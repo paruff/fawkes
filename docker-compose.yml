@@ -1,0 +1,71 @@
+version: '3.0'
+
+volumes:
+  db-vol:
+
+services:
+  ui:
+    image: paruff/verfut-ui:latest
+    ports:
+       - 80:80
+    healthcheck:
+      test: curl --fail -s http://ui/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+ 
+  starter-svc:
+      image: paruff/starter-svc:latest
+      ports:
+        - 8080:8080
+      environment:
+        DB_HOST: db
+      deploy:
+        placement:
+          constraints: [node.role == worker]
+      healthcheck:
+        test: ["CMD", "curl", "--fail", "http://starter-svc:8080/starter-svc/actuator/health"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+
+
+  db:
+    image: postgres:10.5-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 1dba@CIS
+    deploy:
+      placement:
+        constraints: [node.role == worker]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  cadvisor:
+    image: google/cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - 8078:8080
+    networks:
+      - monitor-net
+    restart: always
+    deploy:
+      mode: global
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8079:8080"
+    stop_grace_period: 1m30s
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]

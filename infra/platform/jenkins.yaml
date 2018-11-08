@@ -1,0 +1,140 @@
+plugins:
+  sites:
+  - id: "default"
+    url: "https://updates.jenkins.io/update-center.json"
+jenkins:
+  systemMessage: "Welcome to Jenkins Configuration as Code plugin. VerFuture "
+  agentProtocols: 
+    - "JNLP4-connect" 
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: admin
+         password: Jpassw0rd
+  authorizationStrategy:
+    globalMatrix:
+      grantedPermissions:
+        - "Overall/Read:anonymous"
+        - "Job/Read:anonymous"
+        - "View/Read:anonymous"
+        - "Overall/Administer:authenticated"
+  # securityRealm:
+  #   github:
+  #     githubWebUri: "https://github.com"
+  #     githubApiUri: "https://api.github.com"
+  #     clientID: "someId"
+  #     clientSecret: "${GITHUB_SECRET}"
+  #     oauthScopes: "read:org,user:email"
+  # authorizationStrategy:
+  #   github:
+  #     adminUserNames: "paruff, jmfenner"
+  #     allowAnonymousJobStatusPermission: false
+  #     allowAnonymousReadPermission: false
+  #     allowCcTrayPermission: true
+  #     allowGithubWebHookPermission: true
+  #     authenticatedUserCreateJobPermission: true
+  #     authenticatedUserReadPermission: true
+  #     organizationNames: "unisys, "
+  #     useRepositoryPermissions: true
+  
+  crumbIssuer: "standard"
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword: 
+              scope:    SYSTEM
+              id:       github-user
+              username: ReleasePraqma
+              password: ${github}
+          - basicSSHUserPrivateKey: 
+              scope: SYSTEM
+              id: agent-private-key
+              username: agentuser
+              passphrase:  ""
+              description: "ssh private key used to connect ssh slaves"
+              privateKeySource:
+                directEntry: # The key 'agent_private_key' resolved from a docker secret defined in docker-compose.yml          
+                  privateKey: ${agent_private_key}
+                  
+jobs: 
+  - url: https://raw.githubusercontent.com/Praqma/job-dsl-collection/master/configuration-as-code-dsl/pipeline.dsl #casc
+  - url: https://raw.githubusercontent.com/Praqma/memory-map-plugin/master/jenkins-pipeline/pipeline.groovy #memory map
+  - url: https://raw.githubusercontent.com/Praqma/codesonar-plugin/master/jenkins-pipeline/pipeline.groovy #codesonar
+  - url: https://raw.githubusercontent.com/Praqma/pretested-integration-plugin/master/jenkins-pipeline/pipeline.groovy #pretested integration
+  - url: https://raw.githubusercontent.com/Praqma/ClearCaseUCMPlugin/master/jenkins-pipeline/pipeline.groovy #ccucm 
+  - url: https://raw.githubusercontent.com/Praqma/Praqmatic-Automated-Changelog/master/jenkins-pipeline/pipeline.groovy #pac
+  - url: https://raw.githubusercontent.com/Praqma/PlusBump/rebirth/jenkins-pipeline/pipeline.groovy #plusbump
+#  - url: https://raw.githubusercontent.com/Praqma/job-dsl-collection/master/web-pipeline-dsl/web_pipeline_dsl.groovy #websites
+#  - file: ./jobdsl/rut.groovy #rut (private repo...better keep it here)
+
+tool:
+  git:
+    installations:
+      - name: Default
+        home: "git"
+  dockertool:
+    installations:
+    - name: "docker"
+  jdk:
+    defaultProperties:
+    - installSource:
+        installers:
+        - jdkInstaller:
+            acceptLicense: false
+    installations:
+    - name: "jdk 8"
+      properties:
+      - installSource:
+          installers:
+          - jdkInstaller:
+              acceptLicense: true
+              id: "jdk-8u181-oth-JPR"
+              
+  # maven:
+  #   defaultProperties:
+  #   - installSource:
+  #       installers:
+  #       - mavenInstaller:
+  #   installations:
+  #   - name: "maven 3.5"
+  #     properties:
+  #     - installSource:
+  #         installers:
+  #         - mavenInstaller:
+  #             id: "maven 3.5.4"
+  nodejs:
+    defaultProperties:
+    - installSource:
+        installers:
+        - nodeJSInstaller:
+            npmPackagesRefreshHours: 72
+
+  sonarrunnerinstallation:
+    installations:
+    - name: "sonarqube3"
+      properties:
+      - installSource:
+          installers:
+          - sonarRunnerInstaller:
+              id: "3.2.0.1227"
+
+security:
+  remotingCLI:
+    enabled: false
+
+unclassified:
+  location:
+    url: http://192.168.99.100:8080/
+    adminAddress: philip.ruff@unisys.com
+  sonarglobalconfiguration:
+    installations:
+    - name: "sonarqube"
+      serverUrl: "http://platform-externall-12tbr1nsih2xv-238090866.us-east-2.elb.amazonaws.com:9000"
+      triggers:
+        skipScmCause: false
+        skipUpstreamCause: false
+
+
+

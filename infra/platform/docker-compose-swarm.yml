@@ -1,0 +1,332 @@
+version: '3'
+
+networks:
+  monitor-net:
+  jenkins-net:
+
+volumes:
+  nexus-data:
+  db-data:
+  jenkins-data:
+  sonardb-data:
+  prometheus_data: {}
+  grafana_data: {}
+
+services:
+
+  # ui:
+  #   image: capitaloneio/hygieia-ui
+  #   depends_on:
+  #     - hygieia-api
+  #   ports:
+  #     - "80:80"
+
+  # hygieia-api:
+  #   image: capitaloneio/hygieia-api
+  #   ports:
+  #     - "8084:8080"
+
+  # db:
+  #   image: mongo:latest
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - "db-data:/data/db"
+
+  
+  jenkins:
+    image: paruff/jenkins
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4000M
+        reservations:
+          cpus: '0.2'
+          memory: 400M
+      placement:
+        constraints:
+          - node.role == worker
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+      # Auto-health check to the root page. We add such high values because of a bug when Docker is starting the service, for Jenkins these could be acceptable. #HEALTHCHECK --interval=60s --timeout=5s --retries=3 \ #  CMD curl -f -A "Docker-HealthCheck/v.x (https://docs.docker.com/engine/reference/builder/#healthcheck)" http://localhost:8080/ || exit 1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/robots.txt"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    #  - /usr/bin/docker:/usr/bin/docker
+      - jenkins-data:/var/lib/jenkins/
+      - ./jenkins.yaml:/var/jenkins_home/jenkins.yaml
+    depends_on:
+#      - nexus
+      - sonar
+    environment:
+      - NEXUS_PORT=8081
+      - SONAR_PORT=9000
+      - SONAR_DB_PORT=5432
+      - CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml
+    networks:
+      jenkins-net:
+        aliases:
+          - jenkins
+
+  proxy:
+    image: paruff/docker-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      jenkins-net:
+        aliases:
+          - proxy1
+
+  jenkins-clients:
+    image: blacklabelops/swarm-dockerhost
+    #swids/jenkins-swarm-client
+    depends_on: 
+    - jenkins
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - "SWARM_MASTER_URL=http://jenkins:8080/"
+      - "SWARM_JENKINS_USER=jenkins" 
+      - "SWARM_JENKINS_PASSWORD=swordfish" 
+      - "SWARM_CLIENT_EXECUTORS=3"
+    networks:
+      - jenkins-net
+    #   - "JENKINS_PORT_8080_TCP_ADDR=jenkins"
+    #   - "JENKINS_PORT_8080_TCP_PORT=8080"  
+    # entrypoint: 
+    #   - -java
+    #   - -jar
+    #   - /jenkins/swarm-client.jar
+    #   - -fsroot
+    #   - /jenkins/wks
+    #   - -master
+    #   - http://jenkins:8080   
+      # - -retry
+      # - 3
+      # - -username
+      # - username
+      # - -password
+      # - password
+      #  - -name
+      # - $(/bin/hostname)
+    # -executors 3: Number of executors of the slave
+    # -deleteExistingClients: Deletes any existing node with the same name
+    # -disableClientsUniqueId: Disables Clients unique ID
+    
+  # zap:
+  #   image: owasp/zap2docker-stable
+  #   command: zap.sh -daemon -port 8090 -host 0.0.0.0
+  #   ports:
+  # # ZAP is running on 8090, we want it to be accessible by our tools        
+  #     - "8090:8090"
+  #   healthcheck:
+  #     test: ["CMD", "zap-cli", "status" ]
+  #     interval: 10s
+  #     timeout: 2s
+  #     retries: 3
+
+  # anchore:
+  #   image: anchore/jenkins
+
+    
+  sonardb:
+    restart: always
+    image: postgres:10-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+     - sonardb-data:/var/lib/postgresql/data
+    environment:
+     - POSTGRES_USER=sonar
+     - POSTGRES_PASSWORD=sonar
+
+  sonar:
+    image: sonarqube:lts-alpine
+    restart: always
+    ports:
+     - "9000:9000"
+     #- "9092:9092"
+    depends_on:
+      - sonardb
+    environment:
+     - SONARQUBE_JDBC_URL=jdbc:postgresql://sonardb:5432/sonar
+     - SONARQUBE_JDBC_USERNAME=sonar
+     - SONARQUBE_JDBC_PASSWORD=sonar
+     # https://docs.sonarqube.org/display/SONAR/Requirements
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 3000M
+        reservations:
+          cpus: '0.5'
+          memory: 1000M
+
+  hub:
+    image: selenium/hub
+    ports:
+      - "4444:4444" 
+    environment:
+      - GRID_BROWSER_TIMEOUT=30
+      - GRID_NEW_SESSION_WAIT_TIMEOUT=30
+
+  chromenode:
+    image: selenium/node-chrome
+    ports:
+      - "5555:5555"
+    links:
+      - hub  
+    privileged: true  
+    environment:
+      - HUB_PORT_4444_TCP_ADDR=hub
+      - HUB_PORT_4444_TCP_PORT=4444
+      - DBUS_SESSION_BUS_ADDRESS=/dev/null
+    volumes:
+      - /dev/shm:/dev/shm  
+
+  # nexus:
+  #   image: sonatype/nexus3:3.13.0
+  #   restart: always
+  #   ports:
+  #     - "8081:8081"
+  #     - "8082:8082"
+  #     - "8083:8083"
+  #   volumes:
+  #     - nexus-data:/nexus-data
+
+##########################################################################################
+# DISABLED: GitLab takes too much memory and CPU. Demo uses GitHub repositories instead.
+#
+#  gitlab:
+#    image: gitlab/gitlab-ce:latest
+#    restart: always
+#    networks:
+#      - prodnetwork
+#    environment:
+#      GITLAB_OMNIBUS_CONFIG: |
+#        # external_url 'https://gitlab.example.com'
+#        # Add any other gitlab.rb configuration here, each on its own line
+#    ports:
+#      - "10080:80"
+#      - "10443:443"
+#      - "10022:22"
+#    volumes:
+#      - /opt/gitlab/config:/etc/gitlab
+#      - /opt/gitlab/logs:/var/log/gitlab
+#      - /opt/gitlab/data:/var/opt/gitlab
+
+  # prometheus:
+  #   image: prom/prometheus
+  #   volumes:
+  #     - ./prometheus/:/etc/prometheus/
+  #     - prometheus_data:/prometheus
+  #   command:
+  #     - '--config.file=/etc/prometheus/prometheus.yml'
+  #     - '--storage.tsdb.path=/prometheus'
+  #     - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+  #     - '--web.console.templates=/usr/share/prometheus/consoles'
+  #   ports:
+  #     - 9090:9090
+  #   depends_on:
+  #     - cadvisor
+  #   networks:
+  #     - monitor-net
+  #   restart: always
+  #   deploy:
+  #     placement:
+  #       constraints:
+  #         - node.role==manager
+
+  # node-exporter:
+  #   image: prom/node-exporter
+  #   volumes:
+  #     - /proc:/host/proc:ro
+  #     - /sys:/host/sys:ro
+  #     - /:/rootfs:ro
+  #   command: 
+  #     - '--path.procfs=/host/proc' 
+  #     - '--path.sysfs=/host/sys'
+  #     - --collector.filesystem.ignored-mount-points
+  #     - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+  #   ports:
+  #     - 9100:9100
+  #   networks:
+  #     - monitor-net
+  #   restart: always
+  #   deploy:
+  #     mode: global
+
+  # alertmanager:
+  #   image: prom/alertmanager
+  #   ports:
+  #     - 9093:9093
+  #   volumes:
+  #     - "./alertmanager/:/etc/alertmanager/"
+  #   networks:
+  #     - monitor-net
+  #   restart: always
+  #   command:
+  #     - '--config.file=/etc/alertmanager/config.yml'
+  #     - '--storage.path=/alertmanager'
+  #   deploy:
+  #     placement:
+  #       constraints:
+  #          - node.role==manager
+
+  # cadvisor:
+  #   image: google/cadvisor
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:rw
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
+  #   ports:
+  #     - 8078:8080
+  #   networks:
+  #     - monitor-net
+  #   restart: always
+  #   deploy:
+  #     mode: global
+
+  # grafana:
+  #   image: grafana/grafana
+  #   depends_on:
+  #     - prometheus
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - grafana_data:/var/lib/grafana
+  #     - ./grafana/provisioning/:/etc/grafana/provisioning/
+  #   env_file:
+  #     - ./grafana/config.monitoring
+  #   networks:
+  #     - monitor-net
+  #   restart: always
+
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8079:8080"
+    stop_grace_period: 1m30s
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
