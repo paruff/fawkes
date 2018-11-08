@@ -1,5 +1,10 @@
 #!/bin/bash
 # ./infra-boot.sh -k platform-use1 -w m4.xlarge -m t2.medium -e dr1
+# ssh -i ~/.ssh/platform-use1 docker@10...
+# scp -i ~/.ssh/platform-use1 -r platform/* docker@10...:
+# ssh -i ~/.ssh/platform-use1 docker@10...
+# docker stack deploy --compose-file docker-compose-swarm.yml platform
+
 
 usage() {
     echo " "
