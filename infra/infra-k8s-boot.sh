@@ -1,5 +1,9 @@
 # infra-k8s-boot.sh
 
+# $EKS_SERVICE_ROLE
+# EKS_SUBNET_IDS
+# EKS_SECURITY_GROUPS
+
 aws eks create-cluster \
   --name k8s-workshop \
   --role-arn $EKS_SERVICE_ROLE \
