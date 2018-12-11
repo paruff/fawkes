@@ -72,8 +72,8 @@ aws s3 ls s3://$INFRA_BUCKET_NAME
 
 # Create the three environments
 aws cloudformation create-stack --stack-name platform --template-url https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl --capabilities CAPABILITY_IAM --parameters ParameterKey=KeyName,ParameterValue=$KEYPAIR_NAME ParameterKey=InstanceType,ParameterValue=$WORKER_TYPE ParameterKey=ManagerInstanceType,ParameterValue=$MANAGER_TYPE ParameterKey=EnableCloudStorEfs,ParameterValue=yes
-aws cloudformation create-stack --stack-name verfut-at --template-url https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl --capabilities CAPABILITY_IAM --parameters ParameterKey=KeyName,ParameterValue=$KEYPAIR_NAME ParameterKey=InstanceType,ParameterValue=$WORKER_TYPE ParameterKey=ManagerInstanceType,ParameterValue=$MANAGER_TYPE ParameterKey=EnableCloudStorEfs,ParameterValue=yes ParameterKey=ClusterSize,ParameterValue=3 ParameterKey=ManagerSize,ParameterValue=3
-aws cloudformation create-stack --stack-name verfut-demo --template-url https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl --capabilities CAPABILITY_IAM --parameters ParameterKey=KeyName,ParameterValue=$KEYPAIR_NAME ParameterKey=InstanceType,ParameterValue=$WORKER_TYPE ParameterKey=ManagerInstanceType,ParameterValue=$MANAGER_TYPE ParameterKey=EnableCloudStorEfs,ParameterValue=yes ParameterKey=ClusterSize,ParameterValue=3 ParameterKey=ManagerSize,ParameterValue=3
+# aws cloudformation create-stack --stack-name verfut-at --template-url https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl --capabilities CAPABILITY_IAM --parameters ParameterKey=KeyName,ParameterValue=$KEYPAIR_NAME ParameterKey=InstanceType,ParameterValue=$WORKER_TYPE ParameterKey=ManagerInstanceType,ParameterValue=$MANAGER_TYPE ParameterKey=EnableCloudStorEfs,ParameterValue=yes ParameterKey=ClusterSize,ParameterValue=3 ParameterKey=ManagerSize,ParameterValue=3
+# aws cloudformation create-stack --stack-name verfut-demo --template-url https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl --capabilities CAPABILITY_IAM --parameters ParameterKey=KeyName,ParameterValue=$KEYPAIR_NAME ParameterKey=InstanceType,ParameterValue=$WORKER_TYPE ParameterKey=ManagerInstanceType,ParameterValue=$MANAGER_TYPE ParameterKey=EnableCloudStorEfs,ParameterValue=yes ParameterKey=ClusterSize,ParameterValue=3 ParameterKey=ManagerSize,ParameterValue=3
 # aws cloudformation create-stack --stack-name jenkins-ecs --template-url file://platform/jenkins-ecs.yaml --capabilities CAPABILITY_IAM --parameters ParameterKey=KeyName,ParameterValue=$KEYPAIR_NAME ParameterKey=InstanceType,ParameterValue=m4.large ParameterKey=EcsImageId,ParameterValue=ami-028a9de0a7e353ed9 ParameterKey=PublicAccessCIDR,ParameterValue=0.0.0.0/0 ParameterKey=AvailabilityZone1,ParameterValue=us-east-2a ParameterKey=AvailabilityZone2,ParameterValue=us-east-2b
 
 
@@ -89,16 +89,16 @@ echo "Platform ManagerIPs="
 aws ec2 describe-instances --filters 'Name=tag:Name,Values=platform-Manager'  --output text --query 'Reservations[*].Instances[*].PublicIpAddress'
 ## todo ssh in to first ip and scp docker-compose , docke stack deploy ...
 
-aws cloudformation wait stack-create-complete --stack-name verfut-at
-echo "AT front DNS="
-aws cloudformation describe-stacks --stack-name verfut-at --query 'Stacks[0].Outputs[?OutputKey==`DefaultDNSTarget`].OutputValue' --output text
-echo "Dev ManagerIPs="
-aws ec2 describe-instances --filters 'Name=tag:Name,Values=verfut-at-Manager'  --output text --query 'Reservations[*].Instances[*].PublicIpAddress'
+# aws cloudformation wait stack-create-complete --stack-name verfut-at
+# echo "AT front DNS="
+# aws cloudformation describe-stacks --stack-name verfut-at --query 'Stacks[0].Outputs[?OutputKey==`DefaultDNSTarget`].OutputValue' --output text
+# echo "Dev ManagerIPs="
+# aws ec2 describe-instances --filters 'Name=tag:Name,Values=verfut-at-Manager'  --output text --query 'Reservations[*].Instances[*].PublicIpAddress'
 
-aws cloudformation wait stack-create-complete --stack-name verfut-demo 
-echo "DEMO front DNS="
-aws cloudformation describe-stacks --stack-name verfut-demo --query 'Stacks[0].Outputs[?OutputKey==`DefaultDNSTarget`].OutputValue' --output text
-echo "AT ManagerIPs="
-aws ec2 describe-instances --filters 'Name=tag:Name,Values=verfut-demo-Manager'  --output text --query 'Reservations[*].Instances[*].PublicIpAddress'
+# aws cloudformation wait stack-create-complete --stack-name verfut-demo 
+# echo "DEMO front DNS="
+# aws cloudformation describe-stacks --stack-name verfut-demo --query 'Stacks[0].Outputs[?OutputKey==`DefaultDNSTarget`].OutputValue' --output text
+# echo "AT ManagerIPs="
+# aws ec2 describe-instances --filters 'Name=tag:Name,Values=verfut-demo-Manager'  --output text --query 'Reservations[*].Instances[*].PublicIpAddress'
 
 # aws cloudformation create-stack --stack-name platform-aelk --template-url https://s3.amazonaws.com/aws-cloudwatch/downloads/cloudwatch-logs-subscription-consumer/cwl-elasticsearch.template --capabilities CAPABILITY_IAM --parameters ParameterKey=KeyName,ParameterValue=$KEYPAIR_NAME ParameterKey=NginxUsername,ParameterValue=devsecops ParameterKey=NginxPassword,ParameterValue=1logger@CIS ParameterKey=LogGroupName,ParameterValue=platform-lg ParameterKey=LogFormat,ParameterValue=AWSCloudTrail ParameterKey=SubscriptionFilterPattern,ParameterValue=AWSCloudTrail 

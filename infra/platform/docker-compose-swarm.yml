@@ -199,15 +199,15 @@ services:
     volumes:
       - /dev/shm:/dev/shm  
 
-  # nexus:
-  #   image: sonatype/nexus3:3.13.0
-  #   restart: always
-  #   ports:
-  #     - "8081:8081"
-  #     - "8082:8082"
-  #     - "8083:8083"
-  #   volumes:
-  #     - nexus-data:/nexus-data
+  nexus:
+    image: sonatype/nexus3:3.14.0
+    restart: always
+    ports:
+      - "8081:8081"
+      - "8082:8082"
+      - "8083:8083"
+    volumes:
+      - nexus-data:/nexus-data
 
 ##########################################################################################
 # DISABLED: GitLab takes too much memory and CPU. Demo uses GitHub repositories instead.

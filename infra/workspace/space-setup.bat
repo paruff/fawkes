@@ -54,10 +54,28 @@ ECHO javac exists. Let's go!
 where /q docker
 IF ERRORLEVEL 1 (
 ECHO The application is missing.
-choco install docker-for-windows -y
+choco install docker -y
 ) ELSE (
 ECHO docker exists. Let's go!
 )
+
+where /q docker-machine
+IF ERRORLEVEL 1 (
+ECHO The application is missing.
+choco install docker-machine -y
+) ELSE (
+ECHO docker-machine exists. Let's go!
+)
+
+
+where /q docker-compose
+IF ERRORLEVEL 1 (
+ECHO The application is missing.
+choco install docker-compose -y
+) ELSE (
+ECHO docker-compose exists. Let's go!
+)
+
 
 where /q aws
 IF ERRORLEVEL 1 (
