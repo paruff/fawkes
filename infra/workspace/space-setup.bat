@@ -166,3 +166,4 @@ ECHO postman exists. Let's go!
 )
 
 refreshenv
+docker-machine create --driver virtualbox default
