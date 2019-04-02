@@ -23,8 +23,13 @@
 #                  {\"ParameterKey\": \"VpcId\", \"ParameterValue\": \"${EKS_VPC_ID}\"},
 #                  {\"ParameterKey\": \"Subnets\", \"ParameterValue\": \"${EKS_SUBNET_IDS}\"}]"
 
-terraform plan
+#!/usr/bin/env bash
+
+terraform init
+
 terraform fmt
+
+terraform plan -var-file="starter.tfvars"
 
 terraform plan
 
