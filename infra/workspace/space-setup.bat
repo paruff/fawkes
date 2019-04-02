@@ -46,7 +46,7 @@ ECHO code exists. Let's go!
 where /q javac
 IF ERRORLEVEL 1 (
 ECHO The application is missing.
-choco install jdk8 -y
+choco install jdk11 -y
 ) ELSE (
 ECHO javac exists. Let's go!
 )
@@ -163,6 +163,14 @@ ECHO The application is missing.
 choco install postman -y
 ) ELSE (
 ECHO postman exists. Let's go!
+)
+
+where /q kubectl
+IF ERRORLEVEL 1 (
+ECHO The application is missing.
+choco install minikube -y
+) ELSE (
+ECHO minikube exists. Let's go!
 )
 
 refreshenv
