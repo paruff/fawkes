@@ -1,6 +1,7 @@
-variable "region" {
-  default = "us-west-2"
-}
+# use this to override environment variables
+#variable "region" {
+#  default = "us-west-2"
+#}
 
 # variable "map_accounts" {
 #   description = "Additional AWS account numbers to add to the aws-auth configmap."
