@@ -37,7 +37,7 @@ apply:
   stage: apply
   script:
 #    - terraform apply -input=false "planfile"
-    - terraform apply -input=false
+    - terraform apply -input=false -auto-approve 
   dependencies:
     - plan
 # when: manual
@@ -46,6 +46,6 @@ destroy:
   stage: destroy
   script:
 #    - terraform apply -input=false "planfile"
-    - terraform destroy -input=false
+    - terraform destroy -input=false -auto-approve 
   dependencies:
     - apply
