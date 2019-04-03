@@ -14,7 +14,7 @@ provider "random" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  cluster_name = "test-eks-${random_string.suffix.result}"
+  cluster_name = "k8s-${random_string.suffix.result}"
 
   # the commented out worker group list below shows an example of how to define
   # multiple worker groups of differing configurations
