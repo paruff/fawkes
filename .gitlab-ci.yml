@@ -1,8 +1,3 @@
-image:
-  name: hashicorp/terraform:light
-  entrypoint:
-    - '/usr/bin/env'
-    - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 
 # Cache terraform in between stages
 cache:
@@ -14,8 +9,9 @@ before_script:
   - cd infra/platform/k8s-eks/
   - rm -rf .terraform
   - terraform --version
-  - mkdir -p ./creds
-  - echo $SERVICEACCOUNT | base64 -d > ./creds/serviceaccount.json
+# used for ggoogle cloud
+#  - mkdir -p ./creds
+#  - echo $SERVICEACCOUNT | base64 -d > ./creds/serviceaccount.json
   - terraform init
 
 stages:
@@ -26,11 +22,21 @@ stages:
   - destroy
 
 validate:
+  image:
+    name: hashicorp/terraform:light
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   stage: validate
   script:
     - terraform validate
 
 plan:
+  image:
+    name: hashicorp/terraform:light
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   stage: plan
   script:
     - terraform plan -out "planfile"
@@ -41,6 +47,11 @@ plan:
       - planfile
 
 apply:
+  image:
+    name: hashicorp/terraform:light
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   stage: apply
   script:
 #    - terraform apply -input=false "planfile"
@@ -50,6 +61,11 @@ apply:
 # when: manual
 
 destroy:
+  image:
+    name: hashicorp/terraform:light
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   stage: destroy
   script:
 #    - terraform apply -input=false "planfile"
