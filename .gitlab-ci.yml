@@ -16,6 +16,7 @@ stages:
   - validate
   - plan
   - apply
+  - destroy
 
 validate:
   stage: validate
@@ -36,7 +37,15 @@ apply:
   stage: apply
   script:
 #    - terraform apply -input=false "planfile"
-    - terraform apply
+    - terraform apply -input=false
   dependencies:
     - plan
 # when: manual
+
+destroy:
+  stage: destroy
+  script:
+#    - terraform apply -input=false "planfile"
+    - terraform destroy -input=false
+  dependencies:
+    - apply
