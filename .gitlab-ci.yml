@@ -16,6 +16,7 @@ stages:
   - validate
   - plan
   - apply
+  - audit
   - destroy
 
 validate:
@@ -47,5 +48,41 @@ destroy:
   script:
 #    - terraform apply -input=false "planfile"
     - terraform destroy -input=false -auto-approve 
+  dependencies:
+    - apply
+
+prowler:cis:1:
+  image:
+    name: aethereal/prowler:latest
+  stage: audit
+  script:
+    - prowler -r ${AWS_DEFAULT_REGION} -f ${AWS_DEFAULT_REGION} -c check1
+  dependencies:
+   - apply
+
+prowler:cis:2:
+  image:
+    name: aethereal/prowler:latest
+  stage: audit
+  script:
+    - prowler -r ${AWS_DEFAULT_REGION} -f ${AWS_DEFAULT_REGION} -c check2
+  dependencies:
+   - apply
+
+prowler:cis:3:
+  image:
+    name: aethereal/prowler:latest
+  stage: audit
+  script:
+    - prowler -r ${AWS_DEFAULT_REGION} -f ${AWS_DEFAULT_REGION} -c check3
+  dependencies:
+   - apply
+
+prowler:cis:4:
+  image:
+    name: aethereal/prowler:latest
+  stage: audit
+  script:
+    - prowler -r ${AWS_DEFAULT_REGION} -f ${AWS_DEFAULT_REGION} -c check4
   dependencies:
     - apply
