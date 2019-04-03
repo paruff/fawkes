@@ -4,6 +4,12 @@ image:
     - '/usr/bin/env'
     - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 
+# Cache terraform in between stages
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - infra/platform/k8s-eks/.terraform
+
 before_script:
   - cd infra/platform/k8s-eks/
   - rm -rf .terraform
