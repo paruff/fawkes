@@ -62,7 +62,7 @@ locals {
   worker_groups = [
     {
       # This will launch an autoscaling group with only On-Demand instances
-      instance_type        = "t2.small"
+      instance_type        = "r5.large"
       additional_userdata  = "echo foo bar"
       subnets              = "${join(",", module.vpc.private_subnets)}"
       asg_desired_capacity = "2"
@@ -75,7 +75,7 @@ locals {
       additional_userdata                      = "echo foo bar"
       subnets                                  = "${join(",", module.vpc.private_subnets)}"
       additional_security_group_ids            = "${aws_security_group.worker_group_mgmt_one.id},${aws_security_group.worker_group_mgmt_two.id}"
-      override_instance_type                   = "t3.small"
+      override_instance_type                   = "r5.large"
       asg_desired_capacity                     = "2"
       spot_instance_pools                      = 10
       on_demand_percentage_above_base_capacity = "0"

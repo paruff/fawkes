@@ -7,7 +7,7 @@
 
 terraform init
 terraform fmt
-terraform plan -var-file="starter.tfvars"
+terraform plan
 terraform apply --auto-approve
 
 # Configure kubectl Configure
