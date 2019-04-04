@@ -21,7 +21,8 @@ export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config
 # Helm 
 kubectl -n kube-system create serviceaccount tiller
 kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
-helm init --service-account tiller --tiller-tls-verify
+helm init --service-account tiller 
+# --tiller-tls-verify
 
 helm install stable/kubernetes-dashboard --name dashboard-demo
 
