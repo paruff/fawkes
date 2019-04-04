@@ -79,6 +79,8 @@ helm install stable/kubernetes-dashboard --name dashboard-demo
 # # Satisfied
 # helm install --namespace=pipeline stable/prometheus --name prometheus
 
+# helm install --namespace=pipeline stable/elastic-stack --name elk
+
 # helm install --namespace=pipeline stable/anchore-engine --name anchore
 
 # helm install --namespace=pipeline stable/ --name 
