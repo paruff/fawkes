@@ -1,9 +1,28 @@
+#!/usr/bin/env bash
 # infra-k8s-boot.sh
 
-# this assumes terraform is installed
-# this aim-authorize-
+if !brew -v; then
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+fi
 
-#!/usr/bin/env bash
+# this assumes terraform is installed
+if !terraform -v; then
+ brew install terraform
+fi
+
+if !aws-iam-authenticator -h; thrn
+# this aim-authorize-
+# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
+#   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
+#    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
+#    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
+ curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
+ openssl sha1 -sha256 aws-iam-authenticator
+ chmod +x ./aws-iam-authenticator
+ mkdir $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH
+ echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
+fi
+
 
 terraform init
 terraform fmt
@@ -23,7 +42,8 @@ kubectl -n kube-system create serviceaccount tiller
 kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
 helm init --service-account tiller 
 # --tiller-tls-verify
-kubectl rollout status -h
+# kubectl rollout status -h
+kubectl rollout status deployment tiller-deploy -n kube-system
 
 helm install --wait stable/kubernetes-dashboard --name dashboard-demo
 
