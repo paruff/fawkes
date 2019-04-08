@@ -31,7 +31,7 @@ helm install --wait stable/kubernetes-dashboard --name dashboard-demo
 # Helm up basic
 # kubectl create namespace pipeline
 # # Jenkins
-helm install --namespace=pipeline stable/jenkins --name jenkins --wait
+helm install --namespace=pipeline stable/jenkins --name jenkins --wait --set Master.InstallPlugins=[kubernetes:1.14.0 workflow-aggregator:2.6 credentials-binding:1.17 git:3.9.1 workflow-job:2.31]
 # # kubectl get svc --namespace pipeline -w jenkins
 # # capture url and admin password
 ##
