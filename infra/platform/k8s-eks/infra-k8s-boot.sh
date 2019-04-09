@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 # infra-k8s-boot.sh
 
+case "$OSTYPE" in
+  linux*)   machine=Linux;;
+  darwin*)  machine=Mac;; 
+  win*)     machine=Windows;;
+  msys*)    machine="MSYS / MinGW / Git Bash" ;;
+  cygwin*)  machine=Cygwin;;
+  bsd*)     machine=BSD;;
+  *)        echo "unknown: $OSTYPE" ;;
+esac
+
+echo ${machine}
+
 if ! brew -v; then
   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
@@ -56,7 +68,8 @@ helm install --wait stable/kubernetes-dashboard --name dashboard-demo
 # Helm up basic
 # kubectl create namespace pipeline
 # # Jenkins
-helm install --namespace=pipeline stable/jenkins --name jenkins --wait --set Master.InstallPlugins=[kubernetes:1.14.0 workflow-aggregator:2.6 credentials-binding:1.17 git:3.9.1 workflow-job:2.31]
+helm install --namespace=pipeline stable/jenkins --name jenkins --wait 
+# this is not working , looking to see how JCasC works --set Master.InstallPlugins=[kubernetes:1.14.0 workflow-aggregator:2.6 credentials-binding:1.17 git:3.9.1 workflow-job:2.31]
 # # kubectl get svc --namespace pipeline -w jenkins
 # # capture url and admin password
 ##
