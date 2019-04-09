@@ -12,6 +12,10 @@ fi
 if ! kubectl version; then
   brew install kubernetes-cli
 fi
+if ! helm version; then
+  brew install helm
+fi
+
 if ! aws-iam-authenticator -h; then
 # this aim-authorize-
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
