@@ -9,7 +9,9 @@ fi
 if !terraform -v; then
  brew install terraform
 fi
-
+if !kubectl version; then
+  brew install kubernetes-cli
+fi
 if !aws-iam-authenticator -h; thrn
 # this aim-authorize-
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
