@@ -49,7 +49,6 @@ kubectl rollout status deployment tiller-deploy -n kube-system
 
 helm install --wait stable/kubernetes-dashboard --name dashboard-demo
 
-
 # Helm up basic
 # kubectl create namespace pipeline
 # # Jenkins
@@ -63,8 +62,6 @@ helm install --namespace=pipeline stable/jenkins --name jenkins --wait --set Mas
 #  echo http://$SERVICE_IP:8080/login
 # # list plugins
 
-
-
 helm install --namespace=pipeline stable/sonarqube --name sonarqube --wait
 # # Configure auth, uid: admin, pw:admin
 # export SONAR_SERVICE_IP=$(kubectl get svc --namespace pipeline sonarqube-sonarqube -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -76,17 +73,16 @@ helm install --namespace=pipeline stable/sonatype-nexus --name nexus --set nexus
 ## uid: admin, pw: admin123
 ## I don't seem to have access externally
 
-
 helm install --namespace=pipeline stable/selenium --name selenium
 ## internal URL - http://selenium-selenium-hub.pipeline:4444
 
-# helm install --namespace=pipeline stable/spinnaker --name spinnaker
+helm install --namespace=pipeline stable/spinnaker --name spinnaker --wait
 # # Satisfied
 helm install --namespace=pipeline stable/prometheus --name prometheus --wait
 
 helm install --namespace=pipeline stable/elastic-stack --name elk --wait
 
-# helm install --namespace=pipeline stable/anchore-engine --name anchore
+ helm install --namespace=pipeline stable/anchore-engine --name anchore --wait
 
 # helm install --namespace=pipeline stable/ --name 
 
