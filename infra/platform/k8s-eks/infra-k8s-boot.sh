@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 # infra-k8s-boot.sh
 
-if !brew -v; then
+if ! brew -v; then
   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
 
 # this assumes terraform is installed
-if !terraform -v; then
+if ! terraform -v; then
  brew install terraform
 fi
-if !kubectl version; then
+if ! kubectl version; then
   brew install kubernetes-cli
 fi
-if !aws-iam-authenticator -h; thrn
+if ! aws-iam-authenticator -h; then
 # this aim-authorize-
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
 #   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
