@@ -8,7 +8,7 @@ echo Success: Administrative permissions confirmed.
 ) else (
 echo Failure: Current permissions inadequate.
 pause >nul
-
+exit
 )
 
 where /q choco
