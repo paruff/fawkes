@@ -91,7 +91,7 @@ fi
 
 fi
 
-exit
+# exit
 
 terraform init
 terraform fmt
@@ -129,7 +129,7 @@ helm install --namespace=pipeline stable/jenkins --name jenkins --wait
 # export JENKINS_SERVICE_IP=$(kubectl get svc --namespace pipeline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
 #  echo http://$SERVICE_IP:8080/login
 # # list plugins
-
+exit
 helm install --namespace=pipeline stable/sonarqube --name sonarqube --wait
 # # Configure auth, uid: admin, pw:admin
 # export SONAR_SERVICE_IP=$(kubectl get svc --namespace pipeline sonarqube-sonarqube -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
