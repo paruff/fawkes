@@ -6,31 +6,38 @@
 # os or shell conditional installs of packages mac, win , yum, apt-get?
 
 case "$OSTYPE" in
-  linux*)   machine=Linux;;
+#  linux*)   machine=Linux;;
   darwin*)  machine=Mac;; 
   win*)     machine=Windows;;
-  msys*)    machine="MSYS / MinGW / Git Bash" ;;
-  cygwin*)  machine=Cygwin;;
-  bsd*)     machine=BSD;;
+  msys*)    machine=GBash ;;
+#  cygwin*)  machine=Cygwin;;
+#  bsd*)     machine=BSD;;
   *)        echo "unknown: $OSTYPE" ;;
 esac
 
 echo ${machine}
 
-if ! brew -v; then
-  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-fi
+if [ ${machine} = "Mac" ]; 
+then
 
-# this assumes terraform is installed
-if ! terraform -v; then
- brew install terraform
-fi
-if ! kubectl version; then
-  brew install kubernetes-cli
-fi
-if ! helm version; then
-  brew install kubernetes-helm
-fi
+  if ! brew -v; then
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  fi
+  if terraform -v; then
+    brew upgrade terraform
+  else
+    brew install terraform
+  fi
+  if kubectl version; then
+    brew upgrade kubernetes-cli
+  else
+    brew install kubernetes-cli
+  fi
+  if helm version; then
+    brew upgrade kubernetes-helm
+  else
+    brew install kubernetes-helm
+  fi
 
 if ! aws-iam-authenticator -h; then
 # this aim-authorize-
@@ -45,6 +52,46 @@ if ! aws-iam-authenticator -h; then
  echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
 fi
 
+fi
+# now for windows 10 running git bash
+# TODO define and lock the versions to working versions 
+if [ ${machine} = "GBash" ]; 
+then
+  if ! choco  -v; then
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  fi
+  if terraform -v; then
+    choco upgrade terraform
+  else
+    choco install terraform
+  fi
+  if kubectl version; then
+    choco upgrade kubernetes-cli
+  else
+    choco install kubernetes-cli
+  fi
+  if helm version; then
+    choco  upgrade kubernetes-helm
+  else
+    choco  install kubernetes-helm
+  fi
+
+if ! aws-iam-authenticator -h; then
+# this aim-authorize-
+# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
+#   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
+#    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
+#    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
+ curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
+ openssl sha1 -sha256 aws-iam-authenticator
+ chmod +x ./aws-iam-authenticator
+ mkdir $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH
+ echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
+fi
+
+fi
+
+exit
 
 terraform init
 terraform fmt
