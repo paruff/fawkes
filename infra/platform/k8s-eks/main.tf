@@ -62,7 +62,7 @@ locals {
   worker_groups = [
     {
       # This will launch an autoscaling group with only On-Demand instances
-      instance_type        = "r5.large"
+      instance_type        = "r4.large"
       additional_userdata  = "echo foo bar"
       subnets              = "${join(",", module.vpc.private_subnets)}"
       asg_desired_capacity = "2"

@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 # infra-k8s-boot.sh
+## TODO
+# conditional helm install and update based on does it exist
+# break up cloud provider terraform k8s up
+# os or shell conditional installs of packages mac, win , yum, apt-get?
 
 case "$OSTYPE" in
   linux*)   machine=Linux;;
