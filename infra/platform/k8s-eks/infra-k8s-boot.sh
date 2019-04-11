@@ -58,7 +58,8 @@ fi
 if [ ${machine} = "GBash" ]; 
 then
   if ! choco  -v; then
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  # I wonder if this will work in git bash?
+    @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
   fi
   if terraform -v; then
     choco upgrade terraform
@@ -82,10 +83,10 @@ if ! aws-iam-authenticator -h; then
 #   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
 #    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
 #    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
- curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
- openssl sha1 -sha256 aws-iam-authenticator
- chmod +x ./aws-iam-authenticator
- mkdir $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH
+ curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
+ openssl sha1 -sha256 aws-iam-authenticator.exe
+ chmod +x ./aws-iam-authenticator.exe
+ mkdir $HOME/bin && cp ./aws-iam-authenticator.exe $HOME/bin/aws-iam-authenticator.exe && export PATH=$HOME/bin:$PATH
  echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
 fi
 
@@ -119,7 +120,12 @@ helm install --wait stable/kubernetes-dashboard --name dashboard-demo
 # Helm up basic
 # kubectl create namespace pipeline
 # # Jenkins
-helm install --namespace=pipeline stable/jenkins --name jenkins --wait 
+If [ helm status jenkins ] 
+then
+  helm upgrade jenkins
+else
+  helm install --namespace=pipeline stable/jenkins --name jenkins --wait 
+fi
 # this is not working , looking to see how JCasC works --set Master.InstallPlugins=[kubernetes:1.14.0 workflow-aggregator:2.6 credentials-binding:1.17 git:3.9.1 workflow-job:2.31]
 # # kubectl get svc --namespace pipeline -w jenkins
 # # capture url and admin password
