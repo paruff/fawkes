@@ -58,22 +58,23 @@ fi
 if [ ${machine} = "GBash" ]; 
 then
   if ! choco  -v; then
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      echo "you mush install choco"
+#    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
   if terraform -v; then
-    choco upgrade terraform
+    choco upgrade terraform -y
   else
-    choco install terraform
+    choco install terraform -y
   fi
   if kubectl version; then
-    choco upgrade kubernetes-cli
+    choco upgrade kubernetes-cli -y
   else
-    choco install kubernetes-cli
+    choco install kubernetes-cli -y
   fi
   if helm version; then
-    choco  upgrade kubernetes-helm
+    choco  upgrade kubernetes-helm -y
   else
-    choco  install kubernetes-helm
+    choco  install kubernetes-helm -y
   fi
 
 if ! aws-iam-authenticator -h; then
