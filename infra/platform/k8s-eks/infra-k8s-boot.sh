@@ -58,22 +58,23 @@ fi
 if [ ${machine} = "GBash" ]; 
 then
   if ! choco  -v; then
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      echo "you mush install choco"
+#    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
   if terraform -v; then
-    choco upgrade terraform
+    choco upgrade terraform -y
   else
-    choco install terraform
+    choco install terraform -y
   fi
   if kubectl version; then
-    choco upgrade kubernetes-cli
+    choco upgrade kubernetes-cli -y
   else
-    choco install kubernetes-cli
+    choco install kubernetes-cli -y
   fi
   if helm version; then
-    choco  upgrade kubernetes-helm
+    choco  upgrade kubernetes-helm -y
   else
-    choco  install kubernetes-helm
+    choco  install kubernetes-helm -y
   fi
 
 if ! aws-iam-authenticator -h; then
@@ -82,16 +83,15 @@ if ! aws-iam-authenticator -h; then
 #   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
 #    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
 #    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
- curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
- openssl sha1 -sha256 aws-iam-authenticator
- chmod +x ./aws-iam-authenticator
- mkdir $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH
+ curl -o aws-iam-authenticator.exe https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
+ openssl sha1 -sha256 aws-iam-authenticator.exe
+ chmod +x ./aws-iam-authenticator.exe
+ mkdir -p $HOME/bin && cp ./aws-iam-authenticator.exe $HOME/bin/aws-iam-authenticator.exe && export PATH=$HOME/bin:$PATH
  echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
 fi
 
 fi
 
-exit
 
 terraform init
 terraform fmt
@@ -99,11 +99,12 @@ terraform plan
 terraform apply --auto-approve
 
 # Configure kubectl Configure
+mkdir -p $HOME/.kube/
 cp kubeconfig_* $HOME/.kube/config
 cp kubeconfig_* $HOME/.kube/
 
 export  KUBECONFIG_SAVED=$KUBECONFIG
-export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config
+export KUBECONFIG=$HOME/.kube/config
 
 
 # Helm 
