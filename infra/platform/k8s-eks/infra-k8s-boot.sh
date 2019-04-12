@@ -82,16 +82,16 @@ if ! aws-iam-authenticator -h; then
 #   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
 #    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
 #    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
- curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
- openssl sha1 -sha256 aws-iam-authenticator
- chmod +x ./aws-iam-authenticator
- mkdir $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH
+ curl -o aws-iam-authenticator.exe https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
+ openssl sha1 -sha256 aws-iam-authenticator.exe
+ chmod +x ./aws-iam-authenticator.exe
+ mkdir -p $HOME/bin && cp ./aws-iam-authenticator.exe $HOME/bin/aws-iam-authenticator.exe && export PATH=$HOME/bin:$PATH
  echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
 fi
 
 fi
 
-exit
+# exits
 
 terraform init
 terraform fmt
@@ -99,11 +99,12 @@ terraform plan
 terraform apply --auto-approve
 
 # Configure kubectl Configure
+mkdir -p $HOME/.kube
 cp kubeconfig_* $HOME/.kube/config
 cp kubeconfig_* $HOME/.kube/
 
 export  KUBECONFIG_SAVED=$KUBECONFIG
-export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config
+export KUBECONFIG=$HOME/.kube/config
 
 
 # Helm 
