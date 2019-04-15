@@ -132,11 +132,11 @@ helm install --namespace=pipeline stable/jenkins --name jenkins --wait
 #  echo http://$SERVICE_IP:8080/login
 # # list plugins
 
-helm install --namespace=pipeline stable/sonarqube --name sonarqube --wait
-# # Configure auth, uid: admin, pw:admin
-# export SONAR_SERVICE_IP=$(kubectl get svc --namespace pipeline sonarqube-sonarqube -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-# echo http://$SERVICE_IP:9000
-# # add plugins
+# # Sonarqube
+helm install --name sonarqube stable/sonarqube -f sonarqube/sonarqube-values.yaml --namespace=pipeline --wait ; helm test sonarqube
+# get latest load balancer path to sonarqube chart
+export SERVICE_IP=$(kubectl get svc --namespace pipeline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+echo http://$SERVICE_IP:9000
 
 helm install --namespace=pipeline stable/sonatype-nexus --name nexus --set nexus.service.type=LoadBalancer --wait
 ## where is the url? change nexus.service.type to loadbalancer --set nexus.service.type=LoadBalancer
