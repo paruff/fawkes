@@ -117,13 +117,15 @@ kubectl rollout status deployment tiller-deploy -n kube-system
 
 helm install --wait stable/kubernetes-dashboard --name dashboard-demo
 
+kubectl create namespace pipeline
+
 # Helm up basic
-# kubectl create namespace pipeline
 # # Jenkins
 If [ helm status jenkins ] 
 then
   helm upgrade jenkins
 else
+  kubectl apply -f jenkins/service-account.yml
   helm install --namespace=pipeline stable/jenkins --name jenkins --wait 
 fi
 # this is not working , looking to see how JCasC works --set Master.InstallPlugins=[kubernetes:1.14.0 workflow-aggregator:2.6 credentials-binding:1.17 git:3.9.1 workflow-job:2.31]
@@ -156,17 +158,9 @@ helm install --namespace=pipeline stable/prometheus --name prometheus --wait
 
 helm install --namespace=pipeline stable/elastic-stack --name elk --wait
 
- helm install --namespace=pipeline stable/anchore-engine --name anchore --wait
-
-# helm install --namespace=pipeline stable/ --name 
+# # Delight
+helm install --namespace=pipeline stable/anchore-engine --name anchore --wait
 
 helm install --namespace=pipeline --name jmeter stable/distributed-jmeter --wait
 
-# # Delight
-
-
-
-
-
-
-
+# helm install --namespace=pipeline stable/ --name 
