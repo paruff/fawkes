@@ -199,43 +199,45 @@ Master:
             buildWrapperEnabled: true
             installations:              # mandatory
               - name: sonarqube         # id of the SonarQube configuration - to be used in jobs
-                serverUrl: http://sonarqube-service:9000/sq
+                serverUrl: http://sonarqube-service.pipeline:9000/
                 additionalAnalysisProperties:
                 additionalProperties:
                 triggers:
-          jenkins:
-            clouds:
-              - kubernetes:
-                  name: kubernetes
-                  containerCapStr: 100
-                  templates:
+        
+        clouds:
+          - kubernetes:
+              name: kubernetes
+              containerCapStr: 100
+              templates:
+                - name: maven
+                  label: mavenpodtemplate
+                  containers:
                     - name: maven
-                      label: mavenpodtemplate
-                      containers:
-                        - name: maven
-                          image: maven:3.3.9-jdk-8-alpine
-                          ttyEnabled: true
-                          command: cat
-                          args: ""
-            unclassified:
-              location:
-                url: http://jenkins/
-            jobs:
-      - script: >
-        pipelineJob('configuration-as-code') {
-            definition {
-                cps {
-                    sandbox()
-                    script("""
-                      podTemplate(label: 'mypod') {
-                        node('mypod') {
-                          sh "hostname"
-                        }
+                      image: maven:3.3.9-jdk-8-alpine
+                      ttyEnabled: true
+                      command: cat
+                      args: ""
+        unclassified:
+          location:
+            url: http://jenkins/
+        jobs:
+          - script: >
+            pipelineJob('configuration-as-code') {
+                definition {
+                    cps {
+                        sandbox()
+                        script("""
+                          podTemplate(label: 'mypod') {
+                            node('mypod') {
+                              sh "hostname"
+                            }
+                          }
+                        """.stripIndent())
                       }
-                    """.stripIndent())
-                }
-            }
-        }
+                  }
+              }
+
+
         # sonarGlobalConfiguration:
         #   buildWrapperEnabled: true
         #   installations:
