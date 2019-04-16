@@ -128,15 +128,15 @@ else
   kubectl apply -f jenkins/service-account.yaml
   helm install --namespace=pipeline stable/jenkins --name jenkins --wait 
 fi
-# this is not working , looking to see how JCasC works --set Master.InstallPlugins=[kubernetes:1.14.0 workflow-aggregator:2.6 credentials-binding:1.17 git:3.9.1 workflow-job:2.31]
-# # kubectl get svc --namespace pipeline -w jenkins
-# # capture url and admin password
-##
+echo "Jenkins admin password:"
+printf $(kubectl get secret --namespace pipelines jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+export JENKINS_IP=$(kubectl get svc --namespace pipelines jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+
+echo "Jenkins LB URL"http://$JENKINS_IP:8080/login
 # printf $(kubectl get secret --namespace pipeline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
 # 
 # export JENKINS_SERVICE_IP=$(kubectl get svc --namespace pipeline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
 #  echo http://$SERVICE_IP:8080/login
-# # list plugins
 
 helm install --namespace=pipeline stable/sonarqube --name sonarqube --wait
 # # Configure auth, uid: admin, pw:admin
