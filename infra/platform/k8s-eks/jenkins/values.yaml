@@ -194,6 +194,8 @@ Master:
       welcome-message: |
         jenkins:
           systemMessage: Welcome to UniSys Federal Application Services CI\CD server.  This Jenkins is configured and managed 'as code'.
+    ConfigScripts:
+      sonarqube: |
         unclassified:
           sonarglobalconfiguration:     # mandatory
             buildWrapperEnabled: true
@@ -203,39 +205,26 @@ Master:
                 additionalAnalysisProperties:
                 additionalProperties:
                 triggers:
-        
-        clouds:
-          - kubernetes:
-              name: kubernetes
-              containerCapStr: 100
-              templates:
-                - name: maven
-                  label: mavenpodtemplate
-                  containers:
-                    - name: maven
-                      image: maven:3.3.9-jdk-8-alpine
-                      ttyEnabled: true
-                      command: cat
-                      args: ""
-        unclassified:
-          location:
-            url: http://jenkins/
-        jobs:
-          - script: >
-            pipelineJob('configuration-as-code') {
-                definition {
-                    cps {
-                        sandbox()
-                        script("""
-                          podTemplate(label: 'mypod') {
-                            node('mypod') {
-                              sh "hostname"
-                            }
-                          }
-                        """.stripIndent())
-                      }
-                  }
-              }
+    # ConfigScripts:
+        # unclassified:
+        #   location:
+        #     url: http://jenkins.pipeline/
+        # jobs:
+        #   - script: >
+        #     pipelineJob('configuration-as-code') {
+        #         definition {
+        #             cps {
+        #                 sandbox()
+        #                 script("""
+        #                   podTemplate(label: 'mypod') {
+        #                     node('mypod') {
+        #                       sh "hostname"
+        #                     }
+        #                   }
+        #                 """.stripIndent())
+        #               }
+        #           }
+        #       }
 
 
         # sonarGlobalConfiguration:
@@ -423,8 +412,8 @@ NetworkPolicy:
 
 ## Install Default RBAC roles and bindings
 rbac:
-  install: false
-  serviceAccountName: default
+  install: true
+  serviceAccountName: jenkins
   serviceAccountAnnotations: {}
   # Role reference
   roleRef: cluster-admin
