@@ -203,6 +203,39 @@ Master:
                 additionalAnalysisProperties:
                 additionalProperties:
                 triggers:
+          jenkins:
+            clouds:
+              - kubernetes:
+                  name: kubernetes
+                  containerCapStr: 100
+                  templates:
+                    - name: maven
+                      label: mavenpodtemplate
+                      containers:
+                        - name: maven
+                          image: maven:3.3.9-jdk-8-alpine
+                          ttyEnabled: true
+                          command: cat
+                          args: ""
+            unclassified:
+              location:
+                url: http://jenkins/
+            jobs:
+      - script: >
+        pipelineJob('configuration-as-code') {
+            definition {
+                cps {
+                    sandbox()
+                    script("""
+                      podTemplate(label: 'mypod') {
+                        node('mypod') {
+                          sh "hostname"
+                        }
+                      }
+                    """.stripIndent())
+                }
+            }
+        }
         # sonarGlobalConfiguration:
         #   buildWrapperEnabled: true
         #   installations:

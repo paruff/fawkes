@@ -125,7 +125,7 @@ If [ helm status jenkins ]
 then
   helm upgrade jenkins
 else
-  kubectl apply -f jenkins/service-account.yml
+  kubectl apply -f jenkins/service-account.yaml
   helm install --namespace=pipeline stable/jenkins --name jenkins --wait 
 fi
 # this is not working , looking to see how JCasC works --set Master.InstallPlugins=[kubernetes:1.14.0 workflow-aggregator:2.6 credentials-binding:1.17 git:3.9.1 workflow-job:2.31]
@@ -137,7 +137,7 @@ fi
 # export JENKINS_SERVICE_IP=$(kubectl get svc --namespace pipeline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
 #  echo http://$SERVICE_IP:8080/login
 # # list plugins
-exit
+
 helm install --namespace=pipeline stable/sonarqube --name sonarqube --wait
 # # Configure auth, uid: admin, pw:admin
 # export SONAR_SERVICE_IP=$(kubectl get svc --namespace pipeline sonarqube-sonarqube -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -153,6 +153,7 @@ helm install --namespace=pipeline stable/selenium --name selenium
 ## internal URL - http://selenium-selenium-hub.pipeline:4444
 
 helm install --namespace=pipeline stable/spinnaker --name spinnaker --wait
+exit
 # # Satisfied
 helm install --namespace=pipeline stable/prometheus --name prometheus --wait
 
