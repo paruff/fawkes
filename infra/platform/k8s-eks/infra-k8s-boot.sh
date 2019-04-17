@@ -133,7 +133,8 @@ helm install --namespace=pipeline stable/jenkins --name jenkins --wait
 # # list plugins
 
 # # Sonarqube
-helm install --name sonarqube stable/sonarqube -f sonarqube/sonarqube-values.yaml --namespace=pipeline --wait ; helm test sonarqube
+helm install --name sonarqube stable/sonarqube -f sonarqube/sonarqube-values.yaml --namespace=pipeline --wait
+helm test sonarqube --cleanup
 # get latest load balancer path to sonarqube chart
 export SERVICE_IP=$(kubectl get svc --namespace pipeline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
 echo http://$SERVICE_IP:9000
