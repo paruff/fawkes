@@ -144,12 +144,12 @@ helm install --namespace=pipeline stable/sonarqube --name sonarqube --wait
 # echo http://$SERVICE_IP:9000
 # # add plugins
 
-helm install --namespace=pipeline stable/sonatype-nexus --name nexus --set nexus.service.type=LoadBalancer --wait
+helm install --namespace=pipeline stable/sonatype-nexus --name registry --set nexus.service.type=LoadBalancer --wait
 ## where is the url? change nexus.service.type to loadbalancer --set nexus.service.type=LoadBalancer
 ## uid: admin, pw: admin123
 ## I don't seem to have access externally
 
-helm install --namespace=pipeline stable/selenium --name selenium
+helm install --namespace=pipeline stable/selenium --name selenium --set chromeDebug.enabled=true --set .enabled=true --wait
 ## internal URL - http://selenium-selenium-hub.pipeline:4444
 
 helm install --namespace=pipeline stable/spinnaker --name spinnaker --wait
