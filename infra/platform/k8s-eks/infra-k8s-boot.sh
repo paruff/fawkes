@@ -58,13 +58,8 @@ fi
 if [ ${machine} = "GBash" ]; 
 then
   if ! choco  -v; then
-<<<<<<< HEAD
   # I wonder if this will work in git bash?
     @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-=======
-      echo "you mush install choco"
-#    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
->>>>>>> 528247998d40587c6a36f5cb4a13654e74b079d5
   fi
   if terraform -v; then
     choco upgrade terraform -y
@@ -88,27 +83,16 @@ if ! aws-iam-authenticator -h; then
 #   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
 #    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
 #    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
-<<<<<<< HEAD
  curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
  openssl sha1 -sha256 aws-iam-authenticator.exe
  chmod +x ./aws-iam-authenticator.exe
  mkdir $HOME/bin && cp ./aws-iam-authenticator.exe $HOME/bin/aws-iam-authenticator.exe && export PATH=$HOME/bin:$PATH
-=======
- curl -o aws-iam-authenticator.exe https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
- openssl sha1 -sha256 aws-iam-authenticator.exe
- chmod +x ./aws-iam-authenticator.exe
- mkdir -p $HOME/bin && cp ./aws-iam-authenticator.exe $HOME/bin/aws-iam-authenticator.exe && export PATH=$HOME/bin:$PATH
->>>>>>> 528247998d40587c6a36f5cb4a13654e74b079d5
  echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
 fi
 
 fi
 
-<<<<<<< HEAD
 # exit
-=======
-# exits
->>>>>>> 528247998d40587c6a36f5cb4a13654e74b079d5
 
 terraform init
 terraform fmt
