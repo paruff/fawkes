@@ -58,23 +58,28 @@ fi
 if [ ${machine} = "GBash" ]; 
 then
   if ! choco  -v; then
+<<<<<<< HEAD
   # I wonder if this will work in git bash?
     @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+=======
+      echo "you mush install choco"
+#    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+>>>>>>> 528247998d40587c6a36f5cb4a13654e74b079d5
   fi
   if terraform -v; then
-    choco upgrade terraform
+    choco upgrade terraform -y
   else
-    choco install terraform
+    choco install terraform -y
   fi
   if kubectl version; then
-    choco upgrade kubernetes-cli
+    choco upgrade kubernetes-cli -y
   else
-    choco install kubernetes-cli
+    choco install kubernetes-cli -y
   fi
   if helm version; then
-    choco  upgrade kubernetes-helm
+    choco  upgrade kubernetes-helm -y
   else
-    choco  install kubernetes-helm
+    choco  install kubernetes-helm -y
   fi
 
 if ! aws-iam-authenticator -h; then
@@ -83,16 +88,27 @@ if ! aws-iam-authenticator -h; then
 #   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
 #    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
 #    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
+<<<<<<< HEAD
  curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
  openssl sha1 -sha256 aws-iam-authenticator.exe
  chmod +x ./aws-iam-authenticator.exe
  mkdir $HOME/bin && cp ./aws-iam-authenticator.exe $HOME/bin/aws-iam-authenticator.exe && export PATH=$HOME/bin:$PATH
+=======
+ curl -o aws-iam-authenticator.exe https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
+ openssl sha1 -sha256 aws-iam-authenticator.exe
+ chmod +x ./aws-iam-authenticator.exe
+ mkdir -p $HOME/bin && cp ./aws-iam-authenticator.exe $HOME/bin/aws-iam-authenticator.exe && export PATH=$HOME/bin:$PATH
+>>>>>>> 528247998d40587c6a36f5cb4a13654e74b079d5
  echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
 fi
 
 fi
 
+<<<<<<< HEAD
 # exit
+=======
+# exits
+>>>>>>> 528247998d40587c6a36f5cb4a13654e74b079d5
 
 terraform init
 terraform fmt
@@ -100,11 +116,12 @@ terraform plan
 terraform apply --auto-approve
 
 # Configure kubectl Configure
+mkdir -p $HOME/.kube
 cp kubeconfig_* $HOME/.kube/config
 cp kubeconfig_* $HOME/.kube/
 
 export  KUBECONFIG_SAVED=$KUBECONFIG
-export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config
+export KUBECONFIG=$HOME/.kube/config
 
 
 # Helm 
@@ -138,11 +155,12 @@ echo "Jenkins LB URL"http://$JENKINS_IP:8080/login
 # export JENKINS_SERVICE_IP=$(kubectl get svc --namespace pipeline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
 #  echo http://$SERVICE_IP:8080/login
 
-helm install --namespace=pipeline stable/sonarqube --name sonarqube --wait
-# # Configure auth, uid: admin, pw:admin
-# export SONAR_SERVICE_IP=$(kubectl get svc --namespace pipeline sonarqube-sonarqube -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-# echo http://$SERVICE_IP:9000
-# # add plugins
+# # Sonarqube
+helm install --name sonarqube stable/sonarqube -f sonarqube/sonarqube-values.yaml --namespace=pipeline --wait
+helm test sonarqube --cleanup
+# get latest load balancer path to sonarqube chart
+export SERVICE_IP=$(kubectl get svc --namespace pipeline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+echo http://$SERVICE_IP:9000
 
 helm install --namespace=pipeline stable/sonatype-nexus --name registry --set nexus.service.type=LoadBalancer --wait
 ## where is the url? change nexus.service.type to loadbalancer --set nexus.service.type=LoadBalancer

@@ -1,0 +1,211 @@
+# Default values for sonarqube.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+  repository: sonarqube
+  # tag: 7.6-community
+  # LTS version
+  tag: 6.7.6-community
+  # TODO: consider use LTS version instead (6.7)
+  # If using a private repository, the name of the imagePullSecret to use
+  # pullSecret: my-repo-secret
+
+# Set security context for sonarqube pod
+securityContext:
+  fsGroup: 999
+
+service:
+  name: sonarqube
+  type: LoadBalancer
+  externalPort: 9000
+  internalPort: 9000
+  labels:
+  annotations: {}
+  # May be used in example for internal load balancing in GCP:
+  # cloud.google.com/load-balancer-type: Internal
+  loadBalancerSourceRanges:
+  - 0.0.0.0/0
+  # loadBalancerIP: 1.2.3.4
+ingress:
+  enabled: false
+  # Used to create an Ingress record.
+  hosts:
+    - sonar.organization.com
+  annotations: {}
+  # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  # This property allows for reports up to a certain size to be uploaded to SonarQube
+  # nginx.ingress.kubernetes.io/proxy-body-size: "8m"
+
+# Additional labels for Ingress manifest file
+  # labels:
+  #  traffic-type: external
+  #  traffic-type: internal
+  tls: {}
+  # Secrets must be manually created in the namespace.
+  # - secretName: chart-example-tls
+  #   hosts:
+  #     - chart-example.local
+
+# Affinity for pod assignment
+# Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+affinity: {}
+
+# Tolerations for pod assignment
+# Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+tolerations: []
+
+# Node labels for pod assignment
+# Ref: https://kubernetes.io/docs/user-guide/node-selection/
+nodeSelector: {}
+
+# hostAliases allows the modification of the hosts file inside a container
+hostAliases: []
+# - ip: "192.168.1.10"
+#   hostnames:
+#   - "example.com"
+#   - "www.example.com"
+
+readinessProbe:
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  failureThreshold: 6
+  sonarWebContext: /
+livenessProbe:
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  sonarWebContext: /
+
+# Set extra env variables. Like proxy settings.
+extraEnv: {}
+
+resources: {}
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# limits:
+#  cpu: 100m
+#  memory: 128Mi
+# requests:
+#  cpu: 100m
+#  memory: 128Mi
+persistence:
+  enabled: false
+  ## Specify an existing volume claim instead of creating a new one.
+  ## When using this option all following options like storageClass, accessMode and size are ignored.
+  # existingClaim:
+
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  # accessMode: ReadWriteOnce
+  # size: 10Gi
+
+# List of plugins to install.
+
+plugins:
+  # todo: this flag seems to have zero effect.  It would be nice to start from stratch with no plugins.
+  # deleteDefaultPlugins: true
+
+  install:
+    # SEE this list of latest plugins: https://update.sonarsource.org/update-center.properties
+
+    - "https://github.com/gabrie-allaigre/sonar-auth-gitlab-plugin/releases/download/1.3.2/sonar-auth-gitlab-plugin-1.3.2.jar"
+
+    - "https://binaries.sonarsource.com/Distribution/sonar-css-plugin/sonar-css-plugin-1.0.3.724.jar"
+
+    # GIT - Installed by default, below is to upgrade
+    - "https://binaries.sonarsource.com/Distribution/sonar-scm-git-plugin/sonar-scm-git-plugin-1.8.0.1574.jar"
+
+    - "https://binaries.sonarsource.com/Distribution/sonar-html-plugin/sonar-html-plugin-3.1.0.1615.jar"
+
+    # SonarJS‌ (Languages) - Installed by default, below is to upgrade.
+    - "https://binaries.sonarsource.com/Distribution/sonar-javascript-plugin/sonar-javascript-plugin-5.1.1.7506.jar"
+
+    # SonarJava‌ (Languages)  - Installed by default, below is to upgrade.
+    - "https://binaries.sonarsource.com/Distribution/sonar-java-plugin/sonar-java-plugin-5.12.1.17771.jar"
+
+    # SonarTS‌ (Languages)  - Installed by default, below is to upgrade.
+    - "https://binaries.sonarsource.com/Distribution/sonar-typescript-plugin/sonar-typescript-plugin-1.9.0.3766.jar"
+
+    - "https://github.com/sbaudoin/sonar-yaml/releases/download/v1.4.2/sonar-yaml-plugin-1.4.2.jar"
+    - "https://github.com/willemsrb/sonar-jdepend-plugin/releases/download/sonar-jdepend-plugin-1.1.1/sonar-jdepend-plugin-1.1.1.jar"
+
+    - "https://binaries.sonarsource.com/Distribution/sonar-jacoco-plugin/sonar-jacoco-plugin-1.0.1.143.jar"
+
+    - "https://github.com/jensgerdes/sonar-pmd/releases/download/3.2.0/sonar-pmd-plugin-3.2.0.jar"
+    - "https://github.com/galexandre/sonar-cobertura/releases/download/2.0/sonar-cobertura-plugin-2.0.jar"
+    - "https://github.com/spotbugs/sonar-findbugs/releases/download/3.9.3/sonar-findbugs-plugin-3.9.3.jar"
+
+    # todo: considering added checkstyle plugin and something like OpenTasks
+
+
+  # initContainerImage: alpine:3.9
+  
+  resources: {}
+  # We allow the plugins init container to have a separate resources declaration because
+  # the initContainer does not take as much resources.
+
+# A custom sonar.properties file can be provided using a multiline YAML string.
+# For example:
+# sonarProperties: |
+#   sonar.forceAuthentication=true
+#   sonar.security.realm=LDAP
+#   ldap.url=ldaps://organization.com
+
+# Kubernetes secret that contains the encryption key for the sonarqube instance.
+# The secret must contain the key 'sonar-secret.txt'.
+# The 'sonar.secretKeyPath' property will be set automatically.
+# sonarSecretKey: "settings-encryption-secret"
+
+## Configuration value to select database type
+## Option to use "postgresql" or "mysql" database type, by default "postgresql" is chosen
+## Set the "enable" field to true of the database type you select (if you want to use internal database) and false of the one you don't select
+database:
+  type: "postgresql"
+
+## Configuration values for postgresql dependency
+## ref: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
+postgresql:
+  # Enable to deploy the PostgreSQL chart
+  enabled: true
+  # To use an external PostgreSQL instance, set enabled to false and uncomment
+  # the line below:
+  # postgresServer: ""
+  # To use an external secret for the password for an external PostgreSQL
+  # instance, set enabled to false and provide the name of the secret on the
+  # line below:
+  # postgresPasswordSecret: ""
+  postgresUser: "sonarUser"
+  postgresPassword: "sonarPass"
+  postgresDatabase: "sonarDB"
+  # Specify the TCP port that PostgreSQL should use
+  service:
+    port: 5432
+
+## Configuration values for the mysql dependency
+## ref: https://github.com/kubernetes/charts/blob/master/stable/mysql/README.md
+##
+mysql:
+  # Enable to deploy the mySQL chart
+  enabled: false
+  # To use an external mySQL instance, set enabled to false and uncomment
+  # the line below:
+  # mysqlServer: ""
+  # To use an external secret for the password for an external mySQL instance,
+  # set enabled to false and provide the name of the secret on the line below:
+  # mysqlPasswordSecret: ""
+  mysqlUser: "sonarUser"
+  mysqlPassword: "sonarPass"
+  mysqlDatabase: "sonarDB"
+  # mysqlParams:
+  #   useSSL: "true"
+  # Specify the TCP port that mySQL should use
+  service:
+    port: 3306
