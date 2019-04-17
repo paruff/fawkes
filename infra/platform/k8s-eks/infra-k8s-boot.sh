@@ -58,7 +58,8 @@ fi
 if [ ${machine} = "GBash" ]; 
 then
   if ! choco  -v; then
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  # I wonder if this will work in git bash?
+    @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
   fi
   if terraform -v; then
     choco upgrade terraform
@@ -82,16 +83,16 @@ if ! aws-iam-authenticator -h; then
 #   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
 #    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
 #    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
- curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
- openssl sha1 -sha256 aws-iam-authenticator
- chmod +x ./aws-iam-authenticator
- mkdir $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH
+ curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
+ openssl sha1 -sha256 aws-iam-authenticator.exe
+ chmod +x ./aws-iam-authenticator.exe
+ mkdir $HOME/bin && cp ./aws-iam-authenticator.exe $HOME/bin/aws-iam-authenticator.exe && export PATH=$HOME/bin:$PATH
  echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
 fi
 
 fi
 
-exit
+# exit
 
 terraform init
 terraform fmt
@@ -116,19 +117,26 @@ kubectl rollout status deployment tiller-deploy -n kube-system
 
 helm install --wait stable/kubernetes-dashboard --name dashboard-demo
 
+kubectl create namespace pipeline
+
 # Helm up basic
-# kubectl create namespace pipeline
 # # Jenkins
-helm install --namespace=pipeline stable/jenkins --name jenkins --wait 
-# this is not working , looking to see how JCasC works --set Master.InstallPlugins=[kubernetes:1.14.0 workflow-aggregator:2.6 credentials-binding:1.17 git:3.9.1 workflow-job:2.31]
-# # kubectl get svc --namespace pipeline -w jenkins
-# # capture url and admin password
-##
+If [ helm status jenkins ] 
+then
+  helm upgrade jenkins
+else
+  kubectl apply -f jenkins/service-account.yaml
+  helm install --namespace=pipeline stable/jenkins --name jenkins --wait 
+fi
+echo "Jenkins admin password:"
+printf $(kubectl get secret --namespace pipelines jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+export JENKINS_IP=$(kubectl get svc --namespace pipelines jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+
+echo "Jenkins LB URL"http://$JENKINS_IP:8080/login
 # printf $(kubectl get secret --namespace pipeline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
 # 
 # export JENKINS_SERVICE_IP=$(kubectl get svc --namespace pipeline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
 #  echo http://$SERVICE_IP:8080/login
-# # list plugins
 
 helm install --namespace=pipeline stable/sonarqube --name sonarqube --wait
 # # Configure auth, uid: admin, pw:admin
@@ -136,31 +144,24 @@ helm install --namespace=pipeline stable/sonarqube --name sonarqube --wait
 # echo http://$SERVICE_IP:9000
 # # add plugins
 
-helm install --namespace=pipeline stable/sonatype-nexus --name nexus --set nexus.service.type=LoadBalancer --wait
+helm install --namespace=pipeline stable/sonatype-nexus --name registry --set nexus.service.type=LoadBalancer --wait
 ## where is the url? change nexus.service.type to loadbalancer --set nexus.service.type=LoadBalancer
 ## uid: admin, pw: admin123
 ## I don't seem to have access externally
 
-helm install --namespace=pipeline stable/selenium --name selenium
+helm install --namespace=pipeline stable/selenium --name selenium --set chromeDebug.enabled=true --set .enabled=true --wait
 ## internal URL - http://selenium-selenium-hub.pipeline:4444
 
 helm install --namespace=pipeline stable/spinnaker --name spinnaker --wait
+exit
 # # Satisfied
 helm install --namespace=pipeline stable/prometheus --name prometheus --wait
 
 helm install --namespace=pipeline stable/elastic-stack --name elk --wait
 
- helm install --namespace=pipeline stable/anchore-engine --name anchore --wait
-
-# helm install --namespace=pipeline stable/ --name 
+# # Delight
+helm install --namespace=pipeline stable/anchore-engine --name anchore --wait
 
 helm install --namespace=pipeline --name jmeter stable/distributed-jmeter --wait
 
-# # Delight
-
-
-
-
-
-
-
+# helm install --namespace=pipeline stable/ --name 
