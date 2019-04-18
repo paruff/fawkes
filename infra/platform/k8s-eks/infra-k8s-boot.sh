@@ -124,10 +124,10 @@ kubectl create namespace pipeline
 # # Jenkins
 If [ helm status jenkins ] 
 then
-  helm upgrade jenkins
+  helm upgrade jenkins 
 else
   kubectl apply -f jenkins/service-account.yaml
-  helm install --namespace=pipeline stable/jenkins --name jenkins --wait 
+  helm install --namespace=pipeline stable/jenkins --name jenkins -f jenkins/values.yaml --wait 
 fi
 echo "Jenkins admin password:"
 printf $(kubectl get secret --namespace pipelines jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo

@@ -137,23 +137,25 @@ Master:
 
   # List of plugins to be install during Jenkins master start
   InstallPlugins:
-    - kubernetes:1.14.0
-    - workflow-job:2.31
-    - workflow-aggregator:2.6
-    - credentials-binding:1.17
-    - git:3.9.1
+    - blueocean:1.14.0
     - configuration-as-code:1.10
     - configuration-as-code-support:1.10
-    - junit:1.27
-    - sonar:2.8.1
-    - slack:2.20
+    - credentials-binding:1.17
+    - cucumber-reports:4.5.0
+    - git:3.9.1
     - gitlab-oauth:1.4
     - gitlab-plugin:1.5.11
-    - performance:3.16
+    - kubernetes:1.14.0
     - jira:3.0.6
+    - job-dsl:1.72
+    - junit:1.27
     - nexus-jenkins-plugin:3.5.20190313-114450.3bfee7f
+    - performance:3.16
     - selenium:3.12.0
-    - cucumber-reports:4.5.0
+    - slack:2.20
+    - sonar:2.8.1
+    - workflow-job:2.31
+    - workflow-aggregator:2.6
 
   # Enable to always override the installed plugins with the values of 'Master.InstallPlugins' on upgrade or redeployment.
   # OverwritePlugins: true
@@ -188,8 +190,8 @@ Master:
   # etc.  Best reference is https://<jenkins_url>/configuration-as-code/reference.  The example below creates a welcome message:
   JCasC:
     enabled: true
-    PluginVersion: 1.5
-    SupportPluginVersion: 1.5
+    PluginVersion: 1.10
+    SupportPluginVersion: 1.10
     ConfigScripts:
       welcome-message: |
         jenkins:
@@ -206,36 +208,35 @@ Master:
                 additionalProperties:
                 triggers:
     # ConfigScripts:
-        # unclassified:
-        #   location:
-        #     url: http://jenkins.pipeline/
-        # jobs:
-        #   - script: >
-        #     pipelineJob('configuration-as-code') {
-        #         definition {
-        #             cps {
-        #                 sandbox()
-        #                 script("""
-        #                   podTemplate(label: 'mypod') {
-        #                     node('mypod') {
-        #                       sh "hostname"
-        #                     }
-        #                   }
-        #                 """.stripIndent())
-        #               }
-        #           }
-        #       }
+    #   slack: |
+    #     credentials:
+    #       system:
+    #         domainCredentials:
+    #         - credentials:
+    #           - string:
+    #               description: "slackcnp integration token"
+    #               id: "slackcnp"
+    #               scope: GLOBAL
+    #               secret: "{AQAAABAAAAAgSOfwkvy05VUnM3pkh9fSOmhPkijubBLlBDHNlDIh3rmWG2sU9PbhIEW3sRLeRO6X}"
+    #     slackNotifier:
+    #       baseUrl: "https://unisys-fed.slack.com/services/hooks/jenkins-ci/"
+    #       botUser: false
+    #       room: "#fawkes"
+    #       teamDomain: "unisys-fed"
+    #       tokenCredentialId: "slackcnp"
+    # ConfigScripts:
+    #     jobs: |
+    #       - script: >
+    #           multibranchPipelineJob('configuration-as-code') {
+    #               branchSources {
+    #                   git {
+    #                       id = 'configuration-as-code'
+    #                       remote('https://github.com/jenkinsci/configuration-as-code-plugin.git')
+    #                   }
+    #               }
+    #           }
 
 
-        # sonarGlobalConfiguration:
-        #   buildWrapperEnabled: true
-        #   installations:
-        #   - name: "sonarqube"
-        #     serverAuthenticationToken: "{AQAAABAAAAAQswJ8z7QJQRV1bX6guAyq87Qtc84JEsZH8FDP4KIPD1w=}"
-        #     serverUrl: "pipeline???"
-        #     triggers:
-        #       skipScmCause: false
-        #       skipUpstreamCause: false
   Sidecars:
     configAutoReload:
       # If enabled: true, Jenkins Configuration as Code will be reloaded on-the-fly without a reboot.  If false or not-specified,
