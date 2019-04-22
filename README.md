@@ -2,26 +2,24 @@
 
 | service  |  repo |  regisrty | port  | endpoint  |
 |---|---|---|---|---|
-|  myuscis_tip_svc | https://github.com/Unisys/myuscis-tip-svc/  | https://hub.docker.com/r/paruff/myuscis-tip-svc/  | 80  | ???  |
-|  case | unisys/myuscis-case-svc  | paruff/myuscis-case-svc  | 8080  |  ??? |
-| sec-tips  | unisys/myuscis-sec-tips-svc  | paruff/myuscis-sec-tips-svc  | 8081  | ???  |
+|  ui | https://gitlab.com/Unisys/-tip-ui/  | https://hub.docker.com/r/paruff/myuscis-tip-svc/  | 80  | ???  |
+|  svc1 | unisys/svc1  | paruff/svc1  | 8080  |  ??? |
+|  svc2 | unisys/svc2  | paruff/svc2  | 8081  | ???  |
 
 
 ## project envs
 | env | url |
 |---|---|
-|dev|http://verfut-de-External-1NUDTVSK6RMML-577586660.us-east-1.elb.amazonaws.com/|
-|automated test|http://verfut-at-External-1BFOJZVDQL4A2-1863726564.us-east-1.elb.amazonaws.com/|
+|dev|http://??/|
+|automated test|http://???/|
 
 ## Pipeline/platform resources
 | Service | url |
 |---|---|
-| Jenkins | http://ec2-18-212-234-148.compute-1.amazonaws.com/|
-| sonar |  http://platform-externall-ozafy5g1zflk-1223084853.us-east-1.elb.amazonaws.com:9000/|
+| Jenkins | http://ac31c3d2a5d3711e985de0ebf3e1312a-2067130682.us-east-1.elb.amazonaws.com:8080/|
+| sonar |  http://a116e8fb55d3811e985de0ebf3e1312a-120804566.us-east-1.elb.amazonaws.com:9000/|
 | nexus|  http://platform-externall-ozafy5g1zflk-1223084853.us-east-1.elb.amazonaws.com:8081/
-|prometheus|http://platform-externall-ozafy5g1zflk-1223084853.us-east-1.elb.amazonaws.com:9090/|
-|selenium hub|http://platform-externall-ozafy5g1zflk-1223084853.us-east-1.elb.amazonaws.com:3000/|
-|visualizer|http://platform-externall-ozafy5g1zflk-1223084853.us-east-1.elb.amazonaws.com:8079/|
+|selenium hub|http://a4af0c9005d3811e985de0ebf3e1312a-2036822307.us-east-1.elb.amazonaws.com:4444/|
 
 
 ## to add a new service:
