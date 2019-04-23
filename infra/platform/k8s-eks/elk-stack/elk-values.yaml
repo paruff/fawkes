@@ -6,17 +6,27 @@ elasticsearch:
 
 kibana:
   enabled: true
+
+  files:
+    kibana.yml:
+      ## Default Kibana configuration from kibana-docker.
+      ## but, with corrected elasticsearch.url
+      server.name: kibana
+      server.host: "0"
+      elasticsearch.url: http://elk-elasticsearch-client.pipeline.svc.cluster.local:9200
+
+      ## Custom config properties below
+      ## Ref: https://www.elastic.co/guide/en/kibana/current/settings.html
+      # server.port: 5601
+      # logging.verbose: "true"
+      # server.defaultRoute: "/app/kibana"
+
   env:
-    # ELASTICSEARCH_URL: http://http.default.svc.cluster.local:9200
+    ELASTICSEARCH_URL: http://elk-elasticsearch-client.pipeline.svc.cluster.local:9200
+    # this chart has an issue and is not passing the above to kibana on the cmd line.
+    # instead is sets the url in kibana.yaml but incorrectly to:
+    # http://elasticsearch:9200
 
-    # This should be the right one
-    # ELASTICSEARCH_URL: http://elk-elasticsearch-client.pipeline.svc.cluster.local:9200
-
-    # ELASTICSEARCH_URL: http://elasticsearch-client:9200
-    ELASTICSEARCH_URL: http://elk-elastic-stack.pipeline.svc.cluster.local:9200
-
-    # this chart has an issue and is likely passing the following to kibana on the cmd line:
-    # --elasticsearch.url=http://elasticsearch-client.elastic.svc.cluster.local:9200
     # check via bash like so (replace with current elk-kibana pod):
     #  kubectl -n pipeline exec -it elk-kibana-74f49bc497-xtrfc bash
 

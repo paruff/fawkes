@@ -9,6 +9,12 @@ helm del --purge elk
 kubectl delete pvc -l release=elk,component=data
 # todo: need to wait here until terminate is complete
 
+# maybe try this one instead:
+# https://www.elastic.co/blog/alpha-helm-charts-for-elasticsearch-kibana-and-cncf-membership
+# helm repo add elastic https://helm.elastic.co
+# helm install --name elasticsearch elastic/elasticsearch --namespace=pipeline
+# helm install --name kibana elastic/kibana --namespace=pipeline
+
 helm install --name elk stable/elastic-stack --version 1.6.0 -f elk-values.yaml --namespace=pipeline --wait
 
 # if tests hang or do not cleanup you can delete pods manually as follows:
