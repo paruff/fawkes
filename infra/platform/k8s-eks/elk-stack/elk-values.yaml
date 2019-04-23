@@ -7,7 +7,11 @@ elasticsearch:
 kibana:
   enabled: true
   env:
-    ELASTICSEARCH_URL: http://http.default.svc.cluster.local:9200
+    # ELASTICSEARCH_URL: http://http.default.svc.cluster.local:9200
+    ELASTICSEARCH_URL: http://elk-elasticsearch-client.pipeline.svc.cluster.local:9200    
+    # ELASTIsCSEARCH_URL: http://elasticsearch-client:9200
+    # this chart has an issue and is likely passing the following to kibana on the cmd line:
+    # --elasticsearch.url=http://elasticsearch-client.elastic.svc.cluster.local:9200
 
 logstash:
   enabled: false
