@@ -27,9 +27,6 @@ kibana:
     # instead is sets the url in kibana.yaml but incorrectly to:
     # http://elasticsearch:9200
 
-    # check via bash like so (replace with current elk-kibana pod):
-    #  kubectl -n pipeline exec -it elk-kibana-74f49bc497-xtrfc bash
-
 logstash:
   enabled: false
   # elasticsearch:
@@ -44,14 +41,27 @@ filebeat:
   # indexTemplateLoad:
   #   - elastic-stack-elasticsearch-client:9200
 
+# todo: on fluentd-elasticsearch hosts edit this file
+# /etc/fluent/fluent.conf
+# which also includes more conf files from /etc/fluent/config.d/
+# 
 fluentd:
-  enabled: true
+  enabled: false
 
+# https://github.com/kubernetes/charts/blob/master/stable/fluent-bit/values.yaml
 fluent-bit:
   enabled: true
+  backend:
+    type: es
+    es:
+      host: elk-elasticsearch-client.pipeline.svc.cluster.local
+      port: 9200
+      index: kubernetes_cluster
+      logstash_prefix: kubernetes_cluster
+
 
 fluentd-elasticsearch:
-  enabled: true
+  enabled: false
 
 nginx-ldapauth-proxy:
   enabled: false
@@ -82,6 +92,10 @@ nginx-ldapauth-proxy:
   #   ldapBindPassword: PASSWORD
 elasticsearch-curator:
   enabled: false
+  config:
+    elasticsearch:
+      hosts:
+        - elk-elasticsearch-client.pipeline.svc.cluster.local
 
 elasticsearch-exporter:
   enabled: false
