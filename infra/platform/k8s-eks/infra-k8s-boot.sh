@@ -159,8 +159,7 @@ helm install --namespace=pipeline stable/spinnaker --name spinnaker --wait
 # # Satisfied
 helm install --namespace=pipeline stable/prometheus --name prometheus --wait
 
-# Setup ELK-stack (elasticsearch, logstash, and kibana)
-# TODO: consider using EFK-stack instead (elasticsearch, fluentd, and kibana)
+# Setup EFK-stack (elasticsearch, fluent-bit, and kibana)
 helm install --name elk stable/elastic-stack -f elk-stack/elk-values.yaml --namespace=pipeline --wait
 helm test elk --cleanup
 
