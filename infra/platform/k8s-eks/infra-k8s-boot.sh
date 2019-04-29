@@ -155,11 +155,13 @@ helm install --namespace=pipeline stable/selenium --name selenium --set chromeDe
 ## internal URL - http://selenium-selenium-hub.pipeline:4444
 
 helm install --namespace=pipeline stable/spinnaker --name spinnaker --wait
-exit
+
 # # Satisfied
 helm install --namespace=pipeline stable/prometheus --name prometheus --wait
 
-helm install --namespace=pipeline stable/elastic-stack --name elk --wait
+# Setup EFK-stack (elasticsearch, fluent-bit, and kibana)
+helm install --name elk stable/elastic-stack -f elk-stack/elk-values.yaml --namespace=pipeline --wait
+helm test elk --cleanup
 
 # # Delight
 helm install --namespace=pipeline stable/anchore-engine --name anchore --wait
