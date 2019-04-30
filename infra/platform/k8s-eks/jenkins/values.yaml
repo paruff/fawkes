@@ -151,6 +151,7 @@ Master:
     - junit:1.27
     - nexus-jenkins-plugin:3.5.20190313-114450.3bfee7f
     - performance:3.16
+    - prometheus:1.2.4
     - selenium:3.12.0
     - slack:2.20
     - sonar:2.8.1
@@ -459,3 +460,26 @@ backup:
   # Additional support can added. Visit this repository for details
   # Ref: https://github.com/nuvo/skbn
 destination: s3://nuvo-jenkins-data/backup
+
+prometheus:
+  ## Enable exposure of a Prometheus metric endpoint (requires the 'prometheus' plugin).
+  enabled: true
+
+  ## The path where the prometheus metrics should be provided.
+  urlName: prometheus-metricz
+
+  ## Not sure what this does. It's not documented and isn't an option in the UI.
+  # additionalPath:
+
+  ## The default namespace (default value is 'default').
+  ## Setting this to an empty value will return the build values as Jenkins metrics.
+  defaultNamespace: jenkins_test
+
+  ## Enable authentication for the Prometheus endpoint.
+  useAuthenticatedEndpoint: false
+
+  countSuccessfulBuilds: true
+  countUnstableBuilds: true
+  countFailedBuilds: true
+  countNotBuiltBuilds: true
+  countAbortedBuilds: true

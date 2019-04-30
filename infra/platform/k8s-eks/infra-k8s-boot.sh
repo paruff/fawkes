@@ -130,8 +130,8 @@ else
   helm install --namespace=pipeline stable/jenkins --name jenkins -f jenkins/values.yaml --wait 
 fi
 echo "Jenkins admin password:"
-printf $(kubectl get secret --namespace pipelines jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
-export JENKINS_IP=$(kubectl get svc --namespace pipelines jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+printf $(kubectl get secret --namespace pipeline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+export JENKINS_IP=$(kubectl get svc --namespace pipeline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
 
 echo "Jenkins LB URL"http://$JENKINS_IP:8080/login
 # printf $(kubectl get secret --namespace pipeline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
