@@ -32,9 +32,9 @@ sleep 20
 # END Cleanup
 
 # dry-run only
-# kubectl create secret generic --namespace pipeline prometheus-prometheus-oper-prometheus-scrape-confg --from-file=prometheus-additional.yaml --dry-run -oyaml > additional-scrape-configs.yaml
+# kubectl create secret generic --namespace pipeline prometheus-prometheus-oper-prometheus-scrape-confg --from-file=additional-scrape-configs.yaml --dry-run -oyaml > additional-scrape-configs-secret.yaml
 
-kubectl create secret generic --namespace pipeline prometheus-prometheus-oper-prometheus-scrape-confg --from-file=prometheus-additional.yaml
+kubectl create secret generic --namespace pipeline prometheus-prometheus-oper-prometheus-scrape-confg --from-file=additional-scrape-configs.yaml
 helm install --name prometheus --namespace pipeline -f prometheus-values.yaml stable/prometheus-operator --wait
 
 # kubectl get crd
