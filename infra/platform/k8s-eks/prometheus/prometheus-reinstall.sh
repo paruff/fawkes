@@ -43,11 +43,13 @@ helm install --name prometheus --namespace pipeline -f prometheus-values.yaml st
 
 # Alert manager port-forward example
 # kubectl port-forward -n pipeline alertmanager-prometheus-prometheus-oper-alertmanager-0 9093
+# more generic way
 # kubectl port-forward -n pipeline svc/alertmanager-operated 9093:9093
 
 # Prometheus server port-forward example
 # kubectl port-forward -n pipeline prometheus-prometheus-prometheus-oper-prometheus-0 9090
+# more generic way
 # kubectl port-forward -n pipeline svc/prometheus-prometheus-oper-prometheus 9090:9090
 
 # echo "additional-scrape-configs:"
-# printf $(kubectl get secret --namespace pipeline additional-scrape-configs -o jsonpath="{.data.*}") | base64 --decode
+# printf $(kubectl get secret --namespace pipeline prometheus-prometheus-oper-prometheus-scrape-confg -o jsonpath="{.data.*}") | base64 --decode
