@@ -51,5 +51,8 @@ helm install --name prometheus --namespace pipeline -f prometheus-values.yaml st
 # more generic way
 # kubectl port-forward -n pipeline svc/prometheus-prometheus-oper-prometheus 9090:9090
 
+# Grafana port-forward example
+# kubectl port-forward -n pipeline svc/prometheus-grafana 80:3000
+
 # echo "additional-scrape-configs:"
 # printf $(kubectl get secret --namespace pipeline prometheus-prometheus-oper-prometheus-scrape-confg -o jsonpath="{.data.*}") | base64 --decode
