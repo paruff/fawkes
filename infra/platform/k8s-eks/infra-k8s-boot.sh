@@ -157,7 +157,8 @@ helm install --namespace=pipeline stable/selenium --name selenium --set chromeDe
 helm install --namespace=pipeline stable/spinnaker --name spinnaker --wait
 
 # # Satisfied
-helm install --namespace=pipeline stable/prometheus --name prometheus --wait
+kubectl create secret generic --namespace pipeline additional-scrape-configs --from-file=prometheus/prometheus-additional.yaml --dry-run -oyaml > prometheus/additional-scrape-configs.yaml
+helm install --name prometheus --namespace pipeline -f prometheus/prometheus-values.yaml stable/prometheus-operator --wait
 
 # Setup EFK-stack (elasticsearch, fluent-bit, and kibana)
 helm install --name elk stable/elastic-stack -f elk-stack/elk-values.yaml --namespace=pipeline --wait
