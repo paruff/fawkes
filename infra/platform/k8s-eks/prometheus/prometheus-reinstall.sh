@@ -22,6 +22,8 @@ kubectl delete --ignore-not-found customresourcedefinitions \
   alertmanagers.monitoring.coreos.com \
   prometheusrules.monitoring.coreos.com
 
+kubectl delete secret --namespace pipeline prometheus-prometheus-oper-prometheus-scrape-confg
+
 # catch all in case part of the release remains
 helm del --purge prometheus
 kubectl delete pvc -l release=prometheus,component=data
@@ -29,9 +31,11 @@ kubectl delete pvc -l release=prometheus,component=data
 sleep 20
 # END Cleanup
 
-kubectl create secret generic --namespace pipeline additional-scrape-configs --from-file=prometheus-additional.yaml --dry-run -oyaml > additional-scrape-configs.yaml
-helm install --name prometheus --namespace pipeline -f prometheus-values.yaml stable/prometheus-operator
-# helm install --namespace=pipeline -f prometheus-values.yaml stable/prometheus --name prometheus --wait
+# dry-run only
+# kubectl create secret generic --namespace pipeline prometheus-prometheus-oper-prometheus-scrape-confg --from-file=prometheus-additional.yaml --dry-run -oyaml > additional-scrape-configs.yaml
+
+kubectl create secret generic --namespace pipeline prometheus-prometheus-oper-prometheus-scrape-confg --from-file=prometheus-additional.yaml
+helm install --name prometheus --namespace pipeline -f prometheus-values.yaml stable/prometheus-operator --wait
 
 # kubectl get crd
 # kubectl get pods -n pipeline
@@ -44,3 +48,6 @@ helm install --name prometheus --namespace pipeline -f prometheus-values.yaml st
 # Prometheus server port-forward example
 # kubectl port-forward -n pipeline prometheus-prometheus-prometheus-oper-prometheus-0 9090
 # kubectl port-forward -n pipeline svc/prometheus-prometheus-oper-prometheus 9090:9090
+
+# echo "additional-scrape-configs:"
+# printf $(kubectl get secret --namespace pipeline additional-scrape-configs -o jsonpath="{.data.*}") | base64 --decode

@@ -377,19 +377,19 @@ grafana:
 
   ## Configure additional grafana datasources
   ## ref: http://docs.grafana.org/administration/provisioning/#datasources
-  additionalDataSources: []
-  # - name: prometheus-sample
-  #   access: proxy
-  #   basicAuth: true
-  #   basicAuthPassword: pass
-  #   basicAuthUser: daco
-  #   editable: false
-  #   jsonData:
-  #       tlsSkipVerify: true
-  #   orgId: 1
-  #   type: prometheus
-  #   url: https://prometheus.svc:9090
-  #   version: 1
+  additionalDataSources:
+    - name: prometheus-sample
+      access: proxy
+      basicAuth: true
+      basicAuthPassword: pass
+      basicAuthUser: daco
+      editable: false
+      jsonData:
+        tlsSkipVerify: true
+      orgId: 1
+      type: prometheus
+      url: https://prometheus-prometheus-oper-prometheus.pipeline.svc.cluster.local:9090
+      version: 1
 
   ## If true, create a serviceMonitor for grafana
   ##
@@ -1233,8 +1233,11 @@ prometheus:
     ##
     
     # additionalScrapeConfigs:
-      # name: additional-scrape-configs
-      # key: prometheus-additional.yaml
+    #   name: additional-scrape-configs
+    #   key: prometheus-additional.yaml
+
+    #   name: prometheus-prometheus-oper-prometheus-scrape-confg
+    #   key: additional-scrape-configs.yaml
       
       # - job_name: jenkins
           # metrics_path: /prometheus/
@@ -1330,7 +1333,7 @@ prometheus:
     ## Enable additional scrape configs that are managed externally to this chart. Note that the prometheus
     ## will fail to provision if the correct secret does not exist.
     ##
-    additionalScrapeConfigsExternal: false
+    additionalScrapeConfigsExternal: true
 
   additionalServiceMonitors: []
   ## Name of the ServiceMonitor to create
