@@ -130,8 +130,8 @@ else
   helm install --namespace=pipeline stable/jenkins --name jenkins -f jenkins/values.yaml --wait 
 fi
 echo "Jenkins admin password:"
-printf $(kubectl get secret --namespace pipelines jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
-export JENKINS_IP=$(kubectl get svc --namespace pipelines jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+printf $(kubectl get secret --namespace pipeline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+export JENKINS_IP=$(kubectl get svc --namespace pipeline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
 
 echo "Jenkins LB URL"http://$JENKINS_IP:8080/login
 # printf $(kubectl get secret --namespace pipeline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
@@ -157,14 +157,16 @@ helm install --namespace=pipeline stable/selenium --name selenium --set chromeDe
 helm install --namespace=pipeline stable/spinnaker --name spinnaker --wait
 
 # # Satisfied
-helm install --namespace=pipeline stable/prometheus --name prometheus --wait
+kubectl create secret generic --namespace pipeline prometheus-prometheus-oper-prometheus-scrape-confg --from-file=prometheus/additional-scrape-configs.yaml
+helm install --name prometheus --namespace pipeline -f prometheus/prometheus-values.yaml stable/prometheus-operator --wait
 
 # Setup EFK-stack (elasticsearch, fluent-bit, and kibana)
 helm install --name elk stable/elastic-stack -f elk-stack/elk-values.yaml --namespace=pipeline --wait
 helm test elk --cleanup
 
 # # Delight
-helm install --namespace=pipeline stable/anchore-engine --name anchore --wait
+# TODO: mssheldon - 05/02/2019; logging is way too high for some reason.  Circle back on this later.
+# helm install --namespace=pipeline stable/anchore-engine --name anchore --wait
 
 helm install --namespace=pipeline --name jmeter stable/distributed-jmeter --wait
 
