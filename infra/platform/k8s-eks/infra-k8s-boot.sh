@@ -157,7 +157,7 @@ helm install --namespace=pipeline stable/selenium --name selenium --set chromeDe
 helm install --namespace=pipeline stable/spinnaker --name spinnaker --wait
 
 # # Satisfied
-kubectl create secret generic --namespace pipeline additional-scrape-configs --from-file=prometheus/prometheus-additional.yaml --dry-run -oyaml > prometheus/additional-scrape-configs.yaml
+kubectl create secret generic --namespace pipeline prometheus-prometheus-oper-prometheus-scrape-confg --from-file=prometheus/additional-scrape-configs.yaml
 helm install --name prometheus --namespace pipeline -f prometheus/prometheus-values.yaml stable/prometheus-operator --wait
 
 # Setup EFK-stack (elasticsearch, fluent-bit, and kibana)
@@ -165,7 +165,8 @@ helm install --name elk stable/elastic-stack -f elk-stack/elk-values.yaml --name
 helm test elk --cleanup
 
 # # Delight
-helm install --namespace=pipeline stable/anchore-engine --name anchore --wait
+# TODO: mssheldon - 05/02/2019; logging is way too high for some reason.  Circle back on this later.
+# helm install --namespace=pipeline stable/anchore-engine --name anchore --wait
 
 helm install --namespace=pipeline --name jmeter stable/distributed-jmeter --wait
 
