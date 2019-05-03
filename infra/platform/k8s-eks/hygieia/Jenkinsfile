@@ -59,9 +59,9 @@ volumes: [
         cd ..
         cd UI
             docker build -t ${regNamespace}/hygieia-ui .
-            docker tag ${regNamespace}/hygieia-ui ${regNamespace}/hygieia-api:3.0.2.${shortGitCommit}
-            docker tag ${regNamespace}/hygieia-ui ${regNamespace}/hygieia-api:3.0.2.${BUILD_NUMBER}
-            docker push ${regNamespace}/hygieia-api
+            docker tag ${regNamespace}/hygieia-ui ${regNamespace}/hygieia-ui:3.0.2.${shortGitCommit}
+            docker tag ${regNamespace}/hygieia-ui ${regNamespace}/hygieia-ui:3.0.2.${BUILD_NUMBER}
+            docker push ${regNamespace}/hygieia-ui
             """
          }
       }
