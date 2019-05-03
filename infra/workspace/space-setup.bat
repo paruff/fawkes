@@ -212,3 +212,7 @@ ECHO The application is missing.
 refreshenv
 docker-machine create --driver virtualbox default
 minikube start
+
+echo Success! Ready work in this space...
+pause >nul
+exit
