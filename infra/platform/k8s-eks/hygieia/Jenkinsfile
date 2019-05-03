@@ -38,11 +38,13 @@ volumes: [
                     git url: 'https://github.com/Hygieia/Hygieia.git'
                     sh 'cd api'
                     sh 'mvn -B  clean install' 
-                    sh '../collectors/feature/jira'
-                    sh 'mvn -B  clean install'
-                    sh 'cd ../../../hygieia-jenkins-plugin'
+                    sh '..'
+                    sh 'cd hygieia-jenkins-plugin'
                     sh 'mvn -B  clean install'
                     sh 'cd ..'
+                    sh 'cd collectors/feature/jira'
+                    sh 'mvn -B  clean install'
+                    sh 'cd ../../../''
                 }
                 
             }
