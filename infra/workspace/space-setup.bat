@@ -46,7 +46,7 @@ ECHO code exists. Let's go!
 where /q javac
 IF ERRORLEVEL 1 (
 ECHO The application is missing.
-choco install jdk11 -y
+choco install jdk8 -y
 ) ELSE (
 ECHO javac exists. Let's go!
 )
@@ -173,5 +173,42 @@ choco install minikube -y
 ECHO minikube exists. Let's go!
 )
 
+where /q terraform
+IF ERRORLEVEL 1 (
+ECHO The application is missing.
+    choco install terraform -y
+) ELSE (
+    choco upgrade terraform -y
+    ECHO terraform exists. Let's go!
+)
+
+where /q kubectl
+IF ERRORLEVEL 1 (
+ECHO The application is missing.
+    choco install kubernetes-cli -y
+) ELSE (
+    choco upgrade kubernetes-cli -y
+    ECHO kubectl exists. Let's go!
+)
+
+where /q helm
+IF ERRORLEVEL 1 (
+ECHO The application is missing.
+    choco install kubernetes-helm -y
+) ELSE (
+    choco upgrade kubernetes-helm -y
+    ECHO helm exists. Let's go!
+)
+
+where /q kubectl
+IF ERRORLEVEL 1 (
+ECHO The application is missing.
+    choco install kubernetes-cli -y
+) ELSE (
+    choco upgrade kubernetes-cli -y
+    ECHO kubectl exists. Let's go!
+)
+
 refreshenv
 docker-machine create --driver virtualbox default
+minikube start
