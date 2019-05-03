@@ -30,9 +30,9 @@ volumes: [
 
                 stage('install hygieia-core') {
                     git url: 'https://github.com/Hygieia/hygieia-core.git'
-                    sh 'cd hygieia-core'
+    //                sh 'cd hygieia-core'
                     sh 'mvn -B  clean install' 
-                    sh 'cd ..'
+    //                sh 'cd ..'
                 }
                 
                 stage('install hygieia') {
@@ -41,11 +41,6 @@ volumes: [
                     sh 'mvn -B  clean install' 
                     sh 'cd ..'
                 }
-
-                stage('Publish test results') {
-                    junit 'target/surefire-reports/*.xml'
-                } 
-                
                 
             }
         }
@@ -73,14 +68,7 @@ volumes: [
          }
       }
     }
-    stage('deploy 2 k8s') {
-      container('kubectl') {
-        sh "kubectl get pods"
-        sh "kubectl create deployment spring-petclinic --image=paruff/spring-petclinic"
-        sh "kubectl expose deployment spring-petclinic --type=LoadBalancer --port=8080"
 
-      }
-    }
 
     
     } catch (e) {
