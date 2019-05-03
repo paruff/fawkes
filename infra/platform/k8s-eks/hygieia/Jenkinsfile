@@ -36,15 +36,7 @@ volumes: [
                 
                 stage('install hygieia') {
                     git url: 'https://github.com/Hygieia/Hygieia.git'
-    //                sh 'cd api'
                     sh 'mvn -B  clean install' 
-    //                sh '..'
-    //                sh 'cd hygieia-jenkins-plugin'
-    //                sh 'mvn -B  clean install'
-    //                sh 'cd ..'
-    //                sh 'cd collectors/feature/jira'
-    //                sh 'mvn -B  clean install'
-    //                sh 'cd ../../../'
                 }
                 
             }
@@ -56,21 +48,20 @@ volumes: [
            usernameVariable: 'DOCKER_REG_USER',
            passwordVariable: 'DOCKER_REG_PASSWORD']]) {
           sh """
-          
-            docker login -u ${DOCKER_REG_USER}  -p ${DOCKER_REG_PASSWORD}
-          cd api
-            docker build -t ${regNamespace}/${artifactID} .
-            docker tag ${regNamespace}/${artifactID} ${regNamespace}/${artifactID}:${POMversion}.${shortGitCommit}
             echo $gitBranch
-            echo $branchName
-            if [ ${gitBranch} == "origin/master" ] ; then
-                docker tag ${regNamespace}/${artifactID} ${regNamespace}/${artifactID}:${POMversion}.${gitCommitCount}
-                docker tag ${regNamespace}/${artifactID} ${regNamespace}/${artifactID}:${POMversion}.${BUILD_NUMBER}
-            else
-                docker tag ${regNamespace}/${artifactID} ${regNamespace}/${artifactID}:${branchName}-${POMversion}.${gitCommitCount}
-                docker tag ${regNamespace}/${artifactID} ${regNamespace}/${artifactID}:${branchName}-${POMversion}.${BUILD_NUMBER}
-            fi
-            docker push ${regNamespace}/${artifactID}
+            echo $branchName          
+            docker login -u ${DOCKER_REG_USER}  -p ${DOCKER_REG_PASSWORD}
+        cd api
+            docker build -t ${regNamespace}/hygieia-api
+            docker tag ${regNamespace}/hygieia-api ${regNamespace}/hygieia-api:3.0.2.${shortGitCommit}
+            docker tag ${regNamespace}/hygieia-api ${regNamespace}/hygieia-api:3.0.2.${BUILD_NUMBER}
+            docker push ${regNamespace}/hygieia-api
+        cd ..
+        cd ui
+            docker build -t ${regNamespace}/hygieia-ui
+            docker tag ${regNamespace}/hygieia-ui ${regNamespace}/hygieia-api:3.0.2.${shortGitCommit}
+            docker tag ${regNamespace}/hygieia-ui ${regNamespace}/hygieia-api:3.0.2.${BUILD_NUMBER}
+            docker push ${regNamespace}/hygieia-api
             """
          }
       }
