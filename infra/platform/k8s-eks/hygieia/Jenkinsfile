@@ -1,9 +1,8 @@
 def label = "mypod-${UUID.randomUUID().toString()}"
 podTemplate(label: label, containers: [
     containerTemplate(name: 'maven', image: 'maven:3.6.0-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
-    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true)
-  ],
+    containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true)
+],
 volumes: [
     hostPathVolume(mountPath: '/root/.m2/repository', hostPath: '/root/.m2/repository'),
   hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
@@ -37,9 +36,9 @@ volumes: [
                 
                 stage('install hygieia') {
                     git url: 'https://github.com/Hygieia/Hygieia.git'
-                    sh 'cd Hygieia'
+     //               sh 'cd Hygieia'
                     sh 'mvn -B  clean install' 
-                    sh 'cd ..'
+     //               sh 'cd ..'
                 }
                 
             }
@@ -51,7 +50,9 @@ volumes: [
            usernameVariable: 'DOCKER_REG_USER',
            passwordVariable: 'DOCKER_REG_PASSWORD']]) {
           sh """
+          
             docker login -u ${DOCKER_REG_USER}  -p ${DOCKER_REG_PASSWORD}
+          cd ui
             docker build -t ${regNamespace}/${artifactID} .
             docker tag ${regNamespace}/${artifactID} ${regNamespace}/${artifactID}:${POMversion}.${shortGitCommit}
             echo $gitBranch
