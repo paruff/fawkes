@@ -46,19 +46,15 @@ volumes: [
            usernameVariable: 'DOCKER_REG_USER',
            passwordVariable: 'DOCKER_REG_PASSWORD']]) {
           sh """
-          #  export GITCount = \$(git rev-list --all --count)
-          #  echo $GITCount
             echo $branchName          
             docker login -u ${DOCKER_REG_USER}  -p ${DOCKER_REG_PASSWORD}
         cd api
             docker build -t ${regNamespace}/hygieia-api .
-          #  docker tag ${regNamespace}/hygieia-api ${regNamespace}/hygieia-api:3.0.2.$GITCount
             docker tag ${regNamespace}/hygieia-api ${regNamespace}/hygieia-api:3.0.2.${BUILD_NUMBER}
             docker push ${regNamespace}/hygieia-api
         cd ..
         cd UI
             docker build -t ${regNamespace}/hygieia-ui .
-          #  docker tag ${regNamespace}/hygieia-ui ${regNamespace}/hygieia-ui:3.0.2.$GITCount
             docker tag ${regNamespace}/hygieia-ui ${regNamespace}/hygieia-ui:3.0.2.${BUILD_NUMBER}
             docker push ${regNamespace}/hygieia-ui
             """
