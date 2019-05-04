@@ -46,8 +46,8 @@ volumes: [
            usernameVariable: 'DOCKER_REG_USER',
            passwordVariable: 'DOCKER_REG_PASSWORD']]) {
           sh """
-            GITCount = \$(git rev-list --all --count)
-            echo ${GITCount}
+            export GITCount = \$(git rev-list --all --count)
+            echo $GITCount
             echo $branchName          
             docker login -u ${DOCKER_REG_USER}  -p ${DOCKER_REG_PASSWORD}
         cd api
