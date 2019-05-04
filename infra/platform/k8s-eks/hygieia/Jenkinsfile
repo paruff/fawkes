@@ -51,6 +51,7 @@ volumes: [
             echo $gitBranch
             echo $branchName          
             docker login -u ${DOCKER_REG_USER}  -p ${DOCKER_REG_PASSWORD}
+            docker-compose build
         cd api
             docker build -t ${regNamespace}/hygieia-api .
             docker tag ${regNamespace}/hygieia-api ${regNamespace}/hygieia-api:3.0.2.${shortGitCommit}
