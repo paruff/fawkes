@@ -2,7 +2,7 @@ def label = "mypod-${UUID.randomUUID().toString()}"
 podTemplate(label: label, containers: [
     containerTemplate(name: 'maven', image: 'maven:3.6.1-jdk-8', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
-    containerTemplate(name: 'compose', image: 'docker/compose', command: 'cat', ttyEnabled: true)
+    containerTemplate(name: 'compose', image: 'compose', command: 'cat', ttyEnabled: true)
 ],
 volumes: [
     hostPathVolume(mountPath: '/root/.m2/repository', hostPath: '/root/.m2/repository'),
