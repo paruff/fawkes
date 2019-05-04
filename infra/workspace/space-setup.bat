@@ -51,6 +51,14 @@ choco install jdk8 -y
 ECHO javac exists. Let's go!
 )
 
+where /q chef
+IF ERRORLEVEL 1 (
+ECHO The application is missing.
+choco install chefdk -y
+) ELSE (
+ECHO docker exists. Let's go!
+)
+
 where /q docker
 IF ERRORLEVEL 1 (
 ECHO The application is missing.

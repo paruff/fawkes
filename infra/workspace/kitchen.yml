@@ -1,0 +1,32 @@
+driver:
+  name: ec2
+  customize:
+    cpus: 2
+    memory: 4096
+
+transport:
+  name: winrm
+  elevated: true
+
+provisioner:
+  name: shell
+  script:    'space-setup.bat'
+  
+verifier:
+  name: inspec
+
+platforms:
+  - name: windows
+    # driver:
+    #   box: peru/windows-10-enterprise-x64-eval
+      # working
+      #  senglin/win-10-enterprise-vs2015community
+      # untested
+      #hakonen/windows-10-n-pro-en-x86_64
+      # peru/windows-10-enterprise-x64-eval
+
+suites:
+  - name: default
+    verifier:
+      inspec_tests:
+        - test/integration/default
