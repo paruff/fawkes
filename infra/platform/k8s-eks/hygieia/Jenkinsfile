@@ -1,7 +1,8 @@
 def label = "mypod-${UUID.randomUUID().toString()}"
 podTemplate(label: label, containers: [
     containerTemplate(name: 'maven', image: 'maven:3.6.1-jdk-8', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true)
+    containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'compose', image: 'docker/compose', command: 'cat', ttyEnabled: true)
 ],
 volumes: [
     hostPathVolume(mountPath: '/root/.m2/repository', hostPath: '/root/.m2/repository'),
@@ -29,9 +30,7 @@ volumes: [
 
                 stage('install hygieia-core') {
                     git url: 'https://github.com/Hygieia/hygieia-core.git'
-    //                sh 'cd hygieia-core'
                     sh 'mvn -B  clean install' 
-    //                sh 'cd ..'
                 }
                 
                 stage('install hygieia') {
@@ -42,13 +41,14 @@ volumes: [
             }
         }
         stage('Create Docker images') {
-          container('docker') {
+          container('compose') {
          withCredentials([[$class: 'UsernamePasswordMultiBinding',
            credentialsId: 'dockerreg',
            usernameVariable: 'DOCKER_REG_USER',
            passwordVariable: 'DOCKER_REG_PASSWORD']]) {
           sh """
-            echo $gitBranch
+            GITCount = $(git rev-list --all --count)
+            echo ${GITCount}
             echo $branchName          
             docker login -u ${DOCKER_REG_USER}  -p ${DOCKER_REG_PASSWORD}
             docker-compose build
