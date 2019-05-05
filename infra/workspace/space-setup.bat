@@ -208,19 +208,10 @@ ECHO The application is missing.
     ECHO helm exists. Let's go!
 )
 
-where /q kubectl
-IF ERRORLEVEL 1 (
-ECHO The application is missing.
-    choco install kubernetes-cli -y
-) ELSE (
-    choco upgrade kubernetes-cli -y
-    ECHO kubectl exists. Let's go!
-)
-
 refreshenv
 docker-machine create --driver virtualbox default
 minikube start
 
 echo Success! Ready work in this space...
-pause >nul
+
 exit

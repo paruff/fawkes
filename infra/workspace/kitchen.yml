@@ -1,5 +1,6 @@
 driver:
-  name: ec2
+  name: vagrant
+#  tag: test-kitchen
   customize:
     cpus: 2
     memory: 4096
@@ -17,16 +18,24 @@ verifier:
 
 platforms:
   - name: windows
-    # driver:
-    #   box: peru/windows-10-enterprise-x64-eval
+    driver:
+      box: jhakonen/windows-10-n-pro-en-x86_64
       # working
-      #  senglin/win-10-enterprise-vs2015community
+      #  senglin/win-10-enterprise-vs2015community # 3 yr old with vs
       # untested
-      #hakonen/windows-10-n-pro-en-x86_64
-      # peru/windows-10-enterprise-x64-eval
+      #  jhakonen/windows-10-n-pro-en-x86_64 # 2 yr old
+      # not working
+      #  peru/windows-10-enterprise-x64-eval # well doc and new
 
 suites:
   - name: default
     verifier:
       inspec_tests:
         - test/integration/default
+  - name: devsec
+    verifier:
+      inspec_tests:
+        - name: dev-sec/windows-baseline  # name only defaults to supermarket
+        - name: dev-sec/windows-baseline  # alternatively, you can explicitly specify that the profile is from supermarket in this way
+          supermarket: dev-sec/windows-baseline
+          supermarket_url: https://github.com/dev-sec/windows-baseline
