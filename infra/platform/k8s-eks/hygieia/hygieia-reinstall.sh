@@ -24,3 +24,13 @@ kubectl create -f db-deployment.yaml
 
 kubectl create -f db-service.yaml
 # kubectl port-forward svc/db 27017:27017
+
+# TODO: may need to wait a bit here until mongo is up and initial user is created
+
+kubectl create -f api-deployment.yaml
+# kubectl logs -f deploy/api
+kubectl create -f api-service.yaml
+
+kubectl create -f ui-deployment.yaml
+# kubectl logs -f deploy/ui
+kubectl create -f ui-service.yaml
