@@ -3,8 +3,15 @@
 # Imperative install/reinstall of Hygieia
 
 # BEGIN Cleanup
+kubectl delete svc ui
+kubectl delete deployment ui
+
+kubectl delete svc api
+kubectl delete deployment api
+
 kubectl delete svc db
 kubectl delete deployment db
+
 kubectl delete configmap mongo-initdb
 kubectl delete pvc db-data
 
@@ -25,12 +32,17 @@ kubectl create -f db-deployment.yaml
 kubectl create -f db-service.yaml
 # kubectl port-forward svc/db 27017:27017
 
-# TODO: may need to wait a bit here until mongo is up and initial user is created
+# wait a bit here until mongo is up and initial user is created
+sleep 30
 
 kubectl create -f api-deployment.yaml
 # kubectl logs -f deploy/api
 kubectl create -f api-service.yaml
 
+# wait a bit here until initial mongo collections are created by the API
+sleep 30
+
 kubectl create -f ui-deployment.yaml
 # kubectl logs -f deploy/ui
 kubectl create -f ui-service.yaml
+# kubectl port-forward svc/ui 3000:3000
