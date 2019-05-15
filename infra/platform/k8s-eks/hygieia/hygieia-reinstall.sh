@@ -3,6 +3,8 @@
 # Imperative install/reinstall of Hygieia
 
 # BEGIN Cleanup
+kubectl --namespace pipeline delete deployment jenkins-build-collector
+
 kubectl --namespace pipeline delete svc ui
 kubectl --namespace pipeline delete deployment ui
 
@@ -49,3 +51,7 @@ kubectl create --namespace pipeline -f ui-deployment.yaml
 # kubectl --namespace pipeline logs -f deploy/ui
 kubectl create --namespace pipeline -f ui-service.yaml
 # kubectl port-forward --namespace pipeline svc/ui 3000:3000
+
+# Add Collectors
+
+kubectl create --namespace pipeline -f jenkins-build-collector-deployment.yaml
