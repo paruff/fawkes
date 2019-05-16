@@ -22,10 +22,11 @@ Hygieia Jenkins plugin is available at: https://hygieia.github.io/Hygieia/hygiei
 2. general issue #1 (see below) applied
 3. custom docker image then built, tagged and deployed.
 4. had to manually create an API Key in jenkins to place in environment variable JENKINS_API_KEY
-5. Jenkins URL passed needs to match our collector configuration.  Jenkins needs to pass an accessible FQDN or else just make sure that hygieia and jenkins are in the same k8s cluster were jenkins host is just 'jenkins' internally.  The drawback here is that URLs will not be clickable by dashboard users.
+5. Jenkins URL passed needs to match our collector configuration.  Jenkins needs to pass an accessible FQDN or else just make sure that hygieia and jenkins are in the same k8s cluster were jenkins host is just 'jenkins' internally.  The drawback here is that URLs will not be clickable by dashboard users.  It is recommended to set the Jenkins URL inside "Manage Jenkins" -> "System Configuration".  Jenkins cannot reliably know how to get back to itself without this set--generated URLs will be unreachable otherwise.
 
 
 ## General Issues
 
 1. see: https://github.com/Hygieia/Hygieia/issues/2681 -- Inconsistencies in docker property-builder script causing unexpected failure due to misconfiguration
+2. Had to stop using Dynamically built docker images.  It resulted in unpredictable results.
 
