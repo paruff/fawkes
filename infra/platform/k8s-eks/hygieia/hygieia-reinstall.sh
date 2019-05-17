@@ -3,8 +3,8 @@
 # Imperative install/reinstall of Hygieia
 
 # BEGIN Cleanup
-# kubectl --namespace pipeline delete deployment jenkins-cucumber-test-collector
-# kubectl --namespace pipeline delete deployment jenkins-codequality-collector
+kubectl --namespace pipeline delete deployment jenkins-cucumber-test-collector
+kubectl --namespace pipeline delete deployment jenkins-codequality-collector
 kubectl --namespace pipeline delete deployment jenkins-build-collector
 
 kubectl --namespace pipeline delete svc ui
@@ -56,5 +56,5 @@ kubectl create --namespace pipeline -f ui-service.yaml
 
 # Add Collectors
 kubectl create --namespace pipeline -f jenkins-build-collector-deployment.yaml
-# kubectl create --namespace pipeline -f jenkins-codequality-collector-deployment.yaml
-# kubectl create --namespace pipeline -f jenkins-cucumber-test-collector-deployment.yaml
+kubectl create --namespace pipeline -f jenkins-codequality-collector-deployment.yaml
+kubectl create --namespace pipeline -f jenkins-cucumber-test-collector-deployment.yaml
