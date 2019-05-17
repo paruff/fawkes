@@ -42,6 +42,7 @@ kubectl create --namespace pipeline -f db-service.yaml
 # wait a bit here until mongo is up and initial user is created
 sleep 30
 
+# todo: use LDAP auth. see: https://github.com/Hygieia/Hygieia/issues/1984
 kubectl create --namespace pipeline -f api-deployment.yaml
 # kubectl --namespace pipeline logs -f deploy/api
 kubectl create --namespace pipeline -f api-service.yaml
