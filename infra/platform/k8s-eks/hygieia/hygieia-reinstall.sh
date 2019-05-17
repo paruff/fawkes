@@ -2,7 +2,14 @@
 
 # Imperative install/reinstall of Hygieia
 
+# Note: resource requirements for these deployments come in at about 4Gb
+# For minikube deployments be sure to configure enough memory.  At minimum do:
+# 'minikube config set memory 4096' (after minikube stop and minikube delete as needed)
+# you can always check utilization with 'kubectl describe nodes -n pipeline'
+
 # BEGIN Cleanup
+kubectl --namespace pipeline delete deployment gitlab-feature-collector
+kubectl --namespace pipeline delete deployment gitlab-scm-collector
 kubectl --namespace pipeline delete deployment jenkins-cucumber-test-collector
 kubectl --namespace pipeline delete deployment jenkins-codequality-collector
 kubectl --namespace pipeline delete deployment jenkins-build-collector
@@ -59,3 +66,5 @@ kubectl create --namespace pipeline -f ui-service.yaml
 kubectl create --namespace pipeline -f jenkins-build-collector-deployment.yaml
 kubectl create --namespace pipeline -f jenkins-codequality-collector-deployment.yaml
 kubectl create --namespace pipeline -f jenkins-cucumber-test-collector-deployment.yaml
+kubectl create --namespace pipeline -f gitlab-scm-collector-deployment.yaml
+kubectl create --namespace pipeline -f gitlab-feature-collector-deployment.yaml

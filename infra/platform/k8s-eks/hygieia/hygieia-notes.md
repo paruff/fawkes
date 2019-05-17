@@ -24,6 +24,10 @@ Hygieia Jenkins plugin is available at: https://hygieia.github.io/Hygieia/hygiei
 4. had to manually create an API Key in jenkins to place in environment variable JENKINS_API_KEY
 5. Jenkins URL passed needs to match our collector configuration.  Jenkins needs to pass an accessible FQDN or else just make sure that hygieia and jenkins are in the same k8s cluster were jenkins host is just 'jenkins' internally.  The drawback here is that URLs will not be clickable by dashboard users.  It is recommended to set the Jenkins URL inside "Manage Jenkins" -> "System Configuration".  Jenkins cannot reliably know how to get back to itself without this set--generated URLs will be unreachable otherwise.
 
+## gitlab-scm-collector AND gitlab-feature-collector
+
+1. create an API Access Token for use in environment variable: GITLAB_API_TOKEN
+
 
 ## General Issues
 

@@ -19,7 +19,16 @@ spec:
         io.kompose.service: gitlab-feature-collector
     spec:
       containers:
-      - image: hygieia-gitlab-feature-collector
+      - env:
+        - name: TEST_SCRIPT
+          value: fixme
+        - name: GITLAB_API_TOKEN
+          value: sRGcm5hHPpzT7T59obh7
+        - name: GITLAB_CRON
+          value: 0 0/5 * * * *
+        - name: MONGO_PORT
+          value: tcp://db:27017
+        image: mssheldon/hygieia-gitlab-feature-collector
         name: gitlab-feature-collector
         resources: {}
       restartPolicy: Always
