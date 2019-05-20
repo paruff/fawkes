@@ -16,7 +16,7 @@ volumes: [
     def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
         
         stage('Get the project') {
-            checkout scm
+//            checkout scm
             container('terraform') {
 
                 stage('Terrafor init and apply') {
