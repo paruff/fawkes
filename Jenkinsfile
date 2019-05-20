@@ -20,6 +20,7 @@ volumes: [
             container('terraform') {
 
                 stage('Terrafor init and apply') {
+                    sh 'echo AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} > .aws/credentials'
                     sh 'cd infra/platform/k8s-eks && terraform init && terraform apply --auto-approve'
                 }
                 
