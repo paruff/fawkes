@@ -23,10 +23,6 @@ volumes: [
                     sh 'cd infra/platform/k8s-eks && terraform init && terraform apply --auto-approve'
                 }
                 
-                stage('Load modules') {
-                    sh 'yarn install'
-                }
-                
                 stage('Test') {
                     sh '''
                       echo "$(npm bin)/ng test --progress=false --watch false"
@@ -34,46 +30,34 @@ volumes: [
                     '''
                   //junit "test-results.xml"
                 }
-                
-// TODO
-//  sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target               
-//                stage('Scan components Maven project') {
-//                    sh 'mvn -B -Djavax.net.ssl.trustStore=/path/to/cacerts dependency-check:check'
-//                }
-            
+                          
                 stage 'Package and Code Analysis'
                     withSonarQubeEnv {
                         sh '$(npm bin)/ng lint'
                         sh 'sonar-scanner  -Dsonar.projectKey=angular-conduit-ui -Dsonar.sources=.' 
                     }
-
-                    stage('SonarQube analysis') {
-    // requires SonarQube Scanner 2.8+
-    def scannerHome = tool 'SonarQubeScanner';
-    withSonarQubeEnv('My SonarQube Server') {
-      sh "${scannerHome}/bin/sonar-scanner"
-    }
-  }
-                
-                stage('Build') {
-                    sh '$(npm bin)/ng build --prod --build-optimizer'
-                } 
-                
             }
-        }
-        stage('Create Docker images') {
-      container('docker') {
-        withCredentials([[$class: 'UsernamePasswordMultiBinding',
-          credentialsId: 'dockerhub',
-          usernameVariable: 'DOCKER_HUB_USER',
-          passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+
+    stage('Prepare k8s for Pipeline') {
+      container('kubectl') {
           sh """
             rm -rf node_modules
             docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
             docker build -t paruff/realworld:${gitCommit} .
             docker push paruff/realworld:${gitCommit}
             """
-        }
+      }
+    }
+
+        stage('helm  pipeline services') {
+      container('helm') {
+          sh """
+            rm -rf node_modules
+            docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
+            docker build -t paruff/realworld:${gitCommit} .
+            docker push paruff/realworld:${gitCommit}
+            """
+        
       }
     }
 
