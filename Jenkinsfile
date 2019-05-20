@@ -1,6 +1,6 @@
 def label = "mypod-${UUID.randomUUID().toString()}"
 podTemplate(label: label, containers: [
-    containerTemplate(name: 'kubectl', image: 'hashicorp/terraform:light', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'terraform', image: 'hashicorp/terraform:light', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true)
   ],
@@ -17,10 +17,10 @@ volumes: [
         
         stage('Get the project') {
             checkout scm
-            container('node') {
+            container('terraform') {
 
-                stage('Validate project') {
-                    sh 'echo  "validate"'
+                stage('Terrafor init and apply') {
+                    sh 'cd infra/platform/k8s-eks && terraform init && terraform apply --auto-approve'
                 }
                 
                 stage('Load modules') {
