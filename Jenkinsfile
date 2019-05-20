@@ -37,6 +37,7 @@ volumes: [
                         sh 'sonar-scanner  -Dsonar.projectKey=angular-conduit-ui -Dsonar.sources=.' 
                     }
             }
+        }
 
     stage('Prepare k8s for Pipeline') {
       container('kubectl') {
@@ -49,7 +50,7 @@ volumes: [
       }
     }
 
-        stage('helm  pipeline services') {
+    stage('helm  pipeline services') {
       container('helm') {
           sh """
             rm -rf node_modules
