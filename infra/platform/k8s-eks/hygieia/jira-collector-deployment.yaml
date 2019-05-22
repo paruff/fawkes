@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+      convert
+    kompose.version: 1.18.0 (06a2e56)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: jira-collector
+  name: jira-collector
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: jira-collector
+    spec:
+      containers:
+      - env:
+        - name: PROP_FILE
+          value: application.properties
+        - name: JIRA_CREDENTIALS
+          value: bWljaGFlbC5zaGVsZG9uQHVuaXN5cy5jb206RFZpYzBicGxBOUV2Nm9DbGRabUxDQUIw
+        - name: JIRA_CRON
+          value: 0 0/5 * * * *
+        - name: JIRA_BOARD_AS_TEAM
+          value: "true"  
+        - name: JIRA_BASE_URL
+          value: "https://unisys-fed-as.atlassian.net"
+        - name: JIRA_QUERY_ENDPOINT
+          value: "rest/api/2/"  
+        - name: MONGO_PORT
+          value: tcp://db:27017
+        image: mssheldon/hygieia-jira-feature-collector
+        name: jira-collector
+        resources: {}
+      restartPolicy: Always
+status: {}

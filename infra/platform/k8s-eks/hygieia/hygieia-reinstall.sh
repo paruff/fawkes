@@ -8,6 +8,7 @@
 # you can always check utilization with 'kubectl describe nodes -n pipeline'
 
 # BEGIN Cleanup
+kubectl --namespace pipeline delete deployment jira-collector
 kubectl --namespace pipeline delete deployment gitlab-feature-collector
 kubectl --namespace pipeline delete deployment gitlab-scm-collector
 kubectl --namespace pipeline delete deployment jenkins-cucumber-test-collector
@@ -63,6 +64,10 @@ kubectl create --namespace pipeline -f ui-service.yaml
 # kubectl port-forward --namespace pipeline svc/ui 3000:3000
 
 # Add Collectors
+# requires an api token in place of password for REST calls
+#  obtained by:  echo -n michael.sheldon@unisys.com:THETOKENCREATEDONUSERPROFILE | base64
+kubectl create --namespace pipeline -f jira-collector-deployment.yaml
+
 kubectl create --namespace pipeline -f jenkins-build-collector-deployment.yaml
 kubectl create --namespace pipeline -f jenkins-codequality-collector-deployment.yaml
 kubectl create --namespace pipeline -f jenkins-cucumber-test-collector-deployment.yaml
