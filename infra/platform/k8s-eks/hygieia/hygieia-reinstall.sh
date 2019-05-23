@@ -8,7 +8,7 @@
 # you can always check utilization with 'kubectl describe nodes -n pipeline'
 
 # BEGIN Cleanup
-
+kubectl --namespace pipeline delete deployment score-collector
 kubectl --namespace pipeline delete deployment sonar-codequality-collector
 
 #  ideally should remove collectors from mongo unless completely starting over
@@ -34,10 +34,9 @@ kubectl --namespace pipeline delete configmap mongo-initdb
 kubectl --namespace pipeline delete pvc db-data
 
 sleep 20
-
 # END Cleanup
 
-# TODO: remove this line when calling this script from infra-k8s-boot.sh
+# TODO: the following line is redundant when calling this script from infra-k8s-boot.sh
 kubectl create namespace pipeline
 
 kubectl create --namespace pipeline -f db-data-persistentvolumeclaim.yaml
@@ -83,3 +82,5 @@ kubectl create --namespace pipeline -f gitlab-scm-collector-deployment.yaml
 # kubectl create --namespace pipeline -f gitlab-feature-collector-deployment.yaml
 
 kubectl create --namespace pipeline -f sonar-codequality-collector-deployment.yaml
+
+kubectl create --namespace pipeline -f score-collector-deployment.yaml
