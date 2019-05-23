@@ -15,7 +15,7 @@ kubectl --namespace pipeline delete deployment sonar-codequality-collector
 # example: db.collectors.remove({"_id": ObjectId("4d512b45cc9374271b02ec4f")})
 kubectl --namespace pipeline delete deployment jira-collector
 
-kubectl --namespace pipeline delete deployment gitlab-feature-collector
+# kubectl --namespace pipeline delete deployment gitlab-feature-collector
 kubectl --namespace pipeline delete deployment gitlab-scm-collector
 # kubectl --namespace pipeline delete deployment jenkins-cucumber-test-collector
 # kubectl --namespace pipeline delete deployment jenkins-codequality-collector
@@ -77,7 +77,9 @@ kubectl create --namespace pipeline -f jira-collector-deployment.yaml
 kubectl create --namespace pipeline -f jenkins-build-collector-deployment.yaml
 # kubectl create --namespace pipeline -f jenkins-codequality-collector-deployment.yaml
 # kubectl create --namespace pipeline -f jenkins-cucumber-test-collector-deployment.yaml
+
 kubectl create --namespace pipeline -f gitlab-scm-collector-deployment.yaml
-kubectl create --namespace pipeline -f gitlab-feature-collector-deployment.yaml
+
+# kubectl create --namespace pipeline -f gitlab-feature-collector-deployment.yaml
 
 kubectl create --namespace pipeline -f sonar-codequality-collector-deployment.yaml
