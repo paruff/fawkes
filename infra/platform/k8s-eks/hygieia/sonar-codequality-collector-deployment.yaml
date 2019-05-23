@@ -19,7 +19,20 @@ spec:
         io.kompose.service: sonar-codequality-collector
     spec:
       containers:
-      - image: mssheldon/hygieia-sonar-codequality-collector
+      - env:
+        - name: PROP_FILE
+          value: application.properties
+        - name: SONAR_CRON
+          value: 0 0/5 * * * *
+        - name: SONAR_URL
+          value: http://a116e8fb55d3811e985de0ebf3e1312a-120804566.us-east-1.elb.amazonaws.com:9000
+        - name: SONAR_USERNAME
+          value: admin
+        - name: SONAR_PASSWORD
+          value: admin
+        - name: SONAR_VERSION
+          value: "7.6" 
+        image: mssheldon/hygieia-sonar-codequality-collector
         name: sonar-codequality-collector
         resources: {}
       restartPolicy: Always
