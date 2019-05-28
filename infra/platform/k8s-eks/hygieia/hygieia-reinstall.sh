@@ -8,17 +8,13 @@
 # you can always check utilization with 'kubectl describe nodes -n pipeline'
 
 # BEGIN Cleanup
-kubectl --namespace pipeline delete deployment score-collector
-kubectl --namespace pipeline delete deployment sonar-codequality-collector
 
 #  ideally should remove collectors from mongo unless completely starting over
 # example: db.collectors.remove({"_id": ObjectId("4d512b45cc9374271b02ec4f")})
+kubectl --namespace pipeline delete deployment score-collector
+kubectl --namespace pipeline delete deployment sonar-codequality-collector
 kubectl --namespace pipeline delete deployment jira-collector
-
-# kubectl --namespace pipeline delete deployment gitlab-feature-collector
 kubectl --namespace pipeline delete deployment gitlab-scm-collector
-# kubectl --namespace pipeline delete deployment jenkins-cucumber-test-collector
-# kubectl --namespace pipeline delete deployment jenkins-codequality-collector
 kubectl --namespace pipeline delete deployment jenkins-build-collector
 
 kubectl --namespace pipeline delete svc ui
@@ -74,12 +70,8 @@ kubectl create --namespace pipeline -f ui-service.yaml
 kubectl create --namespace pipeline -f jira-collector-deployment.yaml
 
 kubectl create --namespace pipeline -f jenkins-build-collector-deployment.yaml
-# kubectl create --namespace pipeline -f jenkins-codequality-collector-deployment.yaml
-# kubectl create --namespace pipeline -f jenkins-cucumber-test-collector-deployment.yaml
 
 kubectl create --namespace pipeline -f gitlab-scm-collector-deployment.yaml
-
-# kubectl create --namespace pipeline -f gitlab-feature-collector-deployment.yaml
 
 kubectl create --namespace pipeline -f sonar-codequality-collector-deployment.yaml
 
