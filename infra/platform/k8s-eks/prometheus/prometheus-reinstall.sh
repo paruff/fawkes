@@ -52,7 +52,14 @@ helm install --name prometheus --namespace pipeline -f prometheus-values.yaml st
 # kubectl port-forward -n pipeline svc/prometheus-prometheus-oper-prometheus 9090:9090
 
 # Grafana port-forward example
-# kubectl port-forward -n pipeline svc/prometheus-grafana 80:3000
+# export POD_NAME=$(kubectl get pods --namespace pipeline -l "app=grafana,release=prometheus" -o jsonpath="{.items[0].metadata.name}")
+# echo "Visit http://127.0.0.1:3000 to use Grafana"
+# kubectl port-forward --namespace pipeline $POD_NAME 80:3000
+# more generic way
+# kubectl port-forward -n pipeline svc/prometheus-grafana 80
+# login (default: admin/prom-operator)
+echo "prometheus-grafana admin password:"
+printf $(kubectl get secret --namespace pipeline prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode);echo
 
 # echo "additional-scrape-configs:"
 # printf $(kubectl get secret --namespace pipeline prometheus-prometheus-oper-prometheus-scrape-confg -o jsonpath="{.data.*}") | base64 --decode
