@@ -72,6 +72,7 @@ kubectl create --namespace pipeline -f jira-collector-deployment.yaml
 kubectl create --namespace pipeline -f jenkins-build-collector-deployment.yaml
 
 kubectl create --namespace pipeline -f gitlab-scm-collector-deployment.yaml
+# kubectl --namespace pipeline logs -f deploy/gitlab-scm-collector
 
 kubectl create --namespace pipeline -f sonar-codequality-collector-deployment.yaml
 
