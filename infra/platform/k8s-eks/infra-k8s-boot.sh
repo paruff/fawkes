@@ -170,4 +170,8 @@ helm test elk --cleanup
 
 helm install --namespace=pipeline --name jmeter stable/distributed-jmeter --wait
 
+cd hygieia
+./hygieia-reinstall.sh
+cd ..
+
 # helm install --namespace=pipeline stable/ --name 
