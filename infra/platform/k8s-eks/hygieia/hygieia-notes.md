@@ -1,6 +1,15 @@
 # Hygieia Notes
 
-Here are listed any special configuration items that required special consideration.
+## Deployment Environment Specific
+
+Update these Environment Variables (at minimum) in the specified yaml files
+
+1. jenkins-build-collector-deployment.yaml (JENKINS_API_KEY, JENKINS_MASTER)
+2. sonar-codequality-collector-deployment.yaml (SONAR_URL)
+3. jira-collector-deployment.yaml (JIRA_CREDENTIALS, JIRA_BASE_URL)
+4. gitlab-scm-collector (GITLAB_API_TOKEN)
+
+Here are listed any configuration items that required special consideration.
 
 ## gitlab-scm-collector
 
@@ -34,6 +43,10 @@ Hygieia Jenkins plugin is available at: https://hygieia.github.io/Hygieia/hygiei
 3. custom docker image then built, tagged and deployed.
 4. had to manually create an API Key in jenkins to place in environment variable JENKINS_API_KEY
 5. Jenkins URL passed needs to match our collector configuration.  Jenkins needs to pass an accessible FQDN or else just make sure that hygieia and jenkins are in the same k8s cluster were jenkins host is just 'jenkins' internally.  The drawback here is that URLs will not be clickable by dashboard users.  It is recommended to set the Jenkins URL inside "Manage Jenkins" -> "System Configuration".  Jenkins cannot reliably know how to get back to itself without this set--generated URLs will be unreachable otherwise.
+
+## Jira
+
+1. Story, Epic and Custom field IDs are not the same between instances of jira.  Run this command to reveal the IDs needed in jira-collector-deployment.yaml.  https://unisys-fed-as.atlassian.net/rest/api/2/field
 
 
 # General Issues
