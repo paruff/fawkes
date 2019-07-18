@@ -19,26 +19,7 @@ echo ${machine}
 
 if [ ${machine} = "Mac" ]; 
 then
-
-  if ! brew -v; then
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  fi
-  if terraform -v; then
-    brew upgrade terraform
-  else
-    brew install terraform
-  fi
-  if kubectl version; then
-    brew upgrade kubernetes-cli
-  else
-    brew install kubernetes-cli
-  fi
-  if helm version; then
-    brew upgrade kubernetes-helm
-  else
-    brew install kubernetes-helm
-  fi
-
+../../workspace/space-setup-macosx.sh
 if ! aws-iam-authenticator -h; then
 # this aim-authorize-
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
@@ -57,26 +38,7 @@ fi
 # TODO define and lock the versions to working versions 
 if [ ${machine} = "GBash" ]; 
 then
-  if ! choco  -v; then
-  # I wonder if this will work in git bash?
-    @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-  fi
-  if terraform -v; then
-    choco upgrade terraform -y
-  else
-    choco install terraform -y
-  fi
-  if kubectl version; then
-    choco upgrade kubernetes-cli -y
-  else
-    choco install kubernetes-cli -y
-  fi
-  if helm version; then
-    choco  upgrade kubernetes-helm -y
-  else
-    choco  install kubernetes-helm -y
-  fi
-
+../../workspace/space-setup-win10.ps1
 if ! aws-iam-authenticator -h; then
 # this aim-authorize-
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
