@@ -101,20 +101,29 @@ terraform apply --auto-approve
 
 # Configure kubectl Configure
 mkdir -p $HOME/.kube
+# terraform output kubeconfig > ~/.kube/config
+
 cp kubeconfig_* $HOME/.kube/config
 cp kubeconfig_* $HOME/.kube/
+
+# move to localk8s config
+# mkdir -p /tmp
+# terraform output config_map_aws_auth > /tmp/configmap.yml
+# kubectl apply -f /tmp/configmap.yml
 
 export  KUBECONFIG_SAVED=$KUBECONFIG
 export KUBECONFIG=$HOME/.kube/config
 
 
 # Helm 
-kubectl -n kube-system create serviceaccount tiller
-kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
-helm init --service-account tiller 
+kubectl apply -f tiller-user.yaml
+# kubectl -n kube-system create serviceaccount tiller
+# kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
+helm init --service-account tiller --history-max 200
+# helm init --history-max 200
 # --tiller-tls-verify
 # kubectl rollout status -h
-kubectl rollout status deployment tiller-deploy -n kube-system
+# kubectl rollout status deployment tiller-deploy -n kube-system
 
 helm install --wait stable/kubernetes-dashboard --name dashboard-demo
 
@@ -122,13 +131,8 @@ kubectl create namespace pipeline
 
 # Helm up basic
 # # Jenkins
-If [ helm status jenkins ] 
-then
-  helm upgrade jenkins 
-else
   kubectl apply -f jenkins/service-account.yaml
   helm install --namespace=pipeline stable/jenkins --name jenkins -f jenkins/values.yaml --wait 
-fi
 echo "Jenkins admin password:"
 printf $(kubectl get secret --namespace pipeline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
 export JENKINS_IP=$(kubectl get svc --namespace pipeline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
