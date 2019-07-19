@@ -1,20 +1,13 @@
-describe file('C:\\ProgramData\\chocolatey\\bin\\docker.exe') do
-    it { should exist }
-   end
-# describe command('C:\\ProgramData\\chocolatey\\bin\\docker.exe') do
-#     its(:exit_status) { should eq 0 }
-#   end
-
-describe file('C:\\ProgramData\\chocolatey\\bin\\docker-machine.exe') do
-    it { should exist }
-   end
-describe command('C:\\ProgramData\\chocolatey\\bin\\docker-machine.exe') do
-    its(:exit_status) { should eq 0 }
+  describe docker.version do
+    its('Client.Version') { should cmp >= '18.09.6'}
   end
 
-  describe file('C:\\ProgramData\\chocolatey\\bin\\docker-compose.exe') do
-    it { should exist }
-   end
-describe command('C:\\ProgramData\\chocolatey\\bin\\docker-compose.exe') do
-    its(:exit_status) { should eq 0 }
-  end
+  # describe package('docker-compose') do
+  #   it { should be_installed }
+  #   its('version') { should eq '1.24.0' }
+  # end
+
+  # describe package('docker-machine') do
+  #   it { should be_installed }
+  #   its('version') { should eq '0.16.1' }
+  # end
