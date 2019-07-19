@@ -20,56 +20,23 @@ ECHO choco exists. Let's go!
 )
 
 echo getting the versions of applications installed by choco...
-choco upgrade all --noop > choco-versions.txt
+:: choco upgrade all --noop > choco-versions.txt
+choco list -local-only > choco-versions.txt
 
-Call :InstallIf adoptopenjdk , 8.192
-Call :InstallIf awscli , 1.16.198
-Call :InstallIf chefdk , 4.1.7
-Call :InstallIf docker-cli , 18.09.6
-Call :InstallIf docker-cli , 18.09.6
-Call :InstallIf docker-compose , 1.24.0
-Call :InstallIf docker-machine , 0.16.1
-Call :InstallIf git , 2.22.0 
-Call :InstallIf gitflow-avh , 0.0.0
-Call :InstallIf googlechrome , 75.0.3770.142
-Call :InstallIf helm , 2.14.2
-Call :InstallIf inspec ,4.7.18
-Call :InstallIf kubernetes-cli , 1.15.0
-Call :InstallIf minikube , 1.2.0 
-Call :InstallIf make , 4.2.1
-Call :InstallIf maven , 3.6.1
-:: nodejs lts is 10.16.0
-Call :InstallIf nodejs , 10.16.0
-Call :InstallIf postman , 7.2.2
-Call :InstallIf selenium-chrome-driver , 75.0.3770.8
-Call :InstallIf springtoolsuite , 3.9.6
-Call :InstallIf terraform , 0.12.3
-Call :InstallIf vagrant , 2.2.5
-Call :InstallIf virtualbox , 6.0.10
-Call :InstallIf vscode , 1.36.1
-
+for /f "tokens=1-2 delims=," %%i in (tool-suite.txt) do (
+ Call :InstallIf %%i , %%j
+)
 echo
 echo space setup complete!
 echo 
-
-
-:: can we move this to a file and array?
-
-
-for /f "tokens=1-2 delims=," %%i in (tool-suite.txt) do (
- echo name=%%i
- echo version=%%j
- Call :InstallIf %%i , %%j
-)
-
 :: refreshenv exits the script
 refreshenv
 
 :: Functions
-
 :InstallIf
-findstr /m "%~1 v%~2" choco-versions.txt
-if %errorlevel%==0 (
+echo looking for "%~1 %~2"
+findstr /I /C:"%~1 %~2" choco-versions.txt
+if %errorlevel% EQU 0 (
 echo Found %~1 %~2
 ) else (
 echo installing %~1 %~2
