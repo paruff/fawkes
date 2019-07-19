@@ -1,39 +1,48 @@
+---
 driver:
   name: vagrant
-#  tag: test-kitchen
-  customize:
-    cpus: 2
-    memory: 4096
-
-transport:
-  name: winrm
-  elevated: true
 
 provisioner:
-  name: shell
-  script:    'space-setup.bat'
-  
+  name: chef_zero
+
 verifier:
   name: inspec
 
 platforms:
-  - name: windows
+  - name: ubuntu-18.04
+  - name: centos-7
+  - name: windows-10
+    transport:
+      name: winrm
     driver:
-      box: jhakonen/windows-10-n-pro-en-x86_64
-      # working
-      #  senglin/win-10-enterprise-vs2015community # 3 yr old with vs
-      # untested
-      #  jhakonen/windows-10-n-pro-en-x86_64 # 2 yr old
-      # not working
-      #  peru/windows-10-enterprise-x64-eval # well doc and new
+      guest: :windows
+      box: StefanScherer/windows_10
+  # - name: windows-2016
+  #   transport:
+  #     name: winrm
+  #   driver:
+  #     guest: :windows
+  #     box: calsev/windows-2016
+  # - name: macosx-10.13
+  #   driver:
+  #     box: macosx-10.13
+  - name: macosx-10.12
+    driver:
+      box: elliotweiser/macosx-sierra-clt
 
 suites:
-  - name: default
+  - name: workspace
+    run_list:
+      - recipe[git]
+      - recipe[aws]
+      - recipe[java]
+      - recipe[vagrant]
+#      - recipe[virtualbox]
+      - recipe[maven]
+#      - recipe[docker]
+      - recipe[minikube]
+#      - recipe[helm]
     verifier:
       inspec_tests:
         - test/integration/default
-  # - name: devsec
-  #   verifier:
-  #     inspec_tests:
-  #       - name: dev-sec/windows-baseline  # name only defaults to supermarket
-#    examples https://github.com/inspec/kitchen-inspec
+  
