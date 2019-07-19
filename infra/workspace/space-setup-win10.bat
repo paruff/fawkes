@@ -40,7 +40,7 @@ if %errorlevel% EQU 0 (
 echo Found %~1 %~2
 ) else (
 echo installing %~1 %~2
-choco install -y %~1 --version %~2
+choco upgrade -y %~1 --version %~2
 echo installed %~1 %~2
 )
 EXIT /B 0
