@@ -1,4 +1,4 @@
 describe package('git') do
     it { should be_installed }
-    its('version') { should eq '2.18.0' }
+    its('version') { should include '2.20.0' }
   end

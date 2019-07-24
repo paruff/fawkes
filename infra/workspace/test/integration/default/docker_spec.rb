@@ -4,8 +4,6 @@
 
   describe command('docker-compose') do
     it { should exist }
-    its('stderr') { should eq '' }
-    its('exit_status') { should eq 0 }
   end
 
   describe command('docker-compose version') do
