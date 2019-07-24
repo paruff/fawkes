@@ -55,7 +55,9 @@ brew_install_if0 terraform 0.12.4
 brew tap caskroom/cask
 
 cask_install_if0 adoptopenjdk8
+cask_install_if0 chefdk 4.2.0
 cask_install_if0 google-chrome
+cask_install_if0 inspec 4.7.18
 cask_install_if0 iterm2 
 cask_install_if0 minikube 1.2.0
 cask_install_if0 postman 7.3.4

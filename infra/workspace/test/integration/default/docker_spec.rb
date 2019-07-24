@@ -7,7 +7,7 @@
   end
 
   describe command('docker-compose version') do
-    its('stdout') { should include "1.24.0" }
+    its('stdout') { should include "1.24.1" }
     its('stderr') { should eq '' }
     its('exit_status') { should eq 0 }
   end
