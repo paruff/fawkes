@@ -55,6 +55,7 @@ fi
 fi
 
 # exit
+# aws cloudformation create-stack-instances --stack-set-name fawkes --regions us-west-2 --accounts tads https://s3.amazonaws.com/aws-quickstart/quickstart-amazon-eks/templates/amazon-eks-master.template.yaml
 
 terraform init
 terraform fmt
