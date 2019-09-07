@@ -55,6 +55,7 @@ fi
 fi
 
 # exit
+# This is code to create a k8s eks using cloudformation, seems to work in us-east-2
 # export StackID=fawkes
 # export KeyPairName=tads-eks-use2
 # export 
