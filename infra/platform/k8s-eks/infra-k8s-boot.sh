@@ -55,7 +55,15 @@ fi
 fi
 
 # exit
-# aws cloudformation create-stack-instances --stack-set-name fawkes --regions us-west-2 --accounts tads https://s3.amazonaws.com/aws-quickstart/quickstart-amazon-eks/templates/amazon-eks-master.template.yaml
+# export StackID=fawkes
+# export KeyPairName=tads-eks-use2
+# export 
+#
+# aws cloudformation create-stack --stack-name fawkes --template-body https://s3.amazonaws.com/aws-quickstart/quickstart-amazon-eks/templates/amazon-eks-master.template.yaml --parameters ParameterKey=KeyPairName,ParameterValue=tads-eks-use2 ParameterKey=AvailabilityZones,ParameterValue=us-east-2a\\,us-east-2b\\,us-east-2c ParameterKey=RemoteAccessCIDR,ParameterValue=0.0.0.0/0 ParameterKey=ClusterAutoScaler,ParameterValue=Enabled --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
+# aws cloudformation wait stack-create-complete --stack-name fawkes
+# aws cloudformation describe-stacks --stack-name fawkes --query "Stacks[0].Outputs[?OutputKey=='BastionIP'].OutputValue" --output text | read BastionIP
+# ssh -o "StrictHostKeyChecking no"  -i ~/.ssh/$KeyPairName ec2-user@$BastionIP
+# scp -r . -i ~/.ssh/$KeyPairName ec2-user@$BastionIP:.
 
 terraform init
 terraform fmt
