@@ -88,11 +88,11 @@ export KUBECONFIG=$HOME/.kube/config
 
 
 # Helm 
-kubectl apply -f tiller-user.yaml
+# # kubectl apply -f tiller-user.yaml
 # kubectl -n kube-system create serviceaccount tiller
 # kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
-helm init --service-account tiller --history-max 200
-# helm init --history-max 200
+# helm init --service-account tiller --history-max 200
+ helm init --history-max 200
 # --tiller-tls-verify
 # kubectl rollout status -h
 # kubectl rollout status deployment tiller-deploy -n kube-system
