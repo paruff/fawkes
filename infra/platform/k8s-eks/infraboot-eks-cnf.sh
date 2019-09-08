@@ -39,7 +39,7 @@ fi
 if [ ${machine} = "GBash" ]; 
 then
 ../../workspace/space-setup-win10.ps1
-if ! aws-iam-authenticator -h; then
+if ! aws-iam-authenticator version; then
 # this aim-authorize-
 # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
 #   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
@@ -56,15 +56,17 @@ fi
 
 # exit
 # This is code to create a k8s eks using cloudformation, seems to work in us-east-2
-export StackID=fawkes
+export DATE_WITH_TIME=`date "+%Y%m%d-%H%M%S"` #add %3N as we want millisecond too
+export StackID=fawkes-$DATE_WITH_TIME
 export KeyPairName=tads-eks-use2
-#
-aws cloudformation create-stack --stack-name fawkes --template-body https://s3.amazonaws.com/aws-quickstart/quickstart-amazon-eks/templates/amazon-eks-master.template.yaml --parameters ParameterKey=KeyPairName,ParameterValue=tads-eks-use2 ParameterKey=AvailabilityZones,ParameterValue=us-east-2a\\,us-east-2b\\,us-east-2c ParameterKey=RemoteAccessCIDR,ParameterValue=0.0.0.0/0 ParameterKey=ClusterAutoScaler,ParameterValue=Enabled --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
-aws cloudformation wait stack-create-complete --stack-name fawkes
-aws cloudformation describe-stacks --stack-name fawkes --query "Stacks[0].Outputs[?OutputKey=='BastionIP'].OutputValue" --output text | read BastionIP
-ssh -o "StrictHostKeyChecking no"  -i ~/.ssh/$KeyPairName ec2-user@$BastionIP
-scp -r . -i ~/.ssh/$KeyPairName ec2-user@$BastionIP:.
-ssh -i ~/.ssh/$KeyPairName ec2-user@$BastionIP lineboot-helm.sh
+# export BastionIP
+# aws cloudformation delete-stack --stack-name $StackID
+aws cloudformation create-stack --stack-name $StackID --template-body https://s3.amazonaws.com/aws-quickstart/quickstart-amazon-eks/templates/amazon-eks-master.template.yaml --parameters ParameterKey=KeyPairName,ParameterValue=tads-eks-use2 ParameterKey=AvailabilityZones,ParameterValue=us-east-2a\\,us-east-2b\\,us-east-2c ParameterKey=RemoteAccessCIDR,ParameterValue=0.0.0.0/0 ParameterKey=ClusterAutoScaler,ParameterValue=Enabled --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
+aws cloudformation wait stack-create-complete --stack-name $StackID
+aws cloudformation describe-stacks --stack-name $StackID --query "Stacks[0].Outputs[?OutputKey=='BastionIP'].OutputValue" --output text |  { BastionIP=$(< /dev/stdin); echo "BastionIP=$BastionIP"; };
+ssh -o "StrictHostKeyChecking no"  -i ~/.ssh/$KeyPairName.pem ec2-user@$BastionIP
+scp -r . -i ~/.ssh/$KeyPairName.pem ec2-user@$BastionIP:.
+ssh -i ~/.ssh/$KeyPairName.pem ec2-user@$BastionIP lineboot-helm.sh
 
 # Helm 
 # # kubectl apply -f tiller-user.yaml
