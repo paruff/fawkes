@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# infra-k8s-boot.sh
+# infraboot-eks-cnf.sh
 ## TODO
 # conditional helm install and update based on does it exist
 # break up cloud provider terraform k8s up
@@ -56,43 +56,22 @@ fi
 
 # exit
 # This is code to create a k8s eks using cloudformation, seems to work in us-east-2
-# export StackID=fawkes
-# export KeyPairName=tads-eks-use2
-# export 
+export StackID=fawkes
+export KeyPairName=tads-eks-use2
 #
-# aws cloudformation create-stack --stack-name fawkes --template-body https://s3.amazonaws.com/aws-quickstart/quickstart-amazon-eks/templates/amazon-eks-master.template.yaml --parameters ParameterKey=KeyPairName,ParameterValue=tads-eks-use2 ParameterKey=AvailabilityZones,ParameterValue=us-east-2a\\,us-east-2b\\,us-east-2c ParameterKey=RemoteAccessCIDR,ParameterValue=0.0.0.0/0 ParameterKey=ClusterAutoScaler,ParameterValue=Enabled --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
-# aws cloudformation wait stack-create-complete --stack-name fawkes
-# aws cloudformation describe-stacks --stack-name fawkes --query "Stacks[0].Outputs[?OutputKey=='BastionIP'].OutputValue" --output text | read BastionIP
-# ssh -o "StrictHostKeyChecking no"  -i ~/.ssh/$KeyPairName ec2-user@$BastionIP
-# scp -r . -i ~/.ssh/$KeyPairName ec2-user@$BastionIP:.
-
-terraform init
-terraform fmt
-terraform plan
-terraform apply --auto-approve
-
-# Configure kubectl Configure
-mkdir -p $HOME/.kube
-# terraform output kubeconfig > ~/.kube/config
-
-cp kubeconfig_* $HOME/.kube/config
-cp kubeconfig_* $HOME/.kube/
-
-# move to localk8s config
-# mkdir -p /tmp
-# terraform output config_map_aws_auth > /tmp/configmap.yml
-# kubectl apply -f /tmp/configmap.yml
-
-export  KUBECONFIG_SAVED=$KUBECONFIG
-export KUBECONFIG=$HOME/.kube/config
-
+aws cloudformation create-stack --stack-name fawkes --template-body https://s3.amazonaws.com/aws-quickstart/quickstart-amazon-eks/templates/amazon-eks-master.template.yaml --parameters ParameterKey=KeyPairName,ParameterValue=tads-eks-use2 ParameterKey=AvailabilityZones,ParameterValue=us-east-2a\\,us-east-2b\\,us-east-2c ParameterKey=RemoteAccessCIDR,ParameterValue=0.0.0.0/0 ParameterKey=ClusterAutoScaler,ParameterValue=Enabled --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
+aws cloudformation wait stack-create-complete --stack-name fawkes
+aws cloudformation describe-stacks --stack-name fawkes --query "Stacks[0].Outputs[?OutputKey=='BastionIP'].OutputValue" --output text | read BastionIP
+ssh -o "StrictHostKeyChecking no"  -i ~/.ssh/$KeyPairName ec2-user@$BastionIP
+scp -r . -i ~/.ssh/$KeyPairName ec2-user@$BastionIP:.
+ssh -i ~/.ssh/$KeyPairName ec2-user@$BastionIP lineboot-helm.sh
 
 # Helm 
 # # kubectl apply -f tiller-user.yaml
 # kubectl -n kube-system create serviceaccount tiller
 # kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
 # helm init --service-account tiller --history-max 200
- helm init --history-max 200
+ helm init --tiller-tls-verify --history-max 200
 # --tiller-tls-verify
 # kubectl rollout status -h
 # kubectl rollout status deployment tiller-deploy -n kube-system
