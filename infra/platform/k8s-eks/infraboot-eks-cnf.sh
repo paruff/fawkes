@@ -59,6 +59,16 @@ fi
 export DATE_WITH_TIME=`date "+%Y%m%d-%H%M%S"` #add %3N as we want millisecond too
 export StackID=fawkes-$DATE_WITH_TIME
 export KeyPairName=tads-eks-use2
+<<<<<<< HEAD
+#
+aws cloudformation create-stack --stack-name fawkes --template-body https://s3.amazonaws.com/aws-quickstart/quickstart-amazon-eks/templates/amazon-eks-master.template.yaml --parameters ParameterKey=KeyPairName,ParameterValue=tads-eks-use2 ParameterKey=AvailabilityZones,ParameterValue=us-east-2a\\,us-east-2b\\,us-east-2c ParameterKey=RemoteAccessCIDR,ParameterValue=0.0.0.0/0 ParameterKey=ClusterAutoScaler,ParameterValue=Enabled --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
+aws cloudformation wait stack-create-complete --stack-name fawkes
+aws cloudformation describe-stacks --stack-name fawkes --query "Stacks[0].Outputs[?OutputKey=='BastionIP'].OutputValue" --output text | read BastionIP
+ssh -o "StrictHostKeyChecking no"  -i ~/.ssh/$KeyPairName ec2-user@$BastionIP
+scp -r . -i ~/.ssh/$KeyPairName ec2-user@$BastionIP:.
+ssh -i ~/.ssh/$KeyPairName ec2-user@$BastionIP lineboot-helm.sh
+exit
+=======
 # export BastionIP
 # aws cloudformation delete-stack --stack-name $StackID
 aws cloudformation create-stack --stack-name $StackID --template-body https://s3.amazonaws.com/aws-quickstart/quickstart-amazon-eks/templates/amazon-eks-master.template.yaml --parameters ParameterKey=KeyPairName,ParameterValue=tads-eks-use2 ParameterKey=AvailabilityZones,ParameterValue=us-east-2a\\,us-east-2b\\,us-east-2c ParameterKey=RemoteAccessCIDR,ParameterValue=0.0.0.0/0 ParameterKey=ClusterAutoScaler,ParameterValue=Enabled --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
@@ -67,6 +77,7 @@ aws cloudformation describe-stacks --stack-name $StackID --query "Stacks[0].Outp
 ssh -o "StrictHostKeyChecking no"  -i ~/.ssh/$KeyPairName.pem ec2-user@$BastionIP
 scp -r -i ~/.ssh/$KeyPairName.pem . ec2-user@$BastionIP:.
 ssh -i ~/.ssh/$KeyPairName.pem ec2-user@$BastionIP lineboot-helm.sh
+>>>>>>> 2be167350d853b376253930124430c05905ad443
 
 # Helm 
 # # kubectl apply -f tiller-user.yaml
