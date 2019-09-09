@@ -8,23 +8,23 @@
 # nameOverride:
 # fullnameOverride:
 
-Master:
-  Name: jenkins-master
-  Image: "jenkins/jenkins"
-  ImageTag: "lts"
-  ImagePullPolicy: "Always"
+master:
+  name: jenkins-master
+  image: "jenkins/jenkins"
+  imageTag: "lts"
+  imagePullPolicy: "Always"
 # ImagePullSecret: jenkins
-  Component: "jenkins-master"
-  NumExecutors: 0
+  component: "jenkins-master"
+  numExecutors: 0
   # configAutoReload requires UseSecurity is set to true:
-  UseSecurity: true
+  useSecurity: true
   # SecurityRealm:
   # Optionally configure a different AuthorizationStrategy using Jenkins XML
   # AuthorizationStrategy: |-
   #    <authorizationStrategy class="hudson.security.FullControlOnceLoggedInAuthorizationStrategy">
   #      <denyAnonymousReadAccess>true</denyAnonymousReadAccess>
   #    </authorizationStrategy>
-  HostNetworking: false
+  hostNetworking: false
   # When enabling LDAP or another non-Jenkins identity source, the built-in admin account will no longer exist.
   # Since the AdminUser is used by configAutoReload, in order to use configAutoReload you must change the
   # .Master.AdminUser to a valid username on your LDAP (or other) server.  This user does not need
@@ -32,12 +32,12 @@ Master:
   # additional rights.  Failure to do this will cause the sidecar container to fail to authenticate via SSH and enter
   # a restart loop.  Likewise if you disable the non-Jenkins identity store and instead use the Jenkins internal one,
   # you should revert Master.AdminUser to your preferred admin user:
-  AdminUser: admin
+  adminUser: admin
   # AdminPassword: <defaults to random>
   # AdminSshKey: <defaults to auto-generated>
   # If CasC auto-reload is enabled, an SSH (RSA) keypair is needed.  Can either provide your own, or leave unconfigured to allow a random key to be auto-generated.
   # If you supply your own, it is recommended that the values file that contains your key not be committed to source control in an unencrypted format
-  RollingUpdate: {}
+  rollingUpdate: {}
   # Ignored if Persistence is enabled
   # maxSurge: 1
   # maxUnavailable: 25%
@@ -62,54 +62,54 @@ Master:
   # If you set this prefix and use ingress controller then you might want to set the ingress path below
   # JenkinsUriPrefix: "/jenkins"
   # Enable pod security context (must be `true` if RunAsUser or FsGroup are set)
-  UsePodSecurityContext: true
+  usePodSecurityContext: true
   # Set RunAsUser to 1000 to let Jenkins run as non-root user 'jenkins' which exists in 'jenkins/jenkins' docker image.
   # When setting RunAsUser to a different value than 0 also set FsGroup to the same value:
   # RunAsUser: <defaults to 0>
   # FsGroup: <will be omitted in deployment if RunAsUser is 0>
-  ServicePort: 8080
+  servicePort: 8080
   # For minikube, set this to NodePort, elsewhere use LoadBalancer
   # Use ClusterIP if your setup includes ingress controller
-  ServiceType: LoadBalancer
+  serviceType: LoadBalancer
   # Master Service annotations
-  ServiceAnnotations: {}
+  serviceAnnotations: {}
   # Master Custom Labels
-  DeploymentLabels: {}
+  deploymentLabels: {}
   #   foo: bar
   #   bar: foo
   # Master Service Labels
-  ServiceLabels: {}
+  serviceLabels: {}
   #   service.beta.kubernetes.io/aws-load-balancer-backend-protocol: https
   # Put labels on jeknins-master pod
-  PodLabels: {}
+  podLabels: {}
   # Used to create Ingress record (should used with ServiceType: ClusterIP)
   # HostName: jenkins.cluster.local
   # NodePort: <to set explicitly, choose port between 30000-32767
   # Enable Kubernetes Liveness and Readiness Probes
   # ~ 2 minutes to allow Jenkins to restart when upgrading plugins. Set ReadinessTimeout to be shorter than LivenessTimeout.
-  HealthProbes: true
-  HealthProbesLivenessTimeout: 90
-  HealthProbesReadinessTimeout: 60
-  HealthProbeReadinessPeriodSeconds: 10
-  HealthProbeLivenessFailureThreshold: 12
-  SlaveListenerPort: 50000
+  healthProbes: true
+  healthProbesLivenessTimeout: 90
+  healthProbesReadinessTimeout: 60
+  healthProbeReadinessPeriodSeconds: 10
+  healthProbeLivenessFailureThreshold: 12
+  slaveListenerPort: 50000
 #  SlaveHostPort: 50000
-  DisabledAgentProtocols:
+  disabledAgentProtocols:
     - JNLP-connect
     - JNLP2-connect
-  CSRF:
-    DefaultCrumbIssuer:
-      Enabled: true
-      ProxyCompatability: true
-  CLI: false
+  cSRF:
+    defaultCrumbIssuer:
+      enabled: true
+      proxyCompatability: true
+  cLI: false
   # Kubernetes service type for the JNLP slave service
   # SlaveListenerServiceType is the Kubernetes Service type for the JNLP slave service,
   # either 'LoadBalancer', 'NodePort', or 'ClusterIP'
   # Note if you set this to 'LoadBalancer', you *must* define annotations to secure it. By default
   # this will be an external load balancer and allowing inbound 0.0.0.0/0, a HUGE
   # security risk:  https://github.com/kubernetes/charts/issues/1341
-  SlaveListenerServiceType: ClusterIP
-  SlaveListenerServiceAnnotations: {}
+  slaveListenerServiceType: ClusterIP
+  slaveListenerServiceAnnotations: {}
 
   # Example of 'LoadBalancer' type of slave listener with annotations securing it
   # SlaveListenerServiceType: LoadBalancer
@@ -119,7 +119,7 @@ Master:
 
   # LoadBalancerSourcesRange is a list of allowed CIDR values, which are combined with ServicePort to
   # set allowed inbound rules on the security group assigned to the master load balancer
-  LoadBalancerSourceRanges:
+  loadBalancerSourceRanges:
   - 0.0.0.0/0
   # Optionally assign a known public LB IP
   # LoadBalancerIP: 1.2.3.4
@@ -131,12 +131,12 @@ Master:
   #   -Dcom.sun.management.jmxremote.ssl=false
   # JMXPort: 4000
   # Optionally configure other ports to expose in the Master container
-  ExtraPorts:
+  extraPorts:
   # - name: BuildInfoProxy
   #   port: 9000
 
   # List of plugins to be install during Jenkins master start
-  InstallPlugins:
+  installPlugins:
     - blueocean:1.14.0
     - configuration-as-code:1.10
     - configuration-as-code-support:1.10
@@ -168,7 +168,7 @@ Master:
   #   - "method groovy.json.JsonSlurperClassic parseText java.lang.String"
   #   - "new groovy.json.JsonSlurperClassic"
   # List of groovy init scripts to be executed during Jenkins master start
-  InitScripts:
+  initScripts:
   #  - |
   #    print 'adding global pipeline libraries, register properties, bootstrap jobs...'
   # Kubernetes secret that contains a 'credentials.xml' for Jenkins
@@ -189,15 +189,15 @@ Master:
   # /var/jenkins_home/casc_configs (by default) and will be processed by the Configuration as Code Plugin.  The lines after each |
   # become the content of the configuration yaml file.  The first line after this is a JCasC root element, eg jenkins, credentials,
   # etc.  Best reference is https://<jenkins_url>/configuration-as-code/reference.  The example below creates a welcome message:
-  JCasC:
+  jCasC:
     enabled: true
-    PluginVersion: 1.10
-    SupportPluginVersion: 1.10
-    ConfigScripts:
+    pluginVersion: 1.10
+    supportPluginVersion: 1.10
+    configScripts:
       welcome-message: |
         jenkins:
           systemMessage: Welcome to UniSys Federal Application Services CI\CD server.  This Jenkins is configured and managed 'as code'.
-    ConfigScripts:
+    configScripts:
       sonarqube: |
         unclassified:
           sonarglobalconfiguration:     # mandatory
@@ -238,7 +238,7 @@ Master:
     #           }
 
 
-  Sidecars:
+  sidecars:
     configAutoReload:
       # If enabled: true, Jenkins Configuration as Code will be reloaded on-the-fly without a reboot.  If false or not-specified,
       # jcasc changes will cause a reboot and will only be applied at the subsequent start-up.  Auto-reload uses the Jenkins CLI
@@ -287,18 +287,18 @@ Master:
   # Node labels and tolerations for pod assignment
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#taints-and-tolerations-beta-feature
-  NodeSelector: {}
-  Tolerations: {}
-  PodAnnotations: {}
+  nodeSelector: {}
+  tolerations: {}
+  podAnnotations: {}
 
   # The below two configuration-related values are deprecated and replaced by Jenkins Configuration as Code (see above
   # JCasC key).  They will be deleted in an upcoming version.
-  CustomConfigMap: false
+  customConfigMap: false
   # By default, the configMap is only used to set the initial config the first time
   # that the chart is installed.  Setting `OverwriteConfig` to `true` will overwrite
   # the jenkins config with the contents of the configMap every time the pod starts.
   # This will also overwrite all init scripts
-  OverwriteConfig: false
+  overwriteConfig: false
 
   # By default, the Jobs Map is only used to set the initial jobs the first time
   # that the chart is installed.  Setting `overwriteJobs` to `true` will overwrite
@@ -320,11 +320,11 @@ Master:
     # - secretName: jenkins.cluster.local
     #   hosts:
     #     - jenkins.cluster.local
-  AdditionalConfig: {}
+  additionalConfig: {}
 
   # Master.HostAliases allows for adding entries to Pod /etc/hosts:
   # https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
-  HostAliases: []
+  hostAliases: []
   # - ip: 192.168.50.50
   #   hostnames:
   #     - something.local
@@ -332,14 +332,14 @@ Master:
   #   hostnames:
   #     - other.local
 
-Agent:
-  Enabled: true
-  Image: jenkins/jnlp-slave
-  ImageTag: 3.27-1
-  CustomJenkinsLabels: []
+agent:
+  enabled: true
+  image: jenkins/jnlp-slave
+  imageTag: 3.27-1
+  customJenkinsLabels: []
 # ImagePullSecret: jenkins
-  Component: "jenkins-slave"
-  Privileged: false
+  component: "jenkins-slave"
+  privileged: false
   resources:
     requests:
       cpu: "200m"
@@ -348,10 +348,10 @@ Agent:
       cpu: "200m"
       memory: "256Mi"
   # You may want to change this to true while testing a new image
-  AlwaysPullImage: false
+  alwaysPullImage: false
   # Controls how slave pods are retained after the Jenkins build completes
   # Possible values: Always, Never, OnFailure
-  PodRetention: Never
+  podRetention: Never
   # You can define the volumes that you want to mount for this container
   # Allowed types are: ConfigMap, EmptyDir, HostPath, Nfs, Pod, Secret
   # Configure the attributes as they appear in the corresponding Java class for that type
@@ -364,24 +364,24 @@ Agent:
   # - type: Secret
   #   secretName: mysecret
   #   mountPath: /var/myapp/mysecret
-  NodeSelector: {}
+  nodeSelector: {}
   # Key Value selectors. Ex:
   # jenkins-agent: v1
 
   # Executed command when side container gets started
-  Command:
-  Args:
+  command:
+  args:
   # Side container name
-  SideContainerName: jnlp
+  sideContainerName: jnlp
   # Doesn't allocate pseudo TTY by default
-  TTYEnabled: false
+  tTYEnabled: false
   # Max number of spawned agent
-  ContainerCap: 10
+  containerCap: 10
   # Pod name
-  PodName: default
+  podName: default
 
-Persistence:
-  Enabled: true
+persistence:
+  enabled: true
   ## A manually managed Persistent Volume and Claim
   ## Requires Persistence.Enabled: true
   ## If defined, PVC must be created manually before volume will be bound
@@ -394,9 +394,9 @@ Persistence:
   ##   GKE, AWS & OpenStack)
   ##
   # StorageClass: "-"
-  Annotations: {}
-  AccessMode: ReadWriteOnce
-  Size: 8Gi
+  annotations: {}
+  accessMode: ReadWriteOnce
+  size: 8Gi
   volumes:
   #  - name: nothing
   #    emptyDir: {}
@@ -405,24 +405,26 @@ Persistence:
   #    name: nothing
   #    readOnly: true
 
-NetworkPolicy:
+networkPolicy:
   # Enable creation of NetworkPolicy resources.
-  Enabled: false
+  enabled: false
   # For Kubernetes v1.4, v1.5 and v1.6, use 'extensions/v1beta1'
   # For Kubernetes v1.7, use 'networking.k8s.io/v1'
-  ApiVersion: networking.k8s.io/v1
+  apiVersion: networking.k8s.io/v1
 
 ## Install Default RBAC roles and bindings
 rbac:
-  install: true
-  serviceAccountName: jenkins
+  create: true
+  serviceAccount:
+    name: jenkins
   serviceAccountAnnotations: {}
   # Role reference
-  roleRef: cluster-admin
+  # The following are now generated
+  # roleRef: cluster-admin
   # Role kind (Role or ClusterRole)
-  roleKind: ClusterRole
+  # roleKind: ClusterRole
   # Role binding kind (RoleBinding or ClusterRoleBinding)
-  roleBindingKind: ClusterRoleBinding
+  # roleBindingKind: ClusterRoleBinding
 
 ## Backup cronjob configuration
 ## Ref: https://github.com/nuvo/kube-tasks
