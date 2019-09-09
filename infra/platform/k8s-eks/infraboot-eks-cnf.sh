@@ -65,6 +65,7 @@ aws cloudformation describe-stacks --stack-name fawkes --query "Stacks[0].Output
 ssh -o "StrictHostKeyChecking no"  -i ~/.ssh/$KeyPairName ec2-user@$BastionIP
 scp -r . -i ~/.ssh/$KeyPairName ec2-user@$BastionIP:.
 ssh -i ~/.ssh/$KeyPairName ec2-user@$BastionIP lineboot-helm.sh
+exit
 
 # Helm 
 # # kubectl apply -f tiller-user.yaml
