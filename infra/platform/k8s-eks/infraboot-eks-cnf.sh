@@ -65,7 +65,7 @@ aws cloudformation create-stack --stack-name $StackID --template-body https://s3
 aws cloudformation wait stack-create-complete --stack-name $StackID
 aws cloudformation describe-stacks --stack-name $StackID --query "Stacks[0].Outputs[?OutputKey=='BastionIP'].OutputValue" --output text |  { BastionIP=$(< /dev/stdin); echo "BastionIP=$BastionIP"; };
 ssh -o "StrictHostKeyChecking no"  -i ~/.ssh/$KeyPairName.pem ec2-user@$BastionIP
-scp -r . -i ~/.ssh/$KeyPairName.pem ec2-user@$BastionIP:.
+scp -r -i ~/.ssh/$KeyPairName.pem . ec2-user@$BastionIP:.
 ssh -i ~/.ssh/$KeyPairName.pem ec2-user@$BastionIP lineboot-helm.sh
 
 # Helm 
