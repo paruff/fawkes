@@ -157,7 +157,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "2.15.0"
 
-  name           = "test-vpc-spot"
+  name           = "k8s-eks-vpc"
   cidr           = "10.0.0.0/16"
   azs            = data.aws_availability_zones.available.names
   public_subnets = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
@@ -177,9 +177,9 @@ module "eks" {
   worker_groups_launch_template_mixed = [
     {
       name                    = "spot-1"
-      override_instance_types = ["m5.large", "m5a.large", "m5d.large", "m5ad.large"]
+      override_instance_types = ["r5.large", "r5a.large", "r5a.xlarge", "r5.xlarge"]
       spot_instance_pools     = 4
-      asg_max_size            = 5
+      asg_max_size            = 10
       asg_desired_capacity    = 5
       kubelet_extra_args      = "--node-labels=kubernetes.io/lifecycle=spot"
       public_ip               = true
