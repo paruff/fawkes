@@ -84,7 +84,7 @@ kubectl apply -f tiller-user.yaml
 helm init --service-account tiller --history-max 200
 # --tiller-tls-verify
 # kubectl rollout status -h
-# kubectl rollout status --watch deployment/tiller-deploy -n kube-system
+kubectl rollout status --watch deployment/tiller-deploy -n kube-system
 
 kubectl create namespace pline
 kubectl create namespace dev
