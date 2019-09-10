@@ -7,13 +7,13 @@ helm del sonarqube
 helm del --purge sonarqube
 # todo: need to wait here until terminate is complete
 
-helm install --name sonarqube stable/sonarqube -f sonarqube-values.yaml --namespace=pipeline --wait
+helm install --name sonarqube stable/sonarqube -f sonarqube-values.yaml --namespace=pline --wait
 helm test sonarqube --cleanup
 
 # kubectl get nodes
 # kubectl get po -o wide -n=pipeline
 
-kubectl get svc -n=pipeline
+kubectl get svc -n=pline
 
 # get latest load balancer path to sonarqube chart
 export SERVICE_IP=$(kubectl get svc --namespace pipeline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")

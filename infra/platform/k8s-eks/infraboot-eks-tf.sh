@@ -54,17 +54,6 @@ fi
 
 fi
 
-# exit
-# This is code to create a k8s eks using cloudformation, seems to work in us-east-2
-# export StackID=fawkes
-# export KeyPairName=tads-eks-use2
-# export 
-#
-# aws cloudformation create-stack --stack-name fawkes --template-body https://s3.amazonaws.com/aws-quickstart/quickstart-amazon-eks/templates/amazon-eks-master.template.yaml --parameters ParameterKey=KeyPairName,ParameterValue=tads-eks-use2 ParameterKey=AvailabilityZones,ParameterValue=us-east-2a\\,us-east-2b\\,us-east-2c ParameterKey=RemoteAccessCIDR,ParameterValue=0.0.0.0/0 ParameterKey=ClusterAutoScaler,ParameterValue=Enabled --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND
-# aws cloudformation wait stack-create-complete --stack-name fawkes
-# aws cloudformation describe-stacks --stack-name fawkes --query "Stacks[0].Outputs[?OutputKey=='BastionIP'].OutputValue" --output text | read BastionIP
-# ssh -o "StrictHostKeyChecking no"  -i ~/.ssh/$KeyPairName ec2-user@$BastionIP
-# scp -r . -i ~/.ssh/$KeyPairName ec2-user@$BastionIP:.
 
 terraform init
 terraform fmt
@@ -95,59 +84,64 @@ kubectl apply -f tiller-user.yaml
 helm init --service-account tiller --history-max 200
 # --tiller-tls-verify
 # kubectl rollout status -h
-# kubectl rollout status deployment tiller-deploy -n kube-system
+# kubectl rollout status --watch deployment/tiller-deploy -n kube-system
+
+kubectl create namespace pline
+kubectl create namespace dev
+kubectl create namespace test
+kubectl create namespace prod
+
+sleep 5
 
 helm install --wait stable/kubernetes-dashboard --name dashboard-demo
 
-kubectl create namespace pipeline
-
 # Helm up basic
 # # Jenkins
-  kubectl apply -f jenkins/service-account.yaml
-  helm install --namespace=pipeline stable/jenkins --name jenkins -f jenkins/values.yaml --wait 
+kubectl apply -f jenkins/service-account.yaml
+helm install --namespace=pline stable/jenkins --name jenkins -f jenkins/values.yaml --wait 
 echo "Jenkins admin password:"
-printf $(kubectl get secret --namespace pipeline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
-export JENKINS_IP=$(kubectl get svc --namespace pipeline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+printf $(kubectl get secret --namespace pline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+export JENKINS_IP=$(kubectl get svc --namespace pline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
 
 echo "Jenkins LB URL"http://$JENKINS_IP:8080/login
-# printf $(kubectl get secret --namespace pipeline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+# printf $(kubectl get secret --namespace pline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
 # 
-# export JENKINS_SERVICE_IP=$(kubectl get svc --namespace pipeline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+# export JENKINS_SERVICE_IP=$(kubectl get svc --namespace pline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
 #  echo http://$SERVICE_IP:8080/login
 
 # # Sonarqube
-helm install --name sonarqube stable/sonarqube -f sonarqube/sonarqube-values.yaml --namespace=pipeline --wait
+helm install --name sonarqube stable/sonarqube -f sonarqube/sonarqube-values.yaml --namespace=pline --wait
 helm test sonarqube --cleanup
 # get latest load balancer path to sonarqube chart
-export SERVICE_IP=$(kubectl get svc --namespace pipeline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+export SERVICE_IP=$(kubectl get svc --namespace pline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
 echo http://$SERVICE_IP:9000
 
-helm install --namespace=pipeline stable/sonatype-nexus --name registry --set nexus.service.type=LoadBalancer --wait
+helm install --namespace=pline stable/sonatype-nexus --name registry --set nexus.service.type=LoadBalancer --wait
 ## where is the url? change nexus.service.type to loadbalancer --set nexus.service.type=LoadBalancer
 ## uid: admin, pw: admin123
 ## I don't seem to have access externally
 
-helm install --namespace=pipeline stable/selenium --name selenium --set chromeDebug.enabled=true --set .enabled=true --wait
-## internal URL - http://selenium-selenium-hub.pipeline:4444
+helm install --namespace=pline stable/selenium --name selenium --set chromeDebug.enabled=true --set .enabled=true --wait
+## internal URL - http://selenium-selenium-hub.pline:4444
 
-helm install --namespace=pipeline stable/spinnaker --name spinnaker --wait
+helm install --namespace=pline stable/spinnaker --name spinnaker --wait
 
 # # Satisfied
-kubectl create secret generic --namespace pipeline prometheus-prometheus-oper-prometheus-scrape-confg --from-file=prometheus/additional-scrape-configs.yaml
-helm install --name prometheus --namespace pipeline -f prometheus/prometheus-values.yaml stable/prometheus-operator --wait
+kubectl create secret generic --namespace pline prometheus-prometheus-oper-prometheus-scrape-confg --from-file=prometheus/additional-scrape-configs.yaml
+helm install --name prometheus --namespace pline -f prometheus/prometheus-values.yaml stable/prometheus-operator --wait
 
 # Setup EFK-stack (elasticsearch, fluent-bit, and kibana)
-helm install --name elk stable/elastic-stack -f elk-stack/elk-values.yaml --namespace=pipeline --wait
+helm install --name elk stable/elastic-stack -f elk-stack/elk-values.yaml --namespace=pline --wait
 helm test elk --cleanup
 
 # # Delight
 # TODO: mssheldon - 05/02/2019; logging is way too high for some reason.  Circle back on this later.
-# helm install --namespace=pipeline stable/anchore-engine --name anchore --wait
+# helm install --namespace=pline stable/anchore-engine --name anchore --wait
 
-helm install --namespace=pipeline --name jmeter stable/distributed-jmeter --wait
+helm install --namespace=pline --name jmeter stable/distributed-jmeter --wait
 
 cd hygieia
 ./hygieia-reinstall.sh
 cd ..
 
-# helm install --namespace=pipeline stable/ --name 
+# helm install --namespace=pline stable/ --name 
