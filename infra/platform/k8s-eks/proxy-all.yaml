@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: fawkes
+    tier: proxy
+  ports:
+  - protocol: "TCP"
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fawkes
+spec:
+  selector:
+    matchLabels:
+      app: fawkes
+      tier: proxy
+      track: stable
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: hello
+        tier: proxy
+        track: stable
+    spec:
+      containers:
+      - name: nginx
+        image: "docker.com/paruff/fawkesproxy"
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/usr/sbin/nginx","-s","quit"]
