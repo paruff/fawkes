@@ -26,7 +26,7 @@ before_script:
 stages:
   - validate
   - build
-  - test
+#  - test
   - deploy
   - destroy
 
@@ -34,6 +34,7 @@ validate:
   stage: validate
   script:
     - terraform validate
+    - terraform fmt
 
 plan:
   stage: build
@@ -55,7 +56,7 @@ apply:
     - terraform apply -input=false  --auto-approve
   dependencies:
     - plan
-  when: manual
+ # when: manual
   only:
     - master
 
@@ -70,6 +71,6 @@ apply:
     - terraform destroy -input=false  --auto-approve
   dependencies:
     - plan
-  when: manual
+#  when: manual
   only:
     - master
