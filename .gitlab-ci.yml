@@ -28,6 +28,7 @@ stages:
   - build
   - test
   - deploy
+  - destroy
 
 validate:
   stage: validate
@@ -37,7 +38,6 @@ validate:
 plan:
   stage: build
   script:
-#    - cd infra/platform/k8s-eks/
     - terraform plan -out=$PLAN
   artifacts:
     name: plan
@@ -51,9 +51,23 @@ apply:
   environment:
     name: production
   script:
-#    - cd infra/platform/k8s-eks/
 #    - terraform apply -input=false $PLAN
     - terraform apply -input=false  --auto-approve
+  dependencies:
+    - plan
+  when: manual
+  only:
+    - master
+
+    # Separate apply job for manual launching Terraform as it can be destructive
+# action.
+apply:
+  stage: destroy
+  environment:
+    name: production
+  script:
+#    - terraform apply -input=false $PLAN
+    - terraform destroy -input=false  --auto-approve
   dependencies:
     - plan
   when: manual
