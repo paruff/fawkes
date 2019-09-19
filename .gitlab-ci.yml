@@ -55,8 +55,8 @@ apply:
   script:
 #    - terraform apply -input=false $PLAN
     - terraform apply -input=false  --auto-approve
-  dependencies:
-    - plan
+#  dependencies:
+#    - plan
  # when: manual
   only:
     - master
@@ -70,8 +70,8 @@ apply:
   script:
 #    - terraform apply -input=false $PLAN
     - terraform destroy -input=false  --auto-approve
-  dependencies:
-    - plan
+#  dependencies:
+#    - plan
   when: manual
   only:
     - master
