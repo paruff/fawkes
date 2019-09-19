@@ -12,7 +12,7 @@ image:
 
 # Default output file for Terraform plan
 variables:
-  PLAN: infra/platform/k8s-eks/main.tf
+  PLAN: plan.tfplan
 
 cache:
   paths:
@@ -31,11 +31,13 @@ stages:
 validate:
   stage: validate
   script:
+    - cd infra/platform/k8s-eks/
     - terraform validate
 
 plan:
   stage: build
   script:
+    - cd infra/platform/k8s-eks/
     - terraform plan -out=$PLAN
   artifacts:
     name: plan
@@ -49,6 +51,7 @@ apply:
   environment:
     name: production
   script:
+    - cd infra/platform/k8s-eks/
     - terraform apply -input=false $PLAN
   dependencies:
     - plan
