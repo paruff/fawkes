@@ -37,7 +37,7 @@ validate:
 plan:
   stage: build
   script:
-#    - cd infra/platform/k8s-eks/
+    - cd infra/platform/k8s-eks/
     - terraform plan -out=$PLAN
   artifacts:
     name: plan
@@ -51,7 +51,7 @@ apply:
   environment:
     name: production
   script:
-#    - cd infra/platform/k8s-eks/
+    - cd infra/platform/k8s-eks/
     - terraform apply -input=false $PLAN
   dependencies:
     - plan
