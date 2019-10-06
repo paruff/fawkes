@@ -116,8 +116,8 @@ helm test sonarqube --cleanup
 export SERVICE_IP=$(kubectl get svc --namespace pline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
 echo http://$SERVICE_IP:9000
 
-helm install --namespace=pline stable/sonatype-nexus --name registry --set nexus.service.type=LoadBalancer --wait
-## where is the url? change nexus.service.type to loadbalancer --set nexus.service.type=LoadBalancer
+helm install --namespace=pline stable/docker-registry  --name registry --wait 
+# helm install --namespace=pline stable/sonatype-nexus --name registry --set nexus.service.type=LoadBalancer --wait
 ## uid: admin, pw: admin123
 ## I don't seem to have access externally
 
@@ -139,6 +139,8 @@ helm test elk --cleanup
 # helm install --namespace=pline stable/anchore-engine --name anchore --wait
 
 helm install --namespace=pline --name jmeter stable/distributed-jmeter --wait
+
+kubectl apply --namespace=pline  -f nexusiq/iq-server-all.yaml 
 
 cd hygieia
 ./hygieia-reinstall.sh
