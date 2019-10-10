@@ -137,25 +137,24 @@ master:
 
   # List of plugins to be install during Jenkins master start
   installPlugins:
-    - blueocean:1.14.0
-    - configuration-as-code:1.10
-    - configuration-as-code-support:1.10
-    - credentials-binding:1.17
-    - cucumber-reports:4.5.0
-    - git:3.9.1
+    - blueocean:1.19.0
+    - configuration-as-code:1.32
+    - credentials-binding:1.20
+    - cucumber-reports:4.10.0
+    - git:3.12.1
     - gitlab-oauth:1.4
-    - gitlab-plugin:1.5.11
-    - kubernetes:1.14.0
-    - jira:3.0.6
-    - job-dsl:1.72
-    - junit:1.27
-    - nexus-jenkins-plugin:3.5.20190313-114450.3bfee7f
-    - performance:3.16
-    - prometheus:2.0.0
-    - selenium:3.12.0
-    - slack:2.20
-    - sonar:2.8.1
-    - workflow-job:2.31
+    - gitlab-plugin:1.5.13
+    - kubernetes:1.19.3
+    - jira:3.0.10
+    - job-dsl:1.76
+    - junit:1.28
+    - nexus-jenkins-plugin:3.8.20190920-091853.5b0aa4e
+    - performance:3.17
+    - prometheus:2.0.6
+    - selenium:3.141.59
+    - slack:2.34
+    - sonar:2.9
+    - workflow-job:2.35
     - workflow-aggregator:2.6
 
   # Enable to always override the installed plugins with the values of 'Master.InstallPlugins' on upgrade or redeployment.
@@ -191,8 +190,7 @@ master:
   # etc.  Best reference is https://<jenkins_url>/configuration-as-code/reference.  The example below creates a welcome message:
   jCasC:
     enabled: true
-    pluginVersion: 1.10
-    supportPluginVersion: 1.10
+    pluginVersion: 1.32
     configScripts:
       welcome-message: |
         jenkins:
@@ -208,6 +206,41 @@ master:
                 additionalAnalysisProperties:
                 additionalProperties:
                 triggers:
+  #   configScripts:
+  #   clouds:
+  # - kubernetes:
+  #     connectTimeout: 5
+  #     containerCapStr: "10"
+  #     jenkinsTunnel: "jenkins-agent:50000"
+  #     jenkinsUrl: "http://jenkins:80"
+  #     maxRequestsPerHostStr: "32"
+  #     name: "kubernetes"
+  #     namespace: "pline"
+  #     readTimeout: 15
+  #     serverUrl: "https://kubernetes.default"
+  #     templates:
+  #     - containers:
+  #       - args: "cat"
+  #         command: "/bin/sh -c"
+  #         image: "jenkins/jnlp-slave:3.27-1"
+  #         livenessProbe:
+  #           failureThreshold: 0
+  #           initialDelaySeconds: 0
+  #           periodSeconds: 0
+  #           successThreshold: 0
+  #           timeoutSeconds: 0
+  #         name: "jnlp"
+  #         ttyEnabled: true
+  #         workingDir: "/home/jenkins/agent"
+  #       envVars:
+  #       - envVar:
+  #           key: "JENKINS_URL"
+  #           value: "http://jenkins.pipeline.svc.cluster.local:80"
+  #       label: "jenkins-slave"
+  #       name: "default"
+  #       nodeUsageMode: NORMAL
+  #       workspaceVolume: "dynamicPVC"
+  #       yamlMergeStrategy: "override"
     # ConfigScripts:
     #   slack: |
     #     credentials:
