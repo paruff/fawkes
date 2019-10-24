@@ -142,7 +142,6 @@ master:
     - credentials-binding:1.20
     - cucumber-reports:4.10.0
     - git:3.12.1
-    - gitlab-oauth:1.4
     - gitlab-plugin:1.5.13
     - kubernetes:1.19.3
     - jira:3.0.10
@@ -201,63 +200,25 @@ master:
           sonarglobalconfiguration:     # mandatory
             buildWrapperEnabled: true
             installations:              # mandatory
-              - name: sonarqube         # id of the SonarQube configuration - to be used in jobs
-                serverUrl: http://sonarqube-sonarqube.pipeline:9000/
-                additionalAnalysisProperties:
-                additionalProperties:
-                triggers:
-  #   configScripts:
-  #   clouds:
-  # - kubernetes:
-  #     connectTimeout: 5
-  #     containerCapStr: "10"
-  #     jenkinsTunnel: "jenkins-agent:50000"
-  #     jenkinsUrl: "http://jenkins:80"
-  #     maxRequestsPerHostStr: "32"
-  #     name: "kubernetes"
-  #     namespace: "pline"
-  #     readTimeout: 15
-  #     serverUrl: "https://kubernetes.default"
-  #     templates:
-  #     - containers:
-  #       - args: "cat"
-  #         command: "/bin/sh -c"
-  #         image: "jenkins/jnlp-slave:3.27-1"
-  #         livenessProbe:
-  #           failureThreshold: 0
-  #           initialDelaySeconds: 0
-  #           periodSeconds: 0
-  #           successThreshold: 0
-  #           timeoutSeconds: 0
-  #         name: "jnlp"
-  #         ttyEnabled: true
-  #         workingDir: "/home/jenkins/agent"
-  #       envVars:
-  #       - envVar:
-  #           key: "JENKINS_URL"
-  #           value: "http://jenkins.pipeline.svc.cluster.local:80"
-  #       label: "jenkins-slave"
-  #       name: "default"
-  #       nodeUsageMode: NORMAL
-  #       workspaceVolume: "dynamicPVC"
-  #       yamlMergeStrategy: "override"
-    # ConfigScripts:
-    #   slack: |
-    #     credentials:
-    #       system:
-    #         domainCredentials:
-    #         - credentials:
-    #           - string:
-    #               description: "slackcnp integration token"
-    #               id: "slackcnp"
-    #               scope: GLOBAL
-    #               secret: "{AQAAABAAAAAgSOfwkvy05VUnM3pkh9fSOmhPkijubBLlBDHNlDIh3rmWG2sU9PbhIEW3sRLeRO6X}"
-    #     slackNotifier:
-    #       baseUrl: "https://unisys-fed.slack.com/services/hooks/jenkins-ci/"
-    #       botUser: false
-    #       room: "#fawkes"
-    #       teamDomain: "unisys-fed"
-    #       tokenCredentialId: "slackcnp"
+            - credentialsId: "sonarqube-token"
+              name: "sonarqube"
+              serverUrl: "http://sonarqube-sonarqube.pline:9000"
+        jobs:
+          - script: >
+            pipelineJob('pipeline') {
+              definition {
+                cpsScm {
+                    scriptPath 'Jenkinsfile'
+                    scm {
+                      git {
+                          remote { url 'https://github.com/mkrzyzanowski/blog-001.git' }
+                          branch '*/docker-for-mac'
+                          extensions {}
+                      }
+                    }
+                  }
+                }
+              }
     # ConfigScripts:
     #     jobs: |
     #       - script: >

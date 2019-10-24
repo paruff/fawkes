@@ -290,6 +290,12 @@ cd ..
 install_dashboard(){
     helm install --wait stable/kubernetes-dashboard --name dashboard
 }
+destroy(){
+    echo "Running terraform destroy to deleting remaining resources"
+
+  #terraform destroy -auto-approve -state=$tf_state
+  terraform destroy -auto-approve
+}
 
 provision_cloud(){
 
