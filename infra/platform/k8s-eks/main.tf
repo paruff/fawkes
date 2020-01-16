@@ -177,7 +177,7 @@ module "eks" {
   worker_groups_launch_template_mixed = [
     {
       name                    = "spot-1"
-      override_instance_types = ["r5.large", "r5a.large", "r5a.xlarge", "r5.xlarge"]
+      override_instance_types = ["r5.large", "r5a.large", "r5d.large", "r5ad.large"]
       spot_instance_pools     = 4
       asg_max_size            = 10
       asg_desired_capacity    = 5
