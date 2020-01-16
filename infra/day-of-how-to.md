@@ -35,21 +35,50 @@ Default region name [us-east-2]:
 Default output format [None]:
 ```
 7. Validate by entering "aws s3 ls"
+8. Create a profile called terraform (in ~/.aws/credentials) and copy in aws_access_key_id and aws_secret_access_key that you want to use
+9. Update ~/.aws/config and set region for terraform profile
+10. Export default aws profile
+    linux: export AWS_DEFAULT_PROFILE=terraform
+    windows: setx AWS_DEFAULT_PROFILE terraform
+11. Run 'aws configure' and keep all, except do set default aws region
+11. Test aws config with 'aws ec2 describe-instances --profile terraform'. Should get no errors
 
 ## deploy the CI/CD pipeline
 1.  scp -i ~/.ssh/platform-use1.pem infra/platform/docker-compose-swarm.yml docker@54.172.210.245:
-1.  ssh  -i ~/.ssh/platform-use1.pem docker@54.172.210.245
-1.  docker stack deploy -c docker-compose-swarm.yml  pipeline
+2.  ssh  -i ~/.ssh/platform-use1.pem docker@54.172.210.245
+3.  docker stack deploy -c docker-compose-swarm.yml  pipeline
 
 ## Configure Jenkins
 1. log into Jenkins
+2. configure Jenkins URL
 3. configure Jenkins github id
-2. configure Jenkins dockerhub id
-2. configure github auth and groups
-3. configure slack channel
-4. configure smtp server
-4. configure jobs organization to pull down unisys/{project}-.*
+4. configure Jenkins dockerhub id
+5. configure github auth and groups
+6. configure slack channel
+7. configure smtp server
+8. configure jobs organization to pull down unisys/{project}-.*
 
 ## Configure SonarQube
 1. log into SonarQube
-3. configure SonarQube github id
+2. configure SonarQube github id
+
+## Things that could potentially hurt our one-click deployment
+
+### terraform init
+
+To prevent automatic upgrades to new major versions that may contain breaking
+changes, it is recommended to add version = "..." constraints to the
+corresponding provider blocks in configuration, with the constraint strings
+suggested below.
+
+* provider.local: version = "~> 1.3"
+* provider.null: version = "~> 2.1"
+* provider.template: version = "~> 2.1"
+
+Since our setup gets the latest terraform, we could find incompatibilties in the 11th hour with our variables.tf and main.tf.
+
+## Online resources that helped
+
+* https://hackernoon.com/introduction-to-aws-with-terraform-7a8daf261dc0
+*
+

@@ -1,0 +1,51 @@
+---
+# KITCHEN_YAML="alternative_kitchen.yml" kitchen test
+driver:
+  name: vagrant
+
+# provisioner:
+#   name: chef_zero
+provisioner:
+  name: shell
+  script:    'space-setup-win10.bat'
+
+verifier:
+  name: inspec
+
+platforms:
+  # - name: ubuntu-18.04
+  # - name: centos-7
+  - name: windows-10
+    transport:
+      name: winrm
+    driver:
+      guest: :windows
+      box: StefanScherer/windows_10
+  # - name: macosx-10.12
+  #   driver:
+  #     box: elliotweiser/macosx-sierra-clt
+  # start work on aws test
+  # -name: windows-2012r2
+  # driver:
+  #   image_id: ami-xxxxxxxx
+  # transport:
+  #   username: ec2-user
+  #   ssh_key: ../ec2_keys/US-East1.pem
+
+suites:
+  - name: default
+#   - name: workspace
+#     run_list:
+#       - recipe[git]
+#       - recipe[aws]
+#       - recipe[java]
+#       - recipe[vagrant]
+# #      - recipe[virtualbox]
+#       - recipe[maven]
+# #      - recipe[docker]
+#       - recipe[minikube]
+# #      - recipe[helm]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+  
