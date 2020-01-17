@@ -207,15 +207,9 @@ fi
 
 install_helm(){
     # Helm 
-kubectl apply -f tiller-user.yaml
-# kubectl -n kube-system create serviceaccount tiller
-# kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
-# helm init --service-account tiller --history-max 200
-helm init --service-account tiller --history-max 200
-# --tiller-tls-verify
-# kubectl rollout status -h
-kubectl rollout status --watch deployment/tiller-deploy -n kube-system
 
+helm repo add stable https //kubernetes-charts.storage.googleapis.com
+helm repo update
 }
 
 install_jenkins(){
@@ -320,15 +314,7 @@ export  KUBECONFIG_SAVED=$KUBECONFIG
 export KUBECONFIG=$HOME/.kube/config
 
 
-# Helm 
-kubectl apply -f tiller-user.yaml
-# kubectl -n kube-system create serviceaccount tiller
-# kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
-# helm init --service-account tiller --history-max 200
-helm init --service-account tiller --history-max 200
-# --tiller-tls-verify
-# kubectl rollout status -h
-kubectl rollout status --watch deployment/tiller-deploy -n kube-system
+install_helm
 
 kubectl create namespace pline
 kubectl create namespace dev
