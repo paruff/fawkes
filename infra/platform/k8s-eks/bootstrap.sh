@@ -54,6 +54,7 @@ plan() {
 }
 
 deploy() {
+  prepspace
   plan
 
   echo "Deploying AWS Resources using Terraform"
@@ -169,16 +170,7 @@ if [ ${machine} = "Mac" ];
 then
 ../../workspace/space-setup-macosx.sh
 if ! aws-iam-authenticator -h; then
-# this aim-authorize-
-# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
-#   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
-#    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
-#    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
- curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
- openssl sha1 -sha256 aws-iam-authenticator
- chmod +x ./aws-iam-authenticator
- mkdir $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH
- echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
+  brew install aws-iam-authenticator
 fi
 
 fi
@@ -208,15 +200,15 @@ fi
 install_helm(){
     # Helm 
 
-helm repo add stable https //kubernetes-charts.storage.googleapis.com
+helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm repo update
 }
 
 install_jenkins(){
 
     # # Jenkins
-kubectl apply -f jenkins/service-account.yaml
-helm install --namespace=pline stable/jenkins --name jenkins -f jenkins/values.yaml --wait 
+# kubectl apply -f jenkins/service-account.yaml
+helm install jenkins --namespace=pline stable/jenkins  -f jenkins/values.yaml --wait 
 echo "Jenkins admin password:"
 printf $(kubectl get secret --namespace pline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
 export JENKINS_IP=$(kubectl get svc --namespace pline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
@@ -232,7 +224,7 @@ echo "Jenkins LB URL"http://$JENKINS_IP:8080/login
 install_sonarqube(){
 
 # # Sonarqube
-helm install --name sonarqube stable/sonarqube -f sonarqube/sonarqube-values.yaml --namespace=pline --wait
+helm install sonarqube stable/sonarqube -f sonarqube/sonarqube-values.yaml --namespace=pline --wait
 helm test sonarqube --cleanup
 # get latest load balancer path to sonarqube chart
 export SERVICE_IP=$(kubectl get svc --namespace pline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
@@ -242,26 +234,26 @@ echo http://$SERVICE_IP:9000
 
 install_selenium(){
 
-helm install --namespace=pline stable/selenium --name selenium --set chromeDebug.enabled=true --set .enabled=true --wait
+helm install selenium --namespace=pline stable/selenium  --set chromeDebug.enabled=true --set .enabled=true --wait
 ## internal URL - http://selenium-selenium-hub.pline:4444
 
 }
 
 install_spinnaker(){
 
-helm install --namespace=pline stable/spinnaker --name spinnaker --wait
+helm install spinnaker --namespace=pline stable/spinnaker  --wait
 
 }
 
 install_prometheus(){
 kubectl create secret generic --namespace pline prometheus-prometheus-oper-prometheus-scrape-confg --from-file=prometheus/additional-scrape-configs.yaml
-helm install --name prometheus --namespace pline -f prometheus/prometheus-values.yaml stable/prometheus-operator --wait
+helm install prometheus --namespace pline -f prometheus/prometheus-values.yaml stable/prometheus-operator --wait
 
 }
 
 install_elk(){
     # Setup EFK-stack (elasticsearch, fluent-bit, and kibana)
-helm install --name elk stable/elastic-stack -f elk-stack/elk-values.yaml --namespace=pline --wait
+helm install elk stable/elastic-stack -f elk-stack/elk-values.yaml --namespace=pline --wait
 helm test elk --cleanup
 
 }
@@ -270,7 +262,7 @@ install_nexusiq(){
     kubectl apply --namespace=pline  -f nexusiq/iq-server-all.yaml 
 }
 install_anchore(){
- helm install --namespace=pline stable/anchore-engine --name anchore --wait
+ helm install anchore --namespace=pline stable/anchore-engine  --wait
 
 }
 
@@ -282,7 +274,7 @@ cd ..
 }
 
 install_dashboard(){
-    helm install --wait stable/kubernetes-dashboard --name dashboard
+    helm install dashboard stable/kubernetes-dashboard 
 }
 destroy(){
     echo "Running terraform destroy to deleting remaining resources"
@@ -304,6 +296,9 @@ mkdir -p $HOME/.kube
 
 cp kubeconfig_* $HOME/.kube/config
 cp kubeconfig_* $HOME/.kube/
+
+
+aws eks update-config
 
 # move to localk8s config
 # mkdir -p /tmp
