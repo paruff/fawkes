@@ -97,12 +97,12 @@ install_delight(){
 
 show() {
   export JENKINS_ADMIN_USER="admin"
-  export JENKINS_ADMIN_PASSWORD=$(kubectl get secret --namespace pipeline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode)
-  export JENKINS_IP=$(kubectl get svc --namespace pipeline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+  export JENKINS_ADMIN_PASSWORD=$(kubectl get secret --namespace pline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode)
+  export JENKINS_IP=$(kubectl get svc --namespace pline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
   export JENKINS_LB_URL="http://$JENKINS_IP"
 
   # get latest load balancer path to sonarqube chart
-  export SONARQUBE_SERVICE_IP=$(kubectl get svc --namespace pipeline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+  export SONARQUBE_SERVICE_IP=$(kubectl get svc --namespace pline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
   export SONARQUBE_LB_URL="http://$SONARQUBE_SERVICE_IP:9000"
 
   token_name=$(kubectl -n kube-system get secret -o custom-columns=NAME:.metadata.name | grep dashboard-admin-user-token)
