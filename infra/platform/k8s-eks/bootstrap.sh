@@ -298,7 +298,7 @@ cp kubeconfig_* $HOME/.kube/config
 cp kubeconfig_* $HOME/.kube/
 
 
-aws eks update-config
+aws eks update-kubeconfig --name pipeline
 
 # move to localk8s config
 # mkdir -p /tmp
