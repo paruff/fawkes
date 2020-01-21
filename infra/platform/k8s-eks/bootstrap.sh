@@ -99,7 +99,7 @@ show() {
   export JENKINS_ADMIN_USER="admin"
   export JENKINS_ADMIN_PASSWORD=$(kubectl get secret --namespace pline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode)
   export JENKINS_IP=$(kubectl get svc --namespace pline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
-  export JENKINS_LB_URL="http://$JENKINS_IP"
+  export JENKINS_LB_URL="http://$JENKINS_IP:8080"
 
   # get latest load balancer path to sonarqube chart
   export SONARQUBE_SERVICE_IP=$(kubectl get svc --namespace pline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
