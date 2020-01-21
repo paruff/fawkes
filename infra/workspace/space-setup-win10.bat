@@ -30,6 +30,7 @@ REM  Call :InstallIf %%i , %%j
 REM )
 Call :InstallIf adoptopenjdk8 , 8.212.2
 Call :InstallIf awscli , 1.16.200
+Call :InstallIf aws-iam-authenticator ,  0.4.0
 Call :InstallIf chefdk , 4.1.7
 Call :InstallIf docker-cli , 18.09.6
 Call :InstallIf docker-compose , 1.24.0

@@ -41,6 +41,7 @@ brew list --versions > brew-versions.txt
 brew cask list --versions >> brew-versions.txt
 
 brew_install_if0 awscli 1.16.200
+brew_install_if0 aws-iam-authenticator 0.4.0
 brew_install_if0 git 2.22.0_1
 brew_install_if0 git-flow 0.4.1
 brew_install_if0 maven 3.6.0
