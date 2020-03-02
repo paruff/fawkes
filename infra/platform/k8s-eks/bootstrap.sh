@@ -160,11 +160,26 @@ case "$OSTYPE" in
   win*)     machine=Windows;;
   msys*)    machine=GBash ;;
 #  cygwin*)  machine=Cygwin;;
-#  bsd*)     machine=BSD;;
+  bsd*)     machine=BSD;;
   *)        echo "unknown: $OSTYPE" ;;
 esac
 
 echo ${machine}
+
+if [ ${machine} = "BSD" ]; 
+then
+# ../../workspace/space-setup-linux.sh
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+if ! aws-iam-authenticator -h; then
+ curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/aws-iam-authenticator
+ openssl sha1 -sha256 aws-iam-authenticator
+ chmod +x ./aws-iam-authenticator
+ mkdir $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH
+ echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
+fi
+
 
 if [ ${machine} = "Mac" ]; 
 then
@@ -180,11 +195,6 @@ if [ ${machine} = "GBash" ];
 then
 ../../workspace/space-setup-win10.ps1
 if ! aws-iam-authenticator -h; then
-# this aim-authorize-
-# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
-#   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
-#    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
-#    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
  curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
  openssl sha1 -sha256 aws-iam-authenticator.exe
  chmod +x ./aws-iam-authenticator.exe

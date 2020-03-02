@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.12.0"
+  required_version = ">= 0.12.2"
 }
 
 provider "aws" {
@@ -100,7 +100,7 @@ resource "aws_security_group" "all_worker_mgmt" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.6.0"
+  version = "2.25.0"
 
   name                 = "test-vpc"
   cidr                 = "10.0.0.0/16"
@@ -128,7 +128,7 @@ module "vpc" {
 
 module "eks" {
   source       = "terraform-aws-modules/eks/aws"
-  version      = "8.1.0"
+  version      = "9.0.0"
   cluster_name = local.cluster_name
   subnets      = module.vpc.private_subnets
 
