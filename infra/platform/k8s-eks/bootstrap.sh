@@ -60,7 +60,6 @@ deploy() {
   echo "Deploying AWS Resources using Terraform"
 
   deploy_cloud_resources
-
   deploy_k8s_resources
 
   show
@@ -180,6 +179,7 @@ if ! aws-iam-authenticator -h; then
  echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
 fi
 
+fi
 
 if [ ${machine} = "Mac" ]; 
 then
@@ -203,7 +203,6 @@ if ! aws-iam-authenticator -h; then
 fi
 
 fi
-
 
 }
 
