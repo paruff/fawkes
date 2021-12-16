@@ -37,6 +37,7 @@ Call :InstallIf docker-compose , 1.29.2
 Call :InstallIf docker-machine , 0.16.2
 Call :InstallIf git , 2.34.1
 :: Call :InstallIf gitflow-avh , 0.0.0
+Call :InstallIf golang , 1.17.5
 Call :InstallIf googlechrome , 96.0.4664.110
 :: Call :InstallIf inspec , 4.46.13 included in chef workstation
 Call :InstallIf kubernetes-cli , 1.23.0
@@ -50,7 +51,9 @@ Call :InstallIf nodejs , 16.13.0
 :: LTS 8, 11, 17
 Call :InstallIf openjdk17 , 17.0.1
 Call :InstallIf postman , 9.4.1
+Call :InstallIf python, 3.10.1
 Call :InstallIf selenium-chrome-driver , 83.0.4103.39
+Call :InstallIf serverless, 2.69.1
 Call :InstallIf springtoolsuite , 3.9.6
 Call :InstallIf terraform , 1.1.0
 Call :InstallIf vagrant , 2.2.19
@@ -70,8 +73,14 @@ REM code --install-extention Pivotal.vscode-boot-dev-pack
 echo
 echo space setup complete!
 echo 
+
 :: refreshenv exits the script
-GOTO End
+
+refreshenv
+
+GOTO:eof
+
+EXIT /B n
 
 :: Functions
 :InstallIf
@@ -88,6 +97,6 @@ EXIT /B 0
 
 
 :End
-REM refreshenv
+REM 
 
 EXIT /B n
