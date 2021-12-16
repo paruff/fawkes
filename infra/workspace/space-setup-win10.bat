@@ -29,32 +29,32 @@ REM for /f "tokens=1-2 delims=," %%i in (tool-suite.txt) do (
 REM  Call :InstallIf %%i , %%j
 REM )
 Call :InstallIf adoptopenjdk8 , 8.212.2
-Call :InstallIf awscli , 1.16.200
-Call :InstallIf aws-iam-authenticator ,  0.4.0
+Call :InstallIf awscli , 2.4.6
+Call :InstallIf aws-iam-authenticator ,  0.5.3
 Call :InstallIf chefdk , 4.1.7
-Call :InstallIf docker-cli , 18.09.6
-Call :InstallIf docker-compose , 1.24.0
-Call :InstallIf docker-machine , 0.16.1
-Call :InstallIf git , 2.22.0 
+Call :InstallIf docker-cli , 19.03.12
+Call :InstallIf docker-compose , 1.29.2
+Call :InstallIf docker-machine , 0.16.2
+Call :InstallIf git , 2.34.1
 Call :InstallIf gitflow-avh , 0.0.0
-Call :InstallIf googlechrome , 75.0.3770.142
-Call :InstallIf inspec ,4.7.18
-Call :InstallIf kubernetes-cli , 1.15.1
-Call :InstallIf kubernetes-helm , 2.14.2
-Call :InstallIf make , 4.2.1
-Call :InstallIf maven , 3.6.1
+Call :InstallIf googlechrome , 96.0.4664.110
+Call :InstallIf inspec , 4.46.13
+Call :InstallIf kubernetes-cli , 1.23.0
+Call :InstallIf kubernetes-helm , 3.7.1
+Call :InstallIf make , 4.3
+Call :InstallIf maven , 3.8.4
 Call :InstallIf minikube , 1.2.0 
-Call :InstallIf mobaxterm , 11.1.0
-:: nodejs lts is 10.16.0
-Call :InstallIf nodejs , 10.16.0
+Call :InstallIf microsoft-windows-terminal , 1.11.3471.0
+:: nodejs lts is 16.13.0
+Call :InstallIf nodejs , 16.13.0
 :: Call ?:InstallIf openjdk , 11.0.2.01
-Call :InstallIf postman , 7.2.2
-Call :InstallIf selenium-chrome-driver , 75.0.3770.8
+Call :InstallIf postman , 9.4.1
+Call :InstallIf selenium-chrome-driver , 83.0.4103.39
 Call :InstallIf springtoolsuite , 3.9.6
-Call :InstallIf terraform , 0.12.5
-Call :InstallIf vagrant , 2.2.5
-Call :InstallIf virtualbox , 6.0.10
-Call :InstallIf vscode , 1.36.1
+Call :InstallIf terraform , 1.1.0
+Call :InstallIf vagrant , 2.2.19
+Call :InstallIf virtualbox , 6.1.30
+Call :InstallIf vscode , 1.63.1
 
 REM VS Code plugins from https://marketplace.visualstudio.com/VSCode
 REM code --install-extension redhat.java
