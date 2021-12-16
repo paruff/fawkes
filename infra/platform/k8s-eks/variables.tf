@@ -1,5 +1,5 @@
 variable "region" {
-  default = "us-west-2"
+  default = "us-east-2"
 }
 
 variable "map_accounts" {
@@ -7,7 +7,7 @@ variable "map_accounts" {
   type        = list(string)
 
   default = [
-    "777777777777",
+    "618705811157",
     "888888888888",
   ]
 }
