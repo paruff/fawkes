@@ -20,37 +20,37 @@ echo ${machine}
 if [ ${machine} = "Mac" ]; 
 then
 ../../workspace/space-setup-macosx.sh
-if ! aws-iam-authenticator -h; then
-# this aim-authorize-
-# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
-#   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
-#    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
-#    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
- curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
- openssl sha1 -sha256 aws-iam-authenticator
- chmod +x ./aws-iam-authenticator
- mkdir $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH
- echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
+# if ! aws-iam-authenticator -h; then
+# # this aim-authorize-
+# # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
+# #   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
+# #    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
+# #    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
+#  curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
+#  openssl sha1 -sha256 aws-iam-authenticator
+#  chmod +x ./aws-iam-authenticator
+#  mkdir $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH
+#  echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
+# fi
 fi
 
-fi
 # now for windows 10 running git bash
 # TODO define and lock the versions to working versions 
 if [ ${machine} = "GBash" ]; 
 then
 ../../workspace/space-setup-win10.ps1
-if ! aws-iam-authenticator -h; then
-# this aim-authorize-
-# https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
-#   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
-#    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
-#    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
- curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
- openssl sha1 -sha256 aws-iam-authenticator.exe
- chmod +x ./aws-iam-authenticator.exe
- mkdir $HOME/bin && cp ./aws-iam-authenticator.exe $HOME/bin/aws-iam-authenticator.exe && export PATH=$HOME/bin:$PATH
- echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
-fi
+# if ! aws-iam-authenticator -h; then
+# # this aim-authorize-
+# # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
+# #   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
+# #    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
+# #    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
+#  curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
+#  openssl sha1 -sha256 aws-iam-authenticator.exe
+#  chmod +x ./aws-iam-authenticator.exe
+#  mkdir $HOME/bin && cp ./aws-iam-authenticator.exe $HOME/bin/aws-iam-authenticator.exe && export PATH=$HOME/bin:$PATH
+#  echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
+# fi
 
 fi
 
@@ -77,14 +77,14 @@ export KUBECONFIG=$HOME/.kube/config
 
 
 # Helm 
-kubectl apply -f tiller-user.yaml
+# kubectl apply -f tiller-user.yaml
 # kubectl -n kube-system create serviceaccount tiller
 # kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
 # helm init --service-account tiller --history-max 200
-helm init --service-account tiller --history-max 200
+# helm init --service-account tiller --history-max 200
 # --tiller-tls-verify
 # kubectl rollout status -h
-kubectl rollout status --watch deployment/tiller-deploy -n kube-system
+# kubectl rollout status --watch deployment/tiller-deploy -n kube-system
 
 kubectl create namespace pline
 kubectl create namespace dev
