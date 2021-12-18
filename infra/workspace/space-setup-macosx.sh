@@ -10,8 +10,12 @@ function brew_install_if0 ()
 	echo "$1@$2 installed"
   else
     echo "installing $1  - @$2"
-	brew upgrade $1 #@$2
-  fi
+	brew install $1 
+  #@$2
+
+  # brew extract --version='version_no' <package_name> <tap_name>
+  # Example: brew extract --version='1.9' haproxy homebrew/core
+    fi
 }
 
 
