@@ -4,7 +4,7 @@
   end
 
   describe command('vagrant version') do
-    its('stdout') { should include  "2.2.5" }
+    its('stdout') { should include  "2.2.19" }
     its('stderr') { should eq '' }
     its('exit_status') { should eq 0 }
   end

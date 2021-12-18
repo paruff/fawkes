@@ -1,5 +1,7 @@
 @ECHO OFF
 
+:: to be migrated to powershell desired state configuration so we can use bootstrap.ps1 as the script name and define state not procedure.
+
 echo Administrative permissions required. Detecting permissions...
 
 net session >nul 2>&1
@@ -46,6 +48,7 @@ Call :InstallIf make , 4.3
 Call :InstallIf maven , 3.8.4
 Call :InstallIf minikube , 1.24.0 
 Call :InstallIf microsoft-windows-terminal , 1.11.3471.0
+:: Call :InstallIf newman , 16.13.0
 :: nodejs lts is 16.13.0
 Call :InstallIf nodejs , 16.13.0
 :: LTS 8, 11, 17
