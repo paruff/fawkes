@@ -1,4 +1,6 @@
-# Fawkes is a open source project to stand up a k8s based continuous integration and continuos delivery pipeline
+# Fawkes is a open source project to stand up a work space and a k8s based continuous integration and continuos delivery pipeline
+
+Workspace is supports windows and mac os useing choco and brew.
 
 It is currently built on aws and uses terraform to build the k8s cluster so a todo is add azure, google cloud etc.
 

@@ -20,18 +20,6 @@ echo ${machine}
 if [ ${machine} = "Mac" ]; 
 then
 ../../workspace/space-setup-macosx.sh
-# if ! aws-iam-authenticator -h; then
-# # this aim-authorize-
-# # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
-# #   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
-# #    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
-# #    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
-#  curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
-#  openssl sha1 -sha256 aws-iam-authenticator
-#  chmod +x ./aws-iam-authenticator
-#  mkdir $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH
-#  echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
-# fi
 fi
 
 # now for windows 10 running git bash
@@ -39,18 +27,6 @@ fi
 if [ ${machine} = "GBash" ]; 
 then
 ../../workspace/space-setup-win10.ps1
-# if ! aws-iam-authenticator -h; then
-# # this aim-authorize-
-# # https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html
-# #   Linux: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
-# #    MacOS: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
-# #    Windows: https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
-#  curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/windows/amd64/aws-iam-authenticator.exe
-#  openssl sha1 -sha256 aws-iam-authenticator.exe
-#  chmod +x ./aws-iam-authenticator.exe
-#  mkdir $HOME/bin && cp ./aws-iam-authenticator.exe $HOME/bin/aws-iam-authenticator.exe && export PATH=$HOME/bin:$PATH
-#  echo 'export PATH=$HOME/bin:$PATH' >> ~/.bash_profile
-# fi
 
 fi
 
@@ -75,16 +51,7 @@ cp kubeconfig_* $HOME/.kube/
 export  KUBECONFIG_SAVED=$KUBECONFIG
 export KUBECONFIG=$HOME/.kube/config
 
-
 # Helm 
-# kubectl apply -f tiller-user.yaml
-# kubectl -n kube-system create serviceaccount tiller
-# kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
-# helm init --service-account tiller --history-max 200
-# helm init --service-account tiller --history-max 200
-# --tiller-tls-verify
-# kubectl rollout status -h
-# kubectl rollout status --watch deployment/tiller-deploy -n kube-system
 
 kubectl create namespace pline
 kubectl create namespace dev
@@ -93,57 +60,100 @@ kubectl create namespace prod
 
 sleep 5
 
-helm install --wait stable/kubernetes-dashboard --name dashboard-demo
+helm repo add k8s-dashboard https://kubernetes.github.io/dashboard
+helm install my-kubernetes-dashboard k8s-dashboard/kubernetes-dashboard --version 5.0.5
+
+# helm install --wait stable/kubernetes-dashboard --name dashboard-demo
 
 # Helm up basic
 # # Jenkins
-kubectl apply -f jenkins/service-account.yaml
-helm install --namespace=pline stable/jenkins --name jenkins -f jenkins/values.yaml --wait 
-echo "Jenkins admin password:"
-printf $(kubectl get secret --namespace pline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
-export JENKINS_IP=$(kubectl get svc --namespace pline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+helm repo add jenkinsci https://charts.jenkins.io/
+helm install my-jenkins jenkinsci/jenkins --version 3.10.2
+# change to LTS version
+# add plugins for different pipelines
+0
 
-echo "Jenkins LB URL"http://$JENKINS_IP:8080/login
+# kubectl apply -f jenkins/service-account.yaml
+# helm install --namespace=pline stable/jenkins --name jenkins -f jenkins/values.yaml --wait 
+# echo "Jenkins admin password:"
+# printf $(kubectl get secret --namespace pline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+# export JENKINS_IP=$(kubectl get svc --namespace pline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+
+# echo "Jenkins LB URL"http://$JENKINS_IP:8080/login
 # printf $(kubectl get secret --namespace pline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
 # 
 # export JENKINS_SERVICE_IP=$(kubectl get svc --namespace pline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
 #  echo http://$SERVICE_IP:8080/login
 
 # # Sonarqube
-helm install --name sonarqube stable/sonarqube -f sonarqube/sonarqube-values.yaml --namespace=pline --wait
-helm test sonarqube --cleanup
+# helm install --name sonarqube stable/sonarqube -f sonarqube/sonarqube-values.yaml --namespace=pline --wait
+# helm test sonarqube --cleanup
 # get latest load balancer path to sonarqube chart
-export SERVICE_IP=$(kubectl get svc --namespace pline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
-echo http://$SERVICE_IP:9000
+# export SERVICE_IP=$(kubectl get svc --namespace pline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+# echo http://$SERVICE_IP:9000
+
+helm repo add sonarqube https://SonarSource.github.io/helm-chart-sonarqube
+helm install my-sonarqube sonarqube/sonarqube 
 
 helm install --namespace=pline stable/docker-registry  --name registry --wait 
 # helm install --namespace=pline stable/sonatype-nexus --name registry --set nexus.service.type=LoadBalancer --wait
 ## uid: admin, pw: admin123
 ## I don't seem to have access externally
 
-helm install --namespace=pline stable/selenium --name selenium --set chromeDebug.enabled=true --set .enabled=true --wait
+#SELENIUM 
+helm repo add douban https://douban.github.io/charts/
+helm install my-selenium douban/selenium --version 1.3.0
+# helm install --namespace=pline stable/selenium --name selenium --set chromeDebug.enabled=true --set .enabled=true --wait
 ## internal URL - http://selenium-selenium-hub.pline:4444
 
-helm install --namespace=pline stable/spinnaker --name spinnaker --wait
+# spinnaker
+# helm install --namespace=pline stable/spinnaker --name spinnaker --wait
+
+helm repo add opsmx https://helmcharts.opsmx.com/
+helm install my-spinnaker opsmx/spinnaker --version 2.2.7
 
 # # Satisfied
-kubectl create secret generic --namespace pline prometheus-prometheus-oper-prometheus-scrape-confg --from-file=prometheus/additional-scrape-configs.yaml
-helm install --name prometheus --namespace pline -f prometheus/prometheus-values.yaml stable/prometheus-operator --wait
+#PROMETHEUS
+#  kubectl create secret generic --namespace pline prometheus-prometheus-oper-prometheus-scrape-confg --from-file=prometheus/additional-scrape-configs.yaml
+# helm install --name prometheus --namespace pline -f prometheus/prometheus-values.yaml stable/prometheus-operator --wait
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install my-prometheus prometheus-community/prometheus --version 15.0.2
 
 # Setup EFK-stack (elasticsearch, fluent-bit, and kibana)
-helm install --name elk stable/elastic-stack -f elk-stack/elk-values.yaml --namespace=pline --wait
-helm test elk --cleanup
+# helm install --name elk stable/elastic-stack -f elk-stack/elk-values.yaml --namespace=pline --wait
+# helm test elk --cleanup
+
+helm repo add elastic https://helm.elastic.co
+helm install my-eck-operator elastic/eck-operator --version 1.9.1
 
 # # Delight
 # TODO: mssheldon - 05/02/2019; logging is way too high for some reason.  Circle back on this later.
 # helm install --namespace=pline stable/anchore-engine --name anchore --wait
 
-helm install --namespace=pline --name jmeter stable/distributed-jmeter --wait
+#JMETER
+# helm install --namespace=pline --name jmeter stable/distributed-jmeter --wait
 
+helm repo add cloudnativeapp https://cloudnativeapp.github.io/charts/curated/
+helm install my-distributed-jmeter cloudnativeapp/distributed-jmeter --version 1.0.1
+
+#NEXUS IQ
 kubectl apply --namespace=pline  -f nexusiq/iq-server-all.yaml 
 
+#HYGIEIA
 cd hygieia
 ./hygieia-reinstall.sh
 cd ..
 
 # helm install --namespace=pline stable/ --name 
+
+# GITLAB
+# helm install --namespace=pline stable/ --name 
+# helm repo add gitlab http://charts.gitlab.io/
+# helm install my-gitlab gitlab/gitlab --version 5.6.2
+
+#ECLIPSE CHE
+# helm install --namespace=pline stable/ --name 
+ helm repo add eclipse-che https://eclipse-che.github.io/che-operator/charts
+ helm install my-eclipse-che eclipse-che/eclipse-che --version 7.41.2
+
