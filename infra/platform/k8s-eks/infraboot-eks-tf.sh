@@ -71,7 +71,7 @@ helm repo add jenkinsci https://charts.jenkins.io/
 helm install my-jenkins jenkinsci/jenkins --version 3.10.2
 # change to LTS version
 # add plugins for different pipelines
-0
+
 
 # kubectl apply -f jenkins/service-account.yaml
 # helm install --namespace=pline stable/jenkins --name jenkins -f jenkins/values.yaml --wait 
@@ -138,12 +138,12 @@ helm repo add cloudnativeapp https://cloudnativeapp.github.io/charts/curated/
 helm install my-distributed-jmeter cloudnativeapp/distributed-jmeter --version 1.0.1
 
 #NEXUS IQ
-kubectl apply --namespace=pline  -f nexusiq/iq-server-all.yaml 
+# kubectl apply --namespace=pline  -f nexusiq/iq-server-all.yaml 
 
 #HYGIEIA
-cd hygieia
-./hygieia-reinstall.sh
-cd ..
+# cd hygieia
+# ./hygieia-reinstall.sh
+# cd ..
 
 # helm install --namespace=pline stable/ --name 
 
