@@ -81,8 +81,6 @@ echo
 
 refreshenv
 
-GOTO:eof
-
 EXIT /B n
 
 :: Functions
