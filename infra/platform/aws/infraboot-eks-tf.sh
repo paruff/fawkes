@@ -61,14 +61,14 @@ kubectl create namespace prod
 sleep 5
 
 helm repo add k8s-dashboard https://kubernetes.github.io/dashboard
-helm install my-kubernetes-dashboard k8s-dashboard/kubernetes-dashboard --version 5.0.5
+helm install fawkes-kubernetes-dashboard k8s-dashboard/kubernetes-dashboard --version 5.0.5
 
 # helm install --wait stable/kubernetes-dashboard --name dashboard-demo
 
 # Helm up basic
 # # Jenkins
 helm repo add jenkinsci https://charts.jenkins.io/
-helm install my-jenkins jenkinsci/jenkins --version 3.10.2
+helm install fawkes-jenkins jenkinsci/jenkins --version 3.10.2
 # change to LTS version
 # add plugins for different pipelines
 
@@ -93,7 +93,7 @@ helm install my-jenkins jenkinsci/jenkins --version 3.10.2
 # echo http://$SERVICE_IP:9000
 
 helm repo add sonarqube https://SonarSource.github.io/helm-chart-sonarqube
-helm install my-sonarqube sonarqube/sonarqube 
+helm install fawkes-sonarqube sonarqube/sonarqube 
 
 helm install --namespace=pline stable/docker-registry  --name registry --wait 
 # helm install --namespace=pline stable/sonatype-nexus --name registry --set nexus.service.type=LoadBalancer --wait
@@ -102,7 +102,7 @@ helm install --namespace=pline stable/docker-registry  --name registry --wait
 
 #SELENIUM 
 helm repo add douban https://douban.github.io/charts/
-helm install my-selenium douban/selenium --version 1.3.0
+helm install fawkes-selenium douban/selenium --version 1.3.0
 # helm install --namespace=pline stable/selenium --name selenium --set chromeDebug.enabled=true --set .enabled=true --wait
 ## internal URL - http://selenium-selenium-hub.pline:4444
 
@@ -110,7 +110,7 @@ helm install my-selenium douban/selenium --version 1.3.0
 # helm install --namespace=pline stable/spinnaker --name spinnaker --wait
 
 helm repo add opsmx https://helmcharts.opsmx.com/
-helm install my-spinnaker opsmx/spinnaker --version 2.2.7
+helm install fawkes-spinnaker opsmx/spinnaker --version 2.2.7
 
 # # Satisfied
 #PROMETHEUS
@@ -118,14 +118,14 @@ helm install my-spinnaker opsmx/spinnaker --version 2.2.7
 # helm install --name prometheus --namespace pline -f prometheus/prometheus-values.yaml stable/prometheus-operator --wait
 
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm install my-prometheus prometheus-community/prometheus --version 15.0.2
+helm install fawkes-prometheus prometheus-community/prometheus --version 15.0.2
 
 # Setup EFK-stack (elasticsearch, fluent-bit, and kibana)
 # helm install --name elk stable/elastic-stack -f elk-stack/elk-values.yaml --namespace=pline --wait
 # helm test elk --cleanup
 
 helm repo add elastic https://helm.elastic.co
-helm install my-eck-operator elastic/eck-operator --version 1.9.1
+helm install fawkes-eck-operator elastic/eck-operator --version 1.9.1
 
 # # Delight
 # TODO: mssheldon - 05/02/2019; logging is way too high for some reason.  Circle back on this later.
@@ -135,7 +135,7 @@ helm install my-eck-operator elastic/eck-operator --version 1.9.1
 # helm install --namespace=pline --name jmeter stable/distributed-jmeter --wait
 
 helm repo add cloudnativeapp https://cloudnativeapp.github.io/charts/curated/
-helm install my-distributed-jmeter cloudnativeapp/distributed-jmeter --version 1.0.1
+helm install fawkes-distributed-jmeter cloudnativeapp/distributed-jmeter --version 1.0.1
 
 #NEXUS IQ
 # kubectl apply --namespace=pline  -f nexusiq/iq-server-all.yaml 
@@ -150,10 +150,10 @@ helm install my-distributed-jmeter cloudnativeapp/distributed-jmeter --version 1
 # GITLAB
 # helm install --namespace=pline stable/ --name 
 # helm repo add gitlab http://charts.gitlab.io/
-# helm install my-gitlab gitlab/gitlab --version 5.6.2
+# helm install fawkes-gitlab gitlab/gitlab --version 5.6.2
 
 #ECLIPSE CHE
 # helm install --namespace=pline stable/ --name 
  helm repo add eclipse-che https://eclipse-che.github.io/che-operator/charts
- helm install my-eclipse-che eclipse-che/eclipse-che --version 7.41.2
+ helm install fawkes-eclipse-che eclipse-che/eclipse-che --version 7.41.2
 
