@@ -16,5 +16,5 @@ describe command('helm') do
 end
 
 describe command('helm version') do
-  its('stdout') { should include  "3.6.3" }
+  its('stdout') { should include  "3.7.1" }
 end

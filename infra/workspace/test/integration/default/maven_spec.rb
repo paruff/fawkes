@@ -2,7 +2,7 @@
   describe command('mvn') do
     it { should exist }
     its('stderr') { should eq '' }
-    its('exit_status') { should eq 0 }
+    its('exit_status') { should eq 1 }
   end
 
   describe command('mvn -v') do

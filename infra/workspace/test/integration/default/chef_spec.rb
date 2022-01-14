@@ -17,7 +17,7 @@
   end
 
   describe command('inspec version') do
-    its('stdout') { should include  "4.38.9" }
+    its('stdout') { should include  "4.49.0" }
     its('stderr') { should eq '' }
     its('exit_status') { should eq 0 }
   end
@@ -28,8 +28,8 @@
     its('exit_status') { should eq 0 }
   end
 
-  describe command('inspec version') do
-    its('stdout') { should include  "3.1.1" }
+  describe command('kitchen version') do
+    its('stdout') { should include  "3.0.0" }
     its('stderr') { should eq '' }
     its('exit_status') { should eq 0 }
   end

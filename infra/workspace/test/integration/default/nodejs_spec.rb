@@ -4,7 +4,7 @@
   end
 
   describe command('node --version') do
-    its('stdout') { should include  "17.2.0" }
+    its('stdout') { should include  "16.13.0" }
     its('stderr') { should eq '' }
     its('exit_status') { should eq 0 }
   end
