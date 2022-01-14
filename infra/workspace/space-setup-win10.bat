@@ -30,7 +30,7 @@ REM hard to coordinate and little value with other platforms
 REM for /f "tokens=1-2 delims=," %%i in (tool-suite.txt) do (
 REM  Call :InstallIf %%i , %%j
 REM )
-:: Call :InstallIf adoptopenjdk8 , 8.212.2
+
 Call :InstallIf awscli , 2.4.6
 Call :InstallIf aws-iam-authenticator ,  0.5.3
 Call :InstallIf chef-workstation , 21.11.679
@@ -38,10 +38,8 @@ Call :InstallIf docker-cli , 19.03.12
 Call :InstallIf docker-compose , 1.29.2
 Call :InstallIf docker-machine , 0.16.2
 Call :InstallIf git , 2.34.1
-:: Call :InstallIf gitflow-avh , 0.0.0
 Call :InstallIf golang , 1.17.5
 Call :InstallIf googlechrome , 96.0.4664.110
-:: Call :InstallIf inspec , 4.46.13 included in chef workstation
 Call :InstallIf kubernetes-cli , 1.23.0
 Call :InstallIf kubernetes-helm , 3.7.1
 Call :InstallIf make , 4.3
@@ -51,7 +49,7 @@ Call :InstallIf microsoft-windows-terminal , 1.11.3471.0
 :: Call :InstallIf newman , 16.13.0
 :: nodejs lts is 16.13.0
 Call :InstallIf nodejs , 16.13.0
-:: LTS 8, 11, 17
+:: java LTS 8, 11, 17
 Call :InstallIf openjdk17 , 17.0.1
 Call :InstallIf postman , 9.4.1
 Call :InstallIf python, 3.10.1
@@ -77,12 +75,13 @@ echo
 echo space setup complete!
 echo 
 
-:: refreshenv exits the script
 
-refreshenv
+GOTO zend
+
 
 EXIT /B n
 
+GOTO End 
 :: Functions
 :InstallIf
 echo looking for "%~1 %~2"
@@ -95,6 +94,10 @@ if %errorlevel% EQU 0 (
   echo installed %~1 %~2
 )
 EXIT /B 0
+
+:zend
+:: refreshenv exits the script
+REM refreshenv
 
 
 :End
