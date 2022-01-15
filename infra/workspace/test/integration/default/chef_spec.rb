@@ -29,7 +29,7 @@
   end
 
   describe command('kitchen version') do
-    its('stdout') { should include  "3.0.0" }
+    its('stdout') { should include  "3.1.1" }
     its('stderr') { should eq '' }
     its('exit_status') { should eq 0 }
   end

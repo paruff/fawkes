@@ -6,7 +6,7 @@ describe command('kubectl') do
 end
 
 describe command('kubectl version') do
-  its('stdout') { should include "1.22.4" }
+  its('stdout') { should include "1.23.0" }
 end
 
 describe command('helm') do
