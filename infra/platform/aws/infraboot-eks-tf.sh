@@ -37,22 +37,22 @@ terraform plan
 terraform apply --auto-approve
 
 # set the kubetnetes config info 
-aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)
+# aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)
 
-# Configure kubectl Configure
-# mkdir -p $HOME/.kube
-# terraform output kubeconfig > ~/.kube/config
+# Configure kubectl Config
+# can't find the cluster_name :-()
+# aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)
 
-# cp kubeconfig_* $HOME/.kube/config
-# cp kubeconfig_* $HOME/.kube/
+mkdir -p $HOME/.kube
+cp kubeconfig_* $HOME/.kube/config
+cp kubeconfig_* $HOME/.kube/
+export  KUBECONFIG_SAVED=$KUBECONFIG
+export KUBECONFIG=$HOME/.kube/config
 
 # move to localk8s config
 # mkdir -p /tmp
 # terraform output config_map_aws_auth > /tmp/configmap.yml
 # kubectl apply -f /tmp/configmap.yml
-
-# export  KUBECONFIG_SAVED=$KUBECONFIG
-# export KUBECONFIG=$HOME/.kube/config
 
 # Create namespaces for fawkes and envs 
 
@@ -71,7 +71,7 @@ helm test fawkes-k8s-dashboard
 # Helm up basic
 # # Jenkins
 helm repo add jenkinsci https://charts.jenkins.io/
-helm install fawkes-jenkins jenkins/jenkins 
+helm install fawkes-jenkins jenkinsci/jenkins --version 3.11.0
 helm test fawkes-jenkins 
 # change to LTS version
 # add plugins for different pipelines
@@ -99,6 +99,15 @@ helm test fawkes-jenkins
 helm repo add sonarqube https://SonarSource.github.io/helm-chart-sonarqube
 helm install fawkes-sonarqube sonarqube/sonarqube 
 helm test fawkes-sonarqube
+
+
+helm repo add harbor https://helm.goharbor.io
+helm install my-harbor harbor/harbor --version 1.8.1
+
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install my-keycloak bitnami/keycloak --version 6.0.0
+
 
 # helm install --namespace=fawkes stable/docker-registry  --name registry --wait 
 # helm install --namespace=fawkes stable/sonatype-nexus --name registry --set nexus.service.type=LoadBalancer --wait
