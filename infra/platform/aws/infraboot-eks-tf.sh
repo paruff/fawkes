@@ -71,7 +71,7 @@ helm test fawkes-k8s-dashboard
 # Helm up basic
 # # Jenkins
 helm repo add jenkinsci https://charts.jenkins.io/
-helm install fawkes-jenkins jenkinsci/jenkins --version 3.11.0
+helm install fawkes-jenkins jenkinsci/jenkins --values jenkins/values.yaml
 helm test fawkes-jenkins 
 # change to LTS version
 # add plugins for different pipelines
@@ -97,8 +97,8 @@ helm test fawkes-jenkins
 # echo http://$SERVICE_IP:9000
 
 helm repo add sonarqube https://SonarSource.github.io/helm-chart-sonarqube
-helm install fawkes-sonarqube sonarqube/sonarqube 
-helm test fawkes-sonarqube
+helm upgrade --install sonarqube sonarqube/sonarqube-lts
+helm test sonarqube
 
 
 helm repo add harbor https://helm.goharbor.io
