@@ -3,7 +3,7 @@
   end
 
   describe command('make -v') do
-    its('stdout') { should include "3.81" }
+    its('stdout') { should include "4.3" }
     its('stderr') { should eq '' }
     its('exit_status') { should eq 0 }
   end

@@ -21,9 +21,9 @@ platforms:
     driver:
       guest: :windows
       box: StefanScherer/windows_10
-  # - name: macosx-10.12
-  #   driver:
-  #     box: elliotweiser/macosx-sierra-clt
+  # - name: macos-10.14
+  #    driver:
+  #      box: joaocoelho2/macOS-10.14
   # start work on aws test
   # -name: windows-2012r2
   # driver:
@@ -34,17 +34,6 @@ platforms:
 
 suites:
   - name: default
-#   - name: workspace
-#     run_list:
-#       - recipe[git]
-#       - recipe[aws]
-#       - recipe[java]
-#       - recipe[vagrant]
-# #      - recipe[virtualbox]
-#       - recipe[maven]
-# #      - recipe[docker]
-#       - recipe[minikube]
-# #      - recipe[helm]
     verifier:
       inspec_tests:
         - test/integration/default

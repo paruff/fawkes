@@ -3,8 +3,8 @@
     its('stderr') { should eq '' }
   end
 
-  describe command('node version') do
-    its('stdout') { should include  "10.16.0" }
+  describe command('node --version') do
+    its('stdout') { should include  "16.13.0" }
     its('stderr') { should eq '' }
     its('exit_status') { should eq 0 }
   end

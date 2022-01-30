@@ -1,19 +1,15 @@
 ---
-title: Welcome
+title: Fawkes
 ---
 
-This is the **Edition** template from [CloudCannon](http://cloudcannon.com/).
-**Edition** is perfect for documenting your product, application or service.
-It's populated with example content to give you some ideas.
+Fawkes is a  product delivery platform for developing, deploying, securing, testing and monitoring application products.
 
-ChatApp is a fictional chat application for sending messages and media to others.
-Teams and friend groups would use ChatApp to stay up to date if it existed.
 
-> [Sign up](http://example.com/signup) or learn more about ChatApp at [example.com](http://example.com/).
+> [Sign up](http://example.com/signup) or learn more about Fawkes at [example.com](http://example.com/).
 
 ### Getting Started
 
-Getting a message sent is quick and easy with ChatApp:
+Getting a message sent is quick and easy with Fawkes:
 
 1. Sign up for an account
 2. Add your friends from their email addresses
@@ -23,7 +19,7 @@ Getting a message sent is quick and easy with ChatApp:
 
 ### Features
 
-Explore more of ChatApp by reading about our features:
+Explore more of Fawkes by reading about our features:
 
 #### Media
 
@@ -35,4 +31,4 @@ Sync your contact list with your phone and/or Facebook contacts. Never lose your
 
 #### Devices
 
-ChatApp is available everywhere. Find out how to set it up on your all your devices.
+Fawkes is available everywhere. Find out how to set it up on your all your devices.

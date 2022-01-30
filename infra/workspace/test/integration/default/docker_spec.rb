@@ -1,5 +1,5 @@
   describe docker.version do
-    its('Client.Version') { should cmp >= '18.09.6'}
+    its('Client.Version') { should cmp >= '20.10.6'}
   end
 
   describe command('docker-compose') do
@@ -7,7 +7,7 @@
   end
 
   describe command('docker-compose version') do
-    its('stdout') { should include "1.24.1" }
+    its('stdout') { should include "2.2.2" }
     its('stderr') { should eq '' }
     its('exit_status') { should eq 0 }
   end
@@ -19,7 +19,7 @@
   end
 
   describe command('docker-machine version') do
-    its('stdout') { should include  "0.16.1" }
+    its('stdout') { should include  "0.16.2" }
     its('stderr') { should eq '' }
     its('exit_status') { should eq 0 }
   end

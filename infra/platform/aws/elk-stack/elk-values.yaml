@@ -13,7 +13,7 @@ kibana:
       ## but, with corrected elasticsearch.url
       server.name: kibana
       server.host: "0"
-      elasticsearch.url: http://elk-elasticsearch-client.pipeline.svc.cluster.local:9200
+      elasticsearch.url: http://elk-elasticsearch-client.pline.svc.cluster.local:9200
 
       ## Custom config properties below
       ## Ref: https://www.elastic.co/guide/en/kibana/current/settings.html
@@ -22,7 +22,7 @@ kibana:
       # server.defaultRoute: "/app/kibana"
 
   env:
-    ELASTICSEARCH_URL: http://elk-elasticsearch-client.pipeline.svc.cluster.local:9200
+    ELASTICSEARCH_URL: http://elk-elasticsearch-client.pline.svc.cluster.local:9200
     # this chart has an issue and is not passing the above to kibana on the cmd line.
     # instead is sets the url in kibana.yaml but incorrectly to:
     # http://elasticsearch:9200
