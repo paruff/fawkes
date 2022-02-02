@@ -4,11 +4,7 @@ category: Practices Overview
 order: 1
 ---
 
-Sync your Facebook contacts with ChatApp. Any of your Facebook friends with ChatApp accounts are automatically added to your contact list!
-
-> Signing up with Facebook automatically starts syncing contacts.
-
-To sync your contacts:
+ Practices:
 
 1.     Pair Programming
 1.    Test Driven Development/Unit Testing
