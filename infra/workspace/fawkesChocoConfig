@@ -1,0 +1,67 @@
+Configuration fawkesChocoConfig
+{
+    Import-DscResource -Module fawkesChocoConfig
+    Node "localhost"
+    {
+        LocalConfigurationManager
+        {
+            DebugMode = 'ForceModuleImport'
+        }
+        cChocoInstaller installChoco
+        {
+            InstallDir = "c:\choco"
+        }
+        cChocoPackageInstaller installChrome
+        {
+            Name        = "googlechrome"
+            DependsOn   = "[cChocoInstaller]installChoco"
+            AutoUpgrade = $True
+        }
+        cChocoPackageInstaller noFlashAllowed
+        {
+            Ensure = 'Absent'
+            Name = "flashplayerplugin"
+            DependsOn = "[cChocoInstaller]installChoco"
+        }
+        cChocoPackageInstallerSet installDeliverySuite
+        {
+            Ensure = "Present"
+            Name = @(
+
+                "awscli"
+                "aws-iam-authenticator"
+                "azure-cli"
+                "chef-workstation"
+                "docker-cli"
+                "docker-compose"
+                "docker-machine"
+                "git"
+                "golang"
+                "googlechrome"
+                "gcloudsdk"
+                "kubernetes-cli"
+                "kubernetes-helm"
+                "make"
+                "maven"
+                "minikube"
+                "microsoft-windows-terminal"
+
+                "nodejs"
+                "openjdk17"
+                "postman"
+                "python"
+                "selenium-chrome-driver"
+                "serverless"
+                "springtoolsuite"
+                "terraform"
+                "vagrant"
+                "virtualbox"
+                "vscode"
+            )
+            DependsOn = "[cChocoInstaller]installChoco"
+        }
+    }
+
+}
+
+fawkesChocoConfig
