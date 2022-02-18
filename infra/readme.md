@@ -7,9 +7,9 @@ this will install many of the applications you will need for your development ne
 
 to build the project locally:
 
-> git clone http://github.com/unisys/verfut-project
+> git clone http://github.com/paruff/fawkes
 
-> cd verfut-project
+> cd paruff/fawkes
 
 > set-env.bat
 
