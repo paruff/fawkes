@@ -26,8 +26,8 @@
 
 ## have the new team member add their name to the contact list
 1. log into Github (http://github.com)
-2. navigate to [UniSys organization](https://github.com/Unisys)
-1. select the projects project repo (https://github.com/Unisys/verfut-project)
+2. navigate to [fawkes organization](https://github.com/paruff/fawkes)
+1. select the projects project repo (https://github.com/paruff/fawkes)
 2. select team-contact-list.md
 2. edit the file by selecting the pencil in the upper right corner of the text window
 2. add a new line by copy & paste the last list
