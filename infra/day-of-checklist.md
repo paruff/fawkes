@@ -10,8 +10,8 @@
 	4. Create ssh keys
 	5. Download ssh keys
 	6. cp key into .ssh/
-	7. Git clone verfut-project
-	8. Cd verfut-project/infra
+	7. Git clone fawkes
+	8. cd fawkes/infra
 	9. Infra-boot.sh -k platform-use1 -w m4.xlarge -m t2.medium -e challenge
 	10. … 10 minutes later
 	10. 
