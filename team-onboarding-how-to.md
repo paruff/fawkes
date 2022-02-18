@@ -6,7 +6,7 @@
 
 ## invite Github id to project team
 1. log into Github (http://github.com)
-1. access the unisys organization 
+1. access the paruff/fawkes organization 
 1. select teams from the tabs across the top
 1. select the team you are adding this member to
 1. select the + button to the right of the rest of the teammember on the left
@@ -14,7 +14,7 @@
 1. click on "Invite"
 
 ## Invite user to slack 
-1. Log into Slack [https://unisystc.slack.com/admin]
+1. Log into Slack [https://fawkes.slack.com/admin]
 1. Select "Invite People", in the upper right corner
 1. Enter the Email  address ad Full Name
 1. Then select "Send Invitations"
