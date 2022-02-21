@@ -21,14 +21,14 @@ Getting a message sent is quick and easy with Fawkes:
 
 Explore more of Fawkes by reading about our features:
 
-#### Media
+#### DevSecOps delivery pipeline
 
-Send images, videos and other media to people. Sources include your computer, phone and Facebook.
+A pipeline from commit to prod deploy with checks for quality and security built in. A visual way to track the progress of product delivery.
 
-#### Contact Syncing
+#### Workspace setup
 
-Sync your contact list with your phone and/or Facebook contacts. Never lose your contacts between devices again!
+All delivery team members can run a quick script to install all tools for all roles. These scripts can be easily updated and customized to support your enterprises policies, licenses and or a products unique tool suite!
 
-#### Devices
+#### Secure environments by policy as code
 
-Fawkes is available everywhere. Find out how to set it up on your all your devices.
+Fawkes all evnironments are integrated using zero trust principals, practices and tools. All policies are in code and are configurable and enforced continuously. 
