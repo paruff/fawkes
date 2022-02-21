@@ -5,17 +5,18 @@ title: Fawkes
 Fawkes is a  product delivery platform for developing, deploying, securing, testing and monitoring application products.
 
 
-> [Sign up](http://example.com/signup) or learn more about Fawkes at [example.com](http://example.com/).
-
 ### Getting Started
 
-Getting a message sent is quick and easy with Fawkes:
+Getting a delivery platform online is quick and easy with Fawkes:
 
-1. Sign up for an account
-2. Add your friends from their email addresses
-3. Type a message or send a photo
+1. Git clone https://github.com/paruff/fawkes
+2. cd fawkes/infra/platform/aws
+3. aws configure
+4. ./infraboot-tf.sh 
+5. a few minutes later a url will be outputed and click on that to begin your Fawkes journey
 
-> Feel free to send us a message at [feedback@example.com](mailto:feedback@example.com) with your feedback.
+
+> Feel free to send us a message at [feedback@example.com](mailto:phil.ruff+feedback@gmail.com) with your feedback.
 
 ### Features
 
