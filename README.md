@@ -8,4 +8,4 @@ Fawkes is currently built on aws with terraform to build the k8s cluster.  todo 
 ## Workspaces
 Workspaces are supports windows and mac os useing choco and brew. In the future eclipse che will be installed in the environment to support zero configuration on workstation development for projects/product efforts.
 
-Fawkes is named aft Dumbledores phoenix who in turn was named after [Guy Fawkes](https://en.wikipedia.org/wiki/Guy_Fawkes) from british history.
+Fawkes is named aft Dumbledore's phoenix who in turn was named after [Guy Fawkes](https://en.wikipedia.org/wiki/Guy_Fawkes) from british history.
