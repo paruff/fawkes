@@ -23,7 +23,7 @@ function Install-ChocolateyPackage {
     $chocoExecutionArgs += " upgrade"
   }
 
-  $chocoExecutionArgs += " $PackageName -y --source='$Source'"
+  $chocoExecutionArgs += " $PackageName -y "
   if ($Prerelease) { $chocoExecutionArgs += " --prerelease"}
   if ($Version) { $chocoExecutionArgs += " --version='$Version'"}
   if ($PackageParameters -and $PackageParameters -ne '') { $chocoExecutionArgs += " --package-parameters='$PackageParameters'"}
@@ -36,8 +36,39 @@ function Install-ChocolateyPackage {
   }
 }
 
-Install-ChocolateyPackage gcloudsdk -Source https://internal/repo/v2 -Version 0.0.0.20210904
-Install-ChocolateyPackage ojdkbuild -Source https://internal/repo/v2 -Version 17.0.1.0
-Install-ChocolateyPackage vscode -Source https://internal/repo/v2 -Version 1.64.2
-Install-ChocolateyPackage docker-desktop -Source https://internal/repo/v2 -Version 4.5.0
-Install-ChocolateyPackage docker-machine -Source https://internal/repo/v2 -Version 0.16.2
+
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+
+Install-ChocolateyPackage awscli -Version 2.4.6
+Install-ChocolateyPackage aws-iam-authenticator -Version  0.5.3
+Install-ChocolateyPackage azure-cli -Version 2.33.1
+Install-ChocolateyPackage chef-workstation -Version 21.11.679
+Install-ChocolateyPackage docker-cli -Version 19.03.12
+Install-ChocolateyPackage docker-machine -Version 0.16.2
+Install-ChocolateyPackage git -Version 2.34.1
+Install-ChocolateyPackage gitversion.portable -Version 5.8.2
+
+Install-ChocolateyPackage golang -Version 1.17.5
+Install-ChocolateyPackage gcloudsdk -Version 0.0.0.20210904
+Install-ChocolateyPackage googlechrome -Version 96.0.4664.110
+Install-ChocolateyPackage kubernetes-cli -Version 1.23.0
+Install-ChocolateyPackage kubernetes-helm -Version 3.7.1
+Install-ChocolateyPackage make -Version 4.3
+Install-ChocolateyPackage maven -Version 3.8.4
+Install-ChocolateyPackage minikube -Version 1.24.0 
+Install-ChocolateyPackage microsoft-windows-terminal -Version 1.11.3471.0
+#  Install-ChocolateyPackage newman -Version 16.13.0
+# nodejs lts is 16.13.0
+Install-ChocolateyPackage nodejs -Version 16.13.0
+# java LTS 8, 11, 17
+Install-ChocolateyPackage openjdk17 -Version 17.0.1
+Install-ChocolateyPackage postman -Version 9.4.1
+Install-ChocolateyPackage python -Version 3.10.1
+Install-ChocolateyPackage selenium-chrome-driver -Version 83.0.4103.39
+Install-ChocolateyPackage serverless -Version 2.69.1
+Install-ChocolateyPackage springtoolsuite -Version 3.9.6
+Install-ChocolateyPackage terraform -Version 1.1.0
+Install-ChocolateyPackage vagrant -Version 2.2.19
+Install-ChocolateyPackage virtualbox -Version 6.1.30
+Install-ChocolateyPackage vscode -Version 1.63.1
