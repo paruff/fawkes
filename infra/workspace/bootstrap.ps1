@@ -1,3 +1,5 @@
+#Requires -RunAsAdministrator
+
 function Install-ChocolateyPackage {
   param (
     [Parameter(Mandatory, Position=0)]
@@ -50,7 +52,7 @@ Install-ChocolateyPackage git -Version 2.34.1
 Install-ChocolateyPackage gitversion.portable -Version 5.8.2
 
 Install-ChocolateyPackage golang -Version 1.17.5
-Install-ChocolateyPackage gcloudsdk -Version 0.0.0.20210904
+# Install-ChocolateyPackage gcloudsdk -Version 0.0.0.20210904
 Install-ChocolateyPackage googlechrome -Version 96.0.4664.110
 Install-ChocolateyPackage kubernetes-cli -Version 1.23.0
 Install-ChocolateyPackage kubernetes-helm -Version 3.7.1
@@ -64,7 +66,7 @@ Install-ChocolateyPackage nodejs -Version 16.13.0
 # java LTS 8, 11, 17
 Install-ChocolateyPackage openjdk17 -Version 17.0.1
 Install-ChocolateyPackage postman -Version 9.4.1
-Install-ChocolateyPackage python -Version 3.10.1
+# Install-ChocolateyPackage python -Version 3.10.1
 Install-ChocolateyPackage selenium-chrome-driver -Version 83.0.4103.39
 Install-ChocolateyPackage serverless -Version 2.69.1
 Install-ChocolateyPackage springtoolsuite -Version 3.9.6
