@@ -1,5 +1,7 @@
 #Requires -RunAsAdministrator
 
+Write-Output "Administrative permissions required. Detecting permissions... Look above ...we will never get here if we are not running as admin"
+
 function Install-ChocolateyPackage {
   param (
     [Parameter(Mandatory, Position=0)]
@@ -74,3 +76,23 @@ Install-ChocolateyPackage terraform -Version 1.1.0
 Install-ChocolateyPackage vagrant -Version 2.2.19
 Install-ChocolateyPackage virtualbox -Version 6.1.30
 Install-ChocolateyPackage vscode -Version 1.63.1
+
+# refreshenv
+# Make `refreshenv` available right away, by defining the $env:ChocolateyInstall
+# variable and importing the Chocolatey profile module.
+# Note: Using `. $PROFILE` instead *may* work, but isn't guaranteed to.
+$env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."   
+Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+
+# refreshenv is now an alias for Update-SessionEnvironment
+# (rather than invoking refreshenv.cmd, the *batch file* for use with cmd.exe)
+# This should make git.exe accessible via the refreshed $env:PATH, so that it
+# can be called by name only.
+refreshenv
+
+# docker-machine create --driver virtualbox default
+# minikube start
+
+Write-Output "Success! Ready work in this space..."
+
+# exit
