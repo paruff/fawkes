@@ -2,65 +2,6 @@
 # infra-k8s-boot.sh
 ## TODO
 # conditional helm install and update based on does it exist
-# break up cloud provider terraform k8s up
-# os or shell conditional installs of packages mac, win , yum, apt-get?
-
-case "$OSTYPE" in
-#  linux*)   machine=Linux;;
-  darwin*)  machine=MacOS;; 
-  win*)     machine=Windows;;
-  msys*)    machine=GBash ;;
-#  cygwin*)  machine=Cygwin;;
-#  bsd*)     machine=BSD;;
-  *)        echo "unknown: $OSTYPE" ;;
-esac
-
-echo OS Identified as ${machine}
-
-if [ ${machine} = "MacOS" ]; 
-then
-../../workspace/space-setup-macosx.sh
-fi
-
-# now for windows 10 running git bash
-# TODO define and lock the versions to working versions 
-if [ ${machine} = "GBash" ]; 
-then
-../../workspace/bootstrap.ps1
-fi
-
-# IAC a vpc and k8s cluster 
-terraform init
-terraform fmt
-terraform plan
-terraform apply --auto-approve
-
-# set the kubetnetes config info 
-# aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)
-
-# Configure kubectl Config
-# can't find the cluster_name :-()
-# aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)
-
-mkdir -p $HOME/.kube
-cp kubeconfig_* $HOME/.kube/config
-cp kubeconfig_* $HOME/.kube/
-export  KUBECONFIG_SAVED=$KUBECONFIG
-export KUBECONFIG=$HOME/.kube/config
-
-# move to localk8s config
-# mkdir -p /tmp
-# terraform output config_map_aws_auth > /tmp/configmap.yml
-# kubectl apply -f /tmp/configmap.yml
-
-# Create namespaces for fawkes and envs 
-
-kubectl create namespace fawkes
-kubectl create namespace dev
-kubectl create namespace stage
-kubectl create namespace prod
-
-sleep 5
 
 helm repo add k8s-dashboard https://kubernetes.github.io/dashboard
 helm install fawkes-k8s-dashboard k8s-dashboard/kubernetes-dashboard --version 5.0.5
