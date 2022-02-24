@@ -26,8 +26,7 @@ fi
 # TODO define and lock the versions to working versions 
 if [ ${machine} = "GBash" ]; 
 then
-../../workspace/space-setup-win10.ps1
-
+../../workspace/bootstrap.ps1
 fi
 
 # IAC a vpc and k8s cluster 
