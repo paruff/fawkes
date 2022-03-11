@@ -7,9 +7,9 @@
 
 case "$OSTYPE" in
 #  linux*)   machine=Linux;;
-  darwin*)  ../../workspace/bootstrap.sh ;; 
+  darwin*)  ../workspace/bootstrap.sh ;; 
 # ?  win*)     machine=Windows;;
-  msys*)    ../../workspace/bootstrap.ps1 ;;
+  msys*)    ../workspace/bootstrap.ps1 ;;
 #  cygwin*)  machine=Cygwin;;
 #  bsd*)     machine=BSD;;
   *)        echo "unknown: $OSTYPE" ;;
