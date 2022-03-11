@@ -47,6 +47,7 @@ brew list --versions > brew-versions.txt
 
 brew_install_if0 awscli 2.4.6
 brew_install_if0 aws-iam-authenticator 0.5.3
+brew_install_if0 azure-cli 2.0
 brew_install_if0 chef-workstation 21.11.679
 brew_install_if0 chromedriver 96.0.4664.45
 brew_install_if0 docker 20.10.12
