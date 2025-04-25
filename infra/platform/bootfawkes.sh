@@ -1,36 +1,41 @@
 #!/usr/bin/env bash
-# infra-k8s-boot.sh
-## TODO
-# conditional helm install and update based on does it exist
-# break up cloud provider terraform k8s up
-# os or shell conditional installs of packages mac, win , yum, apt-get?
+set -euo pipefail
+
+# bootfawkes.sh - Bootstrap Fawkes infra and platform
+
+echo "Detecting operating system and running environment setup..."
 
 case "$OSTYPE" in
-#  linux*)   machine=Linux;;
-  darwin*)  ../workspace/bootstrap.sh ;; 
-# ?  win*)     machine=Windows;;
-  msys*)    ../workspace/bootstrap.ps1 ;;
-#  cygwin*)  machine=Cygwin;;
-#  bsd*)     machine=BSD;;
-  *)        echo "unknown: $OSTYPE" ;;
+  darwin*)
+    echo "Detected macOS."
+    ../workspace/space-setup-macos.sh
+    ;;
+  linux*)
+    echo "Detected Linux."
+    ../workspace/space-setup-linux.sh
+    ;;
+  msys*|cygwin*)
+    echo "Detected Windows (Git Bash/MSYS/Cygwin)."
+    pwsh -File ../workspace/bootstrap.ps1
+    ;;
+  *)
+    echo "Unknown or unsupported OS: $OSTYPE"
+    exit 1
+    ;;
 esac
 
-# echo OS Identified as ${machine}
+echo "Checking for required tools: terraform, kubectl, helm, aws..."
+for tool in terraform kubectl helm aws; do
+  if ! command -v "$tool" &>/dev/null; then
+    echo "Error: $tool is not installed or not in PATH."
+    exit 1
+  fi
+done
 
-# if [ ${machine} = "MacOS" ]; 
-# then
-# ../../workspace/bootstrap.sh
-# fi
+echo "Provisioning infrastructure (VPC, Kubernetes cluster)..."
+./buildinfra.sh
 
-# # now for windows 10 running git bash
-# # TODO define and lock the versions to working versions 
-# if [ ${machine} = "GBash" ]; 
-# then
-# ../../workspace/bootstrap.ps1
-# fi
+echo "Deploying platform components (Helm charts, namespaces, etc.)..."
+./buildplatform.sh
 
-# IAC a vpc and k8s cluster 
-buildinfra.sh
-
-
-buildplatform.sh
+echo "Fawkes infrastructure and platform bootstrapping complete."
