@@ -1,0 +1,46 @@
+# Docker Engine version check
+describe docker.version do
+  its('Client.Version') { should cmp >= '20.10.6' }
+end
+
+# Docker Compose v1 (docker-compose)
+describe.one do
+  describe file('/usr/local/bin/docker-compose') do
+    it { should exist }
+    it { should be_executable }
+  end
+  describe file('/usr/bin/docker-compose') do
+    it { should exist }
+    it { should be_executable }
+  end
+end
+
+describe command('docker-compose version') do
+  its('stdout') { should match(/docker-compose version 2\.2\.2/) }
+  its('stderr') { should eq '' }
+  its('exit_status') { should eq 0 }
+end
+
+# Docker Compose v2 (docker compose)
+describe command('docker compose version') do
+  its('stdout') { should match(/Docker Compose version 2\.2\.2/) }
+  its('exit_status') { should eq 0 }
+end
+
+# Docker Machine
+describe.one do
+  describe file('/usr/local/bin/docker-machine') do
+    it { should exist }
+    it { should be_executable }
+  end
+  describe file('/usr/bin/docker-machine') do
+    it { should exist }
+    it { should be_executable }
+  end
+end
+
+describe command('docker-machine version') do
+  its('stdout') { should match(/0\.16\.2/) }
+  its('stderr') { should eq '' }
+  its('exit_status') { should eq 0 }
+end
