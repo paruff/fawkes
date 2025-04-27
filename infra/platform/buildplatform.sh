@@ -65,3 +65,28 @@ deploy_chart fawkes-distributed-jmeter cloudnativeapp/distributed-jmeter --versi
 
 echo "All platform components have been deployed (or upgraded) in the '$NAMESPACE' namespace."
 
+# --- Application Testing Section ---
+echo "Testing deployed applications with 'helm test'..."
+
+test_chart() {
+  local release="$1"
+  echo "Running helm test for $release..."
+  if ! helm test "$release" --namespace "$NAMESPACE" --timeout 5m; then
+    echo "Warning: helm test failed for $release"
+  fi
+}
+
+test_chart fawkes-k8s-dashboard
+test_chart fawkes-jenkins
+test_chart sonarqube
+test_chart my-harbor
+test_chart my-keycloak
+test_chart fawkes-selenium
+test_chart fawkes-spinnaker
+test_chart fawkes-prometheus
+test_chart fawkes-eck-operator
+test_chart my-anchore-engine
+test_chart fawkes-distributed-jmeter
+
+echo "Helm tests completed for all platform components in the '$NAMESPACE' namespace."
+
