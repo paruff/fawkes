@@ -1,38 +1,48 @@
-# Team on boarding how to
+# Team Onboarding Guide
 
-## Request ids for access to repos and tools
-1. Request send an email to the new team member requesting github, slack email and corp email for Jira registration
-1. 
+Welcome to the Fawkes project! This guide will help new team members get access to the tools, repositories, and resources needed to contribute effectively. It also provides tips for learning about the platform and setting up your development workspace.
 
-## invite Github id to project team
-1. log into Github (http://github.com)
-1. access the paruff/fawkes organization 
-1. select teams from the tabs across the top
-1. select the team you are adding this member to
-1. select the + button to the right of the rest of the teammember on the left
-1. enter the users id , the github user id should show up in the drop down, select it 
-1. click on "Invite"
+---
 
-## Invite user to slack 
-1. Log into Slack [https://fawkes.slack.com/admin]
-1. Select "Invite People", in the upper right corner
-1. Enter the Email  address ad Full Name
-1. Then select "Send Invitations"
-1. Once they have accepted invite the to the Team Channel
-1. in the upper right , to the left of the search box, click the gear "seetings"
-1. select "Invite new members to join..."
-1. Enter Slack name in "Invite others to {project channel}"
-1. Select "Invite"
+## 1. Access to Repositories and Tools
 
-## have the new team member add their name to the contact list
-1. log into Github (http://github.com)
-2. navigate to [fawkes organization](https://github.com/paruff/fawkes)
-1. select the projects project repo (https://github.com/paruff/fawkes)
-2. select team-contact-list.md
-2. edit the file by selecting the pencil in the upper right corner of the text window
-2. add a new line by copy & paste the last list
-2. Enter you information in place of that which you copied
-2. select the "Commit changes" at the bottom of the page
-2. review the changes to see that it is as you expected and wanted
+- **GitHub:**  
+  Ask your team lead or project admin to invite you to the [paruff/fawkes GitHub organization](https://github.com/paruff/fawkes).  
+  Once invited, accept the invitation via email or directly on GitHub.
 
-This document support the [Team onboarding checklist](team-on-boarding-checklist.md)
+- **Jira or Issue Tracker:**  
+  If your team uses Jira or another issue tracker, request access from your project admin.
+
+---
+
+## 2. Set Up Your Development Workspace
+
+- Review the [Workspace Automation Guide](infra/workspace/readme.md) for instructions on setting up your local development environment.
+- Use the provided scripts for your operating system (Windows, macOS, or Linux) to install required tools and configure your workspace.
+- If you have issues, check the [Troubleshooting](infra/workspace/readme.md#troubleshooting) section or open a GitHub Issue.
+
+---
+
+## 3. Learn About the Platform
+
+- Read the main [Fawkes README](../README.md) for an overview of the platform, its goals, and architecture.
+- Explore the [Infrastructure](infra/readme.md) and [Platform](infra/platform/readme.md) directories to understand how infrastructure and CI/CD pipelines are provisioned and managed.
+- Review the [Workspace Automation](infra/workspace/readme.md) documentation to learn how developer environments are standardized.
+
+---
+
+## 4. Where to Get Help
+
+- **GitHub Issues:** Report bugs or request features.
+- **Documentation:** Check the `/docs` directory and READMEs throughout the repo.
+
+---
+
+## 5. Additional Tips
+
+- Pair with another team member for your first setup if possible.
+- Review the [Contributing Guide](../CONTRIBUTING.md) for coding standards and workflow.
+
+---
+
+*Welcome to the team! Your contributions help make Fawkes better for everyone.*
