@@ -98,8 +98,15 @@ case "$PROVIDER" in
       echo "Error: minikube is not installed."
       exit 1
     fi
-    minikube start --profile "$ENV_NAME"
-    kubectl config use-context "minikube"
+    # Prefer Docker driver on macOS (and generally)
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      DRIVER="docker"
+    else
+      DRIVER="virtualbox"
+    fi
+    echo "Starting minikube with driver: $DRIVER"
+    minikube start --profile "$ENV_NAME" --driver="$DRIVER"
+    kubectl config use-context "$ENV_NAME" || kubectl config use-context "minikube"
     echo "Minikube cluster '$ENV_NAME' is ready."
     ;;
   azure)
