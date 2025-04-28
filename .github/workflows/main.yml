@@ -25,7 +25,11 @@ jobs:
         uses: ibiqlik/action-yamllint@v3
 
       - name: Lint Shell Scripts
-        uses: ludeeus/action-shellcheck@v2
+        uses: reviewdog/action-shellcheck@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          pattern: "*.sh"
 
       - name: Lint Markdown files
         uses: DavidAnson/markdownlint-cli2-action@v16
