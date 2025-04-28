@@ -24,18 +24,22 @@ Fawkes provides:
 ## Getting Started
 
 1. **Clone the repository:**
+
    ```sh
    git clone https://github.com/paruff/fawkes.git
    cd fawkes
    ```
 
 2. **Provision Infrastructure:**
+
    - See [`infra/platform/`](infra/platform/) for scripts and Terraform modules to provision your Kubernetes cluster and supporting resources.
 
 3. **Set Up Your Workspace:**
+
    - Use the scripts in [`infra/workspace/`](infra/workspace/) to automate your local development environment setup (Windows/macOS).
 
 4. **Deploy Platform Components:**
+
    - Automated deployment of CI/CD, artifact management, monitoring, and more via Helm charts.
 
 5. **Test & Validate:**
