@@ -2,7 +2,8 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+    kompose.cmd:
+      C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
       convert
     kompose.version: 1.18.0 (06a2e56)
   creationTimestamp: null
@@ -19,17 +20,17 @@ spec:
         io.kompose.service: gitlab-scm-collector
     spec:
       containers:
-      - env:
-        - name: TEST_SCRIPT
-          value: fixme
-        - name: GITLAB_API_TOKEN
-          value: dWwck8kJ9LyycG2gV8iJ
-        - name: GITLAB_CRON
-          value: 0 0/5 * * * *
-        - name: MONGO_PORT
-          value: tcp://db:27017
-        image: paruff/hygieia-gitlab-scm-collector:3.0.2.486
-        name: gitlab-scm-collector
-        resources: {}
+        - env:
+            - name: TEST_SCRIPT
+              value: fixme
+            - name: GITLAB_API_TOKEN
+              value: dWwck8kJ9LyycG2gV8iJ
+            - name: GITLAB_CRON
+              value: 0 0/5 * * * *
+            - name: MONGO_PORT
+              value: tcp://db:27017
+          image: paruff/hygieia-gitlab-scm-collector:3.0.2.486
+          name: gitlab-scm-collector
+          resources: {}
       restartPolicy: Always
 status: {}

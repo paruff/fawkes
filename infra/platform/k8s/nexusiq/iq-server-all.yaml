@@ -7,11 +7,11 @@ spec:
     app: nexus
     tier: iq-server
   ports:
-  - protocol: "TCP"
-    port: 8070
-    targetPort: 8070
-#    port: 8071
-#    targetPort: 8071
+    - protocol: "TCP"
+      port: 8070
+      targetPort: 8070
+  #    port: 8071
+  #    targetPort: 8071
   type: LoadBalancer
 ---
 apiVersion: apps/v1
@@ -33,5 +33,5 @@ spec:
         track: stable
     spec:
       containers:
-      - name: iq-server
-        image: "sonatype/nexus-iq-server:1.69.0"
+        - name: iq-server
+          image: "sonatype/nexus-iq-server:1.69.0"
