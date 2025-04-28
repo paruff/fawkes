@@ -1,30 +1,123 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the develop branch
   push:
     branches: [ develop ]
   pull_request:
     branches: [ develop ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  validate:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v0.9.7
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate Terraform (if present)
+        if: hashFiles('**/*.tf') != ''
+        run: |
+          terraform fmt -check
+          terraform init -backend=false
+          terraform validate
+
+      - name: Lint YAML files
+        uses: ibiqlik/action-yamllint@v3
+
+      - name: Lint Shell Scripts
+        uses: ludeeus/action-shellcheck@v2
+
+      - name: Lint Markdown files
+        uses: DavidAnson/markdownlint-cli2-action@v16
+
+  build:
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Add your build steps here (e.g., Docker build, language build, etc.)
+      - name: Build Docker image
+        run: docker build -t fawkes-app:ci .
+
+  security:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Scan Dockerfiles and images with Trivy
+      - name: Scan Dockerfiles with Trivy
+        uses: aquasecurity/trivy-action@v0.19.0
         with:
-          versionSpec: '5.x'
+          scan-type: 'fs'
+          scan-ref: '.'
+          ignore-unfixed: true
+
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@v0.19.0
+        with:
+          image-ref: 'fawkes-app:ci'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+
+      # Scan Helm charts with Trivy
+      - name: Scan Helm charts with Trivy
+        uses: aquasecurity/trivy-action@v0.19.0
+        with:
+          scan-type: 'config'
+          scan-ref: './infra/platform'
+          ignore-unfixed: true
+
+      # Scan dependencies with Trivy (for package vulnerabilities)
+      - name: Scan dependencies with Trivy
+        uses: aquasecurity/trivy-action@v0.19.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          ignore-unfixed: true
+
+      # Optionally, scan for secrets in code
+      - name: Scan for secrets with Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Example: Run unit tests for a Node.js project
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+        if: hashFiles('**/package.json') != ''
+
+      - name: Run tests
+        run: npm test
+        if: hashFiles('**/package.json') != ''
+
+      # Add other language/framework test steps as needed
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [security, test]
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Example: Deploy step (replace with your actual deployment logic)
+      - name: Deploy to Kubernetes (example)
+        run: echo "Deploy step goes here"
+
+      # Optionally, add post-deploy smoke tests or health checks
 
