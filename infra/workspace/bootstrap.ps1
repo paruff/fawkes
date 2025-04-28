@@ -2,7 +2,47 @@
 
 Write-Host "Checking for administrative permissions..."
 
-function Install-ChocolateyIfMissing {
+function Install-DirectOrChoco {
+    param (
+        [Parameter(Mandatory)][string]$ToolName,
+        [Parameter(Mandatory)][string]$CheckCommand,
+        [Parameter(Mandatory)][string]$DirectUrl,
+        [string]$ChocoName = $null,
+        [string]$ChocoVersion = $null
+    )
+    if (Get-Command $CheckCommand -ErrorAction SilentlyContinue) {
+        Write-Host "$ToolName is already installed."
+        return
+    }
+    Write-Host "Installing $ToolName..."
+    try {
+        if ($DirectUrl) {
+            $installer = "$env:TEMP\$ToolName-installer.exe"
+            Invoke-WebRequest -Uri $DirectUrl -OutFile $installer
+            Start-Process -FilePath $installer -ArgumentList "/quiet" -Wait
+            Remove-Item $installer -Force
+            if (Get-Command $CheckCommand -ErrorAction SilentlyContinue) {
+                Write-Host "$ToolName installed successfully (direct)."
+                return
+            }
+        }
+    } catch {
+        Write-Warning "Direct install failed for $ToolName. Trying Chocolatey..."
+    }
+    if ($ChocoName) {
+        $chocoCmd = "choco install $ChocoName -y"
+        if ($ChocoVersion) { $chocoCmd += " --version $ChocoVersion" }
+        iex $chocoCmd
+        if (Get-Command $CheckCommand -ErrorAction SilentlyContinue) {
+            Write-Host "$ToolName installed successfully (choco)."
+        } else {
+            Write-Error "Failed to install $ToolName."
+            exit 1
+        }
+    }
+}
+
+function Ensure-Chocolatey {
     if (-not (Get-Command choco.exe -ErrorAction SilentlyContinue)) {
         Write-Host "Chocolatey not found. Installing Chocolatey..."
         Set-ExecutionPolicy Bypass -Scope Process -Force
@@ -13,78 +53,33 @@ function Install-ChocolateyIfMissing {
     }
 }
 
-function Install-ChocolateyPackage {
-    param (
-        [Parameter(Mandatory)]
-        [string]$PackageName,
-        [string]$Version,
-        [string]$PackageParameters,
-        [switch]$Prerelease,
-        [switch]$UseInstallNotUpgrade
-    )
-    $chocoExecutionArgs = "choco.exe"
-    if ($UseInstallNotUpgrade) {
-        $chocoExecutionArgs += " install"
-    } else {
-        $chocoExecutionArgs += " upgrade"
-    }
-    $chocoExecutionArgs += " $PackageName -y"
-    if ($Prerelease) { $chocoExecutionArgs += " --prerelease" }
-    if ($Version) { $chocoExecutionArgs += " --version='$Version'" }
-    if ($PackageParameters) { $chocoExecutionArgs += " --package-parameters='$PackageParameters'" }
+Ensure-Chocolatey
 
-    Write-Host "Installing/upgrading $PackageName $Version ..."
-    Invoke-Expression -Command $chocoExecutionArgs
-    $exitCode = $LASTEXITCODE
-    $validExitCodes = @(0, 1605, 1614, 1641, 3010)
-    if ($validExitCodes -notcontains $exitCode) {
-        Write-Error "Error installing $PackageName $Version. Exit code: $exitCode"
-        exit 1
-    }
-}
+# Example: Install Git (direct from official, fallback to choco)
+Install-DirectOrChoco -ToolName "Git" `
+    -CheckCommand "git" `
+    -DirectUrl "https://github.com/git-for-windows/git/releases/download/v2.34.1.windows.1/Git-2.34.1-64-bit.exe" `
+    -ChocoName "git" `
+    -ChocoVersion "2.34.1"
 
-Install-ChocolateyIfMissing
+# Example: Install Node.js (direct from official, fallback to choco)
+Install-DirectOrChoco -ToolName "Node.js" `
+    -CheckCommand "node" `
+    -DirectUrl "https://nodejs.org/dist/v16.13.0/node-v16.13.0-x64.msi" `
+    -ChocoName "nodejs" `
+    -ChocoVersion "16.13.0"
 
-# Refresh Chocolatey package list
-choco list -lo > $env:TEMP\choco-versions.txt
+# Example: Install Docker Desktop (direct from official, fallback to choco)
+Install-DirectOrChoco -ToolName "Docker Desktop" `
+    -CheckCommand "docker" `
+    -DirectUrl "https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe" `
+    -ChocoName "docker-desktop"
 
-# List of packages to install (name, version)
-$packages = @(
-    @{ Name = "awscli"; Version = "2.4.6" },
-    @{ Name = "aws-iam-authenticator"; Version = "0.5.3" },
-    @{ Name = "azure-cli"; Version = "2.33.1" },
-    @{ Name = "chef-workstation"; Version = "21.11.679" },
-    @{ Name = "docker-cli"; Version = "19.03.12" },
-    @{ Name = "docker-machine"; Version = "0.16.2" },
-    @{ Name = "git"; Version = "2.34.1" },
-    @{ Name = "gitversion.portable"; Version = "5.8.2" },
-    @{ Name = "golang"; Version = "1.17.5" },
-    @{ Name = "googlechrome"; Version = "96.0.4664.110" },
-    @{ Name = "kubernetes-cli"; Version = "1.23.0" },
-    @{ Name = "kubernetes-helm"; Version = "3.7.1" },
-    @{ Name = "make"; Version = "4.3" },
-    @{ Name = "maven"; Version = "3.8.4" },
-    @{ Name = "minikube"; Version = "1.24.0" },
-    @{ Name = "microsoft-windows-terminal"; Version = "1.11.3471.0" },
-    @{ Name = "nodejs"; Version = "16.13.0" },
-    @{ Name = "openjdk17"; Version = "17.0.1" },
-    @{ Name = "postman"; Version = "9.4.1" },
-    @{ Name = "selenium-chrome-driver"; Version = "83.0.4103.39" },
-    @{ Name = "serverless"; Version = "2.69.1" },
-    @{ Name = "springtoolsuite"; Version = "3.9.6" },
-    @{ Name = "terraform"; Version = "1.1.0" },
-    @{ Name = "vagrant"; Version = "2.2.19" },
-    @{ Name = "virtualbox"; Version = "6.1.30" },
-    @{ Name = "vscode"; Version = "1.63.1" }
-)
-
-foreach ($pkg in $packages) {
-    Install-ChocolateyPackage -PackageName $pkg.Name -Version $pkg.Version
-}
+# Add more tools as needed using the above pattern...
 
 # Refresh environment for new tools
-$env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
-Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-refreshenv
+if (Get-Command refreshenv -ErrorAction SilentlyContinue) {
+    refreshenv
+}
 
 Write-Host "`nSuccess! Your Windows development environment is ready.`n"
