@@ -30,6 +30,7 @@ This directory contains scripts and configuration for **automated developer work
 ### 2. Validate Your Workspace
 
 - Run integration tests to verify your environment:
+
   ```sh
   inspec exec test/integration/default
   ```
@@ -45,4 +46,4 @@ Contributions to improve cross-platform support, add new tools, or enable online
 
 ---
 
-*Fawkes Workspace Automation: Making every developer's environment reliable, reproducible, and ready for collaboration.*
+_Fawkes Workspace Automation: Making every developer's environment reliable, reproducible, and ready for collaboration._

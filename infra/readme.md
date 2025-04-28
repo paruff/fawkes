@@ -26,6 +26,7 @@ cd fawkes/infra
 set-env.bat
 docker-machine ip
 ```
+
 _Note the IP address for accessing your app._
 
 ### 4. Build and Run Locally
@@ -33,6 +34,7 @@ _Note the IP address for accessing your app._
 ```bat
 docker-compose up
 ```
+
 Wait a few minutes, then browse to the IP address provided by `docker-machine ip`.
 
 ### 5. Build and Publish Your Service
@@ -62,4 +64,4 @@ docker push paruff/<svcName>
 
 ---
 
-*Fawkes Infra: Deliver fast, deliver better, deliver with confidence.*
+_Fawkes Infra: Deliver fast, deliver better, deliver with confidence._

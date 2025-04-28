@@ -48,4 +48,4 @@ This directory contains the **Infrastructure as Code (IaC)** and automation scri
 
 ---
 
-*Fawkes Platform Infra: Deliver fast, deliver better, deliver with confidence.*
+_Fawkes Platform Infra: Deliver fast, deliver better, deliver with confidence._

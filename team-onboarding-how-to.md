@@ -45,4 +45,4 @@ Welcome to the Fawkes project! This guide will help new team members get access 
 
 ---
 
-*Welcome to the team! Your contributions help make Fawkes better for everyone.*
+_Welcome to the team! Your contributions help make Fawkes better for everyone._
