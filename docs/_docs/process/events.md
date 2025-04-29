@@ -3,6 +3,7 @@ title: Events
 category: Process
 order: 3
 ---
+
 # The Sprint Cycle
 
 The sprint cycle is the foundational rhythm of the scrum process. Whether you call your development period a sprint, a cycle or an iteration, you are talking about exactly the same thing: a fixed period of time within which you bite off small bits of your project and finish them before returning to bite off a few more. At the end of your sprint, you will be demonstrating working software or thy name is Mud.
@@ -12,7 +13,7 @@ The more frequently the team delivers a potentially shippable product increment,
     Is the product potentially shippable? That is to say, is the quality high enough that the business could ship it? Are all of the current stories done? This is a decision for the team.
     Does it make business sense to ship what we have at this time? Is there enough incremental value present to take the current product to market? This is a decision for the business.
 
-Additionally, the more frequently the team delivers and demonstrates a potentially shippable product increment, the more frequently the team gets feedback, which fuels the important inspect-and-adapt cycle.  The shorter the sprint cycle, the more frequently the team is delivering value to the business.
+Additionally, the more frequently the team delivers and demonstrates a potentially shippable product increment, the more frequently the team gets feedback, which fuels the important inspect-and-adapt cycle. The shorter the sprint cycle, the more frequently the team is delivering value to the business.
 
 As of this writing, it is common for scrum teams to work in sprints that last two weeks, and many teams are starting to work in one-week sprints. Much of the original writing about scrum assumed a month-long sprint, and at the time that seemed very short indeed!
 
@@ -33,6 +34,7 @@ In phase two of the sprint planning meeting, the team rolls up its sleeves and b
 The product owner should be available during this half of the meeting to answer questions. The team may also need to adjust the list of stories it is committing to, as during the process of identifying tasks the team members may realize that they have signed up for too many or too few stories.
 
 The output of the sprint planning meeting is the sprint backlog, the list of all the committed stories, with their associated tasks. The product owner agrees not to ask for additional stories during the sprint, unless the team specifically asks for more. The product owner also commits to being available to answer questions about the stories, negotiate their scope, and provide product guidance until the stories are acceptable and can be considered done.
+
 ## Daily Scrum
 
 The daily scrum, sometimes called the stand-up meeting, is:
@@ -48,6 +50,7 @@ Pointed. Each participant quickly shares:
     Any obstacles are slowing me down.
 
 The goal of this meeting is to inspect and adapt the work the team members are doing, in order to successfully complete the stories that the team has committed to deliver. The inspection happens in the meeting; the adaptation may happen after the meeting. This means that the team needn't solve problems in the meeting: simply surfacing the issues and deciding which team members will address them is usually sufficient. Remember, this meeting is brief!
+
 ## Story Time
 
 In this meeting you will be discussing and improving the stories in your product backlog, which contains all the stories for future sprints. Note that these are not the stories in the current sprint–those stories are now in the sprint backlog. We recommend one hour per week, every week, regardless of the length of your sprint. In this meeting, the team works with the product owner on:
@@ -64,19 +67,21 @@ During story time, the team will assign a size (estimate, if you prefer that ter
 
 Stories at the top of the product backlog need to be small. Small stories are easier for everyone to understand, and easier for the team to complete in a short period of time. Stories further down in the product backlog can be larger and less well defined. This implies that we need to break the big stories into smaller stories as they make their way up the list. While the product owner may do much of this work on their own, story time is their chance to get help from the whole team.
 
-As of this writing, the story time meeting isn’t an 'official' scrum meeting.  We suspect it will be in the future, as all of the high performing scrum teams we know use the story time meeting to help keep their product backlog groomed.
+As of this writing, the story time meeting isn’t an 'official' scrum meeting. We suspect it will be in the future, as all of the high performing scrum teams we know use the story time meeting to help keep their product backlog groomed.
+
 ## Sprint Review
 
-This is the public end of the sprint; invite any and all stakeholders to this meeting.  It's the team's chance to show off its accomplishments, the stories that have met the team's definition of done.  This is also the stakeholders’ opportunity to see how the product has been incrementally improved over the course of the sprint. 
+This is the public end of the sprint; invite any and all stakeholders to this meeting. It's the team's chance to show off its accomplishments, the stories that have met the team's definition of done. This is also the stakeholders’ opportunity to see how the product has been incrementally improved over the course of the sprint.
 
 If there are stories that the team committed to but did not complete, this is the time to share that information with the stakeholders. Then comes the main event of this meeting: demonstrating the stories that did get done. Undoubtedly the stakeholders will have feedback and ideas, and the product owner and the team members will gather this feedback, which will help the team to inspect-and-adapt the product.
 
 This meeting is not a decision-making meeting. It's not when we decide if the stories are done; that must happen before this meeting. It's not when we make decisions or commitments about what the team will do during the next sprint; that happens in sprint planning.
 
 How long should the sprint review be? We recommend scheduling one-half to one hour for every week of development. That is, if you have a one-week sprint, then this meeting might be 30 – 60 minutes. If you have a two-week sprint, then this meeting might need one to two hours. After you have done it a few times, you will know how long your team needs–inspect and adapt!
+
 ## Retrospective
 
-While the sprint review is the public end of the sprint, the team has one more meeting: the retrospective. Scrum is designed to help teams continuously inspect and adapt, resulting in ever-improving performance and happiness. The retrospective, held at the very end of each and every sprint, is dedicated time for the team to focus on what was learned during the sprint, and how that learning can be applied to make some improvement.  We recommend one to two hours of retrospective time for each week of development.
+While the sprint review is the public end of the sprint, the team has one more meeting: the retrospective. Scrum is designed to help teams continuously inspect and adapt, resulting in ever-improving performance and happiness. The retrospective, held at the very end of each and every sprint, is dedicated time for the team to focus on what was learned during the sprint, and how that learning can be applied to make some improvement. We recommend one to two hours of retrospective time for each week of development.
 
 Unlike the traditional “post mortem,” the aim of a retrospective is never to generate a long laundry list of things that went well and things that went wrong, but to identify no more than one or two strategic changes to make in the next sprint. It’s about process improvement.
 Abnormal Sprint Termination: When Good Sprints Go Bad

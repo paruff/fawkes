@@ -7,8 +7,6 @@ This release introduces
 
 **Features:**
 
-*
+- **Fixes:**
 
-**Fixes:**
-
-*
+-
