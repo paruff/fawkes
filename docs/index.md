@@ -2,34 +2,30 @@
 title: Fawkes
 ---
 
-Fawkes is a  product delivery platform for developing, deploying, securing, testing and monitoring application products.
+# Fawkes
 
+Fawkes is a product delivery platform for developing, deploying, securing, testing, and monitoring application products.
 
-### Getting Started
+## Getting Started
 
-Getting a delivery platform online is quick and easy with Fawkes:
+1. Clone the repository:  
+   `git clone https://github.com/paruff/fawkes`
+2. Change directory:  
+   `cd fawkes/infra/platform/aws`
+3. Configure AWS CLI:  
+   `aws configure`
+4. Run the bootstrap script:  
+   `./infraboot-tf.sh`
+5. Follow the output URL to begin your Fawkes journey.
 
-1. Git clone https://github.com/paruff/fawkes
-2. cd fawkes/infra/platform/aws
-3. aws configure
-4. ./infraboot-tf.sh 
-5. a few minutes later a url will be outputed and click on that to begin your Fawkes journey
+For questions or feedback, contact [phil.ruff+feedback@gmail.com](mailto:phil.ruff+feedback@gmail.com).
 
+## Features
 
-> Feel free to send us a message at [feedback@example.com](mailto:phil.ruff+feedback@gmail.com) with your feedback.
+- **DevSecOps Pipeline:** End-to-end delivery pipeline with built-in quality and security checks.
+- **Workspace Setup:** One script to install all required tools for all roles.
+- **Policy as Code:** Secure environments using zero trust principles and configurable policies.
 
-### Features
+---
 
-Explore more of Fawkes by reading about our features:
-
-#### DevSecOps delivery pipeline
-
-A pipeline from commit to prod deploy with checks for quality and security built in. A visual way to track the progress of product delivery.
-
-#### Workspace setup
-
-All delivery team members can run a quick script to install all tools for all roles. These scripts can be easily updated and customized to support your enterprises policies, licenses and or a products unique tool suite!
-
-#### Secure environments by policy as code
-
-Fawkes all evnironments are integrated using zero trust principals, practices and tools. All policies are in code and are configurable and enforced continuously. 
+*Documentation is a work in progress. More details coming soon.*

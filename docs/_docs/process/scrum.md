@@ -14,7 +14,6 @@ To share a document:
 
 > Changes made to documents after sending are not saved back, you'll have to get contacts to send you updated versions.
 
-
 Scrum: A Breathtakingly Brief and Agile Introduction
 
 Looking for a fast, focused overview of scrum roles, scrum artifacts, and the sprint cycle? Scrum: A Breathtakingly Brief and Agile Introduction is the pint-sized, easily digestible, just-the-facts-ma’am summary adapted from our book, The Elements of Scrum by Chris Sims & Hillary Louise Johnson. You can read the full text right here, or you can download it to your Kindle for 99 cents, or buy it as a slick, gorgeously illustrated pocket paperback perfect for gifting to colleagues.
@@ -35,7 +34,7 @@ A development team represents a significant investment on the part of the busine
 
 One way that the product owner maximizes ROI is by directing the team toward the most valuable work, and away from less valuable work. That is, the product owner controls the order, sometimes called priority, of items in the team’s backlog. In scrum, no-one but the product owner is authorized to ask the team to do work or to change the order of backlog items.
 
-Another way that the product owner maximizes the value realized from the team's efforts is to make sure the team fully understands the requirements. If the team fully understands the requirements, then they will build the right thing, and not waste time building the wrong thing. The product owner is responsible for recording the requirements, often in the form of user stories (eg, “As a <role>, I want <a feature>, so that I can <accomplish something>”) and adding them to the product backlog. Each of these users stories, when completed, will incrementally increase in the value of the product.  For this reason, we often say that each time a user story is done we have a new product increment.
+Another way that the product owner maximizes the value realized from the team's efforts is to make sure the team fully understands the requirements. If the team fully understands the requirements, then they will build the right thing, and not waste time building the wrong thing. The product owner is responsible for recording the requirements, often in the form of user stories (eg, “As a <role>, I want <a feature>, so that I can <accomplish something>”) and adding them to the product backlog. Each of these users stories, when completed, will incrementally increase in the value of the product. For this reason, we often say that each time a user story is done we have a new product increment.
 
 The Product Owner Role in a Nutshell:
 
@@ -50,7 +49,7 @@ Scrum Master
 
 The scrum master acts as a coach, guiding the team to ever-higher levels of cohesiveness, self-organization, and performance. While a team’s deliverable is the product, a scrum master’s deliverable is a high-performing, self-organizing team.
 
-The scrum master is the team’s good shepherd, its champion, guardian, facilitator, and scrum expert.  The scrum master helps the team learn and apply scrum and related agile practices to the team's best advantage. The scrum master is constantly available to the team to help them remove any impediments or road-blocks that are keeping them from doing their work. The scrum master is not—we repeat, not—the team’s boss. This is a peer position on the team, set apart by knowledge and responsibilities not rank.
+The scrum master is the team’s good shepherd, its champion, guardian, facilitator, and scrum expert. The scrum master helps the team learn and apply scrum and related agile practices to the team's best advantage. The scrum master is constantly available to the team to help them remove any impediments or road-blocks that are keeping them from doing their work. The scrum master is not—we repeat, not—the team’s boss. This is a peer position on the team, set apart by knowledge and responsibilities not rank.
 
 The scrum master role in a Nutshell:
 
@@ -63,7 +62,7 @@ Team Member
 
 High-performing scrum teams are highly collaborative; they are also self-organizing. The team members doing the work have total authority over how the work gets done. The team alone decides which tools and techniques to use, and which team members will work on which tasks. The theory is that the people who do the work are the highest authorities on how best to do it. Similarly, if the business needs schedule estimates, it is the team members who should create these estimates.
 
-A scrum team should possess all of the skills required to create a potentially shippable product. Most often, this means we will have a team of specialists, each with their own skills to contribute to the team's success.  However, on a scrum team, each team member's role is not to simply contribute in their special area. The role of each and every team member is to help the team deliver potentially shippable product in each sprint. Often, the best way for a team member to do this is by contributing work in their area of specialty. Other times, however, the team will need them to work outside their area of specialty in order to best move backlog items (aka user stories) from "in progress" to "done." What we are describing is a mindset change from "doing my job" to "doing the job." It is also a change in focus from "what we are doing" (work) to what is getting done (results).
+A scrum team should possess all of the skills required to create a potentially shippable product. Most often, this means we will have a team of specialists, each with their own skills to contribute to the team's success. However, on a scrum team, each team member's role is not to simply contribute in their special area. The role of each and every team member is to help the team deliver potentially shippable product in each sprint. Often, the best way for a team member to do this is by contributing work in their area of specialty. Other times, however, the team will need them to work outside their area of specialty in order to best move backlog items (aka user stories) from "in progress" to "done." What we are describing is a mindset change from "doing my job" to "doing the job." It is also a change in focus from "what we are doing" (work) to what is getting done (results).
 
 The Team Member Role in a Nutshell:
 
@@ -115,7 +114,7 @@ The more frequently the team delivers a potentially shippable product increment,
     Is the product potentially shippable? That is to say, is the quality high enough that the business could ship it? Are all of the current stories done? This is a decision for the team.
     Does it make business sense to ship what we have at this time? Is there enough incremental value present to take the current product to market? This is a decision for the business.
 
-Additionally, the more frequently the team delivers and demonstrates a potentially shippable product increment, the more frequently the team gets feedback, which fuels the important inspect-and-adapt cycle.  The shorter the sprint cycle, the more frequently the team is delivering value to the business.
+Additionally, the more frequently the team delivers and demonstrates a potentially shippable product increment, the more frequently the team gets feedback, which fuels the important inspect-and-adapt cycle. The shorter the sprint cycle, the more frequently the team is delivering value to the business.
 
 As of this writing, it is common for scrum teams to work in sprints that last two weeks, and many teams are starting to work in one-week sprints. Much of the original writing about scrum assumed a month-long sprint, and at the time that seemed very short indeed!
 
@@ -167,10 +166,10 @@ Story Splitting
 
 Stories at the top of the product backlog need to be small. Small stories are easier for everyone to understand, and easier for the team to complete in a short period of time. Stories further down in the product backlog can be larger and less well defined. This implies that we need to break the big stories into smaller stories as they make their way up the list. While the product owner may do much of this work on their own, story time is their chance to get help from the whole team.
 
-As of this writing, the story time meeting isn’t an 'official' scrum meeting.  We suspect it will be in the future, as all of the high performing scrum teams we know use the story time meeting to help keep their product backlog groomed.
+As of this writing, the story time meeting isn’t an 'official' scrum meeting. We suspect it will be in the future, as all of the high performing scrum teams we know use the story time meeting to help keep their product backlog groomed.
 Sprint Review
 
-This is the public end of the sprint; invite any and all stakeholders to this meeting.  It's the team's chance to show off its accomplishments, the stories that have met the team's definition of done.  This is also the stakeholders’ opportunity to see how the product has been incrementally improved over the course of the sprint. 
+This is the public end of the sprint; invite any and all stakeholders to this meeting. It's the team's chance to show off its accomplishments, the stories that have met the team's definition of done. This is also the stakeholders’ opportunity to see how the product has been incrementally improved over the course of the sprint.
 
 If there are stories that the team committed to but did not complete, this is the time to share that information with the stakeholders. Then comes the main event of this meeting: demonstrating the stories that did get done. Undoubtedly the stakeholders will have feedback and ideas, and the product owner and the team members will gather this feedback, which will help the team to inspect-and-adapt the product.
 
@@ -179,7 +178,7 @@ This meeting is not a decision-making meeting. It's not when we decide if the st
 How long should the sprint review be? We recommend scheduling one-half to one hour for every week of development. That is, if you have a one-week sprint, then this meeting might be 30 – 60 minutes. If you have a two-week sprint, then this meeting might need one to two hours. After you have done it a few times, you will know how long your team needs–inspect and adapt!
 Retrospective
 
-While the sprint review is the public end of the sprint, the team has one more meeting: the retrospective. Scrum is designed to help teams continuously inspect and adapt, resulting in ever-improving performance and happiness. The retrospective, held at the very end of each and every sprint, is dedicated time for the team to focus on what was learned during the sprint, and how that learning can be applied to make some improvement.  We recommend one to two hours of retrospective time for each week of development.
+While the sprint review is the public end of the sprint, the team has one more meeting: the retrospective. Scrum is designed to help teams continuously inspect and adapt, resulting in ever-improving performance and happiness. The retrospective, held at the very end of each and every sprint, is dedicated time for the team to focus on what was learned during the sprint, and how that learning can be applied to make some improvement. We recommend one to two hours of retrospective time for each week of development.
 
 Unlike the traditional “post mortem,” the aim of a retrospective is never to generate a long laundry list of things that went well and things that went wrong, but to identify no more than one or two strategic changes to make in the next sprint. It’s about process improvement.
 Abnormal Sprint Termination: When Good Sprints Go Bad
