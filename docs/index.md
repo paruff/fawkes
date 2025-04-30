@@ -28,4 +28,4 @@ For questions or feedback, contact [phil.ruff+feedback@gmail.com](mailto:phil.ru
 
 ---
 
-*Documentation is a work in progress. More details coming soon.*
+_Documentation is a work in progress. More details coming soon._
