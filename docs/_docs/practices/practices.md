@@ -6,7 +6,7 @@ order: 1
 
 Practices:
 
-1.      Pair Programming
+1.       Pair Programming
 1.  Test Driven Development/Unit Testing
 1.  Continuous Integration
 1.  Refactoring
