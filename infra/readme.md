@@ -13,6 +13,7 @@ This directory contains the **Infrastructure as Code (IaC)** scripts and automat
   ```bat
   infra/workspace/space-setup.bat
   ```
+
   This will install required tools such as Git, Docker, VirtualBox, and more.
 
 ### 2. Clone the Repository
