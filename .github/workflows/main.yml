@@ -45,16 +45,16 @@ jobs:
             **/*.md
             **/*.markdown
 
-  build:
-    runs-on: ubuntu-latest
-    needs: validate
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # Add your build steps here (e.g., Docker build, language build, etc.)
-      - name: Build Docker image
-        run: docker build -t fawkes-app:ci .
+  # build:
+  #   runs-on: ubuntu-latest
+  #   needs: validate
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #
+  #     # Add your build steps here (e.g., Docker build, language build, etc.)
+  #     - name: Build Docker image
+  #       run: docker build -t fawkes-app:ci .
 
   security:
     runs-on: ubuntu-latest
