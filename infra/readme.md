@@ -7,7 +7,9 @@ This directory contains the **Infrastructure as Code (IaC)** scripts and automat
 ### 1. Prepare Your Local Environment
 
 - **Windows:**  
+
   Run as administrator:
+
   ```bat
   infra/workspace/space-setup.bat
   ```
@@ -43,12 +45,6 @@ Wait a few minutes, then browse to the IP address provided by `docker-machine ip
 docker build -t paruff/<svcName> .
 docker login -u <your-username>
 docker push paruff/<svcName>
-```
-
-Some text.
-
-```sh
-echo "Hello"
 ```
 
 ## What Does This Infrastructure Provide?

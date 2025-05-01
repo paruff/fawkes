@@ -30,7 +30,7 @@
 5. Enter at "Default region name"
 6. Enter at "Default output format"
 
-```
+```sh
 $ aws configure
 AWS Access Key ID [****************CI6A]:
 AWS Secret Access Key [****************8c8U]:
@@ -38,14 +38,14 @@ Default region name [us-east-2]:
 Default output format [None]:
 ```
 
-7. Validate by entering "aws s3 ls"
-8. Create a profile called terraform (in ~/.aws/credentials) and copy in aws_access_key_id and aws_secret_access_key that you want to use
-9. Update ~/.aws/config and set region for terraform profile
-10. Export default aws profile
+1. Validate by entering "aws s3 ls"
+2. Create a profile called terraform (in ~/.aws/credentials) and copy in aws_access_key_id and aws_secret_access_key that you want to use
+3. Update ~/.aws/config and set region for terraform profile
+4. Export default aws profile
     linux: export AWS_DEFAULT_PROFILE=terraform
     windows: setx AWS_DEFAULT_PROFILE terraform
-11. Run 'aws configure' and keep all, except do set default aws region
-12. Test aws config with 'aws ec2 describe-instances --profile terraform'. Should get no errors
+5. Run 'aws configure' and keep all, except do set default aws region
+6. Test aws config with 'aws ec2 describe-instances --profile terraform'. Should get no errors
 
 ## deploy the CI/CD pipeline
 
