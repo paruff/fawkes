@@ -3,23 +3,23 @@
 ## get ssh keys
 
 1. log into the aws console
-1. select ec2 service
-1. select Key Pairs from teh Resources Dashboard
-1. Select "Create Key Pair"
-1. Enter "platform-{region}" and click "Create"
-1. click "OK" to save the keypair on your machine
-1. open a bash terminal
+2. select ec2 service
+3. select Key Pairs from teh Resources Dashboard
+4. Select "Create Key Pair"
+5. Enter "platform-{region}" and click "Create"
+6. click "OK" to save the keypair on your machine
+7. open a bash terminal
 
 ## get access and secret keys
 
 1. log on to the aws console
-1. select IAM services
-1. select "Users" on the left hand navigation menu
-1. select given user
-1. select "Security Credentials" tab
-1. Under "Access Keys", click "Create access key"
-1. Select "Download .csv file"
-1. select "Save File" and then click "OK"
+2. select IAM services
+3. select "Users" on the left hand navigation menu
+4. select given user
+5. select "Security Credentials" tab
+6. Under "Access Keys", click "Create access key"
+7. Select "Download .csv file"
+8. select "Save File" and then click "OK"
 
 ## aws configure
 
@@ -49,9 +49,9 @@ Default output format [None]:
 
 ## deploy the CI/CD pipeline
 
-1.  scp -i ~/.ssh/platform-use1.pem infra/platform/docker-compose-swarm.yml docker@54.172.210.245:
-2.  ssh -i ~/.ssh/platform-use1.pem docker@54.172.210.245
-3.  docker stack deploy -c docker-compose-swarm.yml pipeline
+1. scp -i ~/.ssh/platform-use1.pem infra/platform/docker-compose-swarm.yml docker@54.172.210.245:
+2. ssh -i ~/.ssh/platform-use1.pem docker@54.172.210.245
+3. docker stack deploy -c docker-compose-swarm.yml pipeline
 
 ## Configure Jenkins
 

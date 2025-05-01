@@ -1,54 +1,58 @@
 # Hygieia Notes
 
-## Deployment Environment Specific
+## Deployment Environment Variables
 
-Update these Environment Variables (at minimum) in the specified yaml files
+Update these environment variables in the specified YAML files:
 
-1. jenkins-build-collector-deployment.yaml (JENKINS_API_KEY, JENKINS_MASTER)
-2. sonar-codequality-collector-deployment.yaml (SONAR_URL)
-3. jira-collector-deployment.yaml (JIRA_CREDENTIALS, JIRA_BASE_URL)
-4. gitlab-scm-collector (GITLAB_API_TOKEN)
+1. `jenkins-build-collector-deployment.yaml`: `JENKINS_API_KEY`, `JENKINS_MASTER`
+2. `sonar-codequality-collector-deployment.yaml`: `SONAR_URL`
+3. `jira-collector-deployment.yaml`: `JIRA_CREDENTIALS`, `JIRA_BASE_URL`
+4. `gitlab-scm-collector-deployment.yaml`: `GITLAB_API_TOKEN`
 
-Here are listed any configuration items that required special consideration.
+## Collector Configuration
 
-## gitlab-scm-collector
+### GitLab SCM Collector
 
-1. create an API Access Token for use in environment variable: GITLAB_API_TOKEN defined in gitlab-scm-collector-deployment.yaml
+- Create an API Access Token for use in the `GITLAB_API_TOKEN` environment variable in `gitlab-scm-collector-deployment.yaml`.
 
-## jenkins-build-collector
+### Jenkins Build Collector
 
-1. create an API Key for admin user and in jenkins-build-collector-deployment.yaml in environment variable: JENKINS_API_KEY
-2. update jenkins-build-collector-deployment.yaml was the base URL of your jenkins deployment in environment variable: JENKINS_MASTER
+- Create an API Key for the admin user and set it in `JENKINS_API_KEY` in `jenkins-build-collector-deployment.yaml`.
+- Set the base URL of your Jenkins deployment in `JENKINS_MASTER`.
+- Jenkins URL should match your collector configuration.  
+  - If Jenkins and Hygieia are in the same K8s cluster, you can use the internal host (e.g., `jenkins`), but URLs may not be clickable for dashboard users.
+  - It is recommended to set the Jenkins URL in **Manage Jenkins → System Configuration** to ensure generated URLs are reachable.
 
-# Things Updated in Preparation for K8S Deployment
+## UI Updates
 
-## UI
+- Dockerfile updated to not call `conf-builder.sh` (the contained `sed` command fails).
+- `default.conf` updated to use host `api` at port `8080` by default.
+- `default.conf` is now copied directly to the nginx conf directory instead of being built from a template.
 
-1. Dockerfile updated to not call conf-builder.sh as the contained 'sed' command fails.
-2. updated default.conf to use host 'api' at port '8080' by default
-3. default.conf copied to nginx conf directly instead of building with conf-builder.sh from template
+## Jenkins Plugin Recommendation
 
-## Jenkins
+Hygieia developers recommend using the [Jenkins plugin](https://hygieia.github.io/Hygieia/hygieia-jenkins-plugin.html) instead of the collectors due to performance issues with the Jenkins build collectors, especially on instances with many jobs.  
+See: [Hygieia Issue #2489](https://github.com/Hygieia/Hygieia/issues/2489)
 
-Hygieia developers recommend using the Jenkins plugin instead of the collectors. See: https://github.com/Hygieia/Hygieia/issues/2489
+> "Ideally, you should be using the Jenkins plugin we provide as there are some performance issues for the Jenkins build collectors on Jenkins instances with a large number of jobs."
 
-"... Ideally though you should be using the jenkins plugin we provide as there are some performance issues for the jenkins build collectors on jenkins instances with a large number of jobs."
+### Jenkins Build Collector Dockerfile
 
-Hygieia Jenkins plugin is available at: https://hygieia.github.io/Hygieia/hygieia-jenkins-plugin.html
+1. Fixed Dockerfile to ensure `properties-builder.sh` is copied after the target directory is created.
+2. Applied general issue #1 (see below).
+3. Built, tagged, and deployed a custom Docker image.
+4. Manually created an API Key in Jenkins for `JENKINS_API_KEY`.
 
-### jenkins-build-collector
+## Jira Collector
 
-1. It was necessary to fix the Dockerfile. It tried to copy the properties-builder.sh file before a target directory had been created.
-2. general issue #1 (see below) applied
-3. custom docker image then built, tagged and deployed.
-4. had to manually create an API Key in jenkins to place in environment variable JENKINS_API_KEY
-5. Jenkins URL passed needs to match our collector configuration. Jenkins needs to pass an accessible FQDN or else just make sure that hygieia and jenkins are in the same k8s cluster were jenkins host is just 'jenkins' internally. The drawback here is that URLs will not be clickable by dashboard users. It is recommended to set the Jenkins URL inside "Manage Jenkins" -> "System Configuration". Jenkins cannot reliably know how to get back to itself without this set--generated URLs will be unreachable otherwise.
+- Story, Epic, and Custom field IDs differ between Jira instances.
+- To reveal the IDs needed in `jira-collector-deployment.yaml`, run:
 
-## Jira
+    ```sh
+    curl -u <user>:<token> https://<your-jira-instance>/rest/api/2/field
+    ```
 
-1. Story, Epic and Custom field IDs are not the same between instances of jira. Run this command to reveal the IDs needed in jira-collector-deployment.yaml. https://unisys-fed-as.atlassian.net/rest/api/2/field
+## General Issues
 
-# General Issues
-
-1. see: https://github.com/Hygieia/Hygieia/issues/2681 -- Inconsistencies in docker property-builder script causing unexpected failure due to misconfiguration
-2. Had to stop using Dynamically built docker images. It resulted in unpredictable results.
+1. [Inconsistencies in Docker property-builder script](https://github.com/Hygieia/Hygieia/issues/2681) can cause unexpected failures due to misconfiguration.
+2. Stopped using dynamically built Docker images due to unpredictable results.
