@@ -16,5 +16,7 @@ helm test sonarqube --cleanup
 kubectl get svc -n=pline
 
 # get latest load balancer path to sonarqube chart
-export SERVICE_IP=$(kubectl get svc --namespace pipeline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
-echo http://$SERVICE_IP:9000
+SERVICE_IP=$(kubectl get svc --namespace pipeline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+export SERVICE_IP
+# export SERVICE_IP=$(kubectl get svc --namespace pipeline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+echo http://"$SERVICE_IP":9000
