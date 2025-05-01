@@ -69,14 +69,14 @@ jobs:
 
       # Scan Dockerfiles and images with Trivy
       - name: Scan Dockerfiles with Trivy
-        uses: aquasecurity/trivy-action@v0.13.2
+        uses: aquasecurity/trivy-action@master
         with:
           scan-type: "fs"
           scan-ref: "."
           ignore-unfixed: true
 
       - name: Scan Docker image with Trivy
-        uses: aquasecurity/trivy-action@v0.13.2
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: "fawkes-app:ci"
           format: "table"
@@ -85,7 +85,7 @@ jobs:
 
       # Scan Helm charts with Trivy
       - name: Scan Helm charts with Trivy
-        uses: aquasecurity/trivy-action@v0.13.2
+        uses: aquasecurity/trivy-action@master
         with:
           scan-type: "config"
           scan-ref: "./infra/platform"
@@ -93,7 +93,7 @@ jobs:
 
       # Scan dependencies with Trivy (for package vulnerabilities)
       - name: Scan dependencies with Trivy
-        uses: aquasecurity/trivy-action@v0.13.2
+        uses: aquasecurity/trivy-action@master
         with:
           scan-type: "fs"
           scan-ref: "."
