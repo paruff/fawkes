@@ -1,8 +1,8 @@
-##pre-requisite
+## pre-requisite
 
 1.  setup aws client infr/workspace/setup.bat
 
-# Day of, check list:
+# Day of, check list
 
     1. Provided account access uid & pw
     2. Login to console

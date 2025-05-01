@@ -45,6 +45,12 @@ docker login -u <your-username>
 docker push paruff/<svcName>
 ```
 
+Some text.
+
+```sh
+echo "Hello"
+```
+
 ## What Does This Infrastructure Provide?
 
 - **Kubernetes Cluster Provisioning:**  
