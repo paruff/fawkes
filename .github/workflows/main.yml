@@ -67,22 +67,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # # Scan Dockerfiles and images with Trivy
-      # - name: Scan Dockerfiles with Trivy
-      #   uses: aquasecurity/trivy-action@master
-      #   with:
-      #     scan-type: "fs"
-      #     scan-ref: "."
-      #     ignore-unfixed: true
-
-      - name: Scan Docker image with Trivy
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: "fawkes-app:ci"
-          format: "table"
-          exit-code: "1"
-          ignore-unfixed: true
-
       # Scan Helm charts with Trivy
       - name: Scan Helm charts with Trivy
         uses: aquasecurity/trivy-action@master
@@ -102,6 +86,22 @@ jobs:
       # Optionally, scan for secrets in code
       - name: Scan for secrets with Gitleaks
         uses: gitleaks/gitleaks-action@v2
+
+      # Scan Dockerfiles and images with Trivy
+      - name: Scan Dockerfiles with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          ignore-unfixed: true
+
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "fawkes-app:ci"
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: true
 
   test:
     runs-on: ubuntu-latest
