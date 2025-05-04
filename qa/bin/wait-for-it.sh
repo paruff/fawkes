@@ -21,6 +21,8 @@ USAGE
     exit 1
 }
 
+eval "$("C:\Program Files\Docker\Docker\Resources\bin\docker-machine.exe" env)"
+
 wait_for() {
     if [[ $TIMEOUT -gt 0 ]]; then
         echoerr "$cmdname: waiting $TIMEOUT seconds for $HOST:$PORT"
@@ -51,7 +53,7 @@ wait_for_wrapper() {
     if [[ $QUIET -eq 1 ]]; then
         timeout "$BUSYTIMEFLAG" "$TIMEOUT" "$0" --quiet --child --host="$HOST" --port="$PORT" --timeout="$TIMEOUT" &
     else
-        timeout "$BUSYTIMEFLAG" "$TIMEOUT" "$0" --child --host="$HOST" --port="$PORT" --timeout="$TIMEOUT" &
+        timeout "$BUSYTIMEFLAG" "$TIMEOUT" "$0" --quiet --child --host="$HOST" --port="$PORT" --timeout="$TIMEOUT" &
     fi
     PID=$!
     trap 'kill -INT -$PID' INT
@@ -150,7 +152,7 @@ if [[ $CHILD -gt 0 ]]; then
     exit "$RESULT"
 else
     if [[ $TIMEOUT -gt 0 ]]; then
-        wait_for_wrapper
+        timeout "$BUSYTIMEFLAG" "$TIMEOUT" "$0" --quiet --child --host="$HOST" --port="$PORT" --timeout="$TIMEOUT" &
         RESULT=$?
     else
         wait_for

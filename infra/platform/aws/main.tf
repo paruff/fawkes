@@ -1,17 +1,17 @@
 terraform {
-  required_version = ">= 1.0.0"
+  required_version = ">= 1.3.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"
+      version = "~> 5.40"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 2.0"
+      version = "~> 2.26"
     }
     random = {
       source  = "hashicorp/random"
-      version = "~> 3.0"
+      version = "~> 3.6"
     }
   }
 }
@@ -49,48 +49,51 @@ resource "random_string" "suffix" {
 resource "aws_security_group" "worker_group_mgmt_one" {
   name_prefix = "worker_group_mgmt_one"
   vpc_id      = module.vpc.vpc_id
+  description = "Security group for worker group management one"
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = [var.ssh_ingress_cidr_one]
+    description = "Allow SSH access from specific CIDR block"
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.egress_cidr_block]
+    description = "Allow all egress traffic to specific CIDR block"
   }
-
-  tags = local.tags
 }
 
 resource "aws_security_group" "worker_group_mgmt_two" {
   name_prefix = "worker_group_mgmt_two"
   vpc_id      = module.vpc.vpc_id
+  description = "Security group for worker group management two"
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = [var.ssh_ingress_cidr_two]
+    description = "Allow SSH access from specific CIDR block"
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.egress_cidr_block]
+    description = "Allow all egress traffic to specific CIDR block"
   }
-
-  tags = local.tags
 }
 
 resource "aws_security_group" "all_worker_mgmt" {
   name_prefix = "all_worker_management"
   vpc_id      = module.vpc.vpc_id
+  description = "Security group for all worker management"
 
   ingress {
     from_port   = 22
@@ -111,7 +114,7 @@ resource "aws_security_group" "all_worker_mgmt" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "3.2.0"
+  version = "3.19.0"
 
   name                 = "fawkes-vpc"
   cidr                 = var.vpc_cidr
@@ -136,38 +139,44 @@ module "vpc" {
 }
 
 module "eks" {
-  source          = "terraform-aws-modules/eks/aws"
-  version         = "17.24.0"
-  cluster_name    = local.cluster_name
+  source  = "terraform-aws-modules/eks/aws"
+  version = "19.21.0"
+
   cluster_version = var.eks_version
   subnets         = module.vpc.private_subnets
+  vpc_id          = module.vpc.vpc_id
 
-  vpc_id = module.vpc.vpc_id
-
-  worker_groups = [
-    {
+  eks_managed_node_groups = {
+    worker_group_1 = {
       name                          = "worker-group-1"
-      instance_type                 = var.worker_group_1_instance_type
-      additional_userdata           = "echo foo bar"
-      asg_desired_capacity          = var.worker_group_1_capacity
+      instance_types                = [var.worker_group_1_instance_type]
+      desired_capacity              = var.worker_group_1_capacity
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
-    },
-    {
+    }
+    worker_group_2 = {
       name                          = "worker-group-2"
-      instance_type                 = var.worker_group_2_instance_type
-      additional_userdata           = "echo foo bar"
-      asg_desired_capacity          = var.worker_group_2_capacity
+      instance_types                = [var.worker_group_2_instance_type]
+      desired_capacity              = var.worker_group_2_capacity
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_two.id]
-    },
-  ]
+    }
+  }
 
-  worker_additional_security_group_ids = [aws_security_group.all_worker_mgmt.id]
-  map_roles                            = var.map_roles
-  map_users                            = var.map_users
-  map_accounts                         = var.map_accounts
+  node_security_group_additional_rules = {
+    all_worker_mgmt = {
+      description = "Allow SSH from all_worker_mgmt"
+      protocol    = "tcp"
+      from_port   = 22
+      to_port     = 22
+      cidr_blocks = var.ssh_ingress_cidrs
+    }
+  }
 
-  cluster_enabled_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
-  cluster_log_retention_in_days = 7
+  map_roles    = var.map_roles
+  map_users    = var.map_users
+  map_accounts = var.map_accounts
+
+  cluster_enabled_log_types      = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+  cluster_log_retention_in_days  = 7
 
   cluster_encryption_config = [{
     resources        = ["secrets"]
@@ -178,15 +187,15 @@ module "eks" {
 }
 
 data "aws_eks_cluster" "cluster" {
-  name = module.eks.cluster_id
+  name = module.eks.cluster_name
 }
 
 data "aws_eks_cluster_auth" "cluster" {
-  name = module.eks.cluster_id
+  name = module.eks.cluster_name
 }
 
 output "cluster_name" {
-  value = module.eks.cluster_id
+  value = module.eks.cluster_name
 }
 
 output "cluster_endpoint" {
@@ -194,7 +203,7 @@ output "cluster_endpoint" {
 }
 
 output "kubeconfig" {
-  value = module.eks.kubeconfig
+  value     = module.eks.kubeconfig
   sensitive = true
 }
 
