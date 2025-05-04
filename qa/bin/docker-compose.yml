@@ -1,10 +1,9 @@
-version: '3'
+version: "3"
 services:
-
   hub:
     image: selenium/hub
     ports:
-      - "4444:4444" 
+      - "4444:4444"
     environment:
       - GRID_BROWSER_TIMEOUT=30
       - GRID_NEW_SESSION_WAIT_TIMEOUT=30
@@ -14,14 +13,14 @@ services:
     ports:
       - "5555:5555"
     links:
-      - hub  
-    privileged: true  
+      - hub
+    privileged: true
     environment:
       - HUB_PORT_4444_TCP_ADDR=hub
       - HUB_PORT_4444_TCP_PORT=4444
       - DBUS_SESSION_BUS_ADDRESS=/dev/null
     volumes:
-      - /dev/shm:/dev/shm  
+      - /dev/shm:/dev/shm
 
   seleniumtests:
     image: maven:3.5-jdk-8-alpine
@@ -32,7 +31,7 @@ services:
     expose:
       - 5005
     ports:
-      - "5005:5005"  
+      - "5005:5005"
     links:
       - hub
       - chromenode
