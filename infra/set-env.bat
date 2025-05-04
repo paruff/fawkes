@@ -13,7 +13,7 @@ IF ERRORLEVEL 1 (
 )
 
 REM Set environment variables for Docker
-FOR /f "tokens=*" %%i IN ('docker-machine env') DO @%%i
+eval "$("C:\Program Files\Docker\Docker\Resources\bin\docker-machine.exe" env)"
 IF ERRORLEVEL 1 (
     ECHO Failed to set Docker environment.
     EXIT /B 1

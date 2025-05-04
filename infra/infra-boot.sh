@@ -86,7 +86,7 @@ case "$PROVIDER" in
 
     echo "Platform front DNS:"
     aws cloudformation describe-stacks --stack-name platform \
-        --query 'Stacks[0].Outputs[?OutputKey==`DefaultDNSTarget`].OutputValue' --output text
+        --query "Stacks[0].Outputs[?OutputKey==\`DefaultDNSTarget\`].OutputValue" --output text
 
     echo "Platform Manager IPs:"
     aws ec2 describe-instances --filters "Name=tag:Name,Values=platform-Manager" \
