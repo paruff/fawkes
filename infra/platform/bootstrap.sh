@@ -217,7 +217,8 @@ install_jenkins() {
 install_sonarqube() {
   helm install sonarqube stable/sonarqube -f sonarqube/sonarqube-values.yaml --namespace=pline --wait
   helm test sonarqube --cleanup
-  export SERVICE_IP=$(kubectl get svc --namespace pline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+  SERVICE_IP=$(kubectl get svc --namespace pline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+  export SERVICE_IP
   echo "Sonarqube LB URL: http://$SERVICE_IP:9000"
 }
 

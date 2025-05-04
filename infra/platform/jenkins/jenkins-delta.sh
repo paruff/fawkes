@@ -63,11 +63,7 @@ while [[ $# -gt 0 ]]; do
     -u|--uninstall)
       uninstall
       ;;
-    --default)
-      # DEFAULT=YES # (Unused, so removed)
-      shift # past argument
-      ;;
-    -*|--*)
+    -*)
       echo "Unknown option $1"
       exit 1
       ;;
