@@ -4,13 +4,17 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-readonly script_name=$(basename "${0}")
-readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-IFS=$'\t\n'
+script_name=$(basename "${0}")
+readonly script_name
+
+# script_dir is currently unused. Remove or comment if not needed.
+# script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+# readonly script_dir
 
 boot_debug=${boot_debug:-0}
-environments='dev test prod'
-jenkins_values_file=ignore/jenkins_values_final.yaml
+# environments and jenkins_values_file are unused. Remove or comment if not needed.
+# environments='dev test prod'
+# jenkins_values_file=ignore/jenkins_values_final.yaml
 
 usage() {
   echo "Usage: $script_name <command>"
@@ -130,17 +134,31 @@ install_delight() {
 
 show() {
   export JENKINS_ADMIN_USER="admin"
-  export JENKINS_ADMIN_PASSWORD=$(kubectl get secret --namespace pline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode)
-  export JENKINS_IP=$(kubectl get svc --namespace pline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
-  export JENKINS_LB_URL="http://$JENKINS_IP:8080"
 
-  export SONARQUBE_SERVICE_IP=$(kubectl get svc --namespace pline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
-  export SONARQUBE_LB_URL="http://$SONARQUBE_SERVICE_IP:9000"
+  JENKINS_ADMIN_PASSWORD=$(kubectl get secret --namespace pline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode)
+  export JENKINS_ADMIN_PASSWORD
+
+  JENKINS_IP=$(kubectl get svc --namespace pline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+  export JENKINS_IP
+
+  JENKINS_LB_URL="http://$JENKINS_IP:8080"
+  export JENKINS_LB_URL
+
+  SONARQUBE_SERVICE_IP=$(kubectl get svc --namespace pline sonarqube-sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+  export SONARQUBE_SERVICE_IP
+
+  SONARQUBE_LB_URL="http://$SONARQUBE_SERVICE_IP:9000"
+  export SONARQUBE_LB_URL
 
   token_name=$(kubectl -n kube-system get secret -o custom-columns=NAME:.metadata.name | grep dashboard-admin-user-token)
-  export DASHBOARD_ADMIN_TOKEN=$(kubectl -n kube-system get secret $token_name -o jsonpath='{.data.token}' | base64 --decode)
-  export DASHBOARD_SERVICE_IP=$(kubectl get svc --namespace kube-system kubernetes-dashboard --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
-  export DASHBOARD_LB_URL="https://$DASHBOARD_SERVICE_IP"
+  DASHBOARD_ADMIN_TOKEN=$(kubectl -n kube-system get secret "$token_name" -o jsonpath='{.data.token}' | base64 --decode)
+  export DASHBOARD_ADMIN_TOKEN
+
+  DASHBOARD_SERVICE_IP=$(kubectl get svc --namespace kube-system kubernetes-dashboard --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+  export DASHBOARD_SERVICE_IP
+
+  DASHBOARD_LB_URL="https://$DASHBOARD_SERVICE_IP"
+  export DASHBOARD_LB_URL
 
   echo
   echo "Setup Script Outputs:"
@@ -164,14 +182,14 @@ provision_cloud() {
   terraform plan
   terraform apply --auto-approve
 
-  mkdir -p $HOME/.kube
-  cp kubeconfig_* $HOME/.kube/config
-  cp kubeconfig_* $HOME/.kube/
+  mkdir -p "$HOME/.kube"
+  cp kubeconfig_* "$HOME/.kube/config"
+  cp kubeconfig_* "$HOME/.kube/"
 
   aws eks update-kubeconfig --name pipeline
 
   export KUBECONFIG_SAVED=$KUBECONFIG
-  export KUBECONFIG=$HOME/.kube/config
+  export KUBECONFIG="$HOME/.kube/config"
 
   install_helm
 
@@ -189,8 +207,10 @@ install_helm() {
 install_jenkins() {
   helm install jenkins --namespace=pline stable/jenkins -f jenkins/values.yaml --wait
   echo "Jenkins admin password:"
-  printf $(kubectl get secret --namespace pline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode); echo
-  export JENKINS_IP=$(kubectl get svc --namespace pline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+  printf "%s" "$(kubectl get secret --namespace pline jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode)"
+  echo
+  JENKINS_IP=$(kubectl get svc --namespace pline jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+  export JENKINS_IP
   echo "Jenkins LB URL: http://$JENKINS_IP:8080/login"
 }
 
