@@ -1,27 +1,44 @@
+terraform {
+  required_version = ">= 1.0.0"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.0"
+    }
+  }
+}
+
 provider "aws" {
   region = var.region
 }
 
-data "aws_eks_cluster" "cluster" {
-  name = module.eks.cluster_id
-}
-
-data "aws_eks_cluster_auth" "cluster" {
-  name = module.eks.cluster_id
-}
-
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
   token                  = data.aws_eks_cluster_auth.cluster.token
   load_config_file       = false
 }
 
-data "aws_availability_zones" "available" {
-}
+data "aws_availability_zones" "available" {}
 
 locals {
   cluster_name = "fawkes-eks-${random_string.suffix.result}"
+  tags = merge(
+    {
+      Environment = var.environment
+      Project     = "fawkes"
+      Owner       = var.owner
+    },
+    var.extra_tags
+  )
 }
 
 resource "random_string" "suffix" {
@@ -34,14 +51,20 @@ resource "aws_security_group" "worker_group_mgmt_one" {
   vpc_id      = module.vpc.vpc_id
 
   ingress {
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
-
-    cidr_blocks = [
-      "10.0.0.0/8",
-    ]
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.ssh_ingress_cidr_one]
   }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = local.tags
 }
 
 resource "aws_security_group" "worker_group_mgmt_two" {
@@ -49,14 +72,20 @@ resource "aws_security_group" "worker_group_mgmt_two" {
   vpc_id      = module.vpc.vpc_id
 
   ingress {
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
-
-    cidr_blocks = [
-      "192.168.0.0/16",
-    ]
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.ssh_ingress_cidr_two]
   }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = local.tags
 }
 
 resource "aws_security_group" "all_worker_mgmt" {
@@ -64,16 +93,20 @@ resource "aws_security_group" "all_worker_mgmt" {
   vpc_id      = module.vpc.vpc_id
 
   ingress {
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
-
-    cidr_blocks = [
-      "10.0.0.0/8",
-      "172.16.0.0/12",
-      "192.168.0.0/16",
-    ]
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = var.ssh_ingress_cidrs
   }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = local.tags
 }
 
 module "vpc" {
@@ -81,10 +114,10 @@ module "vpc" {
   version = "3.2.0"
 
   name                 = "fawkes-vpc"
-  cidr                 = "10.0.0.0/16"
+  cidr                 = var.vpc_cidr
   azs                  = data.aws_availability_zones.available.names
-  private_subnets      = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets       = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
+  private_subnets      = var.private_subnets
+  public_subnets       = var.public_subnets
   enable_nat_gateway   = true
   single_nat_gateway   = true
   enable_dns_hostnames = true
@@ -98,37 +131,33 @@ module "vpc" {
     "kubernetes.io/cluster/${local.cluster_name}" = "shared"
     "kubernetes.io/role/internal-elb"             = "1"
   }
+
+  tags = local.tags
 }
 
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   version         = "17.24.0"
   cluster_name    = local.cluster_name
-  cluster_version = "1.21"
+  cluster_version = var.eks_version
   subnets         = module.vpc.private_subnets
-
-  tags = {
-    Environment = "test"
-    GithubRepo  = "terraform-aws-eks"
-    GithubOrg   = "terraform-aws-modules"
-  }
 
   vpc_id = module.vpc.vpc_id
 
   worker_groups = [
     {
       name                          = "worker-group-1"
-      instance_type                 = "t3.medium"
+      instance_type                 = var.worker_group_1_instance_type
       additional_userdata           = "echo foo bar"
-      asg_desired_capacity          = 3
+      asg_desired_capacity          = var.worker_group_1_capacity
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
     },
     {
       name                          = "worker-group-2"
-      instance_type                 = "t3.large"
+      instance_type                 = var.worker_group_2_instance_type
       additional_userdata           = "echo foo bar"
+      asg_desired_capacity          = var.worker_group_2_capacity
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_two.id]
-      asg_desired_capacity          = 3
     },
   ]
 
@@ -136,4 +165,39 @@ module "eks" {
   map_roles                            = var.map_roles
   map_users                            = var.map_users
   map_accounts                         = var.map_accounts
+
+  cluster_enabled_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+  cluster_log_retention_in_days = 7
+
+  cluster_encryption_config = [{
+    resources        = ["secrets"]
+    provider_key_arn = var.kms_key_arn
+  }]
+
+  tags = local.tags
+}
+
+data "aws_eks_cluster" "cluster" {
+  name = module.eks.cluster_id
+}
+
+data "aws_eks_cluster_auth" "cluster" {
+  name = module.eks.cluster_id
+}
+
+output "cluster_name" {
+  value = module.eks.cluster_id
+}
+
+output "cluster_endpoint" {
+  value = data.aws_eks_cluster.cluster.endpoint
+}
+
+output "kubeconfig" {
+  value = module.eks.kubeconfig
+  sensitive = true
+}
+
+output "vpc_id" {
+  value = module.vpc.vpc_id
 }

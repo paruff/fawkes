@@ -1,51 +1,85 @@
-install-module cChoco
+#Requires -RunAsAdministrator
 
-Set-WSManInstance -ValueSet @{MaxEnvelopeSizekb "10000"} -ResourceURI winrm/config
+Write-Host "Checking for administrative permissions..."
 
-Start-DscConfiguration .\fawkesChocoConfig -wait -Verbose -force 
+function Install-DirectOrChoco {
+    param (
+        [Parameter(Mandatory)][string]$ToolName,
+        [Parameter(Mandatory)][string]$CheckCommand,
+        [Parameter(Mandatory)][string]$DirectUrl,
+        [string]$ChocoName = $null,
+        [string]$ChocoVersion = $null
+    )
+    if (Get-Command $CheckCommand -ErrorAction SilentlyContinue) {
+        Write-Host "$ToolName is already installed."
+        return
+    }
+    Write-Host "Installing $ToolName..."
+    try {
+        if ($DirectUrl) {
+            $installer = "$env:TEMP\$ToolName-installer.exe"
+            Invoke-WebRequest -Uri $DirectUrl -OutFile $installer
+            Start-Process -FilePath $installer -ArgumentList "/quiet" -Wait
+            Remove-Item $installer -Force
+            if (Get-Command $CheckCommand -ErrorAction SilentlyContinue) {
+                Write-Host "$ToolName installed successfully (direct)."
+                return
+            }
+        }
+    } catch {
+        Write-Warning "Direct install failed for $ToolName. Trying Chocolatey..."
+    }
+    if ($ChocoName) {
+        $chocoCmd = "choco install $ChocoName -y"
+        if ($ChocoVersion) { $chocoCmd += " --version $ChocoVersion" }
+        iex $chocoCmd
+        if (Get-Command $CheckCommand -ErrorAction SilentlyContinue) {
+            Write-Host "$ToolName installed successfully (choco)."
+        } else {
+            Write-Error "Failed to install $ToolName."
+            exit 1
+        }
+    }
+}
 
+function Ensure-Chocolatey {
+    if (-not (Get-Command choco.exe -ErrorAction SilentlyContinue)) {
+        Write-Host "Chocolatey not found. Installing Chocolatey..."
+        Set-ExecutionPolicy Bypass -Scope Process -Force
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+        iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+    } else {
+        Write-Host "Chocolatey is already installed."
+    }
+}
 
-# function Install-ChocolateyPackage {
-#     param (
-#       [Parameter(Mandatory, Position=0)]
-#       [string]$PackageName,
-  
-#       [string]$Source,
-  
-#       [alias("Params")]
-#       [string]$PackageParameters,
-  
-#       [string]$Version,
-  
-#       [alias("Pre")]
-#       [switch]$Prerelease,
-  
-#       [switch]$UseInstallNotUpgrade
-#     )
-  
-#     $chocoExecutionArgs = "choco.exe"
-#     if ($UseInstallNotUpgrade) {
-#       $chocoExecutionArgs += " install"
-#     } else {
-#       $chocoExecutionArgs += " upgrade"
-#     }
-  
-#     $chocoExecutionArgs += " $PackageName -y"
-#     if ($Prerelease) { $chocoExecutionArgs += " --prerelease"}
-#     if ($Version) { $chocoExecutionArgs += " --version='$Version'"}
-#     if ($PackageParameters -and $PackageParameters -ne '') { $chocoExecutionArgs += " --package-parameters='$PackageParameters'"}
-  
-#     Invoke-Expression -Command $chocoExecutionArgs
-#     $exitCode = $LASTEXITCODE
-#     $validExitCodes = @(0, 1605, 1614, 1641, 3010)
-#     if ($validExitCodes -notcontains $exitCode) {
-#       throw "Error with package installation. See above."
-#     }
-#   }
-  
-#   Install-ChocolateyPackage gcloudsdk  -Version 0.0.0.20210904
-#   Install-ChocolateyPackage ojdkbuild   -Version 17.0.1.0
-#   Install-ChocolateyPackage vscode   -Version 1.64.2
-#   Install-ChocolateyPackage docker-desktop   -Version 4.5.0
-#   Install-ChocolateyPackage docker-machine   -Version 0.16.2
-  
+Ensure-Chocolatey
+
+# Example: Install Git (direct from official, fallback to choco)
+Install-DirectOrChoco -ToolName "Git" `
+    -CheckCommand "git" `
+    -DirectUrl "https://github.com/git-for-windows/git/releases/download/v2.34.1.windows.1/Git-2.34.1-64-bit.exe" `
+    -ChocoName "git" `
+    -ChocoVersion "2.34.1"
+
+# Example: Install Node.js (direct from official, fallback to choco)
+Install-DirectOrChoco -ToolName "Node.js" `
+    -CheckCommand "node" `
+    -DirectUrl "https://nodejs.org/dist/v16.13.0/node-v16.13.0-x64.msi" `
+    -ChocoName "nodejs" `
+    -ChocoVersion "16.13.0"
+
+# Example: Install Docker Desktop (direct from official, fallback to choco)
+Install-DirectOrChoco -ToolName "Docker Desktop" `
+    -CheckCommand "docker" `
+    -DirectUrl "https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe" `
+    -ChocoName "docker-desktop"
+
+# Add more tools as needed using the above pattern...
+
+# Refresh environment for new tools
+if (Get-Command refreshenv -ErrorAction SilentlyContinue) {
+    refreshenv
+}
+
+Write-Host "`nSuccess! Your Windows development environment is ready.`n"

@@ -7,9 +7,9 @@ spec:
     app: fawkes
     tier: proxy
   ports:
-  - protocol: "TCP"
-    port: 80
-    targetPort: 80
+    - protocol: "TCP"
+      port: 80
+      targetPort: 80
   type: LoadBalancer
 ---
 apiVersion: apps/v1
@@ -31,9 +31,9 @@ spec:
         track: stable
     spec:
       containers:
-      - name: nginx
-        image: "docker.com/paruff/fawkesproxy"
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/usr/sbin/nginx","-s","quit"]
+        - name: nginx
+          image: "docker.com/paruff/fawkesproxy"
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx", "-s", "quit"]

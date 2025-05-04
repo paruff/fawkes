@@ -1,10 +1,5 @@
 #!/bin/bash
-# ./infra-boot.sh -k platform-use1 -w m4.xlarge -m t2.medium -e dr1
-# ssh -i ~/.ssh/platform-use1 docker@10...
-# scp -i ~/.ssh/platform-use1 -r platform/* docker@10...:
-# ssh -i ~/.ssh/platform-use1 docker@10...
-# docker stack deploy --compose-file docker-compose-swarm.yml platform
-
+set -euo pipefail
 
 usage() {
     echo " "
@@ -13,92 +8,130 @@ usage() {
     echo "*************"
     echo " "
     echo "DESCRIPTION"
-    echo "Create new AWS VPC and deploy a Docker Swarm infrastructure. Uses the swarm template from"
-    echo "Docker. Three different swarm clusters are created--one for the development tools (e.g.,"
-    echo "Jenkins, Nexus, etc.), one for DEV deployment and one for application testing (AT)."
+    echo "Create new infrastructure for Fawkes platform. Supports AWS (Docker Swarm or EKS), Minikube/local K8s, Azure, and GCP."
     echo " "
     echo "PRE-REQUISITES: "
-    echo "1) You must have the AWS CLI installed on the machine where you're running"
-    echo "   this script; you must have configured it for the account / region where you want to install"
-    echo "   the cluster."
-    echo "2) You must have defined a key-pair in the AWS account and region in which you're"
-    echo "   installing the cluster"
+    echo "1) You must have the CLI tools for your target cloud (aws, az, gcloud) and/or minikube/kubectl installed and configured."
+    echo "2) For AWS, you must have defined a key-pair in the AWS account and region."
     echo " "
     echo "ARGUMENTS:"
-    echo "-k [key-pair-name] is required argument identifying the AWS key pair to be used on the EC2"
-    echo "      instances in the cluster"
-    echo "-w [aws-instance-type] is a required argument identifying what instance type to be used for"
-    echo "      the worker instances in the cluster"
-    echo "-m [aws-instance-type] is a required argument identifying what instance type to be used for"
-    echo "      the swarm cluster manager(s)"
-    echo "-e [environment-name] is a required name for the swarm, e.g., 'platform' or 'prod'"
-    ECHO "-h to display this help script"
+    echo "-p [provider]           (required) Target provider: aws|minikube|azure|gcp"
+    echo "-k [key-pair-name]      (AWS only) AWS key pair for EC2 instances"
+    echo "-w [aws-instance-type]  (AWS only) Instance type for worker nodes"
+    echo "-m [aws-instance-type]  (AWS only) Instance type for manager nodes"
+    echo "-e [environment-name]   (required) Swarm environment name (e.g., 'platform', 'prod')"
+    echo "-h                      Show this help message"
     echo ""
 }
 
-while getopts ":e:k:w:m:h" opt; do
+# Parse arguments
+PROVIDER=""
+KEYPAIR_NAME=""
+WORKER_TYPE=""
+MANAGER_TYPE=""
+ENV_NAME=""
+
+while getopts ":p:e:k:w:m:h" opt; do
   case $opt in
+    p) PROVIDER="$OPTARG" ;;
     k) KEYPAIR_NAME="$OPTARG" ;;
     w) WORKER_TYPE="$OPTARG" ;;
     m) MANAGER_TYPE="$OPTARG" ;;
     e) ENV_NAME="$OPTARG" ;;
-    \?) 
-      echo "Invalid option - $OPTARG"
-      exit 1
-      ;;
-    *) 
-      usage 
-      exit 1
-      ;;
-    h)
-      usage
-      exit 1
-      ;;
+    h) usage; exit 0 ;;
+    \?) echo "Invalid option: -$OPTARG" >&2; usage; exit 1 ;;
+    :) echo "Option -$OPTARG requires an argument." >&2; usage; exit 1 ;;
   esac
 done
 
-# Store this directory's contents in an S3 bucket so we have future access to what version
-# of the scripts were used to create these stacks.
-INFRA_BUCKET_NAME=infra-boot-$ENV_NAME
-aws s3 mb s3://$INFRA_BUCKET_NAME
-aws s3api put-bucket-versioning --bucket $INFRA_BUCKET_NAME --versioning-configuration Status=Enabled
-aws s3 sync . s3://$INFRA_BUCKET_NAME
-aws s3 ls s3://$INFRA_BUCKET_NAME
+if [[ -z "$PROVIDER" || -z "$ENV_NAME" ]]; then
+    echo "Error: -p (provider) and -e (environment) are required."
+    usage
+    exit 1
+fi
 
-# let share this key with the rest of the US regions
-# https://fedoramagazine.org/ssh-key-aws-regions/
-# AWS_REGION="us-east-1 us-east-2 us-west-1 us-west-2"
-# for each in ${AWS_REGION} ; do aws ec2 import-key-pair --key-name $KEYPAIR_NAME --public-key-material file://~/.ssh/aws.pub --region each ; done
+case "$PROVIDER" in
+  aws)
+    if [[ -z "$KEYPAIR_NAME" || -z "$WORKER_TYPE" || -z "$MANAGER_TYPE" ]]; then
+      echo "Error: -k, -w, and -m are required for AWS."
+      usage
+      exit 1
+    fi
 
-# Create the three environments
-aws cloudformation create-stack --stack-name platform --template-url https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl --capabilities CAPABILITY_IAM --parameters ParameterKey=KeyName,ParameterValue=$KEYPAIR_NAME ParameterKey=InstanceType,ParameterValue=$WORKER_TYPE ParameterKey=ManagerInstanceType,ParameterValue=$MANAGER_TYPE ParameterKey=EnableCloudStorEfs,ParameterValue=yes
-# aws cloudformation create-stack --stack-name verfut-at --template-url https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl --capabilities CAPABILITY_IAM --parameters ParameterKey=KeyName,ParameterValue=$KEYPAIR_NAME ParameterKey=InstanceType,ParameterValue=$WORKER_TYPE ParameterKey=ManagerInstanceType,ParameterValue=$MANAGER_TYPE ParameterKey=EnableCloudStorEfs,ParameterValue=yes ParameterKey=ClusterSize,ParameterValue=3 ParameterKey=ManagerSize,ParameterValue=3
-# aws cloudformation create-stack --stack-name verfut-demo --template-url https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl --capabilities CAPABILITY_IAM --parameters ParameterKey=KeyName,ParameterValue=$KEYPAIR_NAME ParameterKey=InstanceType,ParameterValue=$WORKER_TYPE ParameterKey=ManagerInstanceType,ParameterValue=$MANAGER_TYPE ParameterKey=EnableCloudStorEfs,ParameterValue=yes ParameterKey=ClusterSize,ParameterValue=3 ParameterKey=ManagerSize,ParameterValue=3
-# aws cloudformation create-stack --stack-name jenkins-ecs --template-url file://platform/jenkins-ecs.yaml --capabilities CAPABILITY_IAM --parameters ParameterKey=KeyName,ParameterValue=$KEYPAIR_NAME ParameterKey=InstanceType,ParameterValue=m4.large ParameterKey=EcsImageId,ParameterValue=ami-028a9de0a7e353ed9 ParameterKey=PublicAccessCIDR,ParameterValue=0.0.0.0/0 ParameterKey=AvailabilityZone1,ParameterValue=us-east-2a ParameterKey=AvailabilityZone2,ParameterValue=us-east-2b
+    INFRA_BUCKET_NAME="infra-boot-$ENV_NAME"
+    if ! aws s3 mb "s3://$INFRA_BUCKET_NAME"; then
+        echo "Failed to create S3 bucket $INFRA_BUCKET_NAME"
+        exit 1
+    fi
 
+    aws s3api put-bucket-versioning --bucket "$INFRA_BUCKET_NAME" --versioning-configuration Status=Enabled
+    aws s3 sync . "s3://$INFRA_BUCKET_NAME"
+    aws s3 ls "s3://$INFRA_BUCKET_NAME"
 
-# SHOULDN'T NEED THIS: DEMO OUT OF THE APP TESTING ENVIRONMENT
-#aws cloudformation create-stack --stack-name project-demo --template-url https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl --capabilities CAPABILITY_IAM --parameters ParameterKey=KeyName,ParameterValue=platform-use1 ParameterKey=InstanceType,ParameterValue=t2.micro ParameterKey=ManagerInstanceType,ParameterValue=t2.micro
+    if ! aws cloudformation create-stack \
+        --stack-name platform \
+        --template-url https://editions-us-east-1.s3.amazonaws.com/aws/stable/Docker.tmpl \
+        --capabilities CAPABILITY_IAM \
+        --parameters ParameterKey=KeyName,ParameterValue="$KEYPAIR_NAME" \
+                     ParameterKey=InstanceType,ParameterValue="$WORKER_TYPE" \
+                     ParameterKey=ManagerInstanceType,ParameterValue="$MANAGER_TYPE" \
+                     ParameterKey=EnableCloudStorEfs,ParameterValue=yes; then
+        echo "CloudFormation stack creation failed."
+        exit 1
+    fi
 
- echo "Waiting for platform to be created..."
- sleep 4m
-aws cloudformation wait stack-create-complete --stack-name platform 
-echo "Platform front DNS="
-aws cloudformation describe-stacks --stack-name platform --query 'Stacks[0].Outputs[?OutputKey==`DefaultDNSTarget`].OutputValue' --output text
-echo "Platform ManagerIPs="
-aws ec2 describe-instances --filters 'Name=tag:Name,Values=platform-Manager'  --output text --query 'Reservations[*].Instances[*].PublicIpAddress'
-## todo ssh in to first ip and scp docker-compose , docke stack deploy ...
+    echo "Waiting for platform stack to be created..."
+    sleep 4m
+    aws cloudformation wait stack-create-complete --stack-name platform
 
-# aws cloudformation wait stack-create-complete --stack-name verfut-at
-# echo "AT front DNS="
-# aws cloudformation describe-stacks --stack-name verfut-at --query 'Stacks[0].Outputs[?OutputKey==`DefaultDNSTarget`].OutputValue' --output text
-# echo "Dev ManagerIPs="
-# aws ec2 describe-instances --filters 'Name=tag:Name,Values=verfut-at-Manager'  --output text --query 'Reservations[*].Instances[*].PublicIpAddress'
+    echo "Platform front DNS:"
+    aws cloudformation describe-stacks --stack-name platform \
+        --query 'Stacks[0].Outputs[?OutputKey==`DefaultDNSTarget`].OutputValue' --output text
 
-# aws cloudformation wait stack-create-complete --stack-name verfut-demo 
-# echo "DEMO front DNS="
-# aws cloudformation describe-stacks --stack-name verfut-demo --query 'Stacks[0].Outputs[?OutputKey==`DefaultDNSTarget`].OutputValue' --output text
-# echo "AT ManagerIPs="
-# aws ec2 describe-instances --filters 'Name=tag:Name,Values=verfut-demo-Manager'  --output text --query 'Reservations[*].Instances[*].PublicIpAddress'
+    echo "Platform Manager IPs:"
+    aws ec2 describe-instances --filters "Name=tag:Name,Values=platform-Manager" \
+        --output text --query 'Reservations[*].Instances[*].PublicIpAddress'
+    ;;
+  minikube)
+    echo "Provisioning local Minikube cluster..."
+    if ! command -v minikube &>/dev/null; then
+      echo "Error: minikube is not installed."
+      exit 1
+    fi
+    # Prefer Docker driver on macOS (and generally)
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      DRIVER="docker"
+    else
+      DRIVER="virtualbox"
+    fi
+    echo "Starting minikube with driver: $DRIVER"
+    minikube start --profile "$ENV_NAME" --driver="$DRIVER"
+    kubectl config use-context "$ENV_NAME" || kubectl config use-context "minikube"
+    echo "Minikube cluster '$ENV_NAME' is ready."
+    ;;
+  azure)
+    echo "Provisioning Azure Kubernetes Service (AKS) cluster..."
+    if ! command -v az &>/dev/null; then
+      echo "Error: Azure CLI (az) is not installed."
+      exit 1
+    fi
+    # Example: az aks create --resource-group ... --name ...
+    echo "TODO: Add AKS provisioning logic here."
+    ;;
+  gcp)
+    echo "Provisioning Google Kubernetes Engine (GKE) cluster..."
+    if ! command -v gcloud &>/dev/null; then
+      echo "Error: Google Cloud CLI (gcloud) is not installed."
+      exit 1
+    fi
+    # Example: gcloud container clusters create ...
+    echo "TODO: Add GKE provisioning logic here."
+    ;;
+  *)
+    echo "Error: Unsupported provider '$PROVIDER'."
+    usage
+    exit 1
+    ;;
+esac
 
-# aws cloudformation create-stack --stack-name platform-aelk --template-url https://s3.amazonaws.com/aws-cloudwatch/downloads/cloudwatch-logs-subscription-consumer/cwl-elasticsearch.template --capabilities CAPABILITY_IAM --parameters ParameterKey=KeyName,ParameterValue=$KEYPAIR_NAME ParameterKey=NginxUsername,ParameterValue=devsecops ParameterKey=NginxPassword,ParameterValue=1logger@CIS ParameterKey=LogGroupName,ParameterValue=platform-lg ParameterKey=LogFormat,ParameterValue=AWSCloudTrail ParameterKey=SubscriptionFilterPattern,ParameterValue=AWSCloudTrail 
+echo "Infrastructure provisioning complete for provider: $PROVIDER"

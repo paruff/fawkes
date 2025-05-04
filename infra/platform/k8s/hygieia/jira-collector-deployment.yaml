@@ -1,0 +1,62 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd:
+      C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
+      convert
+    kompose.version: 1.18.0 (06a2e56)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: jira-collector
+  name: jira-collector
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: jira-collector
+    spec:
+      containers:
+        - env:
+            - name: PROP_FILE
+              value: application.properties
+            - name: JIRA_CREDENTIALS
+              value: bWljaGFlbC5zaGVsZG9uQHVuaXN5cy5jb206RFZpYzBicGxBOUV2Nm9DbGRabUxDQUIw
+            - name: JIRA_CRON
+              value: 0 0/5 * * * *
+            - name: JIRA_BOARD_AS_TEAM
+              value: "true"
+            - name: JIRA_TEAM_FIELD_NAME
+              value: ""
+            - name: JIRA_BASE_URL
+              value: "https://unisys-fed-as.atlassian.net"
+            - name: JIRA_QUERY_ENDPOINT
+              value: "rest/api/2/"
+            - name: JIRA_ISSUE_TYPE_NAMES
+              value: "Story,Task,Bug"
+            - name: JIRA_STORY_IDS
+              value: "10251,10253,10256"
+            - name: JIRA_EPIC_ID
+              value: "10252"
+            - name: JIRA_TODO_STATUSES
+              value: "BACKLOG,TO DO"
+            - name: JIRA_DOING_STATUSES
+              value: "IN PROGRESS,IMPEDEMENTS"
+            - name: JIRA_DONE_STATUSES
+              value: "DONE,ACCEPTED,RELEASED"
+            - name: JIRA_STORY_POINTS_FIELD_NAME
+              value: "customfield_10243"
+            - name: JIRA_EPIC_FIELD_NAME
+              value: "customfield_10006"
+            - name: JIRA_SPRINT_DATA_FIELD_NAME
+              value: "customfield_10103"
+            - name: MONGO_PORT
+              value: tcp://db:27017
+          image: paruff/hygieia-jira-feature-collector:3.0.2.486
+          name: jira-collector
+          resources: {}
+      restartPolicy: Always
+status: {}
