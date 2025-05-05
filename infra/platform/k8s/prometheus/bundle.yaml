@@ -13,7 +13,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: prometheus-operator
-    namespace: default
+    namespace: monitoring
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -29,7 +29,12 @@ rules:
     resources:
       - customresourcedefinitions
     verbs:
-      - "*"
+      - create
+      - get
+      - list
+      - update
+      - delete
+      - watch
   - apiGroups:
       - monitoring.coreos.com
     resources:
@@ -40,32 +45,67 @@ rules:
       - servicemonitors
       - prometheusrules
     verbs:
-      - "*"
+      - create
+      - get
+      - list
+      - update
+      - delete
+      - watch
   - apiGroups:
       - apps
     resources:
       - statefulsets
     verbs:
-      - "*"
+      - create
+      - get
+      - list
+      - update
+      - delete
+      - watch
   - apiGroups:
       - ""
     resources:
       - configmaps
       - secrets
     verbs:
-      - "*"
+      - create
+      - get
+      - list
+      - update
+      - delete
+      - watch
   - apiGroups:
       - ""
     resources:
       - pods
     verbs:
+      - get
+      - list
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
       - list
       - delete
   - apiGroups:
       - ""
     resources:
       - services
+    verbs:
+      - get
+      - create
+      - update
+      - delete
+  - apiGroups:
+      - ""
+    resources:
       - services/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - ""
+    resources:
       - endpoints
     verbs:
       - get
@@ -96,7 +136,7 @@ metadata:
     apps.kubernetes.io/name: prometheus-operator
     apps.kubernetes.io/version: v0.29.0
   name: prometheus-operator
-  namespace: default
+  namespace: monitoring
 spec:
   replicas: 1
   selector:
@@ -110,13 +150,15 @@ spec:
         apps.kubernetes.io/name: prometheus-operator
         apps.kubernetes.io/version: v0.29.0
     spec:
+      automountServiceAccountToken: false
       containers:
         - args:
             - --kubelet-service=kube-system/kubelet
             - --logtostderr=true
-            - --config-reloader-image=quay.io/coreos/configmap-reload:v0.0.1
-            - --prometheus-config-reloader=quay.io/coreos/prometheus-config-reloader:v0.29.0
-          image: quay.io/coreos/prometheus-operator:v0.29.0
+            - --config-reloader-image=quay.io/coreos/configmap-reload@sha256:1234567890abcdef
+            - --prometheus-config-reloader=quay.io/coreos/prometheus-config-reloader@sha256:abcdef1234567890
+          image: quay.io/coreos/prometheus-operator@sha256:abcdef1234567890
+          imagePullPolicy: Always
           name: prometheus-operator
           ports:
             - containerPort: 8080
@@ -131,6 +173,24 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - NET_RAW
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
       nodeSelector:
         beta.kubernetes.io/os: linux
       securityContext:
