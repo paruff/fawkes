@@ -10,6 +10,21 @@ Fawkes is designed as a modular, cloud-native platform to accelerate infrastruct
 
 ---
 
+## Design Principles
+
+Fawkes is heavily influenced by the research and best practices from the [Accelerate](https://itrevolution.com/accelerate-book/) book, the [DORA](https://dora.dev/) (DevOps Research and Assessment) reports, and the State of DevOps reports.  
+The platform is built to help teams measure and improve the **Four Key DORA Metrics**:
+
+- **Deployment Frequency**
+- **Lead Time for Changes**
+- **Change Failure Rate**
+- **Mean Time to Restore (MTTR)**
+
+Fawkes also aims to implement the [24 DORA capabilities](https://dora.dev/), with a special focus on the 8 capabilities related to Continuous Delivery.  
+These principles guide the platform's architecture, automation, and extensibility, ensuring teams can continuously improve their software delivery performance.
+
+---
+
 ## High-Level Architecture Diagram
 
 ![Fawkes Architecture Diagram](assets/architecture-diagram.png)
