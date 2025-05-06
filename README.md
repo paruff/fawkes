@@ -2,6 +2,9 @@
 
 **Fawkes** is an open source platform for rapidly provisioning secure, automated workspaces and Kubernetes-based continuous delivery pipelines across multiple cloud environments. It is designed for modern DevSecOps teams who want to leverage Infrastructure as Code (IaC), platform automation, and robust testing to accelerate delivery while maintaining security and compliance.
 
+> **Influences:**  
+> Fawkes is heavily inspired by the research and best practices from the [Accelerate](https://itrevolution.com/accelerate-book/) book, the [DORA](https://dora.dev/) (DevOps Research and Assessment) reports, and the State of DevOps reports. The platform is designed to help teams improve the [Four Key Metrics](https://www.devops-research.com/research.html) (Deployment Frequency, Lead Time for Changes, Change Failure Rate, and Mean Time to Restore) and to implement the [24 DORA capabilities](https://dora.dev/), with a particular focus on the 8 capabilities related to Continuous Delivery.
+
 ## Overview
 
 Fawkes provides:
@@ -20,6 +23,7 @@ Fawkes provides:
 - **Security & Compliance:** Built-in security group management, IAM controls, and support for policy-as-code.
 - **Developer Experience:** Automated setup for local and remote workspaces, including all required tools and extensions.
 - **Extensible Platform:** Starter templates for Java Spring Boot and other languages; easy to add your own.
+- **DORA Metrics & Capabilities:** Platform design and included tools help you measure and improve the Four Key Metrics and implement DORA’s 24 capabilities, especially for Continuous Delivery.
 
 ## Getting Started
 
@@ -65,3 +69,9 @@ This project is licensed under the [MIT License](LICENSE).
 ---
 
 Fawkes is named after Dumbledore's phoenix, symbolizing resilience and renewal, and inspired by [Guy Fawkes](https://en.wikipedia.org/wiki/Guy_Fawkes) from British history.
+
+---
+
+## Where else to mention these influences
+
+- **docs/development.md**: Reference the 24 DORA capabilities and how contributors can help implement or improve them.

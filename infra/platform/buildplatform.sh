@@ -37,6 +37,7 @@ add_helm_repo prometheus-community https://prometheus-community.github.io/helm-c
 add_helm_repo elastic https://helm.elastic.co
 add_helm_repo anchore-charts https://charts.anchore.io
 add_helm_repo cloudnativeapp https://cloudnativeapp.github.io/charts/curated/
+add_helm_repo devlake https://apache.github.io/incubator-devlake-helm-chart/
 helm repo update
 
 # Deploy platform components
@@ -62,6 +63,7 @@ deploy_chart fawkes-prometheus prometheus-community/prometheus --version 56.0.0
 deploy_chart fawkes-eck-operator elastic/eck-operator --version 2.11.1
 deploy_chart my-anchore-engine anchore-charts/anchore-engine --version 1.21.0
 deploy_chart fawkes-distributed-jmeter cloudnativeapp/distributed-jmeter --version 1.0.1
+deploy_chart apache-devlake devlake/devlake --version 0.21.0
 
 echo "All platform components have been deployed (or upgraded) in the '$NAMESPACE' namespace."
 
@@ -87,6 +89,7 @@ test_chart fawkes-prometheus
 test_chart fawkes-eck-operator
 test_chart my-anchore-engine
 test_chart fawkes-distributed-jmeter
+test_chart apache-devlake
 
 echo "Helm tests completed for all platform components in the '$NAMESPACE' namespace."
 
