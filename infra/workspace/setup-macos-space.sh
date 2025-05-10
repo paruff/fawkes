@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-echo "Checking for administrative permissions (sudo may be required for some installs)..."
+echo "Setting up your macOS development environment using Homebrew and Brewfile..."
 
 # Function to check and install Homebrew
 install_brew() {
@@ -10,30 +10,19 @@ install_brew() {
     echo "Homebrew not found. Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   else
-    echo "Homebrew is already installed."
+    echo "✅ Homebrew is already installed."
   fi
 }
 
-# Function to check and install a brew package
-install_brew_package() {
-  local pkg="$1"
-  if ! brew list --formula | grep -qw "$pkg"; then
-    echo "Installing $pkg..."
-    brew install "$pkg"
-  else
-    echo "$pkg is already installed."
+# Function to install dependencies from Brewfile
+install_brew_bundle() {
+  if [ ! -f Brewfile ]; then
+    echo "Error: Brewfile not found in the current directory."
+    exit 1
   fi
-}
 
-# Function to check and install a brew cask package
-install_brew_cask() {
-  local cask="$1"
-  if ! brew list --cask | grep -qw "$cask"; then
-    echo "Installing $cask..."
-    brew install --cask "$cask"
-  else
-    echo "$cask is already installed."
-  fi
+  echo "Installing dependencies from Brewfile..."
+  brew bundle --file=Brewfile
 }
 
 # Function to test if a CLI tool is accessible
@@ -58,71 +47,43 @@ test_gui_app() {
   fi
 }
 
+# Install Homebrew if not already installed
 install_brew
 
-# CLI tools
+# Install dependencies from Brewfile
+install_brew_bundle
+
+# Test CLI tools
 CLI_TOOLS=(
   git
   git-flow
-  openjdk@8
+  java
   docker
   docker-machine
   docker-compose
-  awscli
+  aws
   node
-  maven
-  putty
-  selenium-server
+  mvn
   vagrant
-  virtualbox
+  VBoxManage
 )
-
-for tool in "${CLI_TOOLS[@]}"; do
-  install_brew_package "$tool"
-done
-
-# GUI apps
-GUI_APPS=(
-  visual-studio-code
-  google-chrome
-  slack
-  postman
-)
-
-for app in "${GUI_APPS[@]}"; do
-  install_brew_cask "$app"
-done
 
 echo "Testing CLI tools accessibility..."
-test_cli_tool git
-test_cli_tool git-flow
-test_cli_tool java
-test_cli_tool docker
-test_cli_tool docker-machine
-test_cli_tool docker-compose
-test_cli_tool aws
-test_cli_tool node
-test_cli_tool mvn
-test_cli_tool vagrant
-test_cli_tool VBoxManage
+for tool in "${CLI_TOOLS[@]}"; do
+  test_cli_tool "$tool"
+done
 
-# putty and selenium-server may not have direct CLI commands or may require PATH adjustment
-if command -v putty &>/dev/null; then
-  echo "✅ putty is accessible."
-else
-  echo "ℹ️ putty installed, but not found in PATH (may require manual launch)."
-fi
-
-if command -v selenium-server &>/dev/null; then
-  echo "✅ selenium-server is accessible."
-else
-  echo "ℹ️ selenium-server installed, but not found in PATH (may require manual launch)."
-fi
+# Test GUI apps
+GUI_APPS=(
+  "Visual Studio Code"
+  "Google Chrome"
+  "Slack"
+  "Postman"
+)
 
 echo "Testing GUI apps installation..."
-test_gui_app "Visual Studio Code"
-test_gui_app "Google Chrome"
-test_gui_app "Slack"
-test_gui_app "Postman"
+for app in "${GUI_APPS[@]}"; do
+  test_gui_app "$app"
+done
 
-echo "All required tools are installed and accessible."
+echo "All required tools and applications are installed and accessible."
