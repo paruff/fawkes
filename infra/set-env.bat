@@ -6,6 +6,12 @@ set -euo pipefail
 DOCKER_MACHINE="C:\\Program Files\\Docker\\Docker\\Resources\\bin\\docker-machine.exe"
 MACHINE_NAME="default"
 
+# Check if Docker Machine executable exists
+if [ ! -x "$DOCKER_MACHINE" ]; then
+  echo "Error: Docker Machine not found at $DOCKER_MACHINE"
+  exit 1
+fi
+
 # Check if Docker Machine is running
 if ! "$DOCKER_MACHINE" status "$MACHINE_NAME" | grep -qi "Running"; then
   echo "Starting Docker Machine '$MACHINE_NAME'..."
