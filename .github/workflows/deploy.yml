@@ -3,7 +3,7 @@ name: Deploy MkDocs to GitHub Pages
 on:
   push:
     branches:
-      - main  # or 'master' if that's your default
+      - main
 
 permissions:
   contents: read
@@ -13,8 +13,9 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -24,9 +25,17 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install mkdocs-material mkdocs-mermaid2-plugin mkdocs-awesome-pages-plugin pymdown-extensions mkdocs-glightbox mkdocs-git-revision-date-localized-plugin
+          pip install \
+            mkdocs-material \
+            mkdocs-mermaid2-plugin \
+            mkdocs-awesome-pages-plugin \
+            pymdown-extensions \
+            mkdocs-glightbox \
+            mkdocs-git-revision-date-localized-plugin \
+            mkdocs-static-i18n \
+            mkdocs-sitemap-plugin
 
-      - name: Build site
+      - name: Build MkDocs site
         run: mkdocs build --strict
 
       - name: Deploy to GitHub Pages
