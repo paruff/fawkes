@@ -13,35 +13,93 @@ Welcome to the Fawkes project! This guide will help new team members get access 
 - **Jira or Issue Tracker:**  
   If your team uses Jira or another issue tracker, request access from your project admin.
 
+- **Slack or Communication Tools:**  
+  Join the team’s communication channels (e.g., Slack, Teams) for updates and collaboration.
+
 ---
 
 ## 2. Set Up Your Development Workspace
 
-- Review the [Workspace Automation Guide](infra/workspace/readme.md) for instructions on setting up your local development environment.
-- Use the provided scripts for your operating system (Windows, macOS, or Linux) to install required tools and configure your workspace.
-- If you have issues, check the [Troubleshooting](infra/workspace/readme.md#troubleshooting) section or open a GitHub Issue.
+Follow these steps to set up your local development environment:
+
+1. **Review the Workspace Automation Guide**:  
+   Refer to the [Workspace Automation Guide](infra/workspace/readme.md) for detailed instructions.
+
+2. **Run the Setup Script**:  
+   Use the provided script for your operating system:
+   - **Windows**:  
+     Run the PowerShell script as Administrator:
+     ```sh
+     ./setup-win-space.ps1
+     ```
+   - **macOS**:  
+     Run the shell script:
+     ```sh
+     ./setup-macos-space.sh
+     ```
+   - **Linux**:  
+     (Coming soon) Run the Linux setup script:
+     ```sh
+     ./setup-linux-space.sh
+     ```
+
+3. **Validate Your Workspace**:  
+   After setup, validate your environment:
+   - Run integration tests:
+     ```sh
+     inspec exec test/integration/default
+     ```
+   - Check installed tools and configurations:
+     ```sh
+     terraform --version
+     kubectl version --client
+     helm version
+     ```
+
+4. **Troubleshooting**:  
+   If you encounter issues, check the Troubleshooting section or open a GitHub Issue.
 
 ---
 
 ## 3. Learn About the Platform
 
-- Read the main [Fawkes README](../README.md) for an overview of the platform, its goals, and architecture.
-- Explore the [Infrastructure](infra/readme.md) and [Platform](infra/platform/readme.md) directories to understand how infrastructure and CI/CD pipelines are provisioned and managed.
-- Review the [Workspace Automation](infra/workspace/readme.md) documentation to learn how developer environments are standardized.
+1. **Read the Main README**:  
+   Start with the Fawkes README for an overview of the platform, its goals, and architecture.
+
+2. **Explore the Infrastructure**:  
+   Review the Infrastructure Guide to understand how Kubernetes clusters and supporting resources are provisioned.
+
+3. **Understand the Platform Layer**:  
+   Learn about CI/CD pipelines, monitoring, and other platform components in the Platform Infrastructure Guide.
+
+4. **Workspace Automation**:  
+   Familiarize yourself with the Workspace Automation Guide to understand how developer environments are standardized.
 
 ---
 
 ## 4. Where to Get Help
 
-- **GitHub Issues:** Report bugs or request features.
-- **Documentation:** Check the `/docs` directory and READMEs throughout the repo.
+- **GitHub Issues**:  
+  Report bugs or request features in the [GitHub Issues](https://github.com/paruff/fawkes/issues) section.
+
+- **Documentation**:  
+  Check the [docs](http://_vscodecontentref_/3) directory and READMEs throughout the repository for detailed guides and references.
+
+- **Team Support**:  
+  Reach out to your team lead or a senior developer for assistance.
 
 ---
 
 ## 5. Additional Tips
 
-- Pair with another team member for your first setup if possible.
-- Review the [Contributing Guide](../CONTRIBUTING.md) for coding standards and workflow.
+- **Pair Programming**:  
+  Pair with another team member for your first setup to learn best practices and resolve issues quickly.
+
+- **Contributing Guide**:  
+  Review the Contributing Guide for coding standards, workflows, and guidelines.
+
+- **Stay Updated**:  
+  Regularly check the repository for updates to scripts, tools, and documentation.
 
 ---
 
