@@ -2,6 +2,8 @@
 
 Welcome to the Fawkes Internal Developer Platform! This guide will help you set up your environment, deploy the platform, and start using its features.
 
+Fawkes is a **metrics-first platform** designed to help teams improve their **software delivery performance** by focusing on the **Four Key Metrics** and supporting the **eight capabilities** needed to enhance those metrics.
+
 ---
 
 ## Prerequisites
