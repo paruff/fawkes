@@ -22,39 +22,42 @@ This guide explains how to use the Fawkes Internal Developer Platform after setu
 After deployment, you can access services such as Jenkins, SonarQube, and the Kubernetes Dashboard:
 
 - **Jenkins:**  
-  Open the Jenkins URL provided in the deployment output (e.g., `http://<jenkins-lb>:8080`).  
-  Login credentials are shown in the output or can be retrieved using:
+  Access Jenkins via the provided URL (e.g., `http://<jenkins-lb>:8080`).  
+  Retrieve the admin password using:
   ```sh
   kubectl get secret --namespace <namespace> jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode
   ```
 
 - **SonarQube:**  
-  Access via the provided load balancer URL (e.g., `http://<sonarqube-lb>:9000`).  
+  Access SonarQube via the provided URL (e.g., `http://<sonarqube-lb>:9000`).  
   Default credentials: `admin` / `admin`.
 
 - **Kubernetes Dashboard:**  
-  Access via the dashboard URL. Retrieve the admin token as described in [configuration.md](configuration.md).
+  Access the dashboard via the provided URL. Retrieve the admin token using:
+  ```sh
+  kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
+  ```
 
 ---
 
 ## Managing Infrastructure
 
-- **Provisioning:**  
-  Use scripts in the `infra/` directory to provision or update infrastructure:
+- **Provisioning Infrastructure:**  
+  Use the provided scripts in the `infra/` directory to provision or update infrastructure:
   ```sh
   cd infra
   ./infra-boot.sh -p aws -e dev
   ```
 
-- **Destroying:**  
+- **Destroying Infrastructure:**  
   To tear down infrastructure:
   ```sh
   cd infra
   ./infra-boot.sh -p aws -e dev --destroy
   ```
 
-- **Terraform:**  
-  You can also use Terraform directly:
+- **Using Terraform Directly:**  
+  Advanced users can manage infrastructure directly with Terraform:
   ```sh
   cd infra/platform/aws
   terraform init
@@ -66,30 +69,32 @@ After deployment, you can access services such as Jenkins, SonarQube, and the Ku
 
 ## Deploying Platform Services
 
-- **Jenkins:**  
+- **Jenkins Deployment:**  
+  Deploy Jenkins using the provided script:
   ```sh
   cd platform/jenkins
   ./jenkins-delta.sh -i
   ```
 
 - **Other Services:**  
-  Each service directory contains scripts or Helm charts for deployment. See the respective README files.
+  Each service directory contains deployment scripts or Helm charts. Refer to the respective README files for details.
 
 ---
 
 ## Viewing Outputs and Endpoints
 
-After deployment, outputs such as service URLs and credentials are displayed in the terminal.  
+After deployment, service URLs and credentials are displayed in the terminal.  
 You can also retrieve them using:
 
-```sh
-terraform output
-```
-or by running the `show` command in deployment scripts:
+- **Terraform Outputs:**
+  ```sh
+  terraform output
+  ```
 
-```sh
-./jenkins-delta.sh -s
-```
+- **Deployment Script Outputs:**
+  ```sh
+  ./jenkins-delta.sh -s
+  ```
 
 ---
 
@@ -117,7 +122,7 @@ Fawkes is designed to help teams measure and improve the [Four Key DORA Metrics]
 - **Automated CI/CD Pipelines:** Jenkins and other integrated tools provide metrics on deployment frequency and lead time.
 - **Quality Gates:** SonarQube and automated tests help reduce change failure rate.
 - **Monitoring & Alerts:** Integrated monitoring and logging help track and reduce MTTR.
-- **Reporting:** You can extract and visualize DORA metrics from pipeline logs, test reports, and monitoring dashboards.
+- **Reporting:** Extract and visualize DORA metrics from pipeline logs, test reports, and monitoring dashboards.
 
 > See the [architecture](architecture.md) and [development guide](development.md) for more on how Fawkes supports DORA capabilities and continuous improvement.
 
@@ -137,3 +142,5 @@ Fawkes is designed to help teams measure and improve the [Four Key DORA Metrics]
 - For further help, open an issue on [GitHub](https://github.com/paruff/fawkes/issues).
 
 ---
+
+Thank you for choosing Fawkes! We’re excited to help you build better, faster, and more reliable infrastructure.
