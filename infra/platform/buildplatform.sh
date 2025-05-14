@@ -26,7 +26,7 @@ add_helm_repo() {
 }
 
 # Add and update Helm repos (no deprecated 'stable' repo)
-add_helm_repo k8s-dashboard https://kubernetes.github.io/dashboard
+add_helm_repo kubernetes-dashboard https://kubernetes.github.io/dashboard
 add_helm_repo jenkinsci https://charts.jenkins.io/
 add_helm_repo sonarqube https://SonarSource.github.io/helm-chart-sonarqube
 add_helm_repo harbor https://helm.goharbor.io
@@ -52,7 +52,15 @@ deploy_chart() {
   fi
 }
 
-deploy_chart fawkes-k8s-dashboard k8s-dashboard/kubernetes-dashboard --version 7.0.0
+helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+
+# deploy_chart kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --version 7.0.0
+openssl rand -base64 2000 | tr -dc 'A-Z' | fold -w 128 | head -n 1
+kubectl create secret generic devlake-encryption-secret \
+  --from-literal=ENCODE_KEY=<your-encryption-key> \
+  -n fawkes
+deploy_chart apache-devlake devlake/devlake --version 0.21.0
+
 deploy_chart fawkes-jenkins jenkinsci/jenkins --version 5.1.13 --values jenkins/values.yaml
 deploy_chart sonarqube sonarqube/sonarqube-lts --version 10.5.0
 deploy_chart my-harbor harbor/harbor --version 1.14.2
