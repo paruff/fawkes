@@ -2,12 +2,16 @@
 
 This directory provides scripts and configuration for **automated developer workspace creation** as part of the [Fawkes](../../README.md) platform. The goal is to enable every team member to quickly set up a consistent, secure, and fully equipped development environment—on Windows, macOS, and (in the future) Linux.
 
+---
+
 ## Why Automated Workspaces?
 
 - **Consistency:** Every developer gets the same tools, versions, and configuration, reducing "works on my machine" issues.
 - **Collaboration:** Identical environments make it easier to pair program, troubleshoot, and share solutions.
 - **Speed:** New team members can onboard in minutes, not days.
 - **Future-Proof:** Plans to support browser-based/online workspaces for even greater flexibility.
+
+---
 
 ## Supported Platforms
 
@@ -16,16 +20,22 @@ This directory provides scripts and configuration for **automated developer work
 - **Linux:** Planned for future releases.
 - **Online Workspaces:** (e.g., GitHub Codespaces, Eclipse Che) are under consideration.
 
-## Usage
+---
+
+## 🚀 Usage
 
 ### 1. Local Workspace Setup
 
 - **Windows:**  
-  Run `bootstrap.ps1` (PowerShell) or `space-setup-win10.bat` (Batch) as Administrator.
+  Run `setup-win-space.ps1` (PowerShell)  as Administrator.
+
 - **macOS:**  
-  Run `space-setup-macos.sh`.
+  Run `setup-macos-space.sh`.
+
 - **Linux:**  
-  (Coming soon) Run `space-setup-linux.sh`.
+  (Coming soon) Run `setup-OS-space-linux.sh`.
+
+---
 
 ### 2. Validate Your Workspace
 
@@ -40,6 +50,8 @@ This directory provides scripts and configuration for **automated developer work
   ```sh
   kitchen converge
   ```
+
+---
 
 ## Contributing
 
