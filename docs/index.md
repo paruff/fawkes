@@ -1,17 +1,37 @@
 # Fawkes Internal Developer Platform
 
 Welcome to the Fawkes project!  
-Fawkes is an open-source platform for building, deploying, and managing cloud-native infrastructure and developer environments.
+Fawkes is an open-source platform designed to help teams improve their **software delivery performance** by focusing on **metrics first** and supporting the capabilities needed to enhance those metrics.
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Metrics-First Approach
 
-Get started with Fawkes in just a few steps:
+Fawkes is built to help teams measure and improve the **Four Key Metrics** identified in the DORA reports:
 
-1. **Install Fawkes**: Follow the [Getting Started Guide](getting-started.md) to set up Fawkes on your system.
-2. **Explore the Architecture**: Learn how Fawkes works by reviewing the [Architecture Overview](architecture.md).
-3. **Deploy Your First Application**: Use the [Usage Guide](usage.md) to deploy your first cloud-native application.
+1. **Deployment Frequency**: How often an organization successfully releases to production.
+2. **Lead Time for Changes**: The time it takes to go from code committed to code successfully running in production.
+3. **Change Failure Rate**: The percentage of changes that result in a failure in production.
+4. **Mean Time to Restore (MTTR)**: The time it takes to recover from a failure in production.
+
+By focusing on these metrics, Fawkes enables teams to deliver software faster, more reliably, and with reduced risk.
+
+---
+
+## 🌟 Capabilities for Continuous Delivery
+
+Fawkes supports the **eight capabilities** from the **24 identified in Accelerate and the DORA reports** that focus on **continuous delivery**:
+
+1. **Continuous Delivery** – Ensuring software is always in a deployable state and can be released on demand.
+2. **Deployment Automation** – Automating the deployment process to reduce manual intervention and improve reliability.
+3. **Continuous Integration** – Frequently merging code changes and running automated tests to catch issues early.
+4. **Database Change Management** – Managing database changes effectively to prevent bottlenecks and failures.
+5. **Flexible Infrastructure** – Using cloud and infrastructure-as-code practices to improve agility and scalability.
+6. **Loosely Coupled Architecture** – Designing systems that allow teams to work independently without dependencies slowing them down.
+7. **Streamlining Change Approval** – Replacing heavyweight approval processes with peer reviews to speed up releases.
+8. **Monitoring and Observability** – Implementing logging, monitoring, and alerting to ensure system health and quick issue resolution.
+
+These capabilities are embedded into the Fawkes platform to help teams achieve elite performance in software delivery. 🚀
 
 ---
 
@@ -48,9 +68,9 @@ Fawkes is designed to help teams quickly bootstrap secure, scalable, and maintai
 
 ### Why Fawkes?
 
-- **Accelerate Development**: Simplify the process of building and deploying cloud-native applications.
+- **Metrics-First Focus**: Improve the Four Key Metrics with built-in capabilities for continuous delivery.
 - **GitOps-Ready**: Leverage GitOps workflows for declarative infrastructure management.
-- **DORA-Aligned**: Measure and improve the Four Key Metrics (Deployment Frequency, Lead Time for Changes, Change Failure Rate, and MTTR).
+- **DORA-Aligned**: Implement the eight capabilities for continuous delivery to achieve elite performance.
 - **Extensible**: Integrate with popular tools like Jenkins, ArgoCD, Prometheus, and more.
 
 ### Influences

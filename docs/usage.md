@@ -2,6 +2,8 @@
 
 This guide explains how to use the Fawkes Internal Developer Platform after setup. It covers common workflows, service management, and accessing platform features.
 
+Fawkes is a **metrics-first platform** designed to help teams improve their **software delivery performance** by focusing on the **Four Key Metrics** and supporting the **eight capabilities** needed to enhance those metrics.
+
 ---
 
 ## Table of Contents
@@ -19,7 +21,7 @@ This guide explains how to use the Fawkes Internal Developer Platform after setu
 
 ## Accessing Platform Services
 
-After deployment, you can access services such as Jenkins, SonarQube, and the Kubernetes Dashboard:
+After deployment, you can access services such as Jenkins, SonarQube, and the Kubernetes Dashboard. These services support **Continuous Integration**, **Monitoring and Observability**, and **Streamlining Change Approval**.
 
 - **Jenkins:**  
   Access Jenkins via the provided URL (e.g., `http://<jenkins-lb>:8080`).  
