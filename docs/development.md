@@ -50,7 +50,7 @@ Ensure you have the following tools installed:
    Use the scripts in the `infra/` directory to provision the required infrastructure:
    ```sh
    cd infra
-   ./infra-boot.sh -p aws -e dev
+   ./buildinfra.sh -p aws -e dev
    ```
 
 4. **Deploy Platform Services**:

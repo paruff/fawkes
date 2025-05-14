@@ -46,14 +46,14 @@ After deployment, you can access services such as Jenkins, SonarQube, and the Ku
   Use the provided scripts in the `infra/` directory to provision or update infrastructure:
   ```sh
   cd infra
-  ./infra-boot.sh -p aws -e dev
+  ./buildinfra.sh -p aws -e dev
   ```
 
 - **Destroying Infrastructure:**  
   To tear down infrastructure:
   ```sh
   cd infra
-  ./infra-boot.sh -p aws -e dev --destroy
+  ./buildinfra.sh -p aws -e dev --destroy
   ```
 
 - **Using Terraform Directly:**  

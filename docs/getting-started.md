@@ -57,7 +57,7 @@ Navigate to the `infra/` directory and follow the instructions for your cloud pr
 ```sh
 cd infra
 # Example for AWS
-./infra-boot.sh -p aws -e dev
+./buildinfra.sh -p aws -e dev
 ```
 
 For more details on supported platforms and environments, see [architecture.md](architecture.md).
