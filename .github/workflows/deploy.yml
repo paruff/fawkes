@@ -1,38 +1,28 @@
-name: Build and Deploy Docs
+name: Deploy Docs
 on:
   push:
     branches:
-      - master  # adjust this to your main branch name
+      - master
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - '.github/workflows/deploy-docs.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
       
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      
-      - name: Create basic documentation
-        run: |
-          # Create minimal docs structure
-          mkdir -p docs
-          echo "# Fawkes Documentation" > docs/index.md
-          echo "This is the documentation home page for Fawkes." >> docs/index.md
-          
-          # Create minimal mkdocs config
-          cat > mkdocs.yml << EOL
-          site_name: Fawkes
-          theme:
-            name: material
-          EOL
       
       - name: Install dependencies
         run: pip install mkdocs-material
@@ -43,8 +33,8 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: site  # The folder the action should deploy
-          branch: gh-pages  # The branch the action should deploy to
+          folder: site  # The folder containing the built site
+          branch: gh-pages  # The branch to deploy to
 
 # name: Deploy MkDocs to GitHub Pages
 
