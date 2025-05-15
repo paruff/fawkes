@@ -1,18 +1,18 @@
-name: Deploy MkDocs
+name: Build and Deploy Docs
 on:
   push:
     branches:
-      - master  # adjust as needed
+      - master  # adjust this to your main branch name
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
       
       - name: Setup Python
@@ -20,43 +20,31 @@ jobs:
         with:
           python-version: '3.10'
       
-      - name: Print directory structure (debug)
+      - name: Create basic documentation
         run: |
-          echo "Current directory: $(pwd)"
-          ls -la
-      
-      - name: Create basic docs structure
-        run: |
-          # Create docs directory if it doesn't exist
+          # Create minimal docs structure
           mkdir -p docs
-          
-          # Create a basic index.md file
           echo "# Fawkes Documentation" > docs/index.md
-          echo "This is a minimal documentation page." >> docs/index.md
+          echo "This is the documentation home page for Fawkes." >> docs/index.md
           
-          # Print the created structure
-          echo "Created docs structure:"
-          ls -la docs/
+          # Create minimal mkdocs config
+          cat > mkdocs.yml << EOL
+          site_name: Fawkes
+          theme:
+            name: material
+          EOL
       
-      - name: Create minimal mkdocs.yml
-        run: |
-          # Create a very basic mkdocs.yml file
-          echo "site_name: Fawkes" > mkdocs.yml
-          echo "theme:" >> mkdocs.yml
-          echo "  name: material" >> mkdocs.yml
-          
-          # Print the content for verification
-          echo "Created mkdocs.yml:"
-          cat mkdocs.yml
-      
-      - name: Install MkDocs
+      - name: Install dependencies
         run: pip install mkdocs-material
       
-      - name: Build MkDocs (test build first)
-        run: mkdocs build --verbose
+      - name: Build site
+        run: mkdocs build
       
-      - name: Deploy MkDocs
-        run: mkdocs gh-deploy --force
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: site  # The folder the action should deploy
+          branch: gh-pages  # The branch the action should deploy to
 
 # name: Deploy MkDocs to GitHub Pages
 
