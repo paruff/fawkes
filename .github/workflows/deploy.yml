@@ -1,38 +1,68 @@
-name: Deploy MkDocs to GitHub Pages
+name: Deploy MkDocs
 
 on:
   push:
     branches:
-      - master
+      - master  # Adjust the branch as needed
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.x'
 
-      - name: Install dependencies
+      - name: Install MkDocs
+        run: pip install mkdocs mkdocs-material  # Adjust theme if necessary
+
+      - name: Build and Deploy MkDocs
         run: |
-          pip install --upgrade pip
-          pip install mkdocs-material mkdocs-mermaid2-plugin mkdocs-awesome-pages-plugin mkdocs-glightbox mkdocs-git-revision-date-localized-plugin mkdocs-static-i18n pymdown-extensions
-    
-      - name: Build MkDocs site
-        run: mkdocs build --strict
+          mkdocs gh-deploy --force
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
+
+# name: Deploy MkDocs to GitHub Pages
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+# permissions:
+#   contents: read
+#   pages: write
+#   id-token: write
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: '3.11'
+
+#       - name: Install dependencies
+#         run: |
+#           pip install --upgrade pip
+#           pip install mkdocs-material mkdocs-mermaid2-plugin mkdocs-awesome-pages-plugin mkdocs-glightbox mkdocs-git-revision-date-localized-plugin mkdocs-static-i18n pymdown-extensions
+    
+#       - name: Build MkDocs site
+#         run: mkdocs build --strict
+
+#       - name: Deploy to GitHub Pages
+#         uses: peaceiris/actions-gh-pages@v3
+#         with:
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#           publish_dir: ./site
