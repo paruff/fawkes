@@ -1,0 +1,997 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../troubleshooting/">
+      
+      
+        <link rel="next" href="../design/Demand%20Hypothesis/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Usage Guide - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#usage-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Usage Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fawkes Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fawkes Platform Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Development Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Frequently Asked Questions (FAQ)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Getting Started with Fawkes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integrations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Integrations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Troubleshooting Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Usage Guide
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Usage Guide
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessing-platform-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accessing Platform Services
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#managing-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Managing Infrastructure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-platform-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploying Platform Services
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#viewing-outputs-and-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      Viewing Outputs and Endpoints
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd-and-developer-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI/CD and Developer Workflows
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#measuring-and-improving-dora-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Measuring and Improving DORA Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Measuring and Improving DORA Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-fawkes-helps" class="md-nav__link">
+    <span class="md-ellipsis">
+      How Fawkes Helps:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration Management
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Design
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Design
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/Demand%20Hypothesis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Demand Hypothesis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/Jobs%20to%20Be%20Done%20%28JTBD%29%20for%20the%20Improve/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Jobs to Be Done (JTBD) for the Improvement-Driven Leader Persona
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/Persona-Ivan%20The%20Improvement-Driven%20Leader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Persona: The Improvement-Driven Leader
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessing-platform-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accessing Platform Services
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#managing-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Managing Infrastructure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-platform-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploying Platform Services
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#viewing-outputs-and-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      Viewing Outputs and Endpoints
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd-and-developer-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI/CD and Developer Workflows
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#measuring-and-improving-dora-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Measuring and Improving DORA Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Measuring and Improving DORA Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-fawkes-helps" class="md-nav__link">
+    <span class="md-ellipsis">
+      How Fawkes Helps:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration Management
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="usage-guide">Usage Guide</h1>
+<p>This guide explains how to use the Fawkes Internal Developer Platform after setup. It covers common workflows, service management, and accessing platform features.</p>
+<p>Fawkes is a <strong>metrics-first platform</strong> designed to help teams improve their <strong>software delivery performance</strong> by focusing on the <strong>Four Key Metrics</strong> and supporting the <strong>eight capabilities</strong> needed to enhance those metrics.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#accessing-platform-services">Accessing Platform Services</a></li>
+<li><a href="#managing-infrastructure">Managing Infrastructure</a></li>
+<li><a href="#deploying-platform-services">Deploying Platform Services</a></li>
+<li><a href="#viewing-outputs-and-endpoints">Viewing Outputs and Endpoints</a></li>
+<li><a href="#cicd-and-developer-workflows">CI/CD and Developer Workflows</a></li>
+<li><a href="#measuring-and-improving-dora-metrics">Measuring and Improving DORA Metrics</a></li>
+<li><a href="#configuration-management">Configuration Management</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+<hr />
+<h2 id="accessing-platform-services">Accessing Platform Services</h2>
+<p>After deployment, you can access services such as Jenkins, SonarQube, and the Kubernetes Dashboard. These services support <strong>Continuous Integration</strong>, <strong>Monitoring and Observability</strong>, and <strong>Streamlining Change Approval</strong>.</p>
+<ul>
+<li>
+<p><strong>Jenkins:</strong><br />
+  Access Jenkins via the provided URL (e.g., <code>http://&lt;jenkins-lb&gt;:8080</code>).<br />
+  Retrieve the admin password using:
+  <code>sh
+  kubectl get secret --namespace &lt;namespace&gt; jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode</code></p>
+</li>
+<li>
+<p><strong>SonarQube:</strong><br />
+  Access SonarQube via the provided URL (e.g., <code>http://&lt;sonarqube-lb&gt;:9000</code>).<br />
+  Default credentials: <code>admin</code> / <code>admin</code>.</p>
+</li>
+<li>
+<p><strong>Kubernetes Dashboard:</strong><br />
+  Access the dashboard via the provided URL. Retrieve the admin token using:
+  <code>sh
+  kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')</code></p>
+</li>
+</ul>
+<hr />
+<h2 id="managing-infrastructure">Managing Infrastructure</h2>
+<ul>
+<li>
+<p><strong>Provisioning Infrastructure:</strong><br />
+  Use the provided scripts in the <code>infra/</code> directory to provision or update infrastructure:
+  <code>sh
+  cd infra
+  ./buildinfra.sh -p aws -e dev</code></p>
+</li>
+<li>
+<p><strong>Destroying Infrastructure:</strong><br />
+  To tear down infrastructure:
+  <code>sh
+  cd infra
+  ./buildinfra.sh -p aws -e dev --destroy</code></p>
+</li>
+<li>
+<p><strong>Using Terraform Directly:</strong><br />
+  Advanced users can manage infrastructure directly with Terraform:
+  <code>sh
+  cd infra/platform/aws
+  terraform init
+  terraform plan
+  terraform apply</code></p>
+</li>
+</ul>
+<hr />
+<h2 id="deploying-platform-services">Deploying Platform Services</h2>
+<ul>
+<li>
+<p><strong>Jenkins Deployment:</strong><br />
+  Deploy Jenkins using the provided script:
+  <code>sh
+  cd platform/jenkins
+  ./jenkins-delta.sh -i</code></p>
+</li>
+<li>
+<p><strong>Other Services:</strong><br />
+  Each service directory contains deployment scripts or Helm charts. Refer to the respective README files for details.</p>
+</li>
+</ul>
+<hr />
+<h2 id="viewing-outputs-and-endpoints">Viewing Outputs and Endpoints</h2>
+<p>After deployment, service URLs and credentials are displayed in the terminal.<br />
+You can also retrieve them using:</p>
+<ul>
+<li>
+<p><strong>Terraform Outputs:</strong>
+  <code>sh
+  terraform output</code></p>
+</li>
+<li>
+<p><strong>Deployment Script Outputs:</strong>
+  <code>sh
+  ./jenkins-delta.sh -s</code></p>
+</li>
+</ul>
+<hr />
+<h2 id="cicd-and-developer-workflows">CI/CD and Developer Workflows</h2>
+<ul>
+<li>
+<p><strong>Pipelines:</strong><br />
+  Jenkins is pre-configured for CI/CD. Add your repositories and configure pipelines as needed.</p>
+</li>
+<li>
+<p><strong>Workspace Automation:</strong><br />
+  Use scripts in the <code>workspace/</code> directory to set up local development environments.</p>
+</li>
+</ul>
+<hr />
+<h2 id="measuring-and-improving-dora-metrics">Measuring and Improving DORA Metrics</h2>
+<p>Fawkes is designed to help teams measure and improve the <a href="https://www.devops-research.com/research.html">Four Key DORA Metrics</a>:</p>
+<ul>
+<li><strong>Deployment Frequency</strong></li>
+<li><strong>Lead Time for Changes</strong></li>
+<li><strong>Change Failure Rate</strong></li>
+<li><strong>Mean Time to Restore (MTTR)</strong></li>
+</ul>
+<h3 id="how-fawkes-helps">How Fawkes Helps:</h3>
+<ul>
+<li><strong>Automated CI/CD Pipelines:</strong> Jenkins and other integrated tools provide metrics on deployment frequency and lead time.</li>
+<li><strong>Quality Gates:</strong> SonarQube and automated tests help reduce change failure rate.</li>
+<li><strong>Monitoring &amp; Alerts:</strong> Integrated monitoring and logging help track and reduce MTTR.</li>
+<li><strong>Reporting:</strong> Extract and visualize DORA metrics from pipeline logs, test reports, and monitoring dashboards.</li>
+</ul>
+<blockquote>
+<p>See the <a href="../architecture/">architecture</a> and <a href="../development/">development guide</a> for more on how Fawkes supports DORA capabilities and continuous improvement.</p>
+</blockquote>
+<hr />
+<h2 id="configuration-management">Configuration Management</h2>
+<ul>
+<li>All configuration files are located in the <code>infra/</code> and <code>platform/</code> directories.</li>
+<li>Secrets should <strong>not</strong> be committed to version control. Use templates and inject secrets at deploy time.</li>
+<li>See <a href="../configuration/">configuration.md</a> for details on environment variables and secret management.</li>
+</ul>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<ul>
+<li>See <a href="../troubleshooting/">troubleshooting.md</a> for common issues and solutions.</li>
+<li>For further help, open an issue on <a href="https://github.com/paruff/fawkes/issues">GitHub</a>.</li>
+</ul>
+<hr />
+<p>Thank you for choosing Fawkes! We’re excited to help you build better, faster, and more reliable infrastructure.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

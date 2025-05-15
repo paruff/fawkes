@@ -1,0 +1,1237 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../security/">
+      
+      
+        <link rel="next" href="../usage/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Troubleshooting Guide - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#troubleshooting-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Troubleshooting Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fawkes Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fawkes Platform Architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Development Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Frequently Asked Questions (FAQ)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Getting Started with Fawkes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integrations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Integrations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Troubleshooting Guide
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Troubleshooting Guide
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      General Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="General Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-environment-variables-not-loaded" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Environment Variables Not Loaded
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-permission-denied-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Permission Denied Errors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Infrastructure Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Infrastructure Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-terraform-apply-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Terraform Apply Fails
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-infrastructure-not-destroyed-properly" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Infrastructure Not Destroyed Properly
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kubernetes Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-kubernetes-cluster-unreachable" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Kubernetes Cluster Unreachable
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-pods-stuck-in-pending-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Pods Stuck in Pending State
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI/CD Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CI/CD Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-jenkins-pipeline-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Jenkins Pipeline Fails
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-github-actions-workflow-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. GitHub Actions Workflow Fails
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-specific-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Azure-Specific Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Azure-Specific Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-azure-cli-authentication-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Azure CLI Authentication Fails
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-resource-group-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Resource Group Not Found
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-tests-fail-due-to-missing-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Tests Fail Due to Missing Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-performance-tests-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Performance Tests Fail
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Help
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Usage Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Design
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Design
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/Demand%20Hypothesis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Demand Hypothesis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/Jobs%20to%20Be%20Done%20%28JTBD%29%20for%20the%20Improve/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Jobs to Be Done (JTBD) for the Improvement-Driven Leader Persona
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/Persona-Ivan%20The%20Improvement-Driven%20Leader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Persona: The Improvement-Driven Leader
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      General Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="General Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-environment-variables-not-loaded" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Environment Variables Not Loaded
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-permission-denied-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Permission Denied Errors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Infrastructure Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Infrastructure Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-terraform-apply-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Terraform Apply Fails
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-infrastructure-not-destroyed-properly" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Infrastructure Not Destroyed Properly
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kubernetes Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-kubernetes-cluster-unreachable" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Kubernetes Cluster Unreachable
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-pods-stuck-in-pending-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Pods Stuck in Pending State
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI/CD Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CI/CD Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-jenkins-pipeline-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Jenkins Pipeline Fails
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-github-actions-workflow-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. GitHub Actions Workflow Fails
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#azure-specific-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Azure-Specific Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Azure-Specific Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-azure-cli-authentication-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Azure CLI Authentication Fails
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-resource-group-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Resource Group Not Found
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-tests-fail-due-to-missing-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Tests Fail Due to Missing Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-performance-tests-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Performance Tests Fail
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Help
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="troubleshooting-guide">Troubleshooting Guide</h1>
+<p>This guide provides solutions to common issues encountered while using the Fawkes Internal Developer Platform. It is organized by category to help you quickly identify and resolve problems.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#general-issues">General Issues</a></li>
+<li><a href="#infrastructure-issues">Infrastructure Issues</a></li>
+<li><a href="#kubernetes-issues">Kubernetes Issues</a></li>
+<li><a href="#cicd-issues">CI/CD Issues</a></li>
+<li><a href="#azure-specific-issues">Azure-Specific Issues</a></li>
+<li><a href="#testing-issues">Testing Issues</a></li>
+<li><a href="#getting-help">Getting Help</a></li>
+</ul>
+<hr />
+<h2 id="general-issues">General Issues</h2>
+<h3 id="1-environment-variables-not-loaded">1. <strong>Environment Variables Not Loaded</strong></h3>
+<ul>
+<li><strong>Symptom:</strong> Commands fail due to missing environment variables.</li>
+<li><strong>Solution:</strong></li>
+<li>Ensure you have a <code>.env</code> file in the root directory.</li>
+<li>Load the environment variables:
+    <code>sh
+    source .env</code></li>
+</ul>
+<h3 id="2-permission-denied-errors">2. <strong>Permission Denied Errors</strong></h3>
+<ul>
+<li><strong>Symptom:</strong> You encounter <code>Permission Denied</code> errors when running scripts.</li>
+<li><strong>Solution:</strong></li>
+<li>Ensure the script has executable permissions:
+    <code>sh
+    chmod +x &lt;script-name&gt;.sh</code></li>
+<li>Run the script with appropriate privileges (e.g., <code>sudo</code> if required).</li>
+</ul>
+<hr />
+<h2 id="infrastructure-issues">Infrastructure Issues</h2>
+<h3 id="1-terraform-apply-fails">1. <strong>Terraform Apply Fails</strong></h3>
+<ul>
+<li><strong>Symptom:</strong> Terraform fails with errors like "resource already exists" or "authentication failed."</li>
+<li><strong>Solution:</strong></li>
+<li>Run <code>terraform plan</code> to identify conflicting resources.</li>
+<li>Ensure your cloud provider credentials are valid and loaded:
+    <code>sh
+    export AWS_ACCESS_KEY_ID=your-access-key
+    export AWS_SECRET_ACCESS_KEY=your-secret-key</code></li>
+</ul>
+<h3 id="2-infrastructure-not-destroyed-properly">2. <strong>Infrastructure Not Destroyed Properly</strong></h3>
+<ul>
+<li><strong>Symptom:</strong> Resources remain after running the destroy script.</li>
+<li><strong>Solution:</strong></li>
+<li>Manually inspect the resources in your cloud provider's console.</li>
+<li>Run <code>terraform destroy</code> directly in the affected directory:
+    <code>sh
+    terraform destroy</code></li>
+</ul>
+<hr />
+<h2 id="kubernetes-issues">Kubernetes Issues</h2>
+<h3 id="1-kubernetes-cluster-unreachable">1. <strong>Kubernetes Cluster Unreachable</strong></h3>
+<ul>
+<li><strong>Symptom:</strong> <code>kubectl</code> commands fail with "Unable to connect to the server."</li>
+<li><strong>Solution:</strong></li>
+<li>Ensure your <code>kubeconfig</code> is set correctly:
+    <code>sh
+    export KUBECONFIG=/path/to/kubeconfig</code></li>
+<li>Verify the cluster status:
+    <code>sh
+    kubectl cluster-info</code></li>
+</ul>
+<h3 id="2-pods-stuck-in-pending-state">2. <strong>Pods Stuck in Pending State</strong></h3>
+<ul>
+<li><strong>Symptom:</strong> Pods remain in the <code>Pending</code> state.</li>
+<li><strong>Solution:</strong></li>
+<li>Check for insufficient resources:
+    <code>sh
+    kubectl describe pod &lt;pod-name&gt;</code></li>
+<li>Scale up your cluster or free up resources.</li>
+</ul>
+<hr />
+<h2 id="cicd-issues">CI/CD Issues</h2>
+<h3 id="1-jenkins-pipeline-fails">1. <strong>Jenkins Pipeline Fails</strong></h3>
+<ul>
+<li><strong>Symptom:</strong> Jenkins pipelines fail with errors related to missing credentials or tools.</li>
+<li><strong>Solution:</strong></li>
+<li>Verify that the required credentials are configured in Jenkins.</li>
+<li>Ensure the Jenkins agent has the necessary tools installed.</li>
+</ul>
+<h3 id="2-github-actions-workflow-fails">2. <strong>GitHub Actions Workflow Fails</strong></h3>
+<ul>
+<li><strong>Symptom:</strong> GitHub Actions fail with errors like "command not found" or "authentication failed."</li>
+<li><strong>Solution:</strong></li>
+<li>Check the workflow logs for detailed error messages.</li>
+<li>Ensure secrets are configured correctly in the repository settings.</li>
+</ul>
+<hr />
+<h2 id="azure-specific-issues">Azure-Specific Issues</h2>
+<h3 id="1-azure-cli-authentication-fails">1. <strong>Azure CLI Authentication Fails</strong></h3>
+<ul>
+<li><strong>Symptom:</strong> Azure CLI commands fail with "not logged in" or "authentication failed."</li>
+<li><strong>Solution:</strong></li>
+<li>Log in to Azure CLI:
+    <code>sh
+    az login</code></li>
+<li>Set the correct subscription:
+    <code>sh
+    az account set --subscription &lt;subscription-id&gt;</code></li>
+</ul>
+<h3 id="2-resource-group-not-found">2. <strong>Resource Group Not Found</strong></h3>
+<ul>
+<li><strong>Symptom:</strong> Terraform or Azure CLI commands fail with "resource group not found."</li>
+<li><strong>Solution:</strong></li>
+<li>Verify the resource group exists:
+    <code>sh
+    az group list --query "[].name"</code></li>
+<li>Create the resource group if necessary:
+    <code>sh
+    az group create --name &lt;resource-group&gt; --location &lt;location&gt;</code></li>
+</ul>
+<hr />
+<h2 id="testing-issues">Testing Issues</h2>
+<h3 id="1-tests-fail-due-to-missing-dependencies">1. <strong>Tests Fail Due to Missing Dependencies</strong></h3>
+<ul>
+<li><strong>Symptom:</strong> Tests fail with errors like "module not found" or "dependency missing."</li>
+<li><strong>Solution:</strong></li>
+<li>Install the required dependencies:
+    <code>sh
+    mvn clean install</code></li>
+</ul>
+<h3 id="2-performance-tests-fail">2. <strong>Performance Tests Fail</strong></h3>
+<ul>
+<li><strong>Symptom:</strong> Performance tests fail with timeout or resource errors.</li>
+<li><strong>Solution:</strong></li>
+<li>Ensure the test environment has sufficient resources.</li>
+<li>Adjust the test parameters (e.g., reduce load or increase timeouts).</li>
+</ul>
+<hr />
+<h2 id="getting-help">Getting Help</h2>
+<p>If you are unable to resolve an issue, you can:</p>
+<ol>
+<li>Check the <a href="../faq/">FAQ</a> for additional guidance.</li>
+<li>Open an issue on <a href="https://github.com/paruff/fawkes/issues">GitHub</a> with detailed information about the problem.</li>
+<li>Reach out to the community for support.</li>
+</ol>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>
