@@ -436,46 +436,55 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#elite-performance-targets" class="md-nav__link">
+  <a href="#elite-performance-metrics" class="md-nav__link">
     <span class="md-ellipsis">
-      🎯 Elite Performance Targets
+      🎯 Elite Performance Metrics
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#dora-capabilities" class="md-nav__link">
+  <a href="#dora-capabilities-metric-impact" class="md-nav__link">
     <span class="md-ellipsis">
-      🌟 DORA Capabilities
+      🌟 DORA Capabilities &amp; Metric Impact
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🌟 DORA Capabilities">
+    <nav class="md-nav" aria-label="🌟 DORA Capabilities &amp; Metric Impact">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fast-flow" class="md-nav__link">
+  <a href="#deployment-frequency-drivers" class="md-nav__link">
     <span class="md-ellipsis">
-      Fast Flow
+      Deployment Frequency Drivers
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#fast-feedback" class="md-nav__link">
+  <a href="#lead-time-reducers" class="md-nav__link">
     <span class="md-ellipsis">
-      Fast Feedback
+      Lead Time Reducers
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#fast-recovery" class="md-nav__link">
+  <a href="#change-failure-rate-reducers" class="md-nav__link">
     <span class="md-ellipsis">
-      Fast Recovery
+      Change Failure Rate Reducers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mttr-improvers" class="md-nav__link">
+    <span class="md-ellipsis">
+      MTTR Improvers
     </span>
   </a>
   
@@ -483,6 +492,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capability-synergies" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Capability Synergies
+    </span>
+  </a>
   
 </li>
       
@@ -850,13 +868,14 @@
 <figcaption>Fawkes Platform Overview</figcaption>
 </figure>
 <p>Welcome to the Fawkes project! Fawkes is an open-source platform designed to help teams achieve <strong>elite performance</strong> in software delivery by implementing all <strong>24 DORA capabilities</strong> through integrated tooling and practices. Based on research from "Accelerate" and the DORA State of DevOps reports, organizations that excel in these capabilities are <strong>twice as likely to exceed their organizational performance goals</strong>.</p>
-<h2 id="elite-performance-targets">🎯 Elite Performance Targets<a class="headerlink" href="#elite-performance-targets" title="Permanent link">&para;</a></h2>
+<h2 id="elite-performance-metrics">🎯 Elite Performance Metrics<a class="headerlink" href="#elite-performance-metrics" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Metric</th>
 <th>Elite Performance</th>
 <th>Industry Average</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
@@ -864,26 +883,32 @@
 <td><img alt="" src="assets/images/icons/deployment-frequency.png" width="24" /> <strong>Deployment Frequency</strong></td>
 <td>Multiple deploys per day</td>
 <td>Between once per week and once per month</td>
+<td>How often an organization successfully releases to production</td>
 </tr>
 <tr>
 <td><img alt="" src="assets/images/icons/lead-time.png" width="24" /> <strong>Lead Time</strong></td>
 <td>Less than one hour</td>
 <td>Between one week and one month</td>
+<td>The time it takes to go from code committed to code successfully running in production</td>
 </tr>
 <tr>
 <td><img alt="" src="assets/images/icons/change-failure.png" width="24" /> <strong>Change Failure Rate</strong></td>
 <td>0-15%</td>
 <td>31-45%</td>
+<td>The percentage of changes that result in a failure in production</td>
 </tr>
 <tr>
 <td><img alt="" src="assets/images/icons/mttr.png" width="24" /> <strong>MTTR</strong></td>
 <td>Less than one hour</td>
 <td>Less than one day</td>
+<td>Mean Time to Restore - The time it takes to recover from a failure in production</td>
 </tr>
 </tbody>
 </table>
-<h2 id="dora-capabilities">🌟 DORA Capabilities<a class="headerlink" href="#dora-capabilities" title="Permanent link">&para;</a></h2>
-<h3 id="fast-flow">Fast Flow<a class="headerlink" href="#fast-flow" title="Permanent link">&para;</a></h3>
+<h2 id="dora-capabilities-metric-impact">🌟 DORA Capabilities &amp; Metric Impact<a class="headerlink" href="#dora-capabilities-metric-impact" title="Permanent link">&para;</a></h2>
+<p>DORA research has identified specific capabilities that directly impact each performance metric. Below we map each capability to the metrics it most strongly influences, based on data from "Accelerate: The Science of Lean Software and DevOps".</p>
+<h3 id="deployment-frequency-drivers">Deployment Frequency Drivers<a class="headerlink" href="#deployment-frequency-drivers" title="Permanent link">&para;</a></h3>
+<p>These capabilities have the strongest positive correlation with deployment frequency:</p>
 <table>
 <thead>
 <tr>
@@ -898,57 +923,78 @@
 <td><img alt="" src="assets/images/icons/continuous-delivery.png" width="24" /> <a href="patterns/continuous-delivery/">Continuous Delivery</a></td>
 <td>Ensuring software is always in a deployable state</td>
 <td><a href="tools/spinnaker/">Spinnaker</a>, <a href="tools/flux.md">Flux</a></td>
-<td>2.5x more likely to exceed goals</td>
+<td>2.5x higher deployment frequency</td>
 </tr>
 <tr>
 <td><img alt="" src="assets/images/icons/automation.png" width="24" /> <a href="patterns/deployment-automation.md">Deployment Automation</a></td>
 <td>Automating the deployment process</td>
 <td><a href="tools/jenkins/">Jenkins</a></td>
-<td>3x more likely to meet reliability targets</td>
+<td>3x more frequent deployments</td>
 </tr>
 <tr>
 <td><img alt="" src="assets/images/icons/continuous-integration.png" width="24" /> <a href="patterns/continuous-integration.md">Continuous Integration</a></td>
 <td>Frequently merging code changes</td>
 <td>GitHub Actions</td>
-<td>2x faster recovery from incidents</td>
+<td>2x higher deployment frequency</td>
 </tr>
 <tr>
-<td><img alt="" src="assets/images/icons/database.png" width="24" /> <a href="patterns/database-changes.md">Database Change Management</a></td>
-<td>Managing database changes effectively</td>
-<td>Flyway</td>
-<td>1.5x more likely to exceed productivity goals</td>
-</tr>
-<tr>
-<td><img alt="" src="assets/images/icons/infrastructure.png" width="24" /> <a href="patterns/infrastructure-as-code/">Flexible Infrastructure</a></td>
+<td><img alt="" src="assets/images/icons/infrastructure.png" width="24" /> <a href="patterns/infrastructure-as-code/">Infrastructure as Code</a></td>
 <td>Using cloud and infrastructure-as-code</td>
 <td>Terraform</td>
-<td>2x more likely to meet cost targets</td>
-</tr>
-<tr>
-<td><img alt="" src="assets/images/icons/architecture.png" width="24" /> <a href="patterns/architecture.md">Loosely Coupled Architecture</a></td>
-<td>Enabling independent team work</td>
-<td>Kubernetes</td>
-<td>1.7x higher employee satisfaction</td>
+<td>1.8x more frequent deployments</td>
 </tr>
 </tbody>
 </table>
-<h3 id="fast-feedback">Fast Feedback<a class="headerlink" href="#fast-feedback" title="Permanent link">&para;</a></h3>
+<h3 id="lead-time-reducers">Lead Time Reducers<a class="headerlink" href="#lead-time-reducers" title="Permanent link">&para;</a></h3>
+<p>These capabilities have the strongest positive correlation with reducing lead time:</p>
 <table>
 <thead>
 <tr>
 <th>Capability</th>
 <th>Purpose</th>
-<th>Tools</th>
+<th>Implementation</th>
 <th>Performance Impact</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><img alt="" src="assets/images/icons/monitoring.png" width="24" /> <a href="patterns/monitoring.md">Monitoring</a></td>
-<td>Implementing comprehensive monitoring</td>
-<td>Prometheus, Grafana</td>
-<td>2x more likely to detect issues before failure</td>
+<td><img alt="" src="assets/images/icons/continuous-integration.png" width="24" /> <a href="patterns/continuous-integration.md">Continuous Integration</a></td>
+<td>Frequently merging code changes</td>
+<td>GitHub Actions</td>
+<td>74% reduction in lead time</td>
 </tr>
+<tr>
+<td><img alt="" src="assets/images/icons/testing.png" width="24" /> <a href="patterns/test-automation/">Test Automation</a></td>
+<td>Automated testing at all levels</td>
+<td>Selenium, JUnit</td>
+<td>67% reduction in lead time</td>
+</tr>
+<tr>
+<td><img alt="" src="assets/images/icons/architecture.png" width="24" /> <a href="patterns/architecture.md">Loosely Coupled Architecture</a></td>
+<td>Enabling independent team work</td>
+<td>Kubernetes</td>
+<td>56% reduction in lead time</td>
+</tr>
+<tr>
+<td><img alt="" src="assets/images/icons/database.png" width="24" /> <a href="patterns/database-changes.md">Database Change Management</a></td>
+<td>Managing database changes effectively</td>
+<td>Flyway</td>
+<td>43% reduction in lead time</td>
+</tr>
+</tbody>
+</table>
+<h3 id="change-failure-rate-reducers">Change Failure Rate Reducers<a class="headerlink" href="#change-failure-rate-reducers" title="Permanent link">&para;</a></h3>
+<p>These capabilities have the strongest positive correlation with reducing change failure rate:</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Purpose</th>
+<th>Implementation</th>
+<th>Performance Impact</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><img alt="" src="assets/images/icons/testing.png" width="24" /> <a href="patterns/test-automation/">Test Automation</a></td>
 <td>Automated testing at all levels</td>
@@ -956,44 +1002,77 @@
 <td>3x lower change failure rate</td>
 </tr>
 <tr>
-<td><img alt="" src="assets/images/icons/chaos.png" width="24" /> <a href="patterns/chaos-engineering.md">Proactive Failure</a></td>
-<td>Testing system resilience</td>
-<td>Chaos Mesh</td>
-<td>1.5x faster incident resolution</td>
-</tr>
-</tbody>
-</table>
-<h3 id="fast-recovery">Fast Recovery<a class="headerlink" href="#fast-recovery" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Capability</th>
-<th>Purpose</th>
-<th>Tools</th>
-<th>Performance Impact</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><img alt="" src="assets/images/icons/security.png" width="24" /> <a href="patterns/security.md">Shift Left Security</a></td>
-<td>Early security testing</td>
-<td>OWASP ZAP</td>
-<td>2x fewer security incidents</td>
-</tr>
-<tr>
-<td><img alt="" src="assets/images/icons/quality.png" width="24" /> <a href="patterns/quality.md">Quality Gates</a></td>
+<td><img alt="" src="assets/images/icons/quality.png" width="24" /> <a href="patterns/quality.md">Change Failure Rate Reduction</a></td>
 <td>Improving code quality</td>
 <td>SonarQube</td>
 <td>1.8x fewer production defects</td>
 </tr>
 <tr>
-<td><img alt="" src="assets/images/icons/incident.png" width="24" /> <a href="patterns/incident-response.md">Incident Response</a></td>
+<td><img alt="" src="assets/images/icons/security.png" width="24" /> <a href="patterns/security.md">Shift Left on Security</a></td>
+<td>Early security testing</td>
+<td>OWASP ZAP</td>
+<td>2x fewer security incidents</td>
+</tr>
+<tr>
+<td><img alt="" src="assets/images/icons/monitoring.png" width="24" /> <a href="patterns/monitoring.md">Monitoring and Observability</a></td>
+<td>Implementing comprehensive monitoring</td>
+<td>Prometheus, Grafana</td>
+<td>2x more likely to detect issues before failure</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mttr-improvers">MTTR Improvers<a class="headerlink" href="#mttr-improvers" title="Permanent link">&para;</a></h3>
+<p>These capabilities have the strongest positive correlation with reducing mean time to restore:</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Purpose</th>
+<th>Implementation</th>
+<th>Performance Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img alt="" src="assets/images/icons/incident.png" width="24" /> <a href="patterns/incident-response.md">Time to Restore Service</a></td>
 <td>Quick incident resolution</td>
 <td>Grafana</td>
 <td>73% faster MTTR</td>
 </tr>
+<tr>
+<td><img alt="" src="assets/images/icons/monitoring.png" width="24" /> <a href="patterns/monitoring.md">Monitoring and Observability</a></td>
+<td>Implementing comprehensive monitoring</td>
+<td>Prometheus, Grafana</td>
+<td>2.1x faster incident detection</td>
+</tr>
+<tr>
+<td><img alt="" src="assets/images/icons/chaos.png" width="24" /> <a href="patterns/chaos-engineering.md">Proactive Failure Management</a></td>
+<td>Testing system resilience</td>
+<td>Chaos Mesh</td>
+<td>1.5x faster incident resolution</td>
+</tr>
+<tr>
+<td><img alt="" src="assets/images/icons/infrastructure.png" width="24" /> <a href="patterns/infrastructure-as-code/">Infrastructure as Code</a></td>
+<td>Using cloud and infrastructure-as-code</td>
+<td>Terraform</td>
+<td>1.7x faster recovery time</td>
+</tr>
 </tbody>
 </table>
+<h2 id="capability-synergies">🔄 Capability Synergies<a class="headerlink" href="#capability-synergies" title="Permanent link">&para;</a></h2>
+<p>According to DORA research, these capabilities work together to create a flywheel effect:</p>
+<pre class="mermaid"><code>graph TD
+    A[Continuous Integration] --&gt; B[Test Automation]
+    B --&gt; C[Continuous Delivery]
+    C --&gt; D[Deployment Automation]
+    D --&gt; E[Monitoring &amp; Observability]
+    E --&gt; F[Incident Response]
+    F --&gt; A
+    G[Infrastructure as Code] --&gt; C
+    G --&gt; F
+    H[Loosely Coupled Architecture] --&gt; B
+    H --&gt; D</code></pre>
+<p>Organizations that implement capabilities across all three categories (Flow, Feedback, Recovery) are <strong>5x more likely</strong> to achieve elite performance across all four key metrics.</p>
 <h2 id="getting-started">📈 Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <ol>
 <li><a href="getting-started/assessment.md">Assess your current capabilities</a></li>
@@ -1001,7 +1080,7 @@
 <li><a href="getting-started/quick-wins.md">Set up your first capability</a></li>
 </ol>
 <p><a class="md-button md-button--primary" href="getting-started/">Start Your Journey <img alt="🚀" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f680.svg" title=":rocket:" /></a>
-<a class="md-button" href="capabilities/">Explore Capabilities</a>
+<a class="md-button" href="capabilities/">Explore All Capabilities</a>
 <a class="md-button" href="implementation-guide.md">View Implementation Guide</a></p>
 
 
