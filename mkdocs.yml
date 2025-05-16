@@ -2,58 +2,82 @@ site_name: Fawkes
 site_url: https://paruff.github.io/fawkes/
 repo_url: https://github.com/paruff/fawkes
 repo_name: paruff/fawkes
+edit_uri: edit/main/docs/
 
 theme:
   name: material
   palette:
-    - scheme: default
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
       primary: indigo
       accent: indigo
-    - scheme: slate
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
       primary: indigo
       accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
   features:
     - navigation.instant
     - navigation.tracking
-    - navigation.expand
-    - navigation.sections
     - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
     - search.highlight
+    - search.share
+    - search.suggest
     - content.code.copy
+    - content.action.edit
     - toc.integrate
-  language: en
   icon:
     repo: fontawesome/brands/github
 
-nav:
-  - Home: index.md
-  - Getting Started:
-    - Quick Start: getting-started.md
-    - Architecture: architecture.md
-    - Configuration: configuration.md
-  - User Guide:
-    - Usage: usage.md
-    - Integrations: integrations.md
-    - Security: security.md
-    - Troubleshooting: troubleshooting.md
-    - FAQ: faq.md
-  - Development:
-    - Contributing: development.md
-  - About: about.md
-
 markdown_extensions:
   - admonition
-  - pymdownx.highlight
-  - pymdownx.superfences
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - md_in_html
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
   - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
   - pymdownx.inlinehilite
-  - pymdownx.emoji
+  - pymdownx.keys
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
   - toc:
       permalink: true
 
 plugins:
   - search
-#  - sitemap
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - minify:
+      minify_html: true
 
 extra:
   social:
@@ -61,5 +85,12 @@ extra:
       link: https://github.com/paruff/fawkes
   analytics:
     provider: google
-    property: G-E1CNVG3ZTT  # <-- Your Google Analytics Measurement ID
+    property: G-E1CNVG3ZTT
+  consent:
+    title: Cookie consent
+    description: >- 
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
   copyright: © 2025 Philip Ruffini. Licensed under MIT.
