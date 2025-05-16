@@ -6,9 +6,11 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
+        <meta name="description" content="Implementation patterns for test automation based on DORA research and elite performance practices">
       
       
-        <link rel="canonical" href="https://paruff.github.io/fawkes/design/Demand%20Hypothesis/">
+      
+        <link rel="canonical" href="https://paruff.github.io/fawkes/patterns/test-automation/">
       
       
       
@@ -18,7 +20,7 @@
     
     
       
-        <title>Demand Hypothesis - Fawkes</title>
+        <title>Test Automation Pattern - Fawkes</title>
       
     
     
@@ -82,7 +84,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#demand-hypothesis" class="md-skip">
+        <a href="#test-automation-pattern" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Demand Hypothesis
+              Test Automation Pattern
             
           </span>
         </div>
@@ -275,7 +277,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../patterns/" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -545,7 +547,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../patterns/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -727,7 +729,7 @@
 
 
   
-    <a href="https://github.com/paruff/fawkes/edit/main/docs/design/Demand Hypothesis.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/paruff/fawkes/edit/main/docs/patterns/test-automation.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -735,39 +737,223 @@
   
 
 
-<h1 id="demand-hypothesis">Demand Hypothesis<a class="headerlink" href="#demand-hypothesis" title="Permanent link">&para;</a></h1>
-<p>Based on the defined persona (Improvement-Driven Leader) and their Jobs to Be Done, we hypothesize the following about the demand for a service that provides DORA metrics visualization:</p>
-<p><strong>Hypothesis Statement:</strong></p>
-<p><strong>We believe that Improvement-Driven Leaders within software development organizations will find significant value in a service that provides easily accessible, objective visualization of DORA metrics.</strong></p>
-<p><strong>Because:</strong></p>
+<h1 id="test-automation-pattern">Test Automation Pattern<a class="headerlink" href="#test-automation-pattern" title="Permanent link">&para;</a></h1>
+<p><img alt="Test Pyramid" src="../assets/images/patterns/test-pyramid.png" width="600" /></p>
+<p>Test automation is a critical capability identified in DORA research that enables organizations to achieve elite performance through rapid, reliable feedback cycles. According to the research, elite performers automate 95% of their tests.</p>
+<h2 id="core-principles">Core Principles<a class="headerlink" href="#core-principles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Description</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img alt="" src="../assets/images/icons/pyramid.png" width="24" /> <strong>Test Pyramid</strong></td>
+<td>Balance test types for optimal coverage</td>
+<td>Unit (70%), Integration (20%), E2E (10%)</td>
+</tr>
+<tr>
+<td><img alt="" src="../assets/images/icons/shift-left.png" width="24" /> <strong>Shift Left</strong></td>
+<td>Test early in development cycle</td>
+<td>CI pipeline integration</td>
+</tr>
+<tr>
+<td><img alt="" src="../assets/images/icons/reliable.png" width="24" /> <strong>Reliability</strong></td>
+<td>Tests should be deterministic</td>
+<td>Avoid flaky tests</td>
+</tr>
+<tr>
+<td><img alt="" src="../assets/images/icons/fast.png" width="24" /> <strong>Speed</strong></td>
+<td>Quick feedback loops</td>
+<td>Parallel test execution</td>
+</tr>
+<tr>
+<td><img alt="" src="../assets/images/icons/trunk.png" width="24" /> <strong>Trunk-Based</strong></td>
+<td>Support frequent integration</td>
+<td>Pre-merge testing</td>
+</tr>
+</tbody>
+</table>
+<h2 id="implementation-guide">Implementation Guide<a class="headerlink" href="#implementation-guide" title="Permanent link">&para;</a></h2>
+<h3 id="1-unit-testing">1. Unit Testing<a class="headerlink" href="#1-unit-testing" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@Test</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">deploymentFrequencyCalculation</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Arrange</span>
+<span class="w">    </span><span class="n">DeploymentMetrics</span><span class="w"> </span><span class="n">metrics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DeploymentMetrics</span><span class="p">();</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Deployment</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deployments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arrays</span><span class="p">.</span><span class="na">asList</span><span class="p">(</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">Deployment</span><span class="p">(</span><span class="s">&quot;2023-01-01&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">Deployment</span><span class="p">(</span><span class="s">&quot;2023-01-02&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Act</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">metrics</span><span class="p">.</span><span class="na">calculateFrequency</span><span class="p">(</span><span class="n">deployments</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Assert</span>
+<span class="w">    </span><span class="n">assertEquals</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="n">frequency</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Should calculate correct deployment frequency&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nd">@Test</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">shouldHandleNoDeployments</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Arrange</span>
+<span class="w">    </span><span class="n">DeploymentMetrics</span><span class="w"> </span><span class="n">metrics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DeploymentMetrics</span><span class="p">();</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Deployment</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deployments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Collections</span><span class="p">.</span><span class="na">emptyList</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// Act &amp; Assert</span>
+<span class="w">    </span><span class="n">assertDoesNotThrow</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">metrics</span><span class="p">.</span><span class="na">calculateFrequency</span><span class="p">(</span><span class="n">deployments</span><span class="p">));</span>
+<span class="w">    </span><span class="n">assertEquals</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="n">metrics</span><span class="p">.</span><span class="na">calculateFrequency</span><span class="p">(</span><span class="n">deployments</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="2-integration-testing-with-testcontainers">2. Integration Testing with TestContainers<a class="headerlink" href="#2-integration-testing-with-testcontainers" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@TestContainer</span>
+<span class="kd">class</span> <span class="nc">DeploymentRepositoryTest</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Container</span>
+<span class="w">    </span><span class="kd">static</span><span class="w"> </span><span class="n">PostgreSQLContainer</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">postgres</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PostgreSQLContainer</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="s">&quot;postgres:14&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withDatabaseName</span><span class="p">(</span><span class="s">&quot;testdb&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withUsername</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">withPassword</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nd">@Test</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">shouldPersistDeployment</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Arrange</span>
+<span class="w">        </span><span class="n">DeploymentRepository</span><span class="w"> </span><span class="n">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DeploymentRepository</span><span class="p">(</span><span class="n">postgres</span><span class="p">.</span><span class="na">getJdbcUrl</span><span class="p">());</span>
+<span class="w">        </span><span class="n">Deployment</span><span class="w"> </span><span class="n">deployment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Deployment</span><span class="p">(</span><span class="s">&quot;2023-01-01&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Act</span>
+<span class="w">        </span><span class="n">repository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">deployment</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Assert</span>
+<span class="w">        </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">Deployment</span><span class="o">&gt;</span><span class="w"> </span><span class="n">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">repository</span><span class="p">.</span><span class="na">findById</span><span class="p">(</span><span class="n">deployment</span><span class="p">.</span><span class="na">getId</span><span class="p">());</span>
+<span class="w">        </span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">.</span><span class="na">isPresent</span><span class="p">());</span>
+<span class="w">        </span><span class="n">assertEquals</span><span class="p">(</span><span class="s">&quot;2023-01-01&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">found</span><span class="p">.</span><span class="na">get</span><span class="p">().</span><span class="na">getDate</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="3-end-to-end-testing-with-cypress">3. End-to-End Testing with Cypress<a class="headerlink" href="#3-end-to-end-testing-with-cypress" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Deployment Pipeline&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">beforeEach</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">intercept</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;/api/deployments&#39;</span><span class="p">).</span><span class="kr">as</span><span class="p">(</span><span class="s1">&#39;getDeployments&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">login</span><span class="p">();</span><span class="w"> </span><span class="c1">// Custom command for authentication</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;shows deployment metrics dashboard&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Arrange</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s1">&#39;/dashboard&#39;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Act</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">wait</span><span class="p">(</span><span class="s1">&#39;@getDeployments&#39;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Assert</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;deployment-frequency&quot;]&#39;</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">&#39;be.visible&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;lead-time&quot;]&#39;</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">&#39;be.visible&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;change-failure-rate&quot;]&#39;</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">&#39;be.visible&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;mttr&quot;]&#39;</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s1">&#39;be.visible&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;creates new deployment&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Arrange</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s1">&#39;/deployments/new&#39;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Act</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;service-name&quot;]&#39;</span><span class="p">).</span><span class="nx">type</span><span class="p">(</span><span class="s1">&#39;fawkes-web&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;version&quot;]&#39;</span><span class="p">).</span><span class="nx">type</span><span class="p">(</span><span class="s1">&#39;1.0.0&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;submit&quot;]&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// Assert</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;success-message&quot;]&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">should</span><span class="p">(</span><span class="s1">&#39;be.visible&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">and</span><span class="p">(</span><span class="s1">&#39;contain&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Deployment created successfully&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
+<h2 id="continuous-integration-pipeline">Continuous Integration Pipeline<a class="headerlink" href="#continuous-integration-pipeline" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># GitHub Actions workflow for test automation</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test Automation</span>
+<span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">pull_request</span><span class="p p-Indicator">]</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up JDK</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-java@v3</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">java-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;17&#39;</span>
+<span class="w">          </span><span class="nt">distribution</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;temurin&#39;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Unit Tests</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./gradlew test</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Integration Tests</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./gradlew integrationTest</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">E2E Tests</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cypress-io/github-action@v6</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">browser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chrome</span>
+<span class="w">          </span><span class="nt">config-file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cypress.config.js</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload Test Reports</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always()</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v3</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test-reports</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build/reports/tests/</span>
+</code></pre></div>
+<h2 id="test-coverage-goals">Test Coverage Goals<a class="headerlink" href="#test-coverage-goals" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Test Type</th>
+<th>Coverage Target</th>
+<th>Run Frequency</th>
+<th>Max Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unit</td>
+<td>80%</td>
+<td>Every commit</td>
+<td>3 minutes</td>
+</tr>
+<tr>
+<td>Integration</td>
+<td>60%</td>
+<td>Every PR</td>
+<td>10 minutes</td>
+</tr>
+<tr>
+<td>E2E</td>
+<td>40%</td>
+<td>Daily</td>
+<td>30 minutes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="performance-metrics">Performance Metrics<a class="headerlink" href="#performance-metrics" title="Permanent link">&para;</a></h2>
+<p>According to DORA research, elite performers achieve:</p>
 <ul>
-<li>DORA metrics (change lead time, deployment frequency, change fail percentage, failed deployment recovery time) are <strong>globally recognized and validated indicators</strong> of software delivery performance and overall organizational outcomes [6, 7].</li>
-<li>Improvement-Driven Leaders need <strong>objective data</strong> to understand the current state of their software delivery process and identify specific areas for improvement [5, 8].</li>
-<li>There is a common pain point where <strong>management doesn't fully understand the software process or the challenges</strong> faced by development and operations teams, leading to misaligned expectations and pressure [1-3].</li>
-<li>Providing <strong>end-to-end dashboards for stakeholders</strong> to view performance is a key practice for mitigating challenges and enabling <strong>data-driven decision-making</strong> [8].</li>
-<li>Metrics are a <strong>requirement for excellence</strong> and facilitate informed decision-making [8].</li>
-<li>Organizations often struggle to <strong>effectively collect and present</strong> these critical metrics from their existing toolchains [8, 14-16].</li>
-<li>A service focused on delivering these core metrics addresses a fundamental need for <strong>visibility and insight</strong> necessary for an improvement-driven approach [5, 7].</li>
+<li><strong>Test Runtime</strong>: &lt; 10 minutes for the full suite</li>
+<li><strong>Test Reliability</strong>: &gt; 95% pass rate</li>
+<li><strong>Coverage</strong>: &gt; 80% of critical paths</li>
+<li><strong>Automation</strong>: &gt; 95% of all tests</li>
 </ul>
-<p><strong>Therefore:</strong></p>
-<ul>
-<li>Providing a clear, centralized view of DORA metrics will <strong>solve a key pain point</strong> for leaders struggling to measure and understand their team's performance.</li>
-<li>This service will enable leaders to <strong>make better decisions</strong>, <strong>justify investments</strong> in process improvements, and <strong>communicate performance</strong> effectively across the organization.</li>
-<li>The demand for such a service is driven by the need to <strong>identify and address inefficiencies and bottlenecks</strong> in the software delivery lifecycle, ultimately helping organizations get "better at getting better" [5].</li>
-<li>While platforms like Backstage exist, a focused MVP on DORA metrics addresses the specific need for <strong>performance visibility</strong> directly, potentially with less initial overhead than a full IDP implementation, thus being valuable as a targeted solution for this persona.</li>
-</ul>
-<p><strong>Validation Strategy (Implicit/Next Steps):</strong></p>
-<ul>
-<li>Engage directly with potential customers (Improvement-Driven Leaders) to confirm these pain points and the perceived value of a DORA metrics dashboard [17].</li>
-<li>Leverage tools and methods for identifying pain points such as surveys, interviews, analyzing forum discussions (like on Reddit) related to DevOps, performance, and management challenges [17-26].</li>
-<li>Start with a DORA Quick Check style conversation [Conversation History] to assess current understanding and perceived needs regarding performance metrics.</li>
-</ul>
+<p><a class="md-button md-button--primary" href="../examples/test-automation">View Example Project <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.275-.326.75.75 0 0 1 .215-.734L13.94 8l-3.72-3.72a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215m-6.56 0a.75.75 0 0 1 1.042.018.75.75 0 0 1 .018 1.042L2.06 8l3.72 3.72a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215L.47 8.53a.75.75 0 0 1 0-1.06Z"/></svg></span></a>
+<a class="md-button" href="../guides/testing">Testing Guide <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.74 3.74 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574M8.755 4.75l-.004 7.322a3.75 3.75 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25"/></svg></span></a></p>
 
 
 
 
 
 
+
+  
+  
 
 
 

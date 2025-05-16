@@ -6,30 +6,28 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
+        <meta name="description" content="Implementing continuous delivery with Spinnaker in Fawkes">
       
       
-        <link rel="canonical" href="https://paruff.github.io/fawkes/getting-started/">
+      
+        <link rel="canonical" href="https://paruff.github.io/fawkes/tools/spinnaker/">
       
       
-        <link rel="prev" href="..">
       
       
-        <link rel="next" href="../architecture/">
-      
-      
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
-        <title>Quick Start - Fawkes</title>
+        <title>Spinnaker Integration - Fawkes</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -48,9 +46,9 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -86,7 +84,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started-with-fawkes" class="md-skip">
+        <a href="#spinnaker" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +98,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -120,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Quick Start
+              Spinnaker Integration
             
           </span>
         </div>
@@ -238,7 +236,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -255,13 +253,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../getting-started/" class="md-tabs__link">
           
   
   
@@ -281,7 +277,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../patterns/" class="md-tabs__link">
+        <a href="../../patterns/" class="md-tabs__link">
           
   
   
@@ -299,7 +295,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../contributing/" class="md-tabs__link">
+      <a href="../../contributing/" class="md-tabs__link">
         
   
   
@@ -320,7 +316,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../about/index.md" class="md-tabs__link">
+        <a href="../../about/index.md" class="md-tabs__link">
           
   
   
@@ -356,7 +352,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -386,7 +382,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -405,31 +401,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -442,7 +435,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Getting Started
@@ -453,32 +446,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Quick Start
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
         
   
   
@@ -489,107 +460,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      Prerequisites
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#1-clone-the-repository" class="md-nav__link">
-    <span class="md-ellipsis">
-      1. Clone the Repository
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-review-the-directory-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      2. Review the Directory Structure
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-configure-your-environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. Configure Your Environment
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-provision-infrastructure" class="md-nav__link">
-    <span class="md-ellipsis">
-      4. Provision Infrastructure
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-deploy-platform-services" class="md-nav__link">
-    <span class="md-ellipsis">
-      5. Deploy Platform Services
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-access-the-platform" class="md-nav__link">
-    <span class="md-ellipsis">
-      6. Access the Platform
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      7. Next Steps
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#need-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      Need Help?
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -602,7 +472,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
+      <a href="../../architecture/" class="md-nav__link">
         
   
   
@@ -677,7 +547,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../patterns/" class="md-nav__link">
+      <a href="../../patterns/" class="md-nav__link">
         
   
   
@@ -700,7 +570,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tools/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -730,7 +600,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing/" class="md-nav__link">
+      <a href="../../contributing/" class="md-nav__link">
         
   
   
@@ -797,7 +667,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/index.md" class="md-nav__link">
+      <a href="../../about/index.md" class="md-nav__link">
         
   
   
@@ -820,7 +690,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/license.md" class="md-nav__link">
+      <a href="../../about/license.md" class="md-nav__link">
         
   
   
@@ -859,7 +729,7 @@
 
 
   
-    <a href="https://github.com/paruff/fawkes/edit/main/docs/getting-started.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/paruff/fawkes/edit/main/docs/tools/spinnaker.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -867,88 +737,181 @@
   
 
 
-<h1 id="getting-started-with-fawkes">Getting Started with Fawkes<a class="headerlink" href="#getting-started-with-fawkes" title="Permanent link">&para;</a></h1>
-<p>Welcome to the Fawkes Internal Developer Platform! This guide will help you set up your environment, deploy the platform, and start using its features.</p>
-<p>Fawkes is a <strong>metrics-first platform</strong> designed to help teams improve their <strong>software delivery performance</strong> by focusing on the <strong>Four Key Metrics</strong> and supporting the <strong>eight capabilities</strong> needed to enhance those metrics.</p>
-<hr />
-<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
-<p>Before you begin, ensure you have the following tools installed:</p>
+<h1 id="spinnaker">Spinnaker<a class="headerlink" href="#spinnaker" title="Permanent link">&para;</a></h1>
+<p><img alt="Spinnaker Logo" src="../assets/images/tools/spinnaker.png" width="300" /></p>
+<p>Spinnaker is an open-source continuous delivery platform that helps you release software changes with high velocity and confidence.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Spinnaker provides two core sets of features:
+- <strong>Application Management</strong> - Deploy and manage cloud resources
+- <strong>Application Deployment</strong> - Construct and manage continuous delivery workflows</p>
+<h2 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img alt="" src="../assets/images/icons/multi-cloud.png" width="24" /> Multi-Cloud</td>
+<td>Deploy to multiple cloud providers</td>
+</tr>
+<tr>
+<td><img alt="" src="../assets/images/icons/pipelines.png" width="24" /> Pipeline Management</td>
+<td>Create complex deployment workflows</td>
+</tr>
+<tr>
+<td><img alt="" src="../assets/images/icons/canary.png" width="24" /> Automated Canary Analysis</td>
+<td>Automated testing in production</td>
+</tr>
+<tr>
+<td><img alt="" src="../assets/images/icons/rollback.png" width="24" /> Easy Rollbacks</td>
+<td>Quick recovery from failed deployments</td>
+</tr>
+</tbody>
+</table>
+<h2 id="integration-with-fawkes">Integration with Fawkes<a class="headerlink" href="#integration-with-fawkes" title="Permanent link">&para;</a></h2>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Git</strong>: For cloning the repository.</li>
-<li><strong>Docker</strong>: For local development and container builds.</li>
-<li><strong>Terraform</strong>: For infrastructure provisioning.</li>
-<li><strong>kubectl</strong>: For Kubernetes management.</li>
-<li><strong>Helm</strong>: For managing Kubernetes applications.</li>
-<li><strong>Cloud CLI tools</strong>: As needed for your cloud provider (e.g., AWS CLI, Azure CLI, GCloud CLI).</li>
+<li>Kubernetes cluster</li>
+<li>Helm v3</li>
+<li>kubectl configured with cluster access</li>
 </ul>
-<hr />
-<h2 id="1-clone-the-repository">1. Clone the Repository<a class="headerlink" href="#1-clone-the-repository" title="Permanent link">&para;</a></h2>
-<p>Start by cloning the Fawkes repository:</p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/paruff/fawkes.git
-<span class="nb">cd</span><span class="w"> </span>fawkes
+<h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Add Spinnaker Helm repository</span>
+helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>spinnaker<span class="w"> </span>https://helmcharts.opsmx.com/
+helm<span class="w"> </span>repo<span class="w"> </span>update
+
+<span class="c1"># Install Spinnaker</span>
+helm<span class="w"> </span>install<span class="w"> </span>spinnaker<span class="w"> </span>spinnaker/spinnaker<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--namespace<span class="w"> </span>spinnaker<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--create-namespace<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--values<span class="w"> </span>values.yaml
 </code></pre></div>
-<hr />
-<h2 id="2-review-the-directory-structure">2. Review the Directory Structure<a class="headerlink" href="#2-review-the-directory-structure" title="Permanent link">&para;</a></h2>
-<p>Familiarize yourself with the repository structure:</p>
-<ul>
-<li><code>infra/</code>: Infrastructure as Code (Terraform, Kubernetes, scripts).</li>
-<li><code>platform/</code>: Platform services, APIs, and UI.</li>
-<li><code>workspace/</code>: Developer environment automation.</li>
-<li><code>qa/</code>: Quality assurance and test suites.</li>
-<li><code>docs/</code>: Documentation.</li>
-</ul>
-<hr />
-<h2 id="3-configure-your-environment">3. Configure Your Environment<a class="headerlink" href="#3-configure-your-environment" title="Permanent link">&para;</a></h2>
+<p>Example <code>values.yaml</code>:
+<div class="highlight"><pre><span></span><code><span class="nt">spinnakerConfig</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">profiles</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">clouddriver</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">kubernetes</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">accounts</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-cluster</span>
+<span class="w">          </span><span class="nt">requiredGroupMembership</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">          </span><span class="nt">providerVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">V2</span>
+<span class="w">          </span><span class="nt">permissions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">          </span><span class="nt">dockerRegistries</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">          </span><span class="nt">configureImagePullSecrets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="nt">cacheThreads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">          </span><span class="nt">namespaces</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">          </span><span class="nt">omitNamespaces</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">          </span><span class="nt">kinds</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">          </span><span class="nt">omitKinds</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">          </span><span class="nt">customResources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+</code></pre></div></p>
+<h2 id="using-spinnaker-with-fawkes">Using Spinnaker with Fawkes<a class="headerlink" href="#using-spinnaker-with-fawkes" title="Permanent link">&para;</a></h2>
+<h3 id="creating-a-deployment-pipeline">Creating a Deployment Pipeline<a class="headerlink" href="#creating-a-deployment-pipeline" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Copy and edit any example configuration files:
-   <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
-</code></pre></div></li>
-<li>Set up required secrets and environment variables as described in <a href="../configuration/">configuration.md</a>.</li>
+<li>Navigate to Spinnaker UI</li>
+<li>Create a new application:</li>
+<li>Name: <code>fawkes-app</code></li>
+<li>Owner Email: <code>team@fawkes.io</code></li>
+<li>
+<p>Cloud Providers: <code>Kubernetes V2</code></p>
+</li>
+<li>
+<p>Create a deployment pipeline:
+   <div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deploy to Production&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;stages&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;deployManifest&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deploy Application&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;cloudProvider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;kubernetes&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;account&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fawkes-cluster&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;manifests&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;apiVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;apps/v1&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deployment&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fawkes-app&quot;</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">          </span><span class="nt">&quot;spec&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;replicas&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></p>
+</li>
 </ol>
-<hr />
-<h2 id="4-provision-infrastructure">4. Provision Infrastructure<a class="headerlink" href="#4-provision-infrastructure" title="Permanent link">&para;</a></h2>
-<p>Navigate to the <code>infra/</code> directory and follow the instructions for your cloud provider:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra
-<span class="c1"># Example for AWS</span>
-./buildinfra.sh<span class="w"> </span>-p<span class="w"> </span>aws<span class="w"> </span>-e<span class="w"> </span>dev
-</code></pre></div>
-<p>For more details on supported platforms and environments, see <a href="../architecture/">architecture.md</a>.</p>
-<hr />
-<h2 id="5-deploy-platform-services">5. Deploy Platform Services<a class="headerlink" href="#5-deploy-platform-services" title="Permanent link">&para;</a></h2>
-<p>Once the infrastructure is ready, deploy platform services (e.g., Jenkins, SonarQube):</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>platform
-<span class="c1"># Example: Deploy Jenkins</span>
-./jenkins-delta.sh<span class="w"> </span>-i
-</code></pre></div>
-<p>Refer to the <a href="../usage/">usage guide</a> for additional service deployment options.</p>
-<hr />
-<h2 id="6-access-the-platform">6. Access the Platform<a class="headerlink" href="#6-access-the-platform" title="Permanent link">&para;</a></h2>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Find service endpoints and credentials in the output of your deployment scripts or in the <a href="../usage/#showing-outputs">show outputs</a> section.</li>
-<li>Access the developer dashboard, CI/CD tools, and other services via your browser.</li>
+<li><strong>Pipeline Templates</strong></li>
+<li>Use pipeline templates for consistency</li>
+<li>Version control your templates</li>
+<li>
+<p>Share common deployment patterns</p>
+</li>
+<li>
+<p><strong>Security</strong></p>
+</li>
+<li>Enable RBAC</li>
+<li>Use service accounts</li>
+<li>
+<p>Implement least privilege access</p>
+</li>
+<li>
+<p><strong>Monitoring</strong></p>
+</li>
+<li>Configure pipeline notifications</li>
+<li>Monitor pipeline executions</li>
+<li>Set up alerting for failures</li>
 </ol>
-<hr />
-<h2 id="7-next-steps">7. Next Steps<a class="headerlink" href="#7-next-steps" title="Permanent link">&para;</a></h2>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<p>Common issues and solutions:</p>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pipeline fails to start</td>
+<td>Check Spinnaker service account permissions</td>
+</tr>
+<tr>
+<td>Manifest deployment fails</td>
+<td>Verify Kubernetes cluster connectivity</td>
+</tr>
+<tr>
+<td>Images not found</td>
+<td>Confirm container registry configuration</td>
+</tr>
+</tbody>
+</table>
+<h2 id="additional-resources">Additional Resources<a class="headerlink" href="#additional-resources" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Explore the <a href="../usage/">usage guide</a> for workflows and examples.</li>
-<li>Review <a href="../development/">development.md</a> if you want to contribute.</li>
-<li>Check <a href="../troubleshooting/">troubleshooting.md</a> for help with common issues.</li>
+<li><a href="https://spinnaker.io/docs/">Spinnaker Documentation</a></li>
+<li><a href="https://github.com/spinnaker/spinnaker">GitHub Repository</a></li>
+<li><a href="https://join.spinnaker.io/">Community Slack</a></li>
 </ul>
-<hr />
-<h2 id="need-help">Need Help?<a class="headerlink" href="#need-help" title="Permanent link">&para;</a></h2>
-<p>If you encounter any issues or have questions:</p>
-<ul>
-<li>See the <a href="../faq/">FAQ</a> for common questions.</li>
-<li>Open an issue on <a href="https://github.com/paruff/fawkes/issues">GitHub</a>.</li>
-</ul>
-<hr />
-<p>Thank you for choosing Fawkes! We’re excited to help you build better, faster, and more reliable infrastructure.</p>
+<p><a class="md-button md-button--primary" href="../../configuration/#spinnaker">Configure Spinnaker <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8 0a8 8 0 0 1 .701.031C9.444.095 9.99.645 10.16 1.29l.288 1.107c.018.066.079.158.212.224q.347.171.668.386c.123.082.233.09.299.071l1.103-.303c.644-.176 1.392.021 1.82.63q.406.578.704 1.218c.315.675.111 1.422-.364 1.891l-.814.806c-.049.048-.098.147-.088.294q.024.386 0 .772c-.01.147.038.246.088.294l.814.806c.475.469.679 1.216.364 1.891a8 8 0 0 1-.704 1.217c-.428.61-1.176.807-1.82.63l-1.102-.302c-.067-.019-.177-.011-.3.071a6 6 0 0 1-.668.386c-.133.066-.194.158-.211.224l-.29 1.106c-.168.646-.715 1.196-1.458 1.26a8 8 0 0 1-1.402 0c-.743-.064-1.289-.614-1.458-1.26l-.289-1.106c-.018-.066-.079-.158-.212-.224a6 6 0 0 1-.668-.386c-.123-.082-.233-.09-.299-.071l-1.103.303c-.644.176-1.392-.021-1.82-.63a8 8 0 0 1-.704-1.218c-.315-.675-.111-1.422.363-1.891l.815-.806c.05-.048.098-.147.088-.294a6 6 0 0 1 0-.772c.01-.147-.038-.246-.088-.294l-.815-.806C.635 6.045.431 5.298.746 4.623a8 8 0 0 1 .704-1.217c.428-.61 1.176-.807 1.82-.63l1.102.302c.067.019.177.011.3-.071q.321-.215.668-.386c.133-.066.194-.158.211-.224l.29-1.106C6.009.645 6.556.095 7.299.03Q7.646 0 8 0m-.571 1.525c-.036.003-.108.036-.137.146l-.289 1.105c-.147.561-.549.967-.998 1.189q-.26.13-.5.29c-.417.278-.97.423-1.529.27l-1.103-.303c-.109-.03-.175.016-.195.045q-.33.47-.573.99c-.014.031-.021.11.059.19l.815.806c.411.406.562.957.53 1.456a5 5 0 0 0 0 .582c.032.499-.119 1.05-.53 1.456l-.815.806c-.081.08-.073.159-.059.19q.243.52.573.989c.02.03.085.076.195.046l1.102-.303c.56-.153 1.113-.008 1.53.27q.242.16.501.29c.447.222.85.629.997 1.189l.289 1.105c.029.109.101.143.137.146a6.6 6.6 0 0 0 1.142 0c.036-.003.108-.036.137-.146l.289-1.105c.147-.561.549-.967.998-1.189q.26-.13.5-.29c.417-.278.97-.423 1.529-.27l1.103.303c.109.029.175-.016.195-.045q.33-.47.573-.99c.014-.031.021-.11-.059-.19l-.815-.806c-.411-.406-.562-.957-.53-1.456a5 5 0 0 0 0-.582c-.032-.499.119-1.05.53-1.456l.815-.806c.081-.08.073-.159.059-.19a6.5 6.5 0 0 0-.573-.989c-.02-.03-.085-.076-.195-.046l-1.102.303c-.56.153-1.113.008-1.53-.27a4.4 4.4 0 0 0-.501-.29c-.447-.222-.85-.629-.997-1.189l-.289-1.105c-.029-.11-.101-.143-.137-.146a6.6 6.6 0 0 0-1.142 0M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0M9.5 8a1.5 1.5 0 1 0-3.001.001A1.5 1.5 0 0 0 9.5 8"/></svg></span></a>
+<a class="md-button" href="../examples/spinnaker.md">View Examples <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.275-.326.75.75 0 0 1 .215-.734L13.94 8l-3.72-3.72a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215m-6.56 0a.75.75 0 0 1 1.042.018.75.75 0 0 1 .018 1.042L2.06 8l3.72 3.72a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215L.47 8.53a.75.75 0 0 1 0-1.06Z"/></svg></span></a></p>
 
 
 
 
 
 
+
+  
+  
 
 
 
@@ -1089,10 +1052,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.action.edit", "toc.integrate"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.action.edit", "toc.integrate"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
       
     
   </body>
