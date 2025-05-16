@@ -1,12 +1,13 @@
-name: Deploy Docs
+name: Deploy MkDocs to GitHub Pages
 on:
   push:
     branches:
-      - master
+      - main  # or master, depending on your default branch
     paths:
       - 'docs/**'
       - 'mkdocs.yml'
-      - '.github/workflows/deploy-docs.yml'
+      - 'requirements.txt'
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 permissions:
@@ -18,54 +19,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
-      - name: Setup Python
+        with:
+          fetch-depth: 0  # Required for git-revision-date-localized-plugin
+
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
-      
+          python-version: '3.x'
+          cache: 'pip'
+
       - name: Install dependencies
-        run: pip install mkdocs-material
-      
-      - name: Build site
-        run: mkdocs build
-      
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: site  # The folder containing the built site
-          branch: gh-pages  # The branch to deploy to
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-# name: Deploy MkDocs to GitHub Pages
+      - name: Configure Git user
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
 
-# permissions:
-#   contents: read
-#   pages: write
-#   id-token: write
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v4
-
-#       - name: Set up Python
-#         uses: actions/setup-python@v5
-#         with:
-#           python-version: '3.11'
-
-#       - name: Install dependencies
-#         run: |
-#           pip install --upgrade pip
-#           pip install mkdocs-material mkdocs-mermaid2-plugin mkdocs-awesome-pages-plugin mkdocs-glightbox mkdocs-git-revision-date-localized-plugin mkdocs-static-i18n pymdown-extensions
-    
-#       - name: Build MkDocs site
-#         run: mkdocs build --strict
-
-#       - name: Deploy to GitHub Pages
-#         uses: peaceiris/actions-gh-pages@v3
-#         with:
-#           github_token: ${{ secrets.GITHUB_TOKEN }}
-#           publish_dir: ./site
+      - name: Build and deploy MkDocs
+        run: |
+          mkdocs gh-deploy --force
