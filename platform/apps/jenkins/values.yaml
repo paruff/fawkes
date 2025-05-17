@@ -1,0 +1,125 @@
+# Default values for Jenkins Helm chart
+# Updated to simplify configuration and ensure compatibility with modern Kubernetes and Helm practices.
+
+clusterZone: "cluster.local" # Update this to match your cluster's DNS zone.
+
+renderHelmLabels: true
+
+controller:
+  componentName: "jenkins-controller"
+  image:
+    registry: docker.io
+    repository: jenkins/jenkins
+    tag: "2.387.1-jdk11" # Updated to a more recent Jenkins version.
+  imagePullPolicy: "IfNotPresent"
+
+  admin:
+    createSecret: true
+    userKey: jenkins-admin-user
+    passwordKey: jenkins-admin-password
+    adminUser: "admin" # Default admin username.
+    adminPassword: "" # Leave empty to auto-generate a password.
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "512Mi"
+    limits:
+      cpu: "2000m"
+      memory: "4096Mi"
+
+  initScripts: [] # Add initialization scripts here if needed.
+
+  securityContext:
+    runAsUser: 1000
+    fsGroup: 1000
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+
+  serviceType: LoadBalancer # Use LoadBalancer for external access. Change to ClusterIP for internal-only access.
+  servicePort: 8080
+  agentListenerPort: 50000
+
+  probes:
+    livenessProbe:
+      httpGet:
+        path: "/login"
+        port: http
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      timeoutSeconds: 5
+    readinessProbe:
+      httpGet:
+        path: "/login"
+        port: http
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+
+  installPlugins:
+    - kubernetes:1.31.3
+    - workflow-aggregator:2.6
+    - git:4.10.2
+    - configuration-as-code:1.55.1
+
+  enableRawHtmlMarkupFormatter: false # Set to true if you need HTML parsing in pipelines.
+
+agent:
+  enabled: true
+  image:
+    repository: jenkins/inbound-agent
+    tag: "4.11-1"
+  resources:
+    requests:
+      cpu: "512m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1024Mi"
+  podRetention: "Never" # Options: Always, Never, OnFailure
+
+persistence:
+  enabled: true
+  storageClass: "" # Use default storage class if not specified.
+  accessMode: "ReadWriteOnce"
+  size: "10Gi" # Adjust size as needed.
+
+rbac:
+  create: true
+  readSecrets: false
+
+serviceAccount:
+  create: true
+  name: ""
+
+sidecars:
+  configAutoReload:
+    enabled: true
+    image:
+      registry: docker.io
+      repository: kiwigrid/k8s-sidecar
+      tag: "1.27.1"
+    imagePullPolicy: IfNotPresent
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "50Mi"
+      limits:
+        cpu: "100m"
+        memory: "100Mi"
+
+ingress:
+  enabled: false # Set to true if you want to use an ingress controller.
+  annotations: {}
+  hostName: ""
+  tls: []
+
+prometheus:
+  enabled: false # Enable if you want to expose Prometheus metrics.
+
+networkPolicy:
+  enabled: false # Enable if you want to restrict network access to Jenkins.
+
+awsSecurityGroupPolicies:
+  enabled: false
+  policies: []
