@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: iq-server
+  namespace: iq-namespace # Ensure namespace is not default
+spec:
+  selector:
+    app: nexus
+    tier: iq-server
+  ports:
+    - protocol: "TCP"
+      port: 8070
+      targetPort: 8070
+  #    port: 8071
+  #    targetPort: 8071
+  type: LoadBalancer
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus
+  namespace: iq-namespace # Ensure namespace is not default
+spec:
+  selector:
+    matchLabels:
+      app: nexus
+      tier: iq-server
+      track: stable
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nexus
+        tier: iq-server
+        track: stable
+    spec:
+      serviceAccountName: iq-server-sa # Ensure Service Account Tokens are only mounted where necessary
+      containers:
+        - name: iq-server
+          image: "sonatype/nexus-iq-server@sha256:abc123def4567890" # Ensure image uses digest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "512Mi" # Memory requests set
+              cpu: "500m"     # CPU requests set
+            limits:
+              memory: "1Gi"   # Memory limits set
+              cpu: "1"        # CPU limits set
+          securityContext:
+            allowPrivilegeEscalation: false # Containers should not run with allowPrivilegeEscalation
+            readOnlyRootFilesystem: true   # Use read-only filesystem
+            runAsUser: 1000                # Run as high UID
+            runAsNonRoot: true             # Minimize admission of root containers
+            capabilities:
+              drop:
+                - ALL                     # Minimize admission of containers with capabilities
+            seccompProfile:
+              type: RuntimeDefault         # Ensure seccomp profile is set to runtime/default
+          livenessProbe:
+            httpGet:
+              path: /status                # Liveness Probe Configured
+              port: 8070
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /status                # Readiness Probe Configured
+              port: 8070
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            periodSeconds: 5
