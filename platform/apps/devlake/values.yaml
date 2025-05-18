@@ -1,10 +1,29 @@
-database:
-  type: postgres
-  host: devlake-db
-  port: 5432
-  user: devlake
-  password: devlakepassword
-  database: devlake
+# Custom values for DevLake configuration
+config:
+  metrics:
+    dora: true
+    deploymentFrequency:
+      enabled: true
+      window: 7 # days
+    leadTime:
+      enabled: true
+      stages: ["development", "review", "production"]
+    changeFailureRate:
+      enabled: true
+      window: 30 # days
+    timeToRestore:
+      enabled: true
+      severityLevels: ["high", "medium", "low"]
 
-service:
-  type: LoadBalancer
+grafana:
+  enabled: true
+  adminUser: admin
+  adminPassword: "admin" # Change this in production!
+
+mysql:
+  enabled: true
+  auth:
+    rootPassword: "devlake"
+    username: "devlake"
+    password: "devlake"
+    database: "devlake"

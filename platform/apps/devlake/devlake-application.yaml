@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: devlake
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: devlake
+  project: default
+  source:
+    chart: devlake
+    repoURL: https://apache.github.io/incubator-devlake-helm-chart
+    targetRevision: 0.14.0
+    helm:
+      # Custom values for DORA metrics optimization
+      values: |
+        service:
+          type: ClusterIP
+        config:
+          # Enable DORA metrics collection
+          metrics:
+            dora: true
+            deploymentFrequency: true
+            leadTime: true
+            changeFailureRate: true
+            timeToRestore: true
+        grafana:
+          enabled: true
+          adminPassword: "admin"
+        mysql:
+          enabled: true
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+    - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
