@@ -1,107 +1,133 @@
 # Getting Started with Fawkes
 
-Welcome to the Fawkes Internal Developer Platform! This guide will help you set up your environment, deploy the platform, and start using its features.
+Welcome to the Fawkes Internal Developer Platform! This guide will help you understand and implement the GitOps-based approach to platform management and delivery excellence.
 
-Fawkes is a **metrics-first platform** designed to help teams improve their **software delivery performance** by focusing on the **Four Key Metrics** and supporting the **eight capabilities** needed to enhance those metrics.
+## Repository Structure
 
----
+```
+fawkes/
+├── docs/              # Documentation and guides
+├── platform/          # Platform components
+│   ├── iac/          # Infrastructure as Code
+│   │   ├── azure/    # Azure-specific resources
+│   │   ├── aws/      # AWS-specific resources
+│   │   └── gcp/      # GCP-specific resources
+│   ├── services/     # Platform services
+│   └── tests/        # Test suites and quality checks
+└── mkdocs.yml        # Documentation configuration
+```
 
 ## Prerequisites
 
-Before you begin, ensure you have the following tools installed:
+Before you begin, ensure you have:
 
-- **Git**: For cloning the repository.
-- **Docker**: For local development and container builds.
-- **Terraform**: For infrastructure provisioning.
-- **kubectl**: For Kubernetes management.
-- **Helm**: For managing Kubernetes applications.
-- **Cloud CLI tools**: As needed for your cloud provider (e.g., AWS CLI, Azure CLI, GCloud CLI).
-
----
+- **Git**: For repository management
+- **kubectl**: For Kubernetes interaction
+- **Flux** or **ArgoCD**: For GitOps operations
+- **Cloud CLI**: For your chosen cloud provider
 
 ## 1. Clone the Repository
 
-Start by cloning the Fawkes repository:
-
-```sh
+```bash
 git clone https://github.com/paruff/fawkes.git
 cd fawkes
 ```
 
----
+## 2. Choose Your Implementation Path
 
-## 2. Review the Directory Structure
+Fawkes supports multiple implementation paths based on your cloud provider:
 
-Familiarize yourself with the repository structure:
+| Cloud | Implementation | Documentation |
+|-------|---------------|---------------|
+| Azure | AKS + Flux | [Azure Guide](platform/iac/azure/README.md) |
+| AWS | EKS + ArgoCD | [AWS Guide](platform/iac/aws/README.md) |
+| GCP | GKE + Cloud Build | [GCP Guide](platform/iac/gcp/README.md) |
 
-- `infra/`: Infrastructure as Code (Terraform, Kubernetes, scripts).
-- `platform/`: Platform services, APIs, and UI.
-- `workspace/`: Developer environment automation.
-- `qa/`: Quality assurance and test suites.
-- `docs/`: Documentation.
+## 3. Infrastructure Deployment
 
----
+We use a GitOps approach for infrastructure management. Changes are made through pull requests:
 
-## 3. Configure Your Environment
-
-1. Copy and edit any example configuration files:
-   ```sh
-   cp .env.example .env
-   ```
-2. Set up required secrets and environment variables as described in [configuration.md](configuration.md).
-
----
-
-## 4. Provision Infrastructure
-
-Navigate to the `infra/` directory and follow the instructions for your cloud provider:
-
-```sh
-cd infra
-# Example for AWS
-./buildinfra.sh -p aws -e dev
+1. Create a feature branch:
+```bash
+git checkout -b feature/add-new-service
 ```
 
-For more details on supported platforms and environments, see [architecture.md](architecture.md).
-
----
-
-## 5. Deploy Platform Services
-
-Once the infrastructure is ready, deploy platform services (e.g., Jenkins, SonarQube):
-
-```sh
-cd platform
-# Example: Deploy Jenkins
-./jenkins-delta.sh -i
+2. Make changes to infrastructure definitions in `platform/iac/`:
+```yaml
+# Example service definition
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fawkes-service
+spec:
+  replicas: 3
+  ...
 ```
 
-Refer to the [usage guide](usage.md) for additional service deployment options.
+3. Commit and push changes:
+```bash
+git add .
+git commit -m "feat: add new service deployment"
+git push origin feature/add-new-service
+```
 
----
+4. Create a pull request and wait for CI checks and review
 
-## 6. Access the Platform
+## 4. Platform Services
 
-1. Find service endpoints and credentials in the output of your deployment scripts or in the [show outputs](usage.md#showing-outputs) section.
-2. Access the developer dashboard, CI/CD tools, and other services via your browser.
+Services are deployed automatically via GitOps controllers. To add a new service:
 
----
+1. Define the service in `platform/services/`:
+```yaml
+# Example service manifest
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jenkins
+spec:
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    path: platform/services/jenkins
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jenkins
+```
 
-## 7. Next Steps
+2. Commit and push through the GitOps workflow
 
-- Explore the [usage guide](usage.md) for workflows and examples.
-- Review [development.md](development.md) if you want to contribute.
-- Check [troubleshooting.md](troubleshooting.md) for help with common issues.
+## 5. Verify Deployment
 
----
+Monitor deployments through:
+
+- GitOps dashboard (ArgoCD/Flux)
+- Kubernetes dashboard
+- Platform monitoring tools
+
+## 6. Running Tests
+
+Tests are now located in the platform directory:
+
+```bash
+cd platform/tests
+# Run unit tests
+go test ./...
+# Run integration tests
+make integration-tests
+```
+
+## Next Steps
+
+1. [Assess your capabilities](capabilities/assessment.md)
+2. [Review implementation patterns](patterns/index.md)
+3. [Explore available tools](tools/index.md)
 
 ## Need Help?
 
-If you encounter any issues or have questions:
+- Check our [troubleshooting guide](troubleshooting.md)
+- Open an issue on [GitHub](https://github.com/paruff/fawkes/issues)
+- Join our [community discussions](https://github.com/paruff/fawkes/discussions)
 
-- See the [FAQ](faq.md) for common questions.
-- Open an issue on [GitHub](https://github.com/paruff/fawkes/issues).
-
----
-
-Thank you for choosing Fawkes! We’re excited to help you build better, faster, and more reliable infrastructure.
+[Start Assessment :clipboard:](capabilities/assessment.md){ .md-button .md-button--primary }
+[View Patterns :books:](patterns/index.md){ .md-button }
+[Explore Tools :wrench:](tools/index.md){ .md-button }
