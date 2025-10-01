@@ -2,6 +2,8 @@
 
 set -e
 
+echo "Current working directory: $(pwd)"
+
 # Helper function for error messages
 function error_exit {
   echo "[ERROR] $1"
@@ -10,10 +12,20 @@ function error_exit {
 
 # Usage instructions
 function usage {
-  echo "Usage: $0 <environment>"
+  echo "Usage: $0 <environment|cleanup>"
   echo "  environment: local | dev | stage | production"
+  echo "  cleanup: remove ArgoCD, DevLake, and Fawkes resources for a fresh start"
   exit 1
 }
+
+if [[ "$1" == "cleanup" ]]; then
+  echo "🧹 Cleaning up ArgoCD, DevLake, and Fawkes namespaces..."
+  kubectl delete namespace argocd --wait || echo "argocd namespace not found"
+  kubectl delete namespace devlake --wait || echo "devlake namespace not found"
+  kubectl delete namespace fawkes --wait || echo "fawkes namespace not found"
+  echo "✅ Cleanup complete."
+  exit 0
+fi
 
 # Validate parameter
 ENV="$1"
@@ -129,10 +141,21 @@ fi
 
 echo "✅ Kubernetes cluster is reachable."
 
+# Create argocd namespace if it does not exist
+if ! kubectl get namespace argocd &>/dev/null; then
+  kubectl create namespace argocd
+  echo "namespace/argocd created"
+else
+  echo "namespace/argocd already exists"
+fi
+
 # Deploy ArgoCD
 echo "🚀 Deploying ArgoCD..."
-kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -k "$KUSTOMIZE_PATH/"
+# kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+# kubectl apply -k "$KUSTOMIZE_PATH/"
+
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
 
 echo "⏳ Waiting for ArgoCD server to be available..."
 kubectl wait --for=condition=available deployment -l app.kubernetes.io/name=argocd-server -n argocd --timeout=300s
@@ -142,56 +165,51 @@ ARGOCD_PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o js
 echo "🔑 ArgoCD admin password: $ARGOCD_PASSWORD"
 
 # Port-forward ArgoCD UI
-echo "🌐 Port-forwarding ArgoCD UI to http://localhost:8080 ..."
+echo "🌐 Port-forwarding ArgoCD UI to https://localhost:8080 ..."
 kubectl port-forward svc/argocd-server -n argocd 8080:443 >/dev/null 2>&1 &
 ARGOCD_PID=$!
 
-sleep 5
+sleep 10
 
 # Test ArgoCD API
 echo "🔬 Testing ArgoCD API endpoint..."
-if curl -k --silent https://localhost:8080/api/v1/session | grep -q "code"; then
+if curl -ks https://localhost:8080/api/v1/session | grep -q '"code"'; then
   echo "✅ ArgoCD API is responding."
 else
   error_exit "ArgoCD API is not responding as expected."
 fi
 
-# Deploy DevLake (if manifests exist for this env)
-echo "🚀 Deploying DevLake..."
-kubectl create namespace devlake --dry-run=client -o yaml | kubectl apply -f -
-if [ -d "$KUSTOMIZE_PATH/devlake" ]; then
-  kubectl apply -k "$KUSTOMIZE_PATH/devlake/"
-else
-  echo "⚠️  DevLake manifests not found in $KUSTOMIZE_PATH/devlake/. Please deploy DevLake manually if needed."
+# Wait for ArgoCD API to be ready before using argocd CLI
+sleep 10
+
+# Get the Kubernetes API server URL for the current context
+KUBE_SERVER=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$ACTIVE_CONTEXT\")].cluster.server}")
+
+# Login to ArgoCD using CLI
+argocd login localhost:8080 --username admin --password "$ARGOCD_PASSWORD" --insecure
+
+# Set the application path dynamically based on environment
+APP_PATH="platform/apps/${ENV}"
+
+# If the environment-specific directory doesn't exist, fall back to platform/apps
+if [[ ! -d "$APP_PATH" ]]; then
+  APP_PATH="platform/apps"
 fi
 
-echo "⏳ Waiting for DevLake to be available..."
-kubectl wait --for=condition=available deployment -l app.kubernetes.io/name=devlake -n devlake --timeout=300s || \
-  echo "⚠️  DevLake deployment not found or not ready. Please check manually."
+# Create the Fawkes application in ArgoCD
+argocd app create fawkes-app \
+  --repo https://github.com/paruff/fawkes.git \
+  --path "$APP_PATH" \
+  --dest-server "$KUBE_SERVER" \
+  --dest-namespace "$DEST_NAMESPACE" \
+  --sync-policy automated
 
-# Deploy DevLake via ArgoCD Application manifest if present
-DEVLAKE_APP_MANIFEST="platform/apps/devlake/devlake-application.yaml"
-if [ -f "$DEVLAKE_APP_MANIFEST" ]; then
-  echo "🚀 Applying DevLake ArgoCD Application manifest..."
-  kubectl apply -f "$DEVLAKE_APP_MANIFEST"
-else
-  echo "⚠️  DevLake ArgoCD Application manifest not found at $DEVLAKE_APP_MANIFEST. Please deploy DevLake manually if needed."
-fi
-
-echo "⏳ Waiting for DevLake deployment to be available..."
-kubectl wait --for=condition=available deployment -l app.kubernetes.io/name=devlake -n devlake --timeout=300s || \
-  echo "⚠️  DevLake deployment not found or not ready. Please check manually or see docs/troubleshooting.md."
-
-# Port-forward DevLake UI (assuming service name is 'devlake-ui' and port 4000)
-echo "🌐 Port-forwarding DevLake UI to http://localhost:4000 ..."
-kubectl port-forward svc/devlake-ui -n devlake 4000:4000 >/dev/null 2>&1 &
-DEVLAKE_PID=$!
+echo "✅ Fawkes ArgoCD application created and set to auto-sync."
 
 echo ""
 echo "🎉 Bootstrap complete for '$ENV' environment!"
 echo ""
 echo "ArgoCD UI:    https://localhost:8080 (user: admin, password above)"
-echo "DevLake UI:   http://localhost:4000"
 echo ""
-echo "To stop port-forwards, run:"
-echo "  kill $ARGOCD_PID $DEVLAKE_PID"
+echo "To stop port-forward, run:"
+echo "  kill $ARGOCD_PID"
