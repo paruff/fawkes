@@ -22,6 +22,7 @@ if [[ "$1" == "cleanup" ]]; then
   echo "🧹 Cleaning up ArgoCD and Fawkes namespaces..."
   kubectl delete namespace argocd --wait || echo "argocd namespace not found"
   kubectl delete namespace fawkes --wait || echo "fawkes namespace not found"
+  kubectl delete namespace devlake --wait  || echo "argocd namespace not found"
   echo "✅ Cleanup complete."
   exit 0
 fi
@@ -122,10 +123,10 @@ echo "✅ Fawkes ArgoCD application created and set to auto-sync."
 ####
 
 echo "🔬 Testing ArgoCD API endpoint..."
-if curl -ks https://localhost:8080/api/v1/session | grep -q '"code"'; then
-  echo "✅ ArgoCD API is responding."
+if curl -ks https://localhost:8080/healthz | grep -q 'healthy'; then
+  echo "✅ ArgoCD API is healthy."
 else
-  error_exit "ArgoCD API is not responding as expected."
+  error_exit "ArgoCD API is not healthy."
 fi
 
 sleep 5
