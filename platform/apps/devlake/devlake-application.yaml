@@ -11,36 +11,13 @@ spec:
   source:
     chart: devlake
     repoURL: https://apache.github.io/incubator-devlake-helm-chart
-    targetRevision: 0.14.0
+    targetRevision: 0.15.0 # Update to latest stable if needed
     helm:
-      # Custom values for DORA metrics optimization
-      values: |
-        service:
-          type: ClusterIP
-        config:
-          # Enable DORA metrics collection
-          metrics:
-            dora: true
-            deploymentFrequency: true
-            leadTime: true
-            changeFailureRate: true
-            timeToRestore: true
-        grafana:
-          enabled: true
-          adminPassword: "admin"
-        mysql:
-          enabled: true
+      valueFiles:
+        - values.yaml
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-      allowEmpty: false
     syncOptions:
-    - CreateNamespace=true
-    - ApplyOutOfSyncOnly=true
-    retry:
-      limit: 3
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m
+      - CreateNamespace=true
