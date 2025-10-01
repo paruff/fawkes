@@ -105,6 +105,22 @@ ARGOCD_PID=$!
 
 sleep 10
 
+####
+# Login to ArgoCD using CLI
+argocd login localhost:8080 --username admin --password "$ARGOCD_PASSWORD" --insecure
+
+# Create the Fawkes application in ArgoCD
+argocd app create fawkes-app \
+  --repo https://github.com/paruff/fawkes.git \
+  --path platform/apps \
+  --dest-server https://kubernetes.default.svc \
+  --dest-namespace fawkes \
+  --sync-policy automated
+
+echo "✅ Fawkes ArgoCD application created and set to auto-sync."
+
+####
+
 echo "🔬 Testing ArgoCD API endpoint..."
 if curl -ks https://localhost:8080/api/v1/session | grep -q '"code"'; then
   echo "✅ ArgoCD API is responding."
