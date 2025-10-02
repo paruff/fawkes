@@ -1,7 +1,7 @@
 # Default values for Jenkins Helm chart
 # Updated to simplify configuration and ensure compatibility with modern Kubernetes and Helm practices.
 
-clusterZone: "cluster.local" # Update this to match your cluster's DNS zone.
+clusterZone: "cluster.local"      # Update this to match your cluster's DNS zone.
 
 renderHelmLabels: true
 
@@ -10,12 +10,12 @@ controller:
   image:
     registry: docker.io
     repository: jenkins/jenkins
-    tag: "lts-jdk11" # Use the latest LTS tag for stability
+    tag: "lts-jdk11"     # Use the latest LTS tag for stability
   imagePullPolicy: "IfNotPresent"
 
   admin:
     user: "admin"
-    password: "" # Leave empty to auto-generate
+    password: ""      # Leave empty to auto-generate
 
   resources:
     requests:
