@@ -1,0 +1,2315 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
+    
+    
+      
+        <title>ADR-008: Focalboard for Project Management - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2a3383ac.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#adr-008-focalboard-for-project-management" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ADR-008: Focalboard for Project Management
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Implementation Paths
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Wins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Capabilities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Capabilities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Feedback
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Recovery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Patterns
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure as Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Tools
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Tools
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Continuous Delivery
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Spinnaker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Jenkins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kubernetes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-need-for-integrated-project-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Need for Integrated Project Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements-for-project-management-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requirements for Project Management Tool
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forces-at-play" class="md-nav__link">
+    <span class="md-ellipsis">
+      Forces at Play
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consequences
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consequences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#negative" class="md-nav__link">
+    <span class="md-ellipsis">
+      Negative
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#neutral" class="md-nav__link">
+    <span class="md-ellipsis">
+      Neutral
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mitigation-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mitigation Strategies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives Considered
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-1-jira-saas-or-self-hosted" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 1: Jira (SaaS or Self-Hosted)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-2-taiga" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 2: Taiga
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-3-plane" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 3: Plane
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-4-github-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 4: GitHub Projects
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-5-trello-saas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 5: Trello (SaaS)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-6-wekan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 6: Wekan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-7-notion-saas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 7: Notion (SaaS)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Decisions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Notes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deployment-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deployment Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#initial-board-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Initial Board Templates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mattermost-integration-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mattermost Integration Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backstage-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Backstage Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dora-metrics-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      DORA Metrics Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mobile-experience" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mobile Experience
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-data-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      Backup &amp; Data Export
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resource Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-this-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring This Decision
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-focalboard-over-jira" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Focalboard Over Jira?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#focalboards-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Focalboard's Evolution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enterprise Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="adr-008-focalboard-for-project-management">ADR-008: Focalboard for Project Management</h1>
+<h2 id="status">Status</h2>
+<p><strong>Accepted</strong> - October 7, 2025</p>
+<h2 id="context">Context</h2>
+<p>Fawkes is a comprehensive Internal Product Delivery Platform that integrates infrastructure, collaboration, learning, and project management. While we've addressed collaboration needs with Mattermost (ADR-007), teams need integrated project management capabilities to:</p>
+<ul>
+<li><strong>Track Platform Work</strong>: Sprint planning, roadmap visualization, backlog management</li>
+<li><strong>Manage Product Delivery</strong>: Feature planning, release management, dependency tracking</li>
+<li><strong>Coordinate Dojo Learning</strong>: Track learner progress, module completion, assessment status</li>
+<li><strong>Visualize Workflows</strong>: Kanban boards, calendars, tables for different team needs</li>
+<li><strong>Enable Self-Service</strong>: Teams manage their own work without external tools</li>
+</ul>
+<h3 id="the-need-for-integrated-project-management">The Need for Integrated Project Management</h3>
+<p><strong>Current Gap</strong>: Teams using Fawkes must use external tools for:
+- <strong>Sprint Planning</strong>: Jira, Azure DevOps, Linear, or spreadsheets
+- <strong>Roadmap Visualization</strong>: Separate roadmapping tools (ProductPlan, Aha!)
+- <strong>Task Management</strong>: Trello, Asana, Monday.com, or GitHub Projects
+- <strong>Learner Progress Tracking</strong>: Manual spreadsheets or LMS platforms
+- <strong>Resource Planning</strong>: Disconnected from delivery platform</p>
+<p><strong>Problems with External Tools</strong>:
+- <strong>Context Switching</strong>: Jump between platforms (Fawkes → Jira → Confluence)
+- <strong>Integration Overhead</strong>: Custom integrations required, often fragile
+- <strong>Data Silos</strong>: Work tracking separate from actual delivery metrics
+- <strong>Access Control</strong>: Different permission models, SSO complexity
+- <strong>Cost</strong>: Commercial tools expensive at scale (Jira: $7-14/user/month)
+- <strong>Vendor Lock-In</strong>: Proprietary data formats, migration challenges</p>
+<h3 id="requirements-for-project-management-tool">Requirements for Project Management Tool</h3>
+<ol>
+<li><strong>Self-Hosted &amp; Open Source</strong>: Aligns with Fawkes values, data sovereignty</li>
+<li><strong>Native Mattermost Integration</strong>: Seamless with our collaboration platform</li>
+<li><strong>Multiple View Types</strong>: Boards (Kanban), tables, calendar, gallery</li>
+<li><strong>Dojo Integration</strong>: Track learner progress, module completion, assessments</li>
+<li><strong>DORA Metrics Connection</strong>: Link work items to deployments and metrics</li>
+<li><strong>Flexible &amp; Lightweight</strong>: Not overly complex like Jira, but powerful enough</li>
+<li><strong>Developer-Friendly</strong>: API for automation, CLI support, GitOps integration</li>
+<li><strong>Template System</strong>: Pre-built templates for sprints, roadmaps, dojo tracking</li>
+<li><strong>Real-Time Collaboration</strong>: Multiple users editing simultaneously</li>
+<li><strong>Mobile Support</strong>: iOS and Android apps for on-the-go updates</li>
+</ol>
+<h3 id="forces-at-play">Forces at Play</h3>
+<p><strong>Technical Forces</strong>:
+- Need to track both platform development and team usage
+- Dojo learner progress requires structured tracking
+- Sprint planning needs integration with CI/CD metrics
+- Multiple stakeholders with different view preferences</p>
+<p><strong>Business Forces</strong>:
+- Cost consciousness (avoid per-user fees)
+- Data sovereignty and compliance requirements
+- Desire for unified platform experience
+- Open source community expectations</p>
+<p><strong>User Experience Forces</strong>:
+- Teams familiar with Trello/Jira/Asana expect similar UX
+- Learning curve for new tools creates friction
+- Mobile access increasingly important
+- Real-time collaboration expected</p>
+<p><strong>Integration Forces</strong>:
+- Must integrate deeply with Mattermost (discussions, notifications)
+- Should connect to DORA metrics and deployments
+- Needs SSO with platform authentication
+- API for automation and custom workflows</p>
+<h2 id="decision">Decision</h2>
+<p><strong>We will use Focalboard as the integrated project management tool for Fawkes.</strong></p>
+<p>Specifically:
+- <strong>Focalboard bundled with Mattermost</strong> (native integration)
+- <strong>Self-hosted deployment</strong> in Kubernetes alongside Mattermost
+- <strong>Deep integration</strong> with Mattermost channels (board discussions, notifications)
+- <strong>Custom templates</strong> for dojo tracking, sprint planning, platform roadmaps
+- <strong>Backstage integration</strong> via iframe or custom plugin for visibility</p>
+<h3 id="rationale">Rationale</h3>
+<ol>
+<li><strong>Native Mattermost Integration</strong>: Focalboard is developed by Mattermost, Inc. and integrates seamlessly:</li>
+<li>Built into Mattermost (no separate deployment complexity)</li>
+<li>Linked discussions (board cards → Mattermost threads)</li>
+<li>Unified notifications (updates appear in Mattermost)</li>
+<li>Single SSO and permission model</li>
+<li>
+<p>Share boards directly in channels</p>
+</li>
+<li>
+<p><strong>Open Source &amp; Self-Hosted</strong>: Fully open source (MIT/Apache 2.0), aligns with Fawkes values, complete control over data</p>
+</li>
+<li>
+<p><strong>Notion-Like Experience</strong>: Modern, intuitive UX inspired by Notion:</p>
+</li>
+<li>Flexible databases with custom properties</li>
+<li>Multiple views (board, table, calendar, gallery)</li>
+<li>Rich content (markdown, embeds, checklists)</li>
+<li>
+<p>Templates for quick setup</p>
+</li>
+<li>
+<p><strong>Perfect for Dojo Tracking</strong>: Ideal for tracking learner progress:</p>
+</li>
+<li>Board per belt level (White, Yellow, Green, Brown, Black)</li>
+<li>Cards represent learners with completion status</li>
+<li>Custom properties: score, time spent, assessment results</li>
+<li>Calendar view for cohort scheduling</li>
+<li>
+<p>Gallery view for learner profiles</p>
+</li>
+<li>
+<p><strong>Lightweight &amp; Fast</strong>: Unlike Jira, Focalboard is lightweight:</p>
+</li>
+<li>Fast page loads, responsive UI</li>
+<li>Simple setup, minimal configuration</li>
+<li>Not overly complex for small teams</li>
+<li>
+<p>Scales well to large teams when needed</p>
+</li>
+<li>
+<p><strong>Developer-Friendly</strong>:</p>
+</li>
+<li>REST API for automation</li>
+<li>Import/export in JSON format</li>
+<li>Can integrate with CI/CD pipelines</li>
+<li>
+<p>Archive and backup easily</p>
+</li>
+<li>
+<p><strong>Cost Effectiveness</strong>:</p>
+</li>
+<li>Free with Mattermost (no additional cost)</li>
+<li>No per-user fees</li>
+<li>
+<p>Only infrastructure costs (already paying for Mattermost)</p>
+</li>
+<li>
+<p><strong>Multiple Use Cases</strong>:</p>
+</li>
+<li><strong>Sprint Planning</strong>: Kanban boards for backlog → in progress → done</li>
+<li><strong>Roadmap Visualization</strong>: Timeline view for quarters/releases</li>
+<li><strong>Dojo Tracking</strong>: Learner progress boards with custom properties</li>
+<li><strong>Incident Management</strong>: Board for tracking incidents and postmortems</li>
+<li><strong>Team OKRs</strong>: Tables for objectives and key results</li>
+<li>
+<p><strong>Content Calendar</strong>: Calendar view for blog posts, webinars</p>
+</li>
+<li>
+<p><strong>Mobile Support</strong>: Native mobile apps for iOS and Android (via Mattermost apps)</p>
+</li>
+<li>
+<p><strong>Active Development</strong>: Actively maintained by Mattermost with regular updates</p>
+</li>
+<li>
+<p><strong>Familiar UX</strong>: Similar to Trello/Notion/Asana, reducing learning curve</p>
+</li>
+</ol>
+<h2 id="consequences">Consequences</h2>
+<h3 id="positive">Positive</h3>
+<p>✅ <strong>Unified Platform Experience</strong>: Single ecosystem eliminates context switching (chat → boards → tasks)</p>
+<p>✅ <strong>Seamless Collaboration</strong>: Discuss board cards directly in Mattermost channels</p>
+<p>✅ <strong>Perfect Dojo Tracking</strong>: Custom boards track learner progress, module completion, assessment scores</p>
+<p>✅ <strong>Cost Effective</strong>: No additional cost beyond Mattermost infrastructure</p>
+<p>✅ <strong>Data Sovereignty</strong>: Complete control over project data, no third-party access</p>
+<p>✅ <strong>Flexible Views</strong>: Teams choose board, table, calendar, or gallery based on needs</p>
+<p>✅ <strong>Real-Time Updates</strong>: Collaborative editing, changes visible immediately</p>
+<p>✅ <strong>Simple Setup</strong>: Minimal configuration, template-based quick start</p>
+<p>✅ <strong>Open Source Alignment</strong>: Demonstrates commitment to open source stack</p>
+<p>✅ <strong>Developer Automation</strong>: API enables custom workflows and integrations</p>
+<p>✅ <strong>Template Ecosystem</strong>: Can create and share templates for common workflows</p>
+<h3 id="negative">Negative</h3>
+<p>⚠️ <strong>Less Mature Than Jira</strong>: Newer product (launched 2021), fewer advanced features</p>
+<p>⚠️ <strong>Smaller Ecosystem</strong>: Fewer third-party integrations compared to Jira/Asana</p>
+<p>⚠️ <strong>Limited Reporting</strong>: Basic analytics, lacks advanced reporting of Jira</p>
+<p>⚠️ <strong>No Native Time Tracking</strong>: Requires custom properties or external integration</p>
+<p>⚠️ <strong>Simpler Workflow Engine</strong>: Less complex workflows than Jira (but this is often a benefit)</p>
+<p>⚠️ <strong>Dependency Management</strong>: Limited dependency tracking between cards</p>
+<p>⚠️ <strong>Resource Management</strong>: No built-in capacity planning or resource allocation</p>
+<p>⚠️ <strong>Learning Curve</strong>: Teams need to learn new tool (mitigated by familiar UX)</p>
+<p>⚠️ <strong>Feature Gaps</strong>: Some Jira power-user features don't exist</p>
+<h3 id="neutral">Neutral</h3>
+<p>◽ <strong>Bundled vs. Standalone</strong>: Can deploy standalone but better bundled with Mattermost</p>
+<p>◽ <strong>Enterprise Features</strong>: Some features in paid Mattermost Enterprise edition</p>
+<p>◽ <strong>Customization</strong>: Less customizable than Jira but easier to configure</p>
+<h3 id="mitigation-strategies">Mitigation Strategies</h3>
+<ol>
+<li><strong>Maturity Concerns</strong>:</li>
+<li>Start with core use cases (sprint planning, dojo tracking)</li>
+<li>Contribute features back to open source project</li>
+<li>Build custom extensions via API where needed</li>
+<li>
+<p>Monitor roadmap for feature additions</p>
+</li>
+<li>
+<p><strong>Reporting Limitations</strong>:</p>
+</li>
+<li>Export data to Grafana for advanced analytics</li>
+<li>Build custom dashboards using REST API</li>
+<li>Integrate with DORA metrics for delivery insights</li>
+<li>
+<p>Create weekly/monthly summary reports</p>
+</li>
+<li>
+<p><strong>Time Tracking</strong>:</p>
+</li>
+<li>Use custom properties for estimated/actual time</li>
+<li>Integrate with external time tracking if needed</li>
+<li>
+<p>Consider building simple time-tracking plugin</p>
+</li>
+<li>
+<p><strong>Workflow Complexity</strong>:</p>
+</li>
+<li>Keep workflows simple (aligns with agile principles)</li>
+<li>Use Mattermost bot commands for complex automations</li>
+<li>
+<p>Document standard workflows in templates</p>
+</li>
+<li>
+<p><strong>Dependency Management</strong>:</p>
+</li>
+<li>Use linked cards feature for simple dependencies</li>
+<li>Document complex dependencies in card descriptions</li>
+<li>
+<p>Consider building dependency visualization</p>
+</li>
+<li>
+<p><strong>Adoption</strong>:</p>
+</li>
+<li>Create video tutorials</li>
+<li>Provide pre-built templates</li>
+<li>Show integration benefits (Mattermost notifications, DORA links)</li>
+<li>Run pilot with one team before broader rollout</li>
+</ol>
+<h2 id="alternatives-considered">Alternatives Considered</h2>
+<h3 id="alternative-1-jira-saas-or-self-hosted">Alternative 1: Jira (SaaS or Self-Hosted)</h3>
+<p><strong>Pros</strong>:
+- Industry-standard for software teams
+- Extremely powerful and feature-rich
+- Extensive reporting and analytics
+- Huge marketplace of plugins (1,000+)
+- Advanced workflow engine
+- Time tracking, resource management, roadmaps
+- Familiar to most development teams
+- Strong integration ecosystem</p>
+<p><strong>Cons</strong>:
+- <strong>Cost</strong>: $7.75-$14.50/user/month SaaS, or $42,000+ for self-hosted Data Center
+- <strong>Complexity</strong>: Notoriously complex, requires dedicated admin
+- <strong>Performance</strong>: Often slow, especially self-hosted
+- <strong>Vendor Lock-In</strong>: Proprietary data format, difficult to migrate
+- <strong>No Native Mattermost Integration</strong>: Requires custom webhooks
+- <strong>Heavy Resource Requirements</strong>: Self-hosted needs significant infrastructure
+- <strong>Not Open Source</strong>: Proprietary software, no source code access
+- <strong>Misaligned Values</strong>: Commercial SaaS doesn't align with open source platform</p>
+<p><strong>Reason for Rejection</strong>: Cost is prohibitive for open source project (at 500 users: $46,500-$87,000/year). Complexity overkill for most teams. Self-hosted Data Center extremely expensive and complex to operate. No native Mattermost integration. Proprietary nature conflicts with Fawkes' open source values.</p>
+<h3 id="alternative-2-taiga">Alternative 2: Taiga</h3>
+<p><strong>Pros</strong>:
+- Open source (AGPL license)
+- Self-hosted and free
+- Built for agile teams (Scrum/Kanban)
+- Beautiful, modern UI
+- Epics, user stories, tasks, issues
+- Sprint planning and burndown charts
+- Time tracking and velocity reports
+- Wiki for documentation
+- Active community</p>
+<p><strong>Cons</strong>:
+- <strong>No Mattermost Integration</strong>: Separate platform, no native integration
+- <strong>Separate Deployment</strong>: Another service to deploy and maintain
+- <strong>Different Tech Stack</strong>: Django/Angular vs. Go/React
+- <strong>More Complex</strong>: Feature-rich but steeper learning curve than Focalboard
+- <strong>Resource Overhead</strong>: Separate database, more infrastructure
+- <strong>Mobile App Quality</strong>: Mobile apps less polished
+- <strong>Harder to Customize</strong>: Codebase more complex to extend</p>
+<p><strong>Reason for Rejection</strong>: While excellent tool, running separate platform defeats unified platform vision. No Mattermost integration means context switching. Deployment and maintenance overhead higher than bundled Focalboard. More complexity than needed for most use cases.</p>
+<h3 id="alternative-3-plane">Alternative 3: Plane</h3>
+<p><strong>Pros</strong>:
+- Open source (AGPL license)
+- Modern, beautiful UI (Linear-inspired)
+- Fast and lightweight
+- Built for engineering teams
+- Cycles, modules, views
+- Real-time collaboration
+- Self-hosted option
+- Active development</p>
+<p><strong>Cons</strong>:
+- <strong>Very New</strong>: Launched 2023, still maturing
+- <strong>No Mattermost Integration</strong>: Separate platform
+- <strong>Smaller Community</strong>: Newer project, less proven
+- <strong>Limited Documentation</strong>: Still building out docs
+- <strong>Feature Set Evolving</strong>: Core features still being added
+- <strong>No Mobile Apps Yet</strong>: Web-only currently
+- <strong>Separate Infrastructure</strong>: Another service to deploy
+- <strong>Unknown Stability</strong>: Too new to assess long-term viability</p>
+<p><strong>Reason for Rejection</strong>: Too new and unproven for critical platform component. No Mattermost integration. Separate deployment adds complexity. While promising, risk too high for early-stage project. Revisit in 1-2 years when more mature.</p>
+<h3 id="alternative-4-github-projects">Alternative 4: GitHub Projects</h3>
+<p><strong>Pros</strong>:
+- Free and unlimited
+- Native GitHub integration
+- Familiar to developers
+- Board, table, and roadmap views
+- Issue and PR linking
+- GitHub Actions automation
+- No separate deployment needed
+- Already using GitHub</p>
+<p><strong>Cons</strong>:
+- <strong>Limited to Code Repositories</strong>: Not general-purpose project management
+- <strong>Basic Features</strong>: Lacks advanced PM capabilities
+- <strong>No Mattermost Integration</strong>: Separate platform, notifications via email
+- <strong>Poor for Non-Code Work</strong>: Not suitable for dojo tracking, general planning
+- <strong>No Standalone Boards</strong>: Tied to repositories
+- <strong>Limited Customization</strong>: Can't customize fields, workflows much
+- <strong>Not Self-Hosted</strong>: GitHub is SaaS (even with GitHub Enterprise)
+- <strong>No Real-Time Collaboration</strong>: More static than Focalboard/Jira</p>
+<p><strong>Reason for Rejection</strong>: GitHub Projects excellent for code-centric work but too limited for general project management. Not suitable for dojo learner tracking, team planning, roadmaps. No Mattermost integration. Can complement Focalboard but not replace it.</p>
+<h3 id="alternative-5-trello-saas">Alternative 5: Trello (SaaS)</h3>
+<p><strong>Pros</strong>:
+- Simple, intuitive Kanban boards
+- Free tier available
+- Widely known and used
+- Power-Ups for extensions
+- Mobile apps excellent
+- Real-time collaboration
+- Butler automation
+- Visual and easy to learn</p>
+<p><strong>Cons</strong>:
+- <strong>SaaS Only</strong>: No self-hosted option, data on Atlassian servers
+- <strong>Cost at Scale</strong>: $5-$17.50/user/month for paid tiers
+- <strong>Limited Views</strong>: Primarily Kanban, limited table/calendar
+- <strong>Basic Features</strong>: Less powerful than Jira/Focalboard for complex needs
+- <strong>No Mattermost Integration</strong>: Separate platform
+- <strong>Vendor Lock-In</strong>: Proprietary, owned by Atlassian
+- <strong>Not Open Source</strong>: Closed source, can't customize deeply
+- <strong>Data Export Limited</strong>: Proprietary format</p>
+<p><strong>Reason for Rejection</strong>: SaaS-only conflicts with self-hosted platform vision. Cost adds up at scale. No Mattermost integration. Atlassian ownership means potential future pricing changes. Too basic for complex project management needs.</p>
+<h3 id="alternative-6-wekan">Alternative 6: Wekan</h3>
+<p><strong>Pros</strong>:
+- Open source (MIT license)
+- Self-hosted and free
+- Kanban boards (Trello-like)
+- Lightweight and simple
+- Docker deployment easy
+- Multiple languages
+- Integrations via webhooks</p>
+<p><strong>Cons</strong>:
+- <strong>Limited Features</strong>: Very basic compared to alternatives
+- <strong>Development Pace</strong>: Slower development, smaller team
+- <strong>No Mattermost Integration</strong>: Separate platform
+- <strong>Single View Type</strong>: Only Kanban boards, no tables/calendars
+- <strong>Basic Customization</strong>: Limited custom fields
+- <strong>Mobile Experience</strong>: Web-only, no native apps
+- <strong>Smaller Community</strong>: Less active than alternatives</p>
+<p><strong>Reason for Rejection</strong>: While simple and open source, too basic for needs. No Mattermost integration. Limited to Kanban view. Would need to run separately. Focalboard provides much richer feature set with same self-hosted benefits.</p>
+<h3 id="alternative-7-notion-saas">Alternative 7: Notion (SaaS)</h3>
+<p><strong>Pros</strong>:
+- Excellent UX, beautiful design
+- Flexible databases with multiple views
+- Rich content editing (markdown, embeds)
+- Templates and team collaboration
+- Real-time updates
+- Mobile apps excellent
+- Integrations and API
+- Very popular with teams</p>
+<p><strong>Cons</strong>:
+- <strong>SaaS Only</strong>: No self-hosted option
+- <strong>Cost</strong>: $8-$15/user/month for teams
+- <strong>Vendor Lock-In</strong>: Proprietary platform and format
+- <strong>No Mattermost Integration</strong>: Separate platform
+- <strong>Performance</strong>: Can be slow with large databases
+- <strong>Data Sovereignty</strong>: All data on Notion servers
+- <strong>Not Open Source</strong>: Closed source, can't customize
+- <strong>Export Limitations</strong>: Limited export options</p>
+<p><strong>Reason for Rejection</strong>: SaaS-only and proprietary conflicts with values. No self-hosting option. No Mattermost integration. Cost at scale. Focalboard provides Notion-like experience in open source, self-hosted package.</p>
+<h2 id="related-decisions">Related Decisions</h2>
+<ul>
+<li><strong>ADR-007</strong>: Mattermost for Team Collaboration (Focalboard integrates natively)</li>
+<li><strong>Future ADR</strong>: Backstage Plugin for Focalboard (embed boards in developer portal)</li>
+<li><strong>Future ADR</strong>: DORA Metrics Integration (link deployments to board cards)</li>
+</ul>
+<h2 id="implementation-notes">Implementation Notes</h2>
+<h3 id="deployment-architecture">Deployment Architecture</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Focalboard bundled with Mattermost</span>
+<span class="nt">mattermost</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-collaboration</span>
+<span class="w">  </span><span class="nt">components</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">mattermost-app</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">focalboard</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="nt">settings</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">enablePublicSharedBoards</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">enableDataRetention</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">  </span><span class="nt">integrations</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mattermost-channels (board discussions)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage (iframe embed)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-metrics-service (link cards to deployments)</span>
+</code></pre></div>
+<h3 id="initial-board-templates">Initial Board Templates</h3>
+<p><strong>1. Sprint Planning Board</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Sprint</span><span class="nv"> </span><span class="s">Planning&quot;</span>
+<span class="nt">views</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">board</span>
+<span class="w">    </span><span class="nt">columns</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Backlog&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;This</span><span class="nv"> </span><span class="s">Sprint&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;In</span><span class="nv"> </span><span class="s">Progress&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Review&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Done&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table</span>
+<span class="w">    </span><span class="nt">groupBy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Priority&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">calendar</span>
+<span class="w">    </span><span class="nt">dateProperty</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Due</span><span class="nv"> </span><span class="s">Date&quot;</span>
+
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Priority&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<span class="w">    </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;P0&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;P1&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;P2&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;P3&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Estimate&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Assignee&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">person</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Component&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multiSelect</span>
+<span class="w">    </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Backstage&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Jenkins&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ArgoCD&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Observability&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Security&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Sprint&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Story</span><span class="nv"> </span><span class="s">Points&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number</span>
+</code></pre></div></p>
+<p><strong>2. Dojo Learner Progress Board</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Dojo</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">White</span><span class="nv"> </span><span class="s">Belt&quot;</span>
+<span class="nt">views</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">board</span>
+<span class="w">    </span><span class="nt">columns</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Not</span><span class="nv"> </span><span class="s">Started&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Module</span><span class="nv"> </span><span class="s">1&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Module</span><span class="nv"> </span><span class="s">2&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Module</span><span class="nv"> </span><span class="s">3&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Module</span><span class="nv"> </span><span class="s">4&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Assessment&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Certified&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table</span>
+<span class="w">    </span><span class="nt">groupBy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Status&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gallery</span>
+<span class="w">    </span><span class="nt">cardCover</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;profile_image&quot;</span>
+
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Learner</span><span class="nv"> </span><span class="s">Name&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Email&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">email</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Start</span><span class="nv"> </span><span class="s">Date&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Target</span><span class="nv"> </span><span class="s">Completion&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Modules</span><span class="nv"> </span><span class="s">Completed&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Assessment</span><span class="nv"> </span><span class="s">Score&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Time</span><span class="nv"> </span><span class="s">Spent</span><span class="nv"> </span><span class="s">(hours)&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Status&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<span class="w">    </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Not</span><span class="nv"> </span><span class="s">Started&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;In</span><span class="nv"> </span><span class="s">Progress&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Assessment&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Certified&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;On</span><span class="nv"> </span><span class="s">Hold&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Notes&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+</code></pre></div></p>
+<p><strong>3. Platform Roadmap Board</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Platform</span><span class="nv"> </span><span class="s">Roadmap&quot;</span>
+<span class="nt">views</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">board</span>
+<span class="w">    </span><span class="nt">columns</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Idea&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Planned&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;In</span><span class="nv"> </span><span class="s">Development&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Testing&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Released&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table</span>
+<span class="w">    </span><span class="nt">groupBy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Quarter&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">calendar</span>
+<span class="w">    </span><span class="nt">dateProperty</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Target</span><span class="nv"> </span><span class="s">Date&quot;</span>
+
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Quarter&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<span class="w">    </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Q4</span><span class="nv"> </span><span class="s">2025&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Q1</span><span class="nv"> </span><span class="s">2026&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Q2</span><span class="nv"> </span><span class="s">2026&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Q3</span><span class="nv"> </span><span class="s">2026&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Q4</span><span class="nv"> </span><span class="s">2026&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Impact&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<span class="w">    </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;High&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Medium&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Low&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Effort&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<span class="w">    </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Small&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Medium&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Large&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;XL&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Owner&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">person</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Target</span><span class="nv"> </span><span class="s">Date&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Status&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Dependencies&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+</code></pre></div></p>
+<p><strong>4. Incident Management Board</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Incident</span><span class="nv"> </span><span class="s">Tracking&quot;</span>
+<span class="nt">views</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">board</span>
+<span class="w">    </span><span class="nt">columns</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Reported&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Investigating&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Fixing&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Monitoring&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Resolved&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table</span>
+<span class="w">    </span><span class="nt">sortBy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Severity&quot;</span>
+
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Incident</span><span class="nv"> </span><span class="s">ID&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Severity&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<span class="w">    </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;SEV1&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;SEV2&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;SEV3&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;SEV4&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Reported</span><span class="nv"> </span><span class="s">By&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">person</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Incident</span><span class="nv"> </span><span class="s">Commander&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">person</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Reported</span><span class="nv"> </span><span class="s">At&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dateTime</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Resolved</span><span class="nv"> </span><span class="s">At&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dateTime</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;MTTR</span><span class="nv"> </span><span class="s">(minutes)&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Affected</span><span class="nv"> </span><span class="s">Services&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multiSelect</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Root</span><span class="nv"> </span><span class="s">Cause&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Postmortem</span><span class="nv"> </span><span class="s">Link&quot;</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">url</span>
+</code></pre></div></p>
+<h3 id="mattermost-integration-examples">Mattermost Integration Examples</h3>
+<p><strong>1. Board Updates in Channels</strong>:
+<div class="highlight"><pre><span></span><code>[Focalboard Bot] 📋 Card moved in &quot;Sprint 01&quot;
+@john moved &quot;Implement DORA metrics&quot; 
+From: In Progress → Review
+Board: https://mattermost.fawkes.io/boards/abc123
+</code></pre></div></p>
+<p><strong>2. Card Discussions</strong>:
+<div class="highlight"><pre><span></span><code>User clicks &quot;Discuss in Mattermost&quot; on card
+→ Creates thread in linked channel
+→ Thread automatically linked back to card
+→ Comments sync bidirectionally
+</code></pre></div></p>
+<p><strong>3. Daily Stand-up Automation</strong>:
+<div class="highlight"><pre><span></span><code>[Focalboard Bot] 📊 Daily Stand-up - Sprint 01
+Cards completed yesterday: 3
+Cards in progress: 7
+Blocked cards: 1 ⚠️
+
+@alice: 2 cards in review
+@bob: Working on &quot;Security scanning&quot; (blocked)
+@carol: Completed &quot;Deploy Backstage&quot;
+</code></pre></div></p>
+<h3 id="backstage-integration">Backstage Integration</h3>
+<ul>
+<li><strong>Phase 1</strong>: Iframe embed in Backstage (boards visible in developer portal)</li>
+<li><strong>Phase 2</strong>: Custom Backstage plugin (<code>@fawkes/plugin-focalboard</code>)</li>
+<li><strong>Phase 3</strong>: Deep integration (create cards from Backstage, link to services)</li>
+</ul>
+<h3 id="dora-metrics-integration">DORA Metrics Integration</h3>
+<p>Link board cards to deployments:
+<div class="highlight"><pre><span></span><code><span class="c1">// When deployment completes</span>
+<span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">focalboard</span><span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="nx">cards</span><span class="o">/</span><span class="p">{</span><span class="nx">cardId</span><span class="p">}</span><span class="o">/</span><span class="nx">properties</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;deployed&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;deployment_time&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2025-10-07T14:30:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;dora_lead_time&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;8h 42m&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;deployment_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;deploy-12345&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h3 id="mobile-experience">Mobile Experience</h3>
+<ul>
+<li>Access via Mattermost mobile app</li>
+<li>Focalboard integrated in Mattermost mobile (iOS/Android)</li>
+<li>Full board editing on mobile</li>
+<li>Push notifications for card updates</li>
+<li>Offline support with sync</li>
+</ul>
+<h3 id="backup-data-export">Backup &amp; Data Export</h3>
+<ul>
+<li><strong>Backup</strong>: Included in Mattermost backup strategy</li>
+<li><strong>Export</strong>: JSON format for all boards</li>
+<li><strong>Import</strong>: Can import from Trello, Asana, Notion</li>
+<li><strong>Git Backup</strong>: Export boards to Git for version control</li>
+</ul>
+<h3 id="resource-requirements">Resource Requirements</h3>
+<p><strong>Included in Mattermost deployment</strong>:
+- No additional CPU/memory beyond Mattermost
+- Shares PostgreSQL database
+- File attachments use same storage (S3/MinIO)
+- ~100MB additional storage per 100 active boards</p>
+<h3 id="performance-considerations">Performance Considerations</h3>
+<ul>
+<li>Board loading: &lt;1 second for boards with &lt;1000 cards</li>
+<li>Real-time updates via WebSocket</li>
+<li>Card search indexed for fast queries</li>
+<li>Archive old boards to improve performance</li>
+</ul>
+<h2 id="monitoring-this-decision">Monitoring This Decision</h2>
+<p>We will revisit this ADR if:
+- Focalboard becomes unmaintained or development slows significantly
+- Critical features remain missing after 12 months
+- Performance issues arise that can't be resolved
+- A superior open source alternative emerges with Mattermost integration
+- Community adoption is below 50% (teams prefer external tools)</p>
+<p><strong>Next Review Date</strong>: April 7, 2026 (6 months)</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.focalboard.com/docs/">Focalboard Documentation</a></li>
+<li><a href="https://github.com/mattermost/focalboard">Focalboard GitHub</a></li>
+<li><a href="https://docs.mattermost.com/boards/">Mattermost Boards Documentation</a></li>
+<li><a href="https://www.focalboard.com/download/personal-edition/desktop/">Focalboard vs. Alternatives Comparison</a></li>
+</ul>
+<h2 id="notes">Notes</h2>
+<h3 id="why-focalboard-over-jira">Why Focalboard Over Jira?</h3>
+<p>The most common question: "Why not use Jira, the industry standard?"</p>
+<p><strong>Three key reasons</strong>:</p>
+<ol>
+<li>
+<p><strong>Integration</strong>: Focalboard's native Mattermost integration creates unified experience. Jira requires complex external integrations.</p>
+</li>
+<li>
+<p><strong>Cost &amp; Values</strong>: Open source and self-hosted aligns with Fawkes values. Jira's licensing costs don't scale for open source community.</p>
+</li>
+<li>
+<p><strong>Simplicity</strong>: Most teams don't need Jira's complexity. Focalboard's simplicity is a feature, not a limitation. Start simple, scale up as needed.</p>
+</li>
+</ol>
+<h3 id="focalboards-evolution">Focalboard's Evolution</h3>
+<p>Focalboard started as standalone project, acquired by Mattermost in 2021. Now:
+- Core part of Mattermost platform
+- Active development (monthly releases)
+- Growing feature set
+- Increasing adoption
+- Path to maturity clear</p>
+<h3 id="enterprise-considerations">Enterprise Considerations</h3>
+<p>While Focalboard is free, some advanced features require Mattermost Enterprise:
+- Advanced permissions and compliance
+- SAML authentication
+- Data retention policies
+- Advanced audit logging</p>
+<p>For open source Fawkes: Start with free version, upgrade if enterprise adopters need these features.</p>
+<hr />
+<p><strong>Decision Made By</strong>: Platform Architecture Team<br />
+<strong>Approved By</strong>: Project Lead<br />
+<strong>Date</strong>: October 7, 2025<br />
+<strong>Author</strong>: [Platform Architect Name]<br />
+<strong>Last Updated</strong>: October 7, 2025</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
