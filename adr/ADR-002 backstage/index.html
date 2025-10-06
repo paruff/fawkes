@@ -1,0 +1,2397 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
+    
+    
+      
+        <title>ADR-002: Backstage for Developer Portal - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2a3383ac.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#adr-002-backstage-for-developer-portal" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ADR-002: Backstage for Developer Portal
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Implementation Paths
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Wins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Capabilities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Capabilities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Feedback
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Recovery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Patterns
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure as Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Tools
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Tools
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Continuous Delivery
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Spinnaker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Jenkins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kubernetes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-need-for-a-developer-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Need for a Developer Portal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements-for-developer-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requirements for Developer Portal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forces-at-play" class="md-nav__link">
+    <span class="md-ellipsis">
+      Forces at Play
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consequences
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consequences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#negative" class="md-nav__link">
+    <span class="md-ellipsis">
+      Negative
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#neutral" class="md-nav__link">
+    <span class="md-ellipsis">
+      Neutral
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mitigation-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mitigation Strategies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives Considered
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-1-portio-saas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 1: Port.io (SaaS)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-2-humanitec-saas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 2: Humanitec (SaaS)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-3-cortex-saas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 3: Cortex (SaaS)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-4-opslevel-saas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 4: OpsLevel (SaaS)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-5-build-custom-portal-from-scratch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 5: Build Custom Portal from Scratch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-6-compass-by-atlassian-saas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 6: Compass by Atlassian (SaaS)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-7-gitlab-self-hosted-or-saas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 7: GitLab (Self-Hosted or SaaS)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Decisions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Notes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deployment-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deployment Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#initial-plugin-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      Initial Plugin Set
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Software Templates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#techdocs-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      TechDocs Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catalog-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Catalog Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authentication Strategy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customization-branding" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customization &amp; Branding
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring &amp; Observability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-disaster-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      Backup &amp; Disaster Recovery
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-this-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring This Decision
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-backstage-over-building-custom" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Backstage Over Building Custom?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backstage-at-spotify-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Backstage at Spotify Scale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-development-learning-curve" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plugin Development Learning Curve
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="adr-002-backstage-for-developer-portal">ADR-002: Backstage for Developer Portal</h1>
+<h2 id="status">Status</h2>
+<p><strong>Accepted</strong> - October 8, 2025</p>
+<h2 id="context">Context</h2>
+<p>Fawkes is an Internal Product Delivery Platform that needs a unified interface—a "single pane of glass"—where developers and platform engineers can discover services, provision infrastructure, launch applications, access documentation, track learning progress, and monitor platform health.</p>
+<h3 id="the-need-for-a-developer-portal">The Need for a Developer Portal</h3>
+<p><strong>Current Challenges Without a Portal</strong>:
+- <strong>Tool Sprawl</strong>: Developers jump between GitHub, Jenkins, ArgoCD, Grafana, Mattermost, documentation sites
+- <strong>Service Discovery</strong>: No central catalog of services, APIs, dependencies, ownership
+- <strong>Self-Service Barriers</strong>: Provisioning requires knowing where to go, what to do, who to ask
+- <strong>Documentation Fragmentation</strong>: Scattered across wikis, README files, Confluence, tribal knowledge
+- <strong>Onboarding Complexity</strong>: New team members overwhelmed by tools and processes
+- <strong>Cognitive Load</strong>: Mental model of the system exists only in developers' heads
+- <strong>Dojo Integration</strong>: Learning content needs a central hub accessible alongside work</p>
+<p><strong>What Teams Need</strong>:
+1. <strong>Service Catalog</strong>: Comprehensive view of all services, APIs, libraries, and resources
+2. <strong>Software Templates</strong>: Self-service scaffolding for new services ("golden paths")
+3. <strong>Documentation Hub</strong>: Centralized, searchable, always up-to-date technical docs
+4. <strong>Status Dashboard</strong>: Real-time health, deployment status, metrics for all services
+5. <strong>Dojo Learning Hub</strong>: Browse curriculum, launch labs, track progress
+6. <strong>Plugin Ecosystem</strong>: Extensibility to integrate with all platform tools
+7. <strong>Search</strong>: Find anything (services, docs, people, runbooks) instantly
+8. <strong>Developer Experience</strong>: Beautiful, intuitive interface that developers love</p>
+<h3 id="requirements-for-developer-portal">Requirements for Developer Portal</h3>
+<p><strong>Technical Requirements</strong>:
+- <strong>Open Source</strong>: Aligns with Fawkes values, no vendor lock-in
+- <strong>Extensible</strong>: Plugin architecture to integrate all platform components
+- <strong>Kubernetes-Native</strong>: Designed for cloud-native environments
+- <strong>API-First</strong>: Programmatic access to all functionality
+- <strong>Self-Hosted</strong>: Deploy in our infrastructure, control our data
+- <strong>Active Development</strong>: Regular releases, growing community
+- <strong>Enterprise-Grade</strong>: Production-ready, scalable, secure</p>
+<p><strong>User Experience Requirements</strong>:
+- <strong>Intuitive UI</strong>: Developers can use without extensive training
+- <strong>Fast</strong>: Page loads &lt;2 seconds, search instant
+- <strong>Mobile-Friendly</strong>: Accessible on phones/tablets
+- <strong>Customizable</strong>: Branding, themes, layout configurable
+- <strong>Accessible</strong>: WCAG compliance, keyboard navigation</p>
+<p><strong>Integration Requirements</strong>:
+- <strong>GitHub</strong>: Repository discovery, authentication
+- <strong>Jenkins/CI</strong>: Pipeline status, trigger builds
+- <strong>ArgoCD</strong>: Deployment status, sync applications
+- <strong>Kubernetes</strong>: Resource visibility, pod logs
+- <strong>Grafana</strong>: Embed dashboards, show metrics
+- <strong>Mattermost</strong>: Chat integration, notifications
+- <strong>Focalboard</strong>: Embed boards, show progress
+- <strong>DORA Metrics</strong>: Display team performance
+- <strong>Dojo System</strong>: Learning hub, lab launcher</p>
+<h3 id="forces-at-play">Forces at Play</h3>
+<p><strong>Technical Forces</strong>:
+- Need to integrate with dozens of tools (existing and future)
+- Developer portal is mission-critical (high availability required)
+- Must scale from 10 to 1000+ services
+- Security critical (access to sensitive information)</p>
+<p><strong>User Experience Forces</strong>:
+- Developers resist using clunky, slow tools
+- Cognitive load already high; portal must reduce, not increase
+- Mobile access increasingly important
+- Dark mode preference widespread among developers</p>
+<p><strong>Business Forces</strong>:
+- Developer productivity directly impacts business outcomes
+- Portal adoption critical for platform success
+- Open source preference to avoid vendor lock-in
+- Total cost of ownership matters (licensing, maintenance)</p>
+<p><strong>Community Forces</strong>:
+- Backstage has largest, most active community in this space
+- CNCF incubating status provides credibility
+- Spotify's success story is compelling
+- Growing ecosystem of plugins and integrations</p>
+<h2 id="decision">Decision</h2>
+<p><strong>We will use Backstage as the developer portal and dojo learning hub for Fawkes.</strong></p>
+<p>Specifically:
+- <strong>Backstage Core</strong> (latest stable version)
+- <strong>PostgreSQL backend</strong> for catalog storage
+- <strong>Custom Fawkes theme</strong> with branding
+- <strong>Curated plugin ecosystem</strong> (Jenkins, ArgoCD, Kubernetes, Grafana, Mattermost, Focalboard)
+- <strong>Custom dojo plugin</strong> (<code>@fawkes/plugin-dojo</code>) for learning hub
+- <strong>TechDocs</strong> for documentation-as-code
+- <strong>Software Templates</strong> for golden paths</p>
+<h3 id="rationale">Rationale</h3>
+<ol>
+<li>
+<p><strong>Industry Leading</strong>: Backstage is the de facto standard for developer portals, originated at Spotify, now CNCF Incubating project with 100+ adopters including American Airlines, Netflix, Expedia</p>
+</li>
+<li>
+<p><strong>Purpose-Built for IDPs</strong>: Specifically designed for internal developer platforms, not retrofitted from another use case. Core features align perfectly with Fawkes needs:</p>
+</li>
+<li>Service catalog with relationships and ownership</li>
+<li>Software templates for scaffolding</li>
+<li>TechDocs for documentation</li>
+<li>
+<p>Plugin architecture for extensibility</p>
+</li>
+<li>
+<p><strong>Massive Plugin Ecosystem</strong>: 100+ plugins available, covering most tools:</p>
+</li>
+<li>CI/CD: Jenkins, GitHub Actions, CircleCI, GitLab</li>
+<li>Deployment: ArgoCD, Flux, Spinnaker, Kubernetes</li>
+<li>Monitoring: Grafana, Prometheus, Datadog, PagerDuty</li>
+<li>Cloud: AWS, Azure, GCP</li>
+<li>
+<p>And many more</p>
+</li>
+<li>
+<p><strong>CNCF Incubating Status</strong>: Under Cloud Native Computing Foundation governance:</p>
+</li>
+<li>Long-term sustainability assured</li>
+<li>Neutral governance (not single-vendor controlled)</li>
+<li>Rigorous security and quality standards</li>
+<li>
+<p>Growing adoption and contribution</p>
+</li>
+<li>
+<p><strong>Active Development &amp; Community</strong>: </p>
+</li>
+<li>1,000+ contributors</li>
+<li>Monthly releases</li>
+<li>27,000+ GitHub stars</li>
+<li>Active Discord community (5,000+ members)</li>
+<li>
+<p>Excellent documentation</p>
+</li>
+<li>
+<p><strong>Open Source &amp; Self-Hosted</strong>: </p>
+</li>
+<li>Apache 2.0 license</li>
+<li>Complete control over data and deployment</li>
+<li>No per-user licensing fees</li>
+<li>
+<p>Customizable to exact needs</p>
+</li>
+<li>
+<p><strong>Perfect for Dojo Integration</strong>: </p>
+</li>
+<li>Can build custom plugin for learning hub</li>
+<li>TechDocs perfect for module content</li>
+<li>Catalog can track learner progress</li>
+<li>
+<p>Plugins can integrate with lab environment</p>
+</li>
+<li>
+<p><strong>Developer Experience</strong>: </p>
+</li>
+<li>Beautiful, modern UI (React-based)</li>
+<li>Fast, responsive</li>
+<li>Intuitive navigation</li>
+<li>
+<p>Developers actually enjoy using it</p>
+</li>
+<li>
+<p><strong>Extensibility</strong>: </p>
+</li>
+<li>Plugin architecture allows infinite customization</li>
+<li>Frontend and backend plugins</li>
+<li>Can build exactly what we need</li>
+<li>
+<p>TypeScript/React (popular, easy to find contributors)</p>
+</li>
+<li>
+<p><strong>Enterprise Adoption</strong>: Used by major enterprises proves production-readiness, scalability, security</p>
+</li>
+<li>
+<p><strong>Software Templates</strong>: Golden paths built-in, can create custom templates for:</p>
+<ul>
+<li>Microservices (Java, Python, Node.js, Go)</li>
+<li>Infrastructure (Terraform modules)</li>
+<li>Dojo labs (pre-configured learning environments)</li>
+</ul>
+</li>
+<li>
+<p><strong>Search &amp; Discovery</strong>: </p>
+<ul>
+<li>Full-text search across services, docs, people</li>
+<li>Advanced filtering and faceting</li>
+<li>GraphQL API for programmatic access</li>
+</ul>
+</li>
+</ol>
+<h2 id="consequences">Consequences</h2>
+<h3 id="positive">Positive</h3>
+<p>✅ <strong>Unified Developer Experience</strong>: Single interface for all platform interactions, dramatically reduces cognitive load</p>
+<p>✅ <strong>Self-Service Enablement</strong>: Software templates empower developers to provision without platform team tickets</p>
+<p>✅ <strong>Service Visibility</strong>: Catalog provides system-wide visibility—every service, owner, dependencies visible</p>
+<p>✅ <strong>Documentation Centralization</strong>: TechDocs brings all documentation into one searchable place</p>
+<p>✅ <strong>Onboarding Acceleration</strong>: New developers have guided path to understand systems and get productive</p>
+<p>✅ <strong>Dojo Integration</strong>: Custom plugin creates perfect hub for learning (course browser, lab launcher, progress tracking)</p>
+<p>✅ <strong>Extensibility</strong>: Can integrate any tool via plugins, future-proof for new technologies</p>
+<p>✅ <strong>Community Support</strong>: Large community means help available, plugins exist for most needs</p>
+<p>✅ <strong>Developer Satisfaction</strong>: Beautiful UI developers enjoy using improves engagement and platform adoption</p>
+<p>✅ <strong>Open Source Alignment</strong>: Demonstrates commitment to open source, avoids vendor lock-in</p>
+<p>✅ <strong>Cost Effective</strong>: No licensing fees, only infrastructure and development time</p>
+<p>✅ <strong>CNCF Backing</strong>: Long-term sustainability, neutral governance, security audits</p>
+<p>✅ <strong>Golden Paths</strong>: Software templates codify best practices, improve consistency</p>
+<h3 id="negative">Negative</h3>
+<p>⚠️ <strong>Learning Curve</strong>: Platform team needs to learn Backstage architecture, plugin development (TypeScript/React)</p>
+<p>⚠️ <strong>Initial Setup Complexity</strong>: Getting Backstage configured with all plugins takes time (2-4 weeks)</p>
+<p>⚠️ <strong>Resource Requirements</strong>: Backstage + PostgreSQL requires ~1-2GB RAM, 1-2 CPU cores</p>
+<p>⚠️ <strong>Plugin Quality Variance</strong>: Community plugins vary in quality, some need customization</p>
+<p>⚠️ <strong>Version Management</strong>: Keeping Backstage and plugins updated requires ongoing effort</p>
+<p>⚠️ <strong>Custom Plugin Development</strong>: Building custom dojo plugin requires TypeScript/React expertise (20-40 hours)</p>
+<p>⚠️ <strong>Performance at Scale</strong>: Large catalogs (1000+ entities) can slow search/filtering (mitigated with indexing)</p>
+<p>⚠️ <strong>Authentication Complexity</strong>: Integrating with multiple auth providers can be tricky</p>
+<p>⚠️ <strong>Breaking Changes</strong>: Major Backstage updates sometimes introduce breaking changes in plugins</p>
+<h3 id="neutral">Neutral</h3>
+<p>◽ <strong>TypeScript/React Stack</strong>: Modern stack but requires specific skills (widely available)</p>
+<p>◽ <strong>Plugin Approval Process</strong>: Not all community plugins are official; need evaluation</p>
+<p>◽ <strong>Theming Flexibility</strong>: Can fully customize but requires CSS/design skills</p>
+<h3 id="mitigation-strategies">Mitigation Strategies</h3>
+<ol>
+<li><strong>Learning Curve</strong>:</li>
+<li>Allocate 1 week for Backstage training (official docs, tutorials)</li>
+<li>Start with core features, add plugins incrementally</li>
+<li>Leverage community Discord for questions</li>
+<li>
+<p>Consider Backstage training from Spotify (if available)</p>
+</li>
+<li>
+<p><strong>Initial Setup</strong>:</p>
+</li>
+<li>Use official Helm charts for deployment</li>
+<li>Start with minimal plugin set, expand over time</li>
+<li>Document configuration as Infrastructure as Code</li>
+<li>
+<p>Create runbooks for common operations</p>
+</li>
+<li>
+<p><strong>Custom Plugin Development</strong>:</p>
+</li>
+<li>Hire contractor if TypeScript/React skills lacking</li>
+<li>Use plugin templates and examples from community</li>
+<li>Contribute plugin back to community (get feedback, maintenance help)</li>
+<li>
+<p>Budget 40 hours for dojo plugin development</p>
+</li>
+<li>
+<p><strong>Performance</strong>:</p>
+</li>
+<li>Implement PostgreSQL optimization (indexing, connection pooling)</li>
+<li>Use caching for expensive queries</li>
+<li>Consider read replicas for large deployments</li>
+<li>
+<p>Monitor performance, optimize bottlenecks</p>
+</li>
+<li>
+<p><strong>Plugin Quality</strong>:</p>
+</li>
+<li>Vet plugins before adoption (GitHub stars, maintainer responsiveness, recent commits)</li>
+<li>Fork and customize plugins if needed</li>
+<li>Contribute improvements back to community</li>
+<li>
+<p>Build custom plugins for critical features</p>
+</li>
+<li>
+<p><strong>Version Management</strong>:</p>
+</li>
+<li>Establish update cadence (monthly review, quarterly updates)</li>
+<li>Test updates in staging before production</li>
+<li>Pin plugin versions in package.json</li>
+<li>Subscribe to Backstage release notes</li>
+</ol>
+<h2 id="alternatives-considered">Alternatives Considered</h2>
+<h3 id="alternative-1-portio-saas">Alternative 1: Port.io (SaaS)</h3>
+<p><strong>Pros</strong>:
+- Purpose-built for developer portals
+- Beautiful, modern UI
+- SaaS (no operational overhead)
+- Growing quickly, good momentum
+- Strong visualization capabilities
+- AI-powered search</p>
+<p><strong>Cons</strong>:
+- <strong>SaaS Only</strong>: No self-hosted option, data on Port's servers
+- <strong>Cost</strong>: $20-50/developer/month depending on tier (expensive at scale)
+- <strong>Vendor Lock-In</strong>: Proprietary platform, hard to migrate off
+- <strong>Not Open Source</strong>: Closed source, can't customize deeply
+- <strong>Smaller Ecosystem</strong>: Newer, fewer integrations than Backstage
+- <strong>Less Proven</strong>: Fewer large enterprise adoptions
+- <strong>Misaligned Values</strong>: SaaS commercial conflicts with open source platform values</p>
+<p><strong>Reason for Rejection</strong>: SaaS-only model and proprietary nature conflict with Fawkes' self-hosted, open source values. Cost prohibitive for open source community (at 500 developers: $120,000-$300,000/year). Cannot build deep customizations like dojo plugin.</p>
+<h3 id="alternative-2-humanitec-saas">Alternative 2: Humanitec (SaaS)</h3>
+<p><strong>Pros</strong>:
+- Complete IDP platform (more than just portal)
+- Score-based environment management
+- Strong GitOps integration
+- Good enterprise features
+- Active development</p>
+<p><strong>Cons</strong>:
+- <strong>SaaS Only</strong>: No self-hosted option
+- <strong>Very Expensive</strong>: Enterprise pricing ($50-100k+ annually)
+- <strong>Opinionated</strong>: Prescriptive workflows, less flexible
+- <strong>Not Just Portal</strong>: Full platform, we're building our own
+- <strong>Closed Source</strong>: Proprietary, can't customize
+- <strong>Vendor Lock-In</strong>: Migrating off would be extremely difficult</p>
+<p><strong>Reason for Rejection</strong>: Humanitec is a complete platform, not just a portal. We're building Fawkes as the platform, only need portal component. SaaS-only and cost prohibitive. Closed source conflicts with values.</p>
+<h3 id="alternative-3-cortex-saas">Alternative 3: Cortex (SaaS)</h3>
+<p><strong>Pros</strong>:
+- Service catalog with scorecards
+- On-call integration
+- Incident management
+- Resource management
+- Growing adoption</p>
+<p><strong>Cons</strong>:
+- <strong>SaaS Only</strong>: No self-hosted option
+- <strong>Cost</strong>: $15-30/service/month (expensive at scale)
+- <strong>Narrow Focus</strong>: More focused on service management than full portal
+- <strong>Proprietary</strong>: Closed source
+- <strong>Smaller Community</strong>: Less proven than Backstage
+- <strong>Limited Extensibility</strong>: Cannot build custom plugins like dojo</p>
+<p><strong>Reason for Rejection</strong>: SaaS-only, closed source, cost at scale. More focused on service management than comprehensive developer portal. Cannot integrate deeply customized dojo learning system.</p>
+<h3 id="alternative-4-opslevel-saas">Alternative 4: OpsLevel (SaaS)</h3>
+<p><strong>Pros</strong>:
+- Service maturity scoring
+- Good for service ownership tracking
+- Integrations with common tools
+- Nice UI</p>
+<p><strong>Cons</strong>:
+- <strong>SaaS Only</strong>: No self-hosted
+- <strong>Cost</strong>: $15-25/service/month
+- <strong>Narrow Focus</strong>: Primarily service catalog, not full portal
+- <strong>Proprietary</strong>: Closed source
+- <strong>Limited Developer Experience</strong>: More for tracking than daily use</p>
+<p><strong>Reason for Rejection</strong>: Too narrow in focus (service catalog only). SaaS-only, closed source, expensive. Not designed for developer portal use case. Lacks documentation, templates, extensibility features needed.</p>
+<h3 id="alternative-5-build-custom-portal-from-scratch">Alternative 5: Build Custom Portal from Scratch</h3>
+<p><strong>Pros</strong>:
+- Complete control and customization
+- Exact features we want
+- No external dependencies
+- Can optimize for our exact use case
+- Learning opportunity for team</p>
+<p><strong>Cons</strong>:
+- <strong>Massive Time Investment</strong>: 6-12 months full-time development for MVP
+- <strong>Opportunity Cost</strong>: Time not spent on platform features
+- <strong>Maintenance Burden</strong>: Ongoing development, security patches, features
+- <strong>Reinventing Wheel</strong>: Building solved problems (catalog, templates, plugins)
+- <strong>No Community</strong>: No plugins, no shared knowledge
+- <strong>Talent</strong>: Requires frontend expertise (React/TypeScript)
+- <strong>Risk</strong>: May not match quality of established solutions</p>
+<p><strong>Reason for Rejection</strong>: Building custom portal is 6-12 months of work, delaying platform delivery. Backstage solves 80%+ of needs out-of-box. Better to invest time in dojo content and platform features than rebuilding existing solutions. Can always build custom features as Backstage plugins.</p>
+<h3 id="alternative-6-compass-by-atlassian-saas">Alternative 6: Compass by Atlassian (SaaS)</h3>
+<p><strong>Pros</strong>:
+- From Atlassian (established company)
+- Service catalog with health scores
+- Integrates with Jira, Confluence, Bitbucket
+- Good for Atlassian shops</p>
+<p><strong>Cons</strong>:
+- <strong>SaaS Only</strong>: No self-hosted
+- <strong>Cost</strong>: Part of Atlassian Cloud, pricing unclear
+- <strong>Atlassian Ecosystem</strong>: Designed for Atlassian tools (Jira, Confluence)
+- <strong>New Product</strong>: Launched 2022, less mature
+- <strong>Proprietary</strong>: Closed source
+- <strong>Limited Extensibility</strong>: Cannot build custom plugins
+- <strong>Not Developer Portal</strong>: More service management than portal</p>
+<p><strong>Reason for Rejection</strong>: SaaS-only, proprietary, Atlassian ecosystem lock-in. Not designed as comprehensive developer portal. Cannot build custom dojo integration. Newer and less proven than Backstage.</p>
+<h3 id="alternative-7-gitlab-self-hosted-or-saas">Alternative 7: GitLab (Self-Hosted or SaaS)</h3>
+<p><strong>Pros</strong>:
+- All-in-one DevOps platform
+- Self-hosted option available
+- Service catalog feature
+- Strong CI/CD integration
+- Open source core (Community Edition)</p>
+<p><strong>Cons</strong>:
+- <strong>CI/CD Centric</strong>: Designed around GitLab CI/CD, we use Jenkins
+- <strong>Heavy</strong>: GitLab is massive, resource-intensive
+- <strong>Portal Secondary</strong>: Developer portal is add-on, not core feature
+- <strong>Limited Templates</strong>: Software templates less mature than Backstage
+- <strong>Plugin Ecosystem</strong>: Smaller ecosystem for portal features
+- <strong>Complexity</strong>: GitLab has steep learning curve
+- <strong>Cost</strong>: Premium/Ultimate tiers expensive for portal features</p>
+<p><strong>Reason for Rejection</strong>: GitLab excellent for GitLab-centric workflows, but we're using Jenkins, ArgoCD, and other tools. Portal features are add-on, not core competency. Too heavyweight for just portal use case. Backstage better fit for our multi-tool environment.</p>
+<h2 id="related-decisions">Related Decisions</h2>
+<ul>
+<li><strong>ADR-007</strong>: Mattermost for Team Collaboration (will integrate via iframe/plugin)</li>
+<li><strong>ADR-008</strong>: Focalboard for Project Management (will embed boards in Backstage)</li>
+<li><strong>ADR-004</strong>: Jenkins for CI/CD (Jenkins plugin will show pipeline status)</li>
+<li><strong>ADR-003</strong>: ArgoCD for GitOps (ArgoCD plugin will show deployment status)</li>
+<li><strong>Future ADR</strong>: Backstage Dojo Plugin Architecture</li>
+</ul>
+<h2 id="implementation-notes">Implementation Notes</h2>
+<h3 id="deployment-architecture">Deployment Architecture</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Backstage Deployment</span>
+<span class="nt">backstage</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-platform</span>
+
+<span class="w">  </span><span class="nt">components</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">backstage-frontend</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/backstage:latest</span>
+<span class="w">        </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2 (HA)</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 core</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">backstage-backend</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/backstage:latest</span>
+<span class="w">        </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2 (HA)</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 core</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">postgresql</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 (consider HA for production)</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512Mi</span>
+<span class="w">        </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20Gi</span>
+
+<span class="w">  </span><span class="nt">integrations</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github (OAuth, repository discovery)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jenkins (pipeline plugin)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd (deployment plugin)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes (resources plugin)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana (iframe embed)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mattermost (chat integration)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">focalboard (board embed)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dojo-labs (custom plugin)</span>
+</code></pre></div>
+<h3 id="initial-plugin-set">Initial Plugin Set</h3>
+<p><strong>Core Plugins</strong> (included with Backstage):
+- <strong>catalog</strong>: Service catalog with relationships
+- <strong>scaffolder</strong>: Software templates
+- <strong>techdocs</strong>: Documentation as code
+- <strong>search</strong>: Full-text search
+- <strong>kubernetes</strong>: Pod logs, resource status</p>
+<p><strong>Community Plugins</strong> (install via npm):
+- <code>@backstage/plugin-jenkins</code>: CI/CD pipeline status
+- <code>@backstage/plugin-argo-cd</code>: Deployment status
+- <code>@backstage/plugin-grafana</code>: Embed dashboards
+- <code>@roadiehq/backstage-plugin-github-insights</code>: Repository insights
+- <code>@backstage/plugin-tech-radar</code>: Technology adoption tracking</p>
+<p><strong>Custom Plugins</strong> (build ourselves):
+- <code>@fawkes/plugin-dojo</code>: Learning hub, lab launcher, progress tracking
+- <code>@fawkes/plugin-dora-metrics</code>: DORA dashboards and insights
+- <code>@fawkes/plugin-mattermost</code>: Chat integration and notifications
+- <code>@fawkes/plugin-focalboard</code>: Embed project boards</p>
+<h3 id="software-templates">Software Templates</h3>
+<p><strong>Initial Templates</strong>:
+1. <strong>Microservice - Java Spring Boot</strong>
+   - Spring Boot starter with best practices
+   - Dockerfile, Jenkinsfile, K8s manifests
+   - Tests, logging, metrics instrumentation
+   - README with runbook</p>
+<ol>
+<li><strong>Microservice - Python FastAPI</strong></li>
+<li>FastAPI with async support</li>
+<li>pytest, coverage, linting</li>
+<li>Container, pipeline, manifests</li>
+<li>
+<p>Documentation template</p>
+</li>
+<li>
+<p><strong>Microservice - Node.js Express</strong></p>
+</li>
+<li>Express.js with TypeScript</li>
+<li>Jest tests, ESLint, Prettier</li>
+<li>CI/CD and deployment configs</li>
+<li>
+<p>OpenAPI specification</p>
+</li>
+<li>
+<p><strong>Terraform Module</strong></p>
+</li>
+<li>Terraform module structure</li>
+<li>Testing with Terratest</li>
+<li>Documentation and examples</li>
+<li>
+<p>CI/CD for validation</p>
+</li>
+<li>
+<p><strong>Dojo Lab Environment</strong></p>
+</li>
+<li>Pre-configured namespace</li>
+<li>Sample application</li>
+<li>Lab instructions</li>
+<li>Validation scripts</li>
+</ol>
+<h3 id="techdocs-structure">TechDocs Structure</h3>
+<div class="highlight"><pre><span></span><code>docs/
+├── index.md (homepage)
+├── getting-started/
+│   ├── overview.md
+│   ├── quickstart.md
+│   └── concepts.md
+├── architecture/
+│   ├── overview.md
+│   ├── components.md
+│   └── decisions.md (ADRs)
+├── dojo/
+│   ├── overview.md
+│   ├── white-belt/
+│   ├── yellow-belt/
+│   ├── green-belt/
+│   ├── brown-belt/
+│   └── black-belt/
+├── operations/
+│   ├── runbooks/
+│   ├── troubleshooting.md
+│   └── monitoring.md
+└── contributing/
+    ├── code.md
+    ├── docs.md
+    └── dojo-content.md
+</code></pre></div>
+<h3 id="catalog-structure">Catalog Structure</h3>
+<p><strong>Entity Types</strong>:
+- <strong>Component</strong>: Microservices, libraries, websites
+- <strong>API</strong>: REST, GraphQL, gRPC interfaces
+- <strong>Resource</strong>: Databases, queues, storage buckets
+- <strong>System</strong>: Groups of components working together
+- <strong>Domain</strong>: Business domains or product areas
+- <strong>User</strong>: People using the platform
+- <strong>Group</strong>: Teams, departments
+- <strong>Template</strong>: Software templates for scaffolding</p>
+<p><strong>Example Component</strong>:
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Component</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sample-app</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sample Application</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Demo application for Fawkes dojo</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">github.com/project-slug</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">paruff/fawkes</span>
+<span class="w">    </span><span class="nt">backstage.io/techdocs-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dir:.</span>
+<span class="w">    </span><span class="nt">jenkins.io/job-full-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/sample-app</span>
+<span class="w">    </span><span class="nt">argocd/app-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sample-app</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service</span>
+<span class="w">  </span><span class="nt">lifecycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform-team</span>
+<span class="w">  </span><span class="nt">system</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dojo-learning</span>
+<span class="w">  </span><span class="nt">providesApis</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sample-api</span>
+<span class="w">  </span><span class="nt">consumesApis</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auth-api</span>
+<span class="w">  </span><span class="nt">dependsOn</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resource:postgres-db</span>
+</code></pre></div></p>
+<h3 id="authentication-strategy">Authentication Strategy</h3>
+<p><strong>Phase 1</strong> (MVP): GitHub OAuth
+- Simple setup
+- Most developers have GitHub accounts
+- Scopes: read:user, read:org</p>
+<p><strong>Phase 2</strong> (Month 2): Add providers
+- Google OAuth (Gmail accounts)
+- GitLab OAuth (if using GitLab)
+- LDAP/AD (for enterprise)</p>
+<p><strong>Phase 3</strong> (Month 4): Full SSO
+- SAML 2.0 support
+- OIDC support
+- Integration with Keycloak (if deployed)</p>
+<h3 id="customization-branding">Customization &amp; Branding</h3>
+<p><strong>Theme Configuration</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1">// app-config.yaml</span>
+<span class="nx">app</span><span class="o">:</span>
+<span class="w">  </span><span class="kt">title</span><span class="o">:</span><span class="w"> </span><span class="nx">Fawkes</span><span class="w"> </span><span class="nx">Platform</span>
+<span class="w">  </span><span class="nx">branding</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">theme</span><span class="o">:</span>
+<span class="w">      </span><span class="nx">light</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">primary</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#326CE5&#39;</span><span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="nx">Kubernetes</span><span class="w"> </span><span class="nx">blue</span>
+<span class="w">        </span><span class="nx">secondary</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#FF6D00&#39;</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="nx">Fawkes</span><span class="w"> </span><span class="nx">orange</span>
+<span class="w">      </span><span class="nx">dark</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">primary</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#7DA3FF&#39;</span>
+<span class="w">        </span><span class="nx">secondary</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#FFB74D&#39;</span>
+<span class="w">    </span><span class="nx">logo</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;./logo.svg&#39;</span>
+<span class="w">    </span><span class="nx">favicon</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;./favicon.ico&#39;</span>
+</code></pre></div></p>
+<p><strong>Custom Homepage</strong>:
+- Welcome message and quick links
+- Recent deployments
+- DORA metrics summary
+- Dojo progress widget
+- Mattermost activity feed
+- Platform status indicators</p>
+<h3 id="performance-optimization">Performance Optimization</h3>
+<p><strong>Caching</strong>:
+- Enable backend caching for catalog
+- Redis for session storage
+- CDN for static assets (logo, theme)</p>
+<p><strong>Database</strong>:
+- PostgreSQL connection pooling
+- Read replicas for queries
+- Regular vacuum and analyze
+- Index optimization</p>
+<p><strong>Search</strong>:
+- Elasticsearch for full-text search (optional, improves performance)
+- Incremental indexing
+- Faceted search for filtering</p>
+<h3 id="monitoring-observability">Monitoring &amp; Observability</h3>
+<p><strong>Metrics</strong> (Prometheus):
+- HTTP request duration
+- Catalog entity count
+- Plugin load times
+- Database query performance
+- Authentication success/failure</p>
+<p><strong>Dashboards</strong> (Grafana):
+- Backstage performance dashboard
+- User activity dashboard
+- Plugin health dashboard
+- Database metrics dashboard</p>
+<p><strong>Alerts</strong>:
+- Backstage down (&gt;2 min)
+- High error rate (&gt;5% in 5 min)
+- Slow response times (&gt;2s P95)
+- Database connection issues</p>
+<h3 id="backup-disaster-recovery">Backup &amp; Disaster Recovery</h3>
+<p><strong>Backups</strong>:
+- PostgreSQL daily backups
+- Catalog snapshots to Git (optional)
+- Configuration stored in Git (Infrastructure as Code)</p>
+<p><strong>Recovery</strong>:
+- Restore from PostgreSQL backup
+- Redeploy from Git configuration
+- RTO: &lt;4 hours
+- RPO: &lt;24 hours</p>
+<h3 id="security-considerations">Security Considerations</h3>
+<p><strong>Authentication</strong>:
+- OAuth 2.0 for external providers
+- JWT tokens with expiration
+- Session management with secure cookies</p>
+<p><strong>Authorization</strong>:
+- RBAC for catalog entities
+- Team-based access control
+- Read-only public catalog (optional)</p>
+<p><strong>Network Security</strong>:
+- TLS/HTTPS only
+- Network policies to restrict access
+- Rate limiting on APIs
+- CORS configuration</p>
+<p><strong>Secrets Management</strong>:
+- Never store secrets in Backstage config
+- Use Kubernetes secrets or Vault
+- Rotate credentials regularly
+- Audit access logs</p>
+<h2 id="monitoring-this-decision">Monitoring This Decision</h2>
+<p>We will revisit this ADR if:
+- Backstage becomes unmaintained or development slows significantly
+- A superior open source alternative emerges with better fit
+- Performance issues arise that cannot be resolved
+- Plugin ecosystem fails to meet our needs
+- Community adoption of Backstage declines significantly
+- Total cost of ownership (operational) exceeds commercial alternatives</p>
+<p><strong>Next Review Date</strong>: April 8, 2026 (6 months)</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://backstage.io/docs/">Backstage Official Documentation</a></li>
+<li><a href="https://github.com/backstage/backstage">Backstage GitHub Repository</a></li>
+<li><a href="https://backstage.io/plugins">Backstage Plugin Marketplace</a></li>
+<li><a href="https://www.cncf.io/projects/backstage/">CNCF Backstage Project</a></li>
+<li><a href="https://engineering.atspotify.com/2020/04/21/how-we-use-backstage-at-spotify/">Spotify Engineering Blog - Backstage</a></li>
+<li><a href="https://discord.gg/backstage">Backstage Community Discord</a></li>
+</ul>
+<h2 id="notes">Notes</h2>
+<h3 id="why-backstage-over-building-custom">Why Backstage Over Building Custom?</h3>
+<p>The most common question: "Why not build our own portal?"</p>
+<p><strong>Build vs. Buy (Open Source) Calculation</strong>:</p>
+<p><strong>Build Custom</strong>:
+- Development: 6-12 months × 2 engineers = $200k-$400k
+- Maintenance: Ongoing 0.5 FTE = $60k/year
+- Features: Limited to what we build
+- Community: Zero
+- Risk: May not match quality</p>
+<p><strong>Use Backstage</strong>:
+- Setup: 2-4 weeks × 1 engineer = $10k-$20k
+- Custom plugin (dojo): 40 hours = $5k
+- Maintenance: 0.1 FTE (mostly updates) = $12k/year
+- Features: 100+ plugins available immediately
+- Community: 1,000+ contributors, constant improvements
+- Risk: Proven at scale</p>
+<p><strong>ROI</strong>: Backstage saves $200k-$400k upfront, $48k/year ongoing. Gets 100+ plugins and battle-tested features immediately.</p>
+<h3 id="backstage-at-spotify-scale">Backstage at Spotify Scale</h3>
+<p>Spotify's experience (from their blog):
+- <strong>1,300+ services</strong> in catalog
+- <strong>200+ software templates</strong>
+- <strong>200 custom plugins</strong>
+- <strong>2,000+ engineers</strong> using daily
+- <strong>Improved onboarding</strong>: New engineers productive in days, not weeks
+- <strong>Reduced cognitive load</strong>: 80% reduction in "where do I find X" questions</p>
+<p>While Fawkes won't reach Spotify scale immediately, proves Backstage can scale to our needs and beyond.</p>
+<h3 id="plugin-development-learning-curve">Plugin Development Learning Curve</h3>
+<p>Building custom plugins requires TypeScript and React knowledge. However:
+- Official plugin templates speed development
+- Extensive documentation and examples
+- Active community for questions
+- Can hire contractors if needed
+- ROI positive even with learning curve</p>
+<p>Budget 40 hours for first plugin (dojo learning hub), 20 hours for subsequent plugins.</p>
+<hr />
+<p><strong>Decision Made By</strong>: Platform Architecture Team<br />
+<strong>Approved By</strong>: Project Lead<br />
+<strong>Date</strong>: October 8, 2025<br />
+<strong>Author</strong>: [Platform Architect Name]<br />
+<strong>Last Updated</strong>: October 8, 2025</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

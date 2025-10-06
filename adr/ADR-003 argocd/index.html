@@ -1,0 +1,2475 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
+    
+    
+      
+        <title>ADR-003: ArgoCD for GitOps - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2a3383ac.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#adr-003-argocd-for-gitops" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ADR-003: ArgoCD for GitOps
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Implementation Paths
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Wins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Capabilities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Capabilities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Feedback
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Recovery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Patterns
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure as Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Tools
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Tools
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Continuous Delivery
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Spinnaker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Jenkins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kubernetes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-need-for-gitops" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Need for GitOps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements-for-gitops-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requirements for GitOps Tool
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forces-at-play" class="md-nav__link">
+    <span class="md-ellipsis">
+      Forces at Play
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consequences
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consequences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#negative" class="md-nav__link">
+    <span class="md-ellipsis">
+      Negative
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#neutral" class="md-nav__link">
+    <span class="md-ellipsis">
+      Neutral
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mitigation-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mitigation Strategies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives Considered
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-1-flux-cd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 1: Flux CD
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-2-jenkins-x" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 2: Jenkins X
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-3-spinnaker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 3: Spinnaker
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-4-helm-only-no-gitops-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 4: Helm Only (No GitOps Tool)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-5-rancher-fleet" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 5: Rancher Fleet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-6-gitlab-autodevops" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 6: GitLab AutoDevOps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-7-weave-gitops-commercial" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 7: Weave GitOps (Commercial)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Decisions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Notes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deployment-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deployment Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repository-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Repository Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applicationset-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      ApplicationSet Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sync-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sync Policies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#progressive-delivery-with-argo-rollouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Progressive Delivery with Argo Rollouts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notifications-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notifications Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-cluster-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Cluster Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rbac-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      RBAC Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backstage-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Backstage Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring &amp; Observability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secret-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Secret Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-disaster-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      Backup &amp; Disaster Recovery
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Optimization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-this-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring This Decision
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#argocd-vs-flux-the-eternal-debate" class="md-nav__link">
+    <span class="md-ellipsis">
+      ArgoCD vs. Flux: The Eternal Debate
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gitops-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      GitOps Best Practices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#progressive-delivery-roi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Progressive Delivery ROI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="adr-003-argocd-for-gitops">ADR-003: ArgoCD for GitOps</h1>
+<h2 id="status">Status</h2>
+<p><strong>Accepted</strong> - October 8, 2025</p>
+<h2 id="context">Context</h2>
+<p>Fawkes requires a GitOps continuous delivery solution to manage application deployments and platform infrastructure declaratively. GitOps—where Git is the single source of truth for desired system state—is a core principle of modern platform engineering and directly supports DORA best practices.</p>
+<h3 id="the-need-for-gitops">The Need for GitOps</h3>
+<p><strong>Current Challenges Without GitOps</strong>:
+- <strong>Manual Deployments</strong>: Error-prone, not repeatable, tribal knowledge
+- <strong>Configuration Drift</strong>: Production state diverges from declared state
+- <strong>Audit Trail Gaps</strong>: Hard to track who changed what and when
+- <strong>Rollback Complexity</strong>: No easy way to revert to previous working state
+- <strong>Multi-Environment Management</strong>: Promoting changes across dev/staging/prod is manual
+- <strong>No Self-Healing</strong>: Systems don't automatically recover from drift</p>
+<p><strong>What GitOps Provides</strong>:
+1. <strong>Declarative Configuration</strong>: Everything defined in Git (applications, infrastructure, configs)
+2. <strong>Automated Sync</strong>: System automatically converges to desired state
+3. <strong>Version Control</strong>: Complete history of all changes with Git commits
+4. <strong>Easy Rollback</strong>: Revert Git commit to roll back to previous state
+5. <strong>Audit Trail</strong>: Who, what, when, why all tracked in Git
+6. <strong>Self-Healing</strong>: Automatic drift detection and correction
+7. <strong>Multi-Cluster Management</strong>: Manage multiple Kubernetes clusters from single control plane</p>
+<h3 id="requirements-for-gitops-tool">Requirements for GitOps Tool</h3>
+<p><strong>Core Requirements</strong>:
+- <strong>Kubernetes-Native</strong>: Designed specifically for Kubernetes deployments
+- <strong>Git Integration</strong>: Supports GitHub, GitLab, Bitbucket, etc.
+- <strong>Automated Sync</strong>: Watches Git, applies changes automatically
+- <strong>Drift Detection</strong>: Detects and corrects configuration drift
+- <strong>Multi-Cluster</strong>: Manages multiple clusters (dev, staging, prod)
+- <strong>Progressive Delivery</strong>: Supports canary, blue-green deployments
+- <strong>Rollback</strong>: Easy revert to previous version
+- <strong>RBAC</strong>: Fine-grained access control for teams
+- <strong>SSO Integration</strong>: OIDC/SAML for authentication</p>
+<p><strong>DORA Alignment</strong>:
+- <strong>Deployment Frequency</strong>: Automated deployments increase frequency
+- <strong>Lead Time</strong>: Git commit to deployment is fast and automated
+- <strong>Change Failure Rate</strong>: Declarative state reduces misconfigurations
+- <strong>Time to Restore</strong>: Git revert enables fast rollback</p>
+<p><strong>Integration Requirements</strong>:
+- <strong>Backstage</strong>: Show deployment status in developer portal
+- <strong>Jenkins</strong>: Trigger deployments after successful builds
+- <strong>Mattermost</strong>: Send deployment notifications to team channels
+- <strong>DORA Metrics</strong>: Report deployment events for metrics calculation
+- <strong>Kubernetes</strong>: Native integration, no abstraction layer</p>
+<h3 id="forces-at-play">Forces at Play</h3>
+<p><strong>Technical Forces</strong>:
+- Need declarative configuration for reliability
+- Drift detection critical for production stability
+- Multi-environment promotion needs automation
+- Self-healing reduces operational toil</p>
+<p><strong>Operational Forces</strong>:
+- Platform team can't manually deploy everything
+- Need audit trail for compliance
+- Rollback must be fast and reliable
+- Want to reduce deployment-related incidents</p>
+<p><strong>Developer Experience Forces</strong>:
+- Developers want to see deployment status
+- Need confidence deployments will succeed
+- Want easy rollback if issues arise
+- Prefer GitOps "merge to deploy" workflow</p>
+<p><strong>DORA Forces</strong>:
+- Deployment frequency depends on automation
+- Lead time includes deployment time
+- GitOps reduces change failure rate
+- Fast rollback improves time to restore</p>
+<h2 id="decision">Decision</h2>
+<p><strong>We will use ArgoCD as the GitOps continuous delivery platform for Fawkes.</strong></p>
+<p>Specifically:
+- <strong>ArgoCD Core</strong> (latest stable version, currently 2.9+)
+- <strong>Multi-cluster deployment</strong> (manage dev, staging, prod from single ArgoCD)
+- <strong>ApplicationSets</strong> for managing multiple applications with templates
+- <strong>Argo Rollouts</strong> for progressive delivery (canary, blue-green)
+- <strong>Argo Notifications</strong> for Mattermost integration
+- <strong>Argo Image Updater</strong> for automated image updates (optional, evaluate after MVP)
+- <strong>SSO integration</strong> via OIDC (Phase 2)</p>
+<h3 id="rationale">Rationale</h3>
+<ol>
+<li>
+<p><strong>Kubernetes-Native Leader</strong>: ArgoCD is the most popular GitOps tool for Kubernetes, with 15,000+ GitHub stars, CNCF Graduated status, and massive adoption</p>
+</li>
+<li>
+<p><strong>CNCF Graduated Project</strong>: Highest maturity level in CNCF, indicating:</p>
+</li>
+<li>Production-ready and battle-tested</li>
+<li>Strong governance and security</li>
+<li>Long-term sustainability</li>
+<li>
+<p>Regular security audits</p>
+</li>
+<li>
+<p><strong>Best-in-Class GitOps</strong>: Purpose-built for GitOps on Kubernetes:</p>
+</li>
+<li>Declarative Git-based deployments</li>
+<li>Automated sync with configurable policies</li>
+<li>Drift detection with auto-heal option</li>
+<li>Multi-cluster management from single UI</li>
+<li>
+<p>Application health assessment</p>
+</li>
+<li>
+<p><strong>Argo Ecosystem Integration</strong>: Part of larger Argo ecosystem:</p>
+</li>
+<li><strong>Argo Rollouts</strong>: Advanced deployment strategies (canary, blue-green)</li>
+<li><strong>Argo Workflows</strong>: Complex workflow orchestration</li>
+<li><strong>Argo Events</strong>: Event-driven workflow automation</li>
+<li><strong>Argo CD Image Updater</strong>: Automated image updates</li>
+<li>
+<p>All integrate seamlessly</p>
+</li>
+<li>
+<p><strong>Progressive Delivery Support</strong>: Via Argo Rollouts:</p>
+</li>
+<li>Canary deployments with automated analysis</li>
+<li>Blue-green deployments</li>
+<li>Traffic splitting (with service mesh)</li>
+<li>Automated rollback on metrics threshold</li>
+<li>
+<p>Critical for reducing change failure rate</p>
+</li>
+<li>
+<p><strong>Excellent UI</strong>: Beautiful web interface showing:</p>
+</li>
+<li>Application topology (visual graph)</li>
+<li>Real-time sync status</li>
+<li>Resource health</li>
+<li>Git commit history</li>
+<li>
+<p>Diff view (Git vs. cluster)</p>
+</li>
+<li>
+<p><strong>CLI and API</strong>: Full control via CLI and REST API:</p>
+</li>
+<li>Automate operations</li>
+<li>Integrate with CI/CD</li>
+<li>
+<p>Custom tooling and scripts</p>
+</li>
+<li>
+<p><strong>ApplicationSets</strong>: Powerful templating for multiple applications:</p>
+</li>
+<li>Deploy multiple apps with single manifest</li>
+<li>Git generator (monorepo support)</li>
+<li>Cluster generator (multi-cluster)</li>
+<li>
+<p>Matrix generator (combinations)</p>
+</li>
+<li>
+<p><strong>RBAC and Security</strong>: </p>
+</li>
+<li>Fine-grained RBAC for teams</li>
+<li>SSO integration (OIDC, SAML, LDAP)</li>
+<li>Git credentials management</li>
+<li>
+<p>Audit logging</p>
+</li>
+<li>
+<p><strong>Backstage Integration</strong>: Official Backstage plugin shows:</p>
+<ul>
+<li>Application sync status</li>
+<li>Deployment history</li>
+<li>Health status</li>
+<li>Direct links to ArgoCD UI</li>
+</ul>
+</li>
+<li>
+<p><strong>Large Community</strong>: </p>
+<ul>
+<li>300+ contributors</li>
+<li>Active Slack community (10,000+ members)</li>
+<li>Monthly releases</li>
+<li>Extensive documentation</li>
+</ul>
+</li>
+<li>
+<p><strong>Production Proven</strong>: Used by thousands of organizations including Intuit, IBM, Red Hat, Adobe</p>
+</li>
+</ol>
+<h2 id="consequences">Consequences</h2>
+<h3 id="positive">Positive</h3>
+<p>✅ <strong>True GitOps</strong>: Git becomes single source of truth, all changes tracked and auditable</p>
+<p>✅ <strong>Automated Deployments</strong>: Merge to Git → automatic deployment, increasing deployment frequency</p>
+<p>✅ <strong>Drift Correction</strong>: Self-healing keeps cluster in sync with Git, reducing incidents</p>
+<p>✅ <strong>Fast Rollback</strong>: Git revert + automatic sync = sub-minute rollback time</p>
+<p>✅ <strong>Multi-Environment</strong>: Promote changes across environments with Git merges/branches</p>
+<p>✅ <strong>Developer Self-Service</strong>: Developers deploy by merging PRs, no platform team tickets</p>
+<p>✅ <strong>Audit Trail</strong>: Complete history of who deployed what, when, and why (Git commits)</p>
+<p>✅ <strong>Progressive Delivery</strong>: Canary and blue-green reduce blast radius of bad deployments</p>
+<p>✅ <strong>Reduced MTTR</strong>: Fast rollback and self-healing improve time to restore service</p>
+<p>✅ <strong>Visual Topology</strong>: Application graph helps understand dependencies and health</p>
+<p>✅ <strong>Multi-Cluster</strong>: Single pane of glass for dev, staging, prod clusters</p>
+<p>✅ <strong>CNCF Backing</strong>: Graduated status ensures long-term sustainability and security</p>
+<p>✅ <strong>DORA Improvement</strong>: GitOps directly improves all four key metrics</p>
+<h3 id="negative">Negative</h3>
+<p>⚠️ <strong>Learning Curve</strong>: Platform team needs to learn ArgoCD concepts (Applications, ApplicationSets, Sync policies)</p>
+<p>⚠️ <strong>Git as Bottleneck</strong>: All changes must go through Git (could slow emergency fixes)</p>
+<p>⚠️ <strong>Initial Setup Complexity</strong>: Configuring multi-cluster, RBAC, and integrations takes time</p>
+<p>⚠️ <strong>Resource Overhead</strong>: ArgoCD consumes ~500MB RAM, additional for controllers</p>
+<p>⚠️ <strong>Sync Delays</strong>: 3-minute default sync interval (configurable, can use webhooks)</p>
+<p>⚠️ <strong>Secret Management</strong>: Secrets in Git require encryption (Sealed Secrets, SOPS, Vault)</p>
+<p>⚠️ <strong>ApplicationSet Complexity</strong>: Advanced ApplicationSets can become complex to debug</p>
+<p>⚠️ <strong>UI Performance</strong>: Large deployments (100+ apps) can slow UI</p>
+<p>⚠️ <strong>Version Compatibility</strong>: Must ensure ArgoCD version compatible with Kubernetes version</p>
+<h3 id="neutral">Neutral</h3>
+<p>◽ <strong>GitOps Philosophy</strong>: Requires team buy-in to GitOps methodology</p>
+<p>◽ <strong>Repository Structure</strong>: Requires thoughtful Git repository organization</p>
+<p>◽ <strong>Sync Policies</strong>: Choosing auto vs. manual sync requires consideration per application</p>
+<h3 id="mitigation-strategies">Mitigation Strategies</h3>
+<ol>
+<li><strong>Learning Curve</strong>:</li>
+<li>Allocate 1 week for ArgoCD training</li>
+<li>Start with simple applications, progress to complex</li>
+<li>Leverage official documentation and tutorials</li>
+<li>
+<p>Join ArgoCD Slack community for support</p>
+</li>
+<li>
+<p><strong>Git as Bottleneck</strong>:</p>
+</li>
+<li>Use webhooks for faster sync (vs. 3-minute poll)</li>
+<li>Emergency "break glass" procedure documented</li>
+<li>kubectl still available for true emergencies</li>
+<li>
+<p>Consider sync timeout configuration</p>
+</li>
+<li>
+<p><strong>Secret Management</strong>:</p>
+</li>
+<li>Use Sealed Secrets or External Secrets Operator</li>
+<li>Never commit raw secrets to Git</li>
+<li>Document secret rotation procedures</li>
+<li>
+<p>Consider Vault integration for sensitive data</p>
+</li>
+<li>
+<p><strong>Initial Setup</strong>:</p>
+</li>
+<li>Use official Helm chart for deployment</li>
+<li>Start with single cluster, add multi-cluster later</li>
+<li>Use Infrastructure as Code for ArgoCD configuration</li>
+<li>
+<p>Create runbooks for common operations</p>
+</li>
+<li>
+<p><strong>Sync Performance</strong>:</p>
+</li>
+<li>Use webhooks instead of polling where possible</li>
+<li>Configure appropriate sync intervals per application</li>
+<li>Use ApplicationSets for large-scale deployments</li>
+<li>
+<p>Monitor ArgoCD performance metrics</p>
+</li>
+<li>
+<p><strong>Repository Structure</strong>:</p>
+</li>
+<li>Design clear repository structure upfront</li>
+<li>Separate application code from deployment manifests</li>
+<li>Use Kustomize or Helm for configuration management</li>
+<li>Document repository conventions</li>
+</ol>
+<h2 id="alternatives-considered">Alternatives Considered</h2>
+<h3 id="alternative-1-flux-cd">Alternative 1: Flux CD</h3>
+<p><strong>Pros</strong>:
+- CNCF Graduated (alongside ArgoCD)
+- GitOps Toolkit approach (modular)
+- Native Helm support
+- Excellent multi-tenancy
+- Lower resource usage than ArgoCD
+- Strong automation capabilities
+- Good for Infrastructure as Code</p>
+<p><strong>Cons</strong>:
+- <strong>No Built-In UI</strong>: CLI-only, requires separate UI (Weave GitOps)
+- <strong>Less Visual</strong>: No application topology graph like ArgoCD
+- <strong>Smaller Community</strong>: Fewer contributors and users than ArgoCD
+- <strong>Learning Curve</strong>: GitOps Toolkit concepts more abstract
+- <strong>Progressive Delivery</strong>: Requires Flagger (separate project)
+- <strong>Less Mature Backstage Plugin</strong>: ArgoCD plugin more feature-complete</p>
+<p><strong>Reason for Rejection</strong>: Flux is excellent, but ArgoCD's UI is significant advantage for developer experience and troubleshooting. Visual application topology helps developers understand system. ArgoCD's larger community and more mature Backstage integration better fit Fawkes needs. However, Flux is valid choice and could be reconsidered for infrastructure GitOps.</p>
+<h3 id="alternative-2-jenkins-x">Alternative 2: Jenkins X</h3>
+<p><strong>Pros</strong>:
+- Complete CI/CD platform (not just CD)
+- GitOps-based
+- Automated preview environments
+- Integrated pipeline and deployment
+- Good for Jenkins users</p>
+<p><strong>Cons</strong>:
+- <strong>Opinionated</strong>: Prescriptive workflows, less flexible
+- <strong>Complexity</strong>: Full platform, not just GitOps
+- <strong>Jenkins Dependency</strong>: Tied to Jenkins ecosystem
+- <strong>Smaller Adoption</strong>: Less proven than ArgoCD/Flux
+- <strong>Maintenance Concerns</strong>: Development pace slowed
+- <strong>Overkill</strong>: We already have Jenkins for CI</p>
+<p><strong>Reason for Rejection</strong>: Jenkins X is full CI/CD platform, but we're using Jenkins (ADR-004) for CI and only need GitOps for CD. Jenkins X too opinionated and complex. ArgoCD's separation of concerns (CI vs CD) cleaner architecture.</p>
+<h3 id="alternative-3-spinnaker">Alternative 3: Spinnaker</h3>
+<p><strong>Pros</strong>:
+- Multi-cloud native (not just Kubernetes)
+- Advanced deployment strategies
+- Proven at Netflix scale
+- Strong pipeline orchestration
+- Multi-cluster management
+- Extensive integrations</p>
+<p><strong>Cons</strong>:
+- <strong>Heavy and Complex</strong>: Difficult to deploy and maintain
+- <strong>Resource Intensive</strong>: Requires 8+ microservices, significant resources
+- <strong>Steep Learning Curve</strong>: Complex concepts and UI
+- <strong>Not GitOps-First</strong>: Push-based, not GitOps pull model
+- <strong>Maintenance Burden</strong>: High operational overhead
+- <strong>Overkill</strong>: More than we need for Kubernetes deployments</p>
+<p><strong>Reason for Rejection</strong>: Spinnaker powerful but extremely complex. High resource usage (10+ pods) and maintenance burden unjustified for our Kubernetes-focused needs. Not GitOps-native (push model). ArgoCD provides 80% of benefits with 20% of complexity. May revisit Spinnaker if we need multi-cloud deployment orchestration beyond Kubernetes.</p>
+<h3 id="alternative-4-helm-only-no-gitops-tool">Alternative 4: Helm Only (No GitOps Tool)</h3>
+<p><strong>Pros</strong>:
+- Simple, no additional tool to learn
+- Direct control with helm upgrade commands
+- Low resource overhead
+- Familiar to most Kubernetes users
+- Fast deployments</p>
+<p><strong>Cons</strong>:
+- <strong>No GitOps</strong>: No automatic sync, drift detection, or self-healing
+- <strong>Manual Process</strong>: Engineers must run helm commands
+- <strong>No Audit Trail</strong>: History only in Helm releases, not Git
+- <strong>No Rollback Automation</strong>: Manual helm rollback required
+- <strong>No Multi-Cluster</strong>: Managing multiple clusters complex
+- <strong>High Error Potential</strong>: Human mistakes likely
+- <strong>No Developer Self-Service</strong>: Requires platform team access</p>
+<p><strong>Reason for Rejection</strong>: Helm alone doesn't provide GitOps benefits. Manual deployments don't scale, increase error rate, and limit deployment frequency. GitOps is core principle of modern platform engineering and DORA best practices. Helm excellent as package manager but not replacement for GitOps tool.</p>
+<h3 id="alternative-5-rancher-fleet">Alternative 5: Rancher Fleet</h3>
+<p><strong>Pros</strong>:
+- Built into Rancher platform
+- GitOps-based
+- Multi-cluster management
+- Simpler than ArgoCD
+- Good for Rancher users</p>
+<p><strong>Cons</strong>:
+- <strong>Rancher Dependency</strong>: Requires Rancher platform
+- <strong>Smaller Community</strong>: Much smaller than ArgoCD/Flux
+- <strong>Less Mature</strong>: Newer project, less battle-tested
+- <strong>Limited Features</strong>: Fewer advanced features than ArgoCD
+- <strong>No Progressive Delivery</strong>: No built-in canary/blue-green
+- <strong>Weaker Ecosystem</strong>: Fewer integrations and plugins</p>
+<p><strong>Reason for Rejection</strong>: Fleet good if using Rancher, but we're not. ArgoCD more mature, larger community, better features. Fleet's simplicity doesn't outweigh ArgoCD's comprehensive capabilities and proven track record.</p>
+<h3 id="alternative-6-gitlab-autodevops">Alternative 6: GitLab AutoDevOps</h3>
+<p><strong>Pros</strong>:
+- Integrated with GitLab
+- Auto-configured pipelines
+- Built-in deployment
+- Good for GitLab-centric shops</p>
+<p><strong>Cons</strong>:
+- <strong>GitLab Lock-In</strong>: Only works with GitLab
+- <strong>Not GitOps</strong>: Push-based, not declarative
+- <strong>Opinionated</strong>: Limited customization
+- <strong>GitLab Required</strong>: We use GitHub
+- <strong>Less Control</strong>: Abstract away too much
+- <strong>Not Best-of-Breed</strong>: GitOps secondary to CI features</p>
+<p><strong>Reason for Rejection</strong>: GitLab AutoDevOps tied to GitLab ecosystem. We use GitHub. Not true GitOps (push-based CI/CD). ArgoCD better fit for our multi-tool, GitOps-first approach.</p>
+<h3 id="alternative-7-weave-gitops-commercial">Alternative 7: Weave GitOps (Commercial)</h3>
+<p><strong>Pros</strong>:
+- Built on Flux CD
+- Nice UI for Flux
+- Enterprise features
+- Good for Flux users</p>
+<p><strong>Cons</strong>:
+- <strong>Commercial</strong>: Core features open source, but UI and advanced features paid
+- <strong>Cost</strong>: Pricing unclear, per-cluster
+- <strong>Flux Dependency</strong>: Requires Flux understanding
+- <strong>Smaller Adoption</strong>: Newer, less proven
+- <strong>Less Features</strong>: Not as comprehensive as ArgoCD</p>
+<p><strong>Reason for Rejection</strong>: Commercial aspects conflict with open source values. ArgoCD provides richer feature set out-of-box with free, open source UI. Weave GitOps good for Flux users wanting UI, but ArgoCD better starting point.</p>
+<h2 id="related-decisions">Related Decisions</h2>
+<ul>
+<li><strong>ADR-001</strong>: Kubernetes (ArgoCD manages Kubernetes deployments)</li>
+<li><strong>ADR-002</strong>: Backstage (ArgoCD plugin shows deployment status)</li>
+<li><strong>ADR-004</strong>: Jenkins (Jenkins triggers ArgoCD deployments)</li>
+<li><strong>ADR-007</strong>: Mattermost (Argo Notifications sends alerts to Mattermost)</li>
+<li><strong>Future ADR</strong>: Repository Structure for GitOps</li>
+<li><strong>Future ADR</strong>: Secrets Management Strategy</li>
+</ul>
+<h2 id="implementation-notes">Implementation Notes</h2>
+<h3 id="deployment-architecture">Deployment Architecture</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ArgoCD Deployment</span>
+<span class="nt">argocd</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd</span>
+
+<span class="w">  </span><span class="nt">components</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">argocd-server</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2 (HA)</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256Mi</span>
+<span class="w">        </span><span class="nt">ingress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd.fawkes.io</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">argocd-repo-server</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2 (HA)</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512Mi</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">argocd-application-controller</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 (stateful, uses leader election for HA)</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 core</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">argocd-redis</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3 (HA with sentinel)</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200m</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256Mi</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">argocd-dex-server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(for SSO)</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">replicas</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">resources</span><span class="p p-Indicator">:</span>
+<span class="w">          </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128Mi</span>
+
+<span class="w">  </span><span class="nt">integrations</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github (repository source)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mattermost (notifications)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage (status plugin)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-metrics-service (deployment events)</span>
+</code></pre></div>
+<h3 id="repository-structure">Repository Structure</h3>
+<p><strong>Recommended Structure</strong> (monorepo approach):</p>
+<div class="highlight"><pre><span></span><code>gitops-repo/
+├── apps/
+│   ├── dev/
+│   │   ├── team-a/
+│   │   │   ├── service-1/
+│   │   │   │   ├── kustomization.yaml
+│   │   │   │   └── deployment.yaml
+│   │   │   └── service-2/
+│   │   └── team-b/
+│   ├── staging/
+│   └── prod/
+├── platform/
+│   ├── backstage/
+│   ├── jenkins/
+│   ├── mattermost/
+│   ├── prometheus/
+│   └── grafana/
+├── infrastructure/
+│   ├── namespaces/
+│   ├── rbac/
+│   ├── network-policies/
+│   └── resource-quotas/
+├── argocd-apps/
+│   ├── dev-apps.yaml (ApplicationSet)
+│   ├── staging-apps.yaml
+│   └── prod-apps.yaml
+└── README.md
+</code></pre></div>
+<p><strong>Alternative</strong> (polyrepo approach):
+- Separate repository per team/service
+- Pros: Team autonomy, clear ownership
+- Cons: Harder to enforce consistency, more repositories to manage</p>
+<h3 id="applicationset-example">ApplicationSet Example</h3>
+<p><strong>Deploy All Team Applications</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ApplicationSet</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-applications</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">generators</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">git</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">repoURL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/paruff/fawkes-gitops</span>
+<span class="w">        </span><span class="nt">revision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HEAD</span>
+<span class="w">        </span><span class="nt">directories</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/prod/*/*</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{path.basename}}&#39;</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">      </span><span class="nt">source</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">repoURL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/paruff/fawkes-gitops</span>
+<span class="w">        </span><span class="nt">targetRevision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HEAD</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{path}}&#39;</span>
+<span class="w">      </span><span class="nt">destination</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://kubernetes.default.svc</span>
+<span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{path[1]}}&#39;</span><span class="w"> </span><span class="c1"># team name from path</span>
+<span class="w">      </span><span class="nt">syncPolicy</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">automated</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="nt">selfHeal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">syncOptions</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span>
+</code></pre></div>
+<h3 id="sync-policies">Sync Policies</h3>
+<p><strong>Automated Sync</strong> (recommended for most apps):
+<div class="highlight"><pre><span></span><code><span class="nt">syncPolicy</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">automated</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">       </span><span class="c1"># Delete resources removed from Git</span>
+<span class="w">    </span><span class="nt">selfHeal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">    </span><span class="c1"># Revert manual changes</span>
+<span class="w">  </span><span class="nt">syncOptions</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span>
+<span class="w">  </span><span class="nt">retry</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">    </span><span class="nt">backoff</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+<span class="w">      </span><span class="nt">factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">      </span><span class="nt">maxDuration</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3m</span>
+</code></pre></div></p>
+<p><strong>Manual Sync</strong> (for critical production apps initially):
+<div class="highlight"><pre><span></span><code><span class="nt">syncPolicy</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">manual</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w">  </span><span class="c1"># Require manual approval for sync</span>
+</code></pre></div></p>
+<h3 id="progressive-delivery-with-argo-rollouts">Progressive Delivery with Argo Rollouts</h3>
+<p><strong>Canary Deployment Example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rollout</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sample-app</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">canary</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span><span class="w">    </span><span class="c1"># 20% traffic to canary</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40</span><span class="w">    </span><span class="c1"># 40% traffic</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w">    </span><span class="c1"># 60% traffic</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">setWeight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span><span class="w">    </span><span class="c1"># 80% traffic</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">duration</span><span class="p">:</span><span class="w"> </span><span class="nv">5m</span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">analysis</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">templates</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">templateName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error-rate-analysis</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service-name</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sample-app</span>
+<span class="w">      </span><span class="nt">trafficRouting</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">istio</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">virtualService</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sample-app</span>
+</code></pre></div>
+<h3 id="notifications-configuration">Notifications Configuration</h3>
+<p><strong>Mattermost Integration</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd-notifications-cm</span>
+<span class="nt">data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">service.mattermost</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">apiURL: https://mattermost.fawkes.io</span>
+<span class="w">    </span><span class="no">token: $mattermost-token</span>
+
+<span class="w">  </span><span class="nt">template.app-deployed</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">message: |</span>
+<span class="w">      </span><span class="no">Application {{.app.metadata.name}} is now running new version.</span>
+<span class="w">      </span><span class="no">{{if eq .serviceType &quot;slack&quot;}}:white_check_mark:{{end}} Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.</span>
+
+<span class="w">  </span><span class="nt">trigger.on-deployed</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">- when: app.status.operationState.phase in [&#39;Succeeded&#39;]</span>
+<span class="w">      </span><span class="no">send: [app-deployed]</span>
+</code></pre></div>
+<p><strong>Subscribe Application</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Application</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">notifications.argoproj.io/subscribe.on-deployed.mattermost</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-deployments</span>
+</code></pre></div>
+<h3 id="multi-cluster-management">Multi-Cluster Management</h3>
+<p><strong>Add Cluster</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Login to ArgoCD</span>
+argocd<span class="w"> </span>login<span class="w"> </span>argocd.fawkes.io
+
+<span class="c1"># Add production cluster</span>
+argocd<span class="w"> </span>cluster<span class="w"> </span>add<span class="w"> </span>prod-cluster<span class="w"> </span>--name<span class="w"> </span>production
+
+<span class="c1"># Add staging cluster</span>
+argocd<span class="w"> </span>cluster<span class="w"> </span>add<span class="w"> </span>staging-cluster<span class="w"> </span>--name<span class="w"> </span>staging
+</code></pre></div>
+<p><strong>Deploy to Multiple Clusters</strong> (ApplicationSet):</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ApplicationSet</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multi-cluster-app</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">generators</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">list</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">elements</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cluster</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dev</span>
+<span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://dev-cluster</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cluster</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">staging</span><span class="w">  </span>
+<span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://staging-cluster</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cluster</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod</span>
+<span class="w">            </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://prod-cluster</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;sample-app-{{cluster}}&#39;</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">      </span><span class="nt">source</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">repoURL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/paruff/fawkes-gitops</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;apps/{{cluster}}/sample-app&#39;</span>
+<span class="w">      </span><span class="nt">destination</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{{url}}&#39;</span>
+<span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sample-app</span>
+</code></pre></div>
+<h3 id="rbac-configuration">RBAC Configuration</h3>
+<p><strong>Project-Based RBAC</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AppProject</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-a</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Team A applications</span>
+<span class="w">  </span><span class="nt">sourceRepos</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;https://github.com/paruff/fawkes-gitops&#39;</span>
+<span class="w">  </span><span class="nt">destinations</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;team-a-*&#39;</span>
+<span class="w">      </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://kubernetes.default.svc</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-a-developer</span>
+<span class="w">      </span><span class="nt">policies</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p, proj:team-a:team-a-developer, applications, get, team-a/*, allow</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p, proj:team-a:team-a-developer, applications, sync, team-a/*, allow</span>
+</code></pre></div>
+<h3 id="backstage-integration">Backstage Integration</h3>
+<p><strong>Install Plugin</strong>:</p>
+<div class="highlight"><pre><span></span><code>yarn<span class="w"> </span>add<span class="w"> </span>--cwd<span class="w"> </span>packages/app<span class="w"> </span>@roadiehq/backstage-plugin-argo-cd
+</code></pre></div>
+<p><strong>Component Annotation</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Component</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sample-app</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">argocd/app-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sample-app</span>
+<span class="w">    </span><span class="nt">argocd/instance-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service</span>
+<span class="w">  </span><span class="nt">lifecycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">team-a</span>
+</code></pre></div>
+<h3 id="monitoring-observability">Monitoring &amp; Observability</h3>
+<p><strong>Prometheus Metrics</strong>:
+- argocd_app_sync_total (sync attempts)
+- argocd_app_sync_status (current sync status)
+- argocd_app_health_status (application health)
+- argocd_git_request_total (Git operations)</p>
+<p><strong>Grafana Dashboard</strong>:
+- Official ArgoCD dashboard (ID: 14584)
+- Customizations for Fawkes-specific views</p>
+<p><strong>Alerts</strong>:
+- Application OutOfSync &gt;30 minutes
+- Application Degraded &gt;15 minutes
+- Sync Failures (3 consecutive)
+- High API latency (&gt;2s)</p>
+<h3 id="secret-management">Secret Management</h3>
+<p><strong>Option 1: Sealed Secrets</strong> (recommended for MVP):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Encrypt secret</span>
+<span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;my-secret-value&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>my-secret<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dry-run<span class="o">=</span>client<span class="w"> </span>--from-file<span class="o">=</span><span class="nv">password</span><span class="o">=</span>/dev/stdin<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>kubeseal<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span>&gt;<span class="w"> </span>sealed-secret.yaml
+
+<span class="c1"># Commit sealed-secret.yaml to Git</span>
+<span class="c1"># SealedSecret controller decrypts in-cluster</span>
+</code></pre></div>
+<p><strong>Option 2: External Secrets Operator</strong>:
+- Fetch secrets from Vault, AWS Secrets Manager, etc.
+- Keep secret references in Git, not actual secrets
+- Better for large-scale deployments</p>
+<p><strong>Never</strong>: Commit raw secrets to Git!</p>
+<h3 id="backup-disaster-recovery">Backup &amp; Disaster Recovery</h3>
+<p><strong>Backup Strategy</strong>:
+- ArgoCD configuration stored in Git (Infrastructure as Code)
+- Application manifests in GitOps repository
+- ArgoCD state in Kubernetes (can be recreated)</p>
+<p><strong>Recovery</strong>:
+1. Redeploy ArgoCD from Helm chart
+2. Re-add clusters
+3. Create Applications pointing to Git repository
+4. ArgoCD syncs from Git (applications restored)</p>
+<p><strong>RTO</strong>: &lt;2 hours (ArgoCD redeploy + application sync)
+<strong>RPO</strong>: 0 (Git is source of truth, no data loss)</p>
+<h3 id="performance-optimization">Performance Optimization</h3>
+<p><strong>For Large Deployments</strong>:
+- Increase application controller replicas
+- Tune sync timeouts and retry logic
+- Use ApplicationSets instead of individual Applications
+- Enable concurrent sync operations
+- Optimize Git repository size (use shallow clones)</p>
+<p><strong>Resource Limits</strong>:
+<div class="highlight"><pre><span></span><code><span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2Gi</span>
+<span class="w">    </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
+<span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512Mi</span>
+</code></pre></div></p>
+<h2 id="monitoring-this-decision">Monitoring This Decision</h2>
+<p>We will revisit this ADR if:
+- ArgoCD project becomes unmaintained or development slows
+- Performance issues arise that cannot be resolved
+- A superior GitOps tool emerges with better fit
+- Flux CD's UI significantly improves (could reconsider)
+- Operational burden exceeds benefits
+- Community adoption of ArgoCD declines significantly</p>
+<p><strong>Next Review Date</strong>: April 8, 2026 (6 months)</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://argo-cd.readthedocs.io/">ArgoCD Official Documentation</a></li>
+<li><a href="https://github.com/argoproj/argo-cd">ArgoCD GitHub Repository</a></li>
+<li><a href="https://argo-rollouts.readthedocs.io/">Argo Rollouts Documentation</a></li>
+<li><a href="https://www.cncf.io/projects/argo/">CNCF ArgoCD Project</a></li>
+<li><a href="https://opengitops.dev/">GitOps Principles</a></li>
+<li><a href="https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-argo-cd">ArgoCD Backstage Plugin</a></li>
+</ul>
+<h2 id="notes">Notes</h2>
+<h3 id="argocd-vs-flux-the-eternal-debate">ArgoCD vs. Flux: The Eternal Debate</h3>
+<p><strong>When to choose ArgoCD</strong>:
+- Want built-in, feature-rich UI
+- Prefer visual application topology
+- Need strong RBAC out-of-box
+- Value large, active community
+- Want simpler mental model</p>
+<p><strong>When to choose Flux</strong>:
+- Prefer CLI-first workflow
+- Want lower resource usage
+- Need advanced multi-tenancy
+- Comfortable with GitOps Toolkit abstraction
+- Strong preference for CNCF's recommended GitOps tool</p>
+<p><strong>For Fawkes</strong>: ArgoCD's UI significant advantage for developer experience and troubleshooting. Both are excellent choices—this decision not deeply philosophical, more pragmatic based on UX priorities.</p>
+<h3 id="gitops-best-practices">GitOps Best Practices</h3>
+<ol>
+<li><strong>Repository Structure</strong>: Organize thoughtfully upfront (hard to change later)</li>
+<li><strong>Separation of Concerns</strong>: Keep application code separate from deployment manifests</li>
+<li><strong>Environment Promotion</strong>: Use branches or directories for environments</li>
+<li><strong>Secret Management</strong>: Never commit secrets, use Sealed Secrets or Vault</li>
+<li><strong>Sync Policies</strong>: Start with manual sync for critical apps, automate once confident</li>
+<li><strong>Monitoring</strong>: Watch sync failures, drift detection, and performance metrics</li>
+<li><strong>Rollback Plan</strong>: Test rollback procedure before you need it</li>
+</ol>
+<h3 id="progressive-delivery-roi">Progressive Delivery ROI</h3>
+<p>Argo Rollouts adds complexity but significantly reduces change failure rate:
+- Canary deployments catch issues before full rollout
+- Automated rollback based on metrics prevents outages
+- Traffic shifting minimizes blast radius
+- Aligns with DORA best practices</p>
+<p>Worth complexity trade-off for production applications. Can start without Rollouts, add later for critical services.</p>
+<hr />
+<p><strong>Decision Made By</strong>: Platform Architecture Team<br />
+<strong>Approved By</strong>: Project Lead<br />
+<strong>Date</strong>: October 8, 2025<br />
+<strong>Author</strong>: [Platform Architect Name]<br />
+<strong>Last Updated</strong>: October 8, 2025</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

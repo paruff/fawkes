@@ -18,7 +18,7 @@
     
     
       
-        <title>Contributor Covenant Code of Conduct - Fawkes</title>
+        <title>ADR-001: Kubernetes as Container Orchestration Platform - Fawkes</title>
       
     
     
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#contributor-covenant-code-of-conduct" class="md-skip">
+        <a href="#adr-001-kubernetes-as-container-orchestration-platform" class="md-skip">
           Skip to content
         </a>
       
@@ -104,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Contributor Covenant Code of Conduct
+              ADR-001: Kubernetes as Container Orchestration Platform
             
           </span>
         </div>
@@ -1242,73 +1242,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#our-pledge" class="md-nav__link">
+  <a href="#status" class="md-nav__link">
     <span class="md-ellipsis">
-      Our Pledge
+      Status
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#our-standards" class="md-nav__link">
+  <a href="#context" class="md-nav__link">
     <span class="md-ellipsis">
-      Our Standards
+      Context
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#our-responsibilities" class="md-nav__link">
-    <span class="md-ellipsis">
-      Our Responsibilities
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scope" class="md-nav__link">
-    <span class="md-ellipsis">
-      Scope
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#enforcement" class="md-nav__link">
-    <span class="md-ellipsis">
-      Enforcement
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Enforcement">
+    <nav class="md-nav" aria-label="Context">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#reporting" class="md-nav__link">
+  <a href="#forces-at-play" class="md-nav__link">
     <span class="md-ellipsis">
-      Reporting
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#what-to-include-in-a-report" class="md-nav__link">
-    <span class="md-ellipsis">
-      What to Include in a Report
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#confidentiality" class="md-nav__link">
-    <span class="md-ellipsis">
-      Confidentiality
+      Forces at Play
     </span>
   </a>
   
@@ -1320,46 +1275,19 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#enforcement-guidelines" class="md-nav__link">
+  <a href="#decision" class="md-nav__link">
     <span class="md-ellipsis">
-      Enforcement Guidelines
+      Decision
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Enforcement Guidelines">
+    <nav class="md-nav" aria-label="Decision">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-correction" class="md-nav__link">
+  <a href="#rationale" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Correction
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-warning" class="md-nav__link">
-    <span class="md-ellipsis">
-      2. Warning
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-temporary-ban" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. Temporary Ban
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-permanent-ban" class="md-nav__link">
-    <span class="md-ellipsis">
-      4. Permanent Ban
+      Rationale
     </span>
   </a>
   
@@ -1371,38 +1299,215 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#enforcement-process" class="md-nav__link">
+  <a href="#consequences" class="md-nav__link">
     <span class="md-ellipsis">
-      Enforcement Process
+      Consequences
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consequences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#negative" class="md-nav__link">
+    <span class="md-ellipsis">
+      Negative
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#neutral" class="md-nav__link">
+    <span class="md-ellipsis">
+      Neutral
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mitigation-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mitigation Strategies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives Considered
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-1-docker-swarm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 1: Docker Swarm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-2-hashicorp-nomad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 2: HashiCorp Nomad
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-3-aws-ecsfargate" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 3: AWS ECS/Fargate
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-4-platformsh-heroku-style-paas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 4: Platform.sh / Heroku-style PaaS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-5-cloud-native-with-managed-services-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 5: "Cloud Native" with Managed Services Only
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Decisions
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#appeals" class="md-nav__link">
+  <a href="#implementation-notes" class="md-nav__link">
     <span class="md-ellipsis">
-      Appeals
+      Implementation Notes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initial-implementation-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Initial Implementation (MVP)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#learning-resources-for-contributors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Learning Resources for Contributors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-this-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring This Decision
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#attribution" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      Attribution
+      References
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#contact" class="md-nav__link">
+  <a href="#notes" class="md-nav__link">
     <span class="md-ellipsis">
-      Contact
+      Notes
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-not-start-simpler" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Not Start Simpler?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#managed-vs-self-managed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Managed vs. Self-Managed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1422,113 +1527,257 @@
 
 
 
-<h1 id="contributor-covenant-code-of-conduct">Contributor Covenant Code of Conduct</h1>
-<h2 id="our-pledge">Our Pledge</h2>
-<p>We as members, contributors, and leaders pledge to make participation in the Fawkes community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, caste, color, religion, or sexual identity and orientation.</p>
-<p>We pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive, and healthy community.</p>
-<h2 id="our-standards">Our Standards</h2>
-<p>Examples of behavior that contributes to a positive environment for our community include:</p>
+<h1 id="adr-001-kubernetes-as-container-orchestration-platform">ADR-001: Kubernetes as Container Orchestration Platform</h1>
+<h2 id="status">Status</h2>
+<p><strong>Accepted</strong> - October 4, 2025</p>
+<h2 id="context">Context</h2>
+<p>Fawkes requires a container orchestration platform to run the Internal Delivery Platform components (Backstage, Jenkins, ArgoCD, Prometheus, etc.) and to host application workloads for teams using the platform. The orchestration platform must support:</p>
 <ul>
-<li>Demonstrating empathy and kindness toward other people</li>
-<li>Being respectful of differing opinions, viewpoints, and experiences</li>
-<li>Giving and gracefully accepting constructive feedback</li>
-<li>Accepting responsibility and apologizing to those affected by our mistakes, and learning from the experience</li>
-<li>Focusing on what is best not just for us as individuals, but for the overall community</li>
-<li>Using welcoming and inclusive language</li>
-<li>Being patient with new contributors and helping them learn</li>
-<li>Celebrating others' successes and contributions</li>
-<li>Assuming good intent and asking clarifying questions</li>
-<li>Providing credit and recognition where it's due</li>
+<li><strong>Multi-tenancy</strong>: Isolated environments for different teams</li>
+<li><strong>Scalability</strong>: From small teams (5 services) to large enterprises (100+ services)</li>
+<li><strong>Observability</strong>: Rich metrics, logging, and monitoring capabilities</li>
+<li><strong>Security</strong>: RBAC, network policies, secrets management</li>
+<li><strong>Ecosystem</strong>: Strong ecosystem of tools and integrations</li>
+<li><strong>Multi-cloud</strong>: Ability to run on AWS, Azure, GCP, and on-premises</li>
+<li><strong>GitOps</strong>: Declarative configuration and reconciliation</li>
+<li><strong>Developer Experience</strong>: Self-service capabilities, easy local development</li>
 </ul>
-<p>Examples of unacceptable behavior include:</p>
-<ul>
-<li>The use of sexualized language or imagery, and sexual attention or advances of any kind</li>
-<li>Trolling, insulting or derogatory comments, and personal or political attacks</li>
-<li>Public or private harassment</li>
-<li>Publishing others' private information, such as a physical or email address, without their explicit permission</li>
-<li>Dismissing or belittling others' contributions or concerns</li>
-<li>Sustained disruption of discussions, events, or community activities</li>
-<li>Other conduct which could reasonably be considered inappropriate in a professional setting</li>
-<li>Advocating for, or encouraging, any of the above behavior</li>
-</ul>
-<h2 id="our-responsibilities">Our Responsibilities</h2>
-<p>Community leaders and maintainers are responsible for clarifying and enforcing our standards of acceptable behavior and will take appropriate and fair corrective action in response to any behavior that they deem inappropriate, threatening, offensive, or harmful.</p>
-<p>Community leaders have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, and will communicate reasons for moderation decisions when appropriate.</p>
-<h2 id="scope">Scope</h2>
-<p>This Code of Conduct applies within all community spaces, including but not limited to:</p>
-<ul>
-<li>GitHub repositories (issues, pull requests, discussions, wiki)</li>
-<li>Community chat platforms (Slack, Discord)</li>
-<li>Mailing lists and email communications</li>
-<li>Social media channels (official Fawkes accounts)</li>
-<li>In-person events (meetups, conferences, workshops)</li>
-<li>Virtual events (webinars, office hours, live streams)</li>
-<li>Any other forums created by the project team which the community uses for communication</li>
-</ul>
-<p>This Code of Conduct also applies when an individual is officially representing the community in public spaces. Examples include using an official e-mail address, posting via an official social media account, or acting as an appointed representative at an online or offline event.</p>
-<h2 id="enforcement">Enforcement</h2>
-<h3 id="reporting">Reporting</h3>
-<p>Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at:</p>
-<p><strong>conduct@fawkes-project.org</strong></p>
-<p>You may also use GitHub's built-in private vulnerability reporting feature to report Code of Conduct violations confidentially.</p>
-<p>All complaints will be reviewed and investigated promptly and fairly. All community leaders are obligated to respect the privacy and security of the reporter of any incident.</p>
-<h3 id="what-to-include-in-a-report">What to Include in a Report</h3>
-<p>When reporting an incident, please include as much of the following information as possible:</p>
-<ul>
-<li>Your contact information (so we can get in touch with you)</li>
-<li>Names (real, usernames, or pseudonyms) of any individuals involved</li>
-<li>Your account of what occurred</li>
-<li>If you believe this incident is ongoing</li>
-<li>Any other information that may be helpful</li>
-<li>Links to publicly available records (e.g., GitHub comments, mailing list archives)</li>
-<li>Date and time of the incident</li>
-</ul>
-<h3 id="confidentiality">Confidentiality</h3>
-<p>All reports will be kept confidential. In some cases, we may determine that a public statement will need to be made. If that's the case, the identities of all victims and reporters will remain confidential unless those individuals instruct us otherwise.</p>
-<h2 id="enforcement-guidelines">Enforcement Guidelines</h2>
-<p>Community leaders will follow these Community Impact Guidelines in determining the consequences for any action they deem in violation of this Code of Conduct:</p>
-<h3 id="1-correction">1. Correction</h3>
-<p><strong>Community Impact</strong>: Use of inappropriate language or other behavior deemed unprofessional or unwelcome in the community.</p>
-<p><strong>Consequence</strong>: A private, written warning from community leaders, providing clarity around the nature of the violation and an explanation of why the behavior was inappropriate. A public apology may be requested.</p>
-<h3 id="2-warning">2. Warning</h3>
-<p><strong>Community Impact</strong>: A violation through a single incident or series of actions.</p>
-<p><strong>Consequence</strong>: A warning with consequences for continued behavior. No interaction with the people involved, including unsolicited interaction with those enforcing the Code of Conduct, for a specified period of time. This includes avoiding interactions in community spaces as well as external channels like social media. Violating these terms may lead to a temporary or permanent ban.</p>
-<h3 id="3-temporary-ban">3. Temporary Ban</h3>
-<p><strong>Community Impact</strong>: A serious violation of community standards, including sustained inappropriate behavior.</p>
-<p><strong>Consequence</strong>: A temporary ban from any sort of interaction or public communication with the community for a specified period of time. No public or private interaction with the people involved, including unsolicited interaction with those enforcing the Code of Conduct, is allowed during this period. Violating these terms may lead to a permanent ban.</p>
-<h3 id="4-permanent-ban">4. Permanent Ban</h3>
-<p><strong>Community Impact</strong>: Demonstrating a pattern of violation of community standards, including sustained inappropriate behavior, harassment of an individual, or aggression toward or disparagement of classes of individuals.</p>
-<p><strong>Consequence</strong>: A permanent ban from any sort of public interaction within the community.</p>
-<h2 id="enforcement-process">Enforcement Process</h2>
+<p>The platform must be production-ready, with a mature community, extensive documentation, and enterprise adoption.</p>
+<h3 id="forces-at-play">Forces at Play</h3>
+<p><strong>Technical Forces</strong>:
+- Need for container orchestration is non-negotiable for modern platforms
+- Team familiarity with orchestration platforms varies
+- Learning curve vs. time to value tradeoff
+- Platform stability and maturity critical for production use</p>
+<p><strong>Business Forces</strong>:
+- Open-source preference to avoid vendor lock-in
+- Enterprise adoption important for credibility
+- Community size affects long-term sustainability
+- Multi-cloud support required for diverse adoption</p>
+<p><strong>Organizational Forces</strong>:
+- Platform engineering skills growing but not universal
+- Kubernetes increasingly becoming industry standard
+- CNCF ecosystem alignment provides future-proofing</p>
+<h2 id="decision">Decision</h2>
+<p><strong>We will use Kubernetes as the container orchestration platform for Fawkes.</strong></p>
+<p>Specifically:
+- <strong>Managed Kubernetes services</strong> for MVP: AWS EKS, with Azure AKS and GCP GKE following
+- <strong>Kubernetes version</strong>: 1.28+ (stay within N-2 of latest stable)
+- <strong>Distribution agnostic</strong>: Design for standard Kubernetes, test on managed services
+- <strong>Cluster API</strong> for cluster lifecycle management (roadmap)</p>
+<h3 id="rationale">Rationale</h3>
 <ol>
-<li><strong>Report Received</strong>: Community leaders acknowledge receipt within 24 hours</li>
-<li><strong>Initial Review</strong>: Community leaders review the report within 48 hours</li>
-<li><strong>Investigation</strong>: Gather additional information if needed (3-7 days)</li>
-<li><strong>Decision</strong>: Enforcement decision made by 2/3 vote of community leaders</li>
-<li><strong>Action</strong>: Enforcement action taken and parties notified</li>
-<li><strong>Appeal</strong>: Option to appeal decision within 14 days</li>
-<li><strong>Documentation</strong>: Incident documented for future reference (confidentially)</li>
+<li>
+<p><strong>Industry Standard</strong>: Kubernetes is the de facto standard for container orchestration, with 88% of organizations using or evaluating it (CNCF Survey 2023)</p>
+</li>
+<li>
+<p><strong>CNCF Ecosystem</strong>: Kubernetes is the foundation of the CNCF landscape, providing access to hundreds of complementary tools (ArgoCD, Prometheus, Istio, etc.)</p>
+</li>
+<li>
+<p><strong>Multi-Cloud Native</strong>: All major cloud providers offer managed Kubernetes (EKS, AKS, GKE), enabling true multi-cloud portability</p>
+</li>
+<li>
+<p><strong>GitOps Alignment</strong>: Kubernetes' declarative API makes it ideal for GitOps workflows, a core Fawkes principle</p>
+</li>
+<li>
+<p><strong>Platform Engineering Fit</strong>: Kubernetes provides the right abstractions for platform teams to create developer self-service capabilities</p>
+</li>
+<li>
+<p><strong>Talent Availability</strong>: Growing pool of Kubernetes-skilled engineers makes hiring and onboarding easier</p>
+</li>
+<li>
+<p><strong>Enterprise Adoption</strong>: Used by 67% of Fortune 100 companies, providing credibility for enterprise adoption</p>
+</li>
+<li>
+<p><strong>Security Features</strong>: Built-in RBAC, network policies, pod security standards, and secrets management</p>
+</li>
+<li>
+<p><strong>Observability</strong>: Rich metrics exposure, established patterns for monitoring and logging</p>
+</li>
+<li>
+<p><strong>Community &amp; Support</strong>: Massive community, extensive documentation, commercial support available</p>
+</li>
 </ol>
-<h2 id="appeals">Appeals</h2>
-<p>Any individual affected by an enforcement decision may appeal by contacting:</p>
-<p><strong>conduct-appeals@fawkes-project.org</strong></p>
-<p>Appeals will be reviewed by community leaders who were not involved in the original decision. The appeal review will be completed within 14 days, and the decision will be final.</p>
-<h2 id="attribution">Attribution</h2>
-<p>This Code of Conduct is adapted from the <a href="https://www.contributor-covenant.org">Contributor Covenant</a>, version 2.1, available at <a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct.html">https://www.contributor-covenant.org/version/2/1/code_of_conduct.html</a>.</p>
-<p>Community Impact Guidelines were inspired by <a href="https://github.com/mozilla/diversity">Mozilla's code of conduct enforcement ladder</a>.</p>
-<p>For answers to common questions about this code of conduct, see the FAQ at <a href="https://www.contributor-covenant.org/faq">https://www.contributor-covenant.org/faq</a>. Translations are available at <a href="https://www.contributor-covenant.org/translations">https://www.contributor-covenant.org/translations</a>.</p>
-<h2 id="contact">Contact</h2>
-<p>For questions about this Code of Conduct, contact:</p>
+<h2 id="consequences">Consequences</h2>
+<h3 id="positive">Positive</h3>
+<p>✅ <strong>Broad Adoption</strong>: Using Kubernetes makes Fawkes accessible to the largest possible audience<br />
+✅ <strong>Ecosystem Integration</strong>: Can leverage hundreds of CNCF tools designed for Kubernetes<br />
+✅ <strong>Multi-Cloud Support</strong>: Same APIs work across AWS, Azure, GCP, and on-premises<br />
+✅ <strong>Developer Self-Service</strong>: Kubernetes primitives (Namespaces, RBAC) enable multi-tenancy<br />
+✅ <strong>Future-Proof</strong>: Kubernetes is backed by major tech companies and shows no signs of decline<br />
+✅ <strong>GitOps Native</strong>: Declarative configuration aligns perfectly with GitOps principles<br />
+✅ <strong>Skills Transfer</strong>: Learning Fawkes teaches transferable Kubernetes skills<br />
+✅ <strong>Extensibility</strong>: Custom Resource Definitions (CRDs) enable platform extension<br />
+✅ <strong>Production Ready</strong>: Battle-tested at scale by thousands of organizations  </p>
+<h3 id="negative">Negative</h3>
+<p>⚠️ <strong>Complexity</strong>: Kubernetes has a steep learning curve for beginners<br />
+⚠️ <strong>Resource Overhead</strong>: Control plane and system components require 2-4GB RAM minimum<br />
+⚠️ <strong>Operational Burden</strong>: Requires expertise to operate reliably (mitigated by managed services)<br />
+⚠️ <strong>Over-Engineering for Small Teams</strong>: May be overkill for teams with &lt; 5 services<br />
+⚠️ <strong>Version Management</strong>: Frequent releases require upgrade planning and testing<br />
+⚠️ <strong>Configuration Complexity</strong>: YAML configuration can be verbose and error-prone<br />
+⚠️ <strong>Local Development</strong>: Running Kubernetes locally (minikube, kind) adds complexity  </p>
+<h3 id="neutral">Neutral</h3>
+<p>◽ <strong>Cost</strong>: Managed Kubernetes has base costs ($70-150/month for control plane) but provides value at scale<br />
+◽ <strong>Security</strong>: Powerful security features exist but require configuration and expertise<br />
+◽ <strong>Networking</strong>: Kubernetes networking is flexible but requires understanding of concepts  </p>
+<h3 id="mitigation-strategies">Mitigation Strategies</h3>
+<p>For the negative consequences, we will:</p>
+<ol>
+<li><strong>Complexity</strong>: Provide comprehensive documentation, dojo learning modules, and golden paths that abstract complexity</li>
+<li><strong>Resource Overhead</strong>: Start with managed services (EKS) to reduce operational burden</li>
+<li><strong>Operational Burden</strong>: Include monitoring, alerting, and runbooks; leverage managed services</li>
+<li><strong>Over-Engineering</strong>: Document when Kubernetes is appropriate; provide alternative architectures for very small teams</li>
+<li><strong>Version Management</strong>: Establish clear upgrade policies and automated testing</li>
+<li><strong>Configuration Complexity</strong>: Use Helm charts and Kustomize for templating; provide validated templates</li>
+<li><strong>Local Development</strong>: Provide remote development options (Eclipse Che); document local setup thoroughly</li>
+</ol>
+<h2 id="alternatives-considered">Alternatives Considered</h2>
+<h3 id="alternative-1-docker-swarm">Alternative 1: Docker Swarm</h3>
+<p><strong>Pros</strong>:
+- Simpler learning curve than Kubernetes
+- Integrated with Docker ecosystem
+- Lower resource overhead
+- Faster initial setup</p>
+<p><strong>Cons</strong>:
+- Smaller ecosystem (limited tooling compared to K8s)
+- Declining adoption and community activity
+- Limited multi-cloud support
+- Fewer enterprise features (RBAC, network policies less mature)
+- Less relevant skill for users to learn</p>
+<p><strong>Reason for Rejection</strong>: While simpler, Docker Swarm's declining adoption and limited ecosystem make it a poor foundation for a platform meant to last 5+ years. The simplicity advantage doesn't outweigh the ecosystem and future-proofing benefits of Kubernetes.</p>
+<h3 id="alternative-2-hashicorp-nomad">Alternative 2: HashiCorp Nomad</h3>
+<p><strong>Pros</strong>:
+- Simpler than Kubernetes (easier to learn and operate)
+- Good performance and resource efficiency
+- Multi-cloud support
+- Strong HashiCorp ecosystem integration (Vault, Consul)
+- Supports non-containerized workloads</p>
+<p><strong>Cons</strong>:
+- Much smaller ecosystem than Kubernetes
+- Fewer integrations with CNCF tools
+- Smaller community and talent pool
+- Less enterprise adoption
+- Would require custom integrations for many tools</p>
+<p><strong>Reason for Rejection</strong>: Nomad is excellent for specific use cases, but the CNCF ecosystem is centered on Kubernetes. Building Fawkes on Nomad would require reimplementing many integrations and would limit the potential contributor and user base.</p>
+<h3 id="alternative-3-aws-ecsfargate">Alternative 3: AWS ECS/Fargate</h3>
+<p><strong>Pros</strong>:
+- Simpler than Kubernetes for basic use cases
+- Fully managed (no control plane management)
+- Deep AWS integration
+- Lower operational overhead
+- Cost-effective for certain workloads</p>
+<p><strong>Cons</strong>:
+- AWS-only (locks into single cloud vendor)
+- Limited ecosystem (no CNCF tools work natively)
+- Proprietary API (not transferable skills)
+- Multi-tenancy requires more custom work
+- GitOps support less mature</p>
+<p><strong>Reason for Rejection</strong>: ECS lock-in to AWS contradicts Fawkes' multi-cloud goals. While simpler for AWS-only users, it would fragment the platform (need separate solutions for Azure, GCP) and limit adoption by multi-cloud organizations.</p>
+<h3 id="alternative-4-platformsh-heroku-style-paas">Alternative 4: Platform.sh / Heroku-style PaaS</h3>
+<p><strong>Pros</strong>:
+- Extremely simple developer experience
+- Minimal configuration required
+- Fast time-to-value
+- Handles all infrastructure concerns</p>
+<p><strong>Cons</strong>:
+- Not infrastructure we control (SaaS, not self-hosted platform)
+- Contradicts Fawkes' goal of providing an IDP
+- Limited customization and extensibility
+- Doesn't teach platform engineering skills
+- Vendor lock-in and cost at scale</p>
+<p><strong>Reason for Rejection</strong>: Fawkes is about building an Internal Developer Platform, not consuming a PaaS. While these platforms provide great developer experience, they don't align with the goal of creating a self-hosted, customizable platform.</p>
+<h3 id="alternative-5-cloud-native-with-managed-services-only">Alternative 5: "Cloud Native" with Managed Services Only</h3>
+<p><strong>Pros</strong>:
+- Use cloud provider's managed services directly (Lambda, Cloud Run, etc.)
+- No container orchestration complexity
+- Pay only for usage
+- Serverless scaling</p>
+<p><strong>Cons</strong>:
+- Completely different approach per cloud (no portability)
+- Limited long-running workload support
+- Stateful applications challenging
+- Platform components (Jenkins, Backstage) need orchestration anyway
+- Contradicts unified platform goal</p>
+<p><strong>Reason for Rejection</strong>: While serverless has its place, Fawkes needs a consistent foundation across clouds and for long-running platform components. We may use managed services alongside Kubernetes, but can't build the entire platform on serverless.</p>
+<h2 id="related-decisions">Related Decisions</h2>
 <ul>
-<li><strong>General Questions</strong>: conduct@fawkes-project.org</li>
-<li><strong>Enforcement Team</strong>: conduct@fawkes-project.org</li>
-<li><strong>Appeals</strong>: conduct-appeals@fawkes-project.org</li>
-<li><strong>Project Lead</strong>: [Your Contact Information]</li>
+<li><strong>ADR-002</strong>: Backstage for Developer Portal (depends on Kubernetes for deployment)</li>
+<li><strong>ADR-003</strong>: ArgoCD for GitOps (Kubernetes-native GitOps tool)</li>
+<li><strong>ADR-005</strong>: Terraform for Infrastructure (will provision Kubernetes clusters)</li>
+<li><strong>Future ADR</strong>: Cluster API for cluster lifecycle management</li>
 </ul>
+<h2 id="implementation-notes">Implementation Notes</h2>
+<h3 id="initial-implementation-mvp">Initial Implementation (MVP)</h3>
+<ul>
+<li>Start with AWS EKS (most mature managed Kubernetes)</li>
+<li>Single cluster design (platform + applications)</li>
+<li>Use EKS add-ons for AWS integrations</li>
+<li>Kubernetes version 1.28 (N-1 from latest stable at time of writing)</li>
+</ul>
+<h3 id="future-enhancements">Future Enhancements</h3>
+<ol>
+<li><strong>Multi-Cluster</strong> (Month 6-12):</li>
+<li>Separate platform cluster from application clusters</li>
+<li>Multi-region deployments</li>
+<li>
+<p>Cluster API for lifecycle management</p>
+</li>
+<li>
+<p><strong>Multi-Cloud</strong> (Month 3-6):</p>
+</li>
+<li>Azure AKS support</li>
+<li>GCP GKE support</li>
+<li>
+<p>Unified tooling across clouds</p>
+</li>
+<li>
+<p><strong>Advanced Features</strong> (Month 12+):</p>
+</li>
+<li>Service mesh (Linkerd/Istio)</li>
+<li>Multi-tenancy with vCluster or Capsule</li>
+<li>Cost optimization with spot instances</li>
+</ol>
+<h3 id="learning-resources-for-contributors">Learning Resources for Contributors</h3>
+<ul>
+<li><a href="https://kubernetes.io/docs/tutorials/kubernetes-basics/">Kubernetes Basics</a></li>
+<li><a href="https://www.cncf.io/certification/ckad/">CKAD Certification</a></li>
+<li>Platform Engineering dojo modules will include K8s fundamentals</li>
+</ul>
+<h2 id="monitoring-this-decision">Monitoring This Decision</h2>
+<p>We will revisit this ADR if:
+- Kubernetes adoption significantly declines (&lt; 60% of survey respondents)
+- A new orchestration platform gains &gt; 30% market share
+- Operational complexity consistently causes adoption issues
+- Alternative platforms provide compelling advantages</p>
+<p><strong>Next Review Date</strong>: October 4, 2026 (12 months)</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.cncf.io/reports/cncf-annual-survey-2023/">CNCF Annual Survey 2023</a></li>
+<li><a href="https://kubernetes.io/docs/">Kubernetes Documentation</a></li>
+<li><a href="https://aws.github.io/aws-eks-best-practices/">AWS EKS Best Practices</a></li>
+<li><a href="https://www.amazon.com/Kubernetes-Book-Nigel-Poulton/dp/1521823634">The Kubernetes Book by Nigel Poulton</a></li>
+</ul>
+<h2 id="notes">Notes</h2>
+<h3 id="why-not-start-simpler">Why Not Start Simpler?</h3>
+<p>We considered starting with Docker Compose or simpler solutions and "graduating" to Kubernetes later. However:
+- Migration is costly and disruptive for early adopters
+- Learning Kubernetes is a core part of platform engineering
+- Starting with K8s forces us to address complexity early
+- Better to have a steeper initial curve than force migration later</p>
+<h3 id="managed-vs-self-managed">Managed vs. Self-Managed</h3>
+<p>For MVP, we strongly recommend <strong>managed Kubernetes</strong> (EKS, AKS, GKE) because:
+- Reduces operational burden for platform teams
+- Allows focus on platform features, not cluster management
+- Enterprise-grade reliability and SLAs
+- Regular updates and security patches</p>
+<p>Self-managed Kubernetes (on-premises, bare metal) is supported but not the primary use case for Fawkes.</p>
 <hr />
-<p><strong>Document Version</strong>: 1.0<br />
-<strong>Last Updated</strong>: October 4, 2025<br />
-<strong>Based On</strong>: Contributor Covenant v2.1</p>
+<p><strong>Decision Made By</strong>: Platform Architecture Team<br />
+<strong>Approved By</strong>: Project Lead<br />
+<strong>Date</strong>: October 4, 2025<br />
+<strong>Author</strong>: [Platform Architect Name]<br />
+<strong>Last Updated</strong>: October 4, 2025</p>
 
 
 
