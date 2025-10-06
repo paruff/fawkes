@@ -33,9 +33,12 @@ jobs:
 
       # Optional: static linting for Terraform
       - name: Run TFLint
-        uses: terraform-linters/tflint-action@v1
+        uses: terraform-linters/setup-tflint@v4
         with:
           tflint_version: latest
+
+      - name: Run TFLint
+        run: tflint --recursive
 
       # 2️⃣ Secret scanning
       - name: Run Gitleaks (secret scan)
