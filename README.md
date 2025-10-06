@@ -45,6 +45,11 @@ Fawkes is applying for the AWS Activate program to accelerate development and pr
 
 [Apply for AWS Activate](https://aws.amazon.com/activate/) | [See our AWS Cost Estimation](docs/AWS_COST_ESTIMATION.md)
 
+## AWS Activate Application
+   
+   📊 [AWS Cost Estimation](docs/AWS_COST_ESTIMATION.md)  
+   📈 [Business Case & Value Proposition](docs/BUSINESS_CASE.md)
+
 ---
 
 ## 🚀 Getting Started
