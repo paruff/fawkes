@@ -1,0 +1,2536 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
+    
+    
+      
+        <title>ADR-004: Jenkins for CI/CD - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2a3383ac.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#adr-004-jenkins-for-cicd" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ADR-004: Jenkins for CI/CD
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Implementation Paths
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Wins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Capabilities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Capabilities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Feedback
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Recovery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Patterns
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure as Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Tools
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Tools
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Continuous Delivery
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Spinnaker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Jenkins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kubernetes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-need-for-cicd-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Need for CI/CD Automation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements-for-cicd-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requirements for CI/CD Platform
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forces-at-play" class="md-nav__link">
+    <span class="md-ellipsis">
+      Forces at Play
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consequences
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consequences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#negative" class="md-nav__link">
+    <span class="md-ellipsis">
+      Negative
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#neutral" class="md-nav__link">
+    <span class="md-ellipsis">
+      Neutral
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mitigation-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mitigation Strategies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives Considered
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-1-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 1: GitHub Actions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-2-gitlab-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 2: GitLab CI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-3-tekton-pipelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 3: Tekton Pipelines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-4-circleci-saas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 4: CircleCI (SaaS)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-5-drone-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 5: Drone CI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-6-concourse-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 6: Concourse CI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-7-spinnaker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 7: Spinnaker
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Decisions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Notes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deployment-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deployment Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-as-code-jcasc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration as Code (JCasC)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-pipeline-library-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shared Pipeline Library Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#golden-path-jenkinsfile-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Golden Path Jenkinsfile Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete-pipeline-example-without-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Pipeline Example (Without Library)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-list-essential" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plugin List (Essential)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring &amp; Observability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-disaster-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      Backup &amp; Disaster Recovery
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Optimization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-this-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring This Decision
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-not-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Not GitHub Actions?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jenkins-security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Jenkins Security Best Practices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-plugin-configuration-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes Plugin Configuration Tips
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="adr-004-jenkins-for-cicd">ADR-004: Jenkins for CI/CD</h1>
+<h2 id="status">Status</h2>
+<p><strong>Accepted</strong> - October 8, 2025</p>
+<h2 id="context">Context</h2>
+<p>Fawkes requires a Continuous Integration and Continuous Delivery (CI/CD) platform to automate building, testing, securing, and packaging applications. CI/CD is foundational to achieving elite DORA performance, particularly for deployment frequency and lead time for changes.</p>
+<h3 id="the-need-for-cicd-automation">The Need for CI/CD Automation</h3>
+<p><strong>Current Challenges Without CI/CD</strong>:
+- <strong>Manual Builds</strong>: Error-prone, time-consuming, not repeatable
+- <strong>Inconsistent Testing</strong>: Tests run locally (or not at all), vary by developer
+- <strong>Security Gaps</strong>: No automated security scanning, vulnerabilities reach production
+- <strong>Slow Feedback</strong>: Developers wait hours/days to know if changes work
+- <strong>Deployment Bottlenecks</strong>: Manual packaging and deployment slow delivery
+- <strong>No Audit Trail</strong>: Can't trace which code produced which artifact</p>
+<p><strong>What CI/CD Provides</strong>:
+1. <strong>Automated Builds</strong>: Code commit triggers automatic build and test
+2. <strong>Quality Gates</strong>: Automated testing, linting, security scanning block bad code
+3. <strong>Fast Feedback</strong>: Developers know within minutes if changes work
+4. <strong>Consistent Process</strong>: Same build/test process every time, regardless of developer
+5. <strong>Security Integration</strong>: Automated SAST, dependency scanning, container scanning
+6. <strong>Artifact Management</strong>: Versioned, immutable build artifacts
+7. <strong>Deployment Trigger</strong>: Successful builds trigger GitOps deployment
+8. <strong>Audit Trail</strong>: Complete record of what was built, when, and by whom</p>
+<h3 id="requirements-for-cicd-platform">Requirements for CI/CD Platform</h3>
+<p><strong>Core Requirements</strong>:
+- <strong>Pipeline as Code</strong>: Jenkinsfiles in Git, version controlled
+- <strong>Kubernetes Native</strong>: Dynamic agents in Kubernetes pods
+- <strong>Golden Paths</strong>: Reusable pipeline templates for common scenarios
+- <strong>Security Scanning</strong>: Integration with SonarQube, Trivy, dependency checkers
+- <strong>Multi-Language</strong>: Support Java, Python, Node.js, Go, and more
+- <strong>Extensible</strong>: Plugin ecosystem for integrations
+- <strong>GitOps Integration</strong>: Trigger ArgoCD deployments
+- <strong>DORA Metrics</strong>: Report build/deployment events</p>
+<p><strong>DORA Alignment</strong>:
+- <strong>Deployment Frequency</strong>: Automated pipelines enable frequent deployments
+- <strong>Lead Time</strong>: Fast builds reduce time from commit to production
+- <strong>Change Failure Rate</strong>: Quality gates catch issues before deployment
+- <strong>Time to Restore</strong>: Fast pipelines enable quick hotfix deployment</p>
+<p><strong>Integration Requirements</strong>:
+- <strong>GitHub</strong>: Webhook triggers, status checks
+- <strong>ArgoCD</strong>: Trigger GitOps sync after successful build
+- <strong>SonarQube</strong>: Code quality and security analysis
+- <strong>Trivy</strong>: Container image scanning
+- <strong>Harbor/ECR</strong>: Push container images
+- <strong>Mattermost</strong>: Build notifications
+- <strong>Backstage</strong>: Show pipeline status in developer portal
+- <strong>DORA Metrics Service</strong>: Report build events</p>
+<h3 id="forces-at-play">Forces at Play</h3>
+<p><strong>Technical Forces</strong>:
+- Need pipeline-as-code for version control and review
+- Kubernetes-native approach reduces infrastructure overhead
+- Security scanning must be automated and enforced
+- Multi-language support critical for polyglot teams</p>
+<p><strong>Developer Experience Forces</strong>:
+- Fast feedback loops improve developer productivity
+- Clear error messages reduce debugging time
+- Consistent builds reduce "works on my machine" issues
+- Self-service pipelines reduce dependency on platform team</p>
+<p><strong>Operational Forces</strong>:
+- Platform team can't manually build everything
+- Need scalability (100+ concurrent builds)
+- Resource efficiency matters (cost optimization)
+- Maintenance burden should be minimized</p>
+<p><strong>Enterprise Forces</strong>:
+- Many enterprises already use Jenkins
+- Familiarity reduces adoption friction
+- Extensive plugin ecosystem meets diverse needs
+- Proven at massive scale</p>
+<h2 id="decision">Decision</h2>
+<p><strong>We will use Jenkins with Kubernetes plugin as the CI/CD platform for Fawkes.</strong></p>
+<p>Specifically:
+- <strong>Jenkins LTS</strong> (Long-Term Support, latest stable)
+- <strong>Kubernetes Plugin</strong> for dynamic agent provisioning
+- <strong>Configuration as Code (JCasC)</strong> for declarative Jenkins setup
+- <strong>Shared Pipeline Libraries</strong> for golden path reusability
+- <strong>Pipeline-as-Code</strong> (Jenkinsfile in every repository)
+- <strong>Security Scanning Integration</strong> (SonarQube, Trivy, OWASP Dependency-Check)
+- <strong>GitOps Integration</strong> (trigger ArgoCD after successful builds)</p>
+<h3 id="rationale">Rationale</h3>
+<ol>
+<li>
+<p><strong>Industry Standard</strong>: Jenkins is the most widely adopted CI/CD tool, with 20+ years of development, used by 70%+ of enterprises</p>
+</li>
+<li>
+<p><strong>Kubernetes Native</strong>: Jenkins Kubernetes plugin provides:</p>
+</li>
+<li>Dynamic agent provisioning (pods created on-demand)</li>
+<li>Isolated build environments (each build in separate pod)</li>
+<li>Resource efficiency (agents destroyed after build)</li>
+<li>Scalability (limited only by cluster capacity)</li>
+<li>
+<p>Cost optimization (only pay for active builds)</p>
+</li>
+<li>
+<p><strong>Pipeline as Code</strong>: Jenkinsfile DSL enables:</p>
+</li>
+<li>Version-controlled pipelines</li>
+<li>Code review of pipeline changes</li>
+<li>Reusable shared libraries</li>
+<li>Declarative and scripted syntax options</li>
+<li>
+<p>Mature, battle-tested</p>
+</li>
+<li>
+<p><strong>Massive Plugin Ecosystem</strong>: 1,800+ plugins covering:</p>
+</li>
+<li>SCM: GitHub, GitLab, Bitbucket</li>
+<li>Build tools: Maven, Gradle, npm, pip</li>
+<li>Quality: SonarQube, Checkstyle, PMD</li>
+<li>Security: Trivy, OWASP, git-secrets</li>
+<li>Deployment: Kubernetes, ArgoCD, Spinnaker</li>
+<li>
+<p>Notifications: Mattermost, email, Slack</p>
+</li>
+<li>
+<p><strong>Configuration as Code (JCasC)</strong>: </p>
+</li>
+<li>Declarative YAML configuration</li>
+<li>Version controlled in Git</li>
+<li>Reproducible Jenkins setup</li>
+<li>No manual UI configuration</li>
+<li>
+<p>Easy disaster recovery</p>
+</li>
+<li>
+<p><strong>Proven at Scale</strong>: Used by massive organizations:</p>
+</li>
+<li>Netflix (2,000+ builds/day)</li>
+<li>CloudBees customers (enterprise scale)</li>
+<li>Thousands of open source projects</li>
+<li>
+<p>Can handle 100+ concurrent builds easily</p>
+</li>
+<li>
+<p><strong>Shared Libraries</strong>: Reusable pipeline code:</p>
+</li>
+<li>DRY principle for pipelines</li>
+<li>Golden path templates</li>
+<li>Consistent build patterns</li>
+<li>
+<p>Centralized updates (change once, apply everywhere)</p>
+</li>
+<li>
+<p><strong>Enterprise Features Available</strong>: </p>
+</li>
+<li>RBAC and folder-based security</li>
+<li>Audit logging</li>
+<li>Blue Ocean UI (modern interface)</li>
+<li>Pipeline visualization</li>
+<li>
+<p>Extensive reporting</p>
+</li>
+<li>
+<p><strong>Strong Community</strong>: </p>
+</li>
+<li>Active development (monthly releases)</li>
+<li>Large user community</li>
+<li>Extensive documentation</li>
+<li>Many tutorials and examples</li>
+<li>
+<p>Commercial support available (CloudBees)</p>
+</li>
+<li>
+<p><strong>Backstage Integration</strong>: Official Jenkins plugin shows:</p>
+<ul>
+<li>Build status and history</li>
+<li>Console logs</li>
+<li>Test results</li>
+<li>Direct links to Jenkins</li>
+</ul>
+</li>
+<li>
+<p><strong>Familiarity</strong>: Most developers have used Jenkins:</p>
+<ul>
+<li>Reduces learning curve</li>
+<li>Easier contributor onboarding</li>
+<li>Extensive knowledge base (Stack Overflow, blogs)</li>
+</ul>
+</li>
+<li>
+<p><strong>Cost Effective</strong>: </p>
+<ul>
+<li>Open source (free)</li>
+<li>Only infrastructure costs</li>
+<li>Commercial support optional (CloudBees)</li>
+</ul>
+</li>
+</ol>
+<h2 id="consequences">Consequences</h2>
+<h3 id="positive">Positive</h3>
+<p>✅ <strong>Automated Quality Gates</strong>: Every commit tested, scanned, and validated before deployment</p>
+<p>✅ <strong>Fast Feedback</strong>: Developers get results in 5-10 minutes, not hours</p>
+<p>✅ <strong>Golden Paths</strong>: Shared libraries provide consistent, best-practice pipelines</p>
+<p>✅ <strong>Security Integration</strong>: SAST, dependency scanning, container scanning automated</p>
+<p>✅ <strong>Resource Efficiency</strong>: Dynamic Kubernetes agents scale up/down based on load</p>
+<p>✅ <strong>Pipeline as Code</strong>: Jenkinsfiles version-controlled, reviewed, and testable</p>
+<p>✅ <strong>Extensive Integrations</strong>: 1,800+ plugins cover virtually any tool</p>
+<p>✅ <strong>Proven Reliability</strong>: Battle-tested at enterprise scale for 15+ years</p>
+<p>✅ <strong>Developer Self-Service</strong>: Teams create/modify pipelines without platform team</p>
+<p>✅ <strong>DORA Metrics</strong>: Build events feed into deployment frequency and lead time calculations</p>
+<p>✅ <strong>Familiarity</strong>: Developers already know Jenkins, reducing onboarding time</p>
+<p>✅ <strong>Cost Effective</strong>: Open source with no licensing fees</p>
+<h3 id="negative">Negative</h3>
+<p>⚠️ <strong>UI Complexity</strong>: Traditional Jenkins UI dated, can be overwhelming (Blue Ocean helps)</p>
+<p>⚠️ <strong>Plugin Management</strong>: Keeping plugins updated requires ongoing effort</p>
+<p>⚠️ <strong>Groovy DSL</strong>: Jenkinsfile syntax (Groovy) has learning curve</p>
+<p>⚠️ <strong>Resource Usage</strong>: Jenkins controller requires ~2GB RAM minimum</p>
+<p>⚠️ <strong>Security Concerns</strong>: Jenkins has had security vulnerabilities (requires updates)</p>
+<p>⚠️ <strong>Configuration Complexity</strong>: Advanced pipelines can become complex</p>
+<p>⚠️ <strong>Legacy Baggage</strong>: 15+ years of features means some cruft</p>
+<p>⚠️ <strong>Agent Configuration</strong>: Setting up Kubernetes plugin requires careful configuration</p>
+<p>⚠️ <strong>Maintenance</strong>: Jenkins and plugins need regular updates</p>
+<h3 id="neutral">Neutral</h3>
+<p>◽ <strong>Alternative Modern Tools Exist</strong>: GitHub Actions, GitLab CI, Tekton are simpler but less feature-rich</p>
+<p>◽ <strong>Blue Ocean</strong>: Modern UI available but not default</p>
+<p>◽ <strong>CloudBees</strong>: Commercial support available if needed</p>
+<h3 id="mitigation-strategies">Mitigation Strategies</h3>
+<ol>
+<li><strong>UI Complexity</strong>:</li>
+<li>Use Blue Ocean for modern UI</li>
+<li>Standardize on pipeline-as-code (minimize UI usage)</li>
+<li>Create clear documentation and screenshots</li>
+<li>
+<p>Consider Backstage as primary interface (show status there)</p>
+</li>
+<li>
+<p><strong>Plugin Management</strong>:</p>
+</li>
+<li>Use dependabot or similar for plugin updates</li>
+<li>Test updates in staging before production</li>
+<li>Limit plugin count to essential ones</li>
+<li>
+<p>Document which plugins are used and why</p>
+</li>
+<li>
+<p><strong>Groovy DSL Learning Curve</strong>:</p>
+</li>
+<li>Provide Jenkinsfile templates for common scenarios</li>
+<li>Create shared library with high-level abstractions</li>
+<li>Include examples and comments in templates</li>
+<li>
+<p>Run workshops for developers</p>
+</li>
+<li>
+<p><strong>Security</strong>:</p>
+</li>
+<li>Subscribe to Jenkins security advisories</li>
+<li>Automate Jenkins updates (test first)</li>
+<li>Use RBAC to limit permissions</li>
+<li>Regular security audits</li>
+<li>
+<p>Keep plugins updated</p>
+</li>
+<li>
+<p><strong>Configuration</strong>:</p>
+</li>
+<li>Use JCasC for all configuration</li>
+<li>Store configuration in Git</li>
+<li>Use Infrastructure as Code for Jenkins deployment</li>
+<li>
+<p>Document configuration decisions</p>
+</li>
+<li>
+<p><strong>Kubernetes Plugin</strong>:</p>
+</li>
+<li>Start with simple pod templates</li>
+<li>Create library of pod templates for common scenarios</li>
+<li>Document resource limits and requests</li>
+<li>Monitor agent performance</li>
+</ol>
+<h2 id="alternatives-considered">Alternatives Considered</h2>
+<h3 id="alternative-1-github-actions">Alternative 1: GitHub Actions</h3>
+<p><strong>Pros</strong>:
+- Native GitHub integration (no webhooks)
+- YAML-based, simple syntax
+- Matrix builds for testing multiple versions
+- Large marketplace of actions
+- Free for public repos, generous limits
+- Modern, fast, cloud-native</p>
+<p><strong>Cons</strong>:
+- <strong>GitHub Lock-In</strong>: Only works with GitHub
+- <strong>Limited Self-Hosting</strong>: Self-hosted runners less mature than Jenkins
+- <strong>Cost</strong>: Expensive for private repos at scale ($0.008/minute, adds up)
+- <strong>Less Flexible</strong>: More opinionated than Jenkins
+- <strong>Smaller Plugin Ecosystem</strong>: Fewer actions than Jenkins plugins
+- <strong>No Shared Libraries</strong>: Harder to share pipeline code across repos
+- <strong>Limited RBAC</strong>: Access control less granular</p>
+<p><strong>Reason for Rejection</strong>: While excellent for GitHub-centric projects, GitHub Actions creates vendor lock-in. Cost at scale significant (100 builds/day × 10 min × $0.008 = $240/month, $2,880/year just for CI). Self-hosted runners less mature than Jenkins Kubernetes agents. May use for Fawkes repo itself but not as platform-wide CI solution.</p>
+<h3 id="alternative-2-gitlab-ci">Alternative 2: GitLab CI</h3>
+<p><strong>Pros</strong>:
+- Native GitLab integration
+- YAML-based pipelines
+- Built-in container registry
+- Auto DevOps features
+- Good UI and UX
+- Free tier generous</p>
+<p><strong>Cons</strong>:
+- <strong>GitLab Required</strong>: We use GitHub, not GitLab
+- <strong>Migration Overhead</strong>: Would need to migrate or mirror repos
+- <strong>Less Flexible</strong>: More opinionated than Jenkins
+- <strong>Smaller Ecosystem</strong>: Fewer integrations than Jenkins
+- <strong>Learning Curve</strong>: Teams would need to learn new tool</p>
+<p><strong>Reason for Rejection</strong>: GitLab CI excellent if using GitLab, but we use GitHub. Migrating repos or maintaining mirrors adds complexity without clear benefit. Jenkins works with any Git provider.</p>
+<h3 id="alternative-3-tekton-pipelines">Alternative 3: Tekton Pipelines</h3>
+<p><strong>Pros</strong>:
+- Kubernetes-native (CRDs)
+- Cloud-native, modern architecture
+- Pipeline-as-code (YAML)
+- CNCF project (good governance)
+- Growing adoption
+- True cloud-native approach</p>
+<p><strong>Cons</strong>:
+- <strong>Immature</strong>: Newer project, less proven at scale
+- <strong>Steeper Learning Curve</strong>: CRDs and Tasks/Pipelines concepts unfamiliar
+- <strong>No UI</strong>: Requires separate UI (Tekton Dashboard basic)
+- <strong>Smaller Ecosystem</strong>: Fewer pre-built Tasks than Jenkins plugins
+- <strong>Limited Shared Libraries</strong>: Harder to share pipeline code
+- <strong>Complex Setup</strong>: More moving parts than Jenkins
+- <strong>Debugging Harder</strong>: Kubernetes-native means more abstraction</p>
+<p><strong>Reason for Rejection</strong>: Tekton philosophically appealing (cloud-native) but less mature and harder to use. Jenkins provides 80% of benefits with 20% of complexity. May revisit Tekton in 2-3 years when more mature and ecosystem richer.</p>
+<h3 id="alternative-4-circleci-saas">Alternative 4: CircleCI (SaaS)</h3>
+<p><strong>Pros</strong>:
+- Fast builds (optimized infrastructure)
+- Good UI and developer experience
+- Docker-first approach
+- Orbs (reusable config)
+- Free tier available
+- Popular with startups</p>
+<p><strong>Cons</strong>:
+- <strong>SaaS Only</strong>: No self-hosted option (CircleCI Server discontinued)
+- <strong>Cost</strong>: $15-60/user/month depending on tier (expensive at scale)
+- <strong>Vendor Lock-In</strong>: Proprietary platform
+- <strong>Limited Control</strong>: Can't customize deeply
+- <strong>Data on CircleCI Servers</strong>: Security/compliance concerns</p>
+<p><strong>Reason for Rejection</strong>: SaaS-only and proprietary conflicts with self-hosted open source values. Cost at 100 developers: $18,000-$72,000/year. Cannot customize to our exact needs.</p>
+<h3 id="alternative-5-drone-ci">Alternative 5: Drone CI</h3>
+<p><strong>Pros</strong>:
+- Open source and self-hosted
+- Container-native (Docker)
+- YAML-based pipelines
+- Lightweight
+- Easy to set up
+- Good GitHub integration</p>
+<p><strong>Cons</strong>:
+- <strong>Smaller Community</strong>: Much smaller than Jenkins
+- <strong>Limited Plugins</strong>: Fewer integrations than Jenkins
+- <strong>Less Mature</strong>: Newer, less battle-tested
+- <strong>Uncertain Future</strong>: Development pace variable
+- <strong>Limited Enterprise Features</strong>: RBAC, audit logging less robust
+- <strong>Smaller Ecosystem</strong>: Fewer shared pipelines</p>
+<p><strong>Reason for Rejection</strong>: While simpler than Jenkins, Drone's smaller community and ecosystem are concerns. Jenkins' maturity and plugin ecosystem provide more value. Drone good for simple use cases but Fawkes needs comprehensive CI solution.</p>
+<h3 id="alternative-6-concourse-ci">Alternative 6: Concourse CI</h3>
+<p><strong>Pros</strong>:
+- Pipeline-as-code (YAML)
+- Resource-based model (interesting approach)
+- Reproducible builds
+- Open source
+- Kubernetes support</p>
+<p><strong>Cons</strong>:
+- <strong>Steep Learning Curve</strong>: Resource model unintuitive
+- <strong>Small Community</strong>: Very small compared to Jenkins
+- <strong>Limited Plugins</strong>: Minimal ecosystem
+- <strong>Complex Setup</strong>: Many components to deploy
+- <strong>No UI for Configuration</strong>: All YAML, no web UI
+- <strong>Limited Adoption</strong>: Few large organizations use it</p>
+<p><strong>Reason for Rejection</strong>: Concourse's resource-based model interesting but unintuitive. Very small community and ecosystem. Learning curve not justified by benefits over Jenkins.</p>
+<h3 id="alternative-7-spinnaker">Alternative 7: Spinnaker</h3>
+<p><strong>Pros</strong>:
+- Continuous delivery focus
+- Multi-cloud native
+- Advanced deployment strategies
+- Netflix-proven</p>
+<p><strong>Cons</strong>:
+- <strong>Not CI Tool</strong>: Continuous delivery only, not continuous integration
+- <strong>Very Complex</strong>: Difficult to set up and maintain
+- <strong>Resource Heavy</strong>: 10+ microservices, high overhead
+- <strong>Overkill</strong>: More than we need</p>
+<p><strong>Reason for Rejection</strong>: Spinnaker is CD tool, not CI. We need CI/CD together. Spinnaker's complexity unjustified. Using Jenkins (CI) + ArgoCD (CD) cleaner separation of concerns.</p>
+<h2 id="related-decisions">Related Decisions</h2>
+<ul>
+<li><strong>ADR-001</strong>: Kubernetes (Jenkins uses Kubernetes plugin for agents)</li>
+<li><strong>ADR-002</strong>: Backstage (Jenkins plugin shows build status)</li>
+<li><strong>ADR-003</strong>: ArgoCD (Jenkins triggers ArgoCD deployments)</li>
+<li><strong>ADR-007</strong>: Mattermost (Jenkins sends build notifications)</li>
+<li><strong>Future ADR</strong>: Shared Pipeline Library Structure</li>
+<li><strong>Future ADR</strong>: Build Caching Strategy</li>
+</ul>
+<h2 id="implementation-notes">Implementation Notes</h2>
+<h3 id="deployment-architecture">Deployment Architecture</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Jenkins Deployment</span>
+<span class="nt">jenkins</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-ci</span>
+
+<span class="w">  </span><span class="nt">components</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">jenkins-controller</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jenkins/jenkins:lts</span>
+<span class="w">        </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 (stateful, uses persistent volume)</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2 cores</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4Gi</span>
+<span class="w">        </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50Gi (PVC for Jenkins home)</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">jenkins-agents</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">dynamic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true (Kubernetes plugin creates on-demand)</span>
+<span class="w">        </span><span class="nt">pod-templates</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">maven-agent</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 core</span>
+<span class="w">                </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2Gi</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">node-agent</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 core</span>
+<span class="w">                </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">python-agent</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 core</span>
+<span class="w">                </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">docker-agent</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2 cores</span>
+<span class="w">                </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4Gi</span>
+
+<span class="w">  </span><span class="nt">integrations</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github (webhooks, status checks)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sonarqube (code quality scanning)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trivy (container scanning)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd (deployment triggering)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mattermost (notifications)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage (build status plugin)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">harbor (container registry)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-metrics-service (build events)</span>
+</code></pre></div>
+<h3 id="configuration-as-code-jcasc">Configuration as Code (JCasC)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># jenkins-casc.yaml</span>
+<span class="nt">jenkins</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">systemMessage</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Fawkes</span><span class="nv"> </span><span class="s">Platform</span><span class="nv"> </span><span class="s">CI/CD&quot;</span>
+<span class="w">  </span><span class="nt">numExecutors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">  </span><span class="c1"># Use Kubernetes agents only</span>
+
+<span class="w">  </span><span class="nt">securityRealm</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">github</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">githubWebUri</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://github.com&quot;</span>
+<span class="w">      </span><span class="nt">clientID</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${GITHUB_CLIENT_ID}&quot;</span>
+<span class="w">      </span><span class="nt">clientSecret</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${GITHUB_CLIENT_SECRET}&quot;</span>
+
+<span class="w">  </span><span class="nt">authorizationStrategy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">globalMatrix</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">permissions</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Overall/Administer:admin&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Overall/Read:authenticated&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Job/Build:authenticated&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Job/Cancel:authenticated&quot;</span>
+
+<span class="w">  </span><span class="nt">clouds</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kubernetes</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes&quot;</span>
+<span class="w">        </span><span class="nt">serverUrl</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://kubernetes.default&quot;</span>
+<span class="w">        </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fawkes-ci&quot;</span>
+<span class="w">        </span><span class="nt">jenkinsUrl</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://jenkins:8080&quot;</span>
+<span class="w">        </span><span class="nt">jenkinsTunnel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;jenkins-agent:50000&quot;</span>
+<span class="w">        </span><span class="nt">templates</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;maven&quot;</span>
+<span class="w">            </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;maven&quot;</span>
+<span class="w">            </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;maven&quot;</span>
+<span class="w">                </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;maven:3.8-openjdk-17&quot;</span>
+<span class="w">                </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/bin/sh</span><span class="nv"> </span><span class="s">-c&quot;</span>
+<span class="w">                </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cat&quot;</span>
+<span class="w">                </span><span class="nt">ttyEnabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                </span><span class="nt">resourceRequestCpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">                </span><span class="nt">resourceRequestMemory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2Gi&quot;</span>
+<span class="w">                </span><span class="nt">resourceLimitCpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2&quot;</span>
+<span class="w">                </span><span class="nt">resourceLimitMemory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;4Gi&quot;</span>
+
+<span class="nt">unclassified</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">globalLibraries</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">libraries</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;fawkes-pipeline-library&quot;</span>
+<span class="w">        </span><span class="nt">retriever</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">modernSCM</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">scm</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">git</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">remote</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://github.com/paruff/fawkes-pipeline-library&quot;</span>
+<span class="w">                </span><span class="nt">credentialsId</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;github-token&quot;</span>
+</code></pre></div>
+<h3 id="shared-pipeline-library-structure">Shared Pipeline Library Structure</h3>
+<div class="highlight"><pre><span></span><code>fawkes-pipeline-library/
+├── vars/
+│   ├── mavenPipeline.groovy
+│   ├── nodePipeline.groovy
+│   ├── pythonPipeline.groovy
+│   ├── dockerBuild.groovy
+│   ├── securityScan.groovy
+│   └── deployToArgoCD.groovy
+├── src/
+│   └── com/
+│       └── fawkes/
+│           ├── Build.groovy
+│           ├── Test.groovy
+│           ├── Security.groovy
+│           └── Deploy.groovy
+└── resources/
+    └── pod-templates/
+        ├── maven.yaml
+        ├── node.yaml
+        └── python.yaml
+</code></pre></div>
+<h3 id="golden-path-jenkinsfile-examples">Golden Path Jenkinsfile Examples</h3>
+<p><strong>Java Spring Boot</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+
+<span class="n">mavenPipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">sonarQubeProject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
+<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service&#39;</span>
+<span class="w">    </span><span class="n">argocdApp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-service-dev&#39;</span>
+<span class="w">    </span><span class="n">notifyChannel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;team-builds&#39;</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Python FastAPI</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+
+<span class="n">pythonPipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">pythonVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;3.11&#39;</span>
+<span class="w">    </span><span class="n">testCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pytest --cov=src tests/&#39;</span>
+<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-python-service&#39;</span>
+<span class="w">    </span><span class="n">argocdApp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-python-service-dev&#39;</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Node.js Express</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipeline-library&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+
+<span class="n">nodePipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">nodeVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;18&#39;</span>
+<span class="w">    </span><span class="n">buildCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;npm run build&#39;</span>
+<span class="w">    </span><span class="n">testCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;npm test&#39;</span>
+<span class="w">    </span><span class="n">dockerImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-node-service&#39;</span>
+<span class="w">    </span><span class="n">argocdApp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;my-node-service-dev&#39;</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="complete-pipeline-example-without-library">Complete Pipeline Example (Without Library)</h3>
+<div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">yaml</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">apiVersion: v1</span>
+<span class="s2">kind: Pod</span>
+<span class="s2">spec:</span>
+<span class="s2">  containers:</span>
+<span class="s2">  - name: maven</span>
+<span class="s2">    image: maven:3.8-openjdk-17</span>
+<span class="s2">    command: [&#39;cat&#39;]</span>
+<span class="s2">    tty: true</span>
+<span class="s2">  - name: docker</span>
+<span class="s2">    image: docker:latest</span>
+<span class="s2">    command: [&#39;cat&#39;]</span>
+<span class="s2">    tty: true</span>
+<span class="s2">    volumeMounts:</span>
+<span class="s2">    - name: docker-sock</span>
+<span class="s2">      mountPath: /var/run/docker.sock</span>
+<span class="s2">  - name: trivy</span>
+<span class="s2">    image: aquasec/trivy:latest</span>
+<span class="s2">    command: [&#39;cat&#39;]</span>
+<span class="s2">    tty: true</span>
+<span class="s2">  volumes:</span>
+<span class="s2">  - name: docker-sock</span>
+<span class="s2">    hostPath:</span>
+<span class="s2">      path: /var/run/docker.sock</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">DOCKER_REGISTRY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;harbor.fawkes.io&#39;</span>
+<span class="w">        </span><span class="n">IMAGE_NAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${DOCKER_REGISTRY}/myapp/myservice&quot;</span>
+<span class="w">        </span><span class="n">IMAGE_TAG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${env.GIT_COMMIT.take(7)}&quot;</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Checkout&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">checkout</span><span class="w"> </span><span class="n">scm</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn clean package -DskipTests&#39;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn test&#39;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">            </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">always</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">junit</span><span class="w"> </span><span class="s1">&#39;target/surefire-reports/*.xml&#39;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;SonarQube Analysis&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">withSonarQubeEnv</span><span class="o">(</span><span class="s1">&#39;SonarQube&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn sonar:sonar&#39;</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Quality Gate&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">timeout</span><span class="o">(</span><span class="nl">time:</span><span class="w"> </span><span class="mi">5</span><span class="o">,</span><span class="w"> </span><span class="nl">unit:</span><span class="w"> </span><span class="s1">&#39;MINUTES&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">waitForQualityGate</span><span class="w"> </span><span class="nl">abortPipeline:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build Docker Image&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;docker&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                        docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .</span>
+<span class="s2">                        docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest</span>
+<span class="s2">                    &quot;&quot;&quot;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Security Scan&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;trivy&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                        trivy image --severity HIGH,CRITICAL --exit-code 1 ${IMAGE_NAME}:${IMAGE_TAG}</span>
+<span class="s2">                    &quot;&quot;&quot;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Push Image&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;docker&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">withCredentials</span><span class="o">([</span><span class="n">usernamePassword</span><span class="o">(</span><span class="nl">credentialsId:</span><span class="w"> </span><span class="s1">&#39;harbor-credentials&#39;</span><span class="o">,</span><span class="w"> </span>
+<span class="w">                                                     </span><span class="nl">usernameVariable:</span><span class="w"> </span><span class="s1">&#39;USER&#39;</span><span class="o">,</span><span class="w"> </span>
+<span class="w">                                                     </span><span class="nl">passwordVariable:</span><span class="w"> </span><span class="s1">&#39;PASS&#39;</span><span class="o">)])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                            echo \$PASS | docker login ${DOCKER_REGISTRY} -u \$USER --password-stdin</span>
+<span class="s2">                            docker push ${IMAGE_NAME}:${IMAGE_TAG}</span>
+<span class="s2">                            docker push ${IMAGE_NAME}:latest</span>
+<span class="s2">                        &quot;&quot;&quot;</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Update GitOps&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="c1">// Update image tag in GitOps repository</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                        git clone https://github.com/paruff/fawkes-gitops.git</span>
+<span class="s2">                        cd fawkes-gitops</span>
+<span class="s2">                        sed -i &#39;s|image: .*|image: ${IMAGE_NAME}:${IMAGE_TAG}|&#39; apps/dev/myservice/deployment.yaml</span>
+<span class="s2">                        git add apps/dev/myservice/deployment.yaml</span>
+<span class="s2">                        git commit -m &quot;Update myservice to ${IMAGE_TAG}&quot;</span>
+<span class="s2">                        git push</span>
+<span class="s2">                    &quot;&quot;&quot;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Notify DORA Service&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                        curl -X POST https://dora-metrics.fawkes.io/webhook/build \\</span>
+<span class="s2">                          -H &#39;Content-Type: application/json&#39; \\</span>
+<span class="s2">                          -d &#39;{</span>
+<span class="s2">                            &quot;service&quot;: &quot;myservice&quot;,</span>
+<span class="s2">                            &quot;commit&quot;: &quot;${env.GIT_COMMIT}&quot;,</span>
+<span class="s2">                            &quot;buildNumber&quot;: &quot;${env.BUILD_NUMBER}&quot;,</span>
+<span class="s2">                            &quot;status&quot;: &quot;SUCCESS&quot;,</span>
+<span class="s2">                            &quot;duration&quot;: &quot;${currentBuild.duration}&quot;,</span>
+<span class="s2">                            &quot;timestamp&quot;: &quot;${new Date().format(&#39;yyyy-MM-dd HH:mm:ss&#39;)}&quot;</span>
+<span class="s2">                          }&#39;</span>
+<span class="s2">                    &quot;&quot;&quot;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">success</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">mattermostSend</span><span class="o">(</span>
+<span class="w">                </span><span class="nl">channel:</span><span class="w"> </span><span class="s1">&#39;team-builds&#39;</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">color:</span><span class="w"> </span><span class="s1">&#39;good&#39;</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;✅ Build #${env.BUILD_NUMBER} succeeded for ${env.JOB_NAME}\nCommit: ${env.GIT_COMMIT.take(7)}\nDuration: ${currentBuild.durationString}&quot;</span>
+<span class="w">            </span><span class="o">)</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">        </span><span class="n">failure</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">mattermostSend</span><span class="o">(</span>
+<span class="w">                </span><span class="nl">channel:</span><span class="w"> </span><span class="s1">&#39;team-builds&#39;</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">color:</span><span class="w"> </span><span class="s1">&#39;danger&#39;</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;❌ Build #${env.BUILD_NUMBER} failed for ${env.JOB_NAME}\nCommit: ${env.GIT_COMMIT.take(7)}&quot;</span>
+<span class="w">            </span><span class="o">)</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="plugin-list-essential">Plugin List (Essential)</h3>
+<p><strong>Core Plugins</strong>:
+- Kubernetes Plugin (dynamic agents)
+- Pipeline Plugin (Jenkinsfile support)
+- Git Plugin (Git integration)
+- GitHub Plugin (GitHub webhooks)
+- Credentials Plugin (secret management)
+- Configuration as Code Plugin (JCasC)</p>
+<p><strong>Quality &amp; Security</strong>:
+- SonarQube Scanner Plugin
+- Warnings Next Generation Plugin
+- JUnit Plugin
+- Code Coverage Plugin</p>
+<p><strong>Build Tools</strong>:
+- Maven Integration Plugin
+- NodeJS Plugin
+- Python Plugin
+- Docker Plugin</p>
+<p><strong>Deployment</strong>:
+- Kubernetes CLI Plugin
+- HTTP Request Plugin (ArgoCD API)</p>
+<p><strong>Notifications</strong>:
+- Mattermost Plugin
+- Email Extension Plugin</p>
+<p><strong>UI</strong>:
+- Blue Ocean Plugin (modern UI)
+- Dashboard View Plugin</p>
+<h3 id="monitoring-observability">Monitoring &amp; Observability</h3>
+<p><strong>Prometheus Metrics</strong> (via Jenkins Prometheus plugin):
+- jenkins_builds_total
+- jenkins_builds_duration_seconds
+- jenkins_queue_size
+- jenkins_node_online_total
+- jenkins_job_success_rate</p>
+<p><strong>Grafana Dashboard</strong>:
+- Build success/failure rates
+- Build duration trends (P50, P95, P99)
+- Queue size over time
+- Agent utilization
+- Plugin health</p>
+<p><strong>Alerts</strong>:
+- Build queue &gt;10 for &gt;15 minutes
+- Build failure rate &gt;20% (rolling 24h)
+- Jenkins controller down &gt;5 minutes
+- Disk space &lt;20%</p>
+<h3 id="backup-disaster-recovery">Backup &amp; Disaster Recovery</h3>
+<p><strong>Backup Strategy</strong>:
+- Jenkins configuration in Git (JCasC)
+- Persistent volume snapshots (daily)
+- Plugin list documented
+- Job configurations in Git (Jenkinsfile per repo)</p>
+<p><strong>Recovery</strong>:
+1. Redeploy Jenkins from Helm + JCasC
+2. Restore persistent volume from snapshot (job history)
+3. Plugins auto-installed via JCasC
+4. Jobs auto-discovered from GitHub organizations</p>
+<p><strong>RTO</strong>: &lt;4 hours
+<strong>RPO</strong>: &lt;24 hours</p>
+<h3 id="performance-optimization">Performance Optimization</h3>
+<p><strong>Build Caching</strong>:
+- Maven local repository cache (PV)
+- npm cache (PV)
+- Docker layer caching
+- Workspace caching for reuse</p>
+<p><strong>Agent Optimization</strong>:
+- Right-size agent resources
+- Use pod templates with pre-pulled images
+- Implement build timeouts
+- Limit concurrent builds per agent</p>
+<p><strong>Controller Optimization</strong>:
+- Increase heap size for large installations
+- Use separate build agents (don't build on controller)
+- Regular cleanup of old builds
+- Archive artifacts externally (S3/MinIO)</p>
+<h2 id="monitoring-this-decision">Monitoring This Decision</h2>
+<p>We will revisit this ADR if:
+- Jenkins development significantly slows or stops
+- A cloud-native alternative (Tekton, Dagger) becomes significantly more mature
+- Operational burden (updates, plugins) exceeds benefits
+- GitHub Actions or GitLab CI costs become competitive with self-hosted
+- Team strongly prefers different CI tool
+- Security concerns cannot be adequately addressed</p>
+<p><strong>Next Review Date</strong>: April 8, 2026 (6 months)</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.jenkins.io/doc/">Jenkins Official Documentation</a></li>
+<li><a href="https://plugins.jenkins.io/kubernetes/">Jenkins Kubernetes Plugin</a></li>
+<li><a href="https://github.com/jenkinsci/configuration-as-code-plugin">Configuration as Code Plugin</a></li>
+<li><a href="https://www.jenkins.io/doc/book/pipeline/">Jenkins Pipeline Documentation</a></li>
+<li><a href="https://www.jenkins.io/doc/book/pipeline/shared-libraries/">Shared Libraries Documentation</a></li>
+<li><a href="https://github.com/jenkinsci/helm-charts">Jenkins Helm Chart</a></li>
+</ul>
+<h2 id="notes">Notes</h2>
+<h3 id="why-not-github-actions">Why Not GitHub Actions?</h3>
+<p>Most common question: "Why not just use GitHub Actions?"</p>
+<p><strong>GitHub Actions excellent for</strong>:
+- GitHub-hosted open source projects
+- Simple CI workflows
+- GitHub-centric organizations</p>
+<p><strong>Jenkins better for Fawkes because</strong>:
+- <strong>Vendor neutral</strong>: Works with any Git provider
+- <strong>Self-hosted first</strong>: True control, no SaaS lock-in
+- <strong>More flexible</strong>: Less opinionated, more customizable
+- <strong>Shared libraries</strong>: Better code reuse across pipelines
+- <strong>Enterprise features</strong>: RBAC, audit logging more mature
+- <strong>Cost at scale</strong>: Free except infrastructure vs. GitHub's per-minute pricing</p>
+<p>Can use both: GitHub Actions for Fawkes repo itself, Jenkins for platform users.</p>
+<h3 id="jenkins-security-best-practices">Jenkins Security Best Practices</h3>
+<ol>
+<li><strong>Keep Updated</strong>: Subscribe to security advisories, apply patches promptly</li>
+<li><strong>Minimize Plugins</strong>: Only install necessary plugins</li>
+<li><strong>Use RBAC</strong>: Least privilege access model</li>
+<li><strong>Secrets Management</strong>: Use Credentials Plugin, not hardcoded secrets</li>
+<li><strong>Network Segmentation</strong>: Restrict Jenkins network access</li>
+<li><strong>Audit Logging</strong>: Enable and monitor audit logs</li>
+<li><strong>CSRF Protection</strong>: Enable CSRF tokens</li>
+<li><strong>Content Security Policy</strong>: Configure CSP headers</li>
+</ol>
+<h3 id="kubernetes-plugin-configuration-tips">Kubernetes Plugin Configuration Tips</h3>
+<ol>
+<li><strong>Resource Limits</strong>: Always set limits and requests</li>
+<li><strong>Service Account</strong>: Use dedicated service account with minimal permissions</li>
+<li><strong>Network Policies</strong>: Restrict agent network access</li>
+<li><strong>Image Pull Policy</strong>: Use IfNotPresent to reduce registry load</li>
+<li><strong>Pod Templates</strong>: Create library of reusable templates</li>
+<li><strong>Timeouts</strong>: Set appropriate pod and container timeouts</li>
+<li><strong>Cleanup</strong>: Configure automatic pod deletion after build</li>
+</ol>
+<hr />
+<p><strong>Decision Made By</strong>: Platform Architecture Team<br />
+<strong>Approved By</strong>: Project Lead<br />
+<strong>Date</strong>: October 8, 2025<br />
+<strong>Author</strong>: [Platform Architect Name]<br />
+<strong>Last Updated</strong>: October 8, 2025</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2444 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.21">
+    
+    
+      
+        <title>ADR-005: Terraform for Infrastructure as Code - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2a3383ac.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#adr-005-terraform-for-infrastructure-as-code" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ADR-005: Terraform for Infrastructure as Code
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Implementation Paths
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Wins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Capabilities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Capabilities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Feedback
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Recovery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Patterns
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure as Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Tools
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Tools
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Continuous Delivery
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Spinnaker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Jenkins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kubernetes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-need-for-infrastructure-as-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Need for Infrastructure as Code
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements-for-iac-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requirements for IaC Tool
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forces-at-play" class="md-nav__link">
+    <span class="md-ellipsis">
+      Forces at Play
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consequences
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consequences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive" class="md-nav__link">
+    <span class="md-ellipsis">
+      Positive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#negative" class="md-nav__link">
+    <span class="md-ellipsis">
+      Negative
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#neutral" class="md-nav__link">
+    <span class="md-ellipsis">
+      Neutral
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mitigation-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mitigation Strategies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternatives Considered
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-1-pulumi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 1: Pulumi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-2-aws-cloudformation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 2: AWS CloudFormation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-3-azure-resource-manager-arm-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 3: Azure Resource Manager (ARM) Templates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-4-ansible" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 4: Ansible
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-5-crossplane" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 5: Crossplane
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-6-opentofu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 6: OpenTofu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-7-terraform-cdk-cloud-development-kit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative 7: Terraform CDK (Cloud Development Kit)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Decisions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Notes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#repository-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Repository Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-example-eks-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      Module Example (EKS Cluster)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd-integration-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI/CD Integration (GitHub Actions)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-with-terratest" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing with Terratest
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migration-to-crossplane-phase-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Migration to Crossplane (Phase 2)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-this-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring This Decision
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#terraform-vs-pulumi-the-debate" class="md-nav__link">
+    <span class="md-ellipsis">
+      Terraform vs. Pulumi: The Debate
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraform-license-change-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Terraform License Change Context
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-management-is-critical" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Management is Critical
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="adr-005-terraform-for-infrastructure-as-code">ADR-005: Terraform for Infrastructure as Code</h1>
+<h2 id="status">Status</h2>
+<p><strong>Accepted</strong> - October 8, 2025</p>
+<h2 id="context">Context</h2>
+<p>Fawkes requires an Infrastructure as Code (IaC) tool to provision and manage cloud infrastructure declaratively. IaC is fundamental to platform engineering, enabling repeatable, version-controlled, auditable infrastructure management across multiple clouds.</p>
+<h3 id="the-need-for-infrastructure-as-code">The Need for Infrastructure as Code</h3>
+<p><strong>Current Challenges Without IaC</strong>:
+- <strong>Manual Provisioning</strong>: Error-prone, time-consuming, not documented
+- <strong>Configuration Drift</strong>: Infrastructure diverges from documented state
+- <strong>No Version Control</strong>: Can't track infrastructure changes over time
+- <strong>No Code Review</strong>: Infrastructure changes not peer-reviewed
+- <strong>Environment Inconsistencies</strong>: Dev, staging, prod configured differently
+- <strong>Disaster Recovery</strong>: Rebuilding infrastructure from scratch is slow/impossible
+- <strong>No Self-Service</strong>: Developers can't provision infrastructure without tickets
+- <strong>Tribal Knowledge</strong>: Infrastructure setup exists only in operators' heads</p>
+<p><strong>What Infrastructure as Code Provides</strong>:
+1. <strong>Declarative Configuration</strong>: Describe desired state, tool handles how to achieve it
+2. <strong>Version Control</strong>: All infrastructure changes tracked in Git
+3. <strong>Code Review</strong>: Infrastructure changes go through PR process
+4. <strong>Repeatability</strong>: Provision identical infrastructure multiple times
+5. <strong>Environment Parity</strong>: Dev/staging/prod from same code with different variables
+6. <strong>Disaster Recovery</strong>: Rebuild entire infrastructure from code
+7. <strong>Documentation</strong>: Code is documentation (always up-to-date)
+8. <strong>Automation</strong>: Integrate with CI/CD for automated infrastructure changes</p>
+<h3 id="requirements-for-iac-tool">Requirements for IaC Tool</h3>
+<p><strong>Core Requirements</strong>:
+- <strong>Multi-Cloud</strong>: Support AWS, Azure, GCP with consistent workflow
+- <strong>Declarative</strong>: Describe desired state, not procedural steps
+- <strong>State Management</strong>: Track current infrastructure state
+- <strong>Plan/Preview</strong>: Show changes before applying
+- <strong>Modular</strong>: Reusable modules for common patterns
+- <strong>Mature Ecosystem</strong>: Providers for 100+ services
+- <strong>Large Community</strong>: Extensive documentation, examples, support
+- <strong>Open Source</strong>: Transparent, no vendor lock-in</p>
+<p><strong>DORA Alignment</strong>:
+- <strong>Infrastructure Changes</strong>: Version-controlled, reviewable infrastructure
+- <strong>Deployment Frequency</strong>: Automated infrastructure enables faster deployments
+- <strong>Lead Time</strong>: Infrastructure provisioning no longer bottleneck
+- <strong>Change Failure Rate</strong>: Preview changes before applying reduces errors</p>
+<p><strong>Integration Requirements</strong>:
+- <strong>GitHub</strong>: Store modules and configurations
+- <strong>Jenkins</strong>: Automate terraform apply in pipelines
+- <strong>Kubernetes</strong>: Provision clusters, configure resources
+- <strong>Cloud Providers</strong>: AWS, Azure, GCP
+- <strong>Backstage</strong>: Show infrastructure status (future)</p>
+<h3 id="forces-at-play">Forces at Play</h3>
+<p><strong>Technical Forces</strong>:
+- Need multi-cloud support for flexibility
+- State management critical for tracking resources
+- Preview capability reduces risk of changes
+- Modular approach enables code reuse</p>
+<p><strong>Operational Forces</strong>:
+- Platform team can't manually provision everything
+- Need disaster recovery capabilities
+- Environment parity critical for testing
+- Self-service infrastructure reduces tickets</p>
+<p><strong>Developer Experience Forces</strong>:
+- Developers want infrastructure on-demand
+- Need clear documentation of infrastructure
+- Want confidence changes won't break production
+- Prefer familiar tools and workflows</p>
+<p><strong>Ecosystem Forces</strong>:
+- Terraform has dominant market share
+- Extensive provider ecosystem
+- Large community and knowledge base
+- Enterprise adoption provides credibility</p>
+<h2 id="decision">Decision</h2>
+<p><strong>We will use Terraform as the primary Infrastructure as Code tool for Fawkes.</strong></p>
+<p>Specifically:
+- <strong>Terraform OSS</strong> (Open Source, latest stable version)
+- <strong>HCL</strong> (HashiCorp Configuration Language)
+- <strong>Terraform Cloud</strong> for state management (free tier, 5 users)
+- <strong>Modular approach</strong> with reusable modules
+- <strong>Multi-environment</strong> support (dev, staging, prod)
+- <strong>Version pinning</strong> for providers and modules
+- <strong>Automated testing</strong> with Terratest (critical modules)
+- <strong>Crossplane</strong> for Kubernetes-native IaC (roadmap, Phase 2)</p>
+<h3 id="rationale">Rationale</h3>
+<ol>
+<li>
+<p><strong>Industry Standard</strong>: Terraform is the most widely adopted IaC tool, with 40,000+ GitHub stars, used by 70%+ of organizations doing multi-cloud</p>
+</li>
+<li>
+<p><strong>True Multi-Cloud</strong>: Consistent workflow across clouds:</p>
+</li>
+<li>Same HCL syntax for AWS, Azure, GCP</li>
+<li>Unified state management</li>
+<li>Single tool to learn</li>
+<li>
+<p>Providers for 3,000+ services</p>
+</li>
+<li>
+<p><strong>Mature and Battle-Tested</strong>: </p>
+</li>
+<li>10+ years of development</li>
+<li>Production-proven at enterprise scale</li>
+<li>Extensive real-world validation</li>
+<li>
+<p>Known edge cases well-documented</p>
+</li>
+<li>
+<p><strong>Declarative Language</strong>: HCL describes desired state:</p>
+</li>
+<li>Easy to read and understand</li>
+<li>Predictable behavior</li>
+<li>Idempotent operations</li>
+<li>
+<p>Less error-prone than imperative scripts</p>
+</li>
+<li>
+<p><strong>State Management</strong>: </p>
+</li>
+<li>Tracks actual infrastructure state</li>
+<li>Enables drift detection</li>
+<li>Supports team collaboration</li>
+<li>
+<p>Remote state backends (S3, Terraform Cloud)</p>
+</li>
+<li>
+<p><strong>Plan Before Apply</strong>: </p>
+</li>
+<li>Preview changes before executing</li>
+<li>Reduces fear of infrastructure changes</li>
+<li>Catch mistakes before they happen</li>
+<li>
+<p>Show changes in PR reviews</p>
+</li>
+<li>
+<p><strong>Massive Provider Ecosystem</strong>: </p>
+</li>
+<li>AWS: 1,000+ resources</li>
+<li>Azure: 1,500+ resources</li>
+<li>GCP: 800+ resources</li>
+<li>Kubernetes: Full support</li>
+<li>
+<p>3,000+ total providers</p>
+</li>
+<li>
+<p><strong>Module Registry</strong>: </p>
+</li>
+<li>Public registry with 10,000+ modules</li>
+<li>Reusable, community-validated code</li>
+<li>Can publish private modules</li>
+<li>
+<p>Accelerates development</p>
+</li>
+<li>
+<p><strong>Large Community</strong>: </p>
+</li>
+<li>Extensive documentation</li>
+<li>Thousands of tutorials and examples</li>
+<li>Active forums and Slack channels</li>
+<li>
+<p>Commercial support available (HashiCorp)</p>
+</li>
+<li>
+<p><strong>Testing Support</strong>: </p>
+<ul>
+<li>Terratest for integration testing</li>
+<li>terraform validate for syntax</li>
+<li>terraform fmt for formatting</li>
+<li>tflint for best practices</li>
+</ul>
+</li>
+<li>
+<p><strong>CI/CD Integration</strong>: </p>
+<ul>
+<li>Easy to integrate with Jenkins</li>
+<li>Automated plan on PR</li>
+<li>Automated apply on merge</li>
+<li>GitOps workflow support</li>
+</ul>
+</li>
+<li>
+<p><strong>Crossplane Path</strong>: </p>
+<ul>
+<li>Can transition to Crossplane later</li>
+<li>Terraform modules can inform Crossplane compositions</li>
+<li>Provides foundation for Kubernetes-native IaC</li>
+</ul>
+</li>
+</ol>
+<h2 id="consequences">Consequences</h2>
+<h3 id="positive">Positive</h3>
+<p>✅ <strong>Multi-Cloud Freedom</strong>: Same tool and workflow across AWS, Azure, GCP</p>
+<p>✅ <strong>Version Controlled Infrastructure</strong>: All changes in Git with full audit trail</p>
+<p>✅ <strong>Repeatable Provisioning</strong>: Spin up identical environments reliably</p>
+<p>✅ <strong>Environment Parity</strong>: Dev, staging, prod consistent, reducing bugs</p>
+<p>✅ <strong>Disaster Recovery</strong>: Rebuild entire infrastructure from code in hours</p>
+<p>✅ <strong>Code Review</strong>: Infrastructure changes peer-reviewed before applying</p>
+<p>✅ <strong>Preview Changes</strong>: See exactly what will change before applying</p>
+<p>✅ <strong>Modular Code</strong>: Reusable modules reduce duplication and errors</p>
+<p>✅ <strong>State Awareness</strong>: Terraform knows current state, only changes what's needed</p>
+<p>✅ <strong>Extensive Ecosystem</strong>: 3,000+ providers cover virtually any service</p>
+<p>✅ <strong>Developer Self-Service</strong>: Developers can provision infrastructure via modules</p>
+<p>✅ <strong>Documentation as Code</strong>: Infrastructure configuration is documentation</p>
+<p>✅ <strong>Large Community</strong>: Easy to find help, examples, and best practices</p>
+<h3 id="negative">Negative</h3>
+<p>⚠️ <strong>State Management Complexity</strong>: State files require careful handling and locking</p>
+<p>⚠️ <strong>Learning Curve</strong>: HCL syntax and concepts require learning</p>
+<p>⚠️ <strong>State Drift</strong>: Manual changes create drift between code and reality</p>
+<p>⚠️ <strong>Refresh Delays</strong>: terraform plan can be slow for large infrastructures</p>
+<p>⚠️ <strong>Provider Lag</strong>: New cloud features may lag behind AWS/Azure/GCP releases</p>
+<p>⚠️ <strong>Breaking Changes</strong>: Major Terraform/provider updates can break code</p>
+<p>⚠️ <strong>Resource Naming</strong>: Changing resource names often requires destroy/recreate</p>
+<p>⚠️ <strong>Cost of Mistakes</strong>: Accidental terraform destroy can be catastrophic</p>
+<p>⚠️ <strong>Complex Debugging</strong>: Error messages sometimes cryptic</p>
+<h3 id="neutral">Neutral</h3>
+<p>◽ <strong>HCL vs. Other Languages</strong>: Declarative DSL (HCL) vs. general-purpose languages (Python, TypeScript)</p>
+<p>◽ <strong>Terraform Cloud</strong>: Free tier available, paid tiers for advanced features</p>
+<p>◽ <strong>HashiCorp Business</strong>: Company behind Terraform has commercial interests</p>
+<h3 id="mitigation-strategies">Mitigation Strategies</h3>
+<ol>
+<li><strong>State Management</strong>:</li>
+<li>Use remote state backend (Terraform Cloud or S3)</li>
+<li>Enable state locking (DynamoDB for S3)</li>
+<li>Never manually edit state files</li>
+<li>Regular state backups</li>
+<li>
+<p>Document state management procedures</p>
+</li>
+<li>
+<p><strong>Learning Curve</strong>:</p>
+</li>
+<li>Provide Terraform training workshops</li>
+<li>Create comprehensive module documentation</li>
+<li>Use module examples extensively</li>
+<li>Start simple, add complexity gradually</li>
+<li>
+<p>Leverage community resources</p>
+</li>
+<li>
+<p><strong>State Drift</strong>:</p>
+</li>
+<li>Educate team: never make manual changes</li>
+<li>Run terraform plan regularly to detect drift</li>
+<li>Use cloud provider guard rails (SCPs, policies)</li>
+<li>Consider drift detection automation</li>
+<li>
+<p>Document procedure for importing manual changes</p>
+</li>
+<li>
+<p><strong>Breaking Changes</strong>:</p>
+</li>
+<li>Pin provider versions in code</li>
+<li>Test updates in non-production first</li>
+<li>Follow Terraform upgrade guides carefully</li>
+<li>Subscribe to provider changelogs</li>
+<li>
+<p>Budget time for major upgrades</p>
+</li>
+<li>
+<p><strong>Cost of Mistakes</strong>:</p>
+</li>
+<li>Protect production with different credentials</li>
+<li>Use terraform plan before every apply</li>
+<li>Require PR approval for production changes</li>
+<li>Enable deletion protection on critical resources</li>
+<li>
+<p>Regular backups and disaster recovery testing</p>
+</li>
+<li>
+<p><strong>Resource Naming</strong>:</p>
+</li>
+<li>Use computed names where possible</li>
+<li>Document naming conventions</li>
+<li>Use lifecycle blocks (create_before_destroy)</li>
+<li>Plan for resource replacement scenarios</li>
+</ol>
+<h2 id="alternatives-considered">Alternatives Considered</h2>
+<h3 id="alternative-1-pulumi">Alternative 1: Pulumi</h3>
+<p><strong>Pros</strong>:
+- Use real programming languages (Python, TypeScript, Go, C#)
+- Familiar to developers (no new language to learn)
+- Strong typing and IDE support
+- Good testing story (use language's test framework)
+- Modern architecture
+- Growing quickly</p>
+<p><strong>Cons</strong>:
+- <strong>Smaller Community</strong>: Much smaller than Terraform
+- <strong>Fewer Providers</strong>: 100+ providers vs. Terraform's 3,000+
+- <strong>Less Mature</strong>: Newer (2018 vs. Terraform 2014)
+- <strong>SaaS State Backend</strong>: Free tier limited, paid for self-hosted
+- <strong>Steeper Troubleshooting</strong>: Stack traces vs. Terraform's clear errors
+- <strong>Less Enterprise Adoption</strong>: Fewer large-scale production examples</p>
+<p><strong>Reason for Rejection</strong>: Pulumi philosophically appealing (real languages), but Terraform's maturity, ecosystem, and community provide more value. Pulumi excellent for organizations with strong programming culture, but Terraform's declarative approach and larger ecosystem better fit for Fawkes' needs. May revisit in 2-3 years as Pulumi matures.</p>
+<h3 id="alternative-2-aws-cloudformation">Alternative 2: AWS CloudFormation</h3>
+<p><strong>Pros</strong>:
+- Native AWS integration
+- No state management needed
+- AWS-supported and maintained
+- Free (no additional cost)
+- Stack rollback on failure
+- AWS console integration</p>
+<p><strong>Cons</strong>:
+- <strong>AWS Only</strong>: Cannot manage Azure, GCP, or other providers
+- <strong>Verbose YAML/JSON</strong>: Much more verbose than Terraform HCL
+- <strong>Limited Features</strong>: Fewer advanced features than Terraform
+- <strong>Slow Updates</strong>: New AWS features delayed in CloudFormation
+- <strong>Poor Error Messages</strong>: Debugging difficult
+- <strong>No Multi-Cloud</strong>: Complete rewrite needed for other clouds</p>
+<p><strong>Reason for Rejection</strong>: CloudFormation fine for AWS-only, but Fawkes multi-cloud from start. Vendor lock-in to AWS unacceptable. Terraform provides consistent multi-cloud experience. May use CloudFormation for AWS-specific features but not as primary IaC tool.</p>
+<h3 id="alternative-3-azure-resource-manager-arm-templates">Alternative 3: Azure Resource Manager (ARM) Templates</h3>
+<p><strong>Pros</strong>:
+- Native Azure integration
+- Free (included with Azure)
+- Azure portal integration
+- What-if preview capability</p>
+<p><strong>Cons</strong>:
+- <strong>Azure Only</strong>: Cannot manage AWS, GCP
+- <strong>JSON Verbose</strong>: Very verbose JSON syntax
+- <strong>Complex Syntax</strong>: Difficult to write and maintain
+- <strong>Poor Error Messages</strong>: Debugging challenging
+- <strong>Limited Community</strong>: Smaller than Terraform</p>
+<p><strong>Reason for Rejection</strong>: Same issues as CloudFormation—Azure lock-in, verbose syntax, single-cloud only. Terraform multi-cloud approach much better.</p>
+<h3 id="alternative-4-ansible">Alternative 4: Ansible</h3>
+<p><strong>Pros</strong>:
+- General-purpose automation (not just infrastructure)
+- Agentless (SSH-based)
+- YAML syntax (familiar)
+- Large community
+- Can manage configuration in addition to infrastructure</p>
+<p><strong>Cons</strong>:
+- <strong>Imperative, Not Declarative</strong>: Procedural scripts vs. desired state
+- <strong>No Built-In State</strong>: Doesn't track infrastructure state
+- <strong>Idempotency Issues</strong>: Not guaranteed idempotent
+- <strong>Not Designed for IaC</strong>: Configuration management tool, not IaC tool
+- <strong>No Plan Preview</strong>: Can't preview changes before applying
+- <strong>Slower</strong>: SSH-based approach slower than API calls</p>
+<p><strong>Reason for Rejection</strong>: Ansible excellent for configuration management, but not purpose-built for infrastructure provisioning. Terraform's declarative approach and state management much better for IaC. May use Ansible for post-provisioning configuration alongside Terraform.</p>
+<h3 id="alternative-5-crossplane">Alternative 5: Crossplane</h3>
+<p><strong>Pros</strong>:
+- Kubernetes-native (CRDs)
+- Declarative, Kubernetes-style
+- GitOps integration native
+- Composable infrastructure
+- Cloud-agnostic abstractions
+- CNCF project (good governance)</p>
+<p><strong>Cons</strong>:
+- <strong>Less Mature</strong>: Newer than Terraform (2018)
+- <strong>Smaller Ecosystem</strong>: Fewer providers than Terraform
+- <strong>Steeper Learning Curve</strong>: Kubernetes CRDs more complex than HCL
+- <strong>Debugging Harder</strong>: Kubernetes abstraction makes troubleshooting difficult
+- <strong>Smaller Community</strong>: Fewer examples and tutorials
+- <strong>Requires Kubernetes</strong>: Can't use without Kubernetes cluster</p>
+<p><strong>Reason for Rejection</strong>: Crossplane philosophically aligned (Kubernetes-native, cloud-agnostic), but less mature and harder to use. Terraform provides better starting point. <strong>However</strong>, Crossplane is our Phase 2 goal—we'll use Terraform initially, transition to Crossplane as it matures and team gains Kubernetes expertise. Terraform experience will inform Crossplane composition design.</p>
+<h3 id="alternative-6-opentofu">Alternative 6: OpenTofu</h3>
+<p><strong>Pros</strong>:
+- Terraform fork (fully compatible)
+- Open source (Linux Foundation)
+- Community-driven
+- No vendor control concerns
+- Free forever</p>
+<p><strong>Cons</strong>:
+- <strong>Very New</strong>: Fork created August 2023
+- <strong>Uncertain Future</strong>: Will it maintain compatibility?
+- <strong>Smaller Team</strong>: Fewer contributors than Terraform
+- <strong>Provider Ecosystem</strong>: May diverge from Terraform providers
+- <strong>Less Proven</strong>: No significant production usage yet</p>
+<p><strong>Reason for Rejection</strong>: OpenTofu created in response to Terraform license change (BSL). While philosophically appealing (truly open source), too new and unproven. Terraform OSS (pre-license change) still available and sufficient for Fawkes. Will monitor OpenTofu and may switch if it proves mature and sustainable.</p>
+<h3 id="alternative-7-terraform-cdk-cloud-development-kit">Alternative 7: Terraform CDK (Cloud Development Kit)</h3>
+<p><strong>Pros</strong>:
+- Use programming languages (TypeScript, Python, Java, C#, Go)
+- Generates Terraform JSON
+- Familiar to developers
+- HashiCorp-maintained</p>
+<p><strong>Cons</strong>:
+- <strong>Additional Layer</strong>: Complexity of language + Terraform
+- <strong>Less Mature</strong>: Newer than core Terraform
+- <strong>Smaller Community</strong>: Fewer examples than HCL
+- <strong>Debugging Harder</strong>: Two layers to debug (code + generated JSON)
+- <strong>Provider Support</strong>: Not all providers well-supported</p>
+<p><strong>Reason for Rejection</strong>: Terraform CDK interesting but adds complexity. HCL's declarative nature and large ecosystem of HCL modules provide more value. If we wanted programming languages, would choose Pulumi directly. Terraform CDK feels like compromise without clear benefits.</p>
+<h2 id="related-decisions">Related Decisions</h2>
+<ul>
+<li><strong>ADR-001</strong>: Kubernetes (Terraform provisions Kubernetes clusters)</li>
+<li><strong>Future ADR</strong>: Crossplane for Kubernetes-Native IaC (Phase 2 migration path)</li>
+<li><strong>Future ADR</strong>: Terraform Module Structure and Standards</li>
+<li><strong>Future ADR</strong>: State Management and Locking Strategy</li>
+</ul>
+<h2 id="implementation-notes">Implementation Notes</h2>
+<h3 id="repository-structure">Repository Structure</h3>
+<p><strong>Monorepo Approach</strong> (recommended):</p>
+<div class="highlight"><pre><span></span><code>fawkes-infrastructure/
+├── modules/
+│   ├── eks-cluster/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   │   └── README.md
+│   ├── vpc/
+│   ├── rds/
+│   ├── elasticache/
+│   └── s3-bucket/
+├── environments/
+│   ├── dev/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── terraform.tfvars
+│   │   └── backend.tf
+│   ├── staging/
+│   └── prod/
+├── global/
+│   ├── iam/
+│   ├── route53/
+│   └── s3-backend/
+├── scripts/
+│   ├── plan.sh
+│   ├── apply.sh
+│   └── destroy.sh
+├── .github/
+│   └── workflows/
+│       ├── terraform-plan.yml
+│       └── terraform-apply.yml
+└── README.md
+</code></pre></div>
+<h3 id="module-example-eks-cluster">Module Example (EKS Cluster)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># modules/eks-cluster/main.tf</span>
+
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 1.6.0&quot;</span>
+<span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/aws&quot;</span>
+<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 5.0&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nb">kubernetes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/kubernetes&quot;</span>
+<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 2.20&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_eks_cluster&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.cluster_name</span>
+<span class="w">  </span><span class="na">role_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_role.cluster.arn</span>
+<span class="w">  </span><span class="na">version</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">var.kubernetes_version</span>
+
+<span class="w">  </span><span class="nb">vpc_config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">subnet_ids</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="nv">var.subnet_ids</span>
+<span class="w">    </span><span class="na">endpoint_private_access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">    </span><span class="na">endpoint_public_access</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">    </span><span class="na">public_access_cidrs</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.public_access_cidrs</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nb">encryption_config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">provider</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">key_arn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.kms_key_arn</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="na">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;secrets&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">enabled_cluster_log_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;api&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;audit&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;authenticator&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;controllerManager&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;scheduler&quot;</span>
+<span class="w">  </span><span class="p">]</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
+<span class="w">    </span><span class="nv">var.tags</span><span class="p">,</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;Name&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.cluster_name</span>
+<span class="w">      </span><span class="s2">&quot;ManagedBy&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_eks_node_group&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cluster_name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_eks_cluster.main.name</span>
+<span class="w">  </span><span class="na">node_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.cluster_name}-nodegroup&quot;</span>
+<span class="w">  </span><span class="na">node_role_arn</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_iam_role.node.arn</span>
+<span class="w">  </span><span class="na">subnet_ids</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nv">var.subnet_ids</span>
+
+<span class="w">  </span><span class="nb">scaling_config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">desired_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.desired_size</span>
+<span class="w">    </span><span class="na">max_size</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.max_size</span>
+<span class="w">    </span><span class="na">min_size</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.min_size</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">instance_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.instance_types</span>
+
+<span class="w">  </span><span class="nb">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.tags</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="environment-configuration">Environment Configuration</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># environments/dev/main.tf</span>
+
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;s3&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes-terraform-state&quot;</span>
+<span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev/terraform.tfstate&quot;</span>
+<span class="w">    </span><span class="na">region</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="w">    </span><span class="na">encrypt</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-state-lock&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.aws_region</span>
+
+<span class="w">  </span><span class="nb">default_tags</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
+<span class="w">      </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes&quot;</span>
+<span class="w">      </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">module</span><span class="w"> </span><span class="nv">&quot;vpc&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../../modules/vpc&quot;</span>
+
+<span class="w">  </span><span class="na">vpc_name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes-dev-vpc&quot;</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<span class="w">  </span><span class="na">availability_zones</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;us-east-1a&quot;, &quot;us-east-1b&quot;, &quot;us-east-1c&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">public_subnets</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.1.0/24&quot;, &quot;10.0.2.0/24&quot;, &quot;10.0.3.0/24&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="na">private_subnets</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;10.0.11.0/24&quot;, &quot;10.0.12.0/24&quot;, &quot;10.0.13.0/24&quot;</span><span class="p">]</span>
+
+<span class="w">  </span><span class="na">enable_nat_gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">single_nat_gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">  # Cost optimization for dev</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.tags</span>
+<span class="p">}</span>
+
+<span class="kr">module</span><span class="w"> </span><span class="nv">&quot;eks&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;../../modules/eks-cluster&quot;</span>
+
+<span class="w">  </span><span class="na">cluster_name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes-dev&quot;</span>
+<span class="w">  </span><span class="na">kubernetes_version</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.28&quot;</span>
+<span class="w">  </span><span class="na">subnet_ids</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">module.vpc.private_subnet_ids</span>
+
+<span class="w">  </span><span class="na">desired_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+<span class="w">  </span><span class="na">min_size</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
+<span class="w">  </span><span class="na">max_size</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="m">5</span>
+
+<span class="w">  </span><span class="na">instance_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;t3.large&quot;</span><span class="p">]</span>
+
+<span class="w">  </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.tags</span>
+<span class="p">}</span>
+
+<span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
+<span class="w">    </span><span class="na">Project</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes&quot;</span>
+<span class="w">    </span><span class="na">ManagedBy</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="cicd-integration-github-actions">CI/CD Integration (GitHub Actions)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/terraform-plan.yml</span>
+
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Terraform Plan</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;environments/**&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;modules/**&#39;</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">plan</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup Terraform</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hashicorp/setup-terraform@v2</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">terraform_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.6.0</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Terraform Init</span>
+<span class="w">        </span><span class="nt">working-directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">environments/dev</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform init</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Terraform Format Check</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform fmt -check -recursive</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Terraform Validate</span>
+<span class="w">        </span><span class="nt">working-directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">environments/dev</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform validate</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Terraform Plan</span>
+<span class="w">        </span><span class="nt">working-directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">environments/dev</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform plan -no-color</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">AWS_ACCESS_KEY_ID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AWS_ACCESS_KEY_ID }}</span>
+<span class="w">          </span><span class="nt">AWS_SECRET_ACCESS_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AWS_SECRET_ACCESS_KEY }}</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Comment PR</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/github-script@v6</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">github.rest.issues.createComment({</span>
+<span class="w">              </span><span class="no">issue_number: context.issue.number,</span>
+<span class="w">              </span><span class="no">owner: context.repo.owner,</span>
+<span class="w">              </span><span class="no">repo: context.repo.repo,</span>
+<span class="w">              </span><span class="no">body: &#39;Terraform plan completed. Review the output above.&#39;</span>
+<span class="w">            </span><span class="no">})</span>
+</code></pre></div>
+<h3 id="testing-with-terratest">Testing with Terratest</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// test/eks_test.go</span>
+
+<span class="kn">package</span><span class="w"> </span><span class="nx">test</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="s">&quot;testing&quot;</span>
+<span class="w">    </span><span class="s">&quot;github.com/gruntwork-io/terratest/modules/terraform&quot;</span>
+<span class="w">    </span><span class="s">&quot;github.com/stretchr/testify/assert&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="nx">TestEKSCluster</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">terraformOptions</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
+<span class="w">        </span><span class="nx">TerraformDir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../modules/eks-cluster&quot;</span><span class="p">,</span>
+
+<span class="w">        </span><span class="nx">Vars</span><span class="p">:</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+<span class="w">            </span><span class="s">&quot;cluster_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test-cluster&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s">&quot;kubernetes_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.28&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s">&quot;subnet_ids&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;subnet-123&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;subnet-456&quot;</span><span class="p">},</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">defer</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Destroy</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
+
+<span class="w">    </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">InitAndApply</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">)</span>
+
+<span class="w">    </span><span class="nx">clusterName</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;cluster_name&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;test-cluster&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">clusterName</span><span class="p">)</span>
+
+<span class="w">    </span><span class="nx">clusterVersion</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">terraform</span><span class="p">.</span><span class="nx">Output</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="nx">terraformOptions</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;kubernetes_version&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">assert</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1.28&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">clusterVersion</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="state-management">State Management</h3>
+<p><strong>Terraform Cloud</strong> (recommended for MVP):</p>
+<div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">cloud</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">organization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes-platform&quot;</span>
+
+<span class="w">    </span><span class="nb">workspaces</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes-dev&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>S3 Backend</strong> (alternative):</p>
+<div class="highlight"><pre><span></span><code><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;s3&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">bucket</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes-terraform-state&quot;</span>
+<span class="w">    </span><span class="na">key</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev/terraform.tfstate&quot;</span>
+<span class="w">    </span><span class="na">region</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-east-1&quot;</span>
+<span class="w">    </span><span class="na">encrypt</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">    </span><span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-state-lock&quot;</span>
+
+<span class="c1">    # Enable versioning for state file history</span>
+<span class="w">    </span><span class="na">versioning</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="best-practices">Best Practices</h3>
+<ol>
+<li><strong>Always Use Remote State</strong>: Never store state locally for team projects</li>
+<li><strong>Enable State Locking</strong>: Prevent concurrent modifications</li>
+<li><strong>Pin Provider Versions</strong>: Avoid surprise breaking changes</li>
+<li><strong>Use Modules</strong>: DRY principle, reusability</li>
+<li><strong>Separate Environments</strong>: Different state files for dev/staging/prod</li>
+<li><strong>Code Review</strong>: All changes via PR</li>
+<li><strong>Plan Before Apply</strong>: Always review plan output</li>
+<li><strong>Tag Everything</strong>: Consistent tagging for cost tracking and ownership</li>
+<li><strong>Use Variables</strong>: Never hardcode values</li>
+<li><strong>Document Modules</strong>: README with examples</li>
+</ol>
+<h3 id="migration-to-crossplane-phase-2">Migration to Crossplane (Phase 2)</h3>
+<p><strong>Path Forward</strong>:
+1. <strong>Phase 1</strong> (Months 1-6): Use Terraform exclusively
+2. <strong>Phase 2</strong> (Months 7-12): Evaluate Crossplane maturity
+3. <strong>Phase 3</strong> (Year 2): Gradual migration:
+   - Start with new resources in Crossplane
+   - Keep existing resources in Terraform
+   - Create Crossplane compositions based on Terraform modules
+   - Migrate non-critical resources first
+4. <strong>Phase 4</strong> (Year 2-3): Complete migration to Crossplane</p>
+<p><strong>Why Crossplane Eventually</strong>:
+- Kubernetes-native (consistent with platform)
+- GitOps integration seamless
+- Better abstraction for self-service
+- Cloud-agnostic compositions
+- Unified control plane</p>
+<p><strong>Why Terraform First</strong>:
+- Mature and proven today
+- Larger ecosystem and community
+- Easier learning curve
+- Better debugging and documentation
+- Lower risk for MVP</p>
+<h2 id="monitoring-this-decision">Monitoring This Decision</h2>
+<p>We will revisit this ADR if:
+- Terraform license changes make OSS version unusable
+- Crossplane reaches maturity level where migration makes sense
+- Pulumi ecosystem and community significantly grow
+- Team expertise shifts toward different tool
+- OpenTofu becomes mature and clearly sustainable
+- Multi-cloud requirements change significantly</p>
+<p><strong>Next Review Date</strong>: April 8, 2026 (6 months)
+<strong>Crossplane Evaluation</strong>: October 2026 (12 months)</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.terraform.io/docs/">Terraform Official Documentation</a></li>
+<li><a href="https://registry.terraform.io/">Terraform Registry</a></li>
+<li><a href="https://www.terraform-best-practices.com/">Terraform Best Practices</a></li>
+<li><a href="https://terratest.gruntwork.io/">Terratest Documentation</a></li>
+<li><a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs">Terraform AWS Provider</a></li>
+<li><a href="https://crossplane.io/docs/">Crossplane Documentation</a></li>
+</ul>
+<h2 id="notes">Notes</h2>
+<h3 id="terraform-vs-pulumi-the-debate">Terraform vs. Pulumi: The Debate</h3>
+<p><strong>Use Terraform when</strong>:
+- Want largest ecosystem and community
+- Prefer declarative DSL over programming
+- Need maximum provider coverage
+- Want battle-tested maturity</p>
+<p><strong>Use Pulumi when</strong>:
+- Strong programming culture in organization
+- Want to use existing language (Python, TypeScript, Go)
+- Need complex logic in infrastructure code
+- Prefer general-purpose language testing</p>
+<p><strong>For Fawkes</strong>: Terraform's maturity, ecosystem, and community provide more value. Pulumi excellent choice for many organizations, but Terraform better fits Fawkes' needs as open source platform.</p>
+<h3 id="terraform-license-change-context">Terraform License Change Context</h3>
+<p>In August 2023, HashiCorp changed Terraform license from MPL to BSL (Business Source License). This prevents:
+- Using Terraform in commercial competing products
+- Hosting Terraform as paid service</p>
+<p>For Fawkes:
+- <strong>Not Affected</strong>: Using Terraform for our platform is permitted
+- <strong>No Commercial Product</strong>: We're not selling Terraform itself
+- <strong>OpenTofu Available</strong>: Fork exists if needed</p>
+<p>This decision may be revisited if BSL becomes more restrictive or OpenTofu proves more sustainable.</p>
+<h3 id="state-management-is-critical">State Management is Critical</h3>
+<p><strong>State file contains</strong>:
+- All provisioned resource IDs
+- Resource attributes and metadata
+- Dependencies between resources
+- Terraform version used</p>
+<p><strong>If state file is lost</strong>:
+- Terraform can't manage existing resources
+- Must import all resources manually (tedious)
+- Or destroy and recreate everything (disruptive)</p>
+<p><strong>Protection strategies</strong>:
+- Remote state backend (S3, Terraform Cloud)
+- State file versioning enabled
+- Regular backups
+- Never edit state manually
+- State locking to prevent corruption</p>
+<hr />
+<p><strong>Decision Made By</strong>: Platform Architecture Team<br />
+<strong>Approved By</strong>: Project Lead<br />
+<strong>Date</strong>: October 8, 2025<br />
+<strong>Author</strong>: [Platform Architect Name]<br />
+<strong>Last Updated</strong>: October 8, 2025</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
