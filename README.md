@@ -31,6 +31,22 @@ Fawkes provides:
 
 ---
 
+## 🚀 AWS Activate Project
+
+Fawkes is applying for the AWS Activate program to accelerate development and provide free learning resources to the platform engineering community. We're building an AWS-native Internal Delivery Platform that helps organizations achieve Elite DORA performance.
+
+**Why AWS?**
+- Native integration with EKS, RDS, S3, and CloudWatch
+- Scalable, secure infrastructure for enterprise workloads
+- Cost-effective for startups and growing companies
+- Best-in-class Kubernetes support with Amazon EKS
+
+**AWS Services Used**: EKS, RDS, S3, ALB, CloudWatch, X-Ray, Secrets Manager, IAM, VPC, Certificate Manager
+
+[Apply for AWS Activate](https://aws.amazon.com/activate/) | [See our AWS Cost Estimation](docs/AWS_COST_ESTIMATION.md)
+
+---
+
 ## 🚀 Getting Started
 
 Follow these steps to set up and use Fawkes:
@@ -698,3 +714,7 @@ Make your first contribution and become part of the community.
 <p align="center">
   <sub>Fawkes: Named after Dumbledore's phoenix, symbolizing resilience and renewal</sub>
 </p>
+
+## 🛡 License
+
+This project is licensed under the [MIT License](LICENSE).
