@@ -1,0 +1,271 @@
+# ============================================================================
+# FILE: platform/monitoring/prometheus/values-mvp.yaml
+# PURPOSE: MVP Prometheus configuration - Get started quickly
+# FEATURES: Basic monitoring, minimal resources, essential metrics
+# MISSING: HA, long-term storage, advanced alerting, Thanos
+# ============================================================================
+
+# ===== Global Configuration =====
+global:
+  rbac:
+    create: true
+
+# ===== Prometheus Operator =====
+prometheusOperator:
+  enabled: true
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+# ===== Prometheus Server =====
+prometheus:
+  enabled: true
+  
+  prometheusSpec:
+    # Retention - MVP: 7 days (Production: 30+ days)
+    retention: 7d
+    retentionSize: "5GB"
+    
+    # Replication - MVP: Single replica (Production: 2+)
+    replicas: 1
+    
+    # Resources - MVP: Minimal (Production: Scale up)
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+    
+    # Storage - MVP: 10GB (Production: 50-100GB)
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp3
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+    
+    # Service Discovery - MVP: Basic (Production: Add more)
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    
+    # Scrape interval - MVP: 30s (Production: Tunable per target)
+    evaluationInterval: 30s
+    scrapeInterval: 30s
+    
+    # External Labels - For multi-cluster (Production)
+    externalLabels:
+      cluster: fawkes-dev
+      environment: development
+    
+    # Security - MVP: Basic (Production: Pod security policies)
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      fsGroup: 2000
+    
+    # Enable features - MVP: Basic (Production: Add remote write, exemplars)
+    enableFeatures: []
+    
+    # Alertmanager config
+    alertingEndpoints:
+      - name: alertmanager-operated
+        namespace: monitoring
+        port: http-web
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 9090
+
+  # Ingress - MVP: Disabled (Production: Enable with auth)
+  ingress:
+    enabled: false
+    # Production: Enable with annotations:
+    # ingressClassName: alb
+    # annotations:
+    #   alb.ingress.kubernetes.io/scheme: internal
+    #   alb.ingress.kubernetes.io/auth-type: cognito
+
+# ===== Alertmanager =====
+alertmanager:
+  enabled: true
+  
+  alertmanagerSpec:
+    # Replication - MVP: Single (Production: 3 replicas)
+    replicas: 1
+    
+    # Resources - MVP: Minimal
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+    
+    # Storage - MVP: 2GB (Production: 10GB)
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp3
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 2Gi
+    
+    # Configuration - MVP: Log only (Production: Slack, PagerDuty, email)
+    config:
+      global:
+        resolve_timeout: 5m
+      
+      route:
+        group_by: ['alertname', 'cluster', 'service']
+        group_wait: 10s
+        group_interval: 10s
+        repeat_interval: 12h
+        receiver: 'null'  # MVP: No notifications
+      
+      receivers:
+        - name: 'null'
+        # Production: Add real receivers
+        # - name: 'slack'
+        #   slack_configs:
+        #     - api_url: 'SLACK_WEBHOOK_URL'
+        #       channel: '#alerts'
+
+  # Ingress - MVP: Disabled
+  ingress:
+    enabled: false
+
+# ===== Grafana =====
+grafana:
+  enabled: true
+  
+  # Admin credentials - MVP: Simple (Production: OAuth/LDAP)
+  adminPassword: "changeme123"  # CHANGE THIS!
+  
+  # Resources - MVP: Minimal
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 200m
+      memory: 512Mi
+  
+  # Persistence - MVP: Enabled
+  persistence:
+    enabled: true
+    storageClassName: gp3
+    size: 5Gi
+  
+  # Data sources - Auto-configured
+  sidecar:
+    dashboards:
+      enabled: true
+      defaultFolderName: "General"
+    datasources:
+      enabled: true
+      defaultDatasourceEnabled: true
+  
+  # Ingress - MVP: Disabled (Production: Enable with ALB)
+  ingress:
+    enabled: false
+    # Production:
+    # enabled: true
+    # ingressClassName: alb
+    # hosts:
+    #   - grafana.fawkes.yourdomain.com
+
+  # Plugins - MVP: Essential only
+  plugins:
+    - grafana-piechart-panel
+  
+  # Default dashboards - MVP: Kubernetes basics
+  defaultDashboardsEnabled: true
+  defaultDashboardsTimezone: UTC
+
+  # Grafana.ini configuration - MVP: Basic
+  grafana.ini:
+    server:
+      root_url: http://localhost:3000
+    auth.anonymous:
+      enabled: false
+    # Production: Add auth.generic_oauth for SSO
+
+# ===== Node Exporter =====
+nodeExporter:
+  enabled: true
+  
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+# ===== Kube State Metrics =====
+kubeStateMetrics:
+  enabled: true
+  
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+# ===== Prometheus Node Exporter =====
+prometheus-node-exporter:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+# ===== Default Service Monitors =====
+# MVP: Monitor only Kubernetes core components
+defaultRules:
+  create: true
+  rules:
+    alertmanager: true
+    etcd: false  # Not accessible in managed EKS
+    configReloaders: true
+    general: true
+    k8s: true
+    kubeApiserverAvailability: true
+    kubeApiserverSlos: true
+    kubelet: true
+    kubeProxy: true
+    kubePrometheusGeneral: true
+    kubePrometheusNodeRecording: true
+    kubernetesApps: true
+    kubernetesResources: true
+    kubernetesStorage: true
+    kubernetesSystem: true
+    kubeScheduler: false  # Not accessible in managed EKS
+    kubeStateMetrics: true
+    network: true
+    node: true
+    nodeExporterAlerting: true
+    nodeExporterRecording: true
+    prometheus: true
+    prometheusOperator: true
+
+# ===== Additional Scrape Configs =====
+# MVP: Empty (Production: Add application-specific scrapes)
+additionalScrapeConfigs: []
