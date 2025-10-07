@@ -1,90 +1,390 @@
-# Default values for Jenkins Helm chart
-# Updated to simplify configuration and ensure compatibility with modern Kubernetes and Helm practices.
-
-clusterZone: "cluster.local"      # Update this to match your cluster's DNS zone.
-
-renderHelmLabels: true
-
+# ============================================================================
+# FILE: platform/jenkins/values.yaml
+# PURPOSE: Helm chart values for Jenkins deployment
+# ============================================================================
 controller:
-  componentName: "jenkins-controller"
-  image:
-    registry: docker.io
-    repository: jenkins/jenkins
-    tag: "lts-jdk11"     # Use the latest LTS tag for stability
+  # ===== Image Configuration =====
+  image: "jenkins/jenkins"
+  tag: "2.426.1-lts-jdk17"  # LTS version
   imagePullPolicy: "IfNotPresent"
-
-  admin:
-    user: "admin"
-    password: ""      # Leave empty to auto-generate
-
+  
+  # ===== Resource Management =====
   resources:
     requests:
-      cpu: "100m"
-      memory: "512Mi"
+      cpu: "1000m"
+      memory: "2Gi"
     limits:
       cpu: "2000m"
-      memory: "4096Mi"
-
-  serviceType: LoadBalancer
+      memory: "4Gi"
+  
+  # ===== Java Options =====
+  javaOpts: >-
+    -XX:MaxRAMPercentage=75.0
+    -XX:+UseG1GC
+    -XX:+UseStringDeduplication
+    -XX:+ParallelRefProcEnabled
+    -XX:MaxGCPauseMillis=100
+    -Dhudson.slaves.NodeProvisioner.initialDelay=0
+    -Dhudson.slaves.NodeProvisioner.MARGIN=50
+    -Dhudson.slaves.NodeProvisioner.MARGIN0=0.85
+    -Djenkins.install.runSetupWizard=false
+    -Dcasc.jenkins.config=/var/jenkins_home/casc_configs
+  
+  # ===== Jenkins Configuration as Code (JCasC) =====
+  JCasC:
+    defaultConfig: true
+    configScripts:
+      welcome-message: |
+        jenkins:
+          systemMessage: "Fawkes Platform - Jenkins CI/CD"
+      
+      security-realm: |
+        jenkins:
+          securityRealm:
+            local:
+              allowsSignup: false
+              users:
+                - id: "admin"
+                  name: "Administrator"
+                  password: "${JENKINS_ADMIN_PASSWORD}"
+      
+      authorization-strategy: |
+        jenkins:
+          authorizationStrategy:
+            roleBased:
+              roles:
+                global:
+                  - name: "admin"
+                    description: "Jenkins administrators"
+                    permissions:
+                      - "Overall/Administer"
+                    assignments:
+                      - "admin"
+                  - name: "developer"
+                    description: "Developers with build permissions"
+                    permissions:
+                      - "Overall/Read"
+                      - "Job/Build"
+                      - "Job/Read"
+                      - "Job/Workspace"
+                      - "Job/Cancel"
+                      - "View/Read"
+                    assignments:
+                      - "authenticated"
+                  - name: "viewer"
+                    description: "Read-only access"
+                    permissions:
+                      - "Overall/Read"
+                      - "Job/Read"
+                      - "View/Read"
+      
+      kubernetes-cloud: |
+        jenkins:
+          clouds:
+            - kubernetes:
+                name: "kubernetes"
+                serverUrl: "https://kubernetes.default"
+                namespace: "jenkins"
+                jenkinsUrl: "http://jenkins:8080"
+                jenkinsTunnel: "jenkins-agent:50000"
+                containerCapStr: "20"
+                maxRequestsPerHostStr: "32"
+                retentionTimeout: 5
+                connectTimeout: 60
+                readTimeout: 60
+                podLabels:
+                  - key: "app.kubernetes.io/name"
+                    value: "jenkins-agent"
+                  - key: "app.kubernetes.io/part-of"
+                    value: "fawkes"
+                templates:
+                  - name: "default-agent"
+                    namespace: "jenkins"
+                    label: "jenkins-agent"
+                    nodeUsageMode: NORMAL
+                    idleMinutes: 5
+                    containers:
+                      - name: "jnlp"
+                        image: "jenkins/inbound-agent:latest"
+                        alwaysPullImage: true
+                        workingDir: "/home/jenkins/agent"
+                        ttyEnabled: true
+                        resourceRequestCpu: "500m"
+                        resourceRequestMemory: "1Gi"
+                        resourceLimitCpu: "1000m"
+                        resourceLimitMemory: "2Gi"
+                    volumes:
+                      - hostPathVolume:
+                          hostPath: "/var/run/docker.sock"
+                          mountPath: "/var/run/docker.sock"
+                    yaml: |
+                      apiVersion: v1
+                      kind: Pod
+                      metadata:
+                        labels:
+                          app.kubernetes.io/name: jenkins-agent
+                          app.kubernetes.io/part-of: fawkes
+                      spec:
+                        securityContext:
+                          runAsUser: 1000
+                          fsGroup: 1000
+                        serviceAccountName: jenkins-agent
+      
+      credentials: |
+        credentials:
+          system:
+            domainCredentials:
+              - credentials:
+                  - string:
+                      scope: GLOBAL
+                      id: "github-token"
+                      secret: "${GITHUB_TOKEN}"
+                      description: "GitHub Personal Access Token"
+                  - usernamePassword:
+                      scope: GLOBAL
+                      id: "harbor-credentials"
+                      username: "admin"
+                      password: "${HARBOR_PASSWORD}"
+                      description: "Harbor Registry Credentials"
+                  - string:
+                      scope: GLOBAL
+                      id: "sonarqube-token"
+                      secret: "${SONARQUBE_TOKEN}"
+                      description: "SonarQube Token"
+      
+      job-dsl: |
+        jobs:
+          - script: >
+              folder('fawkes-platform') {
+                displayName('Fawkes Platform Projects')
+                description('Platform engineering projects')
+              }
+      
+      global-libraries: |
+        unclassified:
+          globalLibraries:
+            libraries:
+              - name: "fawkes-shared-library"
+                defaultVersion: "main"
+                retriever:
+                  modernSCM:
+                    scm:
+                      git:
+                        remote: "https://github.com/paruff/fawkes-jenkins-library.git"
+                        credentialsId: "github-token"
+  
+  # ===== Security Configuration =====
+  csrf:
+    defaultCrumbIssuer:
+      enabled: true
+      proxyCompatability: true
+  
+  # Disable CLI over remoting
+  disableRememberMe: true
+  
+  # ===== Ingress Configuration =====
+  ingress:
+    enabled: true
+    ingressClassName: "alb"
+    annotations:
+      alb.ingress.kubernetes.io/scheme: "internet-facing"
+      alb.ingress.kubernetes.io/target-type: "ip"
+      alb.ingress.kubernetes.io/certificate-arn: "${ACM_CERTIFICATE_ARN}"
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+      alb.ingress.kubernetes.io/ssl-redirect: '443'
+      alb.ingress.kubernetes.io/healthcheck-path: "/login"
+      alb.ingress.kubernetes.io/healthcheck-interval-seconds: '30'
+      alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+      alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+      alb.ingress.kubernetes.io/unhealthy-threshold-count: '3'
+      # Security headers
+      alb.ingress.kubernetes.io/actions.ssl-redirect: |
+        {"Type": "redirect", "RedirectConfig": {"Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}
+    hostName: jenkins.fawkes.yourdomain.com
+    tls:
+      - secretName: jenkins-tls
+        hosts:
+          - jenkins.fawkes.yourdomain.com
+  
+  # ===== Service Configuration =====
+  serviceType: ClusterIP
   servicePort: 8080
-  agentListenerPort: 50000
-
+  targetPort: 8080
+  agentListenerServiceType: ClusterIP
+  
+  # ===== Health Checks =====
+  healthProbes: true
+  healthProbesLivenessTimeout: 5
+  healthProbesReadinessTimeout: 5
+  healthProbeLivenessPeriodSeconds: 10
+  healthProbeReadinessPeriodSeconds: 10
+  healthProbeLivenessFailureThreshold: 5
+  healthProbeReadinessFailureThreshold: 3
+  healthProbeLivenessInitialDelay: 90
+  healthProbeReadinessInitialDelay: 60
+  
+  # ===== Persistence =====
+  persistence:
+    enabled: true
+    existingClaim: false
+    storageClass: "gp3-retain"
+    accessMode: "ReadWriteOnce"
+    size: "100Gi"
+    annotations: {}
+  
+  # ===== Security Context =====
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  
+  containerSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    readOnlyRootFilesystem: false
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+  
+  # ===== Plugins =====
   installPlugins:
-    - kubernetes
-    - workflow-aggregator
-    - git
-    - configuration-as-code
+    # Core plugins
+    - kubernetes:4029.v5712230ccb_f8
+    - workflow-aggregator:596.v8c21c963d92d
+    - git:5.2.0
+    - configuration-as-code:1670.v564dc8b_982d0
+    
+    # Security
+    - matrix-auth:3.2.1
+    - role-strategy:669.v4a_64f95e_8b_44
+    - credentials-binding:631.v861f7c5c67d
+    - ssh-credentials:308.ve4497b_ccd8f4
+    
+    # Pipeline
+    - pipeline-stage-view:2.33
+    - pipeline-graph-view:194.v8fb_93e9c458e
+    - pipeline-rest-api:2.33
+    - blueocean:1.27.9
+    
+    # Build
+    - docker-workflow:572.v950f58993843
+    - docker-plugin:1.5
+    - kubernetes-credentials-provider:1.231.v4a_1654b_b_b_76f
+    
+    # Quality
+    - sonar:2.16.1
+    - warnings-ng:10.5.0
+    - code-coverage-api:4.1.0
+    
+    # AWS Integration
+    - aws-credentials:218.v1b_e9466ec5d
+    - pipeline-aws:1.43
+    
+    # Utilities
+    - timestamper:1.25
+    - build-timeout:1.31
+    - ansicolor:1.0.2
+    - ws-cleanup:0.45
+    - slack:631.v40deea_40323b
+    
+    # Monitoring
+    - prometheus:2.2.3
+    - metrics:4.2.18
+  
+  # ===== Additional Init Containers =====
+  customInitContainers:
+    - name: "download-plugins"
+      image: "jenkins/jenkins:2.426.1-lts-jdk17"
+      command:
+        - sh
+        - -c
+        - |
+          echo "Downloading additional plugins..."
+          # Add custom plugin downloads if needed
+      volumeMounts:
+        - name: plugins
+          mountPath: /usr/share/jenkins/ref/plugins
+  
+  # ===== Prometheus Metrics =====
+  prometheus:
+    enabled: true
+    serviceMonitorNamespace: "monitoring"
+    serviceMonitorAdditionalLabels:
+      release: prometheus
+    port: 8080
+    path: /prometheus
 
+# ===== Agent Configuration =====
 agent:
   enabled: true
-  image:
-    repository: jenkins/inbound-agent
-    tag: "latest"
+  
+  # Pod template for default agent
+  podName: "jenkins-agent"
+  customJenkinsLabels: []
+  
+  # Resources
   resources:
     requests:
-      cpu: "512m"
-      memory: "512Mi"
+      cpu: "500m"
+      memory: "1Gi"
     limits:
       cpu: "1000m"
-      memory: "1024Mi"
-  podRetention: "Never"
+      memory: "2Gi"
+  
+  # Idle timeout
+  idleMinutes: 5
+  
+  # Service account
+  serviceAccount:
+    create: true
+    name: jenkins-agent
+  
+  # Security context
+  podSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+  
+  containerSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
 
-persistence:
+# ===== Backup Configuration =====
+backup:
   enabled: true
-  accessMode: "ReadWriteOnce"
-  size: "10Gi"
-
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  annotations:
+    backup.velero.io/backup-volumes: jenkins-home
+  
+# ===== RBAC =====
 rbac:
   create: true
+  readSecrets: true  # Needed for credentials
 
 serviceAccount:
   create: true
+  name: jenkins
+  annotations:
+    eks.amazonaws.com/role-arn: "${JENKINS_IAM_ROLE_ARN}"
 
-sidecars:
-  configAutoReload:
-    enabled: true
-    image:
-      repository: kiwigrid/k8s-sidecar
-      tag: "latest"
-    imagePullPolicy: IfNotPresent
+serviceAccountAgent:
+  create: true
+  name: jenkins-agent
 
-ingress:
-  enabled: false
-
-prometheus:
-  enabled: false
-
+# ===== Network Policy =====
 networkPolicy:
-  enabled: false
-
-awsSecurityGroupPolicies:
-  enabled: false
-  policies: []
-
-source:
-  chart: jenkins
-  repoURL: https://charts.jenkins.io
-  targetRevision: 5.1.7
-  helm:
-    valueFiles:
-      - values.yaml
+  enabled: true
+  apiVersion: networking.k8s.io/v1
+  
+# ===== Pod Disruption Budget =====
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1
