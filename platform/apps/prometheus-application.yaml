@@ -1,24 +1,48 @@
-# argocd/applications/prometheus.yaml
+# ============================================================================
+# FILE: argocd-apps/prometheus-application.yaml
+# PURPOSE: ArgoCD Application for Prometheus Stack
+# SCOPE: MVP - Simple, working monitoring
+# ============================================================================
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: prometheus
+  name: prometheus-stack
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"  # Deploy early for monitoring
 spec:
-  project: default
+  project: fawkes-platform
+  
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
-    chart: prometheus
-    targetRevision: 58.2.0  # Use latest stable version
+    chart: kube-prometheus-stack
+    targetRevision: 55.0.0
     helm:
+      # Use MVP values initially
+     # valuesObject:
+        # Import from Git repository
+       # $ref: https://github.com/paruff/fawkes/blob/main/platform/monitoring/prometheus/values-mvp.yaml
+
       valueFiles:
-        - prometheus/values.yaml
+        - values-mvp.yaml
+  
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
+  
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+      allowEmpty: false
     syncOptions:
       - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 1m

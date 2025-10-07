@@ -1,0 +1,76 @@
+# ============================================================================
+# FILE: platform/monitoring/prometheus/alerting-rules-mvp.yaml
+# PURPOSE: Essential alerting rules for MVP
+# SCOPE: Critical alerts only - cluster health, basic resources
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: fawkes-mvp-alerts
+  namespace: monitoring
+  labels:
+    prometheus: kube-prometheus
+    role: alert-rules
+spec:
+  groups:
+    # ===== Critical Infrastructure Alerts =====
+    - name: infrastructure.critical
+      interval: 1m
+      rules:
+        - alert: KubernetesNodeNotReady
+          expr: kube_node_status_condition{condition="Ready",status="true"} == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Kubernetes node not ready"
+            description: "Node {{ $labels.node }} has been unready for more than 5 minutes"
+        
+        - alert: KubernetesPodCrashLooping
+          expr: rate(kube_pod_container_status_restarts_total[15m]) > 0.1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod is crash looping"
+            description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is crash looping"
+        
+        - alert: KubernetesNodeHighCPU
+          expr: (100 - (avg by (node) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 80
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Node CPU usage is high"
+            description: "Node {{ $labels.node }} CPU usage is {{ $value }}%"
+        
+        - alert: KubernetesNodeHighMemory
+          expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Node memory usage is high"
+            description: "Node {{ $labels.node }} memory usage is {{ $value }}%"
+    
+    # ===== Pod Resource Alerts =====
+    - name: pods.resources
+      interval: 1m
+      rules:
+        - alert: PodMemoryUsageHigh
+          expr: sum(container_memory_working_set_bytes{container!=""}) by (namespace, pod) / sum(container_spec_memory_limit_bytes{container!=""}) by (namespace, pod) > 0.9
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod memory usage is high"
+            description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is using {{ $value | humanizePercentage }} of memory limit"
+        
+        - alert: PodCPUUsageHigh
+          expr: sum(rate(container_cpu_usage_seconds_total{container!=""}[5m])) by (namespace, pod) / sum(container_spec_cpu_quota{container!=""}/container_spec_cpu_period{container!=""}) by (namespace, pod) > 0.9
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod CPU usage is high"
+            description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is using {{ $value | humanizePercentage }} of CPU limit"
