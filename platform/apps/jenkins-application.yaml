@@ -1,25 +1,54 @@
+# ============================================================================
+# FILE: argocd-apps/jenkins-application.yaml
+# PURPOSE: ArgoCD Application definition for Jenkins
+# ============================================================================
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: jenkins
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"  # Deploy after core infrastructure
 spec:
+  project: fawkes-platform
+  
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    targetRevision: main
+    path: platform/jenkins
+    helm:
+      valueFiles:
+        - values.yaml
+  
   destination:
     server: https://kubernetes.default.svc
     namespace: jenkins
-  project: default
-  source:
-    chart: jenkins
-    repoURL: https://charts.jenkins.io
-    targetRevision: 5.1.7 # Use the latest stable version; update as needed
-    helm:
-      values: |
-        controller:
-          serviceType: ClusterIP
-          adminPassword: "admin"
+  
   syncPolicy:
     automated:
-      prune: true
-      selfHeal: true
+      prune: true        # Delete resources when removed from Git
+      selfHeal: true     # Auto-sync if cluster state drifts
+      allowEmpty: false
     syncOptions:
       - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  
+  # Health assessment
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas  # Ignore HPA-managed replicas
+  
+  # Notifications
+  revisionHistoryLimit: 10
+
