@@ -1,0 +1,111 @@
+# ============================================================================
+# FILE: platform/logging/opensearch-dashboards/values-mvp.yaml
+# PURPOSE: MVP OpenSearch Dashboards (Kibana alternative)
+# FEATURES: Log visualization, dashboards, dev tools
+# ============================================================================
+
+# ===== OpenSearch Dashboards Version =====
+opensearchDashboardsVersion: "2.11.1"
+
+# ===== Image Configuration =====
+image:
+  repository: "opensearchproject/opensearch-dashboards"
+  tag: "2.11.1"
+  pullPolicy: "IfNotPresent"
+
+# ===== Replicas - MVP: Single instance =====
+# Production: 2+ for HA
+replicaCount: 1
+
+# ===== Resources - MVP: Minimal =====
+resources:
+  requests:
+    cpu: "200m"
+    memory: "512Mi"
+  limits:
+    cpu: "500m"
+    memory: "1Gi"
+
+# ===== OpenSearch Connection =====
+opensearchHosts: "http://opensearch-cluster-master:9200"
+opensearchAccount:
+  secret: ""  # MVP: No auth
+  keyPassphrase:
+    enabled: false
+
+# ===== Service Configuration =====
+service:
+  type: ClusterIP
+  port: 5601
+  annotations: {}
+
+# ===== Configuration =====
+config:
+  opensearch_dashboards.yml: |
+    server.host: '0.0.0.0'
+    server.name: 'opensearch-dashboards'
+    
+    # OpenSearch connection
+    opensearch.hosts: ['http://opensearch-cluster-master:9200']
+    
+    # MVP: Disable security
+    opensearch.ssl.verificationMode: none
+    opensearch.username: ''
+    opensearch.password: ''
+    opensearch_security.auth.type: []
+    
+    # Disable telemetry
+    telemetry.enabled: false
+    telemetry.optIn: false
+    
+    # Session timeout
+    opensearch_security.session.ttl: 86400000
+    opensearch_security.session.keepalive: false
+
+# ===== Ingress - MVP: Disabled =====
+ingress:
+  enabled: false
+  # Production:
+  # enabled: true
+  # ingressClassName: alb
+  # hosts:
+  #   - host: logs.fawkes.yourdomain.com
+
+# ===== Security Context =====
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  runAsNonRoot: true
+  runAsUser: 1000
+
+podSecurityContext:
+  fsGroup: 1000
+  runAsUser: 1000
+
+# ===== RBAC =====
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+  name: opensearch-dashboards
+
+# ===== Probes =====
+livenessProbe:
+  httpGet:
+    path: /api/status
+    port: 5601
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 5
+
+readinessProbe:
+  httpGet:
+    path: /api/status
+    port: 5601
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
