@@ -1,36 +1,31 @@
 # ============================================================================
-# FILE: argocd-apps/prometheus-application.yaml
-# PURPOSE: ArgoCD Application for Prometheus Stack
-# SCOPE: MVP - Simple, working monitoring
+# FILE: argocd-apps/opensearch-dashboards-application.yaml
+# PURPOSE: ArgoCD Application for OpenSearch Dashboards (UI)
+# SCOPE: Visualization and management interface
 # ============================================================================
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: prometheus-stack
+  name: opensearch-dashboards
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
   annotations:
-    argocd.argoproj.io/sync-wave: "1"  # Deploy early for monitoring
+    argocd.argoproj.io/sync-wave: "2"  # After OpenSearch
 spec:
   project: fawkes-platform
   
   source:
-    repoURL: https://prometheus-community.github.io/helm-charts
-    chart: kube-prometheus-stack
-    targetRevision: 55.0.0
+    repoURL: https://opensearch-project.github.io/helm-charts/
+    chart: opensearch-dashboards
+    targetRevision: 2.15.0
     helm:
-      # Use MVP values initially
-     # valuesObject:
-        # Import from Git repository
-       # $ref: https://github.com/paruff/fawkes/blob/main/platform/monitoring/prometheus/values-mvp.yaml
-
-      valueFiles:
-        - prometheus/values-mvp.yaml
+      valuesObject:
+        $ref: https://github.com/paruff/fawkes/blob/main/platform/logging/opensearch-dashboards/values-mvp.yaml
   
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring
+    namespace: logging
   
   syncPolicy:
     automated:
@@ -38,7 +33,6 @@ spec:
       selfHeal: true
       allowEmpty: false
     syncOptions:
-      - CreateNamespace=true
       - ServerSideApply=true
     retry:
       limit: 3

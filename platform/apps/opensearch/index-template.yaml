@@ -1,0 +1,98 @@
+# ============================================================================
+# FILE: platform/logging/opensearch/index-templates.yaml
+# PURPOSE: Index templates for common log types
+# SCOPE: Configure how logs are indexed
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opensearch-index-templates
+  namespace: logging
+data:
+  application-logs.json: |
+    {
+      "index_patterns": ["application-logs-*"],
+      "template": {
+        "settings": {
+          "number_of_shards": 3,
+          "number_of_replicas": 1,
+          "index.refresh_interval": "30s",
+          "index.codec": "best_compression"
+        },
+        "mappings": {
+          "properties": {
+            "@timestamp": {
+              "type": "date"
+            },
+            "level": {
+              "type": "keyword"
+            },
+            "message": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "service": {
+              "type": "keyword"
+            },
+            "namespace": {
+              "type": "keyword"
+            },
+            "pod": {
+              "type": "keyword"
+            },
+            "container": {
+              "type": "keyword"
+            },
+            "trace_id": {
+              "type": "keyword"
+            },
+            "span_id": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    }
+  
+  kubernetes-logs.json: |
+    {
+      "index_patterns": ["kubernetes-logs-*"],
+      "template": {
+        "settings": {
+          "number_of_shards": 2,
+          "number_of_replicas": 1,
+          "index.refresh_interval": "30s"
+        },
+        "mappings": {
+          "properties": {
+            "@timestamp": {
+              "type": "date"
+            },
+            "kubernetes": {
+              "properties": {
+                "namespace_name": {
+                  "type": "keyword"
+                },
+                "pod_name": {
+                  "type": "keyword"
+                },
+                "container_name": {
+                  "type": "keyword"
+                },
+                "labels": {
+                  "type": "object"
+                }
+              }
+            },
+            "log": {
+              "type": "text"
+            }
+          }
+        }
+      }
+    }
