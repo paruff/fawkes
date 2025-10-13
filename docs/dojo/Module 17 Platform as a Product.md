@@ -866,3 +866,725 @@ rate(deployment_total{platform="fawkes"}[1d])
 SELECT 
   (COUNT(*) FILTER (WHERE score >= 9) * 100.0 / COUNT(*) - 
    COUNT(*) FILTER (WHERE score <= 6) * 100.0 / COUNT(*)) as nps
+FROM survey_responses
+WHERE survey_id = 'platform-nps'
+  AND created_at > NOW() - INTERVAL '90 days'
+```
+
+3. **DORA Metrics Panel**:
+```promql
+# Deploy frequency (per day per team)
+avg(rate(deployment_total[1d])) by (team)
+
+# Lead time for changes (commit to deploy)
+histogram_quantile(0.95, 
+  rate(lead_time_seconds_bucket[1d])
+)
+
+# MTTR
+histogram_quantile(0.95,
+  rate(incident_resolution_seconds_bucket[1d])
+)
+
+# Change failure rate
+(rate(deployment_failed_total[1d]) / 
+ rate(deployment_total[1d])) * 100
+```
+
+**View the dashboard**:
+
+```bash
+open http://localhost:3000/d/platform-health
+
+# You should see a comprehensive dashboard showing all key metrics
+```
+
+---
+
+### Lab Validation
+
+```bash
+# Run validation
+fawkes lab validate --module 17
+
+# Expected output:
+# ✅ User feedback analyzed and themes identified
+# ✅ Features prioritized using impact/effort matrix
+# ✅ Quarterly roadmap created with success metrics
+# ✅ NPS survey configured and tested
+# ✅ Platform health dashboard deployed
+```
+
+**Cleanup**:
+
+```bash
+fawkes lab stop --module 17
+```
+
+---
+
+## ✅ Knowledge Check
+
+### Question 1: Product Mindset
+
+What's the key difference between "platform as infrastructure" vs "platform as a product"?
+
+A) Products are externally sold, infrastructure is internal  
+B) Products focus on user satisfaction, infrastructure focuses on uptime  
+C) Products cost more to build  
+D) Infrastructure is more reliable
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+Platform as a product treats internal developers as customers and measures success by their satisfaction and outcomes, not just technical availability. You can have 99.99% uptime but zero adoption if developers don't find it valuable.
+
+</details>
+
+---
+
+### Question 2: User Research
+
+Which user research method provides the deepest insights into developer pain points?
+
+A) Anonymous surveys  
+B) Usage analytics  
+C) In-person interviews with observation  
+D) Support ticket analysis
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer: C**
+
+One-on-one interviews combined with observing actual workflows reveal not just what people say, but what they actually do. You discover workarounds, inefficiencies, and unspoken needs that surveys miss.
+
+</details>
+
+---
+
+### Question 3: User Personas
+
+Why create user personas for your platform?
+
+A) To segment users for marketing  
+B) Different roles have different needs requiring tailored solutions  
+C) It's a requirement for product management  
+D) To decide which users to prioritize
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+Frontend developers, backend engineers, data scientists, and SREs have vastly different needs. A one-size-fits-all platform satisfies no one. Personas help you design appropriate experiences for each group.
+
+</details>
+
+---
+
+### Question 4: NPS (Net Promoter Score)
+
+Your platform has an NPS of -15. What does this mean?
+
+A) 15% of users are happy  
+B) More detractors than promoters - urgent action needed  
+C) Average satisfaction is 15%  
+D) Normal score for internal platforms
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+NPS = % Promoters - % Detractors. A negative NPS means you have more unhappy users than happy ones. This indicates serious problems requiring immediate investigation and action.
+
+</details>
+
+---
+
+### Question 5: Roadmap Prioritization
+
+You have two features: "Real-time logs" (high impact, high effort) and "Improved docs" (medium impact, low effort). Which should you build first?
+
+A) Real-time logs (higher impact)  
+B) Improved docs (faster to ship)  
+C) Build both simultaneously  
+D) Survey users to decide
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+Start with "quick wins" (medium impact, low effort) to build momentum and trust. Better docs can ship in weeks and immediately help users. Real-time logs takes months and users may not trust you to deliver if you haven't shipped smaller improvements first.
+
+</details>
+
+---
+
+### Question 6: Adoption Metrics
+
+Your platform has 40% adoption after 6 months. What should you do?
+
+A) Mandate usage via policy  
+B) Interview non-adopters to understand barriers  
+C) Add more features to attract users  
+D) Wait longer for organic adoption
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+Low adoption indicates your platform doesn't meet user needs. Talk to the 60% who aren't using it - they'll tell you exactly what's blocking them. Mandating usage creates resentment, and adding features may worsen the problem if they're not addressing real needs.
+
+</details>
+
+---
+
+### Question 7: Success Metrics
+
+Which metric best indicates your platform is succeeding?
+
+A) Number of features shipped  
+B) Infrastructure uptime percentage  
+C) Improvement in DORA metrics for users  
+D) Size of your platform team
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer: C**
+
+The ultimate measure of platform success is whether it improves outcomes for your users. If teams using your platform deploy more frequently with fewer failures (better DORA metrics), you're succeeding regardless of feature count or uptime.
+
+</details>
+
+---
+
+### Question 8: Saying No
+
+A senior engineer requests a niche feature that would take 2 months but only helps their team. How do you respond?
+
+A) "No, we're too busy"  
+B) "File a ticket and we'll get to it eventually"  
+C) Build it (they're senior so must be important)  
+D) Explain current priorities and understand the underlying need
+
+<details>
+<summary>Show Answer</summary>
+
+**Answer: D**
+
+Productively saying no means: (1) Acknowledge the request, (2) Explain current priorities and why, (3) Understand the underlying need (there may be a simpler solution), (4) Offer alternatives or a timeline for reconsideration. Never just say no.
+
+</details>
+
+---
+
+## 🌍 Real-World Examples
+
+### Example 1: Spotify's Backstage - Dogfooding as Product Strategy
+
+**Challenge**: 280+ engineers, hundreds of microservices, fragmented tooling creating chaos.
+
+**Product Approach**:
+- **Started with research**: Interviewed 50 engineers about pain points
+- **Built for themselves first**: Backstage solved Spotify's own problems
+- **Measured everything**: Tracked time-to-deploy, incident response time, onboarding speed
+- **Iterated based on feedback**: Weekly demos, monthly retrospectives
+
+**Key Product Decisions**:
+- **Golden paths, not enforcement**: Made easy path obvious, didn't block alternatives
+- **Self-service**: Developers create services without ops tickets
+- **Plugin ecosystem**: Teams can extend for their needs
+
+**Results**:
+- Onboarding time: 10 days → 1 day (90% improvement)
+- Time to first deploy: 4 hours → 5 minutes (98% improvement)
+- Adoption: 100% of teams (voluntary, not mandated)
+
+**Lesson**: "If we couldn't convince ourselves to use it, we knew developers wouldn't either."
+
+**Learn more**: [Backstage Engineering Blog](https://backstage.io/blog/)
+
+---
+
+### Example 2: Netflix's Paved Road - Product Thinking at Scale
+
+**Philosophy**: "We don't require you to use the paved road, but we make it so good that you'd be crazy not to."
+
+**Product Strategy**:
+
+```
+UNPAVED ROAD (Hard way):
+├─ Provision infrastructure yourself: 2 days
+├─ Configure monitoring: 4 hours
+├─ Set up CI/CD: 1 day
+├─ Security scanning: 3 hours
+└─ Total: 3+ days + ongoing maintenance
+
+PAVED ROAD (Netflix platform):
+├─ Run: netflix-scaffold new-service
+├─ Infrastructure auto-provisioned: 10 minutes
+├─ Monitoring pre-configured: 0 minutes
+├─ CI/CD ready: 0 minutes
+├─ Security included: 0 minutes
+└─ Total: 10 minutes + zero maintenance
+```
+
+**Key Insight**: Don't mandate the platform, make it irresistibly better.
+
+**Product Metrics**:
+- **Adoption**: 95%+ voluntary (not mandated)
+- **Developer satisfaction**: NPS 72 (world-class)
+- **Time saved**: 40+ engineering hours per new service
+
+**How they measured product-market fit**:
+- Tracked adoption rate by team
+- Monthly surveys (NPS + open feedback)
+- Usage analytics (which features, how often)
+- "Paved road health score" dashboard
+
+**Lesson**: Product thinking means your platform wins by being better, not by being required.
+
+---
+
+### Example 3: Etsy's Product Management for Infrastructure
+
+**Challenge**: Platform team seen as "cost center" with unclear value.
+
+**Product Transformation**:
+
+**Before** (Infrastructure mindset):
+- Success = Uptime percentage
+- Shipped features, hoped developers used them
+- No user research
+- Reactive support (waiting for tickets)
+
+**After** (Product mindset):
+- **Hired product manager for platform team**
+- **Quarterly OKRs tied to developer productivity**
+- **Regular user research**: 10 developer interviews/month
+- **Platform health dashboard**: Adoption, satisfaction, DORA metrics
+- **Proactive support**: Office hours, documentation, onboarding
+
+**Product Management Practices**:
+
+1. **Quarterly Planning**:
+```
+Q1 OKRs:
+Objective: Make deployments delightful
+├─ KR1: Deploy time P95 < 10 minutes (from 30min)
+├─ KR2: Deployment success rate > 95% (from 88%)
+└─ KR3: Developer NPS > 40 (from 18)
+```
+
+2. **Bi-weekly User Testing**:
+- Watch developers deploy a feature
+- Identify friction points
+- Ship improvements within 1 sprint
+
+3. **Feature Flags for Platform Features**:
+```yaml
+# Gradually roll out new features
+features:
+  parallel_ci:
+    enabled_teams: ["payments", "search", "checkout"]
+    rollout_percentage: 25%
+    feedback_required: true
+```
+
+**Results**:
+- **NPS**: 18 → 58 in 6 months
+- **Adoption**: 45% → 85%
+- **Platform budget**: Increased 40% (demonstrated clear value)
+- **Team morale**: Platform team seen as strategic, not cost center
+
+**Lesson**: Treating infrastructure as a product transforms how the organization views and funds platform teams.
+
+---
+
+### Example 4: Airbnb's Platform Product Management
+
+**Structure**: Each platform capability has a dedicated product manager.
+
+**Example: CI/CD Product Manager**
+
+**Responsibilities**:
+- **User research**: Interview 5 developers weekly
+- **Roadmap**: Prioritize features based on impact
+- **Metrics**: Own deployment frequency and lead time
+- **Communication**: Publish monthly updates to eng org
+
+**Sample Project: "Project Lightning" (Faster CI/CD)**
+
+**Discovery Phase** (2 weeks):
+```
+Research findings:
+- 78% of developers frustrated with CI speed
+- Average build time: 18 minutes
+- 40% of builds fail due to flaky tests
+- Developers context-switch while waiting
+
+User quotes:
+"I start a build then go get coffee. By the time I'm back, 
+ I've forgotten what I was working on."
+
+"Half the time the build fails because of a flaky test, 
+ not my code. It's demoralizing."
+```
+
+**Roadmap** (3 months):
+```
+Month 1: Quick wins
+├─ Parallel test execution: 18min → 12min
+├─ Better test splitting
+└─ Success metric: 33% faster builds
+
+Month 2: Reliability
+├─ Quarantine flaky tests
+├─ Auto-retry failed tests once
+└─ Success metric: <10% false failures
+
+Month 3: Intelligence
+├─ Predictive test selection (only run affected tests)
+├─ Smart caching
+└─ Success metric: 12min → 5min average build time
+```
+
+**Communication**:
+- Weekly Slack updates in #engineering
+- Demo videos showing improvements
+- "Build time tracker" dashboard (public)
+
+**Results**:
+- Build time: 18min → 5min (72% faster)
+- False failure rate: 40% → 8%
+- Developer NPS: +28 points
+- 2,000+ engineering hours saved/month
+
+**Lesson**: Dedicated product management for platform capabilities drives meaningful improvements. Treat each platform area (CI/CD, observability, deployment) as its own product.
+
+---
+
+## 📊 DORA Capabilities Mapping
+
+This module directly supports these **DORA capabilities**:
+
+| Capability | How This Module Helps | Impact on Metrics |
+|------------|----------------------|-------------------|
+| **Generative Culture** | Product thinking fosters collaboration between platform and dev teams | Improves all DORA metrics through better alignment |
+| **Visual Management** | Platform health dashboards make work visible | Faster identification of bottlenecks |
+| **Team Experimentation** | User research and feedback loops enable rapid iteration | Higher deployment frequency through faster learning |
+| **Work in Small Batches** | Quarterly roadmaps and iterative improvement | Reduced lead time and change failure rate |
+| **Learning Culture** | Continuous user feedback creates learning organization | Sustained improvement across all metrics |
+
+---
+
+## 🔧 Troubleshooting Common Issues
+
+### Issue 1: Low Adoption Despite Good Technology
+
+**Symptom**: You've built a technically excellent platform but only 30% adoption after 6 months.
+
+**Root Causes**:
+- Built for perceived needs, not actual needs
+- No marketing/evangelism of the platform
+- Lack of documentation or examples
+- Migration path too difficult from existing solutions
+
+**Solution**:
+
+```
+STEP 1: Interview non-adopters
+"Why aren't you using the platform?"
+Common answers:
+- "Didn't know it existed"
+- "Too hard to migrate"
+- "My current solution works fine"
+- "Tried it once, got stuck, gave up"
+
+STEP 2: Address barriers systematically
+├─ Awareness: Weekly demos, Slack announcements, onboarding talks
+├─ Migration: Build automated migration tools
+├─ Documentation: Step-by-step tutorials for common use cases
+└─ Support: Dedicated office hours, Slack channel with fast response
+
+STEP 3: Create champions
+├─ Find early adopters who love the platform
+├─ Have them present at team meetings
+├─ "Platform champions" program with incentives
+└─ Share success stories publicly
+```
+
+---
+
+### Issue 2: Negative NPS (More Detractors Than Promoters)
+
+**Symptom**: NPS of -10 or below, lots of complaints.
+
+**Immediate Actions**:
+
+```
+WEEK 1: Understand the damage
+├─ Read every detractor comment
+├─ Schedule calls with 10 most vocal detractors
+├─ Identify the top 3 pain points
+
+WEEK 2: Quick wins
+├─ Fix documentation gaps (lowest effort)
+├─ Improve most common error messages
+├─ Send personal follow-ups to detractors
+
+MONTH 1: Address systemic issues
+├─ Tackle #1 pain point from research
+├─ Communicate progress transparently
+├─ Re-survey after changes ship
+
+ONGOING: Prevent future issues
+├─ Monthly NPS surveys (catch problems early)
+├─ Faster response to support tickets
+├─ Proactive communication about known issues
+```
+
+**Example Turnaround**:
+```
+GitHub Internal Platform (fictional example):
+- Month 0: NPS -15 (crisis mode)
+  - Top issue: Deployments failing randomly
+  - Action: All-hands to fix reliability
+  
+- Month 1: NPS -5 (improving)
+  - Fixed deployment reliability
+  - Added status page for transparency
+  
+- Month 3: NPS +15 (positive)
+  - Continued improvements
+  - Regular communication building trust
+  
+- Month 6: NPS +42 (healthy)
+  - Platform now trusted
+  - Adoption increasing
+```
+
+---
+
+### Issue 3: Feature Requests Overwhelming Your Backlog
+
+**Symptom**: 200+ feature requests, can't prioritize, team paralyzed.
+
+**Solution - Ruthless Prioritization**:
+
+```
+FRAMEWORK: Impact vs Strategic Alignment
+
+Step 1: Categorize all requests
+├─ P0 (Do Now): High impact + Strategic alignment
+│   Example: Deploy speed improvements (affects all teams)
+│
+├─ P1 (Do Soon): High impact OR Strategic alignment
+│   Example: Preview environments (affects 60% of teams)
+│
+├─ P2 (Do Later): Medium impact + Nice to have
+│   Example: Additional language support
+│
+└─ P3 (Don't Do): Low impact + Off-strategy
+    Example: Custom CI runners for 1 team
+
+Step 2: Communicate decisions
+├─ Publish prioritization criteria
+├─ Explain "why" for each category
+├─ Set expectations (P0 this quarter, P1 next quarter, P2 backlog, P3 rejected)
+
+Step 3: Review quarterly
+├─ Re-prioritize based on new data
+├─ Business priorities may change
+└─ Some P2s become P0s (and vice versa)
+```
+
+**Sample Communication**:
+
+```markdown
+# Platform Roadmap Prioritization
+
+## How We Prioritize
+
+**P0 Criteria** (Do This Quarter):
+- Affects >50% of teams
+- Improves DORA metrics significantly
+- Blocks other high-priority work
+
+**Current P0 Features** (Q1 2025):
+1. Deployment speed improvements (18min → 8min target)
+2. Real-time deployment status dashboard
+3. Parallel CI pipelines
+
+**P1 Features** (Q2 2025):
+4. Self-service preview environments
+5. Integrated log viewer
+6. Cost optimization dashboard
+
+## Your Request: "Support for Terraform 1.7"
+- Priority: P2 (Do Later)
+- Reasoning: Affects 5 teams (12%), existing 1.6 sufficient for most use cases
+- Timeline: Q3 2025 (will revisit if Terraform 1.7 becomes critical)
+
+Questions? Disagree with priority? Let's talk: #platform-feedback
+```
+
+---
+
+### Issue 4: Platform Team Seen as Cost Center, Not Value Driver
+
+**Symptom**: Budget cuts, no headcount, leadership doesn't understand platform value.
+
+**Solution - Quantify Business Impact**:
+
+```
+BUILD A BUSINESS CASE
+
+1. Quantify Time Savings:
+   Before platform: 40 teams × 4 hours/deploy × $150/hour = $24,000/deploy
+   After platform: 40 teams × 0.5 hours/deploy × $150/hour = $3,000/deploy
+   Savings per deploy: $21,000
+   Deploys per day: 50
+   Annual savings: $21,000 × 50 × 250 days = $262.5M
+
+2. Quantify Faster Time-to-Market:
+   Lead time improvement: 2 weeks → 2 days
+   Revenue impact: Ship features 10 days faster
+   If feature generates $100k/month revenue:
+   Value: $100k × (10/30) = $33k per feature
+   Features per year: 100
+   Annual value: $3.3M
+
+3. Quantify Risk Reduction:
+   MTTR improvement: 2 hours → 15 minutes
+   Downtime cost: $50k/hour
+   Incidents per month: 5
+   Annual savings: $50k × 1.75 × 5 × 12 = $5.25M
+
+TOTAL ANNUAL VALUE: $271M
+Platform team cost: $5M/year (10 engineers)
+ROI: 54x
+```
+
+**Present to Leadership**:
+
+```markdown
+# Platform Team Business Case
+
+## Executive Summary
+Our platform team drives $271M in annual value through:
+- $262.5M in developer productivity gains
+- $3.3M in faster time-to-market
+- $5.25M in reduced downtime costs
+
+At $5M/year cost, we deliver 54x ROI.
+
+## Metrics
+- Deploy frequency: 5/day (up from 0.5/day)
+- Lead time: 2 days (down from 14 days)
+- MTTR: 15 minutes (down from 2 hours)
+- Developer NPS: 52 (up from 18)
+
+## Request
+Maintain current headcount (10 FTE) and approve Q1 roadmap.
+Without platform investment, we risk losing competitive advantage
+in deployment velocity.
+```
+
+---
+
+## 📚 Additional Resources
+
+### Books
+- **"The Lean Startup"** by Eric Ries - Core product principles applicable to platforms
+- **"Inspired: How to Create Tech Products Customers Love"** by Marty Cagan - Product management fundamentals
+- **"Escaping the Build Trap"** by Melissa Perri - Outcome-driven product development
+- **"User Story Mapping"** by Jeff Patton - Understanding user journeys
+- **"The Mom Test"** by Rob Fitzpatrick - How to conduct effective user interviews
+
+### Articles & Papers
+- **"Team Topologies"** by Matthew Skelton & Manuel Pais - Platform team structures
+- **"Platform Strategy"** by Evan Bottcher (ThoughtWorks) - Defining platform vision
+- **"Developers Are Users Too"** by Jean Yang - Applying UX to developer tools
+- **DORA State of DevOps Reports** - Measuring platform impact
+
+### Courses & Communities
+- **Platform Engineering Community** - [platformengineering.org](https://platformengineering.org)
+- **Product School** - Internal product management courses
+- **Mind the Product** - Product management community and resources
+
+### Tools
+- **Backstage** - Platform with built-in user feedback and analytics
+- **Pendo** - Product analytics for internal tools
+- **Dovetail** - User research repository
+- **ProductBoard** - Roadmap management
+- **Fullstory** - Session replay for internal tools
+
+---
+
+## 🎯 Key Takeaways
+
+By completing this module, you've learned:
+
+1. ✅ **Platform as a product mindset** - Your users are developers; measure their satisfaction
+2. ✅ **User research methods** - Interviews, surveys, shadowing, analytics
+3. ✅ **Prioritization frameworks** - Impact vs. effort, strategic alignment
+4. ✅ **Roadmap building** - Outcome-driven, timeboxed, measurable
+5. ✅ **Key metrics** - NPS, adoption, DORA metrics, support efficiency
+6. ✅ **Product management practices** - Feedback loops, iteration, communication
+
+**Critical insight**: The best platform is useless if developers don't adopt it. Product thinking ensures you build what users actually need, not what you think they need.
+
+**Remember**: 
+- 🎯 **Outcomes over outputs**: Measure impact, not features shipped
+- 👂 **Listen more than talk**: Users know their problems better than you
+- 🔁 **Iterate relentlessly**: Small improvements compound over time
+- 📢 **Communicate constantly**: Share progress, celebrate wins, be transparent about challenges
+
+---
+
+## 🚀 Next Steps
+
+### In Module 18: Multi-Tenancy & Resource Management
+
+You'll learn how to:
+- Design multi-tenant platforms serving multiple teams securely
+- Implement resource quotas and isolation
+- Handle namespace management and RBAC at scale
+- Create self-service onboarding workflows
+- Monitor and optimize resource utilization across tenants
+
+**Prepare by**:
+- Identifying how many teams your platform will serve
+- Understanding your organization's compliance requirements
+- Listing resources that need quota enforcement (CPU, memory, storage)
+
+---
+
+## 🏆 Black Belt Progress
+
+**Module 17 Complete!** ✅
+
+```
+Black Belt Progress:
+[████████░░░░░░░░░░░░] 25% (1/4 modules)
+
+✅ Module 17: Platform as a Product
+⬜ Module 18: Multi-Tenancy & Resource Management
+⬜ Module 19: Security & Zero Trust
+⬜ Module 20: Multi-Cloud Strategies
+
+Next: Module 18 to continue your Black Belt journey!
+```
+
+---
+
+**Module 17: Platform as a Product** | Fawkes Dojo | Black Belt  
+*"Build what users need, not what you think they need"* | Version 1.0
