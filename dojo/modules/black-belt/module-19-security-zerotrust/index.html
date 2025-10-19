@@ -1,0 +1,3050 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Module 19: Security & Zero Trust Architecture - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#module-19-security-zero-trust-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Module 19: Security &amp; Zero Trust Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Implementation Paths
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Wins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Capabilities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Capabilities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Feedback
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Recovery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Patterns
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure as Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Tools
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Tools
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Continuous Delivery
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Spinnaker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Jenkins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kubernetes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#learning-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Learning Objectives
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#theory-zero-trust-for-platform-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Theory: Zero Trust for Platform Engineering
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 Theory: Zero Trust for Platform Engineering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-zero-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is Zero Trust?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-zero-trust-matters-for-idps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Zero Trust Matters for IDPs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-zero-trust-architecture-pillars" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Zero Trust Architecture Pillars
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-trust-in-cicd-pipelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zero Trust in CI/CD Pipelines
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔐 Core Concepts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔐 Core Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-workload-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Workload Identity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-mutual-tls-mtls-and-service-mesh" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Mutual TLS (mTLS) and Service Mesh
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-policy-as-code-with-opa" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Policy-as-Code with OPA
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-supply-chain-security-slsa" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Supply Chain Security (SLSA)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-secret-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Secret Management
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zero-trust-architecture-for-fawkes" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ Zero Trust Architecture for Fawkes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Zero Trust Architecture for Fawkes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reference-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reference Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-trust-cicd-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zero Trust CI/CD Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hands-on-lab-implementing-zero-trust-for-fawkes" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Hands-On Lab: Implementing Zero Trust for Fawkes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Hands-On Lab: Implementing Zero Trust for Fawkes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab Overview
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-1-deploy-istio-service-mesh-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercise 1: Deploy Istio Service Mesh (5 minutes)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-2-install-opa-gatekeeper-and-policies-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercise 2: Install OPA Gatekeeper and Policies (5 minutes)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-3-sign-and-verify-container-images-8-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercise 3: Sign and Verify Container Images (8 minutes)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-4-configure-external-secrets-operator-7-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercise 4: Configure External Secrets Operator (7 minutes)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab Validation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#knowledge-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Knowledge Check
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✅ Knowledge Check">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#question-1-zero-trust-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 1: Zero Trust Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-2-workload-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 2: Workload Identity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-3-service-mesh-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 3: Service Mesh Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-4-supply-chain-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 4: Supply Chain Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-5-policy-as-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 5: Policy-as-Code
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-6-secret-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 6: Secret Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-7-sbom-software-bill-of-materials" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 7: SBOM (Software Bill of Materials)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-8-zero-trust-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 8: Zero Trust CI/CD
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌍 Real-World Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌍 Real-World Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-netflixs-zero-trust-journey" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 1: Netflix's Zero Trust Journey
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-googles-beyondcorp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 2: Google's BeyondCorp
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-capital-one-breach-what-went-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 3: Capital One Breach (What Went Wrong)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-4-shopifys-vault-backed-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 4: Shopify's Vault-Backed Secrets
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dora-capabilities-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 DORA Capabilities Mapping
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Troubleshooting Common Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Troubleshooting Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-1-pods-fail-to-start-after-enabling-strict-mtls" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issue 1: Pods Fail to Start After Enabling Strict mTLS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-2-image-signature-verification-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issue 2: Image Signature Verification Fails
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-3-external-secrets-not-syncing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issue 3: External Secrets Not Syncing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-4-opa-gatekeeper-policies-not-enforcing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issue 4: OPA Gatekeeper Policies Not Enforcing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-5-workload-identity-not-working" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issue 5: Workload Identity Not Working
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Additional Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 Additional Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#official-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Official Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools &amp; Projects
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#books-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Books &amp; Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#video-tutorials" class="md-nav__link">
+    <span class="md-ellipsis">
+      Video Tutorials
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Key Takeaways
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Next Steps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-module-20-multi-cloud-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      In Module 20: Multi-Cloud Strategies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#black-belt-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏆 Black Belt Progress
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certification-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎓 Certification Path
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="module-19-security-zero-trust-architecture">Module 19: Security &amp; Zero Trust Architecture</h1>
+<p><strong>Belt Level</strong>: ⚫ Black Belt<br />
+<strong>Duration</strong>: 60 minutes<br />
+<strong>Prerequisites</strong>: Modules 1-18, especially Module 7 (Security Scanning), Module 13 (Observability)<br />
+<strong>Certification Track</strong>: Fawkes Platform Architect</p>
+<hr />
+<h2 id="learning-objectives">🎯 Learning Objectives</h2>
+<p>By the end of this module, you will be able to:</p>
+<ol>
+<li><strong>Design and implement</strong> a zero trust security architecture for internal developer platforms</li>
+<li><strong>Apply</strong> the principle of "never trust, always verify" to CI/CD pipelines and deployment workflows</li>
+<li><strong>Implement</strong> mutual TLS (mTLS), service mesh security, and workload identity</li>
+<li><strong>Configure</strong> policy-as-code enforcement using Open Policy Agent (OPA) and admission controllers</li>
+<li><strong>Establish</strong> supply chain security practices including SBOM generation, image signing, and provenance verification</li>
+</ol>
+<hr />
+<h2 id="theory-zero-trust-for-platform-engineering">📚 Theory: Zero Trust for Platform Engineering</h2>
+<h3 id="what-is-zero-trust">What is Zero Trust?</h3>
+<p>Zero trust is a security model based on the principle of <strong>"never trust, always verify"</strong>. Unlike traditional perimeter-based security (castle-and-moat), zero trust assumes:</p>
+<ul>
+<li><strong>No implicit trust</strong>: Location (inside/outside network) doesn't grant access</li>
+<li><strong>Verify explicitly</strong>: Always authenticate and authorize based on all available data points</li>
+<li><strong>Least privilege access</strong>: Grant minimum permissions necessary for the task</li>
+<li><strong>Assume breach</strong>: Design systems expecting compromise at any point</li>
+</ul>
+<h3 id="why-zero-trust-matters-for-idps">Why Zero Trust Matters for IDPs</h3>
+<p>Internal Developer Platforms handle:</p>
+<ul>
+<li><strong>Credentials and secrets</strong> for all production systems</li>
+<li><strong>CI/CD pipelines</strong> that deploy code to production</li>
+<li><strong>Container registries</strong> with potentially vulnerable images</li>
+<li><strong>Service-to-service communication</strong> across microservices</li>
+<li><strong>Developer access</strong> to sensitive production resources</li>
+</ul>
+<p>A breach at any point could cascade across your entire platform. Zero trust minimizes blast radius.</p>
+<h3 id="the-zero-trust-architecture-pillars">The Zero Trust Architecture Pillars</h3>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────┐
+│                    ZERO TRUST PRINCIPLES                    │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  1. IDENTITY                                                │
+│     ├─ Workload Identity (not long-lived credentials)      │
+│     ├─ Human Identity (SSO, MFA, short-lived tokens)       │
+│     └─ Machine Identity (service accounts, mTLS)           │
+│                                                             │
+│  2. DEVICE                                                  │
+│     ├─ Endpoint security posture                           │
+│     ├─ Compliance validation                               │
+│     └─ Device certificates                                 │
+│                                                             │
+│  3. NETWORK                                                 │
+│     ├─ Encrypt all traffic (TLS everywhere)                │
+│     ├─ Micro-segmentation                                  │
+│     └─ Service mesh (Istio, Linkerd)                       │
+│                                                             │
+│  4. APPLICATION                                             │
+│     ├─ Policy-as-code enforcement                          │
+│     ├─ Runtime security (Falco, AppArmor)                  │
+│     └─ Admission controllers                               │
+│                                                             │
+│  5. DATA                                                    │
+│     ├─ Encryption at rest and in transit                   │
+│     ├─ Data classification and DLP                         │
+│     └─ Secret management (Vault, External Secrets)         │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="zero-trust-in-cicd-pipelines">Zero Trust in CI/CD Pipelines</h3>
+<p>Traditional CI/CD often uses:
+- ❌ Long-lived credentials stored in CI system
+- ❌ Broad permissions for deployment service accounts
+- ❌ No verification of artifact provenance
+- ❌ Implicit trust between pipeline stages</p>
+<p><strong>Zero trust CI/CD</strong>:
+- ✅ Workload identity for pipeline authentication (OIDC)
+- ✅ Least-privilege, ephemeral credentials
+- ✅ Cryptographic verification of artifacts (Sigstore/Cosign)
+- ✅ Policy enforcement at every stage</p>
+<hr />
+<h2 id="core-concepts">🔐 Core Concepts</h2>
+<h3 id="1-workload-identity">1. Workload Identity</h3>
+<p><strong>Problem</strong>: Traditional approaches use long-lived service account keys stored as secrets.</p>
+<p><strong>Zero Trust Solution</strong>: Workload identity allows pods/pipelines to authenticate using short-lived tokens.</p>
+<p><strong>Example: GitHub Actions → AWS</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Traditional approach (NEVER DO THIS)</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure AWS Credentials</span>
+<span class="w">  </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">AWS_ACCESS_KEY_ID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AWS_ACCESS_KEY }}</span><span class="w">     </span><span class="c1"># ❌ Long-lived</span>
+<span class="w">    </span><span class="nt">AWS_SECRET_ACCESS_KEY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AWS_SECRET_KEY }}</span><span class="w"> </span><span class="c1"># ❌ Rotated manually</span>
+
+<span class="c1"># Zero trust approach with OIDC</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configure AWS Credentials</span>
+<span class="w">  </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-actions/configure-aws-credentials@v4</span>
+<span class="w">  </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">role-to-assume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:iam::123456789:role/GitHubActionsRole</span>
+<span class="w">    </span><span class="nt">aws-region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-1</span>
+<span class="w">    </span><span class="c1"># ✅ No secrets stored in GitHub</span>
+<span class="w">    </span><span class="c1"># ✅ Short-lived tokens (1 hour)</span>
+<span class="w">    </span><span class="c1"># ✅ Scoped to specific repos/branches</span>
+</code></pre></div></p>
+<p><strong>Example: Kubernetes Workload Identity</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># AWS: Map to IAM role</span>
+<span class="w">    </span><span class="nt">eks.amazonaws.com/role-arn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:iam::123456789:role/payment-service</span>
+
+<span class="w">    </span><span class="c1"># GCP: Map to GCP service account</span>
+<span class="w">    </span><span class="nt">iam.gke.io/gcp-service-account</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment@project.iam.gserviceaccount.com</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service</span><span class="w">  </span><span class="c1"># ✅ Pod gets temporary credentials</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service:v1.2.3</span>
+<span class="w">        </span><span class="c1"># No AWS_ACCESS_KEY_ID needed! SDK auto-discovers credentials</span>
+</code></pre></div></p>
+<h3 id="2-mutual-tls-mtls-and-service-mesh">2. Mutual TLS (mTLS) and Service Mesh</h3>
+<p><strong>mTLS</strong>: Both client and server authenticate using certificates, encrypting all traffic.</p>
+<p><strong>Service Mesh</strong> (Istio, Linkerd, Consul) provides:
+- Automatic mTLS between all services
+- Fine-grained authorization policies
+- Traffic encryption without code changes</p>
+<p><strong>Example: Istio Authorization Policy</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security.istio.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AuthorizationPolicy</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-access-policy</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payments</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-api</span>
+<span class="w">  </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALLOW</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">principals</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;cluster.local/ns/checkout/sa/checkout-service&quot;</span><span class="w">  </span><span class="c1"># Only checkout can call</span>
+<span class="w">    </span><span class="nt">to</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">operation</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">methods</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;POST&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">paths</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;/api/v1/charge&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">principals</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;cluster.local/ns/admin/sa/admin-dashboard&quot;</span>
+<span class="w">    </span><span class="nt">to</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">operation</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">methods</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;GET&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">paths</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;/api/v1/transactions/*&quot;</span><span class="p p-Indicator">]</span>
+</code></pre></div></p>
+<p><strong>Result</strong>: Even if an attacker compromises the <code>frontend</code> service, they cannot call the payment API.</p>
+<h3 id="3-policy-as-code-with-opa">3. Policy-as-Code with OPA</h3>
+<p><strong>Open Policy Agent (OPA)</strong>: Express security policies as code, enforce them at runtime.</p>
+<p><strong>Gatekeeper</strong>: OPA integration for Kubernetes admission control.</p>
+<p><strong>Example: Require Image Signatures</strong>
+<div class="highlight"><pre><span></span><code><span class="k">package</span><span class="w"> </span><span class="n">kubernetes</span><span class="p">.</span><span class="n">admission</span>
+
+<span class="k">import</span><span class="w"> </span><span class="n">future</span><span class="p">.</span><span class="n">keywords</span><span class="p">.</span><span class="k">contains</span>
+<span class="k">import</span><span class="w"> </span><span class="n">future</span><span class="p">.</span><span class="n">keywords</span><span class="p">.</span><span class="k">if</span>
+
+<span class="c1"># Deny pods with unsigned images</span>
+<span class="n">deny</span><span class="p">[</span><span class="n">msg</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">input</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">kind</span><span class="p">.</span><span class="n">kind</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;Pod&quot;</span>
+<span class="w">    </span><span class="n">image</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">input</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">object</span><span class="p">.</span><span class="n">spec</span><span class="p">.</span><span class="n">containers</span><span class="p">[</span><span class="n">_</span><span class="p">].</span><span class="n">image</span>
+<span class="w">    </span><span class="k">not</span><span class="w"> </span><span class="n">image_is_signed</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+<span class="w">    </span><span class="n">msg</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">sprintf</span><span class="p">(</span><span class="s2">&quot;Image %v is not signed. All images must be signed with Cosign.&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">image</span><span class="p">])</span>
+<span class="p">}</span>
+
+<span class="c1"># Check if image has valid signature</span>
+<span class="n">image_is_signed</span><span class="p">(</span><span class="n">image</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1"># Query external service or cache of verified images</span>
+<span class="w">    </span><span class="n">verified_images</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">data</span><span class="p">.</span><span class="n">verified_images</span>
+<span class="w">    </span><span class="n">image_ref</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">split</span><span class="p">(</span><span class="n">image</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@&quot;</span><span class="p">)[</span><span class="m">0</span><span class="p">]</span>
+<span class="w">    </span><span class="n">verified_images</span><span class="p">[</span><span class="n">image_ref</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Example: Enforce Resource Limits</strong>
+<div class="highlight"><pre><span></span><code><span class="k">package</span><span class="w"> </span><span class="n">kubernetes</span><span class="p">.</span><span class="n">admission</span>
+
+<span class="n">deny</span><span class="p">[</span><span class="n">msg</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">input</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">kind</span><span class="p">.</span><span class="n">kind</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;Deployment&quot;</span>
+<span class="w">    </span><span class="n">container</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">input</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">object</span><span class="p">.</span><span class="n">spec</span><span class="p">.</span><span class="n">template</span><span class="p">.</span><span class="n">spec</span><span class="p">.</span><span class="n">containers</span><span class="p">[</span><span class="n">_</span><span class="p">]</span>
+<span class="w">    </span><span class="k">not</span><span class="w"> </span><span class="n">container</span><span class="p">.</span><span class="n">resources</span><span class="p">.</span><span class="n">limits</span><span class="p">.</span><span class="n">memory</span>
+<span class="w">    </span><span class="n">msg</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">sprintf</span><span class="p">(</span><span class="s2">&quot;Container %v must specify memory limits&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">container</span><span class="p">.</span><span class="n">name</span><span class="p">])</span>
+<span class="p">}</span>
+
+<span class="n">deny</span><span class="p">[</span><span class="n">msg</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">input</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">kind</span><span class="p">.</span><span class="n">kind</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;Deployment&quot;</span>
+<span class="w">    </span><span class="n">container</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">input</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">object</span><span class="p">.</span><span class="n">spec</span><span class="p">.</span><span class="n">template</span><span class="p">.</span><span class="n">spec</span><span class="p">.</span><span class="n">containers</span><span class="p">[</span><span class="n">_</span><span class="p">]</span>
+<span class="w">    </span><span class="k">not</span><span class="w"> </span><span class="n">container</span><span class="p">.</span><span class="n">resources</span><span class="p">.</span><span class="n">limits</span><span class="p">.</span><span class="n">cpu</span>
+<span class="w">    </span><span class="n">msg</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="n">sprintf</span><span class="p">(</span><span class="s2">&quot;Container %v must specify CPU limits&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">container</span><span class="p">.</span><span class="n">name</span><span class="p">])</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h3 id="4-supply-chain-security-slsa">4. Supply Chain Security (SLSA)</h3>
+<p><strong>Supply chain attacks</strong>: Compromise the build or delivery process to inject malicious code.</p>
+<p><strong>SLSA (Supply Chain Levels for Software Artifacts)</strong>: Framework for supply chain integrity.</p>
+<p><strong>Key Components</strong>:</p>
+<ol>
+<li><strong>SBOM (Software Bill of Materials)</strong>: List all dependencies</li>
+<li><strong>Provenance</strong>: Cryptographically signed record of how artifact was built</li>
+<li><strong>Image Signing</strong>: Sign container images with Cosign/Sigstore</li>
+<li><strong>Verification</strong>: Verify signatures before deployment</li>
+</ol>
+<p><strong>Example: Generate SBOM with Syft</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate SBOM for container image</span>
+syft<span class="w"> </span>packages<span class="w"> </span>registry:ghcr.io/myorg/payment-service:v1.2.3<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span>spdx-json<span class="o">=</span>sbom.json
+
+<span class="c1"># Generate SBOM during build</span>
+syft<span class="w"> </span>packages<span class="w"> </span>dir:.<span class="w"> </span>-o<span class="w"> </span>cyclonedx-json<span class="o">=</span>sbom.json
+</code></pre></div></p>
+<p><strong>Example: Sign Image with Cosign</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Sign image (uses keyless signing with Sigstore)</span>
+cosign<span class="w"> </span>sign<span class="w"> </span>ghcr.io/myorg/payment-service:v1.2.3
+
+<span class="c1"># Generate provenance attestation</span>
+cosign<span class="w"> </span>attest<span class="w"> </span>--predicate<span class="w"> </span>provenance.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>ghcr.io/myorg/payment-service:v1.2.3
+
+<span class="c1"># Verify signature before deployment</span>
+cosign<span class="w"> </span>verify<span class="w"> </span>ghcr.io/myorg/payment-service:v1.2.3<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate-identity-regexp<span class="w"> </span><span class="s1">&#39;https://github.com/myorg/*&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate-oidc-issuer<span class="w"> </span><span class="s1">&#39;https://token.actions.githubusercontent.com&#39;</span>
+</code></pre></div></p>
+<p><strong>Example: Policy to Require Signatures</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kyverno.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterPolicy</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verify-image-signatures</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enforce</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verify-signature</span>
+<span class="w">    </span><span class="nt">match</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">any</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">kinds</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
+<span class="w">    </span><span class="nt">verifyImages</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">imageReferences</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;ghcr.io/myorg/*&quot;</span>
+<span class="w">      </span><span class="nt">attestors</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">entries</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">keyless</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">subject</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://github.com/myorg/*&quot;</span>
+<span class="w">            </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://token.actions.githubusercontent.com&quot;</span>
+<span class="w">            </span><span class="nt">rekor</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://rekor.sigstore.dev</span>
+</code></pre></div></p>
+<h3 id="5-secret-management">5. Secret Management</h3>
+<p><strong>Never store secrets in</strong>:
+- ❌ Git repositories
+- ❌ Environment variables in Dockerfiles
+- ❌ ConfigMaps
+- ❌ Hardcoded in source code</p>
+<p><strong>Zero trust secret management</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># External Secrets Operator: Sync from Vault/AWS Secrets Manager</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExternalSecret</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-api-secrets</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">refreshInterval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1h</span>
+<span class="w">  </span><span class="nt">secretStoreRef</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-secretsmanager</span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SecretStore</span>
+<span class="w">  </span><span class="nt">target</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-api-secrets</span>
+<span class="w">    </span><span class="nt">creationPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Owner</span>
+<span class="w">  </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stripe-api-key</span>
+<span class="w">    </span><span class="nt">remoteRef</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod/payment/stripe-api-key</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database-password</span>
+<span class="w">    </span><span class="nt">remoteRef</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod/payment/db-password</span>
+</code></pre></div>
+<p><strong>Vault Integration</strong>:
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">vault.hashicorp.com/agent-inject</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">        </span><span class="nt">vault.hashicorp.com/role</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;payment-service&quot;</span>
+<span class="w">        </span><span class="nt">vault.hashicorp.com/agent-inject-secret-stripe</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;secret/data/payment/stripe&quot;</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service:v1.2.3</span>
+<span class="w">        </span><span class="c1"># Vault agent sidecar injects secrets at /vault/secrets/stripe</span>
+</code></pre></div></p>
+<hr />
+<h2 id="zero-trust-architecture-for-fawkes">🏗️ Zero Trust Architecture for Fawkes</h2>
+<h3 id="reference-architecture">Reference Architecture</h3>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
+│                         DEVELOPER                               │
+│                              │                                  │
+│                    ┌─────────▼──────────┐                       │
+│                    │   SSO + MFA        │                       │
+│                    │   (Okta, Keycloak) │                       │
+│                    └─────────┬──────────┘                       │
+│                              │                                  │
+│                              │ OIDC Token                       │
+│                              │                                  │
+├──────────────────────────────┼──────────────────────────────────┤
+│                              ▼                                  │
+│                    ┌──────────────────┐                         │
+│                    │  API Gateway     │                         │
+│                    │  + Policy Engine │                         │
+│                    │  (OPA, Kyverno)  │                         │
+│                    └────────┬─────────┘                         │
+│                             │                                   │
+│          ┌──────────────────┼──────────────────┐                │
+│          │                  │                  │                │
+│    ┌─────▼──────┐    ┌──────▼──────┐   ┌──────▼───────┐        │
+│    │  Backstage │    │   ArgoCD    │   │  CI System   │        │
+│    │  (mTLS)    │    │   (mTLS)    │   │  (Tekton)    │        │
+│    └─────┬──────┘    └──────┬──────┘   └──────┬───────┘        │
+│          │                  │                  │                │
+│          │ Workload Identity│ Workload Identity│                │
+│          │                  │                  │                │
+├──────────┼──────────────────┼──────────────────┼────────────────┤
+│          │                  │                  │                │
+│          │          ┌───────▼──────────┐       │                │
+│          │          │  Service Mesh    │       │                │
+│          │          │  (Istio/Linkerd) │       │                │
+│          │          │   - mTLS         │       │                │
+│          │          │   - AuthZ Policy │       │                │
+│          │          └───────┬──────────┘       │                │
+│          │                  │                  │                │
+│    ┌─────▼──────────────────▼──────────────────▼───────┐        │
+│    │           Application Workloads                   │        │
+│    │  ┌──────────┐  ┌──────────┐  ┌──────────┐       │        │
+│    │  │ Frontend │  │  Backend │  │ Database │       │        │
+│    │  │  (mTLS)  │  │  (mTLS)  │  │  (mTLS)  │       │        │
+│    │  └──────────┘  └──────────┘  └──────────┘       │        │
+│    │                                                   │        │
+│    │  🔐 All traffic encrypted                        │        │
+│    │  🔐 Every request authenticated                  │        │
+│    │  🔐 Authorization at every hop                   │        │
+│    └───────────────────────────────────────────────────┘        │
+│                                                                 │
+│  Secrets: Vault / External Secrets Operator                    │
+│  Logging: All authN/authZ decisions → SIEM                     │
+│  Policy: OPA Gatekeeper + Kyverno admission controllers        │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="zero-trust-cicd-pipeline">Zero Trust CI/CD Pipeline</h3>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────┐
+│  1. CODE COMMIT                                              │
+│     └─ Developer pushes to GitHub                           │
+│        └─ Signed commit (GPG signature required)            │
+└────────────────────┬─────────────────────────────────────────┘
+                     │
+                     ▼
+┌──────────────────────────────────────────────────────────────┐
+│  2. CI PIPELINE TRIGGERED (Tekton/GitHub Actions)            │
+│     ├─ Authenticate with OIDC (no long-lived credentials)   │
+│     ├─ Scan code (SAST: Semgrep, CodeQL)                    │
+│     ├─ Dependency check (Dependabot, Snyk)                  │
+│     ├─ Build image in ephemeral runner                      │
+│     ├─ Scan image (Trivy, Grype)                            │
+│     ├─ Generate SBOM (Syft)                                 │
+│     ├─ Sign image (Cosign/Sigstore)                         │
+│     ├─ Generate provenance attestation                      │
+│     └─ Push to registry with signature                      │
+└────────────────────┬─────────────────────────────────────────┘
+                     │
+                     ▼
+┌──────────────────────────────────────────────────────────────┐
+│  3. ADMISSION CONTROL (Kubernetes)                           │
+│     ├─ Gatekeeper/Kyverno verify signature                  │
+│     ├─ Check SBOM for known vulnerabilities                 │
+│     ├─ Enforce resource limits                              │
+│     ├─ Validate security context (no root, read-only FS)    │
+│     └─ Only allow if ALL policies pass                      │
+└────────────────────┬─────────────────────────────────────────┘
+                     │
+                     ▼
+┌──────────────────────────────────────────────────────────────┐
+│  4. DEPLOYMENT (ArgoCD)                                      │
+│     ├─ ArgoCD authenticates with workload identity          │
+│     ├─ Applies manifests to cluster                         │
+│     ├─ Service mesh injects mTLS sidecar                    │
+│     └─ Pod authenticates to Vault for secrets               │
+└────────────────────┬─────────────────────────────────────────┘
+                     │
+                     ▼
+┌──────────────────────────────────────────────────────────────┐
+│  5. RUNTIME SECURITY                                         │
+│     ├─ Falco monitors for suspicious syscalls               │
+│     ├─ Service mesh enforces authorization policies         │
+│     ├─ All traffic encrypted with mTLS                      │
+│     └─ Logs sent to SIEM for audit                          │
+└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="hands-on-lab-implementing-zero-trust-for-fawkes">🛠️ Hands-On Lab: Implementing Zero Trust for Fawkes</h2>
+<h3 id="lab-overview">Lab Overview</h3>
+<p>You will implement key zero trust components:
+1. Configure workload identity for CI/CD
+2. Deploy a service mesh with mTLS
+3. Implement policy-as-code with OPA Gatekeeper
+4. Sign and verify container images with Cosign
+5. Configure External Secrets Operator</p>
+<p><strong>Duration</strong>: 25 minutes<br />
+<strong>Tools</strong>: <code>kubectl</code>, <code>cosign</code>, <code>helm</code>, <code>fawkes</code> CLI</p>
+<hr />
+<h3 id="lab-setup">Lab Setup</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ensure you&#39;re in the Fawkes lab environment</span>
+fawkes<span class="w"> </span>lab<span class="w"> </span>start<span class="w"> </span>--module<span class="w"> </span><span class="m">19</span>
+
+<span class="c1"># Verify cluster access</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+
+<span class="c1"># You should see a 3-node cluster with Istio pre-installed</span>
+</code></pre></div>
+<hr />
+<h3 id="exercise-1-deploy-istio-service-mesh-5-minutes">Exercise 1: Deploy Istio Service Mesh (5 minutes)</h3>
+<p><strong>Objective</strong>: Enable mTLS for all services in the <code>payments</code> namespace.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Istio is already installed in the lab. Enable strict mTLS for payments namespace.</span>
+kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>payments
+
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">apiVersion: security.istio.io/v1beta1</span>
+<span class="s">kind: PeerAuthentication</span>
+<span class="s">metadata:</span>
+<span class="s">  name: default</span>
+<span class="s">  namespace: payments</span>
+<span class="s">spec:</span>
+<span class="s">  mtls:</span>
+<span class="s">    mode: STRICT  # Require mTLS for all traffic</span>
+<span class="s">EOF</span>
+
+<span class="c1"># Verify</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>peerauthentication<span class="w"> </span>-n<span class="w"> </span>payments
+</code></pre></div>
+<p><strong>Deploy a test service</strong>:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">apiVersion: v1</span>
+<span class="s">kind: ServiceAccount</span>
+<span class="s">metadata:</span>
+<span class="s">  name: payment-api</span>
+<span class="s">  namespace: payments</span>
+<span class="s">---</span>
+<span class="s">apiVersion: apps/v1</span>
+<span class="s">kind: Deployment</span>
+<span class="s">metadata:</span>
+<span class="s">  name: payment-api</span>
+<span class="s">  namespace: payments</span>
+<span class="s">spec:</span>
+<span class="s">  replicas: 2</span>
+<span class="s">  selector:</span>
+<span class="s">    matchLabels:</span>
+<span class="s">      app: payment-api</span>
+<span class="s">  template:</span>
+<span class="s">    metadata:</span>
+<span class="s">      labels:</span>
+<span class="s">        app: payment-api</span>
+<span class="s">    spec:</span>
+<span class="s">      serviceAccountName: payment-api</span>
+<span class="s">      containers:</span>
+<span class="s">      - name: app</span>
+<span class="s">        image: ghcr.io/fawkes-demo/payment-api:v1.0.0</span>
+<span class="s">        ports:</span>
+<span class="s">        - containerPort: 8080</span>
+<span class="s">---</span>
+<span class="s">apiVersion: v1</span>
+<span class="s">kind: Service</span>
+<span class="s">metadata:</span>
+<span class="s">  name: payment-api</span>
+<span class="s">  namespace: payments</span>
+<span class="s">spec:</span>
+<span class="s">  selector:</span>
+<span class="s">    app: payment-api</span>
+<span class="s">  ports:</span>
+<span class="s">  - port: 80</span>
+<span class="s">    targetPort: 8080</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p><strong>Apply authorization policy</strong>:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">apiVersion: security.istio.io/v1beta1</span>
+<span class="s">kind: AuthorizationPolicy</span>
+<span class="s">metadata:</span>
+<span class="s">  name: payment-api-authz</span>
+<span class="s">  namespace: payments</span>
+<span class="s">spec:</span>
+<span class="s">  selector:</span>
+<span class="s">    matchLabels:</span>
+<span class="s">      app: payment-api</span>
+<span class="s">  action: ALLOW</span>
+<span class="s">  rules:</span>
+<span class="s">  - from:</span>
+<span class="s">    - source:</span>
+<span class="s">        principals:</span>
+<span class="s">        - &quot;cluster.local/ns/checkout/sa/checkout-service&quot;</span>
+<span class="s">    to:</span>
+<span class="s">    - operation:</span>
+<span class="s">        methods: [&quot;POST&quot;]</span>
+<span class="s">        paths: [&quot;/api/v1/charge&quot;]</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p><strong>Test the policy</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># This should FAIL (no valid service account)</span>
+kubectl<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>curl-test<span class="w"> </span>--image<span class="o">=</span>curlimages/curl<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>curl<span class="w"> </span>-v<span class="w"> </span>http://payment-api.payments.svc.cluster.local/api/v1/charge
+
+<span class="c1"># You should see &quot;RBAC: access denied&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="exercise-2-install-opa-gatekeeper-and-policies-5-minutes">Exercise 2: Install OPA Gatekeeper and Policies (5 minutes)</h3>
+<p><strong>Objective</strong>: Enforce that all pods must have resource limits.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install Gatekeeper</span>
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/deploy/gatekeeper.yaml
+
+<span class="c1"># Wait for Gatekeeper to be ready</span>
+kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="o">=</span><span class="nv">condition</span><span class="o">=</span>ready<span class="w"> </span>pod<span class="w"> </span>-l<span class="w"> </span>control-plane<span class="o">=</span>controller-manager<span class="w"> </span>-n<span class="w"> </span>gatekeeper-system<span class="w"> </span>--timeout<span class="o">=</span>120s
+</code></pre></div>
+<p><strong>Create a constraint template</strong>:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">apiVersion: templates.gatekeeper.sh/v1</span>
+<span class="s">kind: ConstraintTemplate</span>
+<span class="s">metadata:</span>
+<span class="s">  name: k8srequiredresources</span>
+<span class="s">spec:</span>
+<span class="s">  crd:</span>
+<span class="s">    spec:</span>
+<span class="s">      names:</span>
+<span class="s">        kind: K8sRequiredResources</span>
+<span class="s">  targets:</span>
+<span class="s">    - target: admission.k8s.gatekeeper.sh</span>
+<span class="s">      rego: |</span>
+<span class="s">        package k8srequiredresources</span>
+
+<span class="s">        violation[{&quot;msg&quot;: msg}] {</span>
+<span class="s">          container := input.review.object.spec.containers[_]</span>
+<span class="s">          not container.resources.limits.memory</span>
+<span class="s">          msg := sprintf(&quot;Container &lt;%v&gt; must specify memory limits&quot;, [container.name])</span>
+<span class="s">        }</span>
+
+<span class="s">        violation[{&quot;msg&quot;: msg}] {</span>
+<span class="s">          container := input.review.object.spec.containers[_]</span>
+<span class="s">          not container.resources.limits.cpu</span>
+<span class="s">          msg := sprintf(&quot;Container &lt;%v&gt; must specify CPU limits&quot;, [container.name])</span>
+<span class="s">        }</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p><strong>Create the constraint</strong>:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">apiVersion: constraints.gatekeeper.sh/v1beta1</span>
+<span class="s">kind: K8sRequiredResources</span>
+<span class="s">metadata:</span>
+<span class="s">  name: must-have-resource-limits</span>
+<span class="s">spec:</span>
+<span class="s">  match:</span>
+<span class="s">    kinds:</span>
+<span class="s">      - apiGroups: [&quot;apps&quot;]</span>
+<span class="s">        kinds: [&quot;Deployment&quot;]</span>
+<span class="s">    namespaces:</span>
+<span class="s">      - &quot;payments&quot;</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p><strong>Test the policy</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># This should FAIL (no resource limits)</span>
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">apiVersion: apps/v1</span>
+<span class="s">kind: Deployment</span>
+<span class="s">metadata:</span>
+<span class="s">  name: bad-deployment</span>
+<span class="s">  namespace: payments</span>
+<span class="s">spec:</span>
+<span class="s">  replicas: 1</span>
+<span class="s">  selector:</span>
+<span class="s">    matchLabels:</span>
+<span class="s">      app: bad-app</span>
+<span class="s">  template:</span>
+<span class="s">    metadata:</span>
+<span class="s">      labels:</span>
+<span class="s">        app: bad-app</span>
+<span class="s">    spec:</span>
+<span class="s">      containers:</span>
+<span class="s">      - name: nginx</span>
+<span class="s">        image: nginx:latest</span>
+<span class="s">        # ❌ No resource limits!</span>
+<span class="s">EOF</span>
+
+<span class="c1"># You should see: &quot;Container &lt;nginx&gt; must specify memory limits&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="exercise-3-sign-and-verify-container-images-8-minutes">Exercise 3: Sign and Verify Container Images (8 minutes)</h3>
+<p><strong>Objective</strong>: Sign an image with Cosign and configure policy to require signatures.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install Cosign</span>
+curl<span class="w"> </span>-sLO<span class="w"> </span>https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64
+chmod<span class="w"> </span>+x<span class="w"> </span>cosign-linux-amd64
+sudo<span class="w"> </span>mv<span class="w"> </span>cosign-linux-amd64<span class="w"> </span>/usr/local/bin/cosign
+
+<span class="c1"># Generate a key pair (in production, use keyless signing)</span>
+cosign<span class="w"> </span>generate-key-pair
+
+<span class="c1"># Sign the payment-api image</span>
+cosign<span class="w"> </span>sign<span class="w"> </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>ghcr.io/fawkes-demo/payment-api:v1.0.0
+
+<span class="c1"># Enter password when prompted</span>
+</code></pre></div>
+<p><strong>Verify the signature</strong>:</p>
+<div class="highlight"><pre><span></span><code>cosign<span class="w"> </span>verify<span class="w"> </span>--key<span class="w"> </span>cosign.pub<span class="w"> </span>ghcr.io/fawkes-demo/payment-api:v1.0.0
+
+<span class="c1"># You should see &quot;Verification for ghcr.io/fawkes-demo/payment-api:v1.0.0 -- The following checks were performed...&quot;</span>
+</code></pre></div>
+<p><strong>Install Kyverno for signature verification</strong>:</p>
+<div class="highlight"><pre><span></span><code>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>kyverno<span class="w"> </span>https://kyverno.github.io/kyverno/
+helm<span class="w"> </span>repo<span class="w"> </span>update
+helm<span class="w"> </span>install<span class="w"> </span>kyverno<span class="w"> </span>kyverno/kyverno<span class="w"> </span>-n<span class="w"> </span>kyverno<span class="w"> </span>--create-namespace
+</code></pre></div>
+<p><strong>Create a policy to verify signatures</strong>:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">apiVersion: kyverno.io/v1</span>
+<span class="s">kind: ClusterPolicy</span>
+<span class="s">metadata:</span>
+<span class="s">  name: verify-image-signature</span>
+<span class="s">spec:</span>
+<span class="s">  validationFailureAction: enforce</span>
+<span class="s">  webhookTimeoutSeconds: 30</span>
+<span class="s">  rules:</span>
+<span class="s">  - name: verify-signature</span>
+<span class="s">    match:</span>
+<span class="s">      any:</span>
+<span class="s">      - resources:</span>
+<span class="s">          kinds:</span>
+<span class="s">          - Pod</span>
+<span class="s">          namespaces:</span>
+<span class="s">          - payments</span>
+<span class="s">    verifyImages:</span>
+<span class="s">    - imageReferences:</span>
+<span class="s">      - &quot;ghcr.io/fawkes-demo/*&quot;</span>
+<span class="s">      attestors:</span>
+<span class="s">      - count: 1</span>
+<span class="s">        entries:</span>
+<span class="s">        - keys:</span>
+<span class="s">            publicKeys: |-</span>
+<span class="s">$(cat cosign.pub | sed &#39;s/^/              /&#39;)</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p><strong>Test the policy</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># This should SUCCEED (signed image)</span>
+kubectl<span class="w"> </span>run<span class="w"> </span>signed-pod<span class="w"> </span>--image<span class="o">=</span>ghcr.io/fawkes-demo/payment-api:v1.0.0<span class="w"> </span>-n<span class="w"> </span>payments
+
+<span class="c1"># This should FAIL (unsigned image)</span>
+kubectl<span class="w"> </span>run<span class="w"> </span>unsigned-pod<span class="w"> </span>--image<span class="o">=</span>nginx:latest<span class="w"> </span>-n<span class="w"> </span>payments
+
+<span class="c1"># You should see: &quot;resource validation error: image signature verification failed&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="exercise-4-configure-external-secrets-operator-7-minutes">Exercise 4: Configure External Secrets Operator (7 minutes)</h3>
+<p><strong>Objective</strong>: Store secrets in AWS Secrets Manager and sync them to Kubernetes.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install External Secrets Operator</span>
+helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>external-secrets<span class="w"> </span>https://charts.external-secrets.io
+helm<span class="w"> </span>install<span class="w"> </span>external-secrets<span class="w"> </span>external-secrets/external-secrets<span class="w"> </span>-n<span class="w"> </span>external-secrets-system<span class="w"> </span>--create-namespace
+
+<span class="c1"># For the lab, we&#39;ll use a fake backend. In production, configure AWS/GCP/Vault.</span>
+</code></pre></div>
+<p><strong>Create a SecretStore</strong> (using Kubernetes secrets as backend for demo):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create a secret to act as our &quot;vault&quot;</span>
+kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>payment-secrets<span class="w"> </span>-n<span class="w"> </span>payments<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span>stripe-api-key<span class="o">=</span>sk_test_abc123<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span>db-password<span class="o">=</span>super-secret-password
+
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">apiVersion: external-secrets.io/v1beta1</span>
+<span class="s">kind: SecretStore</span>
+<span class="s">metadata:</span>
+<span class="s">  name: kubernetes-backend</span>
+<span class="s">  namespace: payments</span>
+<span class="s">spec:</span>
+<span class="s">  provider:</span>
+<span class="s">    kubernetes:</span>
+<span class="s">      remoteNamespace: payments</span>
+<span class="s">      auth:</span>
+<span class="s">        serviceAccount:</span>
+<span class="s">          name: external-secrets</span>
+<span class="s">      server:</span>
+<span class="s">        caProvider:</span>
+<span class="s">          type: ConfigMap</span>
+<span class="s">          name: kube-root-ca.crt</span>
+<span class="s">          key: ca.crt</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p><strong>Create an ExternalSecret</strong>:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">apiVersion: external-secrets.io/v1beta1</span>
+<span class="s">kind: ExternalSecret</span>
+<span class="s">metadata:</span>
+<span class="s">  name: payment-api-external-secret</span>
+<span class="s">  namespace: payments</span>
+<span class="s">spec:</span>
+<span class="s">  refreshInterval: 1m</span>
+<span class="s">  secretStoreRef:</span>
+<span class="s">    name: kubernetes-backend</span>
+<span class="s">    kind: SecretStore</span>
+<span class="s">  target:</span>
+<span class="s">    name: payment-api-secrets</span>
+<span class="s">    creationPolicy: Owner</span>
+<span class="s">  data:</span>
+<span class="s">  - secretKey: STRIPE_API_KEY</span>
+<span class="s">    remoteRef:</span>
+<span class="s">      key: payment-secrets</span>
+<span class="s">      property: stripe-api-key</span>
+<span class="s">  - secretKey: DB_PASSWORD</span>
+<span class="s">    remoteRef:</span>
+<span class="s">      key: payment-secrets</span>
+<span class="s">      property: db-password</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p><strong>Verify the secret was synced</strong>:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>externalsecret<span class="w"> </span>-n<span class="w"> </span>payments
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>payment-api-secrets<span class="w"> </span>-n<span class="w"> </span>payments<span class="w"> </span>-o<span class="w"> </span>yaml
+
+<span class="c1"># You should see STRIPE_API_KEY and DB_PASSWORD</span>
+</code></pre></div>
+<p><strong>Update deployment to use the external secret</strong>:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">apiVersion: apps/v1</span>
+<span class="s">kind: Deployment</span>
+<span class="s">metadata:</span>
+<span class="s">  name: payment-api</span>
+<span class="s">  namespace: payments</span>
+<span class="s">spec:</span>
+<span class="s">  replicas: 2</span>
+<span class="s">  selector:</span>
+<span class="s">    matchLabels:</span>
+<span class="s">      app: payment-api</span>
+<span class="s">  template:</span>
+<span class="s">    metadata:</span>
+<span class="s">      labels:</span>
+<span class="s">        app: payment-api</span>
+<span class="s">    spec:</span>
+<span class="s">      serviceAccountName: payment-api</span>
+<span class="s">      containers:</span>
+<span class="s">      - name: app</span>
+<span class="s">        image: ghcr.io/fawkes-demo/payment-api:v1.0.0</span>
+<span class="s">        envFrom:</span>
+<span class="s">        - secretRef:</span>
+<span class="s">            name: payment-api-secrets  # ✅ Synced from external source</span>
+<span class="s">        resources:</span>
+<span class="s">          limits:</span>
+<span class="s">            memory: &quot;256Mi&quot;</span>
+<span class="s">            cpu: &quot;500m&quot;</span>
+<span class="s">          requests:</span>
+<span class="s">            memory: &quot;128Mi&quot;</span>
+<span class="s">            cpu: &quot;250m&quot;</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<hr />
+<h3 id="lab-validation">Lab Validation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run the validation script</span>
+fawkes<span class="w"> </span>lab<span class="w"> </span>validate<span class="w"> </span>--module<span class="w"> </span><span class="m">19</span>
+
+<span class="c1"># You should see:</span>
+<span class="c1"># ✅ Istio mTLS enabled in payments namespace</span>
+<span class="c1"># ✅ Authorization policies configured</span>
+<span class="c1"># ✅ OPA Gatekeeper installed with resource limit policy</span>
+<span class="c1"># ✅ Image signature verification with Cosign</span>
+<span class="c1"># ✅ Kyverno policy enforcing signatures</span>
+<span class="c1"># ✅ External Secrets Operator syncing secrets</span>
+</code></pre></div>
+<p><strong>Cleanup</strong>:</p>
+<div class="highlight"><pre><span></span><code>fawkes<span class="w"> </span>lab<span class="w"> </span>stop<span class="w"> </span>--module<span class="w"> </span><span class="m">19</span>
+</code></pre></div>
+<hr />
+<h2 id="knowledge-check">✅ Knowledge Check</h2>
+<p>Test your understanding with these questions:</p>
+<h3 id="question-1-zero-trust-principles">Question 1: Zero Trust Principles</h3>
+<p>Which of the following is NOT a core principle of zero trust?</p>
+<p>A) Never trust, always verify<br />
+B) Assume breach<br />
+C) Trust based on network location<br />
+D) Least privilege access</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: C**
+
+Zero trust explicitly rejects the idea that network location (inside/outside perimeter) should grant trust. All access must be verified regardless of location.
+
+</details>
+
+<hr />
+<h3 id="question-2-workload-identity">Question 2: Workload Identity</h3>
+<p>What is the main advantage of workload identity over long-lived service account keys?</p>
+<p>A) Easier to configure<br />
+B) Works with more cloud providers<br />
+C) Credentials are short-lived and automatically rotated<br />
+D) Requires less compute resources</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: C**
+
+Workload identity provides short-lived tokens (typically 1 hour) that are automatically rotated, eliminating the risk of leaked credentials and manual rotation processes.
+
+</details>
+
+<hr />
+<h3 id="question-3-service-mesh-security">Question 3: Service Mesh Security</h3>
+<p>What does mTLS (mutual TLS) provide that regular TLS does not?</p>
+<p>A) Faster encryption<br />
+B) Both client and server authenticate each other<br />
+C) Compression of network traffic<br />
+D) Load balancing capabilities</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+In regular TLS, only the server authenticates to the client. With mTLS, both parties authenticate using certificates, ensuring both ends of the connection are trusted.
+
+</details>
+
+<hr />
+<h3 id="question-4-supply-chain-security">Question 4: Supply Chain Security</h3>
+<p>Which tool is used to cryptographically sign container images?</p>
+<p>A) Trivy<br />
+B) Cosign<br />
+C) Falco<br />
+D) OPA</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+Cosign (part of Sigstore project) is used to sign and verify container images. Trivy is for scanning, Falco for runtime security, and OPA for policy enforcement.
+
+</details>
+
+<hr />
+<h3 id="question-5-policy-as-code">Question 5: Policy-as-Code</h3>
+<p>What happens when a Kubernetes admission controller policy is violated?</p>
+<p>A) The resource is created with a warning<br />
+B) The resource creation is rejected<br />
+C) The policy is automatically updated<br />
+D) An email is sent to administrators</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+Admission controllers (like Gatekeeper and Kyverno) run before resources are persisted to etcd. If a policy is violated, the API request is rejected and the resource is not created.
+
+</details>
+
+<hr />
+<h3 id="question-6-secret-management">Question 6: Secret Management</h3>
+<p>Why should secrets never be stored in Git repositories?</p>
+<p>A) Git is too slow for secret retrieval<br />
+B) Git history is immutable - secrets remain even if deleted<br />
+C) Git doesn't support encryption<br />
+D) Secrets take up too much storage</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+Git history is permanent. Even if you delete a file containing secrets, they remain in the repository's history and can be retrieved by anyone with access to the repo.
+
+</details>
+
+<hr />
+<h3 id="question-7-sbom-software-bill-of-materials">Question 7: SBOM (Software Bill of Materials)</h3>
+<p>What is the primary purpose of an SBOM?</p>
+<p>A) To compress container images<br />
+B) To list all software components and dependencies in an artifact<br />
+C) To encrypt network traffic<br />
+D) To monitor application performance</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+An SBOM provides a complete inventory of all software components, libraries, and dependencies in an artifact, enabling vulnerability tracking and license compliance.
+
+</details>
+
+<hr />
+<h3 id="question-8-zero-trust-cicd">Question 8: Zero Trust CI/CD</h3>
+<p>Which authentication method is recommended for CI/CD pipelines in a zero trust architecture?</p>
+<p>A) Storing AWS access keys in GitHub Secrets<br />
+B) Using long-lived service account tokens<br />
+C) OIDC-based workload identity<br />
+D) Username and password authentication</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: C**
+
+OIDC-based workload identity (like GitHub Actions OIDC to AWS) provides short-lived credentials without storing long-lived secrets, aligning with zero trust principles.
+
+</details>
+
+<hr />
+<h2 id="real-world-examples">🌍 Real-World Examples</h2>
+<h3 id="example-1-netflixs-zero-trust-journey">Example 1: Netflix's Zero Trust Journey</h3>
+<p><strong>Challenge</strong>: Netflix runs on AWS with thousands of microservices. Traditional perimeter security was insufficient.</p>
+<p><strong>Solution</strong>:
+- <strong>No VPN</strong>: All services authenticate individually, no network-based trust
+- <strong>mTLS everywhere</strong>: Every service-to-service call uses mutual TLS
+- <strong>Dynamic authorization</strong>: Zuul gateway enforces fine-grained policies based on user/service identity
+- <strong>Credential rotation</strong>: All credentials rotate automatically every few hours</p>
+<p><strong>Result</strong>: 
+- Eliminated network perimeter as security boundary
+- Reduced blast radius of security incidents
+- Enabled faster deployment (no VPN bottlenecks)</p>
+<p><strong>Learn more</strong>: <a href="https://netflixtechblog.com/tagged/security">Netflix Security Blog</a></p>
+<hr />
+<h3 id="example-2-googles-beyondcorp">Example 2: Google's BeyondCorp</h3>
+<p><strong>Challenge</strong>: Employees working remotely needed access to internal applications without VPN.</p>
+<p><strong>Solution</strong> (BeyondCorp):
+- <strong>Device trust</strong>: Verify device posture before granting access
+- <strong>User identity</strong>: Strong authentication (2FA/U2F keys)
+- <strong>Context-aware access</strong>: Consider user, device, location, and resource sensitivity
+- <strong>Zero trust proxy</strong>: All access flows through proxy that enforces policy</p>
+<p><strong>Key insight</strong>: "Location is not a proxy for trust"</p>
+<p><strong>Result</strong>:
+- Employees work securely from anywhere without VPN
+- Reduced attack surface (no broad network access)
+- Better visibility into access patterns</p>
+<p><strong>Learn more</strong>: <a href="https://cloud.google.com/beyondcorp">BeyondCorp Research Papers</a></p>
+<hr />
+<h3 id="example-3-capital-one-breach-what-went-wrong">Example 3: Capital One Breach (What Went Wrong)</h3>
+<p><strong>Incident</strong> (2019): Attacker compromised a web application firewall (WAF), accessed IAM credentials, and exfiltrated data on 100 million customers.</p>
+<p><strong>Root Causes</strong>:
+- ❌ <strong>Overly permissive IAM role</strong>: WAF had broad access to S3
+- ❌ <strong>No network segmentation</strong>: Compromised WAF could reach production data
+- ❌ <strong>Missing detection</strong>: Exfiltration not detected in real-time</p>
+<p><strong>Zero Trust Would Have Prevented This</strong>:
+- ✅ <strong>Least privilege</strong>: WAF should not have S3 access
+- ✅ <strong>Workload identity</strong>: Short-lived credentials, not long-lived IAM keys
+- ✅ <strong>Micro-segmentation</strong>: WAF isolated from data storage layer
+- ✅ <strong>Continuous monitoring</strong>: Alert on unusual S3 access patterns</p>
+<p><strong>Lesson</strong>: Assume breach. Design systems so a single compromise doesn't cascade.</p>
+<hr />
+<h3 id="example-4-shopifys-vault-backed-secrets">Example 4: Shopify's Vault-Backed Secrets</h3>
+<p><strong>Challenge</strong>: Thousands of microservices needed secure access to secrets (API keys, database passwords).</p>
+<p><strong>Old approach</strong>:
+- Secrets stored in environment variables
+- Rotated manually (infrequently)
+- Broad access (many services could read all secrets)</p>
+<p><strong>Zero trust approach</strong>:
+- <strong>HashiCorp Vault</strong>: Central secret management
+- <strong>Dynamic secrets</strong>: Database credentials generated on-demand, expire after use
+- <strong>Fine-grained ACLs</strong>: Each service can only access its required secrets
+- <strong>Audit logging</strong>: Every secret access logged</p>
+<p><strong>Result</strong>:
+- Secrets rotated automatically
+- Reduced blast radius (leaked credential only works for one service)
+- Complete audit trail for compliance</p>
+<hr />
+<h2 id="dora-capabilities-mapping">📊 DORA Capabilities Mapping</h2>
+<p>This module directly supports these <strong>DORA capabilities</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>How This Module Helps</th>
+<th>Impact on Metrics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Shift Left on Security</strong></td>
+<td>Integrate security scanning and policy enforcement early in CI/CD</td>
+<td>Reduces change failure rate by catching vulnerabilities before production</td>
+</tr>
+<tr>
+<td><strong>Continuous Delivery</strong></td>
+<td>Zero trust enables secure automation without manual approval gates</td>
+<td>Improves deployment frequency and lead time</td>
+</tr>
+<tr>
+<td><strong>Loosely Coupled Architecture</strong></td>
+<td>Service mesh and mTLS allow secure communication without tight coupling</td>
+<td>Enables independent deployment of services</td>
+</tr>
+<tr>
+<td><strong>Monitoring &amp; Observability</strong></td>
+<td>Audit all authentication/authorization decisions for compliance</td>
+<td>Faster MTTR with clear audit trails</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="troubleshooting-common-issues">🔧 Troubleshooting Common Issues</h2>
+<h3 id="issue-1-pods-fail-to-start-after-enabling-strict-mtls">Issue 1: Pods Fail to Start After Enabling Strict mTLS</h3>
+<p><strong>Symptom</strong>:
+<div class="highlight"><pre><span></span><code>Error from server: error when creating &quot;deployment.yaml&quot;: 
+admission webhook &quot;validation.gatekeeper.sh&quot; denied the request
+</code></pre></div></p>
+<p><strong>Cause</strong>: Pods without Istio sidecar injection cannot communicate when strict mTLS is enabled.</p>
+<p><strong>Solution</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Ensure namespace has Istio injection enabled</span>
+kubectl<span class="w"> </span>label<span class="w"> </span>namespace<span class="w"> </span>payments<span class="w"> </span>istio-injection<span class="o">=</span>enabled
+
+<span class="c1"># Restart pods to inject sidecar</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>-n<span class="w"> </span>payments
+</code></pre></div></p>
+<hr />
+<h3 id="issue-2-image-signature-verification-fails">Issue 2: Image Signature Verification Fails</h3>
+<p><strong>Symptom</strong>:
+<div class="highlight"><pre><span></span><code>Error: image signature verification failed: no matching signatures
+</code></pre></div></p>
+<p><strong>Cause</strong>: Image was not signed, or signature verification policy references wrong public key.</p>
+<p><strong>Solution</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify the image is signed</span>
+cosign<span class="w"> </span>verify<span class="w"> </span>--key<span class="w"> </span>cosign.pub<span class="w"> </span>ghcr.io/myorg/app:v1.0.0
+
+<span class="c1"># If not signed, sign it</span>
+cosign<span class="w"> </span>sign<span class="w"> </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>ghcr.io/myorg/app:v1.0.0
+
+<span class="c1"># Ensure Kyverno policy references correct public key</span>
+kubectl<span class="w"> </span>edit<span class="w"> </span>clusterpolicy<span class="w"> </span>verify-image-signature
+</code></pre></div></p>
+<hr />
+<h3 id="issue-3-external-secrets-not-syncing">Issue 3: External Secrets Not Syncing</h3>
+<p><strong>Symptom</strong>:
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>externalsecret
+NAME<span class="w">            </span>STORE<span class="w">    </span>REFRESH<span class="w"> </span>INTERVAL<span class="w">   </span>STATUS<span class="w">         </span>READY
+my-ext-secret<span class="w">   </span>vault<span class="w">    </span>1m<span class="w">                 </span>SecretSyncedError<span class="w">   </span>False
+</code></pre></div></p>
+<p><strong>Cause</strong>: External Secrets Operator cannot authenticate to secret backend (Vault/AWS).</p>
+<p><strong>Solution</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check ExternalSecret status</span>
+kubectl<span class="w"> </span>describe<span class="w"> </span>externalsecret<span class="w"> </span>my-ext-secret<span class="w"> </span>-n<span class="w"> </span>payments
+
+<span class="c1"># Verify SecretStore configuration</span>
+kubectl<span class="w"> </span>describe<span class="w"> </span>secretstore<span class="w"> </span>-n<span class="w"> </span>payments
+
+<span class="c1"># For AWS: Ensure service account has correct IAM role annotation</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>sa<span class="w"> </span>external-secrets<span class="w"> </span>-n<span class="w"> </span>payments<span class="w"> </span>-o<span class="w"> </span>yaml
+
+<span class="c1"># For Vault: Verify Kubernetes auth is configured</span>
+vault<span class="w"> </span>auth<span class="w"> </span>list
+vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>auth/kubernetes/config
+</code></pre></div></p>
+<hr />
+<h3 id="issue-4-opa-gatekeeper-policies-not-enforcing">Issue 4: OPA Gatekeeper Policies Not Enforcing</h3>
+<p><strong>Symptom</strong>: Resources are created despite violating policies.</p>
+<p><strong>Cause</strong>: Constraint may not be applied, or validation failure action is "dryrun".</p>
+<p><strong>Solution</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check if constraint is created</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>constraints
+
+<span class="c1"># Verify constraint status</span>
+kubectl<span class="w"> </span>describe<span class="w"> </span>k8srequiredresources<span class="w"> </span>must-have-resource-limits
+
+<span class="c1"># Ensure enforcement (not dryrun)</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>k8srequiredresources<span class="w"> </span>must-have-resource-limits<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>validationFailureAction
+
+<span class="c1"># Should show: validationFailureAction: enforce</span>
+</code></pre></div></p>
+<hr />
+<h3 id="issue-5-workload-identity-not-working">Issue 5: Workload Identity Not Working</h3>
+<p><strong>Symptom</strong>: Pods cannot authenticate to cloud provider (AWS/GCP/Azure).</p>
+<p><strong>Cause</strong>: Service account not properly annotated, or OIDC provider not configured.</p>
+<p><strong>Solution for AWS (EKS)</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify OIDC provider exists</span>
+aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>my-cluster<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;cluster.identity.oidc.issuer&quot;</span>
+
+<span class="c1"># Verify service account annotation</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>sa<span class="w"> </span>payment-service<span class="w"> </span>-n<span class="w"> </span>payments<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>eks.amazonaws.com/role-arn
+
+<span class="c1"># Should show: eks.amazonaws.com/role-arn: arn:aws:iam::123456789:role/payment-service</span>
+
+<span class="c1"># Verify IAM role trust policy allows the service account</span>
+aws<span class="w"> </span>iam<span class="w"> </span>get-role<span class="w"> </span>--role-name<span class="w"> </span>payment-service<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;Role.AssumeRolePolicyDocument&#39;</span>
+</code></pre></div></p>
+<hr />
+<h2 id="additional-resources">📚 Additional Resources</h2>
+<h3 id="official-documentation">Official Documentation</h3>
+<ul>
+<li><a href="https://www.nist.gov/publications/zero-trust-architecture">NIST Zero Trust Architecture</a> - Comprehensive guide to zero trust principles</li>
+<li><a href="https://www.cisa.gov/zero-trust-maturity-model">CISA Zero Trust Maturity Model</a> - Framework for assessing zero trust adoption</li>
+<li><a href="https://docs.sigstore.dev/">Sigstore Documentation</a> - Software signing and verification</li>
+<li><a href="https://slsa.dev/">SLSA Framework</a> - Supply chain security levels</li>
+</ul>
+<h3 id="tools-projects">Tools &amp; Projects</h3>
+<ul>
+<li><a href="https://istio.io/latest/docs/concepts/security/">Istio Security</a> - Service mesh security</li>
+<li><a href="https://open-policy-agent.github.io/gatekeeper/">OPA Gatekeeper</a> - Kubernetes policy enforcement</li>
+<li><a href="https://kyverno.io/">Kyverno</a> - Kubernetes-native policy management</li>
+<li><a href="https://external-secrets.io/">External Secrets Operator</a> - Sync secrets from external sources</li>
+<li><a href="https://falco.org/">Falco</a> - Runtime security monitoring</li>
+<li><a href="https://github.com/sigstore/cosign">Cosign</a> - Container image signing</li>
+</ul>
+<h3 id="books-papers">Books &amp; Papers</h3>
+<ul>
+<li><strong>"Zero Trust Networks"</strong> by Evan Gilman &amp; Doug Barth (O'Reilly)</li>
+<li><strong>"Kubernetes Security and Observability"</strong> by Brendan Creane &amp; Amit Gupta (O'Reilly)</li>
+<li><strong>Google's BeyondCorp Papers</strong> - Research on zero trust implementation</li>
+</ul>
+<h3 id="video-tutorials">Video Tutorials</h3>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=VYgN5kGo02w">Securing the Software Supply Chain</a> - KubeCon talk on Sigstore</li>
+<li><a href="https://www.youtube.com/watch?v=OP_JBQ1E5qg">Zero Trust Security in Kubernetes</a> - Practical implementation guide</li>
+</ul>
+<hr />
+<h2 id="key-takeaways">🎯 Key Takeaways</h2>
+<p>By completing this module, you've learned:</p>
+<ol>
+<li>✅ <strong>Zero trust principles</strong> - Never trust, always verify; assume breach; least privilege</li>
+<li>✅ <strong>Workload identity</strong> - Short-lived credentials via OIDC instead of long-lived keys</li>
+<li>✅ <strong>Service mesh security</strong> - mTLS and fine-grained authorization with Istio</li>
+<li>✅ <strong>Policy-as-code</strong> - Enforce security policies with OPA Gatekeeper and Kyverno</li>
+<li>✅ <strong>Supply chain security</strong> - Sign images, generate SBOMs, verify provenance</li>
+<li>✅ <strong>Secret management</strong> - External Secrets Operator for centralized secret handling</li>
+</ol>
+<p><strong>Zero trust is not a product, it's an architecture philosophy.</strong> Every component in your platform should:
+- Authenticate explicitly (no implicit trust)
+- Authorize with least privilege (only what's needed)
+- Encrypt all traffic (TLS everywhere)
+- Audit all access (comprehensive logging)</p>
+<hr />
+<h2 id="next-steps">🚀 Next Steps</h2>
+<h3 id="in-module-20-multi-cloud-strategies">In Module 20: Multi-Cloud Strategies</h3>
+<p>You'll learn how to:
+- Design platform architectures that span multiple cloud providers
+- Abstract cloud-specific APIs with unified interfaces
+- Implement disaster recovery and failover across clouds
+- Manage cost optimization in multi-cloud environments
+- Navigate the tradeoffs of multi-cloud vs. cloud-agnostic approaches</p>
+<p><strong>Prepare by</strong>:
+- Reviewing your organization's cloud provider usage
+- Identifying which services are cloud-specific vs. portable
+- Considering disaster recovery requirements (RTO/RPO)</p>
+<hr />
+<h2 id="black-belt-progress">🏆 Black Belt Progress</h2>
+<p><strong>Module 19 Complete!</strong> ✅</p>
+<div class="highlight"><pre><span></span><code>Black Belt Progress:
+[████████████████████░░] 75% (3/4 modules)
+
+✅ Module 17: Platform as a Product
+✅ Module 18: Multi-Tenancy &amp; Resource Management  
+✅ Module 19: Security &amp; Zero Trust
+⬜ Module 20: Multi-Cloud Strategies
+
+Next: Complete Module 20 to finish Black Belt curriculum!
+</code></pre></div>
+<hr />
+<h2 id="certification-path">🎓 Certification Path</h2>
+<p>After completing all Black Belt modules (17-20), you will:</p>
+<ol>
+<li><strong>Complete the Black Belt Assessment</strong> (4 hours):</li>
+<li>Design a complete platform architecture</li>
+<li>Present to peer review panel</li>
+<li>Implement multi-tenant design with zero trust</li>
+<li>Contribute to Fawkes codebase</li>
+<li>
+<p>Mentor 2 White Belt learners</p>
+</li>
+<li>
+<p><strong>Earn the "Fawkes Platform Architect" Certification</strong>:</p>
+</li>
+<li>Demonstrates mastery of platform engineering principles</li>
+<li>Validates ability to design production-grade platforms</li>
+<li>Recognized credential in the platform engineering community</li>
+</ol>
+<p><strong>Keep going!</strong> You're one module away from Black Belt! 🥋</p>
+<hr />
+<p><strong>Module 19: Security &amp; Zero Trust</strong> | Fawkes Dojo | Black Belt<br />
+<em>"Never trust, always verify"</em> | Version 1.0</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

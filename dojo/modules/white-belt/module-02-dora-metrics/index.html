@@ -1,0 +1,2645 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Module 2: DORA Metrics - The North Star - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#module-2-dora-metrics-the-north-star" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Module 2: DORA Metrics - The North Star
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Implementation Paths
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Wins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Capabilities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Capabilities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Feedback
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Recovery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Patterns
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure as Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Tools
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Tools
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Continuous Delivery
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Spinnaker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Jenkins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kubernetes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-learning-objectives-3-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Learning Objectives (3 minutes)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Learning Objectives (3 minutes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn" class="md-nav__link">
+    <span class="md-ellipsis">
+      What You'll Learn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-it-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why It Matters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      Success Criteria
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-theory-concepts-15-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Theory &amp; Concepts (15 minutes)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Theory &amp; Concepts (15 minutes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#video-the-four-key-metrics-explained-7-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      📺 Video: The Four Key Metrics Explained (7 minutes)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-four-key-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Four Key Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Four Key Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-deployment-frequency-df" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 🚀 Deployment Frequency (DF)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-lead-time-for-changes-lt" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. ⏱️ Lead Time for Changes (LT)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-time-to-restore-service-mttr" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 🔧 Time to Restore Service (MTTR)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-change-failure-rate-cfr" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. ❌ Change Failure Rate (CFR)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-performance-spectrum" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Performance Spectrum
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-these-four-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why These Four Metrics?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why These Four Metrics?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#they-balance-speed-and-stability" class="md-nav__link">
+    <span class="md-ellipsis">
+      They Balance Speed and Stability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theyre-predictive-not-descriptive" class="md-nav__link">
+    <span class="md-ellipsis">
+      They're Predictive, Not Descriptive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#they-focus-on-outcomes-not-activities" class="md-nav__link">
+    <span class="md-ellipsis">
+      They Focus on Outcomes, Not Activities
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-business-case-for-dora-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Business Case for DORA Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Business Case for DORA Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scenario-legacy-bank-vs-digital-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scenario: Legacy Bank vs. Digital Startup
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-platform-engineering-improves-dora-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      How Platform Engineering Improves DORA Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How Platform Engineering Improves DORA Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deployment-frequency" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deployment Frequency ↑
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lead-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lead Time ↓
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mttr" class="md-nav__link">
+    <span class="md-ellipsis">
+      MTTR ↓
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#change-failure-rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      Change Failure Rate ↓
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-misconceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Misconceptions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Misconceptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#we-cant-measure-that-in-our-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ "We can't measure that in our organization"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#our-industry-is-different-this-doesnt-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ "Our industry is different; this doesn't apply"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#we-need-to-slow-down-to-improve-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ "We need to slow down to improve quality"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#our-legacy-systems-prevent-us-from-improving" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ "Our legacy systems prevent us from improving"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#leadership-only-cares-about-features-not-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ "Leadership only cares about features, not metrics"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#100-success-rate-is-the-goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      ❌ "100% success rate is the goal"
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-fawkes-automates-dora-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      How Fawkes Automates DORA Metrics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-demonstration-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Demonstration (10 minutes)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Demonstration (10 minutes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#video-navigating-fawkes-dora-dashboards-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      📺 Video: Navigating Fawkes DORA Dashboards (10 minutes)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-takeaways-from-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Takeaways from Demo
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-hands-on-lab-20-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Hands-On Lab (20 minutes)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Hands-On Lab (20 minutes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab Overview
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab Environment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab Instructions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lab Instructions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#part-1-calculate-metrics-30-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      Part 1: Calculate Metrics (30 points)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-2-performance-classification-15-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      Part 2: Performance Classification (15 points)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-3-compare-teams-15-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      Part 3: Compare Teams (15 points)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-4-identify-improvement-opportunities-bonus" class="md-nav__link">
+    <span class="md-ellipsis">
+      Part 4: Identify Improvement Opportunities (Bonus)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-submission" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab Submission
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting-hints" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting Hints
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-knowledge-check-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Knowledge Check (5 minutes)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Knowledge Check (5 minutes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quiz-dora-metrics-mastery" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quiz: DORA Metrics Mastery
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quiz: DORA Metrics Mastery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#question-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 1
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 2
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 3
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 4
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 5
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 6
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 7
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 8
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 9
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 10
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quiz-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quiz Results
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-reflection-next-steps-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Reflection &amp; Next Steps (5 minutes)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Reflection &amp; Next Steps (5 minutes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-you-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      What You Learned
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-this-connects-to-your-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      How This Connects to Your Work
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-world-application-exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-World Application Exercise
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reflection-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reflection Questions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preview-module-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preview: Module 3
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Module Completion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module Completion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#youve-completed-module-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ You've Completed Module 2!
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="module-2-dora-metrics-the-north-star">Module 2: DORA Metrics - The North Star</h1>
+<p><strong>Belt Level</strong>: 🥋 White Belt<br />
+<strong>Duration</strong>: 60 minutes<br />
+<strong>Prerequisites</strong>: Module 1 completed<br />
+<strong>DORA Capabilities</strong>: Monitoring and Observability, Continuous Delivery</p>
+<hr />
+<h2 id="1-learning-objectives-3-minutes">1. Learning Objectives (3 minutes)</h2>
+<h3 id="what-youll-learn">What You'll Learn</h3>
+<p>By the end of this module, you will be able to:</p>
+<ul>
+<li>✅ Explain the Four Key Metrics and why they predict software delivery performance</li>
+<li>✅ Differentiate between Elite, High, Medium, and Low performers using data</li>
+<li>✅ Calculate each DORA metric for your team</li>
+<li>✅ Interpret DORA metrics dashboards and identify improvement opportunities</li>
+<li>✅ Understand how Fawkes automates DORA metrics collection</li>
+<li>✅ Articulate the business impact of improving these metrics</li>
+</ul>
+<h3 id="why-it-matters">Why It Matters</h3>
+<p><strong>The Research</strong>: The DORA (DevOps Research and Assessment) team spent 9 years studying 32,000+ organizations to answer one question:</p>
+<blockquote>
+<p><em>"What separates high-performing software teams from everyone else?"</em></p>
+</blockquote>
+<p><strong>The Discovery</strong>: Just <strong>four metrics</strong> predict organizational performance better than any other measures. Organizations that excel at these metrics are:</p>
+<ul>
+<li><strong>2x more likely</strong> to exceed profitability goals</li>
+<li><strong>2x more likely</strong> to exceed productivity goals  </li>
+<li><strong>2x more likely</strong> to exceed customer satisfaction goals</li>
+<li><strong>50% more likely</strong> to have higher market share</li>
+</ul>
+<p><strong>Your Opportunity</strong>: These aren't vanity metrics—they're <strong>predictive indicators</strong> of success. Understanding and improving them is literally your competitive advantage.</p>
+<h3 id="success-criteria">Success Criteria</h3>
+<p>You've mastered this module when you can:</p>
+<ul>
+<li>Explain each metric to a non-technical executive in business terms</li>
+<li>Look at a DORA dashboard and immediately spot problems</li>
+<li>Calculate metrics for your own team</li>
+<li>Recommend specific improvements based on metric trends</li>
+<li>Understand how platform engineering improves all four metrics</li>
+</ul>
+<hr />
+<h2 id="2-theory-concepts-15-minutes">2. Theory &amp; Concepts (15 minutes)</h2>
+<h3 id="video-the-four-key-metrics-explained-7-minutes">📺 Video: The Four Key Metrics Explained (7 minutes)</h3>
+<blockquote>
+<p><strong>[VIDEO PLACEHOLDER]</strong><br />
+<strong>See detailed script in supporting document</strong></p>
+</blockquote>
+<h3 id="the-four-key-metrics">The Four Key Metrics</h3>
+<p>DORA identified four metrics that matter most for software delivery performance:</p>
+<h4 id="1-deployment-frequency-df">1. 🚀 Deployment Frequency (DF)</h4>
+<p><strong>Definition</strong>: How often does your organization deploy code to production?</p>
+<p><strong>Why It Matters</strong>: Deployment frequency is a proxy for <strong>batch size</strong>. Small, frequent deployments mean:
+- Lower risk (less can go wrong)
+- Faster feedback (find problems sooner)
+- Faster time to market (features reach customers quickly)
+- Better team morale (see your work in production)</p>
+<p><strong>Performance Levels</strong>:
+- <strong>Elite</strong>: Multiple deployments per day (on-demand)
+- <strong>High</strong>: Between once per day and once per week
+- <strong>Medium</strong>: Between once per week and once per month
+- <strong>Low</strong>: Between once per month and once every six months</p>
+<p><strong>Example</strong>:
+- <strong>Low Performer</strong>: "We deploy every 2 months during maintenance windows"
+- <strong>Elite Performer</strong>: "We deploy 50+ times per day automatically"</p>
+<p><strong>How Fawkes Tracks It</strong>: Every ArgoCD sync to production is recorded as a deployment event.</p>
+<hr />
+<h4 id="2-lead-time-for-changes-lt">2. ⏱️ Lead Time for Changes (LT)</h4>
+<p><strong>Definition</strong>: How long does it take for a commit to go from version control to running in production?</p>
+<p><strong>Why It Matters</strong>: Lead time measures <strong>efficiency</strong>. Short lead times mean:
+- Faster feature delivery to customers
+- Quicker response to market changes
+- Reduced work-in-progress inventory
+- Higher developer satisfaction</p>
+<p><strong>Performance Levels</strong>:
+- <strong>Elite</strong>: Less than one hour
+- <strong>High</strong>: Between one day and one week
+- <strong>Medium</strong>: Between one month and six months
+- <strong>Low</strong>: More than six months</p>
+<p><strong>Example</strong>:
+- <strong>Low Performer</strong>: "I wrote this code 3 months ago. Still waiting for QA approval."
+- <strong>Elite Performer</strong>: "I committed code 20 minutes ago. It's already in production."</p>
+<p><strong>How Fawkes Tracks It</strong>: Measures time from Git commit to successful ArgoCD sync in production.</p>
+<p><strong>Important</strong>: This is NOT "time to write code." It's "time code sits waiting" in your process.</p>
+<hr />
+<h4 id="3-time-to-restore-service-mttr">3. 🔧 Time to Restore Service (MTTR)</h4>
+<p><strong>Definition</strong>: How long does it take to restore service when an incident occurs?</p>
+<p><strong>Why It Matters</strong>: MTTR measures <strong>resilience</strong>. Fast recovery means:
+- Less customer impact from incidents
+- Lower stress for on-call engineers
+- Better SLAs and reliability
+- Confidence to move fast (you can recover quickly)</p>
+<p><strong>Performance Levels</strong>:
+- <strong>Elite</strong>: Less than one hour
+- <strong>High</strong>: Less than one day
+- <strong>Medium</strong>: Between one day and one week
+- <strong>Low</strong>: More than one week</p>
+<p><strong>Example</strong>:
+- <strong>Low Performer</strong>: "Production is down. We need a 5-hour emergency change board meeting."
+- <strong>Elite Performer</strong>: "Production issue detected. Automatic rollback completed in 4 minutes."</p>
+<p><strong>How Fawkes Tracks It</strong>: Measures time from incident creation (Alertmanager) to resolution (successful deployment or rollback).</p>
+<hr />
+<h4 id="4-change-failure-rate-cfr">4. ❌ Change Failure Rate (CFR)</h4>
+<p><strong>Definition</strong>: What percentage of deployments cause failures in production?</p>
+<p><strong>Why It Matters</strong>: CFR measures <strong>quality</strong>. Low failure rates mean:
+- Sustainable velocity (not breaking things constantly)
+- Lower operational burden
+- Better customer experience
+- More time for feature development (less firefighting)</p>
+<p><strong>Performance Levels</strong>:
+- <strong>Elite</strong>: 0-15%
+- <strong>High</strong>: 16-30%
+- <strong>Medium</strong>: 16-30%
+- <strong>Low</strong>: 16-30%</p>
+<p><strong>Note</strong>: 2023 research collapsed High/Medium/Low into same range. Elite performers stand out with &lt;15%.</p>
+<p><strong>Example</strong>:
+- <strong>Low Performer</strong>: "Every Friday deployment requires weekend hotfixes."
+- <strong>Elite Performer</strong>: "We deploy 100 times per week with 5% failure rate."</p>
+<p><strong>How Fawkes Tracks It</strong>: Compares successful deployments to failed deployments (rollbacks, incidents within 24 hours of deploy).</p>
+<p><strong>Important</strong>: Some failure is expected and healthy! 0% might mean you're too risk-averse.</p>
+<hr />
+<h3 id="the-performance-spectrum">The Performance Spectrum</h3>
+<p>Here's how teams compare across the four metrics:</p>
+<table>
+<thead>
+<tr>
+<th>Performance</th>
+<th>Deployment Freq</th>
+<th>Lead Time</th>
+<th>MTTR</th>
+<th>Change Fail Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Elite</strong></td>
+<td>On-demand (multiple/day)</td>
+<td>&lt; 1 hour</td>
+<td>&lt; 1 hour</td>
+<td>0-15%</td>
+</tr>
+<tr>
+<td><strong>High</strong></td>
+<td>1/day - 1/week</td>
+<td>1 day - 1 week</td>
+<td>&lt; 1 day</td>
+<td>16-30%</td>
+</tr>
+<tr>
+<td><strong>Medium</strong></td>
+<td>1/week - 1/month</td>
+<td>1 week - 1 month</td>
+<td>1 day - 1 week</td>
+<td>16-30%</td>
+</tr>
+<tr>
+<td><strong>Low</strong></td>
+<td>1/month - 6/months</td>
+<td>1 month - 6 months</td>
+<td>&gt; 1 week</td>
+<td>16-30%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Insight</strong>: Elite performers are <strong>417x faster</strong> at deploying and <strong>6,570x faster</strong> at going from commit to production than low performers!</p>
+<hr />
+<h3 id="why-these-four-metrics">Why These Four Metrics?</h3>
+<h4 id="they-balance-speed-and-stability">They Balance Speed and Stability</h4>
+<p><strong>Speed Metrics</strong>:
+- Deployment Frequency
+- Lead Time for Changes</p>
+<p><strong>Stability Metrics</strong>:
+- Time to Restore Service
+- Change Failure Rate</p>
+<p>You can't optimize for speed alone (you'll break everything) or stability alone (you'll move too slowly). <strong>Elite performers excel at all four simultaneously.</strong></p>
+<h4 id="theyre-predictive-not-descriptive">They're Predictive, Not Descriptive</h4>
+<p>These metrics don't just describe performance—they <strong>predict business outcomes</strong>:</p>
+<ul>
+<li><strong>Profitability</strong>: Teams with high DORA metrics are 2x more likely to exceed profitability targets</li>
+<li><strong>Market Share</strong>: 50% more likely to have higher market share</li>
+<li><strong>Productivity</strong>: 2x more likely to exceed productivity goals</li>
+<li><strong>Customer Satisfaction</strong>: 2x more likely to have happy customers</li>
+</ul>
+<h4 id="they-focus-on-outcomes-not-activities">They Focus on Outcomes, Not Activities</h4>
+<p>Bad metrics: Lines of code written, hours worked, tickets closed<br />
+Good metrics (DORA): How fast you deliver value and how reliably</p>
+<hr />
+<h3 id="the-business-case-for-dora-metrics">The Business Case for DORA Metrics</h3>
+<h4 id="scenario-legacy-bank-vs-digital-startup">Scenario: Legacy Bank vs. Digital Startup</h4>
+<p><strong>Legacy Bank</strong> (Low Performer):
+- Deploys every 3 months
+- Lead time: 4 months from idea to production
+- MTTR: 3 days (requires emergency change approval)
+- CFR: 25% (1 in 4 releases has issues)</p>
+<p><strong>Impact</strong>:
+- New credit card feature takes 1 year to launch (competitors launch in 6 weeks)
+- When mobile app crashes, customers can't access accounts for 3 days
+- Developer turnover: 35% annually (frustration with slow process)</p>
+<p><strong>Digital Startup</strong> (Elite Performer):
+- Deploys 20x per day
+- Lead time: 2 hours from commit to production
+- MTTR: 15 minutes (automated rollback)
+- CFR: 8% (rigorous testing catches issues)</p>
+<p><strong>Impact</strong>:
+- New feature ideas tested with customers within days
+- Production incidents resolved in minutes, not days
+- Developer retention: 95% (engineers love working there)</p>
+<p><strong>Result</strong>: Startup captures 30% market share in 2 years despite having 1/100th the resources.</p>
+<hr />
+<h3 id="how-platform-engineering-improves-dora-metrics">How Platform Engineering Improves DORA Metrics</h3>
+<p>A well-designed platform (like Fawkes) directly improves all four metrics:</p>
+<h4 id="deployment-frequency">Deployment Frequency ↑</h4>
+<ul>
+<li><strong>Automation</strong>: CI/CD pipelines remove manual deployment steps</li>
+<li><strong>Self-Service</strong>: Teams deploy when ready, no waiting for tickets</li>
+<li><strong>Reduced Fear</strong>: Good testing and rollback make deployments safe</li>
+</ul>
+<h4 id="lead-time">Lead Time ↓</h4>
+<ul>
+<li><strong>Automated Testing</strong>: No waiting for manual QA</li>
+<li><strong>Fast Pipelines</strong>: Optimized builds complete in minutes</li>
+<li><strong>Simplified Process</strong>: Golden paths remove decision paralysis</li>
+</ul>
+<h4 id="mttr">MTTR ↓</h4>
+<ul>
+<li><strong>Observability</strong>: Know immediately when things break</li>
+<li><strong>Quick Rollback</strong>: Automated rollback via GitOps</li>
+<li><strong>Runbooks</strong>: Standardized incident response</li>
+</ul>
+<h4 id="change-failure-rate">Change Failure Rate ↓</h4>
+<ul>
+<li><strong>Quality Gates</strong>: Automated security scanning, testing</li>
+<li><strong>Consistent Patterns</strong>: Golden paths reduce errors</li>
+<li><strong>Progressive Delivery</strong>: Canary deployments catch issues early</li>
+</ul>
+<p><strong>The Platform Advantage</strong>: Manual processes hit scaling limits. Platforms enable teams to improve metrics continuously.</p>
+<hr />
+<h3 id="common-misconceptions">Common Misconceptions</h3>
+<h4 id="we-cant-measure-that-in-our-organization">❌ "We can't measure that in our organization"</h4>
+<p><strong>Reality</strong>: If you deploy software, you can measure these metrics. Start simple with manual tracking if needed.</p>
+<h4 id="our-industry-is-different-this-doesnt-apply">❌ "Our industry is different; this doesn't apply"</h4>
+<p><strong>Reality</strong>: DORA research spans every industry from finance to gaming to healthcare. The metrics apply universally.</p>
+<h4 id="we-need-to-slow-down-to-improve-quality">❌ "We need to slow down to improve quality"</h4>
+<p><strong>Reality</strong>: Elite performers deploy MORE frequently AND have LOWER change failure rates. Speed and stability go together.</p>
+<h4 id="our-legacy-systems-prevent-us-from-improving">❌ "Our legacy systems prevent us from improving"</h4>
+<p><strong>Reality</strong>: Legacy systems are a constraint, not an excuse. Many elite performers maintain legacy systems.</p>
+<h4 id="leadership-only-cares-about-features-not-metrics">❌ "Leadership only cares about features, not metrics"</h4>
+<p><strong>Reality</strong>: These metrics predict revenue, market share, and profitability. Leadership should care.</p>
+<h4 id="100-success-rate-is-the-goal">❌ "100% success rate is the goal"</h4>
+<p><strong>Reality</strong>: Some failure is healthy. Elite performers have 8-15% CFR because they're taking appropriate risks.</p>
+<hr />
+<h3 id="how-fawkes-automates-dora-metrics">How Fawkes Automates DORA Metrics</h3>
+<p>Fawkes collects DORA metrics automatically from your CI/CD pipeline:</p>
+<div class="highlight"><pre><span></span><code>Developer commits code
+    ↓
+Git webhook triggers Jenkins pipeline
+    ↓ (Lead Time measurement starts)
+Jenkins builds, tests, packages
+    ↓
+Artifact pushed to Harbor registry
+    ↓
+ArgoCD detects new image version
+    ↓
+ArgoCD syncs to Kubernetes (Deployment event recorded)
+    ↓ (Lead Time measurement ends)
+Prometheus records metrics
+    ↓
+Grafana dashboard updates in real-time
+    ↓
+Alertmanager detects any incidents
+    ↓ (MTTR measurement if incident occurs)
+</code></pre></div>
+<p><strong>Data Sources</strong>:
+- <strong>Git</strong>: Commit timestamps (lead time start)
+- <strong>Jenkins</strong>: Build results (quality signals)
+- <strong>ArgoCD</strong>: Deployment events (DF, lead time end, CFR)
+- <strong>Prometheus/Alertmanager</strong>: Incident detection and resolution (MTTR)</p>
+<p><strong>No Manual Work Required</strong>: Metrics update automatically with every deployment.</p>
+<hr />
+<h2 id="3-demonstration-10-minutes">3. Demonstration (10 minutes)</h2>
+<h3 id="video-navigating-fawkes-dora-dashboards-10-minutes">📺 Video: Navigating Fawkes DORA Dashboards (10 minutes)</h3>
+<blockquote>
+<p><strong>[VIDEO PLACEHOLDER]</strong><br />
+<strong>See detailed script in supporting document</strong></p>
+</blockquote>
+<h3 id="key-takeaways-from-demo">Key Takeaways from Demo</h3>
+<ol>
+<li><strong>Real-Time Updates</strong>: Metrics update with every deployment</li>
+<li><strong>Multiple Views</strong>: Team-level, service-level, and organization-level dashboards</li>
+<li><strong>Drill-Down Capability</strong>: Click any metric to see underlying data</li>
+<li><strong>Trend Analysis</strong>: Compare current period to previous periods</li>
+<li><strong>Actionable Insights</strong>: Dashboard highlights improvement opportunities</li>
+</ol>
+<hr />
+<h2 id="4-hands-on-lab-20-minutes">4. Hands-On Lab (20 minutes)</h2>
+<h3 id="lab-overview">Lab Overview</h3>
+<p>You'll analyze DORA metrics for a sample application, identify performance bottlenecks, and make recommendations for improvement.</p>
+<p><strong>Time Estimate</strong>: 20 minutes<br />
+<strong>Difficulty</strong>: Beginner<br />
+<strong>Auto-Graded</strong>: Partially (calculations auto-checked; recommendations manually reviewed)<br />
+<strong>Points</strong>: 60</p>
+<h3 id="lab-environment">Lab Environment</h3>
+<p>When you click "Start Lab", we'll provision:
+- ✅ Access to Grafana DORA dashboards
+- ✅ Sample data for 3 months (90 days)
+- ✅ 3 different teams with varying performance levels
+- ✅ Lab notebook for your analysis</p>
+<p><strong>Environment will be available for 24 hours from start time.</strong></p>
+<h3 id="lab-instructions">Lab Instructions</h3>
+<h4 id="part-1-calculate-metrics-30-points">Part 1: Calculate Metrics (30 points)</h4>
+<p>You'll analyze "Team Alpha's" performance over the last 30 days.</p>
+<p><strong>Given Data</strong> (available in dashboard):
+- Total deployments to production: 45
+- Total commits: 180
+- Failed deployments (rollbacks): 7
+- Incidents reported: 3
+- Average time from commit to production: 6 hours
+- Average time to resolve incidents: 2 hours</p>
+<ol>
+<li><strong>Calculate Deployment Frequency</strong> (10 points)</li>
+</ol>
+<p>Formula: <code>Total deployments / Days in period</code></p>
+<p>📝 <strong>Submit</strong>: What is Team Alpha's deployment frequency? (deployments per day)</p>
+<p>✅ <strong>Validation</strong>: Auto-checked against correct calculation</p>
+<ol>
+<li><strong>Calculate Lead Time for Changes</strong> (10 points)</li>
+</ol>
+<p>Given: Average time from commit to production = 6 hours</p>
+<p>📝 <strong>Submit</strong>: What is Team Alpha's lead time? Express in hours.</p>
+<p>✅ <strong>Validation</strong>: Auto-checked</p>
+<ol>
+<li><strong>Calculate Change Failure Rate</strong> (10 points)</li>
+</ol>
+<p>Formula: <code>(Failed deployments / Total deployments) × 100</code></p>
+<p>📝 <strong>Submit</strong>: What is Team Alpha's change failure rate? Express as a percentage.</p>
+<p>✅ <strong>Validation</strong>: Auto-checked against correct calculation</p>
+<h4 id="part-2-performance-classification-15-points">Part 2: Performance Classification (15 points)</h4>
+<ol>
+<li><strong>Classify Team Alpha's Performance</strong> (15 points)</li>
+</ol>
+<p>Based on the metrics you calculated, classify Team Alpha according to DORA performance levels:</p>
+<p>📝 <strong>Submit</strong>:
+   - Deployment Frequency Level: [Elite/High/Medium/Low]
+   - Lead Time Level: [Elite/High/Medium/Low]
+   - Change Failure Rate Level: [Elite/High/Medium/Low]
+   - Overall Classification: [Elite/High/Medium/Low]</p>
+<p>✅ <strong>Validation</strong>: Auto-checked against DORA thresholds</p>
+<h4 id="part-3-compare-teams-15-points">Part 3: Compare Teams (15 points)</h4>
+<ol>
+<li><strong>Analyze Team Bravo vs. Team Charlie</strong> (15 points)</li>
+</ol>
+<p>Open the "Team Comparison" dashboard and compare Team Bravo and Team Charlie.</p>
+<p><strong>Team Bravo</strong>:
+   - DF: 0.3 per day (9 per month)
+   - LT: 3 days
+   - MTTR: 4 hours
+   - CFR: 10%</p>
+<p><strong>Team Charlie</strong>:
+   - DF: 2.5 per day (75 per month)
+   - LT: 45 minutes
+   - MTTR: 30 minutes
+   - CFR: 18%</p>
+<p>📝 <strong>Submit</strong>: 
+   - Which team is the higher performer overall? [Bravo/Charlie]
+   - What is Team Charlie's biggest weakness? [DF/LT/MTTR/CFR]
+   - If Team Bravo could improve one metric, which would have the biggest impact? [DF/LT/MTTR/CFR]
+   - Explain your reasoning (2-3 sentences)</p>
+<p>✅ <strong>Validation</strong>: Reasoning manually reviewed by instructors</p>
+<h4 id="part-4-identify-improvement-opportunities-bonus">Part 4: Identify Improvement Opportunities (Bonus)</h4>
+<ol>
+<li><strong>Recommend Improvements for Team Alpha</strong> (Bonus: +10 points)</li>
+</ol>
+<p>Based on Team Alpha's metrics:
+   - DF: 1.5 per day (High)
+   - LT: 6 hours (Elite)
+   - MTTR: 2 hours (Elite)
+   - CFR: 15.6% (Elite)</p>
+<p>📝 <strong>Submit</strong>: 
+   - Team Alpha is performing at Elite level across all metrics. However, what could they do to push even further? (3-5 specific recommendations)</p>
+<p>Examples of good recommendations:
+   - "Reduce deployment frequency variability (some days have 5 deploys, others have 0)"
+   - "Investigate the 7 failed deployments to find common root causes"
+   - "Implement chaos engineering to practice MTTR scenarios"</p>
+<p>✅ <strong>Validation</strong>: Manually reviewed for thoughtfulness and actionability</p>
+<h3 id="lab-submission">Lab Submission</h3>
+<p>Once you've completed all tasks:</p>
+<ol>
+<li>Review your calculations in the lab notebook</li>
+<li>Ensure all required answers are recorded</li>
+<li>Click "Submit Lab" button</li>
+</ol>
+<p><strong>Grading</strong>:
+- Parts 1-2: Auto-graded immediately (45 points)
+- Parts 3-4: Reviewed within 24 hours by instructors (15 + 10 points)
+- Passing score: 48/60 (80%)</p>
+<h3 id="troubleshooting-hints">Troubleshooting Hints</h3>
+<p><strong>Can't access Grafana?</strong>
+- Click "Open Grafana" from lab instructions
+- Use provided credentials (auto-populated)
+- Try incognito mode if having authentication issues</p>
+<p><strong>Calculations not matching?</strong>
+- Double-check your formulas
+- Ensure you're using correct time periods (30 days)
+- Round to 2 decimal places</p>
+<p><strong>Don't understand a metric?</strong>
+- Review the Theory &amp; Concepts section
+- Check the DORA handbook link in resources
+- Ask in #dojo-white-belt on Mattermost</p>
+<hr />
+<h2 id="5-knowledge-check-5-minutes">5. Knowledge Check (5 minutes)</h2>
+<h3 id="quiz-dora-metrics-mastery">Quiz: DORA Metrics Mastery</h3>
+<p><strong>Instructions</strong>: Answer all 10 questions. You need 8/10 (80%) to pass. Unlimited attempts allowed.</p>
+<h4 id="question-1">Question 1</h4>
+<p><strong>Which metric measures "how often" you deploy to production?</strong></p>
+<ul>
+<li>[x] A) Deployment Frequency</li>
+<li>[ ] B) Lead Time for Changes</li>
+<li>[ ] C) Mean Time to Restore</li>
+<li>[ ] D) Change Failure Rate</li>
+</ul>
+<p><strong>Explanation</strong>: <strong>Deployment Frequency</strong> measures how often deployments occur.</p>
+<hr />
+<h4 id="question-2">Question 2</h4>
+<p><strong>An elite performer's Lead Time for Changes is:</strong></p>
+<ul>
+<li>[x] A) Less than one hour</li>
+<li>[ ] B) Between one day and one week</li>
+<li>[ ] C) Less than one day</li>
+<li>[ ] D) Between one hour and one day</li>
+</ul>
+<p><strong>Explanation</strong>: Elite performers have lead times <strong>less than one hour</strong> from commit to production.</p>
+<hr />
+<h4 id="question-3">Question 3</h4>
+<p><strong>What does MTTR stand for?</strong></p>
+<ul>
+<li>[ ] A) Mean Time To Release</li>
+<li>[ ] B) Mean Time To Recover</li>
+<li>[x] C) Mean Time To Restore (Service)</li>
+<li>[ ] D) Mean Time To Rollback</li>
+</ul>
+<p><strong>Explanation</strong>: MTTR is <strong>Mean Time To Restore Service</strong>—how long it takes to recover from incidents.</p>
+<hr />
+<h4 id="question-4">Question 4</h4>
+<p><strong>Elite performers have a Change Failure Rate of:</strong></p>
+<ul>
+<li>[x] A) 0-15%</li>
+<li>[ ] B) 16-30%</li>
+<li>[ ] C) Less than 5%</li>
+<li>[ ] D) 31-45%</li>
+</ul>
+<p><strong>Explanation</strong>: Elite performers maintain a CFR of <strong>0-15%</strong>, significantly better than other performers.</p>
+<hr />
+<h4 id="question-5">Question 5</h4>
+<p><strong>Which statement is TRUE about DORA metrics?</strong></p>
+<ul>
+<li>[ ] A) You must choose between speed (DF/LT) and stability (MTTR/CFR)</li>
+<li>[x] B) Elite performers excel at all four metrics simultaneously</li>
+<li>[ ] C) Only deployment frequency matters</li>
+<li>[ ] D) These metrics only apply to startups, not enterprises</li>
+</ul>
+<p><strong>Explanation</strong>: <strong>Elite performers are fast AND stable</strong>—they excel at all four metrics at once.</p>
+<hr />
+<h4 id="question-6">Question 6</h4>
+<p><strong>Your team deploys once per month. What performance level is this?</strong></p>
+<ul>
+<li>[ ] A) Elite</li>
+<li>[ ] B) High</li>
+<li>[x] C) Medium</li>
+<li>[ ] D) Low</li>
+</ul>
+<p><strong>Explanation</strong>: Once per month is <strong>Medium</strong> performance (between once per week and once per month).</p>
+<hr />
+<h4 id="question-7">Question 7</h4>
+<p><strong>Lead Time for Changes measures:</strong></p>
+<ul>
+<li>[ ] A) Time spent writing code</li>
+<li>[x] B) Time from commit to production</li>
+<li>[ ] C) Time in code review</li>
+<li>[ ] D) Time spent in planning</li>
+</ul>
+<p><strong>Explanation</strong>: Lead time is <strong>commit to production</strong>—how long code waits in your process.</p>
+<hr />
+<h4 id="question-8">Question 8</h4>
+<p><strong>Why do DORA metrics matter to business leaders?</strong></p>
+<ul>
+<li>[ ] A) They're required for compliance</li>
+<li>[x] B) They predict profitability, market share, and customer satisfaction</li>
+<li>[ ] C) They make engineers look good</li>
+<li>[ ] D) They're easy to game</li>
+</ul>
+<p><strong>Explanation</strong>: DORA metrics are <strong>predictive of business outcomes</strong>—2x more likely to exceed profitability goals, etc.</p>
+<hr />
+<h4 id="question-9">Question 9</h4>
+<p><strong>A team has 20 deployments and 5 failures in a month. What's their CFR?</strong></p>
+<ul>
+<li>[ ] A) 5%</li>
+<li>[ ] B) 15%</li>
+<li>[x] C) 25%</li>
+<li>[ ] D) 50%</li>
+</ul>
+<p><strong>Explanation</strong>: CFR = (5 failures / 20 deploys) × 100 = <strong>25%</strong></p>
+<hr />
+<h4 id="question-10">Question 10</h4>
+<p><strong>How does a platform like Fawkes improve DORA metrics?</strong></p>
+<ul>
+<li>[ ] A) By forcing teams to deploy more frequently</li>
+<li>[ ] B) By hiding failure metrics</li>
+<li>[x] C) By automating pipelines, testing, and providing fast feedback</li>
+<li>[ ] D) By reducing the number of engineers needed</li>
+</ul>
+<p><strong>Explanation</strong>: Platforms improve metrics through <strong>automation, quality gates, and fast feedback loops</strong>—making the right things easy.</p>
+<hr />
+<h3 id="quiz-results">Quiz Results</h3>
+<p><strong>Score: X / 10</strong></p>
+<ul>
+<li>✅ <strong>Passed</strong> (8+): Excellent! You understand DORA metrics deeply.</li>
+<li>❌ <strong>Not Yet</strong> (&lt;8): Review the content and try again.</li>
+</ul>
+<hr />
+<h2 id="6-reflection-next-steps-5-minutes">6. Reflection &amp; Next Steps (5 minutes)</h2>
+<h3 id="what-you-learned">What You Learned</h3>
+<p>Congratulations! 🎉 You've completed Module 2. Let's recap:</p>
+<p>✅ <strong>You now understand</strong>:
+- The Four Key Metrics and what they measure
+- Why these metrics predict business success
+- How to calculate and interpret DORA metrics
+- The difference between Elite and Low performers
+- How Fawkes automates metrics collection</p>
+<p>✅ <strong>You can now</strong>:
+- Analyze DORA dashboards and spot issues
+- Make data-driven recommendations for improvement
+- Explain metrics to business stakeholders
+- Use metrics to prioritize platform improvements</p>
+<h3 id="how-this-connects-to-your-work">How This Connects to Your Work</h3>
+<p><strong>For Developers</strong>:
+- You understand what "good" looks like (Elite benchmarks)
+- You can advocate for improvements using data
+- You know how to track your team's progress</p>
+<p><strong>For Platform Engineers</strong>:
+- You can measure platform impact objectively
+- You know which improvements matter most
+- You can demonstrate ROI to leadership</p>
+<p><strong>For Leaders</strong>:
+- You have a data-driven framework for investment decisions
+- You can benchmark against industry standards
+- You can track improvement over time</p>
+<h3 id="real-world-application-exercise">Real-World Application Exercise</h3>
+<p><strong>This Week, Try This</strong>:</p>
+<ol>
+<li><strong>Measure Your Current State</strong></li>
+<li>Track deployments for one week</li>
+<li>Calculate your team's current DORA metrics</li>
+<li>
+<p>Be honest—no judgment, just data</p>
+</li>
+<li>
+<p><strong>Identify One Improvement</strong></p>
+</li>
+<li>Pick the metric with the most room for improvement</li>
+<li>Brainstorm 3 concrete actions to improve it</li>
+<li>
+<p>Estimate impact and effort</p>
+</li>
+<li>
+<p><strong>Share Your Findings</strong></p>
+</li>
+<li>Present current state to your team (5 min standup)</li>
+<li>Discuss: "What's our biggest bottleneck?"</li>
+<li>Agree on one improvement to try</li>
+</ol>
+<h3 id="reflection-questions">Reflection Questions</h3>
+<p>Take 2 minutes to think about:</p>
+<ol>
+<li><strong>Which metric surprised you most?</strong></li>
+<li>
+<p>Did your team's performance match your intuition?</p>
+</li>
+<li>
+<p><strong>What's your team's biggest opportunity?</strong></p>
+</li>
+<li>
+<p>Which metric, if improved, would have the most impact?</p>
+</li>
+<li>
+<p><strong>What's blocking improvement?</strong></p>
+</li>
+<li>
+<p>Technical debt? Process issues? Cultural resistance?</p>
+</li>
+<li>
+<p><strong>Who needs to know this?</strong></p>
+</li>
+<li>Which leader should see your team's DORA metrics?</li>
+</ol>
+<h3 id="additional-resources">Additional Resources</h3>
+<p><strong>📚 Further Reading</strong>:
+- <a href="https://dora.dev/research">DORA State of DevOps Report</a> - Annual research findings
+- <a href="https://itrevolution.com/accelerate-book/">Accelerate Book</a> - The foundational research
+- <a href="https://dora.dev/quickcheck/">DORA Quick Check</a> - Assess your team in 5 minutes
+- <a href="https://cloud.google.com/blog/products/devops-sre/the-2023-accelerate-state-of-devops-report-is-here">Google Cloud DORA Resources</a> - Implementation guides</p>
+<p><strong>🎥 Videos to Watch</strong>:
+- "DORA Metrics Explained" by Dr. Nicole Forsgren (15 min)
+- "Why DORA Metrics Matter" by Gene Kim (20 min)
+- "Implementing DORA Metrics" by Charity Majors (30 min)</p>
+<p><strong>🛠️ Tools</strong>:
+- <a href="https://github.com/dora-team/fourkeys">Four Keys Project</a> - Open source DORA metrics tool
+- <a href="https://www.sleuth.io/">Sleuth</a> - Commercial DORA tracking (Fawkes alternative)
+- <a href="https://linearb.io/">LinearB</a> - Engineering intelligence platform</p>
+<p><strong>💬 Community</strong>:
+- Share your team's metrics (anonymously!) in <code>#dojo-metrics</code>
+- Join the DORA community discussions
+- Help others interpret their data</p>
+<h3 id="preview-module-3">Preview: Module 3</h3>
+<p><strong>Next Up: GitOps Principles</strong></p>
+<p>In Module 3, you'll learn:
+- What GitOps is and why it's transforming deployments
+- Declarative infrastructure and desired state
+- How ArgoCD implements GitOps
+- Pull-based vs. push-based deployments
+- Making your first GitOps change</p>
+<p><strong>Time</strong>: 60 minutes<br />
+<strong>Hands-On</strong>: Make a GitOps deployment using ArgoCD</p>
+<p><strong>Get Ready</strong>: Think about how your team currently deploys applications. Who has access? How is it documented? What could go wrong?</p>
+<hr />
+<h2 id="module-completion">Module Completion</h2>
+<h3 id="youve-completed-module-2">✅ You've Completed Module 2!</h3>
+<p><strong>Next Steps</strong>:
+1. ✅ Mark this module complete in your Backstage profile
+2. 📊 View your progress on the Dojo dashboard
+3. 💬 Share your DORA metrics insights in <code>#dojo-achievements</code>
+4. ➡️ <strong>Continue to Module 3</strong> when ready</p>
+<p><strong>Time Investment</strong>: 60 minutes<br />
+<strong>Skills Gained</strong>: DORA metrics analysis, performance benchmarking<br />
+<strong>Progress</strong>: 2 of 4 modules toward White Belt (50% complete)</p>
+<hr />
+<p><strong>Questions or Issues?</strong>
+- 💬 Ask in <code>#dojo-white-belt</code> on Mattermost
+- 📧 Email: dojo@fawkes.io
+- 🐛 Report bugs: <a href="https://github.com/paruff/fawkes/issues">GitHub Issues</a></p>
+<p><strong>Feedback?</strong>
+- Rate this module (takes 30 seconds)
+- What worked well? What could be better?
+- Help us improve the learning experience!</p>
+<hr />
+<p><strong>Module Author</strong>: Fawkes Learning Team<br />
+<strong>Last Updated</strong>: October 2025<br />
+<strong>Version</strong>: 1.0<br />
+<strong>Based On</strong>: DORA State of DevOps 2023 Report</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
