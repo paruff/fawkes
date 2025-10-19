@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fawkes Dojo - Platform Engineering Mastery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .intro-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .intro-card h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-card .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .belt-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .belt-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #eee;
+        }
+
+        .belt-icon {
+            font-size: 3rem;
+        }
+
+        .belt-info h3 {
+            font-size: 1.8rem;
+            color: #333;
+        }
+
+        .belt-meta {
+            display: flex;
+            gap: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .module-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .module-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .module-number {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #667eea;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .module-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+            padding-right: 3rem;
+        }
+
+        .module-duration {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-description {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .progress-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: width 0.5s ease;
+        }
+
+        .cta-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .certification-path {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .cert-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .cert-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: white;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .belt-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🥋 Fawkes Dojo</h1>
+        <p class="subtitle">Master Platform Engineering from White Belt to Black Belt</p>
+    </div>
+
+    <div class="container">
+        <!-- Introduction -->
+        <div class="intro-card">
+            <h2>Welcome to the Fawkes Dojo</h2>
+            <p>
+                The Fawkes Dojo is a comprehensive platform engineering curriculum designed to transform 
+                you from a beginner to a Platform Architect. Through 20 hands-on modules organized by 
+                belt levels, you'll learn everything from GitOps fundamentals to multi-cloud strategies.
+            </p>
+            <p style="margin-top: 1rem;">
+                <strong>Learning Path:</strong> Start with White Belt (Modules 1-4) and progress through 
+                Yellow, Green, Brown, and Black Belt levels. Each module includes theory, hands-on labs, 
+                real-world examples, and knowledge checks.
+            </p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <span class="number">20</span>
+                <span class="label">Modules</span>
+            </div>
+            <div class="stat-card">
+                <span class="number">40+</span>
+                <span class="label">Hours of Learning</span>
+            </div>
+            <div class="stat-card">
+                <span class="number">5</span>
+                <span class="label">Belt Levels</span>
+            </div>
+            <div class="stat-card">
+                <span class="number">20+</span>
+                <span class="label">Hands-On Labs</span>
+            </div>
+        </div>
+
+        <!-- Progress Tracking -->
+        <div class="progress-section">
+            <h2>Your Progress</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%;" id="progressBar">0%</div>
+            </div>
+            <p style="text-align: center; color: #666;">
+                Complete modules to track your progress toward Platform Architect certification
+            </p>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h2>Ready to Begin Your Journey?</h2>
+            <p style="margin: 1rem 0;">Start with Module 1 or jump to any belt level based on your experience</p>
+            <a href="#white-belt" class="cta-button">Start White Belt</a>
+            <a href="#certification" class="cta-button">View Certifications</a>
+        </div>
+
+        <!-- White Belt -->
+        <div class="belt-section" id="white-belt">
+            <div class="belt-header">
+                <div class="belt-icon">⚪</div>
+                <div class="belt-info">
+                    <h3>White Belt: Platform Fundamentals</h3>
+                    <div class="belt-meta">
+                        <span>⏱️ 8 hours</span>
+                        <span>📚 4 modules</span>
+                        <span>🎓 Certification: Fawkes Platform Operator</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modules-grid">
+                <div class="module-card" onclick="window.open('module-01.md', '_blank')">
+                    <div class="module-number">1</div>
+                    <div class="module-title">Internal Delivery Platforms - What and Why</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Understand what internal developer platforms are, why they matter, and how they improve DORA metrics.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-02.md', '_blank')">
+                    <div class="module-number">2</div>
+                    <div class="module-title">DORA Metrics - The North Star</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Master the four key metrics that define high-performing teams: deployment frequency, lead time, MTTR, and change failure rate.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-03.md', '_blank')">
+                    <div class="module-number">3</div>
+                    <div class="module-title">GitOps Principles</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Learn the declarative, Git-centric approach to infrastructure and application management.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-04.md', '_blank')">
+                    <div class="module-number">4</div>
+                    <div class="module-title">Your First Deployment</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Deploy your first application using Fawkes platform with GitOps workflow.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yellow Belt -->
+        <div class="belt-section" id="yellow-belt">
+            <div class="belt-header">
+                <div class="belt-icon">🟡</div>
+                <div class="belt-info">
+                    <h3>Yellow Belt: CI/CD Mastery</h3>
+                    <div class="belt-meta">
+                        <span>⏱️ 8 hours</span>
+                        <span>📚 4 modules</span>
+                        <span>🎓 Certification: Fawkes CI/CD Specialist</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modules-grid">
+                <div class="module-card" onclick="window.open('module-05.md', '_blank')">
+                    <div class="module-number">5</div>
+                    <div class="module-title">Continuous Integration Fundamentals</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Build robust CI pipelines with automated testing, code quality checks, and fast feedback loops.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-06.md', '_blank')">
+                    <div class="module-number">6</div>
+                    <div class="module-title">Building Golden Path Pipelines</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Create reusable, opinionated CI/CD templates that make the right way the easy way.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-07.md', '_blank')">
+                    <div class="module-number">7</div>
+                    <div class="module-title">Security Scanning & Quality Gates</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Integrate security scanning, vulnerability detection, and automated quality gates into your pipelines.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-08.md', '_blank')">
+                    <div class="module-number">8</div>
+                    <div class="module-title">Artifact Management</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Manage container images, package artifacts, and dependencies with registries and repositories.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Green Belt -->
+        <div class="belt-section" id="green-belt">
+            <div class="belt-header">
+                <div class="belt-icon">🟢</div>
+                <div class="belt-info">
+                    <h3>Green Belt: GitOps & Deployment</h3>
+                    <div class="belt-meta">
+                        <span>⏱️ 8 hours</span>
+                        <span>📚 4 modules</span>
+                        <span>🎓 Certification: Fawkes Deployment Engineer</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modules-grid">
+                <div class="module-card" onclick="window.open('module-09.md', '_blank')">
+                    <div class="module-number">9</div>
+                    <div class="module-title">GitOps with ArgoCD</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Master ArgoCD for declarative, Git-driven deployments to Kubernetes clusters.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-10.md', '_blank')">
+                    <div class="module-number">10</div>
+                    <div class="module-title">Deployment Strategies</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Learn blue-green, canary, rolling, and recreate deployment patterns with hands-on examples.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-11.md', '_blank')">
+                    <div class="module-number">11</div>
+                    <div class="module-title">Progressive Delivery</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Implement feature flags, traffic splitting, and automated rollout strategies with Flagger.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-12.md', '_blank')">
+                    <div class="module-number">12</div>
+                    <div class="module-title">Rollback & Incident Response</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Respond quickly to incidents with automated rollbacks and effective incident management.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brown Belt -->
+        <div class="belt-section" id="brown-belt">
+            <div class="belt-header">
+                <div class="belt-icon">🟤</div>
+                <div class="belt-info">
+                    <h3>Brown Belt: Observability & SRE</h3>
+                    <div class="belt-meta">
+                        <span>⏱️ 8 hours</span>
+                        <span>📚 4 modules</span>
+                        <span>🎓 Certification: Fawkes SRE Practitioner</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modules-grid">
+                <div class="module-card" onclick="window.open('module-13.md', '_blank')">
+                    <div class="module-number">13</div>
+                    <div class="module-title">Metrics, Logs, and Traces</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Build comprehensive observability with the three pillars: metrics, logs, and distributed tracing.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-14.md', '_blank')">
+                    <div class="module-number">14</div>
+                    <div class="module-title">DORA Metrics Deep Dive</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Implement automated DORA metrics collection, dashboards, and continuous improvement practices.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-15.md', '_blank')">
+                    <div class="module-number">15</div>
+                    <div class="module-title">SLIs, SLOs, and Error Budgets</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Define service level objectives and use error budgets to balance reliability and velocity.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-16.md', '_blank')">
+                    <div class="module-number">16</div>
+                    <div class="module-title">Incident Management & Postmortems</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Master incident response workflows and conduct blameless postmortems for continuous learning.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Black Belt -->
+        <div class="belt-section" id="black-belt">
+            <div class="belt-header">
+                <div class="belt-icon">⚫</div>
+                <div class="belt-info">
+                    <h3>Black Belt: Platform Architecture</h3>
+                    <div class="belt-meta">
+                        <span>⏱️ 8 hours</span>
+                        <span>📚 4 modules</span>
+                        <span>🎓 Certification: Fawkes Platform Architect</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modules-grid">
+                <div class="module-card" onclick="window.open('module-17.md', '_blank')">
+                    <div class="module-number">17</div>
+                    <div class="module-title">Platform as a Product</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Apply product management principles to platforms: user research, roadmaps, NPS, and adoption metrics.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-18.md', '_blank')">
+                    <div class="module-number">18</div>
+                    <div class="module-title">Multi-Tenancy & Resource Management</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Design secure multi-tenant platforms with resource quotas, isolation, and self-service onboarding.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-19.md', '_blank')">
+                    <div class="module-number">19</div>
+                    <div class="module-title">Security & Zero Trust</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Implement zero trust architecture with workload identity, mTLS, policy-as-code, and supply chain security.
+                    </div>
+                </div>
+                <div class="module-card" onclick="window.open('module-20.md', '_blank')">
+                    <div class="module-number">20</div>
+                    <div class="module-title">Multi-Cloud Strategies</div>
+                    <div class="module-duration">⏱️ 60 minutes</div>
+                    <div class="module-description">
+                        Navigate multi-cloud architectures: when it makes sense, abstraction strategies, and cost implications.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certification Path -->
+        <div class="certification-path" id="certification">
+            <h2>🎓 Certification Path</h2>
+            <p>Earn industry-recognized certifications as you progress through each belt level</p>
+            <div class="cert-grid">
+                <div class="cert-card">
+                    <div class="icon">⚪</div>
+                    <h4>Platform Operator</h4>
+                    <p>Complete White Belt</p>
+                </div>
+                <div class="cert-card">
+                    <div class="icon">🟡</div>
+                    <h4>CI/CD Specialist</h4>
+                    <p>Complete Yellow Belt</p>
+                </div>
+                <div class="cert-card">
+                    <div class="icon">🟢</div>
+                    <h4>Deployment Engineer</h4>
+                    <p>Complete Green Belt</p>
+                </div>
+                <div class="cert-card">
+                    <div class="icon">🟤</div>
+                    <h4>SRE Practitioner</h4>
+                    <p>Complete Brown Belt</p>
+                </div>
+                <div class="cert-card">
+                    <div class="icon">⚫</div>
+                    <h4>Platform Architect</h4>
+                    <p>Complete Black Belt</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Getting Started -->
+        <div class="intro-card">
+            <h2>🚀 Getting Started</h2>
+            <h3 style="margin-top: 1.5rem;">For Beginners (No platform experience)</h3>
+            <p>Start with <strong>Module 1: Internal Delivery Platforms</strong> and progress sequentially through White Belt.</p>
+            
+            <h3 style="margin-top: 1.5rem;">For DevOps Engineers (Some CI/CD experience)</h3>
+            <p>Start with <strong>Module 5: Continuous Integration Fundamentals</strong> (Yellow Belt) or take the placement quiz.</p>
+            
+            <h3 style="margin-top: 1.5rem;">For Platform Engineers (Experienced)</h3>
+            <p>Jump to <strong>Module 17: Platform as a Product</strong> (Black Belt) or focus on specific skills gaps.</p>
+            
+            <h3 style="margin-top: 1.5rem;">Lab Environment</h3>
+            <p>Each module includes hands-on labs. Use the command <code style="background: #f5f5f5; padding: 0.2rem 0.5rem; border-radius: 4px;">fawkes lab start --module [number]</code> to launch the lab environment.</p>
+            
+            <h3 style="margin-top: 1.5rem;">Support & Community</h3>
+            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                <li>💬 Mattermost: <strong>#dojo-learners</strong> channel</li>
+                <li>📖 Documentation: <a href="https://docs.fawkes.io/dojo">docs.fawkes.io/dojo</a></li>
+                <li>🎥 Office Hours: Every Friday 2-3pm UTC</li>
+                <li>🐛 Report Issues: GitHub Issues on fawkes/dojo repo</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Fawkes Dojo | Platform Engineering Mastery | Version 1.0</p>
+        <p style="margin-top: 0.5rem;">Built with ❤️ by the Fawkes Platform Team</p>
+    </div>
+
+    <script>
+        // Simple progress tracking (would integrate with real backend)
+        function updateProgress() {
+            const completedModules = parseInt(localStorage.getItem('completedModules') || '0');
+            const percentage = (completedModules / 20) * 100;
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = Math.round(percentage) + '%';
+        }
+
+        // Track module clicks
+        document.querySelectorAll('.module-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // In real implementation, this would track in backend
+                console.log('Module clicked:', this.querySelector('.module-title').textContent);
+            });
+        });
+
+        // Initialize progress
+        updateProgress();
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
