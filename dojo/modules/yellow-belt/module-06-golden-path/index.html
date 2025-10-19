@@ -1,0 +1,3623 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Fawkes Dojo Module 6: Building Golden Path Pipelines - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fawkes-dojo-module-6-building-golden-path-pipelines" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Fawkes Dojo Module 6: Building Golden Path Pipelines
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Implementation Paths
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Wins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Capabilities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Capabilities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Feedback
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Recovery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Patterns
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure as Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Tools
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Tools
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Continuous Delivery
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Spinnaker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Jenkins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kubernetes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#module-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Module Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learning-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Learning Objectives
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-what-is-a-golden-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Part 1: What is a Golden Path?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Part 1: What is a Golden Path?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problem-pipeline-proliferation" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Problem: Pipeline Proliferation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#golden-path-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Golden Path Solution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#golden-path-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      Golden Path in Practice
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-jenkins-shared-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ Part 2: Jenkins Shared Libraries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Part 2: Jenkins Shared Libraries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-are-shared-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      What are Shared Libraries?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-library-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shared Library Structure
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-3-hands-on-lab-create-your-first-shared-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Part 3: Hands-On Lab - Create Your First Shared Library
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Part 3: Hands-On Lab - Create Your First Shared Library">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-set-up-shared-library-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Set Up Shared Library Repository
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-java-golden-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Create Java Golden Path
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-helper-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Create Helper Functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-configure-in-jenkins" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: Configure in Jenkins
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-use-golden-path-in-your-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 5: Use Golden Path in Your Project
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-4-creating-templates-for-multiple-languages" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Part 4: Creating Templates for Multiple Languages
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Part 4: Creating Templates for Multiple Languages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python-golden-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python Golden Path
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nodejs-golden-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      Node.js Golden Path
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-5-pipeline-optimization-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚡ Part 5: Pipeline Optimization Techniques
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚡ Part 5: Pipeline Optimization Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#technique-1-parallel-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technique 1: Parallel Execution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technique-2-build-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technique 2: Build Caching
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technique-3-incremental-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technique 3: Incremental Builds
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technique-4-smarter-test-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technique 4: Smarter Test Execution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technique-5-resource-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technique 5: Resource Optimization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-6-measuring-pipeline-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      📈 Part 6: Measuring Pipeline Performance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📈 Part 6: Measuring Pipeline Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-time-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build Time Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-metrics-to-track" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Metrics to Track
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-grafana-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create Grafana Dashboard
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-7-practical-exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      💪 Part 7: Practical Exercise
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💪 Part 7: Practical Exercise">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-create-a-multi-language-golden-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercise: Create a Multi-Language Golden Path
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-8-knowledge-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎓 Part 8: Knowledge Check
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎓 Part 8: Knowledge Check">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quiz-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quiz Questions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-9-module-summary-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Part 9: Module Summary &amp; Next Steps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Part 9: Module Summary &amp; Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-you-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      What You Learned
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dora-capabilities-achieved" class="md-nav__link">
+    <span class="md-ellipsis">
+      DORA Capabilities Achieved
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Takeaways
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-world-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-World Impact
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Additional Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 Additional Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#community" class="md-nav__link">
+    <span class="md-ellipsis">
+      Community
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏅 Module Completion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏅 Module Completion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#assessment-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assessment Checklist
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certification-credit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Certification Credit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#yellow-belt-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎖️ Yellow Belt Progress
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-a-complete-shared-library-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Appendix A: Complete Shared Library Example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Appendix A: Complete Shared Library Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#full-repository-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Full Repository Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-advanced-docker-helper-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Advanced Docker Helper Class
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-the-helper-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using the Helper Class
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-b-testing-shared-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Appendix B: Testing Shared Libraries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Appendix B: Testing Shared Libraries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unit-testing-with-spock" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unit Testing with Spock
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration Testing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-c-advanced-optimization-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Appendix C: Advanced Optimization Patterns
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Appendix C: Advanced Optimization Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-build-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pattern 1: Build Matrix
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-conditional-stages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pattern 2: Conditional Stages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-dynamic-stage-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pattern 3: Dynamic Stage Generation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-4-build-artifact-promotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pattern 4: Build Artifact Promotion
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-d-troubleshooting-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Appendix D: Troubleshooting Guide
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Appendix D: Troubleshooting Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-shared-library-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issue: Shared Library Not Found
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-class-not-found-in-src" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issue: Class Not Found in src/
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-variable-not-found-in-vars" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issue: Variable Not Found in vars/
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-slow-library-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issue: Slow Library Loading
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-cannot-modify-immutable-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issue: Cannot Modify Immutable Objects
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#congratulations" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎉 Congratulations!
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎉 Congratulations!">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-achievements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Achievements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#your-golden-path-journey" class="md-nav__link">
+    <span class="md-ellipsis">
+      Your Golden Path Journey
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impact-on-dora-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Impact on DORA Metrics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      📅 What's Next?
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="fawkes-dojo-module-6-building-golden-path-pipelines">Fawkes Dojo Module 6: Building Golden Path Pipelines</h1>
+<h2 id="module-overview">🎯 Module Overview</h2>
+<p><strong>Belt Level</strong>: 🟡 Yellow Belt - CI/CD Mastery<br />
+<strong>Module</strong>: 2 of 4 (Yellow Belt)<br />
+<strong>Duration</strong>: 60 minutes<br />
+<strong>Difficulty</strong>: Intermediate<br />
+<strong>Prerequisites</strong>: 
+- Module 5: CI Fundamentals complete
+- Basic Groovy syntax understanding
+- Experience with at least one programming language
+- Jenkins pipeline creation experience</p>
+<hr />
+<h2 id="learning-objectives">📚 Learning Objectives</h2>
+<p>By the end of this module, you will:</p>
+<ol>
+<li>✅ Understand the concept of "Golden Path" in platform engineering</li>
+<li>✅ Create reusable Jenkins Shared Libraries</li>
+<li>✅ Build pipeline templates for multiple languages (Java, Python, Node.js)</li>
+<li>✅ Implement pipeline optimization techniques</li>
+<li>✅ Configure build caching for faster builds</li>
+<li>✅ Use parallel execution to reduce build time</li>
+<li>✅ Measure and improve pipeline performance</li>
+</ol>
+<p><strong>DORA Capabilities Addressed</strong>:
+- ✓ CD1: Version control for all production artifacts
+- ✓ CD4: Trunk-based development
+- ✓ Continuous Integration (advanced)
+- ✓ Code Review</p>
+<hr />
+<h2 id="part-1-what-is-a-golden-path">📖 Part 1: What is a Golden Path?</h2>
+<h3 id="the-problem-pipeline-proliferation">The Problem: Pipeline Proliferation</h3>
+<p><strong>Without Golden Paths</strong>:
+<div class="highlight"><pre><span></span><code>Team A: Creates Java pipeline (500 lines)
+Team B: Creates Java pipeline (480 lines, slightly different)
+Team C: Creates Java pipeline (520 lines, more differences)
+Team D: Creates Python pipeline from scratch
+Team E: Copies Team A&#39;s pipeline, modifies it
+
+Result:
+- 50 similar but different pipelines
+- Security update needed → Update 50 pipelines manually
+- New best practice → Adoption takes months
+- No consistency across teams
+- High maintenance burden
+</code></pre></div></p>
+<h3 id="golden-path-solution">Golden Path Solution</h3>
+<blockquote>
+<p><strong>"The easiest path should also be the best path"</strong></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code>Golden Path Template (Java)
+      ↓
+   Maintained by Platform Team
+      ↓
+   Used by 50 teams
+      ↓
+   Update once → All teams benefit
+      ↓
+   Consistency + Best Practices Built-In
+</code></pre></div>
+<p><strong>Golden Path Characteristics</strong>:
+1. <strong>Opinionated</strong>: Embeds best practices by default
+2. <strong>Easy to Use</strong>: 5-10 lines to get started
+3. <strong>Batteries Included</strong>: Security, testing, quality gates built-in
+4. <strong>Customizable</strong>: Escape hatches for edge cases
+5. <strong>Self-Service</strong>: Teams can use without platform team help
+6. <strong>Maintained</strong>: Platform team keeps it updated</p>
+<h3 id="golden-path-in-practice">Golden Path in Practice</h3>
+<p><strong>Instead of this</strong> (200-line Jenkinsfile):
+<div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">yaml</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;...&#39;&#39;&#39;</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="o">}</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Checkout&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Security Scan&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Quality Gate&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Package&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Publish&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">    </span><span class="n">post</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<p><strong>Teams write this</strong> (10-line Jenkinsfile):
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipelines&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+
+<span class="n">goldenPathJava</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">gitRepo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;https://github.com/myteam/myapp.git&#39;</span>
+<span class="w">    </span><span class="n">javaVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;17&#39;</span>
+<span class="w">    </span><span class="n">skipTests</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<p><strong>Result</strong>: 95% less boilerplate, 100% best practices</p>
+<hr />
+<h2 id="part-2-jenkins-shared-libraries">🏗️ Part 2: Jenkins Shared Libraries</h2>
+<h3 id="what-are-shared-libraries">What are Shared Libraries?</h3>
+<p>Jenkins Shared Libraries are reusable Groovy code that can be imported into any Jenkinsfile.</p>
+<p><strong>Benefits</strong>:
+- 🎯 <strong>DRY Principle</strong>: Don't Repeat Yourself
+- 🔒 <strong>Security</strong>: Centralized credential management
+- 📦 <strong>Versioning</strong>: Tag releases, rollback if needed
+- 🧪 <strong>Testable</strong>: Unit test your pipeline logic
+- 📚 <strong>Documentation</strong>: Single source of truth</p>
+<h3 id="shared-library-structure">Shared Library Structure</h3>
+<div class="highlight"><pre><span></span><code>fawkes-pipeline-library/
+├── vars/                          # Global variables (pipeline steps)
+│   ├── goldenPathJava.groovy     # Java pipeline template
+│   ├── goldenPathPython.groovy   # Python pipeline template
+│   ├── goldenPathNode.groovy     # Node.js pipeline template
+│   └── notifySlack.groovy        # Slack notification helper
+├── src/                           # Shared classes and utilities
+│   └── com/
+│       └── fawkes/
+│           └── pipeline/
+│               ├── Docker.groovy
+│               ├── Maven.groovy
+│               └── Security.groovy
+├── resources/                     # Non-Groovy resources
+│   ├── pod-templates/
+│   │   ├── java-agent.yaml
+│   │   ├── python-agent.yaml
+│   │   └── node-agent.yaml
+│   └── scripts/
+│       └── docker-build.sh
+└── README.md
+</code></pre></div>
+<hr />
+<h2 id="part-3-hands-on-lab-create-your-first-shared-library">🛠️ Part 3: Hands-On Lab - Create Your First Shared Library</h2>
+<h3 id="step-1-set-up-shared-library-repository">Step 1: Set Up Shared Library Repository</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create new Git repository</span>
+mkdir<span class="w"> </span>fawkes-pipeline-library
+<span class="nb">cd</span><span class="w"> </span>fawkes-pipeline-library
+
+<span class="c1"># Create directory structure</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>vars
+mkdir<span class="w"> </span>-p<span class="w"> </span>src/com/fawkes/pipeline
+mkdir<span class="w"> </span>-p<span class="w"> </span>resources/pod-templates
+
+<span class="c1"># Initialize Git</span>
+git<span class="w"> </span>init
+</code></pre></div>
+<h3 id="step-2-create-java-golden-path">Step 2: Create Java Golden Path</h3>
+<p>Create <code>vars/goldenPathJava.groovy</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#!/usr/bin/env groovy</span>
+
+<span class="kt">def</span><span class="w"> </span><span class="nf">call</span><span class="o">(</span><span class="n">Map</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[:])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="c1">// Default configuration</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">defaults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">        </span><span class="nl">gitRepo:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">gitBranch:</span><span class="w"> </span><span class="s1">&#39;main&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">gitCredentials:</span><span class="w"> </span><span class="s1">&#39;github-credentials&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">javaVersion:</span><span class="w"> </span><span class="s1">&#39;17&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">mavenVersion:</span><span class="w"> </span><span class="s1">&#39;3.8&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">skipTests:</span><span class="w"> </span><span class="kc">false</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">runSecurityScan:</span><span class="w"> </span><span class="kc">true</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">dockerRegistry:</span><span class="w"> </span><span class="s1">&#39;harbor.fawkes.internal&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">slackChannel:</span><span class="w"> </span><span class="s1">&#39;#builds&#39;</span>
+<span class="w">    </span><span class="o">]</span>
+
+<span class="w">    </span><span class="c1">// Merge user config with defaults</span>
+<span class="w">    </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">defaults</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">config</span>
+
+<span class="w">    </span><span class="c1">// Validate required parameters</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">(!</span><span class="n">config</span><span class="o">.</span><span class="na">gitRepo</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">error</span><span class="o">(</span><span class="s2">&quot;gitRepo is required&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">yaml</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">apiVersion: v1</span>
+<span class="s2">kind: Pod</span>
+<span class="s2">metadata:</span>
+<span class="s2">  labels:</span>
+<span class="s2">    jenkins: agent</span>
+<span class="s2">    app: ${env.JOB_NAME}</span>
+<span class="s2">spec:</span>
+<span class="s2">  containers:</span>
+<span class="s2">  - name: maven</span>
+<span class="s2">    image: maven:${config.mavenVersion}-openjdk-${config.javaVersion}</span>
+<span class="s2">    command: [&#39;sleep&#39;]</span>
+<span class="s2">    args: [&#39;infinity&#39;]</span>
+<span class="s2">    resources:</span>
+<span class="s2">      requests:</span>
+<span class="s2">        memory: &quot;2Gi&quot;</span>
+<span class="s2">        cpu: &quot;1000m&quot;</span>
+<span class="s2">      limits:</span>
+<span class="s2">        memory: &quot;4Gi&quot;</span>
+<span class="s2">        cpu: &quot;2000m&quot;</span>
+<span class="s2">  - name: docker</span>
+<span class="s2">    image: docker:24-dind</span>
+<span class="s2">    securityContext:</span>
+<span class="s2">      privileged: true</span>
+<span class="s2">    command: [&#39;sleep&#39;]</span>
+<span class="s2">    args: [&#39;infinity&#39;]</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">options</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">timestamps</span><span class="o">()</span>
+<span class="w">            </span><span class="n">timeout</span><span class="o">(</span><span class="nl">time:</span><span class="w"> </span><span class="mi">15</span><span class="o">,</span><span class="w"> </span><span class="nl">unit:</span><span class="w"> </span><span class="s1">&#39;MINUTES&#39;</span><span class="o">)</span>
+<span class="w">            </span><span class="n">buildDiscarder</span><span class="o">(</span><span class="n">logRotator</span><span class="o">(</span><span class="nl">numToKeepStr:</span><span class="w"> </span><span class="s1">&#39;10&#39;</span><span class="o">))</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">APP_NAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${env.JOB_NAME}&quot;</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s1">&#39;/&#39;</span><span class="o">)[</span><span class="mi">0</span><span class="o">]</span>
+<span class="w">            </span><span class="n">BUILD_VERSION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${env.BUILD_NUMBER}&quot;</span>
+<span class="w">            </span><span class="n">GIT_COMMIT_SHORT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sh</span><span class="o">(</span>
+<span class="w">                </span><span class="nl">script:</span><span class="w"> </span><span class="s2">&quot;git rev-parse --short HEAD&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">returnStdout:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">            </span><span class="o">).</span><span class="na">trim</span><span class="o">()</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Checkout&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;🔄 Checking out ${config.gitRepo}...&quot;</span>
+<span class="w">                        </span><span class="n">git</span><span class="w"> </span><span class="nl">branch:</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">gitBranch</span><span class="o">,</span>
+<span class="w">                            </span><span class="nl">url:</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">gitRepo</span><span class="o">,</span>
+<span class="w">                            </span><span class="nl">credentialsId:</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">gitCredentials</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;🔨 Building application...&quot;</span>
+<span class="w">                            </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                                mvn clean compile \</span>
+<span class="s2">                                    -DskipTests \</span>
+<span class="s2">                                    -B \</span>
+<span class="s2">                                    --batch-mode \</span>
+<span class="s2">                                    --no-transfer-progress</span>
+<span class="s2">                            &quot;&quot;&quot;</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">expression</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">!</span><span class="n">config</span><span class="o">.</span><span class="na">skipTests</span><span class="w"> </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;🧪 Running tests...&quot;</span>
+<span class="w">                            </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                                mvn test \</span>
+<span class="s2">                                    -B \</span>
+<span class="s2">                                    --batch-mode \</span>
+<span class="s2">                                    --no-transfer-progress</span>
+<span class="s2">                            &quot;&quot;&quot;</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">                </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">always</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">junit</span><span class="w"> </span><span class="s1">&#39;target/surefire-reports/**/*.xml&#39;</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Security Scan&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">expression</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">runSecurityScan</span><span class="w"> </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;🔒 Running security scan...&quot;</span>
+<span class="w">                            </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                                mvn dependency-check:check \</span>
+<span class="s2">                                    -DfailBuildOnCVSS=7</span>
+<span class="s2">                            &quot;&quot;&quot;</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Package&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;📦 Packaging application...&quot;</span>
+<span class="w">                            </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                                mvn package \</span>
+<span class="s2">                                    -DskipTests \</span>
+<span class="s2">                                    -B \</span>
+<span class="s2">                                    --batch-mode \</span>
+<span class="s2">                                    --no-transfer-progress</span>
+<span class="s2">                            &quot;&quot;&quot;</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Docker Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;docker&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;🐳 Building Docker image...&quot;</span>
+<span class="w">                            </span><span class="kt">def</span><span class="w"> </span><span class="n">imageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${config.dockerRegistry}/${env.APP_NAME}&quot;</span>
+<span class="w">                            </span><span class="kt">def</span><span class="w"> </span><span class="n">imageTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${env.BUILD_VERSION}-${env.GIT_COMMIT_SHORT}&quot;</span>
+
+<span class="w">                            </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                                docker build \</span>
+<span class="s2">                                    -t ${imageName}:${imageTag} \</span>
+<span class="s2">                                    -t ${imageName}:latest \</span>
+<span class="s2">                                    .</span>
+<span class="s2">                            &quot;&quot;&quot;</span>
+
+<span class="w">                            </span><span class="c1">// Store for later stages</span>
+<span class="w">                            </span><span class="n">env</span><span class="o">.</span><span class="na">DOCKER_IMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${imageName}:${imageTag}&quot;</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Publish&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;docker&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;📤 Publishing Docker image...&quot;</span>
+<span class="w">                            </span><span class="n">withCredentials</span><span class="o">([</span>
+<span class="w">                                </span><span class="n">usernamePassword</span><span class="o">(</span>
+<span class="w">                                    </span><span class="nl">credentialsId:</span><span class="w"> </span><span class="s1">&#39;harbor-credentials&#39;</span><span class="o">,</span>
+<span class="w">                                    </span><span class="nl">usernameVariable:</span><span class="w"> </span><span class="s1">&#39;DOCKER_USER&#39;</span><span class="o">,</span>
+<span class="w">                                    </span><span class="nl">passwordVariable:</span><span class="w"> </span><span class="s1">&#39;DOCKER_PASS&#39;</span>
+<span class="w">                                </span><span class="o">)</span>
+<span class="w">                            </span><span class="o">])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                                </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                                    echo \$DOCKER_PASS | docker login ${config.dockerRegistry} -u \$DOCKER_USER --password-stdin</span>
+<span class="s2">                                    docker push ${env.DOCKER_IMAGE}</span>
+<span class="s2">                                    docker push ${config.dockerRegistry}/${env.APP_NAME}:latest</span>
+<span class="s2">                                &quot;&quot;&quot;</span>
+<span class="w">                            </span><span class="o">}</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">success</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">notifySlack</span><span class="o">(</span>
+<span class="w">                        </span><span class="nl">channel:</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">slackChannel</span><span class="o">,</span>
+<span class="w">                        </span><span class="nl">color:</span><span class="w"> </span><span class="s1">&#39;good&#39;</span><span class="o">,</span>
+<span class="w">                        </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;✅ Build #${env.BUILD_NUMBER} succeeded\n📦 Image: ${env.DOCKER_IMAGE}&quot;</span>
+<span class="w">                    </span><span class="o">)</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">failure</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">notifySlack</span><span class="o">(</span>
+<span class="w">                        </span><span class="nl">channel:</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">slackChannel</span><span class="o">,</span>
+<span class="w">                        </span><span class="nl">color:</span><span class="w"> </span><span class="s1">&#39;danger&#39;</span><span class="o">,</span>
+<span class="w">                        </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;❌ Build #${env.BUILD_NUMBER} failed\n🔗 ${env.BUILD_URL}&quot;</span>
+<span class="w">                    </span><span class="o">)</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">always</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">cleanWs</span><span class="o">()</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="step-3-create-helper-functions">Step 3: Create Helper Functions</h3>
+<p>Create <code>vars/notifySlack.groovy</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#!/usr/bin/env groovy</span>
+
+<span class="kt">def</span><span class="w"> </span><span class="nf">call</span><span class="o">(</span><span class="n">Map</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[:])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">(!</span><span class="n">config</span><span class="o">.</span><span class="na">channel</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">config</span><span class="o">.</span><span class="na">message</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">error</span><span class="o">(</span><span class="s2">&quot;channel and message are required&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">color</span><span class="w"> </span><span class="o">?:</span><span class="w"> </span><span class="s1">&#39;warning&#39;</span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">slackSend</span><span class="o">(</span>
+<span class="w">            </span><span class="nl">channel:</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">channel</span><span class="o">,</span>
+<span class="w">            </span><span class="nl">color:</span><span class="w"> </span><span class="n">color</span><span class="o">,</span>
+<span class="w">            </span><span class="nl">message:</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">message</span><span class="o">,</span>
+<span class="w">            </span><span class="nl">tokenCredentialId:</span><span class="w"> </span><span class="s1">&#39;slack-token&#39;</span>
+<span class="w">        </span><span class="o">)</span>
+<span class="w">    </span><span class="o">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="o">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;Warning: Failed to send Slack notification: ${e.message}&quot;</span>
+<span class="w">        </span><span class="c1">// Don&#39;t fail build if notification fails</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="step-4-configure-in-jenkins">Step 4: Configure in Jenkins</h3>
+<p><strong>Add Shared Library to Jenkins</strong>:</p>
+<ol>
+<li>Go to Jenkins → Manage Jenkins → Configure System</li>
+<li>Scroll to "Global Pipeline Libraries"</li>
+<li>Click "Add"</li>
+<li>Configure:</li>
+<li>Name: <code>fawkes-pipelines</code></li>
+<li>Default version: <code>main</code></li>
+<li>Retrieval method: "Modern SCM"</li>
+<li>Source Code Management: Git</li>
+<li>Project Repository: <code>https://github.com/fawkes/pipeline-library.git</code></li>
+<li>Credentials: (if private repo)</li>
+<li>✅ Check "Load implicitly" (makes it available to all pipelines)</li>
+<li>Save</li>
+</ol>
+<h3 id="step-5-use-golden-path-in-your-project">Step 5: Use Golden Path in Your Project</h3>
+<p>Create <code>Jenkinsfile</code> in your application repository:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipelines&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+
+<span class="n">goldenPathJava</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">gitRepo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;https://github.com/myteam/my-spring-boot-app.git&#39;</span>
+<span class="w">    </span><span class="n">javaVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;17&#39;</span>
+<span class="w">    </span><span class="n">skipTests</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="n">runSecurityScan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="n">slackChannel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;#my-team&#39;</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>That's it!</strong> 6 lines instead of 200+.</p>
+<hr />
+<h2 id="part-4-creating-templates-for-multiple-languages">📊 Part 4: Creating Templates for Multiple Languages</h2>
+<h3 id="python-golden-path">Python Golden Path</h3>
+<p>Create <code>vars/goldenPathPython.groovy</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#!/usr/bin/env groovy</span>
+
+<span class="kt">def</span><span class="w"> </span><span class="nf">call</span><span class="o">(</span><span class="n">Map</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[:])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">defaults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">        </span><span class="nl">gitRepo:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">gitBranch:</span><span class="w"> </span><span class="s1">&#39;main&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">pythonVersion:</span><span class="w"> </span><span class="s1">&#39;3.11&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">skipTests:</span><span class="w"> </span><span class="kc">false</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">runLinting:</span><span class="w"> </span><span class="kc">true</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">dockerRegistry:</span><span class="w"> </span><span class="s1">&#39;harbor.fawkes.internal&#39;</span>
+<span class="w">    </span><span class="o">]</span>
+
+<span class="w">    </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">defaults</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">config</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">(!</span><span class="n">config</span><span class="o">.</span><span class="na">gitRepo</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">error</span><span class="o">(</span><span class="s2">&quot;gitRepo is required&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">yaml</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">apiVersion: v1</span>
+<span class="s2">kind: Pod</span>
+<span class="s2">spec:</span>
+<span class="s2">  containers:</span>
+<span class="s2">  - name: python</span>
+<span class="s2">    image: python:${config.pythonVersion}-slim</span>
+<span class="s2">    command: [&#39;sleep&#39;]</span>
+<span class="s2">    args: [&#39;infinity&#39;]</span>
+<span class="s2">  - name: docker</span>
+<span class="s2">    image: docker:24-dind</span>
+<span class="s2">    securityContext:</span>
+<span class="s2">      privileged: true</span>
+<span class="s2">    command: [&#39;sleep&#39;]</span>
+<span class="s2">    args: [&#39;infinity&#39;]</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">options</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">timestamps</span><span class="o">()</span>
+<span class="w">            </span><span class="n">timeout</span><span class="o">(</span><span class="nl">time:</span><span class="w"> </span><span class="mi">15</span><span class="o">,</span><span class="w"> </span><span class="nl">unit:</span><span class="w"> </span><span class="s1">&#39;MINUTES&#39;</span><span class="o">)</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Checkout&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">git</span><span class="w"> </span><span class="nl">branch:</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">gitBranch</span><span class="o">,</span>
+<span class="w">                        </span><span class="nl">url:</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">gitRepo</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Setup&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;python&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">                            python -m pip install --upgrade pip</span>
+<span class="s1">                            pip install -r requirements.txt</span>
+<span class="s1">                        &#39;&#39;&#39;</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Lint&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">expression</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">runLinting</span><span class="w"> </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;python&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">                            pip install flake8 black</span>
+<span class="s1">                            flake8 . --max-line-length=88</span>
+<span class="s1">                            black --check .</span>
+<span class="s1">                        &#39;&#39;&#39;</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">expression</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">!</span><span class="n">config</span><span class="o">.</span><span class="na">skipTests</span><span class="w"> </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;python&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">                            pip install pytest pytest-cov</span>
+<span class="s1">                            pytest --cov=. --cov-report=xml --cov-report=html</span>
+<span class="s1">                        &#39;&#39;&#39;</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">                </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">always</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">publishHTML</span><span class="o">([</span>
+<span class="w">                            </span><span class="nl">allowMissing:</span><span class="w"> </span><span class="kc">false</span><span class="o">,</span>
+<span class="w">                            </span><span class="nl">alwaysLinkToLastBuild:</span><span class="w"> </span><span class="kc">true</span><span class="o">,</span>
+<span class="w">                            </span><span class="nl">keepAll:</span><span class="w"> </span><span class="kc">true</span><span class="o">,</span>
+<span class="w">                            </span><span class="nl">reportDir:</span><span class="w"> </span><span class="s1">&#39;htmlcov&#39;</span><span class="o">,</span>
+<span class="w">                            </span><span class="nl">reportFiles:</span><span class="w"> </span><span class="s1">&#39;index.html&#39;</span><span class="o">,</span>
+<span class="w">                            </span><span class="nl">reportName:</span><span class="w"> </span><span class="s1">&#39;Coverage Report&#39;</span>
+<span class="w">                        </span><span class="o">])</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Docker Build &amp; Push&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;docker&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="kt">def</span><span class="w"> </span><span class="n">imageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${config.dockerRegistry}/${env.JOB_NAME}&quot;</span>
+<span class="w">                            </span><span class="kt">def</span><span class="w"> </span><span class="n">imageTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${env.BUILD_NUMBER}&quot;</span>
+
+<span class="w">                            </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                                docker build -t ${imageName}:${imageTag} .</span>
+<span class="s2">                                docker push ${imageName}:${imageTag}</span>
+<span class="s2">                            &quot;&quot;&quot;</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="nodejs-golden-path">Node.js Golden Path</h3>
+<p>Create <code>vars/goldenPathNode.groovy</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#!/usr/bin/env groovy</span>
+
+<span class="kt">def</span><span class="w"> </span><span class="nf">call</span><span class="o">(</span><span class="n">Map</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[:])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">defaults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">        </span><span class="nl">gitRepo:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">gitBranch:</span><span class="w"> </span><span class="s1">&#39;main&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">nodeVersion:</span><span class="w"> </span><span class="s1">&#39;20&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">skipTests:</span><span class="w"> </span><span class="kc">false</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">runLinting:</span><span class="w"> </span><span class="kc">true</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">packageManager:</span><span class="w"> </span><span class="s1">&#39;npm&#39;</span><span class="w">  </span><span class="c1">// or &#39;yarn&#39;, &#39;pnpm&#39;</span>
+<span class="w">    </span><span class="o">]</span>
+
+<span class="w">    </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">defaults</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">config</span>
+
+<span class="w">    </span><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">yaml</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">apiVersion: v1</span>
+<span class="s2">kind: Pod</span>
+<span class="s2">spec:</span>
+<span class="s2">  containers:</span>
+<span class="s2">  - name: node</span>
+<span class="s2">    image: node:${config.nodeVersion}-alpine</span>
+<span class="s2">    command: [&#39;sleep&#39;]</span>
+<span class="s2">    args: [&#39;infinity&#39;]</span>
+<span class="s2">  - name: docker</span>
+<span class="s2">    image: docker:24-dind</span>
+<span class="s2">    securityContext:</span>
+<span class="s2">      privileged: true</span>
+<span class="s2">    command: [&#39;sleep&#39;]</span>
+<span class="s2">    args: [&#39;infinity&#39;]</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Checkout&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">git</span><span class="w"> </span><span class="nl">branch:</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">gitBranch</span><span class="o">,</span>
+<span class="w">                        </span><span class="nl">url:</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">gitRepo</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Install Dependencies&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;node&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="kt">def</span><span class="w"> </span><span class="n">installCmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">packageManager</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;npm&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;npm ci&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span>
+<span class="w">                                           </span><span class="n">config</span><span class="o">.</span><span class="na">packageManager</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;yarn&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;yarn install --frozen-lockfile&#39;</span><span class="w"> </span><span class="o">:</span>
+<span class="w">                                           </span><span class="s1">&#39;pnpm install --frozen-lockfile&#39;</span>
+<span class="w">                            </span><span class="n">sh</span><span class="w"> </span><span class="n">installCmd</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Lint&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">expression</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">runLinting</span><span class="w"> </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;node&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;${config.packageManager} run lint&quot;</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">expression</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">!</span><span class="n">config</span><span class="o">.</span><span class="na">skipTests</span><span class="w"> </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;node&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;${config.packageManager} test&quot;</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;node&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;${config.packageManager} run build&quot;</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Docker Build &amp; Push&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;docker&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="kt">def</span><span class="w"> </span><span class="n">imageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${env.JOB_NAME}&quot;</span>
+<span class="w">                            </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                                docker build -t ${imageName}:${env.BUILD_NUMBER} .</span>
+<span class="s2">                                docker push ${imageName}:${env.BUILD_NUMBER}</span>
+<span class="s2">                            &quot;&quot;&quot;</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<hr />
+<h2 id="part-5-pipeline-optimization-techniques">⚡ Part 5: Pipeline Optimization Techniques</h2>
+<h3 id="technique-1-parallel-execution">Technique 1: Parallel Execution</h3>
+<p>Run independent stages simultaneously:</p>
+<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Parallel Quality Checks&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">parallel</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Unit Tests&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn test&#39;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Linting&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn checkstyle:check&#39;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Security Scan&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn dependency-check:check&#39;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Before</strong>: 6 minutes (2min + 2min + 2min sequential)<br />
+<strong>After</strong>: 2 minutes (all run in parallel)<br />
+<strong>Improvement</strong>: 3x faster ⚡</p>
+<h3 id="technique-2-build-caching">Technique 2: Build Caching</h3>
+<p>Cache Maven dependencies between builds:</p>
+<div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">yaml</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">spec:</span>
+<span class="s1">  containers:</span>
+<span class="s1">  - name: maven</span>
+<span class="s1">    image: maven:3.8-openjdk-17</span>
+<span class="s1">    volumeMounts:</span>
+<span class="s1">    - name: maven-cache</span>
+<span class="s1">      mountPath: /root/.m2</span>
+<span class="s1">  volumes:</span>
+<span class="s1">  - name: maven-cache</span>
+<span class="s1">    persistentVolumeClaim:</span>
+<span class="s1">      claimName: maven-cache-pvc</span>
+<span class="s1">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Before</strong>: 3 minutes downloading dependencies every build<br />
+<strong>After</strong>: 10 seconds (cached)<br />
+<strong>Improvement</strong>: 18x faster on dependencies ⚡</p>
+<h3 id="technique-3-incremental-builds">Technique 3: Incremental Builds</h3>
+<p>Only rebuild what changed:</p>
+<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Incremental Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="kt">def</span><span class="w"> </span><span class="n">changedFiles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sh</span><span class="o">(</span>
+<span class="w">                </span><span class="nl">script:</span><span class="w"> </span><span class="s2">&quot;git diff --name-only HEAD~1&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">returnStdout:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">            </span><span class="o">).</span><span class="na">trim</span><span class="o">()</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="o">(</span><span class="n">changedFiles</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;src/&#39;</span><span class="o">))</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;Source changed, full build&quot;</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn clean package&#39;</span>
+<span class="w">            </span><span class="o">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="o">(</span><span class="n">changedFiles</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;pom.xml&#39;</span><span class="o">))</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;Dependencies changed, rebuild&quot;</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn clean package&#39;</span>
+<span class="w">            </span><span class="o">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;Only docs changed, skip build&quot;</span>
+<span class="w">                </span><span class="n">currentBuild</span><span class="o">.</span><span class="na">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;SUCCESS&#39;</span>
+<span class="w">                </span><span class="k">return</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="technique-4-smarter-test-execution">Technique 4: Smarter Test Execution</h3>
+<p>Run only affected tests:</p>
+<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Smart Testing&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="c1">// Use tools like Laika or Maven Test Selection</span>
+<span class="w">            </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">                mvn test \</span>
+<span class="s1">                    -Dtest=$(git diff --name-only HEAD~1 | \</span>
+<span class="s1">                             grep &#39;src/test&#39; | \</span>
+<span class="s1">                             sed &#39;s/.*\\/\\(.*\\)\\.java/\\1/&#39; | \</span>
+<span class="s1">                             tr &#39;\\n&#39; &#39;,&#39;)</span>
+<span class="s1">            &#39;&#39;&#39;</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="technique-5-resource-optimization">Technique 5: Resource Optimization</h3>
+<p>Right-size your build agents:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Small builds</span>
+<span class="nl">resources:</span>
+<span class="w">  </span><span class="nl">requests:</span>
+<span class="w">    </span><span class="nl">memory:</span><span class="w"> </span><span class="s2">&quot;512Mi&quot;</span>
+<span class="w">    </span><span class="nl">cpu:</span><span class="w"> </span><span class="s2">&quot;500m&quot;</span>
+<span class="w">  </span><span class="nl">limits:</span>
+<span class="w">    </span><span class="nl">memory:</span><span class="w"> </span><span class="s2">&quot;1Gi&quot;</span>
+<span class="w">    </span><span class="nl">cpu:</span><span class="w"> </span><span class="s2">&quot;1000m&quot;</span>
+
+<span class="c1">// Medium builds</span>
+<span class="nl">resources:</span>
+<span class="w">  </span><span class="nl">requests:</span>
+<span class="w">    </span><span class="nl">memory:</span><span class="w"> </span><span class="s2">&quot;2Gi&quot;</span>
+<span class="w">    </span><span class="nl">cpu:</span><span class="w"> </span><span class="s2">&quot;1000m&quot;</span>
+<span class="w">  </span><span class="nl">limits:</span>
+<span class="w">    </span><span class="nl">memory:</span><span class="w"> </span><span class="s2">&quot;4Gi&quot;</span>
+<span class="w">    </span><span class="nl">cpu:</span><span class="w"> </span><span class="s2">&quot;2000m&quot;</span>
+
+<span class="c1">// Large builds</span>
+<span class="nl">resources:</span>
+<span class="w">  </span><span class="nl">requests:</span>
+<span class="w">    </span><span class="nl">memory:</span><span class="w"> </span><span class="s2">&quot;8Gi&quot;</span>
+<span class="w">    </span><span class="nl">cpu:</span><span class="w"> </span><span class="s2">&quot;4000m&quot;</span>
+<span class="w">  </span><span class="nl">limits:</span>
+<span class="w">    </span><span class="nl">memory:</span><span class="w"> </span><span class="s2">&quot;16Gi&quot;</span>
+<span class="w">    </span><span class="nl">cpu:</span><span class="w"> </span><span class="s2">&quot;8000m&quot;</span>
+</code></pre></div>
+<p><strong>Benefit</strong>: Faster scheduling, lower costs, better resource utilization</p>
+<hr />
+<h2 id="part-6-measuring-pipeline-performance">📈 Part 6: Measuring Pipeline Performance</h2>
+<h3 id="build-time-metrics">Build Time Metrics</h3>
+<p>Track and visualize build performance:</p>
+<div class="highlight"><pre><span></span><code><span class="n">post</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">always</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="c1">// Calculate stage durations</span>
+<span class="w">            </span><span class="kt">def</span><span class="w"> </span><span class="n">stageDurations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[:]</span>
+<span class="w">            </span><span class="n">currentBuild</span><span class="o">.</span><span class="na">rawBuild</span><span class="o">.</span><span class="na">getActions</span><span class="o">(</span><span class="n">FlowExecutionAction</span><span class="o">).</span><span class="na">each</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">action</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">                </span><span class="n">action</span><span class="o">.</span><span class="na">getNodes</span><span class="o">().</span><span class="na">each</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">displayName</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="kt">def</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">node</span><span class="o">.</span><span class="na">getDurationMillis</span><span class="o">()</span><span class="w"> </span><span class="s">/ 1000</span>
+<span class="s">                        stageDurations[node.displayName] = duration</span>
+<span class="s">                    }</span>
+<span class="s">                }</span>
+<span class="s">            }</span>
+
+<span class="s">            // Send to Prometheus</span>
+<span class="s">            stageDurations.each { stage, duration -&gt;</span>
+<span class="s">                sh &quot;&quot;&quot;</span>
+<span class="s">                    curl -X POST http://prometheus-pushgateway:9091/</span><span class="n">metrics</span><span class="s">/job/</span><span class="n">jenkins</span><span class="s">/stage/</span><span class="n">$</span><span class="o">{</span><span class="n">stage</span><span class="o">}</span><span class="w"> </span><span class="err">\\</span>
+<span class="w">                        </span><span class="o">--</span><span class="n">data</span><span class="o">-</span><span class="n">binary</span><span class="w"> </span><span class="err">@</span><span class="o">-</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="n">EOF</span>
+<span class="err">#</span><span class="w"> </span><span class="n">TYPE</span><span class="w"> </span><span class="n">jenkins_stage_duration_seconds</span><span class="w"> </span><span class="n">gauge</span>
+<span class="n">jenkins_stage_duration_seconds</span><span class="o">{</span><span class="n">job</span><span class="o">=</span><span class="s2">&quot;${env.JOB_NAME}&quot;</span><span class="o">,</span><span class="n">stage</span><span class="o">=</span><span class="s2">&quot;${stage}&quot;</span><span class="o">}</span><span class="w"> </span><span class="n">$</span><span class="o">{</span><span class="n">duration</span><span class="o">}</span>
+<span class="n">EOF</span>
+<span class="w">                </span><span class="s2">&quot;&quot;</span><span class="err">&quot;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="key-metrics-to-track">Key Metrics to Track</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Average build time</span>
+<span class="k">avg</span><span class="o">(</span><span class="nv">jenkins_build_duration_seconds</span><span class="p">{</span><span class="nl">job</span><span class="o">=</span><span class="p">&quot;</span><span class="s">my-app</span><span class="p">&quot;}</span><span class="o">)</span>
+
+<span class="c1"># Build success rate</span>
+<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">jenkins_build_result</span><span class="p">{</span><span class="nl">result</span><span class="o">=</span><span class="p">&quot;</span><span class="s">SUCCESS</span><span class="p">&quot;}[</span><span class="s">7d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span>
+<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">jenkins_build_result</span><span class="p">[</span><span class="s">7d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span>
+
+<span class="c1"># Slowest pipeline stages</span>
+<span class="k">topk</span><span class="o">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="k">avg</span><span class="o">(</span><span class="nv">jenkins_stage_duration_seconds</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">stage</span><span class="o">))</span>
+
+<span class="c1"># Build time trend</span>
+<span class="kr">rate</span><span class="o">(</span><span class="nv">jenkins_build_duration_seconds</span><span class="p">[</span><span class="s">1d</span><span class="p">]</span><span class="o">)</span>
+</code></pre></div>
+<h3 id="create-grafana-dashboard">Create Grafana Dashboard</h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;dashboard&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Pipeline Performance&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;panels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Average Build Time&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;avg(jenkins_build_duration_seconds) by (job)&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Build Success Rate&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(rate(jenkins_build_result{result=&#39;SUCCESS&#39;}[7d])) / sum(rate(jenkins_build_result[7d])) * 100&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="part-7-practical-exercise">💪 Part 7: Practical Exercise</h2>
+<h3 id="exercise-create-a-multi-language-golden-path">Exercise: Create a Multi-Language Golden Path</h3>
+<p><strong>Objective</strong>: Build a shared library that supports Java, Python, and Node.js</p>
+<p><strong>Requirements</strong>:
+1. Create <code>vars/goldenPath.groovy</code> that auto-detects language
+2. Support configuration for each language
+3. Include parallel testing and linting
+4. Implement build caching
+5. Add performance metrics
+6. Create comprehensive documentation</p>
+<p><strong>Starter Template</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// vars/goldenPath.groovy</span>
+<span class="kt">def</span><span class="w"> </span><span class="nf">call</span><span class="o">(</span><span class="n">Map</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[:])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="c1">// Auto-detect language</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">detectLanguage</span><span class="o">()</span>
+
+<span class="w">    </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;🔍 Detected language: ${language}&quot;</span>
+
+<span class="w">    </span><span class="k">switch</span><span class="o">(</span><span class="n">language</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;java&#39;</span><span class="o">:</span>
+<span class="w">            </span><span class="n">goldenPathJava</span><span class="o">(</span><span class="n">config</span><span class="o">)</span>
+<span class="w">            </span><span class="k">break</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;python&#39;</span><span class="o">:</span>
+<span class="w">            </span><span class="n">goldenPathPython</span><span class="o">(</span><span class="n">config</span><span class="o">)</span>
+<span class="w">            </span><span class="k">break</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;node&#39;</span><span class="o">:</span>
+<span class="w">            </span><span class="n">goldenPathNode</span><span class="o">(</span><span class="n">config</span><span class="o">)</span>
+<span class="w">            </span><span class="k">break</span>
+<span class="w">        </span><span class="k">default</span><span class="o">:</span>
+<span class="w">            </span><span class="n">error</span><span class="o">(</span><span class="s2">&quot;Unsupported language: ${language}&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kt">def</span><span class="w"> </span><span class="nf">detectLanguage</span><span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="c1">// TODO: Implement language detection</span>
+<span class="w">    </span><span class="c1">// Check for pom.xml, requirements.txt, package.json</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Validation Criteria</strong>:
+- [ ] Auto-detects language correctly
+- [ ] All three language templates work
+- [ ] Build time &lt;8 minutes for sample apps
+- [ ] Caching reduces build time by 50%+
+- [ ] Metrics sent to Prometheus
+- [ ] Documentation includes usage examples</p>
+<hr />
+<h2 id="part-8-knowledge-check">🎓 Part 8: Knowledge Check</h2>
+<h3 id="quiz-questions">Quiz Questions</h3>
+<ol>
+<li><strong>What is a "Golden Path" in platform engineering?</strong></li>
+<li>[ ] The fastest build configuration</li>
+<li>[x] An opinionated, easy-to-use template with best practices built-in</li>
+<li>[ ] A deployment strategy</li>
+<li>
+<p>[ ] A security scanning tool</p>
+</li>
+<li>
+<p><strong>Where do you put reusable pipeline steps in a Shared Library?</strong></p>
+</li>
+<li>[ ] src/ directory</li>
+<li>[x] vars/ directory</li>
+<li>[ ] resources/ directory</li>
+<li>
+<p>[ ] lib/ directory</p>
+</li>
+<li>
+<p><strong>What is the benefit of parallel execution in pipelines?</strong></p>
+</li>
+<li>[ ] Uses less resources</li>
+<li>[ ] More reliable</li>
+<li>[x] Reduces total build time</li>
+<li>
+<p>[ ] Easier to debug</p>
+</li>
+<li>
+<p><strong>How can you cache Maven dependencies between builds?</strong></p>
+</li>
+<li>[ ] Use a faster Maven mirror</li>
+<li>[x] Mount a persistent volume to /root/.m2</li>
+<li>[ ] Download dependencies manually</li>
+<li>
+<p>[ ] Skip dependency resolution</p>
+</li>
+<li>
+<p><strong>What should you do with build performance metrics?</strong></p>
+</li>
+<li>[ ] Ignore them</li>
+<li>[ ] Only check when builds are slow</li>
+<li>[x] Send to Prometheus and visualize in Grafana</li>
+<li>
+<p>[ ] Store in Jenkins only</p>
+</li>
+<li>
+<p><strong>What's the recommended maximum build time?</strong></p>
+</li>
+<li>[ ] 30 minutes</li>
+<li>[x] 10 minutes</li>
+<li>[ ] 1 hour</li>
+<li>
+<p>[ ] 5 minutes</p>
+</li>
+<li>
+<p><strong>Which stage can typically be parallelized?</strong></p>
+</li>
+<li>[ ] Checkout</li>
+<li>[ ] Build</li>
+<li>[x] Tests and linting</li>
+<li>
+<p>[ ] Docker push</p>
+</li>
+<li>
+<p><strong>What's the main benefit of Pipeline as Code?</strong></p>
+</li>
+<li>[x] Version controlled, code reviewed, consistent</li>
+<li>[ ] Faster builds</li>
+<li>[ ] Less disk space</li>
+<li>[ ] Better UI</li>
+</ol>
+<p><strong>Answers</strong>: 1-B, 2-B, 3-C, 4-B, 5-C, 6-B, 7-C, 8-A</p>
+<hr />
+<h2 id="part-9-module-summary-next-steps">🎯 Part 9: Module Summary &amp; Next Steps</h2>
+<h3 id="what-you-learned">What You Learned</h3>
+<p>✅ <strong>Golden Paths</strong>: Opinionated templates that make easy = best<br />
+✅ <strong>Shared Libraries</strong>: Reusable pipeline code in <code>vars/</code> and <code>src/</code><br />
+✅ <strong>Multi-Language Support</strong>: Java, Python, Node.js templates<br />
+✅ <strong>Optimization</strong>: Parallel execution, caching, incremental builds<br />
+✅ <strong>Performance Metrics</strong>: Track and improve build times<br />
+✅ <strong>Best Practices</strong>: DRY, testable, maintainable pipelines</p>
+<h3 id="dora-capabilities-achieved">DORA Capabilities Achieved</h3>
+<ul>
+<li>✅ <strong>CD1</strong>: Version control for production artifacts (advanced)</li>
+<li>✅ <strong>CD4</strong>: Trunk-based development support</li>
+<li>✅ <strong>Code Review</strong>: Pipeline changes reviewed like code</li>
+</ul>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li><strong>Golden Paths reduce toil</strong> - Write once, use everywhere</li>
+<li><strong>Shared Libraries enable reuse</strong> - Don't copy-paste pipelines</li>
+<li><strong>Optimization matters</strong> - 10-minute builds vs 30-minute builds = happier developers</li>
+<li><strong>Measure everything</strong> - Can't improve what you don't measure</li>
+<li><strong>Maintainability &gt; Brevity</strong> - Readable pipelines are better than clever pipelines</li>
+</ol>
+<h3 id="real-world-impact">Real-World Impact</h3>
+<p>"After implementing Golden Path pipelines:
+- <strong>Pipeline creation time</strong>: 2 days → 10 minutes
+- <strong>Average build time</strong>: 25 minutes → 7 minutes<br />
+- <strong>Pipelines maintained</strong>: 50 → 3 templates
+- <strong>Security update rollout</strong>: 2 weeks → 1 day</p>
+<p>Our developers now spend time building features, not maintaining pipelines."
+- <em>Platform Engineering Team, Tech Company</em></p>
+<hr />
+<h2 id="additional-resources">📚 Additional Resources</h2>
+<h3 id="documentation">Documentation</h3>
+<ul>
+<li><a href="https://www.jenkins.io/doc/book/pipeline/shared-libraries/">Jenkins Shared Libraries</a></li>
+<li><a href="https://www.jenkins.io/doc/book/pipeline/pipeline-best-practices/">Pipeline Best Practices</a></li>
+<li><a href="https://plugins.jenkins.io/kubernetes/">Kubernetes Plugin Guide</a></li>
+</ul>
+<h3 id="examples">Examples</h3>
+<ul>
+<li><a href="https://github.com/fabric8io/fabric8-pipeline-library">Fabric8 Pipeline Library</a></li>
+<li><a href="https://github.com/cloudbees/pipeline-model-definition-plugin/wiki/Defining-Declarative-Pipelines">CloudBees Pipeline Template Catalog</a></li>
+</ul>
+<h3 id="community">Community</h3>
+<ul>
+<li><a href="https://community.jenkins.io/">Jenkins Community Forums</a></li>
+<li><a href="https://mattermost.fawkes.internal">Fawkes #yellow-belt Mattermost</a></li>
+</ul>
+<hr />
+<h2 id="module-completion">🏅 Module Completion</h2>
+<h3 id="assessment-checklist">Assessment Checklist</h3>
+<ul>
+<li>[ ] <strong>Conceptual Understanding</strong></li>
+<li>[ ] Explain Golden Path philosophy</li>
+<li>[ ] Describe Shared Library structure</li>
+<li>
+<p>[ ] Understand pipeline optimization techniques</p>
+</li>
+<li>
+<p>[ ] <strong>Practical Skills</strong></p>
+</li>
+<li>[ ] Create a Shared Library repository</li>
+<li>[ ] Build Golden Path template for at least one language</li>
+<li>[ ] Implement parallel execution</li>
+<li>[ ] Configure build caching</li>
+<li>
+<p>[ ] Add performance metrics collection</p>
+</li>
+<li>
+<p>[ ] <strong>Hands-On Lab</strong></p>
+</li>
+<li>[ ] Create reusable pipeline template</li>
+<li>[ ] Reduce build time by 50%+ through optimization</li>
+<li>
+<p>[ ] Successfully use template in 3 different projects</p>
+</li>
+<li>
+<p>[ ] <strong>Quiz</strong></p>
+</li>
+<li>[ ] Score 80% or higher (6/8 questions)</li>
+</ul>
+<h3 id="certification-credit">Certification Credit</h3>
+<p>Upon completion, you earn:
+- <strong>5 points</strong> toward Yellow Belt certification (50% complete)
+- <strong>Badge</strong>: "Golden Path Architect"
+- <strong>Skill Unlocked</strong>: Shared Library Development</p>
+<hr />
+<h2 id="yellow-belt-progress">🎖️ Yellow Belt Progress</h2>
+<div class="highlight"><pre><span></span><code>Yellow Belt: CI/CD Mastery
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Module 5: CI Fundamentals        ████████░░░░ 25% ✓
+Module 6: Golden Path Pipelines  ████████░░░░ 50% ✓
+Module 7: Security &amp; Quality     ░░░░░░░░░░░░  0%
+Module 8: Artifact Management    ░░░░░░░░░░░░  0%
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</code></pre></div>
+<p><strong>Halfway to Yellow Belt!</strong> 🎉</p>
+<p><strong>Next Module Preview</strong>: Module 7 - Security Scanning &amp; Quality Gates (SonarQube, Trivy, dependency scanning)</p>
+<hr />
+<h2 id="appendix-a-complete-shared-library-example">📖 Appendix A: Complete Shared Library Example</h2>
+<h3 id="full-repository-structure">Full Repository Structure</h3>
+<div class="highlight"><pre><span></span><code>fawkes-pipeline-library/
+├── vars/
+│   ├── goldenPathJava.groovy
+│   ├── goldenPathPython.groovy
+│   ├── goldenPathNode.groovy
+│   ├── goldenPath.groovy           # Auto-detect wrapper
+│   ├── notifySlack.groovy
+│   ├── runSecurityScan.groovy
+│   └── deployToKubernetes.groovy
+├── src/
+│   └── com/
+│       └── fawkes/
+│           └── pipeline/
+│               ├── Docker.groovy
+│               ├── Git.groovy
+│               ├── Maven.groovy
+│               ├── Kubernetes.groovy
+│               └── Security.groovy
+├── resources/
+│   ├── pod-templates/
+│   │   ├── java-17.yaml
+│   │   ├── python-311.yaml
+│   │   ├── node-20.yaml
+│   │   └── docker-dind.yaml
+│   ├── scripts/
+│   │   ├── docker-build.sh
+│   │   ├── security-scan.sh
+│   │   └── promote-artifact.sh
+│   └── config/
+│       ├── sonarqube.properties
+│       └── checkstyle.xml
+├── test/
+│   └── groovy/
+│       └── com/
+│           └── fawkes/
+│               └── pipeline/
+│                   └── DockerTest.groovy
+├── docs/
+│   ├── README.md
+│   ├── CONTRIBUTING.md
+│   └── examples/
+│       ├── java-example.md
+│       ├── python-example.md
+│       └── node-example.md
+├── Jenkinsfile                     # For testing the library itself
+└── VERSION
+</code></pre></div>
+<h3 id="example-advanced-docker-helper-class">Example: Advanced Docker Helper Class</h3>
+<p>Create <code>src/com/fawkes/pipeline/Docker.groovy</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="n">com</span><span class="o">.</span><span class="na">fawkes</span><span class="o">.</span><span class="na">pipeline</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">Docker</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Serializable</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">script</span>
+
+<span class="w">    </span><span class="n">Docker</span><span class="o">(</span><span class="n">script</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="k">this</span><span class="o">.</span><span class="na">script</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">script</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="nf">build</span><span class="o">(</span><span class="n">Map</span><span class="w"> </span><span class="n">config</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="kt">def</span><span class="w"> </span><span class="n">imageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">imageName</span><span class="w"> </span><span class="o">?:</span><span class="w"> </span><span class="n">script</span><span class="o">.</span><span class="na">env</span><span class="o">.</span><span class="na">JOB_NAME</span>
+<span class="w">        </span><span class="kt">def</span><span class="w"> </span><span class="n">imageTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">imageTag</span><span class="w"> </span><span class="o">?:</span><span class="w"> </span><span class="n">script</span><span class="o">.</span><span class="na">env</span><span class="o">.</span><span class="na">BUILD_NUMBER</span>
+<span class="w">        </span><span class="kt">def</span><span class="w"> </span><span class="n">dockerfile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">dockerfile</span><span class="w"> </span><span class="o">?:</span><span class="w"> </span><span class="s1">&#39;Dockerfile&#39;</span>
+<span class="w">        </span><span class="kt">def</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">context</span><span class="w"> </span><span class="o">?:</span><span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<span class="w">        </span><span class="kt">def</span><span class="w"> </span><span class="n">buildArgs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">buildArgs</span><span class="w"> </span><span class="o">?:</span><span class="w"> </span><span class="o">[:]</span>
+
+<span class="w">        </span><span class="n">script</span><span class="o">.</span><span class="na">echo</span><span class="w"> </span><span class="s2">&quot;🐳 Building Docker image: ${imageName}:${imageTag}&quot;</span>
+
+<span class="w">        </span><span class="kt">def</span><span class="w"> </span><span class="n">buildArgsStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildArgs</span><span class="o">.</span><span class="na">collect</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">k</span><span class="o">,</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s2">&quot;--build-arg ${k}=${v}&quot;</span><span class="w"> </span><span class="o">}.</span><span class="na">join</span><span class="o">(</span><span class="s1">&#39; &#39;</span><span class="o">)</span>
+
+<span class="w">        </span><span class="n">script</span><span class="o">.</span><span class="na">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            docker build \</span>
+<span class="s2">                -f ${dockerfile} \</span>
+<span class="s2">                -t ${imageName}:${imageTag} \</span>
+<span class="s2">                ${buildArgsStr} \</span>
+<span class="s2">                ${context}</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s2">&quot;${imageName}:${imageTag}&quot;</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="nf">push</span><span class="o">(</span><span class="n">String</span><span class="w"> </span><span class="n">image</span><span class="o">,</span><span class="w"> </span><span class="n">Map</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[:])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="kt">def</span><span class="w"> </span><span class="n">registry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">registry</span><span class="w"> </span><span class="o">?:</span><span class="w"> </span><span class="s1">&#39;harbor.fawkes.internal&#39;</span>
+<span class="w">        </span><span class="kt">def</span><span class="w"> </span><span class="n">credentialsId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">credentialsId</span><span class="w"> </span><span class="o">?:</span><span class="w"> </span><span class="s1">&#39;harbor-credentials&#39;</span>
+
+<span class="w">        </span><span class="n">script</span><span class="o">.</span><span class="na">echo</span><span class="w"> </span><span class="s2">&quot;📤 Pushing image: ${image}&quot;</span>
+
+<span class="w">        </span><span class="n">script</span><span class="o">.</span><span class="na">withCredentials</span><span class="o">([</span>
+<span class="w">            </span><span class="n">script</span><span class="o">.</span><span class="na">usernamePassword</span><span class="o">(</span>
+<span class="w">                </span><span class="nl">credentialsId:</span><span class="w"> </span><span class="n">credentialsId</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">usernameVariable:</span><span class="w"> </span><span class="s1">&#39;DOCKER_USER&#39;</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">passwordVariable:</span><span class="w"> </span><span class="s1">&#39;DOCKER_PASS&#39;</span>
+<span class="w">            </span><span class="o">)</span>
+<span class="w">        </span><span class="o">])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">script</span><span class="o">.</span><span class="na">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                echo \$DOCKER_PASS | docker login ${registry} -u \$DOCKER_USER --password-stdin</span>
+<span class="s2">                docker push ${image}</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="nf">scan</span><span class="o">(</span><span class="n">String</span><span class="w"> </span><span class="n">image</span><span class="o">,</span><span class="w"> </span><span class="n">Map</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[:])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="kt">def</span><span class="w"> </span><span class="n">severity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">severity</span><span class="w"> </span><span class="o">?:</span><span class="w"> </span><span class="s1">&#39;HIGH,CRITICAL&#39;</span>
+<span class="w">        </span><span class="kt">def</span><span class="w"> </span><span class="n">exitCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">exitCode</span><span class="w"> </span><span class="o">?:</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="w">        </span><span class="n">script</span><span class="o">.</span><span class="na">echo</span><span class="w"> </span><span class="s2">&quot;🔒 Scanning image for vulnerabilities: ${image}&quot;</span>
+
+<span class="w">        </span><span class="n">script</span><span class="o">.</span><span class="na">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            trivy image \</span>
+<span class="s2">                --severity ${severity} \</span>
+<span class="s2">                --exit-code ${exitCode} \</span>
+<span class="s2">                --no-progress \</span>
+<span class="s2">                ${image}</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="nf">tag</span><span class="o">(</span><span class="n">String</span><span class="w"> </span><span class="n">sourceImage</span><span class="o">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">targetTag</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">script</span><span class="o">.</span><span class="na">echo</span><span class="w"> </span><span class="s2">&quot;🏷️ Tagging image: ${sourceImage} → ${targetTag}&quot;</span>
+<span class="w">        </span><span class="n">script</span><span class="o">.</span><span class="na">sh</span><span class="w"> </span><span class="s2">&quot;docker tag ${sourceImage} ${targetTag}&quot;</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="using-the-helper-class">Using the Helper Class</h3>
+<p>In <code>vars/goldenPathJava.groovy</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipelines&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.fawkes.pipeline.Docker</span>
+
+<span class="kt">def</span><span class="w"> </span><span class="nf">call</span><span class="o">(</span><span class="n">Map</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[:])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">yaml</span><span class="w"> </span><span class="s1">&#39;...&#39;</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="c1">// ... build stages ...</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Docker Operations&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;docker&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="kt">def</span><span class="w"> </span><span class="n">docker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Docker</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
+
+<span class="w">                            </span><span class="c1">// Build</span>
+<span class="w">                            </span><span class="kt">def</span><span class="w"> </span><span class="n">image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">docker</span><span class="o">.</span><span class="na">build</span><span class="o">(</span>
+<span class="w">                                </span><span class="nl">imageName:</span><span class="w"> </span><span class="s2">&quot;${config.dockerRegistry}/${env.APP_NAME}&quot;</span><span class="o">,</span>
+<span class="w">                                </span><span class="nl">imageTag:</span><span class="w"> </span><span class="s2">&quot;${env.BUILD_NUMBER}&quot;</span><span class="o">,</span>
+<span class="w">                                </span><span class="nl">buildArgs:</span><span class="w"> </span><span class="o">[</span>
+<span class="w">                                    </span><span class="s1">&#39;BUILD_DATE&#39;</span><span class="o">:</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Date</span><span class="o">().</span><span class="na">format</span><span class="o">(</span><span class="s1">&#39;yyyy-MM-dd&#39;</span><span class="o">),</span>
+<span class="w">                                    </span><span class="s1">&#39;VCS_REF&#39;</span><span class="o">:</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">GIT_COMMIT</span>
+<span class="w">                                </span><span class="o">]</span>
+<span class="w">                            </span><span class="o">)</span>
+
+<span class="w">                            </span><span class="c1">// Scan</span>
+<span class="w">                            </span><span class="n">docker</span><span class="o">.</span><span class="na">scan</span><span class="o">(</span><span class="n">image</span><span class="o">,</span><span class="w"> </span><span class="nl">severity:</span><span class="w"> </span><span class="s1">&#39;CRITICAL&#39;</span><span class="o">)</span>
+
+<span class="w">                            </span><span class="c1">// Tag</span>
+<span class="w">                            </span><span class="n">docker</span><span class="o">.</span><span class="na">tag</span><span class="o">(</span><span class="n">image</span><span class="o">,</span><span class="w"> </span><span class="s2">&quot;${config.dockerRegistry}/${env.APP_NAME}:latest&quot;</span><span class="o">)</span>
+
+<span class="w">                            </span><span class="c1">// Push</span>
+<span class="w">                            </span><span class="n">docker</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">image</span><span class="o">)</span>
+<span class="w">                            </span><span class="n">docker</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s2">&quot;${config.dockerRegistry}/${env.APP_NAME}:latest&quot;</span><span class="o">)</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<hr />
+<h2 id="appendix-b-testing-shared-libraries">📖 Appendix B: Testing Shared Libraries</h2>
+<h3 id="unit-testing-with-spock">Unit Testing with Spock</h3>
+<p>Create <code>test/groovy/com/fawkes/pipeline/DockerTest.groovy</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="n">com</span><span class="o">.</span><span class="na">fawkes</span><span class="o">.</span><span class="na">pipeline</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">spock.lang.Specification</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">DockerTest</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Specification</span><span class="w"> </span><span class="o">{</span>
+
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">script</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Mock</span><span class="o">()</span>
+<span class="w">    </span><span class="n">Docker</span><span class="w"> </span><span class="n">docker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Docker</span><span class="o">(</span><span class="n">script</span><span class="o">)</span>
+
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="nf">&quot;build should construct correct docker command&quot;</span><span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="nl">given:</span>
+<span class="w">        </span><span class="kt">def</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">            </span><span class="nl">imageName:</span><span class="w"> </span><span class="s1">&#39;myapp&#39;</span><span class="o">,</span>
+<span class="w">            </span><span class="nl">imageTag:</span><span class="w"> </span><span class="s1">&#39;v1.0&#39;</span><span class="o">,</span>
+<span class="w">            </span><span class="nl">buildArgs:</span><span class="w"> </span><span class="o">[</span><span class="nl">APP_VERSION:</span><span class="w"> </span><span class="s1">&#39;1.0.0&#39;</span><span class="o">]</span>
+<span class="w">        </span><span class="o">]</span>
+
+<span class="w">        </span><span class="nl">when:</span>
+<span class="w">        </span><span class="n">docker</span><span class="o">.</span><span class="na">build</span><span class="o">(</span><span class="n">config</span><span class="o">)</span>
+
+<span class="w">        </span><span class="nl">then:</span>
+<span class="w">        </span><span class="mi">1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">script</span><span class="o">.</span><span class="na">sh</span><span class="o">(</span><span class="n">_</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">String</span><span class="o">)</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">cmd</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">            </span><span class="k">assert</span><span class="w"> </span><span class="n">cmd</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;docker build&#39;</span><span class="o">)</span>
+<span class="w">            </span><span class="k">assert</span><span class="w"> </span><span class="n">cmd</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;-t myapp:v1.0&#39;</span><span class="o">)</span>
+<span class="w">            </span><span class="k">assert</span><span class="w"> </span><span class="n">cmd</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;--build-arg APP_VERSION=1.0.0&#39;</span><span class="o">)</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="nf">&quot;scan should fail on critical vulnerabilities&quot;</span><span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="nl">given:</span>
+<span class="w">        </span><span class="kt">def</span><span class="w"> </span><span class="n">image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;myapp:v1.0&#39;</span>
+
+<span class="w">        </span><span class="nl">when:</span>
+<span class="w">        </span><span class="n">docker</span><span class="o">.</span><span class="na">scan</span><span class="o">(</span><span class="n">image</span><span class="o">)</span>
+
+<span class="w">        </span><span class="nl">then:</span>
+<span class="w">        </span><span class="mi">1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">script</span><span class="o">.</span><span class="na">sh</span><span class="o">(</span><span class="n">_</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">String</span><span class="o">)</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">cmd</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">            </span><span class="k">assert</span><span class="w"> </span><span class="n">cmd</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;trivy image&#39;</span><span class="o">)</span>
+<span class="w">            </span><span class="k">assert</span><span class="w"> </span><span class="n">cmd</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;--severity HIGH,CRITICAL&#39;</span><span class="o">)</span>
+<span class="w">            </span><span class="k">assert</span><span class="w"> </span><span class="n">cmd</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;--exit-code 1&#39;</span><span class="o">)</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="integration-testing">Integration Testing</h3>
+<p>Create <code>Jenkinsfile</code> in library root:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Test the shared library itself</span>
+<span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipelines@development&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test Java Template&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">goldenPathJava</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">gitRepo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;https://github.com/fawkes/sample-java-app.git&#39;</span>
+<span class="w">                        </span><span class="n">skipTests</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test Python Template&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">goldenPathPython</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">gitRepo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;https://github.com/fawkes/sample-python-app.git&#39;</span>
+<span class="w">                        </span><span class="n">skipTests</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test Node Template&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">goldenPathNode</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">gitRepo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;https://github.com/fawkes/sample-node-app.git&#39;</span>
+<span class="w">                        </span><span class="n">skipTests</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<hr />
+<h2 id="appendix-c-advanced-optimization-patterns">📖 Appendix C: Advanced Optimization Patterns</h2>
+<h3 id="pattern-1-build-matrix">Pattern 1: Build Matrix</h3>
+<p>Run builds for multiple versions in parallel:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">def</span><span class="w"> </span><span class="nf">call</span><span class="o">(</span><span class="n">Map</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[:])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">javaVersions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">javaVersions</span><span class="w"> </span><span class="o">?:</span><span class="w"> </span><span class="o">[</span><span class="s1">&#39;11&#39;</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;17&#39;</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;21&#39;</span><span class="o">]</span>
+
+<span class="w">    </span><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">agent</span><span class="w"> </span><span class="n">none</span>
+
+<span class="w">        </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build Matrix&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">matrix</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">axes</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">axis</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="n">name</span><span class="w"> </span><span class="s1">&#39;JAVA_VERSION&#39;</span>
+<span class="w">                            </span><span class="n">values</span><span class="w"> </span><span class="n">javaVersions</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+
+<span class="w">                    </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="n">yaml</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">spec:</span>
+<span class="s2">  containers:</span>
+<span class="s2">  - name: maven</span>
+<span class="s2">    image: maven:3.8-openjdk-\${JAVA_VERSION}</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+
+<span class="w">                    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                                </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;maven&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                                        echo &quot;Building with Java \${JAVA_VERSION}&quot;</span>
+<span class="s2">                                        mvn clean package</span>
+<span class="s2">                                    &quot;&quot;&quot;</span>
+<span class="w">                                </span><span class="o">}</span>
+<span class="w">                            </span><span class="o">}</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="pattern-2-conditional-stages">Pattern 2: Conditional Stages</h3>
+<p>Skip stages based on branch or file changes:</p>
+<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Deploy to Production&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">allOf</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">branch</span><span class="w"> </span><span class="s1">&#39;main&#39;</span>
+<span class="w">            </span><span class="n">not</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">changeRequest</span><span class="o">()</span><span class="w"> </span><span class="o">}</span>
+<span class="w">            </span><span class="n">expression</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="kt">def</span><span class="w"> </span><span class="n">changedFiles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sh</span><span class="o">(</span>
+<span class="w">                    </span><span class="nl">script:</span><span class="w"> </span><span class="s2">&quot;git diff --name-only HEAD~1&quot;</span><span class="o">,</span>
+<span class="w">                    </span><span class="nl">returnStdout:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">                </span><span class="o">).</span><span class="na">trim</span><span class="o">()</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">changedFiles</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s1">&#39;src/&#39;</span><span class="o">)</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;Deploying to production...&quot;</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="pattern-3-dynamic-stage-generation">Pattern 3: Dynamic Stage Generation</h3>
+<p>Generate stages based on configuration:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">def</span><span class="w"> </span><span class="nf">generateTestStages</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">testSuites</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">parallelStages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[:]</span>
+
+<span class="w">    </span><span class="n">testSuites</span><span class="o">.</span><span class="na">each</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">suite</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">        </span><span class="n">parallelStages</span><span class="o">[</span><span class="s2">&quot;Test ${suite}&quot;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s2">&quot;Test ${suite}&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;mvn test -Dtest=${suite}Test&quot;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parallelStages</span>
+<span class="o">}</span>
+
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Parallel Tests&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">parallel</span><span class="w"> </span><span class="n">generateTestStages</span><span class="o">([</span><span class="s1">&#39;Unit&#39;</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;Integration&#39;</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;E2E&#39;</span><span class="o">])</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="pattern-4-build-artifact-promotion">Pattern 4: Build Artifact Promotion</h3>
+<p>Progressive promotion through environments:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">def</span><span class="w"> </span><span class="nf">promote</span><span class="o">(</span><span class="n">String</span><span class="w"> </span><span class="n">artifact</span><span class="o">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">fromEnv</span><span class="o">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">toEnv</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;Promoting ${artifact} from ${fromEnv} to ${toEnv}&quot;</span>
+
+<span class="w">    </span><span class="c1">// Tag artifact</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        docker pull ${artifact}:${fromEnv}</span>
+<span class="s2">        docker tag ${artifact}:${fromEnv} ${artifact}:${toEnv}</span>
+<span class="s2">        docker push ${artifact}:${toEnv}</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="w">    </span><span class="c1">// Update manifest</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        git clone https://github.com/org/gitops-manifests.git</span>
+<span class="s2">        cd gitops-manifests</span>
+<span class="s2">        sed -i &#39;s|${artifact}:.*|${artifact}:${toEnv}|&#39; ${toEnv}/deployment.yaml</span>
+<span class="s2">        git add .</span>
+<span class="s2">        git commit -m &quot;Promote ${artifact} to ${toEnv}&quot;</span>
+<span class="s2">        git push</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+<span class="o">}</span>
+
+<span class="c1">// Usage</span>
+<span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Promote to Production&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">promote</span><span class="o">(</span><span class="n">env</span><span class="o">.</span><span class="na">DOCKER_IMAGE</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;staging&#39;</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;production&#39;</span><span class="o">)</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<hr />
+<h2 id="appendix-d-troubleshooting-guide">📖 Appendix D: Troubleshooting Guide</h2>
+<h3 id="issue-shared-library-not-found">Issue: Shared Library Not Found</h3>
+<p><strong>Error</strong>:
+<div class="highlight"><pre><span></span><code>ERROR: Library fawkes-pipelines not found
+</code></pre></div></p>
+<p><strong>Solutions</strong>:
+1. Check library name matches in Jenkins global config
+2. Verify repository URL is correct
+3. Check branch/tag specified exists
+4. If using credentials, verify they're configured</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Use specific version</span>
+<span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipelines@v1.2.3&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+
+<span class="c1">// Use branch</span>
+<span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipelines@develop&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+
+<span class="c1">// Use commit SHA</span>
+<span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipelines@abc1234&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+</code></pre></div>
+<h3 id="issue-class-not-found-in-src">Issue: Class Not Found in src/</h3>
+<p><strong>Error</strong>:
+<div class="highlight"><pre><span></span><code>unable to resolve class com.fawkes.pipeline.Docker
+</code></pre></div></p>
+<p><strong>Solutions</strong>:
+1. Check package path matches directory structure
+2. Ensure class is Serializable
+3. Import correctly in calling code</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Correct import</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.fawkes.pipeline.Docker</span>
+
+<span class="c1">// File must be: src/com/fawkes/pipeline/Docker.groovy</span>
+<span class="c1">// Class must implement Serializable</span>
+</code></pre></div>
+<h3 id="issue-variable-not-found-in-vars">Issue: Variable Not Found in vars/</h3>
+<p><strong>Error</strong>:
+<div class="highlight"><pre><span></span><code>No such DSL method &#39;goldenPathJava&#39; found
+</code></pre></div></p>
+<p><strong>Solutions</strong>:
+1. Check file is in vars/ directory
+2. Filename must match function name
+3. Library must be imported</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// vars/goldenPathJava.groovy defines goldenPathJava()</span>
+<span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipelines&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+<span class="n">goldenPathJava</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">}</span>
+</code></pre></div>
+<h3 id="issue-slow-library-loading">Issue: Slow Library Loading</h3>
+<p><strong>Problem</strong>: Pipeline takes 2+ minutes to start</p>
+<p><strong>Solutions</strong>:
+1. Enable library caching
+2. Use specific version (not HEAD)
+3. Reduce library size</p>
+<p>In Jenkins global config:
+<div class="highlight"><pre><span></span><code>☑ Cache fetched versions on controller for quick retrieval
+</code></pre></div></p>
+<h3 id="issue-cannot-modify-immutable-objects">Issue: Cannot Modify Immutable Objects</h3>
+<p><strong>Error</strong>:
+<div class="highlight"><pre><span></span><code>Scripts not permitted to use method groovy.lang.GroovyObject
+</code></pre></div></p>
+<p><strong>Solutions</strong>:
+1. Approve script in Jenkins → Manage Jenkins → In-process Script Approval
+2. Use <code>@NonCPS</code> annotation for methods that manipulate complex objects</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@NonCPS</span>
+<span class="kt">def</span><span class="w"> </span><span class="nf">parseJson</span><span class="o">(</span><span class="n">String</span><span class="w"> </span><span class="n">json</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">slurper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JsonSlurper</span><span class="o">()</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">slurper</span><span class="o">.</span><span class="na">parseText</span><span class="o">(</span><span class="n">json</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div>
+<hr />
+<h2 id="congratulations">🎉 Congratulations!</h2>
+<p>You've completed <strong>Module 6: Building Golden Path Pipelines</strong>!</p>
+<h3 id="key-achievements">Key Achievements</h3>
+<p>✅ Created reusable Shared Libraries<br />
+✅ Built Golden Path templates for Java, Python, Node.js<br />
+✅ Optimized pipelines with parallel execution and caching<br />
+✅ Implemented performance monitoring<br />
+✅ Reduced pipeline maintenance by 90%+</p>
+<h3 id="your-golden-path-journey">Your Golden Path Journey</h3>
+<div class="highlight"><pre><span></span><code>Before Module 6:
+👤 Writing 200+ line Jenkinsfiles for each project
+🔄 Copy-pasting pipeline code
+🐌 30-minute builds
+😰 Fear of changing pipelines
+
+After Module 6:
+👥 10-line Jenkinsfiles using Golden Paths
+♻️ Reusable components in Shared Libraries
+⚡ 8-minute builds with optimization
+😎 Confident pipeline changes, tested in library
+</code></pre></div>
+<h3 id="impact-on-dora-metrics">Impact on DORA Metrics</h3>
+<ul>
+<li><strong>Deployment Frequency</strong>: ⬆️ Easier pipelines = more deploys</li>
+<li><strong>Lead Time</strong>: ⬇️ Faster builds = faster feedback</li>
+<li><strong>Change Failure Rate</strong>: ⬇️ Tested templates = fewer failures</li>
+<li><strong>MTTR</strong>: ⬇️ Consistent pipelines = easier debugging</li>
+</ul>
+<hr />
+<h2 id="whats-next">📅 What's Next?</h2>
+<p><strong>Continue Your Journey:</strong></p>
+<ol>
+<li>✅ Complete Module 7: Security Scanning &amp; Quality Gates</li>
+<li>✅ Complete Module 8: Artifact Management  </li>
+<li>🎓 Take Yellow Belt Certification Exam</li>
+<li>🚀 Advance to Green Belt (GitOps &amp; Deployment)</li>
+</ol>
+<p><strong>Practice:</strong>
+- Implement Golden Paths for your team
+- Measure build time improvements
+- Share templates with community</p>
+<p><strong>Community:</strong>
+- Share your Shared Library in #show-and-tell
+- Help others in #yellow-belt channel
+- Write a blog post about your experience</p>
+<hr />
+<p><strong>Ready for Module 7?</strong> 🔒</p>
+<p>Next up: <strong>Security Scanning &amp; Quality Gates</strong> - where you'll learn SonarQube, Trivy, dependency scanning, and building security into every pipeline!</p>
+<hr />
+<p><em>Fawkes Dojo - Where Platform Engineers Are Forged</em><br />
+<em>Version 1.0 | Last Updated: October 2025</em><br />
+<em>License: MIT | https://github.com/paruff/fawkes</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

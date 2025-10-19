@@ -1,0 +1,3311 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Module 17: Platform as a Product - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#module-17-platform-as-a-product" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Module 17: Platform as a Product
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Implementation Paths
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Wins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Capabilities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Capabilities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Feedback
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Recovery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Patterns
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure as Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Tools
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Tools
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Continuous Delivery
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Spinnaker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Jenkins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kubernetes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#learning-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Learning Objectives
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#theory-your-platform-is-a-product" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Theory: Your Platform is a Product
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 Theory: Your Platform is a Product">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-platform-as-a-product-mindset" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Platform as a Product Mindset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why This Matters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-platform-product-triad" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Platform Product Triad
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#your-platforms-customers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Your Platform's "Customers"
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-research-for-platforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔍 User Research for Platforms
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔍 User Research for Platforms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#discovery-understanding-the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      Discovery: Understanding the Problem
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Discovery: Understanding the Problem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-user-interviews-most-valuable" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. User Interviews (Most valuable)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-shadowing-observation" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Shadowing / Observation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-surveys-quantitative-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Surveys (Quantitative validation)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-analytics-telemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Analytics / Telemetry
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synthesizing-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      Synthesizing Research
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-a-platform-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Building a Platform Roadmap
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📋 Building a Platform Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#product-roadmap-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Product Roadmap Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#roadmap-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Roadmap Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saying-no-productively" class="md-nav__link">
+    <span class="md-ellipsis">
+      Saying No (Productively)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-metrics-kpis" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Platform Metrics &amp; KPIs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Platform Metrics &amp; KPIs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metrics-pyramid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metrics Pyramid
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-platform-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Platform Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Platform Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-adoption-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Adoption Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-satisfaction-metrics-nps" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Satisfaction Metrics (NPS)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-efficiency-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Efficiency Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-support-reliability-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Support &amp; Reliability Metrics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dashboard-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dashboard Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hands-on-lab-building-a-platform-product" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Hands-On Lab: Building a Platform Product
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Hands-On Lab: Building a Platform Product">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lab-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab Overview
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-1-analyze-user-feedback-6-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercise 1: Analyze User Feedback (6 minutes)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-2-prioritize-using-impact-vs-effort-5-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercise 2: Prioritize Using Impact vs Effort (5 minutes)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-3-create-a-quarterly-roadmap-6-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercise 3: Create a Quarterly Roadmap (6 minutes)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-4-set-up-nps-surveys-4-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercise 4: Set Up NPS Surveys (4 minutes)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-5-build-platform-health-dashboard-4-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercise 5: Build Platform Health Dashboard (4 minutes)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab Validation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#knowledge-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Knowledge Check
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✅ Knowledge Check">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#question-1-product-mindset" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 1: Product Mindset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-2-user-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 2: User Research
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-3-user-personas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 3: User Personas
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-4-nps-net-promoter-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 4: NPS (Net Promoter Score)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-5-roadmap-prioritization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 5: Roadmap Prioritization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-6-adoption-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 6: Adoption Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-7-success-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 7: Success Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-8-saying-no" class="md-nav__link">
+    <span class="md-ellipsis">
+      Question 8: Saying No
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌍 Real-World Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌍 Real-World Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-spotifys-backstage-dogfooding-as-product-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 1: Spotify's Backstage - Dogfooding as Product Strategy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-netflixs-paved-road-product-thinking-at-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 2: Netflix's Paved Road - Product Thinking at Scale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-etsys-product-management-for-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 3: Etsy's Product Management for Infrastructure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-4-airbnbs-platform-product-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 4: Airbnb's Platform Product Management
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dora-capabilities-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 DORA Capabilities Mapping
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Troubleshooting Common Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Troubleshooting Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-1-low-adoption-despite-good-technology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issue 1: Low Adoption Despite Good Technology
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-2-negative-nps-more-detractors-than-promoters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issue 2: Negative NPS (More Detractors Than Promoters)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-3-feature-requests-overwhelming-your-backlog" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issue 3: Feature Requests Overwhelming Your Backlog
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-4-platform-team-seen-as-cost-center-not-value-driver" class="md-nav__link">
+    <span class="md-ellipsis">
+      Issue 4: Platform Team Seen as Cost Center, Not Value Driver
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Additional Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 Additional Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#books" class="md-nav__link">
+    <span class="md-ellipsis">
+      Books
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#articles-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Articles &amp; Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#courses-communities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Courses &amp; Communities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Key Takeaways
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Next Steps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-module-18-multi-tenancy-resource-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      In Module 18: Multi-Tenancy &amp; Resource Management
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#black-belt-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏆 Black Belt Progress
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="module-17-platform-as-a-product">Module 17: Platform as a Product</h1>
+<p><strong>Belt Level</strong>: ⚫ Black Belt<br />
+<strong>Duration</strong>: 60 minutes<br />
+<strong>Prerequisites</strong>: Modules 1-16, especially Module 2 (DORA Metrics)<br />
+<strong>Certification Track</strong>: Fawkes Platform Architect</p>
+<hr />
+<h2 id="learning-objectives">🎯 Learning Objectives</h2>
+<p>By the end of this module, you will be able to:</p>
+<ol>
+<li><strong>Apply</strong> product management principles to internal developer platforms</li>
+<li><strong>Conduct</strong> user research to understand developer needs and pain points</li>
+<li><strong>Build</strong> a platform roadmap driven by user feedback and business value</li>
+<li><strong>Measure</strong> platform adoption, satisfaction, and impact using key metrics</li>
+<li><strong>Establish</strong> feedback loops and customer success practices for internal platforms</li>
+</ol>
+<hr />
+<h2 id="theory-your-platform-is-a-product">📚 Theory: Your Platform is a Product</h2>
+<h3 id="the-platform-as-a-product-mindset">The Platform as a Product Mindset</h3>
+<p><strong>Traditional IT thinking</strong>:
+- "We build infrastructure, developers must use it"
+- Success = Infrastructure availability (99.9% uptime)
+- Mandate adoption through policy
+- One-size-fits-all solutions</p>
+<p><strong>Platform as a Product thinking</strong>:
+- "We serve developers, they are our customers"
+- Success = Developer satisfaction + business outcomes
+- Earn adoption through superior experience
+- Tailored solutions for different user personas</p>
+<h3 id="why-this-matters">Why This Matters</h3>
+<p><strong>The "Build It and They Will Come" Fallacy</strong>:</p>
+<p>Many platform teams build technically excellent platforms that nobody uses:
+- ❌ Kubernetes cluster set up perfectly, but developers still deploy to VMs
+- ❌ CI/CD pipelines available, but teams continue using manual processes
+- ❌ Observability stack deployed, but no one looks at the dashboards</p>
+<p><strong>Root cause</strong>: Building for technical excellence without understanding user needs.</p>
+<h3 id="the-platform-product-triad">The Platform Product Triad</h3>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────┐
+│              PLATFORM AS A PRODUCT TRIAD                    │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│                    ┌──────────────┐                         │
+│                    │   DESIRABLE  │                         │
+│                    │  Do users     │                         │
+│                    │  want it?     │                         │
+│                    └───────┬──────┘                         │
+│                            │                                 │
+│              ┌─────────────┼─────────────┐                  │
+│              │                           │                  │
+│              │                           │                  │
+│     ┌────────▼────────┐         ┌───────▼────────┐         │
+│     │    FEASIBLE     │         │     VIABLE     │         │
+│     │  Can we build   │         │  Does it drive │         │
+│     │  it reliably?   │         │  business      │         │
+│     │                 │         │  value?        │         │
+│     └─────────────────┘         └────────────────┘         │
+│                                                             │
+│  SWEET SPOT: All three overlap                             │
+│  - Developers want it (adoption)                           │
+│  - We can build/maintain it (technical feasibility)        │
+│  - It improves business metrics (DORA, cost, velocity)     │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="your-platforms-customers">Your Platform's "Customers"</h3>
+<p>Unlike external products, your customers are internal:</p>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────┐
+│                    USER PERSONAS                             │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  PERSONA 1: Frontend Developer (Alex)                       │
+│  ├─ Needs: Fast iteration, preview environments             │
+│  ├─ Pain: Complex deployment process, no staging            │
+│  ├─ Skills: React/Vue, basic Docker, no Kubernetes          │
+│  └─ Success: Can deploy feature in &lt;5 minutes               │
+│                                                              │
+│  PERSONA 2: Backend Engineer (Jordan)                       │
+│  ├─ Needs: Database migrations, service mesh                │
+│  ├─ Pain: Manual DB changes, no service discovery           │
+│  ├─ Skills: Java/Python, SQL, intermediate Kubernetes       │
+│  └─ Success: Zero-downtime deployments with DB changes      │
+│                                                              │
+│  PERSONA 3: Data Scientist (Sam)                            │
+│  ├─ Needs: GPU resources, Jupyter notebooks, data access    │
+│  ├─ Pain: No ML infrastructure, manual model deployment     │
+│  ├─ Skills: Python/R, ML frameworks, zero DevOps            │
+│  └─ Success: Train and deploy models without ops team       │
+│                                                              │
+│  PERSONA 4: SRE/DevOps (Morgan)                             │
+│  ├─ Needs: Observability, incident response tools           │
+│  ├─ Pain: Alert fatigue, no runbooks                        │
+│  ├─ Skills: Expert Kubernetes, Terraform, monitoring        │
+│  └─ Success: MTTR &lt; 5 minutes, no 3am pages                 │
+│                                                              │
+│  PERSONA 5: Engineering Manager (Taylor)                    │
+│  ├─ Needs: Team velocity metrics, cost visibility           │
+│  ├─ Pain: No visibility into bottlenecks, surprise bills    │
+│  ├─ Skills: Technical background, business focus            │
+│  └─ Success: Data-driven decisions, predictable costs       │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p><strong>Key insight</strong>: Different personas have different needs. A one-size-fits-all platform will satisfy no one.</p>
+<hr />
+<h2 id="user-research-for-platforms">🔍 User Research for Platforms</h2>
+<h3 id="discovery-understanding-the-problem">Discovery: Understanding the Problem</h3>
+<p><strong>Methods for platform user research</strong>:</p>
+<h4 id="1-user-interviews-most-valuable">1. User Interviews (Most valuable)</h4>
+<div class="highlight"><pre><span></span><code>INTERVIEW SCRIPT TEMPLATE:
+
+Opening (5 min):
+- Thank you for your time
+- We&#39;re improving the platform based on developer feedback
+- No wrong answers, honest feedback helps us most
+- Will take 30 minutes
+
+Current Workflow (10 min):
+- Walk me through how you deployed your last feature
+- What tools did you use?
+- Where did you get stuck?
+- How long did the whole process take?
+
+Pain Points (10 min):
+- What&#39;s the most frustrating part of your deployment process?
+- If you could change one thing, what would it be?
+- What takes longer than it should?
+- What do you work around or hack together?
+
+Desired Future (5 min):
+- If I could wave a magic wand, what would your ideal workflow be?
+- What would success look like?
+- How would you measure improvement?
+
+Closing:
+- Can I follow up if we need clarification?
+- Would you be willing to test early versions?
+</code></pre></div>
+<p><strong>Pro tips</strong>:
+- Ask "How?" and "Why?" not "Would you use...?"
+- Observe actual behavior, not stated preferences
+- Look for workarounds (reveals unmet needs)
+- Interview both happy and unhappy users</p>
+<h4 id="2-shadowing-observation">2. Shadowing / Observation</h4>
+<p>Sit with developers and watch them work:
+- Where do they wait?
+- What do they Google?
+- What tools do they switch between?
+- Where do they ask for help?</p>
+<p><strong>Example insights</strong>:
+- "They spent 20 minutes figuring out environment variable syntax"
+- "They copy-pasted from another team's repo instead of using docs"
+- "They waited 15 minutes for CI pipeline, then force-pushed to debug"</p>
+<h4 id="3-surveys-quantitative-validation">3. Surveys (Quantitative validation)</h4>
+<p>Use after interviews to validate at scale:</p>
+<div class="highlight"><pre><span></span><code>PLATFORM SATISFACTION SURVEY (NPS-style):
+
+1. How likely are you to recommend our platform to a colleague? (0-10)
+
+2. What is the PRIMARY reason for your score?
+   [Open text field]
+
+3. How often do you deploy to production?
+   ○ Multiple times per day
+   ○ Daily
+   ○ Weekly
+   ○ Monthly or less
+
+4. How satisfied are you with the following? (1-5 scale)
+   - Deployment speed
+   - Documentation quality
+   - Getting help when stuck
+   - Observability/debugging
+   - Local development experience
+
+5. What would make the biggest positive impact on your productivity?
+   [Open text field]
+</code></pre></div>
+<h4 id="4-analytics-telemetry">4. Analytics / Telemetry</h4>
+<p>Instrument your platform to observe usage:
+- Which features are used most/least?
+- Where do users drop off?
+- How long do tasks take?
+- What errors do they hit?</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Example: Track platform usage</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Component</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment-service</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">analytics/deploy-frequency</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;5.2/day&quot;</span>
+<span class="w">    </span><span class="nt">analytics/avg-deploy-time</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8m</span><span class="nv"> </span><span class="s">32s&quot;</span>
+<span class="w">    </span><span class="nt">analytics/rollback-rate</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2.1%&quot;</span>
+<span class="w">    </span><span class="nt">analytics/support-tickets</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3/month&quot;</span>
+</code></pre></div>
+<h3 id="synthesizing-research">Synthesizing Research</h3>
+<p><strong>Turn insights into themes</strong>:</p>
+<div class="highlight"><pre><span></span><code>RAW FEEDBACK (from 15 interviews):
+
+&quot;Deployments are slow&quot; (8 mentions)
+&quot;I don&#39;t know if my deploy worked&quot; (12 mentions)
+&quot;Kubernetes YAML is confusing&quot; (6 mentions)
+&quot;I waste time waiting for CI&quot; (7 mentions)
+&quot;Can&#39;t debug production issues&quot; (10 mentions)
+
+↓ Synthesize into themes ↓
+
+THEME 1: Lack of visibility (12 mentions)
+- No real-time deploy status
+- Can&#39;t see what&#39;s running in production
+- No easy way to check logs/metrics
+
+THEME 2: Slow feedback loops (8 mentions)
+- Deployments take &gt;10 minutes
+- CI pipelines are slow
+- No local development that matches prod
+
+THEME 3: Steep learning curve (6 mentions)
+- Kubernetes concepts are hard
+- Too much YAML configuration
+- Documentation assumes too much knowledge
+</code></pre></div>
+<p><strong>Prioritize using Impact vs Effort</strong>:</p>
+<div class="highlight"><pre><span></span><code>┌────────────────────────────────────────────────────────┐
+│           IMPACT vs EFFORT MATRIX                      │
+├────────────────────────────────────────────────────────┤
+│                                                        │
+│  HIGH IMPACT                                           │
+│    │                                                   │
+│    │   [Deployment Status]    [Observability]         │
+│    │   📊 DO FIRST            📊 DO NEXT              │
+│    │                                                   │
+│    │                                                   │
+│    │   [Better Docs]          [Local Dev]             │
+│    │   📝 QUICK WINS          ⚙️  PLAN FOR            │
+│    │                                                   │
+│  LOW IMPACT                                            │
+│    └─────────────────────────────────────────▶        │
+│         LOW EFFORT              HIGH EFFORT            │
+│                                                        │
+└────────────────────────────────────────────────────────┘
+
+NEXT SPRINT:
+1. Deployment status dashboard (high impact, medium effort)
+2. Improve documentation (medium impact, low effort)
+</code></pre></div>
+<hr />
+<h2 id="building-a-platform-roadmap">📋 Building a Platform Roadmap</h2>
+<h3 id="product-roadmap-structure">Product Roadmap Structure</h3>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────┐
+│              PLATFORM ROADMAP (Q1-Q4 2025)                   │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  NORTH STAR: Reduce deployment time from 30min to &lt;5min     │
+│                                                              │
+│  Q1: VISIBILITY &amp; FEEDBACK                                  │
+│  ├─ Deployment status dashboard (Backstage plugin)          │
+│  ├─ Real-time logs in UI                                    │
+│  ├─ Slack notifications for deploy events                   │
+│  └─ Metrics: 80% developers check dashboard weekly          │
+│                                                              │
+│  Q2: SPEED &amp; RELIABILITY                                     │
+│  ├─ Progressive delivery (canary deployments)               │
+│  ├─ Parallel CI pipelines (5min → 2min)                     │
+│  ├─ Auto-rollback on errors                                 │
+│  └─ Metrics: Deploy time P95 &lt; 8 minutes                    │
+│                                                              │
+│  Q3: DEVELOPER EXPERIENCE                                    │
+│  ├─ Self-service preview environments                       │
+│  ├─ Local development with Tilt                             │
+│  ├─ Golden path templates for common patterns               │
+│  └─ Metrics: 60% of teams using preview envs                │
+│                                                              │
+│  Q4: SCALE &amp; OPTIMIZATION                                    │
+│  ├─ Cost optimization dashboard                             │
+│  ├─ Auto-scaling for production workloads                   │
+│  ├─ Multi-region deployments                                │
+│  └─ Metrics: 25% cost reduction, 99.9% availability         │
+│                                                              │
+│  CONTINUOUS:                                                 │
+│  ├─ Weekly office hours                                     │
+│  ├─ Monthly user interviews (5 developers)                  │
+│  ├─ Quarterly satisfaction surveys (NPS)                    │
+│  └─ Backstage documentation updates                         │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="roadmap-principles">Roadmap Principles</h3>
+<ol>
+<li><strong>Themes, not features</strong>: Organize by user goals, not technical tasks</li>
+<li><strong>Timeboxed</strong>: Quarterly or bi-weekly sprints, not "when it's done"</li>
+<li><strong>Outcome-driven</strong>: Each item has success metrics</li>
+<li><strong>Communicated</strong>: Public roadmap visible to all developers</li>
+<li><strong>Flexible</strong>: Re-prioritize based on feedback</li>
+</ol>
+<h3 id="saying-no-productively">Saying No (Productively)</h3>
+<p>Not every request makes the roadmap:</p>
+<div class="highlight"><pre><span></span><code>REQUEST: &quot;Can we add support for Terraform 1.6?&quot;
+
+BAD RESPONSE:
+&quot;No, we&#39;re too busy.&quot;
+
+GOOD RESPONSE:
+&quot;Thanks for the request! We track all feedback. Currently we&#39;re 
+focused on reducing deploy times (our #1 pain point from user 
+research). Terraform 1.6 affects ~5 teams, while deploy speed 
+affects all 40 teams. We&#39;ve added your request to the backlog 
+and will revisit in Q3. Does that work for you?&quot;
+
+EVEN BETTER:
+&quot;Let&#39;s understand the need. What&#39;s the use case for 1.6? 
+[Discussion reveals they just need a specific provider version]
+Oh! We can enable that without upgrading Terraform core. 
+Can you test this next week?&quot;
+</code></pre></div>
+<hr />
+<h2 id="platform-metrics-kpis">📊 Platform Metrics &amp; KPIs</h2>
+<h3 id="metrics-pyramid">Metrics Pyramid</h3>
+<div class="highlight"><pre><span></span><code>┌────────────────────────────────────────────────────────┐
+│                  BUSINESS OUTCOMES                     │
+│  ┌──────────────────────────────────────────────┐     │
+│  │  - Revenue impact                             │     │
+│  │  - Time to market                             │     │
+│  │  - Engineering cost per deploy                │     │
+│  └──────────────────────────────────────────────┘     │
+│                        ▲                               │
+│                        │                               │
+│              ┌─────────┴─────────┐                     │
+│              │   DORA METRICS    │                     │
+│              │ - Deploy frequency│                     │
+│              │ - Lead time       │                     │
+│              │ - MTTR            │                     │
+│              │ - Change fail rate│                     │
+│              └─────────┬─────────┘                     │
+│                        ▲                               │
+│                        │                               │
+│        ┌───────────────┴───────────────┐               │
+│        │   PLATFORM ADOPTION           │               │
+│        │ - Active users                │               │
+│        │ - Usage frequency             │               │
+│        │ - Feature adoption            │               │
+│        └───────────────┬───────────────┘               │
+│                        ▲                               │
+│                        │                               │
+│  ┌─────────────────────┴─────────────────────────┐    │
+│  │         USER SATISFACTION                      │    │
+│  │  - NPS (Net Promoter Score)                   │    │
+│  │  - Support ticket volume                      │    │
+│  │  - Documentation clarity rating               │    │
+│  └───────────────────────────────────────────────┘    │
+│                                                        │
+└────────────────────────────────────────────────────────┘
+
+Start measuring from bottom up:
+1. Are users satisfied? (surveys, interviews)
+2. Are they adopting? (usage analytics)
+3. Is it improving DORA? (deployment metrics)
+4. Is it driving business value? (cost, velocity)
+</code></pre></div>
+<h3 id="key-platform-metrics">Key Platform Metrics</h3>
+<h4 id="1-adoption-metrics">1. Adoption Metrics</h4>
+<div class="highlight"><pre><span></span><code>METRIC: Platform Adoption Rate
+Formula: (Teams using platform / Total teams) × 100%
+
+Targets:
+- Month 1: 10% (early adopters)
+- Month 3: 30% (early majority)
+- Month 6: 60% (late majority)
+- Month 12: 80%+ (full adoption)
+
+Track by feature:
+- CI/CD pipeline: 75% adoption
+- GitOps deployment: 60% adoption
+- Observability: 45% adoption
+- Preview environments: 25% adoption
+</code></pre></div>
+<h4 id="2-satisfaction-metrics-nps">2. Satisfaction Metrics (NPS)</h4>
+<div class="highlight"><pre><span></span><code>Net Promoter Score: &quot;How likely would you recommend our 
+platform to a colleague?&quot; (0-10)
+
+Calculation:
+- Promoters (9-10): Enthusiastic users
+- Passives (7-8): Satisfied but not advocates
+- Detractors (0-6): Unhappy, at risk
+
+NPS = % Promoters - % Detractors
+
+Benchmark:
+- NPS &gt; 50: Excellent
+- NPS 30-50: Good
+- NPS 0-30: Needs improvement
+- NPS &lt; 0: Crisis mode
+</code></pre></div>
+<h4 id="3-efficiency-metrics">3. Efficiency Metrics</h4>
+<div class="highlight"><pre><span></span><code>METRIC: Time to First Deployment
+Track: How long from &quot;I want to deploy&quot; to &quot;It&#39;s in production&quot;
+
+Baseline (no platform): 4 hours
+- Request infrastructure: 2 hours
+- Manual setup: 1 hour  
+- Deploy + verify: 1 hour
+
+Target (with platform): 15 minutes
+- Self-service: 2 minutes
+- Auto-deploy via Git push: 8 minutes
+- Auto-verify health: 5 minutes
+
+Impact: 93% reduction in time to deploy
+</code></pre></div>
+<h4 id="4-support-reliability-metrics">4. Support &amp; Reliability Metrics</h4>
+<div class="highlight"><pre><span></span><code>METRIC: Mean Time to Resolution (Support)
+Track: How fast can developers unblock themselves?
+
+Support ticket categories:
+- Documentation issue: MTTR &lt; 10 minutes (self-service)
+- Configuration help: MTTR &lt; 2 hours (async)
+- Platform bug: MTTR &lt; 4 hours (urgent)
+- Feature request: Tracked in backlog
+
+Target: 80% of issues resolved in &lt;1 hour
+</code></pre></div>
+<h3 id="dashboard-example">Dashboard Example</h3>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────┐
+│           FAWKES PLATFORM HEALTH DASHBOARD                   │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ADOPTION                                                    │
+│  ├─ Active Teams: 32/40 (80%) ▲ +3 this month              │
+│  ├─ Daily Deployments: 127 ▲ +15% MoM                       │
+│  └─ Feature Usage:                                           │
+│      • CI/CD: 85% ▲                                          │
+│      • GitOps: 70% ▲                                         │
+│      • Observability: 55% ▲                                  │
+│                                                              │
+│  SATISFACTION (NPS: 42)                                      │
+│  ├─ Promoters: 55% (22 users)                               │
+│  ├─ Passives: 32% (13 users)                                │
+│  └─ Detractors: 13% (5 users) ⚠️                            │
+│                                                              │
+│  DORA METRICS                                                │
+│  ├─ Deploy Frequency: 5.2/day ▲ (Target: &gt;5)               │
+│  ├─ Lead Time: 45 min ▼ (Target: &lt;1 hour)                  │
+│  ├─ MTTR: 12 min ▲ (Target: &lt;15 min)                       │
+│  └─ Change Fail Rate: 3.2% ▲ (Target: &lt;5%)                 │
+│                                                              │
+│  SUPPORT                                                     │
+│  ├─ Open Tickets: 8 (3 urgent)                              │
+│  ├─ MTTR: 2.3 hours ▼ (Target: &lt;4 hours)                   │
+│  └─ Top Issues:                                              │
+│      1. Deployment timeouts (3 tickets)                     │
+│      2. Secret management confusion (2 tickets)             │
+│                                                              │
+│  ACTIONS                                                     │
+│  🔴 Investigate detractors (schedule 5 interviews)           │
+│  🟡 Improve deployment timeout documentation                │
+│  🟢 Celebrate: Hit 80% adoption milestone! 🎉               │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="hands-on-lab-building-a-platform-product">🛠️ Hands-On Lab: Building a Platform Product</h2>
+<h3 id="lab-overview">Lab Overview</h3>
+<p>You will practice product management for a platform by:
+1. Analyzing user feedback and identifying themes
+2. Prioritizing features using impact vs. effort
+3. Creating a quarterly roadmap
+4. Setting up NPS surveys and adoption tracking
+5. Building a platform health dashboard</p>
+<p><strong>Duration</strong>: 25 minutes<br />
+<strong>Tools</strong>: Backstage, Fawkes CLI, survey tools</p>
+<hr />
+<h3 id="lab-setup">Lab Setup</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Start the platform product lab</span>
+fawkes<span class="w"> </span>lab<span class="w"> </span>start<span class="w"> </span>--module<span class="w"> </span><span class="m">17</span>
+
+<span class="c1"># This provides:</span>
+<span class="c1"># - Backstage instance with sample feedback</span>
+<span class="c1"># - Analytics data from 40 development teams</span>
+<span class="c1"># - Survey responses (30 developers)</span>
+</code></pre></div>
+<hr />
+<h3 id="exercise-1-analyze-user-feedback-6-minutes">Exercise 1: Analyze User Feedback (6 minutes)</h3>
+<p><strong>Objective</strong>: Review user interviews and identify top 3 themes.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># View feedback data</span>
+<span class="nb">cd</span><span class="w"> </span>~/fawkes-lab-17/user-research
+cat<span class="w"> </span>interviews.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {name, role, pain_points}&#39;</span>
+</code></pre></div>
+<p><strong>Sample feedback</strong> (you'll see 15 interviews):</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;interviews&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Alex (Frontend Dev)&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;pain_points&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;Deployments take 25 minutes&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;No way to see if my deploy worked&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Kubernetes is confusing&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Jordan (Backend Dev)&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;pain_points&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;Can&#39;t debug production issues&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;No staging environment&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Database migrations are manual&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// ... 13 more interviews</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Your task</strong>: Use the provided script to analyze themes:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run theme analysis</span>
+python<span class="w"> </span>analyze_feedback.py<span class="w"> </span>interviews.json
+
+<span class="c1"># Output:</span>
+<span class="c1"># THEME 1: Slow deployments (12 mentions) </span>
+<span class="c1"># THEME 2: Lack of visibility (15 mentions)</span>
+<span class="c1"># THEME 3: No staging/preview envs (8 mentions)</span>
+<span class="c1"># THEME 4: Difficult debugging (10 mentions)</span>
+<span class="c1"># THEME 5: Steep learning curve (7 mentions)</span>
+</code></pre></div>
+<p><strong>Question</strong>: Which theme should you prioritize? Consider:
+- Frequency (how many users mentioned it)
+- Severity (how much pain does it cause)
+- Feasibility (can you solve it in &lt;1 quarter)</p>
+<hr />
+<h3 id="exercise-2-prioritize-using-impact-vs-effort-5-minutes">Exercise 2: Prioritize Using Impact vs Effort (5 minutes)</h3>
+<p><strong>Objective</strong>: Plot features on an impact/effort matrix.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># View proposed features</span>
+cat<span class="w"> </span>features.yaml
+</code></pre></div>
+<p><strong>features.yaml</strong>:
+<div class="highlight"><pre><span></span><code><span class="nt">features</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Real-time</span><span class="nv"> </span><span class="s">deployment</span><span class="nv"> </span><span class="s">dashboard&quot;</span>
+<span class="w">    </span><span class="nt">impact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">high</span>
+<span class="w">    </span><span class="nt">effort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">medium</span>
+<span class="w">    </span><span class="nt">theme</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Lack</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">visibility&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Self-service</span><span class="nv"> </span><span class="s">preview</span><span class="nv"> </span><span class="s">environments&quot;</span>
+<span class="w">    </span><span class="nt">impact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">high</span>
+<span class="w">    </span><span class="nt">effort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">high</span>
+<span class="w">    </span><span class="nt">theme</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;No</span><span class="nv"> </span><span class="s">staging&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Improve</span><span class="nv"> </span><span class="s">documentation&quot;</span>
+<span class="w">    </span><span class="nt">impact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">medium</span>
+<span class="w">    </span><span class="nt">effort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">low</span>
+<span class="w">    </span><span class="nt">theme</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Learning</span><span class="nv"> </span><span class="s">curve&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Integrated</span><span class="nv"> </span><span class="s">log</span><span class="nv"> </span><span class="s">viewer&quot;</span>
+<span class="w">    </span><span class="nt">impact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">medium</span>
+<span class="w">    </span><span class="nt">effort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">medium</span>
+<span class="w">    </span><span class="nt">theme</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Debugging&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Parallel</span><span class="nv"> </span><span class="s">CI</span><span class="nv"> </span><span class="s">pipelines&quot;</span>
+<span class="w">    </span><span class="nt">impact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">high</span>
+<span class="w">    </span><span class="nt">effort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">medium</span>
+<span class="w">    </span><span class="nt">theme</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Slow</span><span class="nv"> </span><span class="s">deployments&quot;</span>
+</code></pre></div></p>
+<p><strong>Your task</strong>: Use the Fawkes CLI to generate a prioritization matrix:</p>
+<div class="highlight"><pre><span></span><code>fawkes<span class="w"> </span>product<span class="w"> </span>prioritize<span class="w"> </span>--input<span class="w"> </span>features.yaml<span class="w"> </span>--output<span class="w"> </span>priority-matrix.png
+
+<span class="c1"># Opens an image showing features plotted</span>
+</code></pre></div>
+<p><strong>Expected result</strong>:
+<div class="highlight"><pre><span></span><code>DO FIRST (High Impact, Low-Med Effort):
+1. Real-time deployment dashboard
+2. Parallel CI pipelines
+3. Improve documentation
+
+DO NEXT (High Impact, High Effort):
+4. Self-service preview environments
+
+BACKLOG:
+5. Integrated log viewer
+</code></pre></div></p>
+<hr />
+<h3 id="exercise-3-create-a-quarterly-roadmap-6-minutes">Exercise 3: Create a Quarterly Roadmap (6 minutes)</h3>
+<p><strong>Objective</strong>: Build a Q1 roadmap based on prioritized features.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Use roadmap template</span>
+cp<span class="w"> </span>templates/roadmap-template.md<span class="w"> </span>Q1-2025-roadmap.md
+vim<span class="w"> </span>Q1-2025-roadmap.md
+</code></pre></div>
+<p><strong>Fill in the template</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># Q1 2025 Platform Roadmap</span>
+
+<span class="gu">## North Star Goal</span>
+Reduce deployment time from 25 minutes to &lt;8 minutes (68% improvement)
+
+<span class="gu">## Sprint 1-2 (Weeks 1-4): Visibility</span>
+<span class="gs">**Theme**</span>: Developers can&#39;t see what&#39;s happening
+
+<span class="k">- [ ]</span> Deployment status dashboard in Backstage
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Real-time progress (queued → building → deploying → healthy)
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Estimated time remaining
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Success metric: 70% of developers check dashboard weekly
+
+<span class="k">- [ ]</span> Slack notifications
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Deploy started/completed/failed
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>@ mention author on failures
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Success metric: &lt;2 min to notice failed deploy
+
+<span class="gu">## Sprint 3-4 (Weeks 5-8): Speed</span>
+<span class="gs">**Theme**</span>: Deployments are too slow
+
+<span class="k">- [ ]</span> Parallel CI pipelines
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Run tests in parallel (8min → 3min)
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Cache dependencies
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Success metric: P95 build time &lt;5 minutes
+
+<span class="k">- [ ]</span> Optimize Docker builds
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Multi-stage builds
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Layer caching
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Success metric: Image build &lt;2 minutes
+
+<span class="gu">## Sprint 5-6 (Weeks 9-12): Polish</span>
+<span class="gs">**Theme**</span>: Improve overall experience
+
+<span class="k">- [ ]</span> Documentation overhaul
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Step-by-step tutorials for common tasks
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Video walkthroughs
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Success metric: NPS +10 points
+
+<span class="k">- [ ]</span> Weekly office hours
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>1 hour/week for Q&amp;A
+<span class="w">  </span><span class="k">-</span><span class="w"> </span>Success metric: 15+ attendees average
+
+<span class="gu">## Success Criteria (End of Q1)</span>
+<span class="k">- [ ]</span> Deploy time P95: &lt;8 minutes (from 25min)
+<span class="k">- [ ]</span> Platform adoption: 85% of teams (from 70%)
+<span class="k">- [ ]</span> NPS: 50+ (from 38)
+<span class="k">- [ ]</span> Support tickets: &lt;10/week (from 18/week)
+</code></pre></div>
+<p><strong>Validate your roadmap</strong>:</p>
+<div class="highlight"><pre><span></span><code>fawkes<span class="w"> </span>product<span class="w"> </span>validate-roadmap<span class="w"> </span>Q1-2025-roadmap.md
+
+<span class="c1"># Checks:</span>
+<span class="c1"># ✅ All items have success metrics</span>
+<span class="c1"># ✅ North Star goal is measurable</span>
+<span class="c1"># ✅ Timeboxed to one quarter</span>
+<span class="c1"># ⚠️  Warning: Sprint 1-2 may be overloaded (2 major features)</span>
+</code></pre></div>
+<hr />
+<h3 id="exercise-4-set-up-nps-surveys-4-minutes">Exercise 4: Set Up NPS Surveys (4 minutes)</h3>
+<p><strong>Objective</strong>: Configure automated NPS surveys in Backstage.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install Backstage feedback plugin</span>
+<span class="nb">cd</span><span class="w"> </span>~/fawkes-lab-17/backstage
+yarn<span class="w"> </span>add<span class="w"> </span>@backstage/plugin-user-feedback
+</code></pre></div>
+<p><strong>Configure survey</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># app-config.yaml</span>
+<span class="nt">userFeedback</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">surveys</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform-nps</span>
+<span class="w">      </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Platform</span><span class="nv"> </span><span class="s">Satisfaction</span><span class="nv"> </span><span class="s">Survey&quot;</span>
+<span class="w">      </span><span class="nt">frequency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">quarterly</span>
+<span class="w">      </span><span class="nt">questions</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nps</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nps</span>
+<span class="w">          </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;How</span><span class="nv"> </span><span class="s">likely</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">recommend</span><span class="nv"> </span><span class="s">Fawkes</span><span class="nv"> </span><span class="s">Platform</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">colleague?&quot;</span>
+
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reason</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="w">          </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;What&#39;s</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">PRIMARY</span><span class="nv"> </span><span class="s">reason</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">score?&quot;</span>
+
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">biggest-pain</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="w">          </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;What&#39;s</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">biggest</span><span class="nv"> </span><span class="s">pain</span><span class="nv"> </span><span class="s">point</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">platform?&quot;</span>
+
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">feature-satisfaction</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">matrix</span>
+<span class="w">          </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;How</span><span class="nv"> </span><span class="s">satisfied</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">following?&quot;</span>
+<span class="w">          </span><span class="nt">rows</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Deployment</span><span class="nv"> </span><span class="s">speed&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Documentation&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Getting</span><span class="nv"> </span><span class="s">help</span><span class="nv"> </span><span class="s">when</span><span class="nv"> </span><span class="s">stuck&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Observability/debugging&quot;</span>
+<span class="w">          </span><span class="nt">scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1-5</span>
+</code></pre></div>
+<p><strong>Test the survey</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Simulate 10 survey responses</span>
+fawkes<span class="w"> </span>lab<span class="w"> </span>simulate-surveys<span class="w"> </span>--count<span class="w"> </span><span class="m">10</span>
+
+<span class="c1"># View results dashboard</span>
+open<span class="w"> </span>http://localhost:3000/user-feedback/platform-nps
+</code></pre></div>
+<p><strong>Expected dashboard</strong>:
+<div class="highlight"><pre><span></span><code>Platform NPS: 42
+├─ Promoters (9-10): 12 responses (55%)
+├─ Passives (7-8): 7 responses (32%)
+└─ Detractors (0-6): 3 responses (13%)
+
+Top Pain Points:
+1. &quot;Deployments are still too slow&quot; (8 mentions)
+2. &quot;Documentation is hard to find&quot; (5 mentions)
+3. &quot;Don&#39;t know how to debug prod issues&quot; (4 mentions)
+
+Feature Satisfaction (1-5 scale):
+├─ Deployment speed: 3.2/5 ⚠️
+├─ Documentation: 3.8/5
+├─ Getting help: 4.1/5 ✅
+└─ Observability: 3.5/5
+</code></pre></div></p>
+<hr />
+<h3 id="exercise-5-build-platform-health-dashboard-4-minutes">Exercise 5: Build Platform Health Dashboard (4 minutes)</h3>
+<p><strong>Objective</strong>: Create a dashboard showing adoption, satisfaction, and DORA metrics.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Use Grafana with pre-configured datasources</span>
+<span class="nb">cd</span><span class="w"> </span>~/fawkes-lab-17/grafana
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+
+<span class="c1"># Import dashboard</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:3000/api/dashboards/db<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span>@platform-health-dashboard.json
+</code></pre></div>
+<p><strong>Dashboard panels</strong> (pre-configured):</p>
+<ol>
+<li>
+<p><strong>Adoption Panel</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Teams using platform</span>
+<span class="k">count</span><span class="o">(</span><span class="k">count</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">team</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="nv">deployment_total</span><span class="p">{</span><span class="nl">platform</span><span class="o">=</span><span class="p">&quot;</span><span class="s">fawkes</span><span class="p">&quot;}</span><span class="o">))</span>
+
+<span class="c1"># Daily deployments</span>
+<span class="kr">rate</span><span class="o">(</span><span class="nv">deployment_total</span><span class="p">{</span><span class="nl">platform</span><span class="o">=</span><span class="p">&quot;</span><span class="s">fawkes</span><span class="p">&quot;}[</span><span class="s">1d</span><span class="p">]</span><span class="o">)</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Satisfaction Panel</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1">-- NPS score</span>
+<span class="k">SELECT</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">9</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span>
+<span class="w">   </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">))</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">nps</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">survey_responses</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">survey_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;platform-nps&#39;</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;90 days&#39;</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>DORA Metrics Panel</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Deploy frequency (per day per team)</span>
+<span class="k">avg</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">deployment_total</span><span class="p">[</span><span class="s">1d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">team</span><span class="o">)</span>
+
+<span class="c1"># Lead time for changes (commit to deploy)</span>
+<span class="kr">histogram_quantile</span><span class="o">(</span><span class="mf">0.95</span><span class="p">,</span><span class="w"> </span>
+<span class="w">  </span><span class="kr">rate</span><span class="o">(</span><span class="nv">lead_time_seconds_bucket</span><span class="p">[</span><span class="s">1d</span><span class="p">]</span><span class="o">)</span>
+<span class="o">)</span>
+
+<span class="c1"># MTTR</span>
+<span class="kr">histogram_quantile</span><span class="o">(</span><span class="mf">0.95</span><span class="p">,</span>
+<span class="w">  </span><span class="kr">rate</span><span class="o">(</span><span class="nv">incident_resolution_seconds_bucket</span><span class="p">[</span><span class="s">1d</span><span class="p">]</span><span class="o">)</span>
+<span class="o">)</span>
+
+<span class="c1"># Change failure rate</span>
+<span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">deployment_failed_total</span><span class="p">[</span><span class="s">1d</span><span class="p">]</span><span class="o">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span>
+<span class="w"> </span><span class="kr">rate</span><span class="o">(</span><span class="nv">deployment_total</span><span class="p">[</span><span class="s">1d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span>
+</code></pre></div></p>
+</li>
+</ol>
+<p><strong>View the dashboard</strong>:</p>
+<div class="highlight"><pre><span></span><code>open<span class="w"> </span>http://localhost:3000/d/platform-health
+
+<span class="c1"># You should see a comprehensive dashboard showing all key metrics</span>
+</code></pre></div>
+<hr />
+<h3 id="lab-validation">Lab Validation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run validation</span>
+fawkes<span class="w"> </span>lab<span class="w"> </span>validate<span class="w"> </span>--module<span class="w"> </span><span class="m">17</span>
+
+<span class="c1"># Expected output:</span>
+<span class="c1"># ✅ User feedback analyzed and themes identified</span>
+<span class="c1"># ✅ Features prioritized using impact/effort matrix</span>
+<span class="c1"># ✅ Quarterly roadmap created with success metrics</span>
+<span class="c1"># ✅ NPS survey configured and tested</span>
+<span class="c1"># ✅ Platform health dashboard deployed</span>
+</code></pre></div>
+<p><strong>Cleanup</strong>:</p>
+<div class="highlight"><pre><span></span><code>fawkes<span class="w"> </span>lab<span class="w"> </span>stop<span class="w"> </span>--module<span class="w"> </span><span class="m">17</span>
+</code></pre></div>
+<hr />
+<h2 id="knowledge-check">✅ Knowledge Check</h2>
+<h3 id="question-1-product-mindset">Question 1: Product Mindset</h3>
+<p>What's the key difference between "platform as infrastructure" vs "platform as a product"?</p>
+<p>A) Products are externally sold, infrastructure is internal<br />
+B) Products focus on user satisfaction, infrastructure focuses on uptime<br />
+C) Products cost more to build<br />
+D) Infrastructure is more reliable</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+Platform as a product treats internal developers as customers and measures success by their satisfaction and outcomes, not just technical availability. You can have 99.99% uptime but zero adoption if developers don't find it valuable.
+
+</details>
+
+<hr />
+<h3 id="question-2-user-research">Question 2: User Research</h3>
+<p>Which user research method provides the deepest insights into developer pain points?</p>
+<p>A) Anonymous surveys<br />
+B) Usage analytics<br />
+C) In-person interviews with observation<br />
+D) Support ticket analysis</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: C**
+
+One-on-one interviews combined with observing actual workflows reveal not just what people say, but what they actually do. You discover workarounds, inefficiencies, and unspoken needs that surveys miss.
+
+</details>
+
+<hr />
+<h3 id="question-3-user-personas">Question 3: User Personas</h3>
+<p>Why create user personas for your platform?</p>
+<p>A) To segment users for marketing<br />
+B) Different roles have different needs requiring tailored solutions<br />
+C) It's a requirement for product management<br />
+D) To decide which users to prioritize</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+Frontend developers, backend engineers, data scientists, and SREs have vastly different needs. A one-size-fits-all platform satisfies no one. Personas help you design appropriate experiences for each group.
+
+</details>
+
+<hr />
+<h3 id="question-4-nps-net-promoter-score">Question 4: NPS (Net Promoter Score)</h3>
+<p>Your platform has an NPS of -15. What does this mean?</p>
+<p>A) 15% of users are happy<br />
+B) More detractors than promoters - urgent action needed<br />
+C) Average satisfaction is 15%<br />
+D) Normal score for internal platforms</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+NPS = % Promoters - % Detractors. A negative NPS means you have more unhappy users than happy ones. This indicates serious problems requiring immediate investigation and action.
+
+</details>
+
+<hr />
+<h3 id="question-5-roadmap-prioritization">Question 5: Roadmap Prioritization</h3>
+<p>You have two features: "Real-time logs" (high impact, high effort) and "Improved docs" (medium impact, low effort). Which should you build first?</p>
+<p>A) Real-time logs (higher impact)<br />
+B) Improved docs (faster to ship)<br />
+C) Build both simultaneously<br />
+D) Survey users to decide</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+Start with "quick wins" (medium impact, low effort) to build momentum and trust. Better docs can ship in weeks and immediately help users. Real-time logs takes months and users may not trust you to deliver if you haven't shipped smaller improvements first.
+
+</details>
+
+<hr />
+<h3 id="question-6-adoption-metrics">Question 6: Adoption Metrics</h3>
+<p>Your platform has 40% adoption after 6 months. What should you do?</p>
+<p>A) Mandate usage via policy<br />
+B) Interview non-adopters to understand barriers<br />
+C) Add more features to attract users<br />
+D) Wait longer for organic adoption</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: B**
+
+Low adoption indicates your platform doesn't meet user needs. Talk to the 60% who aren't using it - they'll tell you exactly what's blocking them. Mandating usage creates resentment, and adding features may worsen the problem if they're not addressing real needs.
+
+</details>
+
+<hr />
+<h3 id="question-7-success-metrics">Question 7: Success Metrics</h3>
+<p>Which metric best indicates your platform is succeeding?</p>
+<p>A) Number of features shipped<br />
+B) Infrastructure uptime percentage<br />
+C) Improvement in DORA metrics for users<br />
+D) Size of your platform team</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: C**
+
+The ultimate measure of platform success is whether it improves outcomes for your users. If teams using your platform deploy more frequently with fewer failures (better DORA metrics), you're succeeding regardless of feature count or uptime.
+
+</details>
+
+<hr />
+<h3 id="question-8-saying-no">Question 8: Saying No</h3>
+<p>A senior engineer requests a niche feature that would take 2 months but only helps their team. How do you respond?</p>
+<p>A) "No, we're too busy"<br />
+B) "File a ticket and we'll get to it eventually"<br />
+C) Build it (they're senior so must be important)<br />
+D) Explain current priorities and understand the underlying need</p>
+<details>
+<summary>Show Answer</summary>
+
+**Answer: D**
+
+Productively saying no means: (1) Acknowledge the request, (2) Explain current priorities and why, (3) Understand the underlying need (there may be a simpler solution), (4) Offer alternatives or a timeline for reconsideration. Never just say no.
+
+</details>
+
+<hr />
+<h2 id="real-world-examples">🌍 Real-World Examples</h2>
+<h3 id="example-1-spotifys-backstage-dogfooding-as-product-strategy">Example 1: Spotify's Backstage - Dogfooding as Product Strategy</h3>
+<p><strong>Challenge</strong>: 280+ engineers, hundreds of microservices, fragmented tooling creating chaos.</p>
+<p><strong>Product Approach</strong>:
+- <strong>Started with research</strong>: Interviewed 50 engineers about pain points
+- <strong>Built for themselves first</strong>: Backstage solved Spotify's own problems
+- <strong>Measured everything</strong>: Tracked time-to-deploy, incident response time, onboarding speed
+- <strong>Iterated based on feedback</strong>: Weekly demos, monthly retrospectives</p>
+<p><strong>Key Product Decisions</strong>:
+- <strong>Golden paths, not enforcement</strong>: Made easy path obvious, didn't block alternatives
+- <strong>Self-service</strong>: Developers create services without ops tickets
+- <strong>Plugin ecosystem</strong>: Teams can extend for their needs</p>
+<p><strong>Results</strong>:
+- Onboarding time: 10 days → 1 day (90% improvement)
+- Time to first deploy: 4 hours → 5 minutes (98% improvement)
+- Adoption: 100% of teams (voluntary, not mandated)</p>
+<p><strong>Lesson</strong>: "If we couldn't convince ourselves to use it, we knew developers wouldn't either."</p>
+<p><strong>Learn more</strong>: <a href="https://backstage.io/blog/">Backstage Engineering Blog</a></p>
+<hr />
+<h3 id="example-2-netflixs-paved-road-product-thinking-at-scale">Example 2: Netflix's Paved Road - Product Thinking at Scale</h3>
+<p><strong>Philosophy</strong>: "We don't require you to use the paved road, but we make it so good that you'd be crazy not to."</p>
+<p><strong>Product Strategy</strong>:</p>
+<div class="highlight"><pre><span></span><code>UNPAVED ROAD (Hard way):
+├─ Provision infrastructure yourself: 2 days
+├─ Configure monitoring: 4 hours
+├─ Set up CI/CD: 1 day
+├─ Security scanning: 3 hours
+└─ Total: 3+ days + ongoing maintenance
+
+PAVED ROAD (Netflix platform):
+├─ Run: netflix-scaffold new-service
+├─ Infrastructure auto-provisioned: 10 minutes
+├─ Monitoring pre-configured: 0 minutes
+├─ CI/CD ready: 0 minutes
+├─ Security included: 0 minutes
+└─ Total: 10 minutes + zero maintenance
+</code></pre></div>
+<p><strong>Key Insight</strong>: Don't mandate the platform, make it irresistibly better.</p>
+<p><strong>Product Metrics</strong>:
+- <strong>Adoption</strong>: 95%+ voluntary (not mandated)
+- <strong>Developer satisfaction</strong>: NPS 72 (world-class)
+- <strong>Time saved</strong>: 40+ engineering hours per new service</p>
+<p><strong>How they measured product-market fit</strong>:
+- Tracked adoption rate by team
+- Monthly surveys (NPS + open feedback)
+- Usage analytics (which features, how often)
+- "Paved road health score" dashboard</p>
+<p><strong>Lesson</strong>: Product thinking means your platform wins by being better, not by being required.</p>
+<hr />
+<h3 id="example-3-etsys-product-management-for-infrastructure">Example 3: Etsy's Product Management for Infrastructure</h3>
+<p><strong>Challenge</strong>: Platform team seen as "cost center" with unclear value.</p>
+<p><strong>Product Transformation</strong>:</p>
+<p><strong>Before</strong> (Infrastructure mindset):
+- Success = Uptime percentage
+- Shipped features, hoped developers used them
+- No user research
+- Reactive support (waiting for tickets)</p>
+<p><strong>After</strong> (Product mindset):
+- <strong>Hired product manager for platform team</strong>
+- <strong>Quarterly OKRs tied to developer productivity</strong>
+- <strong>Regular user research</strong>: 10 developer interviews/month
+- <strong>Platform health dashboard</strong>: Adoption, satisfaction, DORA metrics
+- <strong>Proactive support</strong>: Office hours, documentation, onboarding</p>
+<p><strong>Product Management Practices</strong>:</p>
+<ol>
+<li>
+<p><strong>Quarterly Planning</strong>:
+<div class="highlight"><pre><span></span><code>Q1 OKRs:
+Objective: Make deployments delightful
+├─ KR1: Deploy time P95 &lt; 10 minutes (from 30min)
+├─ KR2: Deployment success rate &gt; 95% (from 88%)
+└─ KR3: Developer NPS &gt; 40 (from 18)
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Bi-weekly User Testing</strong>:</p>
+</li>
+<li>Watch developers deploy a feature</li>
+<li>Identify friction points</li>
+<li>
+<p>Ship improvements within 1 sprint</p>
+</li>
+<li>
+<p><strong>Feature Flags for Platform Features</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Gradually roll out new features</span>
+<span class="nt">features</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">parallel_ci</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled_teams</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;payments&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;search&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;checkout&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">rollout_percentage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25%</span>
+<span class="w">    </span><span class="nt">feedback_required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div></p>
+</li>
+</ol>
+<p><strong>Results</strong>:
+- <strong>NPS</strong>: 18 → 58 in 6 months
+- <strong>Adoption</strong>: 45% → 85%
+- <strong>Platform budget</strong>: Increased 40% (demonstrated clear value)
+- <strong>Team morale</strong>: Platform team seen as strategic, not cost center</p>
+<p><strong>Lesson</strong>: Treating infrastructure as a product transforms how the organization views and funds platform teams.</p>
+<hr />
+<h3 id="example-4-airbnbs-platform-product-management">Example 4: Airbnb's Platform Product Management</h3>
+<p><strong>Structure</strong>: Each platform capability has a dedicated product manager.</p>
+<p><strong>Example: CI/CD Product Manager</strong></p>
+<p><strong>Responsibilities</strong>:
+- <strong>User research</strong>: Interview 5 developers weekly
+- <strong>Roadmap</strong>: Prioritize features based on impact
+- <strong>Metrics</strong>: Own deployment frequency and lead time
+- <strong>Communication</strong>: Publish monthly updates to eng org</p>
+<p><strong>Sample Project: "Project Lightning" (Faster CI/CD)</strong></p>
+<p><strong>Discovery Phase</strong> (2 weeks):
+<div class="highlight"><pre><span></span><code>Research findings:
+- 78% of developers frustrated with CI speed
+- Average build time: 18 minutes
+- 40% of builds fail due to flaky tests
+- Developers context-switch while waiting
+
+User quotes:
+&quot;I start a build then go get coffee. By the time I&#39;m back, 
+ I&#39;ve forgotten what I was working on.&quot;
+
+&quot;Half the time the build fails because of a flaky test, 
+ not my code. It&#39;s demoralizing.&quot;
+</code></pre></div></p>
+<p><strong>Roadmap</strong> (3 months):
+<div class="highlight"><pre><span></span><code>Month 1: Quick wins
+├─ Parallel test execution: 18min → 12min
+├─ Better test splitting
+└─ Success metric: 33% faster builds
+
+Month 2: Reliability
+├─ Quarantine flaky tests
+├─ Auto-retry failed tests once
+└─ Success metric: &lt;10% false failures
+
+Month 3: Intelligence
+├─ Predictive test selection (only run affected tests)
+├─ Smart caching
+└─ Success metric: 12min → 5min average build time
+</code></pre></div></p>
+<p><strong>Communication</strong>:
+- Weekly Slack updates in #engineering
+- Demo videos showing improvements
+- "Build time tracker" dashboard (public)</p>
+<p><strong>Results</strong>:
+- Build time: 18min → 5min (72% faster)
+- False failure rate: 40% → 8%
+- Developer NPS: +28 points
+- 2,000+ engineering hours saved/month</p>
+<p><strong>Lesson</strong>: Dedicated product management for platform capabilities drives meaningful improvements. Treat each platform area (CI/CD, observability, deployment) as its own product.</p>
+<hr />
+<h2 id="dora-capabilities-mapping">📊 DORA Capabilities Mapping</h2>
+<p>This module directly supports these <strong>DORA capabilities</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>How This Module Helps</th>
+<th>Impact on Metrics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Generative Culture</strong></td>
+<td>Product thinking fosters collaboration between platform and dev teams</td>
+<td>Improves all DORA metrics through better alignment</td>
+</tr>
+<tr>
+<td><strong>Visual Management</strong></td>
+<td>Platform health dashboards make work visible</td>
+<td>Faster identification of bottlenecks</td>
+</tr>
+<tr>
+<td><strong>Team Experimentation</strong></td>
+<td>User research and feedback loops enable rapid iteration</td>
+<td>Higher deployment frequency through faster learning</td>
+</tr>
+<tr>
+<td><strong>Work in Small Batches</strong></td>
+<td>Quarterly roadmaps and iterative improvement</td>
+<td>Reduced lead time and change failure rate</td>
+</tr>
+<tr>
+<td><strong>Learning Culture</strong></td>
+<td>Continuous user feedback creates learning organization</td>
+<td>Sustained improvement across all metrics</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="troubleshooting-common-issues">🔧 Troubleshooting Common Issues</h2>
+<h3 id="issue-1-low-adoption-despite-good-technology">Issue 1: Low Adoption Despite Good Technology</h3>
+<p><strong>Symptom</strong>: You've built a technically excellent platform but only 30% adoption after 6 months.</p>
+<p><strong>Root Causes</strong>:
+- Built for perceived needs, not actual needs
+- No marketing/evangelism of the platform
+- Lack of documentation or examples
+- Migration path too difficult from existing solutions</p>
+<p><strong>Solution</strong>:</p>
+<div class="highlight"><pre><span></span><code>STEP 1: Interview non-adopters
+&quot;Why aren&#39;t you using the platform?&quot;
+Common answers:
+- &quot;Didn&#39;t know it existed&quot;
+- &quot;Too hard to migrate&quot;
+- &quot;My current solution works fine&quot;
+- &quot;Tried it once, got stuck, gave up&quot;
+
+STEP 2: Address barriers systematically
+├─ Awareness: Weekly demos, Slack announcements, onboarding talks
+├─ Migration: Build automated migration tools
+├─ Documentation: Step-by-step tutorials for common use cases
+└─ Support: Dedicated office hours, Slack channel with fast response
+
+STEP 3: Create champions
+├─ Find early adopters who love the platform
+├─ Have them present at team meetings
+├─ &quot;Platform champions&quot; program with incentives
+└─ Share success stories publicly
+</code></pre></div>
+<hr />
+<h3 id="issue-2-negative-nps-more-detractors-than-promoters">Issue 2: Negative NPS (More Detractors Than Promoters)</h3>
+<p><strong>Symptom</strong>: NPS of -10 or below, lots of complaints.</p>
+<p><strong>Immediate Actions</strong>:</p>
+<div class="highlight"><pre><span></span><code>WEEK 1: Understand the damage
+├─ Read every detractor comment
+├─ Schedule calls with 10 most vocal detractors
+├─ Identify the top 3 pain points
+
+WEEK 2: Quick wins
+├─ Fix documentation gaps (lowest effort)
+├─ Improve most common error messages
+├─ Send personal follow-ups to detractors
+
+MONTH 1: Address systemic issues
+├─ Tackle #1 pain point from research
+├─ Communicate progress transparently
+├─ Re-survey after changes ship
+
+ONGOING: Prevent future issues
+├─ Monthly NPS surveys (catch problems early)
+├─ Faster response to support tickets
+├─ Proactive communication about known issues
+</code></pre></div>
+<p><strong>Example Turnaround</strong>:
+<div class="highlight"><pre><span></span><code>GitHub Internal Platform (fictional example):
+- Month 0: NPS -15 (crisis mode)
+  - Top issue: Deployments failing randomly
+  - Action: All-hands to fix reliability
+
+- Month 1: NPS -5 (improving)
+  - Fixed deployment reliability
+  - Added status page for transparency
+
+- Month 3: NPS +15 (positive)
+  - Continued improvements
+  - Regular communication building trust
+
+- Month 6: NPS +42 (healthy)
+  - Platform now trusted
+  - Adoption increasing
+</code></pre></div></p>
+<hr />
+<h3 id="issue-3-feature-requests-overwhelming-your-backlog">Issue 3: Feature Requests Overwhelming Your Backlog</h3>
+<p><strong>Symptom</strong>: 200+ feature requests, can't prioritize, team paralyzed.</p>
+<p><strong>Solution - Ruthless Prioritization</strong>:</p>
+<div class="highlight"><pre><span></span><code>FRAMEWORK: Impact vs Strategic Alignment
+
+Step 1: Categorize all requests
+├─ P0 (Do Now): High impact + Strategic alignment
+│   Example: Deploy speed improvements (affects all teams)
+│
+├─ P1 (Do Soon): High impact OR Strategic alignment
+│   Example: Preview environments (affects 60% of teams)
+│
+├─ P2 (Do Later): Medium impact + Nice to have
+│   Example: Additional language support
+│
+└─ P3 (Don&#39;t Do): Low impact + Off-strategy
+    Example: Custom CI runners for 1 team
+
+Step 2: Communicate decisions
+├─ Publish prioritization criteria
+├─ Explain &quot;why&quot; for each category
+├─ Set expectations (P0 this quarter, P1 next quarter, P2 backlog, P3 rejected)
+
+Step 3: Review quarterly
+├─ Re-prioritize based on new data
+├─ Business priorities may change
+└─ Some P2s become P0s (and vice versa)
+</code></pre></div>
+<p><strong>Sample Communication</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># Platform Roadmap Prioritization</span>
+
+<span class="gu">## How We Prioritize</span>
+
+<span class="gs">**P0 Criteria**</span> (Do This Quarter):
+<span class="k">-</span><span class="w"> </span>Affects &gt;50% of teams
+<span class="k">-</span><span class="w"> </span>Improves DORA metrics significantly
+<span class="k">-</span><span class="w"> </span>Blocks other high-priority work
+
+<span class="gs">**Current P0 Features**</span> (Q1 2025):
+<span class="k">1.</span> Deployment speed improvements (18min → 8min target)
+<span class="k">2.</span> Real-time deployment status dashboard
+<span class="k">3.</span> Parallel CI pipelines
+
+<span class="gs">**P1 Features**</span> (Q2 2025):
+<span class="k">4.</span> Self-service preview environments
+<span class="k">5.</span> Integrated log viewer
+<span class="k">6.</span> Cost optimization dashboard
+
+<span class="gu">## Your Request: &quot;Support for Terraform 1.7&quot;</span>
+<span class="k">-</span><span class="w"> </span>Priority: P2 (Do Later)
+<span class="k">-</span><span class="w"> </span>Reasoning: Affects 5 teams (12%), existing 1.6 sufficient for most use cases
+<span class="k">-</span><span class="w"> </span>Timeline: Q3 2025 (will revisit if Terraform 1.7 becomes critical)
+
+Questions? Disagree with priority? Let&#39;s talk: <span class="ni">#platform</span>-feedback
+</code></pre></div>
+<hr />
+<h3 id="issue-4-platform-team-seen-as-cost-center-not-value-driver">Issue 4: Platform Team Seen as Cost Center, Not Value Driver</h3>
+<p><strong>Symptom</strong>: Budget cuts, no headcount, leadership doesn't understand platform value.</p>
+<p><strong>Solution - Quantify Business Impact</strong>:</p>
+<div class="highlight"><pre><span></span><code>BUILD A BUSINESS CASE
+
+1. Quantify Time Savings:
+   Before platform: 40 teams × 4 hours/deploy × $150/hour = $24,000/deploy
+   After platform: 40 teams × 0.5 hours/deploy × $150/hour = $3,000/deploy
+   Savings per deploy: $21,000
+   Deploys per day: 50
+   Annual savings: $21,000 × 50 × 250 days = $262.5M
+
+2. Quantify Faster Time-to-Market:
+   Lead time improvement: 2 weeks → 2 days
+   Revenue impact: Ship features 10 days faster
+   If feature generates $100k/month revenue:
+   Value: $100k × (10/30) = $33k per feature
+   Features per year: 100
+   Annual value: $3.3M
+
+3. Quantify Risk Reduction:
+   MTTR improvement: 2 hours → 15 minutes
+   Downtime cost: $50k/hour
+   Incidents per month: 5
+   Annual savings: $50k × 1.75 × 5 × 12 = $5.25M
+
+TOTAL ANNUAL VALUE: $271M
+Platform team cost: $5M/year (10 engineers)
+ROI: 54x
+</code></pre></div>
+<p><strong>Present to Leadership</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># Platform Team Business Case</span>
+
+<span class="gu">## Executive Summary</span>
+Our platform team drives $271M in annual value through:
+<span class="k">-</span><span class="w"> </span>$262.5M in developer productivity gains
+<span class="k">-</span><span class="w"> </span>$3.3M in faster time-to-market
+<span class="k">-</span><span class="w"> </span>$5.25M in reduced downtime costs
+
+At $5M/year cost, we deliver 54x ROI.
+
+<span class="gu">## Metrics</span>
+<span class="k">-</span><span class="w"> </span>Deploy frequency: 5/day (up from 0.5/day)
+<span class="k">-</span><span class="w"> </span>Lead time: 2 days (down from 14 days)
+<span class="k">-</span><span class="w"> </span>MTTR: 15 minutes (down from 2 hours)
+<span class="k">-</span><span class="w"> </span>Developer NPS: 52 (up from 18)
+
+<span class="gu">## Request</span>
+Maintain current headcount (10 FTE) and approve Q1 roadmap.
+Without platform investment, we risk losing competitive advantage
+in deployment velocity.
+</code></pre></div>
+<hr />
+<h2 id="additional-resources">📚 Additional Resources</h2>
+<h3 id="books">Books</h3>
+<ul>
+<li><strong>"The Lean Startup"</strong> by Eric Ries - Core product principles applicable to platforms</li>
+<li><strong>"Inspired: How to Create Tech Products Customers Love"</strong> by Marty Cagan - Product management fundamentals</li>
+<li><strong>"Escaping the Build Trap"</strong> by Melissa Perri - Outcome-driven product development</li>
+<li><strong>"User Story Mapping"</strong> by Jeff Patton - Understanding user journeys</li>
+<li><strong>"The Mom Test"</strong> by Rob Fitzpatrick - How to conduct effective user interviews</li>
+</ul>
+<h3 id="articles-papers">Articles &amp; Papers</h3>
+<ul>
+<li><strong>"Team Topologies"</strong> by Matthew Skelton &amp; Manuel Pais - Platform team structures</li>
+<li><strong>"Platform Strategy"</strong> by Evan Bottcher (ThoughtWorks) - Defining platform vision</li>
+<li><strong>"Developers Are Users Too"</strong> by Jean Yang - Applying UX to developer tools</li>
+<li><strong>DORA State of DevOps Reports</strong> - Measuring platform impact</li>
+</ul>
+<h3 id="courses-communities">Courses &amp; Communities</h3>
+<ul>
+<li><strong>Platform Engineering Community</strong> - <a href="https://platformengineering.org">platformengineering.org</a></li>
+<li><strong>Product School</strong> - Internal product management courses</li>
+<li><strong>Mind the Product</strong> - Product management community and resources</li>
+</ul>
+<h3 id="tools">Tools</h3>
+<ul>
+<li><strong>Backstage</strong> - Platform with built-in user feedback and analytics</li>
+<li><strong>Pendo</strong> - Product analytics for internal tools</li>
+<li><strong>Dovetail</strong> - User research repository</li>
+<li><strong>ProductBoard</strong> - Roadmap management</li>
+<li><strong>Fullstory</strong> - Session replay for internal tools</li>
+</ul>
+<hr />
+<h2 id="key-takeaways">🎯 Key Takeaways</h2>
+<p>By completing this module, you've learned:</p>
+<ol>
+<li>✅ <strong>Platform as a product mindset</strong> - Your users are developers; measure their satisfaction</li>
+<li>✅ <strong>User research methods</strong> - Interviews, surveys, shadowing, analytics</li>
+<li>✅ <strong>Prioritization frameworks</strong> - Impact vs. effort, strategic alignment</li>
+<li>✅ <strong>Roadmap building</strong> - Outcome-driven, timeboxed, measurable</li>
+<li>✅ <strong>Key metrics</strong> - NPS, adoption, DORA metrics, support efficiency</li>
+<li>✅ <strong>Product management practices</strong> - Feedback loops, iteration, communication</li>
+</ol>
+<p><strong>Critical insight</strong>: The best platform is useless if developers don't adopt it. Product thinking ensures you build what users actually need, not what you think they need.</p>
+<p><strong>Remember</strong>: 
+- 🎯 <strong>Outcomes over outputs</strong>: Measure impact, not features shipped
+- 👂 <strong>Listen more than talk</strong>: Users know their problems better than you
+- 🔁 <strong>Iterate relentlessly</strong>: Small improvements compound over time
+- 📢 <strong>Communicate constantly</strong>: Share progress, celebrate wins, be transparent about challenges</p>
+<hr />
+<h2 id="next-steps">🚀 Next Steps</h2>
+<h3 id="in-module-18-multi-tenancy-resource-management">In Module 18: Multi-Tenancy &amp; Resource Management</h3>
+<p>You'll learn how to:
+- Design multi-tenant platforms serving multiple teams securely
+- Implement resource quotas and isolation
+- Handle namespace management and RBAC at scale
+- Create self-service onboarding workflows
+- Monitor and optimize resource utilization across tenants</p>
+<p><strong>Prepare by</strong>:
+- Identifying how many teams your platform will serve
+- Understanding your organization's compliance requirements
+- Listing resources that need quota enforcement (CPU, memory, storage)</p>
+<hr />
+<h2 id="black-belt-progress">🏆 Black Belt Progress</h2>
+<p><strong>Module 17 Complete!</strong> ✅</p>
+<div class="highlight"><pre><span></span><code>Black Belt Progress:
+[████████░░░░░░░░░░░░] 25% (1/4 modules)
+
+✅ Module 17: Platform as a Product
+⬜ Module 18: Multi-Tenancy &amp; Resource Management
+⬜ Module 19: Security &amp; Zero Trust
+⬜ Module 20: Multi-Cloud Strategies
+
+Next: Module 18 to continue your Black Belt journey!
+</code></pre></div>
+<hr />
+<p><strong>Module 17: Platform as a Product</strong> | Fawkes Dojo | Black Belt<br />
+<em>"Build what users need, not what you think they need"</em> | Version 1.0</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

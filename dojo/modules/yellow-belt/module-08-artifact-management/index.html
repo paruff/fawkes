@@ -1,0 +1,2905 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Fawkes Dojo Module 8: Artifact Management - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fawkes-dojo-module-8-artifact-management" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Fawkes Dojo Module 8: Artifact Management
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Implementation Paths
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Wins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Capabilities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Capabilities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Feedback
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Recovery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Patterns
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure as Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Tools
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Tools
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Continuous Delivery
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Spinnaker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Jenkins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kubernetes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#module-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Module Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learning-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Learning Objectives
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-why-artifact-management-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Part 1: Why Artifact Management Matters
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Part 1: Why Artifact Management Matters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problem-ad-hoc-artifact-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Problem: Ad-Hoc Artifact Storage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-solution-centralized-artifact-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Solution: Centralized Artifact Registry
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-harbor-container-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ Part 2: Harbor Container Registry
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Part 2: Harbor Container Registry">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-harbor" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is Harbor?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#harbor-architecture-in-fawkes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Harbor Architecture in Fawkes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-3-hands-on-lab-publishing-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Part 3: Hands-On Lab - Publishing Artifacts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Part 3: Hands-On Lab - Publishing Artifacts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-configure-harbor-in-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Configure Harbor in Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-verify-in-harbor-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Verify in Harbor UI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-4-versioning-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Part 4: Versioning Strategies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Part 4: Versioning Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#semantic-versioning-semver" class="md-nav__link">
+    <span class="md-ellipsis">
+      Semantic Versioning (SemVer)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tagging-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tagging Strategy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementing-versioning-in-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementing Versioning in Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-5-artifact-promotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Part 5: Artifact Promotion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Part 5: Artifact Promotion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environment-promotion-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Promotion Pattern
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementing-promotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementing Promotion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approval-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Approval Gates
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-6-retention-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      🗄️ Part 6: Retention Policies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🗄️ Part 6: Retention Policies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-retention-policies-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Retention Policies Matter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#harbor-retention-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Harbor Retention Rules
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementing-retention-via-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementing Retention via API
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-7-artifact-signing-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔒 Part 7: Artifact Signing &amp; Verification
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔒 Part 7: Artifact Signing &amp; Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-sign-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Sign Artifacts?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#signing-with-cosign" class="md-nav__link">
+    <span class="md-ellipsis">
+      Signing with Cosign
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-admission-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes Admission Control
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-8-monitoring-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      📈 Part 8: Monitoring &amp; Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📈 Part 8: Monitoring &amp; Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-artifact-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Artifact Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grafana-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grafana Dashboard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alerting-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alerting Rules
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-9-practical-exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      💪 Part 9: Practical Exercise
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💪 Part 9: Practical Exercise">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-complete-artifact-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercise: Complete Artifact Lifecycle
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-10-knowledge-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎓 Part 10: Knowledge Check
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎓 Part 10: Knowledge Check">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quiz-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quiz Questions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-11-module-summary-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Part 11: Module Summary &amp; Next Steps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Part 11: Module Summary &amp; Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-you-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      What You Learned
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dora-capabilities-achieved" class="md-nav__link">
+    <span class="md-ellipsis">
+      DORA Capabilities Achieved
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Takeaways
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-world-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-World Impact
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#yellow-belt-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎉 Yellow Belt Complete!
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎉 Yellow Belt Complete!">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#congratulations" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏆 Congratulations!
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yellow-belt-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎖️ Yellow Belt Progress
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yellow-belt-certification" class="md-nav__link">
+    <span class="md-ellipsis">
+      📜 Yellow Belt Certification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-youve-achieved" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎓 What You've Achieved
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 What's Next?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Additional Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 Additional Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tools-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools &amp; Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#learning-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Learning Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#community" class="md-nav__link">
+    <span class="md-ellipsis">
+      Community
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-artifact-management-cheat-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Appendix: Artifact Management Cheat Sheet
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Appendix: Artifact Management Cheat Sheet">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-reference-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Reference Commands
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#final-thoughts" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎊 Final Thoughts
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="fawkes-dojo-module-8-artifact-management">Fawkes Dojo Module 8: Artifact Management</h1>
+<h2 id="module-overview">🎯 Module Overview</h2>
+<p><strong>Belt Level</strong>: 🟡 Yellow Belt - CI/CD Mastery<br />
+<strong>Module</strong>: 4 of 4 (Yellow Belt - <strong>FINAL MODULE</strong>)<br />
+<strong>Duration</strong>: 60 minutes<br />
+<strong>Difficulty</strong>: Intermediate<br />
+<strong>Prerequisites</strong>: 
+- Modules 5, 6, 7 complete
+- Understanding of Docker and containers
+- Familiarity with versioning concepts
+- CI/CD pipeline experience</p>
+<hr />
+<h2 id="learning-objectives">📚 Learning Objectives</h2>
+<p>By the end of this module, you will:</p>
+<ol>
+<li>✅ Understand the role of artifact registries in CI/CD</li>
+<li>✅ Configure Harbor container registry in Fawkes</li>
+<li>✅ Implement semantic versioning strategies</li>
+<li>✅ Manage artifact lifecycle and retention policies</li>
+<li>✅ Implement artifact promotion across environments</li>
+<li>✅ Secure artifacts with signing and scanning</li>
+<li>✅ Optimize storage costs and performance</li>
+</ol>
+<p><strong>DORA Capabilities Addressed</strong>:
+- ✓ CD1: Version control for production artifacts
+- ✓ CD2: Automate deployment process
+- ✓ Artifact Traceability</p>
+<hr />
+<h2 id="part-1-why-artifact-management-matters">📖 Part 1: Why Artifact Management Matters</h2>
+<h3 id="the-problem-ad-hoc-artifact-storage">The Problem: Ad-Hoc Artifact Storage</h3>
+<p><strong>Without proper artifact management</strong>:
+<div class="highlight"><pre><span></span><code>Team A: Stores Docker images on local machines
+Team B: Uses random Docker Hub accounts
+Team C: Rebuilds from source every time
+Team D: No idea which version is in production
+
+Result:
+❌ Can&#39;t reproduce builds
+❌ Can&#39;t rollback reliably
+❌ No audit trail
+❌ Security vulnerabilities untracked
+❌ Storage costs out of control
+</code></pre></div></p>
+<h3 id="the-solution-centralized-artifact-registry">The Solution: Centralized Artifact Registry</h3>
+<div class="highlight"><pre><span></span><code>                   ┌─────────────────────┐
+                   │   Harbor Registry   │
+                   │  (Fawkes Platform)  │
+                   └──────────┬──────────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+   ┌────▼────┐          ┌────▼────┐          ┌────▼────┐
+   │   Dev   │          │ Staging │          │  Prod   │
+   │ myapp:  │          │ myapp:  │          │ myapp:  │
+   │  dev-123│          │  stg-123│          │  v1.2.3 │
+   └─────────┘          └─────────┘          └─────────┘
+</code></pre></div>
+<p><strong>Benefits</strong>:
+- ✅ Single source of truth
+- ✅ Immutable artifacts
+- ✅ Complete audit trail
+- ✅ Security scanning integrated
+- ✅ Efficient storage with deduplication
+- ✅ Role-based access control
+- ✅ Replication for DR</p>
+<hr />
+<h2 id="part-2-harbor-container-registry">🏗️ Part 2: Harbor Container Registry</h2>
+<h3 id="what-is-harbor">What is Harbor?</h3>
+<p>Harbor is an open-source container registry that secures artifacts with policies and role-based access control.</p>
+<p><strong>Key Features</strong>:
+- 🐳 Docker/OCI image storage
+- 🔒 Integrated security scanning (Trivy)
+- 📊 Vulnerability management
+- 🏷️ Image signing (Cosign/Notary)
+- 📦 Helm chart repository
+- 🔐 RBAC and quota management
+- 📈 Audit logging
+- 🌍 Replication across registries</p>
+<h3 id="harbor-architecture-in-fawkes">Harbor Architecture in Fawkes</h3>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────┐
+│                   Harbor Registry                     │
+├──────────────────────────────────────────────────────┤
+│                                                      │
+│  ┌────────────┐  ┌────────────┐  ┌──────────────┐  │
+│  │   Core     │  │  Registry  │  │   Trivy      │  │
+│  │  Service   │  │  (Storage) │  │   Scanner    │  │
+│  └──────┬─────┘  └──────┬─────┘  └──────┬───────┘  │
+│         │                │                │          │
+│  ┌──────▼────────────────▼────────────────▼───────┐ │
+│  │           PostgreSQL Database                  │ │
+│  │  • Image metadata  • Scan results  • Audit    │ │
+│  └────────────────────────────────────────────────┘ │
+│                                                      │
+│  ┌──────────────────────────────────────────────┐  │
+│  │        Object Storage (S3/MinIO)             │  │
+│  │     • Image layers  • Helm charts            │  │
+│  └──────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="part-3-hands-on-lab-publishing-artifacts">🛠️ Part 3: Hands-On Lab - Publishing Artifacts</h2>
+<h3 id="step-1-configure-harbor-in-pipeline">Step 1: Configure Harbor in Pipeline</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// vars/goldenPathJava.groovy (enhanced)</span>
+<span class="kt">def</span><span class="w"> </span><span class="nf">call</span><span class="o">(</span><span class="n">Map</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[:])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">defaults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+<span class="w">        </span><span class="nl">harborRegistry:</span><span class="w"> </span><span class="s1">&#39;harbor.fawkes.internal&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">harborProject:</span><span class="w"> </span><span class="s1">&#39;library&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">harborCredentials:</span><span class="w"> </span><span class="s1">&#39;harbor-robot-account&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">imagePrefix:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="o">,</span>
+<span class="w">        </span><span class="nl">pushToHarbor:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="o">]</span>
+
+<span class="w">    </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">defaults</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">config</span>
+
+<span class="w">    </span><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="c1">// ... agent configuration ...</span>
+
+<span class="w">        </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">HARBOR_REGISTRY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${config.harborRegistry}&quot;</span>
+<span class="w">            </span><span class="n">HARBOR_PROJECT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${config.harborProject}&quot;</span>
+<span class="w">            </span><span class="n">IMAGE_NAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${config.imagePrefix}${env.JOB_NAME}&quot;</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s1">&#39;/&#39;</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="o">)</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="c1">// ... build stages ...</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build Docker Image&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;docker&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="c1">// Generate version tags</span>
+<span class="w">                            </span><span class="kt">def</span><span class="w"> </span><span class="n">shortCommit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">GIT_COMMIT</span><span class="o">.</span><span class="na">take</span><span class="o">(</span><span class="mi">7</span><span class="o">)</span>
+<span class="w">                            </span><span class="kt">def</span><span class="w"> </span><span class="n">buildTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${env.BUILD_NUMBER}-${shortCommit}&quot;</span>
+<span class="w">                            </span><span class="kt">def</span><span class="w"> </span><span class="n">latestTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">BRANCH_NAME</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;main&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;latest&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">BRANCH_NAME</span>
+
+<span class="w">                            </span><span class="n">env</span><span class="o">.</span><span class="na">IMAGE_TAG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildTag</span>
+<span class="w">                            </span><span class="n">env</span><span class="o">.</span><span class="na">IMAGE_FULL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}:${buildTag}&quot;</span>
+
+<span class="w">                            </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;🐳 Building: ${env.IMAGE_FULL}&quot;</span>
+<span class="w">                            </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                                docker build \</span>
+<span class="s2">                                    --label &quot;version=${buildTag}&quot; \</span>
+<span class="s2">                                    --label &quot;git-commit=${env.GIT_COMMIT}&quot; \</span>
+<span class="s2">                                    --label &quot;build-url=${env.BUILD_URL}&quot; \</span>
+<span class="s2">                                    --label &quot;built-by=fawkes-ci&quot; \</span>
+<span class="s2">                                    -t ${env.IMAGE_FULL} \</span>
+<span class="s2">                                    -t ${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}:${latestTag} \</span>
+<span class="s2">                                    .</span>
+<span class="s2">                            &quot;&quot;&quot;</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Push to Harbor&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">expression</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">pushToHarbor</span><span class="w"> </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;docker&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="n">withCredentials</span><span class="o">([</span>
+<span class="w">                                </span><span class="n">usernamePassword</span><span class="o">(</span>
+<span class="w">                                    </span><span class="nl">credentialsId:</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">harborCredentials</span><span class="o">,</span>
+<span class="w">                                    </span><span class="nl">usernameVariable:</span><span class="w"> </span><span class="s1">&#39;HARBOR_USER&#39;</span><span class="o">,</span>
+<span class="w">                                    </span><span class="nl">passwordVariable:</span><span class="w"> </span><span class="s1">&#39;HARBOR_PASS&#39;</span>
+<span class="w">                                </span><span class="o">)</span>
+<span class="w">                            </span><span class="o">])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                                </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;📤 Pushing to Harbor...&quot;</span>
+<span class="w">                                </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                                    echo \$HARBOR_PASS | docker login ${HARBOR_REGISTRY} -u \$HARBOR_USER --password-stdin</span>
+<span class="s2">                                    docker push ${env.IMAGE_FULL}</span>
+
+<span class="s2">                                    # Push additional tags</span>
+<span class="s2">                                    docker push ${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}:${env.BRANCH_NAME}</span>
+<span class="s2">                                &quot;&quot;&quot;</span>
+<span class="w">                            </span><span class="o">}</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Harbor Scan &amp; Sign&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="c1">// Trigger Harbor vulnerability scan</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                            curl -X POST \</span>
+<span class="s2">                                -u \$HARBOR_USER:\$HARBOR_PASS \</span>
+<span class="s2">                                &quot;${HARBOR_REGISTRY}/api/v2.0/projects/${HARBOR_PROJECT}/repositories/${IMAGE_NAME}/artifacts/${env.IMAGE_TAG}/scan&quot;</span>
+<span class="s2">                        &quot;&quot;&quot;</span>
+
+<span class="w">                        </span><span class="c1">// Wait for scan completion</span>
+<span class="w">                        </span><span class="n">timeout</span><span class="o">(</span><span class="nl">time:</span><span class="w"> </span><span class="mi">5</span><span class="o">,</span><span class="w"> </span><span class="nl">unit:</span><span class="w"> </span><span class="s1">&#39;MINUTES&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="n">waitUntil</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                                </span><span class="kt">def</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sh</span><span class="o">(</span>
+<span class="w">                                    </span><span class="nl">script:</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                                        curl -s -u \$HARBOR_USER:\$HARBOR_PASS \</span>
+<span class="s2">                                            &quot;${HARBOR_REGISTRY}/api/v2.0/projects/${HARBOR_PROJECT}/repositories/${IMAGE_NAME}/artifacts/${env.IMAGE_TAG}&quot; \</span>
+<span class="s2">                                            | jq -r &#39;.scan_overview.&quot;application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0&quot;.scan_status&#39;</span>
+<span class="s2">                                    &quot;&quot;&quot;</span><span class="o">,</span>
+<span class="w">                                    </span><span class="nl">returnStdout:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">                                </span><span class="o">).</span><span class="na">trim</span><span class="o">()</span>
+<span class="w">                                </span><span class="k">return</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;Success&#39;</span>
+<span class="w">                            </span><span class="o">}</span>
+<span class="w">                        </span><span class="o">}</span>
+
+<span class="w">                        </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;✅ Harbor scan complete&quot;</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">success</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    ✅ Artifact published successfully!</span>
+<span class="s2">                    📦 Image: ${env.IMAGE_FULL}</span>
+<span class="s2">                    🔗 Harbor: ${HARBOR_REGISTRY}/harbor/projects/${HARBOR_PROJECT}/repositories/${IMAGE_NAME}</span>
+<span class="s2">                    &quot;&quot;&quot;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="step-2-verify-in-harbor-ui">Step 2: Verify in Harbor UI</h3>
+<p>Access Harbor: <code>https://harbor.fawkes.internal</code></p>
+<p><strong>Navigate to your image</strong>:
+1. Projects → Your Project
+2. Repositories → Your Image
+3. Click on tag (e.g., <code>123-abc1234</code>)</p>
+<p><strong>View Details</strong>:
+- 📋 Vulnerabilities scan results
+- 🏷️ Labels and metadata
+- 📊 Layer information
+- 🔒 Signature status
+- 📈 Pull statistics</p>
+<hr />
+<h2 id="part-4-versioning-strategies">📊 Part 4: Versioning Strategies</h2>
+<h3 id="semantic-versioning-semver">Semantic Versioning (SemVer)</h3>
+<p><strong>Format</strong>: <code>MAJOR.MINOR.PATCH</code></p>
+<div class="highlight"><pre><span></span><code>v1.2.3
+│ │ │
+│ │ └─ Patch: Bug fixes (backward compatible)
+│ └─── Minor: New features (backward compatible)
+└───── Major: Breaking changes
+</code></pre></div>
+<p><strong>Examples</strong>:
+- <code>v1.0.0</code> → Initial release
+- <code>v1.0.1</code> → Bug fix
+- <code>v1.1.0</code> → New feature added
+- <code>v2.0.0</code> → Breaking API change</p>
+<h3 id="tagging-strategy">Tagging Strategy</h3>
+<p><strong>Multiple tags per image</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Build number + commit (immutable reference)</span>
+myapp:142-abc1234
+
+<span class="c1"># Semantic version (for releases)</span>
+myapp:v1.2.3
+
+<span class="c1"># Environment-specific</span>
+myapp:dev
+myapp:staging
+myapp:production
+
+<span class="c1"># Branch-based</span>
+myapp:main
+myapp:feature-auth
+
+<span class="c1"># Latest (moving target)</span>
+myapp:latest
+</code></pre></div>
+<h3 id="implementing-versioning-in-pipeline">Implementing Versioning in Pipeline</h3>
+<div class="highlight"><pre><span></span><code><span class="kt">def</span><span class="w"> </span><span class="nf">generateImageTags</span><span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+
+<span class="w">    </span><span class="c1">// Always add build number + commit</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">shortCommit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">GIT_COMMIT</span><span class="o">.</span><span class="na">take</span><span class="o">(</span><span class="mi">7</span><span class="o">)</span>
+<span class="w">    </span><span class="n">tags</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s2">&quot;${env.BUILD_NUMBER}-${shortCommit}&quot;</span><span class="o">)</span>
+
+<span class="w">    </span><span class="c1">// Add semantic version if tagged</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">(</span><span class="n">env</span><span class="o">.</span><span class="na">TAG_NAME</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">tags</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">env</span><span class="o">.</span><span class="na">TAG_NAME</span><span class="o">)</span>
+
+<span class="w">        </span><span class="c1">// Also add major.minor</span>
+<span class="w">        </span><span class="kt">def</span><span class="w"> </span><span class="n">semver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">TAG_NAME</span><span class="w"> </span><span class="o">=~</span><span class="w"> </span><span class="s">/v?(\d+)\.(\d+)\.(\d+)/</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">(</span><span class="n">semver</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">tags</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s2">&quot;v${semver[0][1]}.${semver[0][2]}&quot;</span><span class="o">)</span>
+<span class="w">            </span><span class="n">tags</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s2">&quot;v${semver[0][1]}&quot;</span><span class="o">)</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="c1">// Add branch name</span>
+<span class="w">    </span><span class="n">tags</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">env</span><span class="o">.</span><span class="na">BRANCH_NAME</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s1">&#39;/&#39;</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="o">))</span>
+
+<span class="w">    </span><span class="c1">// Add &#39;latest&#39; for main branch</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">(</span><span class="n">env</span><span class="o">.</span><span class="na">BRANCH_NAME</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;main&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">tags</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s1">&#39;latest&#39;</span><span class="o">)</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">tags</span>
+<span class="o">}</span>
+
+<span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build &amp; Tag&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="kt">def</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">generateImageTags</span><span class="o">()</span>
+<span class="w">            </span><span class="kt">def</span><span class="w"> </span><span class="n">imageBase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}&quot;</span>
+
+<span class="w">            </span><span class="c1">// Build with first tag</span>
+<span class="w">            </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;docker build -t ${imageBase}:${tags[0]} .&quot;</span>
+
+<span class="w">            </span><span class="c1">// Add additional tags</span>
+<span class="w">            </span><span class="n">tags</span><span class="o">.</span><span class="na">drop</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="na">each</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;docker tag ${imageBase}:${tags[0]} ${imageBase}:${tag}&quot;</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="c1">// Push all tags</span>
+<span class="w">            </span><span class="n">tags</span><span class="o">.</span><span class="na">each</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;docker push ${imageBase}:${tag}&quot;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<hr />
+<h2 id="part-5-artifact-promotion">🔄 Part 5: Artifact Promotion</h2>
+<h3 id="environment-promotion-pattern">Environment Promotion Pattern</h3>
+<p><strong>Concept</strong>: Same artifact progresses through environments</p>
+<div class="highlight"><pre><span></span><code>Build → Dev → Test → Staging → Production
+ │       │      │       │          │
+ v142    v142   v142    v142      v142
+         ↓                         ↓
+      promote               final promote
+</code></pre></div>
+<p><strong>Never rebuild</strong> - same artifact, different tags/environment</p>
+<h3 id="implementing-promotion">Implementing Promotion</h3>
+<div class="highlight"><pre><span></span><code><span class="kt">def</span><span class="w"> </span><span class="nf">promoteArtifact</span><span class="o">(</span><span class="n">Map</span><span class="w"> </span><span class="n">config</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">sourceTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">sourceTag</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">targetTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="na">targetTag</span>
+<span class="w">    </span><span class="kt">def</span><span class="w"> </span><span class="n">imageBase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}&quot;</span>
+
+<span class="w">    </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;🔄 Promoting ${imageBase}:${sourceTag} → ${targetTag}&quot;</span>
+
+<span class="w">    </span><span class="c1">// Pull source image</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;docker pull ${imageBase}:${sourceTag}&quot;</span>
+
+<span class="w">    </span><span class="c1">// Re-tag for target environment</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;docker tag ${imageBase}:${sourceTag} ${imageBase}:${targetTag}&quot;</span>
+
+<span class="w">    </span><span class="c1">// Push to Harbor</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;docker push ${imageBase}:${targetTag}&quot;</span>
+
+<span class="w">    </span><span class="c1">// Update GitOps manifest</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        git clone https://github.com/org/gitops-manifests.git</span>
+<span class="s2">        cd gitops-manifests</span>
+
+<span class="s2">        # Update image tag in manifest</span>
+<span class="s2">        yq eval -i &#39;.spec.template.spec.containers[0].image = &quot;${imageBase}:${targetTag}&quot;&#39; \</span>
+<span class="s2">            environments/${targetTag}/deployment.yaml</span>
+
+<span class="s2">        git add .</span>
+<span class="s2">        git commit -m &quot;Promote ${IMAGE_NAME} to ${targetTag} (build ${sourceTag})&quot;</span>
+<span class="s2">        git push</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="w">    </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;✅ Promotion complete&quot;</span>
+<span class="o">}</span>
+
+<span class="c1">// Usage</span>
+<span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Promote to Staging&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">branch</span><span class="w"> </span><span class="s1">&#39;main&#39;</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">promoteArtifact</span><span class="o">(</span>
+<span class="w">                </span><span class="nl">sourceTag:</span><span class="w"> </span><span class="s2">&quot;${env.BUILD_NUMBER}-${env.GIT_COMMIT.take(7)}&quot;</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">targetTag:</span><span class="w"> </span><span class="s1">&#39;staging&#39;</span>
+<span class="w">            </span><span class="o">)</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+
+<span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Promote to Production&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">tag</span><span class="w"> </span><span class="nl">pattern:</span><span class="w"> </span><span class="s2">&quot;v\\d+\\.\\d+\\.\\d+&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">comparator:</span><span class="w"> </span><span class="s2">&quot;REGEXP&quot;</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">promoteArtifact</span><span class="o">(</span>
+<span class="w">                </span><span class="nl">sourceTag:</span><span class="w"> </span><span class="s1">&#39;staging&#39;</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">targetTag:</span><span class="w"> </span><span class="s1">&#39;production&#39;</span>
+<span class="w">            </span><span class="o">)</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="approval-gates">Approval Gates</h3>
+<p>Add manual approval for production:</p>
+<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Approve Production Deploy&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">tag</span><span class="w"> </span><span class="nl">pattern:</span><span class="w"> </span><span class="s2">&quot;v\\d+\\.\\d+\\.\\d+&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">comparator:</span><span class="w"> </span><span class="s2">&quot;REGEXP&quot;</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="kt">def</span><span class="w"> </span><span class="n">approved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">input</span><span class="o">(</span>
+<span class="w">                </span><span class="nl">message:</span><span class="w"> </span><span class="s1">&#39;Deploy to Production?&#39;</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">parameters:</span><span class="w"> </span><span class="o">[</span>
+<span class="w">                    </span><span class="n">booleanParam</span><span class="o">(</span>
+<span class="w">                        </span><span class="nl">name:</span><span class="w"> </span><span class="s1">&#39;DEPLOY&#39;</span><span class="o">,</span>
+<span class="w">                        </span><span class="nl">defaultValue:</span><span class="w"> </span><span class="kc">false</span><span class="o">,</span>
+<span class="w">                        </span><span class="nl">description:</span><span class="w"> </span><span class="s1">&#39;Check to approve production deployment&#39;</span>
+<span class="w">                    </span><span class="o">),</span>
+<span class="w">                    </span><span class="n">text</span><span class="o">(</span>
+<span class="w">                        </span><span class="nl">name:</span><span class="w"> </span><span class="s1">&#39;NOTES&#39;</span><span class="o">,</span>
+<span class="w">                        </span><span class="nl">defaultValue:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="o">,</span>
+<span class="w">                        </span><span class="nl">description:</span><span class="w"> </span><span class="s1">&#39;Deployment notes (optional)&#39;</span>
+<span class="w">                    </span><span class="o">)</span>
+<span class="w">                </span><span class="o">]</span>
+<span class="w">            </span><span class="o">)</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="o">(!</span><span class="n">approved</span><span class="o">.</span><span class="na">DEPLOY</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">error</span><span class="o">(</span><span class="s2">&quot;Production deployment not approved&quot;</span><span class="o">)</span>
+<span class="w">            </span><span class="o">}</span>
+
+<span class="w">            </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;Deployment approved by: ${env.BUILD_USER}&quot;</span>
+<span class="w">            </span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;Notes: ${approved.NOTES}&quot;</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<hr />
+<h2 id="part-6-retention-policies">🗄️ Part 6: Retention Policies</h2>
+<h3 id="why-retention-policies-matter">Why Retention Policies Matter</h3>
+<p><strong>Without retention</strong>:
+<div class="highlight"><pre><span></span><code>Day 1:   10 images  → 1 GB
+Day 30:  300 images → 30 GB
+Day 90:  900 images → 90 GB
+Day 365: 3650 images → 365 GB 💸💸💸
+</code></pre></div></p>
+<p><strong>With retention</strong>:
+<div class="highlight"><pre><span></span><code>Day 1:   10 images → 1 GB
+Day 365: 100 images → 10 GB ✅
+</code></pre></div></p>
+<h3 id="harbor-retention-rules">Harbor Retention Rules</h3>
+<p>Configure in Harbor UI or via API:</p>
+<p><strong>Example Policy</strong>:
+<div class="highlight"><pre><span></span><code><span class="nt">retention_policy</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">scope</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;**&quot;</span><span class="w">  </span><span class="c1"># All repositories</span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Keep production images indefinitely</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;production&quot;</span>
+<span class="w">        </span><span class="nt">retain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1</span><span class="w">  </span><span class="c1"># Forever</span>
+
+<span class="w">      </span><span class="c1"># Keep staging images for 30 days</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;staging&quot;</span>
+<span class="w">        </span><span class="nt">retain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+
+<span class="w">      </span><span class="c1"># Keep latest 10 dev images</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;dev-*&quot;</span>
+<span class="w">        </span><span class="nt">retain_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+
+<span class="w">      </span><span class="c1"># Keep semantic versions for 1 year</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;v*.*.*&quot;</span>
+<span class="w">        </span><span class="nt">retain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">365</span>
+
+<span class="w">      </span><span class="c1"># Delete untagged images after 7 days</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">        </span><span class="nt">retain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+</code></pre></div></p>
+<h3 id="implementing-retention-via-api">Implementing Retention via API</h3>
+<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Configure Retention&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="kt">def</span><span class="w"> </span><span class="n">retentionPolicy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            {</span>
+<span class="s1">                &quot;rules&quot;: [</span>
+<span class="s1">                    {</span>
+<span class="s1">                        &quot;disabled&quot;: false,</span>
+<span class="s1">                        &quot;action&quot;: &quot;retain&quot;,</span>
+<span class="s1">                        &quot;tag_selectors&quot;: [{</span>
+<span class="s1">                            &quot;kind&quot;: &quot;doublestar&quot;,</span>
+<span class="s1">                            &quot;decoration&quot;: &quot;matches&quot;,</span>
+<span class="s1">                            &quot;pattern&quot;: &quot;production&quot;</span>
+<span class="s1">                        }],</span>
+<span class="s1">                        &quot;scope_selectors&quot;: {</span>
+<span class="s1">                            &quot;repository&quot;: [{</span>
+<span class="s1">                                &quot;kind&quot;: &quot;doublestar&quot;,</span>
+<span class="s1">                                &quot;decoration&quot;: &quot;matches&quot;,</span>
+<span class="s1">                                &quot;pattern&quot;: &quot;**&quot;</span>
+<span class="s1">                            }]</span>
+<span class="s1">                        }</span>
+<span class="s1">                    },</span>
+<span class="s1">                    {</span>
+<span class="s1">                        &quot;disabled&quot;: false,</span>
+<span class="s1">                        &quot;action&quot;: &quot;retain&quot;,</span>
+<span class="s1">                        &quot;tag_selectors&quot;: [{</span>
+<span class="s1">                            &quot;kind&quot;: &quot;doublestar&quot;,</span>
+<span class="s1">                            &quot;decoration&quot;: &quot;matches&quot;,</span>
+<span class="s1">                            &quot;pattern&quot;: &quot;v*.*.*&quot;</span>
+<span class="s1">                        }],</span>
+<span class="s1">                        &quot;scope_selectors&quot;: {</span>
+<span class="s1">                            &quot;repository&quot;: [{</span>
+<span class="s1">                                &quot;kind&quot;: &quot;doublestar&quot;,</span>
+<span class="s1">                                &quot;decoration&quot;: &quot;matches&quot;,</span>
+<span class="s1">                                &quot;pattern&quot;: &quot;**&quot;</span>
+<span class="s1">                            }]</span>
+<span class="s1">                        },</span>
+<span class="s1">                        &quot;template&quot;: &quot;retain_n&quot;,</span>
+<span class="s1">                        &quot;params&quot;: {&quot;n&quot;: 10}</span>
+<span class="s1">                    }</span>
+<span class="s1">                ]</span>
+<span class="s1">            }</span>
+<span class="s1">            &#39;&#39;&#39;</span>
+
+<span class="w">            </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                curl -X POST \</span>
+<span class="s2">                    -H &quot;Content-Type: application/json&quot; \</span>
+<span class="s2">                    -u \$HARBOR_USER:\$HARBOR_PASS \</span>
+<span class="s2">                    -d &#39;${retentionPolicy}&#39; \</span>
+<span class="s2">                    &quot;${HARBOR_REGISTRY}/api/v2.0/projects/${HARBOR_PROJECT}/retention&quot;</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<hr />
+<h2 id="part-7-artifact-signing-verification">🔒 Part 7: Artifact Signing &amp; Verification</h2>
+<h3 id="why-sign-artifacts">Why Sign Artifacts?</h3>
+<p><strong>Without signing</strong>:
+<div class="highlight"><pre><span></span><code>❌ Can&#39;t verify artifact authenticity
+❌ Don&#39;t know who published it
+❌ Can&#39;t detect tampering
+❌ Supply chain vulnerable
+</code></pre></div></p>
+<p><strong>With signing</strong>:
+<div class="highlight"><pre><span></span><code>✅ Cryptographically verify origin
+✅ Detect any modifications
+✅ Enforce only signed images run
+✅ Complete audit trail
+</code></pre></div></p>
+<h3 id="signing-with-cosign">Signing with Cosign</h3>
+<p><strong>Install Cosign</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># In pipeline</span>
+curl<span class="w"> </span>-sSL<span class="w"> </span>https://github.com/sigstore/cosign/releases/download/v2.0.0/cosign-linux-amd64<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-o<span class="w"> </span>/usr/local/bin/cosign
+chmod<span class="w"> </span>+x<span class="w"> </span>/usr/local/bin/cosign
+</code></pre></div></p>
+<p><strong>Generate Key Pair</strong> (one-time setup):
+<div class="highlight"><pre><span></span><code>cosign<span class="w"> </span>generate-key-pair
+<span class="c1"># Creates: cosign.key (private) and cosign.pub (public)</span>
+<span class="c1"># Store private key in Jenkins credentials</span>
+</code></pre></div></p>
+<p><strong>Sign Image in Pipeline</strong>:
+<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Sign Image&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">container</span><span class="o">(</span><span class="s1">&#39;cosign&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">withCredentials</span><span class="o">([</span>
+<span class="w">                </span><span class="n">file</span><span class="o">(</span><span class="nl">credentialsId:</span><span class="w"> </span><span class="s1">&#39;cosign-private-key&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">variable:</span><span class="w"> </span><span class="s1">&#39;COSIGN_KEY&#39;</span><span class="o">),</span>
+<span class="w">                </span><span class="n">string</span><span class="o">(</span><span class="nl">credentialsId:</span><span class="w"> </span><span class="s1">&#39;cosign-password&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">variable:</span><span class="w"> </span><span class="s1">&#39;COSIGN_PASSWORD&#39;</span><span class="o">)</span>
+<span class="w">            </span><span class="o">])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    cosign sign \</span>
+<span class="s2">                        --key \${COSIGN_KEY} \</span>
+<span class="s2">                        --yes \</span>
+<span class="s2">                        ${env.IMAGE_FULL}</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<p><strong>Verify Signature</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># In deployment pipeline</span>
+cosign<span class="w"> </span>verify<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--key<span class="w"> </span>cosign.pub<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>harbor.fawkes.internal/library/myapp:v1.2.3
+</code></pre></div></p>
+<h3 id="kubernetes-admission-control">Kubernetes Admission Control</h3>
+<p>Enforce only signed images:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Kyverno policy</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kyverno.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterPolicy</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verify-signed-images</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">validationFailureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enforce</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verify-signature</span>
+<span class="w">    </span><span class="nt">match</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">kinds</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
+<span class="w">    </span><span class="nt">verifyImages</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">imageReferences</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;harbor.fawkes.internal/*&quot;</span>
+<span class="w">      </span><span class="nt">attestors</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">entries</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">keys</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">publicKeys</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">              </span><span class="no">-----BEGIN PUBLIC KEY-----</span>
+<span class="w">              </span><span class="no">[Your Cosign Public Key]</span>
+<span class="w">              </span><span class="no">-----END PUBLIC KEY-----</span>
+</code></pre></div>
+<hr />
+<h2 id="part-8-monitoring-metrics">📈 Part 8: Monitoring &amp; Metrics</h2>
+<h3 id="key-artifact-metrics">Key Artifact Metrics</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Artifact publish rate</span>
+<span class="kr">rate</span><span class="o">(</span><span class="nv">artifacts_published_total</span><span class="p">[</span><span class="s">5m</span><span class="p">]</span><span class="o">)</span>
+
+<span class="c1"># Artifact size over time</span>
+<span class="k">avg</span><span class="o">(</span><span class="nv">artifact_size_bytes</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">repository</span><span class="o">)</span>
+
+<span class="c1"># Pull count by artifact</span>
+<span class="k">sum</span><span class="o">(</span><span class="nv">artifact_pulls_total</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">repository</span><span class="p">,</span><span class="w"> </span><span class="nv">tag</span><span class="o">)</span>
+
+<span class="c1"># Storage usage by project</span>
+<span class="k">sum</span><span class="o">(</span><span class="nv">storage_used_bytes</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">project</span><span class="o">)</span>
+
+<span class="c1"># Vulnerability count by severity</span>
+<span class="k">sum</span><span class="o">(</span><span class="nv">vulnerabilities_total</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">severity</span><span class="p">,</span><span class="w"> </span><span class="nv">repository</span><span class="o">)</span>
+
+<span class="c1"># Artifact age</span>
+<span class="kr">time</span><span class="o">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">artifact_push_timestamp_seconds</span>
+</code></pre></div>
+<h3 id="grafana-dashboard">Grafana Dashboard</h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;dashboard&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Artifact Registry Metrics&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;panels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Daily Artifact Publishes&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(rate(artifacts_published_total[1d]))&quot;</span>
+<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;graph&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Storage Usage by Project&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(storage_used_bytes) by (project) / 1024/1024/1024&quot;</span>
+<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;piechart&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GB&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Most Pulled Images&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;topk(10, sum(rate(artifact_pulls_total[7d])) by (repository))&quot;</span>
+<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;table&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Vulnerabilities by Severity&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(vulnerabilities_total) by (severity)&quot;</span>
+<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bargauge&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="alerting-rules">Alerting Rules</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">groups</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artifact_alerts</span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighVulnerabilityCount</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sum(vulnerabilities_total{severity=&quot;critical&quot;}) &gt; 10</span>
+<span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1h</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">critical</span><span class="nv"> </span><span class="s">vulnerabilities&quot;</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">critical</span><span class="nv"> </span><span class="s">vulnerabilities</span><span class="nv"> </span><span class="s">detected&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StorageQuotaExceeded</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage_used_bytes / storage_quota_bytes &gt; 0.9</span>
+<span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15m</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Storage</span><span class="nv"> </span><span class="s">quota</span><span class="nv"> </span><span class="s">90%</span><span class="nv"> </span><span class="s">full&quot;</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Project</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.project</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$value</span><span class="nv"> </span><span class="s">}}%</span><span class="nv"> </span><span class="s">capacity&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ArtifactNotPulled</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">time() - artifact_last_pull_timestamp_seconds{tag=&quot;production&quot;} &gt; 86400*30</span>
+<span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1h</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Production</span><span class="nv"> </span><span class="s">artifact</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">pulled</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">30</span><span class="nv"> </span><span class="s">days&quot;</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">$labels.repository</span><span class="nv"> </span><span class="s">}}:{{</span><span class="nv"> </span><span class="s">$labels.tag</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">orphaned&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="part-9-practical-exercise">💪 Part 9: Practical Exercise</h2>
+<h3 id="exercise-complete-artifact-lifecycle">Exercise: Complete Artifact Lifecycle</h3>
+<p><strong>Objective</strong>: Implement full artifact management lifecycle</p>
+<p><strong>Requirements</strong>:
+1. Build and tag Docker image with multiple tags
+2. Push to Harbor with metadata labels
+3. Trigger and verify Harbor security scan
+4. Sign image with Cosign
+5. Implement artifact promotion (dev → staging → prod)
+6. Configure retention policy
+7. Set up monitoring for artifact metrics</p>
+<p><strong>Starter Template</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Library</span><span class="o">(</span><span class="s1">&#39;fawkes-pipelines&#39;</span><span class="o">)</span><span class="w"> </span><span class="n">_</span>
+
+<span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">kubernetes</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">yaml</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">apiVersion: v1</span>
+<span class="s1">kind: Pod</span>
+<span class="s1">spec:</span>
+<span class="s1">  containers:</span>
+<span class="s1">  - name: docker</span>
+<span class="s1">    image: docker:24-dind</span>
+<span class="s1">    securityContext:</span>
+<span class="s1">      privileged: true</span>
+<span class="s1">  - name: cosign</span>
+<span class="s1">    image: gcr.io/projectsigstore/cosign:latest</span>
+<span class="s1">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">HARBOR_REGISTRY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;harbor.fawkes.internal&#39;</span>
+<span class="w">        </span><span class="n">HARBOR_PROJECT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;library&#39;</span>
+<span class="w">        </span><span class="n">IMAGE_NAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;myapp&#39;</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Checkout&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">git</span><span class="w"> </span><span class="s1">&#39;https://github.com/myorg/myapp.git&#39;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build &amp; Tag&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="c1">// TODO: Build with multiple tags</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Push to Harbor&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="c1">// TODO: Push all tags</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Scan &amp; Sign&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="c1">// TODO: Trigger Harbor scan and sign with Cosign</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Promote to Staging&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">branch</span><span class="w"> </span><span class="s1">&#39;main&#39;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="c1">// TODO: Promote artifact</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>Validation Criteria</strong>:
+- [ ] Image built and tagged correctly
+- [ ] All tags pushed to Harbor
+- [ ] Harbor scan completed successfully
+- [ ] Image signed with Cosign
+- [ ] Signature verifiable
+- [ ] Artifact promoted correctly
+- [ ] Retention policy configured
+- [ ] Metrics visible in Grafana</p>
+<hr />
+<h2 id="part-10-knowledge-check">🎓 Part 10: Knowledge Check</h2>
+<h3 id="quiz-questions">Quiz Questions</h3>
+<ol>
+<li><strong>What is the purpose of an artifact registry?</strong></li>
+<li>[ ] Store source code</li>
+<li>[x] Store and manage build artifacts (images, packages)</li>
+<li>[ ] Run containers</li>
+<li>
+<p>[ ] Deploy applications</p>
+</li>
+<li>
+<p><strong>What is semantic versioning format?</strong></p>
+</li>
+<li>[ ] BUILD.DATE.TIME</li>
+<li>[x] MAJOR.MINOR.PATCH</li>
+<li>[ ] YEAR.MONTH.DAY</li>
+<li>
+<p>[ ] VERSION.RELEASE.BUILD</p>
+</li>
+<li>
+<p><strong>Why should you use the same artifact across environments?</strong></p>
+</li>
+<li>[ ] Save disk space</li>
+<li>[ ] Faster builds</li>
+<li>[x] Ensure consistency and avoid "works on my machine"</li>
+<li>
+<p>[ ] Easier to debug</p>
+</li>
+<li>
+<p><strong>What does artifact signing provide?</strong></p>
+</li>
+<li>[ ] Faster downloads</li>
+<li>[ ] Smaller file size</li>
+<li>[x] Verification of authenticity and integrity</li>
+<li>
+<p>[ ] Automatic deployment</p>
+</li>
+<li>
+<p><strong>Why implement retention policies?</strong></p>
+</li>
+<li>[x] Control storage costs and remove unused artifacts</li>
+<li>[ ] Make builds faster</li>
+<li>[ ] Improve security</li>
+<li>
+<p>[ ] All of the above</p>
+</li>
+<li>
+<p><strong>What is artifact promotion?</strong></p>
+</li>
+<li>[ ] Marketing the artifact</li>
+<li>[x] Moving same artifact through environments without rebuilding</li>
+<li>[ ] Upgrading to newer version</li>
+<li>
+<p>[ ] Deleting old versions</p>
+</li>
+<li>
+<p><strong>What tool does Fawkes use for container registry?</strong></p>
+</li>
+<li>[ ] Docker Hub</li>
+<li>[ ] Artifactory</li>
+<li>[x] Harbor</li>
+<li>
+<p>[ ] Nexus</p>
+</li>
+<li>
+<p><strong>What is the benefit of tagging with build number + commit SHA?</strong></p>
+</li>
+<li>[ ] Looks professional</li>
+<li>[ ] Required by Docker</li>
+<li>[x] Provides immutable, traceable reference</li>
+<li>[ ] Makes images smaller</li>
+</ol>
+<p><strong>Answers</strong>: 1-B, 2-B, 3-C, 4-C, 5-A, 6-B, 7-C, 8-C</p>
+<hr />
+<h2 id="part-11-module-summary-next-steps">🎯 Part 11: Module Summary &amp; Next Steps</h2>
+<h3 id="what-you-learned">What You Learned</h3>
+<p>✅ <strong>Artifact Registries</strong>: Centralized, secure storage for build artifacts<br />
+✅ <strong>Harbor</strong>: Configuration and usage in Fawkes platform<br />
+✅ <strong>Versioning</strong>: Semantic versioning and tagging strategies<br />
+✅ <strong>Promotion</strong>: Moving artifacts through environments<br />
+✅ <strong>Retention</strong>: Lifecycle management and cost optimization<br />
+✅ <strong>Signing</strong>: Cryptographic verification with Cosign<br />
+✅ <strong>Monitoring</strong>: Tracking artifact metrics and health</p>
+<h3 id="dora-capabilities-achieved">DORA Capabilities Achieved</h3>
+<ul>
+<li>✅ <strong>CD1</strong>: Version control for production artifacts (complete)</li>
+<li>✅ <strong>CD2</strong>: Automated deployment with immutable artifacts</li>
+<li>✅ <strong>Traceability</strong>: Complete audit trail from build to production</li>
+</ul>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li><strong>Artifacts are immutable</strong> - Never rebuild, always promote</li>
+<li><strong>Tag everything</strong> - Multiple tags for different purposes</li>
+<li><strong>Sign your artifacts</strong> - Prevent supply chain attacks</li>
+<li><strong>Lifecycle management</strong> - Retention policies save money</li>
+<li><strong>Monitor your registry</strong> - Track usage, vulnerabilities, costs</li>
+</ol>
+<h3 id="real-world-impact">Real-World Impact</h3>
+<p>"After implementing proper artifact management:
+- <strong>Build reproducibility</strong>: 60% → 100%
+- <strong>Deployment confidence</strong>: 70% → 95%
+- <strong>Storage costs</strong>: $5,000/month → $800/month
+- <strong>Time to rollback</strong>: 30 min → 2 min
+- <strong>Supply chain security</strong>: Significantly improved with signing</p>
+<p>We can now trace every production artifact back to exact source code commit."
+- <em>DevOps Team, E-Commerce Platform</em></p>
+<hr />
+<h2 id="yellow-belt-complete">🎉 Yellow Belt Complete!</h2>
+<h3 id="congratulations">🏆 Congratulations!</h3>
+<p>You've completed all four Yellow Belt modules:
+- ✅ Module 5: CI Fundamentals
+- ✅ Module 6: Golden Path Pipelines
+- ✅ Module 7: Security Scanning &amp; Quality Gates
+- ✅ Module 8: Artifact Management</p>
+<h3 id="yellow-belt-progress">🎖️ Yellow Belt Progress</h3>
+<div class="highlight"><pre><span></span><code>Yellow Belt: CI/CD Mastery
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Module 5: CI Fundamentals        ████████░░░░ 25% ✓
+Module 6: Golden Path Pipelines  ████████░░░░ 50% ✓
+Module 7: Security &amp; Quality     ████████░░░░ 75% ✓
+Module 8: Artifact Management    ████████████ 100% ✓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</code></pre></div>
+<h3 id="yellow-belt-certification">📜 Yellow Belt Certification</h3>
+<p><strong>You're now ready for the Yellow Belt Certification Exam!</strong></p>
+<p><strong>Exam Format</strong>:
+- 40 multiple choice questions
+- 3 hands-on challenges
+- 85% passing score required
+- 2-hour time limit</p>
+<p><strong>Exam Challenges</strong>:
+1. Build a production-ready CI/CD pipeline from scratch
+2. Optimize existing pipeline to &lt;5 minute build time
+3. Implement complete security scanning and artifact management</p>
+<p><strong>Schedule Your Exam</strong>:
+- Visit Fawkes Dojo Portal
+- Navigate to Certifications → Yellow Belt
+- Click "Schedule Exam"</p>
+<h3 id="what-youve-achieved">🎓 What You've Achieved</h3>
+<p><strong>Skills Mastered</strong>:
+- ✅ Jenkins pipeline development
+- ✅ Shared library creation
+- ✅ Security scanning integration
+- ✅ Artifact management
+- ✅ Pipeline optimization
+- ✅ CI/CD best practices</p>
+<p><strong>DORA Impact</strong>:
+- <strong>Deployment Frequency</strong>: Can deploy multiple times per day
+- <strong>Lead Time</strong>: Reduced to minutes with optimized pipelines
+- <strong>Change Failure Rate</strong>: Security gates prevent bad code
+- <strong>MTTR</strong>: Artifact management enables fast rollbacks</p>
+<h3 id="whats-next">🚀 What's Next?</h3>
+<p><strong>Option 1: Take Yellow Belt Certification Exam</strong>
+- Validate your learning
+- Earn "Fawkes CI/CD Specialist" badge
+- Get LinkedIn-verified credential</p>
+<p><strong>Option 2: Continue to Green Belt</strong>
+- Module 9: GitOps with ArgoCD
+- Module 10: Deployment Strategies
+- Module 11: Progressive Delivery
+- Module 12: Rollback &amp; Incident Response</p>
+<p><strong>Option 3: Practice &amp; Contribute</strong>
+- Apply learnings to your team's pipelines
+- Share your shared library with community
+- Write blog post about your journey
+- Help others in #yellow-belt channel</p>
+<hr />
+<h2 id="additional-resources">📚 Additional Resources</h2>
+<h3 id="tools-documentation">Tools &amp; Documentation</h3>
+<ul>
+<li><a href="https://goharbor.io/docs/">Harbor Documentation</a></li>
+<li><a href="https://docs.sigstore.dev/cosign/overview/">Cosign Documentation</a></li>
+<li><a href="https://semver.org/">Semantic Versioning</a></li>
+<li><a href="https://github.com/opencontainers/image-spec">OCI Image Spec</a></li>
+</ul>
+<h3 id="learning-resources">Learning Resources</h3>
+<ul>
+<li><a href="https://www.jfrog.com/confluence/display/JFROG/Best+Practices">Artifact Management Best Practices</a></li>
+<li><a href="https://slsa.dev/">Supply Chain Security</a></li>
+<li><a href="https://www.sigstore.dev/get-started">Container Signing Tutorial</a></li>
+</ul>
+<h3 id="community">Community</h3>
+<ul>
+<li><a href="https://mattermost.fawkes.internal">Fawkes Mattermost</a> - #yellow-belt</li>
+<li>Share your certification achievement!</li>
+<li>Help newcomers in #white-belt</li>
+</ul>
+<hr />
+<h2 id="appendix-artifact-management-cheat-sheet">📖 Appendix: Artifact Management Cheat Sheet</h2>
+<h3 id="quick-reference-commands">Quick Reference Commands</h3>
+<p><strong>Harbor CLI (via API)</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># List repositories</span>
+curl<span class="w"> </span>-u<span class="w"> </span>user:pass<span class="w"> </span>https://harbor.fawkes.internal/api/v2.0/projects/library/repositories
+
+<span class="c1"># Get artifact details</span>
+curl<span class="w"> </span>-u<span class="w"> </span>user:pass<span class="w"> </span>https://harbor.fawkes.internal/api/v2.0/projects/library/repositories/myapp/artifacts/v1.2.3
+
+<span class="c1"># Trigger scan</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>user:pass<span class="w"> </span>https://harbor.fawkes.internal/api/v2.0/projects/library/repositories/myapp/artifacts/v1.2.3/scan
+
+<span class="c1"># Delete artifact</span>
+curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-u<span class="w"> </span>user:pass<span class="w"> </span>https://harbor.fawkes.internal/api/v2.0/projects/library/repositories/myapp/artifacts/v1.2.3
+</code></pre></div></p>
+<p><strong>Cosign Commands</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Sign image</span>
+cosign<span class="w"> </span>sign<span class="w"> </span>--key<span class="w"> </span>cosign.key<span class="w"> </span>myapp:v1.2.3
+
+<span class="c1"># Verify signature</span>
+cosign<span class="w"> </span>verify<span class="w"> </span>--key<span class="w"> </span>cosign.pub<span class="w"> </span>myapp:v1.2.3
+
+<span class="c1"># Attach SBOM</span>
+cosign<span class="w"> </span>attach<span class="w"> </span>sbom<span class="w"> </span>--sbom<span class="w"> </span>sbom.json<span class="w"> </span>myapp:v1.2.3
+
+<span class="c1"># Download SBOM</span>
+cosign<span class="w"> </span>download<span class="w"> </span>sbom<span class="w"> </span>myapp:v1.2.3
+</code></pre></div></p>
+<p><strong>Docker Tag Management</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Create multiple tags</span>
+docker<span class="w"> </span>tag<span class="w"> </span>myapp:123<span class="w"> </span>myapp:v1.2.3
+docker<span class="w"> </span>tag<span class="w"> </span>myapp:123<span class="w"> </span>myapp:latest
+docker<span class="w"> </span>tag<span class="w"> </span>myapp:123<span class="w"> </span>myapp:production
+
+<span class="c1"># Push all tags</span>
+docker<span class="w"> </span>push<span class="w"> </span>--all-tags<span class="w"> </span>myapp
+</code></pre></div></p>
+<hr />
+<h2 id="final-thoughts">🎊 Final Thoughts</h2>
+<p>You've completed an intensive journey through CI/CD mastery. You now have the skills to:</p>
+<ul>
+<li>Build production-ready pipelines</li>
+<li>Implement security at every stage  </li>
+<li>Manage artifacts professionally</li>
+<li>Optimize for speed and reliability</li>
+<li>Lead CI/CD initiatives in your organization</li>
+</ul>
+<p><strong>Your impact on DORA metrics will be significant!</strong></p>
+<hr />
+<p><strong>Ready to continue?</strong> 🟢</p>
+<p>Next up: <strong>Green Belt - GitOps &amp; Deployment</strong></p>
+<p>Module 9: Introduction to GitOps with ArgoCD awaits! You'll learn declarative deployments, automated sync, and progressive delivery strategies.</p>
+<hr />
+<p><em>Fawkes Dojo - Where Platform Engineers Are Forged</em><br />
+<em>Version 1.0 | Last Updated: October 2025</em><br />
+<em>License: MIT | https://github.com/paruff/fawkes</em></p>
+<p><strong>🎉 Yellow Belt Complete - Congratulations, CI/CD Specialist! 🎉</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

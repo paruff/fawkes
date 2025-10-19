@@ -1,0 +1,2580 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Fawkes Dojo Module 14: DORA Metrics Deep Dive - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fawkes-dojo-module-14-dora-metrics-deep-dive" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Fawkes Dojo Module 14: DORA Metrics Deep Dive
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assessment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Implementation Paths
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Wins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Capabilities
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Capabilities
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Feedback
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fast Recovery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Patterns
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Patterns
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure as Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Tools
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Tools
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Continuous Delivery
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Continuous Delivery
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Spinnaker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Jenkins
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kubernetes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#module-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Module Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learning-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Learning Objectives
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-dora-metrics-review-advanced-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Part 1: DORA Metrics Review &amp; Advanced Concepts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📖 Part 1: DORA Metrics Review &amp; Advanced Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-four-key-metrics-refresher" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Four Key Metrics (Refresher)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-these-four" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why These Four?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-dora-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced DORA Concepts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-calculating-dora-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔢 Part 2: Calculating DORA Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔢 Part 2: Calculating DORA Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metric-1-deployment-frequency" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metric 1: Deployment Frequency
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metric-2-lead-time-for-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metric 2: Lead Time for Changes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metric-3-change-failure-rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metric 3: Change Failure Rate
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metric-4-mean-time-to-restore-mttr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metric 4: Mean Time to Restore (MTTR)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-3-building-the-ultimate-dora-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Part 3: Building the Ultimate DORA Dashboard
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Part 3: Building the Ultimate DORA Dashboard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dashboard-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dashboard Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grafana-dashboard-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grafana Dashboard JSON
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-4-hands-on-lab-complete-dora-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Part 4: Hands-On Lab - Complete DORA Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Part 4: Hands-On Lab - Complete DORA Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      Objective
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-deploy-dora-metrics-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Deploy DORA Metrics Collector
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-configure-webhooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Configure Webhooks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-create-grafana-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Create Grafana Dashboard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-validate-data-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: Validate Data Collection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-analyze-your-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 5: Analyze Your Metrics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-5-advanced-analysis-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      📈 Part 5: Advanced Analysis Techniques
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📈 Part 5: Advanced Analysis Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trend-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Trend Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#correlation-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Correlation Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identifying-bottlenecks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identifying Bottlenecks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-6-driving-improvements-with-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      💪 Part 6: Driving Improvements with Data
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💪 Part 6: Driving Improvements with Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#improvement-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Improvement Framework
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-7-knowledge-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎓 Part 7: Knowledge Check
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎓 Part 7: Knowledge Check">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quiz-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quiz Questions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-8-module-summary-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Part 8: Module Summary &amp; Next Steps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Part 8: Module Summary &amp; Next Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-you-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      What You Learned
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dora-capabilities-achieved" class="md-nav__link">
+    <span class="md-ellipsis">
+      DORA Capabilities Achieved
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Takeaways
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-world-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-World Impact
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Additional Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 Additional Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏅 Module Completion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏅 Module Completion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#assessment-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assessment Checklist
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="fawkes-dojo-module-14-dora-metrics-deep-dive">Fawkes Dojo Module 14: DORA Metrics Deep Dive</h1>
+<h2 id="module-overview">🎯 Module Overview</h2>
+<p><strong>Belt Level</strong>: 🟤 Brown Belt - Observability &amp; SRE<br />
+<strong>Module</strong>: 2 of 4 (Brown Belt)<br />
+<strong>Duration</strong>: 60 minutes<br />
+<strong>Difficulty</strong>: Advanced<br />
+<strong>Prerequisites</strong>: 
+- Module 2: DORA Metrics (White Belt) review recommended
+- Module 13: Observability complete
+- Understanding of Prometheus and Grafana
+- Familiarity with GitOps workflows</p>
+<hr />
+<h2 id="learning-objectives">📚 Learning Objectives</h2>
+<p>By the end of this module, you will:</p>
+<ol>
+<li>✅ Calculate and track all four DORA metrics automatically</li>
+<li>✅ Build comprehensive DORA dashboards in Grafana</li>
+<li>✅ Implement metric collection across the entire delivery pipeline</li>
+<li>✅ Analyze trends and identify improvement opportunities</li>
+<li>✅ Benchmark against industry standards</li>
+<li>✅ Use metrics to drive platform improvements</li>
+<li>✅ Present DORA metrics to leadership effectively</li>
+</ol>
+<p><strong>DORA Capabilities Addressed</strong>:
+- ✓ All 4 Key Metrics (Deployment Frequency, Lead Time, MTTR, Change Failure Rate)
+- ✓ Monitoring and Observability
+- ✓ Data-Driven Decision Making</p>
+<hr />
+<h2 id="part-1-dora-metrics-review-advanced-concepts">📖 Part 1: DORA Metrics Review &amp; Advanced Concepts</h2>
+<h3 id="the-four-key-metrics-refresher">The Four Key Metrics (Refresher)</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>What It Measures</th>
+<th>Elite Performance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Deployment Frequency</strong></td>
+<td>How often you deploy</td>
+<td>Multiple per day</td>
+</tr>
+<tr>
+<td><strong>Lead Time for Changes</strong></td>
+<td>Commit → Production time</td>
+<td>&lt; 1 hour</td>
+</tr>
+<tr>
+<td><strong>Change Failure Rate</strong></td>
+<td>% of deployments causing failures</td>
+<td>0-15%</td>
+</tr>
+<tr>
+<td><strong>Mean Time to Restore</strong></td>
+<td>Time to recover from failure</td>
+<td>&lt; 1 hour</td>
+</tr>
+</tbody>
+</table>
+<h3 id="why-these-four">Why These Four?</h3>
+<p>Research shows these metrics are:
+- <strong>Predictive</strong> of organizational performance
+- <strong>Balanced</strong> between speed (DF, LT) and stability (CFR, MTTR)
+- <strong>Actionable</strong> - teams can directly improve them
+- <strong>Universal</strong> - apply across industries and tech stacks</p>
+<h3 id="advanced-dora-concepts">Advanced DORA Concepts</h3>
+<p><strong>1. Metric Correlation</strong></p>
+<p>Metrics don't exist in isolation:</p>
+<div class="highlight"><pre><span></span><code>High Deployment Frequency
+    ↓
+Smaller batch sizes
+    ↓
+Lower Change Failure Rate
+    ↓
+Faster Lead Time (less code per deploy)
+    ↓
+Better MTTR (easier to identify issues)
+</code></pre></div>
+<p><strong>2. Team-Level vs Organization-Level</strong></p>
+<ul>
+<li><strong>Team-level</strong>: Track individual team performance</li>
+<li><strong>Organization-level</strong>: Aggregate across all teams</li>
+<li><strong>Service-level</strong>: Track per microservice/application</li>
+</ul>
+<p><strong>3. Metric Distributions Matter</strong></p>
+<p>Don't just track averages:
+- <strong>P50 (Median)</strong>: Typical case
+- <strong>P95</strong>: Worst 5% of cases
+- <strong>P99</strong>: Outliers that hurt user experience</p>
+<p><strong>Example</strong>:
+<div class="highlight"><pre><span></span><code>Lead Time:
+- Average: 2 hours
+- P50: 30 minutes ✅ (Most deploys are fast)
+- P95: 8 hours ❌ (5% take too long - investigate why)
+</code></pre></div></p>
+<hr />
+<h2 id="part-2-calculating-dora-metrics">🔢 Part 2: Calculating DORA Metrics</h2>
+<h3 id="metric-1-deployment-frequency">Metric 1: Deployment Frequency</h3>
+<p><strong>Definition</strong>: Number of deployments per time period</p>
+<p><strong>Calculation</strong>:
+<div class="highlight"><pre><span></span><code>Deployment Frequency = Total Deployments / Time Period
+
+Example:
+- 150 deployments in 30 days
+- DF = 150 / 30 = 5 deployments per day ✅ Elite
+</code></pre></div></p>
+<p><strong>Data Sources</strong>:
+- ArgoCD sync events
+- GitOps repository commits
+- CI/CD pipeline completions
+- Kubernetes deployment events</p>
+<p><strong>Prometheus Query</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Count deployments per day</span>
+<span class="k">sum</span><span class="o">(</span><span class="kr">increase</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">{</span><span class="nl">phase</span><span class="o">=</span><span class="p">&quot;</span><span class="s">Succeeded</span><span class="p">&quot;}[</span><span class="s">1d</span><span class="p">]</span><span class="o">))</span>
+
+<span class="c1"># Deployment frequency by application</span>
+<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">{</span><span class="nl">phase</span><span class="o">=</span><span class="p">&quot;</span><span class="s">Succeeded</span><span class="p">&quot;}[</span><span class="s">7d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">name</span><span class="o">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">86400</span>
+</code></pre></div></p>
+<h3 id="metric-2-lead-time-for-changes">Metric 2: Lead Time for Changes</h3>
+<p><strong>Definition</strong>: Time from code commit to running in production</p>
+<p><strong>Calculation</strong>:
+<div class="highlight"><pre><span></span><code>Lead Time = Production Deployment Time - Commit Time
+
+Example:
+- Commit: 2025-10-10 14:00:00
+- Production: 2025-10-10 14:25:00
+- Lead Time: 25 minutes ✅ Elite
+</code></pre></div></p>
+<p><strong>Components</strong>:
+<div class="highlight"><pre><span></span><code>Total Lead Time = 
+    Code Review Time +
+    CI Build Time +
+    Test Execution Time +
+    Security Scanning Time +
+    Artifact Creation Time +
+    Deployment Time +
+    Validation Time
+</code></pre></div></p>
+<p><strong>Data Collection</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Webhook receiver for Git commits</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/webhook/commit&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">record_commit</span><span class="p">():</span>
+    <span class="n">commit_sha</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;after&#39;</span><span class="p">]</span>
+    <span class="n">commit_time</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;head_commit&#39;</span><span class="p">][</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Store in database</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">store_commit</span><span class="p">(</span><span class="n">commit_sha</span><span class="p">,</span> <span class="n">commit_time</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">200</span>
+
+<span class="c1"># Webhook receiver for deployments</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/webhook/deploy&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">record_deployment</span><span class="p">():</span>
+    <span class="n">commit_sha</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;revision&#39;</span><span class="p">]</span>
+    <span class="n">deploy_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+
+    <span class="c1"># Calculate lead time</span>
+    <span class="n">commit_time</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_commit_time</span><span class="p">(</span><span class="n">commit_sha</span><span class="p">)</span>
+    <span class="n">lead_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">deploy_time</span> <span class="o">-</span> <span class="n">commit_time</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+
+    <span class="c1"># Send to Prometheus</span>
+    <span class="n">lead_time_histogram</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span><span class="n">app</span><span class="o">=</span><span class="n">app_name</span><span class="p">)</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">lead_time</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">200</span>
+</code></pre></div></p>
+<p><strong>Prometheus Query</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Average lead time (seconds)</span>
+<span class="k">avg</span><span class="o">(</span><span class="nv">deployment_lead_time_seconds</span><span class="o">)</span>
+
+<span class="c1"># P95 lead time</span>
+<span class="kr">histogram_quantile</span><span class="o">(</span><span class="mf">0.95</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">deployment_lead_time_seconds_bucket</span><span class="p">[</span><span class="s">7d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">le</span><span class="o">))</span>
+
+<span class="c1"># Lead time by team</span>
+<span class="k">avg</span><span class="o">(</span><span class="nv">deployment_lead_time_seconds</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">team</span><span class="o">)</span>
+</code></pre></div></p>
+<h3 id="metric-3-change-failure-rate">Metric 3: Change Failure Rate</h3>
+<p><strong>Definition</strong>: Percentage of deployments that result in failure</p>
+<p><strong>Calculation</strong>:
+<div class="highlight"><pre><span></span><code>CFR = (Failed Deployments / Total Deployments) × 100
+
+Example:
+- Total deployments: 100
+- Failed deployments: 8
+- CFR = (8 / 100) × 100 = 8% ✅ Elite
+</code></pre></div></p>
+<p><strong>Defining "Failure"</strong>:
+- Deployment rollback within 24 hours
+- Incident created within 24 hours of deployment
+- Deployment marked as failed in ArgoCD
+- Health checks fail post-deployment</p>
+<p><strong>Data Collection</strong>:
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">calculate_change_failure_rate</span><span class="p">(</span><span class="n">timeframe_hours</span><span class="o">=</span><span class="mi">24</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate CFR by correlating deployments with incidents</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">deployments</span> <span class="o">=</span> <span class="n">get_deployments</span><span class="p">(</span><span class="n">since</span><span class="o">=</span><span class="n">timeframe_hours</span><span class="p">)</span>
+    <span class="n">failures</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">deployment</span> <span class="ow">in</span> <span class="n">deployments</span><span class="p">:</span>
+        <span class="n">deploy_time</span> <span class="o">=</span> <span class="n">deployment</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Check for incidents within 24h</span>
+        <span class="n">incidents</span> <span class="o">=</span> <span class="n">get_incidents</span><span class="p">(</span>
+            <span class="n">since</span><span class="o">=</span><span class="n">deploy_time</span><span class="p">,</span>
+            <span class="n">until</span><span class="o">=</span><span class="n">deploy_time</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Check for rollbacks</span>
+        <span class="n">rollback</span> <span class="o">=</span> <span class="n">get_rollback</span><span class="p">(</span>
+            <span class="n">deployment_id</span><span class="o">=</span><span class="n">deployment</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+            <span class="n">since</span><span class="o">=</span><span class="n">deploy_time</span><span class="p">,</span>
+            <span class="n">until</span><span class="o">=</span><span class="n">deploy_time</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">incidents</span> <span class="ow">or</span> <span class="n">rollback</span><span class="p">:</span>
+            <span class="n">failures</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">cfr</span> <span class="o">=</span> <span class="p">(</span><span class="n">failures</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">deployments</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span> <span class="k">if</span> <span class="n">deployments</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">cfr</span>
+</code></pre></div></p>
+<p><strong>Prometheus Query</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Change Failure Rate (%)</span>
+<span class="k">sum</span><span class="o">(</span><span class="nv">deployment_result</span><span class="p">{</span><span class="nl">status</span><span class="o">=</span><span class="p">&quot;</span><span class="s">failed</span><span class="p">&quot;}</span><span class="o">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">sum</span><span class="o">(</span><span class="nv">deployment_result</span><span class="o">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span>
+
+<span class="c1"># CFR by application</span>
+<span class="o">(</span><span class="k">sum</span><span class="o">(</span><span class="nv">deployment_result</span><span class="p">{</span><span class="nl">status</span><span class="o">=</span><span class="p">&quot;</span><span class="s">failed</span><span class="p">&quot;}</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">app</span><span class="o">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">sum</span><span class="o">(</span><span class="nv">deployment_result</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">app</span><span class="o">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span>
+
+<span class="c1"># CFR trend over time</span>
+<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">deployment_result</span><span class="p">{</span><span class="nl">status</span><span class="o">=</span><span class="p">&quot;</span><span class="s">failed</span><span class="p">&quot;}[</span><span class="s">7d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">deployment_result</span><span class="p">[</span><span class="s">7d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span>
+</code></pre></div></p>
+<h3 id="metric-4-mean-time-to-restore-mttr">Metric 4: Mean Time to Restore (MTTR)</h3>
+<p><strong>Definition</strong>: Average time to recover from a production failure</p>
+<p><strong>Calculation</strong>:
+<div class="highlight"><pre><span></span><code>MTTR = Total Downtime / Number of Incidents
+
+Example:
+- 5 incidents in a month
+- Total downtime: 125 minutes
+- MTTR = 125 / 5 = 25 minutes ✅ Elite
+</code></pre></div></p>
+<p><strong>Data Collection</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Incident lifecycle tracking</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Incident</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">severity</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">severity</span> <span class="o">=</span> <span class="n">severity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">detected_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mitigated_at</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolved_at</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">mitigate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Service restored, but root cause not fixed&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mitigated_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="n">ttm</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mitigated_at</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">detected_at</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+
+        <span class="c1"># Time to Mitigate (what we really care about for MTTR)</span>
+        <span class="n">mttr_histogram</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span><span class="n">severity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">severity</span><span class="p">)</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">ttm</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Root cause fixed, incident closed&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolved_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="n">ttr</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resolved_at</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">detected_at</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+
+        <span class="c1"># Time to Resolve (total incident duration)</span>
+        <span class="n">incident_duration_histogram</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span><span class="n">severity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">severity</span><span class="p">)</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">ttr</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>Prometheus Query</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Average MTTR (seconds)</span>
+<span class="k">avg</span><span class="o">(</span><span class="nv">incident_duration_seconds</span><span class="o">)</span>
+
+<span class="c1"># MTTR by severity</span>
+<span class="k">avg</span><span class="o">(</span><span class="nv">incident_duration_seconds</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">severity</span><span class="o">)</span>
+
+<span class="c1"># P95 MTTR (captures worst cases)</span>
+<span class="kr">histogram_quantile</span><span class="o">(</span><span class="mf">0.95</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">incident_duration_seconds_bucket</span><span class="p">[</span><span class="s">30d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">le</span><span class="o">))</span>
+
+<span class="c1"># MTTR trend</span>
+<span class="kr">avg_over_time</span><span class="o">(</span><span class="nv">incident_duration_seconds</span><span class="p">[</span><span class="s">7d</span><span class="p">]</span><span class="o">)</span>
+</code></pre></div></p>
+<hr />
+<h2 id="part-3-building-the-ultimate-dora-dashboard">📊 Part 3: Building the Ultimate DORA Dashboard</h2>
+<h3 id="dashboard-architecture">Dashboard Architecture</h3>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────┐
+│              DORA Metrics Dashboard                      │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │  Executive Summary (Current vs Target)             │ │
+│  │  DF: 5/day (Elite) | LT: 45m (Elite)              │ │
+│  │  CFR: 8% (Elite)   | MTTR: 25m (Elite)            │ │
+│  └────────────────────────────────────────────────────┘ │
+│                                                          │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐   │
+│  │ Deployment   │ │ Lead Time    │ │ Change       │   │
+│  │ Frequency    │ │ Trend        │ │ Failure Rate │   │
+│  │ (Time Series)│ │ (Histogram)  │ │ (Gauge)      │   │
+│  └──────────────┘ └──────────────┘ └──────────────┘   │
+│                                                          │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │  MTTR Analysis (by Severity &amp; Trend)             │  │
+│  │  SEV1: 15m | SEV2: 1.5h | SEV3: 4h              │  │
+│  └──────────────────────────────────────────────────┘  │
+│                                                          │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │  Team Comparison (Leaderboard)                    │  │
+│  │  Team A: Elite | Team B: High | Team C: Medium  │  │
+│  └──────────────────────────────────────────────────┘  │
+│                                                          │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │  Improvement Trends (30-day vs 90-day)           │  │
+│  │  DF: ↑15% | LT: ↓20% | CFR: ↓10% | MTTR: ↓25% │  │
+│  └──────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="grafana-dashboard-json">Grafana Dashboard JSON</h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;dashboard&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DORA Metrics - Platform Performance&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dora&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;metrics&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;platform&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;timezone&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;utc&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;panels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deployment Frequency (per day)&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(rate(argocd_app_sync_total{phase=&#39;Succeeded&#39;}[7d])) * 86400&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deployments/Day&quot;</span>
+<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;fieldConfig&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;defaults&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;thresholds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;absolute&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="p">}</span>
+<span class="w">              </span><span class="p">]</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;mappings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;short&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Lead Time for Changes (P95)&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;histogram_quantile(0.95, sum(rate(deployment_lead_time_seconds_bucket[7d])) by (le)) / 3600&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P95 Hours&quot;</span>
+<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;fieldConfig&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;defaults&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;thresholds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="p">}</span>
+<span class="w">              </span><span class="p">]</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;h&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Change Failure Rate&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gauge&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(rate(deployment_result{status=&#39;failed&#39;}[7d])) / sum(rate(deployment_result[7d])) * 100&quot;</span>
+<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;fieldConfig&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;defaults&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;thresholds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="p">}</span>
+<span class="w">              </span><span class="p">]</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;max&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;percent&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Mean Time to Restore&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;stat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;avg(incident_duration_seconds) / 60&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Avg Minutes&quot;</span>
+<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;fieldConfig&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;defaults&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;thresholds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;green&quot;</span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yellow&quot;</span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1440</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;red&quot;</span><span class="p">}</span>
+<span class="w">              </span><span class="p">]</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;m&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deployment Frequency Trend&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;graph&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(rate(argocd_app_sync_total{phase=&#39;Succeeded&#39;}[1d])) by (name) * 86400&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{name}}&quot;</span>
+<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Lead Time Distribution&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heatmap&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(increase(deployment_lead_time_seconds_bucket[1h])) by (le)&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heatmap&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{le}}&quot;</span>
+<span class="w">        </span><span class="p">}],</span>
+<span class="w">        </span><span class="nt">&quot;gridPos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;h&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;w&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="part-4-hands-on-lab-complete-dora-implementation">🎯 Part 4: Hands-On Lab - Complete DORA Implementation</h2>
+<h3 id="objective">Objective</h3>
+<p>Implement end-to-end DORA metrics collection and visualization for Fawkes platform.</p>
+<h3 id="step-1-deploy-dora-metrics-collector">Step 1: Deploy DORA Metrics Collector</h3>
+<p>Create <code>dora-collector.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dojo-metrics</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">collector</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes/dora-collector:v1.0</span>
+<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DATABASE_URL</span>
+<span class="w">          </span><span class="nt">valueFrom</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">secretKeyRef</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-db-credentials</span>
+<span class="w">              </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">url</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PROMETHEUS_URL</span>
+<span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://prometheus:9090&quot;</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128Mi&quot;</span>
+<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100m&quot;</span>
+<span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span>
+<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200m&quot;</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dojo-metrics</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090</span>
+<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090</span>
+<span class="nn">---</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monitoring.coreos.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceMonitor</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dojo-metrics</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora-collector</span>
+<span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span>
+<span class="w">    </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
+</code></pre></div>
+<h3 id="step-2-configure-webhooks">Step 2: Configure Webhooks</h3>
+<p><strong>ArgoCD Webhook</strong> (for deployments):</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd-notifications-cm</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd</span>
+<span class="nt">data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">service.webhook.dora</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">url: http://dora-collector.dojo-metrics/webhook/deploy</span>
+<span class="w">    </span><span class="no">headers:</span>
+<span class="w">    </span><span class="no">- name: Content-Type</span>
+<span class="w">      </span><span class="no">value: application/json</span>
+
+<span class="w">  </span><span class="nt">trigger.on-deployed</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">- when: app.status.operationState.phase in [&#39;Succeeded&#39;]</span>
+<span class="w">      </span><span class="no">send: [dora-deploy-succeeded]</span>
+<span class="w">    </span><span class="no">- when: app.status.operationState.phase in [&#39;Failed&#39;]</span>
+<span class="w">      </span><span class="no">send: [dora-deploy-failed]</span>
+
+<span class="w">  </span><span class="nt">template.dora-deploy-succeeded</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">webhook:</span>
+<span class="w">      </span><span class="no">dora:</span>
+<span class="w">        </span><span class="no">method: POST</span>
+<span class="w">        </span><span class="no">body: |</span>
+<span class="w">          </span><span class="no">{</span>
+<span class="w">            </span><span class="no">&quot;event&quot;: &quot;deployment&quot;,</span>
+<span class="w">            </span><span class="no">&quot;status&quot;: &quot;success&quot;,</span>
+<span class="w">            </span><span class="no">&quot;app&quot;: &quot;{{.app.metadata.name}}&quot;,</span>
+<span class="w">            </span><span class="no">&quot;revision&quot;: &quot;{{.app.status.sync.revision}}&quot;,</span>
+<span class="w">            </span><span class="no">&quot;timestamp&quot;: &quot;{{.app.status.operationState.finishedAt}}&quot;</span>
+<span class="w">          </span><span class="no">}</span>
+
+<span class="w">  </span><span class="nt">template.dora-deploy-failed</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">webhook:</span>
+<span class="w">      </span><span class="no">dora:</span>
+<span class="w">        </span><span class="no">method: POST</span>
+<span class="w">        </span><span class="no">body: |</span>
+<span class="w">          </span><span class="no">{</span>
+<span class="w">            </span><span class="no">&quot;event&quot;: &quot;deployment&quot;,</span>
+<span class="w">            </span><span class="no">&quot;status&quot;: &quot;failed&quot;,</span>
+<span class="w">            </span><span class="no">&quot;app&quot;: &quot;{{.app.metadata.name}}&quot;,</span>
+<span class="w">            </span><span class="no">&quot;revision&quot;: &quot;{{.app.status.sync.revision}}&quot;,</span>
+<span class="w">            </span><span class="no">&quot;timestamp&quot;: &quot;{{.app.status.operationState.finishedAt}}&quot;</span>
+<span class="w">          </span><span class="no">}</span>
+</code></pre></div>
+<p><strong>Git Webhook</strong> (for commits):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Add webhook to GitHub repository</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>https://api.github.com/repos/myorg/myapp/hooks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;name&quot;: &quot;web&quot;,</span>
+<span class="s1">    &quot;active&quot;: true,</span>
+<span class="s1">    &quot;events&quot;: [&quot;push&quot;],</span>
+<span class="s1">    &quot;config&quot;: {</span>
+<span class="s1">      &quot;url&quot;: &quot;https://dora-collector.fawkes.io/webhook/commit&quot;,</span>
+<span class="s1">      &quot;content_type&quot;: &quot;json&quot;</span>
+<span class="s1">    }</span>
+<span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="step-3-create-grafana-dashboard">Step 3: Create Grafana Dashboard</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Import dashboard via API</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">GRAFANA_API_KEY</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>http://grafana:3000/api/dashboards/db<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span>@dora-dashboard.json
+
+<span class="c1"># Or import via UI:</span>
+<span class="c1"># Grafana → Dashboards → Import → Upload dora-dashboard.json</span>
+</code></pre></div>
+<h3 id="step-4-validate-data-collection">Step 4: Validate Data Collection</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check if metrics are being collected</span>
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>dojo-metrics<span class="w"> </span>svc/dora-collector<span class="w"> </span><span class="m">9090</span>:9090
+
+<span class="c1"># Query Prometheus</span>
+curl<span class="w"> </span><span class="s2">&quot;http://localhost:9090/metrics&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>deployment
+
+<span class="c1"># Expected output:</span>
+<span class="c1"># deployment_frequency_total{app=&quot;myapp&quot;} 150</span>
+<span class="c1"># deployment_lead_time_seconds_sum{app=&quot;myapp&quot;} 450000</span>
+<span class="c1"># deployment_lead_time_seconds_count{app=&quot;myapp&quot;} 150</span>
+<span class="c1"># deployment_result{app=&quot;myapp&quot;,status=&quot;success&quot;} 142</span>
+<span class="c1"># deployment_result{app=&quot;myapp&quot;,status=&quot;failed&quot;} 8</span>
+</code></pre></div>
+<h3 id="step-5-analyze-your-metrics">Step 5: Analyze Your Metrics</h3>
+<p>Access Grafana dashboard and analyze:</p>
+<ol>
+<li><strong>Deployment Frequency</strong>: Are you deploying daily? Multiple times per day?</li>
+<li><strong>Lead Time</strong>: What's your P95? Where are the bottlenecks?</li>
+<li><strong>CFR</strong>: Which deployments are failing? Common patterns?</li>
+<li><strong>MTTR</strong>: How quickly do you recover? Can you automate more?</li>
+</ol>
+<hr />
+<h2 id="part-5-advanced-analysis-techniques">📈 Part 5: Advanced Analysis Techniques</h2>
+<h3 id="trend-analysis">Trend Analysis</h3>
+<p><strong>Week-over-week comparison</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Current week deployment frequency</span>
+<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">{</span><span class="nl">phase</span><span class="o">=</span><span class="p">&quot;</span><span class="s">Succeeded</span><span class="p">&quot;}[</span><span class="s">7d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">86400</span>
+
+<span class="c1"># Previous week</span>
+<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">{</span><span class="nl">phase</span><span class="o">=</span><span class="p">&quot;</span><span class="s">Succeeded</span><span class="p">&quot;}[</span><span class="s">7d</span><span class="p">]</span><span class="w"> </span><span class="k">offset</span><span class="w"> </span><span class="s">7d</span><span class="o">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">86400</span>
+
+<span class="c1"># % change</span>
+<span class="o">(</span>
+<span class="w">  </span><span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">{</span><span class="nl">phase</span><span class="o">=</span><span class="p">&quot;</span><span class="s">Succeeded</span><span class="p">&quot;}[</span><span class="s">7d</span><span class="p">]</span><span class="o">))</span><span class="w"> </span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span>
+<span class="w">  </span><span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">{</span><span class="nl">phase</span><span class="o">=</span><span class="p">&quot;</span><span class="s">Succeeded</span><span class="p">&quot;}[</span><span class="s">7d</span><span class="p">]</span><span class="w"> </span><span class="k">offset</span><span class="w"> </span><span class="s">7d</span><span class="o">))</span>
+<span class="o">)</span><span class="w"> </span>
+<span class="o">/</span><span class="w"> </span>
+<span class="k">sum</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">argocd_app_sync_total</span><span class="p">{</span><span class="nl">phase</span><span class="o">=</span><span class="p">&quot;</span><span class="s">Succeeded</span><span class="p">&quot;}[</span><span class="s">7d</span><span class="p">]</span><span class="w"> </span><span class="k">offset</span><span class="w"> </span><span class="s">7d</span><span class="o">))</span><span class="w"> </span>
+<span class="o">*</span><span class="w"> </span><span class="mi">100</span>
+</code></pre></div></p>
+<h3 id="correlation-analysis">Correlation Analysis</h3>
+<p><strong>Does higher deployment frequency correlate with lower CFR?</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">pearsonr</span>
+
+<span class="c1"># Fetch data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;team&#39;</span><span class="p">:</span> <span class="n">teams</span><span class="p">,</span>
+    <span class="s1">&#39;deployment_freq&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">get_deployment_freq</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">teams</span><span class="p">],</span>
+    <span class="s1">&#39;cfr&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">get_cfr</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">teams</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="c1"># Calculate correlation</span>
+<span class="n">correlation</span><span class="p">,</span> <span class="n">p_value</span> <span class="o">=</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;deployment_freq&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;cfr&#39;</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Correlation: </span><span class="si">{</span><span class="n">correlation</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P-value: </span><span class="si">{</span><span class="n">p_value</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Expected: Negative correlation (higher DF → lower CFR)</span>
+</code></pre></div>
+<h3 id="identifying-bottlenecks">Identifying Bottlenecks</h3>
+<p><strong>Lead time breakdown</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Time in each stage</span>
+<span class="k">sum</span><span class="o">(</span><span class="nv">ci_stage_duration_seconds</span><span class="p">{</span><span class="nl">stage</span><span class="o">=</span><span class="p">&quot;</span><span class="s">build</span><span class="p">&quot;}</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">app</span><span class="o">)</span>
+<span class="k">sum</span><span class="o">(</span><span class="nv">ci_stage_duration_seconds</span><span class="p">{</span><span class="nl">stage</span><span class="o">=</span><span class="p">&quot;</span><span class="s">test</span><span class="p">&quot;}</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">app</span><span class="o">)</span>
+<span class="k">sum</span><span class="o">(</span><span class="nv">ci_stage_duration_seconds</span><span class="p">{</span><span class="nl">stage</span><span class="o">=</span><span class="p">&quot;</span><span class="s">scan</span><span class="p">&quot;}</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">app</span><span class="o">)</span>
+<span class="k">sum</span><span class="o">(</span><span class="nv">ci_stage_duration_seconds</span><span class="p">{</span><span class="nl">stage</span><span class="o">=</span><span class="p">&quot;</span><span class="s">deploy</span><span class="p">&quot;}</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">app</span><span class="o">)</span>
+</code></pre></div></p>
+<p>Create waterfall chart to visualize:
+<div class="highlight"><pre><span></span><code>Commit → Build (3m) → Test (5m) → Scan (2m) → Deploy (1m) = 11m total
+         ████████    ████████████  ████        ██
+
+Bottleneck: Testing takes 45% of lead time
+Action: Parallelize tests or optimize slow tests
+</code></pre></div></p>
+<hr />
+<h2 id="part-6-driving-improvements-with-data">💪 Part 6: Driving Improvements with Data</h2>
+<h3 id="improvement-framework">Improvement Framework</h3>
+<p><strong>1. Measure Current State</strong>
+<div class="highlight"><pre><span></span><code>Current Performance (Last 30 days):
+- DF: 3 per day (High)
+- LT: 2 hours (High)
+- CFR: 12% (Elite)
+- MTTR: 45 minutes (Elite)
+
+Overall: High Performer
+</code></pre></div></p>
+<p><strong>2. Set Targets</strong>
+<div class="highlight"><pre><span></span><code>3-Month Goals:
+- DF: 5 per day (Elite) - ↑67%
+- LT: 1 hour (Elite) - ↓50%
+- CFR: &lt;10% (Elite) - ↓17%
+- MTTR: &lt;30 min (Elite) - ↓33%
+</code></pre></div></p>
+<p><strong>3. Identify Bottlenecks</strong>
+<div class="highlight"><pre><span></span><code>Lead Time Breakdown:
+- Code Review: 45 min (38%)
+- CI Build: 15 min (13%)
+- Testing: 35 min (29%)
+- Deployment: 25 min (21%)
+
+Biggest opportunity: Code Review (38% of lead time)
+</code></pre></div></p>
+<p><strong>4. Implement Changes</strong>
+<div class="highlight"><pre><span></span><code>Actions:
+1. Reduce PR size (enforce &lt;300 lines)
+2. Pair programming for complex changes (faster review)
+3. Async code review tools (remove scheduling overhead)
+4. Auto-approve trivial changes (docs, formatting)
+
+Expected Impact: Reduce code review time by 50% (22min savings)
+New Lead Time: 1h 5min → Target not quite met, but significant progress
+</code></pre></div></p>
+<p><strong>5. Measure Impact</strong>
+<div class="highlight"><pre><span></span><code>After 30 days:
+- DF: 4.5 per day ✅ (On track)
+- LT: 1h 15min ⚠️ (Close to target)
+- CFR: 9% ✅ (Target met!)
+- MTTR: 28 min ✅ (Target exceeded!)
+
+Continue iteration...
+</code></pre></div></p>
+<hr />
+<h2 id="part-7-knowledge-check">🎓 Part 7: Knowledge Check</h2>
+<h3 id="quiz-questions">Quiz Questions</h3>
+<ol>
+<li><strong>What does P95 lead time represent?</strong></li>
+<li>[ ] Average lead time</li>
+<li>[ ] Fastest lead time</li>
+<li>[x] 95% of deployments complete within this time</li>
+<li>
+<p>[ ] Slowest lead time</p>
+</li>
+<li>
+<p><strong>How do you calculate Change Failure Rate?</strong></p>
+</li>
+<li>[ ] Failed deployments × 100</li>
+<li>[x] (Failed deployments / Total deployments) × 100</li>
+<li>[ ] Total deployments / Failed deployments</li>
+<li>
+<p>[ ] Failed deployments / Successful deployments</p>
+</li>
+<li>
+<p><strong>What's the Elite benchmark for Deployment Frequency?</strong></p>
+</li>
+<li>[ ] Once per week</li>
+<li>[ ] Once per day</li>
+<li>[x] Multiple times per day</li>
+<li>
+<p>[ ] Continuous deployment</p>
+</li>
+<li>
+<p><strong>What should MTTR measure?</strong></p>
+</li>
+<li>[ ] Time to write code</li>
+<li>[ ] Time to test</li>
+<li>[x] Time to restore service after incident</li>
+<li>
+<p>[ ] Time to deploy</p>
+</li>
+<li>
+<p><strong>Why track team-level DORA metrics separately?</strong></p>
+</li>
+<li>[ ] To rank teams</li>
+<li>[x] To identify improvement opportunities specific to each team</li>
+<li>[ ] To punish low performers</li>
+<li>
+<p>[ ] It's not necessary</p>
+</li>
+<li>
+<p><strong>What does high DF + low CFR indicate?</strong></p>
+</li>
+<li>[ ] Luck</li>
+<li>[x] Mature CI/CD with good quality gates</li>
+<li>[ ] Metrics are broken</li>
+<li>
+<p>[ ] Too much testing</p>
+</li>
+<li>
+<p><strong>How often should you review DORA metrics?</strong></p>
+</li>
+<li>[ ] Annually</li>
+<li>[ ] When problems occur</li>
+<li>[x] Weekly or monthly for trends</li>
+<li>
+<p>[ ] Once after implementation</p>
+</li>
+<li>
+<p><strong>What's a good first step to improve lead time?</strong></p>
+</li>
+<li>[ ] Skip testing</li>
+<li>[ ] Deploy less frequently</li>
+<li>[x] Identify and optimize the slowest stage</li>
+<li>[ ] Hire more people</li>
+</ol>
+<p><strong>Answers</strong>: 1-C, 2-B, 3-C, 4-C, 5-B, 6-B, 7-C, 8-C</p>
+<hr />
+<h2 id="part-8-module-summary-next-steps">🎯 Part 8: Module Summary &amp; Next Steps</h2>
+<h3 id="what-you-learned">What You Learned</h3>
+<p>✅ <strong>Advanced Calculation</strong>: All 4 metrics with distributions<br />
+✅ <strong>Data Collection</strong>: Webhooks, Prometheus, automation<br />
+✅ <strong>Dashboards</strong>: Comprehensive Grafana visualizations<br />
+✅ <strong>Analysis</strong>: Trends, correlations, bottlenecks<br />
+✅ <strong>Improvement</strong>: Data-driven optimization framework<br />
+✅ <strong>Presentation</strong>: Communicate metrics to leadership  </p>
+<h3 id="dora-capabilities-achieved">DORA Capabilities Achieved</h3>
+<ul>
+<li>✅ <strong>All 4 Key Metrics</strong>: Automated collection and tracking</li>
+<li>✅ <strong>Monitoring</strong>: Real-time visibility into delivery performance</li>
+<li>✅ <strong>Data-Driven</strong>: Metrics inform platform improvements</li>
+</ul>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li><strong>Metrics must be actionable</strong> - If you can't improve it, don't measure it</li>
+<li><strong>Track distributions, not just averages</strong> - P95/P99 reveal user experience</li>
+<li><strong>Compare teams carefully</strong> - Context matters (legacy vs greenfield)</li>
+<li><strong>Automate collection</strong> - Manual tracking doesn't scale</li>
+<li><strong>Review regularly</strong> - Weekly trends reveal improvement opportunities</li>
+</ol>
+<h3 id="real-world-impact">Real-World Impact</h3>
+<p>"After implementing comprehensive DORA tracking:
+- <strong>Identified bottleneck</strong>: Code review was 40% of lead time
+- <strong>Action</strong>: Reduced PR size, added auto-approval for trivial changes
+- <strong>Result</strong>: Lead time decreased 35% in 60 days
+- <strong>Visibility</strong>: Leadership now tracks metrics quarterly
+- <strong>Culture</strong>: Teams compete (healthily) to improve metrics</p>
+<p>Metrics transformed from vanity to value."
+- <em>Engineering Director, Tech Company</em></p>
+<hr />
+<h2 id="additional-resources">📚 Additional Resources</h2>
+<h3 id="tools">Tools</h3>
+<ul>
+<li><a href="https://github.com/dora-team/fourkeys">Four Keys</a> - DORA metrics collection</li>
+<li><a href="https://www.sleuth.io/">Sleuth</a> - DORA tracking SaaS</li>
+<li><a href="https://linearb.io/">LinearB</a> - Engineering intelligence</li>
+</ul>
+<h3 id="reading">Reading</h3>
+<ul>
+<li><a href="https://dora.dev/research/">DORA State of DevOps Reports</a></li>
+<li><a href="https://itrevolution.com/accelerate-book/">Accelerate</a> - The research behind DORA</li>
+<li><a href="https://cloud.google.com/blog/products/devops-sre/using-the-four-keys-to-measure-your-devops-performance">DORA Metrics Guide</a></li>
+</ul>
+<hr />
+<h2 id="module-completion">🏅 Module Completion</h2>
+<h3 id="assessment-checklist">Assessment Checklist</h3>
+<ul>
+<li>[ ] <strong>Conceptual Understanding</strong></li>
+<li>[ ] Calculate all 4 metrics correctly</li>
+<li>[ ] Understand P50/P95/P99 distributions</li>
+<li>
+<p>[ ] Explain metric correlations</p>
+</li>
+<li>
+<p>[ ] <strong>Practical Skills</strong></p>
+</li>
+<li>[ ] Deploy DORA collector</li>
+<li>[ ] Configure webhooks</li>
+<li>[ ] Build Grafana dashboard</li>
+<li>[ ] Analyze trends
+  -</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
