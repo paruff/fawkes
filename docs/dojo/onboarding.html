@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fawkes Developer Onboarding - Get Started in 30 Minutes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .hero-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .hero-card h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-card .time-estimate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 1rem 0;
+            font-weight: bold;
+        }
+
+        .path-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .path-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .path-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+        }
+
+        .path-card.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+
+        .path-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .path-card h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .path-card .duration {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .step {
+            display: flex;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .step-content h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-time {
+            color: #667eea;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .command {
+            color: #50fa7b;
+        }
+
+        .comment {
+            color: #6272a4;
+        }
+
+        .checklist {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .checklist li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .checklist li:before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+            color: #667eea;
+        }
+
+        .help-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .quick-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .quick-link:hover {
+            transform: translateY(-2px);
+        }
+
+        .faq {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .faq-item {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .faq-question {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-placeholder {
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 3rem;
+            text-align: center;
+            color: #666;
+            margin: 1rem 0;
+        }
+
+        .progress-tracker {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .step {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Fawkes Developer Onboarding</h1>
+        <p class="subtitle">Deploy your first application in 30 minutes</p>
+    </div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-card">
+            <h2>Welcome to Fawkes!</h2>
+            <p>Fawkes is your internal developer platform that makes deploying applications fast, secure, and reliable.</p>
+            <div class="time-estimate">⏱️ Complete Onboarding: 30 minutes</div>
+            <p style="margin-top: 1rem; color: #666;">
+                No infrastructure knowledge required. Just write code, push to Git, and we handle the rest.
+            </p>
+        </div>
+
+        <!-- Path Selector -->
+        <div class="step-section">
+            <h2>Choose Your Onboarding Path</h2>
+            <p>Select the path that matches your experience level:</p>
+            
+            <div class="path-selector">
+                <div class="path-card" onclick="selectPath('beginner')">
+                    <div class="path-icon">🌱</div>
+                    <h3>I'm New to Deployment</h3>
+                    <div class="duration">30 minutes · Guided</div>
+                    <p>Step-by-step guidance through your first deployment. Perfect if you've never deployed an application before.</p>
+                </div>
+
+                <div class="path-card" onclick="selectPath('experienced')">
+                    <div class="path-icon">⚡</div>
+                    <h3>I've Deployed Before</h3>
+                    <div class="duration">15 minutes · Quick Start</div>
+                    <p>Fast-track for developers familiar with Git and deployments. Get straight to deploying on Fawkes.</p>
+                </div>
+
+                <div class="path-card" onclick="selectPath('troubleshoot')">
+                    <div class="path-icon">🔧</div>
+                    <h3>I Need Help</h3>
+                    <div class="duration">Variable · Support</div>
+                    <p>Troubleshooting common issues, getting help, and debugging deployments.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tracker -->
+        <div class="progress-tracker" id="progressTracker" style="display: none;">
+            <h3>Your Onboarding Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar">0%</div>
+            </div>
+            <p style="text-align: center; color: #666; margin-top: 0.5rem;">
+                Keep going! You're doing great 🎉
+            </p>
+        </div>
+
+        <!-- Beginner Path -->
+        <div id="beginnerPath" style="display: none;">
+            <div class="step-section">
+                <h2>🌱 Beginner Path: Your First Deployment</h2>
+                <p>We'll walk you through every step. By the end, you'll have a running application!</p>
+
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-time">⏱️ 2 minutes</div>
+                        <h3>Access Fawkes Platform</h3>
+                        <p>Open your browser and navigate to Fawkes:</p>
+                        <div class="code-block">
+                            <span class="comment"># Open in your browser:</span><br>
+                            https://fawkes.yourcompany.com
+                        </div>
+                        <p>Sign in with your company email. You'll see the Fawkes dashboard.</p>
+                        <div class="help-box">
+                            <strong>💡 Tip:</strong> Bookmark this page! You'll use it often.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-time">⏱️ 3 minutes</div>
+                        <h3>Create Your Application</h3>
+                        <p>In Fawkes, click "Create Component" button. Fill in:</p>
+                        <ul class="checklist">
+                            <li><strong>Name:</strong> my-first-app</li>
+                            <li><strong>Description:</strong> My first Fawkes deployment</li>
+                            <li><strong>Template:</strong> Choose your language (Node.js, Python, Java, Go)</li>
+                            <li><strong>Team:</strong> Select your team</li>
+                        </ul>
+                        <p>Click "Create" and Fawkes will:</p>
+                        <ul style="margin-left: 2rem;">
+                            <li>✅ Create a Git repository</li>
+                            <li>✅ Set up CI/CD pipeline</li>
+                            <li>✅ Configure deployment automation</li>
+                            <li>✅ Generate starter code</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-time">⏱️ 5 minutes</div>
+                        <h3>Clone Your Repository</h3>
+                        <p>Fawkes created a Git repository for you. Clone it to your computer:</p>
+                        <div class="code-block">
+                            <span class="comment"># Copy the repo URL from Fawkes</span><br>
+                            <span class="command">git clone https://github.com/yourorg/my-first-app.git</span><br>
+                            <span class="command">cd my-first-app</span>
+                        </div>
+                        <p>Open the project in your favorite code editor (VS Code, IntelliJ, etc.)</p>
+                        <div class="help-box">
+                            <strong>📚 New to Git?</strong> Git is how we track code changes. 
+                            <a href="#git-basics" style="color: #667eea;">Learn Git basics →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-time">⏱️ 5 minutes</div>
+                        <h3>Make Your First Change</h3>
+                        <p>Let's modify the application. Open the main file and change the welcome message:</p>
+                        <div class="code-block">
+                            <span class="comment"># For Node.js: Edit src/index.js</span><br>
+                            <span class="command">res.send('Hello from Fawkes!');</span><br>
+                            <br>
+                            <span class="comment"># For Python: Edit app/main.py</span><br>
+                            <span class="command">return "Hello from Fawkes!"</span>
+                        </div>
+                        <p>Save the file. That's it! You've made your first code change.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-time">⏱️ 3 minutes</div>
+                        <h3>Commit and Push Your Code</h3>
+                        <p>Now we'll send your change to Git:</p>
+                        <div class="code-block">
+                            <span class="comment"># Stage your changes</span><br>
+                            <span class="command">git add .</span><br>
+                            <br>
+                            <span class="comment"># Commit with a message describing what you changed</span><br>
+                            <span class="command">git commit -m "Update welcome message"</span><br>
+                            <br>
+                            <span class="comment"># Push to GitHub</span><br>
+                            <span class="command">git push origin main</span>
+                        </div>
+                        <div class="success-box">
+                            <strong>🎉 Magic moment:</strong> As soon as you push, Fawkes automatically starts building and deploying your app!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <div class="step-time">⏱️ 5 minutes</div>
+                        <h3>Watch Your Deployment</h3>
+                        <p>Go back to Fawkes in your browser. You'll see:</p>
+                        <ul style="margin-left: 2rem;">
+                            <li>🔨 <strong>Building:</strong> Creating a container image</li>
+                            <li>🧪 <strong>Testing:</strong> Running automated tests</li>
+                            <li>🔒 <strong>Scanning:</strong> Checking for security issues</li>
+                            <li>🚀 <strong>Deploying:</strong> Starting your application</li>
+                            <li>✅ <strong>Healthy:</strong> Your app is running!</li>
+                        </ul>
+                        <p>This whole process takes 3-5 minutes. You can watch the live logs in Fawkes.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">7</div>
+                    <div class="step-content">
+                        <div class="step-time">⏱️ 2 minutes</div>
+                        <h3>Access Your Application</h3>
+                        <p>Once deployment is complete, Fawkes shows you the URL:</p>
+                        <div class="code-block">
+                            https://my-first-app-dev.fawkes.yourcompany.com
+                        </div>
+                        <p>Click the URL and see your app running! You'll see your "Hello from Fawkes!" message.</p>
+                        <div class="success-box">
+                            <strong>🎊 Congratulations!</strong> You just deployed your first application with Fawkes. That's it!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">8</div>
+                    <div class="step-content">
+                        <div class="step-time">⏱️ 5 minutes</div>
+                        <h3>Explore Fawkes Features</h3>
+                        <p>Now that your app is running, explore these Fawkes features:</p>
+                        <ul class="checklist">
+                            <li><strong>Logs:</strong> See real-time application logs</li>
+                            <li><strong>Metrics:</strong> View CPU, memory, and request stats</li>
+                            <li><strong>Deployments:</strong> See history of all deployments</li>
+                            <li><strong>Environments:</strong> Your app runs in dev, staging, and prod</li>
+                        </ul>
+                        <p>Click around the Fawkes interface. You can't break anything!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Steps for Beginners -->
+            <div class="step-section">
+                <h2>🎓 What to Learn Next</h2>
+                <div class="quick-links">
+                    <a href="#" class="quick-link">
+                        <strong>🔍 Debugging</strong><br>
+                        How to find and fix issues
+                    </a>
+                    <a href="#" class="quick-link">
+                        <strong>🌍 Environments</strong><br>
+                        Dev, staging, and production
+                    </a>
+                    <a href="#" class="quick-link">
+                        <strong>📊 Monitoring</strong><br>
+                        Understanding metrics
+                    </a>
+                    <a href="#" class="quick-link">
+                        <strong>🔄 Rollbacks</strong><br>
+                        Undoing bad deployments
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experienced Path -->
+        <div id="experiencedPath" style="display: none;">
+            <div class="step-section">
+                <h2>⚡ Quick Start: Deploy in 15 Minutes</h2>
+                <p>You know the basics. Let's get you deploying fast.</p>
+
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-time">⏱️ 3 minutes</div>
+                        <h3>Bootstrap Your App</h3>
+                        <div class="code-block">
+                            <span class="comment"># Install Fawkes CLI</span><br>
+                            <span class="command">npm install -g @fawkes/cli</span><br>
+                            <span class="command"># or: brew install fawkes</span><br>
+                            <br>
+                            <span class="comment"># Authenticate</span><br>
+                            <span class="command">fawkes login</span><br>
+                            <br>
+                            <span class="comment"># Create new app from template</span><br>
+                            <span class="command">fawkes create my-app --template node-express</span><br>
+                            <span class="command">cd my-app</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-time">⏱️ 2 minutes</div>
+                        <h3>Review Generated Files</h3>
+                        <p>Fawkes created these for you:</p>
+                        <ul style="margin-left: 2rem;">
+                            <li><code>.fawkes/config.yaml</code> - Platform configuration</li>
+                            <li><code>.github/workflows/deploy.yml</code> - CI/CD pipeline</li>
+                            <li><code>k8s/</code> - Kubernetes manifests (auto-managed)</li>
+                            <li><code>Dockerfile</code> - Container image definition</li>
+                        </ul>
+                        <p><strong>You typically don't need to edit these.</strong> Fawkes manages them.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-time">⏱️ 5 minutes</div>
+                        <h3>Deploy</h3>
+                        <div class="code-block">
+                            <span class="comment"># Commit and push</span><br>
+                            <span class="command">git add .</span><br>
+                            <span class="command">git commit -m "Initial commit"</span><br>
+                            <span class="command">git push origin main</span><br>
+                            <br>
+                            <span class="comment"># Watch deployment</span><br>
+                            <span class="command">fawkes deploy watch</span>
+                        </div>
+                        <p>Your app builds and deploys automatically. Takes 3-5 minutes.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-time">⏱️ 2 minutes</div>
+                        <h3>Verify & Monitor</h3>
+                        <div class="code-block">
+                            <span class="comment"># Check deployment status</span><br>
+                            <span class="command">fawkes status</span><br>
+                            <br>
+                            <span class="comment"># View logs</span><br>
+                            <span class="command">fawkes logs --follow</span><br>
+                            <br>
+                            <span class="comment"># Open in browser</span><br>
+                            <span class="command">fawkes open</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-time">⏱️ 3 minutes</div>
+                        <h3>Advanced Configuration</h3>
+                        <p>Customize in <code>.fawkes/config.yaml</code>:</p>
+                        <div class="code-block">
+                            name: my-app<br>
+                            team: backend-team<br>
+                            <br>
+                            environments:<br>
+                            &nbsp;&nbsp;dev:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;replicas: 1<br>
+                            &nbsp;&nbsp;prod:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;replicas: 3<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;resources:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;memory: 512Mi<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cpu: 500m<br>
+                            <br>
+                            secrets:<br>
+                            &nbsp;&nbsp;- DATABASE_URL<br>
+                            &nbsp;&nbsp;- API_KEY
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Topics -->
+            <div class="step-section">
+                <h2>⚙️ Advanced Topics</h2>
+                <div class="quick-links">
+                    <a href="#" class="quick-link">
+                        <strong>🔐 Secrets</strong><br>
+                        Managing sensitive data
+                    </a>
+                    <a href="#" class="quick-link">
+                        <strong>🗄️ Databases</strong><br>
+                        Connecting to datastores
+                    </a>
+                    <a href="#" class="quick-link">
+                        <strong>🌐 Custom Domains</strong><br>
+                        Using your own URLs
+                    </a>
+                    <a href="#" class="quick-link">
+                        <strong>📈 Auto-scaling</strong><br>
+                        Handling traffic spikes
+                    </a>
+                    <a href="#" class="quick-link">
+                        <strong>🔄 CI/CD</strong><br>
+                        Customizing pipelines
+                    </a>
+                    <a href="#" class="quick-link">
+                        <strong>🧪 Testing</strong><br>
+                        Integration tests
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Troubleshooting Path -->
+        <div id="troubleshootPath" style="display: none;">
+            <div class="faq">
+                <h2>🔧 Common Issues & Solutions</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: My deployment is stuck in "Building" status</div>
+                    <p><strong>Solution:</strong></p>
+                    <ol style="margin-left: 2rem;">
+                        <li>Check build logs in Fawkes UI</li>
+                        <li>Common causes:
+                            <ul>
+                                <li>Missing dependencies in package.json/requirements.txt</li>
+                                <li>Build script errors</li>
+                                <li>Dockerfile issues</li>
+                            </ul>
+                        </li>
+                        <li>Run <code>fawkes logs build</code> to see detailed errors</li>
+                    </ol>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: Application crashes immediately after deployment</div>
+                    <p><strong>Solution:</strong></p>
+                    <ol style="margin-left: 2rem;">
+                        <li>Check logs: <code>fawkes logs --tail 100</code></li>
+                        <li>Common causes:
+                            <ul>
+                                <li>Missing environment variables/secrets</li>
+                                <li>Database connection failures</li>
+                                <li>Port configuration (must listen on PORT env var)</li>
+                            </ul>
+                        </li>
+                        <li>Test locally: <code>docker build -t test . && docker run -p 8080:8080 test</code></li>
+                    </ol>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: How do I rollback a bad deployment?</div>
+                    <p><strong>Solution:</strong></p>
+                    <div class="code-block">
+                        <span class="comment"># List recent deployments</span><br>
+                        <span class="command">fawkes deployments list</span><br>
+                        <br>
+                        <span class="comment"># Rollback to previous version</span><br>
+                        <span class="command">fawkes rollback</span><br>
+                        <br>
+                        <span class="comment"># Or rollback to specific version</span><br>
+                        <span class="command">fawkes rollback --version v1.2.3</span>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: I can't access my application URL</div>
+                    <p><strong>Solution:</strong></p>
+                    <ol style="margin-left: 2rem;">
+                        <li>Verify deployment is healthy: <code>fawkes status</code></li>
+                        <li>Check if pods are running: <code>fawkes pods</code></li>
+                        <li>Are you on VPN? (May be required for internal apps)</li>
+                        <li>Try: <code>fawkes open</code> to get correct URL</li>
+                        <li>Check ingress: <code>fawkes ingress status</code></li>
+                    </ol>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: How do I add environment variables/secrets?</div>
+                    <p><strong>Solution:</strong></p>
+                    <div class="code-block">
+                        <span class="comment"># Add secret via CLI</span><br>
+                        <span class="command">fawkes secret set DATABASE_URL "postgres://..."</span><br>
+                        <br>
+                        <span class="comment"># Or add to .fawkes/config.yaml</span><br>
+                        secrets:<br>
+                        &nbsp;&nbsp;- DATABASE_URL<br>
+                        &nbsp;&nbsp;- API_KEY<br>
+                        <br>
+                        <span class="comment"># Then set values in Fawkes UI > Secrets tab</span>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Q: Deployment succeeded but app shows 502/504 errors</div>
+                    <p><strong>Solution:</strong></p>
+                    <ol style="margin-left: 2rem;">
+                        <li>Health check may be failing. Ensure your app:
+                            <ul>
+                                <li>Listens on the correct port (from PORT env var)</li>
+                                <li>Responds to /health or / endpoint</li>
+                                <li>Starts within 60 seconds</li>
+                            </ul>
+                        </li>
+                        <li>Check: <code>fawkes health</code></li>
+                        <li>View health check logs: <code>fawkes logs --health</code></li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Get Help Section -->
+            <div class="step-section">
+                <h2>🆘 Need More Help?</h2>
+                <p>We're here to help! Multiple ways to get support:</p>
+                
+                <div class="quick-links">
+                    <a href="#" class="quick-link">
+                        <strong>💬 Mattermost</strong><br>
+                        #fawkes-help<br>
+                        Response time: <5 min
+                    </a>
+                    <a href="#" class="quick-link">
+                        <strong>📚 Documentation</strong><br>
+                        docs.fawkes.io<br>
+                        Searchable guides
+                    </a>
+                    <a href="#" class="quick-link">
+                        <strong>🎥 Office Hours</strong><br>
+                        Mon/Wed/Fri 2-3pm<br>
+                        Drop-in support
+                    </a>
+                    <a href="#" class="quick-link">
+                        <strong>📧 Email</strong><br>
+                        platform-team@company.com<br>
+                        Response: <4 hours
+                    </a>
+                </div>
+
+                <div class="help-box" style="margin-top: 2rem;">
+                    <strong>🚨 Production Emergency?</strong><br>
+                    Page on-call: <code>fawkes page --incident "description"</code><br>
+                    Or Slack: <code>/page platform-oncall</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Git Basics Section (shared) -->
+        <div class="step-section" id="git-basics" style="display: none;">
+            <h2>📚 Git Basics for Beginners</h2>
+            <p>Git is a version control system that tracks changes to your code.</p>
+
+            <h3>Essential Git Commands</h3>
+            <div class="code-block">
+                <span class="comment"># Clone a repository (download code)</span><br>
+                <span class="command">git clone &lt;url&gt;</span><br>
+                <br>
+                <span class="comment"># See what files changed</span><br>
+                <span class="command">git status</span><br>
+                <br>
+                <span class="comment"># Stage changes for commit</span><br>
+                <span class="command">git add .</span><br>
+                <span class="comment"># (The . means "all files")</span><br>
+                <br>
+                <span class="comment"># Commit changes with a message</span><br>
+                <span class="command">git commit -m "Your message here"</span><br>
+                <br>
+                <span class="comment"># Push to GitHub (upload your changes)</span><br>
+                <span class="command">git push origin main</span><br>
+                <br>
+                <span class="comment"># Pull latest changes (download updates)</span><br>
+                <span class="command">git pull</span>
+            </div>
+
+            <h3>Good Commit Messages</h3>
+            <p>Write clear commit messages that explain WHAT and WHY:</p>
+            <ul style="margin-left: 2rem;">
+                <li>✅ Good: "Fix login bug where users couldn't reset password"</li>
+                <li>✅ Good: "Add user profile page with avatar upload"</li>
+                <li>❌ Bad: "Update code"</li>
+                <li>❌ Bad: "fix"</li>
+            </ul>
+        </div>
+
+        <!-- Quick Reference Card -->
+        <div class="step-section">
+            <h2>📋 Quick Reference: Fawkes CLI Commands</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                    <h4>🚀 Deployment</h4>
+                    <div class="code-block">
+fawkes deploy<br>
+fawkes status<br>
+fawkes rollback<br>
+fawkes deployments list
+                    </div>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                    <h4>📊 Monitoring</h4>
+                    <div class="code-block">
+fawkes logs<br>
+fawkes logs --follow<br>
+fawkes metrics<br>
+fawkes health
+                    </div>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                    <h4>🔐 Secrets</h4>
+                    <div class="code-block">
+fawkes secret set KEY val<br>
+fawkes secret list<br>
+fawkes secret delete KEY
+                    </div>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                    <h4>🛠️ Utilities</h4>
+                    <div class="code-block">
+fawkes open<br>
+fawkes shell<br>
+fawkes scale --replicas 3<br>
+fawkes restart
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Stories -->
+        <div class="step-section">
+            <h2>🌟 Success Stories</h2>
+            <p>See how other developers are using Fawkes:</p>
+
+            <div style="display: grid; gap: 1.5rem; margin-top: 1.5rem;">
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #28a745;">
+                    <p style="font-style: italic; margin-bottom: 1rem;">
+                        "Before Fawkes, deployments took me 2 hours and I was always nervous. Now I deploy 5 times a day and never worry about breaking things."
+                    </p>
+                    <p style="color: #666;"><strong>— Sarah, Frontend Developer</strong></p>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <p style="font-style: italic; margin-bottom: 1rem;">
+                        "I went from not knowing what Kubernetes was to deploying microservices in a week. Fawkes handles all the complexity."
+                    </p>
+                    <p style="color: #666;"><strong>— Marcus, Junior Developer</strong></p>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ffc107;">
+                    <p style="font-style: italic; margin-bottom: 1rem;">
+                        "Our team went from monthly deployments to deploying multiple times per day. Fawkes gave us the confidence to move fast."
+                    </p>
+                    <p style="color: #666;"><strong>— Dev Team Lead, Payments Team</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- What's Next -->
+        <div class="step-section">
+            <h2>🎯 What's Next?</h2>
+            <p>You've completed onboarding! Here's what you can do next:</p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px;">
+                    <h3 style="color: white;">📖 Learn More</h3>
+                    <ul style="margin-top: 1rem; line-height: 1.8;">
+                        <li>Read the <a href="#" style="color: white; text-decoration: underline;">Fawkes User Guide</a></li>
+                        <li>Watch <a href="#" style="color: white; text-decoration: underline;">video tutorials</a></li>
+                        <li>Join <a href="#" style="color: white; text-decoration: underline;">#fawkes-users</a> on Mattermost</li>
+                    </ul>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 1.5rem; border-radius: 8px;">
+                    <h3 style="color: white;">🚀 Deploy More</h3>
+                    <ul style="margin-top: 1rem; line-height: 1.8;">
+                        <li>Try different templates</li>
+                        <li>Deploy to staging</li>
+                        <li>Set up monitoring</li>
+                        <li>Configure auto-scaling</li>
+                    </ul>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 1.5rem; border-radius: 8px;">
+                    <h3 style="color: white;">🤝 Help Others</h3>
+                    <ul style="margin-top: 1rem; line-height: 1.8;">
+                        <li>Share your experience</li>
+                        <li>Answer questions in #fawkes-help</li>
+                        <li>Contribute to docs</li>
+                        <li>Provide feedback</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback -->
+        <div class="hero-card">
+            <h2>💭 How Was Your Onboarding?</h2>
+            <p>Help us improve! Tell us about your experience:</p>
+            <div style="margin-top: 1.5rem;">
+                <a href="#" class="quick-link" style="display: inline-block; margin: 0.5rem;">
+                    😊 Great Experience
+                </a>
+                <a href="#" class="quick-link" style="display: inline-block; margin: 0.5rem;">
+                    😐 It Was OK
+                </a>
+                <a href="#" class="quick-link" style="display: inline-block; margin: 0.5rem;">
+                    😞 Needs Improvement
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div style="background: rgba(0, 0, 0, 0.8); color: white; padding: 2rem 0; text-align: center; margin-top: 2rem;">
+        <div class="container">
+            <h3>📚 Additional Resources</h3>
+            <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 1rem; flex-wrap: wrap;">
+                <a href="#" style="color: white;">📖 Full Documentation</a>
+                <a href="#" style="color: white;">🎥 Video Tutorials</a>
+                <a href="#" style="color: white;">💬 Community Forum</a>
+                <a href="#" style="color: white;">🐛 Report Issues</a>
+                <a href="#" style="color: white;">📊 Platform Status</a>
+            </div>
+            <p style="margin-top: 2rem; opacity: 0.7;">
+                Built with ❤️ by the Platform Team | Questions? #fawkes-help on Mattermost
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let currentPath = null;
+        let completedSteps = 0;
+        const totalSteps = 8; // For beginner path
+
+        function selectPath(path) {
+            currentPath = path;
+            
+            // Hide all paths
+            document.getElementById('beginnerPath').style.display = 'none';
+            document.getElementById('experiencedPath').style.display = 'none';
+            document.getElementById('troubleshootPath').style.display = 'none';
+            document.getElementById('progressTracker').style.display = 'none';
+            
+            // Remove selected class from all cards
+            document.querySelectorAll('.path-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Show selected path
+            if (path === 'beginner') {
+                document.getElementById('beginnerPath').style.display = 'block';
+                document.getElementById('progressTracker').style.display = 'block';
+                event.target.closest('.path-card').classList.add('selected');
+                initializeProgress();
+            } else if (path === 'experienced') {
+                document.getElementById('experiencedPath').style.display = 'block';
+                event.target.closest('.path-card').classList.add('selected');
+            } else if (path === 'troubleshoot') {
+                document.getElementById('troubleshootPath').style.display = 'block';
+                event.target.closest('.path-card').classList.add('selected');
+            }
+            
+            // Smooth scroll to content
+            setTimeout(() => {
+                document.getElementById(path + 'Path').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }, 100);
+        }
+
+        function initializeProgress() {
+            completedSteps = parseInt(localStorage.getItem('fawkesOnboardingProgress') || '0');
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const percentage = (completedSteps / totalSteps) * 100;
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = Math.round(percentage) + '%';
+            localStorage.setItem('fawkesOnboardingProgress', completedSteps);
+        }
+
+        function completeStep(stepNumber) {
+            if (stepNumber > completedSteps) {
+                completedSteps = stepNumber;
+                updateProgress();
+                
+                if (completedSteps === totalSteps) {
+                    setTimeout(() => {
+                        alert('🎉 Congratulations! You\'ve completed the onboarding!');
+                    }, 500);
+                }
+            }
+        }
+
+        // Add click handlers to steps for progress tracking
+        document.querySelectorAll('.step').forEach((step, index) => {
+            step.addEventListener('click', function() {
+                completeStep(index + 1);
+            });
+        });
+
+        // Checklist interaction
+        document.querySelectorAll('.checklist li').forEach(item => {
+            item.addEventListener('click', function() {
+                if (this.style.textDecoration === 'line-through') {
+                    this.style.textDecoration = 'none';
+                    this.style.opacity = '1';
+                    this.querySelector('::before').content = '☐';
+                } else {
+                    this.style.textDecoration = 'line-through';
+                    this.style.opacity = '0.6';
+                }
+            });
+        });
+
+        // Show Git basics section when clicked
+        document.querySelectorAll('a[href="#git-basics"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('git-basics').style.display = 'block';
+                document.getElementById('git-basics').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
