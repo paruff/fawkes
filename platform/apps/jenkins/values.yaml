@@ -1,8 +1,14 @@
 # Minimal -> MVP-ready Jenkins values (use LTS image)
 controller:
   # Use explicit repository + tag if your chart supports them; otherwise use single image
-  image: "jenkins/jenkins"
-  tag: "lts"               # or "lts" / "lts-jdk17" depending on desired LTS
+  image:
+    repository: "jenkins/jenkins"
+    # Choose a Jenkins LTS new enough for your plugins. Example:
+    tag: "2.462.4-jdk11"   # <- bump this to a recent LTS that satisfies plugin requirements
+    # If chart expects controller.image.* (not nested), set both:
+  # If the chart still reads controller.image and controller.tag, keep compatibility:
+  # image: "jenkins/jenkins"
+  # tag: "2.462.4-jdk11"
 
   # admin credentials (recommend creating a k8s Secret and not committing plaintext)
   adminUser: admin
