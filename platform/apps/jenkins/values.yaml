@@ -1,32 +1,39 @@
 # Minimal -> MVP-ready Jenkins values (use LTS image)
 controller:
-  # use official LTS image tag
-  image: "jenkins/jenkins:lts"
+  # Use explicit repository + tag if your chart supports them; otherwise use single image
+  image: "jenkins/jenkins"
+  tag: "lts"               # or "lts" / "lts-jdk17" depending on desired LTS
 
   # admin credentials (recommend creating a k8s Secret and not committing plaintext)
   adminUser: admin
   adminPassword: changeme
 
   # controller options and service
-  JENKINS_OPTS: "--argumentsRealm.passwd.admin=changeme"
+  JENKINS_OPTS: "--argumentsRealm.passwd.admin=changeme -Djenkins.install.runSetupWizard=false"
   serviceType: ClusterIP
 
-  # install useful plugins for MVP (version pins optional)
-  installPlugins:
-    - kubernetes:1.37.2
-    - workflow-aggregator:2.6
-    - credentials-binding:1.27
-    - configuration-as-code:1.57
-    - git:4.11.3
+  # ensure controller doesn't run builds — use agents
+  executors: 0
 
-  # basic resource requests/limits
-  resources:
-    requests:
-      cpu: "250m"
-      memory: "512Mi"
-    limits:
-      cpu: "1000m"
-      memory: "2Gi"
+  # mount JCasC from ConfigMap and inject secret env var
+  JCasC:
+    enabled: true
+    defaultConfig: false
+    configScripts: {}
+  extraEnv:
+    - name: ADMIN_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: jenkins-admin
+          key: ADMIN_PASSWORD
+
+# install plugins required by JCasC (chart-specific key; adjust to your chart)
+installPlugins:
+  - kubernetes:1.37.2
+  - workflow-aggregator:2.6
+  - credentials-binding:1.27
+  - configuration-as-code:1.57
+  - git:4.11.3
 
 persistence:
   enabled: true
