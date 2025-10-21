@@ -7,25 +7,15 @@ kind: Application
 metadata:
   name: jenkins
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"  # Deploy after core infrastructure
 spec:
-  project: fawkes-platform
-  
+  project: default
   source:
     repoURL: https://github.com/paruff/fawkes.git
     targetRevision: main
-    path: platform/jenkins
-    helm:
-      valueFiles:
-        - values.yaml
-  
+    path: platform/apps/jenkins
   destination:
     server: https://kubernetes.default.svc
     namespace: jenkins
-  
   syncPolicy:
     automated:
       prune: true        # Delete resources when removed from Git
