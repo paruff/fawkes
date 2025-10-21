@@ -1,8 +1,64 @@
-# Minimal values for Jenkins Helm chart (only used if you deploy via Helm)
+# Minimal -> MVP-ready Jenkins values (use LTS image)
 controller:
+  # Use explicit repository + tag if your chart supports them; otherwise use single image
+  image: "jenkins/jenkins"
+  tag: "lts-jdk17"               # or "lts" / "lts-jdk17" depending on desired LTS
+
+  # admin credentials (recommend creating a k8s Secret and not committing plaintext)
   adminUser: admin
   adminPassword: changeme
-  JENKINS_OPTS: --argumentsRealm.passwd.admin=changeme
+
+  # controller options and service
+  JENKINS_OPTS: "--argumentsRealm.passwd.admin=changeme -Djenkins.install.runSetupWizard=false"
   serviceType: ClusterIP
+
+  # ensure controller doesn't run builds — use agents
+  executors: 0
+
+  # mount JCasC from ConfigMap and inject secret env var
+  JCasC:
+    enabled: true
+    defaultConfig: false
+    configScripts: {}
+  extraEnv:
+    - name: ADMIN_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: jenkins-admin
+          key: ADMIN_PASSWORD
+
+# install plugins required by JCasC (chart-specific key; adjust to your chart)
+installPlugins:
+  - kubernetes:1.37.2
+  - workflow-aggregator:2.6
+  - credentials-binding:1.27
+  - configuration-as-code:1.57
+  - git:4.11.3
+
 persistence:
-  enabled: false  # set true and configure storage for real workloads
+  enabled: true
+  size: 8Gi
+  storageClass: standard   # change to your cluster's StorageClass
+
+serviceAccount:
+  create: true
+
+rbac:
+  create: true
+
+# JCasC / init groovy locations (mount ConfigMap/Secret if you plan to supply config)
+# Example: put your configuration-as-code in platform/apps/jenkins/jcasc.yaml and mount it via extraConfig
+master:
+  adminUser: admin
+  # If your chart supports mounting JCasC directly, configure it here (chart-specific)
+  # extraConfig: |
+  #   jenkins:
+  #     systemMessage: "Fawkes Jenkins (MVP)"
+
+# optional ingress example (enable and configure if you have an ingress controller)
+ingress:
+  enabled: false
+  annotations: {}
+  hosts:
+    - host: jenkins.example.com
+      paths: ["/"]
