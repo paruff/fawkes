@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jenkins-casc
+  namespace: jenkins
+data:
+  jcasc.yaml: |
+    jenkins:
+      systemMessage: "Fawkes CI (MVP)"
+      mode: NORMAL
+
+    securityRealm:
+      local:
+        allowsSignup: false
+        users:
+          - id: "admin"
+            password: "${ADMIN_PASSWORD}"
+
+    authorizationStrategy:
+      loggedInUsersCanDoAnything:
+        allowAnonymousRead: false
+
+    # minimal k8s agent example
+    clouds:
+      - kubernetes:
+          name: "kubernetes"
+          namespace: "jenkins"
+          templates:
+            - name: "jnlp-agent"
+              label: "k8s-agent"
+              containers:
+                - name: "jnlp"
+                  image: "jenkins/inbound-agent:latest"
+                  args: "${computer.jnlpmac} ${computer.name}"

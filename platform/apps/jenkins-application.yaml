@@ -9,36 +9,46 @@ metadata:
   namespace: argocd
 spec:
   project: default
+
   source:
     repoURL: https://github.com/paruff/fawkes.git
     targetRevision: main
     path: platform/apps/jenkins
+    # If this is a Helm chart, instruct ArgoCD to use the values.yaml in the path:
+    helm:
+      valueFiles:
+        - values.yaml
+      # optional, set extra helm args if needed:
+      # parameters: []
+      # passCredentials: true
+
   destination:
     server: https://kubernetes.default.svc
     namespace: jenkins
+
   syncPolicy:
     automated:
-      prune: true        # Delete resources when removed from Git
-      selfHeal: true     # Auto-sync if cluster state drifts
+      prune: true
+      selfHeal: true
       allowEmpty: false
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
-      - PruneLast=true
+      - Replace=true
     retry:
       limit: 5
       backoff:
         duration: 5s
         factor: 2
         maxDuration: 3m
-  
-  # Health assessment
+
+  # Keep ArgoCD from flagging differences you expect (e.g. HPA controlling replicas)
   ignoreDifferences:
     - group: apps
       kind: Deployment
       jsonPointers:
-        - /spec/replicas  # Ignore HPA-managed replicas
-  
-  # Notifications
+        - /spec/replicas
+
+  # Basic health and retention tuning
   revisionHistoryLimit: 10
 
