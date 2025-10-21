@@ -13,14 +13,46 @@ spec:
   source:
     repoURL: https://charts.jenkins.io
     chart: jenkins
-    targetRevision: 4.1.6  # or latest stable version
-    # If this is a Helm chart, instruct ArgoCD to use the values.yaml in the path:
+    targetRevision: "4.6.0" # adjust if you want a different chart version
     helm:
-      valueFiles:
-        - values.yaml
-      # optional, set extra helm args if needed:
-      # parameters: []
-      # passCredentials: true
+      values: |
+        # Inline values - based on your repo file:
+        controller:
+          image: "jenkins/jenkins"
+          tag: "lts"
+          adminUser: admin
+          adminPassword: changeme
+          JENKINS_OPTS: "--argumentsRealm.passwd.admin=changeme -Djenkins.install.runSetupWizard=false"
+          serviceType: ClusterIP
+          executors: 0
+          JCasC:
+            enabled: true
+            defaultConfig: false
+            configScripts: {}
+          extraEnv:
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jenkins-admin
+                  key: ADMIN_PASSWORD
+        installPlugins:
+          - kubernetes:1.37.2
+          - workflow-aggregator:2.6
+          - credentials-binding:1.27
+          - configuration-as-code:1.57
+          - git:4.11.3
+        persistence:
+          enabled: true
+          size: 8Gi
+          storageClass: standard
+        serviceAccount:
+          create: true
+        rbac:
+          create: true
+        master:
+          adminUser: admin
+        ingress:
+          enabled: false
 
   destination:
     server: https://kubernetes.default.svc
@@ -30,11 +62,10 @@ spec:
     automated:
       prune: true
       selfHeal: true
-      allowEmpty: false
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
-      - Replace=true
+      - PruneLast=true
     retry:
       limit: 5
       backoff:
