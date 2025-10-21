@@ -1,0 +1,56 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sonarqube
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://charts.sonarsource.com
+    chart: sonarqube
+    targetRevision: "9.9.0" # adjust if you want a different chart version
+    helm:
+      values: |
+        # Inline values for SonarQube configuration:
+        sonar:
+          image:
+            repository: sonarsource/sonarqube
+            tag: "9.9.0-community"
+          service:
+            type: ClusterIP
+          persistence:
+            enabled: true
+            size: 10Gi
+            storageClass: standard
+          ingress:
+            enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sonarqube
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Keep ArgoCD from flagging differences you expect (e.g. HPA controlling replicas)
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+
+  # Basic health and retention tuning
+  revisionHistoryLimit: 10
