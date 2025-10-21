@@ -22,7 +22,7 @@ if [[ "$1" == "cleanup" ]]; then
   echo "🧹 Cleaning up ArgoCD and Fawkes namespaces..."
   kubectl delete namespace argocd --wait || echo "argocd namespace not found"
   kubectl delete namespace fawkes --wait || echo "fawkes namespace not found"
-  kubectl delete namespace devlake --wait  || echo "argocd namespace not found"
+  kubectl delete namespace jenkins --wait  || echo "argocd namespace not found"
   echo "✅ Cleanup complete."
   exit 0
 fi
