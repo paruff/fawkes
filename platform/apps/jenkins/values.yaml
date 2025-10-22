@@ -1,4 +1,4 @@
-# Minimal -> MVP-ready Jenkins values (use LTS image)
+# Basic values.yaml you can use with `helm upgrade --install -f values.yaml jenkins charts.jenkins.io/jenkins`
 controller:
   # Use explicit repository + tag if your chart supports them; otherwise use single image
   image:
@@ -35,11 +35,10 @@ controller:
 
 # install plugins required by JCasC (chart-specific key; adjust to your chart)
 installPlugins:
-  - kubernetes:1.37.2
-  - workflow-aggregator:2.6
-  - credentials-binding:1.27
-  - configuration-as-code:1836.vccda_4a_122a_a_e
-  - git:4.11.3
+  - kubernetes
+  - workflow-aggregator
+  - credentials-binding
+  - git
 
 persistence:
   enabled: true
