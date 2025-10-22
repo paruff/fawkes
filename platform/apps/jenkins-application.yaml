@@ -11,35 +11,36 @@ spec:
   project: default
 
   source:
+    # Official Jenkins Helm repo
     repoURL: https://charts.jenkins.io
     chart: jenkins
-    targetRevision: "5.8.102" # adjust if you want a different chart version
+    # omit targetRevision to allow Helm/ArgoCD to pick chart's default/latest
     helm:
+      # Keep values small and override via a dedicated values.yaml if you prefer
       values: |
-        # Inline values - based on your repo file:
         controller:
-          image: "jenkins/jenkins"
-          tag: "2.528.1-lts-jdk17"
-          adminUser: admin
-          adminPassword: changeme
-          JENKINS_OPTS: "--argumentsRealm.passwd.admin=changeme -Djenkins.install.runSetupWizard=false"
           serviceType: ClusterIP
           executors: 0
-          JCasC:
-            enabled: true
-            defaultConfig: false
-            configScripts: {}
+          # Use admin password from Kubernetes Secret
+          adminUser: admin
+          adminPassword: changeme
           extraEnv:
             - name: ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: jenkins-admin
                   key: ADMIN_PASSWORD
+          JENKINS_OPTS: "--argumentsRealm.passwd.admin=changeme -Djenkins.install.runSetupWizard=false"
+          JCasC:
+            enabled: true
+            defaultConfig: false
+            configScripts: {}
+        # install plugin by short id (no explicit version => get chart's recommended/latest)
         installPlugins:
-          - kubernetes:1.37.2
-          - workflow-aggregator:2.6
-          - credentials-binding:1.27
-          - git:4.11.3
+          - kubernetes
+          - workflow-aggregator
+          - credentials-binding
+          - git
         persistence:
           enabled: true
           size: 8Gi
@@ -70,13 +71,11 @@ spec:
         factor: 2
         maxDuration: 3m
 
-  # Keep ArgoCD from flagging differences you expect (e.g. HPA controlling replicas)
   ignoreDifferences:
     - group: apps
       kind: Deployment
       jsonPointers:
         - /spec/replicas
 
-  # Basic health and retention tuning
   revisionHistoryLimit: 10
 
