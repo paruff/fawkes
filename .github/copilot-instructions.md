@@ -181,6 +181,51 @@ This document provides guidance for using Copilot effectively within the Fawkes 
   # Generate a Terraform module for an Azure Kubernetes Service (AKS) cluster
   ```
 
+  ### 15. BDD Testing for IDP Capabilities
+
+#### Gherkin Feature Files
+Write features that describe IDP capabilities from user perspective:
+```gherkin
+Feature: [Capability Name]
+  As a [role]
+  I want to [action]
+  So that [benefit]
+  
+  @smoke @dora-[metric]
+  Scenario: [Specific capability]
+    Given [precondition]
+    When [action]
+    Then [expected outcome]
+    And [additional validation]
+```
+
+#### Test Organization
+- `/tests/e2e/features/` - Gherkin feature files organized by service
+- `/tests/e2e/step_definitions/` - Step implementations
+- `/tests/e2e/support/` - Helper classes and utilities
+
+#### DORA Metrics Tagging
+Tag scenarios with relevant DORA metrics:
+- `@dora-deployment-frequency` - Tests affecting deployment frequency
+- `@dora-lead-time` - Tests affecting lead time for changes
+- `@dora-mttr` - Tests affecting mean time to restore
+- `@dora-change-failure-rate` - Tests affecting change failure rate
+
+#### Running Tests
+```bash
+# Run all E2E tests
+pytest tests/e2e/
+
+# Run smoke tests only
+pytest tests/e2e/ -m smoke
+
+# Run tests for specific service
+pytest tests/e2e/ -k jenkins
+
+# Run with coverage
+pytest tests/e2e/ --cov=infra/platform
+```
+
 ---
 
 By following these best practices, you can ensure that your work within the Fawkes platform aligns with GitOps principles, trunk-based development, and the DORA capabilities, while leveraging Copilot effectively to streamline workflows.
