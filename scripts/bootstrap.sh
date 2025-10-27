@@ -137,7 +137,7 @@ argocd login localhost:8080 --username admin --password "$ARGOCD_PASSWORD" --ins
 # Create the Fawkes application in ArgoCD
 argocd app create fawkes-app \
   --repo https://github.com/paruff/fawkes.git \
-  --path platform/apps \
+  --path infra/kubernetes \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace fawkes \
   --sync-policy automated
