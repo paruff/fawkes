@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -e
+# Fail fast and make unbound variable usage an error. Also propagate pipe failures.
+set -euo pipefail
 
 echo "Current working directory: $(pwd)"
 
@@ -100,49 +101,130 @@ kubectl wait --for=condition=available deployment/argocd-server -n argocd --time
 ARGOCD_PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
 echo "🔑 ArgoCD admin password: $ARGOCD_PASSWORD"
 
-echo "🌐 Port-forwarding ArgoCD UI to https://localhost:8080 ..."
-kubectl port-forward svc/argocd-server -n argocd 8080:443 >/dev/null 2>&1 &
-ARGOCD_PID=$!
+echo "🌐 Ensuring ArgoCD deployments are available..."
 
-sleep 10
+wait_for_workload() {
+  # Waits for a named workload which may be a Deployment or StatefulSet.
+  # Usage: wait_for_workload <name> <namespace> <timeout_seconds>
+  local name="$1" ns="${2:-default}" timeout="${3:-300}"
 
-####
-# Login to ArgoCD using CLI
-argocd login localhost:8080 --username admin --password "$ARGOCD_PASSWORD" --insecure
+  echo "⏳ Waiting for workload ${name} in namespace ${ns} (timeout ${timeout}s)..."
 
-# Create the Fawkes application in ArgoCD
-argocd app create fawkes-app \
-  --repo https://github.com/paruff/fawkes.git \
-  --path platform/apps \
-  --dest-server https://kubernetes.default.svc \
-  --dest-namespace fawkes \
-  --sync-policy automated
+  # Prefer Deployment
+  if kubectl get deployment "${name}" -n "${ns}" >/dev/null 2>&1; then
+    if ! kubectl wait --for=condition=available deployment/${name} -n "${ns}" --timeout="${timeout}s"; then
+      kubectl -n "${ns}" get pods -o wide
+      kubectl -n "${ns}" describe deployment/${name} || true
+      return 1
+    fi
+    return 0
+  fi
 
-echo "✅ Fawkes ArgoCD application created and set to auto-sync."
+  # If not a deployment, check for StatefulSet
+  if kubectl get statefulset "${name}" -n "${ns}" >/dev/null 2>&1; then
+    # Use rollout status for statefulsets which reports readiness
+    if ! kubectl rollout status statefulset/${name} -n "${ns}" --timeout="${timeout}s"; then
+      kubectl -n "${ns}" get pods -o wide
+      kubectl -n "${ns}" describe statefulset/${name} || true
+      return 1
+    fi
+    return 0
+  fi
 
-####
+  # Fallback: wait for any pod with the name prefix to be ready
+  echo "Workload ${name} not found as Deployment or StatefulSet; falling back to pods with prefix ${name}"
+  local end=$((SECONDS + timeout))
+  while [[ ${SECONDS} -lt ${end} ]]; do
+    pod=$(kubectl -n "${ns}" get pods --no-headers -o custom-columns=":metadata.name" | grep "^${name}" | head -n1 || true)
+    if [[ -n "$pod" ]]; then
+      # Check pod readiness
+      ready=$(kubectl -n "${ns}" get pod "$pod" -o jsonpath='{.status.containerStatuses[0].ready}' 2>/dev/null || echo "false")
+      if [[ "$ready" == "true" ]]; then
+        echo "Pod $pod is ready"
+        return 0
+      fi
+    fi
+    sleep 2
+  done
+  kubectl -n "${ns}" get pods -o wide
+  return 1
+}
 
-echo "🔬 Testing ArgoCD API endpoint..."
-if curl -ks https://localhost:8080/healthz | grep -q 'healthy'; then
-  echo "✅ ArgoCD API is healthy."
-else
-  error_exit "ArgoCD API is not healthy."
+# Wait for core ArgoCD components. Some ArgoCD manifests create StatefulSets instead of Deployments
+for dep in argocd-server argocd-repo-server argocd-application-controller argocd-dex-server; do
+  if ! wait_for_workload "${dep}" argocd 300; then
+    error_exit "Deployment ${dep} failed to become available"
+  fi
+done
+
+# Wait for the argocd-server service to have endpoints (ready pods)
+echo "⏳ Waiting for argocd-server service endpoints..."
+ENDPOINTS_TIMEOUT=120
+end=$((SECONDS + ENDPOINTS_TIMEOUT))
+while [[ ${SECONDS} -lt ${end} ]]; do
+  if kubectl get endpoints argocd-server -n argocd -o jsonpath='{.subsets}' | grep -q .; then
+    echo "✅ argocd-server has endpoints"
+    break
+  fi
+  sleep 2
+done
+if [[ ${SECONDS} -ge ${end} ]]; then
+  kubectl -n argocd get endpoints
+  error_exit "argocd-server service has no endpoints after ${ENDPOINTS_TIMEOUT}s"
 fi
 
-sleep 5
+echo "🌐 Creating ArgoCD Application CRs in-cluster (no port-forward required)..."
 
-# Login to ArgoCD using CLI
-argocd login localhost:8080 --username admin --password "$ARGOCD_PASSWORD" --insecure
+# Create Application CRs directly so ArgoCD picks them up without using the argocd CLI
+# This avoids needing port-forward access for initial bootstrapping. These Application
+# resources include automated sync so ArgoCD will deploy the resources (including Jenkins).
 
-# Create the Fawkes application in ArgoCD
-argocd app create fawkes-app \
-  --repo https://github.com/paruff/fawkes.git \
-  --path infra/kubernetes \
-  --dest-server https://kubernetes.default.svc \
-  --dest-namespace fawkes \
-  --sync-policy automated
+cat <<'EOF' | kubectl apply -f -
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fawkes-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    path: platform/apps
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fawkes-infra
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    path: infra/kubernetes
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+EOF
 
-echo "✅ Fawkes ArgoCD application created and set to auto-sync."
+echo "✅ ArgoCD Application CRs applied — ArgoCD will pick them up and sync the fawkes namespace." 
+echo "If you want to access the ArgoCD UI locally run: kubectl -n argocd port-forward svc/argocd-server 8080:443"
 
 echo ""
 echo "🎉 Bootstrap complete for '$ENV' environment!"

@@ -1,0 +1,86 @@
+# Values for installing the upstream Backstage Helm chart
+# Usage: helm repo add backstage https://backstage.github.io/charts && helm install backstage backstage/backstage -f values.yaml
+
+# Replica configuration
+replicaCount: 1
+
+# Image (adjust as needed)
+image:
+  repository: backstage/backstage
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+# Service configuration: expose the app on port 7007. Using type NodePort
+service:
+  type: NodePort
+  port: 7007
+  targetPort: 7007
+  # nodePort: 30007   # optional: uncomment to pin NodePort (must be in allowed range)
+
+# Namespace will be created by helm if not present when used with --create-namespace or the chart does so.
+
+# Application config (app-config.yaml) injected by chart. The exact key depends on the chart
+# Many Backstage charts consume `appConfig` or a ConfigMap named `app-config` — adjust per chart.
+appConfig: |-
+  app:
+    baseUrl: http://localhost:7007
+
+  backend:
+    # Backstage backend listen port
+    baseUrl: http://backstage:7007
+
+  database:
+    client: pg
+    connection:
+      host: postgresql
+      port: 5432
+      user: backstage_user
+      password: changeme_password
+      database: backstage_db
+
+  # Example of configuring a PostgreSQL connection for the backend
+  # Plugins and other backend services will read from this config as required.
+
+# If the chart supports environment variables or extraEnv, set them here
+extraEnv:
+  - name: DATABASE_CLIENT
+    value: pg
+
+# Resources: tune as needed
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# Liveness/readiness probe configuration (if chart exposes these values)
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 7007
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 7007
+  initialDelaySeconds: 10
+  periodSeconds: 5
+
+# Optional Postgres subchart/config if using a chart dependency to deploy a postgres instance
+postgresql:
+  enabled: false
+  postgresqlDatabase: backstage_db
+  postgresqlUsername: backstage_user
+  postgresqlPassword: changeme_password
+
+# Notes:
+# - Kubernetes NodePort values must be within the cluster's allowed NodePort range (typically 30000-32767).
+#   The `port: 7007` here configures the service port; if you need the NodePort itself to be 7007,
+#   that's outside the default range and will be rejected by most clusters. Instead, access the service
+#   on node:<nodeIP>:<nodePort> where nodePort is assigned by Kubernetes (or pin with nodePort above).
+# - Adjust `appConfig` embedding to match the upstream chart's expected values key. Some charts expect
+#   `config` or `appConfig` or `extraConfig` — consult the chart docs and rename the key if necessary.

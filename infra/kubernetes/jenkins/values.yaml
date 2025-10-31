@@ -42,7 +42,10 @@ installPlugins:
   - git
 
 persistence:
-  enabled: true
+  # For local development clusters that may not have a dynamic provisioner or a
+  # `standard` StorageClass, disable persistence to avoid PVC Pending/init failures.
+  # In production, enable persistence and set the correct storageClass.
+  enabled: false
   size: 8Gi
   storageClass: standard   # change to your cluster's StorageClass
 
