@@ -2,11 +2,11 @@
 
 ## 🎯 Module Overview
 
-**Belt Level**: 🟡 Yellow Belt - CI/CD Mastery  
-**Module**: 1 of 4 (Yellow Belt)  
-**Duration**: 60 minutes  
-**Difficulty**: Intermediate  
-**Prerequisites**: 
+**Belt Level**: 🟡 Yellow Belt - CI/CD Mastery
+**Module**: 1 of 4 (Yellow Belt)
+**Duration**: 60 minutes
+**Difficulty**: Intermediate
+**Prerequisites**:
 - White Belt certification complete
 - Basic understanding of Git workflows
 - Familiarity with build tools (Maven, npm, etc.)
@@ -51,7 +51,7 @@ Developer C writes code for 2 weeks → Commits
         Weekend fixing integration issues
 ```
 
-**Result**: 
+**Result**:
 - Integration becomes painful and risky
 - Feedback delayed by weeks
 - Bugs found late, expensive to fix
@@ -285,7 +285,7 @@ spec:
 '''
         }
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
@@ -294,7 +294,7 @@ spec:
                     url: 'https://github.com/fawkes-platform/sample-spring-boot.git'
             }
         }
-        
+
         stage('Build') {
             steps {
                 container('maven') {
@@ -303,7 +303,7 @@ spec:
                 }
             }
         }
-        
+
         stage('Test') {
             steps {
                 container('maven') {
@@ -312,7 +312,7 @@ spec:
                 }
             }
         }
-        
+
         stage('Package') {
             steps {
                 container('maven') {
@@ -322,7 +322,7 @@ spec:
             }
         }
     }
-    
+
     post {
         success {
             echo '✅ Pipeline succeeded!'
@@ -670,7 +670,7 @@ stage('Test') {
         container('maven') {
             // Run with detailed output
             sh 'mvn test -X'  // Debug mode
-            
+
             // Or continue on failure to see all test results
             sh 'mvn test || true'
         }
@@ -679,7 +679,7 @@ stage('Test') {
         always {
             // Always publish test results
             junit 'target/surefire-reports/**/*.xml'
-            
+
             // Archive failed test logs
             archiveArtifacts artifacts: 'target/surefire-reports/**',
                              allowEmptyArchive: true
@@ -795,7 +795,7 @@ pipeline {
         timestamps()
         timeout(time: 10, unit: 'MINUTES')  // Fail if >10 min
     }
-    
+
     stages {
         stage('Parallel Tests') {
             parallel {
@@ -824,7 +824,7 @@ pipeline {
     options {
         skipDefaultCheckout()  // Don't checkout until needed
     }
-    
+
     stages {
         stage('Pre-Flight Checks') {
             steps {
@@ -836,13 +836,13 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        
+
         // ... rest of pipeline
     }
 }
@@ -860,13 +860,13 @@ post {
             message: "✅ Build #${BUILD_NUMBER} succeeded\nBranch: ${env.BRANCH_NAME}"
         )
     }
-    
+
     failure {
         slackSend(
             color: 'danger',
             message: "❌ Build #${BUILD_NUMBER} failed\nBranch: ${env.BRANCH_NAME}\nSee: ${BUILD_URL}"
         )
-        
+
         // Email on failure
         emailext(
             subject: "Build Failed: ${env.JOB_NAME} #${BUILD_NUMBER}",
@@ -889,7 +889,7 @@ pipeline {
         JAVA_VERSION = '17'
         MAVEN_OPTS = '-Xmx2g -XX:+UseG1GC'
     }
-    
+
     stages {
         stage('Build') {
             steps {
@@ -988,7 +988,7 @@ post {
         script {
             def buildDuration = currentBuild.duration / 1000  // seconds
             def buildResult = currentBuild.result ?: 'SUCCESS'
-            
+
             // Send to Prometheus
             sh """mayhem
                 curl -X POST http://prometheus-pushgateway:9091/metrics/job/jenkins \
@@ -1047,7 +1047,7 @@ spec:
 '''
         }
     }
-    
+
     stages {
         // TODO: Add your stages here
         // 1. Checkout
@@ -1056,7 +1056,7 @@ spec:
         // 4. Package
         // 5. Docker Build
     }
-    
+
     post {
         // TODO: Add notifications
     }
@@ -1138,12 +1138,12 @@ spec:
 
 ### What You Learned
 
-✅ **CI Principles**: Early integration, automated builds, fast feedback  
-✅ **Jenkins Architecture**: Controller, agents, Kubernetes plugin  
-✅ **Pipeline as Code**: Jenkinsfile structure and syntax  
-✅ **Build Stages**: Checkout, build, test, package workflow  
-✅ **Troubleshooting**: Common failures and debugging techniques  
-✅ **Best Practices**: Fast builds, fail fast, notifications  
+✅ **CI Principles**: Early integration, automated builds, fast feedback
+✅ **Jenkins Architecture**: Controller, agents, Kubernetes plugin
+✅ **Pipeline as Code**: Jenkinsfile structure and syntax
+✅ **Build Stages**: Checkout, build, test, package workflow
+✅ **Troubleshooting**: Common failures and debugging techniques
+✅ **Best Practices**: Fast builds, fail fast, notifications
 ✅ **DORA Impact**: How CI improves all four key metrics
 
 ### DORA Capabilities Achieved
@@ -1168,7 +1168,7 @@ spec:
 - **Bug detection**: Post-production → Pre-commit
 - **Deploy confidence**: Low → High
 
-We went from monthly releases to daily deploys." 
+We went from monthly releases to daily deploys."
 - *Engineering Team, SaaS Company*
 
 ---
@@ -1250,6 +1250,6 @@ You're now ready to build production-ready CI pipelines. Continue to Module 6 to
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*  
-*Version 1.0 | Last Updated: October 2025*  
+*Fawkes Dojo - Where Platform Engineers Are Forged*
+*Version 1.0 | Last Updated: October 2025*
 *License: MIT | https://github.com/paruff/fawkes*

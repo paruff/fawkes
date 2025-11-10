@@ -9,12 +9,12 @@ This file provides:
 
 Usage:
     Import fixtures in test files:
-    
+
     def test_something(kubernetes_client, jenkins_api):
         # fixtures are automatically available
-        
+
     Use markers to categorize:
-    
+
     @pytest.mark.unit
     @pytest.mark.dora_deployment_frequency
     def test_deployment():
@@ -44,7 +44,7 @@ logger = logging.getLogger(__name__)
 def pytest_configure(config):
     """
     Register custom markers for test categorization.
-    
+
     Markers are used to:
     - Organize tests by type (unit, integration, e2e)
     - Tag tests by DORA metric impact
@@ -64,7 +64,7 @@ def pytest_configure(config):
         "markers",
         "e2e: End-to-end tests (full system, slowest)"
     )
-    
+
     # Special test categories
     config.addinivalue_line(
         "markers",
@@ -82,7 +82,7 @@ def pytest_configure(config):
         "markers",
         "slow: Slow-running tests (run less frequently)"
     )
-    
+
     # DORA capability markers
     config.addinivalue_line(
         "markers",
@@ -100,7 +100,7 @@ def pytest_configure(config):
         "markers",
         "dora_mttr: Tests that measure/improve mean time to restore"
     )
-    
+
     # Dojo belt level markers
     config.addinivalue_line(
         "markers",
@@ -122,7 +122,7 @@ def pytest_configure(config):
         "markers",
         "black_belt: Black belt curriculum tests (Architecture)"
     )
-    
+
     # Sprint markers
     config.addinivalue_line(
         "markers",
@@ -137,7 +137,7 @@ def pytest_configure(config):
 def pytest_collection_modifyitems(config, items):
     """
     Automatically tag tests based on their location and content.
-    
+
     This hook runs after test collection and:
     1. Auto-tags tests based on directory (unit/integration/e2e)
     2. Adds DORA capability tags based on test name
@@ -146,26 +146,26 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         # Auto-tag based on test directory location
         test_path = str(item.fspath)
-        
+
         if "tests/unit" in test_path:
             item.add_marker(pytest.mark.unit)
         elif "tests/integration" in test_path:
             item.add_marker(pytest.mark.integration)
         elif "tests/e2e" in test_path:
             item.add_marker(pytest.mark.e2e)
-        
+
         # Auto-tag DORA capabilities based on test name
         test_name = item.name.lower()
-        
+
         if any(word in test_name for word in ['deploy', 'deployment', 'release']):
             item.add_marker(pytest.mark.dora_deployment_frequency)
-        
+
         if any(word in test_name for word in ['commit', 'lead_time', 'velocity']):
             item.add_marker(pytest.mark.dora_lead_time)
-        
+
         if any(word in test_name for word in ['fail', 'failure', 'rollback', 'revert']):
             item.add_marker(pytest.mark.dora_change_failure_rate)
-        
+
         if any(word in test_name for word in ['incident', 'restore', 'mttr', 'recovery']):
             item.add_marker(pytest.mark.dora_mttr)
 
@@ -173,7 +173,7 @@ def pytest_collection_modifyitems(config, items):
 def pytest_terminal_summary(terminalreporter, exitstatus, config):
     """
     Generate custom test summary report.
-    
+
     Displays:
     - Test counts by category
     - DORA metrics coverage
@@ -182,7 +182,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     """
     # Test category summary
     terminalreporter.write_sep("=", "Test Summary by Category")
-    
+
     categories = {
         'unit': [],
         'integration': [],
@@ -190,41 +190,41 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
         'smoke': [],
         'security': []
     }
-    
+
     for report in terminalreporter.stats.get('passed', []):
         for category in categories.keys():
             if category in report.keywords:
                 categories[category].append(report)
-    
+
     for category, tests in categories.items():
         icon = '✅' if tests else '⏸️'
         terminalreporter.write_line(
             f"  {icon} {category.upper()}: {len(tests)} tests passed"
         )
-    
+
     # DORA metrics coverage
     terminalreporter.write_sep("=", "DORA Metrics Coverage")
-    
+
     dora_metrics = {
         'dora_deployment_frequency': 0,
         'dora_lead_time': 0,
         'dora_change_failure_rate': 0,
         'dora_mttr': 0
     }
-    
+
     for report in terminalreporter.stats.get('passed', []):
         for metric in dora_metrics.keys():
             if metric in report.keywords:
                 dora_metrics[metric] += 1
-    
+
     for metric, count in dora_metrics.items():
         metric_name = metric.replace('dora_', '').replace('_', ' ').title()
         icon = '📊' if count > 0 else '⏸️'
         terminalreporter.write_line(f"  {icon} {metric_name}: {count} tests")
-    
+
     # Dojo progression summary
     terminalreporter.write_sep("=", "Dojo Progression Summary")
-    
+
     belt_levels = ['white_belt', 'yellow_belt', 'green_belt', 'brown_belt', 'black_belt']
     belt_emoji = {
         'white_belt': '🥋',
@@ -233,7 +233,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
         'brown_belt': '🟤',
         'black_belt': '⚫'
     }
-    
+
     for belt in belt_levels:
         count = sum(1 for report in terminalreporter.stats.get('passed', [])
                    if belt in report.keywords)
@@ -253,7 +253,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
 def test_namespace() -> str:
     """
     Generate a unique namespace for this test session.
-    
+
     Returns:
         str: Namespace name like 'test-a1b2c3d4'
     """
@@ -264,7 +264,7 @@ def test_namespace() -> str:
 def test_data_dir() -> Path:
     """
     Directory for test data files.
-    
+
     Returns:
         Path: Path to tests/data/ directory
     """
@@ -277,7 +277,7 @@ def test_data_dir() -> Path:
 def aws_region() -> str:
     """
     AWS region for testing.
-    
+
     Returns:
         str: AWS region (from env or default to us-east-1)
     """
@@ -292,22 +292,22 @@ def aws_region() -> str:
 def kubernetes_client():
     """
     Kubernetes API client for test cluster.
-    
+
     Returns:
         kubernetes.client.CoreV1Api: K8s API client
-        
+
     Raises:
         pytest.skip: If Kubernetes is not available
     """
     try:
         from kubernetes import client, config
-        
+
         # Try to load config (in-cluster or kubeconfig)
         try:
             config.load_incluster_config()
         except:
             config.load_kube_config()
-        
+
         return client.CoreV1Api()
     except Exception as e:
         pytest.skip(f"Kubernetes not available: {e}")
@@ -317,27 +317,27 @@ def kubernetes_client():
 def clean_namespace(kubernetes_client, test_namespace) -> Generator[str, None, None]:
     """
     Create and cleanup a Kubernetes namespace for testing.
-    
+
     Creates a namespace before test, deletes it after.
     Use this for tests that need isolated K8s resources.
-    
+
     Args:
         kubernetes_client: K8s API client
         test_namespace: Base namespace name
-    
+
     Yields:
         str: Namespace name to use
-        
+
     Example:
         def test_deployment(clean_namespace):
             # deploy to clean_namespace
             # namespace is automatically cleaned up after test
     """
     from kubernetes import client
-    
+
     # Create namespace
     namespace = f"{test_namespace}-{uuid.uuid4().hex[:6]}"
-    
+
     try:
         kubernetes_client.create_namespace(
             body=client.V1Namespace(
@@ -345,9 +345,9 @@ def clean_namespace(kubernetes_client, test_namespace) -> Generator[str, None, N
             )
         )
         logger.info(f"Created test namespace: {namespace}")
-        
+
         yield namespace
-        
+
     finally:
         # Cleanup namespace
         try:
@@ -368,7 +368,7 @@ def clean_namespace(kubernetes_client, test_namespace) -> Generator[str, None, N
 def jenkins_url() -> str:
     """
     Jenkins server URL.
-    
+
     Returns:
         str: Jenkins URL from env or default
     """
@@ -382,27 +382,27 @@ def jenkins_url() -> str:
 def jenkins_client(jenkins_url):
     """
     Jenkins API client.
-    
+
     Returns:
         jenkinsapi.jenkins.Jenkins: Authenticated Jenkins client
-        
+
     Raises:
         pytest.skip: If Jenkins is not available
     """
     try:
         from jenkinsapi.jenkins import Jenkins
-        
+
         username = os.getenv('JENKINS_USER', 'robot-account')
         token = os.getenv('JENKINS_TOKEN')
-        
+
         if not token:
             pytest.skip("JENKINS_TOKEN not set")
-        
+
         client = Jenkins(jenkins_url, username=username, password=token)
-        
+
         # Verify connection
         client.get_version()
-        
+
         return client
     except Exception as e:
         pytest.skip(f"Jenkins not available: {e}")
@@ -416,10 +416,10 @@ def jenkins_client(jenkins_url):
 def github_token() -> str:
     """
     GitHub API token.
-    
+
     Returns:
         str: GitHub token from environment
-        
+
     Raises:
         pytest.skip: If token not available
     """
@@ -433,21 +433,21 @@ def github_token() -> str:
 def github_client(github_token):
     """
     GitHub API client.
-    
+
     Returns:
         github.Github: Authenticated GitHub client
-        
+
     Raises:
         pytest.skip: If GitHub is not available
     """
     try:
         from github import Github
-        
+
         client = Github(github_token)
-        
+
         # Verify authentication
         client.get_user().login
-        
+
         return client
     except Exception as e:
         pytest.skip(f"GitHub not available: {e}")
@@ -461,7 +461,7 @@ def github_client(github_token):
 def argocd_url() -> str:
     """
     ArgoCD server URL.
-    
+
     Returns:
         str: ArgoCD URL from env or default
     """
@@ -475,10 +475,10 @@ def argocd_url() -> str:
 def argocd_token() -> str:
     """
     ArgoCD authentication token.
-    
+
     Returns:
         str: ArgoCD token from environment
-        
+
     Raises:
         pytest.skip: If token not available
     """
@@ -496,7 +496,7 @@ def argocd_token() -> str:
 def dora_metrics_url() -> str:
     """
     DORA metrics service URL.
-    
+
     Returns:
         str: DORA metrics API URL
     """
@@ -510,33 +510,33 @@ def dora_metrics_url() -> str:
 def dora_metrics_client(dora_metrics_url):
     """
     DORA metrics API client.
-    
+
     Returns:
         DORAMetricsClient: Client for recording metrics
     """
     class DORAMetricsClient:
         """Simple client for DORA metrics API."""
-        
+
         def __init__(self, base_url: str):
             self.base_url = base_url
             self._commit_times = {}
-        
+
         def record_commit(self, repo: str, sha: str, timestamp: datetime):
             """Record a commit for lead time calculation."""
             self._commit_times[f"{repo}/{sha}"] = timestamp
             logger.info(f"Recorded commit {sha} in {repo}")
-        
+
         def get_commit_time(self, repo: str, sha: str = None) -> datetime:
             """Get recorded commit time."""
             if sha:
                 return self._commit_times.get(f"{repo}/{sha}")
             # Return most recent for repo
-            repo_commits = {k: v for k, v in self._commit_times.items() 
+            repo_commits = {k: v for k, v in self._commit_times.items()
                            if k.startswith(f"{repo}/")}
             if repo_commits:
                 return max(repo_commits.values())
             return datetime.utcnow()
-        
+
         def record_deployment(self, service: str, version: str, status: str):
             """Record a deployment event."""
             import requests
@@ -559,11 +559,11 @@ def dora_metrics_client(dora_metrics_url):
             except Exception as e:
                 logger.warning(f"Failed to record deployment: {e}")
                 return False
-        
+
         def record_failure(self, service: str, failure_type: str = 'test_failure'):
             """Record a failure event."""
             logger.info(f"Recorded failure: {service} - {failure_type}")
-    
+
     return DORAMetricsClient(dora_metrics_url)
 
 
@@ -575,13 +575,13 @@ def dora_metrics_client(dora_metrics_url):
 def git_repo(tmp_path):
     """
     Create a temporary Git repository for testing.
-    
+
     Args:
         tmp_path: pytest's tmp_path fixture
-    
+
     Returns:
         git.Repo: Temporary Git repository
-        
+
     Example:
         def test_commit(git_repo):
             # Make changes
@@ -591,19 +591,19 @@ def git_repo(tmp_path):
     """
     try:
         import git
-        
+
         # Initialize repo
         repo = git.Repo.init(tmp_path)
-        
+
         # Configure
         repo.config_writer().set_value("user", "name", "Test User").release()
         repo.config_writer().set_value("user", "email", "test@fawkes.local").release()
-        
+
         # Initial commit
         (tmp_path / "README.md").write_text("# Test Repo")
         repo.index.add(["README.md"])
         repo.index.commit("Initial commit")
-        
+
         return repo
     except ImportError:
         pytest.skip("GitPython not installed")
@@ -617,7 +617,7 @@ def git_repo(tmp_path):
 def mattermost_webhook_url() -> str:
     """
     Mattermost incoming webhook URL.
-    
+
     Returns:
         str: Webhook URL from env or default
     """
@@ -631,16 +631,16 @@ def mattermost_webhook_url() -> str:
 def mattermost_client(mattermost_webhook_url):
     """
     Simple Mattermost client for testing notifications.
-    
+
     Returns:
         MattermostClient: Client for sending test messages
     """
     class MattermostClient:
         """Simple client for Mattermost webhooks."""
-        
+
         def __init__(self, webhook_url: str):
             self.webhook_url = webhook_url
-        
+
         def send_message(self, text: str, color: str = 'good') -> bool:
             """Send a message to Mattermost."""
             import requests
@@ -660,7 +660,7 @@ def mattermost_client(mattermost_webhook_url):
             except Exception as e:
                 logger.warning(f"Failed to send Mattermost message: {e}")
                 return False
-    
+
     return MattermostClient(mattermost_webhook_url)
 
 
@@ -672,7 +672,7 @@ def mattermost_client(mattermost_webhook_url):
 def postgres_connection_string() -> str:
     """
     PostgreSQL connection string for testing.
-    
+
     Returns:
         str: Connection string
     """
@@ -686,26 +686,26 @@ def postgres_connection_string() -> str:
 def clean_database(postgres_connection_string):
     """
     Provide a clean database for testing.
-    
+
     Creates tables before test, drops them after.
-    
+
     Yields:
         sqlalchemy.engine.Engine: Database engine
     """
     try:
         from sqlalchemy import create_engine, MetaData
-        
+
         engine = create_engine(postgres_connection_string)
         metadata = MetaData()
-        
+
         # Create all tables
         metadata.create_all(engine)
-        
+
         yield engine
-        
+
         # Drop all tables
         metadata.drop_all(engine)
-        
+
     except ImportError:
         pytest.skip("SQLAlchemy not installed")
     except Exception as e:
@@ -720,10 +720,10 @@ def clean_database(postgres_connection_string):
 def wait_for_condition():
     """
     Utility for waiting for a condition to be true.
-    
+
     Returns:
         Callable: Function that waits for condition
-        
+
     Example:
         def test_deployment(wait_for_condition):
             wait_for_condition(
@@ -734,33 +734,33 @@ def wait_for_condition():
             )
     """
     import time
-    
+
     def _wait(condition_fn, timeout=60, interval=1, error_message="Timeout"):
         """
         Wait for condition_fn to return True.
-        
+
         Args:
             condition_fn: Callable that returns bool
             timeout: Maximum seconds to wait
             interval: Seconds between checks
             error_message: Error message if timeout
-            
+
         Raises:
             TimeoutError: If condition not met within timeout
         """
         start_time = time.time()
-        
+
         while time.time() - start_time < timeout:
             try:
                 if condition_fn():
                     return
             except Exception as e:
                 logger.debug(f"Condition check failed: {e}")
-            
+
             time.sleep(interval)
-        
+
         raise TimeoutError(f"{error_message} (waited {timeout}s)")
-    
+
     return _wait
 
 
@@ -768,29 +768,29 @@ def wait_for_condition():
 def capture_logs():
     """
     Capture logs during test execution.
-    
+
     Returns:
         list: List of log records
-        
+
     Example:
         def test_something(capture_logs):
             # do something that logs
-            assert any("expected message" in record.message 
+            assert any("expected message" in record.message
                       for record in capture_logs)
     """
     import logging
-    
+
     records = []
-    
+
     class ListHandler(logging.Handler):
         def emit(self, record):
             records.append(record)
-    
+
     handler = ListHandler()
     logger.addHandler(handler)
-    
+
     yield records
-    
+
     logger.removeHandler(handler)
 
 

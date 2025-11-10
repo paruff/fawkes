@@ -134,7 +134,7 @@ Specifically:
    - **Foreign Data Wrappers**: Access external data sources
    - **Extensions**: PostGIS, pg_stat_statements, timescaledb
 
-4. **ACID Compliance**: 
+4. **ACID Compliance**:
    - Strong consistency guarantees
    - Transaction support
    - Data integrity and reliability
@@ -147,7 +147,7 @@ Specifically:
    - Materialized views for aggregations
    - Connection pooling support
 
-6. **High Availability**: 
+6. **High Availability**:
    - Streaming replication (synchronous and asynchronous)
    - Automatic failover
    - Point-in-time recovery
@@ -435,7 +435,7 @@ metadata:
   namespace: fawkes-data
 spec:
   instances: 3  # 1 primary + 2 replicas
-  
+
   postgresql:
     parameters:
       max_connections: "200"
@@ -443,16 +443,16 @@ spec:
       effective_cache_size: "1GB"
       work_mem: "16MB"
       maintenance_work_mem: "128MB"
-      
+
   bootstrap:
     initdb:
       database: backstage
       owner: backstage
-      
+
   storage:
     size: 50Gi
     storageClass: gp3
-    
+
   backup:
     barmanObjectStore:
       destinationPath: s3://fawkes-postgres-backups/
@@ -466,10 +466,10 @@ spec:
       wal:
         compression: gzip
       retentionPolicy: "30d"
-      
+
   monitoring:
     enablePodMonitor: true
-    
+
   resources:
     requests:
       memory: "1Gi"
@@ -573,19 +573,19 @@ groups:
     for: 1m
     annotations:
       summary: "PostgreSQL is down"
-      
+
   - alert: PostgreSQLReplicationLag
     expr: pg_replication_lag > 30
     for: 5m
     annotations:
       summary: "Replication lag {{ $value }}s"
-      
+
   - alert: PostgreSQLConnectionsHigh
     expr: pg_stat_database_numbackends > 180
     for: 5m
     annotations:
       summary: "High connection count: {{ $value }}"
-      
+
   - alert: PostgreSQLDiskUsageHigh
     expr: pg_database_size_bytes / pg_settings_max_wal_size > 0.8
     for: 5m
@@ -833,8 +833,8 @@ We will revisit this ADR if:
 
 ---
 
-**Decision Made By**: Platform Architecture Team  
-**Approved By**: Project Lead  
-**Date**: October 8, 2025  
-**Author**: [Platform Architect Name]  
+**Decision Made By**: Platform Architecture Team
+**Approved By**: Project Lead
+**Date**: October 8, 2025
+**Author**: [Platform Architect Name]
 **Last Updated**: October 8, 2025

@@ -26,9 +26,9 @@ def context():
 def cleanup_workspace(fawkes_api_url):
     """Cleanup workspaces after tests"""
     created_workspaces = []
-    
+
     yield created_workspaces
-    
+
     # Cleanup
     for workspace_id in created_workspaces:
         try:
@@ -41,14 +41,14 @@ def dora_metrics_tracking(request):
     """Track DORA metrics for each test"""
     markers = [m.name for m in request.node.iter_markers()]
     dora_markers = [m for m in markers if m.startswith('dora-')]
-    
+
     yield
-    
+
     # After test completes, record metrics
     if dora_markers and hasattr(request.node, 'rep_call'):
         duration = request.node.rep_call.duration
         outcome = request.node.rep_call.outcome
-        
+
         # Send to metrics collector
         for marker in dora_markers:
             metric_type = marker.replace('dora-', '')

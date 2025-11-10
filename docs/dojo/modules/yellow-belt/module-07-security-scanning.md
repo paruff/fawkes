@@ -2,11 +2,11 @@
 
 ## 🎯 Module Overview
 
-**Belt Level**: 🟡 Yellow Belt - CI/CD Mastery  
-**Module**: 3 of 4 (Yellow Belt)  
-**Duration**: 60 minutes  
-**Difficulty**: Intermediate  
-**Prerequisites**: 
+**Belt Level**: 🟡 Yellow Belt - CI/CD Mastery
+**Module**: 3 of 4 (Yellow Belt)
+**Duration**: 60 minutes
+**Difficulty**: Intermediate
+**Prerequisites**:
 - Module 5 & 6 complete
 - Understanding of CI/CD pipelines
 - Basic security awareness
@@ -196,9 +196,9 @@ stage('Container Security Scan') {
         container('docker') {
             script {
                 def imageName = "${env.DOCKER_IMAGE}"
-                
+
                 echo "🔒 Scanning image: ${imageName}"
-                
+
                 // Scan for vulnerabilities
                 sh """
                     trivy image \
@@ -209,7 +209,7 @@ stage('Container Security Scan') {
                         --output trivy-report.json \
                         ${imageName}
                 """
-                
+
                 // Also generate human-readable report
                 sh """
                     trivy image \
@@ -237,12 +237,12 @@ stage('Secret Detection') {
         container('maven') {
             script {
                 echo "🔍 Scanning for secrets..."
-                
+
                 // Install trufflehog
                 sh '''
                     pip3 install trufflehog
                 '''
-                
+
                 // Scan repository
                 sh '''
                     trufflehog filesystem . \
@@ -251,7 +251,7 @@ stage('Secret Detection') {
                         --no-update \
                         > trufflehog-report.json || true
                 '''
-                
+
                 // Check results
                 def report = readFile('trufflehog-report.json')
                 if (report.trim()) {
@@ -271,7 +271,7 @@ stage('Dependency Scan') {
         container('maven') {
             script {
                 echo "📦 Scanning dependencies..."
-                
+
                 // OWASP Dependency Check
                 sh '''
                     mvn dependency-check:check \

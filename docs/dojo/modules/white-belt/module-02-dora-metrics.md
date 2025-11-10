@@ -1,8 +1,8 @@
 # Module 2: DORA Metrics - The North Star
 
-**Belt Level**: 🥋 White Belt  
-**Duration**: 60 minutes  
-**Prerequisites**: Module 1 completed  
+**Belt Level**: 🥋 White Belt
+**Duration**: 60 minutes
+**Prerequisites**: Module 1 completed
 **DORA Capabilities**: Monitoring and Observability, Continuous Delivery
 
 ---
@@ -29,7 +29,7 @@ By the end of this module, you will be able to:
 **The Discovery**: Just **four metrics** predict organizational performance better than any other measures. Organizations that excel at these metrics are:
 
 - **2x more likely** to exceed profitability goals
-- **2x more likely** to exceed productivity goals  
+- **2x more likely** to exceed productivity goals
 - **2x more likely** to exceed customer satisfaction goals
 - **50% more likely** to have higher market share
 
@@ -51,7 +51,7 @@ You've mastered this module when you can:
 
 ### 📺 Video: The Four Key Metrics Explained (7 minutes)
 
-> **[VIDEO PLACEHOLDER]**  
+> **[VIDEO PLACEHOLDER]**
 > **See detailed script in supporting document**
 
 ### The Four Key Metrics
@@ -200,7 +200,7 @@ These metrics don't just describe performance—they **predict business outcomes
 
 #### They Focus on Outcomes, Not Activities
 
-Bad metrics: Lines of code written, hours worked, tickets closed  
+Bad metrics: Lines of code written, hours worked, tickets closed
 Good metrics (DORA): How fast you deliver value and how reliably
 
 ---
@@ -324,7 +324,7 @@ Alertmanager detects any incidents
 
 ### 📺 Video: Navigating Fawkes DORA Dashboards (10 minutes)
 
-> **[VIDEO PLACEHOLDER]**  
+> **[VIDEO PLACEHOLDER]**
 > **See detailed script in supporting document**
 
 ### Key Takeaways from Demo
@@ -343,9 +343,9 @@ Alertmanager detects any incidents
 
 You'll analyze DORA metrics for a sample application, identify performance bottlenecks, and make recommendations for improvement.
 
-**Time Estimate**: 20 minutes  
-**Difficulty**: Beginner  
-**Auto-Graded**: Partially (calculations auto-checked; recommendations manually reviewed)  
+**Time Estimate**: 20 minutes
+**Difficulty**: Beginner
+**Auto-Graded**: Partially (calculations auto-checked; recommendations manually reviewed)
 **Points**: 60
 
 ### Lab Environment
@@ -373,87 +373,87 @@ You'll analyze "Team Alpha's" performance over the last 30 days.
 - Average time to resolve incidents: 2 hours
 
 1. **Calculate Deployment Frequency** (10 points)
-   
+
    Formula: `Total deployments / Days in period`
-   
+
    📝 **Submit**: What is Team Alpha's deployment frequency? (deployments per day)
-   
+
    ✅ **Validation**: Auto-checked against correct calculation
 
 2. **Calculate Lead Time for Changes** (10 points)
-   
+
    Given: Average time from commit to production = 6 hours
-   
+
    📝 **Submit**: What is Team Alpha's lead time? Express in hours.
-   
+
    ✅ **Validation**: Auto-checked
 
 3. **Calculate Change Failure Rate** (10 points)
-   
+
    Formula: `(Failed deployments / Total deployments) × 100`
-   
+
    📝 **Submit**: What is Team Alpha's change failure rate? Express as a percentage.
-   
+
    ✅ **Validation**: Auto-checked against correct calculation
 
 #### Part 2: Performance Classification (15 points)
 
 4. **Classify Team Alpha's Performance** (15 points)
-   
+
    Based on the metrics you calculated, classify Team Alpha according to DORA performance levels:
-   
+
    📝 **Submit**:
    - Deployment Frequency Level: [Elite/High/Medium/Low]
    - Lead Time Level: [Elite/High/Medium/Low]
    - Change Failure Rate Level: [Elite/High/Medium/Low]
    - Overall Classification: [Elite/High/Medium/Low]
-   
+
    ✅ **Validation**: Auto-checked against DORA thresholds
 
 #### Part 3: Compare Teams (15 points)
 
 5. **Analyze Team Bravo vs. Team Charlie** (15 points)
-   
+
    Open the "Team Comparison" dashboard and compare Team Bravo and Team Charlie.
-   
+
    **Team Bravo**:
    - DF: 0.3 per day (9 per month)
    - LT: 3 days
    - MTTR: 4 hours
    - CFR: 10%
-   
+
    **Team Charlie**:
    - DF: 2.5 per day (75 per month)
    - LT: 45 minutes
    - MTTR: 30 minutes
    - CFR: 18%
-   
-   📝 **Submit**: 
+
+   📝 **Submit**:
    - Which team is the higher performer overall? [Bravo/Charlie]
    - What is Team Charlie's biggest weakness? [DF/LT/MTTR/CFR]
    - If Team Bravo could improve one metric, which would have the biggest impact? [DF/LT/MTTR/CFR]
    - Explain your reasoning (2-3 sentences)
-   
+
    ✅ **Validation**: Reasoning manually reviewed by instructors
 
 #### Part 4: Identify Improvement Opportunities (Bonus)
 
 6. **Recommend Improvements for Team Alpha** (Bonus: +10 points)
-   
+
    Based on Team Alpha's metrics:
    - DF: 1.5 per day (High)
    - LT: 6 hours (Elite)
    - MTTR: 2 hours (Elite)
    - CFR: 15.6% (Elite)
-   
-   📝 **Submit**: 
+
+   📝 **Submit**:
    - Team Alpha is performing at Elite level across all metrics. However, what could they do to push even further? (3-5 specific recommendations)
-   
+
    Examples of good recommendations:
    - "Reduce deployment frequency variability (some days have 5 deploys, others have 0)"
    - "Investigate the 7 failed deployments to find common root causes"
    - "Implement chaos engineering to practice MTTR scenarios"
-   
+
    ✅ **Validation**: Manually reviewed for thoughtfulness and actionability
 
 ### Lab Submission
@@ -728,7 +728,7 @@ In Module 3, you'll learn:
 - Pull-based vs. push-based deployments
 - Making your first GitOps change
 
-**Time**: 60 minutes  
+**Time**: 60 minutes
 **Hands-On**: Make a GitOps deployment using ArgoCD
 
 **Get Ready**: Think about how your team currently deploys applications. Who has access? How is it documented? What could go wrong?
@@ -745,8 +745,8 @@ In Module 3, you'll learn:
 3. 💬 Share your DORA metrics insights in `#dojo-achievements`
 4. ➡️ **Continue to Module 3** when ready
 
-**Time Investment**: 60 minutes  
-**Skills Gained**: DORA metrics analysis, performance benchmarking  
+**Time Investment**: 60 minutes
+**Skills Gained**: DORA metrics analysis, performance benchmarking
 **Progress**: 2 of 4 modules toward White Belt (50% complete)
 
 ---
@@ -763,7 +763,7 @@ In Module 3, you'll learn:
 
 ---
 
-**Module Author**: Fawkes Learning Team  
-**Last Updated**: October 2025  
-**Version**: 1.0  
+**Module Author**: Fawkes Learning Team
+**Last Updated**: October 2025
+**Version**: 1.0
 **Based On**: DORA State of DevOps 2023 Report

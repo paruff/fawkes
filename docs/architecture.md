@@ -2,9 +2,9 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: October 4, 2025  
-**Status**: Living Document  
+**Version**: 1.0
+**Last Updated**: October 4, 2025
+**Status**: Living Document
 **Audience**: Contributors, Adopters, Platform Engineers
 
 ---
@@ -133,9 +133,9 @@ Fawkes sits at the intersection of:
 
 ### Key Boundaries
 
-**North**: Developer interaction through Backstage portal and Git  
-**South**: Kubernetes clusters and cloud infrastructure  
-**East/West**: External systems and services  
+**North**: Developer interaction through Backstage portal and Git
+**South**: Kubernetes clusters and cloud infrastructure
+**East/West**: External systems and services
 **Core**: Platform services providing CI/CD, GitOps, observability, security
 
 ---
@@ -627,7 +627,7 @@ Secret injected into pod as env var or volume
 
 ### Current State (MVP): AWS Focus
 
-**Rationale**: 
+**Rationale**:
 - Fastest time to MVP
 - Most mature Terraform provider
 - Largest market share
@@ -956,12 +956,12 @@ Major architectural decisions are documented in ADRs stored in `/docs/adr/`:
 
 This architecture provides a solid foundation for a production-ready Internal Delivery Platform that:
 
-✅ Prioritizes developer experience through self-service and automation  
-✅ Integrates security throughout the delivery pipeline  
-✅ Provides comprehensive observability and DORA metrics  
-✅ Follows GitOps principles for declarative management  
-✅ Scales from small teams to enterprise deployments  
-✅ Remains extensible and customizable  
+✅ Prioritizes developer experience through self-service and automation
+✅ Integrates security throughout the delivery pipeline
+✅ Provides comprehensive observability and DORA metrics
+✅ Follows GitOps principles for declarative management
+✅ Scales from small teams to enterprise deployments
+✅ Remains extensible and customizable
 
 The architecture will evolve based on community feedback, adoption patterns, and emerging best practices in platform engineering.
 
@@ -977,6 +977,6 @@ The architecture will evolve based on community feedback, adoption patterns, and
 
 ---
 
-**Document Maintainers**: Platform Architecture Team  
-**Review Cadence**: Quarterly or when major changes proposed  
+**Document Maintainers**: Platform Architecture Team
+**Review Cadence**: Quarterly or when major changes proposed
 **Last Architectural Review**: October 4, 2025

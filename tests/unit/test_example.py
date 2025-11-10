@@ -44,12 +44,12 @@ def test_datetime_operations():
 
 class TestCalculations:
     """Group of related tests using a class."""
-    
+
     @pytest.mark.unit
     def test_addition(self):
         """Test addition."""
         assert 2 + 2 == 4
-    
+
     @pytest.mark.unit
     def test_subtraction(self):
         """Test subtraction."""

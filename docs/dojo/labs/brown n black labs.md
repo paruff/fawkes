@@ -20,7 +20,7 @@ prometheus:
           resources:
             requests:
               storage: 50Gi
-    
+
     additionalScrapeConfigs:
     - job_name: 'fawkes-apps'
       kubernetes_sd_configs:
@@ -63,10 +63,10 @@ metadata:
 data:
   loki.yaml: |
     auth_enabled: false
-    
+
     server:
       http_listen_port: 3100
-    
+
     ingester:
       lifecycler:
         ring:
@@ -75,7 +75,7 @@ data:
           replication_factor: 1
       chunk_idle_period: 15m
       chunk_retain_period: 30s
-    
+
     schema_config:
       configs:
       - from: 2020-10-24
@@ -85,7 +85,7 @@ data:
         index:
           prefix: index_
           period: 24h
-    
+
     storage_config:
       boltdb_shipper:
         active_index_directory: /loki/index
@@ -93,7 +93,7 @@ data:
         shared_store: filesystem
       filesystem:
         directory: /loki/chunks
-    
+
     limits_config:
       enforce_metric_name: false
       reject_old_samples: true
@@ -151,7 +151,7 @@ data:
   tempo.yaml: |
     server:
       http_listen_port: 3100
-    
+
     distributor:
       receivers:
         jaeger:
@@ -166,16 +166,16 @@ data:
               endpoint: 0.0.0.0:4318
             grpc:
               endpoint: 0.0.0.0:4317
-    
+
     ingester:
       trace_idle_period: 10s
       max_block_bytes: 1_000_000
       max_block_duration: 5m
-    
+
     compactor:
       compaction:
         block_retention: 1h
-    
+
     storage:
       trace:
         backend: local
@@ -257,13 +257,13 @@ spec:
           value: "true"
         - name: METRICS_PORT
           value: "9090"
-        
+
         # Logging to Loki
         - name: LOG_FORMAT
           value: "json"
         - name: LOG_LEVEL
           value: "info"
-        
+
         # Tracing to Tempo
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
           value: "http://tempo.monitoring:4318"
@@ -274,7 +274,7 @@ spec:
 
 ---
 # =============================================================================
-# MODULE 14 - LAB 2: DORA Metrics Dashboard  
+# MODULE 14 - LAB 2: DORA Metrics Dashboard
 # Directory: labs/module-14/
 # =============================================================================
 
@@ -289,32 +289,32 @@ data:
   deployment-frequency.promql: |
     # Deployments per day
     sum(increase(deployments_total[1d]))
-    
+
     # By team
     sum by (team) (increase(deployments_total[1d]))
-    
+
     # Trend over 30 days
     sum_over_time(increase(deployments_total[1d])[30d:1d])
-  
+
   lead-time.promql: |
     # P95 lead time
-    histogram_quantile(0.95, 
+    histogram_quantile(0.95,
       rate(lead_time_seconds_bucket[1d])
     )
-    
+
     # Average lead time
-    rate(lead_time_seconds_sum[1d]) / 
+    rate(lead_time_seconds_sum[1d]) /
     rate(lead_time_seconds_count[1d])
-  
+
   mttr.promql: |
     # P95 MTTR
     histogram_quantile(0.95,
       rate(incident_resolution_seconds_bucket[7d])
     )
-    
+
     # Average incidents per week
     sum(increase(incidents_total[7d]))
-  
+
   change-failure-rate.promql: |
     # Change failure rate percentage
     (
@@ -454,7 +454,7 @@ data:
         slo: 99.9
         window: 30d
         error_budget: 0.1
-      
+
       - name: api-latency
         description: 95% of requests complete in <500ms
         sli:
@@ -462,7 +462,7 @@ data:
           percentile: 95
         slo: 0.5
         window: 30d
-      
+
       - name: data-freshness
         description: Data is no older than 5 minutes
         sli:
@@ -490,7 +490,7 @@ spec:
           /
           sum(rate(http_requests_total[5m]))
         )
-    
+
     # Error budget remaining (30 day window)
     - record: slo:availability:error_budget_remaining
       expr: |
@@ -499,14 +499,14 @@ spec:
           /
           (1 - 0.999)
         )
-    
+
     # Burn rate (how fast we're consuming error budget)
     - record: slo:availability:burn_rate
       expr: |
         (1 - sli:availability:ratio_rate5m)
         /
         (1 - 0.999)
-  
+
   - name: slo-latency
     interval: 30s
     rules:
@@ -516,7 +516,7 @@ spec:
         histogram_quantile(0.95,
           rate(http_request_duration_seconds_bucket[5m])
         )
-    
+
     # Latency SLO compliance
     - record: slo:latency:compliance
       expr: |
@@ -543,7 +543,7 @@ spec:
       annotations:
         summary: "Error budget burning too fast"
         description: "At current rate, error budget will be exhausted in {{ $value | humanizeDuration }}"
-    
+
     # Slow burn (10% budget in 3 days)
     - alert: ErrorBudgetSlowBurn
       expr: |
@@ -554,7 +554,7 @@ spec:
       annotations:
         summary: "Error budget burning steadily"
         description: "Error budget consumption rate is elevated"
-    
+
     # Budget exhausted
     - alert: ErrorBudgetExhausted
       expr: |
@@ -654,23 +654,23 @@ metadata:
 data:
   template.md: |
     # Incident Postmortem: [INCIDENT-ID]
-    
+
     **Date**: [YYYY-MM-DD]
     **Duration**: [START] to [END] ([DURATION])
     **Severity**: [P0/P1/P2/P3]
     **Authors**: [Names]
     **Status**: Draft/Final
-    
+
     ## Executive Summary
     [2-3 sentence summary of what happened and impact]
-    
+
     ## Impact
     - **Users affected**: [number or percentage]
     - **Duration**: [X hours Y minutes]
     - **Services affected**: [list]
     - **Revenue impact**: [$amount or N/A]
     - **Customer complaints**: [number]
-    
+
     ## Timeline (all times UTC)
     - **10:30** - Alert fired: High error rate detected
     - **10:32** - On-call acknowledged, incident channel created
@@ -679,40 +679,40 @@ data:
     - **10:40** - Error rate returning to normal
     - **10:45** - Incident resolved, monitoring continues
     - **11:00** - Postmortem scheduled
-    
+
     ## Root Cause
     [Detailed explanation of what caused the incident]
-    
+
     ### Contributing Factors
     1. [Factor 1]
     2. [Factor 2]
-    
+
     ## Resolution
     [What was done to fix the immediate problem]
-    
+
     ## Detection
     - **How detected**: [Alert/User report/Monitoring]
     - **Time to detect**: [X minutes from start]
     - **Could we have detected sooner?**: [Yes/No, explain]
-    
+
     ## Action Items
     | Action | Owner | Due Date | Priority |
     |--------|-------|----------|----------|
     | [Action 1] | @person | YYYY-MM-DD | P0 |
     | [Action 2] | @person | YYYY-MM-DD | P1 |
-    
+
     ## Lessons Learned
     ### What went well
     - [Item 1]
     - [Item 2]
-    
+
     ### What went wrong
     - [Item 1]
     - [Item 2]
-    
+
     ### Where we got lucky
     - [Item 1]
-    
+
     ## Prevention
     [How we'll prevent this from happening again]
 
@@ -776,13 +776,13 @@ data:
   queries.promql: |
     # Components registered
     count(backstage_catalog_entities_total{kind="Component"})
-    
+
     # APIs documented
     count(backstage_catalog_entities_total{kind="API"})
-    
+
     # Active users (last 7 days)
     count(count_over_time(backstage_user_login[7d]))
-    
+
     # Page views by type
     sum by (page_type) (rate(backstage_page_view_total[1h]))
 
@@ -937,13 +937,13 @@ spec:
     - target: admission.k8s.gatekeeper.sh
       rego: |
         package k8srequiredsignedimages
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           not is_signed(container.image)
           msg := sprintf("Image %v is not signed", [container.image])
         }
-        
+
         is_signed(image) {
           # Check if image has valid signature
           # In real implementation, would verify with Cosign
@@ -1094,35 +1094,35 @@ data:
     #!/bin/bash
     # Deploy all lab infrastructure
     set -e
-    
+
     echo "Deploying Fawkes Dojo Lab Infrastructure..."
-    
+
     # Install prerequisite operators
     echo "Installing operators..."
     helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
     helm repo add grafana https://grafana.github.io/helm-charts
     helm repo add argo https://argoproj.github.io/argo-helm
     helm repo update
-    
+
     # Create monitoring namespace
     kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
-    
+
     # Install Prometheus stack
     echo "Installing Prometheus..."
     helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
       -n monitoring \
       -f labs/module-13/prometheus-values.yaml \
       --wait
-    
+
     # Install ArgoCD
     echo "Installing ArgoCD..."
     kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
     kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-    
+
     # Install Flagger
     echo "Installing Flagger..."
     kubectl apply -f labs/green-belt-shared/flagger-install.yaml
-    
+
     # Install Crossplane
     echo "Installing Crossplane..."
     helm upgrade --install crossplane \
@@ -1130,6 +1130,6 @@ data:
       -n crossplane-system \
       --create-namespace \
       --wait
-    
+
     echo "Lab infrastructure deployed successfully!"
     echo "Run 'fawkes lab start --module N' to start a specific lab"

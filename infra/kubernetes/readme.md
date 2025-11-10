@@ -4,31 +4,31 @@ This directory contains the **Infrastructure as Code (IaC)** and automation scri
 
 ## Structure
 
-- **Cloud Providers:**  
+- **Cloud Providers:**
   Subdirectories for each supported cloud (e.g., `aws/`, `azure/`, `gcp/`) contain Terraform modules and scripts to provision Kubernetes clusters and supporting infrastructure.
-- **k8s/**  
+- **k8s/**
   Contains configuration and manifests for platform tools deployed into Kubernetes (e.g., Jenkins, monitoring, security tools).
 
 ## What Does This Provide?
 
-- **Kubernetes Infrastructure:**  
+- **Kubernetes Infrastructure:**
   Automated creation of a Kubernetes cluster with namespaces for `platform`, `dev`, `test`, and `prod` to support environment isolation and secure delivery workflows.
-- **Platform Layer:**  
+- **Platform Layer:**
   Automated deployment of a Jenkins-based CI/CD pipeline in the `platform` namespace, including quality and security gates for visibility and control over your product code base.
-- **DevSecOps by Design:**  
+- **DevSecOps by Design:**
   Integrates security and quality checks into the pipeline, supporting DORA best practices for elite software delivery performance.
-- **Rapid, Repeatable Delivery:**  
+- **Rapid, Repeatable Delivery:**
   Enables teams to provision infrastructure and deploy products quickly, reliably, and with confidence.
 
 ## Key Features
 
-- **Multi-Cloud Ready:**  
+- **Multi-Cloud Ready:**
   Modular scripts and Terraform modules for AWS, Azure, GCP, and more.
-- **Environment Isolation:**  
+- **Environment Isolation:**
   Namespaces for platform services, development, testing, and production.
-- **CI/CD Automation:**  
+- **CI/CD Automation:**
   Jenkins pipelines with built-in quality and security testing.
-- **Observability & Compliance:**  
+- **Observability & Compliance:**
   Integrated monitoring and policy-as-code for visibility and governance.
 
 ## Getting Started
@@ -39,11 +39,11 @@ This directory contains the **Infrastructure as Code (IaC)** and automation scri
 
 ## Why Fawkes Platform Infra?
 
-- **DORA-Aligned:**  
+- **DORA-Aligned:**
   Designed to help teams achieve high deployment frequency, fast lead time, low change failure rate, and quick recovery.
-- **Empowers Teams:**  
+- **Empowers Teams:**
   Delivery teams can provision, test, and deploy infrastructure and applications with confidence and speed.
-- **Open Source & Extensible:**  
+- **Open Source & Extensible:**
   Easily adapt the scripts and modules to your organization's needs.
 
 ---
