@@ -2,11 +2,11 @@
 
 ## 🎯 Module Overview
 
-**Belt Level**: 🟢 Green Belt - GitOps & Deployment  
-**Module**: 2 of 4 (Green Belt)  
-**Duration**: 60 minutes  
-**Difficulty**: Intermediate  
-**Prerequisites**: 
+**Belt Level**: 🟢 Green Belt - GitOps & Deployment
+**Module**: 2 of 4 (Green Belt)
+**Duration**: 60 minutes
+**Difficulty**: Intermediate
+**Prerequisites**:
 - Module 9: GitOps with ArgoCD complete
 - Understanding of Kubernetes Deployments
 - Familiarity with service routing
@@ -403,7 +403,7 @@ strategy:
   rollingUpdate:
     maxSurge: 2        # Update 2 pods at a time
     maxUnavailable: 0  # Keep all pods available
-    
+
 # This means:
 # - Always maintain at least 5 pods available
 # - Can temporarily have up to 7 pods (5 + 2 surge)
@@ -417,7 +417,7 @@ strategy:
   rollingUpdate:
     maxSurge: 1
     maxUnavailable: 0
-    
+
 # This means:
 # - Update only 1 pod at a time
 # - Never reduce capacity
@@ -857,12 +857,12 @@ spec:
 
 ### What You Learned
 
-✅ **Deployment Strategies**: Blue-Green, Rolling, Canary, Recreate  
-✅ **Blue-Green**: Instant rollback with parallel environments  
-✅ **Rolling Update**: Gradual replacement with zero downtime  
-✅ **Canary**: Progressive rollout with risk mitigation  
-✅ **Decision Making**: Choose right strategy for scenario  
-✅ **Implementation**: Hands-on with Kubernetes  
+✅ **Deployment Strategies**: Blue-Green, Rolling, Canary, Recreate
+✅ **Blue-Green**: Instant rollback with parallel environments
+✅ **Rolling Update**: Gradual replacement with zero downtime
+✅ **Canary**: Progressive rollout with risk mitigation
+✅ **Decision Making**: Choose right strategy for scenario
+✅ **Implementation**: Hands-on with Kubernetes
 
 ### DORA Capabilities Achieved
 
@@ -961,6 +961,6 @@ Module 12: Rollback & Incident    ░░░░░░░░░░░░  0%
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*  
-*Version 1.0 | Last Updated: October 2025*  
+*Fawkes Dojo - Where Platform Engineers Are Forged*
+*Version 1.0 | Last Updated: October 2025*
 *License: MIT | https://github.com/paruff/fawkes*

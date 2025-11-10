@@ -73,31 +73,31 @@ Specifically:
 
 ### Positive
 
-✅ **Broad Adoption**: Using Kubernetes makes Fawkes accessible to the largest possible audience  
-✅ **Ecosystem Integration**: Can leverage hundreds of CNCF tools designed for Kubernetes  
-✅ **Multi-Cloud Support**: Same APIs work across AWS, Azure, GCP, and on-premises  
-✅ **Developer Self-Service**: Kubernetes primitives (Namespaces, RBAC) enable multi-tenancy  
-✅ **Future-Proof**: Kubernetes is backed by major tech companies and shows no signs of decline  
-✅ **GitOps Native**: Declarative configuration aligns perfectly with GitOps principles  
-✅ **Skills Transfer**: Learning Fawkes teaches transferable Kubernetes skills  
-✅ **Extensibility**: Custom Resource Definitions (CRDs) enable platform extension  
-✅ **Production Ready**: Battle-tested at scale by thousands of organizations  
+✅ **Broad Adoption**: Using Kubernetes makes Fawkes accessible to the largest possible audience
+✅ **Ecosystem Integration**: Can leverage hundreds of CNCF tools designed for Kubernetes
+✅ **Multi-Cloud Support**: Same APIs work across AWS, Azure, GCP, and on-premises
+✅ **Developer Self-Service**: Kubernetes primitives (Namespaces, RBAC) enable multi-tenancy
+✅ **Future-Proof**: Kubernetes is backed by major tech companies and shows no signs of decline
+✅ **GitOps Native**: Declarative configuration aligns perfectly with GitOps principles
+✅ **Skills Transfer**: Learning Fawkes teaches transferable Kubernetes skills
+✅ **Extensibility**: Custom Resource Definitions (CRDs) enable platform extension
+✅ **Production Ready**: Battle-tested at scale by thousands of organizations
 
 ### Negative
 
-⚠️ **Complexity**: Kubernetes has a steep learning curve for beginners  
-⚠️ **Resource Overhead**: Control plane and system components require 2-4GB RAM minimum  
-⚠️ **Operational Burden**: Requires expertise to operate reliably (mitigated by managed services)  
-⚠️ **Over-Engineering for Small Teams**: May be overkill for teams with < 5 services  
-⚠️ **Version Management**: Frequent releases require upgrade planning and testing  
-⚠️ **Configuration Complexity**: YAML configuration can be verbose and error-prone  
-⚠️ **Local Development**: Running Kubernetes locally (minikube, kind) adds complexity  
+⚠️ **Complexity**: Kubernetes has a steep learning curve for beginners
+⚠️ **Resource Overhead**: Control plane and system components require 2-4GB RAM minimum
+⚠️ **Operational Burden**: Requires expertise to operate reliably (mitigated by managed services)
+⚠️ **Over-Engineering for Small Teams**: May be overkill for teams with < 5 services
+⚠️ **Version Management**: Frequent releases require upgrade planning and testing
+⚠️ **Configuration Complexity**: YAML configuration can be verbose and error-prone
+⚠️ **Local Development**: Running Kubernetes locally (minikube, kind) adds complexity
 
 ### Neutral
 
-◽ **Cost**: Managed Kubernetes has base costs ($70-150/month for control plane) but provides value at scale  
-◽ **Security**: Powerful security features exist but require configuration and expertise  
-◽ **Networking**: Kubernetes networking is flexible but requires understanding of concepts  
+◽ **Cost**: Managed Kubernetes has base costs ($70-150/month for control plane) but provides value at scale
+◽ **Security**: Powerful security features exist but require configuration and expertise
+◽ **Networking**: Kubernetes networking is flexible but requires understanding of concepts
 
 ### Mitigation Strategies
 
@@ -276,8 +276,8 @@ Self-managed Kubernetes (on-premises, bare metal) is supported but not the prima
 
 ---
 
-**Decision Made By**: Platform Architecture Team  
-**Approved By**: Project Lead  
-**Date**: October 4, 2025  
-**Author**: [Platform Architect Name]  
+**Decision Made By**: Platform Architecture Team
+**Approved By**: Project Lead
+**Date**: October 4, 2025
+**Author**: [Platform Architect Name]
 **Last Updated**: October 4, 2025

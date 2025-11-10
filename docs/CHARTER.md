@@ -271,12 +271,12 @@ This charter may be amended through the governance process defined in GOVERNANCE
 
 ---
 
-**Charter Version**: 1.0  
-**Established**: October 4, 2025  
-**Last Reviewed**: October 4, 2025  
+**Charter Version**: 1.0
+**Established**: October 4, 2025
+**Last Reviewed**: October 4, 2025
 **Next Review**: April 4, 2026 (6-month intervals)
 
-**Approved By**:  
+**Approved By**:
 - Project Lead: [Your Name/Signature]
 - Date: October 4, 2025
 

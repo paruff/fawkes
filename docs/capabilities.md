@@ -14,7 +14,7 @@ Enable teams to deploy software quickly and reliably using automated pipelines.
 
 **Implementation:**
 - [Pattern: Continuous Delivery](patterns/continuous-delivery.md)
-- Tools: 
+- Tools:
   - [Spinnaker](tools/spinnaker.md)
   - [Jenkins](tools/jenkins.md)
 

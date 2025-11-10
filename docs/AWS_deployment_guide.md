@@ -1,8 +1,8 @@
 # Fawkes AWS Production Deployment Guide
 
-**Document Purpose**: Complete step-by-step guide for deploying Fawkes on AWS in production  
-**Target Audience**: DevOps engineers, Platform engineers, System administrators  
-**Estimated Time**: 3-4 hours for full deployment  
+**Document Purpose**: Complete step-by-step guide for deploying Fawkes on AWS in production
+**Target Audience**: DevOps engineers, Platform engineers, System administrators
+**Estimated Time**: 3-4 hours for full deployment
 **Last Updated**: October 7, 2025
 
 ---
@@ -190,7 +190,7 @@ aws budgets create-budget \
   - Internet Gateway attached
   - NAT Gateways deployed here
   - Application Load Balancers
-  
+
 - **Private Subnets** (3 AZs): `10.0.11.0/24`, `10.0.12.0/24`, `10.0.13.0/24`
   - No direct internet access
   - EKS worker nodes
@@ -309,7 +309,7 @@ Before proceeding, verify:
 
 ## Phase 1: AWS Foundation Setup
 
-**Duration**: 30 minutes  
+**Duration**: 30 minutes
 **Goal**: Create VPC, subnets, security groups, and IAM roles
 
 ### Step 1.1: Initialize Terraform
@@ -483,7 +483,7 @@ aws secretsmanager list-secrets | grep fawkes
 
 ## Phase 2: EKS Cluster Deployment
 
-**Duration**: 20-30 minutes  
+**Duration**: 20-30 minutes
 **Goal**: Deploy and configure EKS cluster with worker nodes
 
 ### Step 2.1: Create EKS Cluster
@@ -724,7 +724,7 @@ kubectl get sa -n external-secrets-system external-secrets
 
 ## Phase 3: Database and Storage
 
-**Duration**: 20 minutes  
+**Duration**: 20 minutes
 **Goal**: Deploy RDS PostgreSQL and configure storage classes
 
 ### Step 3.1: Create RDS PostgreSQL Instance
@@ -933,7 +933,7 @@ kubectl get storageclass
 
 ## Phase 4: Platform Services
 
-**Duration**: 45-60 minutes  
+**Duration**: 45-60 minutes
 **Goal**: Deploy core Fawkes platform components
 
 ### Step 4.1: Create Namespaces
@@ -1003,7 +1003,7 @@ configs:
 
 redis:
   enabled: true
-  
+
 repoServer:
   replicas: 2
 
@@ -1103,7 +1103,7 @@ harborAdminPassword: $(openssl rand -base64 16)
 
 trivy:
   enabled: true
-  
+
 notary:
   enabled: false
 
@@ -1133,7 +1133,7 @@ helm repo update
 cat > jenkins-values.yaml <<EOF
 controller:
   adminPassword: $JENKINS_PASSWORD
-  
+
   ingress:
     enabled: true
     ingressClassName: alb
@@ -1144,7 +1144,7 @@ controller:
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
       alb.ingress.kubernetes.io/ssl-redirect: '443'
     hostName: jenkins.fawkes.yourdomain.com
-  
+
   resources:
     requests:
       cpu: "1000m"
@@ -1152,7 +1152,7 @@ controller:
     limits:
       cpu: "2000m"
       memory: "4Gi"
-  
+
   JCasC:
     configScripts:
       aws-credentials: |
@@ -1187,7 +1187,7 @@ controller:
                         alwaysPullImage: true
                         workingDir: "/home/jenkins/agent"
                         ttyEnabled: true
-  
+
   installPlugins:
     - kubernetes:latest
     - workflow-aggregator:latest
@@ -1243,7 +1243,7 @@ image:
 backstage:
   image:
     pullPolicy: Always
-  
+
   extraEnvVars:
     - name: POSTGRES_HOST
       value: $RDS_ENDPOINT
@@ -1253,12 +1253,12 @@ backstage:
       value: fawkesadmin
     - name: POSTGRES_PASSWORD
       value: $DB_PASSWORD
-  
+
   appConfig:
     app:
       title: Fawkes Platform
       baseUrl: https://backstage.fawkes.yourdomain.com
-    
+
     backend:
       baseUrl: https://backstage.fawkes.yourdomain.com
       listen:
@@ -1277,14 +1277,14 @@ backstage:
           user: \${POSTGRES_USER}
           password: \${POSTGRES_PASSWORD}
           database: backstage
-    
+
     catalog:
       rules:
         - allow: [Component, System, API, Group, User, Resource, Location]
       locations:
         - type: url
           target: https://github.com/paruff/fawkes/blob/master/catalog-info.yaml
-    
+
     auth:
       providers:
         github:
@@ -1537,7 +1537,7 @@ curl -k https://focalboard.fawkes.yourdomain.com
 
 ## Phase 5: Observability Stack
 
-**Duration**: 30 minutes  
+**Duration**: 30 minutes
 **Goal**: Deploy Prometheus, Grafana, and logging infrastructure
 
 ### Step 5.1: Deploy Prometheus Stack
@@ -1571,7 +1571,7 @@ prometheus:
 grafana:
   enabled: true
   adminPassword: $(openssl rand -base64 16)
-  
+
   ingress:
     enabled: true
     ingressClassName: alb
@@ -1583,12 +1583,12 @@ grafana:
       alb.ingress.kubernetes.io/ssl-redirect: '443'
     hosts:
       - grafana.fawkes.yourdomain.com
-  
+
   persistence:
     enabled: true
     storageClassName: gp3
     size: 10Gi
-  
+
   datasources:
     datasources.yaml:
       apiVersion: 1
@@ -1597,7 +1597,7 @@ grafana:
         type: prometheus
         url: http://prometheus-operated:9090
         isDefault: true
-  
+
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
@@ -1813,7 +1813,7 @@ kubectl get secret -n monitoring prometheus-grafana \
 
 ## Phase 6: Security Hardening
 
-**Duration**: 20 minutes  
+**Duration**: 20 minutes
 **Goal**: Implement security best practices
 
 ### Step 6.1: Deploy Trivy Operator (Vulnerability Scanning)
@@ -2087,7 +2087,7 @@ kubectl auth can-i delete pods --as=system:serviceaccount:default:developer
 
 ## Phase 7: Validation and Testing
 
-**Duration**: 30 minutes  
+**Duration**: 30 minutes
 **Goal**: Verify all components are working correctly
 
 ### Step 7.1: Component Health Checks
@@ -2460,14 +2460,14 @@ data:
   alertmanager.yml: |
     global:
       resolve_timeout: 5m
-    
+
     route:
       group_by: ['alertname', 'cluster', 'service']
       group_wait: 10s
       group_interval: 10s
       repeat_interval: 12h
       receiver: 'fawkes-team'
-    
+
     receivers:
     - name: 'fawkes-team'
       email_configs:
@@ -3407,7 +3407,7 @@ aws config describe-compliance-by-config-rule
 
 ## Conclusion
 
-Congratulations! You've successfully deployed the Fawkes platform on AWS in production. 
+Congratulations! You've successfully deployed the Fawkes platform on AWS in production.
 
 **What you've accomplished**:
 - ✅ Deployed a complete Internal Delivery Platform on AWS
@@ -3442,13 +3442,13 @@ Congratulations! You've successfully deployed the Fawkes platform on AWS in prod
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: October 7, 2025  
-**Maintained By**: Fawkes Platform Team  
+**Document Version**: 1.0
+**Last Updated**: October 7, 2025
+**Maintained By**: Fawkes Platform Team
 **Feedback**: Please submit issues or improvements to the GitHub repository
 
 ---
 
-**Estimated Total Time**: 3-4 hours  
-**Estimated Monthly Cost**: $2,084 (production environment)  
+**Estimated Total Time**: 3-4 hours
+**Estimated Monthly Cost**: $2,084 (production environment)
 **AWS Services Used**: 10+ (EKS, RDS, S3, ALB, CloudWatch, Secrets Manager, ACM, IAM, VPC, ECR)

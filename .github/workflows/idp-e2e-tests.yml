@@ -12,7 +12,7 @@ on:
 jobs:
   e2e-tests:
     runs-on: ubuntu-latest
-    
+
     services:
       jenkins:
         image: jenkins/jenkins:lts
@@ -23,51 +23,51 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+
       - name: Install dependencies
         run: |
           pip install -r tests/e2e/requirements.txt
-      
+
       - name: Set up test cluster
         uses: helm/kind-action@v1
         with:
           cluster_name: fawkes-test
-      
+
       - name: Deploy Fawkes platform
         run: |
           kubectl apply -f infra/platform/k8s/
           kubectl wait --for=condition=ready pod -l app=fawkes-api --timeout=300s
-      
+
       - name: Run smoke tests
         run: |
           pytest tests/e2e/ -m smoke --junit-xml=reports/smoke-tests.xml
-      
+
       - name: Run full E2E suite
         if: github.event_name != 'pull_request'
         run: |
           pytest tests/e2e/ --junit-xml=reports/e2e-tests.xml
-      
+
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: reports/
-      
+
       - name: Publish test results
         if: always()
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           files: reports/*.xml
-      
+
       - name: Comment PR with results
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7

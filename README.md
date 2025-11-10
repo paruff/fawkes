@@ -57,8 +57,8 @@ Fawkes is applying for the AWS Activate program to accelerate development and pr
 [Apply for AWS Activate](https://aws.amazon.com/activate/) | [See our AWS Cost Estimation](docs/AWS_COST_ESTIMATION.md)
 
 ## AWS Activate Application
-   
-   📊 [AWS Cost Estimation](docs/AWS_COST_ESTIMATION.md)  
+
+   📊 [AWS Cost Estimation](docs/AWS_COST_ESTIMATION.md)
    📈 [Business Case & Value Proposition](docs/BUSINESS_CASE.md)
 
 ---
@@ -78,7 +78,7 @@ Progress through 5 belt levels, each building on the last:
 🥋 White Belt (8 hours)      →  Platform Fundamentals
    ↓ Deploy your first app, understand DORA metrics
 
-🟡 Yellow Belt (8 hours)     →  CI/CD Mastery  
+🟡 Yellow Belt (8 hours)     →  CI/CD Mastery
    ↓ Build pipelines, implement security scanning
 
 🟢 Green Belt (8 hours)      →  GitOps & Deployment
@@ -95,11 +95,11 @@ Total: 40 hours from novice to platform architect
 
 ### What You Get
 
-✅ **Hands-On Labs** - Practice in isolated, safe environments  
-✅ **Immediate Feedback** - Auto-graded labs, real-time validation  
-✅ **Production Skills** - Same tools used in enterprise platforms  
-✅ **Recognized Credentials** - Digital badges and certificates  
-✅ **Community Learning** - Learn with peers, get mentorship  
+✅ **Hands-On Labs** - Practice in isolated, safe environments
+✅ **Immediate Feedback** - Auto-graded labs, real-time validation
+✅ **Production Skills** - Same tools used in enterprise platforms
+✅ **Recognized Credentials** - Digital badges and certificates
+✅ **Community Learning** - Learn with peers, get mentorship
 ✅ **Platform Engineering University Integration** - Aligned with industry certifications
 
 **[Start Your Dojo Journey →](docs/dojo/getting-started.md)**
@@ -351,6 +351,7 @@ Comprehensive documentation for all aspects of Fawkes:
 - [Contributing Guide](CONTRIBUTING.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
 - [Development Setup](docs/development.md)
+- [Pre-commit Hooks Setup](docs/PRE-COMMIT.md)
 - [Architectural Decision Records](docs/adr/)
 
 ---
@@ -359,30 +360,30 @@ Comprehensive documentation for all aspects of Fawkes:
 
 ### For Platform Teams
 
-✅ **Production-Ready** - Battle-tested components, enterprise-grade reliability  
-✅ **Open Source** - No vendor lock-in, full control, MIT licensed  
-✅ **Multi-Cloud** - AWS, Azure, GCP with consistent APIs  
-✅ **GitOps Native** - Declarative configuration, automated reconciliation  
-✅ **Extensible** - Plugin architecture, REST APIs, customizable  
-✅ **Well Documented** - Comprehensive guides, tutorials, runbooks  
+✅ **Production-Ready** - Battle-tested components, enterprise-grade reliability
+✅ **Open Source** - No vendor lock-in, full control, MIT licensed
+✅ **Multi-Cloud** - AWS, Azure, GCP with consistent APIs
+✅ **GitOps Native** - Declarative configuration, automated reconciliation
+✅ **Extensible** - Plugin architecture, REST APIs, customizable
+✅ **Well Documented** - Comprehensive guides, tutorials, runbooks
 
 ### For Development Teams
 
-✅ **Self-Service** - Deploy without tickets, provision infrastructure instantly  
-✅ **Golden Paths** - Pre-configured templates for common scenarios  
-✅ **Fast Feedback** - Build, test, deploy in minutes  
-✅ **Visibility** - Real-time status, metrics, logs, traces in one place  
-✅ **ChatOps** - Manage deployments from team chat  
-✅ **Safety** - Automated testing, security scanning, easy rollback  
+✅ **Self-Service** - Deploy without tickets, provision infrastructure instantly
+✅ **Golden Paths** - Pre-configured templates for common scenarios
+✅ **Fast Feedback** - Build, test, deploy in minutes
+✅ **Visibility** - Real-time status, metrics, logs, traces in one place
+✅ **ChatOps** - Manage deployments from team chat
+✅ **Safety** - Automated testing, security scanning, easy rollback
 
 ### For Engineering Leaders
 
-✅ **DORA Metrics** - Measure and improve delivery performance  
-✅ **Cost Visibility** - Track infrastructure and operational costs  
-✅ **Compliance** - Automated policy enforcement, audit trails  
-✅ **Team Health** - Developer satisfaction tracking (NPS)  
-✅ **Skill Development** - Integrated learning with certification  
-✅ **ROI Tracking** - Quantify platform value and improvements  
+✅ **DORA Metrics** - Measure and improve delivery performance
+✅ **Cost Visibility** - Track infrastructure and operational costs
+✅ **Compliance** - Automated policy enforcement, audit trails
+✅ **Team Health** - Developer satisfaction tracking (NPS)
+✅ **Skill Development** - Integrated learning with certification
+✅ **ROI Tracking** - Quantify platform value and improvements
 
 ---
 
@@ -415,15 +416,15 @@ Join our vibrant platform engineering community:
 ## 📈 Success Stories
 
 > "We went from deploying once a week to deploying 10x per day. Fawkes gave us the platform and the learning to achieve elite DORA performance."
-> 
+>
 > — **Sarah Chen, VP Engineering, TechCorp**
 
 > "The dojo system is brilliant. Our developers learned platform engineering while building our IDP. Within 3 months, we had 5 certified platform engineers."
-> 
+>
 > — **Marcus Johnson, Platform Lead, FinanceStart**
 
 > "Fawkes integrated everything we were using separate tools for. One platform, one team, incredible productivity gains."
-> 
+>
 > — **Priya Patel, CTO, HealthTech Solutions**
 
 **[Read More Success Stories →](docs/success-stories/)**

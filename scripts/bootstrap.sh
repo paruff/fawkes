@@ -223,7 +223,7 @@ spec:
       - CreateNamespace=true
 EOF
 
-echo "✅ ArgoCD Application CRs applied — ArgoCD will pick them up and sync the fawkes namespace." 
+echo "✅ ArgoCD Application CRs applied — ArgoCD will pick them up and sync the fawkes namespace."
 echo "If you want to access the ArgoCD UI locally run: kubectl -n argocd port-forward svc/argocd-server 8080:443"
 
 echo ""

@@ -107,7 +107,7 @@ The initial founder(s) who provide overall strategic direction.
 #### Minor Decisions
 *Examples: Bug fixes, documentation improvements, small features*
 
-**Process**: 
+**Process**:
 - Single maintainer approval required for merge
 - Use "Lazy Consensus" - if no objections within 48 hours, proceed
 - Document in pull request comments
@@ -248,9 +248,9 @@ This governance model is inspired by:
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: October 4, 2025  
-**Status**: Active  
+**Document Version**: 1.0
+**Last Updated**: October 4, 2025
+**Status**: Active
 **Contact**: governance@fawkes-project.org
 
 ---

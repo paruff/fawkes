@@ -27,7 +27,7 @@ kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -
 add_helm_repo() {
   local repo_name=$1
   local repo_url=$2
-  
+
   if ! helm repo list | grep -q "^${repo_name}"; then
     echo "➕ Adding Helm repo: $repo_name"
     helm repo add "$repo_name" "$repo_url"
@@ -37,13 +37,13 @@ add_helm_repo() {
 
 # Deploy based on component
 case $COMPONENT in
-  
+
   backstage)
     echo "🎭 Deploying Backstage Developer Portal..."
-    
+
     # Add Backstage Helm repo
     add_helm_repo backstage https://backstage.github.io/charts
-    
+
     # Check if values file exists, create if not
     VALUES_FILE="$REPO_ROOT/infra/kubernetes/backstage/values-local.yaml"
     if [ ! -f "$VALUES_FILE" ]; then
@@ -74,55 +74,55 @@ backstage:
       baseUrl: http://localhost:7007
 EOF
     fi
-    
+
     helm upgrade --install backstage backstage/backstage \
       -f "$VALUES_FILE" \
       -n "$NAMESPACE" \
       --wait --timeout 5m \
       --create-namespace
-    
+
     echo "✅ Backstage deployed!"
     echo "🌐 Access via: kubectl port-forward -n $NAMESPACE svc/backstage 7007:7007"
     ;;
-  
+
   argocd)
     echo "🔄 Deploying ArgoCD..."
-    
+
     # Check if manifests exist
     ARGOCD_MANIFESTS="$REPO_ROOT/infra/kubernetes/argocd"
     if [ ! -d "$ARGOCD_MANIFESTS" ]; then
       echo "⚠️  ArgoCD manifests not found at $ARGOCD_MANIFESTS"
       echo "📥 Installing from official manifests..."
-      
+
       kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
       kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
     else
       kubectl apply -n "$NAMESPACE" -f "$ARGOCD_MANIFESTS"
     fi
-    
+
     # Wait for ArgoCD to be ready
     echo "⏳ Waiting for ArgoCD to be ready..."
     kubectl wait --for=condition=available --timeout=300s \
       deployment/argocd-server -n argocd 2>/dev/null || \
       kubectl wait --for=condition=available --timeout=300s \
       deployment/argocd-server -n "$NAMESPACE"
-    
+
     echo "✅ ArgoCD deployed!"
     echo "🔑 Get admin password: kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath=\"{.data.password}\" | base64 -d"
     echo "🌐 Access via: kubectl port-forward -n argocd svc/argocd-server 8080:443"
     ;;
-  
+
   jenkins)
     echo "🏗️  Deploying Jenkins CI/CD..."
-    
+
     # Check if Jenkins manifests exist
     JENKINS_MANIFESTS="$REPO_ROOT/infra/kubernetes/jenkins"
     if [ ! -d "$JENKINS_MANIFESTS" ]; then
       echo "⚠️  Jenkins manifests not found at $JENKINS_MANIFESTS"
       echo "📥 Installing via Helm..."
-      
+
       add_helm_repo jenkins https://charts.jenkins.io
-      
+
       helm upgrade --install jenkins jenkins/jenkins \
         --set controller.serviceType=NodePort \
         --set controller.nodePort=30008 \
@@ -136,17 +136,17 @@ EOF
     else
       kubectl apply -n "$NAMESPACE" -f "$JENKINS_MANIFESTS"
     fi
-    
+
     echo "✅ Jenkins deployed!"
     echo "🔑 Get admin password: kubectl exec -n $NAMESPACE -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/chart-admin-password"
     echo "🌐 Access via: kubectl port-forward -n $NAMESPACE svc/jenkins 8080:8080"
     ;;
-  
+
   mattermost)
     echo "💬 Deploying Mattermost..."
-    
+
     add_helm_repo mattermost https://helm.mattermost.com
-    
+
     VALUES_FILE="$REPO_ROOT/infra/kubernetes/mattermost/values-local.yaml"
     if [ ! -f "$VALUES_FILE" ]; then
       echo "⚠️  Creating default mattermost values-local.yaml..."
@@ -172,22 +172,22 @@ resources:
     memory: 512Mi
 EOF
     fi
-    
+
     helm upgrade --install mattermost mattermost/mattermost-team-edition \
       -f "$VALUES_FILE" \
       -n "$NAMESPACE" \
       --wait --timeout 5m \
       --create-namespace
-    
+
     echo "✅ Mattermost deployed!"
     echo "🌐 Access via: kubectl port-forward -n $NAMESPACE svc/mattermost 8065:8065"
     ;;
-  
+
   postgresql)
     echo "🐘 Deploying PostgreSQL..."
-    
+
     add_helm_repo bitnami https://charts.bitnami.com/bitnami
-    
+
     helm upgrade --install postgresql bitnami/postgresql \
       --set auth.username=fawkes \
       --set auth.password=fawkes \
@@ -196,11 +196,11 @@ EOF
       -n "$NAMESPACE" \
       --wait --timeout 3m \
       --create-namespace
-    
+
     echo "✅ PostgreSQL deployed!"
     echo "🔗 Connection: postgresql://fawkes:fawkes@postgresql.$NAMESPACE.svc:5432/fawkes"
     ;;
-  
+
   all)
     echo "🚀 Deploying all components..."
     "$0" "$NAMESPACE" postgresql
@@ -208,7 +208,7 @@ EOF
     "$0" "$NAMESPACE" argocd
     "$0" "$NAMESPACE" jenkins
     "$0" "$NAMESPACE" mattermost
-    
+
     echo ""
     echo "======================================"
     echo "✅ All components deployed!"
@@ -222,7 +222,7 @@ EOF
     echo ""
     echo "🔍 Check status: kubectl get pods -n $NAMESPACE"
     ;;
-  
+
   *)
     echo "❌ Unknown component: $COMPONENT"
     echo ""

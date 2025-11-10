@@ -2,9 +2,9 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: October 7, 2025  
-**Status**: Living Document  
+**Version**: 1.0
+**Last Updated**: October 7, 2025
+**Status**: Living Document
 **Audience**: Learning Architects, Contributors, Platform Engineers
 
 ---
@@ -153,8 +153,8 @@ Inspired by martial arts dojo systems, the belt progression provides:
 ### Belt Levels
 
 #### 🥋 White Belt: Platform Fundamentals (8 hours)
-**Target Audience**: New to platform engineering or Fawkes  
-**Prerequisites**: Basic command line, Git, and Docker knowledge  
+**Target Audience**: New to platform engineering or Fawkes
+**Prerequisites**: Basic command line, Git, and Docker knowledge
 **Certification**: "Fawkes Platform Operator"
 
 **Core Competencies**:
@@ -172,7 +172,7 @@ Inspired by martial arts dojo systems, the belt progression provides:
 - Monitoring and Observability
 - Deployment Automation
 
-**Assessment**: 
+**Assessment**:
 - Deploy 2 sample applications successfully
 - Demonstrate understanding of DORA metrics (quiz)
 - Complete 3 hands-on labs
@@ -181,8 +181,8 @@ Inspired by martial arts dojo systems, the belt progression provides:
 ---
 
 #### 🟡 Yellow Belt: CI/CD Mastery (8 hours)
-**Target Audience**: Developers ready to own their CI/CD  
-**Prerequisites**: White Belt certification  
+**Target Audience**: Developers ready to own their CI/CD
+**Prerequisites**: White Belt certification
 **Certification**: "Fawkes CI/CD Specialist"
 
 **Core Competencies**:
@@ -211,8 +211,8 @@ Inspired by martial arts dojo systems, the belt progression provides:
 ---
 
 #### 🟢 Green Belt: GitOps & Deployment (8 hours)
-**Target Audience**: Engineers managing deployments  
-**Prerequisites**: Yellow Belt certification  
+**Target Audience**: Engineers managing deployments
+**Prerequisites**: Yellow Belt certification
 **Certification**: "Fawkes Deployment Engineer"
 
 **Core Competencies**:
@@ -243,8 +243,8 @@ Inspired by martial arts dojo systems, the belt progression provides:
 ---
 
 #### 🟤 Brown Belt: Observability & SRE (8 hours)
-**Target Audience**: Engineers responsible for reliability  
-**Prerequisites**: Green Belt certification  
+**Target Audience**: Engineers responsible for reliability
+**Prerequisites**: Green Belt certification
 **Certification**: "Fawkes SRE Practitioner"
 
 **Core Competencies**:
@@ -274,8 +274,8 @@ Inspired by martial arts dojo systems, the belt progression provides:
 ---
 
 #### ⚫ Black Belt: Platform Architecture (8 hours)
-**Target Audience**: Platform architects and tech leads  
-**Prerequisites**: Brown Belt certification  
+**Target Audience**: Platform architects and tech leads
+**Prerequisites**: Brown Belt certification
 **Certification**: "Fawkes Platform Architect"
 
 **Core Competencies**:
@@ -308,7 +308,7 @@ White Belt (8h)          Platform Fundamentals
     ↓                   ✓ Deploy apps
     ↓                   ✓ Basic DORA metrics
     ↓
-Yellow Belt (8h)         CI/CD Mastery  
+Yellow Belt (8h)         CI/CD Mastery
     ↓                   ✓ Custom pipelines
     ↓                   ✓ Security scanning
     ↓
@@ -674,25 +674,25 @@ validations:
     type: "resource-exists"
     resource: "deployment/sample-app"
     points: 10
-    
+
   - name: "Service responds"
     type: "http-check"
     url: "http://sample-app.{namespace}.svc.cluster.local"
     expected_status: 200
     points: 15
-    
+
   - name: "DORA metric recorded"
     type: "metric-check"
     metric: "deployments_total{app='sample-app'}"
     expected: "> 0"
     points: 10
-    
+
   - name: "Deployment successful"
     type: "status-check"
     resource: "deployment/sample-app"
     condition: "Available"
     points: 15
-    
+
 total_points: 50
 passing_score: 40
 ```
@@ -930,11 +930,11 @@ All 24 DORA capabilities covered across belt progression:
 
 The Fawkes Dojo is not just a training program—it's a **learning platform** that transforms how platform engineering skills are acquired and recognized. By combining:
 
-✅ **Immersive hands-on learning** in production-like environments  
-✅ **Clear progression system** with recognized credentials  
-✅ **DORA-driven curriculum** aligned with industry best practices  
-✅ **Community learning** with peers and mentors  
-✅ **Integration with work** using the same platform for learning and production  
+✅ **Immersive hands-on learning** in production-like environments
+✅ **Clear progression system** with recognized credentials
+✅ **DORA-driven curriculum** aligned with industry best practices
+✅ **Community learning** with peers and mentors
+✅ **Integration with work** using the same platform for learning and production
 
 We create a unique differentiator that positions Fawkes not just as infrastructure, but as a **complete platform engineering education ecosystem**.
 
@@ -942,6 +942,6 @@ We create a unique differentiator that positions Fawkes not just as infrastructu
 
 ---
 
-**Document Maintainers**: Learning Architecture Team  
-**Review Cadence**: Monthly or when curriculum updates needed  
+**Document Maintainers**: Learning Architecture Team
+**Review Cadence**: Monthly or when curriculum updates needed
 **Last Review**: October 7, 2025

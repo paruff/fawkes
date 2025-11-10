@@ -294,7 +294,7 @@
             .header h1 {
                 font-size: 1.8rem;
             }
-            
+
             .step {
                 flex-direction: column;
             }
@@ -322,7 +322,7 @@
         <div class="step-section">
             <h2>Choose Your Onboarding Path</h2>
             <p>Select the path that matches your experience level:</p>
-            
+
             <div class="path-selector">
                 <div class="path-card" onclick="selectPath('beginner')">
                     <div class="path-icon">🌱</div>
@@ -416,7 +416,7 @@
                         </div>
                         <p>Open the project in your favorite code editor (VS Code, IntelliJ, etc.)</p>
                         <div class="help-box">
-                            <strong>📚 New to Git?</strong> Git is how we track code changes. 
+                            <strong>📚 New to Git?</strong> Git is how we track code changes.
                             <a href="#git-basics" style="color: #667eea;">Learn Git basics →</a>
                         </div>
                     </div>
@@ -773,7 +773,7 @@
             <div class="step-section">
                 <h2>🆘 Need More Help?</h2>
                 <p>We're here to help! Multiple ways to get support:</p>
-                
+
                 <div class="quick-links">
                     <a href="#" class="quick-link">
                         <strong>💬 Mattermost</strong><br>
@@ -994,18 +994,18 @@ fawkes restart
 
         function selectPath(path) {
             currentPath = path;
-            
+
             // Hide all paths
             document.getElementById('beginnerPath').style.display = 'none';
             document.getElementById('experiencedPath').style.display = 'none';
             document.getElementById('troubleshootPath').style.display = 'none';
             document.getElementById('progressTracker').style.display = 'none';
-            
+
             // Remove selected class from all cards
             document.querySelectorAll('.path-card').forEach(card => {
                 card.classList.remove('selected');
             });
-            
+
             // Show selected path
             if (path === 'beginner') {
                 document.getElementById('beginnerPath').style.display = 'block';
@@ -1019,12 +1019,12 @@ fawkes restart
                 document.getElementById('troubleshootPath').style.display = 'block';
                 event.target.closest('.path-card').classList.add('selected');
             }
-            
+
             // Smooth scroll to content
             setTimeout(() => {
-                document.getElementById(path + 'Path').scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start' 
+                document.getElementById(path + 'Path').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
                 });
             }, 100);
         }
@@ -1046,7 +1046,7 @@ fawkes restart
             if (stepNumber > completedSteps) {
                 completedSteps = stepNumber;
                 updateProgress();
-                
+
                 if (completedSteps === totalSteps) {
                     setTimeout(() => {
                         alert('🎉 Congratulations! You\'ve completed the onboarding!');

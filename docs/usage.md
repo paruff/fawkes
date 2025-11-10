@@ -23,18 +23,18 @@ Fawkes is a **metrics-first platform** designed to help teams improve their **so
 
 After deployment, you can access services such as Jenkins, SonarQube, and the Kubernetes Dashboard. These services support **Continuous Integration**, **Monitoring and Observability**, and **Streamlining Change Approval**.
 
-- **Jenkins:**  
-  Access Jenkins via the provided URL (e.g., `http://<jenkins-lb>:8080`).  
+- **Jenkins:**
+  Access Jenkins via the provided URL (e.g., `http://<jenkins-lb>:8080`).
   Retrieve the admin password using:
   ```sh
   kubectl get secret --namespace <namespace> jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode
   ```
 
-- **SonarQube:**  
-  Access SonarQube via the provided URL (e.g., `http://<sonarqube-lb>:9000`).  
+- **SonarQube:**
+  Access SonarQube via the provided URL (e.g., `http://<sonarqube-lb>:9000`).
   Default credentials: `admin` / `admin`.
 
-- **Kubernetes Dashboard:**  
+- **Kubernetes Dashboard:**
   Access the dashboard via the provided URL. Retrieve the admin token using:
   ```sh
   kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
@@ -44,21 +44,21 @@ After deployment, you can access services such as Jenkins, SonarQube, and the Ku
 
 ## Managing Infrastructure
 
-- **Provisioning Infrastructure:**  
+- **Provisioning Infrastructure:**
   Use the provided scripts in the `infra/` directory to provision or update infrastructure:
   ```sh
   cd infra
   ./buildinfra.sh -p aws -e dev
   ```
 
-- **Destroying Infrastructure:**  
+- **Destroying Infrastructure:**
   To tear down infrastructure:
   ```sh
   cd infra
   ./buildinfra.sh -p aws -e dev --destroy
   ```
 
-- **Using Terraform Directly:**  
+- **Using Terraform Directly:**
   Advanced users can manage infrastructure directly with Terraform:
   ```sh
   cd infra/platform/aws
@@ -71,21 +71,21 @@ After deployment, you can access services such as Jenkins, SonarQube, and the Ku
 
 ## Deploying Platform Services
 
-- **Jenkins Deployment:**  
+- **Jenkins Deployment:**
   Deploy Jenkins using the provided script:
   ```sh
   cd platform/jenkins
   ./jenkins-delta.sh -i
   ```
 
-- **Other Services:**  
+- **Other Services:**
   Each service directory contains deployment scripts or Helm charts. Refer to the respective README files for details.
 
 ---
 
 ## Viewing Outputs and Endpoints
 
-After deployment, service URLs and credentials are displayed in the terminal.  
+After deployment, service URLs and credentials are displayed in the terminal.
 You can also retrieve them using:
 
 - **Terraform Outputs:**
@@ -102,10 +102,10 @@ You can also retrieve them using:
 
 ## CI/CD and Developer Workflows
 
-- **Pipelines:**  
+- **Pipelines:**
   Jenkins is pre-configured for CI/CD. Add your repositories and configure pipelines as needed.
 
-- **Workspace Automation:**  
+- **Workspace Automation:**
   Use scripts in the `workspace/` directory to set up local development environments.
 
 ---

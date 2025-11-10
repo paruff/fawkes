@@ -99,7 +99,7 @@ Feature: Automated Deployment Pipeline
     And MTTR metric is recorded
 ````
 
-**AI Benefit**: 
+**AI Benefit**:
 - Copilot can generate step definitions from scenarios
 - Copilot can generate scenarios from user stories
 - You get executable specs that AI validates
@@ -137,14 +137,14 @@ def jenkins_client():
 def clean_namespace(kubernetes_cluster) -> Generator[str, None, None]:
     """Creates and cleans up a test namespace"""
     namespace = f"test-{uuid.uuid4().hex[:8]}"
-    
+
     # Create namespace
     kubernetes_cluster.create_namespace(
         body=client.V1Namespace(metadata=client.V1ObjectMeta(name=namespace))
     )
-    
+
     yield namespace
-    
+
     # Cleanup
     kubernetes_cluster.delete_namespace(namespace)
 
@@ -160,13 +160,13 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "smoke: Smoke tests (critical path only)")
     config.addinivalue_line("markers", "security: Security-focused tests")
     config.addinivalue_line("markers", "performance: Performance/load tests")
-    
+
     # DORA capability markers
     config.addinivalue_line("markers", "dora-deployment-frequency: Tests deployment frequency")
     config.addinivalue_line("markers", "dora-lead-time: Tests lead time for changes")
     config.addinivalue_line("markers", "dora-change-failure-rate: Tests change failure detection")
     config.addinivalue_line("markers", "dora-mttr: Tests mean time to restore")
-    
+
     # Belt level markers for dojo
     config.addinivalue_line("markers", "white-belt: White belt curriculum tests")
     config.addinivalue_line("markers", "yellow-belt: Yellow belt curriculum tests")
@@ -191,7 +191,7 @@ def pytest_collection_modifyitems(config, items):
             item.add_marker(pytest.mark.integration)
         elif "tests/e2e" in str(item.fspath):
             item.add_marker(pytest.mark.e2e)
-        
+
         # Add DORA context based on test name
         test_name = item.name.lower()
         if "deploy" in test_name:
@@ -223,7 +223,7 @@ def test_deployment_manifest_is_valid(replicas, memory_request, cpu_request):
     """
     Property test: Any valid combination of replicas and resources
     should produce a valid Kubernetes manifest.
-    
+
     AI Benefit: Tests edge cases you might not think of.
     """
     manifest = generate_deployment_manifest(
@@ -231,14 +231,14 @@ def test_deployment_manifest_is_valid(replicas, memory_request, cpu_request):
         memory_request_mi=memory_request,
         cpu_request_millicores=cpu_request
     )
-    
+
     # Parse as YAML
     parsed = yaml.safe_load(manifest)
-    
+
     # Validate structure
     assert parsed['kind'] == 'Deployment'
     assert parsed['spec']['replicas'] == replicas
-    
+
     # Validate resource limits are higher than requests
     container = parsed['spec']['template']['spec']['containers'][0]
     assert int(container['resources']['limits']['memory'].rstrip('Mi')) >= memory_request
@@ -261,17 +261,17 @@ def test_deployment_manifest_is_valid(replicas, memory_request, cpu_request):
 **Status**: In Progress
 
 ## User Story
-**As a** new developer joining the team  
-**I want** to provision my own development environment with one click  
+**As a** new developer joining the team
+**I want** to provision my own development environment with one click
 **So that** I can start contributing code on my first day without waiting for ops tickets
 
 ## Acceptance Criteria (Testable)
 
 ### AC1: Environment Provisioning
-**Given** I have access to Backstage portal  
-**When** I click "Create New Environment"  
-**Then** a Kubernetes namespace is created within 60 seconds  
-**And** I receive the connection details via email  
+**Given** I have access to Backstage portal
+**When** I click "Create New Environment"
+**Then** a Kubernetes namespace is created within 60 seconds
+**And** I receive the connection details via email
 **And** the environment includes:
   - PostgreSQL database (dev size)
   - Redis cache
@@ -279,8 +279,8 @@ def test_deployment_manifest_is_valid(replicas, memory_request, cpu_request):
   - Pre-configured secrets
 
 ### AC2: Service Templates Available
-**Given** my environment is provisioned  
-**When** I navigate to the "Create Service" page  
+**Given** my environment is provisioned
+**When** I navigate to the "Create Service" page
 **Then** I see templates for:
   - Java Spring Boot
   - Python FastAPI
@@ -289,8 +289,8 @@ def test_deployment_manifest_is_valid(replicas, memory_request, cpu_request):
 **And** each template has a preview and description
 
 ### AC3: Automated CI/CD Setup
-**Given** I select a service template  
-**When** I fill in the service details and click "Create"  
+**Given** I select a service template
+**When** I fill in the service details and click "Create"
 **Then** within 5 minutes:
   - GitHub repository is created
   - Jenkins pipeline is configured
@@ -328,7 +328,7 @@ def test_deployment_manifest_is_valid(replicas, memory_request, cpu_request):
 See: `tests/e2e/features/developer_onboarding.feature`
 ````
 
-**AI Benefit**: 
+**AI Benefit**:
 - Copilot can generate the feature file from the story
 - Copilot can generate step definitions from acceptance criteria
 - Copilot can create test data based on "Given" clauses
@@ -388,32 +388,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       # Copilot understands these checks
       - name: Lint YAML files
         run: |
           pip install yamllint
           yamllint -c .yamllint infra/ tests/
-      
+
       - name: Validate Kubernetes manifests
         run: |
           kubectl-validate infra/kubernetes/**/*.yaml
-      
+
       - name: Check Terraform formatting
         run: |
           cd infra/terraform
           terraform fmt -check -recursive
-      
+
       - name: Markdown lint
         run: |
           npm install -g markdownlint-cli
           markdownlint docs/**/*.md
-      
+
       - name: Check for secrets
         run: |
           pip install detect-secrets
           detect-secrets scan --all-files
-      
+
       # AI knows these should pass quickly
       - name: Fast unit tests
         run: |
@@ -428,18 +428,18 @@ jobs:
     needs: fast-checks
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Build container images
         run: |
           docker build -t fawkes/test:${{ github.sha }} .
-      
+
       - name: Trivy vulnerability scan
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: fawkes/test:${{ github.sha }}
           severity: HIGH,CRITICAL
           exit-code: 1
-      
+
       - name: SonarQube static analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -471,7 +471,7 @@ jobs:
           --health-interval 10s
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Run integration tests
         env:
           POSTGRES_HOST: postgres
@@ -491,21 +491,21 @@ jobs:
     needs: integration-tests
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Create kind cluster
         uses: helm/kind-action@v1
-      
+
       - name: Deploy platform components
         run: |
           ./infra/buildplatform.sh --test-mode
-      
+
       - name: Run BDD tests
         run: |
           pytest tests/e2e \
             --gherkin-terminal-reporter \
             --junitxml=e2e-results.xml \
             --html=e2e-report.html
-      
+
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v3
@@ -529,7 +529,7 @@ jobs:
           NOW=$(date +%s)
           LEAD_TIME=$((NOW - COMMIT_TIME))
           echo "Lead time: $LEAD_TIME seconds"
-      
+
       - name: Record test results
         run: |
           # Send to DORA metrics service
@@ -543,7 +543,7 @@ jobs:
             }'
 ````
 
-**AI Benefit**: 
+**AI Benefit**:
 - Copilot knows the pipeline structure
 - Can suggest fixes for failing stages
 - Understands where tests belong

@@ -273,11 +273,11 @@ Use these tags in code comments and tests:
 def automated_build_pipeline():
     """
     Implements automated CI pipeline that triggers on every commit.
-    
+
     DORA Impact:
     - Increases deployment frequency through automation
     - Reduces lead time by catching issues early
-    
+
     Learning Objective: Students learn to create Jenkins pipelines
     that integrate with GitHub webhooks.
     """
@@ -489,12 +489,12 @@ Feature: Continuous Integration Pipeline
   As a developer
   I want automated build and test pipelines
   So that I can quickly validate changes
-  
+
   Background:
     Given a Jenkins instance is running at "http://jenkins.fawkes-platform.svc"
     And the "spring-boot-template" exists in "/templates/java-spring-boot"
     And GitHub webhooks are configured
-  
+
   @smoke @white-belt
   Scenario: Commit triggers automatic build
     Given I have cloned the "demo-java-app" repository
@@ -504,7 +504,7 @@ Feature: Continuous Integration Pipeline
     And the build status is reported to GitHub
     And the commit shows a green checkmark
     And DORA metrics record the deployment
-  
+
   @yellow-belt
   Scenario: Pipeline includes security scanning
     Given a Jenkins pipeline for "demo-python-app"
@@ -514,7 +514,7 @@ Feature: Continuous Integration Pipeline
     And SonarQube analyzes the source code
     And no HIGH or CRITICAL vulnerabilities are found
     And a security report is archived
-  
+
   @green-belt @dora-change-failure-rate
   Scenario: Failed builds notify team via Mattermost
     Given a Jenkins pipeline for "demo-node-app"
@@ -539,7 +539,7 @@ import time
 def jenkins_running(jenkins_client, url):
     """
     Verify Jenkins is accessible and healthy.
-    
+
     @dora-capability: continuous_integration
     """
     response = jenkins_client.get(f'{url}/api/json')
@@ -552,20 +552,20 @@ def jenkins_running(jenkins_client, url):
 def commit_change(git_repo, branch, dora_metrics):
     """
     Commit test change and record timestamp for lead time calculation.
-    
+
     @dora-metric: lead_time
     """
     git_repo.checkout(branch)
-    
+
     # Make traceable change
     commit_id = f"test-{datetime.utcnow().isoformat()}"
     with open('README.md', 'a') as f:
         f.write(f'\n<!-- Test commit {commit_id} -->')
-    
+
     git_repo.index.add(['README.md'])
     commit = git_repo.index.commit(f'Test commit {commit_id}')
     git_repo.remote('origin').push(branch)
-    
+
     # Record commit time for DORA lead time metric
     dora_metrics.record_commit(
         commit_sha=commit.hexsha,
@@ -578,12 +578,12 @@ def commit_change(git_repo, branch, dora_metrics):
 def build_starts(jenkins_client, git_repo, seconds, dora_metrics):
     """
     Verify build triggered within SLA and update deployment frequency metric.
-    
+
     @dora-metric: deployment_frequency
     """
     start_time = datetime.utcnow()
     deadline = start_time + timedelta(seconds=seconds)
-    
+
     while datetime.utcnow() < deadline:
         builds = jenkins_client.get_builds(git_repo.name)
         if builds and builds[0].timestamp > dora_metrics.get_commit_time(git_repo.name):
@@ -596,7 +596,7 @@ def build_starts(jenkins_client, git_repo, seconds, dora_metrics):
             )
             return
         time.sleep(2)
-    
+
     raise AssertionError(
         f"No build started within {seconds}s of commit to {git_repo.name}. "
         f"This impacts deployment frequency SLA."
@@ -606,17 +606,17 @@ def build_starts(jenkins_client, git_repo, seconds, dora_metrics):
 def verify_dora_metrics(dora_metrics, git_repo):
     """
     Verify DORA metrics service recorded all events.
-    
+
     @dora-capability: monitoring_and_observability
     """
     # Verify metrics were recorded
     metrics = dora_metrics.get_metrics(service=git_repo.name)
-    
+
     assert metrics.get('deployment_frequency') is not None, \
         "Deployment frequency not recorded"
     assert metrics.get('lead_time') is not None, \
         "Lead time not recorded"
-    
+
     # Verify Prometheus metrics are accessible
     prom_response = requests.get('http://prometheus.fawkes-platform.svc:9090/api/v1/query',
                                  params={'query': f'deployments_total{{service="{git_repo.name}"}}'})
@@ -634,21 +634,21 @@ from typing import Dict, List
 def pytest_collection_modifyitems(config, items):
     """
     Add belt level and DORA capability markers for tracking.
-    
+
     @dora-capability: learning_culture
     """
-    belt_order = ['white-belt', 'yellow-belt', 'green-belt', 
+    belt_order = ['white-belt', 'yellow-belt', 'green-belt',
                   'brown-belt', 'black-belt']
-    
+
     for item in items:
         # Extract belt level
-        belt_markers = [m.name for m in item.iter_markers() 
+        belt_markers = [m.name for m in item.iter_markers()
                        if m.name in belt_order]
         if belt_markers:
             item.add_marker(pytest.mark.belt_level(belt_markers[0]))
-        
+
         # Extract DORA metrics
-        dora_markers = [m.name for m in item.iter_markers() 
+        dora_markers = [m.name for m in item.iter_markers()
                        if m.name.startswith('dora-')]
         for marker in dora_markers:
             metric = marker.replace('dora-', '')
@@ -659,22 +659,22 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     Report results by belt level for dojo progression tracking.
     """
     belt_results: Dict[str, List[str]] = {}
-    
+
     for report in terminalreporter.stats.get('passed', []):
         belt_marker = report.keywords.get('belt_level')
         if belt_marker:
             belt = belt_marker[0].args[0]
             belt_results.setdefault(belt, []).append(report.nodeid)
-    
+
     terminalreporter.write_sep('=', 'Dojo Progression Summary')
-    for belt in ['white-belt', 'yellow-belt', 'green-belt', 
+    for belt in ['white-belt', 'yellow-belt', 'green-belt',
                  'brown-belt', 'black-belt']:
         scenarios = belt_results.get(belt, [])
         status = '✅' if scenarios else '⏸️'
         terminalreporter.write_line(
             f'  {status} {belt.upper()}: {len(scenarios)} scenarios passed'
         )
-    
+
     # DORA metrics summary
     dora_results: Dict[str, int] = {}
     for report in terminalreporter.stats.get('passed', []):
@@ -683,7 +683,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
             for metric in dora_marker:
                 metric_name = metric.args[0]
                 dora_results[metric_name] = dora_results.get(metric_name, 0) + 1
-    
+
     if dora_results:
         terminalreporter.write_sep('=', 'DORA Metrics Coverage')
         for metric, count in sorted(dora_results.items()):
@@ -730,7 +730,7 @@ pipeline {
       '''
     }
   }
-  
+
   environment {
     HARBOR_REGISTRY = 'harbor.fawkes-platform.svc'
     HARBOR_PROJECT = 'fawkes'
@@ -738,7 +738,7 @@ pipeline {
     IMAGE_TAG = "${env.GIT_COMMIT.take(8)}"
     HARBOR_CREDS = credentials('harbor-robot-account')
   }
-  
+
   stages {
     stage('Build') {
       steps {
@@ -750,7 +750,7 @@ pipeline {
         }
       }
     }
-    
+
     stage('Code Quality') {
       steps {
         container('maven') {
@@ -760,7 +760,7 @@ pipeline {
         }
       }
     }
-    
+
     stage('Build Container') {
       steps {
         container('kaniko') {
@@ -775,7 +775,7 @@ pipeline {
         }
       }
     }
-    
+
     stage('Security Scan') {
       steps {
         container('trivy') {
@@ -794,7 +794,7 @@ pipeline {
       post {
         always {
           archiveArtifacts artifacts: 'trivy-report.json', allowEmptyArchive: true
-          
+
           // Send scan results to DORA metrics service
           sh '''
             curl -X POST http://dora-metrics.fawkes-platform.svc:8080/api/v1/security-scan \
@@ -808,18 +808,18 @@ pipeline {
             color: 'danger',
             message: """
               🚨 **Security Vulnerabilities Found**
-              
+
               **Service:** ${IMAGE_NAME}:${IMAGE_TAG}
               **Build:** ${env.BUILD_URL}
               **Action Required:** Fix HIGH/CRITICAL vulnerabilities before deployment
-              
+
               See attached trivy-report.json for details.
             """
           )
         }
       }
     }
-    
+
     stage('Deploy to Dev') {
       when {
         branch 'main'
@@ -831,17 +831,17 @@ pipeline {
           sh '''
             git clone https://github.com/paruff/fawkes.git fawkes-gitops
             cd fawkes-gitops/infra/kubernetes/${JOB_NAME}
-            
+
             # Update image tag in deployment
             sed -i "s|image:.*|image: ${IMAGE_NAME}:${IMAGE_TAG}|g" deployment.yaml
-            
+
             git config user.email "jenkins@fawkes-platform"
             git config user.name "Fawkes Jenkins"
             git add deployment.yaml
             git commit -m "Update ${JOB_NAME} to ${IMAGE_TAG}"
             git push origin main
           '''
-          
+
           // Record deployment for DORA metrics
           sh '''
             curl -X POST http://dora-metrics.fawkes-platform.svc:8080/api/v1/deployments \
@@ -864,7 +864,7 @@ pipeline {
             color: 'good',
             message: """
               ✅ **Deployment Successful**
-              
+
               **Service:** ${JOB_NAME}
               **Version:** ${IMAGE_TAG}
               **Environment:** dev
@@ -875,7 +875,7 @@ pipeline {
       }
     }
   }
-  
+
   post {
     always {
       // Cleanup workspace
@@ -922,7 +922,7 @@ spec:
       message: >-
         All containers must have CPU and memory limits defined.
         This ensures predictable resource usage and prevents noisy neighbor issues.
-        
+
         Example:
           resources:
             limits:
@@ -974,7 +974,7 @@ spec:
           - DaemonSet
     validate:
       message: >-
-        Container images must not use 'latest' tag. 
+        Container images must not use 'latest' tag.
         Use a specific version tag like 'v1.2.3' or git commit SHA.
       pattern:
         spec:
@@ -1122,7 +1122,7 @@ class DeploymentEvent(BaseModel):
     commit_timestamp: datetime = Field(..., description="When the commit was created")
     deployment_timestamp: datetime = Field(default_factory=datetime.utcnow, description="When deployment occurred")
     status: Literal['success', 'failure'] = Field(..., description="Deployment outcome")
-    
+
     class Config:
         json_schema_extra = {
             "example": {
@@ -1144,7 +1144,7 @@ class IncidentEvent(BaseModel):
     started_at: datetime = Field(..., description="When incident started")
     resolved_at: Optional[datetime] = Field(None, description="When incident was resolved")
     caused_by_deployment: Optional[str] = Field(None, description="Git commit SHA if caused by deployment")
-    
+
     class Config:
         json_schema_extra = {
             "example": {
@@ -1181,7 +1181,7 @@ async def root():
 async def record_deployment(event: DeploymentEvent):
     """
     Record a deployment event for DORA metrics calculation.
-    
+
     Tracks:
     - Deployment frequency (deployments per day)
     - Lead time for changes (commit to deploy time)
@@ -1195,14 +1195,14 @@ async def record_deployment(event: DeploymentEvent):
             version=event.version,
             status=event.status
         ).inc()
-        
+
         # Calculate and record lead time
         lead_time = (event.deployment_timestamp - event.commit_timestamp).total_seconds()
         lead_time_histogram.labels(
             service=event.service,
             environment=event.environment
         ).observe(lead_time)
-        
+
         # Record failure if applicable
         if event.status == 'failure':
             failure_counter.labels(
@@ -1210,7 +1210,7 @@ async def record_deployment(event: DeploymentEvent):
                 environment=event.environment,
                 failure_type='deployment_failure'
             ).inc()
-            
+
             logger.warning(
                 f"Deployment failure recorded: {event.service} v{event.version} to {event.environment}"
             )
@@ -1218,7 +1218,7 @@ async def record_deployment(event: DeploymentEvent):
             logger.info(
                 f"Deployment success recorded: {event.service} v{event.version} to {event.environment}"
             )
-        
+
         return {
             "status": "recorded",
             "service": event.service,
@@ -1236,7 +1236,7 @@ async def record_deployment(event: DeploymentEvent):
 async def record_incident(event: IncidentEvent):
     """
     Record an incident for MTTR calculation.
-    
+
     If caused by deployment, also increments change failure rate.
     If incident is ongoing (no resolved_at), updates active incidents gauge.
     """
@@ -1249,13 +1249,13 @@ async def record_incident(event: IncidentEvent):
                 environment=event.environment,
                 incident_type=event.incident_type
             ).observe(mttr)
-            
+
             # Decrement active incidents
             active_incidents.labels(
                 service=event.service,
                 environment=event.environment
             ).dec()
-            
+
             # If caused by deployment, count as change failure
             if event.caused_by_deployment:
                 failure_counter.labels(
@@ -1263,12 +1263,12 @@ async def record_incident(event: IncidentEvent):
                     environment=event.environment,
                     failure_type='incident_from_deployment'
                 ).inc()
-            
+
             logger.info(
                 f"Incident resolved: {event.service} in {event.environment} "
                 f"after {round(mttr/60, 2)} minutes"
             )
-            
+
             return {
                 "status": "resolved",
                 "service": event.service,
@@ -1281,12 +1281,12 @@ async def record_incident(event: IncidentEvent):
                 service=event.service,
                 environment=event.environment
             ).inc()
-            
+
             logger.warning(
                 f"Incident started: {event.service} in {event.environment} "
                 f"(severity: {event.severity})"
             )
-            
+
             return {
                 "status": "incident_started",
                 "service": event.service,
@@ -1305,7 +1305,7 @@ async def record_security_scan(scan: SecurityScanResult):
         f"Security scan recorded: {scan.service} v{scan.version} - "
         f"Critical: {scan.critical_vulnerabilities}, High: {scan.high_vulnerabilities}"
     )
-    
+
     return {
         "status": "recorded",
         "service": scan.service,
@@ -1612,9 +1612,9 @@ When generating dojo learning modules, follow this structure:
 
 # Module 1: Internal Delivery Platforms - What and Why
 
-**Belt Level**: 🥋 White Belt  
-**Duration**: 60 minutes  
-**Prerequisites**: Basic understanding of software development, Git, command line  
+**Belt Level**: 🥋 White Belt
+**Duration**: 60 minutes
+**Prerequisites**: Basic understanding of software development, Git, command line
 **Learning Path**: Module 1 of 20 (White Belt: Modules 1-4)
 
 ---
@@ -1635,7 +1635,7 @@ By completing this module, you will be able to:
 
 ### Why This Matters
 
-Platform engineering is one of the fastest-growing disciplines in technology. 
+Platform engineering is one of the fastest-growing disciplines in technology.
 Organizations with mature platforms:
 - Deploy **10x more frequently**
 - Have **50% lower change failure rates**
@@ -2254,12 +2254,12 @@ Track how well Copilot is helping:
 - Ask when uncertain about placement or approach
 
 **Your Goal:**
-Help build Fawkes into the world's best open-source Internal Product Delivery Platform, 
+Help build Fawkes into the world's best open-source Internal Product Delivery Platform,
 where developers learn platform engineering while deploying production-grade infrastructure.
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** October 26, 2025  
-**Maintained By:** Fawkes Platform Team  
+**Version:** 1.0.0
+**Last Updated:** October 26, 2025
+**Maintained By:** Fawkes Platform Team
 **Questions?** Open a [GitHub Discussion](https://github.com/paruff/fawkes/discussions)

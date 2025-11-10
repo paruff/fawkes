@@ -2,11 +2,11 @@
 
 ## 🎯 Module Overview
 
-**Belt Level**: ⚫ Black Belt - Platform Architecture  
-**Module**: 2 of 4 (Black Belt)  
-**Duration**: 90 minutes  
-**Difficulty**: Expert  
-**Prerequisites**: 
+**Belt Level**: ⚫ Black Belt - Platform Architecture
+**Module**: 2 of 4 (Black Belt)
+**Duration**: 90 minutes
+**Difficulty**: Expert
+**Prerequisites**:
 - Module 17: Platform Architecture complete
 - Deep Kubernetes knowledge
 - Security fundamentals
@@ -378,7 +378,7 @@ metadata:
   annotations:
     description: "Team Alpha production workloads"
     owner: "alice@company.com"
-    
+
 ---
 # Resource Quota
 apiVersion: v1
@@ -394,7 +394,7 @@ spec:
     limits.memory: 400Gi
     persistentvolumeclaims: "20"
     services.loadbalancers: "3"
-    
+
 ---
 # Limit Range (default limits)
 apiVersion: v1
@@ -417,7 +417,7 @@ spec:
       cpu: "100m"
       memory: "128Mi"
     type: Container
-    
+
 ---
 # Network Policy (deny all by default)
 apiVersion: networking.k8s.io/v1
@@ -444,36 +444,36 @@ class NamespaceProvisioner:
         kubernetes.config.load_kube_config(k8s_config)
         self.api = kubernetes.client.CoreV1Api()
         self.rbac_api = kubernetes.client.RbacAuthorizationV1Api()
-    
+
     def create_tenant_namespace(self, tenant_config):
         """
         Create namespace with all required resources
-        
+
         Args:
             tenant_config: dict with team, environment, quotas, etc.
         """
         namespace_name = f"{tenant_config['team']}-{tenant_config['environment']}"
-        
+
         # 1. Create namespace
         self._create_namespace(namespace_name, tenant_config)
-        
+
         # 2. Create resource quota
         self._create_resource_quota(namespace_name, tenant_config['quotas'])
-        
+
         # 3. Create limit ranges
         self._create_limit_range(namespace_name, tenant_config['limits'])
-        
+
         # 4. Create network policies
         self._create_network_policies(namespace_name)
-        
+
         # 5. Create RBAC roles
         self._create_rbac(namespace_name, tenant_config['members'])
-        
+
         # 6. Create service accounts
         self._create_service_accounts(namespace_name)
-        
+
         return namespace_name
-    
+
     def _create_namespace(self, name, config):
         """Create namespace with labels and annotations"""
         namespace = kubernetes.client.V1Namespace(
@@ -493,7 +493,7 @@ class NamespaceProvisioner:
         )
         self.api.create_namespace(namespace)
         print(f"✅ Created namespace: {name}")
-    
+
     def _create_resource_quota(self, namespace, quotas):
         """Create resource quota"""
         quota = kubernetes.client.V1ResourceQuota(
@@ -510,10 +510,10 @@ class NamespaceProvisioner:
         )
         self.api.create_namespaced_resource_quota(namespace, quota)
         print(f"✅ Created resource quota in {namespace}")
-    
+
     def _create_rbac(self, namespace, members):
         """Create roles and role bindings for team members"""
-        
+
         # Developer role
         dev_role = kubernetes.client.V1Role(
             metadata=kubernetes.client.V1ObjectMeta(name="developer"),
@@ -531,7 +531,7 @@ class NamespaceProvisioner:
             ]
         )
         self.rbac_api.create_namespaced_role(namespace, dev_role)
-        
+
         # Bind developers
         for member in members.get('developers', []):
             binding = kubernetes.client.V1RoleBinding(
@@ -552,7 +552,7 @@ class NamespaceProvisioner:
                 )
             )
             self.rbac_api.create_namespaced_role_binding(namespace, binding)
-        
+
         print(f"✅ Created RBAC in {namespace}")
 
 # Usage
@@ -626,7 +626,7 @@ spec:
     - target: admission.k8s.gatekeeper.sh
       rego: |
         package k8srequiredlabels
-        
+
         violation[{"msg": msg, "details": {"missing_labels": missing}}] {
           provided := {label | input.review.object.metadata.labels[label]}
           required := {label | label := input.parameters.labels[_]}
@@ -700,7 +700,7 @@ spec:
     - target: admission.k8s.gatekeeper.sh
       rego: |
         package k8sallowedrepos
-        
+
         violation[{"msg": msg}] {
           container := input.review.object.spec.containers[_]
           satisfied := [good | repo = input.parameters.repos[_]
@@ -1021,7 +1021,7 @@ Design multi-tenancy for 10 engineering teams.
    - [ ] PodSecurityPolicy
    - [x] ResourceQuota
    - [ ] RBAC
-   
+
    6. **Default network policy should be:**
    - [x] Deny all, whitelist specific traffic
    - [ ] Allow all, blacklist bad traffic
@@ -1048,11 +1048,11 @@ Design multi-tenancy for 10 engineering teams.
 
 ### What You Learned
 
-✅ **Multi-Tenancy Models**: Namespace, vCluster, cluster-per-tenant  
-✅ **RBAC Deep Dive**: Roles, bindings, service accounts  
-✅ **Namespace Strategy**: Naming, templates, automation  
-✅ **Policy Enforcement**: OPA Gatekeeper policies  
-✅ **Resource Management**: Quotas, limits, priorities  
+✅ **Multi-Tenancy Models**: Namespace, vCluster, cluster-per-tenant
+✅ **RBAC Deep Dive**: Roles, bindings, service accounts
+✅ **Namespace Strategy**: Naming, templates, automation
+✅ **Policy Enforcement**: OPA Gatekeeper policies
+✅ **Resource Management**: Quotas, limits, priorities
 ✅ **Network Isolation**: NetworkPolicies, zero-trust
 
 ### Key Takeaways
@@ -1152,8 +1152,8 @@ Module 20: Platform Leadership     ░░░░░░░░░░░░  0%
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*  
-*Version 1.0 | Last Updated: October 2025*  
+*Fawkes Dojo - Where Platform Engineers Are Forged*
+*Version 1.0 | Last Updated: October 2025*
 *License: MIT | https://github.com/paruff/fawkes*
 
 **🎉 Module 18 Complete - Multi-Tenancy Mastery Achieved! 🎉**

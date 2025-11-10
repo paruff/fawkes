@@ -13,7 +13,7 @@ global:
 # ===== Prometheus Operator =====
 prometheusOperator:
   enabled: true
-  
+
   resources:
     requests:
       cpu: 100m
@@ -25,15 +25,15 @@ prometheusOperator:
 # ===== Prometheus Server =====
 prometheus:
   enabled: true
-  
+
   prometheusSpec:
     # Retention - MVP: 7 days (Production: 30+ days)
     retention: 7d
     retentionSize: "5GB"
-    
+
     # Replication - MVP: Single replica (Production: 2+)
     replicas: 1
-    
+
     # Resources - MVP: Minimal (Production: Scale up)
     resources:
       requests:
@@ -42,7 +42,7 @@ prometheus:
       limits:
         cpu: 1000m
         memory: 2Gi
-    
+
     # Storage - MVP: 10GB (Production: 50-100GB)
     storageSpec:
       volumeClaimTemplate:
@@ -52,30 +52,30 @@ prometheus:
           resources:
             requests:
               storage: 10Gi
-    
+
     # Service Discovery - MVP: Basic (Production: Add more)
     serviceMonitorSelectorNilUsesHelmValues: false
     podMonitorSelectorNilUsesHelmValues: false
     ruleSelectorNilUsesHelmValues: false
-    
+
     # Scrape interval - MVP: 30s (Production: Tunable per target)
     evaluationInterval: 30s
     scrapeInterval: 30s
-    
+
     # External Labels - For multi-cluster (Production)
     externalLabels:
       cluster: fawkes-dev
       environment: development
-    
+
     # Security - MVP: Basic (Production: Pod security policies)
     securityContext:
       runAsNonRoot: true
       runAsUser: 1000
       fsGroup: 2000
-    
+
     # Enable features - MVP: Basic (Production: Add remote write, exemplars)
     enableFeatures: []
-    
+
     # Alertmanager config
     alertingEndpoints:
       - name: alertmanager-operated
@@ -99,11 +99,11 @@ prometheus:
 # ===== Alertmanager =====
 alertmanager:
   enabled: true
-  
+
   alertmanagerSpec:
     # Replication - MVP: Single (Production: 3 replicas)
     replicas: 1
-    
+
     # Resources - MVP: Minimal
     resources:
       requests:
@@ -112,7 +112,7 @@ alertmanager:
       limits:
         cpu: 100m
         memory: 128Mi
-    
+
     # Storage - MVP: 2GB (Production: 10GB)
     storage:
       volumeClaimTemplate:
@@ -122,19 +122,19 @@ alertmanager:
           resources:
             requests:
               storage: 2Gi
-    
+
     # Configuration - MVP: Log only (Production: Slack, PagerDuty, email)
     config:
       global:
         resolve_timeout: 5m
-      
+
       route:
         group_by: ['alertname', 'cluster', 'service']
         group_wait: 10s
         group_interval: 10s
         repeat_interval: 12h
         receiver: 'null'  # MVP: No notifications
-      
+
       receivers:
         - name: 'null'
         # Production: Add real receivers
@@ -150,10 +150,10 @@ alertmanager:
 # ===== Grafana =====
 grafana:
   enabled: true
-  
+
   # Admin credentials - MVP: Simple (Production: OAuth/LDAP)
   adminPassword: "changeme123"  # CHANGE THIS!
-  
+
   # Resources - MVP: Minimal
   resources:
     requests:
@@ -162,13 +162,13 @@ grafana:
     limits:
       cpu: 200m
       memory: 512Mi
-  
+
   # Persistence - MVP: Enabled
   persistence:
     enabled: true
     storageClassName: gp3
     size: 5Gi
-  
+
   # Data sources - Auto-configured
   sidecar:
     dashboards:
@@ -177,7 +177,7 @@ grafana:
     datasources:
       enabled: true
       defaultDatasourceEnabled: true
-  
+
   # Ingress - MVP: Disabled (Production: Enable with ALB)
   ingress:
     enabled: false
@@ -190,7 +190,7 @@ grafana:
   # Plugins - MVP: Essential only
   plugins:
     - grafana-piechart-panel
-  
+
   # Default dashboards - MVP: Kubernetes basics
   defaultDashboardsEnabled: true
   defaultDashboardsTimezone: UTC
@@ -206,7 +206,7 @@ grafana:
 # ===== Node Exporter =====
 nodeExporter:
   enabled: true
-  
+
   resources:
     requests:
       cpu: 50m
@@ -218,7 +218,7 @@ nodeExporter:
 # ===== Kube State Metrics =====
 kubeStateMetrics:
   enabled: true
-  
+
   resources:
     requests:
       cpu: 50m

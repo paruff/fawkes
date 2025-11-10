@@ -1,8 +1,8 @@
 # Fawkes: Business Case & Value Proposition
 
-**Document Purpose**: Comprehensive business justification for AWS Activate partnership  
-**Target Audience**: AWS Activate reviewers, potential investors, enterprise prospects  
-**Company Stage**: Pre-seed, bootstrapped, open-source foundation  
+**Document Purpose**: Comprehensive business justification for AWS Activate partnership
+**Target Audience**: AWS Activate reviewers, potential investors, enterprise prospects
+**Company Stage**: Pre-seed, bootstrapped, open-source foundation
 **Last Updated**: October 7, 2025
 
 ---
@@ -1149,7 +1149,7 @@ Fawkes is a **production-ready, open-source Internal Delivery Platform** that pr
 - ✅ Only DORA metrics automation built-in
 - ✅ Only solution addressing skills gap + tooling gap simultaneously
 
-**This is the kind of innovation AWS Activate should support**: 
+**This is the kind of innovation AWS Activate should support**:
 - Solving real problems for real businesses
 - Building on AWS strengths (EKS, RDS, etc.)
 - Creating positive ecosystem externalities
@@ -1215,16 +1215,16 @@ Fawkes is a **production-ready, open-source Internal Delivery Platform** that pr
 **Conducted**: 25+ interviews with engineering leaders (Jan-Sept 2025)
 
 **Key Quotes**:
-> "We spent $800K building our platform and it still doesn't work well. I wish something like Fawkes existed 2 years ago."  
+> "We spent $800K building our platform and it still doesn't work well. I wish something like Fawkes existed 2 years ago."
 > — VP Engineering, FinTech Startup
 
-> "Finding platform engineers is impossible. Training our own developers would be huge."  
+> "Finding platform engineers is impossible. Training our own developers would be huge."
 > — CTO, Healthcare Company
 
-> "We evaluated Humanitec but $150K/year was too expensive. We'd pay $20K for something similar."  
+> "We evaluated Humanitec but $150K/year was too expensive. We'd pay $20K for something similar."
 > — Director of Engineering, E-commerce
 
-> "The biggest problem isn't the tools, it's that no one knows how to use them effectively."  
+> "The biggest problem isn't the tools, it's that no one knows how to use them effectively."
 > — Platform Lead, Fortune 500
 
 ### Financial Model Assumptions
@@ -1254,10 +1254,10 @@ Fawkes is a **production-ready, open-source Internal Delivery Platform** that pr
 
 ## Contact Information
 
-**Project**: Fawkes - Internal Delivery Platform  
-**Website**: https://github.com/paruff/fawkes  
-**Email**: [Your Professional Email]  
-**LinkedIn**: [Your LinkedIn Profile]  
+**Project**: Fawkes - Internal Delivery Platform
+**Website**: https://github.com/paruff/fawkes
+**Email**: [Your Professional Email]
+**LinkedIn**: [Your LinkedIn Profile]
 **GitHub**: https://github.com/paruff
 
 **AWS Activate Application**:
@@ -1274,45 +1274,45 @@ Fawkes is a **production-ready, open-source Internal Delivery Platform** that pr
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: October 7, 2025  
+**Document Version**: 1.0
+**Last Updated**: October 7, 2025
 **Next Review**: Upon AWS Activate decision
 
-**Prepared by**: Fawkes Founding Team  
+**Prepared by**: Fawkes Founding Team
 **Approved for**: AWS Activate Application Submission
 
 ---
 
 ## Appendix B: FAQ for AWS Activate Reviewers
 
-**Q: Is Fawkes a company or an open-source project?**  
+**Q: Is Fawkes a company or an open-source project?**
 A: Fawkes is currently an open-source project (MIT license) with a clear path to becoming a sustainable business through managed services, training, and enterprise support. We're at the pre-seed/bootstrapped stage.
 
-**Q: Why should AWS give credits to an open-source project?**  
+**Q: Why should AWS give credits to an open-source project?**
 A: Because every Fawkes deployment runs on AWS and drives AWS consumption. Our projected impact: 50+ organizations on AWS, $150K+/month AWS spend, 200+ engineers trained on AWS services. The $25K credit investment could drive $500K-1M+ in AWS revenue over 12 months.
 
-**Q: What happens if you run out of credits before becoming profitable?**  
+**Q: What happens if you run out of credits before becoming profitable?**
 A: We have a phased approach that validates value at each stage. If credits run out, we have contingency plans: migrate to lower-cost regions, apply for additional AWS programs, or customer deployments cover their own infrastructure. However, our financial projections show break-even by month 10-11.
 
-**Q: How is Fawkes different from Backstage?**  
+**Q: How is Fawkes different from Backstage?**
 A: Backstage is a developer portal (service catalog, docs). Fawkes is a complete platform that includes Backstage PLUS Jenkins, ArgoCD, Harbor, monitoring, GitOps workflows, automated DORA metrics, and most importantly, a comprehensive training system (Dojo). Backstage is one component of Fawkes.
 
-**Q: Why not just use AWS Proton?**  
+**Q: Why not just use AWS Proton?**
 A: AWS Proton is excellent but different use case. Proton is AWS-only and template-based. Fawkes is a complete IDP with broader scope (CI/CD, GitOps, training, community) and can deploy to any cloud. They solve different problems. We could integrate with Proton as one deployment option.
 
-**Q: What's your long-term AWS commitment?**  
+**Q: What's your long-term AWS commitment?**
 A: AWS is our primary cloud partner. While we'll add multi-cloud support (Year 2+) for customer demand, AWS will remain our reference implementation, documentation focus, and strategic partnership priority. Our success directly drives AWS consumption.
 
-**Q: How do you plan to make money from open source?**  
+**Q: How do you plan to make money from open source?**
 A: Three revenue streams: (1) Managed service (hosted Fawkes), (2) Enterprise support contracts, (3) Training and certification. The open-source platform is forever free; we charge for convenience, support, and education. This model has proven successful for Red Hat, Databricks, HashiCorp, etc.
 
-**Q: What if a competitor copies your work (it's open source)?**  
+**Q: What if a competitor copies your work (it's open source)?**
 A: That's the point of open source! But our competitive moat is: (1) Community and ecosystem (hard to replicate), (2) Dojo training system (unique differentiator), (3) AWS partnership and co-marketing, (4) First-mover advantage and brand recognition. The code is open, but the community and education ecosystem are our true assets.
 
-**Q: How can you compete with funded startups?**  
+**Q: How can you compete with funded startups?**
 A: By staying lean and focused. Our LTV:CAC ratio (13:1) means we can scale profitably without venture funding. AWS Activate credits remove our biggest constraint (infrastructure costs). We're competing on value (free open source + training), not marketing budget.
 
-**Q: What are the biggest risks?**  
+**Q: What are the biggest risks?**
 A: (1) Low adoption of open source, (2) Difficulty monetizing free users, (3) Competition from funded startups. Mitigations: (1) Heavy investment in docs and community, (2) Clear upgrade path (free → paid), (3) Our unique training moat. See full Risk Analysis section for details.
 
 ---
