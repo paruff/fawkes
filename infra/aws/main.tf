@@ -24,7 +24,6 @@ provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
   token                  = data.aws_eks_cluster_auth.cluster.token
-  load_config_file       = false
 }
 
 data "aws_availability_zones" "available" {}
@@ -114,7 +113,7 @@ resource "aws_security_group" "all_worker_mgmt" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "3.19.0"
+  version = "~> 5.0"
 
   name                 = "fawkes-vpc"
   cidr                 = var.vpc_cidr
@@ -143,20 +142,20 @@ module "eks" {
   version = "19.21.0"
 
   cluster_version = var.eks_version
-  subnets         = module.vpc.private_subnets
+  subnet_ids      = module.vpc.private_subnets
   vpc_id          = module.vpc.vpc_id
 
   eks_managed_node_groups = {
     worker_group_1 = {
       name                          = "worker-group-1"
       instance_types                = [var.worker_group_1_instance_type]
-      desired_capacity              = var.worker_group_1_capacity
+      desired_size                  = var.worker_group_1_capacity
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
     }
     worker_group_2 = {
       name                          = "worker-group-2"
       instance_types                = [var.worker_group_2_instance_type]
-      desired_capacity              = var.worker_group_2_capacity
+      desired_size                  = var.worker_group_2_capacity
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_two.id]
     }
   }
@@ -171,14 +170,11 @@ module "eks" {
     }
   }
 
-  map_roles    = var.map_roles
-  map_users    = var.map_users
-  map_accounts = var.map_accounts
-
   cluster_enabled_log_types      = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
-  cluster_log_retention_in_days  = 7
+  create_cloudwatch_log_group    = true
+  cloudwatch_log_group_retention_in_days  = 7
 
-  cluster_encryption_config = [{
+  cluster_encryption_config = var.kms_key_arn == null ? [] : [{
     resources        = ["secrets"]
     provider_key_arn = var.kms_key_arn
   }]
@@ -202,10 +198,6 @@ output "cluster_endpoint" {
   value = data.aws_eks_cluster.cluster.endpoint
 }
 
-output "kubeconfig" {
-  value     = module.eks.kubeconfig
-  sensitive = true
-}
 
 output "vpc_id" {
   value = module.vpc.vpc_id
