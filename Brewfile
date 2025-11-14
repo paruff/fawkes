@@ -1,0 +1,11 @@
+brew "git"
+brew "jq"
+brew "yq"
+brew "node"
+brew "python@3.11"
+brew "terraform"
+brew "helm"
+brew "kubectl"
+brew "minikube"
+brew "kind"
+cask "docker"        # Docker Desktop (provides Docker engine and CLI)
