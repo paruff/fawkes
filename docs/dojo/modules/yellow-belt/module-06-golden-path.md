@@ -2,11 +2,11 @@
 
 ## 🎯 Module Overview
 
-**Belt Level**: 🟡 Yellow Belt - CI/CD Mastery  
-**Module**: 2 of 4 (Yellow Belt)  
-**Duration**: 60 minutes  
-**Difficulty**: Intermediate  
-**Prerequisites**: 
+**Belt Level**: 🟡 Yellow Belt - CI/CD Mastery
+**Module**: 2 of 4 (Yellow Belt)
+**Duration**: 60 minutes
+**Difficulty**: Intermediate
+**Prerequisites**:
 - Module 5: CI Fundamentals complete
 - Basic Groovy syntax understanding
 - Experience with at least one programming language
@@ -191,15 +191,15 @@ def call(Map config = [:]) {
         dockerRegistry: 'harbor.fawkes.internal',
         slackChannel: '#builds'
     ]
-    
+
     // Merge user config with defaults
     config = defaults + config
-    
+
     // Validate required parameters
     if (!config.gitRepo) {
         error("gitRepo is required")
     }
-    
+
     pipeline {
         agent {
             kubernetes {
@@ -232,13 +232,13 @@ spec:
 """
             }
         }
-        
+
         options {
             timestamps()
             timeout(time: 15, unit: 'MINUTES')
             buildDiscarder(logRotator(numToKeepStr: '10'))
         }
-        
+
         environment {
             APP_NAME = "${env.JOB_NAME}".split('/')[0]
             BUILD_VERSION = "${env.BUILD_NUMBER}"
@@ -247,7 +247,7 @@ spec:
                 returnStdout: true
             ).trim()
         }
-        
+
         stages {
             stage('Checkout') {
                 steps {
@@ -259,7 +259,7 @@ spec:
                     }
                 }
             }
-            
+
             stage('Build') {
                 steps {
                     container('maven') {
@@ -276,7 +276,7 @@ spec:
                     }
                 }
             }
-            
+
             stage('Test') {
                 when {
                     expression { !config.skipTests }
@@ -300,7 +300,7 @@ spec:
                     }
                 }
             }
-            
+
             stage('Security Scan') {
                 when {
                     expression { config.runSecurityScan }
@@ -317,7 +317,7 @@ spec:
                     }
                 }
             }
-            
+
             stage('Package') {
                 steps {
                     container('maven') {
@@ -334,7 +334,7 @@ spec:
                     }
                 }
             }
-            
+
             stage('Docker Build') {
                 steps {
                     container('docker') {
@@ -342,21 +342,21 @@ spec:
                             echo "🐳 Building Docker image..."
                             def imageName = "${config.dockerRegistry}/${env.APP_NAME}"
                             def imageTag = "${env.BUILD_VERSION}-${env.GIT_COMMIT_SHORT}"
-                            
+
                             sh """
                                 docker build \
                                     -t ${imageName}:${imageTag} \
                                     -t ${imageName}:latest \
                                     .
                             """
-                            
+
                             // Store for later stages
                             env.DOCKER_IMAGE = "${imageName}:${imageTag}"
                         }
                     }
                 }
             }
-            
+
             stage('Publish') {
                 steps {
                     container('docker') {
@@ -380,7 +380,7 @@ spec:
                 }
             }
         }
-        
+
         post {
             success {
                 script {
@@ -391,7 +391,7 @@ spec:
                     )
                 }
             }
-            
+
             failure {
                 script {
                     notifySlack(
@@ -401,7 +401,7 @@ spec:
                     )
                 }
             }
-            
+
             always {
                 cleanWs()
             }
@@ -421,9 +421,9 @@ def call(Map config = [:]) {
     if (!config.channel || !config.message) {
         error("channel and message are required")
     }
-    
+
     def color = config.color ?: 'warning'
-    
+
     try {
         slackSend(
             channel: config.channel,
@@ -493,13 +493,13 @@ def call(Map config = [:]) {
         runLinting: true,
         dockerRegistry: 'harbor.fawkes.internal'
     ]
-    
+
     config = defaults + config
-    
+
     if (!config.gitRepo) {
         error("gitRepo is required")
     }
-    
+
     pipeline {
         agent {
             kubernetes {
@@ -521,12 +521,12 @@ spec:
 """
             }
         }
-        
+
         options {
             timestamps()
             timeout(time: 15, unit: 'MINUTES')
         }
-        
+
         stages {
             stage('Checkout') {
                 steps {
@@ -534,7 +534,7 @@ spec:
                         url: config.gitRepo
                 }
             }
-            
+
             stage('Setup') {
                 steps {
                     container('python') {
@@ -545,7 +545,7 @@ spec:
                     }
                 }
             }
-            
+
             stage('Lint') {
                 when {
                     expression { config.runLinting }
@@ -560,7 +560,7 @@ spec:
                     }
                 }
             }
-            
+
             stage('Test') {
                 when {
                     expression { !config.skipTests }
@@ -586,14 +586,14 @@ spec:
                     }
                 }
             }
-            
+
             stage('Docker Build & Push') {
                 steps {
                     container('docker') {
                         script {
                             def imageName = "${config.dockerRegistry}/${env.JOB_NAME}"
                             def imageTag = "${env.BUILD_NUMBER}"
-                            
+
                             sh """
                                 docker build -t ${imageName}:${imageTag} .
                                 docker push ${imageName}:${imageTag}
@@ -623,9 +623,9 @@ def call(Map config = [:]) {
         runLinting: true,
         packageManager: 'npm'  // or 'yarn', 'pnpm'
     ]
-    
+
     config = defaults + config
-    
+
     pipeline {
         agent {
             kubernetes {
@@ -647,7 +647,7 @@ spec:
 """
             }
         }
-        
+
         stages {
             stage('Checkout') {
                 steps {
@@ -655,12 +655,12 @@ spec:
                         url: config.gitRepo
                 }
             }
-            
+
             stage('Install Dependencies') {
                 steps {
                     container('node') {
                         script {
-                            def installCmd = config.packageManager == 'npm' ? 'npm ci' : 
+                            def installCmd = config.packageManager == 'npm' ? 'npm ci' :
                                            config.packageManager == 'yarn' ? 'yarn install --frozen-lockfile' :
                                            'pnpm install --frozen-lockfile'
                             sh installCmd
@@ -668,7 +668,7 @@ spec:
                     }
                 }
             }
-            
+
             stage('Lint') {
                 when {
                     expression { config.runLinting }
@@ -679,7 +679,7 @@ spec:
                     }
                 }
             }
-            
+
             stage('Test') {
                 when {
                     expression { !config.skipTests }
@@ -690,7 +690,7 @@ spec:
                     }
                 }
             }
-            
+
             stage('Build') {
                 steps {
                     container('node') {
@@ -698,7 +698,7 @@ spec:
                     }
                 }
             }
-            
+
             stage('Docker Build & Push') {
                 steps {
                     container('docker') {
@@ -753,8 +753,8 @@ stage('Parallel Quality Checks') {
 }
 ```
 
-**Before**: 6 minutes (2min + 2min + 2min sequential)  
-**After**: 2 minutes (all run in parallel)  
+**Before**: 6 minutes (2min + 2min + 2min sequential)
+**After**: 2 minutes (all run in parallel)
 **Improvement**: 3x faster ⚡
 
 ### Technique 2: Build Caching
@@ -783,8 +783,8 @@ spec:
 }
 ```
 
-**Before**: 3 minutes downloading dependencies every build  
-**After**: 10 seconds (cached)  
+**Before**: 3 minutes downloading dependencies every build
+**After**: 10 seconds (cached)
 **Improvement**: 18x faster on dependencies ⚡
 
 ### Technique 3: Incremental Builds
@@ -799,7 +799,7 @@ stage('Incremental Build') {
                 script: "git diff --name-only HEAD~1",
                 returnStdout: true
             ).trim()
-            
+
             if (changedFiles.contains('src/')) {
                 echo "Source changed, full build"
                 sh 'mvn clean package'
@@ -894,7 +894,7 @@ post {
                     }
                 }
             }
-            
+
             // Send to Prometheus
             stageDurations.each { stage, duration ->
                 sh """
@@ -917,7 +917,7 @@ EOF
 avg(jenkins_build_duration_seconds{job="my-app"})
 
 # Build success rate
-sum(rate(jenkins_build_result{result="SUCCESS"}[7d])) / 
+sum(rate(jenkins_build_result{result="SUCCESS"}[7d])) /
 sum(rate(jenkins_build_result[7d])) * 100
 
 # Slowest pipeline stages
@@ -978,9 +978,9 @@ rate(jenkins_build_duration_seconds[1d])
 def call(Map config = [:]) {
     // Auto-detect language
     def language = detectLanguage()
-    
+
     echo "🔍 Detected language: ${language}"
-    
+
     switch(language) {
         case 'java':
             goldenPathJava(config)
@@ -1072,11 +1072,11 @@ def detectLanguage() {
 
 ### What You Learned
 
-✅ **Golden Paths**: Opinionated templates that make easy = best  
-✅ **Shared Libraries**: Reusable pipeline code in `vars/` and `src/`  
-✅ **Multi-Language Support**: Java, Python, Node.js templates  
-✅ **Optimization**: Parallel execution, caching, incremental builds  
-✅ **Performance Metrics**: Track and improve build times  
+✅ **Golden Paths**: Opinionated templates that make easy = best
+✅ **Shared Libraries**: Reusable pipeline code in `vars/` and `src/`
+✅ **Multi-Language Support**: Java, Python, Node.js templates
+✅ **Optimization**: Parallel execution, caching, incremental builds
+✅ **Performance Metrics**: Track and improve build times
 ✅ **Best Practices**: DRY, testable, maintainable pipelines
 
 ### DORA Capabilities Achieved
@@ -1097,7 +1097,7 @@ def detectLanguage() {
 
 "After implementing Golden Path pipelines:
 - **Pipeline creation time**: 2 days → 10 minutes
-- **Average build time**: 25 minutes → 7 minutes  
+- **Average build time**: 25 minutes → 7 minutes
 - **Pipelines maintained**: 50 → 3 templates
 - **Security update rollout**: 2 weeks → 1 day
 
@@ -1236,22 +1236,22 @@ package com.fawkes.pipeline
 
 class Docker implements Serializable {
     def script
-    
+
     Docker(script) {
         this.script = script
     }
-    
+
     def build(Map config) {
         def imageName = config.imageName ?: script.env.JOB_NAME
         def imageTag = config.imageTag ?: script.env.BUILD_NUMBER
         def dockerfile = config.dockerfile ?: 'Dockerfile'
         def context = config.context ?: '.'
         def buildArgs = config.buildArgs ?: [:]
-        
+
         script.echo "🐳 Building Docker image: ${imageName}:${imageTag}"
-        
+
         def buildArgsStr = buildArgs.collect { k, v -> "--build-arg ${k}=${v}" }.join(' ')
-        
+
         script.sh """
             docker build \
                 -f ${dockerfile} \
@@ -1259,16 +1259,16 @@ class Docker implements Serializable {
                 ${buildArgsStr} \
                 ${context}
         """
-        
+
         return "${imageName}:${imageTag}"
     }
-    
+
     def push(String image, Map config = [:]) {
         def registry = config.registry ?: 'harbor.fawkes.internal'
         def credentialsId = config.credentialsId ?: 'harbor-credentials'
-        
+
         script.echo "📤 Pushing image: ${image}"
-        
+
         script.withCredentials([
             script.usernamePassword(
                 credentialsId: credentialsId,
@@ -1282,13 +1282,13 @@ class Docker implements Serializable {
             """
         }
     }
-    
+
     def scan(String image, Map config = [:]) {
         def severity = config.severity ?: 'HIGH,CRITICAL'
         def exitCode = config.exitCode ?: 1
-        
+
         script.echo "🔒 Scanning image for vulnerabilities: ${image}"
-        
+
         script.sh """
             trivy image \
                 --severity ${severity} \
@@ -1297,7 +1297,7 @@ class Docker implements Serializable {
                 ${image}
         """
     }
-    
+
     def tag(String sourceImage, String targetTag) {
         script.echo "🏷️ Tagging image: ${sourceImage} → ${targetTag}"
         script.sh "docker tag ${sourceImage} ${targetTag}"
@@ -1316,16 +1316,16 @@ import com.fawkes.pipeline.Docker
 def call(Map config = [:]) {
     pipeline {
         agent { kubernetes { yaml '...' } }
-        
+
         stages {
             // ... build stages ...
-            
+
             stage('Docker Operations') {
                 steps {
                     container('docker') {
                         script {
                             def docker = new Docker(this)
-                            
+
                             // Build
                             def image = docker.build(
                                 imageName: "${config.dockerRegistry}/${env.APP_NAME}",
@@ -1335,13 +1335,13 @@ def call(Map config = [:]) {
                                     'VCS_REF': env.GIT_COMMIT
                                 ]
                             )
-                            
+
                             // Scan
                             docker.scan(image, severity: 'CRITICAL')
-                            
+
                             // Tag
                             docker.tag(image, "${config.dockerRegistry}/${env.APP_NAME}:latest")
-                            
+
                             // Push
                             docker.push(image)
                             docker.push("${config.dockerRegistry}/${env.APP_NAME}:latest")
@@ -1368,10 +1368,10 @@ package com.fawkes.pipeline
 import spock.lang.Specification
 
 class DockerTest extends Specification {
-    
+
     def script = Mock()
     Docker docker = new Docker(script)
-    
+
     def "build should construct correct docker command"() {
         given:
         def config = [
@@ -1379,10 +1379,10 @@ class DockerTest extends Specification {
             imageTag: 'v1.0',
             buildArgs: [APP_VERSION: '1.0.0']
         ]
-        
+
         when:
         docker.build(config)
-        
+
         then:
         1 * script.sh(_ as String) >> { String cmd ->
             assert cmd.contains('docker build')
@@ -1390,14 +1390,14 @@ class DockerTest extends Specification {
             assert cmd.contains('--build-arg APP_VERSION=1.0.0')
         }
     }
-    
+
     def "scan should fail on critical vulnerabilities"() {
         given:
         def image = 'myapp:v1.0'
-        
+
         when:
         docker.scan(image)
-        
+
         then:
         1 * script.sh(_ as String) >> { String cmd ->
             assert cmd.contains('trivy image')
@@ -1418,7 +1418,7 @@ Create `Jenkinsfile` in library root:
 
 pipeline {
     agent any
-    
+
     stages {
         stage('Test Java Template') {
             steps {
@@ -1430,7 +1430,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Test Python Template') {
             steps {
                 script {
@@ -1441,7 +1441,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Test Node Template') {
             steps {
                 script {
@@ -1467,10 +1467,10 @@ Run builds for multiple versions in parallel:
 ```groovy
 def call(Map config = [:]) {
     def javaVersions = config.javaVersions ?: ['11', '17', '21']
-    
+
     pipeline {
         agent none
-        
+
         stages {
             stage('Build Matrix') {
                 matrix {
@@ -1480,7 +1480,7 @@ def call(Map config = [:]) {
                             values javaVersions
                         }
                     }
-                    
+
                     agent {
                         kubernetes {
                             yaml """
@@ -1491,7 +1491,7 @@ spec:
 """
                         }
                     }
-                    
+
                     stages {
                         stage('Build') {
                             steps {
@@ -1543,7 +1543,7 @@ Generate stages based on configuration:
 ```groovy
 def generateTestStages(List<String> testSuites) {
     def parallelStages = [:]
-    
+
     testSuites.each { suite ->
         parallelStages["Test ${suite}"] = {
             stage("Test ${suite}") {
@@ -1551,7 +1551,7 @@ def generateTestStages(List<String> testSuites) {
             }
         }
     }
-    
+
     return parallelStages
 }
 
@@ -1575,14 +1575,14 @@ Progressive promotion through environments:
 ```groovy
 def promote(String artifact, String fromEnv, String toEnv) {
     echo "Promoting ${artifact} from ${fromEnv} to ${toEnv}"
-    
+
     // Tag artifact
     sh """
         docker pull ${artifact}:${fromEnv}
         docker tag ${artifact}:${fromEnv} ${artifact}:${toEnv}
         docker push ${artifact}:${toEnv}
     """
-    
+
     // Update manifest
     sh """
         git clone https://github.com/org/gitops-manifests.git
@@ -1711,10 +1711,10 @@ You've completed **Module 6: Building Golden Path Pipelines**!
 
 ### Key Achievements
 
-✅ Created reusable Shared Libraries  
-✅ Built Golden Path templates for Java, Python, Node.js  
-✅ Optimized pipelines with parallel execution and caching  
-✅ Implemented performance monitoring  
+✅ Created reusable Shared Libraries
+✅ Built Golden Path templates for Java, Python, Node.js
+✅ Optimized pipelines with parallel execution and caching
+✅ Implemented performance monitoring
 ✅ Reduced pipeline maintenance by 90%+
 
 ### Your Golden Path Journey
@@ -1747,7 +1747,7 @@ After Module 6:
 **Continue Your Journey:**
 
 1. ✅ Complete Module 7: Security Scanning & Quality Gates
-2. ✅ Complete Module 8: Artifact Management  
+2. ✅ Complete Module 8: Artifact Management
 3. 🎓 Take Yellow Belt Certification Exam
 4. 🚀 Advance to Green Belt (GitOps & Deployment)
 
@@ -1769,6 +1769,6 @@ Next up: **Security Scanning & Quality Gates** - where you'll learn SonarQube, T
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*  
-*Version 1.0 | Last Updated: October 2025*  
+*Fawkes Dojo - Where Platform Engineers Are Forged*
+*Version 1.0 | Last Updated: October 2025*
 *License: MIT | https://github.com/paruff/fawkes*

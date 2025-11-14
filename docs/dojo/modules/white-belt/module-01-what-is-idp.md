@@ -1,8 +1,8 @@
 # Module 1: Internal Delivery Platforms - What and Why
 
-**Belt Level**: 🥋 White Belt  
-**Duration**: 60 minutes  
-**Prerequisites**: Basic command line, Git, Docker knowledge  
+**Belt Level**: 🥋 White Belt
+**Duration**: 60 minutes
+**Prerequisites**: Basic command line, Git, Docker knowledge
 **DORA Capabilities**: Continuous Delivery (introduction)
 
 ---
@@ -47,7 +47,7 @@ You've mastered this module when you can:
 
 ### 📺 Video: What is an Internal Delivery Platform? (7 minutes)
 
-> **[VIDEO PLACEHOLDER]**  
+> **[VIDEO PLACEHOLDER]**
 > **Script Summary**:
 > - Opening: Show developer frustration with 12-step deployment process
 > - Definition: IDP as "self-service platform that provides golden paths"
@@ -72,14 +72,14 @@ Think of it as **"paved roads for software delivery"**—just as cities build ro
 
 #### What an IDP is NOT
 
-❌ **Not a PaaS**: Unlike Heroku or Cloud Foundry, IDPs give developers more control and flexibility  
-❌ **Not just CI/CD**: CI/CD is one component, but IDPs include much more (observability, security, governance)  
-❌ **Not "throw tools over the wall"**: True platforms treat developers as customers and measure satisfaction  
+❌ **Not a PaaS**: Unlike Heroku or Cloud Foundry, IDPs give developers more control and flexibility
+❌ **Not just CI/CD**: CI/CD is one component, but IDPs include much more (observability, security, governance)
+❌ **Not "throw tools over the wall"**: True platforms treat developers as customers and measure satisfaction
 ❌ **Not one-size-fits-all**: Platforms provide flexibility for different application types and team maturity levels
 
 ### The Platform as a Product Mindset
 
-Traditional IT: *"Here are some tools. Figure it out yourself."*  
+Traditional IT: *"Here are some tools. Figure it out yourself."*
 Platform Engineering: *"What do you need to be productive? Let me build that for you."*
 
 #### Key Principles
@@ -211,23 +211,23 @@ Fawkes provides a complete IDP built on industry-standard open-source tools:
 ### Common Pitfalls & How to Avoid Them
 
 #### ❌ Pitfall 1: Building in Isolation
-**Problem**: Platform team builds what they *think* developers need without asking them.  
+**Problem**: Platform team builds what they *think* developers need without asking them.
 **Solution**: Conduct regular developer interviews, track NPS, dogfood your own platform.
 
 #### ❌ Pitfall 2: Too Much Control
-**Problem**: Platform so restrictive that developers route around it.  
+**Problem**: Platform so restrictive that developers route around it.
 **Solution**: Provide golden paths for 80% of cases, escape hatches for edge cases.
 
 #### ❌ Pitfall 3: No Documentation
-**Problem**: Great platform, but no one knows how to use it.  
+**Problem**: Great platform, but no one knows how to use it.
 **Solution**: Documentation is a first-class feature. Use TechDocs, record videos, provide examples.
 
 #### ❌ Pitfall 4: Ignoring Feedback
-**Problem**: Developers complain but nothing changes.  
+**Problem**: Developers complain but nothing changes.
 **Solution**: Public roadmap, regular releases, visible responsiveness to feedback.
 
 #### ❌ Pitfall 5: No Metrics
-**Problem**: Can't prove platform value to leadership.  
+**Problem**: Can't prove platform value to leadership.
 **Solution**: Track DORA metrics, adoption rates, time saved, cost efficiency.
 
 ---
@@ -236,37 +236,37 @@ Fawkes provides a complete IDP built on industry-standard open-source tools:
 
 ### 📺 Video: Fawkes Platform Tour (10 minutes)
 
-> **[VIDEO PLACEHOLDER]**  
+> **[VIDEO PLACEHOLDER]**
 > **Script**: Instructor walks through Fawkes platform showing:
-> 
+>
 > 1. **Backstage Home** (1 min)
 >    - Overview page, quick links
 >    - Component search
-> 
+>
 > 2. **Service Catalog** (2 min)
 >    - Browse services
 >    - View service details (APIs, docs, owner)
 >    - Dependencies visualization
-> 
+>
 > 3. **TechDocs** (1 min)
 >    - Navigate documentation
 >    - Search functionality
-> 
+>
 > 4. **Create New Service** (2 min)
 >    - Click "Create" → choose template
 >    - Fill in service details
 >    - Show generated repository
-> 
+>
 > 5. **DORA Dashboard** (2 min)
 >    - View deployment frequency
 >    - Lead time for changes
 >    - Show live metrics
-> 
+>
 > 6. **CI/CD View** (2 min)
 >    - Jenkins integration
 >    - Pipeline status
 >    - Build logs
-> 
+>
 > **Key Message**: "Notice how everything you need is in one place. No jumping between 12 different tools."
 
 ### Key Takeaways from Demo
@@ -285,9 +285,9 @@ Fawkes provides a complete IDP built on industry-standard open-source tools:
 
 You'll explore the Fawkes Backstage portal, navigate the service catalog, and understand the platform architecture by completing a scavenger hunt.
 
-**Time Estimate**: 15-20 minutes  
-**Difficulty**: Beginner  
-**Auto-Graded**: Yes  
+**Time Estimate**: 15-20 minutes
+**Difficulty**: Beginner
+**Auto-Graded**: Yes
 **Points**: 50
 
 ### Lab Environment
@@ -308,7 +308,7 @@ When you click "Start Lab", we'll provision:
    - Click "Start Lab" button below
    - Log in with your dojo credentials
    - Find the "Home" page
-   
+
    ✅ **Validation**: We'll check that you logged in successfully
 
 2. **Explore the Catalog** (6 points)
@@ -316,14 +316,14 @@ When you click "Start Lab", we'll provision:
    - Find a service called `sample-spring-boot-app`
    - Open its details page
    - Find and click "View Source" to see its GitHub repo
-   
+
    ✅ **Validation**: We'll check that you visited the service page
 
 3. **View Documentation** (6 points)
    - While on the `sample-spring-boot-app` page, click "Docs" tab
    - Read the "Getting Started" documentation
    - Notice the "Edit on GitHub" link
-   
+
    ✅ **Validation**: We'll check that you accessed TechDocs
 
 #### Part 2: Understand Service Details (20 points)
@@ -332,27 +332,27 @@ When you click "Start Lab", we'll provision:
    - On the `sample-spring-boot-app` page, find the "About" section
    - Note the owner (person or team)
    - Find the Mattermost channel for support
-   
+
    📝 **Submit**: Who owns this service? (Type answer in lab notebook)
 
 5. **Explore Dependencies** (5 points)
    - Click the "Dependencies" tab
    - Identify what APIs this service depends on
-   
+
    📝 **Submit**: How many dependencies does this service have?
 
 6. **Check CI/CD Status** (5 points)
    - Click the "CI/CD" tab
    - View the latest Jenkins pipeline run
    - Note whether the build passed or failed
-   
+
    📝 **Submit**: What was the status of the last build?
 
 7. **Review DORA Metrics** (5 points)
    - Navigate to "DORA Metrics" from the left sidebar
    - Find the deployment frequency for the last 7 days
    - Note the lead time for changes
-   
+
    📝 **Submit**: What is the deployment frequency? (e.g., "5 per week")
 
 #### Part 3: Platform Architecture Understanding (15 points)
@@ -361,14 +361,14 @@ When you click "Start Lab", we'll provision:
    - Navigate to "Platform Services" from the left sidebar
    - You should see tiles for Jenkins, ArgoCD, Harbor, Grafana, etc.
    - Click on each one to see its status
-   
+
    📝 **Submit**: List the 5 platform services you found (comma-separated)
 
 9. **Explore a Deployment** (5 points)
    - Click on "ArgoCD" tile to open ArgoCD
    - Browse the applications
    - Find the `sample-spring-boot-app` in the list
-   
+
    📝 **Submit**: What is the sync status of the sample app in ArgoCD?
 
 ### Lab Submission
@@ -625,7 +625,7 @@ In Module 2, you'll learn:
 - How Fawkes automatically tracks DORA metrics
 - How to interpret your team's metrics and drive improvement
 
-**Time**: 60 minutes  
+**Time**: 60 minutes
 **Hands-On**: Build your first DORA dashboard
 
 **Get Ready**: Think about your team's current deployment process. How long does it take? How often do you deploy? How often do deployments fail?
@@ -642,8 +642,8 @@ In Module 2, you'll learn:
 3. 💬 Share your completion in `#dojo-achievements` (optional but encouraged!)
 4. ➡️ **Continue to Module 2** when ready
 
-**Time Investment**: 60 minutes  
-**Skills Gained**: Platform fundamentals, Backstage navigation  
+**Time Investment**: 60 minutes
+**Skills Gained**: Platform fundamentals, Backstage navigation
 **Progress**: 1 of 4 modules toward White Belt (25% complete)
 
 ---
@@ -660,6 +660,6 @@ In Module 2, you'll learn:
 
 ---
 
-**Module Author**: Fawkes Learning Team  
-**Last Updated**: October 2025  
+**Module Author**: Fawkes Learning Team
+**Last Updated**: October 2025
 **Version**: 1.0

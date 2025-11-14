@@ -53,7 +53,7 @@ controller:
     enabled: true
     hostName: jenkins.fawkes.local
   adminPassword: "your-secure-password"
-  
+
 persistence:
   enabled: true
   size: 10Gi
@@ -72,7 +72,7 @@ serviceAccount:
 // Jenkinsfile
 pipeline {
     agent any
-    
+
     stages {
         stage('Build') {
             steps {
@@ -90,7 +90,7 @@ pipeline {
             }
         }
     }
-    
+
     post {
         always {
             junit '**/target/surefire-reports/TEST-*.xml'
@@ -124,7 +124,7 @@ pipeline {
             '''
         }
     }
-    
+
     stages {
         stage('Build & Test') {
             steps {
@@ -133,7 +133,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Deploy to Kubernetes') {
             steps {
                 container('kubectl') {

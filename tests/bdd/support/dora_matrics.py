@@ -12,10 +12,10 @@ class DORAMetric:
 
 class DORAMetricsCollector:
     """Collect DORA metrics from test runs"""
-    
+
     def __init__(self, api_url: str):
         self.api_url = api_url
-    
+
     def record_deployment(self, duration: float, success: bool):
         """Record deployment for frequency and lead time"""
         metric = DORAMetric(
@@ -26,7 +26,7 @@ class DORAMetricsCollector:
             tags=['success' if success else 'failure']
         )
         self._send_metric(metric)
-    
+
     def record_recovery(self, duration: float):
         """Record time to recover from failure"""
         metric = DORAMetric(
@@ -37,7 +37,7 @@ class DORAMetricsCollector:
             tags=['recovery']
         )
         self._send_metric(metric)
-    
+
     def _send_metric(self, metric: DORAMetric):
         """Send metric to collection endpoint"""
         requests.post(

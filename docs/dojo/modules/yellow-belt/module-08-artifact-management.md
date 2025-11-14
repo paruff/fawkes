@@ -2,11 +2,11 @@
 
 ## 🎯 Module Overview
 
-**Belt Level**: 🟡 Yellow Belt - CI/CD Mastery  
-**Module**: 4 of 4 (Yellow Belt - **FINAL MODULE**)  
-**Duration**: 60 minutes  
-**Difficulty**: Intermediate  
-**Prerequisites**: 
+**Belt Level**: 🟡 Yellow Belt - CI/CD Mastery
+**Module**: 4 of 4 (Yellow Belt - **FINAL MODULE**)
+**Duration**: 60 minutes
+**Difficulty**: Intermediate
+**Prerequisites**:
 - Modules 5, 6, 7 complete
 - Understanding of Docker and containers
 - Familiarity with versioning concepts
@@ -136,21 +136,21 @@ def call(Map config = [:]) {
         imagePrefix: '',
         pushToHarbor: true
     ]
-    
+
     config = defaults + config
-    
+
     pipeline {
         // ... agent configuration ...
-        
+
         environment {
             HARBOR_REGISTRY = "${config.harborRegistry}"
             HARBOR_PROJECT = "${config.harborProject}"
             IMAGE_NAME = "${config.imagePrefix}${env.JOB_NAME}".replaceAll('/', '-')
         }
-        
+
         stages {
             // ... build stages ...
-            
+
             stage('Build Docker Image') {
                 steps {
                     container('docker') {
@@ -159,10 +159,10 @@ def call(Map config = [:]) {
                             def shortCommit = env.GIT_COMMIT.take(7)
                             def buildTag = "${env.BUILD_NUMBER}-${shortCommit}"
                             def latestTag = env.BRANCH_NAME == 'main' ? 'latest' : env.BRANCH_NAME
-                            
+
                             env.IMAGE_TAG = buildTag
                             env.IMAGE_FULL = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}:${buildTag}"
-                            
+
                             echo "🐳 Building: ${env.IMAGE_FULL}"
                             sh """
                                 docker build \
@@ -178,7 +178,7 @@ def call(Map config = [:]) {
                     }
                 }
             }
-            
+
             stage('Push to Harbor') {
                 when {
                     expression { config.pushToHarbor }
@@ -197,7 +197,7 @@ def call(Map config = [:]) {
                                 sh """
                                     echo \$HARBOR_PASS | docker login ${HARBOR_REGISTRY} -u \$HARBOR_USER --password-stdin
                                     docker push ${env.IMAGE_FULL}
-                                    
+
                                     # Push additional tags
                                     docker push ${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}:${env.BRANCH_NAME}
                                 """
@@ -206,7 +206,7 @@ def call(Map config = [:]) {
                     }
                 }
             }
-            
+
             stage('Harbor Scan & Sign') {
                 steps {
                     script {
@@ -216,7 +216,7 @@ def call(Map config = [:]) {
                                 -u \$HARBOR_USER:\$HARBOR_PASS \
                                 "${HARBOR_REGISTRY}/api/v2.0/projects/${HARBOR_PROJECT}/repositories/${IMAGE_NAME}/artifacts/${env.IMAGE_TAG}/scan"
                         """
-                        
+
                         // Wait for scan completion
                         timeout(time: 5, unit: 'MINUTES') {
                             waitUntil {
@@ -231,13 +231,13 @@ def call(Map config = [:]) {
                                 return status == 'Success'
                             }
                         }
-                        
+
                         echo "✅ Harbor scan complete"
                     }
                 }
             }
         }
-        
+
         post {
             success {
                 script {
@@ -320,15 +320,15 @@ myapp:latest
 ```groovy
 def generateImageTags() {
     def tags = []
-    
+
     // Always add build number + commit
     def shortCommit = env.GIT_COMMIT.take(7)
     tags.add("${env.BUILD_NUMBER}-${shortCommit}")
-    
+
     // Add semantic version if tagged
     if (env.TAG_NAME) {
         tags.add(env.TAG_NAME)
-        
+
         // Also add major.minor
         def semver = env.TAG_NAME =~ /v?(\d+)\.(\d+)\.(\d+)/
         if (semver) {
@@ -336,15 +336,15 @@ def generateImageTags() {
             tags.add("v${semver[0][1]}")
         }
     }
-    
+
     // Add branch name
     tags.add(env.BRANCH_NAME.replaceAll('/', '-'))
-    
+
     // Add 'latest' for main branch
     if (env.BRANCH_NAME == 'main') {
         tags.add('latest')
     }
-    
+
     return tags
 }
 
@@ -353,15 +353,15 @@ stage('Build & Tag') {
         script {
             def tags = generateImageTags()
             def imageBase = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}"
-            
+
             // Build with first tag
             sh "docker build -t ${imageBase}:${tags[0]} ."
-            
+
             // Add additional tags
             tags.drop(1).each { tag ->
                 sh "docker tag ${imageBase}:${tags[0]} ${imageBase}:${tag}"
             }
-            
+
             // Push all tags
             tags.each { tag ->
                 sh "docker push ${imageBase}:${tag}"
@@ -396,32 +396,32 @@ def promoteArtifact(Map config) {
     def sourceTag = config.sourceTag
     def targetTag = config.targetTag
     def imageBase = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}"
-    
+
     echo "🔄 Promoting ${imageBase}:${sourceTag} → ${targetTag}"
-    
+
     // Pull source image
     sh "docker pull ${imageBase}:${sourceTag}"
-    
+
     // Re-tag for target environment
     sh "docker tag ${imageBase}:${sourceTag} ${imageBase}:${targetTag}"
-    
+
     // Push to Harbor
     sh "docker push ${imageBase}:${targetTag}"
-    
+
     // Update GitOps manifest
     sh """
         git clone https://github.com/org/gitops-manifests.git
         cd gitops-manifests
-        
+
         # Update image tag in manifest
         yq eval -i '.spec.template.spec.containers[0].image = "${imageBase}:${targetTag}"' \
             environments/${targetTag}/deployment.yaml
-        
+
         git add .
         git commit -m "Promote ${IMAGE_NAME} to ${targetTag} (build ${sourceTag})"
         git push
     """
-    
+
     echo "✅ Promotion complete"
 }
 
@@ -481,11 +481,11 @@ stage('Approve Production Deploy') {
                     )
                 ]
             )
-            
+
             if (!approved.DEPLOY) {
                 error("Production deployment not approved")
             }
-            
+
             echo "Deployment approved by: ${env.BUILD_USER}"
             echo "Notes: ${approved.NOTES}"
         }
@@ -525,19 +525,19 @@ retention_policy:
       # Keep production images indefinitely
       - tag: "production"
         retain: -1  # Forever
-      
+
       # Keep staging images for 30 days
       - tag: "staging"
         retain: 30
-      
+
       # Keep latest 10 dev images
       - tag: "dev-*"
         retain_count: 10
-      
+
       # Keep semantic versions for 1 year
       - tag: "v*.*.*"
         retain: 365
-      
+
       # Delete untagged images after 7 days
       - tag: ""
         retain: 7
@@ -589,7 +589,7 @@ stage('Configure Retention') {
                 ]
             }
             '''
-            
+
             sh """
                 curl -X POST \
                     -H "Content-Type: application/json" \
@@ -779,14 +779,14 @@ groups:
         annotations:
           summary: "High number of critical vulnerabilities"
           description: "{{ $value }} critical vulnerabilities detected"
-      
+
       - alert: StorageQuotaExceeded
         expr: storage_used_bytes / storage_quota_bytes > 0.9
         for: 15m
         annotations:
           summary: "Storage quota 90% full"
           description: "Project {{ $labels.project }} is at {{ $value }}% capacity"
-      
+
       - alert: ArtifactNotPulled
         expr: |
           time() - artifact_last_pull_timestamp_seconds{tag="production"} > 86400*30
@@ -835,38 +835,38 @@ spec:
 '''
         }
     }
-    
+
     environment {
         HARBOR_REGISTRY = 'harbor.fawkes.internal'
         HARBOR_PROJECT = 'library'
         IMAGE_NAME = 'myapp'
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
                 git 'https://github.com/myorg/myapp.git'
             }
         }
-        
+
         stage('Build & Tag') {
             steps {
                 // TODO: Build with multiple tags
             }
         }
-        
+
         stage('Push to Harbor') {
             steps {
                 // TODO: Push all tags
             }
         }
-        
+
         stage('Scan & Sign') {
             steps {
                 // TODO: Trigger Harbor scan and sign with Cosign
             }
         }
-        
+
         stage('Promote to Staging') {
             when {
                 branch 'main'
@@ -951,12 +951,12 @@ spec:
 
 ### What You Learned
 
-✅ **Artifact Registries**: Centralized, secure storage for build artifacts  
-✅ **Harbor**: Configuration and usage in Fawkes platform  
-✅ **Versioning**: Semantic versioning and tagging strategies  
-✅ **Promotion**: Moving artifacts through environments  
-✅ **Retention**: Lifecycle management and cost optimization  
-✅ **Signing**: Cryptographic verification with Cosign  
+✅ **Artifact Registries**: Centralized, secure storage for build artifacts
+✅ **Harbor**: Configuration and usage in Fawkes platform
+✅ **Versioning**: Semantic versioning and tagging strategies
+✅ **Promotion**: Moving artifacts through environments
+✅ **Retention**: Lifecycle management and cost optimization
+✅ **Signing**: Cryptographic verification with Cosign
 ✅ **Monitoring**: Tracking artifact metrics and health
 
 ### DORA Capabilities Achieved
@@ -1138,7 +1138,7 @@ docker push --all-tags myapp
 You've completed an intensive journey through CI/CD mastery. You now have the skills to:
 
 - Build production-ready pipelines
-- Implement security at every stage  
+- Implement security at every stage
 - Manage artifacts professionally
 - Optimize for speed and reliability
 - Lead CI/CD initiatives in your organization
@@ -1155,8 +1155,8 @@ Module 9: Introduction to GitOps with ArgoCD awaits! You'll learn declarative de
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*  
-*Version 1.0 | Last Updated: October 2025*  
+*Fawkes Dojo - Where Platform Engineers Are Forged*
+*Version 1.0 | Last Updated: October 2025*
 *License: MIT | https://github.com/paruff/fawkes*
 
 **🎉 Yellow Belt Complete - Congratulations, CI/CD Specialist! 🎉**

@@ -140,7 +140,7 @@ Specifically:
    - Cluster generator (multi-cluster)
    - Matrix generator (combinations)
 
-9. **RBAC and Security**: 
+9. **RBAC and Security**:
    - Fine-grained RBAC for teams
    - SSO integration (OIDC, SAML, LDAP)
    - Git credentials management
@@ -152,7 +152,7 @@ Specifically:
     - Health status
     - Direct links to ArgoCD UI
 
-11. **Large Community**: 
+11. **Large Community**:
     - 300+ contributors
     - Active Slack community (10,000+ members)
     - Monthly releases
@@ -409,7 +409,7 @@ Specifically:
 # ArgoCD Deployment
 argocd:
   namespace: argocd
-  
+
   components:
     - argocd-server:
         replicas: 2 (HA)
@@ -417,31 +417,31 @@ argocd:
           cpu: 500m
           memory: 256Mi
         ingress: argocd.fawkes.io
-        
+
     - argocd-repo-server:
         replicas: 2 (HA)
         resources:
           cpu: 500m
           memory: 512Mi
-          
+
     - argocd-application-controller:
         replicas: 1 (stateful, uses leader election for HA)
         resources:
           cpu: 1 core
           memory: 1Gi
-          
+
     - argocd-redis:
         replicas: 3 (HA with sentinel)
         resources:
           cpu: 200m
           memory: 256Mi
-          
+
     - argocd-dex-server: (for SSO)
         replicas: 1
         resources:
           cpu: 100m
           memory: 128Mi
-          
+
   integrations:
     - github (repository source)
     - mattermost (notifications)
@@ -504,7 +504,7 @@ spec:
         repoURL: https://github.com/paruff/fawkes-gitops
         revision: HEAD
         directories:
-          - path: apps/prod/*/* 
+          - path: apps/prod/*/*
   template:
     metadata:
       name: '{{path.basename}}'
@@ -596,12 +596,12 @@ data:
   service.mattermost: |
     apiURL: https://mattermost.fawkes.io
     token: $mattermost-token
-  
+
   template.app-deployed: |
     message: |
       Application {{.app.metadata.name}} is now running new version.
       {{if eq .serviceType "slack"}}:white_check_mark:{{end}} Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.
-      
+
   trigger.on-deployed: |
     - when: app.status.operationState.phase in ['Succeeded']
       send: [app-deployed]
@@ -645,7 +645,7 @@ spec:
         elements:
           - cluster: dev
             url: https://dev-cluster
-          - cluster: staging  
+          - cluster: staging
             url: https://staging-cluster
           - cluster: prod
             url: https://prod-cluster
@@ -848,8 +848,8 @@ Worth complexity trade-off for production applications. Can start without Rollou
 
 ---
 
-**Decision Made By**: Platform Architecture Team  
-**Approved By**: Project Lead  
-**Date**: October 8, 2025  
-**Author**: [Platform Architect Name]  
+**Decision Made By**: Platform Architecture Team
+**Approved By**: Project Lead
+**Date**: October 8, 2025
+**Author**: [Platform Architect Name]
 **Last Updated**: October 8, 2025

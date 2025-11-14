@@ -2,11 +2,11 @@
 
 ## 🎯 Module Overview
 
-**Belt Level**: 🟢 Green Belt - GitOps & Deployment (**FINAL MODULE**)  
-**Module**: 4 of 4 (Green Belt)  
-**Duration**: 60 minutes  
-**Difficulty**: Advanced  
-**Prerequisites**: 
+**Belt Level**: 🟢 Green Belt - GitOps & Deployment (**FINAL MODULE**)
+**Module**: 4 of 4 (Green Belt)
+**Duration**: 60 minutes
+**Difficulty**: Advanced
+**Prerequisites**:
 - Modules 9, 10, 11 complete
 - Understanding of deployment strategies
 - Familiarity with incident management

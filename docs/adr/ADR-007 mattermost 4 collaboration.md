@@ -72,7 +72,7 @@ Specifically:
 
 3. **Native Focalboard Integration**: Focalboard (Notion-like project management) is built into Mattermost, creating seamless collaboration + project management experience
 
-4. **Strong Integration Capabilities**: 
+4. **Strong Integration Capabilities**:
    - Webhooks (incoming/outgoing)
    - Slash commands for ChatOps
    - REST API for custom integrations
@@ -83,7 +83,7 @@ Specifically:
 
 6. **Dojo Community Support**: Dedicated channels for each belt level, peer learning, mentor office hours
 
-7. **Cost Effectiveness**: 
+7. **Cost Effectiveness**:
    - Team Edition: Free, unlimited users
    - Enterprise: Optional, $10/user/year (10x cheaper than Slack at scale)
    - Self-hosted: No per-user fees, only infrastructure costs (~$50-100/month)
@@ -94,7 +94,7 @@ Specifically:
 
 10. **Active Development**: Backed by Mattermost Inc., regular releases, large community (30,000+ stars on GitHub)
 
-11. **Security & Compliance**: 
+11. **Security & Compliance**:
     - SOC 2 Type II certified
     - GDPR compliant
     - End-to-end encryption available
@@ -155,12 +155,12 @@ Specifically:
 
 ### Mitigation Strategies
 
-1. **Operational Overhead**: 
+1. **Operational Overhead**:
    - Use Mattermost Operator for Kubernetes (automated deployment, upgrades)
    - Include in platform monitoring and backup strategy
    - Document runbooks for common operations
 
-2. **Learning Curve**: 
+2. **Learning Curve**:
    - Create onboarding guide with screenshots
    - Highlight Slack-compatible shortcuts
    - Provide comparison guide (Slack vs. Mattermost)
@@ -327,7 +327,7 @@ mattermost:
     - postgresql (database)
     - minio (file storage, optional - can use S3)
     - nginx-ingress (TLS termination)
-  
+
   integrations:
     - backstage (iframe embed or plugin)
     - jenkins (webhook notifications)
@@ -525,8 +525,8 @@ Mattermost aligns with these expectations while providing enterprise-grade featu
 
 ---
 
-**Decision Made By**: Platform Architecture Team  
-**Approved By**: Project Lead  
-**Date**: October 7, 2025  
-**Author**: [Platform Architect Name]  
+**Decision Made By**: Platform Architecture Team
+**Approved By**: Project Lead
+**Date**: October 7, 2025
+**Author**: [Platform Architect Name]
 **Last Updated**: October 7, 2025

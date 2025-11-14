@@ -5,4 +5,3 @@ Feature: Simple Test
     Given I have a working setup
     When I run a test
     Then it should pass
-    

@@ -2,11 +2,11 @@
 
 ## 🎯 Module Overview
 
-**Belt Level**: 🟤 Brown Belt - Observability & SRE (**FINAL MODULE**)  
-**Module**: 4 of 4 (Brown Belt)  
-**Duration**: 60 minutes  
-**Difficulty**: Advanced  
-**Prerequisites**: 
+**Belt Level**: 🟤 Brown Belt - Observability & SRE (**FINAL MODULE**)
+**Module**: 4 of 4 (Brown Belt)
+**Duration**: 60 minutes
+**Difficulty**: Advanced
+**Prerequisites**:
 - Module 12: Rollback & Incident Response complete
 - Module 13: Observability complete
 - Module 14: DORA Metrics Deep Dive complete
@@ -224,7 +224,7 @@ Current Status: INVESTIGATING
 
 **Status**: MITIGATING
 **Impact**: Still affecting 100% of payment attempts
-**Progress**: 
+**Progress**:
 - Root cause identified: Database connection pool exhausted
 - Mitigation in progress: Scaling connection pool
 - ETA for resolution: 15 minutes
@@ -393,7 +393,7 @@ Reconstruct exact sequence:
 **Date**: October 12, 2025, 14:23 - 15:10 UTC
 **Duration**: 47 minutes
 **Severity**: SEV1
-**Impact**: 
+**Impact**:
 - ~500 failed payment attempts
 - $12,000 estimated revenue impact
 - No data loss
@@ -420,7 +420,7 @@ See [detailed timeline](#timeline-analysis) above
 ### Business Impact
 - **Revenue Loss**: ~$12,000 (estimated)
 - **Reputation**: Minimal (quick resolution, good communication)
-- **SLO Impact**: 
+- **SLO Impact**:
   - Availability: 99.89% (SLO: 99.9%) ⚠️ Close to breach
   - Error Budget: 15% consumed in single incident
 
@@ -578,7 +578,7 @@ groups:
           description: "All instances unreachable for 1 minute"
           runbook: "https://runbooks.company.com/service-down"
           action: "Page oncall immediately, create incident"
-      
+
       # SEV1: High error rate
       - alert: CriticalErrorRate
         expr: |
@@ -593,7 +593,7 @@ groups:
         annotations:
           summary: "Error rate above 10%"
           description: "{{ $value | humanizePercentage }} error rate"
-      
+
       # SEV2: Approaching error budget exhaustion
       - alert: ErrorBudgetCritical
         expr: |
@@ -621,26 +621,26 @@ class IncidentAutomation:
     def __init__(self, mattermost_webhook, pagerduty_key):
         self.mattermost_webhook = mattermost_webhook
         self.pagerduty_key = pagerduty_key
-    
+
     def create_incident(self, alert):
         """Automatically create incident from alert"""
-        
+
         # Extract details
         severity = alert['labels']['severity']
         service = alert['labels']['service']
         summary = alert['annotations']['summary']
         description = alert['annotations']['description']
         runbook = alert['annotations'].get('runbook', '')
-        
+
         # Generate incident ID
         incident_id = self.generate_incident_id()
-        
+
         # Create war room channel
         war_room = self.create_war_room(incident_id, service)
-        
+
         # Page oncall
         self.page_oncall(severity, summary, war_room)
-        
+
         # Post initial notification
         self.post_notification(war_room, {
             'incident_id': incident_id,
@@ -651,19 +651,19 @@ class IncidentAutomation:
             'runbook': runbook,
             'status': 'INVESTIGATING'
         })
-        
+
         # Create incident ticket
         ticket = self.create_ticket(incident_id, severity, summary)
-        
+
         # Update status page
         self.update_status_page(service, summary)
-        
+
         return incident_id
-    
+
     def create_war_room(self, incident_id, service):
         """Create Mattermost war room channel"""
         channel_name = f"incident-{incident_id}-{service}"
-        
+
         # Create channel via API
         response = requests.post(
             f"{self.mattermost_url}/api/v4/channels",
@@ -676,18 +676,18 @@ class IncidentAutomation:
                 "header": f"Incident response for {service}"
             }
         )
-        
+
         return channel_name
-    
+
     def page_oncall(self, severity, summary, war_room):
         """Page oncall via PagerDuty"""
-        
+
         # SEV0 and SEV1 = page immediately
         if severity in ['sev0', 'sev1']:
             urgency = 'high'
         else:
             urgency = 'low'
-        
+
         incident = {
             "incident": {
                 "type": "incident",
@@ -699,7 +699,7 @@ class IncidentAutomation:
                 }
             }
         }
-        
+
         response = requests.post(
             "https://api.pagerduty.com/incidents",
             headers={
@@ -708,12 +708,12 @@ class IncidentAutomation:
             },
             json=incident
         )
-        
+
         return response.json()
-    
+
     def post_notification(self, channel, incident_data):
         """Post incident notification to Mattermost"""
-        
+
         message = f"""
 🚨 **INCIDENT DECLARED - {incident_data['severity'].upper()}**
 
@@ -732,7 +732,7 @@ class IncidentAutomation:
 
 War room: #{channel}
         """
-        
+
         requests.post(
             self.mattermost_webhook,
             json={"text": message}
@@ -748,12 +748,12 @@ automation = IncidentAutomation(
 @app.route('/webhook/alerts', methods=['POST'])
 def handle_alert():
     alerts = request.json['alerts']
-    
+
     for alert in alerts:
         if alert['labels'].get('auto_incident') == 'true':
             incident_id = automation.create_incident(alert)
             print(f"Created incident: {incident_id}")
-    
+
     return '', 200
 ```
 
@@ -770,63 +770,63 @@ class AutoRemediation:
             'connection_pool_exhausted': self.increase_pool,
             'circuit_breaker_open': self.reset_circuit_breaker
         }
-    
+
     def handle_incident(self, incident_type, service):
         """Execute automated remediation"""
-        
+
         if incident_type not in self.remediation_actions:
             print(f"No automated remediation for {incident_type}")
             return False
-        
+
         # Execute remediation
         action = self.remediation_actions[incident_type]
         success = action(service)
-        
+
         # Log action
         self.log_remediation(incident_type, service, success)
-        
+
         return success
-    
+
     def scale_horizontally(self, service):
         """Scale service horizontally"""
         current_replicas = self.get_replica_count(service)
         new_replicas = current_replicas * 2
-        
+
         print(f"Scaling {service} from {current_replicas} to {new_replicas}")
-        
+
         # Scale via kubectl
         subprocess.run([
             'kubectl', 'scale',
             f'deployment/{service}',
             f'--replicas={new_replicas}'
         ])
-        
+
         return True
-    
+
     def restart_pods(self, service):
         """Rolling restart of pods"""
         print(f"Restarting pods for {service}")
-        
+
         subprocess.run([
             'kubectl', 'rollout', 'restart',
             f'deployment/{service}'
         ])
-        
+
         return True
-    
+
     def increase_pool(self, service):
         """Increase connection pool size"""
         current_pool = self.get_pool_size(service)
         new_pool = current_pool * 2
-        
+
         print(f"Increasing pool from {current_pool} to {new_pool}")
-        
+
         # Update ConfigMap
         self.update_config(service, 'pool_size', new_pool)
-        
+
         # Restart to apply
         self.restart_pods(service)
-        
+
         return True
 ```
 
@@ -871,7 +871,7 @@ spec:
 
 **Hypothesis**: "Payment API can tolerate single pod failure without user impact"
 
-**Expected Outcome**: 
+**Expected Outcome**:
 - Service remains available (other pods handle traffic)
 - No increase in error rate
 - Automatic pod recovery within 1 minute
@@ -1314,7 +1314,7 @@ War room remains open for 1 hour
 [See above]
 
 ## Root Cause
-Payment service database connection pool (100 connections) 
+Payment service database connection pool (100 connections)
 insufficient for traffic spike (200 req/s)
 
 ## What Went Well
@@ -1484,11 +1484,11 @@ insufficient for traffic spike (200 req/s)
 
 ### What You Learned
 
-✅ **Advanced Incident Response**: ICS framework, roles, communication  
-✅ **Root Cause Analysis**: 5 Whys, Fishbone, Fault Tree  
-✅ **Blameless Postmortems**: Learning culture, templates, follow-through  
-✅ **Automation**: Detection, creation, remediation  
-✅ **Chaos Engineering**: Building confidence through controlled failure  
+✅ **Advanced Incident Response**: ICS framework, roles, communication
+✅ **Root Cause Analysis**: 5 Whys, Fishbone, Fault Tree
+✅ **Blameless Postmortems**: Learning culture, templates, follow-through
+✅ **Automation**: Detection, creation, remediation
+✅ **Chaos Engineering**: Building confidence through controlled failure
 ✅ **Metrics**: MTTR, MTTD, effectiveness measurement
 
 ### DORA Capabilities Achieved
@@ -1820,8 +1820,8 @@ You've achieved mastery in observability, SRE practices, and incident management
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*  
-*Version 1.0 | Last Updated: October 2025*  
+*Fawkes Dojo - Where Platform Engineers Are Forged*
+*Version 1.0 | Last Updated: October 2025*
 *License: MIT | https://github.com/paruff/fawkes*
 
 **🎉 Brown Belt Complete - Congratulations, SRE Practitioner! 🎉**

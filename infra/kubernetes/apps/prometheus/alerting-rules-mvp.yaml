@@ -25,7 +25,7 @@ spec:
           annotations:
             summary: "Kubernetes node not ready"
             description: "Node {{ $labels.node }} has been unready for more than 5 minutes"
-        
+
         - alert: KubernetesPodCrashLooping
           expr: rate(kube_pod_container_status_restarts_total[15m]) > 0.1
           for: 5m
@@ -34,7 +34,7 @@ spec:
           annotations:
             summary: "Pod is crash looping"
             description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is crash looping"
-        
+
         - alert: KubernetesNodeHighCPU
           expr: (100 - (avg by (node) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 80
           for: 10m
@@ -43,7 +43,7 @@ spec:
           annotations:
             summary: "Node CPU usage is high"
             description: "Node {{ $labels.node }} CPU usage is {{ $value }}%"
-        
+
         - alert: KubernetesNodeHighMemory
           expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
           for: 10m
@@ -52,7 +52,7 @@ spec:
           annotations:
             summary: "Node memory usage is high"
             description: "Node {{ $labels.node }} memory usage is {{ $value }}%"
-    
+
     # ===== Pod Resource Alerts =====
     - name: pods.resources
       interval: 1m
@@ -65,7 +65,7 @@ spec:
           annotations:
             summary: "Pod memory usage is high"
             description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is using {{ $value | humanizePercentage }} of memory limit"
-        
+
         - alert: PodCPUUsageHigh
           expr: sum(rate(container_cpu_usage_seconds_total{container!=""}[5m])) by (namespace, pod) / sum(container_spec_cpu_quota{container!=""}/container_spec_cpu_period{container!=""}) by (namespace, pod) > 0.9
           for: 5m

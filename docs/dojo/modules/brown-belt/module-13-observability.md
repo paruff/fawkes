@@ -2,8 +2,8 @@
 
 ## Module Overview
 
-**Duration:** 3-4 hours  
-**Level:** Advanced  
+**Duration:** 3-4 hours
+**Level:** Advanced
 **Prerequisites:** Modules 1-4, Working Fawkes deployment, Basic understanding of Kubernetes and CI/CD
 
 ### Learning Objectives
@@ -382,7 +382,7 @@ spec:
 
     - alert: HighChangeFailureRate
       expr: |
-        sum(rate(deployment_result{status="failure"}[7d])) 
+        sum(rate(deployment_result{status="failure"}[7d]))
         / sum(rate(deployment_result[7d])) * 100 > 15
       for: 10m
       labels:
@@ -500,7 +500,7 @@ public class TracingConfig {
 # Grafana alert from logs
 - alert: HighErrorRate
   expr: |
-    sum(rate({namespace="fawkes-platform"} |= "ERROR" [5m])) 
+    sum(rate({namespace="fawkes-platform"} |= "ERROR" [5m]))
     > 10
   for: 5m
   labels:

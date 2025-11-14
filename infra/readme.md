@@ -1,6 +1,6 @@
 # Fawkes Infrastructure Automation
 
-Welcome to the Fawkes Infrastructure Automation repository!  
+Welcome to the Fawkes Infrastructure Automation repository!
 This directory contains the **Infrastructure as Code (IaC)** scripts and automation for the Fawkes platform. It enables rapid, repeatable provisioning of Kubernetes infrastructure and a secure, observable CI/CD pipeline, empowering teams to deliver products quickly and confidently.
 
 ---
@@ -68,7 +68,7 @@ After deployment, retrieve service URLs and credentials from the deployment outp
   ```
 
 - **SonarQube Default Credentials**:
-  Username: `admin`  
+  Username: `admin`
   Password: `admin`
 
 ---

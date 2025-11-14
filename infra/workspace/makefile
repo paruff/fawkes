@@ -41,7 +41,7 @@ brew-versions:
 	brew list --versions > brew-versions.txt
 
 clean:
-	
+
 
 .PHONY: install-all
 install-all: $(foreach app,$(APPS),install-$(app)) ## Deploy all application to a given environment

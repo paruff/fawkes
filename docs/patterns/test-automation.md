@@ -32,10 +32,10 @@ void deploymentFrequencyCalculation() {
         new Deployment("2023-01-01"),
         new Deployment("2023-01-02")
     );
-    
+
     // Act
     double frequency = metrics.calculateFrequency(deployments);
-    
+
     // Assert
     assertEquals(2.0, frequency, "Should calculate correct deployment frequency");
 }
@@ -45,7 +45,7 @@ void shouldHandleNoDeployments() {
     // Arrange
     DeploymentMetrics metrics = new DeploymentMetrics();
     List<Deployment> deployments = Collections.emptyList();
-    
+
     // Act & Assert
     assertDoesNotThrow(() -> metrics.calculateFrequency(deployments));
     assertEquals(0.0, metrics.calculateFrequency(deployments));
@@ -62,16 +62,16 @@ class DeploymentRepositoryTest {
         .withDatabaseName("testdb")
         .withUsername("test")
         .withPassword("test");
-    
+
     @Test
     void shouldPersistDeployment() {
         // Arrange
         DeploymentRepository repository = new DeploymentRepository(postgres.getJdbcUrl());
         Deployment deployment = new Deployment("2023-01-01");
-        
+
         // Act
         repository.save(deployment);
-        
+
         // Assert
         Optional<Deployment> found = repository.findById(deployment.getId());
         assertTrue(found.isPresent());
@@ -92,10 +92,10 @@ describe('Deployment Pipeline', () => {
   it('shows deployment metrics dashboard', () => {
     // Arrange
     cy.visit('/dashboard');
-    
+
     // Act
     cy.wait('@getDeployments');
-    
+
     // Assert
     cy.get('[data-testid="deployment-frequency"]').should('be.visible');
     cy.get('[data-testid="lead-time"]').should('be.visible');
@@ -106,12 +106,12 @@ describe('Deployment Pipeline', () => {
   it('creates new deployment', () => {
     // Arrange
     cy.visit('/deployments/new');
-    
+
     // Act
     cy.get('[data-testid="service-name"]').type('fawkes-web');
     cy.get('[data-testid="version"]').type('1.0.0');
     cy.get('[data-testid="submit"]').click();
-    
+
     // Assert
     cy.get('[data-testid="success-message"]')
       .should('be.visible')
@@ -132,25 +132,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-      
+
       - name: Unit Tests
         run: ./gradlew test
-      
+
       - name: Integration Tests
         run: ./gradlew integrationTest
-        
+
       - name: E2E Tests
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
           config-file: cypress.config.js
-      
+
       - name: Upload Test Reports
         if: always()
         uses: actions/upload-artifact@v3
