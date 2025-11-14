@@ -1,15 +1,6 @@
 # TFLint configuration for Fawkes
 # https://github.com/terraform-linters/tflint
 
-config {
-  module = true
-  force = false
-  disabled_by_default = false
-
-  # Ignore child modules
-  ignore_module = {}
-}
-
 # AWS Plugin
 plugin "aws" {
   enabled = true
@@ -22,6 +13,13 @@ plugin "azurerm" {
   enabled = true
   version = "0.25.1"
   source  = "github.com/terraform-linters/tflint-ruleset-azurerm"
+}
+
+# Kubernetes Plugin
+plugin "kubernetes" {
+  enabled = true
+  version = "0.7.0"
+  source  = "github.com/terraform-linters/tflint-ruleset-kubernetes"
 }
 
 # Terraform Rules
