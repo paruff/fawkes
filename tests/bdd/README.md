@@ -26,9 +26,9 @@ Environment variables and inputs used by the steps
 - KUBECONFIG (optional): path to kubeconfig. If unset the client will use the default (~/.kube/config) or in-cluster config.
 - HELM binary: `helm` is invoked via PATH. If you need a different binary path, run tests in an environment where that binary is named `helm` or adjust the step definitions.
 - The Behave steps expect feature scenarios to provide chart path, release name, namespace and values file arguments. Example feature uses placeholders like:
-  - chart path (e.g. `infra/kubernetes/backstage`) 
-  - release name (e.g. `backstage`) 
-  - namespace (e.g. `fawkes-platform`) 
+  - chart path (e.g. `infra/kubernetes/backstage`)
+  - release name (e.g. `backstage`)
+  - namespace (e.g. `fawkes-platform`)
 
 How the tests run (examples)
 

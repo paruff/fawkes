@@ -26,13 +26,13 @@ This directory provides scripts and configuration for **automated developer work
 
 ### 1. Local Workspace Setup
 
-- **Windows:**  
+- **Windows:**
   Run `setup-win-space.ps1` (PowerShell)  as Administrator.
 
-- **macOS:**  
+- **macOS:**
   Run `setup-macos-space.sh`.
 
-- **Linux:**  
+- **Linux:**
   (Coming soon) Run `setup-OS-space-linux.sh`.
 
 ---
@@ -55,7 +55,7 @@ This directory provides scripts and configuration for **automated developer work
 
 ## Contributing
 
-Contributions to improve cross-platform support, add new tools, or enable online workspaces are welcome!  
+Contributions to improve cross-platform support, add new tools, or enable online workspaces are welcome!
 See the main [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
 
 ---

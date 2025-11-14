@@ -1,8 +1,8 @@
 # Module 4: Your First Deployment
 
-**Belt Level**: 🥋 White Belt  
-**Duration**: 60 minutes  
-**Prerequisites**: Modules 1, 2, and 3 completed  
+**Belt Level**: 🥋 White Belt
+**Duration**: 60 minutes
+**Prerequisites**: Modules 1, 2, and 3 completed
 **DORA Capabilities**: Continuous Delivery, Deployment Automation
 
 ---
@@ -47,7 +47,7 @@ You've mastered this module when you can:
 
 ### 📺 Video: The Fawkes Deployment Pipeline (7 minutes)
 
-> **[VIDEO PLACEHOLDER]**  
+> **[VIDEO PLACEHOLDER]**
 > **Script Summary**:
 > - Opening: Show the full deployment pipeline diagram
 > - Code commit → Jenkins build → Harbor registry → ArgoCD sync
@@ -231,21 +231,21 @@ Every deployment automatically updates your DORA metrics:
 ```
 Git → Jenkins → Harbor → ArgoCD → Production
 ```
-**When to Use**: MVP, small teams, low-risk changes  
+**When to Use**: MVP, small teams, low-risk changes
 **Risk Level**: Medium (no staging environment)
 
 #### Pattern 2: Dev → Production (Recommended)
 ```
 Git → Jenkins → Harbor → ArgoCD → Dev → Production
 ```
-**When to Use**: Small teams, moderate risk  
+**When to Use**: Small teams, moderate risk
 **Risk Level**: Low (dev environment for testing)
 
 #### Pattern 3: Full Pipeline (Enterprise)
 ```
 Git → Jenkins → Harbor → ArgoCD → Dev → Staging → Production
 ```
-**When to Use**: Large teams, high-risk changes, compliance requirements  
+**When to Use**: Large teams, high-risk changes, compliance requirements
 **Risk Level**: Very Low (multiple validation stages)
 
 **Fawkes MVP**: Uses Pattern 1 or 2 by default. Pattern 3 configured in production.
@@ -280,9 +280,9 @@ Git → Jenkins → Harbor → ArgoCD → Dev → Staging → Production
 
 ### 📺 Video: Deploying the Sample Application (10 minutes)
 
-> **[VIDEO PLACEHOLDER]**  
+> **[VIDEO PLACEHOLDER]**
 > **Script**: Instructor performs a complete deployment showing:
-> 
+>
 > **Part 1: Create from Template (2 min)**
 > - Open Backstage
 > - Click "Create" → "Choose a template"
@@ -290,32 +290,32 @@ Git → Jenkins → Harbor → ArgoCD → Dev → Staging → Production
 > - Fill in details: name, description, repository
 > - Click "Create"
 > - Show generated repository in GitHub
-> 
+>
 > **Part 2: Trigger Build (2 min)**
 > - Show Jenkins detecting the new repository
 > - Build starts automatically
 > - Walk through build stages in Jenkins UI
 > - Show build logs for each stage
 > - Highlight test results and security scan
-> 
+>
 > **Part 3: Image Registry (1 min)**
 > - Switch to Harbor UI
 > - Show new image with commit SHA tag
 > - Open vulnerability scan results
 > - Explain image signing
-> 
+>
 > **Part 4: ArgoCD Deployment (3 min)**
 > - Open ArgoCD UI
 > - Show application appearing in list
 > - Watch sync in real-time
 > - Explain "Out of Sync" → "Syncing" → "Synced" → "Healthy"
 > - Show Kubernetes resources created
-> 
+>
 > **Part 5: Access Application (1 min)**
 > - Get application URL from Backstage
 > - Open in browser, show it works
 > - Make a test API call
-> 
+>
 > **Part 6: Observe Metrics (1 min)**
 > - Open DORA dashboard
 > - Show deployment frequency incremented
@@ -338,9 +338,9 @@ Git → Jenkins → Harbor → ArgoCD → Dev → Staging → Production
 
 You'll deploy your first application on Fawkes using a golden path template, monitor its progress through the pipeline, and verify it's running successfully.
 
-**Time Estimate**: 20-25 minutes  
-**Difficulty**: Beginner  
-**Auto-Graded**: Yes  
+**Time Estimate**: 20-25 minutes
+**Difficulty**: Beginner
+**Auto-Graded**: Yes
 **Points**: 100
 
 ### Lab Environment
@@ -890,12 +890,12 @@ Next up is the **White Belt Assessment** (2 hours):
 3. 💬 Share your first deployment in `#dojo-achievements`!
 4. ➡️ **Prepare for White Belt Assessment** when ready
 
-**Time Investment**: 60 minutes  
-**Skills Gained**: End-to-end deployment, pipeline understanding, troubleshooting  
+**Time Investment**: 60 minutes
+**Skills Gained**: End-to-end deployment, pipeline understanding, troubleshooting
 **Progress**: 4 of 4 modules complete (100% - Ready for White Belt Assessment!)
 
-**Deployment Count**: 1 🚀  
-**Lead Time**: ~15 minutes (from commit to production)  
+**Deployment Count**: 1 🚀
+**Lead Time**: ~15 minutes (from commit to production)
 **DORA Metrics**: Automatically captured ✅
 
 ---
@@ -912,8 +912,8 @@ Next up is the **White Belt Assessment** (2 hours):
 
 ---
 
-**Module Author**: Fawkes Learning Team  
-**Last Updated**: October 2025  
+**Module Author**: Fawkes Learning Team
+**Last Updated**: October 2025
 **Version**: 1.0
 
 **🎉 Congratulations on your first deployment! You're well on your way to becoming a platform engineering expert.**

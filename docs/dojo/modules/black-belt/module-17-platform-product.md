@@ -1,8 +1,8 @@
 # Module 17: Platform as a Product
 
-**Belt Level**: ⚫ Black Belt  
-**Duration**: 60 minutes  
-**Prerequisites**: Modules 1-16, especially Module 2 (DORA Metrics)  
+**Belt Level**: ⚫ Black Belt
+**Duration**: 60 minutes
+**Prerequisites**: Modules 1-16, especially Module 2 (DORA Metrics)
 **Certification Track**: Fawkes Platform Architect
 
 ---
@@ -354,16 +354,16 @@ BAD RESPONSE:
 "No, we're too busy."
 
 GOOD RESPONSE:
-"Thanks for the request! We track all feedback. Currently we're 
-focused on reducing deploy times (our #1 pain point from user 
-research). Terraform 1.6 affects ~5 teams, while deploy speed 
-affects all 40 teams. We've added your request to the backlog 
+"Thanks for the request! We track all feedback. Currently we're
+focused on reducing deploy times (our #1 pain point from user
+research). Terraform 1.6 affects ~5 teams, while deploy speed
+affects all 40 teams. We've added your request to the backlog
 and will revisit in Q3. Does that work for you?"
 
 EVEN BETTER:
-"Let's understand the need. What's the use case for 1.6? 
+"Let's understand the need. What's the use case for 1.6?
 [Discussion reveals they just need a specific provider version]
-Oh! We can enable that without upgrading Terraform core. 
+Oh! We can enable that without upgrading Terraform core.
 Can you test this next week?"
 ```
 
@@ -440,7 +440,7 @@ Track by feature:
 #### 2. Satisfaction Metrics (NPS)
 
 ```
-Net Promoter Score: "How likely would you recommend our 
+Net Promoter Score: "How likely would you recommend our
 platform to a colleague?" (0-10)
 
 Calculation:
@@ -465,7 +465,7 @@ Track: How long from "I want to deploy" to "It's in production"
 
 Baseline (no platform): 4 hours
 - Request infrastructure: 2 hours
-- Manual setup: 1 hour  
+- Manual setup: 1 hour
 - Deploy + verify: 1 hour
 
 Target (with platform): 15 minutes
@@ -545,7 +545,7 @@ You will practice product management for a platform by:
 4. Setting up NPS surveys and adoption tracking
 5. Building a platform health dashboard
 
-**Duration**: 25 minutes  
+**Duration**: 25 minutes
 **Tools**: Backstage, Fawkes CLI, survey tools
 
 ---
@@ -607,7 +607,7 @@ cat interviews.json | jq '.[] | {name, role, pain_points}'
 python analyze_feedback.py interviews.json
 
 # Output:
-# THEME 1: Slow deployments (12 mentions) 
+# THEME 1: Slow deployments (12 mentions)
 # THEME 2: Lack of visibility (15 mentions)
 # THEME 3: No staging/preview envs (8 mentions)
 # THEME 4: Difficult debugging (10 mentions)
@@ -637,22 +637,22 @@ features:
     impact: high
     effort: medium
     theme: "Lack of visibility"
-    
+
   - name: "Self-service preview environments"
     impact: high
     effort: high
     theme: "No staging"
-    
+
   - name: "Improve documentation"
     impact: medium
     effort: low
     theme: "Learning curve"
-    
+
   - name: "Integrated log viewer"
     impact: medium
     effort: medium
     theme: "Debugging"
-    
+
   - name: "Parallel CI pipelines"
     impact: high
     effort: medium
@@ -783,15 +783,15 @@ userFeedback:
         - id: nps
           type: nps
           text: "How likely are you to recommend Fawkes Platform to a colleague?"
-          
+
         - id: reason
           type: text
           text: "What's the PRIMARY reason for your score?"
-          
+
         - id: biggest-pain
           type: text
           text: "What's your biggest pain point with the platform?"
-          
+
         - id: feature-satisfaction
           type: matrix
           text: "How satisfied are you with the following?"
@@ -863,8 +863,8 @@ rate(deployment_total{platform="fawkes"}[1d])
 2. **Satisfaction Panel**:
 ```sql
 -- NPS score
-SELECT 
-  (COUNT(*) FILTER (WHERE score >= 9) * 100.0 / COUNT(*) - 
+SELECT
+  (COUNT(*) FILTER (WHERE score >= 9) * 100.0 / COUNT(*) -
    COUNT(*) FILTER (WHERE score <= 6) * 100.0 / COUNT(*)) as nps
 FROM survey_responses
 WHERE survey_id = 'platform-nps'
@@ -877,7 +877,7 @@ WHERE survey_id = 'platform-nps'
 avg(rate(deployment_total[1d])) by (team)
 
 # Lead time for changes (commit to deploy)
-histogram_quantile(0.95, 
+histogram_quantile(0.95,
   rate(lead_time_seconds_bucket[1d])
 )
 
@@ -887,7 +887,7 @@ histogram_quantile(0.95,
 )
 
 # Change failure rate
-(rate(deployment_failed_total[1d]) / 
+(rate(deployment_failed_total[1d]) /
  rate(deployment_total[1d])) * 100
 ```
 
@@ -929,9 +929,9 @@ fawkes lab stop --module 17
 
 What's the key difference between "platform as infrastructure" vs "platform as a product"?
 
-A) Products are externally sold, infrastructure is internal  
-B) Products focus on user satisfaction, infrastructure focuses on uptime  
-C) Products cost more to build  
+A) Products are externally sold, infrastructure is internal
+B) Products focus on user satisfaction, infrastructure focuses on uptime
+C) Products cost more to build
 D) Infrastructure is more reliable
 
 <details>
@@ -949,9 +949,9 @@ Platform as a product treats internal developers as customers and measures succe
 
 Which user research method provides the deepest insights into developer pain points?
 
-A) Anonymous surveys  
-B) Usage analytics  
-C) In-person interviews with observation  
+A) Anonymous surveys
+B) Usage analytics
+C) In-person interviews with observation
 D) Support ticket analysis
 
 <details>
@@ -969,9 +969,9 @@ One-on-one interviews combined with observing actual workflows reveal not just w
 
 Why create user personas for your platform?
 
-A) To segment users for marketing  
-B) Different roles have different needs requiring tailored solutions  
-C) It's a requirement for product management  
+A) To segment users for marketing
+B) Different roles have different needs requiring tailored solutions
+C) It's a requirement for product management
 D) To decide which users to prioritize
 
 <details>
@@ -989,9 +989,9 @@ Frontend developers, backend engineers, data scientists, and SREs have vastly di
 
 Your platform has an NPS of -15. What does this mean?
 
-A) 15% of users are happy  
-B) More detractors than promoters - urgent action needed  
-C) Average satisfaction is 15%  
+A) 15% of users are happy
+B) More detractors than promoters - urgent action needed
+C) Average satisfaction is 15%
 D) Normal score for internal platforms
 
 <details>
@@ -1009,9 +1009,9 @@ NPS = % Promoters - % Detractors. A negative NPS means you have more unhappy use
 
 You have two features: "Real-time logs" (high impact, high effort) and "Improved docs" (medium impact, low effort). Which should you build first?
 
-A) Real-time logs (higher impact)  
-B) Improved docs (faster to ship)  
-C) Build both simultaneously  
+A) Real-time logs (higher impact)
+B) Improved docs (faster to ship)
+C) Build both simultaneously
 D) Survey users to decide
 
 <details>
@@ -1029,9 +1029,9 @@ Start with "quick wins" (medium impact, low effort) to build momentum and trust.
 
 Your platform has 40% adoption after 6 months. What should you do?
 
-A) Mandate usage via policy  
-B) Interview non-adopters to understand barriers  
-C) Add more features to attract users  
+A) Mandate usage via policy
+B) Interview non-adopters to understand barriers
+C) Add more features to attract users
 D) Wait longer for organic adoption
 
 <details>
@@ -1049,9 +1049,9 @@ Low adoption indicates your platform doesn't meet user needs. Talk to the 60% wh
 
 Which metric best indicates your platform is succeeding?
 
-A) Number of features shipped  
-B) Infrastructure uptime percentage  
-C) Improvement in DORA metrics for users  
+A) Number of features shipped
+B) Infrastructure uptime percentage
+C) Improvement in DORA metrics for users
 D) Size of your platform team
 
 <details>
@@ -1069,9 +1069,9 @@ The ultimate measure of platform success is whether it improves outcomes for you
 
 A senior engineer requests a niche feature that would take 2 months but only helps their team. How do you respond?
 
-A) "No, we're too busy"  
-B) "File a ticket and we'll get to it eventually"  
-C) Build it (they're senior so must be important)  
+A) "No, we're too busy"
+B) "File a ticket and we'll get to it eventually"
+C) Build it (they're senior so must be important)
 D) Explain current priorities and understand the underlying need
 
 <details>
@@ -1231,10 +1231,10 @@ Research findings:
 - Developers context-switch while waiting
 
 User quotes:
-"I start a build then go get coffee. By the time I'm back, 
+"I start a build then go get coffee. By the time I'm back,
  I've forgotten what I was working on."
 
-"Half the time the build fails because of a flaky test, 
+"Half the time the build fails because of a flaky test,
  not my code. It's demoralizing."
 ```
 
@@ -1357,15 +1357,15 @@ GitHub Internal Platform (fictional example):
 - Month 0: NPS -15 (crisis mode)
   - Top issue: Deployments failing randomly
   - Action: All-hands to fix reliability
-  
+
 - Month 1: NPS -5 (improving)
   - Fixed deployment reliability
   - Added status page for transparency
-  
+
 - Month 3: NPS +15 (positive)
   - Continued improvements
   - Regular communication building trust
-  
+
 - Month 6: NPS +42 (healthy)
   - Platform now trusted
   - Adoption increasing
@@ -1542,7 +1542,7 @@ By completing this module, you've learned:
 
 **Critical insight**: The best platform is useless if developers don't adopt it. Product thinking ensures you build what users actually need, not what you think they need.
 
-**Remember**: 
+**Remember**:
 - 🎯 **Outcomes over outputs**: Measure impact, not features shipped
 - 👂 **Listen more than talk**: Users know their problems better than you
 - 🔁 **Iterate relentlessly**: Small improvements compound over time
@@ -1586,5 +1586,5 @@ Next: Module 18 to continue your Black Belt journey!
 
 ---
 
-**Module 17: Platform as a Product** | Fawkes Dojo | Black Belt  
+**Module 17: Platform as a Product** | Fawkes Dojo | Black Belt
 *"Build what users need, not what you think they need"* | Version 1.0
