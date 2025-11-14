@@ -26,18 +26,32 @@ jobs:
       - name: Terraform fmt check (non-blocking)
         run: terraform fmt -check -recursive || echo "⚠️ Formatting issues found"
 
-      - name: Terraform init and validate
+      - name: Terraform init and validate (per module)
+        shell: bash
         run: |
-          terraform init -backend=false
-          terraform validate
+          set -euo pipefail
+          mapfile -t TF_DIRS < <(find infra -type f -name '*.tf' -not -path '*/.terraform/*' -print0 | xargs -0 -n1 dirname | sort -u)
+          if [[ ${#TF_DIRS[@]} -eq 0 ]]; then
+            echo "No Terraform directories found under infra/"; exit 0
+          fi
+          for d in "${TF_DIRS[@]}"; do
+            echo "\n=== Validating Terraform in $d ==="
+            pushd "$d" >/dev/null
+            terraform init -backend=false -input=false -no-color
+            terraform validate -no-color
+            popd >/dev/null
+          done
 
       # Optional: static linting for Terraform
-      - name: Run TFLint
+      - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
         with:
           tflint_version: latest
 
-      - name: Run TFLint
+      - name: TFLint init
+        run: tflint --init
+
+      - name: Run TFLint (recursive)
         run: tflint --recursive
 
       # 2️⃣ Secret scanning
