@@ -1,8 +1,8 @@
 # Module 3: GitOps Principles
 
-**Belt Level**: 🥋 White Belt  
-**Duration**: 60 minutes  
-**Prerequisites**: Module 1 & 2 completed, Git basics  
+**Belt Level**: 🥋 White Belt
+**Duration**: 60 minutes
+**Prerequisites**: Module 1 & 2 completed, Git basics
 **Learning Path**: Module 3 of 20 (White Belt: Modules 1-4)
 
 ---
@@ -283,7 +283,7 @@ Total: 14 minutes
 
 **Without GitOps**:
 ```
-Incident detected → Find person with access → Figure out what changed → 
+Incident detected → Find person with access → Figure out what changed →
 Run commands to fix → Hope it works
 Total: 30-60 minutes (or more)
 ```
@@ -974,11 +974,11 @@ kubectl scale deployment/myapp --replicas=10
 
 ### What You've Learned
 
-✅ Define GitOps and its four principles  
-✅ Explain pull vs. push deployment models  
-✅ Describe how GitOps improves DORA metrics  
-✅ Navigate GitOps repository structure  
-✅ Make GitOps-driven changes  
+✅ Define GitOps and its four principles
+✅ Explain pull vs. push deployment models
+✅ Describe how GitOps improves DORA metrics
+✅ Navigate GitOps repository structure
+✅ Make GitOps-driven changes
 ✅ Practice rollback procedures
 
 ### Time Investment
@@ -1129,7 +1129,7 @@ White Belt Journey: ████████████░░░░░░░░
 
 Completed:
 ✅ Module 1: What is an IDP (60 min)
-✅ Module 2: DORA Metrics (60 min)  
+✅ Module 2: DORA Metrics (60 min)
 ✅ Module 3: GitOps Principles (60 min)
 
 Remaining:
@@ -1165,10 +1165,10 @@ Keep going! You're 75% of the way to your first certification! 💪
 
 ## 📝 Module Notes
 
-**Module**: GitOps Principles  
-**Version**: 1.0  
-**Last Updated**: October 8, 2025  
-**Author**: Fawkes Platform Team  
+**Module**: GitOps Principles
+**Version**: 1.0
+**Last Updated**: October 8, 2025
+**Author**: Fawkes Platform Team
 **Contributors**: [View Contributors](https://github.com/paruff/fawkes/graphs/contributors)
 
 **Module Changelog**:
@@ -1181,6 +1181,6 @@ This module is continuously improved based on learner feedback. If you have sugg
 
 **© 2025 Fawkes Platform | Licensed under MIT License**
 
-**Platform**: [https://fawkes.io](https://fawkes.io)  
-**GitHub**: [https://github.com/paruff/fawkes](https://github.com/paruff/fawkes)  
+**Platform**: [https://fawkes.io](https://fawkes.io)
+**GitHub**: [https://github.com/paruff/fawkes](https://github.com/paruff/fawkes)
 **Community**: [https://community.fawkes.io](https://community.fawkes.io)

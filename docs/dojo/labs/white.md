@@ -119,21 +119,21 @@ metadata:
 data:
   instructions.md: |
     # Module 1 Lab: Your First Deployment
-    
+
     ## Objectives
     1. Clone the sample application repository
     2. Modify the deployment to use 3 replicas
     3. Deploy using kubectl or GitOps
     4. Verify all pods are running
     5. Access the application
-    
+
     ## Steps
     1. Review the deployment manifest in this namespace
     2. Edit deployment to set replicas: 3
     3. Apply changes: `kubectl apply -f deployment.yaml`
     4. Check status: `kubectl get pods -n lab-module-1`
     5. Access app: http://my-first-app-lab1.fawkes.local
-    
+
     ## Validation
     Run: `fawkes lab validate --lab white-belt-lab1`
 

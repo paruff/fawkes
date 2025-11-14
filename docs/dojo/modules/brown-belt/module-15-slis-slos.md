@@ -2,11 +2,11 @@
 
 ## 🎯 Module Overview
 
-**Belt Level**: 🟤 Brown Belt - Observability & SRE  
-**Module**: 3 of 4 (Brown Belt)  
-**Duration**: 60 minutes  
-**Difficulty**: Advanced  
-**Prerequisites**: 
+**Belt Level**: 🟤 Brown Belt - Observability & SRE
+**Module**: 3 of 4 (Brown Belt)
+**Duration**: 60 minutes
+**Difficulty**: Advanced
+**Prerequisites**:
 - Module 13: Observability complete
 - Module 14: DORA Metrics Deep Dive complete
 - Understanding of Prometheus and monitoring
@@ -124,7 +124,7 @@ sum(up{service="myapp"}) / count(up{service="myapp"}) * 100
 
 ```promql
 # Latency SLI (p95)
-histogram_quantile(0.95, 
+histogram_quantile(0.95,
   sum(rate(http_request_duration_seconds_bucket{service="myapp"}[5m])) by (le)
 )
 
@@ -269,9 +269,9 @@ slos:
     target: 99.95
     window: 30d
     sli: |
-      sum(http_requests_total{status!~"5.."}) 
+      sum(http_requests_total{status!~"5.."})
       / sum(http_requests_total) * 100
-    
+
   - name: latency
     description: "95th percentile response time"
     type: latency
@@ -281,7 +281,7 @@ slos:
       histogram_quantile(0.95,
         sum(rate(http_duration_bucket[5m])) by (le)
       )
-    
+
   - name: error_rate
     description: "Proportion of failed requests"
     type: error_rate
@@ -374,20 +374,20 @@ Define policies for budget exhaustion:
 error_budget_policy:
   - condition: "50% remaining"
     action: "Continue normal operations"
-    
+
   - condition: "25% remaining"
-    action: 
+    action:
       - "Freeze non-critical feature deploys"
       - "Increase monitoring"
       - "Review recent changes"
-    
+
   - condition: "10% remaining"
     action:
       - "Freeze ALL feature deploys"
       - "Focus on reliability improvements"
       - "Daily team review"
       - "Incident commander assigned"
-    
+
   - condition: "0% remaining (exhausted)"
     action:
       - "Complete deploy freeze"
@@ -416,7 +416,7 @@ slis:
       sum(rate(http_requests_total{service="payment-api"}[5m]))
       * 100
     unit: percent
-    
+
   # Latency SLI (p95)
   - name: latency_p95
     description: "95th percentile HTTP request duration"
@@ -425,7 +425,7 @@ slis:
         sum(rate(http_request_duration_seconds_bucket{service="payment-api"}[5m])) by (le)
       ) * 1000
     unit: milliseconds
-    
+
   # Latency SLI (p99)
   - name: latency_p99
     description: "99th percentile HTTP request duration"
@@ -434,7 +434,7 @@ slis:
         sum(rate(http_request_duration_seconds_bucket{service="payment-api"}[5m])) by (le)
       ) * 1000
     unit: milliseconds
-    
+
   # Error Rate SLI
   - name: error_rate
     description: "Percentage of failed HTTP requests"
@@ -460,7 +460,7 @@ slos:
     window: 30d
     description: "Service available 99.9% of the time over 30 days"
     alert_threshold: 99.8  # Alert when approaching SLO breach
-    
+
   # Latency SLO (p95)
   - name: latency_p95_slo
     sli: latency_p95
@@ -468,7 +468,7 @@ slos:
     window: 7d
     description: "95% of requests complete within 500ms over 7 days"
     alert_threshold: 600
-    
+
   # Error Rate SLO
   - name: error_rate_slo
     sli: error_rate
@@ -492,28 +492,28 @@ groups:
       - record: error_budget:availability:remaining_percent
         expr: |
           (
-            100 - 
+            100 -
             (
-              (100 - slo:availability:30d) - 
+              (100 - slo:availability:30d) -
               (100 - sli:availability:30d)
             ) / (100 - slo:availability:30d) * 100
           )
-      
+
       # Availability error budget consumed
       - record: error_budget:availability:consumed_percent
         expr: |
           100 - error_budget:availability:remaining_percent
-      
+
       # Availability burn rate (1 hour)
       - record: error_budget:availability:burn_rate_1h
         expr: |
           (100 - sli:availability:1h) / (100 - slo:availability:30d)
-      
+
       # Availability burn rate (6 hours)
       - record: error_budget:availability:burn_rate_6h
         expr: |
           (100 - sli:availability:6h) / (100 - slo:availability:30d)
-      
+
       # Error rate error budget
       - record: error_budget:error_rate:remaining_percent
         expr: |
@@ -538,7 +538,7 @@ groups:
           /
           sum(rate(http_requests_total{service="payment-api"}[1m]))
           * 100
-      
+
       # Availability SLI (1 hour)
       - record: sli:availability:1h
         expr: |
@@ -546,7 +546,7 @@ groups:
           /
           sum(rate(http_requests_total{service="payment-api"}[1h]))
           * 100
-      
+
       # Availability SLI (30 days)
       - record: sli:availability:30d
         expr: |
@@ -554,7 +554,7 @@ groups:
           /
           sum(rate(http_requests_total{service="payment-api"}[30d]))
           * 100
-      
+
       # Error rate SLI (30 days)
       - record: sli:error_rate:30d
         expr: |
@@ -562,7 +562,7 @@ groups:
           /
           sum(rate(http_requests_total{service="payment-api"}[30d]))
           * 100
-      
+
       # Latency p95 SLI (7 days)
       - record: sli:latency_p95:7d
         expr: |
@@ -592,7 +592,7 @@ groups:
         annotations:
           summary: "Critical burn rate - will exhaust budget in 2 days"
           description: "Error budget burning at {{ $value }}x normal rate"
-      
+
       # Medium burn alert (6 hour window)
       - alert: ErrorBudgetBurnRateHigh
         expr: |
@@ -606,7 +606,7 @@ groups:
         annotations:
           summary: "High burn rate with low remaining budget"
           description: "{{ $value }}% budget remaining, burning fast"
-      
+
       # Budget exhausted
       - alert: ErrorBudgetExhausted
         expr: |
@@ -618,7 +618,7 @@ groups:
         annotations:
           summary: "Error budget completely exhausted"
           description: "Deploy freeze in effect per error budget policy"
-      
+
       # SLO approaching breach
       - alert: SLOApproachingBreach
         expr: |
@@ -734,12 +734,12 @@ error_budget_consumption:
       percentage: 20%
       duration: "15 minutes"
       date: "2025-10-01"
-    
+
     - cause: "Bad deployment (v2.1.0)"
       percentage: 10%
       duration: "8 minutes"
       date: "2025-10-08"
-    
+
     - cause: "DDoS attack"
       percentage: 5%
       duration: "4 minutes"
@@ -755,29 +755,29 @@ Predict when budget will exhaust:
 def forecast_budget_exhaustion(current_burn_rate, remaining_budget):
     """
     Predict days until error budget exhausted
-    
+
     Args:
         current_burn_rate: Current burn rate (multiplier)
         remaining_budget: Remaining budget (percentage)
-    
+
     Returns:
         Days until exhaustion
     """
     if current_burn_rate <= 0:
         return float('inf')  # Never exhausts
-    
+
     # Days in 30-day window
     days_in_window = 30
-    
+
     # Expected daily budget consumption at 1x burn rate
     daily_budget = 100 / days_in_window
-    
+
     # Actual daily consumption at current burn rate
     actual_daily = daily_budget * current_burn_rate
-    
+
     # Days until exhaustion
     days_remaining = remaining_budget / actual_daily
-    
+
     return days_remaining
 
 # Example
@@ -898,10 +898,10 @@ description: "User authentication service"
 slis:
   - name: availability
     # TODO: Define SLI query
-    
+
   - name: latency_p95
     # TODO: Define SLI query
-    
+
   - name: error_rate
     # TODO: Define SLI query
 
@@ -911,7 +911,7 @@ slos:
     objective: ???  # TODO: Set target
     window: 30d
     reasoning: "???"  # TODO: Document why
-    
+
   # TODO: Add latency and error rate SLOs
 
 error_budget_policy:
@@ -990,11 +990,11 @@ error_budget_policy:
 
 ### What You Learned
 
-✅ **SLIs**: User-centric metrics that indicate happiness  
-✅ **SLOs**: Targets for SLIs that balance reliability and innovation  
-✅ **Error Budgets**: Allowed unreliability enabling risk-taking  
-✅ **Burn Rates**: Speed of error budget consumption  
-✅ **SLO-Driven Decisions**: Data-driven deployment and reliability choices  
+✅ **SLIs**: User-centric metrics that indicate happiness
+✅ **SLOs**: Targets for SLIs that balance reliability and innovation
+✅ **Error Budgets**: Allowed unreliability enabling risk-taking
+✅ **Burn Rates**: Speed of error budget consumption
+✅ **SLO-Driven Decisions**: Data-driven deployment and reliability choices
 ✅ **Implementation**: Prometheus, recording rules, alerts, dashboards
 
 ### Key Takeaways
@@ -1091,6 +1091,6 @@ Module 16: Incident Management    ░░░░░░░░░░░░  0%
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*  
-*Version 1.0 | Last Updated: October 2025*  
+*Fawkes Dojo - Where Platform Engineers Are Forged*
+*Version 1.0 | Last Updated: October 2025*
 *License: MIT | https://github.com/paruff/fawkes*

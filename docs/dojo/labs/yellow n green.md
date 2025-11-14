@@ -23,19 +23,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run tests
         run: npm test -- --coverage
-      
+
       - name: Check coverage
         run: |
           COVERAGE=$(node -e "console.log(require('./coverage/coverage-summary.json').total.lines.pct)")
@@ -43,29 +43,29 @@ jobs:
             echo "Coverage $COVERAGE% is below 80%"
             exit 1
           fi
-  
+
   security-scan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Run Semgrep
         uses: returntocorp/semgrep-action@v1
         with:
           config: auto
-      
+
       - name: Run npm audit
         run: npm audit --audit-level=high
-  
+
   build:
     needs: [test, security-scan]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      
+
       - name: Build image
         uses: docker/build-push-action@v4
         with:
@@ -74,7 +74,7 @@ jobs:
           tags: my-app:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      
+
       - name: Scan image
         uses: aquasecurity/trivy-action@master
         with:
@@ -111,7 +111,7 @@ spec:
           value: $(params.git-url)
         - name: revision
           value: $(params.git-revision)
-    
+
     - name: run-tests
       runAfter: [fetch-source]
       taskRef:
@@ -119,7 +119,7 @@ spec:
       workspaces:
         - name: source
           workspace: shared-data
-    
+
     - name: security-scan
       runAfter: [fetch-source]
       taskRef:
@@ -127,7 +127,7 @@ spec:
       workspaces:
         - name: source
           workspace: shared-data
-    
+
     - name: build-image
       runAfter: [run-tests, security-scan]
       taskRef:
@@ -153,18 +153,18 @@ data:
       test_coverage:
         threshold: 80
         action: block
-      
+
       security_vulnerabilities:
         critical: 0
         high: 0
         medium: 5
         action: block
-      
+
       code_quality:
         min_maintainability: B
         max_complexity: 15
         action: warn
-      
+
       build_time:
         max_duration_seconds: 300
         action: warn
@@ -187,11 +187,11 @@ data:
   node-service.yaml: |
     # Golden Path for Node.js Services
     name: Node.js Service Pipeline
-    
+
     on:
       push:
         branches: [main, develop]
-    
+
     jobs:
       golden-path:
         uses: fawkes/workflows/.github/workflows/golden-path-node.yml@v1
@@ -206,11 +206,11 @@ data:
   python-service.yaml: |
     # Golden Path for Python Services
     name: Python Service Pipeline
-    
+
     on:
       push:
         branches: [main]
-    
+
     jobs:
       golden-path:
         uses: fawkes/workflows/.github/workflows/golden-path-python.yml@v1
@@ -244,13 +244,13 @@ data:
           - pattern: api_key = "..."
         message: Hardcoded secret detected
         severity: ERROR
-      
+
       - id: sql-injection
         patterns:
           - pattern: execute($SQL + $INPUT)
         message: Possible SQL injection
         severity: ERROR
-      
+
       - id: xss-vulnerability
         patterns:
           - pattern: innerHTML = $INPUT
@@ -271,16 +271,16 @@ data:
       - CRITICAL
       - HIGH
       - MEDIUM
-    
+
     vulnerability:
       type:
         - os
         - library
-    
+
     ignore-unfixed: true
-    
+
     exit-code: 1  # Fail on findings
-    
+
     cache:
       ttl: 24h
 
@@ -298,7 +298,7 @@ data:
     sonar.sources=src
     sonar.tests=test
     sonar.javascript.lcov.reportPaths=coverage/lcov.info
-    
+
     # Quality Gates
     sonar.qualitygate.wait=true
     sonar.coverage.minimum=80
@@ -335,23 +335,23 @@ data:
   sign-image.sh: |
     #!/bin/bash
     set -e
-    
+
     IMAGE=$1
-    
+
     echo "Signing image: $IMAGE"
-    
+
     # Generate key pair (in real scenario, use existing keys)
     cosign generate-key-pair
-    
+
     # Sign the image
     cosign sign --key cosign.key $IMAGE
-    
+
     # Generate SBOM
     syft packages $IMAGE -o spdx-json=sbom.json
-    
+
     # Attach SBOM to image
     cosign attach sbom --sbom sbom.json $IMAGE
-    
+
     echo "Image signed successfully"
     echo "Verify with: cosign verify --key cosign.pub $IMAGE"
 
@@ -386,16 +386,16 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  
+
   source:
     repoURL: https://github.com/student/my-app
     targetRevision: HEAD
     path: k8s/base
-    
+
   destination:
     server: https://kubernetes.default.svc
     namespace: lab-module-9
-  
+
   syncPolicy:
     automated:
       prune: true
@@ -632,44 +632,44 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: my-app
-  
+
   # HPA reference (optional)
   autoscalerRef:
     apiVersion: autoscaling/v2
     kind: HorizontalPodAutoscaler
     name: my-app
-  
+
   # service port
   service:
     port: 80
     targetPort: 8080
-  
+
   # canary analysis
   analysis:
     # schedule interval
     interval: 1m
-    
+
     # max number of failed metric checks before rollback
     threshold: 5
-    
+
     # max traffic percentage routed to canary
     maxWeight: 50
-    
+
     # canary increment step
     stepWeight: 10
-    
+
     # metrics
     metrics:
     - name: request-success-rate
       thresholdRange:
         min: 99
       interval: 1m
-    
+
     - name: request-duration
       thresholdRange:
         max: 500
       interval: 30s
-    
+
     # webhooks
     webhooks:
     - name: load-test
@@ -792,49 +792,49 @@ data:
   rollback-deployment.sh: |
     #!/bin/bash
     set -e
-    
+
     DEPLOYMENT_NAME=$1
     NAMESPACE=${2:-default}
-    
+
     echo "Rolling back deployment: $DEPLOYMENT_NAME in namespace: $NAMESPACE"
-    
+
     # Get current revision
     CURRENT=$(kubectl rollout history deployment/$DEPLOYMENT_NAME -n $NAMESPACE | tail -1 | awk '{print $1}')
     echo "Current revision: $CURRENT"
-    
+
     # Rollback to previous revision
     kubectl rollout undo deployment/$DEPLOYMENT_NAME -n $NAMESPACE
-    
+
     # Wait for rollback to complete
     kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE --timeout=5m
-    
+
     echo "Rollback completed successfully"
-    
+
     # Verify pods are running
     kubectl get pods -n $NAMESPACE -l app=$DEPLOYMENT_NAME
 
   rollback-argocd.sh: |
     #!/bin/bash
     set -e
-    
+
     APP_NAME=$1
-    
+
     echo "Rolling back ArgoCD application: $APP_NAME"
-    
+
     # Get current revision
     CURRENT=$(argocd app get $APP_NAME -o json | jq -r '.status.sync.revision')
     echo "Current revision: $CURRENT"
-    
+
     # Get history
     argocd app history $APP_NAME
-    
+
     # Rollback to previous revision
     PREVIOUS=$(argocd app history $APP_NAME -o json | jq -r '.[-2].id')
     argocd app rollback $APP_NAME $PREVIOUS
-    
+
     # Wait for sync
     argocd app wait $APP_NAME --timeout 300
-    
+
     echo "ArgoCD rollback completed"
 
 ---
@@ -847,31 +847,31 @@ metadata:
 data:
   playbook.md: |
     # Incident Response Playbook
-    
+
     ## Phase 1: Detection (0-2 minutes)
     - [ ] Alert received
     - [ ] Acknowledge incident
     - [ ] Create incident channel (#incident-YYYYMMDD-NNN)
     - [ ] Page on-call engineer
-    
+
     ## Phase 2: Triage (2-5 minutes)
     - [ ] Check recent deployments
     - [ ] Review error logs
     - [ ] Check monitoring dashboards
     - [ ] Determine severity (P0/P1/P2)
-    
+
     ## Phase 3: Mitigation (5-10 minutes)
     - [ ] Decision: Rollback or fix-forward?
     - [ ] If rollback: `kubectl rollout undo deployment/NAME`
     - [ ] If fix-forward: Deploy hotfix
     - [ ] Verify mitigation: Check metrics
-    
+
     ## Phase 4: Recovery (10-15 minutes)
     - [ ] Confirm all services healthy
     - [ ] Notify stakeholders
     - [ ] Update status page
     - [ ] Document timeline
-    
+
     ## Phase 5: Postmortem (Within 48 hours)
     - [ ] Schedule postmortem meeting
     - [ ] Document root cause
@@ -904,7 +904,7 @@ spec:
       annotations:
         summary: "High error rate detected"
         description: "Error rate is {{ $value | humanizePercentage }}"
-    
+
     - alert: PodCrashLooping
       expr: |
         rate(kube_pod_container_status_restarts_total[15m]) > 0
@@ -914,7 +914,7 @@ spec:
       annotations:
         summary: "Pod is crash looping"
         description: "Pod {{ $labels.pod }} is restarting frequently"
-    
+
     - alert: DeploymentReplicasMismatch
       expr: |
         kube_deployment_spec_replicas != kube_deployment_status_replicas_available
@@ -977,10 +977,10 @@ metadata:
 data:
   # Enable anonymous access for lab environment
   users.anonymous.enabled: "true"
-  
+
   # Increase timeout for sync operations
   timeout.reconciliation: "300s"
-  
+
   # Resource customizations
   resource.customizations: |
     apps/Deployment:
@@ -1112,41 +1112,41 @@ data:
     #!/bin/bash
     # Automated lab setup script
     set -e
-    
+
     MODULE=$1
     STUDENT_EMAIL=$2
-    
+
     if [ -z "$MODULE" ] || [ -z "$STUDENT_EMAIL" ]; then
       echo "Usage: $0 <module-number> <student-email>"
       exit 1
     fi
-    
+
     NAMESPACE="lab-module-${MODULE}-$(echo $STUDENT_EMAIL | cut -d@ -f1)"
-    
+
     echo "Setting up lab for Module $MODULE"
     echo "Student: $STUDENT_EMAIL"
     echo "Namespace: $NAMESPACE"
-    
+
     # Create namespace
     kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
-    
+
     # Label namespace
     kubectl label namespace $NAMESPACE \
       fawkes.io/module="$MODULE" \
       fawkes.io/student="$STUDENT_EMAIL" \
       --overwrite
-    
+
     # Apply resource quota
     kubectl apply -f /labs/shared/resource-quota.yaml -n $NAMESPACE
-    
+
     # Apply network policy
     kubectl apply -f /labs/shared/network-policy.yaml -n $NAMESPACE
-    
+
     # Apply lab-specific resources
     if [ -d "/labs/module-$(printf %02d $MODULE)" ]; then
       kubectl apply -f /labs/module-$(printf %02d $MODULE)/ -n $NAMESPACE
     fi
-    
+
     echo "Lab setup complete!"
     echo "Access with: kubectl config set-context --current --namespace=$NAMESPACE"
 
@@ -1154,15 +1154,15 @@ data:
     #!/bin/bash
     # Cleanup lab environment
     set -e
-    
+
     MODULE=$1
     STUDENT_EMAIL=$2
-    
+
     NAMESPACE="lab-module-${MODULE}-$(echo $STUDENT_EMAIL | cut -d@ -f1)"
-    
+
     echo "Cleaning up lab: $NAMESPACE"
-    
+
     # Delete namespace (cascades all resources)
     kubectl delete namespace $NAMESPACE --wait=true --timeout=120s
-    
+
     echo "Lab cleanup complete!"

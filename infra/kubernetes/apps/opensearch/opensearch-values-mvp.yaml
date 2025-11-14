@@ -75,21 +75,21 @@ config:
   opensearch.yml: |
     cluster.name: opensearch-cluster
     network.host: 0.0.0.0
-    
+
     # MVP: Disable security for simplicity
     # Production: MUST ENABLE security plugin!
     plugins.security.disabled: true
-    
+
     # Discovery settings for single node
     discovery.type: single-node
-    
+
     # Index settings
     action.auto_create_index: true
-    
+
     # Performance tuning - MVP: Conservative
     thread_pool.write.queue_size: 500
     thread_pool.search.queue_size: 1000
-    
+
     # Circuit breakers - prevent OOM
     indices.breaker.total.limit: 70%
     indices.breaker.request.limit: 40%
@@ -137,7 +137,7 @@ podSecurityContext:
 # ===== Sysctls - Required for OpenSearch =====
 sysctlInit:
   enabled: true
-  
+
 sysctl:
   enabled: true
 

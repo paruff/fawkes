@@ -8,9 +8,9 @@ This checklist provides step-by-step instructions for setting up the Fawkes infr
 
 Before starting, ensure the following:
 
-1. **AWS CLI**: Install and configure the AWS CLI.  
+1. **AWS CLI**: Install and configure the AWS CLI.
    [AWS CLI Installation Guide](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
-2. **Git**: Install Git for cloning the repository.  
+2. **Git**: Install Git for cloning the repository.
    [Git Installation Guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 3. **SSH Keys**: Ensure you have SSH keys for secure access to servers.
 4. **Access Credentials**: Obtain AWS access keys and permissions for the required account.

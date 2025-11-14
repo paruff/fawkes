@@ -22,22 +22,22 @@ Fixes #(issue number)
 
 ## Changes Made
 <!-- Describe the changes in detail -->
-- 
-- 
-- 
+-
+-
+-
 
 ## Testing
 <!-- Describe the tests you ran and how to reproduce them -->
 
 ### Test Configuration
-- Fawkes Version: 
-- Cloud Provider: 
-- Kubernetes Version: 
+- Fawkes Version:
+- Cloud Provider:
+- Kubernetes Version:
 
 ### Test Steps
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ### Test Results
 - [ ] All existing tests pass
@@ -78,10 +78,10 @@ Fixes #(issue number)
 
 ## DORA Metrics Impact
 <!-- If applicable, describe how this change affects DORA metrics -->
-- **Deployment Frequency**: 
-- **Lead Time for Changes**: 
-- **Change Failure Rate**: 
-- **Mean Time to Restore**: 
+- **Deployment Frequency**:
+- **Lead Time for Changes**:
+- **Change Failure Rate**:
+- **Mean Time to Restore**:
 
 ## Breaking Changes
 <!-- If this is a breaking change, describe the impact and migration path -->

@@ -59,7 +59,7 @@ prometheus:
           resources:
             requests:
               storage: 50Gi
-    
+
 grafana:
   enabled: true
   persistence:

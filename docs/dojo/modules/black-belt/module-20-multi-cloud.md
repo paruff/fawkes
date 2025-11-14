@@ -1,8 +1,8 @@
 # Module 20: Multi-Cloud Strategies
 
-**Belt Level**: ⚫ Black Belt  
-**Duration**: 60 minutes  
-**Prerequisites**: Modules 1-19, especially Module 17 (Platform as a Product), Module 18 (Multi-Tenancy)  
+**Belt Level**: ⚫ Black Belt
+**Duration**: 60 minutes
+**Prerequisites**: Modules 1-19, especially Module 17 (Platform as a Product), Module 18 (Multi-Tenancy)
 **Certification Track**: Fawkes Platform Architect
 
 ---
@@ -306,7 +306,7 @@ spec:
     │ GDPR         │ │ HIPAA        │ │ AU Privacy   │
     │ compliant    │ │ compliant    │ │ Act          │
     └──────────────┘ └──────────────┘ └──────────────┘
-    
+
     EU customer      US customer      APAC customer
     data stays in    data stays in    data stays in
     EU region        US region        APAC region
@@ -348,7 +348,7 @@ resource "azurerm_storage_account" "data_lake" {
 
 # Output abstraction
 output "data_lake_url" {
-  value = var.cloud_provider == "aws" ? aws_s3_bucket.data_lake[0].bucket_regional_domain_name : 
+  value = var.cloud_provider == "aws" ? aws_s3_bucket.data_lake[0].bucket_regional_domain_name :
           var.cloud_provider == "gcp" ? google_storage_bucket.data_lake[0].url :
           azurerm_storage_account.data_lake[0].primary_blob_endpoint
 }
@@ -522,19 +522,19 @@ data:
     global:
       external_labels:
         cluster: 'multi-cloud'
-    
+
     scrape_configs:
     - job_name: 'aws-services'
       ec2_sd_configs:
       - region: us-east-1
         access_key: ${AWS_ACCESS_KEY}
         secret_key: ${AWS_SECRET_KEY}
-    
+
     - job_name: 'gcp-services'
       gce_sd_configs:
       - project: my-project
         zone: us-central1-a
-    
+
     - job_name: 'azure-services'
       azure_sd_configs:
       - subscription_id: ${AZURE_SUBSCRIPTION_ID}
@@ -622,7 +622,7 @@ You will deploy the same application to AWS (EKS) and GCP (GKE) using:
 4. Istio multi-cluster for cross-cloud service communication
 5. Unified observability with Prometheus + Grafana
 
-**Duration**: 25 minutes  
+**Duration**: 25 minutes
 **Tools**: `terraform`, `kubectl`, `helm`, `fawkes` CLI
 
 ---
@@ -672,7 +672,7 @@ variable "cloud_provider" {
 module "aws_infrastructure" {
   count  = var.cloud_provider == "aws" ? 1 : 0
   source = "./modules/aws"
-  
+
   cluster_name = "fawkes-eks"
   region       = "us-east-1"
   node_count   = 3
@@ -682,7 +682,7 @@ module "aws_infrastructure" {
 module "gcp_infrastructure" {
   count  = var.cloud_provider == "gcp" ? 1 : 0
   source = "./modules/gcp"
-  
+
   cluster_name = "fawkes-gke"
   region       = "us-central1"
   node_count   = 3
@@ -936,9 +936,9 @@ fawkes lab stop --module 20
 
 Which is a VALID reason to adopt multi-cloud architecture?
 
-A) To learn new technologies  
-B) Regulatory requirement for data residency in specific regions  
-C) To have leverage in vendor negotiations  
+A) To learn new technologies
+B) Regulatory requirement for data residency in specific regions
+C) To have leverage in vendor negotiations
 D) To avoid making architectural decisions
 
 <details>
@@ -956,9 +956,9 @@ Data residency requirements (e.g., GDPR mandating EU data stay in EU) are legiti
 
 What is the typical operational overhead increase when moving from single-cloud to multi-cloud?
 
-A) 5-10%  
-B) 15-20%  
-C) 30-50%  
+A) 5-10%
+B) 15-20%
+C) 30-50%
 D) 100%+
 
 <details>
@@ -976,9 +976,9 @@ Industry studies show multi-cloud typically adds 30-50% operational overhead due
 
 For a system requiring RTO (Recovery Time Objective) of 30 minutes, which DR strategy is most appropriate?
 
-A) Cold standby (infrastructure provisioned on-demand)  
-B) Warm standby (infrastructure pre-provisioned, app in standby)  
-C) Hot standby (active-active across clouds)  
+A) Cold standby (infrastructure provisioned on-demand)
+B) Warm standby (infrastructure pre-provisioned, app in standby)
+C) Hot standby (active-active across clouds)
 D) No DR needed
 
 <details>
@@ -996,9 +996,9 @@ Warm standby balances cost and recovery time. Cold standby takes too long (>30 m
 
 Which component is NOT helpful for multi-cloud Kubernetes portability?
 
-A) CSI (Container Storage Interface) drivers  
-B) Crossplane for cloud resource provisioning  
-C) AWS Lambda functions  
+A) CSI (Container Storage Interface) drivers
+B) Crossplane for cloud resource provisioning
+C) AWS Lambda functions
 D) External Secrets Operator
 
 <details>
@@ -1016,9 +1016,9 @@ AWS Lambda is cloud-specific and tightly coupled to AWS. CSI drivers, Crossplane
 
 Why is data transfer between clouds expensive?
 
-A) Bandwidth limitations  
-B) Cloud providers charge high egress fees  
-C) Encryption overhead  
+A) Bandwidth limitations
+B) Cloud providers charge high egress fees
+C) Encryption overhead
 D) Latency penalties
 
 <details>
@@ -1036,9 +1036,9 @@ Cloud providers charge significant egress fees (often $0.08-0.12/GB) when data l
 
 What does an Istio multi-cluster east-west gateway provide?
 
-A) Load balancing within a single cluster  
-B) Secure connectivity between clusters in different clouds  
-C) DNS resolution for external services  
+A) Load balancing within a single cluster
+B) Secure connectivity between clusters in different clouds
+C) DNS resolution for external services
 D) Container image registry
 
 <details>
@@ -1056,9 +1056,9 @@ East-west gateways enable secure, mTLS-encrypted communication between services 
 
 What is the key difference between Terraform and Crossplane for multi-cloud?
 
-A) Terraform is faster  
-B) Crossplane uses Kubernetes APIs, Terraform uses CLI  
-C) Terraform only supports AWS  
+A) Terraform is faster
+B) Crossplane uses Kubernetes APIs, Terraform uses CLI
+C) Terraform only supports AWS
 D) Crossplane is cheaper
 
 <details>
@@ -1076,9 +1076,9 @@ Crossplane provisions cloud resources using Kubernetes Custom Resources (declara
 
 When should you prefer cloud-native services over cloud-agnostic tools?
 
-A) Never, always use cloud-agnostic  
-B) When speed-to-market and features outweigh portability concerns  
-C) Only for non-production environments  
+A) Never, always use cloud-agnostic
+B) When speed-to-market and features outweigh portability concerns
+C) Only for non-production environments
 D) When you have unlimited budget
 
 <details>
@@ -1672,7 +1672,7 @@ You've completed the most comprehensive platform engineering curriculum availabl
 
 ---
 
-**Module 20: Multi-Cloud Strategies** | Fawkes Dojo | Black Belt  
+**Module 20: Multi-Cloud Strategies** | Fawkes Dojo | Black Belt
 *"Build once, deploy anywhere"* | Version 1.0
 
 ---

@@ -413,7 +413,7 @@ mattermost:
           settings:
             enablePublicSharedBoards: true
             enableDataRetention: true
-  
+
   integrations:
     - mattermost-channels (board discussions)
     - backstage (iframe embed)
@@ -554,7 +554,7 @@ properties:
 **1. Board Updates in Channels**:
 ```
 [Focalboard Bot] 📋 Card moved in "Sprint 01"
-@john moved "Implement DORA metrics" 
+@john moved "Implement DORA metrics"
 From: In Progress → Review
 Board: https://mattermost.fawkes.io/boards/abc123
 ```
@@ -682,8 +682,8 @@ For open source Fawkes: Start with free version, upgrade if enterprise adopters 
 
 ---
 
-**Decision Made By**: Platform Architecture Team  
-**Approved By**: Project Lead  
-**Date**: October 7, 2025  
-**Author**: [Platform Architect Name]  
+**Decision Made By**: Platform Architecture Team
+**Approved By**: Project Lead
+**Date**: October 7, 2025
+**Author**: [Platform Architect Name]
 **Last Updated**: October 7, 2025

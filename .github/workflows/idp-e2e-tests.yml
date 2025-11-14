@@ -14,24 +14,45 @@ on:
 jobs:
   e2e-tests:
     runs-on: ubuntu-latest
+<<<<<<< HEAD
     
+=======
+
+    services:
+      jenkins:
+        image: jenkins/jenkins:lts
+        ports:
+          - 8080:8080
+        options: >-
+          --health-cmd "curl -f http://localhost:8080/login || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+>>>>>>> eff5fa95a540cc74d253217d7c88bff137d68382
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+
       - name: Install dependencies
         run: |
+<<<<<<< HEAD
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
       
+=======
+          pip install -r tests/e2e/requirements.txt
+
+>>>>>>> eff5fa95a540cc74d253217d7c88bff137d68382
       - name: Set up test cluster
         uses: helm/kind-action@v1
         with:
           cluster_name: fawkes-test
+<<<<<<< HEAD
           wait: 120s
 
       - name: Sanity check cluster
@@ -55,19 +76,36 @@ jobs:
           echo "Skipping full E2E until manifests and steps are ready."
           pytest -q tests/bdd -k "not nothing" --maxfail=1 || true
       
+=======
+
+      - name: Deploy Fawkes platform
+        run: |
+          kubectl apply -f infra/platform/k8s/
+          kubectl wait --for=condition=ready pod -l app=fawkes-api --timeout=300s
+
+      - name: Run smoke tests
+        run: |
+          pytest tests/e2e/ -m smoke --junit-xml=reports/smoke-tests.xml
+
+      - name: Run full E2E suite
+        if: github.event_name != 'pull_request'
+        run: |
+          pytest tests/e2e/ --junit-xml=reports/e2e-tests.xml
+
+>>>>>>> eff5fa95a540cc74d253217d7c88bff137d68382
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: reports/
-      
+
       - name: Publish test results
         if: always()
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           files: reports/*.xml
-      
+
       - name: Comment PR with results
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
