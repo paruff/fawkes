@@ -4,8 +4,8 @@
 
 ## 🟢 Green Belt Assessment: Fawkes Deployment Engineer
 
-**Duration**: 2.5 hours  
-**Passing Score**: 85% (34/40 questions)  
+**Duration**: 2.5 hours
+**Passing Score**: 85% (34/40 questions)
 **Format**: 40 multiple choice + 3 labs
 
 ### Written Exam Topics (40 Questions)
@@ -70,8 +70,8 @@ Pass:    119 points (85%)
 
 ## 🟤 Brown Belt Assessment: Fawkes SRE Practitioner
 
-**Duration**: 3 hours  
-**Passing Score**: 85% (38/45 questions)  
+**Duration**: 3 hours
+**Passing Score**: 85% (38/45 questions)
 **Format**: 45 multiple choice + 4 labs
 
 ### Written Exam Topics (45 Questions)
@@ -143,8 +143,8 @@ Pass:    136 points (85%)
 
 ## ⚫ Black Belt Assessment: Fawkes Platform Architect
 
-**Duration**: 4 hours  
-**Passing Score**: 90% (45/50 questions + labs)  
+**Duration**: 4 hours
+**Passing Score**: 90% (45/50 questions + labs)
 **Format**: 50 multiple choice + Architecture project + Code contribution + Mentorship
 
 ### Written Exam Topics (50 Questions)
@@ -304,11 +304,11 @@ Passing Score: 360 points (90%)
 
 Upon successful completion, candidates receive:
 
-✅ **Fawkes Platform Architect** certification  
-✅ Digital credential with verification link  
-✅ Recognition on Fawkes contributors page  
-✅ Invitation to Platform Engineering Guild (senior community)  
-✅ Speaking opportunities at meetups/conferences  
+✅ **Fawkes Platform Architect** certification
+✅ Digital credential with verification link
+✅ Recognition on Fawkes contributors page
+✅ Invitation to Platform Engineering Guild (senior community)
+✅ Speaking opportunities at meetups/conferences
 
 **Valid for**: 2 years (recertification required)
 
@@ -371,22 +371,22 @@ fawkes assessment mock --belt [green|brown|black]
 
 ## Frequently Asked Questions
 
-**Q: Can I take assessments out of order?**  
+**Q: Can I take assessments out of order?**
 A: No. Must complete in sequence: White → Yellow → Green → Brown → Black
 
-**Q: How long are certifications valid?**  
+**Q: How long are certifications valid?**
 A: White/Yellow/Green/Brown: No expiration. Black Belt: 2 years (recertification required)
 
-**Q: What if I fail?**  
+**Q: What if I fail?**
 A: Review score report, retake after waiting period (Green: 14 days, Brown: 21 days, Black: 30 days)
 
-**Q: Can I get accommodations?**  
+**Q: Can I get accommodations?**
 A: Yes. Contact dojo-accessibility@fawkes.io for extended time, alternate formats, etc.
 
-**Q: Are assessments proctored?**  
+**Q: Are assessments proctored?**
 A: Written exams: No. Labs: Auto-validated. Black Belt presentation: Yes (live panel)
 
-**Q: What's the pass rate?**  
+**Q: What's the pass rate?**
 A: White: 92%, Yellow: 85%, Green: 78%, Brown: 71%, Black: 45%
 
 ---
@@ -437,7 +437,7 @@ fawkes assessment schedule-presentation \
 
 ---
 
-**All Belt Assessments** | Fawkes Dojo | Version 1.0  
+**All Belt Assessments** | Fawkes Dojo | Version 1.0
 *Your path to Platform Engineering mastery* 🥋
 
 ---

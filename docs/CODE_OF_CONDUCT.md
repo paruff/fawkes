@@ -151,6 +151,6 @@ For questions about this Code of Conduct, contact:
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: October 4, 2025  
+**Document Version**: 1.0
+**Last Updated**: October 4, 2025
 **Based On**: Contributor Covenant v2.1

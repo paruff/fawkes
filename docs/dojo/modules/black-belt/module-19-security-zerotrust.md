@@ -1,8 +1,8 @@
 # Module 19: Security & Zero Trust Architecture
 
-**Belt Level**: ⚫ Black Belt  
-**Duration**: 60 minutes  
-**Prerequisites**: Modules 1-18, especially Module 7 (Security Scanning), Module 13 (Observability)  
+**Belt Level**: ⚫ Black Belt
+**Duration**: 60 minutes
+**Prerequisites**: Modules 1-18, especially Module 7 (Security Scanning), Module 13 (Observability)
 **Certification Track**: Fawkes Platform Architect
 
 ---
@@ -129,7 +129,7 @@ metadata:
   annotations:
     # AWS: Map to IAM role
     eks.amazonaws.com/role-arn: arn:aws:iam::123456789:role/payment-service
-    
+
     # GCP: Map to GCP service account
     iam.gke.io/gcp-service-account: payment@project.iam.gserviceaccount.com
 ---
@@ -488,7 +488,7 @@ You will implement key zero trust components:
 4. Sign and verify container images with Cosign
 5. Configure External Secrets Operator
 
-**Duration**: 25 minutes  
+**Duration**: 25 minutes
 **Tools**: `kubectl`, `cosign`, `helm`, `fawkes` CLI
 
 ---
@@ -936,9 +936,9 @@ Test your understanding with these questions:
 
 Which of the following is NOT a core principle of zero trust?
 
-A) Never trust, always verify  
-B) Assume breach  
-C) Trust based on network location  
+A) Never trust, always verify
+B) Assume breach
+C) Trust based on network location
 D) Least privilege access
 
 <details>
@@ -956,9 +956,9 @@ Zero trust explicitly rejects the idea that network location (inside/outside per
 
 What is the main advantage of workload identity over long-lived service account keys?
 
-A) Easier to configure  
-B) Works with more cloud providers  
-C) Credentials are short-lived and automatically rotated  
+A) Easier to configure
+B) Works with more cloud providers
+C) Credentials are short-lived and automatically rotated
 D) Requires less compute resources
 
 <details>
@@ -976,9 +976,9 @@ Workload identity provides short-lived tokens (typically 1 hour) that are automa
 
 What does mTLS (mutual TLS) provide that regular TLS does not?
 
-A) Faster encryption  
-B) Both client and server authenticate each other  
-C) Compression of network traffic  
+A) Faster encryption
+B) Both client and server authenticate each other
+C) Compression of network traffic
 D) Load balancing capabilities
 
 <details>
@@ -996,9 +996,9 @@ In regular TLS, only the server authenticates to the client. With mTLS, both par
 
 Which tool is used to cryptographically sign container images?
 
-A) Trivy  
-B) Cosign  
-C) Falco  
+A) Trivy
+B) Cosign
+C) Falco
 D) OPA
 
 <details>
@@ -1016,9 +1016,9 @@ Cosign (part of Sigstore project) is used to sign and verify container images. T
 
 What happens when a Kubernetes admission controller policy is violated?
 
-A) The resource is created with a warning  
-B) The resource creation is rejected  
-C) The policy is automatically updated  
+A) The resource is created with a warning
+B) The resource creation is rejected
+C) The policy is automatically updated
 D) An email is sent to administrators
 
 <details>
@@ -1036,9 +1036,9 @@ Admission controllers (like Gatekeeper and Kyverno) run before resources are per
 
 Why should secrets never be stored in Git repositories?
 
-A) Git is too slow for secret retrieval  
-B) Git history is immutable - secrets remain even if deleted  
-C) Git doesn't support encryption  
+A) Git is too slow for secret retrieval
+B) Git history is immutable - secrets remain even if deleted
+C) Git doesn't support encryption
 D) Secrets take up too much storage
 
 <details>
@@ -1056,9 +1056,9 @@ Git history is permanent. Even if you delete a file containing secrets, they rem
 
 What is the primary purpose of an SBOM?
 
-A) To compress container images  
-B) To list all software components and dependencies in an artifact  
-C) To encrypt network traffic  
+A) To compress container images
+B) To list all software components and dependencies in an artifact
+C) To encrypt network traffic
 D) To monitor application performance
 
 <details>
@@ -1076,9 +1076,9 @@ An SBOM provides a complete inventory of all software components, libraries, and
 
 Which authentication method is recommended for CI/CD pipelines in a zero trust architecture?
 
-A) Storing AWS access keys in GitHub Secrets  
-B) Using long-lived service account tokens  
-C) OIDC-based workload identity  
+A) Storing AWS access keys in GitHub Secrets
+B) Using long-lived service account tokens
+C) OIDC-based workload identity
 D) Username and password authentication
 
 <details>
@@ -1104,7 +1104,7 @@ OIDC-based workload identity (like GitHub Actions OIDC to AWS) provides short-li
 - **Dynamic authorization**: Zuul gateway enforces fine-grained policies based on user/service identity
 - **Credential rotation**: All credentials rotate automatically every few hours
 
-**Result**: 
+**Result**:
 - Eliminated network perimeter as security boundary
 - Reduced blast radius of security incidents
 - Enabled faster deployment (no VPN bottlenecks)
@@ -1194,7 +1194,7 @@ This module directly supports these **DORA capabilities**:
 
 **Symptom**:
 ```
-Error from server: error when creating "deployment.yaml": 
+Error from server: error when creating "deployment.yaml":
 admission webhook "validation.gatekeeper.sh" denied the request
 ```
 
@@ -1380,7 +1380,7 @@ Black Belt Progress:
 [████████████████████░░] 75% (3/4 modules)
 
 ✅ Module 17: Platform as a Product
-✅ Module 18: Multi-Tenancy & Resource Management  
+✅ Module 18: Multi-Tenancy & Resource Management
 ✅ Module 19: Security & Zero Trust
 ⬜ Module 20: Multi-Cloud Strategies
 
@@ -1409,5 +1409,5 @@ After completing all Black Belt modules (17-20), you will:
 
 ---
 
-**Module 19: Security & Zero Trust** | Fawkes Dojo | Black Belt  
+**Module 19: Security & Zero Trust** | Fawkes Dojo | Black Belt
 *"Never trust, always verify"* | Version 1.0

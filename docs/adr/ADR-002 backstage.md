@@ -119,32 +119,32 @@ Specifically:
    - Rigorous security and quality standards
    - Growing adoption and contribution
 
-5. **Active Development & Community**: 
+5. **Active Development & Community**:
    - 1,000+ contributors
    - Monthly releases
    - 27,000+ GitHub stars
    - Active Discord community (5,000+ members)
    - Excellent documentation
 
-6. **Open Source & Self-Hosted**: 
+6. **Open Source & Self-Hosted**:
    - Apache 2.0 license
    - Complete control over data and deployment
    - No per-user licensing fees
    - Customizable to exact needs
 
-7. **Perfect for Dojo Integration**: 
+7. **Perfect for Dojo Integration**:
    - Can build custom plugin for learning hub
    - TechDocs perfect for module content
    - Catalog can track learner progress
    - Plugins can integrate with lab environment
 
-8. **Developer Experience**: 
+8. **Developer Experience**:
    - Beautiful, modern UI (React-based)
    - Fast, responsive
    - Intuitive navigation
    - Developers actually enjoy using it
 
-9. **Extensibility**: 
+9. **Extensibility**:
    - Plugin architecture allows infinite customization
    - Frontend and backend plugins
    - Can build exactly what we need
@@ -157,7 +157,7 @@ Specifically:
     - Infrastructure (Terraform modules)
     - Dojo labs (pre-configured learning environments)
 
-12. **Search & Discovery**: 
+12. **Search & Discovery**:
     - Full-text search across services, docs, people
     - Advanced filtering and faceting
     - GraphQL API for programmatic access
@@ -411,7 +411,7 @@ Specifically:
 # Backstage Deployment
 backstage:
   namespace: fawkes-platform
-  
+
   components:
     - backstage-frontend:
         image: fawkes/backstage:latest
@@ -419,21 +419,21 @@ backstage:
         resources:
           cpu: 1 core
           memory: 1Gi
-        
+
     - backstage-backend:
         image: fawkes/backstage:latest
         replicas: 2 (HA)
         resources:
           cpu: 1 core
           memory: 1Gi
-    
+
     - postgresql:
         replicas: 1 (consider HA for production)
         resources:
           cpu: 500m
           memory: 512Mi
         storage: 20Gi
-        
+
   integrations:
     - github (OAuth, repository discovery)
     - jenkins (pipeline plugin)
@@ -759,8 +759,8 @@ Budget 40 hours for first plugin (dojo learning hub), 20 hours for subsequent pl
 
 ---
 
-**Decision Made By**: Platform Architecture Team  
-**Approved By**: Project Lead  
-**Date**: October 8, 2025  
-**Author**: [Platform Architect Name]  
+**Decision Made By**: Platform Architecture Team
+**Approved By**: Project Lead
+**Date**: October 8, 2025
+**Author**: [Platform Architect Name]
 **Last Updated**: October 8, 2025

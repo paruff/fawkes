@@ -120,7 +120,7 @@ Specifically:
    - Deployment: Kubernetes, ArgoCD, Spinnaker
    - Notifications: Mattermost, email, Slack
 
-5. **Configuration as Code (JCasC)**: 
+5. **Configuration as Code (JCasC)**:
    - Declarative YAML configuration
    - Version controlled in Git
    - Reproducible Jenkins setup
@@ -139,14 +139,14 @@ Specifically:
    - Consistent build patterns
    - Centralized updates (change once, apply everywhere)
 
-8. **Enterprise Features Available**: 
+8. **Enterprise Features Available**:
    - RBAC and folder-based security
    - Audit logging
    - Blue Ocean UI (modern interface)
    - Pipeline visualization
    - Extensive reporting
 
-9. **Strong Community**: 
+9. **Strong Community**:
    - Active development (monthly releases)
    - Large user community
    - Extensive documentation
@@ -164,7 +164,7 @@ Specifically:
     - Easier contributor onboarding
     - Extensive knowledge base (Stack Overflow, blogs)
 
-12. **Cost Effective**: 
+12. **Cost Effective**:
     - Open source (free)
     - Only infrastructure costs
     - Commercial support optional (CloudBees)
@@ -418,7 +418,7 @@ Specifically:
 # Jenkins Deployment
 jenkins:
   namespace: fawkes-ci
-  
+
   components:
     - jenkins-controller:
         image: jenkins/jenkins:lts
@@ -427,7 +427,7 @@ jenkins:
           cpu: 2 cores
           memory: 4Gi
         storage: 50Gi (PVC for Jenkins home)
-        
+
     - jenkins-agents:
         dynamic: true (Kubernetes plugin creates on-demand)
         pod-templates:
@@ -447,7 +447,7 @@ jenkins:
               resources:
                 cpu: 2 cores
                 memory: 4Gi
-                
+
   integrations:
     - github (webhooks, status checks)
     - sonarqube (code quality scanning)
@@ -466,13 +466,13 @@ jenkins:
 jenkins:
   systemMessage: "Fawkes Platform CI/CD"
   numExecutors: 0  # Use Kubernetes agents only
-  
+
   securityRealm:
     github:
       githubWebUri: "https://github.com"
       clientID: "${GITHUB_CLIENT_ID}"
       clientSecret: "${GITHUB_CLIENT_SECRET}"
-      
+
   authorizationStrategy:
     globalMatrix:
       permissions:
@@ -480,7 +480,7 @@ jenkins:
         - "Overall/Read:authenticated"
         - "Job/Build:authenticated"
         - "Job/Cancel:authenticated"
-        
+
   clouds:
     - kubernetes:
         name: "kubernetes"
@@ -614,20 +614,20 @@ spec:
 """
         }
     }
-    
+
     environment {
         DOCKER_REGISTRY = 'harbor.fawkes.io'
         IMAGE_NAME = "${DOCKER_REGISTRY}/myapp/myservice"
         IMAGE_TAG = "${env.GIT_COMMIT.take(7)}"
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        
+
         stage('Build') {
             steps {
                 container('maven') {
@@ -635,7 +635,7 @@ spec:
                 }
             }
         }
-        
+
         stage('Test') {
             steps {
                 container('maven') {
@@ -648,7 +648,7 @@ spec:
                 }
             }
         }
-        
+
         stage('SonarQube Analysis') {
             steps {
                 container('maven') {
@@ -658,7 +658,7 @@ spec:
                 }
             }
         }
-        
+
         stage('Quality Gate') {
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
@@ -666,7 +666,7 @@ spec:
                 }
             }
         }
-        
+
         stage('Build Docker Image') {
             steps {
                 container('docker') {
@@ -677,7 +677,7 @@ spec:
                 }
             }
         }
-        
+
         stage('Security Scan') {
             steps {
                 container('trivy') {
@@ -687,12 +687,12 @@ spec:
                 }
             }
         }
-        
+
         stage('Push Image') {
             steps {
                 container('docker') {
-                    withCredentials([usernamePassword(credentialsId: 'harbor-credentials', 
-                                                     usernameVariable: 'USER', 
+                    withCredentials([usernamePassword(credentialsId: 'harbor-credentials',
+                                                     usernameVariable: 'USER',
                                                      passwordVariable: 'PASS')]) {
                         sh """
                             echo \$PASS | docker login ${DOCKER_REGISTRY} -u \$USER --password-stdin
@@ -703,7 +703,7 @@ spec:
                 }
             }
         }
-        
+
         stage('Update GitOps') {
             steps {
                 script {
@@ -719,7 +719,7 @@ spec:
                 }
             }
         }
-        
+
         stage('Notify DORA Service') {
             steps {
                 script {
@@ -739,7 +739,7 @@ spec:
             }
         }
     }
-    
+
     post {
         success {
             mattermostSend(
@@ -917,8 +917,8 @@ Can use both: GitHub Actions for Fawkes repo itself, Jenkins for platform users.
 
 ---
 
-**Decision Made By**: Platform Architecture Team  
-**Approved By**: Project Lead  
-**Date**: October 8, 2025  
-**Author**: [Platform Architect Name]  
+**Decision Made By**: Platform Architecture Team
+**Approved By**: Project Lead
+**Date**: October 8, 2025
+**Author**: [Platform Architect Name]
 **Last Updated**: October 8, 2025

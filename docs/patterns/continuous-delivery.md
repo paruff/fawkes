@@ -67,7 +67,7 @@ pipeline {
 ```java
 public class FeatureFlags {
     private static final String FLAG_NEW_FEATURE = "new-feature";
-    
+
     public boolean isEnabled(String flag) {
         return LaunchDarkly.client().boolVariation(flag, user, false);
     }

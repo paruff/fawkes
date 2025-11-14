@@ -1,8 +1,8 @@
 # White Belt Assessment: Fawkes Platform Operator
 
-**Certification**: Fawkes Platform Operator  
-**Duration**: 2 hours  
-**Passing Score**: 80% (24/30 questions)  
+**Certification**: Fawkes Platform Operator
+**Duration**: 2 hours
+**Passing Score**: 80% (24/30 questions)
 **Format**: 30 multiple choice questions + 3 hands-on labs
 
 ---
@@ -28,9 +28,9 @@ This assessment validates your understanding of:
 
 **Question 1**: What is the primary purpose of an Internal Developer Platform (IDP)?
 
-A) Replace developers with automation  
-B) Reduce cognitive load and provide self-service capabilities  
-C) Control what developers can deploy  
+A) Replace developers with automation
+B) Reduce cognitive load and provide self-service capabilities
+C) Control what developers can deploy
 D) Monitor production systems
 
 <details>
@@ -42,9 +42,9 @@ D) Monitor production systems
 
 **Question 2**: Which of the following is NOT a benefit of platform engineering?
 
-A) Faster deployment frequency  
-B) Reduced mean time to recovery (MTTR)  
-C) Elimination of all incidents  
+A) Faster deployment frequency
+B) Reduced mean time to recovery (MTTR)
+C) Elimination of all incidents
 D) Improved developer productivity
 
 <details>
@@ -56,9 +56,9 @@ D) Improved developer productivity
 
 **Question 3**: What is "cognitive load" in the context of platform engineering?
 
-A) The amount of RAM required by applications  
-B) The mental effort required to understand and use systems  
-C) The number of microservices in production  
+A) The amount of RAM required by applications
+B) The mental effort required to understand and use systems
+C) The number of microservices in production
 D) The complexity of infrastructure code
 
 <details>
@@ -70,9 +70,9 @@ D) The complexity of infrastructure code
 
 **Question 4**: Which principle describes treating infrastructure configuration as code in version control?
 
-A) DevOps  
-B) GitOps  
-C) Infrastructure as a Service (IaaS)  
+A) DevOps
+B) GitOps
+C) Infrastructure as a Service (IaaS)
 D) Continuous Integration
 
 <details>
@@ -84,9 +84,9 @@ D) Continuous Integration
 
 **Question 5**: What is a "golden path" in platform engineering?
 
-A) The fastest deployment route  
-B) The opinionated, easiest way to accomplish common tasks  
-C) The path taken by production traffic  
+A) The fastest deployment route
+B) The opinionated, easiest way to accomplish common tasks
+C) The path taken by production traffic
 D) The career progression for platform engineers
 
 <details>
@@ -98,9 +98,9 @@ D) The career progression for platform engineers
 
 **Question 6**: What does "platform as a product" mean?
 
-A) Selling the platform to external customers  
-B) Treating internal developers as customers with user research and satisfaction metrics  
-C) Building platforms with product management tools  
+A) Selling the platform to external customers
+B) Treating internal developers as customers with user research and satisfaction metrics
+C) Building platforms with product management tools
 D) Creating commercial software products
 
 <details>
@@ -112,9 +112,9 @@ D) Creating commercial software products
 
 **Question 7**: Which layer of the platform engineering stack includes Kubernetes?
 
-A) Developer experience layer  
-B) Infrastructure layer  
-C) Application layer  
+A) Developer experience layer
+B) Infrastructure layer
+C) Application layer
 D) Observability layer
 
 <details>
@@ -126,9 +126,9 @@ D) Observability layer
 
 **Question 8**: What is "self-service" in the context of IDPs?
 
-A) Developers fix their own production incidents  
-B) Developers can provision resources without tickets or manual intervention  
-C) Automated deployment without human approval  
+A) Developers fix their own production incidents
+B) Developers can provision resources without tickets or manual intervention
+C) Automated deployment without human approval
 D) Documentation that developers read themselves
 
 <details>
@@ -140,9 +140,9 @@ D) Documentation that developers read themselves
 
 **Question 9**: Which team topology is most common for platform teams?
 
-A) Stream-aligned team  
-B) Complicated subsystem team  
-C) Platform team  
+A) Stream-aligned team
+B) Complicated subsystem team
+C) Platform team
 D) Enabling team
 
 <details>
@@ -154,9 +154,9 @@ D) Enabling team
 
 **Question 10**: What is the relationship between platform engineering and DevOps?
 
-A) They are competing approaches  
-B) Platform engineering replaces DevOps  
-C) Platform engineering is an evolution/implementation of DevOps principles  
+A) They are competing approaches
+B) Platform engineering replaces DevOps
+C) Platform engineering is an evolution/implementation of DevOps principles
 D) They are unrelated concepts
 
 <details>
@@ -170,9 +170,9 @@ D) They are unrelated concepts
 
 **Question 11**: What are the four key DORA metrics?
 
-A) Uptime, latency, cost, scalability  
-B) Deployment frequency, lead time, MTTR, change failure rate  
-C) Code coverage, bug count, technical debt, velocity  
+A) Uptime, latency, cost, scalability
+B) Deployment frequency, lead time, MTTR, change failure rate
+C) Code coverage, bug count, technical debt, velocity
 D) Commits, pull requests, releases, rollbacks
 
 <details>
@@ -184,9 +184,9 @@ D) Commits, pull requests, releases, rollbacks
 
 **Question 12**: What is considered "elite" performance for deployment frequency?
 
-A) Once per week  
-B) Once per day  
-C) Multiple times per day (on-demand)  
+A) Once per week
+B) Once per day
+C) Multiple times per day (on-demand)
 D) Once per month
 
 <details>
@@ -198,9 +198,9 @@ D) Once per month
 
 **Question 13**: What does "lead time for changes" measure?
 
-A) How long a feature takes to develop  
-B) Time from commit to successfully running in production  
-C) Time to review pull requests  
+A) How long a feature takes to develop
+B) Time from commit to successfully running in production
+C) Time to review pull requests
 D) How long builds take in CI
 
 <details>
@@ -212,9 +212,9 @@ D) How long builds take in CI
 
 **Question 14**: What is MTTR in the context of DORA metrics?
 
-A) Mean Time To Release  
-B) Maximum Time To Respond  
-C) Mean Time To Restore/Recover  
+A) Mean Time To Release
+B) Maximum Time To Respond
+C) Mean Time To Restore/Recover
 D) Minimum Test Requirements
 
 <details>
@@ -226,9 +226,9 @@ D) Minimum Test Requirements
 
 **Question 15**: What is considered "elite" performance for change failure rate?
 
-A) 0% (no failures)  
-B) 0-15%  
-C) 15-30%  
+A) 0% (no failures)
+B) 0-15%
+C) 15-30%
 D) 30-45%
 
 <details>
@@ -240,9 +240,9 @@ D) 30-45%
 
 **Question 16**: Which DORA metric measures the percentage of deployments causing production issues?
 
-A) Deployment frequency  
-B) Lead time  
-C) MTTR  
+A) Deployment frequency
+B) Lead time
+C) MTTR
 D) Change failure rate
 
 <details>
@@ -254,9 +254,9 @@ D) Change failure rate
 
 **Question 17**: How do DORA metrics relate to business outcomes?
 
-A) They don't - they're just technical metrics  
-B) High performers ship features faster and more reliably, improving competitiveness  
-C) Only deployment frequency matters for business  
+A) They don't - they're just technical metrics
+B) High performers ship features faster and more reliably, improving competitiveness
+C) Only deployment frequency matters for business
 D) They only matter for engineering teams
 
 <details>
@@ -268,9 +268,9 @@ D) They only matter for engineering teams
 
 **Question 18**: What is the relationship between deployment frequency and stability?
 
-A) More frequent deployments reduce stability  
-B) They are unrelated  
-C) High performers achieve both high frequency AND high stability  
+A) More frequent deployments reduce stability
+B) They are unrelated
+C) High performers achieve both high frequency AND high stability
 D) You must choose between frequency or stability
 
 <details>
@@ -282,9 +282,9 @@ D) You must choose between frequency or stability
 
 **Question 19**: Which DORA capability focuses on automated testing?
 
-A) Version control  
-B) Test automation  
-C) Deployment automation  
+A) Version control
+B) Test automation
+C) Deployment automation
 D) Trunk-based development
 
 <details>
@@ -296,9 +296,9 @@ D) Trunk-based development
 
 **Question 20**: Why is "small batch size" important for DORA metrics?
 
-A) Smaller changes are easier to review, deploy, and rollback  
-B) It reduces storage costs  
-C) Developers prefer small tasks  
+A) Smaller changes are easier to review, deploy, and rollback
+B) It reduces storage costs
+C) Developers prefer small tasks
 D) It simplifies project management
 
 <details>
@@ -312,9 +312,9 @@ D) It simplifies project management
 
 **Question 21**: What is the core principle of GitOps?
 
-A) All developers must use Git  
-B) Git is the single source of truth for declarative infrastructure and applications  
-C) Operations team manages Git repositories  
+A) All developers must use Git
+B) Git is the single source of truth for declarative infrastructure and applications
+C) Operations team manages Git repositories
 D) Deployments only happen via Git hooks
 
 <details>
@@ -326,9 +326,9 @@ D) Deployments only happen via Git hooks
 
 **Question 22**: Which tool is most commonly used for GitOps in Kubernetes?
 
-A) Jenkins  
-B) GitLab CI  
-C) ArgoCD or Flux  
+A) Jenkins
+B) GitLab CI
+C) ArgoCD or Flux
 D) GitHub Actions
 
 <details>
@@ -340,9 +340,9 @@ D) GitHub Actions
 
 **Question 23**: What is "declarative configuration"?
 
-A) Declaring what you want, not how to achieve it  
-B) Writing detailed step-by-step scripts  
-C) Using command-line tools instead of GUIs  
+A) Declaring what you want, not how to achieve it
+B) Writing detailed step-by-step scripts
+C) Using command-line tools instead of GUIs
 D) Documenting infrastructure changes
 
 <details>
@@ -354,9 +354,9 @@ D) Documenting infrastructure changes
 
 **Question 24**: In GitOps, when should you make changes to production?
 
-A) By SSH-ing into servers  
-B) Through the Kubernetes dashboard  
-C) By committing to Git and letting automation apply changes  
+A) By SSH-ing into servers
+B) Through the Kubernetes dashboard
+C) By committing to Git and letting automation apply changes
 D) Via kubectl apply commands
 
 <details>
@@ -368,9 +368,9 @@ D) Via kubectl apply commands
 
 **Question 25**: What is "drift detection" in GitOps?
 
-A) Monitoring server clock skew  
-B) Detecting when cluster state differs from Git  
-C) Tracking developer productivity changes  
+A) Monitoring server clock skew
+B) Detecting when cluster state differs from Git
+C) Tracking developer productivity changes
 D) Measuring network latency
 
 <details>
@@ -382,9 +382,9 @@ D) Measuring network latency
 
 **Question 26**: What is a "manifest" in Kubernetes?
 
-A) A shipping document  
-B) A YAML/JSON file describing desired resources  
-C) A deployment log  
+A) A shipping document
+B) A YAML/JSON file describing desired resources
+C) A deployment log
 D) A configuration backup
 
 <details>
@@ -396,9 +396,9 @@ D) A configuration backup
 
 **Question 27**: What happens when you push a commit to the GitOps repository?
 
-A) Developers are notified  
-B) GitOps operator detects change and applies it to cluster  
-C) Manual approval is required  
+A) Developers are notified
+B) GitOps operator detects change and applies it to cluster
+C) Manual approval is required
 D) Nothing until you run a command
 
 <details>
@@ -410,9 +410,9 @@ D) Nothing until you run a command
 
 **Question 28**: What is "reconciliation" in GitOps?
 
-A) Merging Git branches  
-B) The process of making cluster state match Git state  
-C) Resolving deployment conflicts  
+A) Merging Git branches
+B) The process of making cluster state match Git state
+C) Resolving deployment conflicts
 D) Approving pull requests
 
 <details>
@@ -424,9 +424,9 @@ D) Approving pull requests
 
 **Question 29**: Which is a benefit of GitOps?
 
-A) Faster SSH access  
-B) Audit trail via Git history  
-C) Reduced need for version control  
+A) Faster SSH access
+B) Audit trail via Git history
+C) Reduced need for version control
 D) Elimination of all manual processes
 
 <details>
@@ -438,9 +438,9 @@ D) Elimination of all manual processes
 
 **Question 30**: What is the difference between push-based and pull-based deployment?
 
-A) Push sends notifications, pull requests data  
-B) Push: CI pushes to cluster. Pull: Operator pulls from Git  
-C) They are the same thing  
+A) Push sends notifications, pull requests data
+B) Push: CI pushes to cluster. Pull: Operator pulls from Git
+C) They are the same thing
 D) Push is for production, pull is for staging
 
 <details>
@@ -580,7 +580,7 @@ You will receive:
 ### Review Materials
 - Module 1: Internal Delivery Platforms
 - Module 2: DORA Metrics
-- Module 3: GitOps Principles  
+- Module 3: GitOps Principles
 - Module 4: Your First Deployment
 
 ### Practice Labs
@@ -650,5 +650,5 @@ Remember:
 
 ---
 
-**White Belt Assessment** | Fawkes Dojo | Version 1.0  
+**White Belt Assessment** | Fawkes Dojo | Version 1.0
 *Earn your Fawkes Platform Operator certification* 🥋

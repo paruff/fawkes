@@ -1,16 +1,16 @@
 # Fawkes AWS Cost Estimation
 
-**Document Purpose**: Detailed AWS infrastructure cost analysis for Fawkes platform deployment  
-**Target Audience**: AWS Activate reviewers, financial planning, infrastructure architects  
-**Last Updated**: October 7, 2025  
+**Document Purpose**: Detailed AWS infrastructure cost analysis for Fawkes platform deployment
+**Target Audience**: AWS Activate reviewers, financial planning, infrastructure architects
+**Last Updated**: October 7, 2025
 **AWS Region**: US-East-1 (Virginia) - Primary region for cost estimates
 
 ---
 
 ## Executive Summary
 
-**Total Estimated Monthly Cost**: $1,847/month  
-**Annual Projection**: $22,164/year  
+**Total Estimated Monthly Cost**: $1,847/month
+**Annual Projection**: $22,164/year
 **AWS Activate Credit Request**: $25,000 (covers 13 months of operation)
 
 **Primary AWS Services**:
@@ -210,7 +210,7 @@ Each environment runs a complete stack including:
 
 ### AWS X-Ray (Distributed Tracing)
 
-**Traces Recorded**: 1 million traces × $5.00/million = **$5.00/month**  
+**Traces Recorded**: 1 million traces × $5.00/million = **$5.00/month**
 **Traces Retrieved**: 100K traces × $0.50/million = **$0.05/month**
 
 **X-Ray Subtotal**: $5.05/month
@@ -271,7 +271,7 @@ Each environment runs a complete stack including:
   - Backup Storage: 500GB × $0.095/GB = **$47.50/month**
   - PIOPS (Provisioned IOPS): 3000 IOPS × $0.10 = **$300.00/month** (optional, for high-traffic scenarios)
 
-**RDS Subtotal (without PIOPS)**: $382.40/month  
+**RDS Subtotal (without PIOPS)**: $382.40/month
 **RDS Subtotal (with PIOPS)**: $682.40/month
 
 *Using base configuration (without PIOPS) for conservative estimate*
@@ -321,7 +321,7 @@ Each environment runs a complete stack including:
 
 ### AWS X-Ray (Distributed Tracing)
 
-**Traces Recorded**: 5 million traces × $5.00/million = **$25.00/month**  
+**Traces Recorded**: 5 million traces × $5.00/million = **$25.00/month**
 **Traces Retrieved**: 500K traces × $0.50/million = **$0.25/month**
 
 **X-Ray Subtotal**: $25.25/month
@@ -354,8 +354,8 @@ Each environment runs a complete stack including:
 
 ### AWS WAF (Web Application Firewall)
 
-**Web ACL**: $5.00/month  
-**Rules**: 5 rules × $1.00 = **$5.00/month**  
+**Web ACL**: $5.00/month
+**Rules**: 5 rules × $1.00 = **$5.00/month**
 **Requests**: 10 million × $0.60/million = **$6.00/month**
 
 **WAF Subtotal**: $16.00/month
@@ -503,9 +503,9 @@ CostCenter: engineering
 
 ### Monthly Cost Review Process
 
-**Week 1**: Review previous month's spend vs. budget  
-**Week 2**: Analyze cost trends and usage patterns  
-**Week 3**: Implement optimization recommendations  
+**Week 1**: Review previous month's spend vs. budget
+**Week 2**: Analyze cost trends and usage patterns
+**Week 3**: Implement optimization recommendations
 **Week 4**: Validate optimizations and adjust budgets
 
 ---
@@ -571,8 +571,8 @@ Services we may adopt as platform matures:
 
 ## Conclusion
 
-**Total AWS Investment Required**: $23,910 over 12 months (phased)  
-**AWS Activate Credit Request**: $25,000  
+**Total AWS Investment Required**: $23,910 over 12 months (phased)
+**AWS Activate Credit Request**: $25,000
 **Optimized Cost (with savings)**: $18,985 (21% under budget)
 
 **Why This Investment Makes Sense**:
@@ -594,9 +594,9 @@ Services we may adopt as platform matures:
 
 ## Appendix: AWS Pricing Assumptions
 
-**Pricing effective as of**: October 2025  
-**Region**: US-East-1 (N. Virginia)  
-**Currency**: USD  
+**Pricing effective as of**: October 2025
+**Region**: US-East-1 (N. Virginia)
+**Currency**: USD
 **Pricing Model**: On-Demand (with Reserved Instance projections)
 
 **Sources**:
@@ -610,7 +610,7 @@ Services we may adopt as platform matures:
 
 ---
 
-**Document Owner**: Fawkes Platform Team  
-**Review Cadence**: Monthly during AWS Activate period  
-**Last Review**: October 7, 2025  
+**Document Owner**: Fawkes Platform Team
+**Review Cadence**: Monthly during AWS Activate period
+**Last Review**: October 7, 2025
 **Next Review**: November 7, 2025

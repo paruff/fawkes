@@ -2,11 +2,11 @@
 
 ## 🎯 Module Overview
 
-**Belt Level**: 🟢 Green Belt - GitOps & Deployment  
-**Module**: 1 of 4 (Green Belt)  
-**Duration**: 2 hours  
-**Difficulty**: Intermediate  
-**Prerequisites**: 
+**Belt Level**: 🟢 Green Belt - GitOps & Deployment
+**Module**: 1 of 4 (Green Belt)
+**Duration**: 2 hours
+**Difficulty**: Intermediate
+**Prerequisites**:
 - White Belt completion (Modules 1-4)
 - Yellow Belt Modules 5-8 completion
 - Working Fawkes platform deployment
@@ -132,7 +132,7 @@ Developer → Commits Code → Git Repository
 
 **Key Components Explained**:
 
-1. **API Server**: 
+1. **API Server**:
    - gRPC/REST API for all operations
    - Authentication and authorization
    - Application management
@@ -325,18 +325,18 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  
+
   # Source repository
   source:
     repoURL: https://github.com/YOUR_USERNAME/fawkes-apps.git
     targetRevision: HEAD
     path: guestbook
-  
+
   # Destination cluster and namespace
   destination:
     server: https://kubernetes.default.svc
     namespace: default
-  
+
   # Sync policy
   syncPolicy:
     automated:
@@ -348,7 +348,7 @@ spec:
     - CreateNamespace=true
     - PrunePropagationPolicy=foreground
     - PruneLast=true
-    
+
     retry:
       limit: 5
       backoff:
@@ -423,17 +423,17 @@ metadata:
   namespace: argocd               # Must be in argocd namespace
   finalizers:
   - resources-finalizer.argocd.argoproj.io  # Cleanup on deletion
-  
+
 spec:
   # Project (multi-tenancy)
   project: default
-  
+
   # Source configuration
   source:
     repoURL: https://github.com/org/repo.git
     targetRevision: HEAD          # Branch, tag, or commit SHA
     path: manifests/app           # Path within repository
-    
+
     # For Helm charts
     helm:
       valueFiles:
@@ -442,18 +442,18 @@ spec:
       parameters:
       - name: image.tag
         value: v1.2.3
-    
+
     # For Kustomize
     kustomize:
       namePrefix: prod-
       images:
       - gcr.io/app:v1.2.3
-  
+
   # Destination
   destination:
     server: https://kubernetes.default.svc
     namespace: production
-  
+
   # Sync policy
   syncPolicy:
     automated:
@@ -462,7 +462,7 @@ spec:
     syncOptions:
     - CreateNamespace=true        # Auto-create namespace
     - PruneLast=true              # Delete resources last
-  
+
   # Ignore differences (for fields that change automatically)
   ignoreDifferences:
   - group: apps
@@ -522,7 +522,7 @@ metadata:
   name: my-app
 spec:
   # ... other config ...
-  
+
   # Custom resource health
   info:
   - name: Custom Health
@@ -712,16 +712,16 @@ metadata:
   namespace: argocd
 spec:
   description: Team Alpha's applications
-  
+
   # Source repositories
   sourceRepos:
   - https://github.com/org/team-alpha-*
-  
+
   # Destination clusters and namespaces
   destinations:
   - namespace: team-alpha-*
     server: https://kubernetes.default.svc
-  
+
   # Allowed resource types
   clusterResourceWhitelist:
   - group: ''
@@ -826,12 +826,12 @@ data:
     - metric: argocd_app_sync_total
       type: counter
       help: Total number of app syncs
-      
+
     # Lead time for changes (commit to deploy)
     - metric: argocd_app_sync_duration_seconds
       type: histogram
       help: Time from commit to successful sync
-      
+
     # Change failure rate
     - metric: argocd_app_sync_failed_total
       type: counter
@@ -958,13 +958,13 @@ argocd app rollback my-app <revision-number>
 
 ### What You Learned
 
-✅ **GitOps Principles**: Declarative, versioned, pulled, reconciled  
-✅ **ArgoCD Architecture**: API server, repo server, application controller  
-✅ **Application Deployment**: Created and synced your first ArgoCD application  
-✅ **Sync Policies**: Manual, automated, self-heal, prune  
-✅ **Troubleshooting**: Common issues and resolution strategies  
-✅ **Best Practices**: Repository structure, projects, progressive delivery  
-✅ **DORA Impact**: How GitOps improves all four key metrics  
+✅ **GitOps Principles**: Declarative, versioned, pulled, reconciled
+✅ **ArgoCD Architecture**: API server, repo server, application controller
+✅ **Application Deployment**: Created and synced your first ArgoCD application
+✅ **Sync Policies**: Manual, automated, self-heal, prune
+✅ **Troubleshooting**: Common issues and resolution strategies
+✅ **Best Practices**: Repository structure, projects, progressive delivery
+✅ **DORA Impact**: How GitOps improves all four key metrics
 
 ### DORA Capabilities Achieved
 
@@ -988,7 +988,7 @@ argocd app rollback my-app <revision-number>
 - **Change Failure Rate**: 15% → 3%
 - **MTTR**: 45 minutes → 5 minutes (Git revert)
 
-The biggest win: junior developers can now deploy confidently because Git history provides instant rollback." 
+The biggest win: junior developers can now deploy confidently because Git history provides instant rollback."
 - *Platform Engineering Team, Fortune 500 Company*
 
 ---
@@ -1335,7 +1335,7 @@ kubectl delete applications --all -n argocd
 - **v1.3** (Q3 2026): Advanced security (RBAC, SSO)
 
 ### Feedback Welcome
-Found an issue or have suggestions? 
+Found an issue or have suggestions?
 - Open issue: https://github.com/paruff/fawkes/issues
 - Email: dojo@fawkes-platform.io
 - Slack: #dojo-feedback
@@ -1586,7 +1586,7 @@ jobs:
         with:
           repository: org/manifests
           token: ${{ secrets.MANIFEST_TOKEN }}
-      
+
       - name: Update image tag
         run: |
           sed -i "s|image:.*|image: myapp:${{ github.sha }}|" deployment.yaml
@@ -1608,23 +1608,23 @@ metadata:
 data:
   service.slack: |
     token: $slack-token
-  
+
   template.app-deployed: |
     message: |
       ✅ *{{.app.metadata.name}}* deployed successfully
       📦 Revision: `{{.app.status.sync.revision}}`
       🔗 <{{.context.argocdUrl}}/applications/{{.app.metadata.name}}|View Application>
-  
+
   template.app-health-degraded: |
     message: |
       ⚠️ *{{.app.metadata.name}}* health degraded
       Status: {{.app.status.health.status}}
       🔗 <{{.context.argocdUrl}}/applications/{{.app.metadata.name}}|View Application>
-  
+
   trigger.on-deployed: |
     - when: app.status.operationState.phase in ['Succeeded']
       send: [app-deployed]
-  
+
   trigger.on-health-degraded: |
     - when: app.status.health.status == 'Degraded'
       send: [app-health-degraded]
@@ -1642,6 +1642,6 @@ You've mastered the fundamentals of GitOps with ArgoCD. You're now equipped to d
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*  
-*Version 1.0 | Last Updated: October 2025*  
+*Fawkes Dojo - Where Platform Engineers Are Forged*
+*Version 1.0 | Last Updated: October 2025*
 *License: MIT | https://github.com/paruff/fawkes*

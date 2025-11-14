@@ -2,11 +2,11 @@
 
 ## 🎯 Module Overview
 
-**Belt Level**: 🟢 Green Belt - GitOps & Deployment  
-**Module**: 3 of 4 (Green Belt)  
-**Duration**: 60 minutes  
-**Difficulty**: Advanced  
-**Prerequisites**: 
+**Belt Level**: 🟢 Green Belt - GitOps & Deployment
+**Module**: 3 of 4 (Green Belt)
+**Duration**: 60 minutes
+**Difficulty**: Advanced
+**Prerequisites**:
 - Module 9 & 10 complete
 - Understanding of canary deployments
 - Familiarity with Prometheus metrics
@@ -60,7 +60,7 @@ Code → Build → Test → Deploy to 5% users
                         Analyze metrics
                               ↓
                      Healthy? → Deploy to 100%
-                              
+
                      Unhealthy? → Automatic Rollback ✅
 ```
 
@@ -241,7 +241,7 @@ Replicas:
   Available:     6
 
 NAME                           KIND        STATUS     AGE  INFO
-⟳ myapp                        Rollout     ॥ Paused   5m   
+⟳ myapp                        Rollout     ॥ Paused   5m
 ├──# revision:2
 │  └──⧉ myapp-789746c88d       ReplicaSet  ✔ Healthy  30s  canary
 │     └──□ myapp-789746c88d-x  Pod         ✔ Running  30s  ready:1/1
@@ -489,7 +489,7 @@ spec:
           sum(rate(
             http_requests_total{service="{{args.service-name}}"}[5m]
           ))
-  
+
   - name: conversion-rate
     interval: 2m
     successCondition: result[0] >= 0.02  # At least 2% conversion
@@ -530,8 +530,8 @@ metrics:
     newRelic:
       profile: my-newrelic-account
       query: |
-        SELECT apdex(duration) 
-        FROM Transaction 
+        SELECT apdex(duration)
+        FROM Transaction
         WHERE appName = '{{args.service-name}}'
 ```
 
@@ -884,12 +884,12 @@ spec:
 
 ### What You Learned
 
-✅ **Progressive Delivery**: Automated, metrics-driven rollouts  
-✅ **Argo Rollouts**: Advanced Kubernetes deployment controller  
-✅ **Automated Analysis**: Decision-making based on metrics  
-✅ **Traffic Shaping**: Precise control with Istio/Nginx  
-✅ **Rollback Automation**: Automatic revert on failure  
-✅ **Observability**: Monitoring rollout health  
+✅ **Progressive Delivery**: Automated, metrics-driven rollouts
+✅ **Argo Rollouts**: Advanced Kubernetes deployment controller
+✅ **Automated Analysis**: Decision-making based on metrics
+✅ **Traffic Shaping**: Precise control with Istio/Nginx
+✅ **Rollback Automation**: Automatic revert on failure
+✅ **Observability**: Monitoring rollout health
 
 ### DORA Capabilities Achieved
 
@@ -991,6 +991,6 @@ Module 12: Rollback & Incident    ░░░░░░░░░░░░  0%
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*  
-*Version 1.0 | Last Updated: October 2025*  
+*Fawkes Dojo - Where Platform Engineers Are Forged*
+*Version 1.0 | Last Updated: October 2025*
 *License: MIT | https://github.com/paruff/fawkes*

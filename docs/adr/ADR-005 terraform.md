@@ -104,7 +104,7 @@ Specifically:
    - Single tool to learn
    - Providers for 3,000+ services
 
-3. **Mature and Battle-Tested**: 
+3. **Mature and Battle-Tested**:
    - 10+ years of development
    - Production-proven at enterprise scale
    - Extensive real-world validation
@@ -116,50 +116,50 @@ Specifically:
    - Idempotent operations
    - Less error-prone than imperative scripts
 
-5. **State Management**: 
+5. **State Management**:
    - Tracks actual infrastructure state
    - Enables drift detection
    - Supports team collaboration
    - Remote state backends (S3, Terraform Cloud)
 
-6. **Plan Before Apply**: 
+6. **Plan Before Apply**:
    - Preview changes before executing
    - Reduces fear of infrastructure changes
    - Catch mistakes before they happen
    - Show changes in PR reviews
 
-7. **Massive Provider Ecosystem**: 
+7. **Massive Provider Ecosystem**:
    - AWS: 1,000+ resources
    - Azure: 1,500+ resources
    - GCP: 800+ resources
    - Kubernetes: Full support
    - 3,000+ total providers
 
-8. **Module Registry**: 
+8. **Module Registry**:
    - Public registry with 10,000+ modules
    - Reusable, community-validated code
    - Can publish private modules
    - Accelerates development
 
-9. **Large Community**: 
+9. **Large Community**:
    - Extensive documentation
    - Thousands of tutorials and examples
    - Active forums and Slack channels
    - Commercial support available (HashiCorp)
 
-10. **Testing Support**: 
+10. **Testing Support**:
     - Terratest for integration testing
     - terraform validate for syntax
     - terraform fmt for formatting
     - tflint for best practices
 
-11. **CI/CD Integration**: 
+11. **CI/CD Integration**:
     - Easy to integrate with Jenkins
     - Automated plan on PR
     - Automated apply on merge
     - GitOps workflow support
 
-12. **Crossplane Path**: 
+12. **Crossplane Path**:
     - Can transition to Crossplane later
     - Terraform modules can inform Crossplane compositions
     - Provides foundation for Kubernetes-native IaC
@@ -541,7 +541,7 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
-  
+
   default_tags {
     tags = {
       Environment = "dev"
@@ -553,32 +553,32 @@ provider "aws" {
 
 module "vpc" {
   source = "../../modules/vpc"
-  
+
   vpc_name            = "fawkes-dev-vpc"
   cidr_block          = "10.0.0.0/16"
   availability_zones  = ["us-east-1a", "us-east-1b", "us-east-1c"]
   public_subnets      = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
   private_subnets     = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
-  
+
   enable_nat_gateway = true
   single_nat_gateway = true  # Cost optimization for dev
-  
+
   tags = local.tags
 }
 
 module "eks" {
   source = "../../modules/eks-cluster"
-  
+
   cluster_name        = "fawkes-dev"
   kubernetes_version  = "1.28"
   subnet_ids          = module.vpc.private_subnet_ids
-  
+
   desired_size = 3
   min_size     = 2
   max_size     = 5
-  
+
   instance_types = ["t3.large"]
-  
+
   tags = local.tags
 }
 
@@ -609,30 +609,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.6.0
-          
+
       - name: Terraform Init
         working-directory: environments/dev
         run: terraform init
-        
+
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
-        
+
       - name: Terraform Validate
         working-directory: environments/dev
         run: terraform validate
-        
+
       - name: Terraform Plan
         working-directory: environments/dev
         run: terraform plan -no-color
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        
+
       - name: Comment PR
         uses: actions/github-script@v6
         with:
@@ -661,21 +661,21 @@ import (
 func TestEKSCluster(t *testing.T) {
     terraformOptions := &terraform.Options{
         TerraformDir: "../modules/eks-cluster",
-        
+
         Vars: map[string]interface{}{
             "cluster_name": "test-cluster",
             "kubernetes_version": "1.28",
             "subnet_ids": []string{"subnet-123", "subnet-456"},
         },
     }
-    
+
     defer terraform.Destroy(t, terraformOptions)
-    
+
     terraform.InitAndApply(t, terraformOptions)
-    
+
     clusterName := terraform.Output(t, terraformOptions, "cluster_name")
     assert.Equal(t, "test-cluster", clusterName)
-    
+
     clusterVersion := terraform.Output(t, terraformOptions, "kubernetes_version")
     assert.Equal(t, "1.28", clusterVersion)
 }
@@ -689,7 +689,7 @@ func TestEKSCluster(t *testing.T) {
 terraform {
   cloud {
     organization = "fawkes-platform"
-    
+
     workspaces {
       name = "fawkes-dev"
     }
@@ -707,7 +707,7 @@ terraform {
     region         = "us-east-1"
     encrypt        = true
     dynamodb_table = "terraform-state-lock"
-    
+
     # Enable versioning for state file history
     versioning = true
   }
@@ -828,8 +828,8 @@ This decision may be revisited if BSL becomes more restrictive or OpenTofu prove
 
 ---
 
-**Decision Made By**: Platform Architecture Team  
-**Approved By**: Project Lead  
-**Date**: October 8, 2025  
-**Author**: [Platform Architect Name]  
+**Decision Made By**: Platform Architecture Team
+**Approved By**: Project Lead
+**Date**: October 8, 2025
+**Author**: [Platform Architect Name]
 **Last Updated**: October 8, 2025

@@ -2,11 +2,11 @@
 
 ## 🎯 Module Overview
 
-**Belt Level**: 🟤 Brown Belt - Observability & SRE  
-**Module**: 2 of 4 (Brown Belt)  
-**Duration**: 60 minutes  
-**Difficulty**: Advanced  
-**Prerequisites**: 
+**Belt Level**: 🟤 Brown Belt - Observability & SRE
+**Module**: 2 of 4 (Brown Belt)
+**Duration**: 60 minutes
+**Difficulty**: Advanced
+**Prerequisites**:
 - Module 2: DORA Metrics (White Belt) review recommended
 - Module 13: Observability complete
 - Understanding of Prometheus and Grafana
@@ -139,7 +139,7 @@ Example:
 
 **Components**:
 ```
-Total Lead Time = 
+Total Lead Time =
     Code Review Time +
     CI Build Time +
     Test Execution Time +
@@ -156,10 +156,10 @@ Total Lead Time =
 def record_commit():
     commit_sha = request.json['after']
     commit_time = request.json['head_commit']['timestamp']
-    
+
     # Store in database
     db.store_commit(commit_sha, commit_time)
-    
+
     return '', 200
 
 # Webhook receiver for deployments
@@ -167,14 +167,14 @@ def record_commit():
 def record_deployment():
     commit_sha = request.json['revision']
     deploy_time = datetime.utcnow()
-    
+
     # Calculate lead time
     commit_time = db.get_commit_time(commit_sha)
     lead_time = (deploy_time - commit_time).total_seconds()
-    
+
     # Send to Prometheus
     lead_time_histogram.labels(app=app_name).observe(lead_time)
-    
+
     return '', 200
 ```
 
@@ -218,26 +218,26 @@ def calculate_change_failure_rate(timeframe_hours=24):
     """
     deployments = get_deployments(since=timeframe_hours)
     failures = 0
-    
+
     for deployment in deployments:
         deploy_time = deployment['timestamp']
-        
+
         # Check for incidents within 24h
         incidents = get_incidents(
             since=deploy_time,
             until=deploy_time + timedelta(hours=24)
         )
-        
+
         # Check for rollbacks
         rollback = get_rollback(
             deployment_id=deployment['id'],
             since=deploy_time,
             until=deploy_time + timedelta(hours=24)
         )
-        
+
         if incidents or rollback:
             failures += 1
-    
+
     cfr = (failures / len(deployments)) * 100 if deployments else 0
     return cfr
 ```
@@ -278,20 +278,20 @@ class Incident:
         self.detected_at = datetime.utcnow()
         self.mitigated_at = None
         self.resolved_at = None
-    
+
     def mitigate(self):
         """Service restored, but root cause not fixed"""
         self.mitigated_at = datetime.utcnow()
         ttm = (self.mitigated_at - self.detected_at).total_seconds()
-        
+
         # Time to Mitigate (what we really care about for MTTR)
         mttr_histogram.labels(severity=self.severity).observe(ttm)
-    
+
     def resolve(self):
         """Root cause fixed, incident closed"""
         self.resolved_at = datetime.utcnow()
         ttr = (self.resolved_at - self.detected_at).total_seconds()
-        
+
         # Time to Resolve (total incident duration)
         incident_duration_histogram.labels(severity=self.severity).observe(ttr)
 ```
@@ -574,13 +574,13 @@ data:
     headers:
     - name: Content-Type
       value: application/json
-  
+
   trigger.on-deployed: |
     - when: app.status.operationState.phase in ['Succeeded']
       send: [dora-deploy-succeeded]
     - when: app.status.operationState.phase in ['Failed']
       send: [dora-deploy-failed]
-  
+
   template.dora-deploy-succeeded: |
     webhook:
       dora:
@@ -593,7 +593,7 @@ data:
             "revision": "{{.app.status.sync.revision}}",
             "timestamp": "{{.app.status.operationState.finishedAt}}"
           }
-  
+
   template.dora-deploy-failed: |
     webhook:
       dora:
@@ -683,12 +683,12 @@ sum(rate(argocd_app_sync_total{phase="Succeeded"}[7d] offset 7d)) * 86400
 
 # % change
 (
-  sum(rate(argocd_app_sync_total{phase="Succeeded"}[7d])) 
-  - 
+  sum(rate(argocd_app_sync_total{phase="Succeeded"}[7d]))
+  -
   sum(rate(argocd_app_sync_total{phase="Succeeded"}[7d] offset 7d))
-) 
-/ 
-sum(rate(argocd_app_sync_total{phase="Succeeded"}[7d] offset 7d)) 
+)
+/
+sum(rate(argocd_app_sync_total{phase="Succeeded"}[7d] offset 7d))
 * 100
 ```
 
@@ -858,12 +858,12 @@ Continue iteration...
 
 ### What You Learned
 
-✅ **Advanced Calculation**: All 4 metrics with distributions  
-✅ **Data Collection**: Webhooks, Prometheus, automation  
-✅ **Dashboards**: Comprehensive Grafana visualizations  
-✅ **Analysis**: Trends, correlations, bottlenecks  
-✅ **Improvement**: Data-driven optimization framework  
-✅ **Presentation**: Communicate metrics to leadership  
+✅ **Advanced Calculation**: All 4 metrics with distributions
+✅ **Data Collection**: Webhooks, Prometheus, automation
+✅ **Dashboards**: Comprehensive Grafana visualizations
+✅ **Analysis**: Trends, correlations, bottlenecks
+✅ **Improvement**: Data-driven optimization framework
+✅ **Presentation**: Communicate metrics to leadership
 
 ### DORA Capabilities Achieved
 

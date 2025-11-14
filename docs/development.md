@@ -26,7 +26,7 @@ Ensure you have the following tools installed:
 - **Terraform**: For infrastructure provisioning
 - **kubectl**: For managing Kubernetes clusters
 - **Helm**: For managing Kubernetes applications
-- **Azure CLI** (if working with Azure):  
+- **Azure CLI** (if working with Azure):
   Install using:
   ```sh
   curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash

@@ -1,0 +1,226 @@
+# Pre-commit hooks for Fawkes Internal Product Delivery Platform
+# Covers: GitOps, Terraform, Kubernetes, and IDP elements
+# Install: make pre-commit-setup
+# Run manually: pre-commit run --all-files
+
+repos:
+  # ============================================================================
+  # General Code Quality
+  # ============================================================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+      - id: end-of-file-fixer
+        name: Fix end of files
+      - id: check-yaml
+        name: Check YAML syntax
+        args: ['--allow-multiple-documents']
+        exclude: '^(infra/kubernetes/.*helm.*|.*templates?/.*\.ya?ml)$'
+      - id: check-json
+        name: Check JSON syntax
+      - id: check-added-large-files
+        name: Check for large files
+        args: ['--maxkb=1024']
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+      - id: mixed-line-ending
+        name: Fix mixed line endings
+        args: ['--fix=lf']
+      - id: detect-private-key
+        name: Detect private keys
+
+  # ============================================================================
+  # YAML Linting (GitOps/K8s/IDP)
+  # ============================================================================
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.33.0
+    hooks:
+      - id: yamllint
+        name: Lint YAML files
+        args: ['-c', '.yamllint']
+        types: [yaml]
+
+  # ============================================================================
+  # Markdown Linting (Documentation)
+  # ============================================================================
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.38.0
+    hooks:
+      - id: markdownlint
+        name: Lint Markdown files
+        args: ['--config', '.markdownlint.json', '--fix']
+
+  # ============================================================================
+  # Terraform Formatting & Validation
+  # ============================================================================
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.86.0
+    hooks:
+      - id: terraform_fmt
+        name: Terraform format
+        args:
+          - --args=-recursive
+      - id: terraform_validate
+        name: Terraform validate
+        args:
+          - --hook-config=--retry-once-with-cleanup=true
+      - id: terraform_tflint
+        name: Terraform lint (TFLint)
+        args:
+          - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
+          - --args=--only=terraform_deprecated_interpolation
+          - --args=--only=terraform_deprecated_index
+          - --args=--only=terraform_unused_declarations
+          - --args=--only=terraform_comment_syntax
+          - --args=--only=terraform_documented_outputs
+          - --args=--only=terraform_documented_variables
+          - --args=--only=terraform_typed_variables
+          - --args=--only=terraform_naming_convention
+          - --args=--only=terraform_required_version
+          - --args=--only=terraform_required_providers
+          - --args=--only=terraform_unused_required_providers
+          - --args=--only=terraform_standard_module_structure
+      - id: terraform_docs
+        name: Terraform docs
+        args:
+          - --args=--config=.terraform-docs.yml
+      - id: terraform_tfsec
+        name: Terraform security scan (tfsec)
+        args:
+          - --args=--soft-fail
+
+  # ============================================================================
+  # Kubernetes Manifest Validation
+  # ============================================================================
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.5.4
+    hooks:
+      - id: insert-license
+        name: Insert license header
+        files: '\.(yaml|yml|tf)$'
+        args:
+          - --license-filepath
+          - LICENSE
+          - --comment-style
+          - '#'
+        exclude: '^(\.github/|\.pre-commit-config\.yaml|\.yamllint)'
+
+  # ============================================================================
+  # Security Scanning
+  # ============================================================================
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.1
+    hooks:
+      - id: gitleaks
+        name: Detect secrets with Gitleaks
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        name: Detect secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package-lock.json
+
+  # ============================================================================
+  # Python Code Quality (for scripts and tests)
+  # ============================================================================
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        name: Format Python code with Black
+        language_version: python3
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        name: Lint Python with Flake8
+        args: ['--max-line-length=120', '--extend-ignore=E203,W503']
+
+  # ============================================================================
+  # Shell Script Validation
+  # ============================================================================
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.6
+    hooks:
+      - id: shellcheck
+        name: Lint shell scripts
+        args: ['--severity=warning']
+
+  # ============================================================================
+  # Custom Local Hooks for Fawkes-Specific Validation
+  # ============================================================================
+  - repo: local
+    hooks:
+      # Kubernetes manifest validation with kubeval
+      - id: kubeval
+        name: Validate Kubernetes manifests (kubeval)
+        entry: bash -c 'if command -v kubeval &> /dev/null; then find infra/kubernetes -name "*.yaml" -o -name "*.yml" | grep -v values.yaml | xargs -I {} kubeval --ignore-missing-schemas {}; else echo "⚠️  kubeval not installed, skipping K8s validation"; fi'
+        language: system
+        pass_filenames: false
+        files: '^infra/kubernetes/.*\.(yaml|yml)$'
+
+      # Kustomize build validation
+      - id: kustomize-validate
+        name: Validate Kustomize builds
+        entry: bash -c 'if command -v kustomize &> /dev/null; then for dir in $(find infra/kubernetes -name "kustomization.yaml" -exec dirname {} \;); do echo "Validating $dir" && kustomize build "$dir" > /dev/null; done; else echo "⚠️  kustomize not installed, skipping validation"; fi'
+        language: system
+        pass_filenames: false
+        files: '^infra/kubernetes/.*kustomization\.yaml$'
+
+      # Backstage catalog validation (IDP)
+      - id: backstage-catalog-validate
+        name: Validate Backstage catalog files
+        entry: bash -c 'if command -v yq &> /dev/null; then find . -name "catalog-info.yaml" -o -name "*.catalog-info.yaml" | xargs -I {} bash -c "yq eval . {} > /dev/null && echo \"✓ {}\""; else echo "⚠️  yq not installed, skipping Backstage catalog validation"; fi'
+        language: system
+        pass_filenames: false
+        files: '(catalog-info|\.catalog-info)\.yaml$'
+
+      # ArgoCD Application validation (GitOps)
+      - id: argocd-validate
+        name: Validate ArgoCD applications
+        entry: bash -c 'if command -v argocd &> /dev/null; then find . -name "*-application.yaml" -o -name "application.yaml" | xargs -I {} bash -c "argocd app validate {} 2>/dev/null || echo \"⚠️  ArgoCD validation skipped for {}\""; else echo "⚠️  argocd CLI not installed, skipping ArgoCD validation"; fi'
+        language: system
+        pass_filenames: false
+        files: '.*application\.yaml$'
+
+      # Helm chart linting (IDP components)
+      - id: helm-lint
+        name: Lint Helm charts
+        entry: bash -c 'if command -v helm &> /dev/null; then for chart in infra/kubernetes/*/Chart.yaml; do dir=$(dirname "$chart"); echo "Linting $dir" && helm lint "$dir"; done; else echo "⚠️  helm not installed, skipping chart linting"; fi'
+        language: system
+        pass_filenames: false
+        files: '^infra/kubernetes/.*/Chart\.yaml$'
+
+      # Check for hardcoded secrets in manifests
+      - id: check-k8s-secrets
+        name: Check for hardcoded secrets in K8s manifests
+        entry: bash -c 'grep -r "kind. Secret" infra/kubernetes/ --include="*.yaml" --include="*.yml" 2>/dev/null | grep -v "stringData. {}" | grep -v "# Example" | grep -v "# Template" && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+        files: '^infra/kubernetes/.*\.(yaml|yml)$'
+
+      # Validate MkDocs configuration (IDP documentation)
+      - id: mkdocs-validate
+        name: Validate MkDocs configuration
+        entry: bash -c 'if command -v mkdocs &> /dev/null && [ -f mkdocs.yml ]; then mkdocs build --strict --verbose --site-dir /tmp/mkdocs-build-test && rm -rf /tmp/mkdocs-build-test; else echo "⚠️  mkdocs not installed or mkdocs.yml not found"; fi'
+        language: system
+        pass_filenames: false
+        files: '^(mkdocs\.yml|docs/.*\.md)$'
+
+# Configuration for pre-commit CI (optional)
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: monthly
+  skip: [terraform_tflint, terraform_tfsec, kubeval, kustomize-validate, helm-lint, mkdocs-validate]
+  submodules: false
