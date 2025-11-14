@@ -11,25 +11,18 @@ on:
     - cron: '0 */6 * * *'  # Every 6 hours
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: idp-e2e-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   e2e-tests:
     runs-on: ubuntu-latest
-<<<<<<< HEAD
-    
-=======
-
-    services:
-      jenkins:
-        image: jenkins/jenkins:lts
-        ports:
-          - 8080:8080
-        options: >-
-          --health-cmd "curl -f http://localhost:8080/login || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
->>>>>>> eff5fa95a540cc74d253217d7c88bff137d68382
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -37,68 +30,46 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'requirements-dev.txt'
 
       - name: Install dependencies
         run: |
-<<<<<<< HEAD
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
-      
-=======
-          pip install -r tests/e2e/requirements.txt
-
->>>>>>> eff5fa95a540cc74d253217d7c88bff137d68382
       - name: Set up test cluster
         uses: helm/kind-action@v1
         with:
           cluster_name: fawkes-test
-<<<<<<< HEAD
           wait: 120s
 
       - name: Sanity check cluster
         run: |
           kubectl cluster-info
           kubectl get nodes -o wide
-      
+
       - name: Prepare reports directory
         run: |
           mkdir -p reports
-      
+
       - name: Run smoke tests (BDD subset)
         run: |
           # Run only our minimal smoke test to avoid collecting incomplete BDD scenarios
           pytest tests/bdd/test_smoke.py -m smoke --junit-xml=reports/smoke-tests.xml
-      
+
       - name: Run full E2E suite (placeholder)
         if: github.event_name != 'pull_request'
         run: |
           # TODO: implement full E2E when platform deployment is wired for CI
           echo "Skipping full E2E until manifests and steps are ready."
           pytest -q tests/bdd -k "not nothing" --maxfail=1 || true
-      
-=======
-
-      - name: Deploy Fawkes platform
-        run: |
-          kubectl apply -f infra/platform/k8s/
-          kubectl wait --for=condition=ready pod -l app=fawkes-api --timeout=300s
-
-      - name: Run smoke tests
-        run: |
-          pytest tests/e2e/ -m smoke --junit-xml=reports/smoke-tests.xml
-
-      - name: Run full E2E suite
-        if: github.event_name != 'pull_request'
-        run: |
-          pytest tests/e2e/ --junit-xml=reports/e2e-tests.xml
-
->>>>>>> eff5fa95a540cc74d253217d7c88bff137d68382
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports
+          name: test-reports-${{ github.run_id }}
           path: reports/
+          retention-days: 7
 
       - name: Publish test results
         if: always()
@@ -116,5 +87,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '✅ Smoke tests executed. JUnit XML uploaded as artifact: test-reports.'
+              body: `✅ Smoke tests executed. JUnit XML uploaded as artifact: test-reports-${context.runId}.`
             });
