@@ -102,3 +102,104 @@ ENV/
 .vscode/
 *.swp
 *.swo
+## Remove overly specific Terraform provider binary path (general patterns below handle this)
+# infra/terraform/argocd/.terraform/providers/... (handled by **/.terraform/ rule)
+
+##############################################
+# Fawkes Additions (Platform Tooling)       #
+##############################################
+
+# macOS / OS cruft
+.DS_Store
+Thumbs.db
+
+# Python tooling caches & virtual envs
+.venv/
+.tox/
+.pytest_cache/
+.mypy_cache/
+.hypothesis/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Terraform (keep .terraform.lock.hcl tracked)
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+terraform.tfstate.backup
+terraform.log
+
+# Local variable and backend files (keep example templates)
+*.tfvars
+*.tfvars.json
+*auto.tfvars
+*auto.tfvars.json
+backend.tfvars
+!*.tfvars.example
+!backend.tfvars.example
+
+# Sentinel / policy test outputs (if added later)
+sentinel.hcl
+policy_tests/*.json
+policy_tests/output/
+
+# Helm packaged charts & locks (retain if intentionally released)
+*.tgz
+Chart.lock
+
+# Kubernetes temp / generated kubeconfigs
+fawkes-kubeconfig-*
+kubeconfig_*
+*.kubeconfig
+*.yaml.orig
+
+# Node / Backstage (portal) build artifacts & caches
+node_modules/
+*.log
+npm-debug.log*
+yarn-error.log*
+.yarn/
+.pnp.*
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.cache/
+dist/
+build/
+coverage/
+next-env.d.ts
+.next/
+out/
+
+# Jenkins local data (never commit instance state)
+jenkins_home/
+
+# Docker & container build scratch
+*.tar
+*.dockerignore.orig
+
+# Nix build outputs (flake dev usage)
+result
+*.drv
+.direnv/
+
+# Reports (retain directory, ignore volatile outputs; keep examples via *.example)
+reports/*.xml
+reports/*.html
+!reports/*.example.*
+
+# Misc editor / swap files
+*.swp
+*.swo
+*~
+
