@@ -1,17 +1,29 @@
 terraform {
-  required_version = ">= 1.3.0"
+  required_version = ">= 1.6.0" # Repo guideline: Terraform 1.6+ syntax
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.40"
+      version = "~> 5.0" # Allow upgrades within major 5
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 2.26"
+      version = "~> 2.26" # Matches current cluster compatibility
     }
     random = {
       source  = "hashicorp/random"
       version = "~> 3.6"
+    }
+    time = {
+      source  = "hashicorp/time"
+      version = ">= 0.9.0"
+    }
+    tls = {
+      source  = "hashicorp/tls"
+      version = ">= 4.0.0"
+    }
+    cloudinit = {
+      source  = "hashicorp/cloudinit"
+      version = ">= 2.0.0"
     }
   }
 }
@@ -139,7 +151,7 @@ module "vpc" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "19.21.0"
+  version = "~> 19.0" # Stable major; access entries not yet adopted here
 
   cluster_version = var.eks_version
   subnet_ids      = module.vpc.private_subnets
@@ -150,12 +162,16 @@ module "eks" {
       name                          = "worker-group-1"
       instance_types                = [var.worker_group_1_instance_type]
       desired_size                  = var.worker_group_1_capacity
+      min_size                      = var.worker_group_1_min_size
+      max_size                      = var.worker_group_1_max_size
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
     }
     worker_group_2 = {
       name                          = "worker-group-2"
       instance_types                = [var.worker_group_2_instance_type]
       desired_size                  = var.worker_group_2_capacity
+      min_size                      = var.worker_group_2_min_size
+      max_size                      = var.worker_group_2_max_size
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_two.id]
     }
   }
@@ -170,9 +186,10 @@ module "eks" {
     }
   }
 
-  cluster_enabled_log_types      = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
-  create_cloudwatch_log_group    = true
+  cluster_enabled_log_types               = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+  create_cloudwatch_log_group             = true
   cloudwatch_log_group_retention_in_days  = 7
+
 
   cluster_encryption_config = var.kms_key_arn == null ? [] : [{
     resources        = ["secrets"]
@@ -201,4 +218,18 @@ output "cluster_endpoint" {
 
 output "vpc_id" {
   value = module.vpc.vpc_id
+}
+
+# aws-auth configmap management (maps legacy vars to authentication config)
+resource "kubernetes_config_map" "aws_auth" {
+  metadata {
+    name      = "aws-auth"
+    namespace = "kube-system"
+  }
+  data = {
+    mapRoles    = yamlencode([for r in var.map_roles : { rolearn = r.rolearn, username = r.username, groups = r.groups }])
+    mapUsers    = yamlencode([for u in var.map_users : { userarn = u.userarn, username = u.username, groups = u.groups }])
+    mapAccounts = yamlencode(var.map_accounts)
+  }
+  depends_on = [module.eks]
 }
