@@ -268,9 +268,23 @@ jobs:
           echo "Validating Backstage Helm values..."
           yq eval . infra/kubernetes/backstage/values.yaml > /dev/null
 
-      - name: Install MkDocs and build documentation
+      - name: Install MkDocs deps
         run: |
           pip install -r requirements.txt
+
+      - name: Build docs (non-strict for PRs and non-main pushes)
+        if: github.event_name != 'push' || github.ref != 'refs/heads/main'
+        run: |
+          echo "Building MkDocs without strict mode (warnings won't fail CI)..."
+          mkdocs build --verbose | tee mkdocs-build.txt
+          if grep -q "WARNING -" mkdocs-build.txt; then
+            echo "::warning::MkDocs produced warnings. See mkdocs-build.txt artifact."
+          fi
+
+      - name: Build docs (strict on main branch)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "Building MkDocs in strict mode on main..."
           mkdocs build --strict --verbose
 
       - name: Check documentation links

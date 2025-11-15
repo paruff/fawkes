@@ -1,0 +1,27 @@
+###############################################
+# Fawkes AKS Example Variables (Nov 2025)
+# Copy to terraform.tfvars and adjust as needed.
+###############################################
+
+location            = "East US"
+resource_group_name = "aks-resource-group"
+cluster_name        = "fawkes-aks"
+dns_prefix          = "fawkes-aks"
+
+# Node pool configuration (autoscaling enabled)
+vm_size   = "Standard_D2s_v5"
+min_count = 2
+max_count = 5
+
+# Set to null to let Azure choose default supported version
+kubernetes_version = null
+
+# Identity & OIDC
+oidc_issuer_enabled       = true
+workload_identity_enabled = true
+
+tags = {
+  Project     = "fawkes"
+  Environment = "dev"
+  Owner       = "platform-team"
+}
