@@ -156,10 +156,10 @@ repos:
   # ============================================================================
   - repo: local
     hooks:
-      # Kubernetes manifest validation with kubeval
+      # Kubernetes manifest validation with kubeconform (preferred) or kubeval (fallback)
       - id: kubeval
-        name: Validate Kubernetes manifests (kubeval)
-        entry: bash -c 'if command -v kubeval &> /dev/null; then find infra/kubernetes -name "*.yaml" -o -name "*.yml" | grep -v values.yaml | xargs -I {} kubeval --ignore-missing-schemas {}; else echo "⚠️  kubeval not installed, skipping K8s validation"; fi'
+        name: Validate Kubernetes manifests (kubeconform/kubeval)
+        entry: bash -c 'if command -v kubeconform &> /dev/null; then find infra/kubernetes -name "*.yaml" -o -name "*.yml" | grep -v values.yaml | xargs -I {} kubeconform -strict -ignore-missing-schemas {}; elif command -v kubeval &> /dev/null; then find infra/kubernetes -name "*.yaml" -o -name "*.yml" | grep -v values.yaml | xargs -I {} kubeval --ignore-missing-schemas {}; else echo "⚠️  kubeconform/kubeval not installed, skipping K8s validation"; fi'
         language: system
         pass_filenames: false
         files: '^infra/kubernetes/.*\.(yaml|yml)$'

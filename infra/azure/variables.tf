@@ -64,9 +64,4 @@ variable "tags" {
   default     = {}
 }
 
-# Deprecated/unused (left for compatibility); autoscaling is enabled
-variable "node_count" {
-  description = "Deprecated: fixed node count (use min/max with autoscaling)"
-  type        = number
-  default     = 2
-}
+// Removed deprecated `node_count` variable; autoscaling uses `min_count`/`max_count`.
