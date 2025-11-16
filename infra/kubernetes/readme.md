@@ -31,6 +31,47 @@ This directory contains the **Infrastructure as Code (IaC)** and automation scri
 - **Observability & Compliance:**
   Integrated monitoring and policy-as-code for visibility and governance.
 
+## Secret Management (GitOps-Friendly)
+
+Fawkes uses **External Secrets Operator** to pull secrets from cloud vaults (AWS Secrets Manager, Azure Key Vault) instead of committing Kubernetes `Secret` objects with inline data:
+
+### Pattern
+
+1. Define a `ClusterSecretStore` per cloud provider (e.g. `aws-secrets-manager`, `azure-keyvault`).
+2. Reference the store from `ExternalSecret` objects (e.g. `externalsecret-jenkins-admin.yaml`).
+3. Helm-managed operator reconciles remote keys into Kubernetes `Secret`s.
+4. Service workloads mount only the synthesized in-cluster secret.
+
+### Benefits
+
+- Zero plaintext secrets in Git (audit-safe).
+- Rotation handled at source; operator refreshes on interval.
+- Multi-cloud abstraction with consistent Kubernetes API.
+- Enables IRSA (AWS) / Workload Identity (Azure) for vault access without static credentials.
+
+### Example (Jenkins Admin Password)
+
+`infra/kubernetes/external-secrets/externalsecret-jenkins-admin.yaml` pulls `jenkins/admin/password` from the selected store and creates `Secret jenkins-admin` consumed by the Jenkins chart.
+
+### Migration Guide
+
+| Legacy | New | Action |
+|--------|-----|--------|
+| Inline base64 `Secret` | `ExternalSecret` + remote key | Replace file, commit |
+| SealedSecret | ExternalSecret | Optional: decrypt and move key to vault |
+
+### AWS Setup Notes
+
+- Annotate operator service account with IAM role granting `secretsmanager:GetSecretValue`.
+- Use OIDC provider output from Terraform (`cluster_oidc_issuer_url`) when configuring IRSA.
+
+### Azure Setup Notes
+
+- Enable AKS workload identity outputs (`oidc_issuer_url`).
+- Grant Key Vault `get` permissions to the operator's managed identity.
+
+See directory: `infra/kubernetes/external-secrets/` for manifests and ArgoCD Application.
+
 ## Getting Started
 
 1. **Choose your cloud provider directory** (e.g., `aws/`) and follow the instructions in its README to provision infrastructure.
