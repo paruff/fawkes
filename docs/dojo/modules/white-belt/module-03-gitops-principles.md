@@ -499,15 +499,15 @@ overlays/
 
 #### 5. Never Commit Secrets to Git
 
-**Wrong**:
+**Wrong (example with placeholder)**:
 ```yaml
-# ❌ NEVER do this
+# ❌ NEVER commit real secrets
 apiVersion: v1
 kind: Secret
 metadata:
   name: database-password
 data:
-  password: cGFzc3dvcmQxMjM=  # base64 encoded, but still visible!
+  password: PLACEHOLDER_BASE64_VALUE  # base64 is NOT encryption
 ```
 
 **Right**: Use Sealed Secrets or External Secrets Operator
@@ -519,7 +519,7 @@ metadata:
   name: database-password
 spec:
   encryptedData:
-    password: AgBh7+5k8... # Encrypted, only decryptable in-cluster
+    password: AgAAAA...REDACTED_EXAMPLE  # Encrypted; only decryptable by controller
 ```
 
 **Why**: Git history is forever. Committed secrets are compromised secrets.
