@@ -7,7 +7,7 @@ BREWFILE_PATH="${REPO_ROOT}/Brewfile"
 
 NON_INTERACTIVE=0
 ACCEPT_DRIVER_PERMS=0
-NO_LOCK=0
+DEPRECATED_NO_LOCK=0
 
 usage() {
   cat <<EOF
@@ -18,7 +18,7 @@ Options:
       --accept-driver-permissions   Automatically set hyperkit driver permissions (sudo)
   -f, --file <path>                 Path to Brewfile (default: 
                                     ${BREWFILE_PATH})
-      --no-lock                     Pass --no-lock to brew bundle
+      --no-lock                     Deprecated: ignored (brew bundle removed this flag)
   -h, --help                        Show this help
 EOF
 }
@@ -34,7 +34,7 @@ while [[ $# -gt 0 ]]; do
     -f|--file)
       BREWFILE_PATH="${2:-}"; shift 2 ;;
     --no-lock)
-      NO_LOCK=1; shift ;;
+      DEPRECATED_NO_LOCK=1; shift ;;
     -h|--help)
       usage; exit 0 ;;
     *)
@@ -85,7 +85,10 @@ fi
 
 echo "Running Homebrew bundle..."
 bundle_args=(--file="${BREWFILE_PATH}")
-if [[ ${NO_LOCK} -eq 1 ]]; then bundle_args+=(--no-lock); fi
+# Note: --no-lock was removed from brew bundle. If provided, we ignore it.
+if [[ ${DEPRECATED_NO_LOCK} -eq 1 ]]; then
+  echo "Note: --no-lock is deprecated and ignored (no longer supported by brew bundle)."
+fi
 brew bundle "${bundle_args[@]}"
 
 echo "Post-install: hyperkit driver check (only relevant on Intel macs with hyperkit installed)"
