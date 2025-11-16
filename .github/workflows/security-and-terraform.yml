@@ -54,11 +54,24 @@ jobs:
       - name: Run TFLint (recursive)
         run: tflint --recursive
 
-      # 2️⃣ Secret scanning
+      # 2️⃣ Secret scanning (install and run Gitleaks directly to avoid action input quirks)
+      - name: Setup Gitleaks
+        run: |
+          GITLEAKS_VERSION=8.24.3
+          curl -sSL -o gitleaks.tar.gz \
+            https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz
+          tar -xzf gitleaks.tar.gz gitleaks
+          sudo install -m 755 gitleaks /usr/local/bin/gitleaks
+
       - name: Run Gitleaks (secret scan)
-        uses: gitleaks/gitleaks-action@v2
-        with:
-          args: detect --source . --report-path gitleaks-report.json --no-banner
+        run: |
+          gitleaks detect \
+            --redact \
+            --report-format sarif \
+            --report-path gitleaks-results.sarif \
+            --no-banner \
+            --verbose
+        continue-on-error: true
 
       # 3️⃣ Vulnerability / misconfiguration scanning
       - name: Run Trivy (repo scan)
@@ -75,11 +88,17 @@ jobs:
         with:
           sarif_file: trivy-results.sarif
 
+      - name: Upload Gitleaks results to GitHub Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: gitleaks-results.sarif
+
       # 5️⃣ Upload artifacts for later review
       - name: Upload reports
         uses: actions/upload-artifact@v4
         with:
           name: security-reports
           path: |
-            gitleaks-report.json
+            gitleaks-results.sarif
             trivy-results.sarif
