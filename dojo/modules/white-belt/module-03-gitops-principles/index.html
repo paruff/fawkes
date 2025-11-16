@@ -2641,14 +2641,14 @@ overlays/
 </code></pre></div>
 <p><strong>Why</strong>: DRY principle - define once, override only what differs.</p>
 <h4 id="5-never-commit-secrets-to-git">5. Never Commit Secrets to Git</h4>
-<p><strong>Wrong</strong>:
-<div class="highlight"><pre><span></span><code><span class="c1"># ❌ NEVER do this</span>
+<p><strong>Wrong (example with placeholder)</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ NEVER commit real secrets</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database-password</span>
 <span class="nt">data</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cGFzc3dvcmQxMjM=</span><span class="w">  </span><span class="c1"># base64 encoded, but still visible!</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLACEHOLDER_BASE64_VALUE</span><span class="w">  </span><span class="c1"># base64 is NOT encryption</span>
 </code></pre></div></p>
 <p><strong>Right</strong>: Use Sealed Secrets or External Secrets Operator
 <div class="highlight"><pre><span></span><code><span class="c1"># ✅ Encrypted secret safe for Git</span>
@@ -2658,7 +2658,7 @@ overlays/
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database-password</span>
 <span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">encryptedData</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AgBh7+5k8...</span><span class="w"> </span><span class="c1"># Encrypted, only decryptable in-cluster</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AgAAAA...REDACTED_EXAMPLE</span><span class="w">  </span><span class="c1"># Encrypted; only decryptable by controller</span>
 </code></pre></div></p>
 <p><strong>Why</strong>: Git history is forever. Committed secrets are compromised secrets.</p>
 <hr />
