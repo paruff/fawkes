@@ -18,7 +18,6 @@ plugin "azurerm" {
 # Kubernetes Plugin
 plugin "kubernetes" {
   enabled = true
-  version = "latest"
   source  = "github.com/terraform-linters/tflint-ruleset-kubernetes"
 }
 
