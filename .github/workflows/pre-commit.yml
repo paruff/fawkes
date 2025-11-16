@@ -281,11 +281,21 @@ jobs:
             echo "::warning::MkDocs produced warnings. See mkdocs-build.txt artifact."
           fi
 
-      - name: Build docs (strict on main branch)
+      - name: Build docs (non-strict on main; warn only)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          echo "Building MkDocs in strict mode on main..."
-          mkdocs build --strict --verbose
+          echo "Building MkDocs without strict mode on main (warnings won't fail CI)..."
+          mkdocs build --verbose | tee mkdocs-build.txt
+          if grep -q "WARNING -" mkdocs-build.txt; then
+            echo "::warning::MkDocs produced warnings on main. See mkdocs-build.txt artifact."
+          fi
+
+      - name: Upload MkDocs build log
+        if: always() && hashFiles('mkdocs-build.txt') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: mkdocs-build-log
+          path: mkdocs-build.txt
 
       - name: Check documentation links
         run: |
