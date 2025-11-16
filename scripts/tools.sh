@@ -44,7 +44,7 @@ case "$CMD" in
       nix shell "${NIX_FLAKE_PATH}#default" -c bash -lc '
         set -euo pipefail
         MISSING=0
-        for tool in kubectl helm terraform jq yq git docker; do
+        for tool in kubectl helm terraform tflint terraform-docs tfsec kubeval kustomize gitleaks trivy argocd jq yq git docker pre-commit; do
           if ! command -v "$tool" >/dev/null 2>&1; then
             echo "MISSING: $tool"
             MISSING=1
@@ -62,7 +62,7 @@ case "$CMD" in
         echo "No Nix flake at ${NIX_FLAKE_PATH}; checking host for required tools..."
       fi
       MISSING=0
-      for tool in kubectl helm terraform jq yq git docker; do
+      for tool in kubectl helm terraform tflint terraform-docs tfsec kubeval kustomize gitleaks trivy argocd jq yq git docker pre-commit; do
         if ! command -v "$tool" >/dev/null 2>&1; then
           echo "MISSING: $tool"
           MISSING=1
