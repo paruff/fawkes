@@ -15,12 +15,8 @@ plugin "azurerm" {
   source  = "github.com/terraform-linters/tflint-ruleset-azurerm"
 }
 
-# Kubernetes Plugin
-plugin "kubernetes" {
-  enabled = true
-  version = "0.6.0"
-  source  = "github.com/terraform-linters/tflint-ruleset-kubernetes"
-}
+# Kubernetes Plugin (temporarily removed due to upstream tag resolution errors)
+# Re-enable after confirming a valid release tag exists.
 
 # Terraform Rules
 rule "terraform_deprecated_interpolation" {
