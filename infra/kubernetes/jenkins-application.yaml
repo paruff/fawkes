@@ -6,7 +6,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: jenkins
-  namespace: argocd
+  namespace: fawkes
 spec:
   project: default
 
@@ -25,19 +25,15 @@ spec:
             tag: jdk21
             tagLabel: jdk21
             pullPolicy: Always
-          serviceType: ClusterIP
+          # Expose for local developer access
+          serviceType: LoadBalancer
           executors: 0
-          # Use admin credentials from Kubernetes Secret (new nested keys)
+          # Local default admin credentials
           admin:
             username: admin
-            password: changeme
-          extraEnv:
-            - name: ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: jenkins-admin
-                  key: ADMIN_PASSWORD
-          JENKINS_OPTS: "--argumentsRealm.passwd.admin=changeme -Djenkins.install.runSetupWizard=false"
+            password: fawkesidp
+          # Disable setup wizard and set password consistently
+          JENKINS_OPTS: "--argumentsRealm.passwd.admin=fawkesidp -Djenkins.install.runSetupWizard=false"
           JCasC:
             enabled: true
             defaultConfig: false

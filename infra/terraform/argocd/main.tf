@@ -6,14 +6,15 @@ terraform {
     }
     helm = {
       source  = "hashicorp/helm"
-      version = ">= 2.7.0"
+      version = ">= 2.7.0, < 3.0.0"
     }
   }
   required_version = ">= 1.3.0"
 }
 
 provider "kubernetes" {
-  # Uses KUBECONFIG env or in-cluster config if available
+  # Explicitly point to kubeconfig provided by ignite.sh
+  config_path = var.kubeconfig_path
 }
 
 /*
@@ -25,7 +26,11 @@ If you need to customize Kubernetes connection for Helm, set `kubeconfig`
 or configure a separate provider alias.
 */
 
-provider "helm" {}
+provider "helm" {
+  kubernetes {
+    config_path = var.kubeconfig_path
+  }
+}
 
 resource "helm_release" "argocd" {
   name       = var.release_name
@@ -34,6 +39,8 @@ resource "helm_release" "argocd" {
   version    = var.chart_version != "" ? var.chart_version : null
   namespace  = var.namespace
   create_namespace = true
+  # Avoid CRD ownership conflicts if CRDs already exist from previous installs
+  skip_crds = true
 
   # Use a small values file included in this module. Users can override by
   # providing their own values via the values override file path variable.
