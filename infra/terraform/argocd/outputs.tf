@@ -11,6 +11,7 @@ output "argocd_admin_password_b64" {
 
 output "argocd_admin_password" {
   description = "Decoded ArgoCD initial admin password (sensitive)"
-  value       = base64decode(data.kubernetes_secret.argocd_initial_admin_secret.data["password"])
+  # Guard decode in case provider returns non-UTF8 or unexpected format
+  value       = try(base64decode(data.kubernetes_secret.argocd_initial_admin_secret.data["password"]), "")
   sensitive   = true
 }

@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: grafana
-  namespace: argocd
+  namespace: fawkes
 spec:
   project: default
   source:
@@ -10,8 +10,11 @@ spec:
     chart: grafana
     targetRevision: latest
     helm:
-      valueFiles:
-        - values.yaml
+      values: |
+        service:
+          type: LoadBalancer
+        adminUser: admin
+        adminPassword: fawkesidp
   destination:
     server: https://kubernetes.default.svc
     namespace: grafana

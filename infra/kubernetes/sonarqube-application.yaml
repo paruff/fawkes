@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: sonarqube
-  namespace: argocd
+  namespace: fawkes
 spec:
   project: default
 
@@ -18,7 +18,8 @@ spec:
             repository: sonarsource/sonarqube
             tag: "9.9.0-community"
           service:
-            type: ClusterIP
+            # Expose for local developer access
+            type: LoadBalancer
           persistence:
             enabled: true
             size: 10Gi

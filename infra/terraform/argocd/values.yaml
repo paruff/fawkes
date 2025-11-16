@@ -1,6 +1,9 @@
+installCRDs: false
+
 server:
   service:
-    type: ClusterIP
+    # For local developer access on Docker Desktop/minikube, expose via LoadBalancer
+    type: LoadBalancer
 
 # Optional: enable admin initial password secret (default behavior creates argocd-initial-admin-secret)
 configs:

@@ -25,5 +25,10 @@ variable "chart_version" {
 variable "namespace" {
   description = "Kubernetes namespace to install ArgoCD into"
   type        = string
-  default     = "argocd"
+  default     = "fawkes"
+}
+
+variable "kubeconfig_path" {
+  description = "Path to the kubeconfig file used by Kubernetes and Helm providers"
+  type        = string
 }
