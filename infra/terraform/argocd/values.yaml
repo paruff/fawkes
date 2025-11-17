@@ -1,9 +1,21 @@
-installCRDs: false
+installCRDs: true
 
 server:
+  # Enable HTTP UI (no TLS) for local development convenience
+  insecure: true
+  extraArgs:
+    - --insecure
   service:
-    # For local developer access on Docker Desktop/minikube, expose via LoadBalancer
-    type: LoadBalancer
+    # Avoid localhost port conflicts; expose via Ingress instead
+    type: ClusterIP
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - argocd.127.0.0.1.nip.io
+    paths:
+      - /
+    https: false
 
 # Optional: enable admin initial password secret (default behavior creates argocd-initial-admin-secret)
 configs:
