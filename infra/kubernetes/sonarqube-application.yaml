@@ -18,18 +18,23 @@ spec:
             repository: sonarsource/sonarqube
             tag: "9.9.0-community"
           service:
-            # Expose for local developer access
-            type: LoadBalancer
+            # Use Ingress locally to avoid port conflicts
+            type: ClusterIP
           persistence:
             enabled: true
             size: 10Gi
             storageClass: standard
           ingress:
-            enabled: false
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - name: sonarqube.127.0.0.1.nip.io
+                path: /
+                pathType: Prefix
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: sonarqube
+    namespace: fawkes
 
   syncPolicy:
     automated:

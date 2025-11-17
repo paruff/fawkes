@@ -3,6 +3,11 @@
 # Lightweight rename of bootstrap.sh -> ignite.sh (keeps behavior but with a new name)
 set -euo pipefail
 
+# Ensure we are running under bash even if invoked from zsh/sh
+if [[ -z "${BASH_VERSION:-}" ]]; then
+  exec bash "$0" "$@"
+fi
+
 echo "Current working directory: $(pwd)"
 
 # Default Argo CD namespace (can override via ARGOCD_NAMESPACE env)

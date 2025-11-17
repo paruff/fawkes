@@ -12,7 +12,12 @@ spec:
     helm:
       values: |
         service:
-          type: LoadBalancer
+          type: ClusterIP
+        ingress:
+          enabled: true
+          ingressClassName: nginx
+          hosts:
+            - grafana.127.0.0.1.nip.io
         adminUser: admin
         adminPassword: fawkesidp
   destination:

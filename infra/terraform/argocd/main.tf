@@ -39,8 +39,8 @@ resource "helm_release" "argocd" {
   version    = var.chart_version != "" ? var.chart_version : null
   namespace  = var.namespace
   create_namespace = true
-  # Avoid CRD ownership conflicts if CRDs already exist from previous installs
-  skip_crds = true
+  # Install CRDs so fresh clusters work. If collisions occur, use ignite's AUTO_CLEAN_ARGO to remove leftovers.
+  skip_crds = false
 
   # Use a small values file included in this module. Users can override by
   # providing their own values via the values override file path variable.
