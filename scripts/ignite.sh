@@ -1,6 +1,50 @@
 #!/usr/bin/env bash
-
-# Lightweight rename of bootstrap.sh -> ignite.sh (keeps behavior but with a new name)
+# =============================================================================
+# File: scripts/ignite.sh
+# Purpose: Orchestrate Fawkes bootstrap across local test clusters and cloud providers (AWS, Azure, GCP, others): installs prerequisites, can provision a target Kubernetes cluster (via Terraform/provider tooling), then deploys Argo CD and initial Applications. Local runs are for fast validation before cloud deployment.
+# Implementation Plan (Transition to Full Multi-Cloud Bootstrap)
+# 1. Modularize phases: check_prereqs, provision_cluster, deploy_argocd, seed_applications, post_deploy_summary, cleanup.
+# 2. Abstract provider selection: --provider [local|aws|azure|gcp] with per-provider function dispatch.
+# 3. Introduce flags: --cluster-name, --region/--location, --only-cluster, --only-apps, --skip-cluster, --dry-run, --resume, --verbose.
+# 4. Externalize provider config (e.g. config/providers/<provider>.yaml) for regions, versions, instance types, Terraform module paths.
+# 5. Split Terraform: dedicated root modules per provider (infra/aws, infra/azure, infra/gcp) invoked conditionally instead of single argocd module.
+# 6. Implement idempotent step tracking (state file .ignite-state.json) enabling --resume after partial failures.
+# 7. Refactor local-only (minikube/docker-desktop) logic into provision_local_cluster() separated from cloud drivers.
+# 8. Add provider cluster validation (health checks: API reachability, node readiness, storage class existence) before Argo CD deploy.
+# 9. Integrate External Secrets Operator + provider secret stores automatically when --provider != local (AWS SM, Azure Key Vault, GCP Secret Manager).
+# 10. Enhance logging: structured key=value lines with timestamps; optional JSON log (--log-format json).
+# 11. Add observability hooks: emit bootstrap duration & step metrics (Prometheus pushgateway optional) and trace IDs for troubleshooting.
+# 12. Security hardening: ensure no plaintext secrets in logs; verify External Secrets adoption before pruning legacy Secret manifests.
+# 13. Makefile targets: make ignite-local, ignite-aws, ignite-azure, ignite-gcp, ignite-clean mapping to appropriate flags.
+# 14. Add CI pipeline stages: plan cluster, apply cluster, deploy apps; include drift detection & destroy job for ephemeral environments.
+# 15. Testing: add bats tests for flag parsing & dry-run; create validation harness that mocks kubectl/terraform.
+# 16. Documentation: update docs/getting-started.md + architecture.md with multi-cloud flow diagrams; add usage matrix of flags per provider.
+# 17. Deprecation: remove inline Argo CD Application CR heredoc after externalizing manifests to platform/apps; ensure sync relies on GitOps only.
+# 18. Future: replace direct Terraform cluster provisioning with Crossplane compositions once stable; keep provider abstraction compatible.
+# Context: [local|CI|prod], [caller or workflow]
+# Usage: [bash ./scripts/ignite.sh local,aws,azure,gcc local,dev,staging,prod]
+# Usage:
+#   - bash ./scripts/ignite.sh clean
+#   - AUTO_CLEAN_ARGO=1 FAWKES_LOCAL_PASSWORD=fawkesidp bash ./scripts/ignite.sh local
+#   - MINIKUBE_DRIVER=docker bash ./scripts/ignite.sh local
+#   - bash ./scripts/ignite.sh [dev|stage|production]  # requires a valid kubectl context
+# Inputs:
+#   - Env: ARGOCD_NAMESPACE (default=fawkes), AUTO_INSTALL, AUTO_CLEAN_ARGO,
+#          FAWKES_LOCAL_PASSWORD (default=fawkesidp), MINIKUBE_MEMORY, MINIKUBE_CPUS,
+#          MINIKUBE_DISK_SIZE, MINIKUBE_DRIVER, KUBECONFIG (auto-set), TF_VAR_kubeconfig_path (auto-set)
+# Outputs:
+#   - Argo CD installed in namespace 'fawkes' with Application CRs applied
+#   - Admin password printed (and set to FAWKES_LOCAL_PASSWORD for local if argocd CLI present)
+#   - Terraform log at infra/terraform/argocd/terraform.log
+#   - Namespaces/CRDs/cluster-scoped resources created as needed; exit code reflects success/failure
+# Dependencies: kubectl, terraform, helm, argocd (optional), docker or minikube, jq, base64
+# Owner: Fawkes Platform Team | Last Updated: 2025-11-17
+# Links: docs/getting-started.md, docs/troubleshooting.md, docs/development.md, docs/adr/ADR-003 argocd.md# Inputs: [env VAR_A, flags --bar, files ./x.yaml]
+# Outputs: [logs, manifests, exit codes]
+# Dependencies: [kubectl, terraform, argocd, jq]
+# Owner: [team or handle] | Last Updated: [YYYY-MM-DD]
+# Links: [docs url], [ADR-00X]
+# =============================================================================
 set -euo pipefail
 
 # Ensure we are running under bash even if invoked from zsh/sh
