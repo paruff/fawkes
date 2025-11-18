@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fawkes-app
+  namespace: fawkes
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    path: platform/apps
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fawkes-infra
+  namespace: fawkes
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    path: infra/kubernetes
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

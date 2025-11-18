@@ -714,16 +714,7 @@ validate_cluster() {
   fi
 }
 
-# Create target Argo CD namespace if it does not exist
-ensure_namespace() {
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: ${ARGO_NS}
-EOF
-echo "namespace/${ARGO_NS} ensured"
-}
+# Namespace for Argo CD is created by Helm (Terraform helm_release create_namespace=true)
 
 # Optional cleanup of pre-existing Argo CD cluster-scoped resources
 maybe_cleanup_argocd_cluster_resources() {
@@ -759,21 +750,7 @@ maybe_cleanup_argocd_cluster_resources() {
 ## (moved under main flow and gated by resume)
 
 # If Argo CD CRDs pre-exist (from previous installs), label/annotate them so Helm can adopt
-patch_existing_crds() {
-  echo "Checking for existing Argo CD CRDs to patch ownership labels (if needed)..."
-  for crd in $(kubectl get crd -o name | grep -E 'argoproj.io' | cut -d/ -f2); do
-    echo "Patching CRD $crd with Helm ownership labels/annotations"
-    kubectl patch crd "$crd" --type merge -p '{
-      "metadata": {
-        "labels": {"app.kubernetes.io/managed-by": "Helm"},
-        "annotations": {
-          "meta.helm.sh/release-name": "argocd",
-          "meta.helm.sh/release-namespace": "'"${ARGO_NS}"'"
-        }
-      }
-    }' || true
-  done
-}
+# CRD patching no longer needed since Helm now manages CRD installation
 
 # Deploy ArgoCD using Terraform
 deploy_argocd() {
@@ -958,89 +935,19 @@ wait_for_argocd_endpoints() {
 }
 ## (invoked from main via run_step)
 
-ensure_argocd_crds() {
-  echo "🔎 Ensuring Argo CD CRDs exist..."
-  local missing=0
-  for c in applications.argoproj.io applicationsets.argoproj.io appprojects.argoproj.io; do
-    if ! kubectl get crd "$c" >/dev/null 2>&1; then
-      missing=1
-      break
-    fi
-  done
-  if [[ $missing -eq 1 ]]; then
-    echo "CRDs missing. Installing CRDs from argo-helm chart..."
-    if ! helm repo list 2>/dev/null | awk '{print $1}' | grep -qx "argo"; then
-      helm repo add argo https://argoproj.github.io/argo-helm >/dev/null
-    fi
-    helm repo update >/dev/null
-    local CHART_VERSION
-    CHART_VERSION="${HELM_ARGOCD_CHART_VERSION:-9.1.3}"
-    local tmp_crds
-    tmp_crds=$(mktemp -t argo-crds-XXXX.yaml)
-    if helm show crds argo/argo-cd --version "$CHART_VERSION" > "$tmp_crds" 2>/dev/null && grep -q '^apiVersion:' "$tmp_crds"; then
-      kubectl apply -f "$tmp_crds"
-    else
-      echo "[WARN] Helm did not return CRDs for argo/argo-cd@$CHART_VERSION. Falling back to direct CRD manifests..."
-      kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/crds/application-crd.yaml
-      kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/crds/applicationset-crd.yaml
-      kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/crds/appproject-crd.yaml
-    fi
-    rm -f "$tmp_crds" || true
-  else
-    echo "CRDs already present."
-  fi
-}
+## CRDs are now installed by Helm (Terraform helm_release); no manual ensure step required
+
+## AppProject 'default' is now applied via platform/bootstrap kustomization
 
 ## (invoked from main via run_step)
 
 ## (log moved into seed_applications when invoked)
 
 seed_applications() {
-echo "🌐 Creating ArgoCD Application CRs in-cluster (no port-forward required)..."
-cat <<EOF | kubectl apply -f -
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: fawkes-app
-  namespace: ${ARGO_NS}
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/paruff/fawkes.git
-    path: platform/apps
-    targetRevision: HEAD
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: fawkes
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: fawkes-infra
-  namespace: ${ARGO_NS}
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/paruff/fawkes.git
-    path: infra/kubernetes
-    targetRevision: HEAD
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: fawkes
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-EOF
-echo "✅ ArgoCD Application CRs applied — ArgoCD will pick them up and sync the fawkes namespace."
+  echo "🌐 Applying bootstrap kustomization from platform/bootstrap..."
+  # Apply the committed GitOps bootstrap (AppProject + root Applications)
+  kubectl apply -k "${ROOT_DIR}/platform/bootstrap"
+  echo "✅ Bootstrap applied — ArgoCD will pick up Applications and sync."
 }
 
 post_deploy_summary() {
@@ -1113,19 +1020,18 @@ main() {
   else
     echo "[DRY-RUN] Skipping cluster validation"
   fi
-
-  run_step "ensure_namespace" ensure_namespace
+  
   run_step "maybe_cleanup_argocd_cluster_resources" maybe_cleanup_argocd_cluster_resources
-  run_step "patch_existing_crds" patch_existing_crds
+  # CRD patching not required; Helm manages CRDs now
   run_step "deploy_argocd" deploy_argocd
 
   if [[ $DRY_RUN -eq 0 ]]; then
     run_step "ensure_argocd_workloads" ensure_argocd_workloads
     run_step "wait_for_argocd_endpoints" wait_for_argocd_endpoints
-    run_step "ensure_argocd_crds" ensure_argocd_crds
+    # CRDs and AppProject are handled by Helm and bootstrap kustomization
     run_step "seed_applications" seed_applications
   else
-    echo "[DRY-RUN] Skipping workload waits, CRDs ensure, and application seeding"
+    echo "[DRY-RUN] Skipping workload waits and application seeding"
   fi
   post_deploy_summary
 }
