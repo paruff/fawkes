@@ -39,8 +39,8 @@ resource "helm_release" "argocd" {
   version    = var.chart_version != "" ? var.chart_version : null
   namespace  = var.namespace
   create_namespace = true
-  # Avoid CRD ownership conflicts if CRDs already exist in the cluster
-  skip_crds = true
+  # Install CRDs via Helm to shift CRD management from the bootstrap script to Terraform/Helm
+  skip_crds = false
 
   # Use a small values file included in this module. Users can override by
   # providing their own values via the values override file path variable.
