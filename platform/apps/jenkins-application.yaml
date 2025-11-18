@@ -43,9 +43,10 @@ spec:
             # Let the chart choose apiVersion based on the cluster; avoids template mismatch
             ingressClassName: nginx
             hostName: jenkins.127.0.0.1.nip.io
-            # Jenkins chart supports simple path list; chart wires backend to the service
+            # Use explicit object form for paths to satisfy networking.k8s.io/v1 Ingress schema
             paths:
-              - "/"
+              - path: "/"
+                pathType: Prefix
         # install plugin by short id (no explicit version => get chart's recommended/latest)
         installPlugins:
           - kubernetes
