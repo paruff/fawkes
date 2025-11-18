@@ -40,12 +40,12 @@ spec:
             configScripts: {}
           ingress:
             enabled: true
-            apiVersion: networking.k8s.io/v1
+            # Let the chart choose apiVersion based on the cluster; avoids template mismatch
             ingressClassName: nginx
             hostName: jenkins.127.0.0.1.nip.io
+            # Jenkins chart supports simple path list; chart wires backend to the service
             paths:
-              - path: /
-                pathType: Prefix
+              - "/"
         # install plugin by short id (no explicit version => get chart's recommended/latest)
         installPlugins:
           - kubernetes
@@ -60,8 +60,7 @@ spec:
           create: true
         rbac:
           create: true
-        ingress:
-          enabled: false
+        # Remove top-level ingress toggle to avoid conflicting templates
 
   destination:
     server: https://kubernetes.default.svc
