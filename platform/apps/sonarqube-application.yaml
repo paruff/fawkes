@@ -9,14 +9,14 @@ spec:
   source:
     repoURL: https://charts.sonarsource.com
     chart: sonarqube
-    targetRevision: "9.9.0" # adjust if you want a different chart version
+    targetRevision: "2025.1.0" # Helm chart version; adjust to desired release (e.g. 2025.4 when available)
     helm:
       values: |
         # Inline values for SonarQube configuration:
         sonar:
           image:
             repository: sonarsource/sonarqube
-            tag: "9.9.0-community"
+            tag: "2025.1.0-community"  # Application (container) version
           service:
             # Use Ingress locally to avoid port conflicts
             type: ClusterIP
@@ -31,6 +31,22 @@ spec:
               - name: sonarqube.127.0.0.1.nip.io
                 path: /
                 pathType: Prefix
+          resources:  # Sizing tuned for small dev usage; adjust for production workloads
+            requests:
+              cpu: 500m
+              memory: 1.5Gi
+            limits:
+              cpu: 2
+              memory: 3Gi
+          # JVM / readiness tuning (commented out until validated against target chart)
+          # web:
+          #   javaOpts: "-Xms512m -Xmx1G"
+          # core:
+          #   javaOpts: "-Xms512m -Xmx2G"
+          # livenessProbe:
+          #   initialDelaySeconds: 60
+          # readinessProbe:
+          #   initialDelaySeconds: 90
 
   destination:
     server: https://kubernetes.default.svc
