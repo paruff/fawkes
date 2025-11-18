@@ -2,6 +2,9 @@ import pytest
 import requests
 from kubernetes import client, config
 
+# Ensure Argo CD bootstrap step definitions are registered for all BDD tests
+import tests.bdd.step_definitions.argocd_steps  # noqa: F401
+
 @pytest.fixture(scope='session')
 def fawkes_api_url():
     """Base URL for Fawkes API"""
