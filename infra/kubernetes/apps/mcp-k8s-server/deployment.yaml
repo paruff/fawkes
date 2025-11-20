@@ -6,7 +6,7 @@ metadata:
   labels:
     app: mcp-k8s-server
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: mcp-k8s-server
@@ -18,7 +18,7 @@ spec:
       serviceAccountName: mcp-inspector
       containers:
         - name: server
-          image: ghcr.io/paruff/mcp-k8s-server:latest
+          image: ghcr.io/paruff/mcp-k8s-server:v0.1.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
