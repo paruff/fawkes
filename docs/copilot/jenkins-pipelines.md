@@ -120,8 +120,8 @@ fawkes/
 │   └── BUSINESS_CASE.md            # Business value prop
 │
 ├── infra/                          # Infrastructure as Code
-│   ├── buildinfra.sh               # Infrastructure provisioning script
-│   ├── buildplatform.sh            # Platform deployment script
+│   ├── scripts/ignite.sh           # Unified cluster + Argo CD bootstrap
+│   ├── scripts/ignite.sh           # Unified cluster + Argo CD bootstrap
 │   ├── terraform/                  # Terraform modules (AWS primary)
 │   │   └── aws/                    # AWS-specific IaC
 │   ├── kubernetes/                 # Kubernetes manifests
@@ -186,12 +186,12 @@ fawkes/
 - **Python tests:** `test_<feature>.py`
 - **Feature files:** `<capability>.feature` (lowercase, underscores)
 - **Helm charts:** `Chart.yaml`, `values.yaml`, `templates/`
-- **Scripts:** Lowercase with hyphens (e.g., `buildinfra.sh`, `setup-OS-space.sh`)
+- **Scripts:** Place in `scripts/` (e.g., `ignite.sh`, `setup-OS-space.sh`)
 
 ### Key Paths Reference
 | Component | Path |
 |-----------|------|
-| Infrastructure scripts | `/infra/buildinfra.sh`, `/infra/buildplatform.sh` |
+| Infrastructure scripts | `/scripts/ignite.sh` |
 | Terraform (AWS) | `/infra/terraform/aws/` or `/modules/` |
 | Kubernetes manifests | `/infra/kubernetes/<service>/` |
 | Dojo curriculum | `/docs/dojo/<belt-level>/` |
@@ -1971,10 +1971,10 @@ make jenkins work in kubernetes
 ```bash
 # Provision AWS infrastructure
 cd infra
-./buildinfra.sh -p aws -e dev
+../scripts/ignite.sh --provider aws dev
 
-# Deploy platform components
-./buildplatform.sh
+# Deploy platform components on current cluster
+../scripts/ignite.sh --only-apps local
 
 # Run tests
 cd tests/e2e

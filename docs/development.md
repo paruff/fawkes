@@ -50,7 +50,7 @@ Ensure you have the following tools installed:
    Use the scripts in the `infra/` directory to provision the required infrastructure:
    ```sh
    cd infra
-   ./buildinfra.sh -p aws -e dev
+   ./scripts/ignite.sh --provider aws dev
    ```
 
 4. **Deploy Platform Services**:
