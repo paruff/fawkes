@@ -2518,8 +2518,8 @@
 │   └── BUSINESS_CASE.md            # Business value prop
 │
 ├── infra/                          # Infrastructure as Code
-│   ├── buildinfra.sh               # Infrastructure provisioning script
-│   ├── buildplatform.sh            # Platform deployment script
+│   ├── scripts/ignite.sh           # Unified cluster + Argo CD bootstrap
+│   ├── scripts/ignite.sh           # Unified cluster + Argo CD bootstrap
 │   ├── terraform/                  # Terraform modules (AWS primary)
 │   │   └── aws/                    # AWS-specific IaC
 │   ├── kubernetes/                 # Kubernetes manifests
@@ -2584,7 +2584,7 @@
 <li><strong>Python tests:</strong> <code>test_&lt;feature&gt;.py</code></li>
 <li><strong>Feature files:</strong> <code>&lt;capability&gt;.feature</code> (lowercase, underscores)</li>
 <li><strong>Helm charts:</strong> <code>Chart.yaml</code>, <code>values.yaml</code>, <code>templates/</code></li>
-<li><strong>Scripts:</strong> Lowercase with hyphens (e.g., <code>buildinfra.sh</code>, <code>setup-OS-space.sh</code>)</li>
+<li><strong>Scripts:</strong> Place in <code>scripts/</code> (e.g., <code>ignite.sh</code>, <code>setup-OS-space.sh</code>)</li>
 </ul>
 <h3 id="key-paths-reference">Key Paths Reference</h3>
 <table>
@@ -2597,7 +2597,7 @@
 <tbody>
 <tr>
 <td>Infrastructure scripts</td>
-<td><code>/infra/buildinfra.sh</code>, <code>/infra/buildplatform.sh</code></td>
+<td><code>/scripts/ignite.sh</code></td>
 </tr>
 <tr>
 <td>Terraform (AWS)</td>
@@ -4480,10 +4480,10 @@ Include all in separate YAML files following naming convention.
 <h3 id="common-development-tasks">Common Development Tasks</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Provision AWS infrastructure</span>
 <span class="nb">cd</span><span class="w"> </span>infra
-./buildinfra.sh<span class="w"> </span>-p<span class="w"> </span>aws<span class="w"> </span>-e<span class="w"> </span>dev
+../scripts/ignite.sh<span class="w"> </span>--provider<span class="w"> </span>aws<span class="w"> </span>dev
 
-<span class="c1"># Deploy platform components</span>
-./buildplatform.sh
+<span class="c1"># Deploy platform components on current cluster</span>
+../scripts/ignite.sh<span class="w"> </span>--only-apps<span class="w"> </span><span class="nb">local</span>
 
 <span class="c1"># Run tests</span>
 <span class="nb">cd</span><span class="w"> </span>tests/e2e
