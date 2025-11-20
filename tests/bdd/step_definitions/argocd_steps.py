@@ -9,9 +9,13 @@ from __future__ import annotations
 import json
 import subprocess
 from typing import Dict
+import os
 
 import pytest
 from pytest_bdd import given, when, then, parsers
+
+if os.getenv("FAWKES_DEBUG_STEPS") == "1":  # pragma: no cover
+    print("[bdd] Loaded argocd_steps definitions")
 
 
 def _kubectl_json(args: list[str]) -> Dict:
