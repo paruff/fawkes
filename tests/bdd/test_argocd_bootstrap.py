@@ -5,7 +5,10 @@ scenarios for execution. This module imports all scenarios from the
 feature describing the expected GitOps bootstrap state.
 """
 from pytest_bdd import scenarios
-import tests.bdd.step_definitions.argocd_steps  # noqa: F401  Ensure step definitions are registered
+try:
+	from .step_definitions import argocd_steps  # noqa: F401  Ensure step definitions are registered
+except Exception:  # pragma: no cover
+	from tests.bdd.step_definitions import argocd_steps  # noqa: F401
 
 # Provide the feature filename only; pytest-bdd will resolve it relative to the
 # default feature base directory to avoid duplicating 'features/features'.

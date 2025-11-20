@@ -1,9 +1,17 @@
 import pytest
+import os
+import sys
 import requests
 from kubernetes import client, config
 
-# Ensure Argo CD bootstrap step definitions are registered for all BDD tests
-import tests.bdd.step_definitions.argocd_steps  # noqa: F401
+# Ensure Argo CD bootstrap step definitions are registered early as a pytest plugin
+# Make repository root importable when pytest rootdir is tests/bdd
+_HERE = os.path.dirname(__file__)
+_ROOT = os.path.abspath(os.path.join(_HERE, "..", ".."))
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
+
+pytest_plugins = ("tests.bdd.step_definitions.argocd_steps",)
 
 @pytest.fixture(scope='session')
 def fawkes_api_url():
