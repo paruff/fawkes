@@ -38,7 +38,7 @@ cd fawkes/infra
 Use the provided scripts to provision infrastructure for your environment:
 
 ```sh
-./buildinfra.sh -p aws -e dev
+../scripts/ignite.sh --provider aws dev
 ```
 
 Replace `aws` with your cloud provider (e.g., `azure`, `gcp`) and `dev` with your environment name.
@@ -50,8 +50,7 @@ Replace `aws` with your cloud provider (e.g., `azure`, `gcp`) and `dev` with you
 Once the infrastructure is ready, deploy platform services (e.g., Jenkins, SonarQube):
 
 ```sh
-cd platform
-./buildplatform.sh
+../scripts/ignite.sh --only-apps local
 ```
 
 Refer to the [Platform Infrastructure Guide](platform/readme.md) for more details.

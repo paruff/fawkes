@@ -497,7 +497,7 @@ jobs:
 
       - name: Deploy platform components
         run: |
-          ./infra/buildplatform.sh --test-mode
+          ./scripts/ignite.sh --only-apps local
 
       - name: Run BDD tests
         run: |

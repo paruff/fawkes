@@ -200,12 +200,8 @@ cd fawkes
 cp config/example.tfvars config/terraform.tfvars
 # Edit terraform.tfvars with your settings
 
-# 3. Provision infrastructure
-cd infra
-./buildinfra.sh -p aws -e dev
-
-# 4. Deploy platform components
-./buildplatform.sh
+# 3. Provision infrastructure and deploy platform via Argo CD
+./scripts/ignite.sh --provider aws dev
 
 # 5. Access your platform
 kubectl get ingress -n fawkes-platform

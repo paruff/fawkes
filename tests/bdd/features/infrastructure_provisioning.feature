@@ -10,7 +10,7 @@ Feature: Infrastructure Provisioning
   Scenario: Provision AWS EKS cluster
     Given I have AWS credentials configured
     And I have Terraform installed
-    When I run "./buildinfra.sh -p aws -e dev"
+    When I run "./scripts/ignite.sh --provider aws dev"
     Then the script completes successfully within 30 minutes
     And an EKS cluster named "fawkes-dev" is created
     And the cluster has 3 worker nodes
