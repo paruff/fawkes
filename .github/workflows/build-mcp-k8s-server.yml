@@ -1,0 +1,52 @@
+name: Build MCP K8s Server Image
+
+on:
+  push:
+    tags:
+      - 'mcp-k8s-server-v*'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Derive version tag
+        id: version
+        shell: bash
+        run: |
+          RAW_REF="${GITHUB_REF_NAME}"
+          # Expect tags like mcp-k8s-server-v0.1.0 → produce v0.1.0
+          VERSION_TAG="${RAW_REF#mcp-k8s-server-}"
+          echo "version=${VERSION_TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push (multi-arch)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./services/mcp-k8s-server
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ghcr.io/paruff/mcp-k8s-server:${{ steps.version.outputs.version }}
+          labels: |
+            org.opencontainers.image.source=${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ steps.version.outputs.version }}
