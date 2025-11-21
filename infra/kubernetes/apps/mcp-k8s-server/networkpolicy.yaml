@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mcp-k8s-server-ingress
+  namespace: fawkes
+spec:
+  podSelector:
+    matchLabels:
+      app: mcp-k8s-server
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector: {}
+      ports:
+        - protocol: TCP
+          port: 8080
