@@ -14,6 +14,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  checks: write
 
 concurrency:
   group: idp-e2e-${{ github.ref }}
@@ -43,6 +44,11 @@ jobs:
           cluster_name: fawkes-test
           wait: 120s
 
+      - name: Build & load inspector image (local)
+        run: |
+          docker build -t ghcr.io/paruff/mcp-k8s-server:ci ./services/mcp-k8s-server
+          kind load docker-image ghcr.io/paruff/mcp-k8s-server:ci --name fawkes-test
+
       - name: Sanity check cluster
         run: |
           kubectl cluster-info
@@ -59,11 +65,17 @@ jobs:
           fi
           # Inspector deployment (kustomize)
           kubectl apply -k infra/kubernetes/apps/mcp-k8s-server
+          # Patch image to use locally built tag
+          kubectl -n fawkes set image deployment/mcp-k8s-server server=ghcr.io/paruff/mcp-k8s-server:ci
+          # Diagnostics before rollout wait
+          kubectl -n fawkes get deploy mcp-k8s-server -o yaml | sed -n '1,120p'
+          kubectl -n fawkes get pods -l app=mcp-k8s-server -o wide || true
+          kubectl -n fawkes get events --sort-by=.metadata.creationTimestamp | tail -n 40 || true
           # Wait for pod readiness (ignore if replicas=0)
           if kubectl -n fawkes get deploy mcp-k8s-server >/dev/null 2>&1; then
             REPLICAS=$(kubectl -n fawkes get deploy mcp-k8s-server -o jsonpath='{.spec.replicas}')
             if [ "$REPLICAS" != "0" ]; then
-              kubectl -n fawkes rollout status deployment/mcp-k8s-server --timeout=180s
+              kubectl -n fawkes rollout status deployment/mcp-k8s-server --timeout=300s
             fi
           fi
 
@@ -113,10 +125,9 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const { context, github } = require('@actions/github');
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `✅ Smoke tests executed. JUnit XML uploaded as artifact: test-reports-${context.runId}.`
+              body: `✅ Smoke tests executed. JUnit XML uploaded as artifact: test-reports-${process.env.GITHUB_RUN_ID}.`
             });
