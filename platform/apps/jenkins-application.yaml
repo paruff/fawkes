@@ -1,12 +1,26 @@
 # ============================================================================
-# FILE: argocd-apps/jenkins-application.yaml
-# PURPOSE: ArgoCD Application definition for Jenkins
+# FILE: platform/apps/jenkins-application.yaml
+# PURPOSE: ArgoCD Application definition for Jenkins CI/CD service
+# USAGE: Applied automatically when ArgoCD discovers this manifest
+# ACCESS:
+#   Local: kubectl port-forward -n fawkes svc/jenkins 8080:8080
+#   Cloud: Access via ingress at jenkins.<your-domain>
+# NOTE: Admin credentials must be provided via Kubernetes secret 'jenkins-admin'
+#   Create with: kubectl create secret generic jenkins-admin \
+#     --from-literal=username=admin \
+#     --from-literal=password=YOUR_SECURE_PASSWORD -n fawkes
 # ============================================================================
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: jenkins
   namespace: fawkes
+  labels:
+    app.kubernetes.io/name: jenkins
+    app.kubernetes.io/component: ci-cd
+    app.kubernetes.io/part-of: fawkes-platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   project: default
 
@@ -14,54 +28,91 @@ spec:
     # Official Jenkins Helm repo
     repoURL: https://charts.jenkins.io
     chart: jenkins
-    targetRevision: "5.8.102" # required by ArgoCD for Helm charts
+    targetRevision: "5.8.3"
     helm:
-      # Keep values small and override via a dedicated values.yaml if you prefer
+      # Values for Jenkins Helm chart - credentials via Kubernetes secrets
       values: |
         controller:
           image:
             registry: docker.io
             repository: jenkins/jenkins
-            tag: jdk21
-            tagLabel: jdk21
-            pullPolicy: Always
-          # Use Ingress locally to avoid port conflicts
+            tag: 2.479.1-lts-jdk21
+            pullPolicy: IfNotPresent
+          # Service type - ClusterIP works with both port-forward (local) and Ingress (cloud)
           serviceType: ClusterIP
+          # Don't run builds on controller - use agents
           executors: 0
-          # Local default admin credentials
+          # Admin credentials from Kubernetes secret (not hardcoded)
+          # Secret must be created before deployment:
+          # kubectl create secret generic jenkins-admin --from-literal=username=admin --from-literal=password=YOUR_PASSWORD -n fawkes
           admin:
             username: admin
-            password: fawkesidp
-          # Disable setup wizard and set password consistently
-          JENKINS_OPTS: "--argumentsRealm.passwd.admin=fawkesidp -Djenkins.install.runSetupWizard=false"
+            existingSecret: jenkins-admin
+            userKey: username
+            passwordKey: password
+          # Java options for Jenkins
+          javaOpts: "-Djenkins.install.runSetupWizard=false"
+          # Jenkins Configuration as Code
           JCasC:
             enabled: true
-            defaultConfig: false
-            configScripts: {}
+            defaultConfig: true
+            configScripts:
+              welcome-message: |
+                jenkins:
+                  systemMessage: "Fawkes CI/CD Platform - Managed by ArgoCD"
+          # Install essential plugins (under controller per Helm chart spec)
+          installPlugins:
+            - kubernetes:4371.vb_33b_086d54a_1
+            - workflow-aggregator:608.v67378e9d3db_1
+            - git:5.7.0
+            - configuration-as-code:1985.vdda_32d0c4ea_b_
+            - credentials-binding:681.vf91669a_32e45
+            - github:1.43.0
+          # Additional plugins for CI/CD workflows
+          additionalPlugins:
+            - blueocean:1.27.16
+            - pipeline-stage-view:2.34
+          # Ingress configuration - enabled for cloud access
           ingress:
             enabled: true
-            # Let the chart choose apiVersion based on the cluster; avoids template mismatch
             ingressClassName: nginx
             hostName: jenkins.127.0.0.1.nip.io
-            # Use explicit object form for paths to satisfy networking.k8s.io/v1 Ingress schema
+            annotations:
+              nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+              nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
             paths:
-              - path: "/"
+              - path: /
                 pathType: Prefix
-        # install plugin by short id (no explicit version => get chart's recommended/latest)
-        installPlugins:
-          - kubernetes
-          - workflow-aggregator
-          - credentials-binding
-          - git
-        persistence:
+          # Resource limits suitable for development
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: 2000m
+              memory: 4Gi
+        # Agent configuration for Kubernetes-based builds
+        agent:
           enabled: true
-          size: 8Gi
-          storageClass: standard
+          namespace: fawkes
+          image:
+            repository: jenkins/inbound-agent
+            tag: "3307.vb_cb_6f6a_b_5adb-1"
+          resources:
+            requests:
+              cpu: 512m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+        # Persistence - disabled for local, enable for production
+        persistence:
+          enabled: false
         serviceAccount:
           create: true
+          name: jenkins
         rbac:
           create: true
-        # Remove top-level ingress toggle to avoid conflicting templates
 
   destination:
     server: https://kubernetes.default.svc
@@ -87,6 +138,9 @@ spec:
       kind: Deployment
       jsonPointers:
         - /spec/replicas
+    - group: ""
+      kind: Secret
+      jsonPointers:
+        - /data
 
   revisionHistoryLimit: 10
-
