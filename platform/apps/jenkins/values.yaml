@@ -1,70 +1,129 @@
-# Basic values.yaml you can use with `helm upgrade --install -f values.yaml jenkins charts.jenkins.io/jenkins`
-controller:
-  # Use explicit repository + tag if your chart supports them; otherwise use single image
-  image:
-    repository: "jenkins/jenkins"
-    # Choose a Jenkins LTS new enough for your plugins. Example:
-    tag: "2.528.1-lts-jdk17"   # <- use JDK17 LTS for plugin compatibility
-    # If chart expects controller.image.* (not nested), set both:
-  # If the chart still reads controller.image and controller.tag, keep compatibility:
-  # image: "jenkins/jenkins"
-  # tag: "2.462.4-jdk11"
+# ============================================================================
+# FILE: platform/apps/jenkins/values.yaml
+# PURPOSE: Helm values for standalone Jenkins deployment (not via ArgoCD)
+# USAGE:
+#   Local: helm upgrade --install jenkins jenkins/jenkins -f values.yaml -n fawkes
+#   Access: kubectl port-forward -n fawkes svc/jenkins 8080:8080
+#           Then browse to http://localhost:8080 (admin/fawkesidp)
+# ============================================================================
 
-  # admin credentials (recommend creating a k8s Secret and not committing plaintext)
+controller:
+  # Jenkins LTS image with JDK21 support
+  image:
+    registry: docker.io
+    repository: jenkins/jenkins
+    tag: "2.479.1-lts-jdk21"
+    pullPolicy: IfNotPresent
+
+  # Admin credentials for local development
+  # For production: use External Secrets Operator or Kubernetes secrets
   admin:
     username: admin
-    password: changeme
+    password: fawkesidp
+    existingSecret: ""  # Set to secret name if using external secrets
 
-  # controller options and service
-  JENKINS_OPTS: "--argumentsRealm.passwd.admin=changeme -Djenkins.install.runSetupWizard=false"
+  # Service configuration
   serviceType: ClusterIP
+  servicePort: 8080
+  targetPort: 8080
 
-  # ensure controller doesn't run builds — use agents
+  # Don't run builds on controller - use Kubernetes agents
   executors: 0
 
-  # mount JCasC from ConfigMap and inject secret env var
+  # Java options
+  javaOpts: "-Djenkins.install.runSetupWizard=false"
+
+  # Jenkins Configuration as Code
   JCasC:
     enabled: true
-    defaultConfig: false
-    configScripts: {}
-  extraEnv:
-    - name: ADMIN_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: jenkins-admin
-          key: ADMIN_PASSWORD
+    defaultConfig: true
+    configScripts:
+      welcome-message: |
+        jenkins:
+          systemMessage: "Fawkes CI/CD Platform"
+          mode: NORMAL
+      security-realm: |
+        jenkins:
+          securityRealm:
+            local:
+              allowsSignup: false
+      kubernetes-cloud: |
+        jenkins:
+          clouds:
+            - kubernetes:
+                name: "kubernetes"
+                namespace: "fawkes"
+                jenkinsUrl: "http://jenkins.fawkes.svc.cluster.local:8080"
+                jenkinsTunnel: "jenkins-agent.fawkes.svc.cluster.local:50000"
 
-# install plugins required by JCasC (chart-specific key; adjust to your chart)
-installPlugins: []
+  # Install essential plugins
+  installPlugins:
+    - kubernetes:4371.vb_33b_086d54a_1
+    - workflow-aggregator:608.v67378e9d3db_1
+    - git:5.7.0
+    - configuration-as-code:1985.vdda_32d0c4ea_b_
+    - credentials-binding:681.vf91669a_32e45
+    - github:1.43.0
 
+  # Additional useful plugins
+  additionalPlugins:
+    - blueocean:1.27.16
+    - pipeline-stage-view:2.34
+    - prometheus:814.v2e2d0e5efd69
+
+  # Resource limits for local development
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+
+  # Ingress configuration (optional - for cloud deployments)
+  ingress:
+    enabled: false
+    ingressClassName: nginx
+    hostName: jenkins.example.com
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    paths:
+      - path: /
+        pathType: Prefix
+
+# Agent configuration for Kubernetes-based builds
+agent:
+  enabled: true
+  namespace: fawkes
+  image:
+    repository: jenkins/inbound-agent
+    tag: "3307.vb_cb_6f6a_b_5adb-1"
+  resources:
+    requests:
+      cpu: 512m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+# Persistence configuration
+# Disabled for local development; enable for production
 persistence:
-  # For local development clusters that may not have a dynamic provisioner or a
-  # `standard` StorageClass, disable persistence to avoid PVC Pending/init failures.
-  # In production, enable persistence and set the correct storageClass.
   enabled: false
-  size: 8Gi
-  storageClass: standard   # change to your cluster's StorageClass
+  # Production settings (uncomment when needed):
+  # enabled: true
+  # size: 20Gi
+  # storageClass: ""  # Use cluster default
 
 serviceAccount:
   create: true
+  name: jenkins
+  annotations: {}
+    # For AWS IRSA:
+    # eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/jenkins-role
+    # For GCP Workload Identity:
+    # iam.gke.io/gcp-service-account: jenkins@project-id.iam.gserviceaccount.com
 
 rbac:
   create: true
-
-# JCasC / init groovy locations (mount ConfigMap/Secret if you plan to supply config)
-# Example: put your configuration-as-code in platform/apps/jenkins/jcasc.yaml and mount it via extraConfig
-master:
-  admin:
-    username: admin
-  # If your chart supports mounting JCasC directly, configure it here (chart-specific)
-  # extraConfig: |
-  #   jenkins:
-  #     systemMessage: "Fawkes Jenkins (MVP)"
-
-# optional ingress example (enable and configure if you have an ingress controller)
-ingress:
-  enabled: false
-  annotations: {}
-  hosts:
-    - host: jenkins.example.com
-      paths: ["/"]
+  readSecrets: true
