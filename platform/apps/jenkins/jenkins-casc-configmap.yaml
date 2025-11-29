@@ -1,7 +1,8 @@
 # ============================================================================
 # FILE: platform/apps/jenkins/jenkins-casc-configmap.yaml
-# PURPOSE: ConfigMap for Jenkins Configuration as Code
-# NOTE: Password is injected via environment variable from Kubernetes secret
+# PURPOSE: ConfigMap for Jenkins Configuration as Code (supplementary config)
+# NOTE: Security realm and admin credentials are managed by the Helm chart
+#       via existingSecret. This ConfigMap provides additional JCasC config.
 # ============================================================================
 apiVersion: v1
 kind: ConfigMap
@@ -19,12 +20,8 @@ data:
       mode: NORMAL
       numExecutors: 0
 
-      securityRealm:
-        local:
-          allowsSignup: false
-          users:
-            - id: "${JENKINS_ADMIN_ID:-admin}"
-              password: "${JENKINS_ADMIN_PASSWORD}"  # Injected from Kubernetes Secret
+      # NOTE: Security realm is configured by Helm chart via existingSecret
+      # Do not override security realm settings here
 
       authorizationStrategy:
         loggedInUsersCanDoAnything:

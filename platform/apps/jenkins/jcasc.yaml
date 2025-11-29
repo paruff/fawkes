@@ -2,19 +2,17 @@
 # FILE: platform/apps/jenkins/jcasc.yaml
 # PURPOSE: Jenkins Configuration as Code (JCasC) for Fawkes platform
 # USAGE: Mounted as ConfigMap or included in Helm values
-# NOTE: Password is injected from Kubernetes secret via environment variable
+# NOTE: Security realm and admin credentials are managed by the Helm chart
+#       via existingSecret. This file provides supplementary JCasC config.
 # ============================================================================
 jenkins:
   systemMessage: "Fawkes CI/CD Platform - Managed by GitOps"
   mode: NORMAL
   numExecutors: 0  # Don't run builds on controller
 
-  securityRealm:
-    local:
-      allowsSignup: false
-      users:
-        - id: "${JENKINS_ADMIN_ID:-admin}"
-          password: "${JENKINS_ADMIN_PASSWORD}"  # Injected from Kubernetes Secret
+  # NOTE: Security realm is configured by Helm chart via existingSecret
+  # The admin user and password are automatically configured when using:
+  #   controller.admin.existingSecret: jenkins-admin
 
   authorizationStrategy:
     loggedInUsersCanDoAnything:

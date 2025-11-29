@@ -121,7 +121,8 @@ EOF
     # Check if admin secret exists, create if not
     if ! kubectl get secret jenkins-admin -n "$NAMESPACE" >/dev/null 2>&1; then
       echo "🔐 Creating jenkins-admin secret with generated password..."
-      JENKINS_PASSWORD=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 24)
+      # Generate a secure 32-character password using /dev/urandom
+      JENKINS_PASSWORD=$(head -c 32 /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | head -c 32)
       kubectl create secret generic jenkins-admin \
         --from-literal=username=admin \
         --from-literal=password="$JENKINS_PASSWORD" \
