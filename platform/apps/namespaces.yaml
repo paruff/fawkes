@@ -1,5 +1,13 @@
-# filepath: platform/apps/namespace-fawkes.yaml
+# ============================================================================
+# FILE: platform/apps/namespaces.yaml
+# PURPOSE: Namespace definitions for Fawkes platform services
+# ============================================================================
 apiVersion: v1
 kind: Namespace
 metadata:
   name: fawkes
+  labels:
+    app.kubernetes.io/part-of: fawkes-platform
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
