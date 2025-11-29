@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: jenkins-casc
-  namespace: jenkins
+  namespace: fawkes
 data:
   jcasc.yaml: |
     jenkins:
@@ -24,7 +24,7 @@ data:
     clouds:
       - kubernetes:
           name: "kubernetes"
-          namespace: "jenkins"
+          namespace: "fawkes"
           templates:
             - name: "jnlp-agent"
               label: "k8s-agent"
