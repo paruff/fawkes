@@ -12,7 +12,7 @@ def test_cluster_has_nodes():
     # Optionally assert Ready condition
     for node in data["items"]:
         conditions = {c["type"]: c["status"] for c in node["status"].get("conditions", [])}
-        assert conditions.get("Ready") == "True", f"Node {node['metadata']['name']} not Ready"import pytest
+        assert conditions.get("Ready") == "True", f"Node {node['metadata']['name']} not Ready"
 
 
 
