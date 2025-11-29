@@ -2,6 +2,25 @@
 jenkins:
   systemMessage: "Fawkes CI (MVP)"
   mode: NORMAL
+  # Kubernetes cloud configuration for ephemeral agents
+  clouds:
+    - kubernetes:
+        name: "kubernetes"
+        namespace: "fawkes"
+        jenkinsUrl: "http://jenkins:8080"
+        jenkinsTunnel: "jenkins-agent:50000"
+        containerCapStr: "10"
+        templates:
+          - name: "jnlp-agent"
+            label: "k8s-agent"
+            remoteFs: "/home/jenkins"
+            instanceCapStr: "5"
+            idleTerminationMinutes: 10
+            containers:
+              - name: "jnlp"
+                image: "jenkins/inbound-agent:latest"
+                args: "${computer.jnlpmac} ${computer.name}"
+                workingDir: "/home/jenkins"
 
 securityRealm:
   local:
@@ -17,24 +36,3 @@ authorizationStrategy:
 unclassified:
   location:
     adminAddress: "ci-admin@fawkes.local"
-
-# Kubernetes cloud configuration for ephemeral agents
-jenkins:
-  clouds:
-    - kubernetes:
-        name: "kubernetes"
-        namespace: "jenkins"
-        jenkinsUrl: "http://jenkins:8080"
-        jenkinsTunnel: "jenkins-agent:50000"
-        containerCapStr: "10"
-        templates:
-          - name: "jnlp-agent"
-            label: "k8s-agent"
-            remoteFs: "/home/jenkins"
-            instanceCapStr: "5"
-            idleTerminationMinutes: 10
-            containers:
-              - name: "jnlp"
-                image: "jenkins/inbound-agent:latest"
-                args: "${computer.jnlpmac} ${computer.name}"
-                workingDir: "/home/jenkins"
