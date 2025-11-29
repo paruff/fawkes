@@ -1,5 +1,6 @@
 import json
 import subprocess
+import time
 import pytest
 
 
@@ -9,7 +10,6 @@ def test_cluster_has_nodes():
     out = subprocess.check_output(["kubectl", "get", "nodes", "-o", "json"])
     data = json.loads(out)
     assert data.get("items"), "No nodes returned from kubectl"
-    # Optionally assert Ready condition
     for node in data["items"]:
         conditions = {c["type"]: c["status"] for c in node["status"].get("conditions", [])}
         assert conditions.get("Ready") == "True", f"Node {node['metadata']['name']} not Ready"
@@ -51,12 +51,13 @@ def test_ephemeral_pod_lifecycle():
         "kubectl", "run", pod_name, "--image=busybox", "-n", "fawkes", "--restart=Never", "--", "sh", "-c", "echo smoke-test && sleep 1"
     ], check=True)
     # Wait until completed or timeout
+    phase = None
     for _ in range(30):
         out = subprocess.check_output(["kubectl", "get", "pod", pod_name, "-n", "fawkes", "-o", "json"])
         phase = json.loads(out)["status"].get("phase")
         if phase in {"Succeeded", "Failed"}:
             break
-        import time; time.sleep(1)
+        time.sleep(1)
     assert phase == "Succeeded", f"Ephemeral pod did not succeed (phase={phase})"
     subprocess.check_output(["kubectl", "delete", "pod", pod_name, "-n", "fawkes", "--ignore-not-found=true"])
 
