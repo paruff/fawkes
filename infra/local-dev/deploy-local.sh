@@ -115,31 +115,58 @@ EOF
   jenkins)
     echo "🏗️  Deploying Jenkins CI/CD..."
 
-    # Check if Jenkins manifests exist
-    JENKINS_MANIFESTS="$REPO_ROOT/infra/kubernetes/jenkins"
-    if [ ! -d "$JENKINS_MANIFESTS" ]; then
-      echo "⚠️  Jenkins manifests not found at $JENKINS_MANIFESTS"
-      echo "📥 Installing via Helm..."
+    # Add Jenkins Helm repo
+    add_helm_repo jenkins https://charts.jenkins.io
 
-      add_helm_repo jenkins https://charts.jenkins.io
+    # Check if admin secret exists, create if not
+    if ! kubectl get secret jenkins-admin -n "$NAMESPACE" >/dev/null 2>&1; then
+      echo "🔐 Creating jenkins-admin secret with generated password..."
+      JENKINS_PASSWORD=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 24)
+      kubectl create secret generic jenkins-admin \
+        --from-literal=username=admin \
+        --from-literal=password="$JENKINS_PASSWORD" \
+        -n "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
+      echo "📋 Generated admin password: $JENKINS_PASSWORD"
+      echo "   (Save this password - it won't be shown again)"
+    else
+      echo "✓ Using existing jenkins-admin secret"
+    fi
 
+    # Check if custom values file exists
+    JENKINS_VALUES="$REPO_ROOT/platform/apps/jenkins/values.yaml"
+
+    if [ -f "$JENKINS_VALUES" ]; then
+      echo "📄 Using custom values from $JENKINS_VALUES"
       helm upgrade --install jenkins jenkins/jenkins \
-        --set controller.serviceType=NodePort \
-        --set controller.nodePort=30008 \
-        --set controller.resources.requests.cpu=100m \
-        --set controller.resources.requests.memory=512Mi \
-        --set controller.resources.limits.cpu=1000m \
-        --set controller.resources.limits.memory=1Gi \
+        -f "$JENKINS_VALUES" \
         -n "$NAMESPACE" \
-        --wait --timeout 5m \
+        --wait --timeout 10m \
         --create-namespace
     else
-      kubectl apply -n "$NAMESPACE" -f "$JENKINS_MANIFESTS"
+      echo "📥 Installing with default configuration..."
+      helm upgrade --install jenkins jenkins/jenkins \
+        --set controller.serviceType=ClusterIP \
+        --set controller.admin.existingSecret=jenkins-admin \
+        --set controller.admin.userKey=username \
+        --set controller.admin.passwordKey=password \
+        --set controller.resources.requests.cpu=500m \
+        --set controller.resources.requests.memory=1Gi \
+        --set controller.resources.limits.cpu=2000m \
+        --set controller.resources.limits.memory=4Gi \
+        --set persistence.enabled=false \
+        -n "$NAMESPACE" \
+        --wait --timeout 10m \
+        --create-namespace
     fi
 
     echo "✅ Jenkins deployed!"
-    echo "🔑 Get admin password: kubectl exec -n $NAMESPACE -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/chart-admin-password"
-    echo "🌐 Access via: kubectl port-forward -n $NAMESPACE svc/jenkins 8080:8080"
+    echo ""
+    echo "📋 Access Jenkins:"
+    echo "   1. Port-forward: kubectl port-forward -n $NAMESPACE svc/jenkins 8080:8080"
+    echo "   2. Open browser: http://localhost:8080"
+    echo "   3. Username: admin"
+    echo "   4. Password: kubectl get secret jenkins-admin -n $NAMESPACE -o jsonpath='{.data.password}' | base64 -d"
+    echo ""
     ;;
 
   mattermost)

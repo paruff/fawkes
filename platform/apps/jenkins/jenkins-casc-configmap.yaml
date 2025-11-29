@@ -1,34 +1,54 @@
+# ============================================================================
+# FILE: platform/apps/jenkins/jenkins-casc-configmap.yaml
+# PURPOSE: ConfigMap for Jenkins Configuration as Code
+# NOTE: Password is injected via environment variable from Kubernetes secret
+# ============================================================================
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: jenkins-casc
-  namespace: jenkins
+  namespace: fawkes
+  labels:
+    app.kubernetes.io/name: jenkins
+    app.kubernetes.io/component: configuration
+    app.kubernetes.io/part-of: fawkes-platform
 data:
   jcasc.yaml: |
     jenkins:
-      systemMessage: "Fawkes CI (MVP)"
+      systemMessage: "Fawkes CI/CD Platform - Managed by GitOps"
       mode: NORMAL
+      numExecutors: 0
 
-    securityRealm:
-      local:
-        allowsSignup: false
-        users:
-          - id: "admin"
-            password: "${ADMIN_PASSWORD}"
+      securityRealm:
+        local:
+          allowsSignup: false
+          users:
+            - id: "${JENKINS_ADMIN_ID:-admin}"
+              password: "${JENKINS_ADMIN_PASSWORD}"  # Injected from Kubernetes Secret
 
-    authorizationStrategy:
-      loggedInUsersCanDoAnything:
-        allowAnonymousRead: false
+      authorizationStrategy:
+        loggedInUsersCanDoAnything:
+          allowAnonymousRead: false
 
-    # minimal k8s agent example
-    clouds:
-      - kubernetes:
-          name: "kubernetes"
-          namespace: "jenkins"
-          templates:
-            - name: "jnlp-agent"
-              label: "k8s-agent"
-              containers:
-                - name: "jnlp"
-                  image: "jenkins/inbound-agent:latest"
-                  args: "${computer.jnlpmac} ${computer.name}"
+      clouds:
+        - kubernetes:
+            name: "kubernetes"
+            namespace: "fawkes"
+            jenkinsUrl: "http://jenkins.fawkes.svc.cluster.local:8080"
+            jenkinsTunnel: "jenkins-agent.fawkes.svc.cluster.local:50000"
+            containerCapStr: "10"
+            templates:
+              - name: "default-jnlp"
+                label: "k8s-agent jnlp"
+                serviceAccount: "jenkins"
+                idleMinutes: 10
+                containers:
+                  - name: "jnlp"
+                    image: "jenkins/inbound-agent:3307.vb_cb_6f6a_b_5adb-1"
+                    workingDir: "/home/jenkins/agent"
+                    ttyEnabled: true
+
+    unclassified:
+      location:
+        adminAddress: "ci-admin@fawkes.local"
+        url: "http://jenkins.fawkes.svc.cluster.local:8080/"
