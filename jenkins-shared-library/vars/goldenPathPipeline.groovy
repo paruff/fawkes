@@ -160,8 +160,44 @@ def call(Map config = [:]) {
 
                     stage('Quality Gate') {
                         steps {
-                            timeout(time: 5, unit: 'MINUTES') {
-                                waitForQualityGate abortPipeline: true
+                            script {
+                                // Wait for Quality Gate with detailed feedback
+                                timeout(time: 5, unit: 'MINUTES') {
+                                    def qg = waitForQualityGate()
+                                    def sonarUrl = env.SONARQUBE_URL ?: 'http://sonarqube.fawkes.svc:9000'
+                                    def reportUrl = "${sonarUrl}/dashboard?id=${config.sonarProject}&branch=${env.BRANCH_NAME ?: 'main'}"
+                                    
+                                    echo "=============================================="
+                                    echo "SonarQube Quality Gate: ${qg.status}"
+                                    echo "=============================================="
+                                    echo "📊 View detailed analysis report:"
+                                    echo "   ${reportUrl}"
+                                    echo "=============================================="
+                                    
+                                    // Add link to build description for easy access
+                                    currentBuild.description = (currentBuild.description ?: '') + 
+                                        "\n<a href='${reportUrl}'>📊 SonarQube Report</a>"
+                                    
+                                    if (qg.status != 'OK') {
+                                        def failureReason = """
+❌ QUALITY GATE FAILED: ${qg.status}
+
+The code changes did not meet the quality criteria.
+Please review the SonarQube analysis for details:
+${reportUrl}
+
+Common failure reasons:
+- New bugs or vulnerabilities introduced
+- Code coverage dropped below threshold
+- Duplicate code exceeded limit
+- Security hotspots require review
+"""
+                                        echo failureReason
+                                        error "Quality Gate failed: ${qg.status}. See: ${reportUrl}"
+                                    }
+                                    
+                                    echo "✅ Quality Gate passed successfully!"
+                                }
                             }
                         }
                     }
@@ -468,33 +504,58 @@ def publishBddResults(String language) {
 
 /**
  * Run SonarQube analysis based on language
+ *
+ * Executes language-specific SonarQube scanner with branch information
+ * for accurate tracking in the SonarQube dashboard. Links analysis to
+ * the Git repository and branch names for proper reporting.
  */
 def runSonarScan(Map config) {
+    def branch = env.BRANCH_NAME ?: 'main'
+    def commitSha = env.GIT_COMMIT ?: ''
+    
+    echo "Running SonarQube analysis for ${config.sonarProject} on branch ${branch}"
+    
     switch (config.language) {
         case 'java':
-            sh "mvn sonar:sonar -Dsonar.projectKey=${config.sonarProject}"
+            sh """
+                mvn sonar:sonar \
+                    -Dsonar.projectKey=${config.sonarProject} \
+                    -Dsonar.projectName='${config.sonarProject}' \
+                    -Dsonar.branch.name=${branch} \
+                    -Dsonar.scm.revision=${commitSha}
+            """
             break
         case 'python':
             sh """
                 sonar-scanner \
                     -Dsonar.projectKey=${config.sonarProject} \
+                    -Dsonar.projectName='${config.sonarProject}' \
                     -Dsonar.sources=src \
-                    -Dsonar.python.coverage.reportPaths=coverage.xml
+                    -Dsonar.python.coverage.reportPaths=coverage.xml \
+                    -Dsonar.branch.name=${branch} \
+                    -Dsonar.scm.revision=${commitSha}
             """
             break
         case 'node':
             sh """
                 npx sonar-scanner \
                     -Dsonar.projectKey=${config.sonarProject} \
-                    -Dsonar.sources=src
+                    -Dsonar.projectName='${config.sonarProject}' \
+                    -Dsonar.sources=src \
+                    -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                    -Dsonar.branch.name=${branch} \
+                    -Dsonar.scm.revision=${commitSha}
             """
             break
         case 'go':
             sh """
                 sonar-scanner \
                     -Dsonar.projectKey=${config.sonarProject} \
+                    -Dsonar.projectName='${config.sonarProject}' \
                     -Dsonar.sources=. \
-                    -Dsonar.go.coverage.reportPaths=coverage.out
+                    -Dsonar.go.coverage.reportPaths=coverage.out \
+                    -Dsonar.branch.name=${branch} \
+                    -Dsonar.scm.revision=${commitSha}
             """
             break
     }
