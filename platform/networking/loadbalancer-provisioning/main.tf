@@ -20,11 +20,6 @@ variable "environment" {
   default     = "dev"
 }
 
-variable "vpc_id" {
-  description = "VPC ID where the load balancer will be deployed"
-  type        = string
-}
-
 variable "extra_tags" {
   description = "Additional tags to apply to resources"
   type        = map(string)
