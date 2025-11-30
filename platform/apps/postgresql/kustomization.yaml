@@ -1,0 +1,24 @@
+# ============================================================================
+# FILE: platform/apps/postgresql/kustomization.yaml
+# PURPOSE: Kustomize configuration for PostgreSQL resources
+# ============================================================================
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: fawkes
+
+resources:
+  # CloudNativePG Operator (deploys to cloudnativepg-system namespace)
+  - cloudnativepg-operator-application.yaml
+  # Focalboard database credentials (dev/local)
+  - db-focalboard-credentials.yaml
+  # Focalboard PostgreSQL cluster
+  - db-focalboard-cluster.yaml
+  # Note: For production, uncomment externalsecret-db-focalboard.yaml
+  # and comment out db-focalboard-credentials.yaml
+  # - externalsecret-db-focalboard.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/managed-by: argocd
+      app.kubernetes.io/part-of: fawkes-platform

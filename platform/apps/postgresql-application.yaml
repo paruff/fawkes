@@ -1,0 +1,52 @@
+# ============================================================================
+# FILE: platform/apps/postgresql-application.yaml
+# PURPOSE: ArgoCD Application for PostgreSQL infrastructure stack
+#          Deploys CloudNativePG Operator and database clusters via Kustomize.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgresql
+  namespace: fawkes
+  annotations:
+    argocd.argoproj.io/sync-wave: "-4"
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    path: platform/apps/postgresql
+    targetRevision: HEAD
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    # Ignore status fields on CloudNativePG resources
+    - group: postgresql.cnpg.io
+      kind: Cluster
+      jsonPointers:
+        - /status
+
+  revisionHistoryLimit: 10
