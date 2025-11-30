@@ -165,7 +165,9 @@ def call(Map config = [:]) {
                                 timeout(time: 5, unit: 'MINUTES') {
                                     def qg = waitForQualityGate()
                                     def sonarUrl = env.SONARQUBE_URL ?: 'http://sonarqube.fawkes.svc:9000'
-                                    def reportUrl = "${sonarUrl}/dashboard?id=${config.sonarProject}&branch=${env.BRANCH_NAME ?: 'main'}"
+                                    def projectKey = config.sonarProject ?: config.appName ?: 'unknown-project'
+                                    def branchName = env.BRANCH_NAME ?: 'main'
+                                    def reportUrl = "${sonarUrl}/dashboard?id=${projectKey}&branch=${branchName}"
                                     
                                     echo "=============================================="
                                     echo "SonarQube Quality Gate: ${qg.status}"
