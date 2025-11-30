@@ -1,0 +1,78 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns
+  namespace: fawkes
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  project: default
+  source:
+    repoURL: https://kubernetes-sigs.github.io/external-dns/
+    chart: external-dns
+    targetRevision: 1.15.0
+    helm:
+      values: |
+        # Provider configuration - defaults to AWS Route53
+        # Supported providers: aws, azure, google, cloudflare, etc.
+        provider:
+          name: aws
+
+        # Domain filter - only manage records for fawkes.idp domain
+        domainFilters:
+          - fawkes.idp
+
+        # Policy for managing DNS records
+        # sync = create, update, and delete records
+        # upsert-only = create and update only (safer for initial rollout)
+        policy: upsert-only
+
+        # Source configuration - watch these resources for DNS records
+        sources:
+          - ingress
+          - service
+
+        # Registry for tracking which records are managed
+        registry: txt
+        txtOwnerId: fawkes-external-dns
+
+        # Resource configuration
+        resources:
+          requests:
+            cpu: 10m
+            memory: 50Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
+
+        # Service account for IRSA (AWS) or Workload Identity (GCP/Azure)
+        serviceAccount:
+          create: true
+          name: external-dns
+          annotations:
+            # For AWS IRSA - replace with your IAM role ARN
+            # eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/external-dns-role
+
+        # Extra args for additional configuration
+        extraArgs:
+          # Log level
+          - --log-level=info
+          # Interval for DNS sync
+          - --interval=1m
+          # AWS-specific: use txt records for ownership
+          - --aws-zones-cache-duration=1h
+
+        # Metrics for Prometheus
+        metrics:
+          enabled: true
+          serviceMonitor:
+            enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: external-dns
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
