@@ -3,10 +3,8 @@
 Step definitions for PostgreSQL database service BDD tests.
 """
 
-from pytest_bdd import scenarios, given, when, then, parsers
+from pytest_bdd import scenarios, given, when, then
 import subprocess
-import json
-import time
 
 scenarios('../features/postgresql-deployment.feature')
 
