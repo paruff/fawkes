@@ -1,8 +1,33 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  name: fawkes-networking
+  namespace: fawkes
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    path: platform/networking
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
   name: fawkes-app
   namespace: fawkes
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   project: default
   source:
@@ -24,6 +49,8 @@ kind: Application
 metadata:
   name: fawkes-infra
   namespace: fawkes
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   project: default
   source:
