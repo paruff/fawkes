@@ -1,0 +1,2789 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>ADR-010: Ingress Controller for Service Access - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#adr-010-ingress-controller-for-service-access" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ADR-010: Ingress Controller for Service Access
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assessment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Paths
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Wins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Capabilities
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patterns
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Continuous Delivery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spinnaker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Infrastructure
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#routing-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Routing Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-ingress-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Ingress Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oauth2-proxy-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OAuth2 Proxy Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deployment-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consequences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Positive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#negative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Negative
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#neutral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Neutral
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-1-traefik" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 1: Traefik
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-2-istioenvoy-service-mesh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 2: Istio/Envoy Service Mesh
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-3-kong-ingress-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 3: Kong Ingress Controller
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-4-haproxy-ingress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 4: HAProxy Ingress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-5-cloud-provider-ingress-aws-alb-gcp-gclb-azure-app-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 5: Cloud Provider Ingress (AWS ALB, GCP GCLB, Azure App Gateway)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-6-contour-envoy-based" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 6: Contour (Envoy-based)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-mvp-week-3-of-sprint-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: MVP (Week 3 of Sprint 01)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-core-services-weeks-4-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Core Services (Weeks 4-5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-security-monitoring-week-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Security &amp; Monitoring (Week 6)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-documentation-training-week-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4: Documentation &amp; Training (Week 7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dojo-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dojo Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dojo Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#yellow-belt-module-4-exposing-services-with-ingress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Yellow Belt - Module 4: "Exposing Services with Ingress"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring &amp; Observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring &amp; Observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tlsssl-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS/SSL Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rate-limiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rate Limiting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ip-whitelisting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IP Whitelisting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web-application-firewall-waf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web Application Firewall (WAF)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-deployment-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Deployment (Production)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-environment-cost-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Environment Cost Breakdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-platform-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Platform Teams
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-dojo-learners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Dojo Learners
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration Path
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Migration Path">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-default-cloud-ingress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Default Cloud Ingress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-path-based-to-subdomain-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Path-Based to Subdomain Routing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#last-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Last Updated
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="adr-010-ingress-controller-for-service-access">ADR-010: Ingress Controller for Service Access</h1>
+<h2 id="status">Status</h2>
+<p>Accepted</p>
+<h2 id="context">Context</h2>
+<p>The Fawkes platform integrates multiple services that require external access:</p>
+<p><strong>Core Services</strong>:
+- Backstage (Developer Portal &amp; Dojo Hub) - Primary user interface
+- Mattermost (Team Collaboration) - Chat and collaboration
+- Focalboard (Project Management) - Kanban boards and planning
+- ArgoCD (GitOps UI) - Deployment visualization
+- Jenkins (CI/CD UI) - Pipeline management
+- Grafana (Observability) - Metrics and dashboards
+- Harbor (Container Registry UI) - Image management
+- SonarQube (Code Quality) - Security and quality reports</p>
+<p><strong>Access Requirements</strong>:
+- Single entry point with consistent domain structure
+- TLS/SSL encryption for all services
+- Path-based or subdomain-based routing
+- Rate limiting and DDoS protection
+- Authentication integration (OIDC/OAuth2)
+- Certificate management automation
+- Load balancing across replicas
+- WebSocket support (Mattermost, ArgoCD, Jenkins)
+- Health check integration
+- Request/response logging for security auditing</p>
+<p><strong>Technical Constraints</strong>:
+- Must work across AWS, Azure, GCP, and on-premises environments
+- Should integrate with cert-manager for automated certificate provisioning
+- Must support both path-based (/backstage) and subdomain-based (backstage.fawkes.example.com) routing
+- Should minimize cloud provider lock-in
+- Must support learner environments with dynamic provisioning
+- Should provide observability (request metrics, tracing)</p>
+<p><strong>Security Requirements</strong>:
+- Force HTTPS/TLS for all traffic
+- Support for custom certificates and Let's Encrypt
+- Web Application Firewall (WAF) capabilities
+- Rate limiting per service and per IP
+- DDoS protection
+- Security headers (HSTS, CSP, X-Frame-Options)
+- IP whitelisting capabilities for sensitive services</p>
+<p><strong>Operational Requirements</strong>:
+- Easy configuration via annotations or CRDs
+- Automatic service discovery
+- Rolling updates without downtime
+- Clear error pages and troubleshooting
+- Integration with platform monitoring</p>
+<h2 id="decision">Decision</h2>
+<p>We will use <strong>NGINX Ingress Controller</strong> as the primary ingress solution for the Fawkes platform.</p>
+<h3 id="architecture">Architecture</h3>
+<div class="highlight"><pre><span></span><code>Internet
+   |
+   v
+┌─────────────────────────────────────────┐
+│  Cloud Load Balancer (AWS NLB/ALB)      │
+│  (Optional, for production)              │
+└─────────────────────────────────────────┘
+   |
+   v
+┌─────────────────────────────────────────┐
+│  NGINX Ingress Controller                │
+│  - TLS Termination                       │
+│  - Path/Subdomain Routing                │
+│  - Rate Limiting                         │
+│  - Authentication (OAuth2 Proxy)         │
+└─────────────────────────────────────────┘
+   |
+   ├──&gt; Backstage Service (/)
+   ├──&gt; Mattermost Service (/mattermost)
+   ├──&gt; Focalboard Service (/focalboard)
+   ├──&gt; ArgoCD Service (/argocd)
+   ├──&gt; Jenkins Service (/jenkins)
+   ├──&gt; Grafana Service (/grafana)
+   ├──&gt; Harbor Service (/harbor)
+   └──&gt; SonarQube Service (/sonarqube)
+</code></pre></div>
+<h3 id="routing-strategy">Routing Strategy</h3>
+<p><strong>Primary: Subdomain-Based Routing</strong> (Production)
+<div class="highlight"><pre><span></span><code>https://backstage.fawkes.example.com  → Backstage
+https://chat.fawkes.example.com       → Mattermost
+https://boards.fawkes.example.com     → Focalboard
+https://cd.fawkes.example.com         → ArgoCD
+https://ci.fawkes.example.com         → Jenkins
+https://metrics.fawkes.example.com    → Grafana
+https://registry.fawkes.example.com   → Harbor
+https://quality.fawkes.example.com    → SonarQube
+</code></pre></div></p>
+<p><strong>Alternative: Path-Based Routing</strong> (Development/Learning)
+<div class="highlight"><pre><span></span><code>https://fawkes.example.com/           → Backstage
+https://fawkes.example.com/chat       → Mattermost
+https://fawkes.example.com/boards     → Focalboard
+https://fawkes.example.com/cd         → ArgoCD
+https://fawkes.example.com/ci         → Jenkins
+https://fawkes.example.com/metrics    → Grafana
+https://fawkes.example.com/registry   → Harbor
+https://fawkes.example.com/quality    → SonarQube
+</code></pre></div></p>
+<h3 id="certificate-management">Certificate Management</h3>
+<p>Integration with <strong>cert-manager</strong> for automated certificate provisioning:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cert-manager.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIssuer</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">letsencrypt-prod</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">acme</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://acme-v02.api.letsencrypt.org/directory</span>
+<span class="w">    </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform-team@example.com</span>
+<span class="w">    </span><span class="nt">privateKeySecretRef</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">letsencrypt-prod-key</span>
+<span class="w">    </span><span class="nt">solvers</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">http01</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">ingress</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+</code></pre></div>
+<h3 id="example-ingress-configuration">Example Ingress Configuration</h3>
+<p><strong>Backstage (Primary Portal)</strong>:
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-core</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cert-manager.io/cluster-issuer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;letsencrypt-prod&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/force-ssl-redirect</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/ssl-protocols</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TLSv1.2</span><span class="nv"> </span><span class="s">TLSv1.3&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/proxy-body-size</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;50m&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/rate-limit</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;100&quot;</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">  </span><span class="nt">tls</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage.fawkes.example.com</span>
+<span class="w">    </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage-tls</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage.fawkes.example.com</span>
+<span class="w">    </span><span class="nt">http</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
+<span class="w">        </span><span class="nt">pathType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prefix</span>
+<span class="w">        </span><span class="nt">backend</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backstage</span>
+<span class="w">            </span><span class="nt">port</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7007</span>
+</code></pre></div></p>
+<p><strong>Mattermost (WebSocket Support)</strong>:
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mattermost</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes-collaboration</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cert-manager.io/cluster-issuer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;letsencrypt-prod&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/force-ssl-redirect</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/proxy-read-timeout</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;600&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/proxy-send-timeout</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;600&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/websocket-services</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;mattermost&quot;</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">  </span><span class="nt">tls</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chat.fawkes.example.com</span>
+<span class="w">    </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mattermost-tls</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chat.fawkes.example.com</span>
+<span class="w">    </span><span class="nt">http</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
+<span class="w">        </span><span class="nt">pathType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Prefix</span>
+<span class="w">        </span><span class="nt">backend</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mattermost</span>
+<span class="w">            </span><span class="nt">port</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8065</span>
+</code></pre></div></p>
+<h3 id="security-configuration">Security Configuration</h3>
+<p><strong>Rate Limiting</strong>:
+<div class="highlight"><pre><span></span><code><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/limit-rps</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10&quot;</span>
+<span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/limit-connections</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;20&quot;</span>
+</code></pre></div></p>
+<p><strong>IP Whitelisting</strong> (for admin services):
+<div class="highlight"><pre><span></span><code><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/whitelist-source-range</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10.0.0.0/8,172.16.0.0/12&quot;</span>
+</code></pre></div></p>
+<p><strong>Security Headers</strong>:
+<div class="highlight"><pre><span></span><code><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nginx.ingress.kubernetes.io/configuration-snippet</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">more_set_headers &quot;X-Frame-Options: DENY&quot;;</span>
+<span class="w">    </span><span class="no">more_set_headers &quot;X-Content-Type-Options: nosniff&quot;;</span>
+<span class="w">    </span><span class="no">more_set_headers &quot;X-XSS-Protection: 1; mode=block&quot;;</span>
+<span class="w">    </span><span class="no">more_set_headers &quot;Strict-Transport-Security: max-age=31536000; includeSubDomains&quot;;</span>
+</code></pre></div></p>
+<h3 id="oauth2-proxy-integration">OAuth2 Proxy Integration</h3>
+<p>For services without native SSO support:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/auth-url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://oauth2.fawkes.example.com/oauth2/auth&quot;</span>
+<span class="w">    </span><span class="nt">nginx.ingress.kubernetes.io/auth-signin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://oauth2.fawkes.example.com/oauth2/start?rd=$escaped_request_uri&quot;</span>
+</code></pre></div>
+<h3 id="monitoring-integration">Monitoring Integration</h3>
+<p>NGINX Ingress Controller exposes Prometheus metrics:
+- Request rate per service
+- Request duration percentiles
+- Error rates (4xx, 5xx)
+- Bytes transferred
+- Upstream response time</p>
+<p>Grafana dashboards: <strong>NGINX Ingress Controller</strong> (official dashboard ID: 9614)</p>
+<h3 id="deployment-configuration">Deployment Configuration</h3>
+<p><strong>NGINX Ingress Controller Helm Values</strong>:
+<div class="highlight"><pre><span></span><code><span class="nt">controller</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+
+<span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span>
+<span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128Mi</span>
+<span class="w">    </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
+<span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512Mi</span>
+
+<span class="w">  </span><span class="nt">service</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LoadBalancer</span>
+<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">service.beta.kubernetes.io/aws-load-balancer-type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;nlb&quot;</span>
+<span class="w">      </span><span class="nt">service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+
+<span class="w">  </span><span class="nt">metrics</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">serviceMonitor</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">use-forwarded-headers</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">compute-full-forwarded-for</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">use-proxy-protocol</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;false&quot;</span>
+<span class="w">    </span><span class="nt">enable-real-ip</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">proxy-body-size</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;50m&quot;</span>
+<span class="w">    </span><span class="nt">ssl-protocols</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TLSv1.2</span><span class="nv"> </span><span class="s">TLSv1.3&quot;</span>
+<span class="w">    </span><span class="nt">ssl-ciphers</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384&quot;</span>
+
+<span class="w">  </span><span class="nt">podAnnotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">prometheus.io/scrape</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="w">    </span><span class="nt">prometheus.io/port</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10254&quot;</span>
+</code></pre></div></p>
+<h2 id="consequences">Consequences</h2>
+<h3 id="positive">Positive</h3>
+<ol>
+<li><strong>Cloud Agnostic</strong>: NGINX Ingress works identically across AWS, Azure, GCP, and on-premises</li>
+<li><strong>Mature &amp; Proven</strong>: Battle-tested in production at massive scale, large community support</li>
+<li><strong>Feature Rich</strong>: Comprehensive feature set including rate limiting, WebSocket, authentication</li>
+<li><strong>Observable</strong>: Native Prometheus metrics integration</li>
+<li><strong>Flexible Routing</strong>: Supports both path-based and subdomain-based routing strategies</li>
+<li><strong>Cost Effective</strong>: Open source with no licensing costs</li>
+<li><strong>Well Documented</strong>: Extensive documentation, examples, and community resources</li>
+<li><strong>Security Hardened</strong>: Regular security updates, CVE tracking, hardening guides available</li>
+<li><strong>GitOps Friendly</strong>: Declarative YAML configuration fits ArgoCD workflow</li>
+<li><strong>Learning Friendly</strong>: Simple annotation-based configuration good for dojo learners</li>
+</ol>
+<h3 id="negative">Negative</h3>
+<ol>
+<li><strong>Resource Overhead</strong>: NGINX controller pods consume cluster resources (mitigated by proper sizing)</li>
+<li><strong>Single Point of Failure</strong>: Requires 3+ replicas for high availability</li>
+<li><strong>Configuration Complexity</strong>: Advanced features require learning NGINX-specific annotations</li>
+<li><strong>Path-Based Routing Limitations</strong>: Some applications (like Mattermost) work better with subdomain routing</li>
+<li><strong>Certificate Management Dependency</strong>: Requires cert-manager for automated TLS (adds complexity)</li>
+<li><strong>Reload on Configuration Change</strong>: Configuration changes trigger NGINX reload (brief traffic disruption)</li>
+</ol>
+<h3 id="neutral">Neutral</h3>
+<ol>
+<li><strong>Load Balancer Costs</strong>: Cloud load balancers incur costs (AWS NLB ~$16/month + data transfer)</li>
+<li><strong>Monitoring Overhead</strong>: Requires Prometheus/Grafana for observability</li>
+<li><strong>DNS Management</strong>: Subdomain routing requires wildcard DNS or multiple A records</li>
+<li><strong>Learning Curve</strong>: Platform team must understand NGINX configuration paradigms</li>
+</ol>
+<h2 id="alternatives-considered">Alternatives Considered</h2>
+<h3 id="alternative-1-traefik">Alternative 1: Traefik</h3>
+<p><strong>Pros</strong>:
+- Native Let's Encrypt integration (no cert-manager needed)
+- Dynamic configuration via labels
+- Built-in dashboard for traffic visualization
+- Smaller resource footprint
+- Excellent WebSocket support
+- Modern, actively developed</p>
+<p><strong>Cons</strong>:
+- Smaller community compared to NGINX
+- Less enterprise adoption
+- More limited advanced features (rate limiting, WAF)
+- Documentation less comprehensive for complex scenarios
+- Fewer third-party integrations</p>
+<p><strong>Reason for Rejection</strong>: While Traefik is excellent and modern, NGINX Ingress has broader enterprise adoption, more comprehensive documentation for complex scenarios, and better alignment with DORA best practices documentation. The larger community makes it easier for Fawkes learners to find troubleshooting resources.</p>
+<h3 id="alternative-2-istioenvoy-service-mesh">Alternative 2: Istio/Envoy Service Mesh</h3>
+<p><strong>Pros</strong>:
+- Full service mesh capabilities (mTLS, traffic management, observability)
+- Advanced traffic routing (A/B testing, canary, circuit breaking)
+- Superior observability (distributed tracing, detailed metrics)
+- Built-in security (zero-trust networking)
+- Envoy is modern, high-performance proxy</p>
+<p><strong>Cons</strong>:
+- Significant complexity overhead (steep learning curve)
+- High resource consumption (sidecar for every pod)
+- Operational burden (control plane management, upgrades)
+- Overkill for ingress-only use case
+- Adds 6-8 weeks to MVP timeline
+- Too complex for learner environments</p>
+<p><strong>Reason for Rejection</strong>: Service mesh capabilities are valuable but represent over-engineering for MVP. Fawkes needs ingress management, not full service mesh. Istio/Envoy can be considered post-MVP as "Advanced Networking" module in Brown Belt curriculum.</p>
+<h3 id="alternative-3-kong-ingress-controller">Alternative 3: Kong Ingress Controller</h3>
+<p><strong>Pros</strong>:
+- API gateway features (rate limiting, authentication, transformation)
+- Plugin ecosystem for extensibility
+- Enterprise version available with support
+- Good for API-heavy platforms
+- Lua-based customization
+- Built-in developer portal</p>
+<p><strong>Cons</strong>:
+- More complex than pure ingress controller
+- Requires PostgreSQL for production (additional dependency)
+- Licensing considerations (enterprise features)
+- Smaller community than NGINX
+- API gateway features not needed for internal platform</p>
+<p><strong>Reason for Rejection</strong>: Kong's strength is API management, which is not a primary Fawkes requirement. The additional complexity and PostgreSQL dependency don't provide sufficient value for our use case. NGINX provides everything we need without API gateway overhead.</p>
+<h3 id="alternative-4-haproxy-ingress">Alternative 4: HAProxy Ingress</h3>
+<p><strong>Pros</strong>:
+- Extremely high performance and efficiency
+- Very low resource consumption
+- Battle-tested load balancing capabilities
+- Excellent documentation
+- Used by major internet properties</p>
+<p><strong>Cons</strong>:
+- Smaller Kubernetes community compared to NGINX
+- Less flexible annotation-based configuration
+- Fewer examples and tutorials for Kubernetes
+- Less integration with cloud-native ecosystem
+- Limited WebSocket support compared to NGINX</p>
+<p><strong>Reason for Rejection</strong>: While HAProxy is excellent for performance-critical scenarios, NGINX Ingress provides better Kubernetes-native integration, more comprehensive documentation for learners, and broader community support. HAProxy's performance advantages are not critical for Fawkes' scale.</p>
+<h3 id="alternative-5-cloud-provider-ingress-aws-alb-gcp-gclb-azure-app-gateway">Alternative 5: Cloud Provider Ingress (AWS ALB, GCP GCLB, Azure App Gateway)</h3>
+<p><strong>Pros</strong>:
+- Native cloud integration
+- Managed service (no controller to maintain)
+- Tight security integration (IAM, security groups)
+- Automatic scaling
+- Lower operational overhead</p>
+<p><strong>Cons</strong>:
+- <strong>Cloud vendor lock-in</strong> (violates Fawkes portability principle)
+- Inconsistent behavior across clouds
+- Limited customization compared to NGINX
+- Annotations differ per cloud
+- Cannot run on-premises or in learner laptops
+- Makes dojo lab provisioning cloud-specific</p>
+<p><strong>Reason for Rejection</strong>: Violates core Fawkes principle of cloud portability. Learners need consistent experience across environments. Platform teams should be able to deploy Fawkes anywhere, including on-premises or local Kubernetes clusters. Cloud ingress controllers prevent this flexibility.</p>
+<h3 id="alternative-6-contour-envoy-based">Alternative 6: Contour (Envoy-based)</h3>
+<p><strong>Pros</strong>:
+- Uses Envoy proxy (modern, high-performance)
+- Simpler than full Istio deployment
+- Good HTTPProxy CRD for advanced routing
+- CNCF project with growing community
+- Excellent for multi-tenancy</p>
+<p><strong>Cons</strong>:
+- Smaller community and ecosystem than NGINX
+- Less mature documentation
+- Fewer examples and tutorials
+- Less enterprise adoption
+- Not as feature-complete for edge use cases</p>
+<p><strong>Reason for Rejection</strong>: While Contour is a good middle ground between NGINX and Istio, its smaller community and less mature documentation make it less suitable for a learning-focused platform. NGINX's extensive resources better support dojo learners troubleshooting issues independently.</p>
+<h2 id="implementation-plan">Implementation Plan</h2>
+<h3 id="phase-1-mvp-week-3-of-sprint-01">Phase 1: MVP (Week 3 of Sprint 01)</h3>
+<ol>
+<li><strong>Deploy NGINX Ingress Controller</strong> [4 hours]</li>
+<li>Install via Helm chart</li>
+<li>Configure for AWS NLB (or equivalent)</li>
+<li>Verify controller pods running</li>
+<li>
+<p>Test basic HTTP routing</p>
+</li>
+<li>
+<p><strong>Deploy cert-manager</strong> [2 hours]</p>
+</li>
+<li>Install cert-manager via Helm</li>
+<li>Create ClusterIssuer for Let's Encrypt staging</li>
+<li>Test certificate provisioning</li>
+<li>
+<p>Create production ClusterIssuer</p>
+</li>
+<li>
+<p><strong>Create Ingress for Backstage</strong> [2 hours]</p>
+</li>
+<li>Subdomain-based routing (backstage.fawkes.dev)</li>
+<li>TLS certificate from Let's Encrypt</li>
+<li>Force HTTPS redirect</li>
+<li>
+<p>Test end-to-end access</p>
+</li>
+<li>
+<p><strong>Document Standard Ingress Pattern</strong> [2 hours]</p>
+</li>
+<li>Create ingress template for new services</li>
+<li>Document annotation patterns</li>
+<li>Create troubleshooting guide</li>
+<li>Add to Dojo Module 2 curriculum</li>
+</ol>
+<h3 id="phase-2-core-services-weeks-4-5">Phase 2: Core Services (Weeks 4-5)</h3>
+<ol>
+<li><strong>Deploy Ingress for Collaboration Services</strong> [4 hours]</li>
+<li>Mattermost with WebSocket support</li>
+<li>Focalboard (integrated with Mattermost)</li>
+<li>
+<p>Test real-time features</p>
+</li>
+<li>
+<p><strong>Deploy Ingress for CI/CD Services</strong> [4 hours]</p>
+</li>
+<li>Jenkins with authentication</li>
+<li>ArgoCD with SSO</li>
+<li>
+<p>Harbor with rate limiting</p>
+</li>
+<li>
+<p><strong>Deploy Ingress for Observability Services</strong> [3 hours]</p>
+</li>
+<li>Grafana with OAuth2 proxy</li>
+<li>Prometheus (internal only, IP whitelist)</li>
+<li>OpenSearch dashboards</li>
+</ol>
+<h3 id="phase-3-security-monitoring-week-6">Phase 3: Security &amp; Monitoring (Week 6)</h3>
+<ol>
+<li><strong>Implement Security Hardening</strong> [4 hours]</li>
+<li>Configure rate limiting</li>
+<li>Add security headers</li>
+<li>IP whitelisting for admin services</li>
+<li>
+<p>Test DDoS protection</p>
+</li>
+<li>
+<p><strong>Configure Monitoring</strong> [3 hours]</p>
+</li>
+<li>Prometheus ServiceMonitor for NGINX metrics</li>
+<li>Grafana dashboard for ingress monitoring</li>
+<li>Alerting rules for high error rates</li>
+<li>
+<p>Log aggregation for access logs</p>
+</li>
+<li>
+<p><strong>Create Dojo Lab Automation</strong> [4 hours]</p>
+<ul>
+<li>Automated ingress provisioning for learner namespaces</li>
+<li>Dynamic subdomain creation (learner-01.labs.fawkes.dev)</li>
+<li>Wildcard certificate management</li>
+<li>Cleanup automation</li>
+</ul>
+</li>
+</ol>
+<h3 id="phase-4-documentation-training-week-7">Phase 4: Documentation &amp; Training (Week 7)</h3>
+<ol>
+<li>
+<p><strong>Write Comprehensive Documentation</strong> [6 hours]</p>
+<ul>
+<li>Architecture overview with diagrams</li>
+<li>Configuration patterns and best practices</li>
+<li>Troubleshooting guide (common issues)</li>
+<li>Security hardening checklist</li>
+</ul>
+</li>
+<li>
+<p><strong>Create Dojo Module Content</strong> [4 hours]</p>
+<ul>
+<li>Yellow Belt Module: "Exposing Services with Ingress"</li>
+<li>Hands-on lab: Create custom ingress</li>
+<li>Assessment questions on TLS, routing, security</li>
+<li>Video walkthrough (15 minutes)</li>
+</ul>
+</li>
+</ol>
+<h2 id="dojo-integration">Dojo Integration</h2>
+<h3 id="yellow-belt-module-4-exposing-services-with-ingress">Yellow Belt - Module 4: "Exposing Services with Ingress"</h3>
+<p><strong>Learning Objectives</strong>:
+- Understand Kubernetes Ingress concepts
+- Configure NGINX Ingress Controller
+- Implement TLS/SSL with cert-manager
+- Apply security best practices (rate limiting, headers)
+- Troubleshoot common ingress issues</p>
+<p><strong>Hands-On Lab</strong>:
+1. Deploy a sample application to learner namespace
+2. Create Ingress resource with subdomain routing
+3. Configure TLS certificate via cert-manager
+4. Test HTTPS access and forced redirect
+5. Add rate limiting and security headers
+6. Monitor ingress metrics in Grafana</p>
+<p><strong>Assessment</strong>:
+- Quiz on Ingress concepts (5 questions)
+- Practical: Deploy and expose a new service
+- Troubleshoot broken ingress configuration</p>
+<p><strong>Time</strong>: 90 minutes (30 min theory + 60 min hands-on)</p>
+<h2 id="monitoring-observability">Monitoring &amp; Observability</h2>
+<h3 id="key-metrics">Key Metrics</h3>
+<p><strong>NGINX Ingress Controller Metrics</strong>:
+- <code>nginx_ingress_controller_requests</code> - Total requests per service
+- <code>nginx_ingress_controller_request_duration_seconds</code> - Request latency percentiles
+- <code>nginx_ingress_controller_response_size</code> - Response sizes
+- <code>nginx_ingress_controller_ssl_expire_time_seconds</code> - Certificate expiration
+- <code>nginx_ingress_controller_nginx_process_connections</code> - Active connections</p>
+<p><strong>Grafana Dashboard Panels</strong>:
+1. Request Rate (per service, per ingress)
+2. Request Duration (P50, P95, P99)
+3. HTTP Status Codes (2xx, 4xx, 5xx rates)
+4. SSL Certificate Expiration Timeline
+5. Ingress Controller Resource Usage (CPU, memory)
+6. Error Rate by Service</p>
+<p><strong>Alerting Rules</strong>:
+<div class="highlight"><pre><span></span><code><span class="nt">groups</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingress_alerts</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighErrorRate</span>
+<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sum(rate(nginx_ingress_controller_requests{status=~&quot;5..&quot;}[5m])) / sum(rate(nginx_ingress_controller_requests[5m])) &gt; 0.05</span>
+<span class="w">    </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">5xx</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">detected&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CertificateExpiring</span>
+<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(nginx_ingress_controller_ssl_expire_time_seconds - time()) / 86400 &lt; 7</span>
+<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TLS</span><span class="nv"> </span><span class="s">certificate</span><span class="nv"> </span><span class="s">expiring</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">less</span><span class="nv"> </span><span class="s">than</span><span class="nv"> </span><span class="s">7</span><span class="nv"> </span><span class="s">days&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighLatency</span>
+<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">histogram_quantile(0.95, nginx_ingress_controller_request_duration_seconds_bucket) &gt; 5</span>
+<span class="w">    </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
+<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;P95</span><span class="nv"> </span><span class="s">latency</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">5</span><span class="nv"> </span><span class="s">seconds&quot;</span>
+</code></pre></div></p>
+<h2 id="security-considerations">Security Considerations</h2>
+<h3 id="tlsssl-management">TLS/SSL Management</h3>
+<ol>
+<li><strong>Certificate Rotation</strong>: cert-manager automatically renews certificates 30 days before expiration</li>
+<li><strong>Protocol Enforcement</strong>: Only TLSv1.2 and TLSv1.3 allowed</li>
+<li><strong>Cipher Suites</strong>: Strong ciphers only, no deprecated algorithms</li>
+<li><strong>HSTS</strong>: Strict-Transport-Security header enforced</li>
+</ol>
+<h3 id="rate-limiting">Rate Limiting</h3>
+<p>Per-Service Defaults:
+- Public services (Backstage): 100 requests/second per IP
+- Internal services (Jenkins, ArgoCD): 50 requests/second per IP
+- Admin services (Prometheus): 10 requests/second per IP</p>
+<h3 id="ip-whitelisting">IP Whitelisting</h3>
+<p>Sensitive services restricted to:
+- Corporate VPN CIDR blocks
+- Platform team IP ranges
+- CI/CD pipeline source IPs</p>
+<h3 id="web-application-firewall-waf">Web Application Firewall (WAF)</h3>
+<p>ModSecurity integration (post-MVP):
+- OWASP Core Rule Set (CRS)
+- SQL injection prevention
+- XSS attack blocking
+- Request validation</p>
+<h2 id="cost-analysis">Cost Analysis</h2>
+<h3 id="aws-deployment-production">AWS Deployment (Production)</h3>
+<p><strong>Infrastructure</strong>:
+- Network Load Balancer: $16/month + $0.006/GB data transfer
+- EBS volumes (NGINX controller state): $8/month for 80GB
+- Data transfer (estimated 1TB/month): $90/month</p>
+<p><strong>NGINX Controller Resources</strong>:
+- 3 replicas × 0.5 CPU × $0.04/hour = $43/month
+- 3 replicas × 512MB RAM × $0.005/hour = $5/month</p>
+<p><strong>Total Monthly Cost</strong>: ~$162/month</p>
+<p><strong>Cost Optimization</strong>:
+- Use AWS ALB for learner/dev environments (cheaper)
+- Reduce replica count in non-production
+- Implement caching to reduce data transfer</p>
+<h3 id="multi-environment-cost-breakdown">Multi-Environment Cost Breakdown</h3>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Load Balancer</th>
+<th>Replicas</th>
+<th>Monthly Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production</td>
+<td>NLB</td>
+<td>3</td>
+<td>$162</td>
+</tr>
+<tr>
+<td>Staging</td>
+<td>ALB</td>
+<td>2</td>
+<td>$40</td>
+</tr>
+<tr>
+<td>Development</td>
+<td>NodePort</td>
+<td>1</td>
+<td>$0</td>
+</tr>
+<tr>
+<td>Learner Labs</td>
+<td>ALB (shared)</td>
+<td>2</td>
+<td>$40</td>
+</tr>
+</tbody>
+</table>
+<h2 id="documentation-structure">Documentation Structure</h2>
+<h3 id="for-platform-teams">For Platform Teams</h3>
+<ol>
+<li><strong>Architecture Overview</strong></li>
+<li>Request flow diagrams</li>
+<li>TLS termination architecture</li>
+<li>Certificate management workflow</li>
+<li>
+<p>Multi-environment routing strategy</p>
+</li>
+<li>
+<p><strong>Deployment Guide</strong></p>
+</li>
+<li>Helm chart installation</li>
+<li>Configuration recommendations</li>
+<li>Cloud-specific considerations</li>
+<li>
+<p>Troubleshooting common issues</p>
+</li>
+<li>
+<p><strong>Operations Runbook</strong></p>
+</li>
+<li>Certificate renewal procedures</li>
+<li>Ingress controller upgrades</li>
+<li>Scaling guidelines</li>
+<li>Incident response procedures</li>
+</ol>
+<h3 id="for-dojo-learners">For Dojo Learners</h3>
+<ol>
+<li><strong>Concepts Tutorial</strong></li>
+<li>What is an Ingress Controller?</li>
+<li>How TLS/SSL works</li>
+<li>Routing strategies comparison</li>
+<li>
+<p>Security best practices</p>
+</li>
+<li>
+<p><strong>Hands-On Lab Guide</strong></p>
+</li>
+<li>Step-by-step ingress creation</li>
+<li>TLS configuration walkthrough</li>
+<li>Troubleshooting exercises</li>
+<li>
+<p>Real-world scenarios</p>
+</li>
+<li>
+<p><strong>Reference Materials</strong></p>
+</li>
+<li>Annotation cheat sheet</li>
+<li>Common patterns library</li>
+<li>Error message decoder</li>
+<li>kubectl commands reference</li>
+</ol>
+<h2 id="migration-path">Migration Path</h2>
+<h3 id="from-default-cloud-ingress">From Default Cloud Ingress</h3>
+<p>If organizations start with cloud-native ingress:</p>
+<ol>
+<li><strong>Week 1</strong>: Deploy NGINX Ingress alongside existing ingress</li>
+<li><strong>Week 2</strong>: Migrate non-critical services to NGINX</li>
+<li><strong>Week 3</strong>: Validate routing, TLS, monitoring</li>
+<li><strong>Week 4</strong>: Migrate critical services with rollback plan</li>
+<li><strong>Week 5</strong>: Decommission cloud ingress controller</li>
+</ol>
+<p><strong>Rollback Strategy</strong>: Maintain both controllers for 2 weeks, allow instant DNS cutover</p>
+<h3 id="from-path-based-to-subdomain-routing">From Path-Based to Subdomain Routing</h3>
+<ol>
+<li>Configure subdomain routing for new services</li>
+<li>Maintain path-based routing for existing services</li>
+<li>Gradually migrate services based on traffic patterns</li>
+<li>Update documentation and bookmarks</li>
+<li>Deprecate path-based routing after 6 months</li>
+</ol>
+<h2 id="related-decisions">Related Decisions</h2>
+<ul>
+<li><strong>ADR-001</strong>: Kubernetes for Container Orchestration (ingress is Kubernetes-native)</li>
+<li><strong>ADR-002</strong>: Backstage for Developer Portal (primary ingress endpoint)</li>
+<li><strong>ADR-009</strong>: External Secrets Operator (integrates with ingress for secrets)</li>
+<li><strong>Future ADR</strong>: OAuth2 Proxy for Unified Authentication (auth layer on ingress)</li>
+<li><strong>Future ADR</strong>: Service Mesh (potential Istio migration path)</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>NGINX Ingress Controller Documentation: https://kubernetes.github.io/ingress-nginx/</li>
+<li>cert-manager Documentation: https://cert-manager.io/docs/</li>
+<li>CNCF Ingress Controller Comparison: https://docs.google.com/spreadsheets/d/191WWNpjJ2za6-nbG4ZoUMXMpUK8KlCIosvQB0f-oq3k</li>
+<li>OWASP TLS Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html</li>
+<li>Kubernetes Ingress Concepts: https://kubernetes.io/docs/concepts/services-networking/ingress/</li>
+</ul>
+<h2 id="notes">Notes</h2>
+<p><strong>Production Readiness Checklist</strong>:
+- [ ] 3+ replicas for high availability
+- [ ] Cloud load balancer provisioned
+- [ ] TLS certificates from trusted CA (Let's Encrypt or corporate)
+- [ ] Rate limiting configured
+- [ ] Security headers enabled
+- [ ] Monitoring dashboards created
+- [ ] Alerting rules configured
+- [ ] Runbook documented
+- [ ] Team trained on ingress operations</p>
+<p><strong>Learner Environment Considerations</strong>:
+- Use path-based routing to minimize DNS complexity
+- Provide pre-configured ingress templates
+- Automate certificate provisioning
+- Create self-service ingress creation workflow
+- Include ingress troubleshooting in curriculum</p>
+<h2 id="last-updated">Last Updated</h2>
+<p>December 7, 2024 - Initial version documenting NGINX Ingress Controller selection</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
