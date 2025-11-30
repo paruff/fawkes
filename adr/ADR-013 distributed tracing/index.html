@@ -1800,6 +1800,217 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#monitoring-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring &amp; Observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring &amp; Observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tempo-health-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tempo Health Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opentelemetry-collector-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OpenTelemetry Collector Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-privacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Privacy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-costs-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Costs (Production)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrastructure-costs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure Costs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-platform-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Platform Teams
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-application-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Application Teams
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-dojo-learners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Dojo Learners
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#last-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Last Updated
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2546,7 +2757,267 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 4. Create video walkthrough (15 minutes)</p>
 <h2 id="dojo-integration">Dojo Integration</h2>
 <h3 id="brown-belt-module-6-distributed-tracing-request-flow-analysis">Brown Belt - Module 6: "Distributed Tracing &amp; Request Flow Analysis"</h3>
-<p>**Learning Objectives</p>
+<p><strong>Learning Objectives</strong>:
+- Understand distributed tracing concepts (spans, traces, context propagation)
+- Implement OpenTelemetry instrumentation in applications
+- Query traces using TraceQL
+- Correlate traces with metrics and logs
+- Debug performance issues using distributed tracing
+- Calculate DORA lead time metrics from traces</p>
+<p><strong>Hands-On Lab</strong> (90 minutes):</p>
+<p><strong>Part 1: Instrument a Microservice</strong> (30 min)
+1. Deploy sample 3-tier app (frontend → API → database)
+2. Add OpenTelemetry SDK to each service
+3. Configure trace export to Tempo
+4. Generate traffic and view traces in Grafana
+5. Observe request flow across services</p>
+<p><strong>Part 2: Advanced Querying</strong> (30 min)
+1. Write TraceQL queries to find:
+   - Slow database queries
+   - Requests with errors
+   - Specific user journeys
+   - Deployment traces
+2. Create custom Grafana dashboard
+3. Set up trace-based alerts</p>
+<p><strong>Part 3: Troubleshooting Exercise</strong> (30 min)
+- <strong>Scenario</strong>: Application experiencing intermittent slowness
+- <strong>Task</strong>: Use traces to identify:
+  - Which service is the bottleneck
+  - Slow database queries
+  - External API latency
+  - Network issues
+- <strong>Deliverable</strong>: Root cause analysis report with trace evidence</p>
+<p><strong>Assessment</strong>:
+- Quiz: 10 questions on tracing concepts
+- Practical: Instrument new service and create dashboard
+- Troubleshooting: Debug broken trace (missing context propagation)</p>
+<p><strong>Time</strong>: 2 hours (30 min theory + 90 min hands-on + assessment)</p>
+<h2 id="monitoring-observability">Monitoring &amp; Observability</h2>
+<h3 id="tempo-health-metrics">Tempo Health Metrics</h3>
+<p><strong>Key Metrics to Monitor</strong>:
+- <code>tempo_ingester_bytes_received_total</code> - Trace ingestion rate
+- <code>tempo_ingester_blocks_flushed_total</code> - Block flush rate
+- <code>tempo_query_frontend_result_metrics_inspected_bytes</code> - Query performance
+- <code>tempo_distributor_spans_received_total</code> - Span reception rate
+- <code>tempo_compactor_blocks_compacted_total</code> - Compaction health</p>
+<p><strong>Grafana Dashboard</strong>: "Tempo Operations"
+- Ingestion rate by tenant
+- Query latency (P50, P95, P99)
+- Storage usage and growth
+- Compaction lag
+- Error rates</p>
+<p><strong>Alerting Rules</strong>:
+<div class="highlight"><pre><span></span><code><span class="nt">groups</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tempo_alerts</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TempoHighIngestionErrors</span>
+<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rate(tempo_distributor_spans_received_total{status=&quot;error&quot;}[5m]) &gt; 100</span>
+<span class="w">    </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
+<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;High</span><span class="nv"> </span><span class="s">trace</span><span class="nv"> </span><span class="s">ingestion</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">rate&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TempoHighQueryLatency</span>
+<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">histogram_quantile(0.95, tempo_query_frontend_duration_seconds_bucket) &gt; 10</span>
+<span class="w">    </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Tempo</span><span class="nv"> </span><span class="s">query</span><span class="nv"> </span><span class="s">latency</span><span class="nv"> </span><span class="s">P95</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">10s&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TempoStorageUsageHigh</span>
+<span class="w">    </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tempo_ingester_bytes_metric_total &gt; 100e9</span><span class="w">  </span><span class="c1"># 100GB</span>
+<span class="w">    </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Tempo</span><span class="nv"> </span><span class="s">ingester</span><span class="nv"> </span><span class="s">storage</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">high&quot;</span>
+</code></pre></div></p>
+<h3 id="opentelemetry-collector-health">OpenTelemetry Collector Health</h3>
+<p><strong>Key Metrics</strong>:
+- <code>otelcol_receiver_accepted_spans</code> - Spans received
+- <code>otelcol_receiver_refused_spans</code> - Spans refused (backpressure)
+- <code>otelcol_processor_batch_batch_send_size</code> - Batch sizes
+- <code>otelcol_exporter_sent_spans</code> - Spans successfully exported
+- <code>otelcol_exporter_send_failed_spans</code> - Export failures</p>
+<p><strong>Dashboard</strong>: "OpenTelemetry Collector Health"
+- Span throughput (in/out)
+- Processor queue depth
+- Export success/failure rates
+- Memory usage by component</p>
+<h2 id="security-considerations">Security Considerations</h2>
+<h3 id="data-privacy">Data Privacy</h3>
+<p><strong>Sensitive Data Scrubbing</strong>:
+- Remove authorization headers
+- Hash SQL statements
+- Redact PII from URLs and headers
+- Obfuscate API keys in trace attributes</p>
+<p><strong>Access Control</strong>:
+- Grafana RBAC for trace viewing
+- Namespace-based trace isolation (teams only see their traces)
+- Audit logging for trace access</p>
+<h3 id="compliance">Compliance</h3>
+<p><strong>Data Retention</strong>:
+- 7 days detailed traces (compliance with GDPR "right to be forgotten")
+- 30 days sampled traces
+- Automated deletion after retention period</p>
+<p><strong>Encryption</strong>:
+- TLS for all trace transmission (OTLP over gRPC/HTTPS)
+- S3 server-side encryption for stored traces
+- No plaintext credentials in trace attributes</p>
+<h2 id="cost-analysis">Cost Analysis</h2>
+<h3 id="storage-costs-production">Storage Costs (Production)</h3>
+<p><strong>Assumptions</strong>:
+- 100 services generating traces
+- 1,000 requests/second average
+- 10 spans per trace average
+- 10% sampling rate (tail-based)
+- ~1KB per span (compressed)</p>
+<p><strong>Daily Trace Volume</strong>:
+- Raw spans: 100 services × 1,000 req/s × 10 spans × 86,400 s = 86.4 billion spans/day
+- After sampling: 8.64 billion spans/day
+- Storage: 8.64B spans × 1KB = 8.64 TB/day (before compression)
+- After compression (10:1): ~864 GB/day</p>
+<p><strong>Monthly Storage (7-day retention)</strong>:
+- 864 GB/day × 7 days = 6 TB active storage
+- S3 Standard: $0.023/GB = $138/month
+- S3 Intelligent-Tiering (after 7 days): $0.0125/GB = $75/month</p>
+<p><strong>Total Monthly Cost</strong>: ~$213/month (vs. $5,000+/month for commercial APM at 100 services)</p>
+<p><strong>Cost Optimization</strong>:
+- Increase sampling rate in non-production (less cost-sensitive)
+- Use S3 Lifecycle policies to move old traces to Glacier
+- Tune tail-based sampling to focus on valuable traces
+- Compress spans aggressively (Snappy → LZ4)</p>
+<h3 id="infrastructure-costs">Infrastructure Costs</h3>
+<p><strong>Tempo Pods</strong>:
+- 3 replicas × 2 CPU × $0.04/CPU/hour = $5.76/day = $173/month
+- 3 replicas × 4GB RAM × $0.005/GB/hour = $1.44/day = $43/month</p>
+<p><strong>OpenTelemetry Collector</strong>:
+- DaemonSet (1 per node, 10 nodes): 10 × 0.1 CPU × $0.04 = $0.96/day = $29/month
+- DaemonSet memory: 10 × 128MB × $0.005/GB/hour = negligible</p>
+<p><strong>Total Infrastructure</strong>: ~$245/month</p>
+<p><strong>Grand Total</strong>: ~$458/month for distributed tracing (100 services, production scale)</p>
+<h2 id="documentation-structure">Documentation Structure</h2>
+<h3 id="for-platform-teams">For Platform Teams</h3>
+<ol>
+<li><strong>Architecture &amp; Design</strong></li>
+<li>Trace collection flow</li>
+<li>Sampling strategies explained</li>
+<li>Storage architecture (S3 layout)</li>
+<li>
+<p>Query performance optimization</p>
+</li>
+<li>
+<p><strong>Deployment Guide</strong></p>
+</li>
+<li>Helm chart installation (Tempo, OTel Collector)</li>
+<li>Cloud-specific configurations (AWS, Azure, GCP)</li>
+<li>Scaling guidelines</li>
+<li>
+<p>Backup and disaster recovery</p>
+</li>
+<li>
+<p><strong>Operations Runbook</strong></p>
+</li>
+<li>Common troubleshooting scenarios</li>
+<li>Tempo upgrade procedures</li>
+<li>Storage management (compaction, cleanup)</li>
+<li>Performance tuning guide</li>
+</ol>
+<h3 id="for-application-teams">For Application Teams</h3>
+<ol>
+<li><strong>Instrumentation Guide</strong></li>
+<li>Language-specific SDKs (Java, Python, Node.js, Go)</li>
+<li>Auto vs. manual instrumentation</li>
+<li>Custom span creation</li>
+<li>
+<p>Best practices (span naming, attributes)</p>
+</li>
+<li>
+<p><strong>Querying &amp; Troubleshooting</strong></p>
+</li>
+<li>TraceQL query cookbook</li>
+<li>Common debugging patterns</li>
+<li>Grafana dashboard usage</li>
+<li>
+<p>Trace-to-logs/metrics correlation</p>
+</li>
+<li>
+<p><strong>Performance Impact</strong></p>
+</li>
+<li>Overhead benchmarks</li>
+<li>Sampling recommendations</li>
+<li>Optimization techniques</li>
+</ol>
+<h3 id="for-dojo-learners">For Dojo Learners</h3>
+<ol>
+<li><strong>Concepts Tutorial</strong></li>
+<li>What is distributed tracing?</li>
+<li>Spans, traces, and context propagation</li>
+<li>When to use tracing vs. logs/metrics</li>
+<li>
+<p>Real-world use cases</p>
+</li>
+<li>
+<p><strong>Hands-On Labs</strong></p>
+</li>
+<li>Lab 1: Instrument a simple app</li>
+<li>Lab 2: Query traces with TraceQL</li>
+<li>Lab 3: Debug performance issue</li>
+<li>
+<p>Lab 4: Trace a deployment pipeline</p>
+</li>
+<li>
+<p><strong>Reference Materials</strong></p>
+</li>
+<li>OpenTelemetry SDK quick reference</li>
+<li>TraceQL cheat sheet</li>
+<li>Common trace patterns</li>
+<li>Troubleshooting decision tree</li>
+</ol>
+<h2 id="related-decisions">Related Decisions</h2>
+<ul>
+<li><strong>ADR-011</strong>: Centralized Log Management (Loki) - Trace-to-log correlation via trace IDs</li>
+<li><strong>ADR-012</strong>: Metrics Monitoring (Prometheus/Grafana) - Exemplars link metrics to traces</li>
+<li><strong>ADR-002</strong>: Backstage for Developer Portal - Primary UI instrumentation</li>
+<li><strong>ADR-004</strong>: Jenkins for CI/CD - Pipeline trace instrumentation</li>
+<li><strong>ADR-003</strong>: ArgoCD for GitOps - Deployment trace instrumentation</li>
+<li><strong>Future ADR</strong>: Service Mesh (Istio) - Alternative instrumentation via sidecar proxies</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>OpenTelemetry Documentation: https://opentelemetry.io/docs/</li>
+<li>Grafana Tempo Documentation: https://grafana.com/docs/tempo/</li>
+<li>TraceQL Language Reference: https://grafana.com/docs/tempo/latest/traceql/</li>
+<li>CNCF Distributed Tracing Best Practices: https://github.com/cncf/tag-observability</li>
+<li>Distributed Tracing Patterns (book) by Austin Parker</li>
+<li>OpenTelemetry Best Practices: https://opentelemetry.io/docs/concepts/instrumentation/</li>
+</ul>
+<h2 id="notes">Notes</h2>
+<p><strong>Production Readiness Checklist</strong>:
+- [ ] Tempo deployed with 3+ replicas for HA
+- [ ] S3/MinIO backend configured with proper retention
+- [ ] OpenTelemetry Collector deployed (DaemonSet + Deployment)
+- [ ] Tail-based sampling configured and tested
+- [ ] Grafana data source configured with Tempo
+- [ ] Trace-to-logs correlation working (Loki derived fields)
+- [ ] Trace-to-metrics correlation working (Prometheus exemplars)
+- [ ] Sensitive data scrubbing verified
+- [ ] Performance benchmarks completed (overhead &lt; 5%)
+- [ ] Monitoring dashboards created
+- [ ] Alerting rules configured
+- [ ] Documentation complete
+- [ ] Team trained on querying and troubleshooting</p>
+<p><strong>Learner Environment Considerations</strong>:
+- Use in-memory Tempo backend for short-lived labs
+- Pre-instrument sample applications
+- Provide TraceQL query examples
+- Include broken traces for troubleshooting practice
+- Show real-world debugging scenarios
+- Integrate with DORA metrics curriculum</p>
+<p><strong>Future Enhancements</strong> (Post-MVP):
+- Service mesh integration (Istio sidecar auto-instrumentation)
+- Trace-based SLO monitoring
+- Anomaly detection from trace patterns
+- Cost attribution per service from trace data
+- Automated performance recommendations
+- Trace replay for testing</p>
+<h2 id="last-updated">Last Updated</h2>
+<p>December 7, 2024 - Initial version documenting Grafana Tempo + OpenTelemetry for distributed tracing</p>
 
 
 
