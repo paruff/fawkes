@@ -231,11 +231,28 @@ def dependencyCheck(Map config) {
 /**
  * Get the SonarQube dashboard URL for a project
  *
- * @param projectKey The SonarQube project key
- * @param branch Optional branch name
- * @return The URL to the SonarQube dashboard
+ * Constructs the URL to the SonarQube dashboard for viewing detailed
+ * code analysis results. Uses the SONARQUBE_URL environment variable
+ * if available, otherwise defaults to the internal Kubernetes service URL.
+ *
+ * @param projectKey The SonarQube project key (required)
+ * @param branch Optional branch name, defaults to 'main'
+ * @return The URL to the SonarQube dashboard for the specified project and branch
+ *
+ * @example
+ * // Get URL for main branch
+ * def url = getSonarQubeUrl('my-service')
+ * // Returns: http://sonarqube.fawkes.svc:9000/dashboard?id=my-service&branch=main
+ *
+ * @example
+ * // Get URL for specific branch
+ * def url = getSonarQubeUrl('my-service', 'feature-branch')
+ * // Returns: http://sonarqube.fawkes.svc:9000/dashboard?id=my-service&branch=feature-branch
  */
 def getSonarQubeUrl(String projectKey, String branch = 'main') {
+    if (!projectKey) {
+        throw new IllegalArgumentException("projectKey is required")
+    }
     def baseUrl = env.SONARQUBE_URL ?: 'http://sonarqube.fawkes.svc:9000'
     return "${baseUrl}/dashboard?id=${projectKey}&branch=${branch}"
 }
