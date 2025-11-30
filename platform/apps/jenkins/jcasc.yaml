@@ -1,7 +1,12 @@
 # Jenkins Configuration as Code (JCasC) - security + Kubernetes agents
+# Golden Path CI/CD Pipeline Configuration
 jenkins:
-  systemMessage: "Fawkes CI (MVP)"
+  systemMessage: "Fawkes CI/CD Platform - Golden Path Enabled"
   mode: NORMAL
+  # numExecutors: 0 prevents builds from running on the controller node
+  # for security and resource isolation - all builds run on Kubernetes agents
+  numExecutors: 0
+
   # Kubernetes cloud configuration for ephemeral agents
   clouds:
     - kubernetes:
@@ -9,18 +14,95 @@ jenkins:
         namespace: "fawkes"
         jenkinsUrl: "http://jenkins:8080"
         jenkinsTunnel: "jenkins-agent:50000"
-        containerCapStr: "10"
+        containerCapStr: "20"
         templates:
+          # Default JNLP agent
           - name: "jnlp-agent"
             label: "k8s-agent"
             remoteFs: "/home/jenkins"
-            instanceCapStr: "5"
+            instanceCapStr: "10"
             idleTerminationMinutes: 10
             containers:
               - name: "jnlp"
                 image: "jenkins/inbound-agent:latest"
                 args: "${computer.jnlpmac} ${computer.name}"
                 workingDir: "/home/jenkins"
+
+          # Maven agent for Java builds
+          - name: "maven-agent"
+            label: "maven java"
+            remoteFs: "/home/jenkins"
+            instanceCapStr: "5"
+            idleTerminationMinutes: 10
+            containers:
+              - name: "maven"
+                image: "maven:3.9-eclipse-temurin-17"
+                command: "cat"
+                ttyEnabled: true
+                resourceRequestCpu: "1"
+                resourceRequestMemory: "2Gi"
+                resourceLimitCpu: "2"
+                resourceLimitMemory: "4Gi"
+              - name: "jnlp"
+                image: "jenkins/inbound-agent:latest"
+                args: "${computer.jnlpmac} ${computer.name}"
+
+          # Python agent
+          - name: "python-agent"
+            label: "python"
+            remoteFs: "/home/jenkins"
+            instanceCapStr: "5"
+            idleTerminationMinutes: 10
+            containers:
+              - name: "python"
+                image: "python:3.11-slim"
+                command: "cat"
+                ttyEnabled: true
+                resourceRequestCpu: "500m"
+                resourceRequestMemory: "1Gi"
+                resourceLimitCpu: "1"
+                resourceLimitMemory: "2Gi"
+              - name: "jnlp"
+                image: "jenkins/inbound-agent:latest"
+                args: "${computer.jnlpmac} ${computer.name}"
+
+          # Node.js agent
+          - name: "node-agent"
+            label: "node nodejs"
+            remoteFs: "/home/jenkins"
+            instanceCapStr: "5"
+            idleTerminationMinutes: 10
+            containers:
+              - name: "node"
+                image: "node:20-slim"
+                command: "cat"
+                ttyEnabled: true
+                resourceRequestCpu: "500m"
+                resourceRequestMemory: "1Gi"
+                resourceLimitCpu: "1"
+                resourceLimitMemory: "2Gi"
+              - name: "jnlp"
+                image: "jenkins/inbound-agent:latest"
+                args: "${computer.jnlpmac} ${computer.name}"
+
+          # Go agent
+          - name: "go-agent"
+            label: "go golang"
+            remoteFs: "/home/jenkins"
+            instanceCapStr: "5"
+            idleTerminationMinutes: 10
+            containers:
+              - name: "golang"
+                image: "golang:1.21"
+                command: "cat"
+                ttyEnabled: true
+                resourceRequestCpu: "500m"
+                resourceRequestMemory: "1Gi"
+                resourceLimitCpu: "1"
+                resourceLimitMemory: "2Gi"
+              - name: "jnlp"
+                image: "jenkins/inbound-agent:latest"
+                args: "${computer.jnlpmac} ${computer.name}"
 
 securityRealm:
   local:
@@ -36,3 +118,56 @@ authorizationStrategy:
 unclassified:
   location:
     adminAddress: "ci-admin@fawkes.local"
+    url: "http://jenkins.127.0.0.1.nip.io"
+
+  # Global Shared Library Configuration for Golden Path
+  globalLibraries:
+    libraries:
+      - name: "fawkes-pipeline-library"
+        defaultVersion: "main"
+        implicit: true
+        allowVersionOverride: true
+        retriever:
+          modernSCM:
+            scm:
+              git:
+                remote: "https://github.com/paruff/fawkes"
+                credentialsId: "github-token"
+            libraryPath: "jenkins-shared-library"
+
+  # SonarQube configuration (for code quality gates)
+  sonarGlobalConfiguration:
+    buildWrapperEnabled: true
+    installations:
+      - name: "SonarQube"
+        serverUrl: "http://sonarqube.fawkes.svc:9000"
+        credentialsId: "sonarqube-token"
+
+  # Mattermost notification configuration
+  mattermostNotifier:
+    endpoint: "http://mattermost.fawkes.svc:8065/hooks/jenkins"
+    room: "ci-builds"
+    icon: ":jenkins:"
+    buildServerUrl: "http://jenkins.127.0.0.1.nip.io"
+
+# Security hardening
+security:
+  scriptApproval:
+    approvedSignatures:
+      - "method groovy.lang.GroovyObject invokeMethod java.lang.String java.lang.Object"
+      - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods take java.lang.CharSequence int"
+
+# Tool installations
+tool:
+  git:
+    installations:
+      - name: "Default"
+        home: "git"
+  maven:
+    installations:
+      - name: "Maven 3.9"
+        properties:
+          - installSource:
+              installers:
+                - maven:
+                    id: "3.9.6"

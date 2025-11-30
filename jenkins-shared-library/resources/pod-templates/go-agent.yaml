@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    jenkins: agent
+    language: go
+spec:
+  serviceAccountName: jenkins-agent
+  containers:
+  - name: golang
+    image: golang:1.21
+    command: ['cat']
+    tty: true
+    resources:
+      requests:
+        cpu: '500m'
+        memory: '1Gi'
+      limits:
+        cpu: '1'
+        memory: '2Gi'
+    volumeMounts:
+    - name: go-cache
+      mountPath: /go/pkg
+  - name: docker
+    image: docker:24-dind
+    command: ['cat']
+    tty: true
+    securityContext:
+      privileged: true
+    volumeMounts:
+    - name: docker-sock
+      mountPath: /var/run/docker.sock
+  - name: trivy
+    image: aquasec/trivy:latest
+    command: ['cat']
+    tty: true
+  volumes:
+  - name: docker-sock
+    hostPath:
+      path: /var/run/docker.sock
+  - name: go-cache
+    emptyDir: {}

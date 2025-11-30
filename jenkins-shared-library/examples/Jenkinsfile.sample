@@ -1,0 +1,60 @@
+/**
+ * Sample Jenkinsfile demonstrating Golden Path pipeline usage
+ *
+ * This file shows how application teams can use the Fawkes shared library
+ * to implement a standardized CI/CD pipeline with minimal configuration.
+ *
+ * Copy this file to your repository root as 'Jenkinsfile' and customize
+ * the configuration options as needed.
+ */
+
+// Load the Fawkes shared library
+@Library('fawkes-pipeline-library') _
+
+// Use the Golden Path pipeline with configuration
+goldenPathPipeline {
+    // Required: Application name (used for Docker image, ArgoCD app, etc.)
+    appName = 'sample-app'
+
+    // Required: Programming language (java, python, node, go)
+    language = 'java'
+
+    // Optional: Docker registry (defaults to harbor.fawkes.local)
+    // dockerRegistry = 'harbor.fawkes.local'
+
+    // Optional: Full Docker image name (auto-generated from registry + appName)
+    // dockerImage = 'harbor.fawkes.local/myorg/sample-app'
+
+    // Optional: Mattermost notification channel
+    notifyChannel = 'team-builds'
+
+    // Optional: Custom build command (uses language defaults if not specified)
+    // buildCommand = 'mvn clean package -P production -DskipTests'
+
+    // Optional: Custom test command
+    // testCommand = 'mvn test -Dtest=UnitTests'
+
+    // Optional: Custom BDD test command
+    // bddTestCommand = 'mvn verify -Dcucumber.filter.tags="@smoke"'
+
+    // Optional: SonarQube project key (defaults to appName)
+    // sonarProject = 'sample-app'
+
+    // Optional: Trivy severity filter
+    // trivySeverity = 'HIGH,CRITICAL'
+
+    // Optional: Enable/disable BDD tests
+    runBddTests = true
+
+    // Optional: Enable/disable security scanning
+    runSecurityScan = true
+
+    // Optional: Deploy to ArgoCD after successful build
+    deployToArgoCD = true
+
+    // Optional: ArgoCD application name (defaults to {appName}-dev)
+    // argocdApp = 'sample-app-dev'
+
+    // Optional: Pipeline timeout in minutes
+    timeoutMinutes = 30
+}
