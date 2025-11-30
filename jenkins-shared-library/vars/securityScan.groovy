@@ -142,7 +142,7 @@ def dependencyCheck(Map config) {
                 safety check --json > safety-report.json || true
                 pip-audit --format json -o pip-audit.json || true
             '''
-            archiveArtifacts artifacts: '*-report.json, pip-audit.json', allowEmptyArchive: true
+            archiveArtifacts artifacts: '*-report.json,pip-audit.json', allowEmptyArchive: true
             break
         case 'node':
             sh '''

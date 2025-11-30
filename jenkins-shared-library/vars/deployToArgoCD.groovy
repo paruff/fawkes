@@ -76,7 +76,8 @@ def updateGitOpsManifest(Map config) {
                     kustomize edit set image *=${config.imageTag}
                     cd -
                 else
-                    sed -i 's|:.*\$|:${config.imageTag}|g' \${MANIFEST_PATH}
+                    # Update image tag in deployment manifest
+                    sed -i 's|:.*\\$|:${config.imageTag}|g' \${MANIFEST_PATH}
                 fi
                 
                 # Commit and push

@@ -3,7 +3,9 @@
 jenkins:
   systemMessage: "Fawkes CI/CD Platform - Golden Path Enabled"
   mode: NORMAL
-  numExecutors: 0  # Use Kubernetes agents only
+  # numExecutors: 0 prevents builds from running on the controller node
+  # for security and resource isolation - all builds run on Kubernetes agents
+  numExecutors: 0
 
   # Kubernetes cloud configuration for ephemeral agents
   clouds:
