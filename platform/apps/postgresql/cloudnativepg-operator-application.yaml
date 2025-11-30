@@ -1,0 +1,87 @@
+# ============================================================================
+# FILE: platform/apps/postgresql/cloudnativepg-operator-application.yaml
+# PURPOSE: ArgoCD Application to deploy CloudNativePG Operator for managing
+#          PostgreSQL clusters with HA, automated failover, backup/restore.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudnativepg-operator
+  namespace: fawkes
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
+spec:
+  project: default
+  source:
+    repoURL: https://cloudnative-pg.github.io/charts
+    chart: cloudnative-pg
+    targetRevision: 0.22.1
+    helm:
+      values: |
+        # CloudNativePG Operator configuration
+        crds:
+          create: true
+
+        # Monitoring configuration
+        monitoring:
+          podMonitorEnabled: true
+          grafanaDashboard:
+            create: false
+
+        # Operator resources
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+
+        # Service account
+        serviceAccount:
+          create: true
+          name: cloudnativepg-operator
+
+        # Pod security
+        podSecurityContext:
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+
+        containerSecurityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+
+        # High availability
+        replicaCount: 1
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cloudnativepg-system
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+
+  revisionHistoryLimit: 10
