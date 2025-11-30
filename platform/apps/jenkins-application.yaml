@@ -1,6 +1,6 @@
 # ============================================================================
 # FILE: argocd-apps/jenkins-application.yaml
-# PURPOSE: ArgoCD Application definition for Jenkins
+# PURPOSE: ArgoCD Application definition for Jenkins with Golden Path CI/CD
 # ============================================================================
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -43,16 +43,62 @@ spec:
             # Let the chart choose apiVersion based on the cluster; avoids template mismatch
             ingressClassName: nginx
             hostName: jenkins.127.0.0.1.nip.io
+            # TLS configuration for secure access
+            tls:
+              - secretName: jenkins-tls
+                hosts:
+                  - jenkins.127.0.0.1.nip.io
+            annotations:
+              cert-manager.io/cluster-issuer: "letsencrypt-prod"
+              nginx.ingress.kubernetes.io/ssl-redirect: "true"
             # Use explicit object form for paths to satisfy networking.k8s.io/v1 Ingress schema
             paths:
               - path: "/"
                 pathType: Prefix
-        # install plugin by short id (no explicit version => get chart's recommended/latest)
-        installPlugins:
-          - kubernetes
-          - workflow-aggregator
-          - credentials-binding
-          - git
+        # Golden Path required plugins
+        controller:
+          installPlugins:
+            # Core Pipeline
+            - kubernetes:latest
+            - workflow-aggregator:latest
+            - workflow-job:latest
+            - workflow-multibranch:latest
+            - pipeline-stage-view:latest
+            - pipeline-utility-steps:latest
+            # Source Control
+            - git:latest
+            - github:latest
+            - github-branch-source:latest
+            # Credentials & Security
+            - credentials-binding:latest
+            - credentials:latest
+            # Configuration as Code
+            - configuration-as-code:latest
+            # Shared Libraries
+            - pipeline-github-lib:latest
+            # Quality & Testing
+            - junit:latest
+            - jacoco:latest
+            - warnings-ng:latest
+            - htmlpublisher:latest
+            - cucumber-reports:latest
+            # Security Scanning
+            - sonar:latest
+            # Notifications
+            - mattermost:latest
+            - email-ext:latest
+            # Kubernetes
+            - kubernetes-cli:latest
+            # Build Tools
+            - maven-plugin:latest
+            - nodejs:latest
+            # Utilities
+            - http_request:latest
+            - pipeline-input-step:latest
+            - docker-workflow:latest
+            - timestamper:latest
+            - ansicolor:latest
+            - build-discarder:latest
         persistence:
           enabled: true
           size: 8Gi
@@ -61,7 +107,12 @@ spec:
           create: true
         rbac:
           create: true
-        # Remove top-level ingress toggle to avoid conflicting templates
+        # Agent configuration
+        agent:
+          enabled: true
+          namespace: fawkes
+          image: jenkins/inbound-agent
+          tag: latest
 
   destination:
     server: https://kubernetes.default.svc
