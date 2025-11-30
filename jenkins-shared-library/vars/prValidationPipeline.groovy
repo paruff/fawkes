@@ -253,7 +253,8 @@ def runLinting(Map config) {
             sh 'npm run lint || true'
             break
         case 'go':
-            sh 'go install golang.org/x/lint/golint@latest && golint ./... || true'
+            // Using staticcheck instead of deprecated golint
+            sh 'go install honnef.co/go/tools/cmd/staticcheck@latest && staticcheck ./... || true'
             break
     }
 }

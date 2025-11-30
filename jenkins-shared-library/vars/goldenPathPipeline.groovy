@@ -529,8 +529,13 @@ def updateGitOpsManifest(Map config) {
         usernameVariable: 'GIT_USER',
         passwordVariable: 'GIT_TOKEN'
     )]) {
+        // Clone without credentials in URL to avoid exposure in logs
         sh """
-            git clone https://\${GIT_USER}:\${GIT_TOKEN}@github.com/paruff/fawkes-gitops.git gitops-repo
+            # Configure git credential helper to avoid credentials in clone URL
+            git config --global credential.helper 'store --file=/tmp/.git-credentials'
+            echo "https://\${GIT_USER}:\${GIT_TOKEN}@github.com" > /tmp/.git-credentials
+            
+            git clone https://github.com/paruff/fawkes-gitops.git gitops-repo
             cd gitops-repo
             
             # Update image tag in deployment manifest
@@ -545,6 +550,9 @@ def updateGitOpsManifest(Map config) {
             else
                 echo "Warning: Deployment manifest not found for ${config.appName}"
             fi
+            
+            # Clean up credentials
+            rm -f /tmp/.git-credentials
         """
     }
 }
@@ -569,7 +577,7 @@ def recordDoraMetrics(Map config, def build) {
                 "build_number": "${env.BUILD_NUMBER}",
                 "status": "${status}",
                 "duration_ms": ${duration},
-                "timestamp": "${new Date().format('yyyy-MM-dd HH:mm:ss')}"
+                "timestamp": "${new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone('UTC'))}"
             }
             """,
             validResponseCodes: '200:299'
