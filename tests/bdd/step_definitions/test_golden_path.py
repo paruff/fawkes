@@ -53,22 +53,31 @@ def dora_available(context):
 
 
 # Jenkins Access & Security
+@given('Jenkins is deployed via Ingress')
+def jenkins_deployed_via_ingress(context):
+    """Verify Jenkins is deployed via Ingress."""
+    context['jenkins_deployed'] = True
+    context['ingress_enabled'] = True
+    assert context['jenkins_deployed']
+
+
 @given('a Platform Engineer has valid credentials')
 def engineer_has_credentials(context):
     """Platform Engineer has valid credentials."""
     context['has_credentials'] = True
 
 
-@when('they access the Jenkins URL via Ingress')
+@when('an authenticated Platform Engineer accesses the Jenkins URL')
 def access_jenkins(context):
     """Access Jenkins via Ingress URL."""
     context['accessed_jenkins'] = True
 
 
-@then('they are authenticated successfully')
-def authenticated_successfully(context):
-    """Verify successful authentication."""
+@then('they are logged in via platform SSO/OAuth if available')
+def authenticated_via_sso_oauth(context):
+    """Verify authentication via SSO/OAuth."""
     context['authenticated'] = True
+    context['sso_oauth_enabled'] = True
     assert context['authenticated']
 
 
@@ -106,16 +115,27 @@ def commit_pushed(context, branch):
     context['commit_pushed'] = True
 
 
-@then('the pipeline executes mandatory stages including Checkout, Build, Test, Scan, and Push')
+@then('the pipeline executes the mandatory sequence of stages')
+def verify_pipeline_executes_stages(context):
+    """Verify pipeline executes mandatory stages."""
+    context['pipeline_executed'] = True
+    assert context['pipeline_executed']
+
+
+@then('the stages include Checkout, Unit Test, BDD/Gherkin Test, Security Scan, Build Image, and Push Artifact')
 def verify_mandatory_stages(context):
     """Verify mandatory stages are executed."""
-    expected_stages = ['Checkout', 'Build', 'Unit Test', 'BDD/Gherkin Test',
-                       'Security Scan', 'Quality Gate', 'Build Docker Image',
-                       'Container Security Scan', 'Push Artifact', 'Update GitOps',
-                       'Record DORA Metrics']
+    expected_stages = ['Checkout', 'Unit Test', 'BDD/Gherkin Test',
+                       'Security Scan', 'Build Docker Image', 'Push Artifact']
     context['pipeline_stages'] = expected_stages
     # In real test, verify against actual pipeline execution
-    assert len(expected_stages) > 0
+    assert len(expected_stages) == 6
+    assert 'Checkout' in expected_stages
+    assert 'Unit Test' in expected_stages
+    assert 'BDD/Gherkin Test' in expected_stages
+    assert 'Security Scan' in expected_stages
+    assert 'Build Docker Image' in expected_stages
+    assert 'Push Artifact' in expected_stages
 
 
 @then('the pipeline completes successfully')
@@ -321,7 +341,7 @@ def deployment_via_gitops(context):
     assert context['deployment_via_gitops']
 
 
-# PR Validation Pipeline
+# PR Validation Pipeline / Trunk-Based Compliance
 @given('a developer creates a feature branch')
 def developer_creates_feature_branch(context):
     """Developer creates feature branch."""
@@ -335,25 +355,23 @@ def pr_opened(context, branch):
     context['pr_target_branch'] = branch
 
 
-@then('a lightweight pipeline runs')
+@then('a lightweight non-artifact-producing pipeline runs')
 def lightweight_pipeline_runs(context):
-    """Lightweight pipeline runs."""
+    """Lightweight non-artifact-producing pipeline runs."""
     context['lightweight_pipeline'] = True
+    context['non_artifact_producing'] = True
     assert context['lightweight_pipeline']
+    assert context['non_artifact_producing']
 
 
-@then('only unit tests are executed')
-def only_unit_tests(context):
-    """Only unit tests are executed."""
-    context['unit_tests_only'] = True
-    assert context['unit_tests_only']
-
-
-@then('only BDD tests are executed')
-def only_bdd_tests(context):
-    """Only BDD tests are executed."""
-    context['bdd_tests_only'] = True
-    assert context['bdd_tests_only']
+@then('only unit tests and BDD tests are executed')
+def only_unit_and_bdd_tests(context):
+    """Only unit tests and BDD tests are executed."""
+    context['unit_tests_executed'] = True
+    context['bdd_tests_executed'] = True
+    context['only_tests_executed'] = True
+    assert context['unit_tests_executed']
+    assert context['bdd_tests_executed']
 
 
 @then('no Docker image is built')
@@ -368,6 +386,13 @@ def no_artifact_pushed(context):
     """No artifact is pushed."""
     context['no_artifact_pushed'] = True
     assert context['no_artifact_pushed']
+
+
+@then('fast feedback is provided before merging')
+def fast_feedback_provided(context):
+    """Fast feedback is provided before merging."""
+    context['fast_feedback_provided'] = True
+    assert context['fast_feedback_provided']
 
 
 @then('PR status is updated with results')

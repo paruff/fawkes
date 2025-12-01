@@ -11,9 +11,10 @@ Feature: Golden Path CI/CD Pipeline
 
   @smoke @security
   Scenario: Jenkins Access & Security
-    Given a Platform Engineer has valid credentials
-    When they access the Jenkins URL via Ingress
-    Then they are authenticated successfully
+    Given Jenkins is deployed via Ingress
+    And a Platform Engineer has valid credentials
+    When an authenticated Platform Engineer accesses the Jenkins URL
+    Then they are logged in via platform SSO/OAuth if available
     And all network traffic is secured with TLS
     And unauthorized access is denied
 
@@ -22,7 +23,8 @@ Feature: Golden Path CI/CD Pipeline
     Given a repository contains a Jenkinsfile calling the shared library
     And the repository has source code for a "java" application
     When a commit is pushed to the "main" branch
-    Then the pipeline executes mandatory stages including Checkout, Build, Test, Scan, and Push
+    Then the pipeline executes the mandatory sequence of stages
+    And the stages include Checkout, Unit Test, BDD/Gherkin Test, Security Scan, Build Image, and Push Artifact
     And the pipeline completes successfully
 
   @bdd @testing
@@ -69,15 +71,15 @@ Feature: Golden Path CI/CD Pipeline
     And ArgoCD detects the manifest change
     And the deployment proceeds via GitOps
 
-  @pr @fast-feedback
-  Scenario: PR Validation Pipeline
+  @pr @fast-feedback @trunk-based-compliance
+  Scenario: Trunk-Based Compliance - PR Validation Pipeline
     Given a developer creates a feature branch
     When a PR is opened against the "main" branch
-    Then a lightweight pipeline runs
-    And only unit tests are executed
-    And only BDD tests are executed
+    Then a lightweight non-artifact-producing pipeline runs
+    And only unit tests and BDD tests are executed
     And no Docker image is built
     And no artifact is pushed
+    And fast feedback is provided before merging
     And PR status is updated with results
 
   @dora @metrics
