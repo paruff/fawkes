@@ -1,86 +1,243 @@
-# Values for installing the upstream Backstage Helm chart
-# Usage: helm repo add backstage https://backstage.github.io/charts && helm install backstage backstage/backstage -f values.yaml
+# ============================================================================
+# FILE: platform/apps/backstage/values.yaml
+# PURPOSE: Helm values for Backstage deployment via upstream chart
+#          Configures HA deployment, external PostgreSQL, OAuth authentication.
+# USAGE: helm repo add backstage https://backstage.github.io/charts
+#        helm install backstage backstage/backstage -f values.yaml -n fawkes
+# ============================================================================
 
-# Replica configuration
-replicaCount: 1
+# ============================================================
+# Replica Configuration (HA)
+# ============================================================
+replicaCount: 2
 
-# Image (adjust as needed)
+# ============================================================
+# Image Configuration
+# ============================================================
 image:
   repository: backstage/backstage
   tag: "latest"
   pullPolicy: IfNotPresent
 
-# Service configuration: expose the app on port 7007. Using type NodePort
+# ============================================================
+# Service Configuration
+# ============================================================
 service:
-  type: NodePort
+  type: ClusterIP
   port: 7007
   targetPort: 7007
-  # nodePort: 30007   # optional: uncomment to pin NodePort (must be in allowed range)
 
-# Namespace will be created by helm if not present when used with --create-namespace or the chart does so.
+# ============================================================
+# Ingress Configuration
+# ============================================================
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: backstage.fawkes.idp
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: backstage-tls
+      hosts:
+        - backstage.fawkes.idp
 
-# Application config (app-config.yaml) injected by chart. The exact key depends on the chart
-# Many Backstage charts consume `appConfig` or a ConfigMap named `app-config` — adjust per chart.
-appConfig: |-
-  app:
-    baseUrl: http://localhost:7007
+# ============================================================
+# Application Configuration (app-config.yaml)
+# Mount external ConfigMap for app-config
+# ============================================================
+extraVolumes:
+  - name: app-config
+    configMap:
+      name: backstage-app-config
+      items:
+        - key: app-config.yaml
+          path: app-config.yaml
 
-  backend:
-    # Backstage backend listen port
-    baseUrl: http://backstage:7007
+extraVolumeMounts:
+  - name: app-config
+    mountPath: /app/app-config.yaml
+    subPath: app-config.yaml
+    readOnly: true
 
-  database:
-    client: pg
-    connection:
-      host: postgresql
-      port: 5432
-      user: backstage_user
-      password: changeme_password
-      database: backstage_db
+# ============================================================
+# Environment Variables for Secrets
+# ============================================================
+extraEnvVars:
+  # PostgreSQL connection
+  - name: POSTGRES_HOST
+    value: "db-backstage-dev-rw.fawkes.svc.cluster.local"
+  - name: POSTGRES_PORT
+    value: "5432"
+  - name: POSTGRES_DB
+    value: "backstage_db"
+  - name: POSTGRES_USER
+    valueFrom:
+      secretKeyRef:
+        name: db-backstage-credentials
+        key: username
+  - name: POSTGRES_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: db-backstage-credentials
+        key: password
+  # GitHub OAuth (configure in backstage-oauth-credentials secret)
+  - name: AUTH_GITHUB_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: backstage-oauth-credentials
+        key: github-client-id
+        optional: true
+  - name: AUTH_GITHUB_CLIENT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: backstage-oauth-credentials
+        key: github-client-secret
+        optional: true
+  # GitHub Integration Token
+  - name: GITHUB_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: backstage-github-credentials
+        key: token
+        optional: true
+  # ArgoCD Integration
+  - name: ARGOCD_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: backstage-argocd-credentials
+        key: username
+        optional: true
+  - name: ARGOCD_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: backstage-argocd-credentials
+        key: password
+        optional: true
+  - name: ARGOCD_AUTH_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: backstage-argocd-credentials
+        key: token
+        optional: true
+  # Jenkins Integration
+  - name: JENKINS_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: backstage-jenkins-credentials
+        key: username
+        optional: true
+  - name: JENKINS_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: backstage-jenkins-credentials
+        key: api-key
+        optional: true
 
-  # Example of configuring a PostgreSQL connection for the backend
-  # Plugins and other backend services will read from this config as required.
-
-# If the chart supports environment variables or extraEnv, set them here
-extraEnv:
-  - name: DATABASE_CLIENT
-    value: pg
-
-# Resources: tune as needed
+# ============================================================
+# Resource Configuration
+# ============================================================
 resources:
   requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
     cpu: 500m
     memory: 512Mi
+  limits:
+    cpu: 2
+    memory: 2Gi
 
-# Liveness/readiness probe configuration (if chart exposes these values)
+# ============================================================
+# Health Probes
+# ============================================================
 livenessProbe:
   httpGet:
-    path: /health
+    path: /healthcheck
     port: 7007
-  initialDelaySeconds: 30
-  periodSeconds: 10
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  timeoutSeconds: 10
+  failureThreshold: 3
 
 readinessProbe:
   httpGet:
-    path: /health
+    path: /healthcheck
     port: 7007
-  initialDelaySeconds: 10
-  periodSeconds: 5
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
 
-# Optional Postgres subchart/config if using a chart dependency to deploy a postgres instance
+# ============================================================
+# Security Context
+# ============================================================
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: 1000
+  capabilities:
+    drop:
+      - ALL
+  seccompProfile:
+    type: RuntimeDefault
+
+# ============================================================
+# Pod Affinity (HA - spread across nodes)
+# ============================================================
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - backstage
+          topologyKey: kubernetes.io/hostname
+
+# ============================================================
+# Pod Disruption Budget
+# ============================================================
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# ============================================================
+# Service Account
+# ============================================================
+serviceAccount:
+  create: true
+  name: backstage
+  annotations: {}
+
+# ============================================================
+# PostgreSQL Subchart (DISABLED - using external CloudNativePG)
+# ============================================================
 postgresql:
   enabled: false
-  postgresqlDatabase: backstage_db
-  postgresqlUsername: backstage_user
-  postgresqlPassword: changeme_password
 
-# Notes:
-# - Kubernetes NodePort values must be within the cluster's allowed NodePort range (typically 30000-32767).
-#   The `port: 7007` here configures the service port; if you need the NodePort itself to be 7007,
-#   that's outside the default range and will be rejected by most clusters. Instead, access the service
-#   on node:<nodeIP>:<nodePort> where nodePort is assigned by Kubernetes (or pin with nodePort above).
-# - Adjust `appConfig` embedding to match the upstream chart's expected values key. Some charts expect
-#   `config` or `appConfig` or `extraConfig` — consult the chart docs and rename the key if necessary.
+# ============================================================
+# Prometheus Metrics
+# ============================================================
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: fawkes
+    interval: 30s
+    labels:
+      release: prometheus
