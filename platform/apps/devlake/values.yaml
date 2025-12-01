@@ -8,30 +8,96 @@
 
 config:
   metrics:
+    # Enable DORA metrics calculation
     dora: true
+
+    # Metric 1: Deployment Frequency
+    # Measures how often code is deployed to production
     deploymentFrequency:
       enabled: true
       window: 7  # days
     leadTime:
       enabled: true
-      stages: ["development", "review", "production"]
+      stages:
+        - development   # Time in development
+        - review        # Time in code review
+        - production    # Time to production deploy
+      # Targets for DORA performance levels:
+      # Elite: Less than one hour
+      # High: Less than one day
+      # Medium: Less than one week
+      # Low: More than one week
+
+    # Metric 3: Change Failure Rate (CFR)
+    # Percentage of deployments causing production incidents
     changeFailureRate:
       enabled: true
       window: 30  # days
     timeToRestore:
       enabled: true
-      severityLevels: ["high", "medium", "low"]
+      severityLevels:
+        - high    # Critical incidents
+        - medium  # Major incidents
+        - low     # Minor incidents
+      # Targets for DORA performance levels:
+      # Elite: Less than one hour
+      # High: Less than one day
+      # Medium: Less than one week
+      # Low: More than one week
 
+    # Metric 5: Operational Performance (Reliability)
+    # Tracks SLO/SLI adherence for service reliability
+    operationalPerformance:
+      enabled: true
+      sloTarget: 99.9        # Target SLO percentage
+      latencyP99Threshold: 500   # P99 latency in ms
+      errorRateThreshold: 0.1    # Error rate percentage
+
+# ============================================================
+# Grafana Configuration for DORA Dashboards
+# ============================================================
 grafana:
   enabled: true
+
+  image:
+    repository: grafana/grafana
+    tag: "10.2.2"
+
   adminUser: admin
   # Grafana admin password from Kubernetes secret (managed by External Secrets)
   # See: platform/apps/devlake/externalsecret-devlake.yaml
   adminPasswordSecretName: devlake-grafana-secrets
   adminPasswordSecretKey: admin-password
 
+  # Ingress for Grafana access
+  ingress:
+    enabled: true
+    hosts:
+      - devlake-grafana.127.0.0.1.nip.io
+
+# ============================================================
+# MySQL Database Configuration
+# ============================================================
 mysql:
   enabled: true
+
+  image:
+    repository: mysql
+    tag: "8.0"
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+
+  persistence:
+    enabled: true
+    size: 20Gi
+    storageClass: ""  # Uses default storage class
+
   auth:
     # Database credentials from Kubernetes secret (managed by External Secrets)
     # See: platform/apps/devlake/externalsecret-devlake.yaml
