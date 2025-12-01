@@ -1,0 +1,252 @@
+# ============================================================================
+# FILE: platform/policies/generation-policies.yaml
+# PURPOSE: Generation policies that automatically create standard resources
+#          when new namespaces or other resources are created.
+# ============================================================================
+---
+# Policy: Generate default NetworkPolicy for new namespaces
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: generate-namespace-network-policy
+  labels:
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: network-policy
+    policy.fawkes.idp/category: networking
+    policy.fawkes.idp/severity: medium
+  annotations:
+    policies.kyverno.io/title: Generate Namespace Network Policy
+    policies.kyverno.io/category: Fawkes Platform Standards
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/description: >-
+      Automatically generates a default NetworkPolicy for new namespaces that:
+      1. Allows ingress from the same namespace
+      2. Allows ingress from the ingress-nginx namespace
+      3. Allows egress to kube-dns for DNS resolution
+      4. Denies all other traffic by default
+spec:
+  rules:
+    - name: generate-default-network-policy
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+      exclude:
+        any:
+          - resources:
+              names:
+                - kube-system
+                - kube-public
+                - kube-node-lease
+                - kyverno
+                - default
+                - fawkes
+                - vault
+                - ingress-nginx
+      generate:
+        apiVersion: networking.k8s.io/v1
+        kind: NetworkPolicy
+        name: default-deny-with-exceptions
+        namespace: "{{request.object.metadata.name}}"
+        synchronize: true
+        data:
+          spec:
+            podSelector: {}
+            policyTypes:
+              - Ingress
+              - Egress
+            ingress:
+              # Allow traffic from same namespace
+              - from:
+                  - podSelector: {}
+              # Allow traffic from ingress controller
+              - from:
+                  - namespaceSelector:
+                      matchLabels:
+                        kubernetes.io/metadata.name: ingress-nginx
+            egress:
+              # Allow DNS resolution
+              - to:
+                  - namespaceSelector:
+                      matchLabels:
+                        kubernetes.io/metadata.name: kube-system
+                ports:
+                  - protocol: UDP
+                    port: 53
+                  - protocol: TCP
+                    port: 53
+              # Allow egress to same namespace
+              - to:
+                  - podSelector: {}
+---
+# Policy: Generate ResourceQuota for new namespaces
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: generate-namespace-resource-quota
+  labels:
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: resource-policy
+    policy.fawkes.idp/category: resource-management
+    policy.fawkes.idp/severity: medium
+  annotations:
+    policies.kyverno.io/title: Generate Namespace Resource Quota
+    policies.kyverno.io/category: Fawkes Platform Standards
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/description: >-
+      Automatically generates a default ResourceQuota for new namespaces
+      to prevent resource exhaustion and ensure fair resource distribution.
+      Teams can request quota increases through platform support.
+spec:
+  rules:
+    - name: generate-default-quota
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+      exclude:
+        any:
+          - resources:
+              names:
+                - kube-system
+                - kube-public
+                - kube-node-lease
+                - kyverno
+                - default
+                - fawkes
+                - vault
+                - ingress-nginx
+                - monitoring
+      generate:
+        apiVersion: v1
+        kind: ResourceQuota
+        name: default-quota
+        namespace: "{{request.object.metadata.name}}"
+        synchronize: true
+        data:
+          spec:
+            hard:
+              requests.cpu: "4"
+              requests.memory: 8Gi
+              limits.cpu: "8"
+              limits.memory: 16Gi
+              pods: "20"
+              services: "10"
+              secrets: "20"
+              configmaps: "20"
+              persistentvolumeclaims: "5"
+---
+# Policy: Generate LimitRange for new namespaces
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: generate-namespace-limit-range
+  labels:
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: resource-policy
+    policy.fawkes.idp/category: resource-management
+    policy.fawkes.idp/severity: low
+  annotations:
+    policies.kyverno.io/title: Generate Namespace Limit Range
+    policies.kyverno.io/category: Fawkes Platform Standards
+    policies.kyverno.io/severity: low
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/description: >-
+      Automatically generates a default LimitRange for new namespaces
+      to set default resource requests/limits and constrain container sizes.
+spec:
+  rules:
+    - name: generate-default-limit-range
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+      exclude:
+        any:
+          - resources:
+              names:
+                - kube-system
+                - kube-public
+                - kube-node-lease
+                - kyverno
+                - default
+                - fawkes
+                - vault
+                - ingress-nginx
+                - monitoring
+      generate:
+        apiVersion: v1
+        kind: LimitRange
+        name: default-limits
+        namespace: "{{request.object.metadata.name}}"
+        synchronize: true
+        data:
+          spec:
+            limits:
+              - type: Container
+                default:
+                  cpu: 500m
+                  memory: 512Mi
+                defaultRequest:
+                  cpu: 100m
+                  memory: 128Mi
+                max:
+                  cpu: "2"
+                  memory: 4Gi
+                min:
+                  cpu: 50m
+                  memory: 64Mi
+---
+# Policy: Generate platform ServiceAccount for new namespaces
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: generate-namespace-service-account
+  labels:
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: rbac-policy
+    policy.fawkes.idp/category: security
+    policy.fawkes.idp/severity: low
+  annotations:
+    policies.kyverno.io/title: Generate Platform Service Account
+    policies.kyverno.io/category: Fawkes Platform Standards
+    policies.kyverno.io/severity: low
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/description: >-
+      Automatically generates a platform service account for new namespaces
+      that can be used for Vault authentication and platform integrations.
+spec:
+  rules:
+    - name: generate-platform-service-account
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+      exclude:
+        any:
+          - resources:
+              names:
+                - kube-system
+                - kube-public
+                - kube-node-lease
+                - kyverno
+                - default
+      generate:
+        apiVersion: v1
+        kind: ServiceAccount
+        name: platform-service
+        namespace: "{{request.object.metadata.name}}"
+        synchronize: true
+        data:
+          metadata:
+            labels:
+              app.kubernetes.io/part-of: fawkes
+              app.kubernetes.io/component: service-account
+            annotations:
+              vault.hashicorp.com/role: platform-service
