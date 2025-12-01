@@ -1,0 +1,39 @@
+# ============================================================================
+# FILE: platform/apps/focalboard/configmap.yaml
+# PURPOSE: Configuration for Focalboard server
+#          Includes settings for PostgreSQL connection, SSO, and server options.
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: focalboard-config
+  namespace: fawkes
+  labels:
+    app: focalboard
+    component: project-management
+    environment: dev
+    team: platform
+data:
+  # Focalboard configuration file (JSON format)
+  config.json: |
+    {
+      "serverRoot": "http://localhost:8000",
+      "port": 8000,
+      "dbtype": "postgres",
+      "dbconfig": "postgres://focalboard_user:$(POSTGRES_PASSWORD)@db-focalboard-dev-rw.fawkes.svc.cluster.local:5432/focalboard?sslmode=require",
+      "useSSL": false,
+      "webpath": "./pack",
+      "filespath": "./files",
+      "telemetry": false,
+      "prometheus_address": ":9092",
+      "session_expire_time": 2592000,
+      "session_refresh_time": 18000,
+      "localOnly": false,
+      "enableLocalMode": false,
+      "localModeSocketLocation": "/var/tmp/focalboard_local.socket",
+      "authMode": "native",
+      "logging_cfg_file": "",
+      "logging_cfg_json": "{\"def\": {\"type\": \"console\", \"options\": {\"out\": \"stdout\"}, \"format\": \"plain\", \"format_options\": {\"delim\": \" \", \"min_level_len\": 5, \"min_msg_len\": 40, \"enable_color\": true, \"enable_caller\": true}, \"levels\": [{\"id\": 5, \"name\": \"debug\", \"color\": 36}, {\"id\": 4, \"name\": \"info\", \"color\": 32}, {\"id\": 3, \"name\": \"warn\", \"color\": 33}, {\"id\": 2, \"name\": \"error\", \"color\": 31, \"stacktrace\": true}, {\"id\": 1, \"name\": \"fatal\", \"color\": 31, \"stacktrace\": true}]}, \"outputs\": [{\"name\": \"default\", \"type\": \"def\", \"levels\": [4, 3, 2, 1]}]}",
+      "audit_cfg_file": "",
+      "audit_cfg_json": ""
+    }

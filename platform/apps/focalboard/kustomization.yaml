@@ -1,0 +1,21 @@
+# ============================================================================
+# FILE: platform/apps/focalboard/kustomization.yaml
+# PURPOSE: Kustomize configuration for Focalboard resources
+# ============================================================================
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: fawkes
+
+resources:
+  - configmap.yaml
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: focalboard
+      app.kubernetes.io/component: project-management
+      app.kubernetes.io/part-of: fawkes-platform
+      app.kubernetes.io/managed-by: argocd
