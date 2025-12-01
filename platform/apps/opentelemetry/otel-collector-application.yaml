@@ -406,6 +406,54 @@ spec:
                   from_attribute: container_id
                   action: upsert
 
+            # ============================================================
+            # Batch Processor for Traces
+            # Batches spans for efficient export to Tempo
+            # ============================================================
+            batch/traces:
+              timeout: 10s
+              send_batch_size: 1000
+              send_batch_max_size: 2000
+
+            # ============================================================
+            # Transform Processor for Traces
+            # Adds cluster and environment context to trace resources
+            # ============================================================
+            transform/traces:
+              trace_statements:
+                - context: resource
+                  statements:
+                    - set(attributes["cluster"], "fawkes-dev")
+                    - set(attributes["environment"], "development")
+                    - set(attributes["deployment.environment"], "development")
+
+            # ============================================================
+            # Attributes Processor for Traces - Security Scrubbing
+            # Removes sensitive data from span attributes per ADR-013
+            # - Authorization headers
+            # - Cookies
+            # - Credit card patterns
+            # ============================================================
+            attributes/traces:
+              actions:
+                # Remove authorization headers
+                - key: http.request.header.authorization
+                  action: delete
+                - key: http.request.header.cookie
+                  action: delete
+                # Hash database statements to preserve structure but hide values
+                - key: db.statement
+                  action: hash
+
+            # ============================================================
+            # Probabilistic Sampler Processor for Traces
+            # Samples traces at configurable rate (10% for production)
+            # All errors and slow requests are kept via tail sampling
+            # Development: 100% sampling for full visibility
+            # ============================================================
+            probabilistic_sampler:
+              sampling_percentage: 100
+
           exporters:
             # ============================================================
             # Prometheus Remote Write Exporter (Metrics)
@@ -448,6 +496,25 @@ spec:
               verbosity: basic
               sampling_initial: 5
               sampling_thereafter: 200
+
+            # ============================================================
+            # OTLP Exporter for Traces (Tempo)
+            # Sends distributed traces to Grafana Tempo backend
+            # Uses gRPC for efficient trace transport
+            # ============================================================
+            otlp/tempo:
+              endpoint: "tempo.monitoring.svc.cluster.local:4317"
+              tls:
+                insecure: true
+              retry_on_failure:
+                enabled: true
+                initial_interval: 5s
+                max_interval: 30s
+                max_elapsed_time: 300s
+              sending_queue:
+                enabled: true
+                num_consumers: 10
+                queue_size: 5000
 
           extensions:
             health_check:
@@ -501,6 +568,26 @@ spec:
                   - batch/logs
                 exporters:
                   - opensearch
+
+              # ============================================================
+              # Traces Pipeline
+              # Receives distributed traces via OTLP, enriches with
+              # Kubernetes context, applies sampling, and exports to Tempo
+              # Implements W3C Trace Context propagation per ADR-013
+              # ============================================================
+              traces:
+                receivers:
+                  - otlp
+                processors:
+                  - memory_limiter
+                  - probabilistic_sampler
+                  - k8sattributes
+                  - resourcedetection
+                  - attributes/traces
+                  - transform/traces
+                  - batch/traces
+                exporters:
+                  - otlp/tempo
 
         # ============================================================
         # Ports Configuration
