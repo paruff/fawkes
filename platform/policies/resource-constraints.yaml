@@ -1,0 +1,254 @@
+# ============================================================================
+# FILE: platform/policies/resource-constraints.yaml
+# PURPOSE: Validation policies enforcing mandatory resource constraints.
+#          These policies ensure all workloads have appropriate resource
+#          limits for cluster stability and fair resource allocation.
+# ============================================================================
+---
+# Policy: Require resource limits on all containers
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-resource-limits
+  labels:
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: resource-policy
+    policy.fawkes.idp/category: resource-management
+    policy.fawkes.idp/severity: high
+  annotations:
+    policies.kyverno.io/title: Require Resource Limits
+    policies.kyverno.io/category: Fawkes Platform Standards
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      All containers must specify resource limits for CPU and memory.
+      This ensures cluster stability and prevents resource exhaustion.
+      Without limits, a single pod could consume all cluster resources.
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: require-limits
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+      validate:
+        message: >-
+          Resource limits are required for all containers. Specify
+          spec.containers[*].resources.limits.memory and
+          spec.containers[*].resources.limits.cpu for all containers.
+        pattern:
+          spec:
+            containers:
+              - resources:
+                  limits:
+                    memory: "?*"
+                    cpu: "?*"
+---
+# Policy: Require resource requests on all containers
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-resource-requests
+  labels:
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: resource-policy
+    policy.fawkes.idp/category: resource-management
+    policy.fawkes.idp/severity: medium
+  annotations:
+    policies.kyverno.io/title: Require Resource Requests
+    policies.kyverno.io/category: Fawkes Platform Standards
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      All containers must specify resource requests for CPU and memory.
+      This enables the scheduler to make optimal placement decisions
+      and ensures pods are scheduled on nodes with sufficient resources.
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: require-requests
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+      validate:
+        message: >-
+          Resource requests are required for all containers. Specify
+          spec.containers[*].resources.requests.memory and
+          spec.containers[*].resources.requests.cpu for all containers.
+        pattern:
+          spec:
+            containers:
+              - resources:
+                  requests:
+                    memory: "?*"
+                    cpu: "?*"
+---
+# Policy: Enforce maximum resource limits
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: limit-resource-maximums
+  labels:
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: resource-policy
+    policy.fawkes.idp/category: resource-management
+    policy.fawkes.idp/severity: medium
+  annotations:
+    policies.kyverno.io/title: Limit Resource Maximums
+    policies.kyverno.io/category: Fawkes Platform Standards
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      Container resource limits must not exceed platform maximums.
+      For larger allocations, contact the platform team to request
+      an exception or dedicated node pool.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: check-memory-limit
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+                      - monitoring
+      validate:
+        message: >-
+          Container memory limit exceeds maximum allowed (8Gi).
+          Contact platform team for larger allocations.
+        deny:
+          conditions:
+            any:
+              - key: "{{ request.object.spec.containers[*].resources.limits.memory | map(&to_number(@), @) | max(@) }}"
+                operator: GreaterThan
+                value: 8589934592
+    - name: check-cpu-limit
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+                      - monitoring
+      validate:
+        message: >-
+          Container CPU limit exceeds maximum allowed (4 cores).
+          Contact platform team for larger allocations.
+        deny:
+          conditions:
+            any:
+              - key: "{{ request.object.spec.containers[*].resources.limits.cpu | map(&to_number(@), @) | max(@) }}"
+                operator: GreaterThan
+                value: 4000
+---
+# Policy: Require liveness and readiness probes
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-probes
+  labels:
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: reliability-policy
+    policy.fawkes.idp/category: reliability
+    policy.fawkes.idp/severity: medium
+  annotations:
+    policies.kyverno.io/title: Require Health Probes
+    policies.kyverno.io/category: Fawkes Platform Standards
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      Containers should define liveness and readiness probes for proper
+      health checking and traffic management. This policy audits pods
+      without probes but does not block them.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: require-readiness-probe
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+      validate:
+        message: >-
+          Containers should have a readinessProbe defined for proper
+          traffic management. Consider adding a readinessProbe.
+        pattern:
+          spec:
+            containers:
+              - readinessProbe: "?*"
+    - name: require-liveness-probe
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+      validate:
+        message: >-
+          Containers should have a livenessProbe defined for proper
+          health checking. Consider adding a livenessProbe.
+        pattern:
+          spec:
+            containers:
+              - livenessProbe: "?*"

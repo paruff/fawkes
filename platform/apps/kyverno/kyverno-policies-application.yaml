@@ -1,0 +1,47 @@
+# ============================================================================
+# FILE: platform/apps/kyverno/kyverno-policies-application.yaml
+# PURPOSE: ArgoCD Application for deploying Kyverno policies
+#          Deploys security, mutation, and generation policies from the
+#          platform/policies directory.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno-policies
+  namespace: fawkes
+  labels:
+    app: kyverno-policies
+    component: policy-as-code
+    environment: dev
+    team: platform
+  annotations:
+    argocd.argoproj.io/docs: "https://kyverno.io/policies/"
+    argocd.argoproj.io/sync-wave: "-3"
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    targetRevision: HEAD
+    path: platform/policies
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyverno
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  revisionHistoryLimit: 10
