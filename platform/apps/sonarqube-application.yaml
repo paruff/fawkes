@@ -1,52 +1,165 @@
+# ============================================================================
+# FILE: platform/apps/sonarqube-application.yaml
+# PURPOSE: ArgoCD Application for SonarQube deployment with external PostgreSQL
+#          Provides centralized code quality and security analysis for the platform.
+# PREREQ: PostgreSQL cluster (db-sonarqube-dev) must be deployed first.
+# ============================================================================
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: sonarqube
   namespace: fawkes
+  labels:
+    app: sonarqube
+    component: security
+    environment: dev
+    team: platform
+  annotations:
+    # Link to documentation
+    argocd.argoproj.io/docs: "https://docs.sonarqube.org/"
 spec:
   project: default
 
   source:
     repoURL: https://charts.sonarsource.com
     chart: sonarqube
-    targetRevision: "2025.1.0" # Helm chart version; adjust to desired release (e.g. 2025.4 when available)
+    targetRevision: "2025.1.0" # Helm chart version; adjust to desired release
     helm:
       values: |
-        # Inline values for SonarQube configuration:
-        sonar:
-          image:
-            repository: sonarsource/sonarqube
-            tag: "2025.1.0-community"  # Application (container) version
-          service:
-            # Use Ingress locally to avoid port conflicts
-            type: ClusterIP
-          persistence:
+        # ============================================================
+        # SonarQube Helm Chart Configuration
+        # ============================================================
+
+        # Image configuration
+        image:
+          repository: docker.io/sonarqube
+          tag: "10.7.0-community"
+
+        # Service configuration
+        service:
+          type: ClusterIP
+          externalPort: 9000
+          internalPort: 9000
+          labels:
+            app: sonarqube
+
+        # Ingress configuration for external access
+        ingress:
+          enabled: true
+          ingressClassName: nginx
+          hosts:
+            - name: sonarqube.127.0.0.1.nip.io
+              path: /
+              pathType: Prefix
+          annotations:
+            nginx.ingress.kubernetes.io/proxy-body-size: "64m"
+            nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+            nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+            nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+
+        # Persistence for SonarQube data
+        persistence:
+          enabled: true
+          storageClass: standard
+          accessMode: ReadWriteOnce
+          size: 10Gi
+
+        # Resource configuration for development
+        resources:
+          requests:
+            cpu: 500m
+            memory: 2Gi
+          limits:
+            cpu: 2
+            memory: 4Gi
+
+        # JVM tuning for SonarQube
+        sonarProperties:
+          sonar.forceAuthentication: "true"
+          sonar.web.javaAdditionalOpts: "-Xms512m -Xmx1g"
+          sonar.ce.javaAdditionalOpts: "-Xms512m -Xmx2g"
+          sonar.search.javaAdditionalOpts: "-Xms512m -Xmx1g"
+
+        # Readiness and liveness probes
+        readinessProbe:
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          failureThreshold: 6
+        livenessProbe:
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          failureThreshold: 6
+
+        # ============================================================
+        # External PostgreSQL Configuration
+        # Uses CloudNativePG cluster: db-sonarqube-dev
+        # ============================================================
+        postgresql:
+          enabled: false  # Disable embedded PostgreSQL
+
+        jdbcOverwrite:
+          enable: true
+          jdbcUrl: "jdbc:postgresql://db-sonarqube-dev-rw.fawkes.svc.cluster.local:5432/sonarqube"
+          jdbcUsername: "sonarqube_user"
+          jdbcSecretName: "db-sonarqube-credentials"
+          jdbcSecretPasswordKey: "password"
+
+        # ============================================================
+        # Plugins Configuration
+        # Install additional analysis plugins
+        # ============================================================
+        plugins:
+          install:
+            # Git SCM plugin for repository integration
+            - "https://binaries.sonarsource.com/Distribution/sonar-scm-git-plugin/sonar-scm-git-plugin-1.17.2.2082.jar"
+            # JaCoCo plugin for Java code coverage
+            - "https://binaries.sonarsource.com/Distribution/sonar-jacoco-plugin/sonar-jacoco-plugin-1.3.0.1538.jar"
+            # FindBugs/SpotBugs for additional bug detection
+            - "https://github.com/spotbugs/sonar-findbugs/releases/download/4.2.9/sonar-findbugs-plugin-4.2.9.jar"
+            # Checkstyle for Java code style checking
+            - "https://github.com/checkstyle/sonar-checkstyle/releases/download/10.17.0/checkstyle-sonar-plugin-10.17.0.jar"
+            # YAML plugin for infrastructure code analysis
+            - "https://github.com/sbaudoin/sonar-yaml/releases/download/v1.9.1/sonar-yaml-plugin-1.9.1.jar"
+
+        # ============================================================
+        # Security Context
+        # ============================================================
+        securityContext:
+          fsGroup: 1000
+
+        podSecurityContext:
+          fsGroup: 1000
+
+        containerSecurityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          seccompProfile:
+            type: RuntimeDefault
+
+        # ============================================================
+        # Monitoring Configuration
+        # ============================================================
+        prometheusMonitoring:
+          podMonitor:
             enabled: true
-            size: 10Gi
-            storageClass: standard
-          ingress:
-            enabled: true
-            ingressClassName: nginx
-            hosts:
-              - name: sonarqube.127.0.0.1.nip.io
-                path: /
-                pathType: Prefix
-          resources:  # Sizing tuned for small dev usage; adjust for production workloads
-            requests:
-              cpu: 500m
-              memory: 1.5Gi
-            limits:
-              cpu: 2
-              memory: 3Gi
-          # JVM / readiness tuning (commented out until validated against target chart)
-          # web:
-          #   javaOpts: "-Xms512m -Xmx1G"
-          # core:
-          #   javaOpts: "-Xms512m -Xmx2G"
-          # livenessProbe:
-          #   initialDelaySeconds: 60
-          # readinessProbe:
-          #   initialDelaySeconds: 90
+            namespace: fawkes
+            interval: 30s
+
+        # ============================================================
+        # Additional environment variables
+        # ============================================================
+        env:
+          - name: SONAR_WEB_SYSTEMPASSCODE
+            valueFrom:
+              secretKeyRef:
+                name: sonarqube-admin-credentials
+                key: systempasscode
+                optional: true
 
   destination:
     server: https://kubernetes.default.svc
@@ -60,6 +173,7 @@ spec:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
+      - ServerSideApply=true
     retry:
       limit: 5
       backoff:
@@ -67,10 +181,14 @@ spec:
         factor: 2
         maxDuration: 3m
 
-  # Keep ArgoCD from flagging differences you expect (e.g. HPA controlling replicas)
+  # Keep ArgoCD from flagging differences you expect
   ignoreDifferences:
     - group: apps
       kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    - group: apps
+      kind: StatefulSet
       jsonPointers:
         - /spec/replicas
 

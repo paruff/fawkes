@@ -64,6 +64,22 @@ Examples:
 | Username | Stored in Secret `db-focalboard-credentials` |
 | Password | Stored in Secret `db-focalboard-credentials` |
 
+### SonarQube Database
+
+| Property | Value |
+|----------|-------|
+| Host (Primary/RW) | `db-sonarqube-dev-rw.fawkes.svc.cluster.local` |
+| Host (Replicas/RO) | `db-sonarqube-dev-ro.fawkes.svc.cluster.local` |
+| Port | `5432` |
+| Database | `sonarqube` |
+| Username | Stored in Secret `db-sonarqube-credentials` |
+| Password | Stored in Secret `db-sonarqube-credentials` |
+
+**JDBC Connection String** (for SonarQube configuration):
+```
+jdbc:postgresql://db-sonarqube-dev-rw.fawkes.svc.cluster.local:5432/sonarqube
+```
+
 ### Connection String Format
 
 ```
