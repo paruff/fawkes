@@ -81,16 +81,6 @@ spec:
             - name: metrics
               containerPort: 9092
               protocol: TCP
-          # Environment variables for database connection
-          env:
-            - name: FOCALBOARD_DBTYPE
-              value: "postgres"
-            - name: FOCALBOARD_DBCONFIG
-              valueFrom:
-                secretKeyRef:
-                  name: focalboard-db-connection
-                  key: connection-string
-                  optional: true
           # Volume mounts
           volumeMounts:
             - name: config
@@ -99,6 +89,8 @@ spec:
               readOnly: true
             - name: data
               mountPath: /opt/focalboard/files
+            - name: tmp
+              mountPath: /tmp
           # Resource requests and limits
           resources:
             requests:
@@ -110,7 +102,7 @@ spec:
           # Security context
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
+            readOnlyRootFilesystem: true
             runAsNonRoot: true
             runAsUser: 65534
             capabilities:
@@ -145,6 +137,8 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: focalboard-data
+        - name: tmp
+          emptyDir: {}
 ---
 # ============================================================================
 # PersistentVolumeClaim for file uploads and attachments
