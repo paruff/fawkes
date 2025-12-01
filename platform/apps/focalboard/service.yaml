@@ -1,0 +1,28 @@
+# ============================================================================
+# FILE: platform/apps/focalboard/service.yaml
+# PURPOSE: Kubernetes Service for Focalboard
+#          Exposes the Focalboard server within the cluster.
+# ============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: focalboard
+  namespace: fawkes
+  labels:
+    app: focalboard
+    component: project-management
+    environment: dev
+    team: platform
+spec:
+  type: ClusterIP
+  selector:
+    app: focalboard
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http
+      protocol: TCP
+    - name: metrics
+      port: 9092
+      targetPort: metrics
+      protocol: TCP

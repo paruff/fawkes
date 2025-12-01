@@ -1,0 +1,33 @@
+# ============================================================================
+# FILE: platform/apps/focalboard/ingress.yaml
+# PURPOSE: Kubernetes Ingress for Focalboard external access
+#          Exposes Focalboard at pm.fawkes.io (or local dev URL).
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: focalboard
+  namespace: fawkes
+  labels:
+    app: focalboard
+    component: project-management
+    environment: dev
+    team: platform
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: pm.127.0.0.1.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: focalboard
+                port:
+                  number: 8000
