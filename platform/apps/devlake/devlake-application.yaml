@@ -1,15 +1,8 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fawkes-devlake
+  name: devlake
   namespace: fawkes
-  labels:
-    app: devlake
-    component: dora-metrics
-    environment: dev
-    team: platform
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
 spec:
   project: default
   source:
@@ -17,8 +10,6 @@ spec:
     chart: devlake
     targetRevision: 1.0.1
     helm:
-      valueFiles:
-        - values.yaml
       values: |
         # ============================================================
         # DevLake Core Configuration
@@ -26,8 +17,7 @@ spec:
         # ============================================================
 
         # Namespace for DevLake deployment
-        # Components are isolated in fawkes-devlake namespace
-        namespace: fawkes-devlake
+        namespace: fawkes
 
         # ============================================================
         # DevLake API Server Configuration
@@ -48,23 +38,13 @@ spec:
               cpu: 1000m
               memory: 2Gi
 
-          # Environment variables for API configuration
-          envs:
-            # Encryption secret for sensitive data
-            # In production, use Vault or External Secrets
-            - name: ENCRYPTION_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: devlake-secrets
-                  key: encryption-secret
-
-            # API port configuration
-            - name: PORT
-              value: "8080"
-
-            # Logging level
-            - name: LOGGING_LEVEL
-              value: "info"
+          # Use secret references for sensitive values
+          extraEnv:
+          - name: ENCRYPTION_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: devlake-secrets
+                key: encryption-secret
 
         # ============================================================
         # DevLake UI Configuration
@@ -90,12 +70,10 @@ spec:
         # ============================================================
         grafana:
           enabled: true
-
           image:
             repository: grafana/grafana
             tag: 10.2.2
             pullPolicy: IfNotPresent
-
           resources:
             requests:
               cpu: 100m
@@ -103,19 +81,12 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
-
-          # Grafana admin credentials from secret
-          # Create secret: kubectl create secret generic devlake-grafana-secrets \
-          #   --from-literal=admin-user=admin \
-          #   --from-literal=admin-password=<password>
+          # Admin credentials sourced from Secret (no inline password)
           adminUser: admin
           adminPasswordSecretName: devlake-grafana-secrets
           adminPasswordSecretKey: admin-password
-
-          # Pre-configured DORA dashboards
           dashboards:
             enabled: true
-            # Import official DevLake DORA dashboards
             dora:
               enabled: true
 
@@ -124,12 +95,10 @@ spec:
         # ============================================================
         mysql:
           enabled: true
-
           image:
             repository: mysql
             tag: "8.0"
             pullPolicy: IfNotPresent
-
           resources:
             requests:
               cpu: 500m
@@ -137,18 +106,15 @@ spec:
             limits:
               cpu: 2000m
               memory: 4Gi
-
           persistence:
             enabled: true
             storageClass: ""
             size: 20Gi
-
-          # Database credentials from External Secret
-          # See: platform/apps/devlake/config/data-sources.yaml for secret definition
+          # Database credentials: reference External Secret, no inline values
           auth:
             database: lake
             username: devlake
-            existingSecret: devlake-mysql-secrets
+            existingSecret: devlake-db
             secretKeys:
               rootPassword: mysql-root-password
               password: mysql-password
@@ -196,7 +162,7 @@ spec:
             dora: true
             deploymentFrequency:
               enabled: true
-              window: 7  # days
+              window: 7
             leadTime:
               enabled: true
               stages:
@@ -205,7 +171,7 @@ spec:
                 - production
             changeFailureRate:
               enabled: true
-              window: 30  # days
+              window: 30
             timeToRestore:
               enabled: true
               severityLevels:
@@ -230,26 +196,16 @@ spec:
         podLabels:
           app.kubernetes.io/part-of: fawkes-platform
           app.kubernetes.io/component: dora-metrics
-
         podAnnotations:
           prometheus.io/scrape: "true"
           prometheus.io/port: "8080"
           prometheus.io/path: "/metrics"
-
   destination:
     server: https://kubernetes.default.svc
-    namespace: fawkes-devlake
-
+    namespace: fawkes
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - PruneLast=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m
