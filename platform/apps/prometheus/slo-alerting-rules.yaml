@@ -160,14 +160,14 @@ spec:
 
         # Prometheus self-monitoring
         - alert: PrometheusTargetScrapesSlow
-          expr: prometheus_target_scrape_pool_sync_total{quantile="0.99"} > 10
+          expr: prometheus_target_sync_length_seconds{quantile="0.99"} > 10
           for: 10m
           labels:
             severity: warning
             team: platform
           annotations:
             summary: "Prometheus scrapes are slow"
-            description: "P99 scrape pool sync time is {{ $value }}s, indicating slow target discovery."
+            description: "P99 target sync duration is {{ $value }}s, indicating slow target discovery."
             runbook_url: "https://docs.fawkes.io/runbooks/prometheus-slow-scrapes"
 
         # Alertmanager not sending alerts
@@ -226,7 +226,12 @@ spec:
               sum(rate(http_request_duration_seconds_bucket[5m])) by (namespace, service_name, le)
             )
 
-        # Service availability
+    # ===== Availability Recording Rules =====
+    # Uses a separate group with longer interval for efficiency
+    - name: slo.availability.recording
+      interval: 5m
+      rules:
+        # Service availability over rolling 1-hour window
         - record: fawkes:service:availability
           expr: |
             avg_over_time(up[1h])
