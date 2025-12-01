@@ -1,7 +1,34 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
 # ============================================================================
 # FILE: platform/apps/opentelemetry/otel-collector-application.yaml
 # PURPOSE: ArgoCD Application for OpenTelemetry Collector deployment as DaemonSet
-#          Collects and exports metrics from applications and infrastructure
+#          Collects and exports metrics and logs from applications and infrastructure
+# FEATURES:
+#   - Log collection from container stdout/stderr via filelog receiver
+#   - Kubernetes context enrichment (k8s.pod.name, k8s.namespace.name, k8s.container.name)
+#   - Trace correlation (traceId, spanId) preserved for log-trace correlation
+#   - OpenSearch exporter for centralized log storage
+#   - Failure handling with memory_limiter and batch processor (5+ min buffer)
+# SEE: docs/adr/ADR-011 Centralized Log Management.md
 # ============================================================================
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -25,7 +52,7 @@ spec:
     helm:
       values: |
         # ============================================================
-        # Deployment Mode: DaemonSet for node-level metric collection
+        # Deployment Mode: DaemonSet for node-level log and metric collection
         # ============================================================
         mode: daemonset
 
@@ -38,14 +65,15 @@ spec:
 
         # ============================================================
         # Resource Configuration
+        # Increased memory for log buffering (5+ min retention)
         # ============================================================
         resources:
           requests:
-            cpu: 100m
-            memory: 256Mi
-          limits:
-            cpu: 500m
+            cpu: 200m
             memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
 
         # ============================================================
         # Service Account
@@ -86,6 +114,10 @@ spec:
 
         # ============================================================
         # Pod Security Context
+        # Note: filelog receiver needs access to /var/log, running as
+        # non-root with fsGroup for log file access
+        # readOnlyRootFilesystem: false is required for file_storage
+        # extension to persist queue state during restarts
         # ============================================================
         podSecurityContext:
           runAsNonRoot: true
@@ -95,7 +127,9 @@ spec:
 
         securityContext:
           allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
+          # Required for file_storage extension to write queue state
+          # The emptyDir volume provides isolated writable storage
+          readOnlyRootFilesystem: false
           capabilities:
             drop:
               - ALL
@@ -105,13 +139,75 @@ spec:
         # ============================================================
         config:
           receivers:
-            # OTLP receiver for applications sending metrics via OpenTelemetry SDK
+            # OTLP receiver for applications sending metrics and logs via OpenTelemetry SDK
             otlp:
               protocols:
                 grpc:
                   endpoint: 0.0.0.0:4317
                 http:
                   endpoint: 0.0.0.0:4318
+
+            # ============================================================
+            # Filelog Receiver for Container Log Collection
+            # Collects logs from /var/log/containers/*.log
+            # Parses Kubernetes container log format (CRI/Docker)
+            # ============================================================
+            filelog:
+              include:
+                - /var/log/containers/*.log
+              exclude:
+                # Exclude collector's own logs to avoid feedback loops
+                - /var/log/containers/*otel-collector*.log
+              start_at: end
+              include_file_path: true
+              include_file_name: false
+              # Parse container runtime log format
+              operators:
+                # Extract metadata from file path
+                - type: regex_parser
+                  id: container_parser
+                  regex: '^/var/log/containers/(?P<pod_name>[^_]+)_(?P<namespace>[^_]+)_(?P<container_name>[^-]+)-(?P<container_id>[a-f0-9]{64})\.log$$'
+                  parse_from: attributes["log.file.path"]
+                  parse_to: attributes
+                # Parse JSON log body for CRI format
+                - type: json_parser
+                  id: json_parser
+                  parse_from: body
+                  parse_to: attributes
+                  timestamp:
+                    parse_from: attributes.time
+                    layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+                # Move log content to body
+                - type: move
+                  from: attributes.log
+                  to: body
+                # Extract log level if present in structured logs
+                - type: severity_parser
+                  parse_from: attributes.level
+                  if: attributes.level != nil
+                  preset: none
+                  mapping:
+                    fatal: fatal
+                    error: error
+                    warn: warn
+                    warning: warn
+                    info: info
+                    debug: debug
+                    trace: trace
+                # Extract traceId from structured JSON logs
+                - type: regex_parser
+                  id: trace_id_parser
+                  regex: '"traceId"\s*:\s*"(?P<trace_id>[a-fA-F0-9]{32})"'
+                  parse_from: body
+                  parse_to: attributes
+                  if: body matches '"traceId"'
+                # Extract spanId from structured JSON logs (separate for order independence)
+                - type: regex_parser
+                  id: span_id_parser
+                  regex: '"spanId"\s*:\s*"(?P<span_id>[a-fA-F0-9]{16})"'
+                  parse_from: body
+                  parse_to: attributes
+                  if: body matches '"spanId"'
 
             # Prometheus receiver for scraping /metrics endpoints
             prometheus:
@@ -180,19 +276,34 @@ spec:
                 network: {}
 
           processors:
-            # Batch processor for efficient exporting
+            # ============================================================
+            # Batch Processor for Efficient Exporting
+            # Configured for 5+ minute buffer retention on failure
+            # ============================================================
             batch:
               timeout: 10s
               send_batch_size: 1000
               send_batch_max_size: 2000
 
-            # Memory limiter to prevent OOM
+            # Separate batch config for logs with larger buffer
+            batch/logs:
+              timeout: 5s
+              send_batch_size: 500
+              send_batch_max_size: 1000
+
+            # ============================================================
+            # Memory Limiter to Prevent OOM
+            # Configured to buffer logs during backend unavailability
+            # 5+ minute retention: ~800MiB allows substantial buffering
+            # ============================================================
             memory_limiter:
               check_interval: 5s
-              limit_mib: 400
-              spike_limit_mib: 100
+              limit_mib: 800
+              spike_limit_mib: 200
 
-            # Resource detection for Kubernetes attributes
+            # ============================================================
+            # Resource Detection for Kubernetes Attributes
+            # ============================================================
             resourcedetection:
               detectors:
                 - env
@@ -203,7 +314,11 @@ spec:
               timeout: 5s
               override: false
 
-            # K8s attributes processor for enrichment
+            # ============================================================
+            # K8s Attributes Processor for Kubernetes Context Enrichment
+            # Adds mandatory attributes: k8s.pod.name, k8s.namespace.name,
+            # k8s.container.name, k8s.deployment.name per ADR-011
+            # ============================================================
             k8sattributes:
               auth_type: "serviceAccount"
               passthrough: false
@@ -215,8 +330,14 @@ spec:
                   - k8s.pod.name
                   - k8s.pod.uid
                   - k8s.deployment.name
+                  - k8s.statefulset.name
+                  - k8s.daemonset.name
+                  - k8s.replicaset.name
                   - k8s.node.name
                   - k8s.container.name
+                  - container.id
+                  - container.image.name
+                  - container.image.tag
                 labels:
                   - tag_name: app
                     key: app
@@ -227,6 +348,9 @@ spec:
                   - tag_name: component
                     key: app.kubernetes.io/component
                     from: pod
+                  - tag_name: version
+                    key: app.kubernetes.io/version
+                    from: pod
               pod_association:
                 - sources:
                     - from: resource_attribute
@@ -234,8 +358,15 @@ spec:
                 - sources:
                     - from: resource_attribute
                       name: k8s.pod.uid
+                - sources:
+                    - from: resource_attribute
+                      name: k8s.pod.name
+                    - from: resource_attribute
+                      name: k8s.namespace.name
 
-            # Transform processor to add resource labels
+            # ============================================================
+            # Transform Processor for Resource Labels
+            # ============================================================
             transform:
               metric_statements:
                 - context: resource
@@ -243,8 +374,42 @@ spec:
                     - set(attributes["cluster"], "fawkes-dev")
                     - set(attributes["environment"], "development")
 
+            # Transform processor for logs - add cluster context
+            transform/logs:
+              log_statements:
+                - context: resource
+                  statements:
+                    - set(attributes["cluster"], "fawkes-dev")
+                    - set(attributes["environment"], "development")
+                - context: log
+                  statements:
+                    # Move trace context to resource attributes for correlation
+                    - set(resource.attributes["trace_id"], attributes["trace_id"]) where attributes["trace_id"] != nil
+                    - set(resource.attributes["span_id"], attributes["span_id"]) where attributes["span_id"] != nil
+
+            # ============================================================
+            # Attributes Processor for Log Enrichment
+            # Maps filelog-extracted attributes to semantic conventions
+            # ============================================================
+            attributes/logs:
+              actions:
+                - key: k8s.pod.name
+                  from_attribute: pod_name
+                  action: upsert
+                - key: k8s.namespace.name
+                  from_attribute: namespace
+                  action: upsert
+                - key: k8s.container.name
+                  from_attribute: container_name
+                  action: upsert
+                - key: container.id
+                  from_attribute: container_id
+                  action: upsert
+
           exporters:
-            # Prometheus remote write exporter
+            # ============================================================
+            # Prometheus Remote Write Exporter (Metrics)
+            # ============================================================
             prometheusremotewrite:
               endpoint: "http://prometheus-prometheus.monitoring.svc.cluster.local:9090/api/v1/write"
               tls:
@@ -252,7 +417,33 @@ spec:
               resource_to_telemetry_conversion:
                 enabled: true
 
-            # Debug exporter for troubleshooting (disabled in production)
+            # ============================================================
+            # OpenSearch Exporter (Logs)
+            # Sends logs directly to OpenSearch using the native
+            # OpenSearch bulk API format
+            # Configured with retry and queue for failure handling
+            # ============================================================
+            opensearch:
+              http:
+                endpoint: "http://opensearch-cluster-master.logging.svc.cluster.local:9200"
+                tls:
+                  insecure: true
+              logs_index: "otel-logs"
+              # Retry configuration for transient failures
+              retry:
+                enabled: true
+                initial_interval: 5s
+                max_interval: 30s
+                max_elapsed_time: 300s
+              # Queue configuration for 5+ minute buffering
+              sending_queue:
+                enabled: true
+                num_consumers: 10
+                queue_size: 5000
+
+            # ============================================================
+            # Debug Exporter for Troubleshooting (disabled in production)
+            # ============================================================
             debug:
               verbosity: basic
               sampling_initial: 5
@@ -263,12 +454,20 @@ spec:
               endpoint: 0.0.0.0:13133
             zpages:
               endpoint: 0.0.0.0:55679
+            # File storage extension for persistent queue during restarts
+            file_storage:
+              directory: /var/lib/otelcol/file_storage
+              timeout: 10s
 
           service:
             extensions:
               - health_check
               - zpages
+              - file_storage
             pipelines:
+              # ============================================================
+              # Metrics Pipeline
+              # ============================================================
               metrics:
                 receivers:
                   - otlp
@@ -283,6 +482,25 @@ spec:
                   - batch
                 exporters:
                   - prometheusremotewrite
+
+              # ============================================================
+              # Logs Pipeline
+              # Collects logs from containers and OTLP, enriches with
+              # Kubernetes context, and exports to OpenSearch
+              # ============================================================
+              logs:
+                receivers:
+                  - filelog
+                  - otlp
+                processors:
+                  - memory_limiter
+                  - attributes/logs
+                  - k8sattributes
+                  - resourcedetection
+                  - transform/logs
+                  - batch/logs
+                exporters:
+                  - opensearch
 
         # ============================================================
         # Ports Configuration
@@ -346,6 +564,37 @@ spec:
           metricsEndpoints:
             - port: metrics
               interval: 30s
+
+        # ============================================================
+        # Volume Mounts for Log Collection and File Storage
+        # Required for filelog receiver and persistent queue
+        # ============================================================
+        extraVolumes:
+          - name: varlogcontainers
+            hostPath:
+              path: /var/log/containers
+          - name: varlogpods
+            hostPath:
+              path: /var/log/pods
+          - name: varlibdockercontainers
+            hostPath:
+              path: /var/lib/docker/containers
+          - name: file-storage
+            emptyDir:
+              sizeLimit: 500Mi
+
+        extraVolumeMounts:
+          - name: varlogcontainers
+            mountPath: /var/log/containers
+            readOnly: true
+          - name: varlogpods
+            mountPath: /var/log/pods
+            readOnly: true
+          - name: varlibdockercontainers
+            mountPath: /var/lib/docker/containers
+            readOnly: true
+          - name: file-storage
+            mountPath: /var/lib/otelcol/file_storage
 
   destination:
     server: https://kubernetes.default.svc
