@@ -1,0 +1,60 @@
+# ============================================================================
+# FILE: platform/apps/focalboard-application.yaml
+# PURPOSE: ArgoCD Application for Focalboard deployment with external PostgreSQL
+#          Provides centralized project management (Kanban) for the platform.
+# PREREQ: PostgreSQL cluster (db-focalboard-dev) must be deployed first.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: focalboard
+  namespace: fawkes
+  labels:
+    app: focalboard
+    component: project-management
+    environment: dev
+    team: platform
+  annotations:
+    # Link to documentation
+    argocd.argoproj.io/docs: "https://github.com/mattermost/focalboard"
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    path: platform/apps/focalboard
+    targetRevision: HEAD
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Keep ArgoCD from flagging differences you expect
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/replicas
+
+  # Basic health and retention tuning
+  revisionHistoryLimit: 10
