@@ -2627,38 +2627,76 @@
 - Reporting and compliance</p>
 <h3 id="6-dora-metrics-service">6. DORA Metrics Service</h3>
 <p><strong>Purpose</strong>: Automated collection and visualization of DORA metrics</p>
+<p><strong>Implementation</strong>: Apache DevLake provides unified DORA metrics collection,
+calculation, and visualization. In the Fawkes GitOps architecture:</p>
+<ul>
+<li><strong>ArgoCD</strong> is the primary source for deployment metrics (syncs = deployments)</li>
+<li><strong>Jenkins</strong> provides CI quality metrics (builds, tests, rework)</li>
+<li><strong>GitHub</strong> provides commit and PR data</li>
+<li><strong>Observability</strong> provides incident data for CFR/MTTR</li>
+</ul>
 <p><strong>Architecture</strong>:
-<div class="highlight"><pre><span></span><code>┌─────────────┐     Webhooks     ┌──────────────────┐
-│   GitHub    │ ───────────────&gt; │  DORA Metrics    │
-└─────────────┘                   │     Service      │
-                                  │   (Go/Python)    │
-┌─────────────┐     Webhooks     │                  │
-│   Jenkins   │ ───────────────&gt; │  - Calculates    │
-└─────────────┘                   │  - Stores        │
-                                  │  - Exposes       │
-┌─────────────┐     Webhooks     │                  │
-│   ArgoCD    │ ───────────────&gt; │                  │
-└─────────────┘                   └──────────────────┘
-                                          │
-                                          │ Metrics
-                                          ▼
-                                  ┌──────────────────┐
-                                  │   Prometheus     │
-                                  │   PostgreSQL     │
-                                  └──────────────────┘
-                                          │
-                                          │ Query
-                                          ▼
-                                  ┌──────────────────┐
-                                  │     Grafana      │
-                                  │    Dashboards    │
-                                  └──────────────────┘
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
+│                        Data Sources                              │
+│                                                                   │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
+│  │   GitHub     │  │   ArgoCD     │  │   Jenkins    │          │
+│  │              │  │  (PRIMARY)   │  │   (CI/QA)    │          │
+│  │ • Commits    │  │ • Syncs      │  │ • Builds     │          │
+│  │ • PRs        │  │ • Deploys    │  │ • Tests      │          │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘          │
+│         │                 │                  │                   │
+│  ┌──────────────┐        │                  │                   │
+│  │ Observability│        │                  │                   │
+│  │ • Incidents  │        │                  │                   │
+│  └──────┬───────┘        │                  │                   │
+└─────────┼────────────────┼──────────────────┼───────────────────┘
+          │                │                  │
+          ▼                ▼                  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      DevLake Platform                            │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │   GitHub   │   ArgoCD    │   Jenkins   │   Webhook         │ │
+│  │   Plugin   │   Plugin    │   Plugin    │   Plugin          │ │
+│  └─────────────────────────┬──────────────────────────────────┘ │
+│                            │                                     │
+│                            ▼                                     │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │                   DORA Calculations                         │ │
+│  │  • Deployment Frequency (ArgoCD syncs)                     │ │
+│  │  • Lead Time (Commit → ArgoCD sync)                        │ │
+│  │  • CFR (Failed syncs + Incidents)                          │ │
+│  │  • MTTR (Incident → Restore sync)                          │ │
+│  │  • Operational Performance (SLO adherence)                 │ │
+│  └────────────────────────────────────────────────────────────┘ │
+│                            │                                     │
+│                            ▼                                     │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │                   MySQL Database                            │ │
+│  └────────────────────────────────────────────────────────────┘ │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      Visualization                               │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
+│  │   Grafana    │  │  Backstage   │  │  DevLake UI  │          │
+│  │  Dashboards  │  │   Plugin     │  │              │          │
+│  └──────────────┘  └──────────────┘  └──────────────┘          │
+└─────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<p><strong>Metrics Calculated</strong>:
-1. <strong>Deployment Frequency</strong>: Deployments per day/week
-2. <strong>Lead Time for Changes</strong>: Commit to production time
-3. <strong>Change Failure Rate</strong>: Failed deployments / total deployments
-4. <strong>Mean Time to Restore</strong>: Incident detection to resolution time</p>
+<p><strong>DORA Metrics Calculated</strong>:
+1. <strong>Deployment Frequency</strong>: ArgoCD syncs per day/week (production apps)
+2. <strong>Lead Time for Changes</strong>: Commit timestamp to ArgoCD sync completion
+3. <strong>Change Failure Rate</strong>: (Failed syncs + Incidents) / Total syncs
+4. <strong>Mean Time to Restore</strong>: Incident creation to restore sync
+5. <strong>Operational Performance</strong>: SLO/SLI adherence from Prometheus</p>
+<p><strong>CI/Rework Metrics</strong> (from Jenkins):
+- Build Success Rate
+- Quality Gate Pass Rate
+- Test Flakiness
+- Rework Rate (retry builds)</p>
+<p>See <a href="../adr/ADR-016%20devlake-dora-strategy/">ADR-016: DevLake DORA Strategy</a> for details.</p>
 <h3 id="7-infrastructure-layer">7. Infrastructure Layer</h3>
 <p><strong>Purpose</strong>: Cloud infrastructure provisioning and management</p>
 <p><strong>Components</strong>:</p>
@@ -3433,6 +3471,7 @@ Application consumes database
 <li><a href="../adr/006-postgresql.md">ADR-006: PostgreSQL for Data Persistence</a></li>
 <li><a href="../adr/ADR-009%20secrets%20managment.md">ADR-009: Secrets Management</a></li>
 <li><a href="../adr/ADR-015%20vault%20deployment.md">ADR-015: HashiCorp Vault Deployment</a></li>
+<li><a href="../adr/ADR-016%20devlake-dora-strategy.md">ADR-016: DevLake for DORA Metrics</a></li>
 </ul>
 <hr />
 <h2 id="diagrams">Diagrams</h2>
