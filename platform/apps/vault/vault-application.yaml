@@ -1,0 +1,301 @@
+# ============================================================================
+# FILE: platform/apps/vault/vault-application.yaml
+# PURPOSE: ArgoCD Application for HashiCorp Vault HA deployment
+#          Provides centralized secrets management for the Fawkes platform.
+# PREREQ: PostgreSQL cluster (db-vault-dev) must be deployed for storage backend.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault
+  namespace: fawkes
+  labels:
+    app: vault
+    component: secrets-management
+    environment: dev
+    team: platform
+  annotations:
+    argocd.argoproj.io/docs: "https://developer.hashicorp.com/vault/docs"
+    argocd.argoproj.io/sync-wave: "-3"
+spec:
+  project: default
+
+  source:
+    repoURL: https://helm.releases.hashicorp.com
+    chart: vault
+    targetRevision: 0.28.1
+    helm:
+      values: |
+        # ============================================================
+        # HashiCorp Vault Helm Chart Configuration
+        # High Availability deployment with Kubernetes Auth integration
+        # ============================================================
+
+        global:
+          enabled: true
+          tlsDisable: false
+
+        # ============================================================
+        # Injector Configuration (Vault Agent Sidecar)
+        # Enables automatic secret injection into application pods
+        # ============================================================
+        injector:
+          enabled: true
+          replicas: 2
+
+          # Injector resources
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+
+          # Metrics for Prometheus
+          metrics:
+            enabled: true
+
+          # Webhook configuration
+          webhook:
+            failurePolicy: Ignore
+            matchPolicy: Exact
+            timeoutSeconds: 30
+
+          # Affinity for HA - spread across nodes
+          affinity:
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  podAffinityTerm:
+                    labelSelector:
+                      matchLabels:
+                        app.kubernetes.io/name: vault-agent-injector
+                    topologyKey: kubernetes.io/hostname
+
+          # Security context
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 100
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+
+        # ============================================================
+        # Vault Server Configuration (HA Mode)
+        # ============================================================
+        server:
+          enabled: true
+          replicas: 3
+
+          # Image configuration
+          image:
+            repository: hashicorp/vault
+            tag: "1.17.3"
+
+          # Resource configuration
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 1
+              memory: 512Mi
+
+          # Data storage for Raft integrated storage
+          dataStorage:
+            enabled: true
+            size: 10Gi
+            storageClass: standard
+
+          # Audit log storage
+          auditStorage:
+            enabled: true
+            size: 5Gi
+            storageClass: standard
+
+          # Standalone mode disabled - using HA
+          standalone:
+            enabled: false
+
+          # HA configuration with Raft integrated storage
+          ha:
+            enabled: true
+            replicas: 3
+            raft:
+              enabled: true
+              setNodeId: true
+              config: |
+                ui = true
+
+                # Listener configuration
+                # NOTE: TLS is disabled for development/local environments.
+                # For production deployments, enable TLS by setting tls_disable = 0
+                # and configuring tls_cert_file and tls_key_file paths.
+                listener "tcp" {
+                  tls_disable = 1
+                  address = "[::]:8200"
+                  cluster_address = "[::]:8201"
+                  # Production TLS configuration (uncomment and configure):
+                  # tls_cert_file = "/vault/tls/tls.crt"
+                  # tls_key_file = "/vault/tls/tls.key"
+                  # tls_client_ca_file = "/vault/tls/ca.crt"
+                  telemetry {
+                    unauthenticated_metrics_access = true
+                  }
+                }
+
+                storage "raft" {
+                  path = "/vault/data"
+                  retry_join {
+                    leader_api_addr = "http://vault-0.vault-internal:8200"
+                  }
+                  retry_join {
+                    leader_api_addr = "http://vault-1.vault-internal:8200"
+                  }
+                  retry_join {
+                    leader_api_addr = "http://vault-2.vault-internal:8200"
+                  }
+                }
+
+                telemetry {
+                  prometheus_retention_time = "30s"
+                  disable_hostname = true
+                }
+
+                service_registration "kubernetes" {}
+
+          # Ingress configuration for Vault UI/API
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - host: vault.127.0.0.1.nip.io
+            annotations:
+              nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+              nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+              nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+
+          # Service configuration
+          service:
+            enabled: true
+            type: ClusterIP
+            port: 8200
+            targetPort: 8200
+
+          # Security context for Vault pods
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 100
+            runAsGroup: 1000
+            fsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+
+          # Affinity for HA - spread across nodes
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchLabels:
+                      app.kubernetes.io/name: vault
+                      component: server
+                  topologyKey: kubernetes.io/hostname
+
+          # Tolerations (if needed for dedicated nodes)
+          tolerations: []
+
+          # Extra environment variables
+          # NOTE: VAULT_CACERT is only needed when TLS is enabled.
+          # Configure TLS certificate path when using production TLS settings.
+          extraEnvironmentVars:
+            VAULT_LOG_LEVEL: info
+            # VAULT_CACERT: /vault/tls/ca.crt  # Uncomment for TLS
+
+          # Readiness probe
+          readinessProbe:
+            enabled: true
+            path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
+
+          # Liveness probe
+          livenessProbe:
+            enabled: true
+            path: "/v1/sys/health?standbyok=true"
+            initialDelaySeconds: 60
+
+          # Service account
+          serviceAccount:
+            create: true
+            name: vault
+            annotations: {}
+
+        # ============================================================
+        # CSI Provider Configuration
+        # Enables secrets injection via CSI volumes
+        # ============================================================
+        csi:
+          enabled: true
+          image:
+            repository: hashicorp/vault-csi-provider
+            tag: "1.4.3"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+
+        # ============================================================
+        # Vault UI Configuration
+        # ============================================================
+        ui:
+          enabled: true
+          serviceType: ClusterIP
+
+        # ============================================================
+        # Server Volume Mounts for TLS (optional - for production)
+        # ============================================================
+        # serverTelemetry:
+        #   serviceMonitor:
+        #     enabled: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vault
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/replicas
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+      jqPathExpressions:
+        - .webhooks[]?.clientConfig.caBundle
+
+  revisionHistoryLimit: 10
