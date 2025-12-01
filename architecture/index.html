@@ -1580,6 +1580,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#developer-experience-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Developer Experience Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Developer Experience Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deployment-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#component-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2285,6 +2357,176 @@
 <strong>South</strong>: Kubernetes clusters and cloud infrastructure
 <strong>East/West</strong>: External systems and services
 <strong>Core</strong>: Platform services providing CI/CD, GitOps, observability, security</p>
+<hr />
+<h2 id="developer-experience-layer">Developer Experience Layer</h2>
+<p>The Developer Experience (DX) Layer is the primary interface between developers and the Fawkes platform. It provides a unified, authenticated interface for self-service capabilities, monitoring, and service discovery.</p>
+<h3 id="architecture-overview">Architecture Overview</h3>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                         Developer Experience Layer                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                        Backstage Developer Portal                       │ │
+│  │                                                                          │ │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────────┐ │ │
+│  │  │   Service    │  │   Software   │  │   TechDocs   │  │   Search   │ │ │
+│  │  │   Catalog    │  │  Templates   │  │              │  │            │ │ │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘  └────────────┘ │ │
+│  │                                                                          │ │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────────┐ │ │
+│  │  │   Plugins    │  │     Auth     │  │  Kubernetes  │  │   Dojo     │ │ │
+│  │  │   (CI/CD)    │  │   (OAuth)    │  │   Status     │  │  Learning  │ │ │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘  └────────────┘ │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                      │                                       │
+│                                      ▼                                       │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                           PostgreSQL (HA)                               │ │
+│  │                    CloudNativePG: db-backstage-dev                      │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                       │
+                 ┌─────────────────────┼─────────────────────┐
+                 │                     │                     │
+                 ▼                     ▼                     ▼
+         ┌─────────────┐       ┌─────────────┐       ┌─────────────┐
+         │   Jenkins   │       │   ArgoCD    │       │   GitHub    │
+         │   (CI/CD)   │       │   (GitOps)  │       │   (OAuth)   │
+         └─────────────┘       └─────────────┘       └─────────────┘
+</code></pre></div>
+<h3 id="key-components">Key Components</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+<th>Technology</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Backstage Portal</strong></td>
+<td>Single pane of glass for developers</td>
+<td>TypeScript/React</td>
+</tr>
+<tr>
+<td><strong>Service Catalog</strong></td>
+<td>Inventory of services, APIs, resources</td>
+<td>Backstage Core</td>
+</tr>
+<tr>
+<td><strong>Software Templates</strong></td>
+<td>Golden paths for new services</td>
+<td>Backstage Scaffolder</td>
+</tr>
+<tr>
+<td><strong>TechDocs</strong></td>
+<td>Documentation as code</td>
+<td>MkDocs + Backstage</td>
+</tr>
+<tr>
+<td><strong>Authentication</strong></td>
+<td>SSO via OAuth 2.0/OIDC</td>
+<td>GitHub OAuth</td>
+</tr>
+<tr>
+<td><strong>PostgreSQL</strong></td>
+<td>Catalog and session storage</td>
+<td>CloudNativePG (HA)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="authentication-flow">Authentication Flow</h3>
+<div class="highlight"><pre><span></span><code>Developer Access Request
+         │
+         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      Ingress Controller                      │
+│                   (HTTPS: backstage.fawkes.idp)              │
+└─────────────────────────────────────────────────────────────┘
+         │
+         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Backstage Frontend                        │
+│                                                              │
+│  ┌──────────────────┐                                       │
+│  │ Unauthenticated? │──Yes──┐                               │
+│  └──────────────────┘       │                               │
+│           │                 │                               │
+│          No                 ▼                               │
+│           │       ┌──────────────────┐                      │
+│           │       │ Redirect to SSO  │                      │
+│           │       │  (GitHub OAuth)  │                      │
+│           │       └──────────────────┘                      │
+│           │                 │                               │
+│           │                 ▼                               │
+│           │       ┌──────────────────┐                      │
+│           │       │ OAuth Callback   │                      │
+│           │       │ Validate Token   │                      │
+│           │       └──────────────────┘                      │
+│           │                 │                               │
+│           ▼                 ▼                               │
+│       ┌──────────────────────────────────────────────────┐ │
+│       │                 Authenticated                     │ │
+│       │          Access to Catalog, Templates, Docs       │ │
+│       └──────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="deployment-configuration">Deployment Configuration</h3>
+<p><strong>High Availability</strong>:
+- 2 replicas with pod anti-affinity
+- Pod disruption budget (minAvailable: 1)
+- PostgreSQL HA cluster (3 instances)</p>
+<p><strong>Resource Allocation</strong>:
+- Backstage: 500m-2 CPU, 512Mi-2Gi memory
+- PostgreSQL: 500m-2 CPU, 512Mi-2Gi memory</p>
+<p><strong>Security</strong>:
+- TLS termination at ingress (cert-manager)
+- Non-root container execution
+- Read-only filesystem where possible
+- Security context with dropped capabilities</p>
+<h3 id="integration-points">Integration Points</h3>
+<table>
+<thead>
+<tr>
+<th>Integration</th>
+<th>Purpose</th>
+<th>Configuration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GitHub OAuth</strong></td>
+<td>User authentication</td>
+<td><code>auth.providers.github</code></td>
+</tr>
+<tr>
+<td><strong>GitHub API</strong></td>
+<td>Repository discovery</td>
+<td><code>integrations.github</code></td>
+</tr>
+<tr>
+<td><strong>Jenkins</strong></td>
+<td>CI/CD pipeline status</td>
+<td><code>proxy.endpoints./jenkins</code></td>
+</tr>
+<tr>
+<td><strong>ArgoCD</strong></td>
+<td>Deployment status</td>
+<td><code>proxy.endpoints./argocd</code></td>
+</tr>
+<tr>
+<td><strong>Kubernetes</strong></td>
+<td>Resource status</td>
+<td><code>kubernetes.clusterLocatorMethods</code></td>
+</tr>
+<tr>
+<td><strong>Prometheus</strong></td>
+<td>Metrics exposure</td>
+<td>ServiceMonitor</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="component-overview">Component Overview</h2>
 <h3 id="1-developer-portal-backstage">1. Developer Portal (Backstage)</h3>
