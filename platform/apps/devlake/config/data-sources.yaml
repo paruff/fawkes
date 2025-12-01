@@ -1,0 +1,380 @@
+# DevLake Data Sources Configuration
+# ============================================================
+# This file configures the data source connections for DevLake
+# to collect DORA metrics from Git, ArgoCD, Jenkins, and Observability.
+#
+# IMPORTANT: In a GitOps architecture:
+# - ArgoCD is the PRIMARY source for deployment metrics
+# - Jenkins provides CI/build metrics and rework tracking
+# - GitHub/Git provides commit and PR data
+# - Observability provides incident data for MTTR
+#
+# NOTE: Credentials should be managed via Vault or External Secrets.
+# The placeholders below reference Kubernetes secrets that should be
+# created using the External Secrets Operator or Vault Agent.
+# ============================================================
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: devlake-data-sources
+  namespace: fawkes-devlake
+  labels:
+    app: devlake
+    component: config
+    team: platform
+data:
+  # ============================================================
+  # Data Sources Blueprint
+  # Defines the collection configuration for each data source
+  # ============================================================
+  data-sources.json: |
+    {
+      "name": "Fawkes Platform DORA Metrics",
+      "mode": "NORMAL",
+      "enable": true,
+      "cronConfig": "0 0 * * *",
+      "isManual": false,
+      "skipOnFail": true,
+      "settings": {
+        "version": "2.0.0",
+        "timeAfter": null,
+        "connections": [
+          {
+            "plugin": "github",
+            "connectionId": 1,
+            "scopes": []
+          },
+          {
+            "plugin": "argocd",
+            "connectionId": 1,
+            "scopes": [],
+            "description": "Primary source for deployment frequency and lead time"
+          },
+          {
+            "plugin": "jenkins",
+            "connectionId": 1,
+            "scopes": [],
+            "description": "CI metrics, build success rate, rework tracking"
+          },
+          {
+            "plugin": "webhook",
+            "connectionId": 1,
+            "scopes": [],
+            "description": "Incident events for CFR and MTTR"
+          }
+        ]
+      }
+    }
+
+  # ============================================================
+  # GitHub Data Source Configuration
+  # Collects commits, PRs, and branch data for Lead Time calculation
+  # ============================================================
+  github-connection.json: |
+    {
+      "name": "GitHub - Fawkes",
+      "endpoint": "https://api.github.com/",
+      "authMethod": "AccessToken",
+      "token": "${GITHUB_TOKEN}",
+      "proxy": "",
+      "rateLimitPerHour": 4500,
+      "enableGraphql": true,
+      "transformationRules": {
+        "prType": ".*",
+        "prComponent": "",
+        "prBodyClosePattern": "(?mi)(fix|close|resolve|fixes|closes|resolves)[\\s]*#([0-9]+)"
+      },
+      "scope": [
+        {
+          "connectionId": 1,
+          "owner": "paruff",
+          "repo": "fawkes",
+          "transformationRuleId": 1
+        }
+      ]
+    }
+
+  # ============================================================
+  # ArgoCD Data Source Configuration (PRIMARY DEPLOYMENT SOURCE)
+  # Collects deployment/sync events for DORA Deployment Frequency
+  # and Lead Time for Changes metrics
+  # ============================================================
+  argocd-connection.json: |
+    {
+      "name": "ArgoCD - Fawkes GitOps",
+      "endpoint": "${ARGOCD_SERVER_URL}",
+      "token": "${ARGOCD_AUTH_TOKEN}",
+      "proxy": "",
+      "transformationRules": {
+        "deploymentPattern": ".*",
+        "productionPattern": ".*-prod$|.*-production$",
+        "stagingPattern": ".*-staging$|.*-stage$",
+        "developmentPattern": ".*-dev$|.*-development$"
+      },
+      "scope": [
+        {
+          "connectionId": 1,
+          "appName": "fawkes-*",
+          "description": "All Fawkes applications for deployment tracking"
+        }
+      ],
+      "metrics": {
+        "deploymentFrequency": {
+          "enabled": true,
+          "successfulSyncsOnly": true
+        },
+        "leadTime": {
+          "enabled": true,
+          "correlateWithGitCommits": true
+        },
+        "changeFailureRate": {
+          "enabled": true,
+          "failedSyncAsFailure": true
+        }
+      }
+    }
+
+  # ============================================================
+  # Jenkins Data Source Configuration (CI AND REWORK METRICS)
+  # Collects build data for quality metrics, NOT deployment frequency
+  # Focus: Build success rate, test results, rework tracking
+  # ============================================================
+  jenkins-connection.json: |
+    {
+      "name": "Jenkins - Fawkes CI",
+      "endpoint": "${JENKINS_URL}",
+      "username": "${JENKINS_ADMIN_USER}",
+      "password": "${JENKINS_ADMIN_PASSWORD}",
+      "proxy": "",
+      "transformationRules": {
+        "buildSuccessPattern": "SUCCESS",
+        "buildFailurePattern": "FAILURE|ABORTED|UNSTABLE"
+      },
+      "scope": [
+        {
+          "connectionId": 1,
+          "fullName": "fawkes-golden-path",
+          "transformationRuleId": 1
+        }
+      ],
+      "metrics": {
+        "buildSuccessRate": {
+          "enabled": true,
+          "description": "Track CI build success/failure rate"
+        },
+        "reworkRate": {
+          "enabled": true,
+          "description": "Track builds triggered by same commit (retries)"
+        },
+        "qualityGatePassRate": {
+          "enabled": true,
+          "description": "Track SonarQube quality gate results"
+        },
+        "testFlakiness": {
+          "enabled": true,
+          "description": "Track non-deterministic test failures"
+        },
+        "buildDuration": {
+          "enabled": true,
+          "description": "Track build time trends"
+        }
+      }
+    }
+
+  # ============================================================
+  # Webhook Configuration for Incident Events
+  # Receives incident events from Observability for CFR/MTTR
+  # ============================================================
+  webhook-connection.json: |
+    {
+      "name": "Fawkes DORA Webhooks",
+      "webhooks": [
+        {
+          "name": "incident-events",
+          "description": "Receives incident events for MTTR calculation",
+          "endpoint": "/api/plugins/webhook/1/incidents",
+          "source": "observability"
+        },
+        {
+          "name": "cicd-events",
+          "description": "Receives CI/CD events for rework tracking",
+          "endpoint": "/api/plugins/webhook/1/cicd",
+          "source": "jenkins"
+        }
+      ]
+    }
+
+---
+# ============================================================
+# External Secret for GitHub Token
+# Uses External Secrets Operator to sync from Vault
+# ============================================================
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: devlake-github-token
+  namespace: fawkes-devlake
+  labels:
+    app: devlake
+    component: secrets
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: devlake-github-secrets
+    creationPolicy: Owner
+  data:
+    - secretKey: github-token
+      remoteRef:
+        key: secret/data/fawkes/devlake
+        property: github-token
+
+---
+# ============================================================
+# External Secret for ArgoCD Token (PRIMARY DEPLOYMENT SOURCE)
+# Uses External Secrets Operator to sync from Vault
+# ============================================================
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: devlake-argocd-token
+  namespace: fawkes-devlake
+  labels:
+    app: devlake
+    component: secrets
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: devlake-argocd-secrets
+    creationPolicy: Owner
+  data:
+    - secretKey: argocd-server-url
+      remoteRef:
+        key: secret/data/fawkes/devlake
+        property: argocd-server-url
+    - secretKey: argocd-auth-token
+      remoteRef:
+        key: secret/data/fawkes/devlake
+        property: argocd-auth-token
+
+---
+# ============================================================
+# External Secret for Jenkins Credentials (CI METRICS)
+# Uses External Secrets Operator to sync from Vault
+# ============================================================
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: devlake-jenkins-creds
+  namespace: fawkes-devlake
+  labels:
+    app: devlake
+    component: secrets
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: devlake-jenkins-secrets
+    creationPolicy: Owner
+  data:
+    - secretKey: jenkins-username
+      remoteRef:
+        key: secret/data/fawkes/devlake
+        property: jenkins-username
+    - secretKey: jenkins-password
+      remoteRef:
+        key: secret/data/fawkes/devlake
+        property: jenkins-password
+
+---
+# ============================================================
+# External Secret for DevLake Encryption
+# Uses External Secrets Operator to sync from Vault
+# ============================================================
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: devlake-encryption-secret
+  namespace: fawkes-devlake
+  labels:
+    app: devlake
+    component: secrets
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: devlake-secrets
+    creationPolicy: Owner
+  data:
+    - secretKey: encryption-secret
+      remoteRef:
+        key: secret/data/fawkes/devlake
+        property: encryption-secret
+
+---
+# ============================================================
+# External Secret for MySQL Credentials
+# Uses External Secrets Operator to sync from Vault
+# ============================================================
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: devlake-mysql-secret
+  namespace: fawkes-devlake
+  labels:
+    app: devlake
+    component: secrets
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: devlake-mysql-secrets
+    creationPolicy: Owner
+  data:
+    - secretKey: mysql-root-password
+      remoteRef:
+        key: secret/data/fawkes/devlake
+        property: mysql-root-password
+    - secretKey: mysql-password
+      remoteRef:
+        key: secret/data/fawkes/devlake
+        property: mysql-password
+
+---
+# ============================================================
+# External Secret for Grafana Credentials
+# Uses External Secrets Operator to sync from Vault
+# ============================================================
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: devlake-grafana-secret
+  namespace: fawkes-devlake
+  labels:
+    app: devlake
+    component: secrets
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: devlake-grafana-secrets
+    creationPolicy: Owner
+  data:
+    - secretKey: admin-password
+      remoteRef:
+        key: secret/data/fawkes/devlake
+        property: grafana-admin-password
