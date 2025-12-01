@@ -69,12 +69,15 @@ def withVaultSecrets(List secretMappings, Closure body) {
 
     // Use the HashiCorp Vault plugin if available
     try {
+        // NOTE: skipSslVerification should be false in production environments.
+        // Set VAULT_SKIP_SSL_VERIFY=false in production to enforce TLS verification.
+        def skipSsl = env.VAULT_SKIP_SSL_VERIFY?.toBoolean() ?: false
         withVault(
             configuration: [
                 vaultUrl: config.vaultUrl,
                 vaultNamespace: config.vaultNamespace,
                 vaultCredentialId: config.tokenCredentialId,
-                skipSslVerification: true,
+                skipSslVerification: skipSsl,
                 timeout: 60
             ],
             vaultSecrets: vaultSecrets
@@ -174,7 +177,7 @@ def getKubernetesAuthToken(Map config) {
             "jwt": "${jwt}"
         }
         """,
-        validResponseCodes: '200',
+        validResponseCodes: '200:299',
         quiet: true
     )
 
@@ -192,7 +195,7 @@ def readSecretFromVault(String vaultUrl, String token, String path) {
         url: secretUrl,
         httpMode: 'GET',
         customHeaders: [[name: 'X-Vault-Token', value: token, maskValue: true]],
-        validResponseCodes: '200',
+        validResponseCodes: '200:299',
         quiet: true
     )
 

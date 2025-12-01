@@ -132,10 +132,18 @@ spec:
               config: |
                 ui = true
 
+                # Listener configuration
+                # NOTE: TLS is disabled for development/local environments.
+                # For production deployments, enable TLS by setting tls_disable = 0
+                # and configuring tls_cert_file and tls_key_file paths.
                 listener "tcp" {
                   tls_disable = 1
                   address = "[::]:8200"
                   cluster_address = "[::]:8201"
+                  # Production TLS configuration (uncomment and configure):
+                  # tls_cert_file = "/vault/tls/tls.crt"
+                  # tls_key_file = "/vault/tls/tls.key"
+                  # tls_client_ca_file = "/vault/tls/ca.crt"
                   telemetry {
                     unauthenticated_metrics_access = true
                   }
@@ -206,9 +214,11 @@ spec:
           tolerations: []
 
           # Extra environment variables
+          # NOTE: VAULT_CACERT is only needed when TLS is enabled.
+          # Configure TLS certificate path when using production TLS settings.
           extraEnvironmentVars:
-            VAULT_CACERT: /vault/userconfig/vault-tls/ca.crt
             VAULT_LOG_LEVEL: info
+            # VAULT_CACERT: /vault/tls/ca.crt  # Uncomment for TLS
 
           # Readiness probe
           readinessProbe:
