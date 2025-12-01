@@ -4,7 +4,7 @@
  *
  * Provides reusable security scanning functions including:
  * - Container image scanning with Trivy
- * - SonarQube static analysis
+ * - SonarQube static analysis with Quality Gate enforcement
  * - OWASP dependency checks
  *
  * Usage:
@@ -13,6 +13,7 @@
  *     image = 'my-image:tag'
  *     sonarProject = 'my-project'
  *     language = 'java'
+ *     failOnQualityGate = true
  * }
  *
  * @author Fawkes Platform Team
@@ -25,7 +26,11 @@ def call(Map config = [:]) {
         language: 'java',
         trivySeverity: 'HIGH,CRITICAL',
         trivyExitCode: '1',
-        failOnVulnerabilities: true
+        failOnVulnerabilities: true,
+        failOnQualityGate: true,
+        sonarQubeTimeout: 5,
+        sonarHostUrl: env.SONARQUBE_URL ?: 'http://sonarqube.fawkes.svc:9000',
+        sonarBranch: env.BRANCH_NAME ?: 'main'
     ]
 
     config = defaultConfig + config
@@ -81,48 +86,111 @@ def containerScan(Map config) {
 }
 
 /**
- * Run SonarQube analysis
+ * Run SonarQube analysis with Quality Gate enforcement
+ *
+ * This function executes SonarQube analysis and waits for the Quality Gate result.
+ * If the Quality Gate fails and failOnQualityGate is true, the pipeline will fail.
+ * A direct link to the SonarQube analysis report is provided in the build logs.
  */
 def sonarAnalysis(Map config) {
+    def sonarReportUrl = ''
+    
     withSonarQubeEnv('SonarQube') {
         switch (config.language) {
             case 'java':
-                sh "mvn sonar:sonar -Dsonar.projectKey=${config.sonarProject}"
+                sh """
+                    mvn sonar:sonar \
+                        -Dsonar.projectKey=${config.sonarProject} \
+                        -Dsonar.projectName='${config.sonarProject}' \
+                        -Dsonar.branch.name=${config.sonarBranch}
+                """
                 break
             case 'python':
                 sh """
                     sonar-scanner \
                         -Dsonar.projectKey=${config.sonarProject} \
+                        -Dsonar.projectName='${config.sonarProject}' \
                         -Dsonar.sources=src \
-                        -Dsonar.python.coverage.reportPaths=coverage.xml
+                        -Dsonar.python.coverage.reportPaths=coverage.xml \
+                        -Dsonar.branch.name=${config.sonarBranch}
                 """
                 break
             case 'node':
                 sh """
                     npx sonar-scanner \
                         -Dsonar.projectKey=${config.sonarProject} \
+                        -Dsonar.projectName='${config.sonarProject}' \
                         -Dsonar.sources=src \
-                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                        -Dsonar.branch.name=${config.sonarBranch}
                 """
                 break
             case 'go':
                 sh """
                     sonar-scanner \
                         -Dsonar.projectKey=${config.sonarProject} \
+                        -Dsonar.projectName='${config.sonarProject}' \
                         -Dsonar.sources=. \
-                        -Dsonar.go.coverage.reportPaths=coverage.out
+                        -Dsonar.go.coverage.reportPaths=coverage.out \
+                        -Dsonar.branch.name=${config.sonarBranch}
                 """
                 break
         }
+        
+        // Construct SonarQube report URL for developer access
+        sonarReportUrl = "${config.sonarHostUrl}/dashboard?id=${config.sonarProject}&branch=${config.sonarBranch}"
     }
     
-    // Wait for quality gate
-    timeout(time: 5, unit: 'MINUTES') {
+    // Wait for quality gate with detailed logging
+    echo "=============================================="
+    echo "Waiting for SonarQube Quality Gate result..."
+    echo "=============================================="
+    
+    timeout(time: config.sonarQubeTimeout, unit: 'MINUTES') {
         def qg = waitForQualityGate()
-        if (qg.status != 'OK' && config.failOnVulnerabilities) {
-            error "Quality Gate failed: ${qg.status}"
+        
+        // Log Quality Gate result with link to dashboard
+        echo "=============================================="
+        echo "SonarQube Quality Gate: ${qg.status}"
+        echo "=============================================="
+        echo "📊 View detailed analysis report:"
+        echo "   ${sonarReportUrl}"
+        echo "=============================================="
+        
+        // Add summary to build description for easy access
+        currentBuild.description = (currentBuild.description ?: '') + 
+            "\n<a href='${sonarReportUrl}'>SonarQube Report</a>"
+        
+        if (qg.status != 'OK') {
+            def failureMessage = """
+============================================
+❌ QUALITY GATE FAILED: ${qg.status}
+============================================
+The code changes did not meet the quality criteria.
+Please review the SonarQube analysis for details:
+
+${sonarReportUrl}
+
+Common failure reasons:
+- New bugs or vulnerabilities introduced
+- Code coverage dropped below threshold
+- Duplicate code exceeded limit
+- Security hotspots require review
+============================================
+"""
+            echo failureMessage
+            
+            if (config.failOnQualityGate) {
+                error "Quality Gate failed: ${qg.status}. See SonarQube report: ${sonarReportUrl}"
+            } else {
+                unstable "Quality Gate failed but pipeline continues: ${qg.status}"
+            }
+        } else {
+            echo "✅ Quality Gate passed successfully!"
         }
     }
+    
+    return sonarReportUrl
 }
 
 /**
@@ -158,6 +226,35 @@ def dependencyCheck(Map config) {
             archiveArtifacts artifacts: 'govulncheck.json', allowEmptyArchive: true
             break
     }
+}
+
+/**
+ * Get the SonarQube dashboard URL for a project
+ *
+ * Constructs the URL to the SonarQube dashboard for viewing detailed
+ * code analysis results. Uses the SONARQUBE_URL environment variable
+ * if available, otherwise defaults to the internal Kubernetes service URL.
+ *
+ * @param projectKey The SonarQube project key (required)
+ * @param branch Optional branch name, defaults to 'main'
+ * @return The URL to the SonarQube dashboard for the specified project and branch
+ *
+ * @example
+ * // Get URL for main branch
+ * def url = getSonarQubeUrl('my-service')
+ * // Returns: http://sonarqube.fawkes.svc:9000/dashboard?id=my-service&branch=main
+ *
+ * @example
+ * // Get URL for specific branch
+ * def url = getSonarQubeUrl('my-service', 'feature-branch')
+ * // Returns: http://sonarqube.fawkes.svc:9000/dashboard?id=my-service&branch=feature-branch
+ */
+def getSonarQubeUrl(String projectKey, String branch = 'main') {
+    if (!projectKey) {
+        throw new IllegalArgumentException("projectKey is required")
+    }
+    def baseUrl = env.SONARQUBE_URL ?: 'http://sonarqube.fawkes.svc:9000'
+    return "${baseUrl}/dashboard?id=${projectKey}&branch=${branch}"
 }
 
 return this

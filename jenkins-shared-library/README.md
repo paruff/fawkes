@@ -245,13 +245,55 @@ Given('the API is running', function() {
 
 ### SonarQube
 
-Configure SonarQube in Jenkins and add `sonar-project.properties`:
+The Golden Path pipeline includes mandatory SonarQube Quality Gate enforcement. When the Quality Gate fails, the pipeline stops and provides a direct link to the SonarQube dashboard.
+
+#### Jenkins Configuration
+
+1. Install the SonarQube Scanner plugin
+2. Configure SonarQube server in Jenkins (Manage Jenkins > Configure System > SonarQube servers):
+   - Name: `SonarQube`
+   - Server URL: `http://sonarqube.fawkes.svc:9000`
+   - Server authentication token: (create in SonarQube and add as Jenkins credential)
+
+3. Add `sonar-project.properties` to your repository:
 
 ```properties
 sonar.projectKey=my-service
+sonar.projectName=My Service
 sonar.sources=src
 sonar.tests=tests
 sonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+```
+
+#### Quality Gate Behavior
+
+**Main Branch**: Quality Gate is **mandatory**. Pipeline fails if gate fails.
+**PR Branches**: Quality Gate status is reported but does not block.
+
+When Quality Gate fails, developers see:
+- ❌ Failure reason in console output
+- 📊 Direct link to SonarQube analysis report
+- List of common failure causes
+
+#### Quality Gate Thresholds
+
+| Metric | Threshold |
+|--------|-----------|
+| New Bugs | 0 |
+| New Vulnerabilities | 0 |
+| New Security Hotspots Reviewed | 100% |
+| New Code Coverage | ≥80% |
+| New Duplicated Lines | ≤3% |
+| Maintainability Rating | A |
+
+#### Custom Configuration
+
+```groovy
+goldenPathPipeline {
+    appName = 'my-service'
+    sonarProject = 'custom-project-key'  // Override default (appName)
+    runSecurityScan = true               // Enable SonarQube (default)
+}
 ```
 
 ### Trivy
