@@ -86,9 +86,12 @@ grafana:
     tag: "10.2.2"
 
   adminUser: admin
-  # NOTE: In production, use Vault/ExternalSecrets for credentials
-  # Reference: platform/apps/devlake/config/data-sources.yaml
-  adminPassword: "fawkesidp"
+  # Grafana admin password from Kubernetes secret
+  # Create secret: kubectl create secret generic devlake-grafana-secrets \
+  #   --from-literal=admin-password=<password> -n fawkes-devlake
+  # Or use External Secrets to sync from Vault
+  adminPasswordSecretName: devlake-grafana-secrets
+  adminPasswordSecretKey: admin-password
 
   resources:
     requests:

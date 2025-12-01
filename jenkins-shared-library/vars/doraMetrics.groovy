@@ -223,25 +223,27 @@ def recordIncident(Map config = [:]) {
         buildNumber: env.BUILD_NUMBER ?: '0',
         environment: 'ci'
     ]
-    
+
     config = defaults + config
-    
+
     def devlakeWebhookUrl = env.DEVLAKE_WEBHOOK_URL ?: 'http://devlake.fawkes-devlake.svc:8080'
-    
+
+    // Build JSON payload with proper handling of optional resolvedAt field
+    def resolvedDateField = config.resolvedAt ? ",\n        \"resolvedDate\": \"${config.resolvedAt}\"" : ''
+
     def payload = """
     {
         "id": "${config.service}-incident-${config.buildNumber}",
         "title": "${config.title}",
         "status": "${config.status}",
         "severity": "${config.severity}",
-        "createdDate": "${config.createdAt}",
-        ${config.resolvedAt ? "\"resolvedDate\": \"${config.resolvedAt}\"," : ''}
+        "createdDate": "${config.createdAt}"${resolvedDateField},
         "service": "${config.service}",
         "environment": "${config.environment}",
         "url": "${env.BUILD_URL ?: ''}"
     }
     """
-    
+
     try {
         httpRequest(
             url: "${devlakeWebhookUrl}/api/plugins/webhook/1/incidents",

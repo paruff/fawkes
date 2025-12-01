@@ -351,3 +351,30 @@ spec:
       remoteRef:
         key: secret/data/fawkes/devlake
         property: mysql-password
+
+---
+# ============================================================
+# External Secret for Grafana Credentials
+# Uses External Secrets Operator to sync from Vault
+# ============================================================
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: devlake-grafana-secret
+  namespace: fawkes-devlake
+  labels:
+    app: devlake
+    component: secrets
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: devlake-grafana-secrets
+    creationPolicy: Owner
+  data:
+    - secretKey: admin-password
+      remoteRef:
+        key: secret/data/fawkes/devlake
+        property: grafana-admin-password

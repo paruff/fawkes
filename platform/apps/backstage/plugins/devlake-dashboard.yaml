@@ -255,7 +255,14 @@ data:
       );
     };
 
-    const MetricCard = ({ title, value, unit, rating }) => (
+    interface MetricCardProps {
+      title: string;
+      value: number;
+      unit: string;
+      rating: 'elite' | 'high' | 'medium' | 'low';
+    }
+
+    const MetricCard: React.FC<MetricCardProps> = ({ title, value, unit, rating }) => (
       <div style={{
         padding: '16px',
         border: `2px solid ${getRatingColor(rating)}`,

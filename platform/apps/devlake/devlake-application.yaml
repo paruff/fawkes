@@ -104,9 +104,13 @@ spec:
               cpu: 500m
               memory: 512Mi
 
-          # Use existing Grafana admin credentials
+          # Grafana admin credentials from secret
+          # Create secret: kubectl create secret generic devlake-grafana-secrets \
+          #   --from-literal=admin-user=admin \
+          #   --from-literal=admin-password=<password>
           adminUser: admin
-          adminPassword: fawkesidp
+          adminPasswordSecretName: devlake-grafana-secrets
+          adminPasswordSecretKey: admin-password
 
           # Pre-configured DORA dashboards
           dashboards:
@@ -139,13 +143,11 @@ spec:
             storageClass: ""
             size: 20Gi
 
-          # Database credentials
-          # In production, use Vault or External Secrets
+          # Database credentials from External Secret
+          # See: platform/apps/devlake/config/data-sources.yaml for secret definition
           auth:
-            rootPassword: ""
             database: lake
             username: devlake
-            password: ""
             existingSecret: devlake-mysql-secrets
             secretKeys:
               rootPassword: mysql-root-password
