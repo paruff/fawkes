@@ -140,6 +140,127 @@ Fawkes sits at the intersection of:
 
 ---
 
+## Developer Experience Layer
+
+The Developer Experience (DX) Layer is the primary interface between developers and the Fawkes platform. It provides a unified, authenticated interface for self-service capabilities, monitoring, and service discovery.
+
+### Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         Developer Experience Layer                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                        Backstage Developer Portal                       │ │
+│  │                                                                          │ │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────────┐ │ │
+│  │  │   Service    │  │   Software   │  │   TechDocs   │  │   Search   │ │ │
+│  │  │   Catalog    │  │  Templates   │  │              │  │            │ │ │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘  └────────────┘ │ │
+│  │                                                                          │ │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────────┐ │ │
+│  │  │   Plugins    │  │     Auth     │  │  Kubernetes  │  │   Dojo     │ │ │
+│  │  │   (CI/CD)    │  │   (OAuth)    │  │   Status     │  │  Learning  │ │ │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘  └────────────┘ │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+│                                      │                                       │
+│                                      ▼                                       │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                           PostgreSQL (HA)                               │ │
+│  │                    CloudNativePG: db-backstage-dev                      │ │
+│  └────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                       │
+                 ┌─────────────────────┼─────────────────────┐
+                 │                     │                     │
+                 ▼                     ▼                     ▼
+         ┌─────────────┐       ┌─────────────┐       ┌─────────────┐
+         │   Jenkins   │       │   ArgoCD    │       │   GitHub    │
+         │   (CI/CD)   │       │   (GitOps)  │       │   (OAuth)   │
+         └─────────────┘       └─────────────┘       └─────────────┘
+```
+
+### Key Components
+
+| Component | Purpose | Technology |
+|-----------|---------|------------|
+| **Backstage Portal** | Single pane of glass for developers | TypeScript/React |
+| **Service Catalog** | Inventory of services, APIs, resources | Backstage Core |
+| **Software Templates** | Golden paths for new services | Backstage Scaffolder |
+| **TechDocs** | Documentation as code | MkDocs + Backstage |
+| **Authentication** | SSO via OAuth 2.0/OIDC | GitHub OAuth |
+| **PostgreSQL** | Catalog and session storage | CloudNativePG (HA) |
+
+### Authentication Flow
+
+```
+Developer Access Request
+         │
+         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      Ingress Controller                      │
+│                   (HTTPS: backstage.fawkes.idp)              │
+└─────────────────────────────────────────────────────────────┘
+         │
+         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Backstage Frontend                        │
+│                                                              │
+│  ┌──────────────────┐                                       │
+│  │ Unauthenticated? │──Yes──┐                               │
+│  └──────────────────┘       │                               │
+│           │                 │                               │
+│          No                 ▼                               │
+│           │       ┌──────────────────┐                      │
+│           │       │ Redirect to SSO  │                      │
+│           │       │  (GitHub OAuth)  │                      │
+│           │       └──────────────────┘                      │
+│           │                 │                               │
+│           │                 ▼                               │
+│           │       ┌──────────────────┐                      │
+│           │       │ OAuth Callback   │                      │
+│           │       │ Validate Token   │                      │
+│           │       └──────────────────┘                      │
+│           │                 │                               │
+│           ▼                 ▼                               │
+│       ┌──────────────────────────────────────────────────┐ │
+│       │                 Authenticated                     │ │
+│       │          Access to Catalog, Templates, Docs       │ │
+│       └──────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Deployment Configuration
+
+**High Availability**:
+- 2 replicas with pod anti-affinity
+- Pod disruption budget (minAvailable: 1)
+- PostgreSQL HA cluster (3 instances)
+
+**Resource Allocation**:
+- Backstage: 500m-2 CPU, 512Mi-2Gi memory
+- PostgreSQL: 500m-2 CPU, 512Mi-2Gi memory
+
+**Security**:
+- TLS termination at ingress (cert-manager)
+- Non-root container execution
+- Read-only filesystem where possible
+- Security context with dropped capabilities
+
+### Integration Points
+
+| Integration | Purpose | Configuration |
+|-------------|---------|---------------|
+| **GitHub OAuth** | User authentication | `auth.providers.github` |
+| **GitHub API** | Repository discovery | `integrations.github` |
+| **Jenkins** | CI/CD pipeline status | `proxy.endpoints./jenkins` |
+| **ArgoCD** | Deployment status | `proxy.endpoints./argocd` |
+| **Kubernetes** | Resource status | `kubernetes.clusterLocatorMethods` |
+| **Prometheus** | Metrics exposure | ServiceMonitor |
+
+---
+
 ## Component Overview
 
 ### 1. Developer Portal (Backstage)
