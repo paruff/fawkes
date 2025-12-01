@@ -253,11 +253,14 @@ gitops-repo/
 - Policy enforcement
 - Registry integration
 
-**Secrets Management**:
-- External Secrets Operator
-- Integration with cloud KMS
-- Secret rotation
-- Audit logging
+**Secrets Management** (HashiCorp Vault + External Secrets Operator):
+- HashiCorp Vault for centralized secrets management (HA deployment)
+- Vault Agent Sidecar for automatic secret injection into pods
+- CSI Secret Store Driver for volume-based secret mounting
+- External Secrets Operator for cloud provider integration
+- Kubernetes Auth Method for service account authentication
+- Dynamic secret generation and automatic rotation
+- Comprehensive audit logging for compliance
 
 **Policy Enforcement** (Kyverno):
 - Admission control
@@ -640,29 +643,69 @@ The SonarQube Quality Gate is a mandatory stage in the Golden Path CI/CD pipelin
 ### Secrets Management
 
 **Architecture**:
+
+The Fawkes platform implements a hybrid secrets management approach using
+HashiCorp Vault as the primary secrets store with External Secrets Operator
+for cloud provider integration.
+
 ```
-Application needs secret
-    │
-    ▼
-Requests from Kubernetes Secret
-    │
-    ▼
-External Secrets Operator:
-    │
-    ├─ Fetches from cloud provider (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager)
-    ├─ Creates/updates Kubernetes Secret
-    └─ Monitors for changes (auto-rotation)
-    │
-    ▼
-Secret injected into pod as env var or volume
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          Secrets Management Layer                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────┐    ┌────────────────────────────────────┐  │
+│  │    HashiCorp Vault (HA)    │    │   External Secrets Operator        │  │
+│  │                            │    │                                    │  │
+│  │  ┌──────────────────────┐  │    │  • AWS Secrets Manager sync       │  │
+│  │  │ vault-0 (Primary)    │  │    │  • Azure Key Vault sync           │  │
+│  │  │ vault-1 (Standby)    │  │    │  • GCP Secret Manager sync        │  │
+│  │  │ vault-2 (Standby)    │  │    │                                    │  │
+│  │  └──────────────────────┘  │    └────────────────────────────────────┘  │
+│  │                            │                     │                       │
+│  │  • Kubernetes Auth         │                     │                       │
+│  │  • Dynamic Secrets         │                     │                       │
+│  │  • Audit Logging           │                     │                       │
+│  └────────────────────────────┘                     │                       │
+│              │                                       │                       │
+│              │ Vault Agent Sidecar                  │ ExternalSecret        │
+│              │ or CSI Driver                        │                       │
+│              ▼                                       ▼                       │
+│  ┌─────────────────────────────────────────────────────────────────────────┐│
+│  │                        Kubernetes Secrets                                ││
+│  │  (Mounted as volumes or environment variables in application pods)      ││
+│  └─────────────────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Secret Injection Methods**:
+
+| Method | Description | Use Case |
+|--------|-------------|----------|
+| Vault Agent Sidecar | Automatic injection via mutating webhook | Most applications, auto-rotation |
+| CSI Secret Store | Mount secrets as volumes | Legacy apps, file-based config |
+| External Secrets | Sync from cloud providers | Cloud-native deployments |
+
+**Secret Rotation Flow**:
+```
+Secret Updated in Vault
+     │
+     ▼
+Vault Agent Detects Change (polling interval)
+     │
+     ▼
+Agent Updates /vault/secrets/* Files
+     │
+     ▼
+Application Reads New Secret (no pod restart)
 ```
 
 **Best Practices**:
 - No secrets in Git repositories
 - Secrets encrypted at rest and in transit
-- Automatic rotation every 90 days
+- Automatic rotation via Vault Agent
 - Audit logging for all secret access
-- Least privilege access (RBAC)
+- Least privilege access via Vault policies
+- Service account authentication (no static tokens)
 
 ---
 
@@ -825,7 +868,9 @@ Application consumes database
 | SAST | SonarQube | 10+ | Code quality and security analysis |
 | Container Scanning | Trivy | 0.48+ | Comprehensive vulnerability detection |
 | Policy Engine | Kyverno | 1.11+ | Kubernetes-native, easier than OPA |
-| Secrets | External Secrets Operator | 0.9+ | Multi-provider, automated rotation |
+| Secrets (Primary) | HashiCorp Vault | 1.17+ | Centralized secrets, dynamic credentials, HA |
+| Secrets (Cloud Sync) | External Secrets Operator | 0.9+ | Multi-provider cloud secrets sync |
+| Secrets (CSI) | Secrets Store CSI Driver | 1.4+ | Volume-based secret mounting |
 
 ### Data Stores
 
@@ -908,6 +953,8 @@ Major architectural decisions are documented in ADRs stored in `/docs/adr/`:
 - [ADR-004: Jenkins for CI/CD](../adr/004-jenkins.md)
 - [ADR-005: Terraform over Pulumi for IaC](../adr/005-terraform.md)
 - [ADR-006: PostgreSQL for Data Persistence](../adr/006-postgresql.md)
+- [ADR-009: Secrets Management](../adr/ADR-009%20secrets%20managment.md)
+- [ADR-015: HashiCorp Vault Deployment](../adr/ADR-015%20vault%20deployment.md)
 
 ---
 

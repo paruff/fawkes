@@ -1,0 +1,159 @@
+# ============================================================================
+# FILE: platform/apps/vault/vault-policies.yaml
+# PURPOSE: Additional Vault access policies and service account configurations
+#          for platform services to securely access secrets.
+# ============================================================================
+---
+# ServiceAccount for applications that need Vault access
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vault-secrets-reader
+  namespace: fawkes
+  labels:
+    app: vault
+    component: secrets-reader
+  annotations:
+    # Annotation for Vault Agent Injector
+    vault.hashicorp.com/agent-inject: "true"
+    vault.hashicorp.com/role: "platform-service"
+---
+# ClusterRole for reading secrets via Vault
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: vault-secrets-reader
+  labels:
+    app: vault
+    component: rbac
+rules:
+  # Allow reading secrets that Vault Agent creates
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch"]
+  # Allow reading configmaps for Vault configuration
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+---
+# ClusterRoleBinding for vault-secrets-reader
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vault-secrets-reader
+  labels:
+    app: vault
+    component: rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: vault-secrets-reader
+subjects:
+  - kind: ServiceAccount
+    name: vault-secrets-reader
+    namespace: fawkes
+---
+# ServiceAccount for Jenkins with Vault integration
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: jenkins-vault
+  namespace: jenkins
+  labels:
+    app: jenkins
+    component: vault-integration
+---
+# ServiceAccount for Backstage with Vault integration
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: backstage-vault
+  namespace: fawkes
+  labels:
+    app: backstage
+    component: vault-integration
+---
+# ServiceAccount for Grafana with Vault integration
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: grafana-vault
+  namespace: fawkes
+  labels:
+    app: grafana
+    component: vault-integration
+---
+# ConfigMap with example Vault Agent annotations for applications
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-agent-examples
+  namespace: vault
+  labels:
+    app: vault
+    component: documentation
+data:
+  # Example pod annotations for Vault Agent Sidecar injection
+  pod-annotations.yaml: |
+    # Add these annotations to your Pod spec for automatic secret injection
+    #
+    # Basic secret injection:
+    # vault.hashicorp.com/agent-inject: "true"
+    # vault.hashicorp.com/role: "platform-service"
+    # vault.hashicorp.com/agent-inject-secret-db-creds: "secret/data/fawkes/databases/myapp"
+    #
+    # The secret will be available at: /vault/secrets/db-creds
+    #
+    # For formatted output (e.g., connection string):
+    # vault.hashicorp.com/agent-inject-template-db-creds: |
+    #   {{- with secret "secret/data/fawkes/databases/myapp" -}}
+    #   postgresql://{{ .Data.data.username }}:{{ .Data.data.password }}@db-host:5432/mydb
+    #   {{- end }}
+
+  deployment-example.yaml: |
+    # Example Deployment with Vault Agent Sidecar
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: example-app
+      namespace: fawkes
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: example-app
+      template:
+        metadata:
+          labels:
+            app: example-app
+          annotations:
+            # Enable Vault Agent injection
+            vault.hashicorp.com/agent-inject: "true"
+            # Vault role to use for authentication
+            vault.hashicorp.com/role: "platform-service"
+            # Inject database credentials
+            vault.hashicorp.com/agent-inject-secret-db-creds.txt: "secret/data/fawkes/databases/example-app"
+            # Template for rendering the secret
+            vault.hashicorp.com/agent-inject-template-db-creds.txt: |
+              {{- with secret "secret/data/fawkes/databases/example-app" -}}
+              DB_HOST={{ .Data.data.host }}
+              DB_PORT={{ .Data.data.port }}
+              DB_USER={{ .Data.data.username }}
+              DB_PASS={{ .Data.data.password }}
+              DB_NAME={{ .Data.data.database }}
+              {{- end }}
+            # Auto-rotate secrets when they change
+            vault.hashicorp.com/agent-pre-populate-only: "false"
+        spec:
+          serviceAccountName: vault-secrets-reader
+          containers:
+            - name: app
+              image: myapp:latest
+              # Read secrets from the injected file
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  source /vault/secrets/db-creds.txt
+                  exec /app/start
+              volumeMounts: []

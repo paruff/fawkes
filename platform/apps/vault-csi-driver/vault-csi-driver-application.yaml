@@ -1,0 +1,123 @@
+# ============================================================================
+# FILE: platform/apps/vault-csi-driver/vault-csi-driver-application.yaml
+# PURPOSE: ArgoCD Application for Secrets Store CSI Driver deployment
+#          Enables mounting secrets from Vault as Kubernetes volumes.
+# PREREQ: Vault must be deployed and configured.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: secrets-store-csi-driver
+  namespace: fawkes
+  labels:
+    app: secrets-store-csi-driver
+    component: secrets-management
+    environment: dev
+    team: platform
+  annotations:
+    argocd.argoproj.io/docs: "https://secrets-store-csi-driver.sigs.k8s.io/"
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  project: default
+
+  source:
+    repoURL: https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
+    chart: secrets-store-csi-driver
+    targetRevision: 1.4.4
+    helm:
+      values: |
+        # ============================================================
+        # Secrets Store CSI Driver Configuration
+        # ============================================================
+
+        # Enable secret synchronization to Kubernetes secrets
+        syncSecret:
+          enabled: true
+
+        # Enable rotation of secrets
+        enableSecretRotation: true
+        rotationPollInterval: 2m
+
+        # Provider health check
+        providerHealthCheck: true
+        providerHealthCheckInterval: 2m
+
+        # Resource configuration
+        linux:
+          enabled: true
+          crds:
+            enabled: true
+            annotations: {}
+          image:
+            repository: registry.k8s.io/csi-secrets-store/driver
+            tag: v1.4.4
+            pullPolicy: IfNotPresent
+          driver:
+            resources:
+              requests:
+                cpu: 50m
+                memory: 64Mi
+              limits:
+                cpu: 200m
+                memory: 128Mi
+          registrar:
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                cpu: 50m
+                memory: 64Mi
+          livenessProbe:
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                cpu: 50m
+                memory: 64Mi
+
+        # RBAC configuration
+        rbac:
+          install: true
+          pspEnabled: false
+
+        # Logging
+        logVerbosity: 0
+        logFormatJSON: true
+
+        # Metrics
+        metricsAddr: ":8095"
+
+        # Security context
+        securityContext:
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - PrunePropagationPolicy=foreground
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: apps
+      kind: DaemonSet
+      jsonPointers:
+        - /spec/template/spec/containers/0/resources
+
+  revisionHistoryLimit: 10

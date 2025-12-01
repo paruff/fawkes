@@ -1,0 +1,202 @@
+# ============================================================================
+# FILE: platform/apps/vault/vault-auth-config.yaml
+# PURPOSE: Kubernetes Auth Method configuration for Vault
+#          Enables service accounts to authenticate to Vault for secret access.
+# NOTE: Apply after Vault is initialized and unsealed.
+# ============================================================================
+---
+# ServiceAccount for Vault Auth Delegator
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vault-auth
+  namespace: vault
+  labels:
+    app: vault
+    component: auth
+---
+# ClusterRoleBinding for Vault to validate service account tokens
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vault-auth-delegator
+  labels:
+    app: vault
+    component: auth
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+  - kind: ServiceAccount
+    name: vault-auth
+    namespace: vault
+---
+# Secret for Vault Auth ServiceAccount Token (K8s 1.24+)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vault-auth-token
+  namespace: vault
+  labels:
+    app: vault
+    component: auth
+  annotations:
+    kubernetes.io/service-account.name: vault-auth
+type: kubernetes.io/service-account-token
+---
+# ConfigMap with Vault initialization and configuration script
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-init-config
+  namespace: vault
+  labels:
+    app: vault
+    component: config
+data:
+  # Vault policies for platform services
+  platform-policy.hcl: |
+    # Policy for platform services to read their own secrets
+    path "secret/data/fawkes/{{identity.entity.aliases.auth_kubernetes_*.metadata.service_account_namespace}}/*" {
+      capabilities = ["read", "list"]
+    }
+
+    # Allow services to read shared platform secrets
+    path "secret/data/fawkes/shared/*" {
+      capabilities = ["read", "list"]
+    }
+
+  jenkins-policy.hcl: |
+    # Policy for Jenkins CI/CD secrets
+    path "secret/data/fawkes/cicd/jenkins/*" {
+      capabilities = ["read", "list"]
+    }
+
+    # Allow Jenkins to read all application deployment secrets
+    path "secret/data/fawkes/apps/*" {
+      capabilities = ["read", "list"]
+    }
+
+    # Allow Jenkins to read shared secrets
+    path "secret/data/fawkes/shared/*" {
+      capabilities = ["read", "list"]
+    }
+
+  backstage-policy.hcl: |
+    # Policy for Backstage developer portal
+    path "secret/data/fawkes/core/backstage/*" {
+      capabilities = ["read", "list"]
+    }
+
+    path "secret/data/fawkes/shared/*" {
+      capabilities = ["read", "list"]
+    }
+
+  database-policy.hcl: |
+    # Policy for database credential access
+    path "secret/data/fawkes/databases/*" {
+      capabilities = ["read", "list"]
+    }
+
+    # Dynamic database credentials (if using database secrets engine)
+    path "database/creds/*" {
+      capabilities = ["read"]
+    }
+
+  observability-policy.hcl: |
+    # Policy for observability stack (Grafana, Prometheus, etc.)
+    path "secret/data/fawkes/observability/*" {
+      capabilities = ["read", "list"]
+    }
+
+    path "secret/data/fawkes/shared/*" {
+      capabilities = ["read", "list"]
+    }
+
+  # Vault configuration script
+  configure-vault.sh: |
+    #!/bin/sh
+    set -e
+
+    echo "=== Configuring Vault Kubernetes Auth Method ==="
+
+    # Wait for Vault to be ready
+    until vault status 2>/dev/null; do
+      echo "Waiting for Vault to be ready..."
+      sleep 5
+    done
+
+    # Enable Kubernetes auth method if not already enabled
+    vault auth list | grep -q "kubernetes/" || vault auth enable kubernetes
+
+    # Configure Kubernetes auth method
+    vault write auth/kubernetes/config \
+      kubernetes_host="https://kubernetes.default.svc:443" \
+      token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+      kubernetes_ca_cert="$(cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt)"
+
+    echo "=== Creating Vault Policies ==="
+
+    # Create platform policy
+    vault policy write platform-policy /vault/config/platform-policy.hcl
+
+    # Create Jenkins policy
+    vault policy write jenkins-policy /vault/config/jenkins-policy.hcl
+
+    # Create Backstage policy
+    vault policy write backstage-policy /vault/config/backstage-policy.hcl
+
+    # Create database policy
+    vault policy write database-policy /vault/config/database-policy.hcl
+
+    # Create observability policy
+    vault policy write observability-policy /vault/config/observability-policy.hcl
+
+    echo "=== Creating Kubernetes Auth Roles ==="
+
+    # Create role for Jenkins
+    vault write auth/kubernetes/role/jenkins \
+      bound_service_account_names=jenkins \
+      bound_service_account_namespaces=jenkins,fawkes \
+      policies=jenkins-policy \
+      ttl=1h
+
+    # Create role for Backstage
+    vault write auth/kubernetes/role/backstage \
+      bound_service_account_names=backstage \
+      bound_service_account_namespaces=backstage,fawkes \
+      policies=backstage-policy \
+      ttl=1h
+
+    # Create role for platform services (generic)
+    vault write auth/kubernetes/role/platform-service \
+      bound_service_account_names=* \
+      bound_service_account_namespaces=fawkes \
+      policies=platform-policy \
+      ttl=1h
+
+    # Create role for Grafana
+    vault write auth/kubernetes/role/grafana \
+      bound_service_account_names=grafana \
+      bound_service_account_namespaces=fawkes,monitoring \
+      policies=observability-policy \
+      ttl=1h
+
+    # Create role for Prometheus
+    vault write auth/kubernetes/role/prometheus \
+      bound_service_account_names=prometheus,prometheus-server \
+      bound_service_account_namespaces=fawkes,monitoring \
+      policies=observability-policy \
+      ttl=1h
+
+    echo "=== Enabling Secrets Engines ==="
+
+    # Enable KV v2 secrets engine for Fawkes platform
+    vault secrets list | grep -q "secret/" || vault secrets enable -path=secret kv-v2
+
+    # Enable audit logging
+    vault audit list | grep -q "file/" || vault audit enable file file_path=/vault/audit/vault-audit.log
+
+    echo "=== Vault Configuration Complete ==="
+    echo "Kubernetes Auth Method is configured and ready."
