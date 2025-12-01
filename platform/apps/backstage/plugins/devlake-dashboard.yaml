@@ -1,0 +1,326 @@
+# Backstage DevLake Dashboard Plugin Configuration
+# ============================================================
+# Integrates DevLake DORA metrics dashboards into the Backstage
+# Developer Portal for unified service observability.
+#
+# This configuration enables:
+# - Iframe embedding of DevLake Grafana dashboards
+# - DORA metrics display on service entity pages
+# - Team-level performance tracking
+# ============================================================
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fawkes-devlake-dashboard-plugin
+  namespace: fawkes
+  labels:
+    app: backstage
+    component: plugin
+    plugin-name: devlake-dashboard
+    team: platform
+data:
+  # ============================================================
+  # Plugin Registration
+  # Adds DevLake as a Backstage plugin
+  # ============================================================
+  plugin-config.yaml: |
+    plugins:
+      - name: fawkes-devlake-dashboard
+        enabled: true
+        version: "1.0.0"
+        description: "DORA Metrics Dashboard powered by Apache DevLake"
+
+        # Iframe configuration for dashboard embedding
+        iframe:
+          enabled: true
+          # DevLake Grafana endpoint for DORA dashboards
+          baseUrl: "http://devlake-grafana.127.0.0.1.nip.io"
+          # Dashboard paths for different views
+          dashboards:
+            dora-overview: "/d/dora-overview/dora-overview"
+            deployment-frequency: "/d/deployment-frequency/deployment-frequency"
+            lead-time: "/d/lead-time-for-changes/lead-time-for-changes"
+            change-failure-rate: "/d/change-failure-rate/change-failure-rate"
+            mttr: "/d/mttr/mean-time-to-restore"
+          # Default query parameters
+          queryParams:
+            orgId: "1"
+            theme: "light"
+            kiosk: "tv"
+
+        # Entity page integration
+        entityPage:
+          enabled: true
+          tab:
+            label: "DORA Metrics"
+            path: "/dora"
+          card:
+            enabled: true
+            title: "DORA Performance"
+            position: "overview-grid"
+
+  # ============================================================
+  # Backstage App Config Extension
+  # Add to backstage app-config.yaml
+  # ============================================================
+  app-config-extension.yaml: |
+    # DevLake integration configuration
+    devlake:
+      # Base URL for DevLake API
+      apiUrl: http://devlake.fawkes-devlake.svc:8080
+      # Base URL for DevLake UI
+      uiUrl: http://devlake.127.0.0.1.nip.io
+      # Grafana URL for dashboard embeds
+      grafanaUrl: http://devlake-grafana.127.0.0.1.nip.io
+      # Proxy configuration for API calls
+      proxy:
+        '/devlake/api':
+          target: http://devlake.fawkes-devlake.svc:8080
+          changeOrigin: true
+          pathRewrite:
+            '^/api/proxy/devlake/api': '/api'
+
+    # Extend catalog entity with DORA annotations
+    catalog:
+      rules:
+        - allow: [Component, API, System, Domain, Resource, Location]
+      locations: []
+
+    # Custom annotations for DORA metrics linking
+    # Add to catalog-info.yaml for each service:
+    #   annotations:
+    #     devlake.apache.org/project-name: "my-service"
+    #     devlake.apache.org/repo-id: "github:paruff/my-service"
+
+  # ============================================================
+  # DORA Metrics Widget Component
+  # React component for displaying DORA metrics on entity pages
+  # ============================================================
+  dora-widget.tsx: |
+    /**
+     * DORA Metrics Widget for Backstage Entity Pages
+     *
+     * Displays the five DORA metrics for a service:
+     * - Deployment Frequency
+     * - Lead Time for Changes
+     * - Change Failure Rate
+     * - Mean Time to Restore
+     * - Operational Performance
+     */
+    import React from 'react';
+    import {
+      InfoCard,
+      Progress,
+      StatusOK,
+      StatusWarning,
+      StatusError
+    } from '@backstage/core-components';
+    import { useEntity } from '@backstage/plugin-catalog-react';
+    import { useApi, configApiRef } from '@backstage/core-plugin-api';
+
+    interface DoraMetrics {
+      deploymentFrequency: {
+        value: number;
+        unit: string;
+        rating: 'elite' | 'high' | 'medium' | 'low';
+      };
+      leadTimeForChanges: {
+        value: number;
+        unit: string;
+        rating: 'elite' | 'high' | 'medium' | 'low';
+      };
+      changeFailureRate: {
+        value: number;
+        unit: string;
+        rating: 'elite' | 'high' | 'medium' | 'low';
+      };
+      meanTimeToRestore: {
+        value: number;
+        unit: string;
+        rating: 'elite' | 'high' | 'medium' | 'low';
+      };
+      operationalPerformance: {
+        value: number;
+        unit: string;
+        rating: 'elite' | 'high' | 'medium' | 'low';
+      };
+    }
+
+    const getRatingIcon = (rating: string) => {
+      switch (rating) {
+        case 'elite':
+        case 'high':
+          return <StatusOK />;
+        case 'medium':
+          return <StatusWarning />;
+        default:
+          return <StatusError />;
+      }
+    };
+
+    const getRatingColor = (rating: string) => {
+      switch (rating) {
+        case 'elite':
+          return '#4caf50';
+        case 'high':
+          return '#8bc34a';
+        case 'medium':
+          return '#ff9800';
+        default:
+          return '#f44336';
+      }
+    };
+
+    export const DoraMetricsWidget = () => {
+      const { entity } = useEntity();
+      const config = useApi(configApiRef);
+      const devlakeApiUrl = config.getString('devlake.apiUrl');
+
+      const [metrics, setMetrics] = React.useState<DoraMetrics | null>(null);
+      const [loading, setLoading] = React.useState(true);
+      const [error, setError] = React.useState<Error | null>(null);
+
+      const projectName = entity.metadata.annotations?.['devlake.apache.org/project-name']
+        || entity.metadata.name;
+
+      React.useEffect(() => {
+        const fetchMetrics = async () => {
+          try {
+            const response = await fetch(
+              `${devlakeApiUrl}/api/dora/metrics?project=${projectName}`
+            );
+            if (!response.ok) {
+              throw new Error('Failed to fetch DORA metrics');
+            }
+            const data = await response.json();
+            setMetrics(data);
+          } catch (err) {
+            setError(err as Error);
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        fetchMetrics();
+      }, [devlakeApiUrl, projectName]);
+
+      if (loading) {
+        return <Progress />;
+      }
+
+      if (error || !metrics) {
+        return (
+          <InfoCard title="DORA Metrics">
+            <p>Unable to load DORA metrics. Ensure the service is configured in DevLake.</p>
+          </InfoCard>
+        );
+      }
+
+      return (
+        <InfoCard title="DORA Metrics" subheader={`Performance metrics for ${projectName}`}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px' }}>
+            <MetricCard
+              title="Deployment Frequency"
+              value={metrics.deploymentFrequency.value}
+              unit={metrics.deploymentFrequency.unit}
+              rating={metrics.deploymentFrequency.rating}
+            />
+            <MetricCard
+              title="Lead Time"
+              value={metrics.leadTimeForChanges.value}
+              unit={metrics.leadTimeForChanges.unit}
+              rating={metrics.leadTimeForChanges.rating}
+            />
+            <MetricCard
+              title="Change Failure Rate"
+              value={metrics.changeFailureRate.value}
+              unit={metrics.changeFailureRate.unit}
+              rating={metrics.changeFailureRate.rating}
+            />
+            <MetricCard
+              title="MTTR"
+              value={metrics.meanTimeToRestore.value}
+              unit={metrics.meanTimeToRestore.unit}
+              rating={metrics.meanTimeToRestore.rating}
+            />
+            <MetricCard
+              title="Operational Performance"
+              value={metrics.operationalPerformance.value}
+              unit={metrics.operationalPerformance.unit}
+              rating={metrics.operationalPerformance.rating}
+            />
+          </div>
+        </InfoCard>
+      );
+    };
+
+    const MetricCard = ({ title, value, unit, rating }) => (
+      <div style={{
+        padding: '16px',
+        border: `2px solid ${getRatingColor(rating)}`,
+        borderRadius: '8px',
+        textAlign: 'center'
+      }}>
+        {getRatingIcon(rating)}
+        <h3 style={{ margin: '8px 0' }}>{title}</h3>
+        <p style={{
+          fontSize: '24px',
+          fontWeight: 'bold',
+          color: getRatingColor(rating)
+        }}>
+          {value} {unit}
+        </p>
+        <span style={{
+          textTransform: 'uppercase',
+          fontSize: '12px',
+          color: getRatingColor(rating)
+        }}>
+          {rating}
+        </span>
+      </div>
+    );
+
+    export default DoraMetricsWidget;
+
+---
+# ============================================================
+# Backstage Catalog Entity Annotation Example
+# Shows how to annotate services for DevLake integration
+# ============================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fawkes-devlake-catalog-example
+  namespace: fawkes
+  labels:
+    app: backstage
+    component: documentation
+data:
+  catalog-entity-example.yaml: |
+    # Example catalog-info.yaml with DevLake annotations
+    # Add these annotations to your service's catalog-info.yaml
+
+    apiVersion: backstage.io/v1alpha1
+    kind: Component
+    metadata:
+      name: my-service
+      description: Example service with DORA metrics
+      annotations:
+        # DevLake project mapping
+        devlake.apache.org/project-name: "my-service"
+        devlake.apache.org/repo-id: "github:paruff/my-service"
+
+        # Optional: Team mapping for team-level metrics
+        devlake.apache.org/team: "platform-team"
+
+        # Link to DevLake dashboard
+        devlake.apache.org/dashboard-url: "http://devlake-grafana.127.0.0.1.nip.io/d/dora-overview"
+      tags:
+        - dora-enabled
+        - production
+    spec:
+      type: service
+      lifecycle: production
+      owner: platform-team
+      system: fawkes-platform

@@ -73,7 +73,8 @@ def call(Map config = [:]) {
         environment {
             IMAGE_TAG = "${env.GIT_COMMIT?.take(7) ?: 'latest'}"
             FULL_IMAGE = "${config.dockerImage}:${IMAGE_TAG}"
-            DORA_METRICS_URL = "${env.DORA_METRICS_URL ?: 'http://dora-metrics.fawkes.svc:8080'}"
+            // DevLake API for CI metrics (deployment metrics via ArgoCD)
+            DEVLAKE_API_URL = "${env.DEVLAKE_API_URL ?: 'http://devlake.fawkes-devlake.svc:8080'}"
         }
 
         options {
@@ -621,15 +622,22 @@ def updateGitOpsManifest(Map config) {
 }
 
 /**
- * Record DORA metrics
+ * Record CI/DORA metrics using the doraMetrics shared library
+ * 
+ * NOTE: In Fawkes GitOps architecture:
+ * - ArgoCD is the primary source for deployment frequency metrics
+ * - Jenkins provides CI metrics: build success, rework, quality gates
+ * - This function records CI-related metrics, not deployment events
  */
 def recordDoraMetrics(Map config, def build) {
     def status = build.currentResult ?: 'UNKNOWN'
     def duration = build.duration ?: 0
+    def devlakeApiUrl = env.DEVLAKE_API_URL ?: 'http://devlake.fawkes-devlake.svc:8080'
 
     try {
+        // Record CI build event for rework and build success tracking
         httpRequest(
-            url: "${DORA_METRICS_URL}/api/v1/builds",
+            url: "${devlakeApiUrl}/api/plugins/webhook/1/cicd",
             httpMode: 'POST',
             contentType: 'APPLICATION_JSON',
             requestBody: """
@@ -638,15 +646,20 @@ def recordDoraMetrics(Map config, def build) {
                 "commit_sha": "${env.GIT_COMMIT}",
                 "branch": "${env.BRANCH_NAME}",
                 "build_number": "${env.BUILD_NUMBER}",
-                "status": "${status}",
+                "status": "${status == 'SUCCESS' ? 'success' : 'failure'}",
                 "duration_ms": ${duration},
-                "timestamp": "${new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone('UTC'))}"
+                "stage": "pipeline-complete",
+                "timestamp": "${new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone('UTC'))}",
+                "url": "${env.BUILD_URL}",
+                "type": "ci_build"
             }
             """,
             validResponseCodes: '200:299'
         )
+        echo "✅ DORA: CI build metrics recorded for ${config.appName}"
+        echo "   NOTE: Deployment metrics are tracked via ArgoCD syncs"
     } catch (Exception e) {
-        echo "Warning: Failed to record DORA metrics: ${e.message}"
+        echo "⚠️ DORA: Failed to record CI metrics: ${e.message}"
     }
 }
 
