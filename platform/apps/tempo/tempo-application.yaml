@@ -52,57 +52,6 @@ spec:
     helm:
       values: |
         # ============================================================
-        # Tempo Server Configuration
-        # ============================================================
-        tempo:
-          # ============================================================
-          # Receivers Configuration - OTLP for trace ingestion
-          # ============================================================
-          receivers:
-            otlp:
-              protocols:
-                grpc:
-                  endpoint: 0.0.0.0:4317
-                http:
-                  endpoint: 0.0.0.0:4318
-
-          # ============================================================
-          # Storage Configuration - Local filesystem for development
-          # For production, configure S3/MinIO backend
-          # ============================================================
-          storage:
-            trace:
-              backend: local
-              local:
-                path: /var/tempo/traces
-              wal:
-                path: /var/tempo/wal
-
-          # ============================================================
-          # Retention Configuration - 7 days for development
-          # ============================================================
-          retention: 168h  # 7 days
-
-          # ============================================================
-          # Metrics Generator - Generate RED metrics from traces
-          # ============================================================
-          metricsGenerator:
-            enabled: true
-            remoteWriteUrl: "http://prometheus-prometheus.monitoring.svc.cluster.local:9090/api/v1/write"
-            processors:
-              - service-graphs
-              - span-metrics
-
-          # ============================================================
-          # Global Overrides
-          # ============================================================
-          global_overrides:
-            per_tenant_override_config: /conf/overrides.yaml
-            metrics_generator_processors:
-              - service-graphs
-              - span-metrics
-
-        # ============================================================
         # Resource Configuration
         # ============================================================
         resources:
