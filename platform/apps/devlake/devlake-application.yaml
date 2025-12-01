@@ -1,0 +1,253 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fawkes-devlake
+  namespace: fawkes
+  labels:
+    app: devlake
+    component: dora-metrics
+    environment: dev
+    team: platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    repoURL: https://apache.github.io/incubator-devlake-helm-chart
+    chart: devlake
+    targetRevision: 1.0.1
+    helm:
+      valueFiles:
+        - values.yaml
+      values: |
+        # ============================================================
+        # DevLake Core Configuration
+        # Apache DevLake for DORA Metrics Collection and Visualization
+        # ============================================================
+
+        # Namespace for DevLake deployment
+        # Components are isolated in fawkes-devlake namespace
+        namespace: fawkes-devlake
+
+        # ============================================================
+        # DevLake API Server Configuration
+        # ============================================================
+        lake:
+          image:
+            repository: apache/devlake
+            tag: v1.0.1
+            pullPolicy: IfNotPresent
+
+          replicas: 1
+
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+
+          # Environment variables for API configuration
+          envs:
+            # Encryption secret for sensitive data
+            # In production, use Vault or External Secrets
+            - name: ENCRYPTION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: devlake-secrets
+                  key: encryption-secret
+
+            # API port configuration
+            - name: PORT
+              value: "8080"
+
+            # Logging level
+            - name: LOGGING_LEVEL
+              value: "info"
+
+        # ============================================================
+        # DevLake UI Configuration
+        # ============================================================
+        ui:
+          image:
+            repository: apache/devlake-config-ui
+            tag: v1.0.1
+            pullPolicy: IfNotPresent
+
+          replicas: 1
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+        # ============================================================
+        # Grafana Configuration for DORA Dashboards
+        # ============================================================
+        grafana:
+          enabled: true
+
+          image:
+            repository: grafana/grafana
+            tag: 10.2.2
+            pullPolicy: IfNotPresent
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+          # Use existing Grafana admin credentials
+          adminUser: admin
+          adminPassword: fawkesidp
+
+          # Pre-configured DORA dashboards
+          dashboards:
+            enabled: true
+            # Import official DevLake DORA dashboards
+            dora:
+              enabled: true
+
+        # ============================================================
+        # MySQL Database Configuration
+        # ============================================================
+        mysql:
+          enabled: true
+
+          image:
+            repository: mysql
+            tag: "8.0"
+            pullPolicy: IfNotPresent
+
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: 2000m
+              memory: 4Gi
+
+          persistence:
+            enabled: true
+            storageClass: ""
+            size: 20Gi
+
+          # Database credentials
+          # In production, use Vault or External Secrets
+          auth:
+            rootPassword: ""
+            database: lake
+            username: devlake
+            password: ""
+            existingSecret: devlake-mysql-secrets
+            secretKeys:
+              rootPassword: mysql-root-password
+              password: mysql-password
+
+        # ============================================================
+        # Service Configuration
+        # ============================================================
+        service:
+          type: ClusterIP
+          lake:
+            port: 8080
+          ui:
+            port: 4000
+          grafana:
+            port: 3000
+
+        # ============================================================
+        # Ingress Configuration
+        # ============================================================
+        ingress:
+          enabled: true
+          className: nginx
+          annotations:
+            nginx.ingress.kubernetes.io/proxy-body-size: 100m
+          hosts:
+            - host: devlake.127.0.0.1.nip.io
+              paths:
+                - path: /api
+                  pathType: Prefix
+                  service: lake
+                - path: /
+                  pathType: Prefix
+                  service: ui
+            - host: devlake-grafana.127.0.0.1.nip.io
+              paths:
+                - path: /
+                  pathType: Prefix
+                  service: grafana
+
+        # ============================================================
+        # DORA Metrics Configuration
+        # ============================================================
+        config:
+          metrics:
+            dora: true
+            deploymentFrequency:
+              enabled: true
+              window: 7  # days
+            leadTime:
+              enabled: true
+              stages:
+                - development
+                - review
+                - production
+            changeFailureRate:
+              enabled: true
+              window: 30  # days
+            timeToRestore:
+              enabled: true
+              severityLevels:
+                - high
+                - medium
+                - low
+            operationalPerformance:
+              enabled: true
+              sloTarget: 99.9
+
+        # ============================================================
+        # Security Context
+        # ============================================================
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          fsGroup: 1000
+
+        # ============================================================
+        # Pod Labels and Annotations
+        # ============================================================
+        podLabels:
+          app.kubernetes.io/part-of: fawkes-platform
+          app.kubernetes.io/component: dora-metrics
+
+        podAnnotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8080"
+          prometheus.io/path: "/metrics"
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes-devlake
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
