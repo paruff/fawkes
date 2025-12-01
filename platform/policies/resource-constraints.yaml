@@ -153,6 +153,8 @@ spec:
         deny:
           conditions:
             any:
+              # Note: 8589934592 bytes = 8Gi (8 * 1024 * 1024 * 1024)
+              # JMESPath converts memory to bytes for comparison
               - key: "{{ request.object.spec.containers[*].resources.limits.memory | map(&to_number(@), @) | max(@) }}"
                 operator: GreaterThan
                 value: 8589934592
@@ -179,6 +181,8 @@ spec:
         deny:
           conditions:
             any:
+              # Note: 4000 millicores = 4 cores (4 * 1000m)
+              # JMESPath converts CPU to millicores for comparison
               - key: "{{ request.object.spec.containers[*].resources.limits.cpu | map(&to_number(@), @) | max(@) }}"
                 operator: GreaterThan
                 value: 4000

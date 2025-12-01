@@ -253,6 +253,8 @@ spec:
                       - kyverno
       mutate:
         foreach:
+          # Note: element.name references the container name from the containers array
+          # Kubernetes requires container names, so this is always available
           - list: "request.object.spec.containers"
             patchStrategicMerge:
               spec:
