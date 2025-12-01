@@ -2,16 +2,10 @@
 # DevLake Helm Values for Fawkes Platform
 # Apache DevLake for DORA Metrics Collection and Visualization
 # ============================================================
-# Usage: helm install devlake apache/devlake -f values.yaml -n fawkes-devlake
-#
-# For more configuration options, see:
-# https://devlake.apache.org/docs/GettingStarted/HelmSetup
+# SECURITY: Database credentials are managed via External Secrets
+# See: platform/apps/devlake/externalsecret-devlake.yaml
 # ============================================================
 
-# ============================================================
-# DORA Metrics Configuration
-# Enables and configures the five core DORA metrics
-# ============================================================
 config:
   metrics:
     # Enable DORA metrics calculation
@@ -21,15 +15,7 @@ config:
     # Measures how often code is deployed to production
     deploymentFrequency:
       enabled: true
-      window: 7  # Rolling window in days
-      # Targets for DORA performance levels:
-      # Elite: Multiple deploys per day
-      # High: Between once per day and once per week
-      # Medium: Between once per week and once per month
-      # Low: Less than once per month
-
-    # Metric 2: Lead Time for Changes
-    # Measures time from code commit to production deployment
+      window: 7  # days
     leadTime:
       enabled: true
       stages:
@@ -46,15 +32,7 @@ config:
     # Percentage of deployments causing production incidents
     changeFailureRate:
       enabled: true
-      window: 30  # Rolling window in days
-      # Targets for DORA performance levels:
-      # Elite: 0-5%
-      # High: 5-10%
-      # Medium: 10-15%
-      # Low: 15-100%
-
-    # Metric 4: Mean Time to Restore (MTTR)
-    # Average time to restore service after incident
+      window: 30  # days
     timeToRestore:
       enabled: true
       severityLevels:
@@ -86,25 +64,10 @@ grafana:
     tag: "10.2.2"
 
   adminUser: admin
-  # Grafana admin password from Kubernetes secret
-  # Create secret: kubectl create secret generic devlake-grafana-secrets \
-  #   --from-literal=admin-password=<password> -n fawkes-devlake
-  # Or use External Secrets to sync from Vault
+  # Grafana admin password from Kubernetes secret (managed by External Secrets)
+  # See: platform/apps/devlake/externalsecret-devlake.yaml
   adminPasswordSecretName: devlake-grafana-secrets
   adminPasswordSecretKey: admin-password
-
-  resources:
-    requests:
-      cpu: 100m
-      memory: 256Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-
-  # Pre-configured DORA dashboards
-  dashboards:
-    dora:
-      enabled: true
 
   # Ingress for Grafana access
   ingress:
@@ -136,132 +99,11 @@ mysql:
     storageClass: ""  # Uses default storage class
 
   auth:
-    # NOTE: In production, use Vault/ExternalSecrets for credentials
-    # Reference: platform/apps/devlake/config/data-sources.yaml
-    database: lake
+    # Database credentials from Kubernetes secret (managed by External Secrets)
+    # See: platform/apps/devlake/externalsecret-devlake.yaml
+    database: devlake
     username: devlake
     existingSecret: devlake-mysql-secrets
     secretKeys:
       rootPassword: mysql-root-password
       password: mysql-password
-
-# ============================================================
-# DevLake API Server Configuration
-# ============================================================
-lake:
-  image:
-    repository: apache/devlake
-    tag: v1.0.1
-    pullPolicy: IfNotPresent
-
-  replicas: 1
-
-  resources:
-    requests:
-      cpu: 200m
-      memory: 512Mi
-    limits:
-      cpu: 1000m
-      memory: 2Gi
-
-  # Environment variables
-  envs:
-    - name: PORT
-      value: "8080"
-    - name: LOGGING_LEVEL
-      value: "info"
-    - name: ENCRYPTION_SECRET
-      valueFrom:
-        secretKeyRef:
-          name: devlake-secrets
-          key: encryption-secret
-
-# ============================================================
-# DevLake UI Configuration
-# ============================================================
-ui:
-  image:
-    repository: apache/devlake-config-ui
-    tag: v1.0.1
-    pullPolicy: IfNotPresent
-
-  replicas: 1
-
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-
-# ============================================================
-# Service Configuration
-# ============================================================
-service:
-  type: ClusterIP
-  lake:
-    port: 8080
-  ui:
-    port: 4000
-  grafana:
-    port: 3000
-
-# ============================================================
-# Ingress Configuration
-# ============================================================
-ingress:
-  enabled: true
-  className: nginx
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: 100m
-  hosts:
-    - host: devlake.127.0.0.1.nip.io
-      paths:
-        - path: /api
-          pathType: Prefix
-          service: lake
-        - path: /
-          pathType: Prefix
-          service: ui
-    - host: devlake-grafana.127.0.0.1.nip.io
-      paths:
-        - path: /
-          pathType: Prefix
-          service: grafana
-
-# ============================================================
-# Security Context
-# ============================================================
-securityContext:
-  runAsNonRoot: true
-  runAsUser: 1000
-  fsGroup: 1000
-
-# ============================================================
-# Pod Labels and Annotations
-# ============================================================
-podLabels:
-  app.kubernetes.io/part-of: fawkes-platform
-  app.kubernetes.io/component: dora-metrics
-
-podAnnotations:
-  prometheus.io/scrape: "true"
-  prometheus.io/port: "8080"
-  prometheus.io/path: "/metrics"
-
-# ============================================================
-# Data Source Connections
-# Configured via External Secrets for security
-# See: platform/apps/devlake/config/data-sources.yaml
-# ============================================================
-connections:
-  github:
-    enabled: true
-    # Token managed via External Secrets
-  jenkins:
-    enabled: true
-    # Credentials managed via External Secrets
-  webhook:
-    enabled: true
-    # For incident/deployment events

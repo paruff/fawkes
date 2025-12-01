@@ -17,7 +17,13 @@ server:
       - /
     https: false
 
-# Optional: enable admin initial password secret (default behavior creates argocd-initial-admin-secret)
+# ArgoCD configuration
 configs:
   cm:
     application.instanceLabelKey: "argocd.argoproj.io/instance"
+  # Admin credentials managed via External Secrets
+  # See: platform/apps/external-secrets/externalsecret-argocd-admin.yaml
+  # The ExternalSecret creates 'argocd-initial-admin-secret' with the admin password
+  secret:
+    # Don't auto-generate the admin secret - use ExternalSecret instead
+    createSecret: false
