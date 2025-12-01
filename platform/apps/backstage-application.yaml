@@ -1,0 +1,269 @@
+# ============================================================================
+# FILE: platform/apps/backstage-application.yaml
+# PURPOSE: ArgoCD Application for Backstage Developer Portal deployment
+#          Provides a unified developer portal with SSO authentication.
+# PREREQ: PostgreSQL cluster (db-backstage-dev) must be deployed first.
+#         OAuth credentials secret (backstage-oauth-credentials) must exist.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backstage
+  namespace: fawkes
+  labels:
+    app: backstage
+    component: developer-portal
+    environment: dev
+    team: platform
+  annotations:
+    # Link to documentation
+    argocd.argoproj.io/docs: "https://backstage.io/docs"
+    # Sync wave to ensure database is deployed first
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: default
+
+  source:
+    repoURL: https://backstage.github.io/charts
+    chart: backstage
+    targetRevision: "1.10.0"
+    helm:
+      valueFiles:
+        - values.yaml
+      values: |
+        # ============================================================
+        # Backstage Helm Chart Configuration
+        # ============================================================
+
+        # HA Configuration
+        replicaCount: 2
+
+        # Image configuration
+        image:
+          repository: backstage/backstage
+          tag: "latest"
+          pullPolicy: IfNotPresent
+
+        # Service configuration
+        service:
+          type: ClusterIP
+          port: 7007
+          targetPort: 7007
+
+        # Ingress configuration for external access
+        ingress:
+          enabled: true
+          className: nginx
+          annotations:
+            nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+            nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+            nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+            nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+            nginx.ingress.kubernetes.io/ssl-redirect: "true"
+            cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          hosts:
+            - host: backstage.fawkes.idp
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - secretName: backstage-tls
+              hosts:
+                - backstage.fawkes.idp
+
+        # Mount external ConfigMap for app-config
+        extraVolumes:
+          - name: app-config
+            configMap:
+              name: backstage-app-config
+              items:
+                - key: app-config.yaml
+                  path: app-config.yaml
+
+        extraVolumeMounts:
+          - name: app-config
+            mountPath: /app/app-config.yaml
+            subPath: app-config.yaml
+            readOnly: true
+
+        # Environment variables for database and secrets
+        extraEnvVars:
+          - name: POSTGRES_HOST
+            value: "db-backstage-dev-rw.fawkes.svc.cluster.local"
+          - name: POSTGRES_PORT
+            value: "5432"
+          - name: POSTGRES_DB
+            value: "backstage_db"
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: db-backstage-credentials
+                key: username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-backstage-credentials
+                key: password
+          - name: AUTH_GITHUB_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: backstage-oauth-credentials
+                key: github-client-id
+                optional: true
+          - name: AUTH_GITHUB_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: backstage-oauth-credentials
+                key: github-client-secret
+                optional: true
+          - name: GITHUB_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: backstage-github-credentials
+                key: token
+                optional: true
+          - name: ARGOCD_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: backstage-argocd-credentials
+                key: username
+                optional: true
+          - name: ARGOCD_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: backstage-argocd-credentials
+                key: password
+                optional: true
+          - name: ARGOCD_AUTH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: backstage-argocd-credentials
+                key: token
+                optional: true
+          - name: JENKINS_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: backstage-jenkins-credentials
+                key: username
+                optional: true
+          - name: JENKINS_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: backstage-jenkins-credentials
+                key: api-key
+                optional: true
+
+        # Resource configuration
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 2
+            memory: 2Gi
+
+        # Health probes
+        livenessProbe:
+          httpGet:
+            path: /healthcheck
+            port: 7007
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+
+        readinessProbe:
+          httpGet:
+            path: /healthcheck
+            port: 7007
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        # Security context
+        podSecurityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          fsGroup: 1000
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+              - ALL
+          seccompProfile:
+            type: RuntimeDefault
+
+        # Pod affinity for HA
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                      - key: app.kubernetes.io/name
+                        operator: In
+                        values:
+                          - backstage
+                  topologyKey: kubernetes.io/hostname
+
+        # Pod disruption budget
+        podDisruptionBudget:
+          enabled: true
+          minAvailable: 1
+
+        # Service account
+        serviceAccount:
+          create: true
+          name: backstage
+
+        # Disable embedded PostgreSQL (using external CloudNativePG)
+        postgresql:
+          enabled: false
+
+        # Prometheus metrics
+        metrics:
+          serviceMonitor:
+            enabled: true
+            namespace: fawkes
+            interval: 30s
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Keep ArgoCD from flagging differences you expect
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/replicas
+
+  # Basic health and retention tuning
+  revisionHistoryLimit: 10

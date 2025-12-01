@@ -1,0 +1,147 @@
+# ============================================================================
+# FILE: platform/apps/backstage/app-config.yaml
+# PURPOSE: Backstage application configuration
+#          Configures authentication, database, plugins, and core functionality.
+# NOTE: This file is mounted as a ConfigMap and used by the Backstage container.
+#       Secrets should be injected via environment variables, not hardcoded here.
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backstage-app-config
+  namespace: fawkes
+  labels:
+    app: backstage
+    component: developer-portal
+    environment: dev
+    team: platform
+data:
+  app-config.yaml: |
+    # ============================================================
+    # Backstage Application Configuration
+    # ============================================================
+
+    app:
+      title: Fawkes Developer Portal
+      baseUrl: https://backstage.fawkes.idp
+      support:
+        url: https://github.com/paruff/fawkes/issues
+        items:
+          - title: GitHub Issues
+            icon: github
+            links:
+              - url: https://github.com/paruff/fawkes/issues
+                title: GitHub Issues
+
+    organization:
+      name: Fawkes Platform
+
+    backend:
+      baseUrl: https://backstage.fawkes.idp
+      listen:
+        port: 7007
+        host: 0.0.0.0
+      csp:
+        connect-src: ["'self'", 'http:', 'https:']
+      cors:
+        origin: https://backstage.fawkes.idp
+        methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+        credentials: true
+      database:
+        client: pg
+        connection:
+          host: ${POSTGRES_HOST}
+          port: ${POSTGRES_PORT}
+          user: ${POSTGRES_USER}
+          password: ${POSTGRES_PASSWORD}
+          database: ${POSTGRES_DB}
+          ssl:
+            require: true
+            rejectUnauthorized: false
+      reading:
+        allow:
+          - host: github.com
+          - host: raw.githubusercontent.com
+
+    integrations:
+      github:
+        - host: github.com
+          token: ${GITHUB_TOKEN}
+
+    proxy:
+      endpoints:
+        '/argocd/api':
+          target: http://argocd-server.argocd.svc:80/api/v1/
+          changeOrigin: true
+          secure: false
+          headers:
+            Cookie: argocd.token=${ARGOCD_AUTH_TOKEN}
+        '/jenkins/api':
+          target: http://jenkins.fawkes.svc:8080/
+          changeOrigin: true
+          secure: false
+
+    techdocs:
+      builder: external
+      generator:
+        runIn: local
+      publisher:
+        type: local
+        local:
+          publishDirectory: /app/techdocs
+
+    auth:
+      environment: production
+      providers:
+        github:
+          production:
+            clientId: ${AUTH_GITHUB_CLIENT_ID}
+            clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+            signIn:
+              resolvers:
+                - resolver: usernameMatchingUserEntityName
+
+    scaffolder:
+      defaultAuthor:
+        name: Fawkes Platform Bot
+        email: platform-bot@fawkes.idp
+      defaultCommitMessage: 'Created by Fawkes Backstage scaffolder'
+
+    catalog:
+      import:
+        entityFilename: catalog-info.yaml
+        pullRequestBranchName: backstage-integration
+      rules:
+        - allow: [Component, System, API, Resource, Location, Domain, Template]
+      locations:
+        - type: url
+          target: https://github.com/paruff/fawkes/blob/main/catalog-info.yaml
+          rules:
+            - allow: [Component, System, API, Resource, Location, Domain, Template]
+
+    kubernetes:
+      serviceLocatorMethod:
+        type: multiTenant
+      clusterLocatorMethods:
+        - type: config
+          clusters:
+            - url: https://kubernetes.default.svc
+              name: fawkes-cluster
+              authProvider: serviceAccount
+              skipTLSVerify: true
+              skipMetricsLookup: false
+
+    argocd:
+      baseUrl: http://argocd-server.argocd.svc:80
+      username: ${ARGOCD_USERNAME}
+      password: ${ARGOCD_PASSWORD}
+      appLocatorMethods:
+        - type: config
+          instances:
+            - name: main
+              url: http://argocd-server.argocd.svc:80
+
+    jenkins:
+      baseUrl: http://jenkins.fawkes.svc:8080
+      username: ${JENKINS_USERNAME}
+      apiKey: ${JENKINS_API_KEY}
