@@ -1,0 +1,280 @@
+# ============================================================================
+# FILE: platform/apps/kyverno/kyverno-application.yaml
+# PURPOSE: ArgoCD Application for Kyverno Policy Engine deployment
+#          Provides native Kubernetes policy-as-code enforcement for the
+#          Fawkes platform including validation, mutation, and generation.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno
+  namespace: fawkes
+  labels:
+    app: kyverno
+    component: policy-engine
+    environment: dev
+    team: platform
+  annotations:
+    argocd.argoproj.io/docs: "https://kyverno.io/docs/"
+    argocd.argoproj.io/sync-wave: "-4"
+spec:
+  project: default
+
+  source:
+    repoURL: https://kyverno.github.io/kyverno/
+    chart: kyverno
+    targetRevision: 3.3.3
+    helm:
+      values: |
+        # ============================================================
+        # Kyverno Helm Chart Configuration
+        # Kubernetes-native Policy Engine with Admission Control
+        # ============================================================
+
+        # ============================================================
+        # Global Configuration
+        # ============================================================
+        crds:
+          install: true
+
+        # ============================================================
+        # Admission Controller Configuration
+        # ============================================================
+        admissionController:
+          replicas: 3
+
+          # Container configuration
+          container:
+            image:
+              registry: ghcr.io
+              repository: kyverno/kyverno
+              tag: ""
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+
+            # Security context for container
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 1000
+              runAsGroup: 1000
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              seccompProfile:
+                type: RuntimeDefault
+              readOnlyRootFilesystem: true
+
+          # Service account configuration
+          serviceAccount:
+            create: true
+            name: kyverno-admission-controller
+
+          # Metrics for Prometheus
+          metricsService:
+            create: true
+            port: 8000
+
+          # Pod anti-affinity for HA
+          antiAffinity:
+            enabled: true
+
+          # Topology spread constraints
+          topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: ScheduleAnyway
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: admission-controller
+
+        # ============================================================
+        # Background Controller Configuration
+        # ============================================================
+        backgroundController:
+          replicas: 2
+
+          container:
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 256Mi
+
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 1000
+              runAsGroup: 1000
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              seccompProfile:
+                type: RuntimeDefault
+              readOnlyRootFilesystem: true
+
+          serviceAccount:
+            create: true
+            name: kyverno-background-controller
+
+          metricsService:
+            create: true
+            port: 8000
+
+        # ============================================================
+        # Reports Controller Configuration
+        # ============================================================
+        reportsController:
+          replicas: 1
+
+          container:
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 256Mi
+
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 1000
+              runAsGroup: 1000
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              seccompProfile:
+                type: RuntimeDefault
+              readOnlyRootFilesystem: true
+
+          serviceAccount:
+            create: true
+            name: kyverno-reports-controller
+
+          metricsService:
+            create: true
+            port: 8000
+
+        # ============================================================
+        # Cleanup Controller Configuration
+        # ============================================================
+        cleanupController:
+          replicas: 1
+
+          container:
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 256Mi
+
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 1000
+              runAsGroup: 1000
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              seccompProfile:
+                type: RuntimeDefault
+              readOnlyRootFilesystem: true
+
+          serviceAccount:
+            create: true
+            name: kyverno-cleanup-controller
+
+          metricsService:
+            create: true
+            port: 8000
+
+        # ============================================================
+        # Webhook Configuration
+        # ============================================================
+        webhooksCleanup:
+          enabled: true
+
+        # ============================================================
+        # Features Configuration
+        # ============================================================
+        features:
+          # Enable policy reports for audit and compliance
+          policyReports:
+            enabled: true
+          # Enable logging for debugging
+          logging:
+            format: json
+            verbosity: 2
+
+        # ============================================================
+        # Config (ConfigMap settings)
+        # ============================================================
+        config:
+          # Exclude system namespaces from policy enforcement
+          webhooks:
+            - namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+
+          # Resource filters - exclude system resources
+          resourceFilters:
+            - "[Event,*,*]"
+            - "[*,kube-system,*]"
+            - "[*,kube-public,*]"
+            - "[*,kube-node-lease,*]"
+            - "[*,kyverno,*]"
+            - "[Node,*,*]"
+            - "[APIService,*,*]"
+            - "[TokenReview,*,*]"
+            - "[SubjectAccessReview,*,*]"
+            - "[SelfSubjectAccessReview,*,*]"
+            - "[*,*,kube-controller-manager]"
+            - "[*,*,kube-scheduler]"
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyverno
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+      jqPathExpressions:
+        - .webhooks[]?.clientConfig.caBundle
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      jqPathExpressions:
+        - .webhooks[]?.clientConfig.caBundle
+
+  revisionHistoryLimit: 10

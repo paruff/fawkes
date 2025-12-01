@@ -1,0 +1,310 @@
+# ============================================================================
+# FILE: platform/policies/mutation-policies.yaml
+# PURPOSE: Mutation policies for automatic standardization of resources.
+#          These policies automatically modify resources to comply with
+#          platform standards without requiring developer intervention.
+# ============================================================================
+---
+# Policy: Add platform standard labels to all workloads
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: add-platform-labels
+  labels:
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: standardization-policy
+    policy.fawkes.idp/category: standardization
+    policy.fawkes.idp/severity: low
+  annotations:
+    policies.kyverno.io/title: Add Platform Labels
+    policies.kyverno.io/category: Fawkes Platform Standards
+    policies.kyverno.io/severity: low
+    policies.kyverno.io/subject: Pod, Deployment, StatefulSet, DaemonSet
+    policies.kyverno.io/description: >-
+      Automatically adds Fawkes platform standard labels to workloads
+      for consistent resource management, monitoring, and cost allocation.
+spec:
+  rules:
+    - name: add-labels-to-pods
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              +(app.fawkes.idp/managed-by): "fawkes-platform"
+              +(app.fawkes.idp/environment): "{{request.namespace}}"
+    - name: add-labels-to-deployments
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+                - StatefulSet
+                - DaemonSet
+              namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              +(app.fawkes.idp/managed-by): "fawkes-platform"
+              +(app.fawkes.idp/environment): "{{request.namespace}}"
+          spec:
+            template:
+              metadata:
+                labels:
+                  +(app.fawkes.idp/managed-by): "fawkes-platform"
+                  +(app.fawkes.idp/environment): "{{request.namespace}}"
+---
+# Policy: Add Vault Agent annotations for secret injection
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: add-vault-annotations
+  labels:
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: vault-integration
+    policy.fawkes.idp/category: integration
+    policy.fawkes.idp/severity: low
+  annotations:
+    policies.kyverno.io/title: Add Vault Agent Annotations
+    policies.kyverno.io/category: Fawkes Platform Standards
+    policies.kyverno.io/severity: low
+    policies.kyverno.io/subject: Pod, Deployment
+    policies.kyverno.io/description: >-
+      Automatically adds Vault Agent sidecar annotations to Pods that have
+      the label vault.fawkes.idp/inject=true, enabling automatic secret
+      injection from HashiCorp Vault.
+spec:
+  rules:
+    - name: add-vault-sidecar-to-pods
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              selector:
+                matchLabels:
+                  vault.fawkes.idp/inject: "true"
+              namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+                      - vault
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            annotations:
+              +(vault.hashicorp.com/agent-inject): "true"
+              +(vault.hashicorp.com/role): "platform-service"
+              +(vault.hashicorp.com/agent-pre-populate-only): "false"
+    - name: add-vault-sidecar-to-deployments
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+              selector:
+                matchLabels:
+                  vault.fawkes.idp/inject: "true"
+              namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+                      - vault
+      mutate:
+        patchStrategicMerge:
+          spec:
+            template:
+              metadata:
+                annotations:
+                  +(vault.hashicorp.com/agent-inject): "true"
+                  +(vault.hashicorp.com/role): "platform-service"
+                  +(vault.hashicorp.com/agent-pre-populate-only): "false"
+---
+# Policy: Set platform Ingress class for Services
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: set-ingress-class
+  labels:
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: networking-policy
+    policy.fawkes.idp/category: networking
+    policy.fawkes.idp/severity: low
+  annotations:
+    policies.kyverno.io/title: Set Platform Ingress Class
+    policies.kyverno.io/category: Fawkes Platform Standards
+    policies.kyverno.io/severity: low
+    policies.kyverno.io/subject: Ingress
+    policies.kyverno.io/description: >-
+      Automatically sets the platform's default Ingress class (nginx) for
+      Ingress resources that don't specify one, ensuring consistent
+      traffic routing through the platform ingress controller.
+spec:
+  rules:
+    - name: set-default-ingress-class
+      match:
+        any:
+          - resources:
+              kinds:
+                - Ingress
+              namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+      mutate:
+        patchStrategicMerge:
+          spec:
+            +(ingressClassName): nginx
+---
+# Policy: Set default security context for containers
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: set-default-security-context
+  labels:
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: security-policy
+    policy.fawkes.idp/category: security
+    policy.fawkes.idp/severity: medium
+  annotations:
+    policies.kyverno.io/title: Set Default Security Context
+    policies.kyverno.io/category: Fawkes Platform Standards
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      Automatically sets secure defaults for Pod security context including
+      runAsNonRoot, allowPrivilegeEscalation, and seccompProfile when not
+      explicitly specified.
+spec:
+  rules:
+    - name: set-pod-security-context
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+      mutate:
+        patchStrategicMerge:
+          spec:
+            securityContext:
+              +(runAsNonRoot): true
+              +(seccompProfile):
+                type: RuntimeDefault
+    - name: set-container-security-context
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+      mutate:
+        foreach:
+          - list: "request.object.spec.containers"
+            patchStrategicMerge:
+              spec:
+                containers:
+                  - name: "{{ element.name }}"
+                    securityContext:
+                      +(allowPrivilegeEscalation): false
+                      +(readOnlyRootFilesystem): true
+---
+# Policy: Add resource requests if missing
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: add-default-resources
+  labels:
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: resource-policy
+    policy.fawkes.idp/category: resource-management
+    policy.fawkes.idp/severity: low
+  annotations:
+    policies.kyverno.io/title: Add Default Resource Requests
+    policies.kyverno.io/category: Fawkes Platform Standards
+    policies.kyverno.io/severity: low
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      Automatically adds default resource requests for containers that
+      don't specify them, ensuring basic resource allocation for scheduling.
+spec:
+  rules:
+    - name: add-default-requests
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaceSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                      - kube-system
+                      - kube-public
+                      - kube-node-lease
+                      - kyverno
+      mutate:
+        foreach:
+          - list: "request.object.spec.containers"
+            patchStrategicMerge:
+              spec:
+                containers:
+                  - name: "{{ element.name }}"
+                    resources:
+                      requests:
+                        +(cpu): "100m"
+                        +(memory): "128Mi"
