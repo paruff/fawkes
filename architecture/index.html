@@ -2370,11 +2370,14 @@
 - SBOM generation
 - Policy enforcement
 - Registry integration</p>
-<p><strong>Secrets Management</strong>:
-- External Secrets Operator
-- Integration with cloud KMS
-- Secret rotation
-- Audit logging</p>
+<p><strong>Secrets Management</strong> (HashiCorp Vault + External Secrets Operator):
+- HashiCorp Vault for centralized secrets management (HA deployment)
+- Vault Agent Sidecar for automatic secret injection into pods
+- CSI Secret Store Driver for volume-based secret mounting
+- External Secrets Operator for cloud provider integration
+- Kubernetes Auth Method for service account authentication
+- Dynamic secret generation and automatic rotation
+- Comprehensive audit logging for compliance</p>
 <p><strong>Policy Enforcement</strong> (Kyverno):
 - Admission control
 - Resource validation
@@ -2697,28 +2700,83 @@ Deploy to Kubernetes
 - ≤3% duplicated lines
 - Maintainability rating A</p>
 <h3 id="secrets-management">Secrets Management</h3>
-<p><strong>Architecture</strong>:
-<div class="highlight"><pre><span></span><code>Application needs secret
-    │
-    ▼
-Requests from Kubernetes Secret
-    │
-    ▼
-External Secrets Operator:
-    │
-    ├─ Fetches from cloud provider (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager)
-    ├─ Creates/updates Kubernetes Secret
-    └─ Monitors for changes (auto-rotation)
-    │
-    ▼
-Secret injected into pod as env var or volume
+<p><strong>Architecture</strong>:</p>
+<p>The Fawkes platform implements a hybrid secrets management approach using
+HashiCorp Vault as the primary secrets store with External Secrets Operator
+for cloud provider integration.</p>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                          Secrets Management Layer                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────┐    ┌────────────────────────────────────┐  │
+│  │    HashiCorp Vault (HA)    │    │   External Secrets Operator        │  │
+│  │                            │    │                                    │  │
+│  │  ┌──────────────────────┐  │    │  • AWS Secrets Manager sync       │  │
+│  │  │ vault-0 (Primary)    │  │    │  • Azure Key Vault sync           │  │
+│  │  │ vault-1 (Standby)    │  │    │  • GCP Secret Manager sync        │  │
+│  │  │ vault-2 (Standby)    │  │    │                                    │  │
+│  │  └──────────────────────┘  │    └────────────────────────────────────┘  │
+│  │                            │                     │                       │
+│  │  • Kubernetes Auth         │                     │                       │
+│  │  • Dynamic Secrets         │                     │                       │
+│  │  • Audit Logging           │                     │                       │
+│  └────────────────────────────┘                     │                       │
+│              │                                       │                       │
+│              │ Vault Agent Sidecar                  │ ExternalSecret        │
+│              │ or CSI Driver                        │                       │
+│              ▼                                       ▼                       │
+│  ┌─────────────────────────────────────────────────────────────────────────┐│
+│  │                        Kubernetes Secrets                                ││
+│  │  (Mounted as volumes or environment variables in application pods)      ││
+│  └─────────────────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p><strong>Secret Injection Methods</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vault Agent Sidecar</td>
+<td>Automatic injection via mutating webhook</td>
+<td>Most applications, auto-rotation</td>
+</tr>
+<tr>
+<td>CSI Secret Store</td>
+<td>Mount secrets as volumes</td>
+<td>Legacy apps, file-based config</td>
+</tr>
+<tr>
+<td>External Secrets</td>
+<td>Sync from cloud providers</td>
+<td>Cloud-native deployments</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Secret Rotation Flow</strong>:
+<div class="highlight"><pre><span></span><code>Secret Updated in Vault
+     │
+     ▼
+Vault Agent Detects Change (polling interval)
+     │
+     ▼
+Agent Updates /vault/secrets/* Files
+     │
+     ▼
+Application Reads New Secret (no pod restart)
 </code></pre></div></p>
 <p><strong>Best Practices</strong>:
 - No secrets in Git repositories
 - Secrets encrypted at rest and in transit
-- Automatic rotation every 90 days
+- Automatic rotation via Vault Agent
 - Audit logging for all secret access
-- Least privilege access (RBAC)</p>
+- Least privilege access via Vault policies
+- Service account authentication (no static tokens)</p>
 <hr />
 <h2 id="multi-cloud-strategy">Multi-Cloud Strategy</h2>
 <h3 id="current-state-mvp-aws-focus">Current State (MVP): AWS Focus</h3>
@@ -2990,10 +3048,22 @@ Application consumes database
 <td>Kubernetes-native, easier than OPA</td>
 </tr>
 <tr>
-<td>Secrets</td>
+<td>Secrets (Primary)</td>
+<td>HashiCorp Vault</td>
+<td>1.17+</td>
+<td>Centralized secrets, dynamic credentials, HA</td>
+</tr>
+<tr>
+<td>Secrets (Cloud Sync)</td>
 <td>External Secrets Operator</td>
 <td>0.9+</td>
-<td>Multi-provider, automated rotation</td>
+<td>Multi-provider cloud secrets sync</td>
+</tr>
+<tr>
+<td>Secrets (CSI)</td>
+<td>Secrets Store CSI Driver</td>
+<td>1.4+</td>
+<td>Volume-based secret mounting</td>
 </tr>
 </tbody>
 </table>
@@ -3119,6 +3189,8 @@ Application consumes database
 <li><a href="../adr/004-jenkins.md">ADR-004: Jenkins for CI/CD</a></li>
 <li><a href="../adr/005-terraform.md">ADR-005: Terraform over Pulumi for IaC</a></li>
 <li><a href="../adr/006-postgresql.md">ADR-006: PostgreSQL for Data Persistence</a></li>
+<li><a href="../adr/ADR-009%20secrets%20managment.md">ADR-009: Secrets Management</a></li>
+<li><a href="../adr/ADR-015%20vault%20deployment.md">ADR-015: HashiCorp Vault Deployment</a></li>
 </ul>
 <hr />
 <h2 id="diagrams">Diagrams</h2>
