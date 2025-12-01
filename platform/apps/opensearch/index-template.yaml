@@ -1,7 +1,32 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
 # ============================================================================
-# FILE: platform/logging/opensearch/index-templates.yaml
-# PURPOSE: Index templates for common log types
-# SCOPE: Configure how logs are indexed
+# FILE: platform/apps/opensearch/index-template.yaml
+# PURPOSE: Index templates for OpenTelemetry logs with Kubernetes context
+# SCOPE: Configure how logs are indexed for centralized log management
+# SEE: docs/adr/ADR-011 Centralized Log Management.md
+# FEATURES:
+#   - Kubernetes context enrichment (k8s.pod.name, k8s.namespace.name, k8s.container.name)
+#   - Trace correlation (traceId, spanId) for log-trace correlation
+#   - OpenTelemetry semantic conventions support
 # ============================================================================
 apiVersion: v1
 kind: ConfigMap
@@ -9,9 +34,145 @@ metadata:
   name: opensearch-index-templates
   namespace: logging
 data:
+  # ============================================================================
+  # OTLP Logs Index Template
+  # Primary template for logs received via OpenTelemetry Collector
+  # ============================================================================
+  otel-logs.json: |
+    {
+      "index_patterns": ["otel-logs-*", "fawkes-logs-*"],
+      "priority": 100,
+      "template": {
+        "settings": {
+          "number_of_shards": 3,
+          "number_of_replicas": 1,
+          "index.refresh_interval": "30s",
+          "index.codec": "best_compression",
+          "index.mapping.total_fields.limit": 2000
+        },
+        "mappings": {
+          "properties": {
+            "@timestamp": {
+              "type": "date"
+            },
+            "observedTimestamp": {
+              "type": "date"
+            },
+            "body": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "severityText": {
+              "type": "keyword"
+            },
+            "severityNumber": {
+              "type": "integer"
+            },
+            "traceId": {
+              "type": "keyword"
+            },
+            "spanId": {
+              "type": "keyword"
+            },
+            "traceFlags": {
+              "type": "integer"
+            },
+            "resource": {
+              "properties": {
+                "attributes": {
+                  "properties": {
+                    "k8s.namespace.name": {
+                      "type": "keyword"
+                    },
+                    "k8s.pod.name": {
+                      "type": "keyword"
+                    },
+                    "k8s.pod.uid": {
+                      "type": "keyword"
+                    },
+                    "k8s.container.name": {
+                      "type": "keyword"
+                    },
+                    "k8s.deployment.name": {
+                      "type": "keyword"
+                    },
+                    "k8s.statefulset.name": {
+                      "type": "keyword"
+                    },
+                    "k8s.daemonset.name": {
+                      "type": "keyword"
+                    },
+                    "k8s.replicaset.name": {
+                      "type": "keyword"
+                    },
+                    "k8s.node.name": {
+                      "type": "keyword"
+                    },
+                    "container.id": {
+                      "type": "keyword"
+                    },
+                    "container.image.name": {
+                      "type": "keyword"
+                    },
+                    "container.image.tag": {
+                      "type": "keyword"
+                    },
+                    "service.name": {
+                      "type": "keyword"
+                    },
+                    "service.version": {
+                      "type": "keyword"
+                    },
+                    "cluster": {
+                      "type": "keyword"
+                    },
+                    "environment": {
+                      "type": "keyword"
+                    },
+                    "app": {
+                      "type": "keyword"
+                    },
+                    "component": {
+                      "type": "keyword"
+                    },
+                    "version": {
+                      "type": "keyword"
+                    },
+                    "trace_id": {
+                      "type": "keyword"
+                    },
+                    "span_id": {
+                      "type": "keyword"
+                    }
+                  }
+                }
+              }
+            },
+            "attributes": {
+              "type": "object",
+              "enabled": true
+            },
+            "droppedAttributesCount": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    }
+
+  # ============================================================================
+  # Application Logs Index Template
+  # For structured application logs with trace correlation
+  # ============================================================================
   application-logs.json: |
     {
       "index_patterns": ["application-logs-*"],
+      "priority": 50,
       "template": {
         "settings": {
           "number_of_shards": 3,
@@ -36,6 +197,9 @@ data:
                 }
               }
             },
+            "logger": {
+              "type": "keyword"
+            },
             "service": {
               "type": "keyword"
             },
@@ -53,15 +217,26 @@ data:
             },
             "span_id": {
               "type": "keyword"
+            },
+            "cluster": {
+              "type": "keyword"
+            },
+            "environment": {
+              "type": "keyword"
             }
           }
         }
       }
     }
 
+  # ============================================================================
+  # Kubernetes Platform Logs Index Template
+  # For Kubernetes control plane and platform service logs
+  # ============================================================================
   kubernetes-logs.json: |
     {
       "index_patterns": ["kubernetes-logs-*"],
+      "priority": 50,
       "template": {
         "settings": {
           "number_of_shards": 2,
@@ -84,6 +259,12 @@ data:
                 "container_name": {
                   "type": "keyword"
                 },
+                "node_name": {
+                  "type": "keyword"
+                },
+                "deployment_name": {
+                  "type": "keyword"
+                },
                 "labels": {
                   "type": "object"
                 }
@@ -91,6 +272,15 @@ data:
             },
             "log": {
               "type": "text"
+            },
+            "level": {
+              "type": "keyword"
+            },
+            "trace_id": {
+              "type": "keyword"
+            },
+            "span_id": {
+              "type": "keyword"
             }
           }
         }
