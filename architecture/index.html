@@ -2621,10 +2621,17 @@
 - Dynamic secret generation and automatic rotation
 - Comprehensive audit logging for compliance</p>
 <p><strong>Policy Enforcement</strong> (Kyverno):
-- Admission control
-- Resource validation
-- Mutation policies
-- Reporting and compliance</p>
+- Kubernetes-native policy engine for policy-as-code
+- <strong>Validation Policies</strong>: Enforce Pod Security Standards (runAsNonRoot,
+  disallow privileged, require resource limits)
+- <strong>Mutation Policies</strong>: Automatic standardization (platform labels, Vault
+  integration, Ingress class defaults, security context defaults)
+- <strong>Generation Policies</strong>: Automatic resource creation for new namespaces
+  (NetworkPolicy, ResourceQuota, LimitRange)
+- <strong>Policy Reports</strong>: Audit and compliance via PolicyReport CRDs
+- HA deployment with 3 admission controller replicas
+- Integration with ArgoCD for GitOps policy management
+- See <a href="../adr/ADR-017%20kyverno-policy-engine/">ADR-017: Kyverno Policy Engine</a></p>
 <h3 id="6-dora-metrics-service">6. DORA Metrics Service</h3>
 <p><strong>Purpose</strong>: Automated collection and visualization of DORA metrics</p>
 <p><strong>Implementation</strong>: Apache DevLake provides unified DORA metrics collection,
@@ -3324,8 +3331,8 @@ Application consumes database
 <tr>
 <td>Policy Engine</td>
 <td>Kyverno</td>
-<td>1.11+</td>
-<td>Kubernetes-native, easier than OPA</td>
+<td>3.3+</td>
+<td>Kubernetes-native, validation/mutation/generation</td>
 </tr>
 <tr>
 <td>Secrets (Primary)</td>
@@ -3472,6 +3479,7 @@ Application consumes database
 <li><a href="../adr/ADR-009%20secrets%20managment.md">ADR-009: Secrets Management</a></li>
 <li><a href="../adr/ADR-015%20vault%20deployment.md">ADR-015: HashiCorp Vault Deployment</a></li>
 <li><a href="../adr/ADR-016%20devlake-dora-strategy.md">ADR-016: DevLake for DORA Metrics</a></li>
+<li><a href="../adr/ADR-017%20kyverno-policy-engine.md">ADR-017: Kyverno Policy Engine</a></li>
 </ul>
 <hr />
 <h2 id="diagrams">Diagrams</h2>
