@@ -1,7 +1,9 @@
 # ============================================================================
 # FILE: platform/apps/focalboard/configmap.yaml
-# PURPOSE: Configuration for Focalboard server
-#          Includes settings for PostgreSQL connection, SSO, and server options.
+# PURPOSE: Configuration template for Focalboard server
+#          NOTE: This is a TEMPLATE. The $(POSTGRES_PASSWORD) placeholder is
+#          replaced at runtime by the init container using the actual password
+#          from the db-focalboard-credentials Kubernetes Secret.
 # ============================================================================
 apiVersion: v1
 kind: ConfigMap
@@ -14,10 +16,12 @@ metadata:
     environment: dev
     team: platform
 data:
-  # Focalboard configuration file (JSON format)
+  # Focalboard configuration file template (JSON format)
+  # The init container processes this template and replaces $(POSTGRES_PASSWORD)
+  # with the actual secret value before the main container starts.
   config.json: |
     {
-      "serverRoot": "http://localhost:8000",
+      "serverRoot": "http://pm.127.0.0.1.nip.io",
       "port": 8000,
       "dbtype": "postgres",
       "dbconfig": "postgres://focalboard_user:$(POSTGRES_PASSWORD)@db-focalboard-dev-rw.fawkes.svc.cluster.local:5432/focalboard?sslmode=require",
