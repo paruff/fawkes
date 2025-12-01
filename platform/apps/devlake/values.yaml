@@ -1,16 +1,23 @@
-# Custom values for DevLake configuration
+# ============================================================
+# DevLake Helm Values for Fawkes Platform
+# Apache DevLake for DORA Metrics Collection and Visualization
+# ============================================================
+# SECURITY: Database credentials are managed via External Secrets
+# See: platform/apps/devlake/externalsecret-devlake.yaml
+# ============================================================
+
 config:
   metrics:
     dora: true
     deploymentFrequency:
       enabled: true
-      window: 7 # days
+      window: 7  # days
     leadTime:
       enabled: true
       stages: ["development", "review", "production"]
     changeFailureRate:
       enabled: true
-      window: 30 # days
+      window: 30  # days
     timeToRestore:
       enabled: true
       severityLevels: ["high", "medium", "low"]
@@ -18,12 +25,19 @@ config:
 grafana:
   enabled: true
   adminUser: admin
-  adminPassword: "admin" # Change this in production!
+  # Grafana admin password from Kubernetes secret (managed by External Secrets)
+  # See: platform/apps/devlake/externalsecret-devlake.yaml
+  adminPasswordSecretName: devlake-grafana-secrets
+  adminPasswordSecretKey: admin-password
 
 mysql:
   enabled: true
   auth:
-    rootPassword: "devlake"
-    username: "devlake"
-    password: "devlake"
-    database: "devlake"
+    # Database credentials from Kubernetes secret (managed by External Secrets)
+    # See: platform/apps/devlake/externalsecret-devlake.yaml
+    database: devlake
+    username: devlake
+    existingSecret: devlake-mysql-secrets
+    secretKeys:
+      rootPassword: mysql-root-password
+      password: mysql-password
