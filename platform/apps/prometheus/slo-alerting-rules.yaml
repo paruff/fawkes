@@ -1,0 +1,232 @@
+# ============================================================================
+# FILE: platform/apps/prometheus/slo-alerting-rules.yaml
+# PURPOSE: SLO-based alerting rules for critical service metrics
+#          P99 latency, error rate, and availability alerts
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: fawkes-slo-alerts
+  namespace: monitoring
+  labels:
+    prometheus: kube-prometheus
+    role: alert-rules
+spec:
+  groups:
+    # ===== SLO Latency Alerts =====
+    - name: slo.latency
+      interval: 30s
+      rules:
+        # P99 latency > 500ms for 5 minutes (Critical)
+        - alert: SLOLatencyP99Critical
+          expr: |
+            (
+              histogram_quantile(0.99,
+                sum(rate(http_request_duration_seconds_bucket{job=~".+"}[5m])) by (namespace, service_name, le)
+              ) > 0.5
+            )
+            and
+            (
+              sum(rate(http_request_duration_seconds_count{job=~".+"}[5m])) by (namespace, service_name) > 0
+            )
+          for: 5m
+          labels:
+            severity: critical
+            slo_type: latency
+          annotations:
+            summary: "P99 latency SLO violation for {{ $labels.service_name }}"
+            description: "Service {{ $labels.namespace }}/{{ $labels.service_name }} P99 latency is {{ $value | humanizeDuration }}, exceeding 500ms SLO for 5 minutes."
+            runbook_url: "https://docs.fawkes.io/runbooks/slo-latency-violation"
+
+        # P95 latency > 300ms for 10 minutes (Warning)
+        - alert: SLOLatencyP95Warning
+          expr: |
+            (
+              histogram_quantile(0.95,
+                sum(rate(http_request_duration_seconds_bucket{job=~".+"}[5m])) by (namespace, service_name, le)
+              ) > 0.3
+            )
+            and
+            (
+              sum(rate(http_request_duration_seconds_count{job=~".+"}[5m])) by (namespace, service_name) > 0
+            )
+          for: 10m
+          labels:
+            severity: warning
+            slo_type: latency
+          annotations:
+            summary: "P95 latency degradation for {{ $labels.service_name }}"
+            description: "Service {{ $labels.namespace }}/{{ $labels.service_name }} P95 latency is {{ $value | humanizeDuration }}, exceeding 300ms threshold for 10 minutes."
+            runbook_url: "https://docs.fawkes.io/runbooks/slo-latency-warning"
+
+    # ===== SLO Error Rate Alerts =====
+    - name: slo.errors
+      interval: 30s
+      rules:
+        # Error rate > 5% for 5 minutes (Critical)
+        - alert: SLOErrorRateCritical
+          expr: |
+            (
+              sum(rate(http_requests_total{status=~"5.."}[5m])) by (namespace, service_name)
+              /
+              sum(rate(http_requests_total[5m])) by (namespace, service_name)
+            ) > 0.05
+          for: 5m
+          labels:
+            severity: critical
+            slo_type: error_rate
+          annotations:
+            summary: "Error rate SLO violation for {{ $labels.service_name }}"
+            description: "Service {{ $labels.namespace }}/{{ $labels.service_name }} error rate is {{ $value | humanizePercentage }}, exceeding 5% SLO for 5 minutes."
+            runbook_url: "https://docs.fawkes.io/runbooks/slo-error-rate-violation"
+
+        # Error rate > 1% for 10 minutes (Warning)
+        - alert: SLOErrorRateWarning
+          expr: |
+            (
+              sum(rate(http_requests_total{status=~"5.."}[5m])) by (namespace, service_name)
+              /
+              sum(rate(http_requests_total[5m])) by (namespace, service_name)
+            ) > 0.01
+          for: 10m
+          labels:
+            severity: warning
+            slo_type: error_rate
+          annotations:
+            summary: "Elevated error rate for {{ $labels.service_name }}"
+            description: "Service {{ $labels.namespace }}/{{ $labels.service_name }} error rate is {{ $value | humanizePercentage }}, exceeding 1% threshold for 10 minutes."
+            runbook_url: "https://docs.fawkes.io/runbooks/slo-error-rate-warning"
+
+    # ===== SLO Availability Alerts =====
+    - name: slo.availability
+      interval: 30s
+      rules:
+        # Service availability < 99.9% (Critical)
+        - alert: SLOAvailabilityCritical
+          expr: |
+            (
+              sum(up{job=~".+"}) by (namespace, service_name)
+              /
+              count(up{job=~".+"}) by (namespace, service_name)
+            ) < 0.999
+          for: 5m
+          labels:
+            severity: critical
+            slo_type: availability
+          annotations:
+            summary: "Availability SLO violation for {{ $labels.service_name }}"
+            description: "Service {{ $labels.namespace }}/{{ $labels.service_name }} availability is {{ $value | humanizePercentage }}, below 99.9% SLO."
+            runbook_url: "https://docs.fawkes.io/runbooks/slo-availability-violation"
+
+        # Service target unreachable (Critical)
+        - alert: ServiceTargetDown
+          expr: up == 0
+          for: 2m
+          labels:
+            severity: critical
+            slo_type: availability
+          annotations:
+            summary: "Service target {{ $labels.job }} is down"
+            description: "Prometheus cannot scrape metrics from {{ $labels.instance }} for job {{ $labels.job }}."
+            runbook_url: "https://docs.fawkes.io/runbooks/service-target-down"
+
+    # ===== Platform Service Alerts =====
+    - name: platform.services
+      interval: 30s
+      rules:
+        # ArgoCD Server unavailable
+        - alert: ArgoCDServerDown
+          expr: up{job="argocd-server"} == 0
+          for: 3m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "ArgoCD Server is down"
+            description: "ArgoCD Server has been unavailable for more than 3 minutes."
+            runbook_url: "https://docs.fawkes.io/runbooks/argocd-down"
+
+        # Jenkins Server unavailable
+        - alert: JenkinsServerDown
+          expr: up{job="jenkins"} == 0
+          for: 3m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "Jenkins Server is down"
+            description: "Jenkins Server has been unavailable for more than 3 minutes."
+            runbook_url: "https://docs.fawkes.io/runbooks/jenkins-down"
+
+        # Prometheus self-monitoring
+        - alert: PrometheusTargetScrapesSlow
+          expr: prometheus_target_scrape_pool_sync_total{quantile="0.99"} > 10
+          for: 10m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "Prometheus scrapes are slow"
+            description: "P99 scrape pool sync time is {{ $value }}s, indicating slow target discovery."
+            runbook_url: "https://docs.fawkes.io/runbooks/prometheus-slow-scrapes"
+
+        # Alertmanager not sending alerts
+        - alert: AlertmanagerNotificationsFailing
+          expr: rate(alertmanager_notifications_failed_total[5m]) > 0
+          for: 10m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "Alertmanager notifications are failing"
+            description: "Alertmanager is failing to send notifications via {{ $labels.integration }}."
+            runbook_url: "https://docs.fawkes.io/runbooks/alertmanager-notifications-failing"
+
+    # ===== Recording Rules for SLO Dashboards =====
+    - name: slo.recording
+      interval: 30s
+      rules:
+        # Request rate per service
+        - record: fawkes:http_requests:rate5m
+          expr: |
+            sum(rate(http_requests_total[5m])) by (namespace, service_name)
+
+        # Error rate per service
+        - record: fawkes:http_errors:rate5m
+          expr: |
+            sum(rate(http_requests_total{status=~"5.."}[5m])) by (namespace, service_name)
+
+        # Error rate percentage per service
+        - record: fawkes:http_error_rate:ratio5m
+          expr: |
+            (
+              sum(rate(http_requests_total{status=~"5.."}[5m])) by (namespace, service_name)
+              /
+              sum(rate(http_requests_total[5m])) by (namespace, service_name)
+            )
+
+        # P50 latency per service
+        - record: fawkes:http_latency:p50
+          expr: |
+            histogram_quantile(0.50,
+              sum(rate(http_request_duration_seconds_bucket[5m])) by (namespace, service_name, le)
+            )
+
+        # P95 latency per service
+        - record: fawkes:http_latency:p95
+          expr: |
+            histogram_quantile(0.95,
+              sum(rate(http_request_duration_seconds_bucket[5m])) by (namespace, service_name, le)
+            )
+
+        # P99 latency per service
+        - record: fawkes:http_latency:p99
+          expr: |
+            histogram_quantile(0.99,
+              sum(rate(http_request_duration_seconds_bucket[5m])) by (namespace, service_name, le)
+            )
+
+        # Service availability
+        - record: fawkes:service:availability
+          expr: |
+            avg_over_time(up[1h])

@@ -1,0 +1,376 @@
+# ============================================================================
+# FILE: platform/apps/opentelemetry/otel-collector-application.yaml
+# PURPOSE: ArgoCD Application for OpenTelemetry Collector deployment as DaemonSet
+#          Collects and exports metrics from applications and infrastructure
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: otel-collector
+  namespace: fawkes
+  labels:
+    app: otel-collector
+    component: observability
+    environment: dev
+    team: platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  project: default
+
+  source:
+    repoURL: https://open-telemetry.github.io/opentelemetry-helm-charts
+    chart: opentelemetry-collector
+    targetRevision: "0.108.0"
+    helm:
+      values: |
+        # ============================================================
+        # Deployment Mode: DaemonSet for node-level metric collection
+        # ============================================================
+        mode: daemonset
+
+        # ============================================================
+        # Image Configuration
+        # ============================================================
+        image:
+          repository: otel/opentelemetry-collector-contrib
+          tag: "0.114.0"
+
+        # ============================================================
+        # Resource Configuration
+        # ============================================================
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+
+        # ============================================================
+        # Service Account
+        # ============================================================
+        serviceAccount:
+          create: true
+          name: otel-collector
+
+        # ============================================================
+        # Cluster Role for Kubernetes metrics
+        # ============================================================
+        clusterRole:
+          create: true
+          rules:
+            - apiGroups: [""]
+              resources:
+                - nodes
+                - nodes/proxy
+                - nodes/metrics
+                - services
+                - endpoints
+                - pods
+                - namespaces
+              verbs: ["get", "list", "watch"]
+            - apiGroups: [""]
+              resources:
+                - configmaps
+              verbs: ["get"]
+            - apiGroups: ["apps"]
+              resources:
+                - daemonsets
+                - deployments
+                - replicasets
+                - statefulsets
+              verbs: ["get", "list", "watch"]
+            - nonResourceURLs: ["/metrics", "/metrics/cadvisor"]
+              verbs: ["get"]
+
+        # ============================================================
+        # Pod Security Context
+        # ============================================================
+        podSecurityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          runAsGroup: 10001
+          fsGroup: 10001
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+
+        # ============================================================
+        # OpenTelemetry Collector Configuration
+        # ============================================================
+        config:
+          receivers:
+            # OTLP receiver for applications sending metrics via OpenTelemetry SDK
+            otlp:
+              protocols:
+                grpc:
+                  endpoint: 0.0.0.0:4317
+                http:
+                  endpoint: 0.0.0.0:4318
+
+            # Prometheus receiver for scraping /metrics endpoints
+            prometheus:
+              config:
+                scrape_configs:
+                  # Scrape applications with prometheus.io annotations
+                  - job_name: 'kubernetes-pods'
+                    kubernetes_sd_configs:
+                      - role: pod
+                    relabel_configs:
+                      # Only scrape pods with prometheus.io/scrape=true
+                      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+                        action: keep
+                        regex: true
+                      # Use custom port if specified
+                      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port]
+                        action: replace
+                        regex: (\d+)
+                        target_label: __address__
+                        replacement: $${1}:$$1
+                      # Use custom path if specified
+                      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+                        action: replace
+                        target_label: __metrics_path__
+                        regex: (.+)
+                      # Add Kubernetes labels
+                      - source_labels: [__meta_kubernetes_namespace]
+                        action: replace
+                        target_label: namespace
+                      - source_labels: [__meta_kubernetes_pod_name]
+                        action: replace
+                        target_label: pod_name
+                      - source_labels: [__meta_kubernetes_pod_label_app]
+                        action: replace
+                        target_label: app
+                      - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+                        action: replace
+                        target_label: service_name
+
+            # Kubelet metrics receiver for container-level metrics
+            kubeletstats:
+              collection_interval: 30s
+              auth_type: "serviceAccount"
+              endpoint: "https://$${env:NODE_IP}:10250"
+              insecure_skip_verify: true
+              metric_groups:
+                - container
+                - pod
+                - node
+
+            # Host metrics receiver for node-level metrics
+            hostmetrics:
+              collection_interval: 30s
+              scrapers:
+                cpu:
+                  metrics:
+                    system.cpu.utilization:
+                      enabled: true
+                disk: {}
+                filesystem: {}
+                load: {}
+                memory:
+                  metrics:
+                    system.memory.utilization:
+                      enabled: true
+                network: {}
+
+          processors:
+            # Batch processor for efficient exporting
+            batch:
+              timeout: 10s
+              send_batch_size: 1000
+              send_batch_max_size: 2000
+
+            # Memory limiter to prevent OOM
+            memory_limiter:
+              check_interval: 5s
+              limit_mib: 400
+              spike_limit_mib: 100
+
+            # Resource detection for Kubernetes attributes
+            resourcedetection:
+              detectors:
+                - env
+                - system
+              system:
+                hostname_sources:
+                  - os
+              timeout: 5s
+              override: false
+
+            # K8s attributes processor for enrichment
+            k8sattributes:
+              auth_type: "serviceAccount"
+              passthrough: false
+              filter:
+                node_from_env_var: K8S_NODE_NAME
+              extract:
+                metadata:
+                  - k8s.namespace.name
+                  - k8s.pod.name
+                  - k8s.pod.uid
+                  - k8s.deployment.name
+                  - k8s.node.name
+                  - k8s.container.name
+                labels:
+                  - tag_name: app
+                    key: app
+                    from: pod
+                  - tag_name: service_name
+                    key: app.kubernetes.io/name
+                    from: pod
+                  - tag_name: component
+                    key: app.kubernetes.io/component
+                    from: pod
+              pod_association:
+                - sources:
+                    - from: resource_attribute
+                      name: k8s.pod.ip
+                - sources:
+                    - from: resource_attribute
+                      name: k8s.pod.uid
+
+            # Transform processor to add resource labels
+            transform:
+              metric_statements:
+                - context: resource
+                  statements:
+                    - set(attributes["cluster"], "fawkes-dev")
+                    - set(attributes["environment"], "development")
+
+          exporters:
+            # Prometheus remote write exporter
+            prometheusremotewrite:
+              endpoint: "http://prometheus-prometheus.monitoring.svc.cluster.local:9090/api/v1/write"
+              tls:
+                insecure: true
+              resource_to_telemetry_conversion:
+                enabled: true
+
+            # Debug exporter for troubleshooting (disabled in production)
+            debug:
+              verbosity: basic
+              sampling_initial: 5
+              sampling_thereafter: 200
+
+          extensions:
+            health_check:
+              endpoint: 0.0.0.0:13133
+            zpages:
+              endpoint: 0.0.0.0:55679
+
+          service:
+            extensions:
+              - health_check
+              - zpages
+            pipelines:
+              metrics:
+                receivers:
+                  - otlp
+                  - prometheus
+                  - kubeletstats
+                  - hostmetrics
+                processors:
+                  - memory_limiter
+                  - k8sattributes
+                  - resourcedetection
+                  - transform
+                  - batch
+                exporters:
+                  - prometheusremotewrite
+
+        # ============================================================
+        # Ports Configuration
+        # ============================================================
+        ports:
+          otlp:
+            enabled: true
+            containerPort: 4317
+            servicePort: 4317
+            protocol: TCP
+          otlp-http:
+            enabled: true
+            containerPort: 4318
+            servicePort: 4318
+            protocol: TCP
+          metrics:
+            enabled: true
+            containerPort: 8888
+            servicePort: 8888
+            protocol: TCP
+          health:
+            enabled: true
+            containerPort: 13133
+            servicePort: 13133
+            protocol: TCP
+          zpages:
+            enabled: true
+            containerPort: 55679
+            servicePort: 55679
+            protocol: TCP
+
+        # ============================================================
+        # Environment Variables
+        # ============================================================
+        extraEnvs:
+          - name: K8S_NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          - name: NODE_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+
+        # ============================================================
+        # Tolerations for running on all nodes
+        # ============================================================
+        tolerations:
+          - key: node-role.kubernetes.io/master
+            operator: Exists
+            effect: NoSchedule
+          - key: node-role.kubernetes.io/control-plane
+            operator: Exists
+            effect: NoSchedule
+
+        # ============================================================
+        # Pod Monitoring for self-metrics
+        # ============================================================
+        podMonitor:
+          enabled: true
+          metricsEndpoints:
+            - port: metrics
+              interval: 30s
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: apps
+      kind: DaemonSet
+      jsonPointers:
+        - /spec/template/metadata/annotations
+
+  revisionHistoryLimit: 10
