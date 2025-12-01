@@ -1,0 +1,349 @@
+# ============================================================================
+# FILE: platform/apps/prometheus/prometheus-application.yaml
+# PURPOSE: ArgoCD Application for kube-prometheus-stack deployment with
+#          OpenTelemetry integration and SLO-based alerting
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-stack
+  namespace: fawkes
+  labels:
+    app: prometheus
+    component: observability
+    environment: dev
+    team: platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "-3"
+spec:
+  project: default
+
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: "66.3.1"
+    helm:
+      values: |
+        # ============================================================
+        # Global Configuration
+        # ============================================================
+        global:
+          rbac:
+            create: true
+
+        fullnameOverride: prometheus
+
+        # ============================================================
+        # Prometheus Operator
+        # ============================================================
+        prometheusOperator:
+          enabled: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+
+        # ============================================================
+        # Prometheus Server
+        # ============================================================
+        prometheus:
+          enabled: true
+          prometheusSpec:
+            retention: 15d
+            retentionSize: "10GB"
+            replicas: 1
+
+            resources:
+              requests:
+                cpu: 500m
+                memory: 1Gi
+              limits:
+                cpu: 1000m
+                memory: 2Gi
+
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: standard
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 20Gi
+
+            # Enable automatic service discovery
+            serviceMonitorSelectorNilUsesHelmValues: false
+            podMonitorSelectorNilUsesHelmValues: false
+            ruleSelectorNilUsesHelmValues: false
+            probeSelectorNilUsesHelmValues: false
+
+            # Scrape configuration
+            evaluationInterval: 30s
+            scrapeInterval: 30s
+
+            # External labels for multi-cluster
+            externalLabels:
+              cluster: fawkes-dev
+              environment: development
+
+            # Security context
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 1000
+              fsGroup: 2000
+
+            # Enable remote write for OpenTelemetry Collector
+            enableRemoteWriteReceiver: true
+
+            # Alertmanager endpoints
+            alertingEndpoints:
+              - name: alertmanager-operated
+                namespace: monitoring
+                port: http-web
+
+          service:
+            type: ClusterIP
+            port: 9090
+
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - prometheus.127.0.0.1.nip.io
+            paths:
+              - /
+
+        # ============================================================
+        # Alertmanager
+        # ============================================================
+        alertmanager:
+          enabled: true
+          alertmanagerSpec:
+            replicas: 1
+            resources:
+              requests:
+                cpu: 50m
+                memory: 64Mi
+              limits:
+                cpu: 100m
+                memory: 128Mi
+
+            storage:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: standard
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 2Gi
+
+          config:
+            global:
+              resolve_timeout: 5m
+
+            route:
+              group_by: ['alertname', 'cluster', 'service', 'namespace']
+              group_wait: 30s
+              group_interval: 5m
+              repeat_interval: 4h
+              receiver: 'platform-team'
+              routes:
+                # Critical SLO violations go to on-call
+                - match:
+                    severity: critical
+                  receiver: 'platform-oncall'
+                  continue: true
+                # Warning alerts for general monitoring
+                - match:
+                    severity: warning
+                  receiver: 'platform-team'
+
+            receivers:
+              - name: 'null'
+              - name: 'platform-team'
+                slack_configs:
+                  - api_url_file: /etc/alertmanager/secrets/slack-webhook-url
+                    channel: '#platform-alerts'
+                    send_resolved: true
+                    title: '{{ template "slack.default.title" . }}'
+                    text: '{{ template "slack.default.text" . }}'
+              - name: 'platform-oncall'
+                slack_configs:
+                  - api_url_file: /etc/alertmanager/secrets/slack-webhook-url
+                    channel: '#platform-oncall'
+                    send_resolved: true
+                    title: '[{{ .Status | toUpper }}] {{ .CommonLabels.alertname }}'
+                    text: |-
+                      *Alert:* {{ .CommonLabels.alertname }}
+                      *Severity:* {{ .CommonLabels.severity }}
+                      *Namespace:* {{ .CommonLabels.namespace }}
+                      *Description:* {{ .CommonAnnotations.description }}
+                      *Runbook:* {{ .CommonAnnotations.runbook_url }}
+
+            inhibit_rules:
+              - source_match:
+                  severity: 'critical'
+                target_match:
+                  severity: 'warning'
+                equal: ['alertname', 'cluster', 'service']
+
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - alertmanager.127.0.0.1.nip.io
+            paths:
+              - /
+
+        # ============================================================
+        # Grafana
+        # ============================================================
+        grafana:
+          enabled: true
+          adminPassword: "fawkesidp"
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 200m
+              memory: 512Mi
+
+          persistence:
+            enabled: true
+            storageClassName: standard
+            size: 5Gi
+
+          sidecar:
+            dashboards:
+              enabled: true
+              defaultFolderName: "General"
+              searchNamespace: ALL
+            datasources:
+              enabled: true
+              defaultDatasourceEnabled: true
+
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - grafana.127.0.0.1.nip.io
+            path: /
+
+          plugins:
+            - grafana-piechart-panel
+            - grafana-clock-panel
+
+          defaultDashboardsEnabled: true
+          defaultDashboardsTimezone: UTC
+
+          grafana.ini:
+            server:
+              root_url: http://grafana.127.0.0.1.nip.io
+            auth.anonymous:
+              enabled: false
+
+        # ============================================================
+        # Node Exporter
+        # ============================================================
+        nodeExporter:
+          enabled: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+
+        # ============================================================
+        # Kube State Metrics
+        # ============================================================
+        kubeStateMetrics:
+          enabled: true
+
+        kube-state-metrics:
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+
+        # ============================================================
+        # Prometheus Node Exporter
+        # ============================================================
+        prometheus-node-exporter:
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+
+        # ============================================================
+        # Default Rules
+        # ============================================================
+        defaultRules:
+          create: true
+          rules:
+            alertmanager: true
+            etcd: false
+            configReloaders: true
+            general: true
+            k8s: true
+            kubeApiserverAvailability: true
+            kubeApiserverSlos: true
+            kubelet: true
+            kubeProxy: true
+            kubePrometheusGeneral: true
+            kubePrometheusNodeRecording: true
+            kubernetesApps: true
+            kubernetesResources: true
+            kubernetesStorage: true
+            kubernetesSystem: true
+            kubeScheduler: false
+            kubeStateMetrics: true
+            network: true
+            node: true
+            nodeExporterAlerting: true
+            nodeExporterRecording: true
+            prometheus: true
+            prometheusOperator: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/replicas
+
+  revisionHistoryLimit: 10

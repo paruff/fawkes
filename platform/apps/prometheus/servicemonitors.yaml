@@ -1,0 +1,222 @@
+# ============================================================================
+# FILE: platform/apps/prometheus/servicemonitors.yaml
+# PURPOSE: ServiceMonitor resources for automatic Prometheus scraping
+#          of platform services and applications with Kubernetes labels
+# ============================================================================
+---
+# ============================================================================
+# ServiceMonitor for ArgoCD Server Metrics
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: argocd-server-metrics
+  namespace: monitoring
+  labels:
+    app: argocd
+    component: server
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-server
+  namespaceSelector:
+    matchNames:
+      - fawkes
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod_name
+        - sourceLabels: [__meta_kubernetes_service_name]
+          targetLabel: service_name
+---
+# ============================================================================
+# ServiceMonitor for ArgoCD Application Controller
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: argocd-application-controller-metrics
+  namespace: monitoring
+  labels:
+    app: argocd
+    component: application-controller
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-application-controller
+  namespaceSelector:
+    matchNames:
+      - fawkes
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod_name
+        - sourceLabels: [__meta_kubernetes_service_name]
+          targetLabel: service_name
+---
+# ============================================================================
+# ServiceMonitor for Jenkins Metrics
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: jenkins-metrics
+  namespace: monitoring
+  labels:
+    app: jenkins
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jenkins
+  namespaceSelector:
+    matchNames:
+      - fawkes
+  endpoints:
+    - port: http
+      interval: 60s
+      path: /prometheus
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod_name
+        - sourceLabels: [__meta_kubernetes_service_name]
+          targetLabel: service_name
+---
+# ============================================================================
+# ServiceMonitor for SonarQube Metrics
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sonarqube-metrics
+  namespace: monitoring
+  labels:
+    app: sonarqube
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: sonarqube
+  namespaceSelector:
+    matchNames:
+      - fawkes
+  endpoints:
+    - port: http
+      interval: 60s
+      path: /api/monitoring/metrics
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod_name
+        - sourceLabels: [__meta_kubernetes_service_name]
+          targetLabel: service_name
+---
+# ============================================================================
+# ServiceMonitor for PostgreSQL Metrics (CloudNativePG)
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: postgresql-metrics
+  namespace: monitoring
+  labels:
+    app: postgresql
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchExpressions:
+      - key: cnpg.io/cluster
+        operator: Exists
+  namespaceSelector:
+    any: true
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod_name
+        - sourceLabels: [__meta_kubernetes_pod_label_cnpg_io_cluster]
+          targetLabel: cluster_name
+---
+# ============================================================================
+# ServiceMonitor for OpenTelemetry Collector Metrics
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: otel-collector-metrics
+  namespace: monitoring
+  labels:
+    app: otel-collector
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: opentelemetry-collector
+  namespaceSelector:
+    matchNames:
+      - monitoring
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod_name
+        - sourceLabels: [__meta_kubernetes_service_name]
+          targetLabel: service_name
+---
+# ============================================================================
+# PodMonitor for Application Pods with prometheus.io annotations
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: application-pods
+  namespace: monitoring
+  labels:
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchExpressions:
+      - key: app
+        operator: Exists
+  namespaceSelector:
+    any: true
+  podMetricsEndpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod_name
+        - sourceLabels: [__meta_kubernetes_pod_label_app]
+          targetLabel: app
+        - sourceLabels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+          targetLabel: service_name
+        - sourceLabels: [__meta_kubernetes_pod_label_app_kubernetes_io_component]
+          targetLabel: component
+        - sourceLabels: [__meta_kubernetes_pod_label_app_kubernetes_io_version]
+          targetLabel: version
