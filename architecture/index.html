@@ -1830,6 +1830,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#sonarqube-quality-gate-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SonarQube Quality Gate Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#secrets-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2615,9 +2626,15 @@ Repository ready for development
 ┌─────────────────────────────────────────┐
 │ Stage 1: Source Code Analysis          │
 │ - SonarQube (SAST)                      │
+│   * Security vulnerability detection    │
+│   * Code quality metrics                │
+│   * Technical debt tracking             │
 │ - git-secrets (credential scanning)    │
 │ - License compliance check              │
 │ Quality Gate: Block if critical issues │
+│                                         │
+│ ⚡ Main Branch: MUST pass to proceed    │
+│ 📊 Dashboard: sonarqube.fawkes.local    │
 └─────────────────────────────────────────┘
     │
     ▼
@@ -2647,6 +2664,38 @@ Repository ready for development
     ▼
 Deploy to Kubernetes
 </code></pre></div>
+<h3 id="sonarqube-quality-gate-integration">SonarQube Quality Gate Integration</h3>
+<p>The SonarQube Quality Gate is a mandatory stage in the Golden Path CI/CD pipeline:</p>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
+│                  SonarQube Quality Gate Flow                     │
+│                                                                   │
+│  ┌──────────┐     ┌──────────────┐     ┌──────────────────┐    │
+│  │  Build   │ ──► │   Analyze    │ ──► │  Quality Gate    │    │
+│  │  Code    │     │  with Sonar  │     │  Evaluation      │    │
+│  └──────────┘     └──────────────┘     └──────────────────┘    │
+│                                                │                  │
+│                    ┌───────────────────────────┴────────┐        │
+│                    ▼                                    ▼        │
+│           ┌──────────────┐                    ┌──────────────┐  │
+│           │     PASS     │                    │     FAIL     │  │
+│           │   ✅ Green   │                    │   ❌ Red     │  │
+│           └──────────────┘                    └──────────────┘  │
+│                    │                                    │        │
+│                    ▼                                    ▼        │
+│           ┌──────────────┐                    ┌──────────────┐  │
+│           │ Build Image  │                    │ Stop Pipeline│  │
+│           │ Push Registry│                    │ Log Failure  │  │
+│           └──────────────┘                    │ Link to Report│  │
+│                                               └──────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p><strong>Quality Gate Conditions</strong>:
+- 0 new bugs
+- 0 new vulnerabilities
+- 100% security hotspots reviewed
+- ≥80% new code coverage
+- ≤3% duplicated lines
+- Maintainability rating A</p>
 <h3 id="secrets-management">Secrets Management</h3>
 <p><strong>Architecture</strong>:
 <div class="highlight"><pre><span></span><code>Application needs secret
