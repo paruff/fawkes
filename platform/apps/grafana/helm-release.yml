@@ -3,6 +3,11 @@ kind: Application
 metadata:
   name: grafana
   namespace: fawkes
+  labels:
+    app: grafana
+    component: observability
+    environment: dev
+    team: platform
 spec:
   project: default
   source:
@@ -20,6 +25,139 @@ spec:
             - grafana.127.0.0.1.nip.io
         adminUser: admin
         adminPassword: fawkesidp
+
+        # ============================================================
+        # Data Sources Configuration
+        # Configures Prometheus, Tempo, and OpenSearch for unified observability
+        # Enables trace-to-logs and trace-to-metrics correlation
+        # ============================================================
+        datasources:
+          datasources.yaml:
+            apiVersion: 1
+            datasources:
+              # ============================================================
+              # Prometheus Data Source for Metrics
+              # ============================================================
+              - name: Prometheus
+                type: prometheus
+                uid: prometheus
+                url: http://prometheus-prometheus.monitoring.svc.cluster.local:9090
+                access: proxy
+                isDefault: true
+                jsonData:
+                  httpMethod: POST
+                  exemplarTraceIdDestinations:
+                    - name: trace_id
+                      datasourceUid: tempo
+                      urlDisplayLabel: View Trace
+
+              # ============================================================
+              # Grafana Tempo Data Source for Distributed Tracing
+              # Enables TraceQL queries and service dependency graphs
+              # Configured with trace-to-logs correlation to OpenSearch
+              # ============================================================
+              - name: Tempo
+                type: tempo
+                uid: tempo
+                url: http://tempo.monitoring.svc.cluster.local:3200
+                access: proxy
+                jsonData:
+                  httpMethod: GET
+                  tracesToLogs:
+                    datasourceUid: opensearch
+                    tags:
+                      - k8s.namespace.name
+                      - k8s.pod.name
+                      - k8s.container.name
+                    mappedTags:
+                      - key: service.name
+                        value: service_name
+                    mapTagNamesEnabled: true
+                    spanStartTimeShift: '-1h'
+                    spanEndTimeShift: '1h'
+                    filterByTraceID: true
+                    filterBySpanID: false
+                  tracesToMetrics:
+                    datasourceUid: prometheus
+                    tags:
+                      - key: service.name
+                        value: service
+                    queries:
+                      - name: Request Rate
+                        query: sum(rate(traces_spanmetrics_calls_total{$$__tags}[5m]))
+                      - name: Error Rate
+                        query: >-
+                          sum(rate(traces_spanmetrics_calls_total{
+                          $$__tags, status_code="STATUS_CODE_ERROR"}[5m]))
+                      - name: P95 Latency
+                        query: >-
+                          histogram_quantile(0.95,
+                          sum(rate(traces_spanmetrics_latency_bucket{$$__tags}[5m])) by (le))
+                  serviceMap:
+                    datasourceUid: prometheus
+                  nodeGraph:
+                    enabled: true
+                  search:
+                    hide: false
+                  lokiSearch:
+                    datasourceUid: opensearch
+
+              # ============================================================
+              # OpenSearch Data Source for Logs
+              # Enables log search and trace correlation
+              # ============================================================
+              - name: OpenSearch
+                type: opensearch
+                uid: opensearch
+                url: http://opensearch-cluster-master.logging.svc.cluster.local:9200
+                access: proxy
+                database: otel-logs*
+                jsonData:
+                  database: otel-logs*
+                  flavor: opensearch
+                  version: "2.11.0"
+                  timeField: "@timestamp"
+                  logMessageField: body
+                  logLevelField: severityText
+                  pplEnabled: true
+                  derivedFields:
+                    - name: TraceID
+                      matcherRegex: '"trace_id"\s*:\s*"([a-fA-F0-9]{32})"'
+                      url: '$${__value.raw}'
+                      datasourceUid: tempo
+                      urlDisplayLabel: View Trace
+                    - name: TraceID
+                      matcherRegex: 'trace_id=([a-fA-F0-9]{32})'
+                      url: '$${__value.raw}'
+                      datasourceUid: tempo
+                      urlDisplayLabel: View Trace
+
+        # ============================================================
+        # Default Dashboards
+        # Pre-configured dashboards for observability
+        # ============================================================
+        dashboardProviders:
+          dashboardproviders.yaml:
+            apiVersion: 1
+            providers:
+              - name: default
+                orgId: 1
+                folder: ''
+                type: file
+                disableDeletion: false
+                editable: true
+                options:
+                  path: /var/lib/grafana/dashboards/default
+
+        dashboards:
+          default:
+            # Tempo Service Overview Dashboard
+            # Source: https://grafana.com/grafana/dashboards/15316
+            # Provides trace search, service graphs, and latency analysis
+            tempo-overview:
+              gnetId: 15316
+              revision: 1
+              datasource: Tempo
   destination:
     server: https://kubernetes.default.svc
     namespace: grafana
@@ -27,3 +165,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
