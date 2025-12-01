@@ -127,11 +127,11 @@ spec:
                         action: keep
                         regex: true
                       # Use custom port if specified
-                      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port]
+                      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
                         action: replace
-                        regex: (\d+)
+                        regex: ([^:]+)(?::\d+)?;(\d+)
                         target_label: __address__
-                        replacement: $${1}:$$1
+                        replacement: $$1:$$2
                       # Use custom path if specified
                       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
                         action: replace
@@ -155,7 +155,7 @@ spec:
             kubeletstats:
               collection_interval: 30s
               auth_type: "serviceAccount"
-              endpoint: "https://$${env:NODE_IP}:10250"
+              endpoint: "https://$${NODE_IP}:10250"
               insecure_skip_verify: true
               metric_groups:
                 - container

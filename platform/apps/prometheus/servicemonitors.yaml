@@ -139,8 +139,9 @@ metadata:
     prometheus: kube-prometheus
 spec:
   selector:
-    matchLabels:
-      cnpg.io/cluster: ""
+    matchExpressions:
+      - key: cnpg.io/cluster
+        operator: Exists
   namespaceSelector:
     any: true
   endpoints:
