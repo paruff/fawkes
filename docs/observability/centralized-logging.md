@@ -122,12 +122,14 @@ k8sattributes:
       # ... more attributes
 ```
 
-#### OTLP Exporter for OpenSearch
+#### OpenSearch Exporter
 
 ```yaml
-otlphttp/opensearch:
-  endpoint: "http://opensearch-cluster-master.logging.svc.cluster.local:9200"
-  retry_on_failure:
+opensearch:
+  http:
+    endpoint: "http://opensearch-cluster-master.logging.svc.cluster.local:9200"
+  logs_index: "otel-logs"
+  retry:
     enabled: true
     max_elapsed_time: 300s
   sending_queue:
@@ -162,9 +164,8 @@ resource.attributes.k8s.namespace.name: "my-namespace"
 
 **Find logs with a specific trace ID:**
 
-<!-- Example trace ID for documentation - pragma: allowlist secret -->
 ```text
-traceId: "00000000000000000000000000000000"
+traceId: "<your-32-character-trace-id>"
 ```
 
 **Find error logs from a deployment:**
@@ -177,15 +178,13 @@ resource.attributes.k8s.deployment.name: "my-app" AND severityText: "ERROR"
 
 For optimal trace correlation, applications should emit structured JSON logs:
 
-<!-- Example JSON with placeholder trace IDs - pragma: allowlist secret -->
-
 ```json
 {
   "@timestamp": "2024-12-07T10:30:00.123Z",
   "level": "INFO",
   "message": "User login successful",
-  "traceId": "00000000000000000000000000000000",
-  "spanId": "0000000000000000",
+  "traceId": "<32-character-hex-trace-id>",
+  "spanId": "<16-character-hex-span-id>",
   "userId": "user-123"
 }
 ```

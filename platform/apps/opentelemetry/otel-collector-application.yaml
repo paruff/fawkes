@@ -116,6 +116,8 @@ spec:
         # Pod Security Context
         # Note: filelog receiver needs access to /var/log, running as
         # non-root with fsGroup for log file access
+        # readOnlyRootFilesystem: false is required for file_storage
+        # extension to persist queue state during restarts
         # ============================================================
         podSecurityContext:
           runAsNonRoot: true
@@ -125,6 +127,8 @@ spec:
 
         securityContext:
           allowPrivilegeEscalation: false
+          # Required for file_storage extension to write queue state
+          # The emptyDir volume provides isolated writable storage
           readOnlyRootFilesystem: false
           capabilities:
             drop:
@@ -190,13 +194,20 @@ spec:
                     info: info
                     debug: debug
                     trace: trace
-                # Extract traceId and spanId from structured logs (W3C traceparent)
+                # Extract traceId from structured JSON logs
                 - type: regex_parser
-                  id: trace_parser
-                  regex: '"traceId"\s*:\s*"(?P<trace_id>[a-f0-9]{32})".*"spanId"\s*:\s*"(?P<span_id>[a-f0-9]{16})"'
+                  id: trace_id_parser
+                  regex: '"traceId"\s*:\s*"(?P<trace_id>[a-fA-F0-9]{32})"'
                   parse_from: body
                   parse_to: attributes
                   if: body matches '"traceId"'
+                # Extract spanId from structured JSON logs (separate for order independence)
+                - type: regex_parser
+                  id: span_id_parser
+                  regex: '"spanId"\s*:\s*"(?P<span_id>[a-fA-F0-9]{16})"'
+                  parse_from: body
+                  parse_to: attributes
+                  if: body matches '"spanId"'
 
             # Prometheus receiver for scraping /metrics endpoints
             prometheus:
@@ -407,17 +418,19 @@ spec:
                 enabled: true
 
             # ============================================================
-            # OTLP/HTTP Exporter for OpenSearch (Logs)
-            # Sends logs via OTLP to OpenSearch Data Prepper or
-            # OpenSearch with OTLP ingestion plugin
+            # OpenSearch Exporter (Logs)
+            # Sends logs directly to OpenSearch using the native
+            # OpenSearch bulk API format
             # Configured with retry and queue for failure handling
             # ============================================================
-            otlphttp/opensearch:
-              endpoint: "http://opensearch-cluster-master.logging.svc.cluster.local:9200"
-              tls:
-                insecure: true
+            opensearch:
+              http:
+                endpoint: "http://opensearch-cluster-master.logging.svc.cluster.local:9200"
+                tls:
+                  insecure: true
+              logs_index: "otel-logs"
               # Retry configuration for transient failures
-              retry_on_failure:
+              retry:
                 enabled: true
                 initial_interval: 5s
                 max_interval: 30s
@@ -487,7 +500,7 @@ spec:
                   - transform/logs
                   - batch/logs
                 exporters:
-                  - otlphttp/opensearch
+                  - opensearch
 
         # ============================================================
         # Ports Configuration
