@@ -169,9 +169,11 @@ data:
       policies=backstage-policy \
       ttl=1h
 
-    # Create role for platform services (generic)
+    # Create role for platform services
+    # NOTE: This role is scoped to the fawkes namespace only.
+    # For better security, consider creating specific roles for each service.
     vault write auth/kubernetes/role/platform-service \
-      bound_service_account_names=* \
+      bound_service_account_names=vault-secrets-reader,default \
       bound_service_account_namespaces=fawkes \
       policies=platform-policy \
       ttl=1h
@@ -196,7 +198,9 @@ data:
     vault secrets list | grep -q "secret/" || vault secrets enable -path=secret kv-v2
 
     # Enable audit logging
-    vault audit list | grep -q "file/" || vault audit enable file file_path=/vault/audit/vault-audit.log
+    # Audit log path can be customized via VAULT_AUDIT_LOG_PATH environment variable
+    AUDIT_LOG_PATH="${VAULT_AUDIT_LOG_PATH:-/vault/audit/vault-audit.log}"
+    vault audit list | grep -q "file/" || vault audit enable file file_path="${AUDIT_LOG_PATH}"
 
     echo "=== Vault Configuration Complete ==="
     echo "Kubernetes Auth Method is configured and ready."

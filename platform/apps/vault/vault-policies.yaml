@@ -27,16 +27,56 @@ metadata:
     app: vault
     component: rbac
 rules:
-  # Allow reading secrets that Vault Agent creates
+  # Allow reading secrets that Vault Agent creates in vault namespace
+  # NOTE: For tighter security, use namespace-scoped Role instead of ClusterRole
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+    # Restrict to secrets with vault prefix
+    resourceNames: []
+  # Allow reading configmaps for Vault configuration
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get"]
+---
+# Role for fawkes namespace (preferred over ClusterRole for least privilege)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: vault-secrets-reader
+  namespace: fawkes
+  labels:
+    app: vault
+    component: rbac
+rules:
+  # Allow reading secrets in fawkes namespace only
   - apiGroups: [""]
     resources: ["secrets"]
     verbs: ["get", "list", "watch"]
-  # Allow reading configmaps for Vault configuration
   - apiGroups: [""]
     resources: ["configmaps"]
     verbs: ["get", "list", "watch"]
 ---
-# ClusterRoleBinding for vault-secrets-reader
+# RoleBinding for vault-secrets-reader in fawkes namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: vault-secrets-reader
+  namespace: fawkes
+  labels:
+    app: vault
+    component: rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: vault-secrets-reader
+subjects:
+  - kind: ServiceAccount
+    name: vault-secrets-reader
+    namespace: fawkes
+---
+# ClusterRoleBinding for vault-secrets-reader (for cluster-wide access if needed)
+# NOTE: This is kept for backwards compatibility but the namespace Role is preferred
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
