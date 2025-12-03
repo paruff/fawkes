@@ -1,0 +1,2066 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>ADR-025: Developer Experience Metrics Collection & Dashboarding (EXPANDED) - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#adr-025-developer-experience-metrics-collection-dashboarding-expanded" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ADR-025: Developer Experience Metrics Collection &amp; Dashboarding (EXPANDED)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assessment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Paths
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Wins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Capabilities
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patterns
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Continuous Delivery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spinnaker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Infrastructure
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overall-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overall Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dashboard-1-executive-health-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dashboard 1: Executive Health Dashboard
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dashboard 1: Executive Health Dashboard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dashboard-2-platform-team-operations-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dashboard 2: Platform Team Operations Dashboard
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dashboard 2: Platform Team Operations Dashboard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layout-5-pages-tabbed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout (5 pages, tabbed)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Layout (5 pages, tabbed)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#page-1-real-time-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Page 1: Real-Time Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#page-2-space-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Page 2: SPACE Deep Dive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#page-3-experiments-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Page 3: Experiments Tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="adr-025-developer-experience-metrics-collection-dashboarding-expanded">ADR-025: Developer Experience Metrics Collection &amp; Dashboarding (EXPANDED)</h1>
+<h2 id="status">Status</h2>
+<p>Accepted</p>
+<h2 id="context">Context</h2>
+<p>ADR-014 established the SPACE framework for measuring developer experience across five dimensions:</p>
+<ul>
+<li><strong>S</strong>atisfaction</li>
+<li><strong>P</strong>erformance</li>
+<li><strong>A</strong>ctivity</li>
+<li><strong>C</strong>ommunication &amp; Collaboration</li>
+<li><strong>E</strong>fficiency &amp; Flow</li>
+</ul>
+<p>ADR-015 established qualitative feedback collection (interviews, surveys, feedback widget).</p>
+<p>Now we need the <strong>visualization layer</strong> that brings quantitative and qualitative data together into actionable insights. The 2025 DORA Report emphasizes that metrics alone don’t drive change—<em>how you visualize and act on metrics</em> determines success.</p>
+<p><strong>The Challenge</strong>:</p>
+<ul>
+<li>We’ll be collecting 100+ individual metrics</li>
+<li>Data comes from 15+ different sources</li>
+<li>Multiple audiences need different views (developers, platform team, executives)</li>
+<li>Metrics must drive action, not just observation</li>
+<li>Need to correlate metrics (e.g., does NPS correlate with lead time?)</li>
+<li>Must avoid metric gaming and vanity metrics</li>
+</ul>
+<p><strong>Industry Context</strong>:
+Most organizations fail at DevEx dashboards by:</p>
+<ol>
+<li><strong>Too many metrics</strong>: Dashboards with 50+ charts are overwhelming</li>
+<li><strong>Wrong audience</strong>: Executive dashboards shown to developers (or vice versa)</li>
+<li><strong>No action</strong>: Beautiful dashboards that nobody acts on</li>
+<li><strong>Lagging indicators only</strong>: By the time you see the problem, it’s too late</li>
+<li><strong>Missing context</strong>: Charts without explaining <em>why</em> it matters</li>
+</ol>
+<p>We need dashboards that are:</p>
+<ul>
+<li><strong>Actionable</strong>: Every metric should prompt a question or action</li>
+<li><strong>Contextual</strong>: Show why metrics matter and how to improve them</li>
+<li><strong>Predictive</strong>: Leading indicators that warn of future problems</li>
+<li><strong>Accessible</strong>: Right level of detail for each audience</li>
+<li><strong>Living</strong>: Updated in real-time, not weekly reports</li>
+</ul>
+<h2 id="decision">Decision</h2>
+<p>We will build a <strong>three-tier DevEx Dashboard system</strong> in Grafana that serves three distinct audiences with progressive levels of detail:</p>
+<ol>
+<li><strong>Executive Health Dashboard</strong> (10,000-foot view)</li>
+<li><strong>Platform Team Operations Dashboard</strong> (1,000-foot view)</li>
+<li><strong>Team-Level Deep Dive Dashboard</strong> (ground-level view)</li>
+</ol>
+<h3 id="overall-architecture">Overall Architecture</h3>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────┐
+│  DATA COLLECTION LAYER                                      │
+│                                                              │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
+│  │ Surveys      │  │ System       │  │ User         │     │
+│  │ (Qualtrics)  │  │ Metrics      │  │ Behavior     │     │
+│  │              │  │ (Prometheus) │  │ (Analytics)  │     │
+│  │ - NPS        │  │ - DORA       │  │ - Backstage  │     │
+│  │ - Pulse      │  │ - Build time │  │ - GitHub     │     │
+│  │ - Feedback   │  │ - Uptime     │  │ - Copilot    │     │
+│  └──────────────┘  └──────────────┘  └──────────────┘     │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│  DATA WAREHOUSE (PostgreSQL + Prometheus)                   │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │ Aggregated Metrics Tables                              │ │
+│  │ - devex_satisfaction (NPS, ratings, sentiment)         │ │
+│  │ - devex_performance (DORA, build, deploy metrics)      │ │
+│  │ - devex_activity (commits, PRs, reviews, AI usage)     │ │
+│  │ - devex_collaboration (review time, comments, etc.)    │ │
+│  │ - devex_efficiency (flow state, friction, toil)        │ │
+│  │ - devex_correlations (pre-computed relationships)      │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │ ETL Pipeline (Apache Airflow)                          │ │
+│  │ - Hourly: Sync GitHub, Backstage, Prometheus          │ │
+│  │ - Daily: Compute derived metrics and correlations     │ │
+│  │ - Weekly: Generate trend analysis and forecasts       │ │
+│  └────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│  VISUALIZATION LAYER (Grafana)                              │
+│                                                              │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌──────────────┐│
+│  │ Executive       │  │ Platform Team   │  │ Team         ││
+│  │ Health          │  │ Operations      │  │ Deep Dive    ││
+│  │ Dashboard       │  │ Dashboard       │  │ Dashboard    ││
+│  └─────────────────┘  └─────────────────┘  └──────────────┘│
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │ Alerting &amp; Notifications                               │ │
+│  │ - Slack: Real-time alerts for platform team           │ │
+│  │ - Email: Weekly digest for executives                 │ │
+│  │ - Mattermost: Monthly &quot;State of DevEx&quot; for all        │ │
+│  └────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="dashboard-1-executive-health-dashboard">Dashboard 1: Executive Health Dashboard</h2>
+<p><strong>Audience</strong>: CTO, VPs, Engineering Directors
+<strong>Update Frequency</strong>: Real-time (but typically viewed weekly)
+<strong>Purpose</strong>: High-level health check and business value demonstration</p>
+<h3 id="layout">Layout</h3>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────────────┐
+│  Fawkes Developer Experience Health - Q4 2024                        │
+│  Updated: 2 minutes ago                        [Export] [Share]      │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  ┌─────────────────────┐  ┌─────────────────────┐                   │
+│  │  Overall NPS        │  │  Platform ROI       │                   │
+│  │                     │  │                     │                   │
+│  │      62             │  │    $2.1M/year       │                   │
+│  │   ↑ +4 from Q3      │  │  (productivity +    │                   │
+│  │                     │  │   reduced incidents)│                   │
+│  │  Target: 65         │  │                     │                   │
+│  │  Industry: 58       │  │  Investment: $480k  │                   │
+│  └─────────────────────┘  └─────────────────────┘                   │
+│                                                                       │
+│  ┌───────────────────────────────────────────────────────────────┐  │
+│  │  SPACE Framework Health (vs. Target)                          │  │
+│  │                                                                │  │
+│  │  Satisfaction      ████████████░░░░  4.2/5  Target: 4.5       │  │
+│  │  Performance       ███████████████░  4.5/5  ✓ Exceeds Target  │  │
+│  │  Activity          ██████████████░░  4.3/5  Target: 4.5       │  │
+│  │  Communication     █████████████░░░  4.1/5  Target: 4.5       │  │
+│  │  Efficiency        ████████████░░░░  4.0/5  ⚠ Below Target    │  │
+│  │                                                                │  │
+│  │  Overall Score: 4.2/5 (up from 3.8 last quarter)              │  │
+│  └───────────────────────────────────────────────────────────────┘  │
+│                                                                       │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │  DORA Metrics - Last 30 Days                                 │    │
+│  │                                                               │    │
+│  │  Deployment Frequency:  2.3/day  ↑ +15%  Elite Performer    │    │
+│  │  Lead Time:            18 hours  ↓ -22%  Elite Performer    │    │
+│  │  Change Failure Rate:       12%  ↓ -3%   Elite Performer    │    │
+│  │  MTTR:                 47 mins   ↓ -18%  Elite Performer    │    │
+│  │                                                               │    │
+│  │  ✅ Fawkes team is now in &quot;Elite Performer&quot; category!        │    │
+│  └─────────────────────────────────────────────────────────────┘    │
+│                                                                       │
+│  ┌───────────────────────────────────────┐  ┌──────────────────────┐│
+│  │  🚨 Attention Required                │  │  🎉 Wins This Month  ││
+│  │                                        │  │                      ││
+│  │  ⚠️  Efficiency score dropped from    │  │  ✅ NPS increased +4 ││
+│  │     4.3 → 4.0 (friction increasing)   │  │  ✅ Lead time -22%   ││
+│  │     Action: Review friction reports   │  │  ✅ AI adoption 85%  ││
+│  │                                        │  │  ✅ 3 teams achieved ││
+│  │  ⚠️  Build times up 20% past 2 weeks  │  │     elite status     ││
+│  │     Action: Jenkins capacity review   │  │                      ││
+│  └───────────────────────────────────────┘  └──────────────────────┘│
+│                                                                       │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │  Quarterly Trend (NPS &amp; DORA Deployment Frequency)          │    │
+│  │                                                               │    │
+│  │  70│     NPS                                                 │    │
+│  │  65│      ╱────────────                                      │    │
+│  │  60│  ───╱                                                   │    │
+│  │  55│ ╱                                                       │    │
+│  │  50│╱                                                        │    │
+│  │    └─────────────────────────────────────                   │    │
+│  │     Q1    Q2    Q3    Q4                                     │    │
+│  │                                                               │    │
+│  │   3│     Deploy/Day                                          │    │
+│  │   2│              ╱────────                                  │    │
+│  │   1│      ───────╱                                           │    │
+│  │    └─────────────────────────────────                        │    │
+│  │     Q1    Q2    Q3    Q4                                     │    │
+│  └─────────────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="key-features">Key Features</h3>
+<p><strong>1. Single Number Health Indicators</strong></p>
+<ul>
+<li>NPS (leading indicator of platform health)</li>
+<li>Platform ROI (business value in dollars)</li>
+<li>Overall SPACE score (composite health metric)</li>
+</ul>
+<p><strong>2. Traffic Light System</strong></p>
+<ul>
+<li>🟢 Green: Exceeds target</li>
+<li>🟡 Yellow: Meets target</li>
+<li>🔴 Red: Below target</li>
+<li>All thresholds configurable</li>
+</ul>
+<p><strong>3. Automatic Insights</strong></p>
+<ul>
+<li>“Attention Required” panel auto-generated from anomaly detection</li>
+<li>“Wins This Month” celebrates progress</li>
+<li>No need to manually interpret charts</li>
+</ul>
+<p><strong>4. Trend Visibility</strong></p>
+<ul>
+<li>Quarterly trends show trajectory</li>
+<li>Compare current quarter to previous</li>
+<li>Project forward based on current trend</li>
+</ul>
+<p><strong>5. Benchmarking</strong></p>
+<ul>
+<li>Compare to industry standards (DORA research)</li>
+<li>Show peer company comparisons (if available)</li>
+<li>Highlight “elite performer” achievements</li>
+</ul>
+<hr />
+<h2 id="dashboard-2-platform-team-operations-dashboard">Dashboard 2: Platform Team Operations Dashboard</h2>
+<p><strong>Audience</strong>: Platform engineers, SREs, DevOps team
+<strong>Update Frequency</strong>: Real-time
+<strong>Purpose</strong>: Day-to-day operations, troubleshooting, experimentation tracking</p>
+<h3 id="layout-5-pages-tabbed">Layout (5 pages, tabbed)</h3>
+<h4 id="page-1-real-time-health">Page 1: Real-Time Health</h4>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────────────┐
+│  Platform Operations - Real-Time Health                              │
+│  [Health] [SPACE Deep Dive] [Experiments] [Feedback] [Correlations]  │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  🚨 ACTIVE ALERTS (2)                                                 │
+│  ┌─────────────────────────────────────────────────────────────────┐ │
+│  │ 🔴 CRITICAL: Jenkins build queue depth = 28 (threshold: 20)     │ │
+│  │    Triggered: 15 minutes ago                                    │ │
+│  │    Action: Scale up Jenkins agents OR investigate stuck builds  │ │
+│  │    [View Details] [Acknowledge] [Create Incident]               │ │
+│  │                                                                  │ │
+│  │ 🟡 WARNING: ArgoCD sync failures 12% (threshold: 10%)           │ │
+│  │    Triggered: 2 hours ago                                       │ │
+│  │    Affected: payment-service, auth-service (3 more)             │ │
+│  │    [View Details] [Acknowledge]                                 │ │
+│  └─────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+│  PLATFORM SERVICES STATUS                                             │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐              │
+│  │ Backstage    │  │ Jenkins      │  │ ArgoCD       │              │
+│  │ ✅ Healthy   │  │ ⚠️  Degraded │  │ ⚠️  Degraded │              │
+│  │ 99.8% uptime │  │ Queue: 28    │  │ Sync: 88%    │              │
+│  │ Latency: 210ms│ │ Agents: 8/15 │  │ Apps: 47/53  │              │
+│  └──────────────┘  └──────────────┘  └──────────────┘              │
+│                                                                       │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐              │
+│  │ Harbor       │  │ Mattermost   │  │ Prometheus   │              │
+│  │ ✅ Healthy   │  │ ✅ Healthy   │  │ ✅ Healthy   │              │
+│  └──────────────┘  └──────────────┘  └──────────────┘              │
+│                                                                       │
+│  CURRENT CAPACITY                                                     │
+│  ┌─────────────────────────────────────────────────────────────────┐ │
+│  │ Kubernetes Cluster                                              │ │
+│  │ CPU:    [████████████░░░░░░] 65%  (target: &lt;80%)               │ │
+│  │ Memory: [███████████████░░░] 78%  (⚠️ approaching limit)        │ │
+│  │ Pods:   247/300                                                 │ │
+│  │                                                                 │ │
+│  │ Jenkins Agents                                                  │ │
+│  │ Active: [████████████████░░░] 8/15  (⚠️ queue building)        │ │
+│  │ Queue:  28 jobs (avg wait: 12 minutes)                         │ │
+│  └─────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+│  RECENT ACTIVITY (Last Hour)                                          │
+│  ┌─────────────────────────────────────────────────────────────────┐ │
+│  │ 🚀 Deployments: 12 (11 success, 1 failed)                       │ │
+│  │ 🔨 Builds: 47 (43 success, 3 failed, 1 timeout)                 │ │
+│  │ 👤 Active Users: 68 developers using platform                   │ │
+│  │ 💬 Feedback: 3 new submissions (2 friction, 1 praise)           │ │
+│  │ 🤖 AI Usage: Copilot active for 52 developers                   │ │
+│  └─────────────────────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h4 id="page-2-space-deep-dive">Page 2: SPACE Deep Dive</h4>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────────────┐
+│  SPACE Framework Deep Dive - Last 30 Days                            │
+│  [Health] [SPACE Deep Dive] [Experiments] [Feedback] [Correlations]  │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  📊 SATISFACTION                                                      │
+│  ┌─────────────────────────────────────────────────────────────────┐ │
+│  │ NPS Score: 62 (↑ +4 from last month)                            │ │
+│  │                                                                  │ │
+│  │  70│                              Target: 65                    │ │
+│  │  60│     ●─────●────────●────────────────●                      │ │
+│  │  50│  ●─╯                                                       │ │
+│  │  40│                                                            │ │
+│  │     └────────────────────────────────────                       │ │
+│  │      Oct   Nov   Dec   Jan   Feb                                │ │
+│  │                                                                  │ │
+│  │  Breakdown:                                                     │ │
+│  │  Promoters (9-10): 45%  ███████████                            │ │
+│  │  Passives (7-8):   38%  ████████                               │ │
+│  │  Detractors (0-6): 17%  ████                                   │ │
+│  │                                                                  │ │
+│  │  Top Drivers of Satisfaction:                                  │ │
+│  │  ✅ Fast deployments (mentioned by 23 developers)               │ │
+│  │  ✅ Good documentation (18 mentions)                            │ │
+│  │  ✅ AI tools helpful (15 mentions)                              │ │
+│  │                                                                  │ │
+│  │  Top Drivers of Dissatisfaction:                               │ │
+│  │  ❌ Jenkins slow (18 mentions)                                  │ │
+│  │  ❌ Backstage search poor (12 mentions)                         │ │
+│  │  ❌ Too many tools (9 mentions)                                 │ │
+│  │                                                                  │ │
+│  │  [View Detailed Feedback] [View NPS Comments]                  │ │
+│  └─────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+│  📊 PERFORMANCE (DORA Metrics)                                        │
+│  ┌─────────────────────────────────────────────────────────────────┐ │
+│  │  Deployment Frequency                Lead Time for Changes      │ │
+│  │   3.0│              Target: 2.0/day    30│                     │ │
+│  │   2.5│        ●────────●               25│                     │ │
+│  │   2.0│    ●──╯                         20│         ●           │ │
+│  │   1.5│  ●╯                              15│    ●────╯          │ │
+│  │   1.0│                                  10│ ●──╯               │ │
+│  │      └────────────────                   └────────────          │ │
+│  │       Week 1-4                             Week 1-4             │ │
+│  │                                                                  │ │
+│  │  Change Failure Rate         MTTR (Mean Time to Recovery)      │ │
+│  │   20%│                           120│                          │ │
+│  │   15%│  Target: &lt;15%               90│                          │ │
+│  │   10%│        ●─────●               60│    ●─────●             │ │
+│  │    5%│    ●──╯                      30│  ●─╯                   │ │
+│  │    0%│                                0│                         │ │
+│  │      └────────────────                 └────────────            │ │
+│  │       Week 1-4                          Week 1-4                │ │
+│  │                                                                  │ │
+│  │  Performance Category: 🏆 ELITE PERFORMER                       │ │
+│  │  (All 4 metrics in elite range)                                │ │
+│  └─────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+│  📊 ACTIVITY                                                          │
+│  ┌─────────────────────────────────────────────────────────────────┐ │
+│  │  Developer Activity Metrics                                     │ │
+│  │                                                                  │ │
+│  │  Average per Developer (last 7 days):                          │ │
+│  │  • Commits: 12.3 (target: 10+)           ✅                     │ │
+│  │  • PRs created: 3.1 (target: 2+)         ✅                     │ │
+│  │  • PRs reviewed: 4.7 (target: 3+)        ✅                     │ │
+│  │  • Documentation edits: 0.8              ⚠️  (target: 1+)      │ │
+│  │  • Dojo progress: 2.1 modules/month      ✅                     │ │
+│  │                                                                  │ │
+│  │  Platform Adoption:                                             │ │
+│  │  • Backstage MAU: 94/100 developers (94%) ✅                    │ │
+│  │  • AI tools: 85/100 developers (85%)      ✅                    │ │
+│  │  • Dojo: 62/100 enrolled (62%)            ⚠️  (target: 70%)    │ │
+│  │                                                                  │ │
+│  │  [View Team Breakdown] [View Individual Trends]                │ │
+│  └─────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+│  📊 COMMUNICATION &amp; COLLABORATION                                     │
+│  ┌─────────────────────────────────────────────────────────────────┐ │
+│  │  Code Review Metrics                                            │ │
+│  │  • Time to first review: 8 hrs (target: &lt;12)  ✅               │ │
+│  │  • Comments per PR: 3.2 (target: &gt;2)           ✅               │ │
+│  │  • Approval rate: 92%                          ✅               │ │
+│  │  • Constructive tone: 96%                      ✅               │ │
+│  │                                                                  │ │
+│  │  Knowledge Sharing:                                             │ │
+│  │  • Wiki edits: 47 this month                   ✅               │ │
+│  │  • TechDocs updates: 23                        ✅               │ │
+│  │  • #help channel responses: 156                ✅               │ │
+│  │  • Pair programming sessions: 12               ⚠️  (Low)        │ │
+│  │                                                                  │ │
+│  │  Cross-Team Collaboration:                                      │ │
+│  │  • Cross-team PRs: 18% of all PRs              ✅               │ │
+│  │  • Shared library usage: 67%                   ✅               │ │
+│  └─────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+│  📊 EFFICIENCY &amp; FLOW                                                 │
+│  ┌─────────────────────────────────────────────────────────────────┐ │
+│  │  Flow State (self-reported weekly pulse):                      │ │
+│  │  • Achieved flow 3+ days/week: 68%            ✅  (target: 60%) │ │
+│  │  • Never achieved flow: 8%                     ✅  (target: &lt;10%)│ │
+│  │                                                                  │ │
+│  │  Valuable Work Time:                                            │ │
+│  │  • Average % on valuable work: 62%            ✅  (target: 60%) │ │
+│  │  • Trend: ↑ +5% from last month                                │ │
+│  │                                                                  │ │
+│  │  Friction Incidents (last 30 days):                            │ │
+│  │  • Total: 34 (down from 47)                   ✅  Improving!    │ │
+│  │  • By category:                                                 │ │
+│  │    - Jenkins slow: 12 reports                                   │ │
+│  │    - Docs unclear: 8 reports                                    │ │
+│  │    - Access issues: 7 reports                                   │ │
+│  │    - Other: 7 reports                                           │ │
+│  │                                                                  │ │
+│  │  Cognitive Load (1-5 scale, 5=overwhelmed):                    │ │
+│  │  • Average: 3.2                                ✅  (target: &lt;3.5)│ │
+│  │  • High load (4-5): 23% of developers          ⚠️  Monitor      │ │
+│  │                                                                  │ │
+│  │  [View Friction Details] [View High Load Individuals]          │ │
+│  └─────────────────────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h4 id="page-3-experiments-tracking">Page 3: Experiments Tracking</h4>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────────────┐
+│  Platform Experiments &amp; A/B Tests                                    │
+│  [Health] [SPACE Deep Dive] [Experiments] [Feedback] [Correlations]  │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  ACTIVE EXPERIMENTS (3)                                               │
+│                                                                       │
+│  ┌─────────────────────────────────────────────────────────────────┐ │
+│  │ Experiment #12: AI-Powered PR Review Bot                        │ │
+│  │ Started: Dec 1, 2024  |  Status: ✅ In Progress  |  Cohort: 15% │ │
+│  │                                                                  │ │
+│  │ Hypothesis:                                                     │ │
+│  │ AI-assisted code review will reduce time-to-first-review by    │ │
+│  │ 30% and increase code quality scores by 10%.                   │ │
+│  │                                                                  │ │
+│  │ Current Results (after 2 weeks):                                │ │
+│  │                                                                  │ │
+│  │          Control   Treatment   Difference   Sig?                │ │
+│  │ TTFR     12 hrs    8 hrs      -33%         ✅ Yes (p&lt;0.01)      │ │
+│  │ Quality  7.2/10    7.8/10     +8%          ⚠️  Trending         │ │
+│  │ Sat.     4.1/5     4.4/5      +7%          ✅ Yes (p&lt;0.05)      │ │
+│  │                                                                  │ │
+│  │ Qualitative Feedback (5 interviews):                           │ │
+│  │ ✅ &quot;Catches issues I would miss&quot; (4 mentions)                   │ │
+│  │ ✅ &quot;Faster reviews, less waiting&quot; (3 mentions)                  │ │
+│  │ ⚠️  &quot;Sometimes suggests wrong fixes&quot; (2 mentions)               │ │
+│  │                                                                  │ │
+│  │ Recommendation: ✅ ROLLOUT TO ALL                                │ │
+│  │ • TTFR significantly improved                                   │ │
+│  │ • Satisfaction significantly improved                           │ │
+│  │ • Code quality trending positive (2 more weeks to confirm)     │ │
+│  │                                                                  │ │
+│  │ [View Detailed Analysis] [Rollout Plan] [Cancel Experiment]    │ │
+│  └─────────────────────────────────────────────────────────────────┘ │
+│                                                                       │
+│  ┌─────────────────────────────────────────────────────────────────┐ │
+│  │ Experiment #13: Self-Service Secrets Rotation                  │ │
+│  │ Started: Dec 10, 2024  |  Status: ⚠️  Monitoring  |  Cohort: 20%│ │
+│  │                                                                  │ │
+│  │ Hypothesis:                                                     │ │
+│  │ Self-service secrets rotation will reduce security tickets by  │ │
+│  │
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
