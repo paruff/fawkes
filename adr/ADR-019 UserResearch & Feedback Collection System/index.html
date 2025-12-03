@@ -1,0 +1,2463 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>ADR-019: User Research & Feedback Collection System - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#adr-019-user-research-feedback-collection-system" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ADR-019: User Research &amp; Feedback Collection System
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assessment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Paths
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Wins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Capabilities
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patterns
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Continuous Delivery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spinnaker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Infrastructure
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-1-continuous-feedback-channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component 1: Continuous Feedback Channels
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Component 1: Continuous Feedback Channels">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-in-platform-feedback-widget-backstage-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 In-Platform Feedback Widget (Backstage Plugin)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-mattermost-platform-feedback-channel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Mattermost #platform-feedback Channel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-bi-weekly-office-hours" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Bi-Weekly Office Hours
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-github-issues-feature-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 GitHub Issues (Feature Requests)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-2-structured-user-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component 2: Structured User Research
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Component 2: Structured User Research">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-monthly-user-interviews-5-per-month" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Monthly User Interviews (5 per month)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-user-journey-mapping-workshops-quarterly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 User Journey Mapping Workshops (Quarterly)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-usability-testing-as-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Usability Testing (As Needed)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-3-feedback-processing-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component 3: Feedback Processing Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Component 3: Feedback Processing Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-feedback-database-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Feedback Database Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-automated-analysis-ai-powered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Automated Analysis (AI-Powered)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-monthly-devex-review-meeting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Monthly DevEx Review Meeting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-you-said-we-did-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 “You Said, We Did” Communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-minimal-viable-feedback-system-weeks-1-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Minimal Viable Feedback System (Weeks 1-2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-automation-scale-weeks-3-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Automation &amp; Scale (Weeks 3-6)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-continuous-improvement-month-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Continuous Improvement (Month 2+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consequences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Positive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#negative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Negative
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#neutral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Neutral
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#last-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Last Updated
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="adr-019-user-research-feedback-collection-system">ADR-019: User Research &amp; Feedback Collection System</h1>
+<h2 id="status">Status</h2>
+<p>Accepted</p>
+<h2 id="context">Context</h2>
+<p>ADR-018 established the SPACE framework for <em>quantitative</em> measurement of developer experience. However, numbers alone cannot tell the complete story. Metrics show <em>what</em> is happening but rarely explain <em>why</em>. To build a truly user-centric platform, we need deep qualitative insights to complement our quantitative metrics.</p>
+<p><strong>The 2025 DORA Report Finding</strong>:</p>
+<blockquote>
+<p>“User-centric focus is THE differentiator. Without it, AI adoption can have a negative impact on team performance.”</p>
+</blockquote>
+<p><strong>What “User-Centric” Actually Means</strong>:</p>
+<ul>
+<li>Regular direct contact with developers (our users)</li>
+<li>Understanding their goals, pain points, and workflows</li>
+<li>Validating assumptions before building features</li>
+<li>Closing the feedback loop: “You said X, we did Y”</li>
+<li>Treating the platform as a product, developers as customers</li>
+</ul>
+<p><strong>Current State - Critical Gaps</strong>:</p>
+<ul>
+<li>❌ No systematic user interviews</li>
+<li>❌ No user journey mapping</li>
+<li>❌ No usability testing of platform features</li>
+<li>❌ No process for collecting/triaging feedback</li>
+<li>❌ Platform decisions made by platform team in isolation</li>
+<li>❌ Developers have no clear way to influence roadmap</li>
+</ul>
+<p><strong>Why This Matters for Fawkes</strong>:</p>
+<ol>
+<li><strong>AI Amplification</strong>: User-centric focus amplifies AI benefits (DORA finding)</li>
+<li><strong>Avoid “Build It and They Won’t Come”</strong>: Features nobody asked for = wasted effort</li>
+<li><strong>Early Problem Detection</strong>: Catch issues before they become widespread</li>
+<li><strong>Build Trust</strong>: Developers feel heard when their feedback shapes the platform</li>
+<li><strong>Competitive Advantage</strong>: Great DevEx attracts and retains top talent</li>
+</ol>
+<h2 id="decision">Decision</h2>
+<p>We will implement a comprehensive <strong>User Research &amp; Feedback Collection System</strong> with three interconnected components:</p>
+<ol>
+<li><strong>Continuous Feedback Channels</strong> (always-on, low-friction)</li>
+<li><strong>Structured User Research</strong> (proactive, scheduled)</li>
+<li><strong>Feedback Processing Pipeline</strong> (turning insights into action)</li>
+</ol>
+<h3 id="architecture">Architecture</h3>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────┐
+│  FEEDBACK COLLECTION LAYER                                   │
+│                                                               │
+│  ┌────────────────┐  ┌────────────────┐  ┌────────────────┐ │
+│  │ In-Platform    │  │ Mattermost     │  │ Office Hours   │ │
+│  │ Feedback       │  │ #platform      │  │ (Bi-weekly)    │ │
+│  │ Widget         │  │ -feedback      │  │                │ │
+│  └────────────────┘  └────────────────┘  └────────────────┘ │
+│                                                               │
+│  ┌────────────────┐  ┌────────────────┐  ┌────────────────┐ │
+│  │ User           │  │ Usability      │  │ Feature        │ │
+│  │ Interviews     │  │ Testing        │  │ Requests       │ │
+│  │ (Monthly)      │  │ Sessions       │  │ (GitHub)       │ │
+│  └────────────────┘  └────────────────┘  └────────────────┘ │
+└──────────────────────────────────────────────────────────────┘
+                            ↓
+┌──────────────────────────────────────────────────────────────┐
+│  AGGREGATION &amp; ANALYSIS LAYER                                │
+│                                                               │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ Feedback Database (PostgreSQL)                         │  │
+│  │ - All feedback tagged and categorized                  │  │
+│  │ - Sentiment analysis (AI-powered)                      │  │
+│  │ - Deduplication and clustering                         │  │
+│  │ - Priority scoring algorithm                           │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                            ↓                                  │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ Analysis &amp; Insights                                    │  │
+│  │ - Theme identification (qualitative coding)            │  │
+│  │ - Trend analysis (increasing/decreasing issues)        │  │
+│  │ - Impact assessment (how many users affected?)         │  │
+│  │ - User journey pain point mapping                      │  │
+│  └────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+                            ↓
+┌──────────────────────────────────────────────────────────────┐
+│  ACTION &amp; COMMUNICATION LAYER                                │
+│                                                               │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ Monthly DevEx Review Meeting                           │  │
+│  │ - Review top feedback themes                           │  │
+│  │ - Prioritize improvements (impact vs. effort)          │  │
+│  │ - Assign owners and set deadlines                      │  │
+│  │ - Track experiments and measure impact                 │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                            ↓                                  │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ &quot;You Said, We Did&quot; Communication                       │  │
+│  │ - Monthly update post (Mattermost + email)             │  │
+│  │ - Quarterly DevEx town hall                            │  │
+│  │ - Close the loop on every piece of feedback            │  │
+│  └────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h2 id="component-1-continuous-feedback-channels">Component 1: Continuous Feedback Channels</h2>
+<h3 id="11-in-platform-feedback-widget-backstage-plugin">1.1 In-Platform Feedback Widget (Backstage Plugin)</h3>
+<p><strong>What</strong>: A persistent feedback button in Backstage that allows developers to submit feedback in &lt;30 seconds without leaving their workflow.</p>
+<p><strong>Implementation</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Backstage Plugin: @fawkes/plugin-feedback</span>
+<span class="c1">// Appears in every Backstage page header</span>
+
+<span class="kd">interface</span><span class="w"> </span><span class="nx">FeedbackSubmission</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;bug&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;friction&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;feature-request&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;praise&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">category</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ci-cd&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;gitops&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;docs&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;dojo&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;other&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">page</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">timestamp</span><span class="o">:</span><span class="w"> </span><span class="kt">Date</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">userRole</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">anonymized</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">;</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="w">  </span><span class="nx">sentiment</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;positive&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;neutral&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;negative&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>One-click access from any Backstage page</li>
+<li>Pre-categorized feedback types (reduces friction)</li>
+<li>Optional anonymous submission</li>
+<li>Automatically captures context (page, time, user role)</li>
+<li>AI-powered sentiment analysis</li>
+<li>“Thank you” confirmation with ticket number</li>
+</ul>
+<p><strong>Example Flow</strong>:</p>
+<div class="highlight"><pre><span></span><code>[User clicks &quot;Give Feedback&quot; button in Backstage header]
+
+┌─────────────────────────────────────────┐
+│  Quick Feedback (30 seconds)            │
+│                                          │
+│  What type of feedback?                 │
+│  ( ) Bug - Something&#39;s broken           │
+│  (•) Friction - Something&#39;s annoying    │
+│  ( ) Feature Request - I need...        │
+│  ( ) Praise - Something&#39;s great!        │
+│                                          │
+│  Which area?                             │
+│  [Dropdown: CI/CD, GitOps, Docs, etc.]  │
+│                                          │
+│  Tell us more: (required)                │
+│  [Text area - 50-500 characters]         │
+│                                          │
+│  [✓] Make this feedback anonymous        │
+│                                          │
+│  [Cancel]  [Submit Feedback]             │
+└─────────────────────────────────────────┘
+
+[After submission]
+✅ Thanks! Your feedback has been recorded as FEEDBACK-1234.
+   The platform team reviews all feedback monthly.
+</code></pre></div>
+<p><strong>Target</strong>: 50+ feedback submissions per month (for 100 developers = 50% monthly participation)</p>
+<h3 id="12-mattermost-platform-feedback-channel">1.2 Mattermost #platform-feedback Channel</h3>
+<p><strong>What</strong>: A dedicated, monitored channel where developers can share feedback, ask questions, and discuss platform topics.</p>
+<p><strong>Purpose</strong>:</p>
+<ul>
+<li>Lower-friction than formal feedback form</li>
+<li>Enables peer-to-peer discussion</li>
+<li>Platform team can ask clarifying questions</li>
+<li>Public transparency (everyone sees responses)</li>
+</ul>
+<p><strong>Guidelines</strong>:</p>
+<ul>
+<li>Platform team commits to &lt;24 hour response time</li>
+<li>All feedback is acknowledged, even if not immediately actionable</li>
+<li>Emoji reactions for quick validation (“👍 we hear you”)</li>
+<li>Monthly summary post of feedback received and actions taken</li>
+</ul>
+<p><strong>Example Interaction</strong>:</p>
+<div class="highlight"><pre><span></span><code>@developer_alice [10:23 AM]
+The Jenkins build for my service is taking 45 minutes now. 
+It used to be 15 minutes last month. Anyone else seeing this?
+🐌
+
+@platform_engineer [10:41 AM]
+Thanks for flagging @developer_alice! We&#39;ll investigate. 
+Can you share which service? (DM if sensitive)
+
+@developer_bob [11:02 AM]
+Same issue here. My builds went from 12 mins → 35 mins
+Seems like it started after the Jenkins upgrade last week?
+
+@platform_engineer [11:15 AM]
+Good catch on the timing. We upgraded Jenkins on Oct 28th.
+I&#39;ll check if we inadvertently changed build parallelism settings.
+Created ticket: FAWKES-567. Will update here by EOD.
+
+@platform_engineer [4:30 PM]
+Update: Found the issue. Jenkins upgrade reset parallel build 
+settings. Fix deployed. Builds should be back to normal speed now.
+@developer_alice @developer_bob can you confirm?
+
+@developer_alice [4:45 PM]
+Confirmed! Back to 16 minutes. Thanks! 🎉
+</code></pre></div>
+<h3 id="13-bi-weekly-office-hours">1.3 Bi-Weekly Office Hours</h3>
+<p><strong>What</strong>: Scheduled 1-hour sessions where developers can drop in to discuss platform topics, demo features, or raise concerns.</p>
+<p><strong>Format</strong>:</p>
+<ul>
+<li>Every other Wednesday, 2:00-3:00 PM (recorded for async viewing)</li>
+<li>Open agenda (anyone can add topics to shared doc)</li>
+<li>Mix of platform team updates + developer Q&amp;A</li>
+<li>Virtual (Zoom/Google Meet) with Mattermost live chat</li>
+</ul>
+<p><strong>Typical Agenda</strong>:</p>
+<div class="highlight"><pre><span></span><code>Fawkes Platform Office Hours - Nov 15, 2024
+
+📋 Agenda (add your topics below):
+1. [Platform Team] Demo: New AI code review bot (10 min)
+2. [Platform Team] Update: DORA metrics dashboard launch (5 min)
+3. [@developer_charlie] Question: How do I set up multi-region deployments? (10 min)
+4. [@developer_diana] Feedback: Backstage search is slow (10 min)
+5. Open discussion + Q&amp;A (25 min)
+
+📊 Since Last Office Hours:
+- 47 feedback submissions received
+- Top issue: Jenkins build times → Fixed
+- NPS score: 62 (↑ from 58 last quarter)
+
+🎯 Coming Next Sprint:
+- AI-powered PR review suggestions
+- Dojo Module 6: Advanced GitOps
+- Backstage performance improvements
+</code></pre></div>
+<p><strong>Target</strong>: 10-15 attendees per session, 40+ watching recording</p>
+<h3 id="14-github-issues-feature-requests">1.4 GitHub Issues (Feature Requests)</h3>
+<p><strong>What</strong>: A public repository (<code>fawkes/platform-feedback</code>) where developers can submit feature requests, vote on proposals, and discuss implementations.</p>
+<p><strong>Process</strong>:</p>
+<ol>
+<li>Developer opens issue with feature request template</li>
+<li>Platform team labels and categorizes (P0/P1/P2)</li>
+<li>Community can upvote (👍 reactions)</li>
+<li>Monthly review: Top 3 upvoted features → roadmap consideration</li>
+<li>Status updates posted as comments</li>
+<li>Closed with link to implementation or explanation if rejected</li>
+</ol>
+<p><strong>Feature Request Template</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gu">## Feature Request</span>
+
+<span class="gs">**Problem Statement**</span>:
+What problem are you trying to solve? (Be specific)
+
+<span class="gs">**Proposed Solution**</span>:
+How would you like this to work?
+
+<span class="gs">**Alternatives Considered**</span>:
+What workarounds are you currently using?
+
+<span class="gs">**Impact**</span>:
+How many people would benefit? How often would this be used?
+
+<span class="gs">**Additional Context**</span>:
+Screenshots, examples, related issues?
+</code></pre></div>
+<p><strong>Success Metric</strong>: 10+ feature requests per month, 80% receive response within 1 week</p>
+<h2 id="component-2-structured-user-research">Component 2: Structured User Research</h2>
+<h3 id="21-monthly-user-interviews-5-per-month">2.1 Monthly User Interviews (5 per month)</h3>
+<p><strong>What</strong>: One-on-one, semi-structured interviews with developers to deeply understand their workflows, pain points, and needs.</p>
+<p><strong>Recruitment</strong>:</p>
+<ul>
+<li>Stratified sampling: Mix of roles, teams, experience levels</li>
+<li>Rotate through teams (don’t interview same people repeatedly)</li>
+<li>$50 gift card incentive for 1-hour participation</li>
+<li>Opt-in via Mattermost announcement</li>
+</ul>
+<p><strong>Interview Guide Template</strong>:</p>
+<div class="highlight"><pre><span></span><code>Fawkes User Interview Guide (60 minutes)
+
+Introduction (5 min):
+<span class="k">-</span><span class="w"> </span>Thank participant, explain purpose
+<span class="k">-</span><span class="w"> </span>Emphasize: No right/wrong answers, all feedback valuable
+<span class="k">-</span><span class="w"> </span>Confirm recording consent
+
+Warm-Up (5 min):
+<span class="k">-</span><span class="w"> </span>What&#39;s your role and team?
+<span class="k">-</span><span class="w"> </span>How long have you been using Fawkes?
+<span class="k">-</span><span class="w"> </span>On a scale of 1-5, how would you rate your overall experience?
+
+Current Workflow (15 min):
+<span class="k">-</span><span class="w"> </span>Walk me through your typical day using Fawkes
+<span class="k">-</span><span class="w"> </span>What&#39;s the first thing you do in the morning?
+<span class="k">-</span><span class="w"> </span>How do you deploy code from idea to production?
+<span class="k">-</span><span class="w"> </span>[Screen share: Show me how you do X]
+
+Pain Points (15 min):
+<span class="k">-</span><span class="w"> </span>What&#39;s the most frustrating part of using Fawkes?
+<span class="k">-</span><span class="w"> </span>When was the last time Fawkes slowed you down?
+<span class="k">-</span><span class="w"> </span>If you could fix one thing tomorrow, what would it be?
+<span class="k">-</span><span class="w"> </span>What workarounds have you developed?
+
+AI Tools (10 min):
+<span class="k">-</span><span class="w"> </span>Are you using AI coding assistants (Copilot, etc.)?
+<span class="k">-</span><span class="w"> </span>How has AI changed your workflow?
+<span class="k">-</span><span class="w"> </span>What would make AI tools more useful in Fawkes?
+
+Aspirations (5 min):
+<span class="k">-</span><span class="w"> </span>What does an ideal platform look like to you?
+<span class="k">-</span><span class="w"> </span>What would make you recommend Fawkes to others?
+
+Wrap-Up (5 min):
+<span class="k">-</span><span class="w"> </span>Anything we haven&#39;t covered?
+<span class="k">-</span><span class="w"> </span>Can we follow up if we have clarifying questions?
+<span class="k">-</span><span class="w"> </span>Thank you + next steps
+</code></pre></div>
+<p><strong>Analysis Process</strong>:</p>
+<ol>
+<li>Transcribe interviews (automated via Otter.ai)</li>
+<li>Qualitative coding: Tag themes (e.g., “Jenkins slow”, “docs unclear”, “AI helpful”)</li>
+<li>Affinity mapping: Cluster similar feedback</li>
+<li>Synthesis: Write 1-page summary per interview</li>
+<li>Monthly report: Top 5 themes across all interviews</li>
+</ol>
+<p><strong>Target</strong>: 5 interviews per month = 60/year = ~60% of developers interviewed annually (for 100-person org)</p>
+<h3 id="22-user-journey-mapping-workshops-quarterly">2.2 User Journey Mapping Workshops (Quarterly)</h3>
+<p><strong>What</strong>: Collaborative workshops where developers and platform team map the end-to-end journey of using Fawkes, identifying pain points and opportunities.</p>
+<p><strong>Process</strong>:</p>
+<ol>
+<li>Select 1-2 key journeys (e.g., “Onboarding a new service”, “Deploying a hotfix”)</li>
+<li>Invite 6-8 developers who’ve recently completed that journey</li>
+<li>2-hour workshop: Map stages, emotions, pain points, moments of delight</li>
+<li>Platform team commits to addressing top 3 pain points</li>
+</ol>
+<p><strong>Example Journey Map Output</strong>:</p>
+<div class="highlight"><pre><span></span><code>Journey: Deploying Your First Service to Production
+
+Stage 1: Setup
+😊 Easy: Backstage template worked great
+😐 Okay: Jenkins config was confusing but documentation helped
+😢 Frustrating: Spent 2 hours debugging IAM permissions
+
+Stage 2: First Deploy
+😊 Easy: ArgoCD UI is intuitive
+😢 Frustrating: No idea if deployment was successful (logs buried)
+😡 Blocker: Deployment failed due to missing secret, took 4 hours to debug
+
+Stage 3: Monitoring
+😐 Okay: Grafana dashboard is powerful but overwhelming
+😢 Frustrating: Can&#39;t tell if my service is healthy without asking SRE team
+
+Top Pain Points:
+1. IAM permissions are black magic (fix: better templates + error messages)
+2. Deployment status is unclear (fix: real-time status in Backstage)
+3. Monitoring setup is manual and confusing (fix: auto-generated dashboards)
+</code></pre></div>
+<h3 id="23-usability-testing-as-needed">2.3 Usability Testing (As Needed)</h3>
+<p><strong>What</strong>: Observing developers trying to complete specific tasks with new or existing platform features.</p>
+<p><strong>When to Use</strong>:</p>
+<ul>
+<li>Before launching major new features (beta testing)</li>
+<li>After receiving complaints about existing features</li>
+<li>To validate design decisions</li>
+</ul>
+<p><strong>Process</strong>:</p>
+<ol>
+<li>Define 3-5 realistic tasks (e.g., “Deploy a new microservice”)</li>
+<li>Recruit 5 developers (diverse skill levels)</li>
+<li>Observe remotely (screen share + think-aloud protocol)</li>
+<li>Measure: Time to complete, errors, satisfaction rating</li>
+<li>Identify usability issues and iterate design</li>
+</ol>
+<p><strong>Example Test</strong>:</p>
+<div class="highlight"><pre><span></span><code>Task: Create a new Python microservice and deploy it to staging
+
+Success Criteria:
+- Task completed without assistance: &lt;20 minutes
+- No critical errors (blockers that prevent completion)
+- Satisfaction rating: &gt;4/5
+
+Observations (n=5 developers):
+✅ All completed task in 12-18 minutes
+⚠️  3/5 were confused by &quot;Create Component&quot; vs &quot;Create Service&quot; buttons
+⚠️  4/5 didn&#39;t notice deployment status indicator
+✅ Average satisfaction: 4.2/5
+
+Recommendations:
+1. Merge &quot;Create Component&quot; and &quot;Create Service&quot; into one flow
+2. Make deployment status more prominent (add animation)
+3. Add contextual help tooltip on first use
+</code></pre></div>
+<h2 id="component-3-feedback-processing-pipeline">Component 3: Feedback Processing Pipeline</h2>
+<h3 id="31-feedback-database-schema">3.1 Feedback Database Schema</h3>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">feedback</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="k">type</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w"> </span><span class="c1">-- &#39;bug&#39;, &#39;friction&#39;, &#39;feature-request&#39;, &#39;praise&#39;</span>
+<span class="w">  </span><span class="n">category</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w"> </span><span class="c1">-- &#39;ci-cd&#39;, &#39;gitops&#39;, &#39;docs&#39;, &#39;dojo&#39;, &#39;other&#39;</span>
+<span class="w">  </span><span class="n">description</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="k">source</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w"> </span><span class="c1">-- &#39;widget&#39;, &#39;mattermost&#39;, &#39;interview&#39;, &#39;github&#39;</span>
+
+<span class="w">  </span><span class="c1">-- Context</span>
+<span class="w">  </span><span class="n">user_id</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span><span class="w"> </span><span class="c1">-- NULL if anonymous</span>
+<span class="w">  </span><span class="n">user_role</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">  </span><span class="n">page_context</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span><span class="w"> </span><span class="c1">-- Which Backstage page?</span>
+<span class="w">  </span><span class="k">timestamp</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+
+<span class="w">  </span><span class="c1">-- Analysis</span>
+<span class="w">  </span><span class="n">sentiment</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span><span class="w"> </span><span class="c1">-- &#39;positive&#39;, &#39;neutral&#39;, &#39;negative&#39; (AI-generated)</span>
+<span class="w">  </span><span class="n">themes</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">[],</span><span class="w"> </span><span class="c1">-- e.g., [&#39;performance&#39;, &#39;documentation&#39;, &#39;jenkins&#39;]</span>
+<span class="w">  </span><span class="n">impact_score</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="c1">-- 1-5 based on affected users + frequency</span>
+
+<span class="w">  </span><span class="c1">-- Lifecycle</span>
+<span class="w">  </span><span class="n">status</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;new&#39;</span><span class="p">,</span><span class="w"> </span><span class="c1">-- &#39;new&#39;, &#39;triaged&#39;, &#39;in-progress&#39;, &#39;resolved&#39;, &#39;wont-fix&#39;</span>
+<span class="w">  </span><span class="n">assigned_to</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<span class="w">  </span><span class="n">resolution_notes</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">  </span><span class="n">resolved_at</span><span class="w"> </span><span class="k">TIMESTAMP</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_feedback_status</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">feedback</span><span class="p">(</span><span class="n">status</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_feedback_category</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">feedback</span><span class="p">(</span><span class="n">category</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_feedback_timestamp</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">feedback</span><span class="p">(</span><span class="k">timestamp</span><span class="w"> </span><span class="k">DESC</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="32-automated-analysis-ai-powered">3.2 Automated Analysis (AI-Powered)</h3>
+<p><strong>Sentiment Analysis</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Using OpenAI API for sentiment classification</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">analyze_sentiment</span><span class="p">(</span><span class="n">feedback_text</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">openai</span><span class="o">.</span><span class="n">ChatCompletion</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span>
+        <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Classify sentiment as positive, neutral, or negative.&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">feedback_text</span><span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span>  <span class="c1"># &#39;positive&#39; | &#39;neutral&#39; | &#39;negative&#39;</span>
+</code></pre></div>
+<p><strong>Theme Extraction</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Identify common themes across feedback</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_themes</span><span class="p">(</span><span class="n">feedback_batch</span><span class="p">):</span>
+    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    Analyze these </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">feedback_batch</span><span class="p">)</span><span class="si">}</span><span class="s2"> feedback items and identify 3-5 recurring themes.</span>
+
+<span class="s2">    Feedback:</span>
+<span class="s2">    </span><span class="si">{</span><span class="n">format_feedback</span><span class="p">(</span><span class="n">feedback_batch</span><span class="p">)</span><span class="si">}</span>
+
+<span class="s2">    Return themes as a JSON array, e.g., [&quot;performance&quot;, &quot;documentation&quot;, &quot;onboarding&quot;]</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+    <span class="c1"># Returns: [&#39;jenkins-slow&#39;, &#39;backstage-search&#39;, &#39;dojo-outdated&#39;, ...]</span>
+</code></pre></div>
+<p><strong>Impact Scoring Algorithm</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">calculate_impact_score</span><span class="p">(</span><span class="n">feedback</span><span class="p">):</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># How many users mention similar issues?</span>
+    <span class="n">score</span> <span class="o">+=</span> <span class="n">count_similar_feedback</span><span class="p">(</span><span class="n">feedback</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># 0-10 points</span>
+
+    <span class="c1"># Severity (based on type)</span>
+    <span class="n">severity_weights</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bug&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;friction&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;feature-request&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;praise&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+    <span class="n">score</span> <span class="o">+=</span> <span class="n">severity_weights</span><span class="p">[</span><span class="n">feedback</span><span class="o">.</span><span class="n">type</span><span class="p">]</span>
+
+    <span class="c1"># Sentiment (negative = more urgent)</span>
+    <span class="k">if</span> <span class="n">feedback</span><span class="o">.</span><span class="n">sentiment</span> <span class="o">==</span> <span class="s1">&#39;negative&#39;</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">+=</span> <span class="mi">2</span>
+
+    <span class="c1"># Recency (recent = more relevant)</span>
+    <span class="n">days_old</span> <span class="o">=</span> <span class="p">(</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">feedback</span><span class="o">.</span><span class="n">timestamp</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
+    <span class="k">if</span> <span class="n">days_old</span> <span class="o">&lt;</span> <span class="mi">7</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">+=</span> <span class="mi">3</span>
+    <span class="k">elif</span> <span class="n">days_old</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>  <span class="c1"># Cap at 10</span>
+</code></pre></div>
+<h3 id="33-monthly-devex-review-meeting">3.3 Monthly DevEx Review Meeting</h3>
+<p><strong>Attendees</strong>: Platform team (5-7 people)
+<strong>Duration</strong>: 90 minutes
+<strong>Frequency</strong>: First Wednesday of every month</p>
+<p><strong>Agenda</strong>:</p>
+<div class="highlight"><pre><span></span><code>1. Metrics Review (15 min)
+   - NPS score trend
+   - DORA metrics
+   - Feedback volume and sentiment
+
+2. Feedback Deep Dive (30 min)
+   - Top 5 themes from past month
+   - High-impact individual issues
+   - User interview synthesis
+
+3. Prioritization (25 min)
+   - Evaluate top issues (impact vs. effort)
+   - Select 1-2 improvements to tackle next month
+   - Assign owners and set deadlines
+
+4. Experiment Review (15 min)
+   - Did last month&#39;s changes work?
+   - Measure before/after metrics
+   - Lessons learned
+
+5. Communication Planning (5 min)
+   - Draft &quot;You Said, We Did&quot; post
+   - Plan quarterly town hall content
+</code></pre></div>
+<p><strong>Output</strong>:</p>
+<ul>
+<li>1-2 committed improvements for next month</li>
+<li>Owners assigned with clear success criteria</li>
+<li>Communication plan for closing the loop</li>
+</ul>
+<h3 id="34-you-said-we-did-communication">3.4 “You Said, We Did” Communication</h3>
+<p><strong>Monthly Post</strong> (Mattermost + Email):</p>
+<div class="highlight"><pre><span></span><code><span class="gu">## You Said, We Did - November 2024</span>
+
+Hey team! Here&#39;s what we heard from you last month and what we&#39;re doing about it.
+
+<span class="gu">### 📊 Feedback by the Numbers</span>
+<span class="k">-</span><span class="w"> </span>52 feedback submissions (↑ from 41 last month)
+<span class="k">-</span><span class="w"> </span>5 user interviews conducted
+<span class="k">-</span><span class="w"> </span>Overall sentiment: 68% positive, 24% neutral, 8% negative
+
+<span class="gu">### 🔥 Top 3 Themes We Heard</span>
+<span class="k">1.</span> <span class="gs">**Jenkins builds are slow**</span> (18 mentions)
+   👉 WE DID: Optimized build parallelism, reduced avg build time 45min → 18min
+
+<span class="k">2.</span> <span class="gs">**Backstage search doesn&#39;t find docs**</span> (12 mentions)
+   👉 WE DID: Upgraded search index, now indexes TechDocs + ADRs + Mattermost
+
+<span class="k">3.</span> <span class="gs">**Dojo modules are outdated**</span> (9 mentions)
+   👉 WORKING ON IT: Updating modules 6-10, target completion Dec 15
+
+<span class="gu">### 🎉 Wins to Celebrate</span>
+<span class="k">-</span><span class="w"> </span><span class="ni">@developer_eve</span> completed Black Belt! 🥋
+<span class="k">-</span><span class="w"> </span>Deployment frequency hit 2.4/day (↑ from 1.9/day)
+<span class="k">-</span><span class="w"> </span>NPS score: 62 (↑ from 58)
+
+<span class="gu">### 💡 What We&#39;re Focusing on Next Month</span>
+<span class="k">-</span><span class="w"> </span>AI-powered code review suggestions (pilot with 3 teams)
+<span class="k">-</span><span class="w"> </span>Improved error messages in ArgoCD
+<span class="k">-</span><span class="w"> </span>Self-service secrets rotation
+
+<span class="gu">### 📣 We Want to Hear From You</span>
+<span class="k">-</span><span class="w"> </span>Use the feedback button in Backstage
+<span class="k">-</span><span class="w"> </span>Join office hours (next one: Nov 20, 2pm)
+<span class="k">-</span><span class="w"> </span>DM us anytime in <span class="ni">#platform</span>-feedback
+
+Thanks for making Fawkes better! 🚀
+<span class="k">-</span><span class="w"> </span>The Platform Team
+</code></pre></div>
+<p><strong>Quarterly Town Hall</strong> (45 minutes, recorded):</p>
+<ul>
+<li>Review quarter’s progress (metrics, features delivered)</li>
+<li>Deep dive on 2-3 major improvements</li>
+<li>Roadmap preview for next quarter</li>
+<li>Live Q&amp;A</li>
+</ul>
+<h2 id="implementation-plan">Implementation Plan</h2>
+<h3 id="phase-1-minimal-viable-feedback-system-weeks-1-2">Phase 1: Minimal Viable Feedback System (Weeks 1-2)</h3>
+<p><strong>Week 1: Quick Wins</strong></p>
+<ol>
+<li>Create #platform-feedback Mattermost channel</li>
+<li>Set up Google Form for feedback (temporary, before Backstage plugin)</li>
+<li>Schedule first 3 user interviews</li>
+<li>Create feedback database schema</li>
+</ol>
+<p><strong>Week 2: First Feedback Cycle</strong></p>
+<ol>
+<li>Announce feedback channels to all developers</li>
+<li>Conduct first 3 user interviews</li>
+<li>Collect first batch of feedback</li>
+<li>Manual analysis and theme identification</li>
+<li>First “You Said, We Heard” post</li>
+</ol>
+<h3 id="phase-2-automation-scale-weeks-3-6">Phase 2: Automation &amp; Scale (Weeks 3-6)</h3>
+<p><strong>Week 3-4: Backstage Plugin</strong></p>
+<ol>
+<li>Develop feedback widget Backstage plugin</li>
+<li>Integrate with PostgreSQL database</li>
+<li>Add AI sentiment analysis</li>
+<li>Beta test with platform team</li>
+<li>Launch to all developers</li>
+</ol>
+<p><strong>Week 5-6: Process &amp; Cadence</strong></p>
+<ol>
+<li>Establish monthly DevEx review meeting</li>
+<li>Create feedback analysis dashboard (Grafana)</li>
+<li>Schedule bi-weekly office hours (recurring)</li>
+<li>Document user research processes</li>
+<li>Train platform team on facilitation</li>
+</ol>
+<h3 id="phase-3-continuous-improvement-month-2">Phase 3: Continuous Improvement (Month 2+)</h3>
+<ol>
+<li>Refine based on initial learnings</li>
+<li>Add advanced features (theme clustering, trend analysis)</li>
+<li>Integrate with roadmap planning tools</li>
+<li>Measure impact: Are we closing the loop effectively?</li>
+</ol>
+<h2 id="consequences">Consequences</h2>
+<h3 id="positive">Positive</h3>
+<ol>
+<li><strong>User-Centric Culture</strong>: Platform team stays connected to developer needs</li>
+<li><strong>Early Problem Detection</strong>: Catch issues before they become crises</li>
+<li><strong>Higher Trust</strong>: Developers feel heard and valued</li>
+<li><strong>Better Prioritization</strong>: Roadmap driven by validated user needs, not assumptions</li>
+<li><strong>Continuous Learning</strong>: Platform team develops deep domain expertise</li>
+<li><strong>Competitive Advantage</strong>: Great DevEx attracts and retains talent</li>
+<li><strong>AI Readiness</strong>: User-centric foundation amplifies AI benefits (DORA finding)</li>
+<li><strong>Reduced Waste</strong>: Don’t build features nobody wants</li>
+<li><strong>Faster Adoption</strong>: Developers embrace platform when they influence it</li>
+<li><strong>Measurable Impact</strong>: Can prove platform value with qualitative + quantitative data</li>
+</ol>
+<h3 id="negative">Negative</h3>
+<ol>
+<li><strong>Time Investment</strong>: ~20% of platform team time on research and analysis</li>
+<li><strong>Expectation Management</strong>: Must deliver on feedback or risk losing trust</li>
+<li><strong>Potentially Overwhelming</strong>: Too much feedback can be paralyzing</li>
+<li><strong>Interview Recruiting</strong>: May struggle to get volunteers (mitigate with incentives)</li>
+<li><strong>Analysis Burden</strong>: Qualitative research requires skill and effort</li>
+<li><strong>Difficult Tradeoffs</strong>: Must say “no” to some feature requests</li>
+</ol>
+<h3 id="neutral">Neutral</h3>
+<ol>
+<li><strong>Requires Facilitation Skills</strong>: Platform team needs training on research methods</li>
+<li><strong>Cultural Shift</strong>: Treating developers as users requires leadership buy-in</li>
+<li><strong>Ongoing Commitment</strong>: This is a permanent practice, not a one-time project</li>
+</ol>
+<h2 id="related-decisions">Related Decisions</h2>
+<ul>
+<li><strong>ADR-014</strong>: DevEx Measurement Framework (SPACE) - Quantitative complement to qualitative research</li>
+<li><strong>ADR-002</strong>: Backstage for Developer Portal - Primary vehicle for feedback widget</li>
+<li><strong>ADR-007</strong>: Mattermost for Collaboration - #platform-feedback channel</li>
+<li><strong>ADR-016</strong>: Platform-as-Product - User research informs product decisions</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><strong>2025 DORA Report</strong>: User-centric focus critical for AI success</li>
+<li><strong>Continuous Discovery Habits</strong> (Teresa Torres): Product discovery best practices</li>
+<li><strong>The Mom Test</strong> (Rob Fitzpatrick): How to ask good interview questions</li>
+<li><strong>Just Enough Research</strong> (Erika Hall): Practical research for teams</li>
+<li><strong>User Interviews</strong>: https://www.userinterviews.com/ux-research-field-guide-chapter/user-interviews</li>
+</ul>
+<h2 id="last-updated">Last Updated</h2>
+<p>December 7, 2024 - Initial version documenting user research and feedback system for Fawkes</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
