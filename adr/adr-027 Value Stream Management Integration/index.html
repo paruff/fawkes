@@ -1,0 +1,2760 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>ADR-027: Value Stream Management Integration - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#adr-027-value-stream-management-integration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ADR-027: Value Stream Management Integration
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assessment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Paths
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Wins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Capabilities
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patterns
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Continuous Delivery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spinnaker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Infrastructure
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#background" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Background
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dora-2025-vsm-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DORA 2025 VSM Findings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#current-fawkes-architecture-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Fawkes Architecture Gaps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forces-at-play" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forces at Play
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decision-drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision Drivers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-vsm-hub-new-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. VSM Hub (New Service)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-work-item-correlation-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Work Item Correlation Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-value-stream-stages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Value Stream Stages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-flow-metrics-calculated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Flow Metrics Calculated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-bottleneck-detection-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Bottleneck Detection Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-business-value-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Business Value Tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-customer-feedback-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Customer Feedback Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Points
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Points">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#focalboard-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Focalboard Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#github-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jenkins-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jenkins Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#argocd-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ArgoCD Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backstage-plugin-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backstage Plugin (New)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grafana-dashboards-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grafana Dashboards (New)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-storage-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Storage Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consequences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Positive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#negative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Negative
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#neutral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Neutral
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-1-use-existing-commercial-vsm-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 1: Use Existing Commercial VSM Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-2-basic-dashboards-with-manual-correlation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 2: Basic Dashboards with Manual Correlation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-3-extend-existing-tools-eg-backstage-plugin-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 3: Extend Existing Tools (e.g., Backstage Plugin Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-4-third-party-open-source-vsm-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 4: Third-Party Open Source VSM Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-5-delayed-implementation-post-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 5: Delayed Implementation (Post-MVP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-foundation-weeks-1-4-mvp-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Foundation (Weeks 1-4) - MVP Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-intelligence-weeks-5-8-post-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Intelligence (Weeks 5-8) - Post-MVP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-business-value-weeks-9-12-post-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Business Value (Weeks 9-12) - Post-MVP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="adr-027-value-stream-management-integration">ADR-027: Value Stream Management Integration</h1>
+<h2 id="status">Status</h2>
+<p><strong>Proposed</strong> - Pending team review and approval</p>
+<p><strong>Date</strong>: December 2025</p>
+<p><strong>Decision Makers</strong>: Platform Architecture Team, Product Leadership</p>
+<p><strong>Consulted</strong>: Development Teams, DevOps Engineers, Product Managers</p>
+<p><strong>Informed</strong>: All Engineering, Executive Leadership</p>
+<hr />
+<h2 id="context">Context</h2>
+<h3 id="background">Background</h3>
+<p>Based on the 2025 DORA Report findings, organizations with mature Value Stream Management (VSM) practices see significant improvements in:</p>
+<ul>
+<li><strong>3.5x higher organizational performance</strong> compared to low VSM maturity</li>
+<li><strong>Better visibility</strong> into software delivery bottlenecks</li>
+<li><strong>Data-driven decision making</strong> for process improvements</li>
+<li><strong>Alignment</strong> between business value and technical delivery</li>
+</ul>
+<p>Currently, Fawkes collects DORA metrics (deployment frequency, lead time, change failure rate, MTTR) but lacks:</p>
+<ol>
+<li><strong>End-to-end value stream visibility</strong> - Can’t trace from idea to production</li>
+<li><strong>Work item integration</strong> - DORA metrics aren’t linked to business value</li>
+<li><strong>Flow metrics</strong> - No measurement of work in progress, cycle time by stage</li>
+<li><strong>Bottleneck identification</strong> - No automated detection of process constraints</li>
+<li><strong>Value delivery measurement</strong> - No connection between features and business outcomes</li>
+</ol>
+<h3 id="dora-2025-vsm-findings">DORA 2025 VSM Findings</h3>
+<p>The 2025 DORA Report identifies <strong>8 Value Stream Management Capabilities</strong>:</p>
+<ol>
+<li><strong>Visualization of work</strong> - Teams see work flowing through the value stream</li>
+<li><strong>Work integrated with toolchains</strong> - Tracking tools connected to CI/CD</li>
+<li><strong>Work limited in process</strong> - WIP limits enforced</li>
+<li><strong>Flow metrics</strong> - Cycle time, throughput, WIP measured</li>
+<li><strong>Quality integrated in process</strong> - Quality gates in the value stream</li>
+<li><strong>Work prioritized by business value</strong> - Value-driven backlog</li>
+<li><strong>Customer feedback</strong> - Fast feedback loops from production</li>
+<li><strong>Continuous improvement</strong> - Regular process optimization</li>
+</ol>
+<p>Organizations with <strong>high VSM maturity</strong> (6-8 capabilities) significantly outperform those with low maturity (0-3 capabilities).</p>
+<h3 id="current-fawkes-architecture-gaps">Current Fawkes Architecture Gaps</h3>
+<p><strong>What We Have</strong>:</p>
+<ul>
+<li>✅ DORA metrics collection (4 key metrics)</li>
+<li>✅ Focalboard for project management</li>
+<li>✅ Backstage service catalog</li>
+<li>✅ ArgoCD for deployment tracking</li>
+<li>✅ Jenkins for CI/CD</li>
+</ul>
+<p><strong>What We’re Missing</strong>:</p>
+<ul>
+<li>❌ Integration between Focalboard work items and DORA metrics</li>
+<li>❌ Value stream visualization (idea → code → deploy → operate)</li>
+<li>❌ Flow metrics (cycle time by stage, WIP, throughput)</li>
+<li>❌ Bottleneck detection and alerts</li>
+<li>❌ Business value tracking per feature</li>
+<li>❌ Customer feedback integration</li>
+<li>❌ Value stream dashboards for stakeholders</li>
+</ul>
+<h3 id="forces-at-play">Forces at Play</h3>
+<p><strong>Technical Forces</strong>:</p>
+<ul>
+<li>Need to integrate disparate tools (Focalboard, GitHub, Jenkins, ArgoCD, Grafana)</li>
+<li>Require consistent work item identifiers across the toolchain</li>
+<li>Must handle real-time data aggregation from multiple sources</li>
+<li>Need to maintain low overhead (no manual data entry)</li>
+</ul>
+<p><strong>Organizational Forces</strong>:</p>
+<ul>
+<li>Product managers need visibility into delivery performance</li>
+<li>Engineering leaders need bottleneck identification</li>
+<li>Executives need business value delivery metrics</li>
+<li>Teams need actionable insights, not just dashboards</li>
+</ul>
+<p><strong>User Experience Forces</strong>:</p>
+<ul>
+<li>Developers shouldn’t be burdened with extra process</li>
+<li>Data collection should be automated</li>
+<li>Insights should be contextual and actionable</li>
+<li>Integration should be seamless with existing workflows</li>
+</ul>
+<h3 id="decision-drivers">Decision Drivers</h3>
+<ol>
+<li><strong>DORA Alignment</strong>: 2025 DORA Report emphasizes VSM as a key differentiator</li>
+<li><strong>Platform-as-Product</strong>: VSM enables us to measure platform value delivery</li>
+<li><strong>User-Centric</strong>: Understanding flow helps us reduce developer friction</li>
+<li><strong>Competitive Advantage</strong>: Few open-source IDPs offer integrated VSM</li>
+<li><strong>Data-Driven Improvement</strong>: Can’t improve what we don’t measure</li>
+</ol>
+<hr />
+<h2 id="decision">Decision</h2>
+<p><strong>We will implement an integrated Value Stream Management system in Fawkes</strong> that:</p>
+<ol>
+<li><strong>Connects work items</strong> (Focalboard) with code changes (GitHub), builds (Jenkins), and deployments (ArgoCD)</li>
+<li><strong>Automates flow metrics collection</strong> (cycle time, WIP, throughput) across value stream stages</li>
+<li><strong>Visualizes the end-to-end value stream</strong> from idea to production</li>
+<li><strong>Detects and alerts on bottlenecks</strong> using ML-based anomaly detection</li>
+<li><strong>Measures business value delivery</strong> by linking work items to customer outcomes</li>
+<li><strong>Integrates customer feedback</strong> from production into the value stream</li>
+</ol>
+<h3 id="architecture-overview">Architecture Overview</h3>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
+│                   VALUE STREAM MANAGEMENT LAYER                  │
+│                                                                   │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │ VSM Hub (New Component)                                    │ │
+│  │ - Work item correlation engine                             │ │
+│  │ - Flow metrics calculation service                         │ │
+│  │ - Bottleneck detection (ML-based)                          │ │
+│  │ - Business value tracking                                  │ │
+│  │ - API for dashboards and integrations                      │ │
+│  └────────────────────────────────────────────────────────────┘ │
+│                           ↓         ↓                            │
+│  ┌──────────────────────────┐  ┌──────────────────────────┐    │
+│  │ VSM Backstage Plugin     │  │ Grafana VSM Dashboards   │    │
+│  │ - Value stream view      │  │ - Flow metrics           │    │
+│  │ - Work item tracker      │  │ - Bottleneck alerts      │    │
+│  │ - Team health dashboard  │  │ - Value delivery trends  │    │
+│  └──────────────────────────┘  └──────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────┘
+                            ↑
+                            │ (Event streams &amp; webhooks)
+                            │
+┌─────────────────────────────────────────────────────────────────┐
+│                      DATA SOURCES (Existing)                     │
+│  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐  │
+│  │ Focalboard │ │ GitHub     │ │ Jenkins    │ │ ArgoCD     │  │
+│  │ (Work)     │ │ (Code)     │ │ (Build)    │ │ (Deploy)   │  │
+│  └────────────┘ └────────────┘ └────────────┘ └────────────┘  │
+│                                                                   │
+│  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐  │
+│  │ Mattermost │ │ Prometheus │ │ OpenSearch │ │ Customer   │  │
+│  │ (Collab)   │ │ (Metrics)  │ │ (Logs)     │ │ Feedback   │  │
+│  └────────────┘ └────────────┘ └────────────┘ └────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="core-components">Core Components</h3>
+<h4 id="1-vsm-hub-new-service">1. VSM Hub (New Service)</h4>
+<p><strong>Technology</strong>: Go microservice (performance, concurrency)</p>
+<p><strong>Responsibilities</strong>:</p>
+<ul>
+<li>Receive webhooks/events from all tools</li>
+<li>Correlate work items across tools using identifiers</li>
+<li>Calculate flow metrics in real-time</li>
+<li>Detect bottlenecks using statistical analysis</li>
+<li>Store value stream data (PostgreSQL)</li>
+<li>Expose REST/GraphQL API</li>
+</ul>
+<p><strong>Data Model</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">type</span><span class="w"> </span><span class="nx">WorkItem</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">ID</span><span class="w">              </span><span class="kt">string</span>
+<span class="w">    </span><span class="nx">FocalboardID</span><span class="w">    </span><span class="kt">string</span>
+<span class="w">    </span><span class="nx">Type</span><span class="w">            </span><span class="kt">string</span><span class="w"> </span><span class="c1">// feature, bug, story</span>
+<span class="w">    </span><span class="nx">BusinessValue</span><span class="w">   </span><span class="kt">int</span><span class="w">    </span><span class="c1">// 1-100 scale</span>
+<span class="w">    </span><span class="nx">Stage</span><span class="w">           </span><span class="kt">string</span><span class="w"> </span><span class="c1">// backlog, dev, review, test, deploy, done</span>
+<span class="w">    </span><span class="nx">CreatedAt</span><span class="w">       </span><span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+<span class="w">    </span><span class="nx">UpdatedAt</span><span class="w">       </span><span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+<span class="p">}</span>
+
+<span class="kd">type</span><span class="w"> </span><span class="nx">FlowEvent</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">WorkItemID</span><span class="w">      </span><span class="kt">string</span>
+<span class="w">    </span><span class="nx">EventType</span><span class="w">       </span><span class="kt">string</span><span class="w"> </span><span class="c1">// stage_enter, stage_exit</span>
+<span class="w">    </span><span class="nx">Stage</span><span class="w">           </span><span class="kt">string</span>
+<span class="w">    </span><span class="nx">Timestamp</span><span class="w">       </span><span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+<span class="w">    </span><span class="nx">Source</span><span class="w">          </span><span class="kt">string</span><span class="w"> </span><span class="c1">// focalboard, github, jenkins, argocd</span>
+<span class="w">    </span><span class="nx">Metadata</span><span class="w">        </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="kd">type</span><span class="w"> </span><span class="nx">FlowMetrics</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">WorkItemID</span><span class="w">      </span><span class="kt">string</span>
+<span class="w">    </span><span class="nx">CycleTime</span><span class="w">       </span><span class="nx">duration</span><span class="w"> </span><span class="c1">// total time from start to done</span>
+<span class="w">    </span><span class="nx">LeadTime</span><span class="w">        </span><span class="nx">duration</span><span class="w"> </span><span class="c1">// time from commit to deploy</span>
+<span class="w">    </span><span class="nx">StageTimings</span><span class="w">    </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="nx">duration</span>
+<span class="w">    </span><span class="nx">WaitTime</span><span class="w">        </span><span class="nx">duration</span>
+<span class="w">    </span><span class="nx">ActiveTime</span><span class="w">      </span><span class="nx">duration</span>
+<span class="w">    </span><span class="nx">BlockedTime</span><span class="w">     </span><span class="nx">duration</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="2-work-item-correlation-strategy">2. Work Item Correlation Strategy</h4>
+<p><strong>Convention</strong>: All tools must reference work items using consistent identifiers</p>
+<p><strong>GitHub Commits</strong>:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;[FOC-123] Add user authentication feature&quot;</span>
+</code></pre></div>
+<p><strong>Branch Naming</strong>:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/FOC-123-user-auth
+</code></pre></div>
+<p><strong>Pull Request Description</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="gu">## Related Work Items</span>
+<span class="k">-</span><span class="w"> </span>Focalboard: FOC-123
+
+<span class="gu">## Changes</span>
+...
+</code></pre></div>
+<p><strong>Automation</strong>:</p>
+<ul>
+<li>Pre-commit hooks validate work item ID format</li>
+<li>GitHub Actions comment on PRs with Focalboard link</li>
+<li>VSM Hub extracts IDs from commit messages</li>
+</ul>
+<h4 id="3-value-stream-stages">3. Value Stream Stages</h4>
+<p><strong>Standard Flow</strong>:</p>
+<div class="highlight"><pre><span></span><code>1. Backlog (Focalboard)
+   ↓
+2. In Progress (Focalboard status change)
+   ↓
+3. Code Review (GitHub PR opened)
+   ↓
+4. Build (Jenkins triggered)
+   ↓
+5. Test (Automated tests)
+   ↓
+6. Deploy Staging (ArgoCD sync - staging)
+   ↓
+7. Validation (Manual/automated validation)
+   ↓
+8. Deploy Production (ArgoCD sync - prod)
+   ↓
+9. Monitoring (24-hour observation)
+   ↓
+10. Done (Work item closed + deployed)
+</code></pre></div>
+<p><strong>Customizable</strong>: Teams can define custom stages via config</p>
+<h4 id="4-flow-metrics-calculated">4. Flow Metrics Calculated</h4>
+<p><strong>Cycle Time</strong>: Time from “In Progress” to “Done”</p>
+<ul>
+<li>Total cycle time</li>
+<li>Per-stage cycle time</li>
+<li>Active time vs. wait time</li>
+</ul>
+<p><strong>Lead Time</strong>: Time from first commit to production deployment</p>
+<ul>
+<li>Aligns with DORA lead time metric</li>
+<li>Broken down by CI/CD stages</li>
+</ul>
+<p><strong>Work in Progress (WIP)</strong>:</p>
+<ul>
+<li>Current WIP per stage</li>
+<li>WIP trends over time</li>
+<li>WIP limit violations</li>
+</ul>
+<p><strong>Throughput</strong>:</p>
+<ul>
+<li>Work items completed per week</li>
+<li>By team, by type, by priority</li>
+</ul>
+<p><strong>Flow Efficiency</strong>:</p>
+<div class="highlight"><pre><span></span><code>Flow Efficiency = Active Time / (Active Time + Wait Time)
+</code></pre></div>
+<ul>
+<li>Target: &gt;40% (industry benchmark)</li>
+</ul>
+<p><strong>Blocked Time</strong>:</p>
+<ul>
+<li>Time work items spend blocked</li>
+<li>Blocking reasons (categorized)</li>
+</ul>
+<h4 id="5-bottleneck-detection-algorithm">5. Bottleneck Detection Algorithm</h4>
+<p><strong>Approach</strong>: Statistical anomaly detection + rule-based alerts</p>
+<p><strong>Anomaly Detection</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Simplified algorithm</span>
+<span class="k">for</span> <span class="n">stage</span> <span class="ow">in</span> <span class="n">value_stream</span><span class="p">:</span>
+    <span class="n">avg_cycle_time</span> <span class="o">=</span> <span class="n">historical_average</span><span class="p">(</span><span class="n">stage</span><span class="p">)</span>
+    <span class="n">std_dev</span> <span class="o">=</span> <span class="n">standard_deviation</span><span class="p">(</span><span class="n">stage</span><span class="p">)</span>
+
+    <span class="n">current_items</span> <span class="o">=</span> <span class="n">items_in_stage</span><span class="p">(</span><span class="n">stage</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">current_items</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">time_in_stage</span> <span class="o">&gt;</span> <span class="n">avg_cycle_time</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">std_dev</span><span class="p">):</span>
+            <span class="n">alert</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Item </span><span class="si">{</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> stuck in </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Stage-level bottleneck</span>
+    <span class="k">if</span> <span class="n">count</span><span class="p">(</span><span class="n">current_items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">historical_average_wip</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">:</span>
+        <span class="n">alert</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bottleneck detected in </span><span class="si">{</span><span class="n">stage</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Rule-Based Alerts</strong>:</p>
+<ul>
+<li>WIP exceeds limit for 2+ days</li>
+<li>Cycle time &gt;2x team average</li>
+<li>Flow efficiency &lt;30% for 1 week</li>
+<li>Item blocked for &gt;24 hours</li>
+</ul>
+<h4 id="6-business-value-tracking">6. Business Value Tracking</h4>
+<p><strong>Value Assignment</strong>:</p>
+<ul>
+<li>Product managers assign value (1-100) in Focalboard</li>
+<li>VSM Hub tracks value delivered per sprint/quarter</li>
+<li>Value delivery rate calculated</li>
+</ul>
+<p><strong>Metrics</strong>:</p>
+<div class="highlight"><pre><span></span><code>Value Delivered = Sum(completed_items.business_value)
+Value Velocity = Value Delivered / Time Period
+Value Efficiency = Value Delivered / Total Cycle Time
+</code></pre></div>
+<p><strong>Dashboard</strong>:</p>
+<ul>
+<li>Value delivered this sprint vs. planned</li>
+<li>Cumulative flow diagram with value overlay</li>
+<li>High-value items stuck in pipeline (alerts)</li>
+</ul>
+<h4 id="7-customer-feedback-integration">7. Customer Feedback Integration</h4>
+<p><strong>Sources</strong>:</p>
+<ul>
+<li>Production incidents (linked to work items)</li>
+<li>NPS surveys (per feature)</li>
+<li>Feature usage analytics (Prometheus)</li>
+<li>Support tickets (Mattermost)</li>
+</ul>
+<p><strong>Feedback Loop</strong>:</p>
+<div class="highlight"><pre><span></span><code>Deploy Feature (FOC-123)
+    ↓
+Monitor Usage (7 days)
+    ↓
+Collect Feedback (NPS survey)
+    ↓
+Calculate Feature Success Score
+    ↓
+Update Work Item with outcomes
+    ↓
+Inform Product Roadmap
+</code></pre></div>
+<p><strong>Feature Success Score</strong>:</p>
+<div class="highlight"><pre><span></span><code>Success = (Usage * NPS * Uptime) - (Incidents * Severity)
+</code></pre></div>
+<h3 id="integration-points">Integration Points</h3>
+<h4 id="focalboard-integration">Focalboard Integration</h4>
+<p><strong>Webhooks</strong>:</p>
+<ul>
+<li>Work item created → VSM Hub (stage: backlog)</li>
+<li>Work item status changed → VSM Hub (stage transition)</li>
+<li>Work item assigned value → VSM Hub (business value update)</li>
+</ul>
+<p><strong>API Calls</strong>:</p>
+<ul>
+<li>VSM Hub queries Focalboard for work item details</li>
+<li>Backstage plugin displays Focalboard cards</li>
+</ul>
+<p><strong>Enhancement</strong>:</p>
+<ul>
+<li>Custom Focalboard field: “Work Item ID” (e.g., FOC-123)</li>
+<li>Displayed prominently for developer reference</li>
+</ul>
+<h4 id="github-integration">GitHub Integration</h4>
+<p><strong>Webhooks</strong>:</p>
+<ul>
+<li>Commit pushed → VSM Hub (extract work item ID from message)</li>
+<li>PR opened → VSM Hub (stage: code review)</li>
+<li>PR merged → VSM Hub (code review complete)</li>
+</ul>
+<p><strong>Automation</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/vsm-integration.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VSM Integration</span>
+<span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">pull_request</span><span class="p p-Indicator">]</span>
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">notify-vsm</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Extract Work Item ID</span>
+<span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">work_item</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">echo &quot;ID=$(git log -1 --pretty=%B | grep -oP &#39;FOC-\d+&#39;)&quot; &gt;&gt; $GITHUB_OUTPUT</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Notify VSM Hub</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">curl -X POST $VSM_HUB_URL/events \</span>
+<span class="w">            </span><span class="no">-H &quot;Content-Type: application/json&quot; \</span>
+<span class="w">            </span><span class="no">-d &#39;{</span>
+<span class="w">              </span><span class="no">&quot;work_item_id&quot;: &quot;${{ steps.work_item.outputs.ID }}&quot;,</span>
+<span class="w">              </span><span class="no">&quot;event&quot;: &quot;commit&quot;,</span>
+<span class="w">              </span><span class="no">&quot;source&quot;: &quot;github&quot;,</span>
+<span class="w">              </span><span class="no">&quot;timestamp&quot;: &quot;&#39;$(date -Iseconds)&#39;&quot;</span>
+<span class="w">            </span><span class="no">}&#39;</span>
+</code></pre></div>
+<h4 id="jenkins-integration">Jenkins Integration</h4>
+<p><strong>Webhooks</strong>:</p>
+<ul>
+<li>Build started → VSM Hub (stage: build)</li>
+<li>Build completed → VSM Hub (build success/failure)</li>
+<li>Tests run → VSM Hub (test results)</li>
+</ul>
+<p><strong>Pipeline Enhancement</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+<span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">WORK_ITEM_ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sh</span><span class="o">(</span><span class="nl">script:</span><span class="w"> </span><span class="s2">&quot;git log -1 --pretty=%B | grep -oP &#39;FOC-\\d+&#39;&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">returnStdout:</span><span class="w"> </span><span class="kc">true</span><span class="o">).</span><span class="na">trim</span><span class="o">()</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;mvn clean package&#39;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">            </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">always</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                        curl -X POST $VSM_HUB_URL/events \</span>
+<span class="s2">                          -H &#39;Content-Type: application/json&#39; \</span>
+<span class="s2">                          -d &#39;{</span>
+<span class="s2">                            &quot;work_item_id&quot;: &quot;$WORK_ITEM_ID&quot;,</span>
+<span class="s2">                            &quot;event&quot;: &quot;build_complete&quot;,</span>
+<span class="s2">                            &quot;status&quot;: &quot;$currentBuild.result&quot;</span>
+<span class="s2">                          }&#39;</span>
+<span class="s2">                    &quot;&quot;&quot;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h4 id="argocd-integration">ArgoCD Integration</h4>
+<p><strong>Webhooks</strong>:</p>
+<ul>
+<li>Application synced → VSM Hub (deployment to env)</li>
+<li>Sync failed → VSM Hub (deployment failure)</li>
+<li>Health check → VSM Hub (deployment health)</li>
+</ul>
+<p><strong>Configuration</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># argocd-notifications configmap</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd-notifications-cm</span>
+<span class="nt">data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">service.webhook.vsm-hub</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">url: http://vsm-hub.fawkes.svc.cluster.local/events</span>
+<span class="w">    </span><span class="no">headers:</span>
+<span class="w">    </span><span class="no">- name: Content-Type</span>
+<span class="w">      </span><span class="no">value: application/json</span>
+
+<span class="w">  </span><span class="nt">trigger.on-deployed</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">- when: app.status.operationState.phase in [&#39;Succeeded&#39;]</span>
+<span class="w">      </span><span class="no">send: [vsm-hub-deployment-success]</span>
+</code></pre></div>
+<h4 id="backstage-plugin-new">Backstage Plugin (New)</h4>
+<p><strong>Plugin</strong>: <code>@fawkes/plugin-vsm</code></p>
+<p><strong>Features</strong>:</p>
+<ol>
+<li><strong>Value Stream View</strong>: Visualize work item flow</li>
+<li><strong>Team Dashboard</strong>: Team-level flow metrics</li>
+<li><strong>Work Item Tracker</strong>: See status across all tools</li>
+<li><strong>Bottleneck Alerts</strong>: In-context alerts for teams</li>
+</ol>
+<p><strong>UI Mockup</strong>:</p>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────┐
+│ Service: payment-service                     Value Stream   │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Work Items in Flow (Current Sprint)                        │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐      │
+│  │ Backlog  │→│ In Prog  │→│ Review   │→│ Deploy   │      │
+│  │    5     │ │    3     │ │    2     │ │    1     │      │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘      │
+│       ↓             ↓             ↓            ↓            │
+│  ⚠️ WIP Limit     ✅ Healthy   🔴 Bottleneck  ✅ Healthy   │
+│                                                              │
+│  Flow Metrics (Last 30 Days)                                │
+│  • Cycle Time: 4.2 days (target: &lt;5 days) ✅               │
+│  • Lead Time: 2.1 days (elite: &lt;1 day) 🟡                  │
+│  • Flow Efficiency: 35% (target: &gt;40%) 🔴                   │
+│  • Throughput: 12 items/week ✅                             │
+│                                                              │
+│  Active Work Items                                          │
+│  FOC-456 [Feature] ████████░░ (80% - Code Review)          │
+│  FOC-457 [Bug]     ██░░░░░░░░ (20% - In Progress)          │
+│  FOC-458 [Story]   ██████████ (100% - Deploying) 🚀        │
+│                                                              │
+│  Alerts 🔔                                                  │
+│  • FOC-450 stuck in Code Review for 3 days (avg: 1 day)    │
+│  • Flow efficiency dropped below 30% - investigate          │
+└─────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h4 id="grafana-dashboards-new">Grafana Dashboards (New)</h4>
+<p><strong>Dashboard 1: Executive Value Stream Overview</strong></p>
+<ul>
+<li>Value delivered (current quarter)</li>
+<li>Cycle time trends (6 months)</li>
+<li>Bottleneck heatmap (by team)</li>
+<li>Top blockers (categorized)</li>
+</ul>
+<p><strong>Dashboard 2: Team Flow Metrics</strong></p>
+<ul>
+<li>Cumulative flow diagram</li>
+<li>Cycle time distribution</li>
+<li>WIP trends</li>
+<li>Throughput velocity</li>
+</ul>
+<p><strong>Dashboard 3: Work Item Deep Dive</strong></p>
+<ul>
+<li>Individual work item journey</li>
+<li>Stage timings breakdown</li>
+<li>Wait time vs. active time</li>
+<li>Blockers and delays</li>
+</ul>
+<p><strong>Dashboard 4: Bottleneck Analysis</strong></p>
+<ul>
+<li>Stage-level bottlenecks</li>
+<li>Historical bottleneck trends</li>
+<li>Bottleneck resolution time</li>
+<li>Impact on flow efficiency</li>
+</ul>
+<h3 id="data-storage-strategy">Data Storage Strategy</h3>
+<p><strong>PostgreSQL Schema</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- Work Items</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">work_items</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">focalboard_id</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">,</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+<span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">business_value</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">stage</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">updated_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">completed_at</span><span class="w"> </span><span class="k">TIMESTAMP</span>
+<span class="p">);</span>
+
+<span class="c1">-- Flow Events</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">flow_events</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">work_item_id</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">work_items</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+<span class="w">    </span><span class="n">event_type</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">    </span><span class="n">stage</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">    </span><span class="k">timestamp</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="k">source</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">    </span><span class="n">metadata</span><span class="w"> </span><span class="n">JSONB</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_flow_events_work_item</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">flow_events</span><span class="p">(</span><span class="n">work_item_id</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_flow_events_timestamp</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">flow_events</span><span class="p">(</span><span class="k">timestamp</span><span class="p">);</span>
+
+<span class="c1">-- Flow Metrics (Calculated)</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">flow_metrics</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">work_item_id</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">work_items</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+<span class="w">    </span><span class="n">cycle_time_hours</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">lead_time_hours</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">active_time_hours</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">wait_time_hours</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">blocked_time_hours</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">flow_efficiency</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">stage_timings</span><span class="w"> </span><span class="n">JSONB</span><span class="p">,</span>
+<span class="w">    </span><span class="n">calculated_at</span><span class="w"> </span><span class="k">TIMESTAMP</span>
+<span class="p">);</span>
+
+<span class="c1">-- Bottlenecks</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">bottlenecks</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">stage</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">    </span><span class="n">detected_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">resolved_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">severity</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span><span class="w"> </span><span class="c1">-- low, medium, high, critical</span>
+<span class="w">    </span><span class="n">work_items_affected</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">[],</span>
+<span class="w">    </span><span class="n">root_cause</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">resolution</span><span class="w"> </span><span class="nb">TEXT</span>
+<span class="p">);</span>
+</code></pre></div>
+<p><strong>Time-Series Data</strong> (Prometheus):</p>
+<div class="highlight"><pre><span></span><code># Gauge: Current WIP by stage
+vsm_wip_current{stage=&quot;code_review&quot;, team=&quot;payments&quot;} 5
+
+# Histogram: Cycle time distribution
+vsm_cycle_time_seconds{stage=&quot;build&quot;, team=&quot;payments&quot;} 3600
+
+# Counter: Work items completed
+vsm_items_completed_total{type=&quot;feature&quot;, team=&quot;payments&quot;} 45
+
+# Gauge: Flow efficiency
+vsm_flow_efficiency{team=&quot;payments&quot;} 0.38
+</code></pre></div>
+<hr />
+<h2 id="consequences">Consequences</h2>
+<h3 id="positive">Positive</h3>
+<ol>
+<li><strong>End-to-End Visibility</strong>: Teams and leaders see work flow from idea to production</li>
+<li>Reduces “where is my feature?” questions</li>
+<li>Identifies bottlenecks quickly</li>
+<li>Enables data-driven process improvements</li>
+<li><strong>Automated Data Collection</strong>: No manual tracking required</li>
+<li>Developers continue existing workflows</li>
+<li>Metrics calculated automatically</li>
+<li>Real-time updates</li>
+<li><strong>Actionable Insights</strong>: Not just dashboards, but alerts and recommendations</li>
+<li>Bottleneck alerts notify teams immediately</li>
+<li>Trend analysis predicts future issues</li>
+<li>Benchmarking against industry standards</li>
+<li><strong>Business Value Connection</strong>: Links engineering work to business outcomes</li>
+<li>Product managers see value delivery rates</li>
+<li>Executives understand ROI of platform improvements</li>
+<li>Prioritization driven by value, not just urgency</li>
+<li><strong>Competitive Differentiation</strong>: Few open-source IDPs offer integrated VSM</li>
+<li>Attracts organizations serious about flow metrics</li>
+<li>Aligns with 2025 DORA findings</li>
+<li>Positions Fawkes as cutting-edge</li>
+<li><strong>Platform-as-Product Enablement</strong>: Measures platform’s own value delivery</li>
+<li>Internal customers can see platform team throughput</li>
+<li>Continuous improvement becomes data-driven</li>
+<li>Justifies platform investment with metrics</li>
+</ol>
+<h3 id="negative">Negative</h3>
+<ol>
+<li><strong>Implementation Complexity</strong>: Significant development effort required</li>
+<li>New service (VSM Hub) to build and maintain</li>
+<li>Multiple integrations to implement</li>
+<li>Data model to design and evolve</li>
+<li><strong>Mitigation</strong>: Phased rollout, start with 2-3 integrations</li>
+<li><strong>Convention Enforcement</strong>: Requires consistent work item ID usage</li>
+<li>Teams must adopt naming conventions</li>
+<li>Pre-commit hooks needed</li>
+<li>Change management required</li>
+<li><strong>Mitigation</strong>: Automation (Git hooks), clear documentation, training</li>
+<li><strong>Data Quality Dependency</strong>: Metrics only as good as input data</li>
+<li>Missed commit messages → broken correlation</li>
+<li>Inconsistent Focalboard updates → wrong stage timings</li>
+<li>Webhooks failures → missing events</li>
+<li><strong>Mitigation</strong>: Data quality monitoring, event replay, manual correction UI</li>
+<li><strong>Performance Concerns</strong>: Real-time correlation at scale</li>
+<li>High event volume from CI/CD (100s per hour)</li>
+<li>Complex joins across data sources</li>
+<li>Dashboard query performance</li>
+<li><strong>Mitigation</strong>: Event streaming (Kafka), caching (Redis), query optimization</li>
+<li><strong>Privacy Considerations</strong>: Individual developer performance visibility</li>
+<li>Metrics could be misused for surveillance</li>
+<li>Team metrics, not individual metrics</li>
+<li>Requires careful communication</li>
+<li><strong>Mitigation</strong>: Team-level aggregation only, explicit privacy policy</li>
+<li><strong>Maintenance Overhead</strong>: Another system to operate</li>
+<li>VSM Hub needs monitoring, scaling, updates</li>
+<li>Additional PostgreSQL database</li>
+<li>Integration maintenance as tools evolve</li>
+<li><strong>Mitigation</strong>: Observability from day one, runbooks, automation</li>
+</ol>
+<h3 id="neutral">Neutral</h3>
+<ol>
+<li><strong>Learning Curve</strong>: Teams need to understand VSM concepts</li>
+<li>Training required on flow metrics</li>
+<li>Dojo module needed (“Value Stream Management”)</li>
+<li><strong>Action</strong>: Include in Yellow Belt curriculum</li>
+<li><strong>Cultural Change</strong>: Shifts focus from velocity to flow</li>
+<li>Story points de-emphasized</li>
+<li>Flow efficiency becomes key metric</li>
+<li><strong>Action</strong>: Leadership buy-in, communicate why</li>
+<li><strong>Tool Dependencies</strong>: Relies on existing tool quality</li>
+<li>Focalboard API stability</li>
+<li>GitHub webhook reliability</li>
+<li>Jenkins plugin ecosystem</li>
+<li><strong>Action</strong>: Contribute improvements upstream</li>
+</ol>
+<hr />
+<h2 id="alternatives-considered">Alternatives Considered</h2>
+<h3 id="alternative-1-use-existing-commercial-vsm-tools">Alternative 1: Use Existing Commercial VSM Tools</h3>
+<p><strong>Examples</strong>: Tasktop Hub, ConnectAll, Plutora</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>✅ Mature, battle-tested solutions</li>
+<li>✅ Pre-built integrations with popular tools</li>
+<li>✅ Advanced analytics and ML features</li>
+<li>✅ Enterprise support available</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>❌ Expensive ($50-200 per user/month)</li>
+<li>❌ SaaS-only (data leaves infrastructure)</li>
+<li>❌ Not open source (vendor lock-in)</li>
+<li>❌ Limited customization</li>
+<li>❌ Doesn’t align with Fawkes’ self-hosted ethos</li>
+</ul>
+<p><strong>Why Rejected</strong>:
+Fawkes is an open-source, self-hosted platform. Introducing a commercial SaaS tool contradicts our core values and creates vendor dependency. Our users expect integrated, customizable solutions.</p>
+<h3 id="alternative-2-basic-dashboards-with-manual-correlation">Alternative 2: Basic Dashboards with Manual Correlation</h3>
+<p><strong>Approach</strong>: Build Grafana dashboards with manual work item entry</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>✅ Simple to implement (minimal code)</li>
+<li>✅ Leverages existing Grafana infrastructure</li>
+<li>✅ No new services to maintain</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>❌ Manual data entry is error-prone</li>
+<li>❌ No automated correlation between tools</li>
+<li>❌ No real-time updates</li>
+<li>❌ Poor developer experience</li>
+<li>❌ Doesn’t scale beyond 1-2 teams</li>
+</ul>
+<p><strong>Why Rejected</strong>:
+Manual processes don’t scale and create developer friction. We need automated, seamless integration that respects developer time.</p>
+<h3 id="alternative-3-extend-existing-tools-eg-backstage-plugin-only">Alternative 3: Extend Existing Tools (e.g., Backstage Plugin Only)</h3>
+<p><strong>Approach</strong>: Build VSM as a Backstage plugin without dedicated service</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>✅ Fewer components to maintain</li>
+<li>✅ Integrated into existing portal</li>
+<li>✅ Simpler architecture</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>❌ Backstage plugin can’t process real-time events reliably</li>
+<li>❌ No central data store for historical analysis</li>
+<li>❌ Limited to Backstage users (not available in Grafana)</li>
+<li>❌ Poor separation of concerns</li>
+</ul>
+<p><strong>Why Rejected</strong>:
+VSM requires real-time event processing, data aggregation, and ML-based analysis. A Backstage plugin alone can’t provide the required functionality. We need a dedicated service with a proper data layer.</p>
+<h3 id="alternative-4-third-party-open-source-vsm-tools">Alternative 4: Third-Party Open Source VSM Tools</h3>
+<p><strong>Examples</strong>: Haystack, Faros AI, Swarmia (partially open source)</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>✅ Open source (some)</li>
+<li>✅ Active communities</li>
+<li>✅ Pre-built integrations</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>❌ May not integrate with our specific stack (Focalboard)</li>
+<li>❌ Require additional deployment complexity</li>
+<li>❌ May not align with our UX principles</li>
+<li>❌ Not designed for learning (dojo integration)</li>
+</ul>
+<p><strong>Why Partially Considered</strong>:
+We could use these as <em>inspiration</em> or even <em>components</em> (e.g., Faros’s data model), but not as drop-in replacements. We’ll evaluate their architectures and adopt patterns that fit Fawkes.</p>
+<h3 id="alternative-5-delayed-implementation-post-mvp">Alternative 5: Delayed Implementation (Post-MVP)</h3>
+<p><strong>Approach</strong>: Focus on core platform features first, add VSM later</p>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>✅ Faster MVP delivery</li>
+<li>✅ Less complexity initially</li>
+<li>✅ Can learn from user feedback first</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>❌ Misses opportunity to differentiate at launch</li>
+<li>❌ Harder to retrofit integrations later</li>
+<li>❌ 2025 DORA emphasizes VSM importance now</li>
+<li>❌ Competitors may add VSM first</li>
+</ul>
+<p><strong>Why Rejected</strong>:
+The 2025 DORA Report makes clear that VSM is a key differentiator for high-performing organizations. Delaying this means Fawkes won’t be competitive with modern expectations. However, we will use a <strong>phased approach</strong> (see Implementation Plan).</p>
+<hr />
+<h2 id="implementation-plan">Implementation Plan</h2>
+<h3 id="phase-1-foundation-weeks-1-4-mvp-scope">Phase 1: Foundation (Weeks 1-4) - <strong>MVP Scope</strong></h3>
+<p><strong>Goal</strong>: Basic correlation and cycle time measurement</p>
+<p><strong>Deliverables</strong>:</p>
+<ol>
+<li>VSM Hub service (Go)</li>
+<li>Webhook receiver</li>
+<li>Work item correlation engine</li>
+<li>Basic API (REST)</li>
+<li>PostgreSQL schema</li>
+<li>Integrations (simplified):</li>
+<li>Focalboard webhook → VSM Hub</li>
+<li>GitHub webhook → VSM Hub</li>
+<li>Jenkins webhook → VSM Hub</li>
+<li>Metrics:</li>
+<li>Cycle time (end-to-end)</li>
+<li>Lead time (commit → deploy)</li>
+<li>WIP by stage</li>
+<li>Visualization:</li>
+<li>Simple Grafana dashboard (flow metrics)</li>
+<li>Backstage plugin (minimal - work item list)</li>
+</ol>
+<p><strong>Success Criteria</strong>:</p>
+<ul>
+<li>✅ Can correlate work items across Focalboard, GitHub, Jenkins</li>
+<li>✅ Cycle time calculated for completed work items</li>
+<li>✅ Dashboard shows basic flow metrics</li>
+</ul>
+<h3 id="phase-2-intelligence-weeks-5-8-post-mvp">Phase 2: Intelligence (Weeks 5-8) - <strong>Post-MVP</strong></h3>
+<p><strong>Goal</strong>: Bottleneck detection and alerts</p>
+<p><strong>Deliverables</strong>:</p>
+<ol>
+<li>Bottleneck detection algorithm</li>
+<li>Statistical anomaly detection</li>
+<li>Rule-based alerts</li>
+<li>Enhanced metrics:</li>
+<li>Flow efficiency</li>
+<li>Stage-level cycle times</li>
+<li>Wait time vs. active time</li>
+<li>Alerting:</li>
+<li>Mattermost notifications for bottlenecks</li>
+<li>Email alerts for leadership</li>
+<li>In-app alerts (Backstage)</li>
+<li>Enhanced Backstage plugin:</li>
+<li>Value stream visualization</li>
+<li>Bottleneck alerts</li>
+<li>Team health dashboard</li>
+</ol>
+<p><strong>Success Criteria</strong>:</p>
+<ul>
+<li>✅ Bottlenecks detected within 4 hours of occurrence</li>
+<li>✅ Alerts sent to appropriate channels</li>
+<li>✅ Flow efficiency calculated and displayed</li>
+</ul>
+<h3 id="phase-3-business-value-weeks-9-12-post-mvp">Phase 3: Business Value (Weeks 9-12) - <strong>Post-MVP</strong></h3>
+<p><strong>Goal</strong>: Link work items to business outcomes</p>
+<p><strong>Deliverables</strong>:</p>
+<ol>
+<li>Business value tracking</li>
+<li>Value assignment in Focalboard</li>
+<li>Value delivery metrics</li>
+<li>Value velocity trends</li>
+<li>Customer feedback integration</li>
+<li>NPS per feature</li>
+<li>Feature usage tracking</li>
+<li>Incident correlation</li>
+<li>Advanced dashboards:</li>
+<li>Executive value stream overview</li>
+<li>Value delivery trends</li>
+<li>Feature success scores</li>
+<li>Dojo module: “Value Stream Management”</li>
+<li>VSM concepts and metrics</li>
+<li>Hands-on lab: Optimize a value stream</li>
+<li>Certification: “Fawkes VSM Practitioner”</li>
+</ol>
+<p><strong>Success Criteria</strong>:</p>
+<ul>
+<li>✅ Business value tracked for</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
