@@ -21,7 +21,7 @@
     
     
       
-        <title>ADR 029 - Fawkes</title>
+        <title>ADR-029: Flow Metrics Storage Strategy - Fawkes</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#week-3-optimization-continued" class="md-skip">
+        <a href="#adr-029-flow-metrics-storage-strategy" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ADR 029
+              ADR-029: Flow Metrics Storage Strategy
             
           </span>
         </div>
@@ -1387,6 +1387,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1395,6 +1397,323 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#functional-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functional Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#non-functional-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-Functional Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-access-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Access Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#primary-storage-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary Storage: PostgreSQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secondary-storage-prometheus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secondary Storage: Prometheus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tertiary-storage-s3-cold-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tertiary Storage: S3 (Cold Storage)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-flow-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Flow Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Flow Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-webhook-event-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 1: Webhook Event Processing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-dashboard-query-grafana" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 2: Dashboard Query (Grafana)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-detailed-flow-item-query-backstage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example 3: Detailed Flow Item Query (Backstage)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rationale
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rationale">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-postgresql-for-primary-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why PostgreSQL for Primary Storage?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-prometheus-for-time-series" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Prometheus for Time-Series?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-s3-for-archival" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why S3 for Archival?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-retention-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Retention Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-optimization-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Optimization Strategies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Optimization Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-database-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Database Indexing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-materialized-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Materialized Views
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-partitioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Partitioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-query-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Query Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-caching-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Caching Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disaster-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disaster Recovery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Disaster Recovery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backup-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#week-3-optimization-continued" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1404,8 +1723,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#week-4-monitoring-alerting" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1415,8 +1734,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#week-5-backup-recovery" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1426,8 +1745,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#week-6-data-migration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1437,8 +1756,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#week-7-security-hardening" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1448,8 +1767,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#week-8-production-readiness" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1457,6 +1776,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1721,8 +2045,852 @@
 
 
 
-  <h1>ADR 029</h1>
+<h1 id="adr-029-flow-metrics-storage-strategy">ADR-029: Flow Metrics Storage Strategy</h1>
+<p><strong>Status</strong>: Proposed</p>
+<p><strong>Date</strong>: 2025-01-15</p>
+<p><strong>Authors</strong>: Fawkes Architecture Team</p>
+<p><strong>Deciders</strong>: Platform Architects, SRE Team, Data Engineering</p>
+<hr />
+<h2 id="context">Context</h2>
+<p>The Flow Metrics Service needs to store and query multiple types of data to support Value Stream Management:</p>
+<ol>
+<li><strong>Flow Items</strong> - Complete journey of work items through all stages</li>
+<li><strong>Time-Series Metrics</strong> - Flow velocity, flow time, efficiency trends over time</li>
+<li><strong>Event Stream</strong> - Raw webhook events from GitHub, Jenkins, ArgoCD, etc.</li>
+<li><strong>Aggregated Analytics</strong> - Pre-calculated metrics for dashboards</li>
+<li><strong>Historical Data</strong> - Long-term retention for trend analysis</li>
+</ol>
+<p><strong>Key Requirements:</strong></p>
+<h3 id="functional-requirements">Functional Requirements</h3>
+<ul>
+<li>Store complete flow item lifecycle (8 stages, multiple timestamps)</li>
+<li>Support complex relational queries (joins across teams, stages, items)</li>
+<li>Handle time-series data for trending and alerting</li>
+<li>Enable real-time dashboard updates (&lt;1 second latency)</li>
+<li>Support historical queries (90 days minimum, ideally 1+ year)</li>
+<li>Calculate percentiles (P50, P75, P95) efficiently</li>
+<li>Support team-level and individual item drill-downs</li>
+<li>Enable export for data science/ML analysis</li>
+</ul>
+<h3 id="non-functional-requirements">Non-Functional Requirements</h3>
+<ul>
+<li><strong>Write throughput</strong>: 100+ events/second (peak)</li>
+<li><strong>Query latency</strong>: &lt;500ms for dashboard queries</li>
+<li><strong>Data retention</strong>: 90 days hot, 1 year warm, 3 years cold</li>
+<li><strong>Availability</strong>: 99.9% uptime</li>
+<li><strong>Scalability</strong>: Support 50+ teams, 10,000+ flow items/month</li>
+<li><strong>Cost</strong>: &lt;$500/month infrastructure</li>
+<li><strong>Backup/Recovery</strong>: RPO &lt;1 hour, RTO &lt;4 hours</li>
+</ul>
+<h3 id="data-access-patterns">Data Access Patterns</h3>
+<p><strong>Write-Heavy Patterns:</strong></p>
+<ul>
+<li>Webhook events (high frequency, small payloads)</li>
+<li>Flow item updates (multiple times per item lifecycle)</li>
+<li>Metrics calculations (periodic batch processing)</li>
+</ul>
+<p><strong>Read-Heavy Patterns:</strong></p>
+<ul>
+<li>Dashboard queries (real-time, high concurrency)</li>
+<li>Team metrics (daily/weekly aggregations)</li>
+<li>Individual flow item drill-downs (ad-hoc queries)</li>
+<li>Historical trend analysis (monthly/quarterly reports)</li>
+<li>Executive reporting (weekly/monthly aggregations)</li>
+</ul>
+<hr />
+<h2 id="decision">Decision</h2>
+<p>We will implement a <strong>hybrid storage architecture</strong> combining PostgreSQL for relational data and Prometheus for time-series metrics:</p>
+<h3 id="primary-storage-postgresql">Primary Storage: PostgreSQL</h3>
+<p><strong>Purpose</strong>: Authoritative source for flow items and detailed event data</p>
+<p><strong>Schema</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- Core flow items table</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">flow_items</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">gen_random_uuid</span><span class="p">(),</span>
+<span class="w">    </span><span class="n">external_id</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">  </span><span class="c1">-- GitHub issue #, JIRA ticket, etc.</span>
+<span class="w">    </span><span class="n">team_id</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">item_type</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">     </span><span class="c1">-- feature, bug, chore</span>
+<span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">500</span><span class="p">),</span>
+<span class="w">    </span><span class="n">description</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">story_points</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">current_stage</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">status</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">        </span><span class="c1">-- in_progress, completed, cancelled</span>
+<span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<span class="w">    </span><span class="n">updated_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<span class="w">    </span><span class="n">completed_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
 
+<span class="w">    </span><span class="c1">-- Metadata</span>
+<span class="w">    </span><span class="n">labels</span><span class="w"> </span><span class="n">JSONB</span><span class="p">,</span>
+<span class="w">    </span><span class="n">metadata</span><span class="w"> </span><span class="n">JSONB</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">-- Indexes</span>
+<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">flow_items_external_id_key</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="p">(</span><span class="n">external_id</span><span class="p">,</span><span class="w"> </span><span class="n">team_id</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_flow_items_team_status</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">flow_items</span><span class="p">(</span><span class="n">team_id</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_flow_items_created_at</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">flow_items</span><span class="p">(</span><span class="n">created_at</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_flow_items_completed_at</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">flow_items</span><span class="p">(</span><span class="n">completed_at</span><span class="p">)</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">completed_at</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_flow_items_current_stage</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">flow_items</span><span class="p">(</span><span class="n">current_stage</span><span class="p">);</span>
+
+<span class="c1">-- Stage transitions table</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">stage_transitions</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">BIGSERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">flow_item_id</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">flow_items</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">from_stage</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">    </span><span class="n">to_stage</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">transitioned_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<span class="w">    </span><span class="n">duration_seconds</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span><span class="w">  </span><span class="c1">-- Time spent in from_stage</span>
+
+<span class="w">    </span><span class="c1">-- Metadata</span>
+<span class="w">    </span><span class="n">triggered_by</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span><span class="w">  </span><span class="c1">-- user, automation, webhook</span>
+<span class="w">    </span><span class="n">event_type</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<span class="w">    </span><span class="n">event_payload</span><span class="w"> </span><span class="n">JSONB</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">-- Indexes</span>
+<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">stage_transitions_flow_item_stage</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="p">(</span><span class="n">flow_item_id</span><span class="p">,</span><span class="w"> </span><span class="n">to_stage</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_stage_transitions_flow_item</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">stage_transitions</span><span class="p">(</span><span class="n">flow_item_id</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_stage_transitions_timestamp</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">stage_transitions</span><span class="p">(</span><span class="n">transitioned_at</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_stage_transitions_stage</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">stage_transitions</span><span class="p">(</span><span class="n">to_stage</span><span class="p">);</span>
+
+<span class="c1">-- Stage metrics (denormalized for query performance)</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">stage_metrics</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">BIGSERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">flow_item_id</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">flow_items</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">stage</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">-- Time tracking</span>
+<span class="w">    </span><span class="n">started_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ended_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">active_time_seconds</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="n">wait_time_seconds</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">-- Calculated metrics</span>
+<span class="w">    </span><span class="n">flow_efficiency_percent</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+
+<span class="w">    </span><span class="c1">-- Metadata</span>
+<span class="w">    </span><span class="n">blockers</span><span class="w"> </span><span class="n">JSONB</span><span class="p">,</span><span class="w">  </span><span class="c1">-- List of blockers encountered</span>
+<span class="w">    </span><span class="n">metadata</span><span class="w"> </span><span class="n">JSONB</span><span class="p">,</span>
+
+<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">stage_metrics_flow_item_stage</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="p">(</span><span class="n">flow_item_id</span><span class="p">,</span><span class="w"> </span><span class="n">stage</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_stage_metrics_flow_item</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">stage_metrics</span><span class="p">(</span><span class="n">flow_item_id</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_stage_metrics_stage</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">stage_metrics</span><span class="p">(</span><span class="n">stage</span><span class="p">);</span>
+
+<span class="c1">-- Teams table</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">teams</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">description</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">-- Configuration</span>
+<span class="w">    </span><span class="n">wip_limit</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="n">target_flow_time_hours</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">96</span><span class="p">,</span><span class="w">  </span><span class="c1">-- 4 days</span>
+<span class="w">    </span><span class="n">target_flow_efficiency_percent</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">-- Metadata</span>
+<span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<span class="w">    </span><span class="n">updated_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<span class="w">    </span><span class="n">config</span><span class="w"> </span><span class="n">JSONB</span>
+<span class="p">);</span>
+
+<span class="c1">-- Raw webhook events (for debugging and reprocessing)</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">webhook_events</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">BIGSERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="k">source</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">        </span><span class="c1">-- github, jenkins, argocd</span>
+<span class="w">    </span><span class="n">event_type</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">received_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<span class="w">    </span><span class="n">processed_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">processing_status</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;pending&#39;</span><span class="p">,</span><span class="w">  </span><span class="c1">-- pending, processed, failed</span>
+
+<span class="w">    </span><span class="c1">-- Event data</span>
+<span class="w">    </span><span class="n">payload</span><span class="w"> </span><span class="n">JSONB</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">headers</span><span class="w"> </span><span class="n">JSONB</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">-- Processing info</span>
+<span class="w">    </span><span class="n">flow_item_id</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">flow_items</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+<span class="w">    </span><span class="n">error_message</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">retry_count</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">-- Partitioning by month</span>
+<span class="w">    </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">received_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="s1">&#39;2025-01-01&#39;</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_webhook_events_source</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">webhook_events</span><span class="p">(</span><span class="k">source</span><span class="p">,</span><span class="w"> </span><span class="n">event_type</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_webhook_events_received_at</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">webhook_events</span><span class="p">(</span><span class="n">received_at</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_webhook_events_processing_status</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">webhook_events</span><span class="p">(</span><span class="n">processing_status</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">processing_status</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s1">&#39;processed&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Partition webhook_events by month for performance</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">webhook_events_2025_01</span><span class="w"> </span><span class="n">PARTITION</span><span class="w"> </span><span class="k">OF</span><span class="w"> </span><span class="n">webhook_events</span>
+<span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;2025-01-01&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;2025-02-01&#39;</span><span class="p">);</span>
+
+<span class="c1">-- Aggregated metrics (pre-calculated for dashboard performance)</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">daily_team_metrics</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">BIGSERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">team_id</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">teams</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+<span class="w">    </span><span class="n">metric_date</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">-- Flow metrics</span>
+<span class="w">    </span><span class="n">flow_velocity</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="w">              </span><span class="c1">-- items/week</span>
+<span class="w">    </span><span class="n">flow_time_p50_hours</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+<span class="w">    </span><span class="n">flow_time_p75_hours</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+<span class="w">    </span><span class="n">flow_time_p95_hours</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+<span class="w">    </span><span class="n">flow_efficiency_percent</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+<span class="w">    </span><span class="n">flow_load</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span><span class="w">                         </span><span class="c1">-- WIP count</span>
+
+<span class="w">    </span><span class="c1">-- Item counts</span>
+<span class="w">    </span><span class="n">items_completed</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="n">items_started</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="n">items_cancelled</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">-- Breakdown by type</span>
+<span class="w">    </span><span class="n">features_completed</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="n">bugs_completed</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="n">chores_completed</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">-- Calculated</span>
+<span class="w">    </span><span class="n">calculated_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+
+<span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">daily_team_metrics_team_date</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="p">(</span><span class="n">team_id</span><span class="p">,</span><span class="w"> </span><span class="n">metric_date</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_daily_team_metrics_team_date</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">daily_team_metrics</span><span class="p">(</span><span class="n">team_id</span><span class="p">,</span><span class="w"> </span><span class="n">metric_date</span><span class="w"> </span><span class="k">DESC</span><span class="p">);</span>
+
+<span class="c1">-- Materialized view for current flow metrics (refreshed every 5 minutes)</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">current_flow_metrics</span><span class="w"> </span><span class="k">AS</span>
+<span class="k">SELECT</span><span class="w"> </span>
+<span class="w">    </span><span class="n">fi</span><span class="p">.</span><span class="n">team_id</span><span class="p">,</span>
+<span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;in_progress&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">current_wip</span><span class="p">,</span>
+<span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">completed_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;7 days&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">completed_last_7d</span><span class="p">,</span>
+<span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">completed_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;30 days&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">completed_last_30d</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">-- Flow time percentiles (last 30 days)</span>
+<span class="w">    </span><span class="n">PERCENTILE_CONT</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="n">WITHIN</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span>
+<span class="w">        </span><span class="k">EXTRACT</span><span class="p">(</span><span class="n">EPOCH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="n">fi</span><span class="p">.</span><span class="n">completed_at</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">created_at</span><span class="p">))</span><span class="o">/</span><span class="mi">3600</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">completed_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;30 days&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">flow_time_p50_hours</span><span class="p">,</span>
+
+<span class="w">    </span><span class="n">PERCENTILE_CONT</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">95</span><span class="p">)</span><span class="w"> </span><span class="n">WITHIN</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span>
+<span class="w">        </span><span class="k">EXTRACT</span><span class="p">(</span><span class="n">EPOCH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="n">fi</span><span class="p">.</span><span class="n">completed_at</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">created_at</span><span class="p">))</span><span class="o">/</span><span class="mi">3600</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">completed_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;30 days&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">flow_time_p95_hours</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">-- Flow efficiency (last 30 days)</span>
+<span class="w">    </span><span class="k">AVG</span><span class="p">(</span>
+<span class="w">        </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">sm</span><span class="p">.</span><span class="n">active_time_seconds</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">stage_metrics</span><span class="w"> </span><span class="n">sm</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">sm</span><span class="p">.</span><span class="n">flow_item_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">/</span>
+<span class="w">        </span><span class="k">NULLIF</span><span class="p">(</span><span class="k">EXTRACT</span><span class="p">(</span><span class="n">EPOCH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="n">fi</span><span class="p">.</span><span class="n">completed_at</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">created_at</span><span class="p">)),</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">completed_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;30 days&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">avg_flow_efficiency_percent</span><span class="p">,</span>
+
+<span class="w">    </span><span class="k">MAX</span><span class="p">(</span><span class="n">fi</span><span class="p">.</span><span class="n">updated_at</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">last_updated</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">flow_items</span><span class="w"> </span><span class="n">fi</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">team_id</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">current_flow_metrics</span><span class="w"> </span><span class="p">(</span><span class="n">team_id</span><span class="p">);</span>
+
+<span class="c1">-- Refresh materialized view every 5 minutes via cron job</span>
+<span class="c1">-- SELECT refresh_flow_metrics_view();</span>
+</code></pre></div>
+<h3 id="secondary-storage-prometheus">Secondary Storage: Prometheus</h3>
+<p><strong>Purpose</strong>: Time-series metrics for real-time monitoring and alerting</p>
+<p><strong>Metrics Exposed</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># flow_metrics_service/src/metrics/prometheus_metrics.py</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">prometheus_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">Histogram</span><span class="p">,</span> <span class="n">Gauge</span><span class="p">,</span> <span class="n">Summary</span>
+
+<span class="c1"># Flow Velocity</span>
+<span class="n">flow_velocity_items_per_week</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span>
+    <span class="s1">&#39;flow_velocity_items_per_week&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Number of flow items completed per week&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Flow Time</span>
+<span class="n">flow_time_seconds</span> <span class="o">=</span> <span class="n">Histogram</span><span class="p">(</span>
+    <span class="s1">&#39;flow_time_seconds&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Total time from start to completion&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">],</span>
+    <span class="n">buckets</span><span class="o">=</span><span class="p">[</span>
+        <span class="mi">3600</span><span class="p">,</span>      <span class="c1"># 1 hour</span>
+        <span class="mi">21600</span><span class="p">,</span>     <span class="c1"># 6 hours</span>
+        <span class="mi">86400</span><span class="p">,</span>     <span class="c1"># 1 day</span>
+        <span class="mi">172800</span><span class="p">,</span>    <span class="c1"># 2 days</span>
+        <span class="mi">345600</span><span class="p">,</span>    <span class="c1"># 4 days</span>
+        <span class="mi">604800</span><span class="p">,</span>    <span class="c1"># 1 week</span>
+        <span class="mi">1209600</span><span class="p">,</span>   <span class="c1"># 2 weeks</span>
+        <span class="mi">2592000</span><span class="p">,</span>   <span class="c1"># 30 days</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Flow Efficiency</span>
+<span class="n">flow_efficiency_percent</span> <span class="o">=</span> <span class="n">Histogram</span><span class="p">(</span>
+    <span class="s1">&#39;flow_efficiency_percent&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Flow efficiency (active time / total time)&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;team&#39;</span><span class="p">],</span>
+    <span class="n">buckets</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Flow Load (WIP)</span>
+<span class="n">flow_load_wip_current</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span>
+    <span class="s1">&#39;flow_load_wip_current&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Current number of items in progress&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;team&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">flow_load_wip_limit</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span>
+    <span class="s1">&#39;flow_load_wip_limit&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;WIP limit for team&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;team&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Stage Metrics</span>
+<span class="n">stage_wait_time_seconds</span> <span class="o">=</span> <span class="n">Histogram</span><span class="p">(</span>
+    <span class="s1">&#39;stage_wait_time_seconds&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Wait time in each stage&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;stage&#39;</span><span class="p">],</span>
+    <span class="n">buckets</span><span class="o">=</span><span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="mi">21600</span><span class="p">,</span> <span class="mi">86400</span><span class="p">,</span> <span class="mi">172800</span><span class="p">,</span> <span class="mi">604800</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">stage_active_time_seconds</span> <span class="o">=</span> <span class="n">Histogram</span><span class="p">(</span>
+    <span class="s1">&#39;stage_active_time_seconds&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Active time in each stage&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;stage&#39;</span><span class="p">],</span>
+    <span class="n">buckets</span><span class="o">=</span><span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="mi">21600</span><span class="p">,</span> <span class="mi">86400</span><span class="p">,</span> <span class="mi">172800</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">stage_flow_efficiency_percent</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span>
+    <span class="s1">&#39;stage_flow_efficiency_percent&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Flow efficiency per stage&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;stage&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Event Counters</span>
+<span class="n">webhook_events_received_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
+    <span class="s1">&#39;webhook_events_received_total&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Total webhook events received&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;event_type&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">webhook_events_processed_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
+    <span class="s1">&#39;webhook_events_processed_total&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Total webhook events successfully processed&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;event_type&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">webhook_events_failed_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
+    <span class="s1">&#39;webhook_events_failed_total&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Total webhook events that failed processing&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;event_type&#39;</span><span class="p">,</span> <span class="s1">&#39;error_type&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Flow Item Lifecycle</span>
+<span class="n">flow_items_created_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
+    <span class="s1">&#39;flow_items_created_total&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Total flow items created&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">flow_items_completed_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
+    <span class="s1">&#39;flow_items_completed_total&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Total flow items completed&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">flow_items_cancelled_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
+    <span class="s1">&#39;flow_items_cancelled_total&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Total flow items cancelled&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;item_type&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Stage Transitions</span>
+<span class="n">stage_transitions_total</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
+    <span class="s1">&#39;stage_transitions_total&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Total stage transitions&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;from_stage&#39;</span><span class="p">,</span> <span class="s1">&#39;to_stage&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Bottleneck Detection</span>
+<span class="n">bottleneck_detected</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span>
+    <span class="s1">&#39;bottleneck_detected&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Binary indicator of bottleneck (1 = yes, 0 = no)&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;stage&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">bottleneck_severity</span> <span class="o">=</span> <span class="n">Gauge</span><span class="p">(</span>
+    <span class="s1">&#39;bottleneck_severity&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Severity of bottleneck (0-100 scale)&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;stage&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="tertiary-storage-s3-cold-storage">Tertiary Storage: S3 (Cold Storage)</h3>
+<p><strong>Purpose</strong>: Long-term archival and compliance</p>
+<p><strong>Data Archived</strong>:</p>
+<ul>
+<li>Flow items older than 90 days (compressed JSON)</li>
+<li>Webhook events older than 30 days</li>
+<li>Daily aggregated metrics (permanent retention)</li>
+</ul>
+<p><strong>Format</strong>: Parquet files partitioned by <code>year/month/team_id/</code></p>
+<hr />
+<h2 id="architecture-diagram">Architecture Diagram</h2>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
+│                    WRITE PATH                                    │
+└─────────────────────────────────────────────────────────────────┘
+
+GitHub/Jenkins/ArgoCD Webhooks
+        ↓
+┌──────────────────┐
+│ Flow Metrics API │
+│ (FastAPI)        │
+└────────┬─────────┘
+         │
+         ├──────────────────┐
+         ↓                  ↓
+┌─────────────────┐  ┌──────────────────┐
+│ PostgreSQL      │  │ Prometheus       │
+│ (write-through) │  │ (metrics export) │
+└─────────────────┘  └──────────────────┘
+         │
+         ↓ (async background job)
+┌─────────────────┐
+│ Metrics         │
+│ Aggregator      │
+│ (nightly batch) │
+└────────┬────────┘
+         │
+         ↓
+┌─────────────────┐
+│ daily_team_     │
+│ metrics table   │
+└─────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    READ PATH                                     │
+└─────────────────────────────────────────────────────────────────┘
+
+Dashboard Queries
+        │
+        ├─────────────────────────┬─────────────────────────┐
+        ↓                         ↓                         ↓
+┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│ Grafana          │    │ Backstage VSM    │    │ Executive        │
+│ (Prometheus +    │    │ (PostgreSQL)     │    │ Reports          │
+│  PostgreSQL)     │    │                  │    │ (PostgreSQL)     │
+└──────────────────┘    └──────────────────┘    └──────────────────┘
+        ↓                         ↓                         ↓
+┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│ current_flow_    │    │ flow_items       │    │ daily_team_      │
+│ metrics view     │    │ + stage_metrics  │    │ metrics          │
+│ (5min refresh)   │    │ (live queries)   │    │ (pre-agg)        │
+└──────────────────┘    └──────────────────┘    └──────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    ARCHIVAL PATH                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+PostgreSQL (90+ days old)
+        ↓
+┌──────────────────┐
+│ Archival Job     │
+│ (weekly cron)    │
+└────────┬─────────┘
+         ↓
+┌──────────────────┐
+│ S3 Bucket        │
+│ (Parquet files)  │
+│ year/month/team/ │
+└──────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="data-flow-examples">Data Flow Examples</h2>
+<h3 id="example-1-webhook-event-processing">Example 1: Webhook Event Processing</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Webhook received</span>
+<span class="n">POST</span> <span class="o">/</span><span class="n">webhook</span><span class="o">/</span><span class="n">github</span>
+<span class="p">{</span>
+  <span class="s2">&quot;event_type&quot;</span><span class="p">:</span> <span class="s2">&quot;pull_request.opened&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;pr_number&quot;</span><span class="p">:</span> <span class="mi">456</span><span class="p">,</span>
+  <span class="s2">&quot;repository&quot;</span><span class="p">:</span> <span class="s2">&quot;sample-app&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;alice&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="s2">&quot;2025-01-15T10:30:00Z&quot;</span>
+<span class="p">}</span>
+
+<span class="c1"># Step 1: Insert raw event to PostgreSQL</span>
+<span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">webhook_events</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">event_type</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+<span class="n">VALUES</span> <span class="p">(</span><span class="s1">&#39;github&#39;</span><span class="p">,</span> <span class="s1">&#39;pull_request.opened&#39;</span><span class="p">,</span> <span class="s1">&#39;{&quot;pr_number&quot;: 456, ...}&#39;</span><span class="p">);</span>
+
+<span class="c1"># Step 2: Identify or create flow item</span>
+<span class="n">SELECT</span> <span class="nb">id</span> <span class="n">FROM</span> <span class="n">flow_items</span> 
+<span class="n">WHERE</span> <span class="n">external_id</span> <span class="o">=</span> <span class="s1">&#39;sample-app#456&#39;</span> <span class="n">AND</span> <span class="n">team_id</span> <span class="o">=</span> <span class="s1">&#39;alpha&#39;</span><span class="p">;</span>
+
+<span class="c1"># Step 3: Create stage transition</span>
+<span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">stage_transitions</span> <span class="p">(</span><span class="n">flow_item_id</span><span class="p">,</span> <span class="n">from_stage</span><span class="p">,</span> <span class="n">to_stage</span><span class="p">,</span> <span class="n">transitioned_at</span><span class="p">)</span>
+<span class="n">VALUES</span> <span class="p">(</span><span class="s1">&#39;uuid-123&#39;</span><span class="p">,</span> <span class="s1">&#39;development&#39;</span><span class="p">,</span> <span class="s1">&#39;code_review&#39;</span><span class="p">,</span> <span class="s1">&#39;2025-01-15T10:30:00Z&#39;</span><span class="p">);</span>
+
+<span class="c1"># Step 4: Update flow item current stage</span>
+<span class="n">UPDATE</span> <span class="n">flow_items</span> 
+<span class="n">SET</span> <span class="n">current_stage</span> <span class="o">=</span> <span class="s1">&#39;code_review&#39;</span><span class="p">,</span> <span class="n">updated_at</span> <span class="o">=</span> <span class="n">NOW</span><span class="p">()</span>
+<span class="n">WHERE</span> <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;uuid-123&#39;</span><span class="p">;</span>
+
+<span class="c1"># Step 5: Calculate and update stage metrics</span>
+<span class="n">UPDATE</span> <span class="n">stage_metrics</span>
+<span class="n">SET</span> <span class="n">ended_at</span> <span class="o">=</span> <span class="n">NOW</span><span class="p">(),</span>
+    <span class="n">wait_time_seconds</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">calculated</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="n">active_time_seconds</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">calculated</span><span class="o">&gt;</span>
+<span class="n">WHERE</span> <span class="n">flow_item_id</span> <span class="o">=</span> <span class="s1">&#39;uuid-123&#39;</span> <span class="n">AND</span> <span class="n">stage</span> <span class="o">=</span> <span class="s1">&#39;development&#39;</span><span class="p">;</span>
+
+<span class="c1"># Step 6: Export metrics to Prometheus</span>
+<span class="n">stage_transitions_total</span><span class="p">{</span><span class="n">team</span><span class="o">=</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="n">from_stage</span><span class="o">=</span><span class="s2">&quot;development&quot;</span><span class="p">,</span> <span class="n">to_stage</span><span class="o">=</span><span class="s2">&quot;code_review&quot;</span><span class="p">}</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="n">flow_load_wip_current</span><span class="p">{</span><span class="n">team</span><span class="o">=</span><span class="s2">&quot;alpha&quot;</span><span class="p">}</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">count</span> <span class="ow">in</span> <span class="n">progress</span> <span class="n">items</span><span class="o">&gt;</span>
+</code></pre></div>
+<h3 id="example-2-dashboard-query-grafana">Example 2: Dashboard Query (Grafana)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Query: Flow Velocity (last 30 days)</span>
+<span class="c1"># Grafana queries Prometheus</span>
+
+<span class="nv">flow_velocity_items_per_week</span><span class="p">{</span><span class="nl">team</span><span class="o">=</span><span class="p">&quot;</span><span class="s">alpha</span><span class="p">&quot;}</span>
+
+<span class="c1"># Prometheus scrapes /metrics endpoint every 15 seconds</span>
+<span class="c1"># Flow Metrics Service calculates and exposes:</span>
+<span class="c1"># - Count completed items in last 7 days</span>
+<span class="c1"># - Divide by (7/7) = items per week</span>
+<span class="c1"># - Update gauge metric</span>
+</code></pre></div>
+<h3 id="example-3-detailed-flow-item-query-backstage">Example 3: Detailed Flow Item Query (Backstage)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">-- Query: Get complete flow item journey for USER-123</span>
+
+<span class="c1">-- Main flow item</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">flow_items</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">external_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;USER-123&#39;</span><span class="p">;</span>
+
+<span class="c1">-- All stage transitions</span>
+<span class="k">SELECT</span><span class="w"> </span>
+<span class="w">    </span><span class="n">st</span><span class="p">.</span><span class="n">from_stage</span><span class="p">,</span>
+<span class="w">    </span><span class="n">st</span><span class="p">.</span><span class="n">to_stage</span><span class="p">,</span>
+<span class="w">    </span><span class="n">st</span><span class="p">.</span><span class="n">transitioned_at</span><span class="p">,</span>
+<span class="w">    </span><span class="n">st</span><span class="p">.</span><span class="n">duration_seconds</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">stage_transitions</span><span class="w"> </span><span class="n">st</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">flow_items</span><span class="w"> </span><span class="n">fi</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">flow_item_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">id</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">external_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;USER-123&#39;</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">transitioned_at</span><span class="p">;</span>
+
+<span class="c1">-- Stage-level metrics</span>
+<span class="k">SELECT</span><span class="w"> </span>
+<span class="w">    </span><span class="n">sm</span><span class="p">.</span><span class="n">stage</span><span class="p">,</span>
+<span class="w">    </span><span class="n">sm</span><span class="p">.</span><span class="n">started_at</span><span class="p">,</span>
+<span class="w">    </span><span class="n">sm</span><span class="p">.</span><span class="n">ended_at</span><span class="p">,</span>
+<span class="w">    </span><span class="n">sm</span><span class="p">.</span><span class="n">active_time_seconds</span><span class="p">,</span>
+<span class="w">    </span><span class="n">sm</span><span class="p">.</span><span class="n">wait_time_seconds</span><span class="p">,</span>
+<span class="w">    </span><span class="n">sm</span><span class="p">.</span><span class="n">flow_efficiency_percent</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">stage_metrics</span><span class="w"> </span><span class="n">sm</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">flow_items</span><span class="w"> </span><span class="n">fi</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">sm</span><span class="p">.</span><span class="n">flow_item_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">id</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">external_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;USER-123&#39;</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">sm</span><span class="p">.</span><span class="n">started_at</span><span class="p">;</span>
+
+<span class="c1">-- Calculate total flow efficiency</span>
+<span class="k">SELECT</span><span class="w"> </span>
+<span class="w">    </span><span class="k">SUM</span><span class="p">(</span><span class="n">sm</span><span class="p">.</span><span class="n">active_time_seconds</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">total_active</span><span class="p">,</span>
+<span class="w">    </span><span class="k">SUM</span><span class="p">(</span><span class="n">sm</span><span class="p">.</span><span class="n">active_time_seconds</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">sm</span><span class="p">.</span><span class="n">wait_time_seconds</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">total_time</span><span class="p">,</span>
+<span class="w">    </span><span class="p">(</span><span class="k">SUM</span><span class="p">(</span><span class="n">sm</span><span class="p">.</span><span class="n">active_time_seconds</span><span class="p">)::</span><span class="nb">float</span><span class="w"> </span><span class="o">/</span><span class="w"> </span>
+<span class="w">     </span><span class="k">NULLIF</span><span class="p">(</span><span class="k">SUM</span><span class="p">(</span><span class="n">sm</span><span class="p">.</span><span class="n">active_time_seconds</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">sm</span><span class="p">.</span><span class="n">wait_time_seconds</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">flow_efficiency</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">stage_metrics</span><span class="w"> </span><span class="n">sm</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">flow_items</span><span class="w"> </span><span class="n">fi</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">sm</span><span class="p">.</span><span class="n">flow_item_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">id</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">external_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;USER-123&#39;</span><span class="p">;</span>
+</code></pre></div>
+<hr />
+<h2 id="rationale">Rationale</h2>
+<h3 id="why-postgresql-for-primary-storage">Why PostgreSQL for Primary Storage?</h3>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>✅ Strong relational model (flow items → transitions → metrics)</li>
+<li>✅ ACID compliance for data integrity</li>
+<li>✅ Complex JOIN queries for analytics</li>
+<li>✅ Excellent JSON support (JSONB) for flexible metadata</li>
+<li>✅ Materialized views for query performance</li>
+<li>✅ Partitioning for time-series data management</li>
+<li>✅ Native support in Backstage and other tools</li>
+<li>✅ Team familiarity (already using for other Fawkes components)</li>
+<li>✅ Proven at scale (handle millions of rows)</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>❌ Not optimized for pure time-series queries</li>
+<li>❌ Requires careful indexing for performance</li>
+<li>❌ More expensive than NoSQL for massive scale</li>
+</ul>
+<p><strong>Why Not Alternatives?</strong></p>
+<p><strong>MongoDB:</strong></p>
+<ul>
+<li>Document model doesn’t fit relational nature of flow items</li>
+<li>Weaker consistency guarantees</li>
+<li>More complex to query across relationships</li>
+</ul>
+<p><strong>Cassandra:</strong></p>
+<ul>
+<li>Overkill for expected scale (&lt;10M rows/year)</li>
+<li>Complex operational overhead</li>
+<li>Difficult to change schema</li>
+</ul>
+<p><strong>DynamoDB:</strong></p>
+<ul>
+<li>Expensive at scale</li>
+<li>Limited query flexibility</li>
+<li>Vendor lock-in</li>
+</ul>
+<h3 id="why-prometheus-for-time-series">Why Prometheus for Time-Series?</h3>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>✅ Industry standard for metrics</li>
+<li>✅ Native Grafana integration</li>
+<li>✅ Efficient time-series storage</li>
+<li>✅ Powerful query language (PromQL)</li>
+<li>✅ Built-in alerting</li>
+<li>✅ Pull-based model (service exposes /metrics)</li>
+<li>✅ Already deployed in Fawkes for DORA metrics</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>❌ Limited retention (15 days default, expensive to extend)</li>
+<li>❌ Not designed for detailed event storage</li>
+<li>❌ No JOIN capabilities</li>
+</ul>
+<p><strong>Why Not Alternatives?</strong></p>
+<p><strong>InfluxDB:</strong></p>
+<ul>
+<li>Additional infrastructure component</li>
+<li>Licensing concerns (InfluxDB 3.x)</li>
+<li>Less mature Grafana integration</li>
+</ul>
+<p><strong>TimescaleDB:</strong></p>
+<ul>
+<li>PostgreSQL extension, could consolidate storage</li>
+<li>Considered but adds complexity to single PostgreSQL instance</li>
+<li>Future option if Prometheus retention becomes issue</li>
+</ul>
+<h3 id="why-s3-for-archival">Why S3 for Archival?</h3>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>✅ Extremely cost-effective ($0.023/GB/month)</li>
+<li>✅ Unlimited retention</li>
+<li>✅ Parquet format efficient for analytics</li>
+<li>✅ Compatible with data science tools (Pandas, Spark)</li>
+<li>✅ Lifecycle policies for automatic tiering</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>❌ High latency (seconds to retrieve)</li>
+<li>❌ Not queryable without external tools</li>
+</ul>
+<hr />
+<h2 id="data-retention-strategy">Data Retention Strategy</h2>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────┐
+│ Data Lifecycle Management                                        │
+└─────────────────────────────────────────────────────────────────┘
+
+0-30 days (HOT):
+├─ PostgreSQL: All tables (full detail)
+├─ Prometheus: All metrics (15-second resolution)
+└─ Query performance: &lt;100ms
+
+30-90 days (WARM):
+├─ PostgreSQL: All tables (full detail)
+├─ Prometheus: Downsampled to 1-minute resolution (via recording rules)
+└─ Query performance: &lt;500ms
+
+90 days - 1 year (COLD):
+├─ PostgreSQL: Aggregated metrics only (daily_team_metrics)
+├─ S3: Full detail (Parquet files)
+├─ Prometheus: Not available (use PostgreSQL)
+└─ Query performance: &lt;2s (from PostgreSQL), &lt;30s (from S3)
+
+1+ years (ARCHIVED):
+├─ PostgreSQL: Aggregated metrics only
+├─ S3: Full detail (Parquet + Glacier)
+└─ Query performance: Minutes (from Glacier)
+
+Deletion Policy:
+├─ webhook_events: Delete after 90 days
+├─ stage_transitions: Archive to S3 after 90 days, delete after 1 year
+├─ flow_items: Archive to S3 after 90 days, delete after 3 years
+├─ daily_team_metrics: Keep forever (small size)
+└─ Prometheus: Automatic deletion after 15 days
+</code></pre></div>
+<hr />
+<h2 id="performance-optimization-strategies">Performance Optimization Strategies</h2>
+<h3 id="1-database-indexing">1. Database Indexing</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">-- Indexes for common query patterns</span>
+
+<span class="c1">-- Dashboard: Team metrics</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_flow_items_team_completed</span><span class="w"> </span>
+<span class="k">ON</span><span class="w"> </span><span class="n">flow_items</span><span class="p">(</span><span class="n">team_id</span><span class="p">,</span><span class="w"> </span><span class="n">completed_at</span><span class="p">)</span><span class="w"> </span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;completed&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Dashboard: WIP count</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_flow_items_team_in_progress</span><span class="w"> </span>
+<span class="k">ON</span><span class="w"> </span><span class="n">flow_items</span><span class="p">(</span><span class="n">team_id</span><span class="p">)</span><span class="w"> </span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;in_progress&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Drill-down: Flow item lookup</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_flow_items_external_id_hash</span><span class="w"> </span>
+<span class="k">ON</span><span class="w"> </span><span class="n">flow_items</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">hash</span><span class="p">(</span><span class="n">external_id</span><span class="p">);</span>
+
+<span class="c1">-- Analytics: Stage efficiency</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_stage_metrics_stage_efficiency</span><span class="w"> </span>
+<span class="k">ON</span><span class="w"> </span><span class="n">stage_metrics</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span><span class="w"> </span><span class="n">flow_efficiency_percent</span><span class="p">);</span>
+
+<span class="c1">-- Webhook processing: Unprocessed events</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_webhook_events_pending</span><span class="w"> </span>
+<span class="k">ON</span><span class="w"> </span><span class="n">webhook_events</span><span class="p">(</span><span class="k">source</span><span class="p">,</span><span class="w"> </span><span class="n">received_at</span><span class="p">)</span><span class="w"> </span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">processing_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pending&#39;</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="2-materialized-views">2. Materialized Views</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">-- Refresh strategy</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">refresh_flow_metrics_view</span><span class="p">()</span>
+<span class="k">RETURNS</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<span class="k">BEGIN</span>
+<span class="w">    </span><span class="n">REFRESH</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">current_flow_metrics</span><span class="p">;</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+
+<span class="c1">-- Schedule via pg_cron (every 5 minutes)</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">cron</span><span class="p">.</span><span class="n">schedule</span><span class="p">(</span><span class="s1">&#39;refresh-flow-metrics&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;*/5 * * * *&#39;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="s1">&#39;SELECT refresh_flow_metrics_view()&#39;</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="3-partitioning">3. Partitioning</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">-- Partition webhook_events by month</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">webhook_events</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="c1">-- ... columns ...</span>
+<span class="p">)</span><span class="w"> </span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">RANGE</span><span class="w"> </span><span class="p">(</span><span class="n">received_at</span><span class="p">);</span>
+
+<span class="c1">-- Create partitions for 2025</span>
+<span class="k">DO</span><span class="w"> </span><span class="err">$$</span>
+<span class="k">DECLARE</span>
+<span class="w">    </span><span class="n">month_start</span><span class="w"> </span><span class="nb">DATE</span><span class="p">;</span>
+<span class="k">BEGIN</span>
+<span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="n">month_num</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="mi">1</span><span class="p">..</span><span class="mi">12</span><span class="w"> </span><span class="n">LOOP</span>
+<span class="w">        </span><span class="n">month_start</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="s1">&#39;2025-01-01&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">month_num</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;1 month&#39;</span><span class="p">;</span>
+<span class="w">        </span><span class="k">EXECUTE</span><span class="w"> </span><span class="n">format</span><span class="p">(</span>
+<span class="w">            </span><span class="s1">&#39;CREATE TABLE IF NOT EXISTS webhook_events_%s PARTITION OF webhook_events</span>
+<span class="s1">             FOR VALUES FROM (%L) TO (%L)&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">to_char</span><span class="p">(</span><span class="n">month_start</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;YYYY_MM&#39;</span><span class="p">),</span>
+<span class="w">            </span><span class="n">month_start</span><span class="p">,</span>
+<span class="w">            </span><span class="n">month_start</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;1 month&#39;</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+<span class="k">END</span><span class="w"> </span><span class="err">$$</span><span class="p">;</span>
+
+<span class="c1">-- Automatic partition creation (pg_partman)</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">partman</span><span class="p">.</span><span class="n">create_parent</span><span class="p">(</span>
+<span class="w">    </span><span class="n">p_parent_table</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;public.webhook_events&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">p_control</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;received_at&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">p_type</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;native&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">p_interval</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;1 month&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">p_premake</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="w">  </span><span class="c1">-- Create 3 months ahead</span>
+<span class="p">);</span>
+</code></pre></div>
+<h3 id="4-query-optimization">4. Query Optimization</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Use connection pooling</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_engine</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.pool</span><span class="w"> </span><span class="kn">import</span> <span class="n">QueuePool</span>
+
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span>
+    <span class="s1">&#39;postgresql://flowmetrics:password@postgres:5432/flowmetrics&#39;</span><span class="p">,</span>
+    <span class="n">poolclass</span><span class="o">=</span><span class="n">QueuePool</span><span class="p">,</span>
+    <span class="n">pool_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">max_overflow</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+    <span class="n">pool_pre_ping</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># Verify connections before use</span>
+<span class="p">)</span>
+
+<span class="c1"># Use prepared statements for repeated queries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
+
+<span class="c1"># Bad: Vulnerable to SQL injection, not prepared</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_team_metrics_bad</span><span class="p">(</span><span class="n">team_id</span><span class="p">):</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SELECT * FROM daily_team_metrics WHERE team_id = &#39;</span><span class="si">{</span><span class="n">team_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+    <span class="k">return</span> <span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+<span class="c1"># Good: Parameterized, prepared statement</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_team_metrics_good</span><span class="p">(</span><span class="n">team_id</span><span class="p">):</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        SELECT * FROM daily_team_metrics </span>
+<span class="s2">        WHERE team_id = :team_id </span>
+<span class="s2">        ORDER BY metric_date DESC </span>
+<span class="s2">        LIMIT 30</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;team_id&quot;</span><span class="p">:</span> <span class="n">team_id</span><span class="p">})</span>
+
+<span class="c1"># Best: Use SQLAlchemy ORM with lazy loading</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.orm</span><span class="w"> </span><span class="kn">import</span> <span class="n">sessionmaker</span>
+
+<span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_team_metrics_best</span><span class="p">(</span><span class="n">team_id</span><span class="p">):</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">DailyTeamMetrics</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">team_id</span><span class="o">=</span><span class="n">team_id</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">DailyTeamMetrics</span><span class="o">.</span><span class="n">metric_date</span><span class="o">.</span><span class="n">desc</span><span class="p">())</span>\
+        <span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="5-caching-strategy">5. Caching Strategy</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Redis for hot data caching</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">redis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Redis</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="n">redis_client</span> <span class="o">=</span> <span class="n">Redis</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;redis&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">6379</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_team_flow_metrics</span><span class="p">(</span><span class="n">team_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">force_refresh</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get team flow metrics with Redis caching</span>
+<span class="sd">    Cache TTL: 5 minutes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cache_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;flow_metrics:team:</span><span class="si">{</span><span class="n">team_id</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="c1"># Try cache first</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">force_refresh</span><span class="p">:</span>
+        <span class="n">cached</span> <span class="o">=</span> <span class="n">redis_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cache_key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cached</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">cached</span><span class="p">)</span>
+
+    <span class="c1"># Cache miss - query database</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="n">calculate_team_metrics</span><span class="p">(</span><span class="n">team_id</span><span class="p">)</span>
+
+    <span class="c1"># Store in cache with 5-minute TTL</span>
+    <span class="n">redis_client</span><span class="o">.</span><span class="n">setex</span><span class="p">(</span>
+        <span class="n">cache_key</span><span class="p">,</span>
+        <span class="mi">300</span><span class="p">,</span>  <span class="c1"># 5 minutes</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">metrics</span>
+
+<span class="c1"># Cache invalidation on write</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_flow_item</span><span class="p">(</span><span class="n">flow_item_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">updates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="c1"># Update database</span>
+    <span class="n">update_database</span><span class="p">(</span><span class="n">flow_item_id</span><span class="p">,</span> <span class="n">updates</span><span class="p">)</span>
+
+    <span class="c1"># Invalidate team cache</span>
+    <span class="n">flow_item</span> <span class="o">=</span> <span class="n">get_flow_item</span><span class="p">(</span><span class="n">flow_item_id</span><span class="p">)</span>
+    <span class="n">redis_client</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;flow_metrics:team:</span><span class="si">{</span><span class="n">flow_item</span><span class="o">.</span><span class="n">team_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="disaster-recovery">Disaster Recovery</h2>
+<h3 id="backup-strategy">Backup Strategy</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># PostgreSQL backup configuration</span>
+<span class="nt">backup</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">tool</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pg_dump + wal-e</span>
+<span class="w">  </span><span class="nt">frequency</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">full</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">daily at 02:00 UTC</span>
+<span class="w">    </span><span class="nt">incremental</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">continuous (WAL archiving)</span>
+<span class="w">  </span><span class="nt">retention</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">full_backups</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30 days</span>
+<span class="w">    </span><span class="nt">wal_archives</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30 days</span>
+<span class="w">  </span><span class="nt">storage</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">S3 (s3://fawkes-backups/postgres/flow-metrics/)</span>
+<span class="w">    </span><span class="nt">encryption</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AES-256</span>
+<span class="w">  </span><span class="nt">verification</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">test_restore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">weekly</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">rpo:​​​​​​​​​​​​​​​​</span>
+</code></pre></div>
+<hr />
 <h3 id="week-3-optimization-continued">Week 3: Optimization (continued)</h3>
 <ul>
 <li>[ ] Create materialized views</li>
