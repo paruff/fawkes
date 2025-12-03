@@ -1,0 +1,2509 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>ADR-018: Developer Experience Measurement Framework (SPACE) - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#adr-018-developer-experience-measurement-framework-space" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ADR-018: Developer Experience Measurement Framework (SPACE)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assessment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Paths
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Wins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Capabilities
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patterns
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Continuous Delivery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spinnaker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Infrastructure
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-five-space-dimensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation: Five SPACE Dimensions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation: Five SPACE Dimensions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-satisfaction-how-happy-are-developers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. SATISFACTION (How Happy Are Developers?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-performance-how-well-do-systems-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. PERFORMANCE (How Well Do Systems Work?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-activity-what-are-developers-doing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. ACTIVITY (What Are Developers Doing?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-communication-collaboration-how-well-do-teams-work-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. COMMUNICATION &amp; COLLABORATION (How Well Do Teams Work Together?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-efficiency-flow-can-developers-focus-and-deliver-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. EFFICIENCY &amp; FLOW (Can Developers Focus and Deliver Value?)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-collection-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Collection Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#privacy-ethics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privacy &amp; Ethics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-devex-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The DevEx Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#measurement-cadence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measurement Cadence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acting-on-insights-the-feedback-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acting on Insights: The Feedback Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consequences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Positive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#negative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Negative
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#neutral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Neutral
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alternative-1-no-formal-measurement-status-quo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 1: No Formal Measurement (Status Quo)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-2-dora-metrics-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 2: DORA Metrics Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-3-custom-metrics-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 3: Custom Metrics Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-4-simple-nps-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 4: Simple NPS Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-5-devex-framework-dx-core-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative 5: DevEx Framework (DX Core 4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-foundation-weeks-1-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Foundation (Weeks 1-2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-full-rollout-weeks-3-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Full Rollout (Weeks 3-4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-iteration-month-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Iteration (Month 2+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metrics-for-success" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics for Success
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#last-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Last Updated
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="adr-018-developer-experience-measurement-framework-space">ADR-018: Developer Experience Measurement Framework (SPACE)</h1>
+<h2 id="status">Status</h2>
+<p>Accepted</p>
+<h2 id="context">Context</h2>
+<p>The 2025 DORA Report identifies <strong>user-centric focus</strong> as the single most critical capability for successful AI adoption and high-performing teams. The research found with high certainty that:</p>
+<blockquote>
+<p>“When teams adopt a user-centric focus, the positive influence of AI on their performance is amplified. Conversely, in the absence of a user-centric focus, AI adoption can have a negative impact on team performance.”</p>
+</blockquote>
+<p>For Fawkes to succeed as an Internal Delivery Platform, we must treat developers as our users and continuously measure, understand, and improve their experience. Without systematic measurement of developer experience (DevEx), we risk building features that don’t solve real problems, implementing AI tools that create friction rather than value, and making platform decisions based on assumptions rather than data.</p>
+<p><strong>Current State</strong>:</p>
+<ul>
+<li>❌ No systematic measurement of developer satisfaction</li>
+<li>❌ No tracking of cognitive load or friction points</li>
+<li>❌ No understanding of time spent on valuable vs. toil work</li>
+<li>❌ No feedback loops from developers to platform team</li>
+<li>❌ Platform decisions made on assumptions, not validated needs</li>
+<li>❌ No baseline metrics to measure improvement over time</li>
+</ul>
+<p><strong>The Problem</strong>:
+Organizations often measure <em>outputs</em> (deployments, lines of code, tickets closed) but fail to measure the <em>experience</em> of the people doing the work. This leads to:</p>
+<ul>
+<li>Productivity theater (looking busy without delivering value)</li>
+<li>Burnout from measuring activity instead of outcomes</li>
+<li>Tools and processes that optimize metrics but harm humans</li>
+<li>Disconnect between platform team goals and developer needs</li>
+</ul>
+<p><strong>Industry Context</strong>:
+The SPACE framework, developed by researchers at GitHub, Microsoft, and University of Victoria, provides a holistic approach to measuring developer productivity and experience across five dimensions:</p>
+<ol>
+<li><strong>S</strong>atisfaction: How fulfilled developers feel</li>
+<li><strong>P</strong>erformance: System and process outcomes</li>
+<li><strong>A</strong>ctivity: Developer actions and outputs</li>
+<li><strong>C</strong>ommunication &amp; Collaboration: Team interaction quality</li>
+<li><strong>E</strong>fficiency &amp; Flow: Ability to complete work with minimal interruption</li>
+</ol>
+<p>This framework has been validated in industry and aligns with DORA’s research on high-performing teams.</p>
+<h2 id="decision">Decision</h2>
+<p>We will adopt the <strong>SPACE framework</strong> as our comprehensive Developer Experience measurement strategy for the Fawkes platform. This framework will guide what we measure, how we collect data, and how we act on insights to continuously improve the platform.</p>
+<h3 id="architecture">Architecture</h3>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────┐
+│  Developer Experience Measurement System                    │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │ SATISFACTION (Self-Reported)                           │ │
+│  │ - NPS surveys (quarterly)                              │ │
+│  │ - Platform satisfaction ratings (5-point scale)        │ │
+│  │ - Recommendation likelihood                            │ │
+│  │ - Well-being assessments                               │ │
+│  │ - Job satisfaction                                     │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                          ↓                                   │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │ PERFORMANCE (System Metrics)                           │ │
+│  │ - DORA 4 keys (deployment freq, lead time, CFR, MTTR) │ │
+│  │ - Build success rate                                   │ │
+│  │ - Test coverage                                        │ │
+│  │ - Code review turnaround time                          │ │
+│  │ - Incident response time                               │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                          ↓                                   │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │ ACTIVITY (Behavioral Metrics)                          │ │
+│  │ - Commits per developer                                │ │
+│  │ - Pull requests opened/merged                          │ │
+│  │ - Code review participation                            │ │
+│  │ - Documentation contributions                          │ │
+│  │ - Platform feature usage                               │ │
+│  │ - AI tool adoption rates                               │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                          ↓                                   │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │ COMMUNICATION &amp; COLLABORATION (Interaction Quality)    │ │
+│  │ - Mattermost engagement metrics                        │ │
+│  │ - Code review quality (comment depth, resolution time) │ │
+│  │ - Documentation clarity ratings                        │ │
+│  │ - Cross-team collaboration frequency                   │ │
+│  │ - Knowledge sharing (wiki edits, blog posts)          │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                          ↓                                   │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │ EFFICIENCY &amp; FLOW (Experience Quality)                 │ │
+│  │ - Time spent in flow state (self-reported)            │ │
+│  │ - Cognitive load assessments                           │ │
+│  │ - Context switching frequency                          │ │
+│  │ - Percentage of time on valuable work                 │ │
+│  │ - Friction incident logging                            │ │
+│  │ - Interruption tracking                                │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                          ↓                                   │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │ DevEx Dashboard (Grafana)                              │ │
+│  │ - Real-time metrics visualization                      │ │
+│  │ - Historical trend analysis                            │ │
+│  │ - Team-level drill-downs                               │ │
+│  │ - Alert on degrading metrics                           │ │
+│  └────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="implementation-five-space-dimensions">Implementation: Five SPACE Dimensions</h3>
+<h4 id="1-satisfaction-how-happy-are-developers">1. SATISFACTION (How Happy Are Developers?)</h4>
+<p><strong>What We’ll Measure</strong>:</p>
+<ul>
+<li><strong>Net Promoter Score (NPS)</strong>: “How likely are you to recommend Fawkes to a colleague?” (0-10 scale)</li>
+<li><strong>Platform Satisfaction</strong>: “How satisfied are you with the Fawkes platform?” (1-5 scale)</li>
+<li><strong>Feature Satisfaction</strong>: Rate specific features (Backstage, CI/CD, GitOps, etc.)</li>
+<li><strong>Well-being</strong>: “I feel burned out from work” (strongly disagree to strongly agree)</li>
+<li><strong>Job Satisfaction</strong>: “I find my work meaningful and fulfilling”</li>
+</ul>
+<p><strong>Collection Methods</strong>:</p>
+<ul>
+<li>Quarterly NPS surveys (5 minutes)</li>
+<li>Post-interaction micro-surveys (1 question after major platform actions)</li>
+<li>Annual comprehensive DevEx survey (15 minutes)</li>
+<li>In-platform feedback widget (always available)</li>
+</ul>
+<p><strong>Target Metrics</strong>:</p>
+<ul>
+<li>NPS &gt;50 (good), &gt;70 (excellent)</li>
+<li>Platform satisfaction &gt;4.0/5.0</li>
+<li>&lt;20% reporting burnout symptoms</li>
+</ul>
+<p><strong>Example Survey Question</strong>:</p>
+<div class="highlight"><pre><span></span><code>On a scale of 0-10, how likely are you to recommend 
+the Fawkes platform to a colleague?
+
+0 = Not at all likely
+10 = Extremely likely
+
+[0] [1] [2] [3] [4] [5] [6] [7] [8] [9] [10]
+
+Follow-up: What&#39;s the primary reason for your score?
+[Text box]
+</code></pre></div>
+<h4 id="2-performance-how-well-do-systems-work">2. PERFORMANCE (How Well Do Systems Work?)</h4>
+<p><strong>What We’ll Measure</strong>:</p>
+<ul>
+<li><strong>DORA Metrics</strong>: Deployment frequency, lead time, change failure rate, MTTR</li>
+<li><strong>Build Metrics</strong>: Build success rate, build duration (P50, P95)</li>
+<li><strong>Quality Metrics</strong>: Test coverage, security scan pass rate, code quality scores</li>
+<li><strong>Reliability Metrics</strong>: Service uptime, incident count, MTTR</li>
+<li><strong>Time-to-Value</strong>: Hours from onboarding to first deployment</li>
+</ul>
+<p><strong>Collection Methods</strong>:</p>
+<ul>
+<li>Automated telemetry from Jenkins, ArgoCD, GitHub</li>
+<li>Prometheus metrics collection</li>
+<li>Grafana dashboards with historical trends</li>
+<li>Automated alerting on threshold breaches</li>
+</ul>
+<p><strong>Target Metrics</strong>:</p>
+<ul>
+<li>Deployment frequency: &gt;1/day</li>
+<li>Lead time for changes: &lt;24 hours</li>
+<li>Change failure rate: &lt;15%</li>
+<li>MTTR: &lt;1 hour</li>
+<li>Build success rate: &gt;95%</li>
+<li>Time to first deployment: &lt;4 hours</li>
+</ul>
+<p><strong>Example Dashboard Panel</strong>:</p>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────┐
+│ DORA Metrics - Last 30 Days             │
+│                                         │
+│ Deployment Frequency: 2.3/day ↑ +15%  │
+│ Lead Time: 18 hours        ↓ -22%     │
+│ Change Failure Rate: 12%   ↓ -3%      │
+│ MTTR: 47 minutes          ↓ -18%      │
+│                                         │
+│ [View Details] [Team Breakdown]        │
+└─────────────────────────────────────────┘
+</code></pre></div>
+<h4 id="3-activity-what-are-developers-doing">3. ACTIVITY (What Are Developers Doing?)</h4>
+<p><strong>What We’ll Measure</strong>:</p>
+<ul>
+<li><strong>Code Contributions</strong>: Commits, PRs, lines added/deleted</li>
+<li><strong>Review Activity</strong>: PRs reviewed, comments per review, approval rate</li>
+<li><strong>Platform Usage</strong>: Backstage views, dojo module completions, tool adoption</li>
+<li><strong>AI Tool Usage</strong>: Copilot acceptance rate, AI-generated code percentage</li>
+<li><strong>Documentation</strong>: Wiki edits, TechDocs updates, README improvements</li>
+<li><strong>Learning</strong>: Dojo progress, certification completions, training attendance</li>
+</ul>
+<p><strong>Collection Methods</strong>:</p>
+<ul>
+<li>GitHub API for code metrics</li>
+<li>Backstage analytics</li>
+<li>Application logs and usage tracking</li>
+<li>AI tool telemetry (Copilot, RAG queries)</li>
+</ul>
+<p><strong>Target Metrics</strong>:</p>
+<ul>
+<li>80%+ developers active on platform weekly</li>
+<li>Average 10+ commits per developer per week</li>
+<li>90%+ PRs reviewed within 24 hours</li>
+<li>70%+ AI tool adoption within 6 months</li>
+<li>50%+ developers complete White Belt within 3 months</li>
+</ul>
+<p><strong>Warning</strong>: Activity metrics alone are dangerous. Never use these for:</p>
+<ul>
+<li>Individual performance reviews</li>
+<li>Ranking developers</li>
+<li>Setting quotas or minimums</li>
+<li>Punitive actions</li>
+</ul>
+<p>These metrics show <em>patterns</em>, not individual worth. High activity ≠ high value.</p>
+<h4 id="4-communication-collaboration-how-well-do-teams-work-together">4. COMMUNICATION &amp; COLLABORATION (How Well Do Teams Work Together?)</h4>
+<p><strong>What We’ll Measure</strong>:</p>
+<ul>
+<li><strong>Code Review Quality</strong>: Average comments per PR, time to first review, resolution time</li>
+<li><strong>Collaboration Patterns</strong>: Cross-team PRs, pair programming sessions, mob programming</li>
+<li><strong>Knowledge Sharing</strong>: Mattermost channel activity, documentation contributions</li>
+<li><strong>Feedback Quality</strong>: Constructive comment ratio, conflict resolution time</li>
+<li><strong>Onboarding Support</strong>: Mentorship assignments, new developer success rate</li>
+</ul>
+<p><strong>Collection Methods</strong>:</p>
+<ul>
+<li>GitHub PR metadata analysis</li>
+<li>Mattermost analytics</li>
+<li>Backstage TechDocs engagement</li>
+<li>Manual tagging of collaboration events</li>
+<li>Onboarding survey feedback</li>
+</ul>
+<p><strong>Target Metrics</strong>:</p>
+<ul>
+<li>&lt;12 hour average time to first code review</li>
+<li>80% PRs with at least 1 constructive comment</li>
+<li>60% developers actively helping in Mattermost</li>
+<li>&lt;5% “toxic” or unconstructive review comments</li>
+<li>90%+ new developers feel supported during onboarding</li>
+</ul>
+<p><strong>Example Metric</strong>:</p>
+<div class="highlight"><pre><span></span><code>Code Review Health Score: 87/100
+
+✅ Fast response: 8 hours avg (target: &lt;12)
+✅ Thorough: 3.2 comments avg (target: &gt;2)
+⚠️  Approval rate: 92% (investigate rubber-stamping?)
+✅ Constructive tone: 96% positive
+</code></pre></div>
+<h4 id="5-efficiency-flow-can-developers-focus-and-deliver-value">5. EFFICIENCY &amp; FLOW (Can Developers Focus and Deliver Value?)</h4>
+<p><strong>What We’ll Measure</strong>:</p>
+<ul>
+<li><strong>Flow State</strong>: “How often did you achieve deep focus?” (self-reported weekly)</li>
+<li><strong>Valuable Work Time</strong>: “% of time spent on work you consider valuable” (weekly survey)</li>
+<li><strong>Friction Incidents</strong>: Logging when tools/processes create blockers</li>
+<li><strong>Context Switching</strong>: “How many different tools/tasks did you use today?”</li>
+<li><strong>Cognitive Load</strong>: “Rate your mental effort today” (1-5 scale, daily pulse)</li>
+<li><strong>Wait Time</strong>: Time spent blocked on external dependencies</li>
+</ul>
+<p><strong>Collection Methods</strong>:</p>
+<ul>
+<li>Weekly pulse surveys (2 minutes, 5 questions)</li>
+<li>Friction logging widget in Backstage (“Report a friction point”)</li>
+<li>Time tracking (optional, privacy-preserving)</li>
+<li>Meeting calendar analysis (% time in meetings)</li>
+</ul>
+<p><strong>Target Metrics</strong>:</p>
+<ul>
+<li>60% time spent on valuable work</li>
+<li>3 days per week achieving flow state</li>
+<li>&lt;30 friction incidents per 100 developers per month</li>
+<li>Cognitive load average &lt;3.5/5.0 (below “overwhelmed”)</li>
+<li>&lt;25% time in meetings</li>
+</ul>
+<p><strong>Example Weekly Pulse Survey</strong>:</p>
+<div class="highlight"><pre><span></span><code>Quick Check-In (2 minutes)
+
+1. This week, approximately what % of your time 
+   was spent on work you found valuable?
+   [Slider: 0% - 100%]
+
+2. How many times did you achieve &quot;flow state&quot; 
+   (deep, focused work)?
+   [ ] Never  [ ] 1-2 times  [ ] 3-4 times  [ ] 5+ times
+
+3. Rate your cognitive load this week:
+   [ ] Very Low  [ ] Low  [ ] Moderate  [ ] High  [ ] Overwhelming
+
+4. Did you experience any significant friction 
+   using the platform?
+   [ ] No  [ ] Yes → [Report details]
+
+5. One thing to celebrate or improve?
+   [Optional text box]
+</code></pre></div>
+<h3 id="data-collection-infrastructure">Data Collection Infrastructure</h3>
+<p><strong>Technology Stack</strong>:</p>
+<ul>
+<li><strong>Surveys</strong>: Qualtrics or Typeform (quarterly NPS, annual DevEx)</li>
+<li><strong>Pulse Surveys</strong>: Custom Backstage plugin (weekly 2-min check-in)</li>
+<li><strong>Metrics Collection</strong>: Prometheus (system metrics)</li>
+<li><strong>Dashboards</strong>: Grafana (DevEx Dashboard with SPACE dimensions)</li>
+<li><strong>Feedback Widget</strong>: Backstage plugin (always-on feedback)</li>
+<li><strong>Analytics</strong>: PostHog or Amplitude (product analytics)</li>
+<li><strong>Data Warehouse</strong>: PostgreSQL (survey responses, aggregated metrics)</li>
+</ul>
+<p><strong>Data Pipeline</strong>:</p>
+<div class="highlight"><pre><span></span><code>Survey Tools → API → Data Warehouse (PostgreSQL)
+                ↓
+Platform Logs → Prometheus → Grafana DevEx Dashboard
+                ↓
+GitHub API → ETL → Data Warehouse
+                ↓
+          Analysis &amp; Reports
+</code></pre></div>
+<h3 id="privacy-ethics">Privacy &amp; Ethics</h3>
+<p><strong>Privacy-First Principles</strong>:</p>
+<ol>
+<li><strong>Individual data is never shared</strong>: Managers never see individual survey responses</li>
+<li><strong>Aggregation threshold</strong>: Metrics only shown for groups of 5+ people</li>
+<li><strong>Opt-in for detailed tracking</strong>: Time tracking, keystroke analytics always optional</li>
+<li><strong>Anonymous feedback</strong>: Developers can always provide feedback anonymously</li>
+<li><strong>Data retention limits</strong>: Survey responses deleted after 2 years</li>
+<li><strong>Right to be forgotten</strong>: Developers can request data deletion at any time</li>
+</ol>
+<p><strong>Never Use DevEx Data For</strong>:</p>
+<ul>
+<li>❌ Individual performance reviews</li>
+<li>❌ Ranking developers</li>
+<li>❌ Firing decisions</li>
+<li>❌ Bonus calculations</li>
+<li>❌ Comparing individuals</li>
+</ul>
+<p><strong>Always Use DevEx Data For</strong>:</p>
+<ul>
+<li>✅ Identifying platform improvement opportunities</li>
+<li>✅ Understanding team-level trends</li>
+<li>✅ Measuring impact of platform changes</li>
+<li>✅ Celebrating successes</li>
+<li>✅ Advocating for developer needs to leadership</li>
+</ul>
+<h3 id="the-devex-dashboard">The DevEx Dashboard</h3>
+<p><strong>Grafana Dashboard Structure</strong> (3 pages):</p>
+<p><strong>Page 1: Executive Summary</strong></p>
+<ul>
+<li>Overall NPS score with trend</li>
+<li>DORA 4 keys summary</li>
+<li>Satisfaction score across dimensions</li>
+<li>Key alerts (metrics degrading)</li>
+</ul>
+<p><strong>Page 2: SPACE Deep Dive</strong></p>
+<ul>
+<li>5 panels (one per SPACE dimension)</li>
+<li>Historical trends (30/60/90 day views)</li>
+<li>Team-level breakdowns</li>
+<li>Correlation analysis (e.g., satisfaction vs. lead time)</li>
+</ul>
+<p><strong>Page 3: Action Dashboard</strong></p>
+<ul>
+<li>Top 5 friction points (from feedback)</li>
+<li>Suggested improvements (from analysis)</li>
+<li>Experiment tracking (what we’re trying)</li>
+<li>Impact measurement (did changes help?)</li>
+</ul>
+<h3 id="measurement-cadence">Measurement Cadence</h3>
+<table>
+<thead>
+<tr>
+<th>Metric Type</th>
+<th>Frequency</th>
+<th>Duration</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NPS Survey</td>
+<td>Quarterly</td>
+<td>5 min</td>
+<td>Track overall satisfaction trend</td>
+</tr>
+<tr>
+<td>DevEx Survey</td>
+<td>Annual</td>
+<td>15 min</td>
+<td>Comprehensive assessment</td>
+</tr>
+<tr>
+<td>Weekly Pulse</td>
+<td>Weekly</td>
+<td>2 min</td>
+<td>Quick check-in, catch issues early</td>
+</tr>
+<tr>
+<td>Friction Reports</td>
+<td>Continuous</td>
+<td>1 min</td>
+<td>Log blockers in real-time</td>
+</tr>
+<tr>
+<td>DORA Metrics</td>
+<td>Continuous</td>
+<td>N/A</td>
+<td>Automated system metrics</td>
+</tr>
+<tr>
+<td>Platform Analytics</td>
+<td>Continuous</td>
+<td>N/A</td>
+<td>Usage patterns, adoption</td>
+</tr>
+</tbody>
+</table>
+<h3 id="acting-on-insights-the-feedback-loop">Acting on Insights: The Feedback Loop</h3>
+<p><strong>Monthly DevEx Review Meeting</strong> (Platform Team):</p>
+<ol>
+<li>Review dashboard (30 minutes)</li>
+<li>Identify top 3 issues (from friction reports, survey feedback)</li>
+<li>Prioritize improvements (impact vs. effort)</li>
+<li>Commit to 1-2 experiments for next month</li>
+<li>Measure impact in following month</li>
+</ol>
+<p><strong>Quarterly DevEx Report</strong> (to Leadership):</p>
+<ul>
+<li>NPS trend and key drivers</li>
+<li>DORA metrics performance</li>
+<li>Platform adoption metrics</li>
+<li>Top improvements delivered</li>
+<li>Planned focus areas for next quarter</li>
+</ul>
+<p><strong>Communicating Back to Developers</strong>:</p>
+<ul>
+<li>Monthly “You Said, We Did” post in Mattermost</li>
+<li>Quarterly DevEx town hall (results + roadmap)</li>
+<li>Always close the loop on feedback: “We heard X, here’s what we’re doing about it”</li>
+</ul>
+<h2 id="consequences">Consequences</h2>
+<h3 id="positive">Positive</h3>
+<ol>
+<li><strong>Data-Driven Decisions</strong>: Platform roadmap based on validated user needs, not assumptions</li>
+<li><strong>Early Warning System</strong>: Degrading metrics alert us to problems before they become crises</li>
+<li><strong>Demonstrate Value</strong>: Quantify platform impact for leadership (ROI, productivity gains)</li>
+<li><strong>Continuous Improvement</strong>: Systematic process for getting better over time</li>
+<li><strong>Developer Trust</strong>: Developers feel heard when feedback leads to action</li>
+<li><strong>AI Readiness</strong>: User-centric foundation amplifies AI benefits (per DORA research)</li>
+<li><strong>Attract Talent</strong>: High DevEx scores help recruit top engineers</li>
+<li><strong>Reduce Turnover</strong>: Satisfied developers stay longer, reducing hiring costs</li>
+<li><strong>Cultural Shift</strong>: Treating developers as users changes how we build platforms</li>
+<li><strong>Benchmark Progress</strong>: Baselines enable “before/after” analysis of changes</li>
+</ol>
+<h3 id="negative">Negative</h3>
+<ol>
+<li><strong>Survey Fatigue</strong>: Too many surveys can reduce response rates (mitigate with short, purposeful surveys)</li>
+<li><strong>Privacy Concerns</strong>: Developers may worry about surveillance (mitigate with clear privacy policy)</li>
+<li><strong>Overhead</strong>: Collecting, analyzing, and acting on data takes time (~20% of platform team)</li>
+<li><strong>Expectation Management</strong>: Measuring creates expectation that we’ll act on findings</li>
+<li><strong>Analysis Paralysis</strong>: Too much data can delay decisions (mitigate with monthly review cadence)</li>
+<li><strong>Gaming Metrics</strong>: Teams may try to optimize metrics rather than outcomes (mitigate with education)</li>
+<li><strong>Initial Low Scores</strong>: First measurements may reveal uncomfortable truths about current state</li>
+</ol>
+<h3 id="neutral">Neutral</h3>
+<ol>
+<li><strong>Requires Cultural Buy-In</strong>: Leadership must support user-centric approach</li>
+<li><strong>Learning Curve</strong>: Platform team must develop research and analysis skills</li>
+<li><strong>Ongoing Effort</strong>: DevEx measurement is a permanent practice, not a one-time project</li>
+</ol>
+<h2 id="alternatives-considered">Alternatives Considered</h2>
+<h3 id="alternative-1-no-formal-measurement-status-quo">Alternative 1: No Formal Measurement (Status Quo)</h3>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Zero overhead</li>
+<li>No survey fatigue</li>
+<li>No privacy concerns</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Decisions based on loudest voices or HiPPO (Highest Paid Person’s Opinion)</li>
+<li>No way to prove platform value</li>
+<li>Can’t measure improvement over time</li>
+<li>Miss early warning signs of problems</li>
+</ul>
+<p><strong>Reason for Rejection</strong>: DORA research conclusively shows user-centric focus amplifies AI benefits and team performance. Without measurement, we can’t be user-centric.</p>
+<h3 id="alternative-2-dora-metrics-only">Alternative 2: DORA Metrics Only</h3>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Well-established framework</li>
+<li>Automated data collection</li>
+<li>Proven correlation with outcomes</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Only measures system performance, not human experience</li>
+<li>Misses satisfaction, cognitive load, friction</li>
+<li>Can create perverse incentives if used alone</li>
+<li>Doesn’t capture communication/collaboration quality</li>
+</ul>
+<p><strong>Reason for Rejection</strong>: DORA metrics are necessary but insufficient. SPACE framework encompasses DORA metrics (Performance dimension) plus human factors.</p>
+<h3 id="alternative-3-custom-metrics-framework">Alternative 3: Custom Metrics Framework</h3>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Tailored precisely to Fawkes needs</li>
+<li>No need to learn existing framework</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Reinventing the wheel</li>
+<li>No industry benchmarks for comparison</li>
+<li>Lacks research validation</li>
+<li>Hard to explain to stakeholders</li>
+</ul>
+<p><strong>Reason for Rejection</strong>: SPACE is well-researched, industry-validated, and comprehensive. Better to adopt proven framework than create our own.</p>
+<h3 id="alternative-4-simple-nps-only">Alternative 4: Simple NPS Only</h3>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Very simple to implement</li>
+<li>Low survey burden</li>
+<li>Easy to track over time</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>NPS tells you “what” (satisfaction level) but not “why”</li>
+<li>No diagnostic capability</li>
+<li>Can’t identify specific improvement areas</li>
+<li>Misses entire dimensions (activity, flow, collaboration)</li>
+</ul>
+<p><strong>Reason for Rejection</strong>: NPS is a great summary metric but insufficient for driving improvements. We need diagnostic metrics to understand what to fix.</p>
+<h3 id="alternative-5-devex-framework-dx-core-4">Alternative 5: DevEx Framework (DX Core 4)</h3>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Focused specifically on developer experience</li>
+<li>Simpler than SPACE (4 dimensions vs. 5)</li>
+<li>Good research backing</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Less comprehensive than SPACE</li>
+<li>Newer framework (less industry adoption)</li>
+<li>Doesn’t explicitly include collaboration dimension</li>
+</ul>
+<p><strong>Reason for Rejection</strong>: SPACE is more comprehensive and has broader industry adoption. DevEx framework is good but SPACE is better established.</p>
+<h2 id="implementation-plan">Implementation Plan</h2>
+<h3 id="phase-1-foundation-weeks-1-2">Phase 1: Foundation (Weeks 1-2)</h3>
+<p><strong>Week 1: Infrastructure Setup</strong></p>
+<ol>
+<li>Deploy survey tools (Qualtrics/Typeform account)</li>
+<li>Create data warehouse schema in PostgreSQL</li>
+<li>Design Grafana DevEx dashboard (mockup)</li>
+<li>Draft privacy policy and data handling procedures</li>
+<li>Write initial NPS survey (5 questions)</li>
+</ol>
+<p><strong>Week 2: Baseline Measurement</strong></p>
+<ol>
+<li>Launch first NPS survey to all developers</li>
+<li>Collect DORA metrics baseline (automated)</li>
+<li>Deploy friction reporting widget in Backstage</li>
+<li>Analyze NPS results and identify themes</li>
+<li>Set initial targets for each SPACE dimension</li>
+</ol>
+<h3 id="phase-2-full-rollout-weeks-3-4">Phase 2: Full Rollout (Weeks 3-4)</h3>
+<p><strong>Week 3: Automated Metrics</strong></p>
+<ol>
+<li>Implement Prometheus collectors for activity metrics</li>
+<li>Build Grafana dashboards (all 5 SPACE dimensions)</li>
+<li>Set up alerting for degrading metrics</li>
+<li>Document data collection infrastructure</li>
+<li>Train platform team on dashboard usage</li>
+</ol>
+<p><strong>Week 4: Feedback Loops</strong></p>
+<ol>
+<li>Deploy weekly pulse survey (automated in Backstage)</li>
+<li>Create feedback response process (monthly review meetings)</li>
+<li>Launch first “You Said, We Did” communication</li>
+<li>Schedule quarterly DevEx review with leadership</li>
+<li>Establish monthly user interview schedule (5 devs/month)</li>
+</ol>
+<h3 id="phase-3-iteration-month-2">Phase 3: Iteration (Month 2+)</h3>
+<ol>
+<li>Conduct first monthly DevEx review meeting</li>
+<li>Implement 1-2 improvements based on feedback</li>
+<li>Measure impact of changes</li>
+<li>Refine metrics and surveys based on learnings</li>
+<li>Build momentum: celebrate wins, share results</li>
+</ol>
+<h2 id="metrics-for-success">Metrics for Success</h2>
+<p><strong>Adoption Metrics</strong> (First 3 Months):</p>
+<ul>
+<li>70%+ response rate on NPS surveys</li>
+<li>50%+ response rate on weekly pulse surveys</li>
+<li>20+ friction reports submitted per month</li>
+<li>100% platform team trained on dashboard usage</li>
+<li>Monthly DevEx review meetings established</li>
+</ul>
+<p><strong>Outcome Metrics</strong> (First 6 Months):</p>
+<ul>
+<li>NPS &gt;50 (baseline + improvement)</li>
+<li>60% developers report time on valuable work</li>
+<li>&lt;30 friction incidents per 100 developers per month</li>
+<li>DORA metrics trending upward</li>
+<li>3+ platform improvements delivered from feedback</li>
+</ul>
+<p><strong>Long-Term Metrics</strong> (12+ Months):</p>
+<ul>
+<li>NPS &gt;60 (elite performer territory)</li>
+<li>Deployment frequency &gt;2/day</li>
+<li>Lead time &lt;12 hours</li>
+<li>&lt;10% developers reporting burnout</li>
+<li>Platform team can articulate clear ROI with data</li>
+</ul>
+<h2 id="related-decisions">Related Decisions</h2>
+<ul>
+<li><strong>ADR-002</strong>: Backstage for Developer Portal (primary vehicle for surveys, feedback widget)</li>
+<li><strong>ADR-006</strong>: Prometheus for Metrics (Performance and Activity dimension data collection)</li>
+<li><strong>ADR-015</strong>: User Research &amp; Feedback System (complements quantitative metrics with qualitative insights)</li>
+<li><strong>ADR-016</strong>: Platform-as-Product Operating Model (DevEx metrics inform product roadmap)</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><strong>SPACE Framework Paper</strong>: https://queue.acm.org/detail.cfm?id=3454124</li>
+<li><strong>2025 DORA Report</strong>: https://dora.dev/dora-report-2025</li>
+<li><strong>DevEx Framework</strong>: https://queue.acm.org/detail.cfm?id=3595878</li>
+<li><strong>GitHub Octoverse</strong>: Developer productivity research</li>
+<li><strong>Accelerate (Book)</strong>: Forsgren, Humble, Kim - DORA metrics foundation</li>
+<li><strong>Team Topologies (Book)</strong>: Skelton &amp; Pais - Cognitive load research</li>
+</ul>
+<h2 id="notes">Notes</h2>
+<p><strong>Key Insight from DORA 2025</strong>:</p>
+<blockquote>
+<p>“We found with a high degree of certainty that when teams adopt a user-centric focus, the positive influence of AI on their performance is amplified. Conversely, in the absence of a user-centric focus, AI adoption can have a negative impact on team performance.”</p>
+</blockquote>
+<p><strong>Translation for Fawkes</strong>:</p>
+<ul>
+<li>DevEx measurement is not optional—it’s the foundation for AI success</li>
+<li>Without measuring developer experience, AI adoption may harm performance</li>
+<li>SPACE framework provides the comprehensive measurement system we need</li>
+<li>Measurement without action is worthless—commit to monthly improvements</li>
+</ul>
+<p><strong>Cultural Note</strong>:
+Implementing DevEx measurement is a cultural transformation as much as a technical one. The platform team must genuinely care about developer experience and be willing to change based on feedback. If leadership views this as “just more metrics,” it will fail.</p>
+<h2 id="last-updated">Last Updated</h2>
+<p>December 7, 2024 - Initial version documenting SPACE framework adoption for Fawkes DevEx measurement</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
