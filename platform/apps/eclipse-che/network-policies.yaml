@@ -1,0 +1,115 @@
+# ============================================================================
+# FILE: platform/apps/eclipse-che/network-policies.yaml
+# PURPOSE: Network policies for Eclipse Che workspace isolation
+#          Provides security separation between workspaces and controls egress.
+# ============================================================================
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: che-workspace-isolation
+  namespace: eclipse-che
+  labels:
+    app.kubernetes.io/name: che-workspace-isolation
+    app.kubernetes.io/component: network-security
+    app.kubernetes.io/part-of: eclipse-che
+spec:
+  # Apply to all workspace pods
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: workspace
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow traffic from Che gateway
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              app.kubernetes.io/part-of: eclipse-che
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: che-gateway
+    # Allow traffic from ingress controller
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+  egress:
+    # Allow DNS resolution
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Allow access to Kubernetes API
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 6443
+    # Allow HTTPS egress (for Git, package managers, etc.)
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 80
+    # Allow SSH for Git (git@github.com)
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 22
+    # Allow access to Vault for secrets
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: vault
+      ports:
+        - protocol: TCP
+          port: 8200
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: che-allow-internal
+  namespace: eclipse-che
+  labels:
+    app.kubernetes.io/name: che-allow-internal
+    app.kubernetes.io/component: network-security
+    app.kubernetes.io/part-of: eclipse-che
+spec:
+  # Apply to Che server components
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: eclipse-che
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow all traffic within eclipse-che namespace
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: eclipse-che
+    # Allow traffic from ingress controller
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+    # Allow traffic from fawkes namespace (Backstage integration)
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: fawkes

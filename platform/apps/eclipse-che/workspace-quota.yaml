@@ -1,0 +1,65 @@
+# ============================================================================
+# FILE: platform/apps/eclipse-che/workspace-quota.yaml
+# PURPOSE: ResourceQuota template for Eclipse Che workspace namespaces
+#          Prevents CDE consumption from overwhelming the cluster.
+# ============================================================================
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: che-workspace-quota
+  namespace: eclipse-che
+  labels:
+    app.kubernetes.io/name: che-workspace-quota
+    app.kubernetes.io/component: resource-management
+    app.kubernetes.io/part-of: eclipse-che
+spec:
+  hard:
+    # CPU limits for workspace namespaces
+    requests.cpu: "16"
+    limits.cpu: "32"
+    # Memory limits for workspace namespaces
+    requests.memory: 32Gi
+    limits.memory: 64Gi
+    # Maximum number of pods (workspaces)
+    pods: "20"
+    # PVC limits
+    persistentvolumeclaims: "20"
+    requests.storage: 100Gi
+---
+# ============================================================================
+# LimitRange for default workspace container limits
+# ============================================================================
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: che-workspace-limits
+  namespace: eclipse-che
+  labels:
+    app.kubernetes.io/name: che-workspace-limits
+    app.kubernetes.io/component: resource-management
+    app.kubernetes.io/part-of: eclipse-che
+spec:
+  limits:
+    # Default limits for containers
+    - default:
+        cpu: "2"
+        memory: 4Gi
+      defaultRequest:
+        cpu: 500m
+        memory: 1Gi
+      type: Container
+    # Maximum limits per container
+    - max:
+        cpu: "8"
+        memory: 16Gi
+      min:
+        cpu: 100m
+        memory: 128Mi
+      type: Container
+    # PVC limits
+    - max:
+        storage: 20Gi
+      min:
+        storage: 1Gi
+      type: PersistentVolumeClaim
