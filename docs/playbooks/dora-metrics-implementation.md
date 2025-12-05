@@ -154,7 +154,7 @@ spec:
     spec:
       containers:
       - name: collector
-        image: fawkes/dora-collector:latest
+        image: fawkes/dora-collector:v1.0.0
         ports:
         - containerPort: 8080
         volumeMounts:
@@ -490,7 +490,7 @@ kubectl exec -n monitoring deploy/prometheus -- \
 
 ```bash
 # Simulate an incident resolution
-curl -X POST http://dora-collector:8080/incidents/resolve \
+curl -X POST http://dora-collector.dora-metrics:8080/incidents/resolve \
   -d '{"incident_id": "test-123", "resolved_at": "'$(date -Iseconds)'"}'
 
 # Verify MTTR metric
