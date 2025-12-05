@@ -48,6 +48,9 @@ spec:
         - protocol: TCP
           port: 53
     # Allow access to Kubernetes API
+    # NOTE: Wide CIDR used to allow access to external Git repos and
+    # package registries. In high-security environments, consider
+    # restricting to specific IP ranges or using an egress gateway.
     - to:
         - ipBlock:
             cidr: 0.0.0.0/0

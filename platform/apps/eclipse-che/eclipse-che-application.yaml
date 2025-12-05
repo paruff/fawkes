@@ -201,6 +201,9 @@ spec:
             # ============================================================
             networking:
               # Domain for Che
+              # NOTE: This is a local development default using nip.io.
+              # For production, override via Helm values with your actual domain.
+              # Example: che.fawkes.idp or che.your-company.com
               domain: che.127.0.0.1.nip.io
 
               # TLS configuration
@@ -212,6 +215,8 @@ spec:
                 nginx.ingress.kubernetes.io/proxy-body-size: "50m"
                 nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
                 nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+                # NOTE: SSL redirect disabled for local development.
+                # For production, set to "true" to enforce HTTPS.
                 nginx.ingress.kubernetes.io/ssl-redirect: "false"
 
               # Labels for ingress

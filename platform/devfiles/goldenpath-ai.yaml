@@ -72,6 +72,9 @@ attributes:
 # ============================================================================
 components:
   # Main AI/ML development container
+  # NOTE: For production, consider using a digest-pinned image or
+  # hosting verified images in your own container registry.
+  # Example: your-registry.com/tensorflow:2.15.0-gpu-jupyter@sha256:...
   - name: ai-dev
     container:
       image: tensorflow/tensorflow:2.15.0-gpu-jupyter
@@ -175,7 +178,8 @@ commands:
       component: ai-dev
       commandLine: |
         jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root \
-          --NotebookApp.token='' --NotebookApp.password=''
+          --ServerApp.token="${JUPYTER_TOKEN:-$(openssl rand -hex 32)}" \
+          --ServerApp.password=""
       workingDir: ${PROJECT_SOURCE}
       group:
         kind: run

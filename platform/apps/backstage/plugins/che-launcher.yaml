@@ -16,10 +16,13 @@ metadata:
     app.kubernetes.io/part-of: backstage
 data:
   # Eclipse Che server configuration
+  # NOTE: URLs use local development defaults (nip.io).
+  # For production, override these values via environment-specific ConfigMaps.
   che-config.yaml: |
     # Eclipse Che integration settings
     che:
       # Base URL for Eclipse Che server
+      # For production, use: https://che.fawkes.idp
       baseUrl: https://che.127.0.0.1.nip.io
 
       # Default Devfile to use when none specified
@@ -136,6 +139,5 @@ metadata:
     vault.hashicorp.com/role: "backstage"
     vault.hashicorp.com/agent-inject-secret-che-token: "secret/data/backstage/che"
 type: Opaque
-stringData:
-  # Placeholder - actual value injected by Vault
-  api-token: "placeholder-replace-with-vault"
+# Note: Data is injected by Vault Agent - no static values stored in Git
+data: {}
