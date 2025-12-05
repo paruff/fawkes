@@ -1,0 +1,204 @@
+# ============================================================================
+# FILE: platform/devfiles/goldenpath-python.yaml
+# PURPOSE: Golden Path Devfile for Python development environments
+#          Provides standardized Python development workspace in Eclipse Che.
+# USAGE: Reference this Devfile when launching a new workspace for Python projects.
+# ============================================================================
+schemaVersion: 2.2.2
+metadata:
+  name: goldenpath-python
+  displayName: Golden Path Python Development
+  description: |
+    Standardized Python development environment for Fawkes platform.
+    Includes Python 3.11, pip, Poetry, pre-commit, and VS Code language server.
+  version: 1.0.0
+  provider: Fawkes Platform Team
+  supportUrl: https://github.com/paruff/fawkes/issues
+  tags:
+    - Python
+    - Django
+    - FastAPI
+    - Flask
+    - Data Science
+  icon: https://www.python.org/static/community_logos/python-logo.png
+  projectType: Python
+  language: Python
+
+# ============================================================================
+# Starter Projects - Template repositories
+# ============================================================================
+starterProjects:
+  - name: python-fastapi
+    description: FastAPI microservice template
+    git:
+      remotes:
+        origin: https://github.com/paruff/fawkes-template-python-fastapi
+  - name: python-django
+    description: Django web application template
+    git:
+      remotes:
+        origin: https://github.com/paruff/fawkes-template-python-django
+  - name: python-cli
+    description: Python CLI application template
+    git:
+      remotes:
+        origin: https://github.com/paruff/fawkes-template-python-cli
+
+# ============================================================================
+# Components - Container definitions
+# ============================================================================
+components:
+  # Main development container
+  - name: python
+    container:
+      image: quay.io/devfile/universal-developer-image:ubi8-latest
+      memoryLimit: 4Gi
+      memoryRequest: 1Gi
+      cpuLimit: "2"
+      cpuRequest: 500m
+      mountSources: true
+      sourceMapping: /projects
+      env:
+        - name: PYTHON_VERSION
+          value: "3.11"
+        - name: PYTHONDONTWRITEBYTECODE
+          value: "1"
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: PIP_NO_CACHE_DIR
+          value: "1"
+        - name: POETRY_VIRTUALENVS_IN_PROJECT
+          value: "true"
+        - name: POETRY_NO_INTERACTION
+          value: "1"
+      endpoints:
+        - name: python-app
+          targetPort: 8000
+          exposure: public
+          protocol: https
+        - name: debug
+          targetPort: 5678
+          exposure: internal
+      volumeMounts:
+        - name: pip-cache
+          path: /home/user/.cache/pip
+        - name: venv
+          path: /projects/.venv
+
+  # Volume for pip cache
+  - name: pip-cache
+    volume:
+      size: 2Gi
+
+  # Volume for virtual environments
+  - name: venv
+    volume:
+      size: 2Gi
+
+# ============================================================================
+# Commands - Development tasks
+# ============================================================================
+commands:
+  # Setup commands
+  - id: install-dependencies
+    exec:
+      label: "Install Dependencies"
+      component: python
+      commandLine: |
+        if [ -f "requirements.txt" ]; then
+          pip install -r requirements.txt
+        elif [ -f "pyproject.toml" ]; then
+          pip install poetry && poetry install
+        fi
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: build
+        isDefault: true
+
+  - id: install-dev-dependencies
+    exec:
+      label: "Install Dev Dependencies"
+      component: python
+      commandLine: |
+        pip install pytest pytest-cov black isort mypy pre-commit debugpy
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: build
+
+  # Run commands
+  - id: run-app
+    exec:
+      label: "Run Application"
+      component: python
+      commandLine: python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: run
+        isDefault: true
+
+  - id: run-debug
+    exec:
+      label: "Run with Debugger"
+      component: python
+      commandLine: python -m debugpy --listen 0.0.0.0:5678 --wait-for-client -m uvicorn main:app --host 0.0.0.0 --port 8000
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: debug
+        isDefault: true
+
+  # Test commands
+  - id: run-tests
+    exec:
+      label: "Run Tests"
+      component: python
+      commandLine: pytest -v --cov=. --cov-report=html
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: test
+        isDefault: true
+
+  - id: run-tests-watch
+    exec:
+      label: "Run Tests (Watch Mode)"
+      component: python
+      commandLine: pytest-watch
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: test
+
+  # Lint commands
+  - id: lint
+    exec:
+      label: "Run Linting"
+      component: python
+      commandLine: |
+        black --check . && isort --check-only . && mypy .
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: build
+
+  - id: format
+    exec:
+      label: "Format Code"
+      component: python
+      commandLine: black . && isort .
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: build
+
+  # Pre-commit
+  - id: pre-commit
+    exec:
+      label: "Run Pre-commit Hooks"
+      component: python
+      commandLine: pre-commit run --all-files
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: build
+
+# ============================================================================
+# Events - Lifecycle hooks
+# ============================================================================
+events:
+  postStart:
+    - install-dependencies

@@ -1,0 +1,258 @@
+# ============================================================================
+# FILE: platform/devfiles/goldenpath-ai.yaml
+# PURPOSE: Golden Path Devfile for AI/ML development environments
+#          Provides high-resource workspace with GPU support for AI development.
+# USAGE: Reference this Devfile for AI/ML projects requiring GPU/high-CPU.
+# ============================================================================
+schemaVersion: 2.2.2
+metadata:
+  name: goldenpath-ai
+  displayName: Golden Path AI/ML Development
+  description: |
+    High-resource AI/ML development environment for Fawkes platform.
+    Includes TensorFlow, PyTorch, Jupyter, CUDA support, and VS Code AI extensions.
+    Designed for workloads requiring GPU or high-CPU resources.
+  version: 1.0.0
+  provider: Fawkes Platform Team
+  supportUrl: https://github.com/paruff/fawkes/issues
+  tags:
+    - AI
+    - Machine Learning
+    - Deep Learning
+    - TensorFlow
+    - PyTorch
+    - Jupyter
+    - GPU
+  icon: https://raw.githubusercontent.com/tensorflow/tensorflow/master/tensorflow/tools/tf_sig_build_dockerfiles/logos/TF_FullColor_Horizontal.png
+  projectType: Python
+  language: Python
+
+# ============================================================================
+# Starter Projects - AI/ML template repositories
+# ============================================================================
+starterProjects:
+  - name: ml-classification
+    description: Machine Learning classification project template
+    git:
+      remotes:
+        origin: https://github.com/paruff/fawkes-template-ml-classification
+  - name: deep-learning
+    description: Deep Learning with TensorFlow/PyTorch template
+    git:
+      remotes:
+        origin: https://github.com/paruff/fawkes-template-deep-learning
+  - name: jupyter-notebooks
+    description: Jupyter Notebook project template
+    git:
+      remotes:
+        origin: https://github.com/paruff/fawkes-template-jupyter-notebooks
+
+# ============================================================================
+# Attributes - Workspace configuration
+# ============================================================================
+attributes:
+  # Pod overrides for GPU scheduling
+  pod-overrides:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "che-workspace"
+    spec:
+      # Node selector for GPU-enabled nodes
+      nodeSelector:
+        gpu-enabled: "true"
+      # Tolerations for GPU nodes
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+
+# ============================================================================
+# Components - Container definitions
+# ============================================================================
+components:
+  # Main AI/ML development container
+  - name: ai-dev
+    container:
+      image: tensorflow/tensorflow:2.15.0-gpu-jupyter
+      memoryLimit: 16Gi
+      memoryRequest: 8Gi
+      cpuLimit: "8"
+      cpuRequest: "2"
+      mountSources: true
+      sourceMapping: /projects
+      env:
+        - name: PYTHON_VERSION
+          value: "3.11"
+        - name: PYTHONDONTWRITEBYTECODE
+          value: "1"
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: TF_CPP_MIN_LOG_LEVEL
+          value: "2"
+        - name: CUDA_VISIBLE_DEVICES
+          value: "0"
+        - name: JUPYTER_ENABLE_LAB
+          value: "yes"
+        - name: MLFLOW_TRACKING_URI
+          value: "http://mlflow.fawkes.svc:5000"
+      endpoints:
+        - name: jupyter
+          targetPort: 8888
+          exposure: public
+          protocol: https
+        - name: tensorboard
+          targetPort: 6006
+          exposure: public
+          protocol: https
+        - name: mlflow
+          targetPort: 5000
+          exposure: internal
+        - name: debug
+          targetPort: 5678
+          exposure: internal
+      volumeMounts:
+        - name: pip-cache
+          path: /home/user/.cache/pip
+        - name: model-cache
+          path: /home/user/.cache/huggingface
+        - name: datasets
+          path: /projects/datasets
+
+  # Volume for pip cache
+  - name: pip-cache
+    volume:
+      size: 5Gi
+
+  # Volume for model cache (Hugging Face, etc.)
+  - name: model-cache
+    volume:
+      size: 20Gi
+
+  # Volume for datasets
+  - name: datasets
+    volume:
+      size: 50Gi
+
+# ============================================================================
+# Commands - Development tasks
+# ============================================================================
+commands:
+  # Setup commands
+  - id: install-dependencies
+    exec:
+      label: "Install AI/ML Dependencies"
+      component: ai-dev
+      commandLine: |
+        pip install --upgrade pip
+        pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+        pip install transformers datasets accelerate
+        pip install scikit-learn pandas numpy matplotlib seaborn
+        pip install mlflow wandb
+        if [ -f "requirements.txt" ]; then
+          pip install -r requirements.txt
+        fi
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: build
+        isDefault: true
+
+  - id: install-jupyter-extensions
+    exec:
+      label: "Install Jupyter Extensions"
+      component: ai-dev
+      commandLine: |
+        pip install jupyter jupyterlab ipywidgets
+        jupyter labextension install @jupyter-widgets/jupyterlab-manager
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: build
+
+  # Run commands
+  - id: start-jupyter
+    exec:
+      label: "Start Jupyter Lab"
+      component: ai-dev
+      commandLine: |
+        jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root \
+          --NotebookApp.token='' --NotebookApp.password=''
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: run
+        isDefault: true
+
+  - id: start-tensorboard
+    exec:
+      label: "Start TensorBoard"
+      component: ai-dev
+      commandLine: tensorboard --logdir=./logs --host=0.0.0.0 --port=6006
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: run
+
+  - id: run-training
+    exec:
+      label: "Run Training Script"
+      component: ai-dev
+      commandLine: python train.py
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: run
+
+  - id: run-debug
+    exec:
+      label: "Run with Debugger"
+      component: ai-dev
+      commandLine: python -m debugpy --listen 0.0.0.0:5678 --wait-for-client train.py
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: debug
+        isDefault: true
+
+  # Test commands
+  - id: run-tests
+    exec:
+      label: "Run Tests"
+      component: ai-dev
+      commandLine: pytest -v --cov=. --cov-report=html
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: test
+        isDefault: true
+
+  # Model commands
+  - id: validate-model
+    exec:
+      label: "Validate Model"
+      component: ai-dev
+      commandLine: |
+        python -c "import torch; print('CUDA available:', torch.cuda.is_available()); print('GPU:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'N/A')"
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: build
+
+  - id: export-model
+    exec:
+      label: "Export Model to ONNX"
+      component: ai-dev
+      commandLine: python export_model.py --format onnx
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: build
+
+  # MLflow commands
+  - id: start-mlflow
+    exec:
+      label: "Start MLflow Server"
+      component: ai-dev
+      commandLine: mlflow server --host 0.0.0.0 --port 5000
+      workingDir: ${PROJECT_SOURCE}
+      group:
+        kind: run
+
+# ============================================================================
+# Events - Lifecycle hooks
+# ============================================================================
+events:
+  postStart:
+    - install-dependencies
