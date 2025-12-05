@@ -18,39 +18,41 @@ How-to guides in Fawkes are designed to:
 
 ## Platform Operations
 
+The following how-to guides are being organized. Many are available in existing sections while the Diátaxis structure is being populated.
+
 ### Deployment & Delivery
 
-| Guide | Description |
-|-------|-------------|
-| [Deploy an Application](deploy-application.md) | Deploy your first application using GitOps |
-| [Configure Blue-Green Deployments](blue-green-deployments.md) | Set up zero-downtime deployments |
-| [Implement Canary Releases](canary-releases.md) | Gradually roll out changes |
-| [Rollback a Deployment](rollback-deployment.md) | Quickly revert problematic releases |
+| Guide | Description | Status |
+|-------|-------------|--------|
+| Deploy an Application | Deploy your first application using GitOps | See [Continuous Delivery Pattern](../patterns/continuous-delivery.md) |
+| Configure Blue-Green Deployments | Set up zero-downtime deployments | 🚧 Coming soon |
+| Implement Canary Releases | Gradually roll out changes | 🚧 Coming soon |
+| Rollback a Deployment | Quickly revert problematic releases | 🚧 Coming soon |
 
 ### Infrastructure
 
-| Guide | Description |
-|-------|-------------|
-| [Provision Infrastructure with Terraform](terraform-provisioning.md) | Create cloud resources declaratively |
-| [Manage Secrets](secrets-management.md) | Securely handle sensitive data |
-| [Configure Ingress](configure-ingress.md) | Set up external access to services |
+| Guide | Description | Status |
+|-------|-------------|--------|
+| Provision Infrastructure with Terraform | Create cloud resources declaratively | See [Infrastructure as Code Pattern](../patterns/infrastructure-as-code.md) |
+| Manage Secrets | Securely handle sensitive data | 🚧 Coming soon |
+| Configure Ingress | Set up external access to services | See [Ingress Access](../ingress-access.md) |
 
 ### Observability
 
-| Guide | Description |
-|-------|-------------|
-| [Set Up Monitoring Dashboards](monitoring-dashboards.md) | Create custom Grafana dashboards |
-| [Configure Alerts](configure-alerts.md) | Set up proactive notifications |
-| [Trace Requests](distributed-tracing.md) | Debug with distributed tracing |
-| [Aggregate Logs](log-aggregation.md) | Centralize logging with OpenSearch |
+| Guide | Description | Status |
+|-------|-------------|--------|
+| Set Up Monitoring Dashboards | Create custom Grafana dashboards | See [DORA Metrics Guide](../observability/dora-metrics-guide.md) |
+| Configure Alerts | Set up proactive notifications | 🚧 Coming soon |
+| Trace Requests | Debug with distributed tracing | See [Distributed Tracing](../observability/distributed-tracing.md) |
+| Aggregate Logs | Centralize logging with OpenSearch | See [Centralized Logging](../observability/centralized-logging.md) |
 
 ### Security
 
-| Guide | Description |
-|-------|-------------|
-| [Implement Security Scanning](security-scanning.md) | Add SAST and container scanning |
-| [Configure Policy Enforcement](policy-enforcement.md) | Use Kyverno for Kubernetes policies |
-| [Set Up RBAC](rbac-configuration.md) | Configure role-based access control |
+| Guide | Description | Status |
+|-------|-------------|--------|
+| Implement Security Scanning | Add SAST and container scanning | See [Security](../security.md) |
+| Configure Policy Enforcement | Use Kyverno for Kubernetes policies | 🚧 Coming soon |
+| Set Up RBAC | Configure role-based access control | 🚧 Coming soon |
 
 ## How to Use These Guides
 

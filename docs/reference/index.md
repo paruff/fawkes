@@ -20,68 +20,64 @@ Reference content in Fawkes is designed to:
 
 ### Infrastructure
 
-| Component | Version | Documentation |
-|-----------|---------|---------------|
-| Kubernetes | 1.28+ | [Kubernetes Reference](kubernetes.md) |
-| Terraform | 1.6+ | [Terraform Reference](terraform.md) |
-| Crossplane | 1.14+ | [Crossplane Reference](crossplane.md) |
+| Component | Version | Status |
+|-----------|---------|--------|
+| Kubernetes | 1.28+ | See [existing tools](../tools/index.md) |
+| Terraform | 1.6+ | See [existing tools](../tools/index.md) |
+| Crossplane | 1.14+ | 🚧 Reference coming soon |
 
 ### CI/CD
 
-| Component | Version | Documentation |
-|-----------|---------|---------------|
-| Jenkins | 2.426+ | [Jenkins Reference](jenkins.md) |
-| ArgoCD | 2.9+ | [ArgoCD Reference](argocd.md) |
-| GitHub Actions | N/A | [GitHub Actions Reference](github-actions.md) |
+| Component | Version | Status |
+|-----------|---------|--------|
+| Jenkins | 2.426+ | See [Jenkins tool doc](../tools/jenkins.md) |
+| ArgoCD | 2.9+ | 🚧 Reference coming soon |
+| GitHub Actions | N/A | 🚧 Reference coming soon |
 
 ### Observability
 
-| Component | Version | Documentation |
-|-----------|---------|---------------|
-| Prometheus | 2.47+ | [Prometheus Reference](prometheus.md) |
-| Grafana | 10.2+ | [Grafana Reference](grafana.md) |
-| OpenSearch | 2.11+ | [OpenSearch Reference](opensearch.md) |
-| Jaeger | 1.51+ | [Jaeger Reference](jaeger.md) |
+| Component | Version | Status |
+|-----------|---------|--------|
+| Prometheus | 2.47+ | See [Prometheus tool doc](../tools/prometheus.md) |
+| Grafana | 10.2+ | 🚧 Reference coming soon |
+| OpenSearch | 2.11+ | See [Centralized Logging](../observability/centralized-logging.md) |
+| Jaeger | 1.51+ | See [Distributed Tracing](../observability/distributed-tracing.md) |
 
 ### Collaboration
 
-| Component | Version | Documentation |
-|-----------|---------|---------------|
-| Mattermost | 9.2+ | [Mattermost Reference](mattermost.md) |
-| Focalboard | 7.11+ | [Focalboard Reference](focalboard.md) |
-| Backstage | 1.21+ | [Backstage Reference](backstage.md) |
+| Component | Version | Status |
+|-----------|---------|--------|
+| Mattermost | 9.2+ | 🚧 Reference coming soon |
+| Focalboard | 7.11+ | See [Focalboard tool doc](../tools/focalboard.md) |
+| Backstage | 1.21+ | 🚧 Reference coming soon |
 
 ### Security
 
-| Component | Version | Documentation |
-|-----------|---------|---------------|
-| SonarQube | 10.3+ | [SonarQube Reference](sonarqube.md) |
-| Trivy | 0.47+ | [Trivy Reference](trivy.md) |
-| Kyverno | 1.11+ | [Kyverno Reference](kyverno.md) |
-| External Secrets | 0.9+ | [External Secrets Reference](external-secrets.md) |
+| Component | Version | Status |
+|-----------|---------|--------|
+| SonarQube | 10.3+ | 🚧 Reference coming soon |
+| Trivy | 0.47+ | 🚧 Reference coming soon |
+| Kyverno | 1.11+ | 🚧 Reference coming soon |
+| External Secrets | 0.9+ | 🚧 Reference coming soon |
 
 ## Configuration Reference
 
-| Topic | Description |
-|-------|-------------|
-| [Environment Variables](environment-variables.md) | Platform configuration options |
-| [Helm Values](helm-values.md) | Chart configuration reference |
-| [Feature Flags](feature-flags.md) | Available feature toggles |
+Configuration documentation is being organized. See the existing [Configuration](../configuration.md) page.
 
 ## API Reference
 
-| API | Description |
-|-----|-------------|
-| [Platform API](api/platform.md) | Core platform endpoints |
-| [Metrics API](api/metrics.md) | DORA metrics collection |
-| [Webhook API](api/webhooks.md) | Event-driven integrations |
+API documentation is under development. The following will be available:
+
+- Platform API - Core platform endpoints
+- Metrics API - DORA metrics collection  
+- Webhook API - Event-driven integrations
 
 ## Command Reference
 
-| CLI | Description |
-|-----|-------------|
-| [fawkes CLI](cli/fawkes.md) | Platform management commands |
-| [ignite.sh](cli/ignite.md) | Bootstrap script reference |
+CLI documentation is under development. The following will be available:
+
+- fawkes CLI - Platform management commands
+- ignite.sh - Bootstrap script reference
 
 ## How Reference Differs from Other Documentation
 

@@ -53,9 +53,9 @@ description: "[Brief description of what this playbook achieves]"
 
 | Component | Minimum Version | Required | Documentation |
 |-----------|-----------------|----------|---------------|
-| Kubernetes | 1.28+ | ✅ | [Reference](../reference/kubernetes.md) |
-| [Component 2] | [Version] | ✅ | [Reference](../reference/[component].md) |
-| [Component 3] | [Version] | ⬜ Optional | [Reference](../reference/[component].md) |
+| Kubernetes | 1.28+ | ✅ | *Link to reference docs* |
+| [Component 2] | [Version] | ✅ | *Link to reference docs* |
+| [Component 3] | [Version] | ⬜ Optional | *Link to reference docs* |
 
 ### Environment Requirements
 
@@ -253,10 +253,12 @@ After implementation, expect to see improvement in these DORA metrics:
 
 ### Related Resources
 
-- [Tutorial](../tutorials/[related-tutorial].md) - Learning introduction to these concepts
-- [How-To](../how-to/[related-guide].md) - Additional procedural guides
-- [Reference](../reference/[component].md) - Technical specifications
-- [Explanation](../explanation/[concept].md) - Deeper conceptual background
+When creating a playbook, link to relevant existing documentation:
+
+- **Tutorial**: Link to learning introduction for these concepts
+- **How-To**: Link to additional procedural guides
+- **Reference**: Link to technical specifications
+- **Explanation**: Link to deeper conceptual background
 
 ### Troubleshooting
 
