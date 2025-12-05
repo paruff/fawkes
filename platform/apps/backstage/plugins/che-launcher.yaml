@@ -1,0 +1,143 @@
+# ============================================================================
+# FILE: platform/apps/backstage/plugins/che-launcher.yaml
+# PURPOSE: Backstage integration configuration for Eclipse Che CDE launcher
+#          Enables launching Cloud Development Environments from Service Catalog.
+# ============================================================================
+---
+# ConfigMap for Che Launcher plugin configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backstage-che-launcher-config
+  namespace: fawkes
+  labels:
+    app.kubernetes.io/name: backstage-che-launcher
+    app.kubernetes.io/component: plugin-config
+    app.kubernetes.io/part-of: backstage
+data:
+  # Eclipse Che server configuration
+  # NOTE: URLs use local development defaults (nip.io).
+  # For production, override these values via environment-specific ConfigMaps.
+  che-config.yaml: |
+    # Eclipse Che integration settings
+    che:
+      # Base URL for Eclipse Che server
+      # For production, use: https://che.fawkes.idp
+      baseUrl: https://che.127.0.0.1.nip.io
+
+      # Default Devfile to use when none specified
+      defaultDevfile: goldenpath-python
+
+      # Available Devfile templates
+      devfiles:
+        - name: goldenpath-python
+          displayName: Python Development
+          description: Standardized Python environment with FastAPI, Django support
+          url: https://raw.githubusercontent.com/paruff/fawkes/main/platform/devfiles/goldenpath-python.yaml
+          tags:
+            - python
+            - django
+            - fastapi
+            - flask
+          resources:
+            cpu: "2"
+            memory: 4Gi
+
+        - name: goldenpath-ai
+          displayName: AI/ML Development
+          description: High-resource environment for AI/ML with GPU support
+          url: https://raw.githubusercontent.com/paruff/fawkes/main/platform/devfiles/goldenpath-ai.yaml
+          tags:
+            - ai
+            - machine-learning
+            - tensorflow
+            - pytorch
+            - jupyter
+          resources:
+            cpu: "8"
+            memory: 16Gi
+            gpu: "1"
+
+      # Workspace settings
+      workspace:
+        # Auto-stop idle workspaces after this many seconds
+        idleTimeout: 1800
+        # Maximum workspaces per user
+        maxPerUser: 3
+        # Default storage size
+        storageSize: 10Gi
+
+      # Entity annotation for CDE support
+      annotations:
+        # Annotation to enable CDE button on entity
+        enabled: eclipse.org/che-enabled
+        # Annotation specifying Devfile template
+        devfile: eclipse.org/che-devfile
+        # Annotation for custom Devfile URL
+        devfileUrl: eclipse.org/che-devfile-url
+
+---
+# Backstage app-config overlay for Che integration
+# This should be merged with the main app-config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backstage-che-app-config
+  namespace: fawkes
+  labels:
+    app.kubernetes.io/name: backstage-che-config
+    app.kubernetes.io/component: app-config
+    app.kubernetes.io/part-of: backstage
+data:
+  # Partial app-config for Eclipse Che integration
+  app-config-che.yaml: |
+    # Eclipse Che integration for Backstage
+    che:
+      # Base URL for Che API
+      baseUrl: ${CHE_BASE_URL}
+
+      # Factory URL template for launching workspaces
+      # Parameters: ${repoUrl}, ${devfile}
+      factoryUrlTemplate: "${CHE_BASE_URL}/#${repoUrl}?devfile=${devfile}"
+
+      # Dashboard URL
+      dashboardUrl: ${CHE_BASE_URL}/dashboard
+
+    # Proxy configuration for Che API access
+    proxy:
+      endpoints:
+        /che-api:
+          target: ${CHE_BASE_URL}/api
+          headers:
+            Authorization: Bearer ${CHE_API_TOKEN}
+          changeOrigin: true
+          secure: true
+
+    # Catalog entity processor for Che annotations
+    catalog:
+      processors:
+        che:
+          # Enable Che annotation processor
+          enabled: true
+          # Default Devfile when annotation missing
+          defaultDevfile: goldenpath-python
+
+---
+# Secret for Che API token (template - actual token managed by Vault)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backstage-che-credentials
+  namespace: fawkes
+  labels:
+    app.kubernetes.io/name: backstage-che-credentials
+    app.kubernetes.io/component: credentials
+    app.kubernetes.io/part-of: backstage
+  annotations:
+    # This secret should be populated by External Secrets Operator or Vault
+    vault.hashicorp.com/agent-inject: "true"
+    vault.hashicorp.com/role: "backstage"
+    vault.hashicorp.com/agent-inject-secret-che-token: "secret/data/backstage/che"
+type: Opaque
+# Note: Data is injected by Vault Agent - no static values stored in Git
+data: {}

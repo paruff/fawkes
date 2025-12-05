@@ -258,6 +258,81 @@ Developer Access Request
 | **ArgoCD** | Deployment status | `proxy.endpoints./argocd` |
 | **Kubernetes** | Resource status | `kubernetes.clusterLocatorMethods` |
 | **Prometheus** | Metrics exposure | ServiceMonitor |
+| **Eclipse Che** | Cloud Development Environments | `proxy.endpoints./che-api` |
+
+### Cloud Development Environments (Eclipse Che)
+
+The Developer Experience Layer includes Eclipse Che for Cloud Development
+Environments (CDEs), enabling developers to instantly provision standardized,
+pre-configured development workspaces.
+
+#### CDE Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    Cloud Development Environment Layer                       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                      Backstage CDE Launcher                            │ │
+│  │   (Launch CDEs directly from Service Catalog entity pages)             │ │
+│  └───────────────────────────────┬────────────────────────────────────────┘ │
+│                                  │                                           │
+│                                  ▼                                           │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                     Eclipse Che Server                                  │ │
+│  │                  (eclipse-che namespace)                                │ │
+│  │                                                                          │ │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────────┐ │ │
+│  │  │  Dashboard   │  │   Devfile    │  │   Plugin     │  │ Workspace  │ │ │
+│  │  │              │  │   Registry   │  │   Registry   │  │ Controller │ │ │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘  └────────────┘ │ │
+│  └───────────────────────────────┬────────────────────────────────────────┘ │
+│                                  │                                           │
+│              ┌───────────────────┼───────────────────┐                      │
+│              │                   │                   │                      │
+│              ▼                   ▼                   ▼                      │
+│  ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐            │
+│  │ che-user-dev1    │ │ che-user-dev2    │ │ che-user-dev3    │            │
+│  │  ┌────────────┐  │ │  ┌────────────┐  │ │  ┌────────────┐  │            │
+│  │  │ VS Code    │  │ │  │ VS Code    │  │ │  │ VS Code    │  │            │
+│  │  │ Container  │  │ │  │ Container  │  │ │  │ Container  │  │            │
+│  │  └────────────┘  │ │  └────────────┘  │ │  └────────────┘  │            │
+│  │  ┌────────────┐  │ │  ┌────────────┐  │ │  ┌────────────┐  │            │
+│  │  │ Python Dev │  │ │  │ AI/ML Dev  │  │ │  │ Node.js    │  │            │
+│  │  │ Container  │  │ │  │ Container  │  │ │  │ Container  │  │            │
+│  │  └────────────┘  │ │  └────────────┘  │ │  └────────────┘  │            │
+│  │  ┌────────────┐  │ │  ┌────────────┐  │ │  ┌────────────┐  │            │
+│  │  │Vault Agent │  │ │  │Vault Agent │  │ │  │Vault Agent │  │            │
+│  │  └────────────┘  │ │  └────────────┘  │ │  └────────────┘  │            │
+│  └──────────────────┘ └──────────────────┘ └──────────────────┘            │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+#### Golden Path Devfiles
+
+| Template | Description | Resources |
+|----------|-------------|-----------|
+| `goldenpath-python` | Python development (Django, FastAPI, Flask) | 2 CPU, 4Gi Memory |
+| `goldenpath-ai` | AI/ML development with GPU support | 8 CPU, 16Gi Memory, GPU |
+
+#### Key Features
+
+- **Instant Provisioning**: Launch pre-configured workspaces in under 2 minutes
+- **SSO Integration**: Same authentication as Backstage portal
+- **Vault Secrets**: Automatic credential injection via Vault Agent
+- **Resource Quotas**: Team-level resource limits prevent cluster overload
+- **Workspace Isolation**: Dedicated namespaces per user for security
+
+#### Access URLs
+
+| Endpoint | URL | Purpose |
+|----------|-----|---------|
+| Che Dashboard | `https://che.fawkes.idp` | Workspace management |
+| Devfile Registry | `https://che.fawkes.idp/devfile-registry` | Template catalog |
+
+See [ADR-021: Eclipse Che CDE Strategy](adr/ADR-021%20eclipse-che-cde-strategy.md)
+for detailed architecture decisions.
 
 ---
 
@@ -1014,6 +1089,7 @@ Application consumes database
 | Container Orchestration | Kubernetes | 1.28+ | Industry standard, CNCF graduated |
 | Infrastructure as Code | Terraform | 1.6+ | Mature, multi-cloud, large community |
 | Developer Portal | Backstage | Latest | CNCF incubating, Spotify-proven |
+| Cloud Development Env | Eclipse Che | 7.89+ | CNCF incubating, Devfile standard |
 | CI/CD | Jenkins | 2.4+ | Enterprise adoption, extensive plugins |
 | GitOps | ArgoCD | 2.9+ | Kubernetes-native, progressive delivery |
 | Container Registry | Harbor | 2.9+ | Security scanning, RBAC, replication |
@@ -1125,6 +1201,7 @@ Major architectural decisions are documented in ADRs stored in `/docs/adr/`:
 - [ADR-015: HashiCorp Vault Deployment](../adr/ADR-015%20vault%20deployment.md)
 - [ADR-016: DevLake for DORA Metrics](../adr/ADR-016%20devlake-dora-strategy.md)
 - [ADR-017: Kyverno Policy Engine](../adr/ADR-017%20kyverno-policy-engine.md)
+- [ADR-021: Eclipse Che CDE Strategy](../adr/ADR-021%20eclipse-che-cde-strategy.md)
 
 ---
 
