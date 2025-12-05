@@ -1646,6 +1646,67 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#cloud-development-environments-eclipse-che" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Development Environments (Eclipse Che)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cloud Development Environments (Eclipse Che)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cde-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CDE Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#golden-path-devfiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Golden Path Devfiles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-urls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access URLs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2525,8 +2586,111 @@
 <td>Metrics exposure</td>
 <td>ServiceMonitor</td>
 </tr>
+<tr>
+<td><strong>Eclipse Che</strong></td>
+<td>Cloud Development Environments</td>
+<td><code>proxy.endpoints./che-api</code></td>
+</tr>
 </tbody>
 </table>
+<h3 id="cloud-development-environments-eclipse-che">Cloud Development Environments (Eclipse Che)</h3>
+<p>The Developer Experience Layer includes Eclipse Che for Cloud Development
+Environments (CDEs), enabling developers to instantly provision standardized,
+pre-configured development workspaces.</p>
+<h4 id="cde-architecture">CDE Architecture</h4>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                    Cloud Development Environment Layer                       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                      Backstage CDE Launcher                            │ │
+│  │   (Launch CDEs directly from Service Catalog entity pages)             │ │
+│  └───────────────────────────────┬────────────────────────────────────────┘ │
+│                                  │                                           │
+│                                  ▼                                           │
+│  ┌────────────────────────────────────────────────────────────────────────┐ │
+│  │                     Eclipse Che Server                                  │ │
+│  │                  (eclipse-che namespace)                                │ │
+│  │                                                                          │ │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────────┐ │ │
+│  │  │  Dashboard   │  │   Devfile    │  │   Plugin     │  │ Workspace  │ │ │
+│  │  │              │  │   Registry   │  │   Registry   │  │ Controller │ │ │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘  └────────────┘ │ │
+│  └───────────────────────────────┬────────────────────────────────────────┘ │
+│                                  │                                           │
+│              ┌───────────────────┼───────────────────┐                      │
+│              │                   │                   │                      │
+│              ▼                   ▼                   ▼                      │
+│  ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐            │
+│  │ che-user-dev1    │ │ che-user-dev2    │ │ che-user-dev3    │            │
+│  │  ┌────────────┐  │ │  ┌────────────┐  │ │  ┌────────────┐  │            │
+│  │  │ VS Code    │  │ │  │ VS Code    │  │ │  │ VS Code    │  │            │
+│  │  │ Container  │  │ │  │ Container  │  │ │  │ Container  │  │            │
+│  │  └────────────┘  │ │  └────────────┘  │ │  └────────────┘  │            │
+│  │  ┌────────────┐  │ │  ┌────────────┐  │ │  ┌────────────┐  │            │
+│  │  │ Python Dev │  │ │  │ AI/ML Dev  │  │ │  │ Node.js    │  │            │
+│  │  │ Container  │  │ │  │ Container  │  │ │  │ Container  │  │            │
+│  │  └────────────┘  │ │  └────────────┘  │ │  └────────────┘  │            │
+│  │  ┌────────────┐  │ │  ┌────────────┐  │ │  ┌────────────┐  │            │
+│  │  │Vault Agent │  │ │  │Vault Agent │  │ │  │Vault Agent │  │            │
+│  │  └────────────┘  │ │  └────────────┘  │ │  └────────────┘  │            │
+│  └──────────────────┘ └──────────────────┘ └──────────────────┘            │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h4 id="golden-path-devfiles">Golden Path Devfiles</h4>
+<table>
+<thead>
+<tr>
+<th>Template</th>
+<th>Description</th>
+<th>Resources</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>goldenpath-python</code></td>
+<td>Python development (Django, FastAPI, Flask)</td>
+<td>2 CPU, 4Gi Memory</td>
+</tr>
+<tr>
+<td><code>goldenpath-ai</code></td>
+<td>AI/ML development with GPU support</td>
+<td>8 CPU, 16Gi Memory, GPU</td>
+</tr>
+</tbody>
+</table>
+<h4 id="key-features">Key Features</h4>
+<ul>
+<li><strong>Instant Provisioning</strong>: Launch pre-configured workspaces in under 2 minutes</li>
+<li><strong>SSO Integration</strong>: Same authentication as Backstage portal</li>
+<li><strong>Vault Secrets</strong>: Automatic credential injection via Vault Agent</li>
+<li><strong>Resource Quotas</strong>: Team-level resource limits prevent cluster overload</li>
+<li><strong>Workspace Isolation</strong>: Dedicated namespaces per user for security</li>
+</ul>
+<h4 id="access-urls">Access URLs</h4>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>URL</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Che Dashboard</td>
+<td><code>https://che.fawkes.idp</code></td>
+<td>Workspace management</td>
+</tr>
+<tr>
+<td>Devfile Registry</td>
+<td><code>https://che.fawkes.idp/devfile-registry</code></td>
+<td>Template catalog</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="../adr/ADR-021%20eclipse-che-cde-strategy/">ADR-021: Eclipse Che CDE Strategy</a>
+for detailed architecture decisions.</p>
 <hr />
 <h2 id="component-overview">Component Overview</h2>
 <h3 id="1-developer-portal-backstage">1. Developer Portal (Backstage)</h3>
@@ -3237,6 +3401,12 @@ Application consumes database
 <td>CNCF incubating, Spotify-proven</td>
 </tr>
 <tr>
+<td>Cloud Development Env</td>
+<td>Eclipse Che</td>
+<td>7.89+</td>
+<td>CNCF incubating, Devfile standard</td>
+</tr>
+<tr>
 <td>CI/CD</td>
 <td>Jenkins</td>
 <td>2.4+</td>
@@ -3480,6 +3650,7 @@ Application consumes database
 <li><a href="../adr/ADR-015%20vault%20deployment.md">ADR-015: HashiCorp Vault Deployment</a></li>
 <li><a href="../adr/ADR-016%20devlake-dora-strategy.md">ADR-016: DevLake for DORA Metrics</a></li>
 <li><a href="../adr/ADR-017%20kyverno-policy-engine.md">ADR-017: Kyverno Policy Engine</a></li>
+<li><a href="../adr/ADR-021%20eclipse-che-cde-strategy.md">ADR-021: Eclipse Che CDE Strategy</a></li>
 </ul>
 <hr />
 <h2 id="diagrams">Diagrams</h2>

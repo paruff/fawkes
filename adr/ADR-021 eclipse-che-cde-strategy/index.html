@@ -1,0 +1,2218 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>ADR-021: Eclipse Che Cloud Development Environment (CDE) Strategy - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#adr-021-eclipse-che-cloud-development-environment-cde-strategy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ADR-021: Eclipse Che Cloud Development Environment (CDE) Strategy
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/assessment.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../capabilities/fast-flow.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Capabilities
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../patterns/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Patterns
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tools/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tools
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/assessment.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assessment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/implementation-paths.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Paths
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quick-wins.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Wins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Capabilities
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-flow.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-feedback.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/fast-recovery.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fast Recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patterns
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/monitoring.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Continuous Delivery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spinnaker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Infrastructure
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/terraform.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/kubernetes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/grafana.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grafana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current State
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation Criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-eclipse-che" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Eclipse Che
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#devfile-standardization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Devfile Standardization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deployment-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sso-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSO Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secrets-access-via-vault" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets Access via Vault
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-quota-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Quota Enforcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backstage-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backstage Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edge-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edge Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consequences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Positive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#negative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Negative
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risks-and-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks and Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-github-codespaces-commercial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. GitHub Codespaces (Commercial)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-gitpod-open-sourcecommercial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Gitpod (Open Source/Commercial)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-vs-code-dev-containers-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. VS Code Dev Containers (Local)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-custom-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Custom Solution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-core-deployment-week-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Core Deployment (Week 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-devfile-templates-week-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Devfile Templates (Week 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-integration-week-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Integration (Week 3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-documentation-training-week-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4: Documentation &amp; Training (Week 4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="adr-021-eclipse-che-cloud-development-environment-cde-strategy">ADR-021: Eclipse Che Cloud Development Environment (CDE) Strategy</h1>
+<h2 id="status">Status</h2>
+<p>Accepted</p>
+<h2 id="context">Context</h2>
+<p>The Fawkes platform requires a Cloud Development Environment (CDE) solution to
+eliminate local environment setup friction, ensure consistent development
+toolchains, and enable AI-ready development workspaces with appropriate resources.</p>
+<h3 id="current-state">Current State</h3>
+<p>Product developers rely on local machines for development, leading to:</p>
+<ul>
+<li>"Works on my machine" issues due to inconsistent toolchains</li>
+<li>Significant setup time for new projects</li>
+<li>AI development requiring substantial local resources (GPU/high-CPU)</li>
+<li>Security concerns with local development of sensitive codebases</li>
+<li>Difficulty onboarding new team members</li>
+</ul>
+<h3 id="requirements">Requirements</h3>
+<ol>
+<li><strong>Standardized Environments</strong>: Pre-configured workspaces with correct runtime,
+   tools, and language servers</li>
+<li><strong>AI-Ready Workspaces</strong>: Support for GPU/high-CPU resource allocation for AI/ML
+   development</li>
+<li><strong>Git Integration</strong>: Automatic repository cloning and access configuration</li>
+<li><strong>SSO Integration</strong>: Seamless authentication via platform's central SSO provider</li>
+<li><strong>Secrets Access</strong>: Secure credential injection via Vault Agent pattern</li>
+<li><strong>Resource Management</strong>: Kubernetes ResourceQuota enforcement to prevent
+   cluster overload</li>
+<li><strong>Workspace Isolation</strong>: Dedicated namespaces per user/team for security
+   separation</li>
+</ol>
+<h3 id="evaluation-criteria">Evaluation Criteria</h3>
+<ul>
+<li>Open source with active community</li>
+<li>Kubernetes-native deployment</li>
+<li>Devfile standard support</li>
+<li>SSO/OIDC integration capability</li>
+<li>IDE flexibility (VS Code, IntelliJ, etc.)</li>
+<li>Backstage integration potential</li>
+</ul>
+<h2 id="decision">Decision</h2>
+<p>We will deploy <strong>Eclipse Che</strong> as the Cloud Development Environment platform for
+Fawkes.</p>
+<h3 id="why-eclipse-che">Why Eclipse Che</h3>
+<p><strong>Advantages</strong>:</p>
+<ol>
+<li><strong>Kubernetes-Native</strong>: Built for Kubernetes with Operator-based deployment</li>
+<li><strong>Devfile Standard</strong>: Uses CNCF Devfile specification for workspace definitions</li>
+<li><strong>IDE Flexibility</strong>: Supports VS Code, Che-Theia, and JetBrains IDEs</li>
+<li><strong>SSO Support</strong>: Native OIDC integration for SSO authentication</li>
+<li><strong>Open Source</strong>: Apache 2.0 license, CNCF project (incubating)</li>
+<li><strong>Per-User Workspaces</strong>: Automatic namespace isolation per developer</li>
+<li><strong>Resource Control</strong>: Kubernetes-native resource limits and quotas</li>
+</ol>
+<p><strong>Trade-offs</strong>:</p>
+<ol>
+<li><strong>Resource Intensive</strong>: Workspaces consume significant cluster resources</li>
+<li><strong>Complexity</strong>: Operator deployment requires careful configuration</li>
+<li><strong>Learning Curve</strong>: Teams need to understand Devfile structure</li>
+</ol>
+<h3 id="architecture">Architecture</h3>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                       Eclipse Che CDE Architecture                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │                        Access Layer                                      │ │
+│  │                                                                           │ │
+│  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐          │ │
+│  │  │   Backstage     │  │   Che Dashboard │  │   Direct IDE    │          │ │
+│  │  │   CDE Launcher  │  │                 │  │   Access        │          │ │
+│  │  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘          │ │
+│  └───────────┼────────────────────┼────────────────────┼────────────────────┘ │
+│              │                    │                    │                      │
+│              └────────────────────┴────────────────────┘                      │
+│                                   │                                           │
+│                                   ▼                                           │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │                   Eclipse Che Operator (eclipse-che namespace)          │ │
+│  │                                                                           │ │
+│  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐          │ │
+│  │  │  Che Server     │  │  Devfile        │  │  Workspace      │          │ │
+│  │  │  (API/Gateway)  │  │  Registry       │  │  Controller     │          │ │
+│  │  └─────────────────┘  └─────────────────┘  └─────────────────┘          │ │
+│  │                                                                           │ │
+│  │  ┌─────────────────────────────────────────────────────────────────────┐ │ │
+│  │  │                    OIDC/SSO Integration                              │ │ │
+│  │  │           (Platform SSO → Eclipse Che Authentication)               │ │ │
+│  │  └─────────────────────────────────────────────────────────────────────┘ │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                   │                                           │
+│                                   ▼                                           │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │                   Developer Workspaces (user namespaces)                 │ │
+│  │                                                                           │ │
+│  │  ┌─────────────────────────────────────────────────────────────────────┐ │ │
+│  │  │ Namespace: che-user-developer1                                       │ │ │
+│  │  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐     │ │ │
+│  │  │  │  IDE Container  │  │  Dev Container  │  │  Vault Agent    │     │ │ │
+│  │  │  │  (VS Code)      │  │  (Python/Node)  │  │  Sidecar        │     │ │ │
+│  │  │  └─────────────────┘  └─────────────────┘  └─────────────────┘     │ │ │
+│  │  │        │ ResourceQuota: 4 CPU, 8Gi Memory                           │ │ │
+│  │  └─────────────────────────────────────────────────────────────────────┘ │ │
+│  │                                                                           │ │
+│  │  ┌─────────────────────────────────────────────────────────────────────┐ │ │
+│  │  │ Namespace: che-user-developer2 (AI Workspace)                        │ │ │
+│  │  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐     │ │ │
+│  │  │  │  IDE Container  │  │  AI Container   │  │  Vault Agent    │     │ │ │
+│  │  │  │  (VS Code)      │  │  (TensorFlow)   │  │  Sidecar        │     │ │ │
+│  │  │  └─────────────────┘  └─────────────────┘  └─────────────────┘     │ │ │
+│  │  │        │ ResourceQuota: 8 CPU, 16Gi Memory, GPU: 1                  │ │ │
+│  │  │        │ Node Selector: gpu-enabled=true                            │ │ │
+│  │  └─────────────────────────────────────────────────────────────────────┘ │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="devfile-standardization">Devfile Standardization</h3>
+<p>Eclipse Che uses Devfiles to define development environments. We will provide
+two initial Golden Path Devfiles:</p>
+<table>
+<thead>
+<tr>
+<th>Devfile</th>
+<th>Purpose</th>
+<th>Resources</th>
+<th>Tools</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>goldenpath-python</code></td>
+<td>General Python development</td>
+<td>2 CPU, 4Gi Memory</td>
+<td>Python 3.11, pip, Language Server</td>
+</tr>
+<tr>
+<td><code>goldenpath-ai</code></td>
+<td>AI/ML development</td>
+<td>8 CPU, 16Gi Memory, GPU</td>
+<td>TensorFlow, PyTorch, Jupyter, CUDA</td>
+</tr>
+</tbody>
+</table>
+<h3 id="deployment-configuration">Deployment Configuration</h3>
+<p><strong>Namespace</strong>: <code>eclipse-che</code></p>
+<p><strong>Components</strong>:</p>
+<ul>
+<li>Eclipse Che Operator (via OperatorHub or Helm)</li>
+<li>Che Server (API gateway, workspace management)</li>
+<li>Devfile Registry (Golden Path templates)</li>
+<li>PostgreSQL (workspace metadata storage)</li>
+</ul>
+<p><strong>Resource Requirements</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">che-operator</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128Mi</span>
+<span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512Mi</span>
+
+<span class="nt">che-server</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
+<span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2Gi</span>
+
+<span class="nt">devfile-registry</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128Mi</span>
+<span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512Mi</span>
+</code></pre></div>
+<h3 id="sso-integration">SSO Integration</h3>
+<p>Eclipse Che will integrate with the platform's central SSO provider:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">auth</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">oAuthClientName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eclipse-che</span>
+<span class="w">    </span><span class="nt">oAuthSecret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">che-oauth-secret</span>
+<span class="w">    </span><span class="nt">identityProviderURL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://sso.fawkes.idp/realms/fawkes</span>
+</code></pre></div>
+<p>For GitHub OAuth (matching Backstage):</p>
+<ul>
+<li>Che uses the same OAuth provider configured for Backstage</li>
+<li>User identity is consistent across portal and CDEs</li>
+<li>Token refresh handled automatically</li>
+</ul>
+<h3 id="secrets-access-via-vault">Secrets Access via Vault</h3>
+<p>Workspaces will access secrets via the Vault Agent Sidecar pattern:</p>
+<ol>
+<li>Workspace pod annotations trigger Vault Agent injection</li>
+<li>Secrets mounted at <code>/vault/secrets/</code> in workspace container</li>
+<li>Developers use secrets without managing credentials locally</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># Workspace template annotation</span>
+<span class="nt">vault.hashicorp.com/agent-inject</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="nt">vault.hashicorp.com/role</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;che-workspace&quot;</span>
+<span class="nt">vault.hashicorp.com/agent-inject-secret-db-creds</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;secret/data/dev/database&quot;</span>
+</code></pre></div>
+<h3 id="resource-quota-enforcement">Resource Quota Enforcement</h3>
+<p>Each team has a cluster-wide quota for CDE consumption:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ResourceQuota</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">che-workspace-quota</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">che-user-team-a</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">hard</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">requests.cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;16&quot;</span>
+<span class="w">    </span><span class="nt">requests.memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32Gi</span>
+<span class="w">    </span><span class="nt">limits.cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;32&quot;</span>
+<span class="w">    </span><span class="nt">limits.memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">64Gi</span>
+<span class="w">    </span><span class="nt">pods</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10&quot;</span>
+</code></pre></div>
+<p>When quota is exceeded:</p>
+<ul>
+<li>New workspace launches are denied with clear error message</li>
+<li>Users see quota status in Che Dashboard</li>
+<li>Alerting configured for approaching quota limits</li>
+</ul>
+<h3 id="backstage-integration">Backstage Integration</h3>
+<p>Eclipse Che integrates with Backstage via:</p>
+<ol>
+<li><strong>Che Launcher Plugin</strong>: Component to launch CDEs from Service Catalog</li>
+<li><strong>Entity Annotation</strong>: Link services to Devfile templates</li>
+<li><strong>Status Widget</strong>: Show active workspaces for each service</li>
+</ol>
+<p>Example catalog annotation:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">eclipse.org/che-devfile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">goldenpath-python</span>
+<span class="w">    </span><span class="nt">eclipse.org/che-url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://che.fawkes.idp</span>
+</code></pre></div>
+<h3 id="edge-cases">Edge Cases</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quota exceeded</td>
+<td>Clear error message, workspace launch blocked</td>
+</tr>
+<tr>
+<td>Git access denied</td>
+<td>Prompt for credentials, SSO token refresh</td>
+</tr>
+<tr>
+<td>Workspace idle timeout</td>
+<td>Auto-stop after 30 minutes, state preserved</td>
+</tr>
+<tr>
+<td>Devfile not found</td>
+<td>Fallback to Universal Developer Image</td>
+</tr>
+<tr>
+<td>GPU unavailable</td>
+<td>Queue workspace, notify when resources free</td>
+</tr>
+</tbody>
+</table>
+<h2 id="consequences">Consequences</h2>
+<h3 id="positive">Positive</h3>
+<ol>
+<li><strong>Consistent Environments</strong>: All developers use identical, reproducible setups</li>
+<li><strong>Fast Onboarding</strong>: New team members productive within minutes</li>
+<li><strong>AI-Ready Infrastructure</strong>: GPU resources available on-demand</li>
+<li><strong>Security</strong>: No sensitive code on local machines</li>
+<li><strong>Reduced Support</strong>: Fewer "works on my machine" issues</li>
+</ol>
+<h3 id="negative">Negative</h3>
+<ol>
+<li><strong>Resource Cost</strong>: Significant cluster resources per active workspace</li>
+<li><strong>Network Dependency</strong>: Requires stable internet connection</li>
+<li><strong>Learning Curve</strong>: Devfile authoring requires training</li>
+<li><strong>Complexity</strong>: Additional platform component to maintain</li>
+</ol>
+<h3 id="risks-and-mitigations">Risks and Mitigations</h3>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Workspace sprawl</td>
+<td>Auto-stop idle workspaces, quota enforcement</td>
+</tr>
+<tr>
+<td>Performance issues</td>
+<td>Node affinity, SSD storage for workspaces</td>
+</tr>
+<tr>
+<td>Security exposure</td>
+<td>Network policies, namespace isolation, RBAC</td>
+</tr>
+<tr>
+<td>Vendor lock-in</td>
+<td>Devfile is CNCF standard, portable</td>
+</tr>
+</tbody>
+</table>
+<h2 id="alternatives-considered">Alternatives Considered</h2>
+<h3 id="1-github-codespaces-commercial">1. GitHub Codespaces (Commercial)</h3>
+<p><strong>Description</strong>: GitHub's cloud development environment</p>
+<p><strong>Rejected because</strong>:</p>
+<ul>
+<li>Vendor lock-in to GitHub ecosystem</li>
+<li>Per-user licensing costs</li>
+<li>Limited customization for enterprise requirements</li>
+</ul>
+<h3 id="2-gitpod-open-sourcecommercial">2. Gitpod (Open Source/Commercial)</h3>
+<p><strong>Description</strong>: Alternative CDE platform</p>
+<p><strong>Rejected because</strong>:</p>
+<ul>
+<li>Less mature Kubernetes Operator</li>
+<li>Smaller community than Eclipse Che</li>
+<li>Commercial licensing for enterprise features</li>
+</ul>
+<h3 id="3-vs-code-dev-containers-local">3. VS Code Dev Containers (Local)</h3>
+<p><strong>Description</strong>: Containerized development environments running locally</p>
+<p><strong>Rejected because</strong>:</p>
+<ul>
+<li>Still requires local resources</li>
+<li>Not suitable for AI/ML workloads</li>
+<li>No centralized management</li>
+</ul>
+<h3 id="4-custom-solution">4. Custom Solution</h3>
+<p><strong>Description</strong>: Build bespoke CDE platform</p>
+<p><strong>Rejected because</strong>:</p>
+<ul>
+<li>Significant development effort</li>
+<li>Maintenance burden</li>
+<li>Reinventing existing solutions</li>
+</ul>
+<h2 id="implementation-plan">Implementation Plan</h2>
+<h3 id="phase-1-core-deployment-week-1">Phase 1: Core Deployment (Week 1)</h3>
+<ul>
+<li>[x] Create ADR-021 for Eclipse Che CDE strategy</li>
+<li>[ ] Deploy Eclipse Che Operator via ArgoCD</li>
+<li>[ ] Configure SSO integration</li>
+<li>[ ] Set up ingress for Che endpoints</li>
+</ul>
+<h3 id="phase-2-devfile-templates-week-2">Phase 2: Devfile Templates (Week 2)</h3>
+<ul>
+<li>[ ] Create <code>goldenpath-python</code> Devfile</li>
+<li>[ ] Create <code>goldenpath-ai</code> Devfile</li>
+<li>[ ] Configure Devfile Registry</li>
+<li>[ ] Test workspace launch with templates</li>
+</ul>
+<h3 id="phase-3-integration-week-3">Phase 3: Integration (Week 3)</h3>
+<ul>
+<li>[ ] Develop Backstage Che Launcher plugin</li>
+<li>[ ] Configure Vault Agent integration</li>
+<li>[ ] Set up ResourceQuota policies</li>
+<li>[ ] Create team namespaces</li>
+</ul>
+<h3 id="phase-4-documentation-training-week-4">Phase 4: Documentation &amp; Training (Week 4)</h3>
+<ul>
+<li>[ ] Update architecture documentation</li>
+<li>[ ] Create Devfile authoring guide</li>
+<li>[ ] Add Dojo learning module for CDEs</li>
+<li>[ ] Create operational runbooks</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.eclipse.org/che/docs/">Eclipse Che Documentation</a></li>
+<li><a href="https://devfile.io/">CNCF Devfile Specification</a></li>
+<li><a href="https://github.com/eclipse-che/che-operator">Eclipse Che Operator</a></li>
+<li><a href="../ADR-002%20backstage/">ADR-002: Backstage for Developer Portal</a></li>
+<li><a href="../ADR-015%20vault%20deployment/">ADR-015: HashiCorp Vault Deployment</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
