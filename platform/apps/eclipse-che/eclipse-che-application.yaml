@@ -1,0 +1,273 @@
+# ============================================================================
+# FILE: platform/apps/eclipse-che/eclipse-che-application.yaml
+# PURPOSE: ArgoCD Application for Eclipse Che CDE deployment
+#          Provides Cloud Development Environments for the Fawkes platform.
+# PREREQ: Ingress controller deployed, SSO provider configured.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: eclipse-che
+  namespace: fawkes
+  labels:
+    app: eclipse-che
+    component: cde
+    environment: dev
+    team: platform
+  annotations:
+    argocd.argoproj.io/docs: "https://www.eclipse.org/che/docs/"
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: default
+
+  source:
+    repoURL: https://eclipse-che.github.io/che-operator
+    chart: eclipse-che
+    targetRevision: 7.89.0
+    helm:
+      values: |
+        # ============================================================
+        # Eclipse Che Operator Configuration
+        # Cloud Development Environment for Fawkes IDP
+        # ============================================================
+
+        # CheCluster custom resource configuration
+        cheCluster:
+          metadata:
+            name: eclipse-che
+            namespace: eclipse-che
+
+          spec:
+            # ============================================================
+            # Component Configuration
+            # ============================================================
+            components:
+              cheServer:
+                # Server deployment configuration
+                deployment:
+                  containers:
+                    - name: che-server
+                      resources:
+                        requests:
+                          cpu: 500m
+                          memory: 1Gi
+                        limits:
+                          cpu: 2
+                          memory: 2Gi
+
+                # Che Server additional properties
+                extraProperties:
+                  CHE_INFRA_KUBERNETES_WORKSPACE__START__TIMEOUT__MIN: "10"
+                  CHE_LIMITS_WORKSPACE_IDLE_TIMEOUT: "1800000"
+                  CHE_WORKSPACE_ACTIVITY_CHECK__SCHEDULER__PERIOD__S: "60"
+                  CHE_WORKSPACE_DEFAULT__MEMORY__LIMIT__MB: "4096"
+                  CHE_WORKSPACE_DEFAULT__CPU__LIMIT: "2"
+
+              # Dashboard configuration
+              dashboard:
+                deployment:
+                  containers:
+                    - name: dashboard
+                      resources:
+                        requests:
+                          cpu: 100m
+                          memory: 128Mi
+                        limits:
+                          cpu: 500m
+                          memory: 512Mi
+
+              # Devfile registry configuration
+              devfileRegistry:
+                deployment:
+                  containers:
+                    - name: devfile-registry
+                      resources:
+                        requests:
+                          cpu: 100m
+                          memory: 128Mi
+                        limits:
+                          cpu: 500m
+                          memory: 512Mi
+                # External Devfile registries (Golden Path templates)
+                externalDevfileRegistries:
+                  - url: https://registry.devfile.io
+
+              # Plugin registry configuration
+              pluginRegistry:
+                deployment:
+                  containers:
+                    - name: plugin-registry
+                      resources:
+                        requests:
+                          cpu: 100m
+                          memory: 128Mi
+                        limits:
+                          cpu: 500m
+                          memory: 512Mi
+
+              # Metrics and observability
+              metrics:
+                enable: true
+
+              # Image puller (pre-pulls common images)
+              imagePuller:
+                enable: true
+                spec:
+                  daemonsetName: che-image-puller
+
+            # ============================================================
+            # Container Registry Configuration
+            # ============================================================
+            containerRegistry:
+              # Use internal registry or external
+              hostname: ""
+              organization: ""
+
+            # ============================================================
+            # Dev Environments Configuration
+            # ============================================================
+            devEnvironments:
+              # Default editor
+              defaultEditor: che-incubator/che-code/latest
+
+              # Default components
+              defaultComponents:
+                - name: universal-developer-image
+                  container:
+                    image: quay.io/devfile/universal-developer-image:ubi8-latest
+                    memoryLimit: 4Gi
+                    memoryRequest: 1Gi
+                    cpuLimit: "2"
+                    cpuRequest: "500m"
+
+              # Container build configuration
+              containerBuildConfiguration:
+                openShiftSecurityContextConstraint: ""
+
+              # Disable self-signed certificate check
+              disableContainerBuildCapabilities: false
+
+              # Default namespace template
+              defaultNamespace:
+                template: che-<username>
+                autoProvision: true
+
+              # Max running workspaces per user
+              maxNumberOfRunningWorkspacesPerUser: 3
+
+              # Node selector for workspaces
+              nodeSelector: {}
+
+              # PVC strategy
+              persistentVolumeClaimPolicy: common
+
+              # Pod tolerations for workspaces
+              tolerations: []
+
+              # Workspace storage
+              storage:
+                pvcStrategy: per-user
+                perUserStrategyPvcConfig:
+                  claimSize: 10Gi
+                  storageClass: standard
+
+              # Seconds of inactivity before auto-stopping
+              secondsOfInactivityBeforeIdling: 1800
+
+              # Seconds of run after idle before stopping
+              secondsOfRunBeforeIdling: -1
+
+              # Security context
+              containerSecurityContext:
+                runAsUser: 1000
+                fsGroup: 1000
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+
+              # Trusted certificates ConfigMap
+              trustedCerts:
+                gitTrustedCertsConfigMapName: ""
+
+            # ============================================================
+            # GitOps Configuration
+            # ============================================================
+            gitOps:
+              enabled: true
+
+            # ============================================================
+            # Networking Configuration
+            # ============================================================
+            networking:
+              # Domain for Che
+              # NOTE: This is a local development default using nip.io.
+              # For production, override via Helm values with your actual domain.
+              # Example: che.fawkes.idp or che.your-company.com
+              domain: che.127.0.0.1.nip.io
+
+              # TLS configuration
+              tlsSecretName: ""
+
+              # Annotations for ingress
+              annotations:
+                kubernetes.io/ingress.class: nginx
+                nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+                nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+                nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+                # NOTE: SSL redirect disabled for local development.
+                # For production, set to "true" to enforce HTTPS.
+                nginx.ingress.kubernetes.io/ssl-redirect: "false"
+
+              # Labels for ingress
+              labels: {}
+
+              # Auth configuration
+              auth:
+                # Gateway configuration
+                gateway:
+                  deployment:
+                    containers:
+                      - name: gateway
+                        resources:
+                          requests:
+                            cpu: 100m
+                            memory: 128Mi
+                          limits:
+                            cpu: 500m
+                            memory: 512Mi
+                  configLabels:
+                    app: che
+                    component: gateway-config
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: eclipse-che
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: org.eclipse.che
+      kind: CheCluster
+      jsonPointers:
+        - /spec/devEnvironments/defaultComponents
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+
+  revisionHistoryLimit: 10
