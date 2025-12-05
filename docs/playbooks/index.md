@@ -23,37 +23,37 @@ Every playbook follows the same five-section structure, mapped to Diátaxis quad
 
 ### Platform Setup
 
-| Playbook | Business Value | Complexity |
-|----------|---------------|------------|
-| [Platform Bootstrap](platform-bootstrap.md) | Establish foundation for elite delivery | ⭐⭐ |
-| [Multi-Cloud Strategy](multi-cloud-strategy.md) | Reduce vendor lock-in risk | ⭐⭐⭐ |
-| [GitOps Foundation](gitops-foundation.md) | Enable declarative infrastructure | ⭐⭐ |
+| Playbook | Business Value | Complexity | Status |
+|----------|---------------|------------|--------|
+| Platform Bootstrap | Establish foundation for elite delivery | ⭐⭐ | 🚧 Coming soon |
+| Multi-Cloud Strategy | Reduce vendor lock-in risk | ⭐⭐⭐ | 🚧 Coming soon |
+| GitOps Foundation | Enable declarative infrastructure | ⭐⭐ | 🚧 Coming soon |
 
 ### DORA Excellence
 
-| Playbook | Business Value | Complexity |
-|----------|---------------|------------|
-| [DORA Metrics Implementation](dora-metrics-implementation.md) | Data-driven delivery improvement | ⭐⭐ |
-| [Deployment Frequency Optimization](deployment-frequency.md) | Faster time to market | ⭐⭐ |
-| [Lead Time Reduction](lead-time-reduction.md) | Rapid value delivery | ⭐⭐⭐ |
-| [Change Failure Rate Reduction](change-failure-rate.md) | Improved quality | ⭐⭐⭐ |
-| [MTTR Improvement](mttr-improvement.md) | Enhanced reliability | ⭐⭐⭐ |
+| Playbook | Business Value | Complexity | Status |
+|----------|---------------|------------|--------|
+| [DORA Metrics Implementation](dora-metrics-implementation.md) | Data-driven delivery improvement | ⭐⭐ | ✅ Available |
+| Deployment Frequency Optimization | Faster time to market | ⭐⭐ | 🚧 Coming soon |
+| Lead Time Reduction | Rapid value delivery | ⭐⭐⭐ | 🚧 Coming soon |
+| Change Failure Rate Reduction | Improved quality | ⭐⭐⭐ | 🚧 Coming soon |
+| MTTR Improvement | Enhanced reliability | ⭐⭐⭐ | 🚧 Coming soon |
 
 ### Security & Compliance
 
-| Playbook | Business Value | Complexity |
-|----------|---------------|------------|
-| [Security Scanning Pipeline](security-scanning.md) | Shift-left security posture | ⭐⭐ |
-| [Policy Enforcement with Kyverno](kyverno-policies.md) | Automated compliance | ⭐⭐ |
-| [Secrets Management](secrets-management.md) | Reduced security risk | ⭐⭐ |
+| Playbook | Business Value | Complexity | Status |
+|----------|---------------|------------|--------|
+| Security Scanning Pipeline | Shift-left security posture | ⭐⭐ | 🚧 Coming soon |
+| Policy Enforcement with Kyverno | Automated compliance | ⭐⭐ | 🚧 Coming soon |
+| Secrets Management | Reduced security risk | ⭐⭐ | 🚧 Coming soon |
 
 ### Observability
 
-| Playbook | Business Value | Complexity |
-|----------|---------------|------------|
-| [Full-Stack Observability](observability-stack.md) | Proactive incident detection | ⭐⭐⭐ |
-| [SLO-Based Alerting](slo-alerting.md) | Customer-focused reliability | ⭐⭐⭐ |
-| [Cost Visibility](cost-visibility.md) | FinOps enablement | ⭐⭐ |
+| Playbook | Business Value | Complexity | Status |
+|----------|---------------|------------|--------|
+| Full-Stack Observability | Proactive incident detection | ⭐⭐⭐ | 🚧 Coming soon |
+| SLO-Based Alerting | Customer-focused reliability | ⭐⭐⭐ | 🚧 Coming soon |
+| Cost Visibility | FinOps enablement | ⭐⭐ | 🚧 Coming soon |
 
 ## Using Playbooks
 

@@ -59,12 +59,12 @@ DORA (DevOps Research and Assessment) research has identified four key metrics t
 
 | Component | Minimum Version | Required | Documentation |
 |-----------|-----------------|----------|---------------|
-| Kubernetes | 1.28+ | ✅ | [Reference](../reference/kubernetes.md) |
-| Prometheus | 2.47+ | ✅ | [Reference](../reference/prometheus.md) |
-| Grafana | 10.2+ | ✅ | [Reference](../reference/grafana.md) |
-| Jenkins | 2.426+ | ✅ | [Reference](../reference/jenkins.md) |
-| ArgoCD | 2.9+ | ✅ | [Reference](../reference/argocd.md) |
-| DevLake | 0.19+ | ⬜ Optional | [Reference](../reference/devlake.md) |
+| Kubernetes | 1.28+ | ✅ | See [Getting Started](../getting-started.md) |
+| Prometheus | 2.47+ | ✅ | See [Prometheus Tool](../tools/prometheus.md) |
+| Grafana | 10.2+ | ✅ | See [Observability](../observability/dora-metrics-guide.md) |
+| Jenkins | 2.426+ | ✅ | See [Jenkins Tool](../tools/jenkins.md) |
+| ArgoCD | 2.9+ | ✅ | See [GitOps Module](../dojo/modules/green-belt/module-09-gitops-argocd.md) |
+| DevLake | 0.19+ | ⬜ Optional | See [DevLake ADR](../adr/ADR-016%20devlake-dora-strategy.md) |
 
 ### Environment Requirements
 
@@ -595,10 +595,9 @@ This playbook establishes the foundation for measuring DORA metrics. After 2-4 w
 
 ### Related Resources
 
-- [Understanding DORA Metrics](../explanation/dora-metrics.md) - Conceptual background on the four key metrics
-- [Grafana Reference](../reference/grafana.md) - Technical specifications for dashboards
-- [Prometheus Reference](../reference/prometheus.md) - Metrics collection details
-- [DORA Dashboard Demo](../tutorials/dora-metrics-intro.md) - Learning introduction
+- [Module 2: DORA Metrics](../dojo/modules/white-belt/module-02-dora-metrics.md) - Conceptual background on the four key metrics
+- [Prometheus Tool Reference](../tools/prometheus.md) - Metrics collection details
+- [DORA Metrics Guide](../observability/dora-metrics-guide.md) - Detailed DORA implementation guide
 
 ### Troubleshooting
 
