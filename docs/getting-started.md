@@ -23,7 +23,7 @@ Before you begin, ensure you have:
 
 - **Git**: For repository management
 - **kubectl**: For Kubernetes interaction
-- **Flux** or **ArgoCD**: For GitOps operations
+- **ArgoCD**: For GitOps operations
 - **Cloud CLI**: For your chosen cloud provider
 
 ## 1. Clone the Repository
@@ -77,7 +77,7 @@ git push origin feature/add-new-service
 
 Services are deployed automatically via GitOps controllers. To add a new service:
 
-1. Define the service in `platform/services/`:
+1. Define the service in `platform/apps/`:
 ```yaml
 # Example service manifest
 apiVersion: argoproj.io/v1alpha1
@@ -87,7 +87,7 @@ metadata:
 spec:
   source:
     repoURL: https://github.com/paruff/fawkes.git
-    path: platform/services/jenkins
+    path: platform/apps/jenkins
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
@@ -106,14 +106,17 @@ Monitor deployments through:
 
 ## 6. Running Tests
 
-Tests are now located in the platform directory:
+Tests are executed using pytest:
 
 ```bash
-cd platform/tests
 # Run unit tests
-go test ./...
-# Run integration tests
-make integration-tests
+pytest tests/unit -v
+
+# Run BDD tests
+pytest tests/bdd -v
+
+# Run all tests
+pytest tests/ -v
 ```
 
 ## Next Steps
