@@ -1,0 +1,3870 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Troubleshoot and resolve Cloud Native Buildpack build failures">
+      
+      
+      
+      
+        <link rel="prev" href="../../security/rotate-vault-secrets/">
+      
+      
+        <link rel="next" href="../../networking/configure-ingress-tls/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Debug Buildpack Failure - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#debug-buildpack-failure" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Debug Buildpack Failure
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../tutorials/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../explanation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Explanation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../playbooks/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Playbooks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../tutorials/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dojo Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dojo Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/white-belt/module-01-what-is-idp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    White Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/yellow-belt/module-05-ci-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yellow Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/green-belt/module-09-gitops-argocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Green Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/brown-belt/module-13-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brown Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/black-belt/module-17-platform-product/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Black Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GitOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gitops/onboard-service-argocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Onboard Service to ArgoCD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gitops/sync-argocd-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync ArgoCD Application
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/trace-request-tempo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Requests with Tempo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/view-dora-metrics-devlake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    View DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/rotate-vault-secrets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rotate Vault Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-locate-the-build-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Locate the Build Failure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Locate the Build Failure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#access-jenkins-build-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Jenkins Build Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identify-the-failure-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identify the Failure Point
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-analyze-the-error-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Analyze the Error Message
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Analyze the Error Message">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understand-the-failure-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the Failure Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-detection-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Detection Failures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Detection Failures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verify-required-files-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Required Files Exist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix-add-missing-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix: Add Missing Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-dependency-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Dependency Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Dependency Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-version-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Version Constraints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix-update-dependency-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix: Update Dependency Versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-dependency-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Dependency Availability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-build-command-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Build Command Failures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Build Command Failures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reproduce-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproduce Locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-build-logs-for-specific-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Build Logs for Specific Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-permission-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Permission Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Permission Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix-correct-file-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix: Correct File Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-cache-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Cache Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Cache Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix-clear-build-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix: Clear Build Cache
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-configure-buildpack-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Configure Buildpack Behavior
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Configure Buildpack Behavior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-projecttoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create project.toml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-test-locally-before-pushing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Test Locally Before Pushing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-verify-build-succeeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Verify Build Succeeds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-verify-image-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Verify Image Runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-verify-buildpack-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Verify Buildpack Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-verify-in-cicd-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Verify in CI/CD Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-buildpack-issues-and-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Buildpack Issues and Solutions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Buildpack Issues and Solutions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-no-buildpack-groups-passed-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "No buildpack groups passed detection"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-unable-to-satisfy-node-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "Unable to satisfy node version"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-npm-install-fails-with-network-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "npm install fails with network error"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-out-of-memory-during-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "Out of memory during build"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/configure-ingress-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Ingress with TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Policy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../policy/troubleshoot-kyverno-violation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshoot Kyverno Violations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patterns
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_8" id="__nav_4_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../explanation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explanation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Explanation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../business_case/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business Case
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../capabilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spinnaker (Deprecated)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--deprecated"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/focalboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Focalboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../playbooks/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playbooks
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playbooks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../playbooks/TEMPLATE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../playbooks/dora-metrics-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-locate-the-build-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Locate the Build Failure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Locate the Build Failure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#access-jenkins-build-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Jenkins Build Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identify-the-failure-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identify the Failure Point
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-analyze-the-error-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Analyze the Error Message
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Analyze the Error Message">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understand-the-failure-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the Failure Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-detection-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Detection Failures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Detection Failures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verify-required-files-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Required Files Exist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix-add-missing-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix: Add Missing Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-dependency-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Dependency Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Dependency Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-version-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Version Constraints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix-update-dependency-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix: Update Dependency Versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-dependency-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Dependency Availability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-build-command-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Build Command Failures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Build Command Failures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reproduce-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproduce Locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-build-logs-for-specific-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Build Logs for Specific Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-permission-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Permission Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Permission Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix-correct-file-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix: Correct File Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-cache-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Cache Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Cache Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fix-clear-build-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix: Clear Build Cache
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-configure-buildpack-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Configure Buildpack Behavior
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Configure Buildpack Behavior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-projecttoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create project.toml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-test-locally-before-pushing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Test Locally Before Pushing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-verify-build-succeeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Verify Build Succeeds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-verify-image-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Verify Image Runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-verify-buildpack-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Verify Buildpack Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-verify-in-cicd-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Verify in CI/CD Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-buildpack-issues-and-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Buildpack Issues and Solutions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Buildpack Issues and Solutions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-no-buildpack-groups-passed-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "No buildpack groups passed detection"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-unable-to-satisfy-node-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "Unable to satisfy node version"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-npm-install-fails-with-network-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "npm install fails with network error"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-out-of-memory-during-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: "Out of memory during build"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="debug-buildpack-failure">Debug Buildpack Failure</h1>
+<h2 id="goal">Goal</h2>
+<p>Identify and resolve failures when building container images using Cloud Native Buildpacks, enabling successful application deployment.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Before you begin, ensure you have:</p>
+<ul>
+<li>[ ] Access to the CI/CD system (Jenkins) where the build failed</li>
+<li>[ ] Build logs from the failed buildpack execution</li>
+<li>[ ] Source code repository access</li>
+<li>[ ] <code>pack</code> CLI installed locally (optional, for local testing)</li>
+<li>[ ] Docker installed locally (for local debugging)</li>
+</ul>
+<h2 id="steps">Steps</h2>
+<h3 id="1-locate-the-build-failure">1. Locate the Build Failure</h3>
+<h4 id="access-jenkins-build-logs">Access Jenkins Build Logs</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Get Jenkins URL</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;https://jenkins.127.0.0.1.nip.io&quot;</span>
+
+<span class="c1"># Navigate to the failed build</span>
+<span class="c1"># Jobs → Your Pipeline → Build #XX → Console Output</span>
+</code></pre></div>
+<p>Or using Jenkins CLI:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Download Jenkins CLI</span>
+wget<span class="w"> </span>http://jenkins.127.0.0.1.nip.io/jnlpJars/jenkins-cli.jar
+
+<span class="c1"># Get build log</span>
+java<span class="w"> </span>-jar<span class="w"> </span>jenkins-cli.jar<span class="w"> </span>-s<span class="w"> </span>http://jenkins.127.0.0.1.nip.io<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-auth<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>console<span class="w"> </span>my-pipeline<span class="w"> </span><span class="m">123</span><span class="w">  </span><span class="c1"># build number</span>
+</code></pre></div>
+<h4 id="identify-the-failure-point">Identify the Failure Point</h4>
+<p>Look for error indicators in logs:</p>
+<div class="highlight"><pre><span></span><code>[detector] ======== Results ========
+[detector] fail: paketo-buildpacks/node-engine@1.0.0
+[detector] ERROR: No buildpack groups passed detection.
+[detector] ERROR: Please check that you are running against the correct path.
+ERROR: failed to build: exit status 1
+</code></pre></div>
+<p>Common failure patterns:</p>
+<ul>
+<li><code>No buildpack groups passed detection</code> - Buildpack couldn't detect project type</li>
+<li><code>Unable to satisfy X dependency</code> - Missing dependency or version conflict</li>
+<li><code>Error during build</code> - Build command failed</li>
+<li><code>COPY failed</code> - File not found during build</li>
+</ul>
+<h3 id="2-analyze-the-error-message">2. Analyze the Error Message</h3>
+<h4 id="understand-the-failure-type">Understand the Failure Type</h4>
+<table>
+<thead>
+<tr>
+<th>Error Pattern</th>
+<th>Cause</th>
+<th>Section to Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>No buildpack groups passed detection</code></td>
+<td>Wrong project structure or missing files</td>
+<td><a href="#3-detection-failures">3. Detection Failures</a></td>
+</tr>
+<tr>
+<td><code>Unable to satisfy dependency</code></td>
+<td>Version constraints or unavailable dependency</td>
+<td><a href="#4-dependency-issues">4. Dependency Issues</a></td>
+</tr>
+<tr>
+<td><code>Error: npm install failed</code></td>
+<td>Node.js build error</td>
+<td><a href="#5-build-command-failures">5. Build Command Failures</a></td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>File permission issues</td>
+<td><a href="#6-permission-issues">6. Permission Issues</a></td>
+</tr>
+<tr>
+<td><code>Layer restoration failed</code></td>
+<td>Cache corruption</td>
+<td><a href="#7-cache-issues">7. Cache Issues</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-detection-failures">3. Detection Failures</h3>
+<p>If buildpack can't detect your project type:</p>
+<h4 id="verify-required-files-exist">Verify Required Files Exist</h4>
+<p>Different buildpacks require different files:</p>
+<p><strong>Node.js (Paketo):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Required: package.json in repository root</span>
+ls<span class="w"> </span>-la<span class="w"> </span>package.json
+
+<span class="c1"># Verify package.json is valid JSON</span>
+cat<span class="w"> </span>package.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div>
+<p><strong>Java (Paketo):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Required: pom.xml (Maven) or build.gradle (Gradle)</span>
+ls<span class="w"> </span>-la<span class="w"> </span>pom.xml<span class="w"> </span>build.gradle
+
+<span class="c1"># For multi-module projects, ensure parent POM exists</span>
+</code></pre></div>
+<p><strong>Python (Paketo):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Required: requirements.txt, Pipfile, or setup.py</span>
+ls<span class="w"> </span>-la<span class="w"> </span>requirements.txt<span class="w"> </span>Pipfile<span class="w"> </span>setup.py
+</code></pre></div>
+<p><strong>Go (Paketo):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Required: go.mod</span>
+ls<span class="w"> </span>-la<span class="w"> </span>go.mod
+</code></pre></div>
+<h4 id="fix-add-missing-files">Fix: Add Missing Files</h4>
+<p>Create the required file for your project:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Node.js example</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>package.json<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">{</span>
+<span class="s">  &quot;name&quot;: &quot;my-app&quot;,</span>
+<span class="s">  &quot;version&quot;: &quot;1.0.0&quot;,</span>
+<span class="s">  &quot;main&quot;: &quot;index.js&quot;,</span>
+<span class="s">  &quot;scripts&quot;: {</span>
+<span class="s">    &quot;start&quot;: &quot;node index.js&quot;</span>
+<span class="s">  },</span>
+<span class="s">  &quot;dependencies&quot;: {</span>
+<span class="s">    &quot;express&quot;: &quot;^4.18.0&quot;</span>
+<span class="s">  }</span>
+<span class="s">}</span>
+<span class="s">EOF</span>
+
+<span class="c1"># Python example</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>requirements.txt<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">flask==2.3.0</span>
+<span class="s">gunicorn==21.2.0</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<h3 id="4-dependency-issues">4. Dependency Issues</h3>
+<p>If dependencies can't be resolved:</p>
+<h4 id="check-version-constraints">Check Version Constraints</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Node.js: View dependency versions</span>
+cat<span class="w"> </span>package.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.dependencies, .devDependencies&#39;</span>
+
+<span class="c1"># Python: Check requirements</span>
+cat<span class="w"> </span>requirements.txt
+
+<span class="c1"># Java: Check Maven dependencies</span>
+cat<span class="w"> </span>pom.xml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;&lt;dependencies&gt;&quot;</span>
+</code></pre></div>
+<h4 id="fix-update-dependency-versions">Fix: Update Dependency Versions</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Node.js: Use compatible versions</span>
+npm<span class="w"> </span>install<span class="w"> </span>express@4.18.0
+
+<span class="c1"># Python: Pin versions</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;flask==2.3.0&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>requirements.txt
+
+<span class="c1"># Java: Update in pom.xml</span>
+&lt;dependency&gt;
+<span class="w">  </span>&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+<span class="w">  </span>&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+<span class="w">  </span>&lt;version&gt;3.1.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre></div>
+<h4 id="verify-dependency-availability">Verify Dependency Availability</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Node.js: Check if package exists in npm registry</span>
+npm<span class="w"> </span>view<span class="w"> </span>express<span class="w"> </span>versions<span class="w"> </span>--json
+
+<span class="c1"># Python: Check PyPI</span>
+pip<span class="w"> </span>index<span class="w"> </span>versions<span class="w"> </span>flask
+
+<span class="c1"># Java: Check Maven Central</span>
+curl<span class="w"> </span>https://search.maven.org/solrsearch/select?q<span class="o">=</span>g:org.springframework.boot+AND+a:spring-boot-starter-web
+</code></pre></div>
+<h3 id="5-build-command-failures">5. Build Command Failures</h3>
+<p>If the build command itself fails:</p>
+<h4 id="reproduce-locally">Reproduce Locally</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Test build locally with pack CLI</span>
+pack<span class="w"> </span>build<span class="w"> </span>my-app:local<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--builder<span class="w"> </span>paketobuildpacks/builder:base<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--path<span class="w"> </span>.
+
+<span class="c1"># Or use docker</span>
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>my-app:local<span class="w"> </span>.
+</code></pre></div>
+<h4 id="check-build-logs-for-specific-errors">Check Build Logs for Specific Errors</h4>
+<p>Common build errors:</p>
+<p><strong>Node.js:</strong></p>
+<div class="highlight"><pre><span></span><code>ERROR: npm install failed
+ENOENT: no such file or directory
+</code></pre></div>
+<p><strong>Fix:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ensure all files are committed</span>
+git<span class="w"> </span>status
+
+<span class="c1"># Check .gitignore doesn&#39;t exclude required files</span>
+cat<span class="w"> </span>.gitignore
+
+<span class="c1"># Add missing files</span>
+git<span class="w"> </span>add<span class="w"> </span>src/config.js
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fix: add missing config file&quot;</span>
+</code></pre></div>
+<p><strong>Python:</strong></p>
+<div class="highlight"><pre><span></span><code>ERROR: Could not find a version that satisfies the requirement
+</code></pre></div>
+<p><strong>Fix:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Use compatible Python version</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;python_version = \&quot;3.11\&quot;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>runtime.txt
+
+<span class="c1"># Or specify in buildpack config</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>project.toml<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">[[build.env]]</span>
+<span class="s">name = &quot;BP_PYTHON_VERSION&quot;</span>
+<span class="s">value = &quot;3.11.*&quot;</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p><strong>Java:</strong></p>
+<div class="highlight"><pre><span></span><code>ERROR: Compilation error
+[ERROR] cannot find symbol
+</code></pre></div>
+<p><strong>Fix:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Build locally to identify error</span>
+mvn<span class="w"> </span>clean<span class="w"> </span>install
+
+<span class="c1"># Fix compilation errors in code</span>
+<span class="c1"># Then commit and rebuild</span>
+</code></pre></div>
+<h3 id="6-permission-issues">6. Permission Issues</h3>
+<p>If build fails due to permissions:</p>
+<div class="highlight"><pre><span></span><code>ERROR: Permission denied
+COPY failed: stat /tmp/src/app: permission denied
+</code></pre></div>
+<h4 id="fix-correct-file-permissions">Fix: Correct File Permissions</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Make files readable</span>
+chmod<span class="w"> </span>-R<span class="w"> </span><span class="m">644</span><span class="w"> </span>.
+
+<span class="c1"># Make directories executable</span>
+find<span class="w"> </span>.<span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-exec<span class="w"> </span>chmod<span class="w"> </span><span class="m">755</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+
+<span class="c1"># Make scripts executable</span>
+chmod<span class="w"> </span>+x<span class="w"> </span>scripts/*.sh
+
+<span class="c1"># Commit permission changes</span>
+git<span class="w"> </span>add<span class="w"> </span>--chmod<span class="o">=</span>+x<span class="w"> </span>scripts/entrypoint.sh
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fix: make entrypoint executable&quot;</span>
+</code></pre></div>
+<h3 id="7-cache-issues">7. Cache Issues</h3>
+<p>If layer restoration fails:</p>
+<div class="highlight"><pre><span></span><code>ERROR: failed to restore cached layer
+ERROR: layer restoration failed
+</code></pre></div>
+<h4 id="fix-clear-build-cache">Fix: Clear Build Cache</h4>
+<p>In Jenkins pipeline:</p>
+<div class="highlight"><pre><span></span><code><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build with Buildpack&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            # Clear buildpack cache</span>
+<span class="s1">            pack build my-app:latest \</span>
+<span class="s1">              --builder paketobuildpacks/builder:base \</span>
+<span class="s1">              --clear-cache \</span>
+<span class="s1">              --path .</span>
+<span class="s1">        &#39;&#39;&#39;</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Or delete cache manually:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># In CI/CD environment</span>
+rm<span class="w"> </span>-rf<span class="w"> </span>/var/cache/buildpacks/*
+
+<span class="c1"># Rebuild without cache</span>
+</code></pre></div>
+<h3 id="8-configure-buildpack-behavior">8. Configure Buildpack Behavior</h3>
+<h4 id="create-projecttoml">Create <code>project.toml</code></h4>
+<p>Customize buildpack behavior with a configuration file:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># project.toml - place in repository root</span>
+<span class="k">[_]</span>
+<span class="n">schema-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.2&quot;</span>
+
+<span class="k">[[build.env]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_NODE_VERSION&quot;</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;20.*&quot;</span>
+
+<span class="k">[[build.env]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_NPM_INSTALL_ARGS&quot;</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;--production&quot;</span>
+
+<span class="k">[[build.buildpacks]]</span>
+<span class="n">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;docker://gcr.io/paketo-buildpacks/nodejs:latest&quot;</span>
+
+<span class="k">[[build.buildpacks]]</span>
+<span class="n">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;docker://gcr.io/paketo-buildpacks/npm-install:latest&quot;</span>
+</code></pre></div>
+<p>Common configuration options:</p>
+<p><strong>Node.js:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">[[build.env]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_NODE_VERSION&quot;</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;20.*&quot;</span>
+
+<span class="k">[[build.env]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_NPM_INSTALL_ARGS&quot;</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;--production&quot;</span>
+</code></pre></div>
+<p><strong>Python:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">[[build.env]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_PYTHON_VERSION&quot;</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;3.11.*&quot;</span>
+
+<span class="k">[[build.env]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_PIP_ARGS&quot;</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;--no-cache-dir&quot;</span>
+</code></pre></div>
+<p><strong>Java:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">[[build.env]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_JVM_VERSION&quot;</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;17.*&quot;</span>
+
+<span class="k">[[build.env]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_MAVEN_BUILD_ARGUMENTS&quot;</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;clean install -DskipTests&quot;</span>
+</code></pre></div>
+<h3 id="9-test-locally-before-pushing">9. Test Locally Before Pushing</h3>
+<p>Always test buildpack builds locally:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install pack CLI</span>
+brew<span class="w"> </span>install<span class="w"> </span>buildpacks/tap/pack<span class="w">  </span><span class="c1"># macOS</span>
+<span class="c1"># or download from https://buildpacks.io/docs/tools/pack/</span>
+
+<span class="c1"># Build locally</span>
+pack<span class="w"> </span>build<span class="w"> </span>my-app:test<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--builder<span class="w"> </span>paketobuildpacks/builder:base<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--path<span class="w"> </span>.
+
+<span class="c1"># Run container to verify</span>
+docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">8080</span>:8080<span class="w"> </span>my-app:test
+
+<span class="c1"># Test endpoint</span>
+curl<span class="w"> </span>http://localhost:8080/health
+</code></pre></div>
+<h2 id="verification">Verification</h2>
+<h3 id="1-verify-build-succeeds">1. Verify Build Succeeds</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Re-run Jenkins build</span>
+<span class="c1"># Or build locally</span>
+pack<span class="w"> </span>build<span class="w"> </span>my-app:verified<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--builder<span class="w"> </span>paketobuildpacks/builder:base<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--path<span class="w"> </span>.
+
+<span class="c1"># Should complete without errors</span>
+<span class="c1"># Look for: Successfully built image my-app:verified</span>
+</code></pre></div>
+<h3 id="2-verify-image-runs">2. Verify Image Runs</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run the built image</span>
+docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">8080</span>:8080<span class="w"> </span>--name<span class="w"> </span>test-app<span class="w"> </span>my-app:verified
+
+<span class="c1"># Check container is running</span>
+docker<span class="w"> </span>ps<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>test-app
+
+<span class="c1"># Check logs for errors</span>
+docker<span class="w"> </span>logs<span class="w"> </span>test-app
+
+<span class="c1"># Test application endpoints</span>
+curl<span class="w"> </span>http://localhost:8080
+curl<span class="w"> </span>http://localhost:8080/health
+
+<span class="c1"># Clean up</span>
+docker<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>test-app
+</code></pre></div>
+<h3 id="3-verify-buildpack-metadata">3. Verify Buildpack Metadata</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Inspect image for buildpack metadata</span>
+pack<span class="w"> </span>inspect<span class="w"> </span>my-app:verified
+
+<span class="c1"># Should show:</span>
+<span class="c1"># - Buildpacks used</span>
+<span class="c1"># - Runtime version</span>
+<span class="c1"># - Build processes</span>
+<span class="c1"># - Launch processes</span>
+</code></pre></div>
+<h3 id="4-verify-in-cicd-pipeline">4. Verify in CI/CD Pipeline</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Trigger Jenkins build</span>
+<span class="c1"># Navigate to Console Output</span>
+
+<span class="c1"># Verify all stages pass:</span>
+<span class="c1"># [detector] ✓ paketo-buildpacks/node-engine</span>
+<span class="c1"># [analyzer] ✓ Layer restoration successful</span>
+<span class="c1"># [builder] ✓ Build completed successfully</span>
+<span class="c1"># [exporter] ✓ Image exported</span>
+</code></pre></div>
+<h2 id="common-buildpack-issues-and-solutions">Common Buildpack Issues and Solutions</h2>
+<h3 id="issue-no-buildpack-groups-passed-detection">Issue: "No buildpack groups passed detection"</h3>
+<p><strong>Solution:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ensure correct file structure</span>
+ls<span class="w"> </span>-la<span class="w"> </span>package.json<span class="w">  </span><span class="c1"># Node.js</span>
+ls<span class="w"> </span>-la<span class="w"> </span>pom.xml<span class="w">       </span><span class="c1"># Java</span>
+ls<span class="w"> </span>-la<span class="w"> </span>requirements.txt<span class="w">  </span><span class="c1"># Python</span>
+
+<span class="c1"># Specify builder explicitly</span>
+pack<span class="w"> </span>build<span class="w"> </span>my-app<span class="w"> </span>--builder<span class="w"> </span>paketobuildpacks/builder:full
+</code></pre></div>
+<h3 id="issue-unable-to-satisfy-node-version">Issue: "Unable to satisfy node version"</h3>
+<p><strong>Solution:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Add to project.toml</span>
+<span class="k">[[build.env]]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;BP_NODE_VERSION&quot;</span>
+<span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;20.*&quot;</span><span class="w">  </span><span class="c1"># Use wildcard for flexibility</span>
+</code></pre></div>
+<h3 id="issue-npm-install-fails-with-network-error">Issue: "npm install fails with network error"</h3>
+<p><strong>Solution:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Configure npm registry</span>
+<span class="o">[[</span>build.env<span class="o">]]</span>
+<span class="nv">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;NPM_CONFIG_REGISTRY&quot;</span>
+<span class="nv">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://registry.npmjs.org&quot;</span>
+
+<span class="c1"># Or use .npmrc</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;registry=https://registry.npmjs.org&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.npmrc
+</code></pre></div>
+<h3 id="issue-out-of-memory-during-build">Issue: "Out of memory during build"</h3>
+<p><strong>Solution:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Increase memory in Jenkins pipeline</span>
+<span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">PACK_MEMORY_LIMIT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;4G&#39;</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;pack build my-app --memory 4G&#39;</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<h2 id="troubleshooting-checklist">Troubleshooting Checklist</h2>
+<ul>
+<li>[ ] Required manifest file exists (package.json, pom.xml, etc.)</li>
+<li>[ ] Manifest file is valid (JSON/XML syntax)</li>
+<li>[ ] Dependencies are available and versions are compatible</li>
+<li>[ ] Build commands succeed locally</li>
+<li>[ ] File permissions are correct</li>
+<li>[ ] No sensitive files in repository (check .gitignore)</li>
+<li>[ ] Buildpack version is up to date</li>
+<li>[ ] Correct builder is specified</li>
+<li>[ ] Cache is not corrupted</li>
+</ul>
+<h2 id="next-steps">Next Steps</h2>
+<p>After resolving buildpack issues:</p>
+<ul>
+<li><a href="../../gitops/onboard-service-argocd/">Onboard Service to ArgoCD</a> - Deploy your application</li>
+<li><a href="../../networking/configure-ingress-tls/">Configure Ingress TLS</a> - Expose your service</li>
+<li><a href="../../observability/view-dora-metrics-devlake/">View DORA Metrics</a> - Track deployment performance</li>
+<li><a href="../../../troubleshooting/">Troubleshooting Guide</a> - Additional debugging help</li>
+</ul>
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="../../../patterns/continuous-delivery/">Continuous Delivery Pattern</a> - Build and deployment best practices</li>
+<li><a href="../../../tools/jenkins/">Jenkins Configuration</a> - CI/CD setup</li>
+<li><a href="https://paketo.io/docs/">Paketo Buildpacks Documentation</a> - Official buildpack docs</li>
+<li><a href="https://buildpacks.io/">Cloud Native Buildpacks</a> - CNB specification</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
