@@ -204,7 +204,7 @@ Fawkes provides a complete IDP built on industry-standard open-source tools:
 | **Harbor** | Container registry | Harbor registry |
 | **Prometheus/Grafana** | Metrics & monitoring | Prometheus stack |
 | **OpenSearch** | Log aggregation & search | OpenSearch |
-| **Jaeger** | Distributed tracing | Jaeger |
+| **Grafana Tempo** | Distributed tracing | Grafana Tempo |
 | **Mattermost** | Team collaboration | Mattermost |
 | **Focalboard** | Project tracking | Focalboard |
 

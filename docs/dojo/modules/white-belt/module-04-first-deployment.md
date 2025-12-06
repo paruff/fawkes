@@ -157,7 +157,7 @@ Let's break down each stage:
 - Probes monitor health (liveness, readiness)
 - Metrics collected by Prometheus
 - Logs shipped to OpenSearch
-- Traces sent to Jaeger
+- Traces sent to Grafana Tempo
 
 **Your Role**: Access application, verify functionality
 
@@ -546,7 +546,7 @@ curl https://my-first-app.dojo-learner-{username}.fawkes-dojo.internal/api/hello
    - You should see application startup logs
 2. Click **"Metrics"** tab → Opens Grafana
    - View pod CPU, memory, network metrics
-3. Click **"Traces"** tab → Opens Jaeger
+3. Click **"Traces"** tab → Opens Grafana Tempo
    - View distributed traces (if application makes external calls)
 
 ✅ **Validation**: We'll check that metrics were recorded
