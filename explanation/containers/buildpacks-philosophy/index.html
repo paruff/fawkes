@@ -1,0 +1,4147 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="The trade-offs of Cloud Native Buildpacks versus Dockerfiles for container builds">
+      
+      
+      
+      
+        <link rel="prev" href="../../architecture/gitops-strategy/">
+      
+      
+        <link rel="next" href="../../security/zero-trust-model/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Buildpacks Philosophy - Why We Chose CNB Over Dockerfiles - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#buildpacks-philosophy-security-and-convenience-vs-control" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Buildpacks Philosophy - Why We Chose CNB Over Dockerfiles
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../tutorials/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../how-to/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Explanation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../playbooks/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Playbooks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../tutorials/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dojo Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dojo Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/white-belt/module-01-what-is-idp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    White Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/yellow-belt/module-05-ci-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yellow Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/green-belt/module-09-gitops-argocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Green Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/brown-belt/module-13-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brown Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/black-belt/module-17-platform-product/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Black Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../how-to/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GitOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/gitops/onboard-service-argocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Onboard Service to ArgoCD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/gitops/sync-argocd-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync ArgoCD Application
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/observability/trace-request-tempo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Requests with Tempo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/observability/view-dora-metrics-devlake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    View DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/security/rotate-vault-secrets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rotate Vault Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/development/debug-buildpack-failure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/networking/configure-ingress-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Ingress with TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Policy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/policy/troubleshoot-kyverno-violation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshoot Kyverno Violations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patterns
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explanation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Explanation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/gitops-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Buildpacks Philosophy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Buildpacks Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem-dockerfile-sprawl-and-security-debt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem: Dockerfile Sprawl and Security Debt
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Problem: Dockerfile Sprawl and Security Debt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-traditional-dockerfile-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Traditional Dockerfile Approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-os-patching-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The OS Patching Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-works-on-my-machine-syndrome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The "Works on My Machine" Syndrome
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-solution-cloud-native-buildpacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Solution: Cloud Native Buildpacks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Solution: Cloud Native Buildpacks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-are-buildpacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Are Buildpacks?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-rebase-superpower" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Rebase Superpower
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standardization-the-platform-advantage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standardization: The Platform Advantage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trade-offs-what-you-gain-and-lose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trade-Offs: What You Gain and Lose
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Trade-Offs: What You Gain and Lose">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-buildpacks-give-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Buildpacks Give You
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-buildpacks-cost-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Buildpacks Cost You
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-dockerfiles-anyway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Dockerfiles Anyway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-philosophy-platform-as-product" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Philosophy: Platform as Product
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Philosophy: Platform as Product">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-paved-road-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The "Paved Road" Concept
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-maintenance-burden-shift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Maintenance Burden Shift
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world-example-the-log4shell-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-World Example: The Log4Shell Response
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real-World Example: The Log4Shell Response">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dockerfile-world-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dockerfile World Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buildpack-world-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buildpack World Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#philosophical-underpinnings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Philosophical Underpinnings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Philosophical Underpinnings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principle-1-convention-over-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 1: Convention Over Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#principle-2-separation-of-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 2: Separation of Concerns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#principle-3-scale-through-standardization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 3: Scale Through Standardization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addressing-common-objections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addressing Common Objections
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Addressing Common Objections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#but-im-a-senior-engineer-i-know-how-to-write-a-good-dockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "But I'm a senior engineer; I know how to write a good Dockerfile!"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buildpacks-are-a-black-box-i-dont-trust-what-i-dont-understand" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Buildpacks are a black box; I don't trust what I don't understand."
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-if-i-need-to-install-a-system-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "What if I need to install a system package?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#our-build-is-too-customcomplex-for-a-buildpack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Our build is too custom/complex for a buildpack."
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/zero-trust-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zero Trust Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/unified-telemetry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unified Telemetry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IDP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IDP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../idp/product-discovery-delivery-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Discovery & Delivery Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Governance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../governance/policy-as-code-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policy as Code Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../business_case/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business Case
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../capabilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spinnaker (Deprecated)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--deprecated"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/focalboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Focalboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../playbooks/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playbooks
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playbooks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../playbooks/TEMPLATE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../playbooks/dora-metrics-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem-dockerfile-sprawl-and-security-debt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem: Dockerfile Sprawl and Security Debt
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Problem: Dockerfile Sprawl and Security Debt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-traditional-dockerfile-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Traditional Dockerfile Approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-os-patching-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The OS Patching Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-works-on-my-machine-syndrome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The "Works on My Machine" Syndrome
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-solution-cloud-native-buildpacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Solution: Cloud Native Buildpacks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Solution: Cloud Native Buildpacks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-are-buildpacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Are Buildpacks?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-rebase-superpower" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Rebase Superpower
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standardization-the-platform-advantage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standardization: The Platform Advantage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trade-offs-what-you-gain-and-lose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trade-Offs: What You Gain and Lose
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Trade-Offs: What You Gain and Lose">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-buildpacks-give-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Buildpacks Give You
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-buildpacks-cost-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Buildpacks Cost You
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-dockerfiles-anyway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Dockerfiles Anyway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-philosophy-platform-as-product" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Philosophy: Platform as Product
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Philosophy: Platform as Product">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-paved-road-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The "Paved Road" Concept
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-maintenance-burden-shift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Maintenance Burden Shift
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world-example-the-log4shell-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-World Example: The Log4Shell Response
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real-World Example: The Log4Shell Response">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dockerfile-world-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dockerfile World Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buildpack-world-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buildpack World Response
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#philosophical-underpinnings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Philosophical Underpinnings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Philosophical Underpinnings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principle-1-convention-over-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 1: Convention Over Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#principle-2-separation-of-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 2: Separation of Concerns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#principle-3-scale-through-standardization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 3: Scale Through Standardization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addressing-common-objections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addressing Common Objections
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Addressing Common Objections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#but-im-a-senior-engineer-i-know-how-to-write-a-good-dockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "But I'm a senior engineer; I know how to write a good Dockerfile!"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buildpacks-are-a-black-box-i-dont-trust-what-i-dont-understand" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Buildpacks are a black box; I don't trust what I don't understand."
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-if-i-need-to-install-a-system-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "What if I need to install a system package?"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#our-build-is-too-customcomplex-for-a-buildpack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Our build is too custom/complex for a buildpack."
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="buildpacks-philosophy-security-and-convenience-vs-control">Buildpacks Philosophy: Security and Convenience vs. Control</h1>
+<h2 id="context">Context</h2>
+<p>When you need to deploy an application to Kubernetes, you must create a container image. For decades, the answer has been simple: <strong>write a Dockerfile</strong>. But Fawkes takes a different approach for the Golden Path: <strong>Cloud Native Buildpacks (CNB)</strong>.</p>
+<p>This choice surprises developers. "Why can't I just write my own Dockerfile?" The answer isn't that you <em>can't</em>—it's that for 80% of applications, you <em>shouldn't need to</em>. Buildpacks trade manual control for automated maintenance, and in platform engineering, that's usually the right trade.</p>
+<p>This document explains the <strong>philosophy</strong> behind Buildpacks, not the mechanics (for that, see our <a href="../../../how-to/development/debug-buildpack-failure/">How-To guide on debugging buildpack failures</a>).</p>
+<h2 id="the-problem-dockerfile-sprawl-and-security-debt">The Problem: Dockerfile Sprawl and Security Debt</h2>
+<h3 id="the-traditional-dockerfile-approach">The Traditional Dockerfile Approach</h3>
+<p>Every team writes their own container build logic:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Team A&#39;s Node.js Dockerfile</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:16-alpine</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>package*.json<span class="w"> </span>./
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>ci<span class="w"> </span>--production
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.js&quot;</span><span class="p">]</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c"># Team B&#39;s Node.js Dockerfile (slightly different)</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:14</span>
+<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>curl
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/usr/src/app</span>
+<span class="k">COPY</span><span class="w"> </span>package.json<span class="w"> </span>package-lock.json<span class="w"> </span>./
+<span class="k">RUN</span><span class="w"> </span>npm<span class="w"> </span>install
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;npm&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;start&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>What's Wrong Here?</strong></p>
+<ol>
+<li><strong>Version Sprawl</strong>: Team A uses Node 16, Team B uses Node 14. Who's patching vulnerabilities?</li>
+<li><strong>OS Differences</strong>: Alpine vs. Debian. Different CVE scan results, different behavior.</li>
+<li><strong>Security Lag</strong>: Node 16 has a critical CVE. Who remembers to update 47 Dockerfiles?</li>
+<li><strong>No Rebase</strong>: OS layer has vulnerability. Must rebuild every image? Or ignore it?</li>
+<li><strong>Tribal Knowledge</strong>: Why <code>npm ci</code> vs <code>npm install</code>? Why <code>--production</code>? Lost when Team A member leaves.</li>
+</ol>
+<h3 id="the-os-patching-problem">The OS Patching Problem</h3>
+<p>A critical vulnerability is discovered in <code>glibc</code> (the C library used by most Linux distros). Your images are affected.</p>
+<p><strong>Dockerfile Approach:</strong>
+1. Update base image tag in every Dockerfile (<code>FROM node:16.20.1</code> → <code>FROM node:16.20.2</code>)
+2. Rebuild every application image
+3. Re-test every application
+4. Re-deploy every application
+5. Hope you found all the Dockerfiles (did you check that archived repo?)</p>
+<p><strong>Time to Patch</strong>: Days to weeks<br />
+<strong>MTTR Impact</strong>: ⬆️ (High)<br />
+<strong>Deployment Frequency</strong>: ⬇️ (Slowed by rebuild toil)</p>
+<h3 id="the-works-on-my-machine-syndrome">The "Works on My Machine" Syndrome</h3>
+<p>Developers optimize for local development:
+<div class="highlight"><pre><span></span><code><span class="c"># &quot;I need curl for debugging&quot;</span>
+<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>curl<span class="w"> </span>wget<span class="w"> </span>netcat<span class="w"> </span>vim
+
+<span class="c"># &quot;I&#39;ll clean this up later&quot; (Narrator: They didn&#39;t)</span>
+<span class="k">COPY</span><span class="w"> </span>devtools.sh<span class="w"> </span>/usr/local/bin/
+</code></pre></div></p>
+<p><strong>Result:</strong>
+- Production images bloated with debug tools
+- Larger attack surface
+- Slower image pulls
+- Container sprawl: 1GB+ images for 10MB applications</p>
+<h2 id="the-solution-cloud-native-buildpacks">The Solution: Cloud Native Buildpacks</h2>
+<h3 id="what-are-buildpacks">What Are Buildpacks?</h3>
+<p>Buildpacks are <strong>pluggable, modular components</strong> that inspect your source code, detect the framework, install dependencies, and build an optimized container image—<strong>without a Dockerfile</strong>.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># No Dockerfile needed</span>
+pack<span class="w"> </span>build<span class="w"> </span>my-app<span class="w"> </span>--builder<span class="w"> </span>paketobuildpacks/builder:base
+
+<span class="c1"># Buildpack detects: &quot;This is a Node.js app&quot;</span>
+<span class="c1"># Buildpack installs: Node.js runtime, npm dependencies</span>
+<span class="c1"># Buildpack configures: Start command, environment</span>
+<span class="c1"># Buildpack outputs: Optimized multi-layer image</span>
+</code></pre></div>
+<p><strong>The Magic:</strong>
+- <strong>Detection</strong>: Buildpacks analyze source code (<code>package.json</code> → Node.js, <code>pom.xml</code> → Java)
+- <strong>Installation</strong>: Install exactly what's needed (no <code>apt-get</code> required)
+- <strong>Caching</strong>: Smart layer caching (dependencies separate from app code)
+- <strong>Optimization</strong>: Production-ready defaults (minimal base images, non-root users)</p>
+<h3 id="the-rebase-superpower">The Rebase Superpower</h3>
+<p>This is where Buildpacks shine:</p>
+<p><strong>Scenario</strong>: A CVE is found in Ubuntu base layer.</p>
+<p><strong>Buildpack Approach:</strong>
+1. Paketo team publishes new base image (patched)
+2. Run <code>pack rebase my-app:v1.2.3</code> (no source code needed!)
+3. New image layers swapped in <strong>without rebuilding</strong>
+4. Push updated image to registry
+5. Deploy with confidence (app layers untouched)</p>
+<p><strong>Time to Patch</strong>: Minutes<br />
+<strong>MTTR Impact</strong>: ⬇️ (Low)<br />
+<strong>Deployment Frequency</strong>: Maintains high (no rebuild bottleneck)</p>
+<pre class="mermaid"><code>graph TB
+    A[App Layers] --&gt;|Unchanged| B[New Image]
+    C[Old OS Layers] -.-&gt;|Replaced| D[Patched OS Layers]
+    D --&gt; B
+
+    style C fill:#ff6b6b
+    style D fill:#4CAF50</code></pre>
+<p><strong>Why This Matters:</strong>
+- <strong>No app rebuild</strong> - Don't re-run tests, don't involve developers
+- <strong>No behavior change</strong> - App code and dependencies identical
+- <strong>Fast patching</strong> - Security team can patch without developer involvement
+- <strong>Supply chain security</strong> - Base images maintained by Paketo community, not random Dockerfiles</p>
+<h3 id="standardization-the-platform-advantage">Standardization: The Platform Advantage</h3>
+<p>With Buildpacks, Fawkes enforces <strong>sensible defaults</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Dockerfile Chaos</th>
+<th>Buildpack Consistency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Base Image</strong></td>
+<td><code>node:16-alpine</code>, <code>node:14</code>, <code>node:latest</code> (😱)</td>
+<td>Paketo Node.js buildpack (curated, patched)</td>
+</tr>
+<tr>
+<td><strong>User</strong></td>
+<td>Often root (security risk)</td>
+<td>Non-root user (automatic)</td>
+</tr>
+<tr>
+<td><strong>Dependency Caching</strong></td>
+<td>Manually optimized (if at all)</td>
+<td>Automatic layer splitting</td>
+</tr>
+<tr>
+<td><strong>Security Scanning</strong></td>
+<td>Per-Dockerfile results</td>
+<td>Uniform scan results</td>
+</tr>
+<tr>
+<td><strong>Start Command</strong></td>
+<td>Hardcoded in Dockerfile</td>
+<td>Buildpack auto-detects (<code>npm start</code>, <code>java -jar</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Developer Experience:</strong>
+- <strong>No Dockerfile to write</strong> - Just push code
+- <strong>No OS knowledge required</strong> - Don't need to know Alpine vs. Debian
+- <strong>No "copy-paste from Stack Overflow"</strong> - Buildpack handles it
+- <strong>Consistent behavior</strong> - All Node.js apps built the same way</p>
+<h2 id="trade-offs-what-you-gain-and-lose">Trade-Offs: What You Gain and Lose</h2>
+<h3 id="what-buildpacks-give-you">What Buildpacks Give You</h3>
+<table>
+<thead>
+<tr>
+<th>Benefit</th>
+<th>Explanation</th>
+<th>DORA Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Automated OS Patching</strong></td>
+<td>Rebase without rebuild</td>
+<td>⬇️ MTTR (faster security patches)</td>
+</tr>
+<tr>
+<td><strong>Supply Chain Security</strong></td>
+<td>Curated, signed base images</td>
+<td>⬇️ Change Failure Rate (fewer vulnerabilities)</td>
+</tr>
+<tr>
+<td><strong>Dependency Scanning</strong></td>
+<td>Bill of Materials (SBOM) generated automatically</td>
+<td>Compliance (audit trail)</td>
+</tr>
+<tr>
+<td><strong>Zero Dockerfile Maintenance</strong></td>
+<td>No more "update base image" PRs across 50 repos</td>
+<td>⬆️ Deployment Frequency (less toil)</td>
+</tr>
+<tr>
+<td><strong>Best Practice Enforcement</strong></td>
+<td>Non-root users, minimal images, proper caching</td>
+<td>⬇️ Change Failure Rate (fewer misconfigurations)</td>
+</tr>
+<tr>
+<td><strong>Framework-Specific Optimization</strong></td>
+<td>Node.js buildpack knows Node.js best practices</td>
+<td>Performance (optimized startup, smaller images)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-buildpacks-cost-you">What Buildpacks Cost You</h3>
+<table>
+<thead>
+<tr>
+<th>Challenge</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Less Control</strong></td>
+<td>Can't <code>RUN apt-get install custom-tool</code>. <strong>Mitigation</strong>: Use buildpack extensions or multi-stage builds with base buildpack image for edge cases</td>
+</tr>
+<tr>
+<td><strong>Black Box Feeling</strong></td>
+<td>"What's the buildpack doing?" <strong>Mitigation</strong>: <code>pack build --verbose</code> shows every step. Buildpacks are open source (inspect on GitHub)</td>
+</tr>
+<tr>
+<td><strong>Framework Lock-In</strong></td>
+<td>Only works if buildpack exists for your language. <strong>Mitigation</strong>: Paketo covers Java, Node.js, Python, Go, Ruby, PHP, .NET—90% of apps. Use Dockerfile for exotic stacks</td>
+</tr>
+<tr>
+<td><strong>Debugging Learning Curve</strong></td>
+<td>Different errors than Dockerfile failures. <strong>Mitigation</strong>: <a href="../../../how-to/development/debug-buildpack-failure/">Debug guide</a> and Fawkes Dojo training</td>
+</tr>
+<tr>
+<td><strong>Build Time</strong></td>
+<td>First build can be slower (detecting, caching setup). <strong>Mitigation</strong>: Subsequent builds very fast due to smart caching</td>
+</tr>
+</tbody>
+</table>
+<h3 id="when-to-use-dockerfiles-anyway">When to Use Dockerfiles Anyway</h3>
+<p>Buildpacks are the <strong>Golden Path</strong>, but not the <strong>Only Path</strong>:</p>
+<p><strong>Use Buildpacks When:</strong>
+- ✅ Standard web application (Node.js, Java, Python, Go, Ruby, PHP, .NET)
+- ✅ Willing to follow framework conventions (<code>package.json</code>, <code>pom.xml</code>, etc.)
+- ✅ Value security automation over customization</p>
+<p><strong>Use Dockerfile When:</strong>
+- ⚠️ Truly unique requirements (custom OS, exotic dependencies)
+- ⚠️ Legacy app with specific build steps not automatable
+- ⚠️ Polyglot app (Node.js + Python + Java in one container—please don't)
+- ⚠️ Embedded systems or non-standard architectures</p>
+<p><strong>Fawkes Policy</strong>: Golden Path is Buildpacks. Dockerfile opt-out allowed with justification (architectural review required).</p>
+<h2 id="the-philosophy-platform-as-product">The Philosophy: Platform as Product</h2>
+<h3 id="the-paved-road-concept">The "Paved Road" Concept</h3>
+<p>Buildpacks embody the <strong>Golden Path</strong> philosophy:</p>
+<ul>
+<li><strong>Easy things should be easy</strong> - Deploying a standard Node.js app: zero config</li>
+<li><strong>Hard things should be possible</strong> - Need custom build? Dockerfile escape hatch exists</li>
+<li><strong>Safe by default</strong> - Security and best practices baked in, not opt-in</li>
+</ul>
+<pre class="mermaid"><code>graph LR
+    A[Developer] --&gt;|Golden Path| B[Buildpack]
+    A --&gt;|Edge Case| C[Dockerfile]
+    B --&gt;|90% of apps| D[Production]
+    C --&gt;|10% of apps| D
+
+    style B fill:#4CAF50
+    style C fill:#FFA726</code></pre>
+<p><strong>The Contract:</strong>
+- Platform team maintains buildpacks (updates, security patches, optimizations)
+- Developers follow conventions (standard project structure, framework best practices)
+- Everyone benefits (fast deploys, secure images, low cognitive load)</p>
+<h3 id="the-maintenance-burden-shift">The Maintenance Burden Shift</h3>
+<p><strong>Before Buildpacks (Dockerfile Era):</strong>
+<div class="highlight"><pre><span></span><code>Platform Team:
+- Writes &quot;recommended Dockerfile&quot; guide
+- Reviews 200 Dockerfiles in PRs
+- Manually reminds teams to update base images
+
+Developers:
+- Copy-paste Dockerfiles from other projects
+- Cargo-cult optimizations they don&#39;t understand
+- Ignore security patches (too much work)
+</code></pre></div></p>
+<p><strong>After Buildpacks:</strong>
+<div class="highlight"><pre><span></span><code>Platform Team:
+- Maintains 1 buildpack configuration
+- Updates platform builder when patches released
+- Automatically rebases all images (via CI)
+
+Developers:
+- Write code
+- Push code
+- Deployments happen
+- (No Dockerfile to maintain)
+</code></pre></div></p>
+<p><strong>Who Wins?</strong> Everyone. Platform team scales better. Developers ship faster. Security team sleeps better.</p>
+<h2 id="real-world-example-the-log4shell-response">Real-World Example: The Log4Shell Response</h2>
+<p>In December 2021, the <strong>Log4Shell</strong> vulnerability (CVE-2021-44228) was discovered in Log4j, affecting millions of Java applications.</p>
+<h3 id="dockerfile-world-response">Dockerfile World Response</h3>
+<ol>
+<li><strong>Identify affected apps</strong> - Search 300 repos for <code>pom.xml</code> or <code>build.gradle</code> with Log4j</li>
+<li><strong>Update dependencies</strong> - Each team updates their <code>pom.xml</code> (version 2.15.0)</li>
+<li><strong>Rebuild images</strong> - <code>docker build</code> for each app (wait for CI)</li>
+<li><strong>Re-test</strong> - Run full test suites (hours)</li>
+<li><strong>Re-deploy</strong> - 300 deployments over 2 weeks</li>
+<li><strong>Miss stragglers</strong> - That archived repo? Still vulnerable</li>
+</ol>
+<p><strong>Time to Remediate</strong>: 2-3 weeks<br />
+<strong>Human Effort</strong>: Hundreds of developer-hours</p>
+<h3 id="buildpack-world-response">Buildpack World Response</h3>
+<ol>
+<li><strong>Paketo team updates buildpack</strong> - Log4j version bumped in Java buildpack</li>
+<li><strong>Platform team updates builder</strong> - <code>pack builder pull paketobuildpacks/builder:base</code></li>
+<li><strong>CI triggers rebuilds</strong> - Automated pipeline rebuilds all Java apps (parallel)</li>
+<li><strong>Automated testing</strong> - Smoke tests pass (no code changes)</li>
+<li><strong>Automated deployment</strong> - GitOps syncs new images</li>
+<li><strong>Complete coverage</strong> - Every Java app patched automatically</li>
+</ol>
+<p><strong>Time to Remediate</strong>: 2-3 days<br />
+<strong>Human Effort</strong>: One platform engineer</p>
+<p><strong>This is the promise of Buildpacks</strong>: When a platform team of 3 can patch 300 applications faster than 300 developers, you've achieved leverage.</p>
+<h2 id="philosophical-underpinnings">Philosophical Underpinnings</h2>
+<h3 id="principle-1-convention-over-configuration">Principle 1: Convention Over Configuration</h3>
+<p><strong>Dockerfile Philosophy</strong>: "Give developers full control; they'll make good choices."<br />
+<strong>Reality</strong>: Developers copy-paste, cargo-cult, and move fast (breaking things).</p>
+<p><strong>Buildpack Philosophy</strong>: "Encode best practices; let developers override when necessary."<br />
+<strong>Reality</strong>: 90% follow convention happily. 10% understand enough to safely override.</p>
+<h3 id="principle-2-separation-of-concerns">Principle 2: Separation of Concerns</h3>
+<p><strong>Dockerfile</strong>: Developer is responsible for OS, runtime, dependencies, app code, optimization, security.</p>
+<p><strong>Buildpack</strong>: 
+- <strong>Platform Team</strong>: Maintains OS, runtime, build tools (centralized expertise)
+- <strong>Developer</strong>: Focuses on application code and business logic
+- <strong>Clear Boundary</strong>: <code>package.json</code> is the interface; everything below is abstracted</p>
+<h3 id="principle-3-scale-through-standardization">Principle 3: Scale Through Standardization</h3>
+<p><strong>The Formula:</strong>
+<div class="highlight"><pre><span></span><code>Operational Efficiency = (Standard Patterns) / (Custom Snowflakes)
+</code></pre></div></p>
+<p>100 unique Dockerfiles = 100 maintenance burdens<br />
+100 apps using 1 buildpack = 1 maintenance point</p>
+<p><strong>This is why platforms exist</strong>: To amortize expertise across many teams.</p>
+<h2 id="addressing-common-objections">Addressing Common Objections</h2>
+<h3 id="but-im-a-senior-engineer-i-know-how-to-write-a-good-dockerfile">"But I'm a senior engineer; I know how to write a good Dockerfile!"</h3>
+<p><strong>Response</strong>: You probably do! And that's valuable for the 10% edge cases. But:</p>
+<ol>
+<li><strong>Your team might not</strong> - Junior engineers copy your Dockerfile and miss subtleties</li>
+<li><strong>You might leave</strong> - Tribal knowledge doesn't scale</li>
+<li><strong>Security doesn't wait</strong> - Can you patch 50 Dockerfiles when a CVE drops at 5pm Friday?</li>
+</ol>
+<p><strong>Buildpacks are for scale</strong>, not because we doubt your skills.</p>
+<h3 id="buildpacks-are-a-black-box-i-dont-trust-what-i-dont-understand">"Buildpacks are a black box; I don't trust what I don't understand."</h3>
+<p><strong>Response</strong>: 
+1. <strong>Buildpacks are open source</strong> - <a href="https://github.com/paketo-buildpacks">Paketo Buildpacks on GitHub</a>
+2. <strong>Full transparency</strong> - Run <code>pack build --verbose</code> to see every command
+3. <strong>SBOM generated</strong> - Bill of Materials shows exactly what's in your image
+4. <strong>Inspectable</strong> - <code>pack inspect-image my-app</code> shows layers, buildpacks used, metadata</p>
+<p><strong>Dockerfiles can be black boxes too</strong> - How many devs actually audit <code>node:16-alpine</code>?</p>
+<h3 id="what-if-i-need-to-install-a-system-package">"What if I need to install a system package?"</h3>
+<p><strong>Response</strong>: Buildpack extensions allow custom install steps:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># buildpack.yml</span>
+<span class="nn">---</span>
+<span class="nt">nodejs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">18</span>
+
+<span class="nt">extensions</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">install-custom-tool</span>
+<span class="w">    </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">apt-get update &amp;&amp; apt-get install -y my-tool</span>
+</code></pre></div>
+<p><strong>Or</strong>: Use Dockerfile for that app. Buildpacks are the <strong>default</strong>, not a prison.</p>
+<h3 id="our-build-is-too-customcomplex-for-a-buildpack">"Our build is too custom/complex for a buildpack."</h3>
+<p><strong>Response</strong>: Probably true for 5-10% of apps. Those should use Dockerfiles. But:</p>
+<ol>
+<li><strong>Are you sure?</strong> - 80% of "we're special" claims aren't (seen this repeatedly)</li>
+<li><strong>Can it be simplified?</strong> - Complex builds often indicate architectural issues</li>
+<li><strong>Can we contribute?</strong> - If it's a valid use case, propose a buildpack extension</li>
+</ol>
+<p><strong>The goal isn't 100% buildpack adoption</strong>—it's <strong>making the common case trivial</strong>.</p>
+<h2 id="related-reading">Related Reading</h2>
+<ul>
+<li><strong>How-To</strong>: <a href="../../../how-to/development/debug-buildpack-failure/">Debug Buildpack Failures</a></li>
+<li><strong>Tutorial</strong>: <a href="../../../dojo/modules/yellow-belt/module-06-golden-path/">Module 6: Golden Path</a></li>
+<li><strong>Reference</strong>: <a href="https://paketo.io">Paketo Buildpacks Documentation</a></li>
+<li><strong>Reference</strong>: <a href="https://buildpacks.io">Cloud Native Buildpacks Specification</a></li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>Buildpacks are a <strong>philosophical choice</strong>, not just a technical one. They represent a belief that:</p>
+<ol>
+<li><strong>Automation beats manual toil</strong> - Even when you're good at the toil</li>
+<li><strong>Centralized expertise scales</strong> - Better than distributed mediocrity</li>
+<li><strong>Security is a platform concern</strong> - Not every team's homework</li>
+<li><strong>Convention liberates</strong> - By removing low-level decisions, we free developers to focus on business value</li>
+</ol>
+<p>The question isn't "Can I write a better Dockerfile than a buildpack?" (you might).<br />
+The question is "Can I maintain 50 better Dockerfiles, patch them in hours during a CVE, and train my whole team to do the same?" (you can't).</p>
+<p><strong>Buildpacks are the Golden Path because they scale.</strong></p>
+<p>And when you need to step off the Golden Path? Dockerfiles still exist. The door is always open—we've just made it so most people don't need to walk through it.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
