@@ -1,0 +1,38 @@
+# ============================================================================
+# FILE: templates/golden-path-service/k8s-manifests/ingress.yaml
+# PURPOSE: Kubernetes Ingress manifest (generated from score.yaml)
+# NOTE: Generated from score.yaml route definition
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-service
+  namespace: my-team
+  labels:
+    app: my-service
+    team: my-team
+    managed-by: score
+  annotations:
+    score.dev/source: "score.yaml"
+    # Nginx Ingress Controller annotations
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # Cert-manager annotation for TLS
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - my-service.dev.fawkes.idp  # From score.yaml route.host
+      secretName: my-service-tls
+  rules:
+    - host: my-service.dev.fawkes.idp
+      http:
+        paths:
+          - path: /  # From score.yaml route.path
+            pathType: Prefix
+            backend:
+              service:
+                name: my-service
+                port:
+                  number: 80

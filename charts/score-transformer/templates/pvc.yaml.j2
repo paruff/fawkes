@@ -1,0 +1,17 @@
+{# Jinja2 template for PersistentVolumeClaim from SCORE volume resource #}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ name }}
+  namespace: {{ namespace }}
+  labels:
+    app: {{ name.rsplit('-', 1)[0] }}
+    team: {{ team }}
+    managed-by: score
+spec:
+  accessModes:
+    - {{ access_mode }}
+  storageClassName: {{ storage_class }}
+  resources:
+    requests:
+      storage: {{ size }}

@@ -1,0 +1,34 @@
+{# Jinja2 template for Kubernetes Ingress from SCORE #}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ name }}
+  namespace: {{ namespace }}
+  labels:
+    app: {{ name }}
+    team: {{ team }}
+    managed-by: score
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    {% if tls_enabled %}
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    {% endif %}
+spec:
+  ingressClassName: nginx
+  {% if tls_enabled %}
+  tls:
+    - hosts:
+        - {{ host }}
+      secretName: {{ name }}-tls
+  {% endif %}
+  rules:
+    - host: {{ host }}
+      http:
+        paths:
+          - path: {{ path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ name }}
+                port:
+                  number: 80

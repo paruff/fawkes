@@ -1,0 +1,173 @@
+# ============================================================================
+# FILE: templates/golden-path-service/k8s-manifests/deployment.yaml
+# PURPOSE: Kubernetes Deployment manifest (generated from score.yaml)
+# NOTE: This is a REFERENCE example. In practice, this would be generated
+#       by the SCORE transformer from the score.yaml file.
+# ============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-service
+  namespace: my-team
+  labels:
+    app: my-service
+    component: web
+    team: my-team
+    managed-by: score
+  annotations:
+    score.dev/source: "score.yaml"
+    score.dev/version: "v1b1"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-service
+      component: web
+  template:
+    metadata:
+      labels:
+        app: my-service
+        component: web
+        team: my-team
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      # Security context (from score.yaml extensions.fawkes.security)
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+      
+      containers:
+        - name: web
+          # Image from score.yaml containers.web.image
+          image: harbor.fawkes.local/my-team/my-service:latest
+          imagePullPolicy: IfNotPresent
+          
+          # Ports from score.yaml service.ports
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          
+          # Environment variables from score.yaml containers.web.variables
+          env:
+            - name: LOG_LEVEL
+              value: "info"
+            - name: ENVIRONMENT
+              value: "dev"  # Injected by environment overlay
+            
+            # Database connection (from resources.db)
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: my-service-db-credentials
+                  key: connection_string
+            
+            # Redis connection (from resources.cache)
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: my-service-cache-credentials
+                  key: connection_string
+            
+            # API keys (from resources.api-secret)
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: my-service-api-secret
+                  key: API_KEY
+          
+          # Resources from score.yaml containers.web.resources
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          
+          # Volume mounts (from resources.storage)
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/uploads
+            - name: tmp
+              mountPath: /tmp
+          
+          # Health checks from score.yaml
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          
+          # Security context
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+      
+      # Volumes
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: my-service-storage
+        - name: tmp
+          emptyDir: {}
+---
+# ============================================================================
+# HorizontalPodAutoscaler (from score.yaml extensions.fawkes.deployment.autoscaling)
+# ============================================================================
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-service
+  namespace: my-team
+  labels:
+    app: my-service
+    team: my-team
+    managed-by: score
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-service
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
