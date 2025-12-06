@@ -14,6 +14,334 @@ Fawkes aims to become the **leading open-source Internal Product Delivery Platfo
 
 ---
 
+## Product Backlog Overview
+
+**Total Items**: 33 (3 Epics, 9 Features, 21 Stories)  
+**Total Story Points**: 84 SP  
+**Project**: Fawkes Backlog
+
+The roadmap is organized into three major epics, each containing features and stories that drive platform capabilities forward:
+
+### 📊 Backlog Summary
+
+| Epic | Features | Stories | Story Points |
+|------|----------|---------|--------------|
+| IDP - 2022 DORA Foundations | 3 | 6 | 24 SP |
+| DORA - 2025 AI/VSM Focus | 4 | 9 | 39 SP |
+| Fawkes - Developer Experience (DX) | 3 | 6 | 21 SP |
+| **Total** | **9** | **21** | **84 SP** |
+
+---
+
+## Epic 1: IDP - 2022 DORA Foundations
+
+**Milestone**: DORA Foundations  
+**Labels**: `epic`, `priority:high`  
+**Goal**: Establish foundational platform capabilities that enable elite DORA metrics performance
+
+Building the core infrastructure and practices that enable teams to achieve high deployment frequency, low lead time for changes, low change failure rate, and fast time to restore service.
+
+### Feature 1.1: Automated CI/CD Pipelines
+**Labels**: `feature`, `priority:high`  
+**Description**: Streamline deployment pipelines with automation and security
+
+#### Stories
+- **Story 1.1.1**: Single-command deployment to Staging  
+  **Story Points**: 3 SP  
+  **Priority**: High  
+  **User Story**: As a developer, I want to deploy my service to staging with a single command so that I can quickly validate changes before production.  
+  **Acceptance Criteria**:
+  - [ ] Single CLI command deploys latest commit to staging
+  - [ ] Deployment status visible in real-time
+  - [ ] Rollback available if deployment fails
+  - [ ] Deployment time < 5 minutes for standard service
+
+- **Story 1.1.2**: Integrate automated security scanning into build pipelines  
+  **Story Points**: 5 SP  
+  **Priority**: High  
+  **User Story**: As a platform engineer, I want security scanning integrated into every build so that vulnerabilities are caught early in the development cycle.  
+  **Acceptance Criteria**:
+  - [ ] SAST scanning runs on every commit
+  - [ ] Container image scanning integrated
+  - [ ] Build fails on HIGH/CRITICAL vulnerabilities
+  - [ ] Security reports available in dashboard
+  - [ ] Developers receive actionable feedback
+
+### Feature 1.2: Integrated Observability Tools
+**Labels**: `feature`, `priority:high`  
+**Description**: Provide comprehensive visibility into system behavior and performance
+
+#### Stories
+- **Story 1.2.1**: Standardize logging across microservices  
+  **Story Points**: 5 SP  
+  **Priority**: High  
+  **User Story**: As a developer, I want standardized logging across all services so that I can easily troubleshoot issues across the system.  
+  **Acceptance Criteria**:
+  - [ ] Logging library provided for all supported languages
+  - [ ] Structured logging format enforced
+  - [ ] Correlation IDs propagate across services
+  - [ ] Logs aggregated in central location
+  - [ ] Documentation and examples provided
+
+- **Story 1.2.2**: Add DORA metrics dashboard  
+  **Story Points**: 3 SP  
+  **Priority**: High  
+  **User Story**: As an engineering leader, I want a dashboard showing our four key DORA metrics so that I can track our delivery performance over time.  
+  **Acceptance Criteria**:
+  - [ ] Dashboard displays all 4 DORA metrics
+  - [ ] Data updated in real-time
+  - [ ] Historical trends visible (30/60/90 days)
+  - [ ] Team-level and service-level views available
+  - [ ] Export functionality for reporting
+
+### Feature 1.3: Continuous Testing Framework
+**Labels**: `feature`, `priority:medium`  
+**Description**: Enable fast, reliable testing at all levels
+
+#### Stories
+- **Story 1.3.1**: Provide self-service load-test tool  
+  **Story Points**: 5 SP  
+  **Priority**: Medium  
+  **User Story**: As a developer, I want to run load tests on my service through a self-service tool so that I can validate performance before production deployment.  
+  **Acceptance Criteria**:
+  - [ ] Web UI for configuring load tests
+  - [ ] Pre-configured test scenarios available
+  - [ ] Test results visualized with graphs
+  - [ ] Comparison against previous runs
+  - [ ] Integration with CI/CD pipeline
+
+- **Story 1.3.2**: Standardize unit test coverage reporting  
+  **Story Points**: 3 SP  
+  **Priority**: Medium  
+  **User Story**: As a developer, I want automated test coverage reports so that I can ensure my code is adequately tested.  
+  **Acceptance Criteria**:
+  - [ ] Coverage reports generated on every build
+  - [ ] Coverage trends tracked over time
+  - [ ] Minimum coverage threshold configurable
+  - [ ] Coverage badges available for README
+  - [ ] Uncovered lines highlighted in PRs
+
+---
+
+## Epic 2: DORA - 2025 AI/VSM Focus
+
+**Milestone**: AI & Value Stream  
+**Labels**: `epic`, `priority:high`  
+**Goal**: Leverage AI and value stream mapping to achieve next-level delivery performance
+
+Implementing modern practices including value stream mapping, healthy data ecosystems, AI assistance, and user-centric development to optimize flow and decision-making.
+
+### Feature 2.1: Value Stream Mapping (VSM) Tooling
+**Labels**: `feature`, `priority:high`  
+**Description**: Visualize and optimize the end-to-end delivery value stream
+
+#### Stories
+- **Story 2.1.1**: Visualize end-to-end flow in dashboard  
+  **Story Points**: 5 SP  
+  **Priority**: High  
+  **User Story**: As a product manager, I want to visualize the end-to-end flow of features from ideation to production so that I can identify bottlenecks and optimize delivery.  
+  **Acceptance Criteria**:
+  - [ ] Visual representation of value stream stages
+  - [ ] Work items mapped to current stage
+  - [ ] Time spent in each stage visible
+  - [ ] Bottlenecks highlighted automatically
+  - [ ] Drill-down to individual work items
+
+- **Story 2.1.2**: Collect cycle time data at handoff points  
+  **Story Points**: 5 SP  
+  **Priority**: High  
+  **User Story**: As a platform engineer, I want to automatically collect cycle time data at each handoff point so that we can measure and improve flow efficiency.  
+  **Acceptance Criteria**:
+  - [ ] Automated data collection at key handoffs
+  - [ ] Integration with issue tracking system
+  - [ ] Integration with CI/CD system
+  - [ ] Data stored for historical analysis
+  - [ ] API available for custom integrations
+
+### Feature 2.2: Healthy Data Ecosystems
+**Labels**: `feature`, `priority:high`  
+**Description**: Build robust data infrastructure for AI and analytics
+
+#### Stories
+- **Story 2.2.1**: Provide anonymized production event logs  
+  **Story Points**: 8 SP  
+  **Priority**: High  
+  **User Story**: As a data scientist, I want access to anonymized production event logs so that I can train AI models while protecting user privacy.  
+  **Acceptance Criteria**:
+  - [ ] Automated PII scrubbing pipeline
+  - [ ] Anonymized logs available in data lake
+  - [ ] Access controls based on role
+  - [ ] Audit trail of data access
+  - [ ] Documentation on data schema
+  - [ ] Compliance with GDPR/privacy regulations
+
+- **Story 2.2.2**: Implement data quality checks  
+  **Story Points**: 5 SP  
+  **Priority**: Medium  
+  **User Story**: As a data engineer, I want automated data quality checks so that downstream consumers can trust the data they're using.  
+  **Acceptance Criteria**:
+  - [ ] Schema validation on ingestion
+  - [ ] Completeness checks automated
+  - [ ] Anomaly detection for data patterns
+  - [ ] Quality metrics dashboard
+  - [ ] Alerts on quality degradation
+
+### Feature 2.3: AI-Assisted Development Integration
+**Labels**: `feature`, `priority:medium`  
+**Description**: Integrate AI assistants into developer workflow
+
+#### Stories
+- **Story 2.3.1**: SSO for AI assistant  
+  **Story Points**: 3 SP  
+  **Priority**: Medium  
+  **User Story**: As a developer, I want to use single sign-on to access AI coding assistants so that I don't have to manage multiple credentials.  
+  **Acceptance Criteria**:
+  - [ ] SSO integration with corporate identity provider
+  - [ ] Seamless authentication flow
+  - [ ] Session management
+  - [ ] Audit trail of AI assistant usage
+  - [ ] Role-based access control
+
+- **Story 2.3.2**: Index internal KB for assistant  
+  **Story Points**: 5 SP  
+  **Priority**: Medium  
+  **User Story**: As a developer, I want the AI assistant to have knowledge of our internal documentation and code standards so that it gives me relevant, organization-specific suggestions.  
+  **Acceptance Criteria**:
+  - [ ] Internal documentation indexed
+  - [ ] Code patterns and standards indexed
+  - [ ] Runbooks and troubleshooting guides indexed
+  - [ ] Regular re-indexing scheduled
+  - [ ] Search relevance validated
+  - [ ] Privacy controls for sensitive docs
+
+### Feature 2.4: User-Centric Focus Enablement
+**Labels**: `feature`, `priority:medium`  
+**Description**: Connect engineering work to user value and feedback
+
+#### Stories
+- **Story 2.4.1**: Tag features with user problem  
+  **Story Points**: 3 SP  
+  **Priority**: Medium  
+  **User Story**: As a product owner, I want to tag each feature with the user problem it solves so that the team stays focused on delivering user value.  
+  **Acceptance Criteria**:
+  - [ ] User problem field in issue template
+  - [ ] Required field for feature issues
+  - [ ] Visible in dashboards and reports
+  - [ ] Linkable to user research/feedback
+  - [ ] Searchable and filterable
+
+- **Story 2.4.2**: Ingest user feedback into VSM  
+  **Story Points**: 5 SP  
+  **Priority**: Medium  
+  **User Story**: As a product manager, I want user feedback automatically correlated with deployed features so that I can measure real-world impact and iterate quickly.  
+  **Acceptance Criteria**:
+  - [ ] Integration with feedback tools (surveys, support tickets)
+  - [ ] Automated correlation with deployments
+  - [ ] Feedback visible in VSM dashboard
+  - [ ] Sentiment analysis on feedback
+  - [ ] Actionable insights surfaced
+
+---
+
+## Epic 3: Fawkes - Developer Experience (DX)
+
+**Milestone**: Developer Experience  
+**Labels**: `epic`, `priority:high`  
+**Goal**: Create delightful, productive developer experience through self-service and great tools
+
+Empowering developers with self-service capabilities, excellent documentation, and modern tooling to maximize productivity and satisfaction.
+
+### Feature 3.1: Developer Self-Service Portal
+**Labels**: `feature`, `priority:high`  
+**Description**: Enable developers to provision and manage resources independently
+
+#### Stories
+- **Story 3.1.1**: Provision microservice via portal  
+  **Story Points**: 8 SP  
+  **Priority**: High  
+  **User Story**: As a developer, I want to provision a new microservice through a web portal so that I can start coding without waiting for infrastructure tickets.  
+  **Acceptance Criteria**:
+  - [ ] Web form for service creation
+  - [ ] Template selection (API, web service, worker, etc.)
+  - [ ] Automated repository creation
+  - [ ] CI/CD pipeline auto-configured
+  - [ ] Infrastructure provisioned automatically
+  - [ ] Monitoring and logging pre-configured
+  - [ ] Service appears in service catalog
+  - [ ] Provisioning time < 10 minutes
+
+- **Story 3.1.2**: Troubleshoot button linking to runbooks  
+  **Story Points**: 3 SP  
+  **Priority**: Medium  
+  **User Story**: As a developer experiencing an issue, I want a troubleshoot button that links to relevant runbooks so that I can quickly resolve common problems myself.  
+  **Acceptance Criteria**:
+  - [ ] Troubleshoot button in service dashboard
+  - [ ] Context-aware runbook suggestions
+  - [ ] Runbooks searchable and categorized
+  - [ ] Step-by-step troubleshooting guides
+  - [ ] Integration with observability tools
+  - [ ] Feedback mechanism for runbook quality
+
+### Feature 3.2: Discovery and Documentation
+**Labels**: `feature`, `priority:high`  
+**Description**: Make services and documentation easily discoverable and up-to-date
+
+#### Stories
+- **Story 3.2.1**: Central service catalog  
+  **Story Points**: 5 SP  
+  **Priority**: High  
+  **User Story**: As a developer, I want a central catalog of all services so that I can discover and understand what services exist and how to use them.  
+  **Acceptance Criteria**:
+  - [ ] Searchable service catalog UI
+  - [ ] Service metadata (owner, version, dependencies)
+  - [ ] API documentation linked
+  - [ ] Health status visible
+  - [ ] Usage examples provided
+  - [ ] Contact information for support
+
+- **Story 3.2.2**: Flag stale docs  
+  **Story Points**: 3 SP  
+  **Priority**: Medium  
+  **User Story**: As a documentation maintainer, I want stale documentation automatically flagged so that I can keep content fresh and accurate.  
+  **Acceptance Criteria**:
+  - [ ] Automated staleness detection (last update date)
+  - [ ] Visual indicators on stale docs
+  - [ ] Notifications to doc owners
+  - [ ] Configurable staleness threshold
+  - [ ] Tracking dashboard for doc health
+
+### Feature 3.3: Design System Adoption
+**Labels**: `feature`, `priority:medium`  
+**Description**: Accelerate UI development with consistent components and patterns
+
+#### Stories
+- **Story 3.3.1**: Implement component library  
+  **Story Points**: 8 SP  
+  **Priority**: Medium  
+  **User Story**: As a frontend developer, I want a component library with pre-built UI components so that I can build consistent interfaces quickly without reinventing common patterns.  
+  **Acceptance Criteria**:
+  - [ ] Component library created with common UI elements
+  - [ ] Storybook documentation for each component
+  - [ ] Accessible components (WCAG 2.1 AA)
+  - [ ] React and Vue versions available
+  - [ ] NPM package published
+  - [ ] Usage examples and guidelines
+  - [ ] Dark mode support
+
+- **Story 3.3.2**: Run internal DX survey  
+  **Story Points**: 2 SP  
+  **Priority**: Medium  
+  **User Story**: As a platform team lead, I want to run regular developer experience surveys so that I can measure satisfaction and identify improvement areas.  
+  **Acceptance Criteria**:
+  - [ ] Survey questions designed (based on DORA/SPACE framework)
+  - [ ] Automated survey distribution quarterly
+  - [ ] Anonymous response collection
+  - [ ] Results dashboard created
+  - [ ] Action items tracked from feedback
+  - [ ] Trend analysis over time
+
+---
+
 ## Current Release: v0.1.0-alpha (MVP Development)
 
 **Status**: In Active Development  
