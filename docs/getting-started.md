@@ -6,15 +6,36 @@ Welcome to the Fawkes Internal Developer Platform! This guide will help you unde
 
 ```
 fawkes/
-├── docs/              # Documentation and guides
-├── platform/          # Platform components
-│   ├── iac/          # Infrastructure as Code
-│   │   ├── azure/    # Azure-specific resources
-│   │   ├── aws/      # AWS-specific resources
-│   │   └── gcp/      # GCP-specific resources
-│   ├── services/     # Platform services
-│   └── tests/        # Test suites and quality checks
-└── mkdocs.yml        # Documentation configuration
+├── docs/                          # Documentation (Diátaxis framework)
+│   ├── tutorials/                 # Learning-oriented guides
+│   ├── how-to/                    # Task-oriented guides
+│   ├── explanation/               # Understanding-oriented discussions
+│   ├── reference/                 # Information-oriented specifications
+│   │   ├── api/                   # API specifications (OpenAPI, REST)
+│   │   ├── crds/                  # Custom Resource Definitions
+│   │   ├── config/                # Configuration tables (Helm values)
+│   │   ├── policies/              # Policy listings (Kyverno)
+│   │   ├── catalogue/             # Service catalog reference
+│   │   └── glossary.md            # Fawkes terminology
+│   └── dojo/                      # Belt-based learning modules
+├── platform/                      # Platform components
+│   ├── apps/                      # ArgoCD applications (Jenkins, Backstage, etc.)
+│   ├── policies/                  # Kyverno policies (security, mutation, generation)
+│   ├── devfiles/                  # Eclipse Che development environments
+│   ├── networking/                # Ingress, cert-manager, external-dns
+│   └── bootstrap/                 # Platform initialization scripts
+├── infra/                         # Infrastructure as Code
+│   ├── local-dev/                 # Local Kubernetes (kind, minikube)
+│   ├── kubernetes/                # Kubernetes manifests
+│   └── terraform/                 # Cloud infrastructure (AWS, Azure, GCP)
+├── jenkins-shared-library/        # Golden Path pipeline library
+├── services/                      # Platform-specific services
+│   └── mcp-k8s-server/            # Model Context Protocol server
+├── tests/                         # Test suites
+│   ├── bdd/                       # BDD/Gherkin acceptance tests
+│   ├── unit/                      # Unit tests
+│   └── integration/               # Integration tests
+└── mkdocs.yml                     # Documentation site configuration
 ```
 
 ## Prerequisites
