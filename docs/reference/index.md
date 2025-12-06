@@ -60,17 +60,53 @@ Reference content in Fawkes is designed to:
 | Kyverno | 1.11+ | 🚧 Reference coming soon |
 | External Secrets | 0.9+ | 🚧 Reference coming soon |
 
-## Configuration Reference
-
-Configuration documentation is being organized. See the existing [Configuration](../configuration.md) page.
-
 ## API Reference
 
-API documentation is under development. The following will be available:
+REST API specifications for platform services.
 
-- Platform API - Core platform endpoints
-- Metrics API - DORA metrics collection  
-- Webhook API - Event-driven integrations
+| API | Description | Status |
+|-----|-------------|--------|
+| [Backstage Plugins API](api/backstage-plugins.md) | Internal Backstage plugins (Che Launcher, DevLake Dashboard) | ✅ Available |
+| [Jenkins Webhook API](api/jenkins-webhook.md) | Trigger Jenkins pipelines via webhooks | ✅ Available |
+
+## Custom Resource Definitions (CRDs)
+
+Field-level specifications for Kubernetes custom resources and Devfiles.
+
+| CRD | Description | Status |
+|-----|-------------|--------|
+| [Golden Path Devfile](crds/golden-path-crd.md) | Eclipse Che workspace configuration specification | ✅ Available |
+
+## Configuration Reference
+
+Helm values and configuration tables for platform components.
+
+| Component | Description | Status |
+|-----------|-------------|--------|
+| [Jenkins Helm Values](config/jenkins-values.md) | Complete Jenkins Helm chart configuration | ✅ Available |
+| See [Configuration Guide](../configuration.md) | General platform configuration | ✅ Available |
+
+## Policy Reference
+
+Complete listings of active policies and their enforcement modes.
+
+| Policy Type | Description | Status |
+|-------------|-------------|--------|
+| [Kyverno Policy List](policies/kyverno-policy-list.md) | All active Kyverno policies (security, mutation, generation) | ✅ Available |
+
+## Catalog Reference
+
+Service types and capabilities available in the platform.
+
+| Catalog | Description | Status |
+|---------|-------------|--------|
+| [Service Types](catalogue/service-types.md) | Supported services and deployment patterns | ✅ Available |
+
+## Glossary
+
+| Resource | Description |
+|----------|-------------|
+| [Glossary](glossary.md) | Fawkes-specific terms, concepts, and acronyms |
 
 ## Command Reference
 
