@@ -91,10 +91,26 @@ Organizations that implement capabilities across all three categories (Flow, Fee
 
 ## 📈 Getting Started
 
+!!! success "Start Here: Tutorials"
+    **New to Fawkes?** Begin with our guided tutorials to achieve your first success in under 30 minutes!
+    
+    [**Deploy Your First Service →**](tutorials/1-deploy-first-service.md){ .md-button .md-button--primary }
+    
+    Complete all 6 tutorials to master core Fawkes workflows:
+    
+    1. [Deploy Your First Service](tutorials/1-deploy-first-service.md) - 30 min
+    2. [Add Distributed Tracing](tutorials/2-add-tracing-tempo.md) - 25 min
+    3. [Consume Vault Secrets](tutorials/3-consume-vault-secret.md) - 30 min
+    4. [Migrate to Buildpacks](tutorials/4-buildpack-migration.md) - 25 min
+    5. [Create a Golden Path Template](tutorials/5-create-golden-path-template.md) - 35 min
+    6. [Measure DORA Metrics](tutorials/6-measure-dora-metrics.md) - 30 min
+
+### Alternative Learning Paths
+
 1. [Assess your current capabilities](getting-started/assessment.md)
 2. [Choose your implementation path](getting-started/implementation-paths.md)
 3. [Set up your first capability](getting-started/quick-wins.md)
 
-[Start Your Journey :rocket:](getting-started.md){ .md-button .md-button--primary }
+[View All Tutorials](tutorials/index.md){ .md-button }
 [Explore All Capabilities](capabilities.md){ .md-button }
-[View Implementation Guide](implementation-guide.md){ .md-button }
+[Dojo Learning Path](dojo/getting-started.md){ .md-button }
