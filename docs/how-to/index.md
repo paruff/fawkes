@@ -18,13 +18,14 @@ How-to guides in Fawkes are designed to:
 
 ## Platform Operations
 
-The following how-to guides are being organized. Many are available in existing sections while the Diátaxis structure is being populated.
+The following how-to guides help you accomplish specific tasks with Fawkes.
 
 ### Deployment & Delivery
 
 | Guide | Description | Status |
 |-------|-------------|--------|
-| Deploy an Application | Deploy your first application using GitOps | See [Continuous Delivery Pattern](../patterns/continuous-delivery.md) |
+| [Onboard Service to ArgoCD](gitops/onboard-service-argocd.md) | Deploy a new microservice using GitOps | ✅ Available |
+| [Sync ArgoCD Application](gitops/sync-argocd-app.md) | Manual and automated synchronization | ✅ Available |
 | Configure Blue-Green Deployments | Set up zero-downtime deployments | 🚧 Coming soon |
 | Implement Canary Releases | Gradually roll out changes | 🚧 Coming soon |
 | Rollback a Deployment | Quickly revert problematic releases | 🚧 Coming soon |
@@ -34,25 +35,33 @@ The following how-to guides are being organized. Many are available in existing 
 | Guide | Description | Status |
 |-------|-------------|--------|
 | Provision Infrastructure with Terraform | Create cloud resources declaratively | See [Infrastructure as Code Pattern](../patterns/infrastructure-as-code.md) |
-| Manage Secrets | Securely handle sensitive data | 🚧 Coming soon |
-| Configure Ingress | Set up external access to services | See [Ingress Access](../ingress-access.md) |
+| [Rotate Vault Secrets](security/rotate-vault-secrets.md) | Securely rotate secrets and update applications | ✅ Available |
+| [Configure Ingress with TLS](networking/configure-ingress-tls.md) | Set up HTTPS access with automatic certificates | ✅ Available |
 
 ### Observability
 
 | Guide | Description | Status |
 |-------|-------------|--------|
-| Set Up Monitoring Dashboards | Create custom Grafana dashboards | See [DORA Metrics Guide](../observability/dora-metrics-guide.md) |
+| [Trace Requests with Grafana Tempo](observability/trace-request-tempo.md) | Debug latency and errors using distributed tracing | ✅ Available |
+| [View DORA Metrics in DevLake](observability/view-dora-metrics-devlake.md) | Access and analyze deployment performance metrics | ✅ Available |
 | Configure Alerts | Set up proactive notifications | 🚧 Coming soon |
-| Trace Requests | Debug with distributed tracing | See [Distributed Tracing](../observability/distributed-tracing.md) |
 | Aggregate Logs | Centralize logging with OpenSearch | See [Centralized Logging](../observability/centralized-logging.md) |
 
-### Security
+### Security & Policy
 
 | Guide | Description | Status |
 |-------|-------------|--------|
+| [Troubleshoot Kyverno Policy Violations](policy/troubleshoot-kyverno-violation.md) | Resolve policy blocks and enforcement issues | ✅ Available |
 | Implement Security Scanning | Add SAST and container scanning | See [Security](../security.md) |
-| Configure Policy Enforcement | Use Kyverno for Kubernetes policies | 🚧 Coming soon |
 | Set Up RBAC | Configure role-based access control | 🚧 Coming soon |
+
+### Development
+
+| Guide | Description | Status |
+|-------|-------------|--------|
+| [Debug Buildpack Failures](development/debug-buildpack-failure.md) | Troubleshoot Cloud Native Buildpack build errors | ✅ Available |
+| Set Up Local Development | Configure local Fawkes environment | 🚧 Coming soon |
+| Create Custom Pipeline | Build Jenkins pipeline for your project | 🚧 Coming soon |
 
 ## How to Use These Guides
 

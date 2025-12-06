@@ -11,7 +11,7 @@ These patterns provide proven approaches to implementing DORA capabilities in yo
 
 | Pattern | Description | Related Tools |
 |---------|-------------|---------------|
-| ![](../assets/images/icons/continuous-delivery.png){ width="24" } [Continuous Delivery](continuous-delivery.md) | Automated deployment pipeline patterns | Spinnaker, Jenkins, Flux |
+| ![](../assets/images/icons/continuous-delivery.png){ width="24" } [Continuous Delivery](continuous-delivery.md) | Automated deployment pipeline patterns | ArgoCD, Jenkins, Argo Rollouts |
 | ![](../assets/images/icons/infrastructure.png){ width="24" } [Infrastructure as Code](infrastructure-as-code.md) | Managing infrastructure through code | Terraform, Kubernetes |
 | ![](../assets/images/icons/database.png){ width="24" } [Database Changes](database-changes.md) | Safe database deployment patterns | Flyway, Liquibase |
 

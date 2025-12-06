@@ -135,7 +135,7 @@ spec:
 | CI/CD | Jenkins, GitHub Actions | Pipeline automation |
 | Version Control | Git | Source code management |
 | Testing | Selenium, JUnit | Automated testing |
-| Deployment | Spinnaker, ArgoCD | Deployment automation |
+| Deployment | ArgoCD, Argo Rollouts | Deployment automation |
 | Monitoring | Prometheus, Grafana | Performance tracking |
 
 ## References
