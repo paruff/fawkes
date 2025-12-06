@@ -4149,6 +4149,111 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#score-workload-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SCORE Workload Specification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SCORE Workload Specification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why SCORE?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repository-structure-with-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository Structure with SCORE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supported-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-specific-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment-Specific Deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migration-from-k8s-manifests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration from K8s Manifests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation &amp; Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4186,6 +4291,7 @@
 <li><strong>Supports BDD Testing</strong>: Gherkin/Cucumber integration</li>
 <li><strong>Produces GitOps-Ready Artifacts</strong>: Versioned container images for ArgoCD</li>
 <li><strong>Tracks DORA Metrics</strong>: Automated metrics collection</li>
+<li><strong>Uses SCORE for Workload Definition</strong>: Platform-agnostic application specifications (see <a href="#score-workload-specification">SCORE Integration</a>)</li>
 </ul>
 <h2 id="quick-start">Quick Start</h2>
 <h3 id="1-add-a-jenkinsfile">1. Add a Jenkinsfile</h3>
@@ -4618,10 +4724,137 @@
 <li><strong>Use feature flags</strong> - Deploy to main frequently</li>
 <li><strong>Monitor builds</strong> - Watch for increasing durations</li>
 <li><strong>Update dependencies</strong> - Keep libraries current</li>
+<li><strong>Define workloads with SCORE</strong> - Use <code>score.yaml</code> for portable application definitions</li>
 </ol>
+<h2 id="score-workload-specification">SCORE Workload Specification</h2>
+<p>Fawkes Golden Path supports <a href="https://score.dev">SCORE</a>, an open-source, platform-agnostic workload specification. Instead of writing Kubernetes YAML directly, define your application's needs in a simple <code>score.yaml</code> file.</p>
+<h3 id="why-score">Why SCORE?</h3>
+<p>✅ <strong>Portability</strong>: Define once, deploy anywhere (dev, staging, prod)
+✅ <strong>Simplicity</strong>: Describe what you need, not how to configure K8s
+✅ <strong>Consistency</strong>: Same format across all Golden Path applications
+✅ <strong>Developer-Friendly</strong>: Focus on application logic, not infrastructure</p>
+<h3 id="quick-example">Quick Example</h3>
+<p>Create a <code>score.yaml</code> in your repository:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">score.dev/v1b1</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-service</span>
+
+<span class="nt">containers</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;harbor.fawkes.local/my-team/my-service:latest&quot;</span>
+<span class="w">    </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">limits</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512Mi&quot;</span><span class="p p-Indicator">,</span><span class="nt"> cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="nt">requests</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;256Mi&quot;</span><span class="p p-Indicator">,</span><span class="nt"> cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;250m&quot;</span><span class="p p-Indicator">}</span>
+<span class="w">    </span><span class="nt">variables</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">LOG_LEVEL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;info&quot;</span>
+<span class="w">      </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${resources.db.connection_string}&quot;</span>
+
+<span class="nt">service</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">web</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="nv">80</span><span class="p p-Indicator">,</span><span class="nt"> targetPort</span><span class="p">:</span><span class="w"> </span><span class="nv">8080</span><span class="p p-Indicator">}</span>
+
+<span class="nt">resources</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
+<span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;myapp&quot;</span>
+
+<span class="nt">route</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;my-service.${ENVIRONMENT}.fawkes.idp&quot;</span>
+<span class="w">  </span><span class="nt">tls</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">}</span>
+</code></pre></div>
+<p>The platform automatically translates this into:
+- Kubernetes Deployment
+- Service
+- Ingress
+- PostgreSQL database (via CloudNativePG)
+- TLS certificate (via cert-manager)</p>
+<h3 id="repository-structure-with-score">Repository Structure with SCORE</h3>
+<div class="highlight"><pre><span></span><code>my-service/
+├── score.yaml              # Workload definition (SCORE spec)
+├── Jenkinsfile             # CI/CD pipeline
+├── Dockerfile              # Container build
+├── src/                    # Application code
+└── tests/                  # Tests
+</code></pre></div>
+<h3 id="supported-resources">Supported Resources</h3>
+<table>
+<thead>
+<tr>
+<th>Resource Type</th>
+<th>Description</th>
+<th>Fawkes Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>postgres</code></td>
+<td>PostgreSQL database</td>
+<td>CloudNativePG Cluster</td>
+</tr>
+<tr>
+<td><code>redis</code></td>
+<td>Redis cache</td>
+<td>Redis Helm Chart</td>
+</tr>
+<tr>
+<td><code>secret</code></td>
+<td>Secrets from Vault</td>
+<td>External Secrets Operator</td>
+</tr>
+<tr>
+<td><code>volume</code></td>
+<td>Persistent storage</td>
+<td>PersistentVolumeClaim</td>
+</tr>
+</tbody>
+</table>
+<h3 id="environment-specific-deployment">Environment-Specific Deployment</h3>
+<p>The same <code>score.yaml</code> works across environments. Environment differences (replicas, resource limits, hostnames) are handled by the platform:</p>
+<p><strong>Dev Environment:</strong>
+- 1 replica
+- Smaller resource limits
+- <code>my-service.dev.fawkes.idp</code></p>
+<p><strong>Prod Environment:</strong>
+- 3 replicas with autoscaling
+- Higher resource limits
+- <code>my-service.prod.fawkes.idp</code></p>
+<h3 id="migration-from-k8s-manifests">Migration from K8s Manifests</h3>
+<p>If you have existing Kubernetes manifests, you can migrate gradually:</p>
+<ol>
+<li><strong>Keep existing manifests</strong> - They continue to work</li>
+<li><strong>Create score.yaml</strong> - Define the same workload in SCORE</li>
+<li><strong>Validate</strong> - Ensure generated manifests match your needs</li>
+<li><strong>Switch</strong> - Remove old manifests, use SCORE-generated ones</li>
+</ol>
+<h3 id="advanced-configuration">Advanced Configuration</h3>
+<p>For Fawkes-specific features (autoscaling, observability, security policies), use the <code>extensions.fawkes</code> section:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">extensions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">fawkes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-team</span>
+<span class="w">    </span><span class="nt">deployment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">autoscaling</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">minReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">        </span><span class="nt">maxReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">    </span><span class="nt">observability</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">metrics</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090</span>
+<span class="w">    </span><span class="nt">security</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<h3 id="documentation-examples">Documentation &amp; Examples</h3>
+<ul>
+<li><strong>Full Template</strong>: See <code>templates/golden-path-service/score.yaml</code></li>
+<li><strong>Architecture Decision</strong>: <a href="../adr/ADR-030%20SCORE%20Workload%20Specification%20Integration/">ADR-030: SCORE Integration</a></li>
+<li><strong>Transformer Details</strong>: <code>charts/score-transformer/README.md</code></li>
+<li><strong>Official SCORE Docs</strong>: https://score.dev</li>
+</ul>
 <h2 id="next-steps">Next Steps</h2>
 <ol>
 <li>Add Jenkinsfile to your repository</li>
+<li>Create <code>score.yaml</code> for workload definition (recommended)</li>
 <li>Configure BDD tests (optional)</li>
 <li>Push to main branch</li>
 <li>Monitor build in Jenkins</li>
