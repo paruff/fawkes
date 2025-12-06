@@ -109,8 +109,8 @@ spec:
 
 ### Resources
 
-- [Onboard Service to ArgoCD](../how-to/gitops/onboard-service-argocd.md) - Step-by-step guide
-- [Sync ArgoCD Application](../how-to/gitops/sync-argocd-app.md) - Manual and automated sync
+- [Onboard Service to ArgoCD](../how-to/gitops/onboard-service-argocd.md) - **Start here**: Step-by-step migration guide
+- [Sync ArgoCD Application](../how-to/gitops/sync-argocd-app.md) - Manual and automated sync workflows
 - [ArgoCD Documentation](https://argo-cd.readthedocs.io/) - Official ArgoCD docs
 - [Argo Rollouts](https://argoproj.github.io/argo-rollouts/) - Progressive delivery
 
