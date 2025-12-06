@@ -5,7 +5,7 @@ description: Secure your application with HashiCorp Vault for compliant secret m
 
 # Consume Vault Secrets
 
-**Time to Complete**: 25-30 minutes  
+**Time to Complete**: 30 minutes  
 **Goal**: Replace hardcoded configuration with secrets managed by HashiCorp Vault, following the Fawkes security best practices.
 
 ## What You'll Learn

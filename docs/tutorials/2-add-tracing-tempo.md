@@ -5,7 +5,7 @@ description: Instrument your service with OpenTelemetry and view traces in Grafa
 
 # Add Distributed Tracing with Tempo
 
-**Time to Complete**: 20-25 minutes  
+**Time to Complete**: 25 minutes  
 **Goal**: Add OpenTelemetry instrumentation to your service and view distributed traces in Grafana Tempo.
 
 ## What You'll Learn
