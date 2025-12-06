@@ -11,7 +11,7 @@ Fawkes integrates with industry-leading open-source tools to implement DORA capa
 
 | Tool | Purpose | Related Patterns |
 |------|---------|-----------------|
-| [Spinnaker](spinnaker.md) | Cloud-native continuous delivery | [Continuous Delivery](../patterns/continuous-delivery.md) |
+| [Spinnaker (Deprecated)](spinnaker.md) | Legacy deployment tool - use ArgoCD instead | [Continuous Delivery](../patterns/continuous-delivery.md) |
 | [Jenkins](jenkins.md) | Automation server | [Continuous Delivery](../patterns/continuous-delivery.md) |
 
 ## Infrastructure Tools
