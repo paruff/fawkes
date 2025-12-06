@@ -84,6 +84,7 @@ Helm values and configuration tables for platform components.
 | Component | Description | Status |
 |-----------|-------------|--------|
 | [Jenkins Helm Values](config/jenkins-values.md) | Complete Jenkins Helm chart configuration | ✅ Available |
+| [Prometheus Helm Values](config/prometheus-values.md) | Complete Prometheus monitoring configuration | ✅ Available |
 | See [Configuration Guide](../configuration.md) | General platform configuration | ✅ Available |
 
 ## Policy Reference
