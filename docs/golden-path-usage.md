@@ -11,6 +11,7 @@ The Golden Path is a standardized CI/CD pipeline that:
 - **Supports BDD Testing**: Gherkin/Cucumber integration
 - **Produces GitOps-Ready Artifacts**: Versioned container images for ArgoCD
 - **Tracks DORA Metrics**: Automated metrics collection
+- **Uses SCORE for Workload Definition**: Platform-agnostic application specifications (see [SCORE Integration](#score-workload-specification))
 
 ## Quick Start
 
@@ -424,11 +425,136 @@ View detailed logs in Jenkins console output:
 3. **Use feature flags** - Deploy to main frequently
 4. **Monitor builds** - Watch for increasing durations
 5. **Update dependencies** - Keep libraries current
+6. **Define workloads with SCORE** - Use `score.yaml` for portable application definitions
+
+## SCORE Workload Specification
+
+Fawkes Golden Path supports [SCORE](https://score.dev), an open-source, platform-agnostic workload specification. Instead of writing Kubernetes YAML directly, define your application's needs in a simple `score.yaml` file.
+
+### Why SCORE?
+
+✅ **Portability**: Define once, deploy anywhere (dev, staging, prod)
+✅ **Simplicity**: Describe what you need, not how to configure K8s
+✅ **Consistency**: Same format across all Golden Path applications
+✅ **Developer-Friendly**: Focus on application logic, not infrastructure
+
+### Quick Example
+
+Create a `score.yaml` in your repository:
+
+```yaml
+apiVersion: score.dev/v1b1
+metadata:
+  name: my-service
+
+containers:
+  web:
+    image: "harbor.fawkes.local/my-team/my-service:latest"
+    resources:
+      limits: {memory: "512Mi", cpu: "500m"}
+      requests: {memory: "256Mi", cpu: "250m"}
+    variables:
+      LOG_LEVEL: "info"
+      DATABASE_URL: "${resources.db.connection_string}"
+
+service:
+  ports:
+    web: {port: 80, targetPort: 8080}
+
+resources:
+  db:
+    type: postgres
+    properties:
+      database: "myapp"
+
+route:
+  host: "my-service.${ENVIRONMENT}.fawkes.idp"
+  tls: {enabled: true}
+```
+
+The platform automatically translates this into:
+- Kubernetes Deployment
+- Service
+- Ingress
+- PostgreSQL database (via CloudNativePG)
+- TLS certificate (via cert-manager)
+
+### Repository Structure with SCORE
+
+```
+my-service/
+├── score.yaml              # Workload definition (SCORE spec)
+├── Jenkinsfile             # CI/CD pipeline
+├── Dockerfile              # Container build
+├── src/                    # Application code
+└── tests/                  # Tests
+```
+
+### Supported Resources
+
+| Resource Type | Description | Fawkes Implementation |
+|--------------|-------------|----------------------|
+| `postgres` | PostgreSQL database | CloudNativePG Cluster |
+| `redis` | Redis cache | Redis Helm Chart |
+| `secret` | Secrets from Vault | External Secrets Operator |
+| `volume` | Persistent storage | PersistentVolumeClaim |
+
+### Environment-Specific Deployment
+
+The same `score.yaml` works across environments. Environment differences (replicas, resource limits, hostnames) are handled by the platform:
+
+**Dev Environment:**
+- 1 replica
+- Smaller resource limits
+- `my-service.dev.fawkes.idp`
+
+**Prod Environment:**
+- 3 replicas with autoscaling
+- Higher resource limits
+- `my-service.prod.fawkes.idp`
+
+### Migration from K8s Manifests
+
+If you have existing Kubernetes manifests, you can migrate gradually:
+
+1. **Keep existing manifests** - They continue to work
+2. **Create score.yaml** - Define the same workload in SCORE
+3. **Validate** - Ensure generated manifests match your needs
+4. **Switch** - Remove old manifests, use SCORE-generated ones
+
+### Advanced Configuration
+
+For Fawkes-specific features (autoscaling, observability, security policies), use the `extensions.fawkes` section:
+
+```yaml
+extensions:
+  fawkes:
+    team: my-team
+    deployment:
+      autoscaling:
+        enabled: true
+        minReplicas: 2
+        maxReplicas: 10
+    observability:
+      metrics:
+        enabled: true
+        port: 9090
+    security:
+      runAsNonRoot: true
+```
+
+### Documentation & Examples
+
+- **Full Template**: See `templates/golden-path-service/score.yaml`
+- **Architecture Decision**: [ADR-030: SCORE Integration](adr/ADR-030%20SCORE%20Workload%20Specification%20Integration.md)
+- **Transformer Details**: `charts/score-transformer/README.md`
+- **Official SCORE Docs**: https://score.dev
 
 ## Next Steps
 
 1. Add Jenkinsfile to your repository
-2. Configure BDD tests (optional)
-3. Push to main branch
-4. Monitor build in Jenkins
-5. Verify deployment in ArgoCD
+2. Create `score.yaml` for workload definition (recommended)
+3. Configure BDD tests (optional)
+4. Push to main branch
+5. Monitor build in Jenkins
+6. Verify deployment in ArgoCD

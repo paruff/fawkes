@@ -1,0 +1,259 @@
+# ============================================================================
+# FILE: templates/golden-path-service/score.yaml
+# PURPOSE: SCORE workload specification for Golden Path services
+#          This is a platform-agnostic definition of application requirements.
+# USAGE: Copy this template when creating a new service via Backstage
+# REFERENCE: https://score.dev
+# ============================================================================
+
+# SCORE API version
+apiVersion: score.dev/v1b1
+
+# Metadata about the workload
+metadata:
+  name: "my-service"  # Replace with your service name
+  
+# Container definitions
+containers:
+  # Main application container
+  web:
+    image: "harbor.fawkes.local/my-team/my-service:latest"  # Replace with your image
+    
+    # Command to run (optional, uses image default if not specified)
+    # command: ["/app/server"]
+    # args: ["--port", "8080"]
+    
+    # Container resource requirements
+    resources:
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+      requests:
+        memory: "256Mi"
+        cpu: "250m"
+    
+    # Environment variables
+    variables:
+      # Static environment variables
+      LOG_LEVEL: "info"
+      ENVIRONMENT: "${ENVIRONMENT}"  # Injected by platform based on deployment environment
+      
+      # Variables from resources (databases, caches, etc.)
+      # These are automatically populated when resources are provisioned
+      DATABASE_URL: "${resources.db.connection_string}"
+      REDIS_URL: "${resources.cache.connection_string}"
+      
+      # Variables from secrets
+      # These reference External Secrets managed by the platform
+      API_KEY: "${resources.api-secret.API_KEY}"
+    
+    # Files to mount into the container (optional)
+    # files:
+    #   - target: /app/config/app.yaml
+    #     mode: "0644"
+    #     content: |
+    #       application:
+    #         name: my-service
+    #         debug: false
+    
+    # Readiness probe
+    livenessProbe:
+      httpGet:
+        path: /health
+        port: 8080
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      
+    # Liveness probe
+    readinessProbe:
+      httpGet:
+        path: /ready
+        port: 8080
+      initialDelaySeconds: 10
+      periodSeconds: 5
+
+# Service ports to expose
+service:
+  ports:
+    web:
+      port: 80        # External port (e.g., on the Service)
+      targetPort: 8080  # Container port
+      protocol: tcp
+
+# Resources required by the application
+# The platform translates these into actual infrastructure
+resources:
+  
+  # PostgreSQL database
+  # Platform provisions this via CloudNativePG operator
+  db:
+    type: postgres
+    metadata:
+      annotations:
+        # Platform-specific hints for resource provisioning
+        fawkes.dev/storage-size: "10Gi"
+        fawkes.dev/version: "15"
+    properties:
+      # Database will be created with this name
+      database: "myapp"
+  
+  # Redis cache
+  # Platform provisions this via Redis operator or Helm chart
+  cache:
+    type: redis
+    metadata:
+      annotations:
+        fawkes.dev/storage-size: "2Gi"
+    properties:
+      # Cache configuration
+      maxmemory-policy: "allkeys-lru"
+  
+  # Secret from Vault
+  # Platform provisions this via External Secrets Operator
+  api-secret:
+    type: secret
+    metadata:
+      annotations:
+        # Path in Vault where secret is stored
+        fawkes.dev/vault-path: "secret/my-team/my-service/api-keys"
+    properties:
+      # Keys to fetch from the secret
+      keys:
+        - API_KEY
+        - JWT_SECRET
+  
+  # Persistent volume for uploads/data
+  # Platform provisions this via PersistentVolumeClaim
+  storage:
+    type: volume
+    metadata:
+      annotations:
+        fawkes.dev/storage-class: "standard"
+        fawkes.dev/access-mode: "ReadWriteOnce"
+    properties:
+      size: "5Gi"
+      mountPath: "/app/uploads"
+
+# Route/Ingress configuration (optional)
+# If specified, creates an Ingress for external access
+route:
+  host: "my-service.${ENVIRONMENT}.fawkes.idp"  # Environment-specific hostname
+  path: "/"
+  tls:
+    enabled: true
+    # Certificate is automatically provisioned via cert-manager
+
+# ============================================================================
+# Platform-Specific Configuration (Fawkes Extensions)
+# These are NOT part of the SCORE spec but are recognized by Fawkes transformer
+# ============================================================================
+extensions:
+  fawkes:
+    # Team ownership for RBAC and billing
+    team: "my-team"
+    
+    # Deployment strategy
+    deployment:
+      strategy: "RollingUpdate"
+      replicas: 2
+      
+      # Horizontal Pod Autoscaling
+      autoscaling:
+        enabled: true
+        minReplicas: 2
+        maxReplicas: 10
+        targetCPUUtilizationPercentage: 70
+        targetMemoryUtilizationPercentage: 80
+    
+    # Observability configuration
+    observability:
+      # Prometheus metrics scraping
+      metrics:
+        enabled: true
+        port: 9090
+        path: "/metrics"
+      
+      # Distributed tracing
+      tracing:
+        enabled: true
+        samplingRate: 0.1  # 10% of requests
+      
+      # Logging
+      logging:
+        enabled: true
+        format: "json"
+        level: "info"
+    
+    # Security policies
+    security:
+      # Pod Security Standards
+      podSecurityStandard: "restricted"
+      
+      # Run as non-root user
+      runAsNonRoot: true
+      runAsUser: 65534
+      
+      # Network policies
+      networkPolicy:
+        enabled: true
+        allowedNamespaces:
+          - "my-team"
+          - "fawkes"
+    
+    # DORA metrics tracking
+    dora:
+      enabled: true
+      # Deployment frequency tracked automatically
+      # Change failure rate tracked via rollback detection
+
+# ============================================================================
+# USAGE EXAMPLES
+# ============================================================================
+
+# Example 1: Simple web service (no database)
+# ------------------------------------------
+# apiVersion: score.dev/v1b1
+# metadata:
+#   name: simple-web
+# containers:
+#   web:
+#     image: "nginx:latest"
+#     resources:
+#       limits: {memory: "128Mi", cpu: "100m"}
+# service:
+#   ports:
+#     http: {port: 80, targetPort: 80}
+# route:
+#   host: "simple-web.dev.fawkes.idp"
+
+# Example 2: API with database and cache
+# ---------------------------------------
+# apiVersion: score.dev/v1b1
+# metadata:
+#   name: api-service
+# containers:
+#   api:
+#     image: "my-api:v1.0.0"
+#     variables:
+#       DB_URL: "${resources.db.connection_string}"
+#       REDIS_URL: "${resources.cache.connection_string}"
+# resources:
+#   db: {type: postgres}
+#   cache: {type: redis}
+# service:
+#   ports:
+#     api: {port: 8080, targetPort: 8080}
+
+# Example 3: Background worker (no ingress)
+# ------------------------------------------
+# apiVersion: score.dev/v1b1
+# metadata:
+#   name: worker
+# containers:
+#   worker:
+#     image: "my-worker:v1.0.0"
+#     variables:
+#       QUEUE_URL: "${resources.queue.connection_string}"
+# resources:
+#   queue: {type: rabbitmq}
+# # No service.ports or route - internal workload only
