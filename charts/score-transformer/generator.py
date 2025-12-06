@@ -169,6 +169,7 @@ class ScoreGenerator:
         
         context = {
             'name': f"{self.score_data['metadata']['name']}-{name}",
+            'app_name': self.score_data['metadata']['name'],  # Explicit app name
             'namespace': self.get_namespace(),
             'size': size,
             'storage_class': storage_class,
@@ -180,29 +181,49 @@ class ScoreGenerator:
     
     def generate_external_secret(self, name: str, resource_def: Dict) -> str:
         """Generate ExternalSecret for databases, caches, and secrets."""
-        # This is a placeholder - actual implementation would integrate with
-        # External Secrets Operator and Vault
-        return f"""# ExternalSecret for {name} ({resource_def.get('type')})
+        # Use Jinja2 template for better maintainability
+        template_str = """# ExternalSecret for {{ name }} ({{ resource_type }})
 # TODO: Implement External Secrets Operator integration
 # This would create a Secret with connection credentials from Vault
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: {self.score_data['metadata']['name']}-{name}
-  namespace: {self.get_namespace()}
+  name: {{ app_name }}-{{ name }}
+  namespace: {{ namespace }}
+  labels:
+    app: {{ app_name }}
+    team: {{ team }}
+    managed-by: score
 spec:
   # Implementation depends on Vault structure
   secretStoreRef:
     name: vault-backend
     kind: SecretStore
   target:
-    name: {self.score_data['metadata']['name']}-{name}-credentials
+    name: {{ app_name }}-{{ name }}-credentials
 """
+        from jinja2 import Template
+        template = Template(template_str)
+        
+        context = {
+            'name': name,
+            'resource_type': resource_def.get('type'),
+            'app_name': self.score_data['metadata']['name'],
+            'namespace': self.get_namespace(),
+            'team': self.get_team(),
+        }
+        
+        return template.render(**context)
     
     def get_namespace(self) -> str:
         """Determine namespace from team and environment."""
         team = self.get_team()
-        return f"{team}-{self.environment}" if team else self.environment
+        
+        # Handle 'default' team specially to avoid conflicts with K8s default namespace
+        if team == 'default':
+            return f"fawkes-{self.environment}"
+        
+        return f"{team}-{self.environment}"
     
     def get_team(self) -> str:
         """Get team name from SCORE extensions."""
