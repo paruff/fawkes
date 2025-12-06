@@ -10,6 +10,8 @@ The Fawkes roadmap consists of:
 - **21 Stories** - Concrete, implementable work items
 - **Total**: 33 issues with 84 story points
 
+**Automation Status**: The provided Python script includes complete definitions for Epic 1 (DORA Foundations) with all 3 features and 6 stories. Epic 2 and Epic 3 are partially implemented and can be created manually or by extending the script.
+
 ## Prerequisites
 
 1. **GitHub CLI installed and authenticated**
@@ -31,15 +33,20 @@ The Fawkes roadmap consists of:
 
 ## Quick Start
 
-The fastest way to create all roadmap issues:
+The fastest way to create roadmap issues for Epic 1 (DORA Foundations):
 
 ```bash
 # 1. Preview what will be created
 python scripts/create_roadmap_issues.py --dry-run
 
-# 2. Create all issues
+# 2. Create Epic 1 issues (1 epic, 3 features, 6 stories)
 python scripts/create_roadmap_issues.py
 ```
+
+For Epic 2 and Epic 3, you can either:
+- Create issues manually using the GitHub UI (see Method 2 below)
+- Extend the Python script with full definitions
+- Use the GitHub CLI directly (see Method 3 below)
 
 ## Detailed Instructions
 

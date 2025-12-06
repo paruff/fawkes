@@ -20,7 +20,28 @@ Fawkes aims to become the **leading open-source Internal Product Delivery Platfo
 **Total Story Points**: 84 SP  
 **Project**: Fawkes Backlog
 
-The roadmap is organized into three major epics, each containing features and stories that drive platform capabilities forward:
+The roadmap is organized into three major epics, each containing features and stories that drive platform capabilities forward.
+
+### 🚀 Quick Start: Create GitHub Issues
+
+Want to create these epics, features, and stories as actual GitHub issues?
+
+**Note**: The automation script (`scripts/create_roadmap_issues.py`) currently includes complete definitions for Epic 1 (DORA Foundations) with all 6 stories. Epic 2 and Epic 3 structures are included but need to be expanded with full story definitions before running.
+
+For a complete solution, you can:
+1. **Manual creation**: Follow the [detailed guide](how-to/roadmap/create-roadmap-issues.md) to create issues via GitHub UI or CLI
+2. **Extend the script**: Add full definitions for remaining epics/features/stories to the Python script
+3. **Create Epic 1 only**: Use the script as-is to create the first epic and its related items
+
+```bash
+# Preview Epic 1 issues (fully implemented)
+python scripts/create_roadmap_issues.py --dry-run
+
+# Create Epic 1 issues in GitHub  
+python scripts/create_roadmap_issues.py
+```
+
+**📖 Full Instructions**: See [How to Create Roadmap Issues](how-to/roadmap/create-roadmap-issues.md)
 
 ### 📊 Backlog Summary
 

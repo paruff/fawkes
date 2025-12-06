@@ -2,12 +2,20 @@
 """
 Create GitHub issues for Fawkes roadmap epics, features, and stories.
 
-This script creates 33 issues (3 epics, 9 features, 21 stories) based on the
-detailed roadmap in docs/roadmap.md.
+This script creates GitHub issues based on the detailed roadmap in docs/roadmap.md.
+
+CURRENT STATUS: 
+- Epic 1 (DORA Foundations): COMPLETE - 1 epic, 3 features, 6 stories
+- Epic 2 (AI/VSM Focus): PARTIAL - Epic and 1 feature with 2 stories defined
+- Epic 3 (Developer DX): STRUCTURE ONLY - Epic defined, features/stories need implementation
+
+To complete the script, add full definitions for all remaining features and stories
+for Epic 2 and Epic 3 following the pattern established for Epic 1.
 
 Usage:
     python scripts/create_roadmap_issues.py --dry-run  # Preview what will be created
     python scripts/create_roadmap_issues.py            # Create issues (requires gh CLI auth)
+    python scripts/create_roadmap_issues.py --repo owner/repo  # Use custom repository
 """
 
 import argparse
@@ -15,6 +23,9 @@ import json
 import subprocess
 import sys
 from typing import List, Dict, Any
+
+
+DEFAULT_REPO = "paruff/fawkes"
 
 
 # Epic 1: IDP - 2022 DORA Foundations
@@ -865,7 +876,7 @@ def create_issue_data():
     return issues
 
 
-def create_github_issue(issue_data: Dict[str, Any], dry_run: bool = True) -> None:
+def create_github_issue(issue_data: Dict[str, Any], repo: str, dry_run: bool = True) -> None:
     """Create a GitHub issue using gh CLI."""
     title = issue_data["title"]
     body = issue_data["body"]
@@ -876,7 +887,7 @@ def create_github_issue(issue_data: Dict[str, Any], dry_run: bool = True) -> Non
         "--title", title,
         "--body", body,
         "--label", labels,
-        "--repo", "paruff/fawkes"
+        "--repo", repo
     ]
     
     if "milestone" in issue_data:
@@ -888,6 +899,7 @@ def create_github_issue(issue_data: Dict[str, Any], dry_run: bool = True) -> Non
         print(f"Labels: {labels}")
         if "milestone" in issue_data:
             print(f"Milestone: {issue_data['milestone']}")
+        print(f"Repository: {repo}")
         print(f"{'='*80}")
         print(body[:500] + "..." if len(body) > 500 else body)
     else:
@@ -901,7 +913,10 @@ def create_github_issue(issue_data: Dict[str, Any], dry_run: bool = True) -> Non
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Create Fawkes roadmap issues")
+    parser = argparse.ArgumentParser(
+        description="Create Fawkes roadmap issues",
+        epilog=f"Default repository: {DEFAULT_REPO}"
+    )
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -912,6 +927,11 @@ def main():
         type=int,
         help="Limit number of issues to create (for testing)"
     )
+    parser.add_argument(
+        "--repo",
+        default=DEFAULT_REPO,
+        help=f"GitHub repository (default: {DEFAULT_REPO})"
+    )
     args = parser.parse_args()
     
     issues = create_issue_data()
@@ -919,8 +939,9 @@ def main():
     print(f"\n{'='*80}")
     print(f"Fawkes Roadmap Issue Creator")
     print(f"{'='*80}")
+    print(f"Repository: {args.repo}")
     print(f"Mode: {'DRY RUN (preview only)' if args.dry_run else 'CREATING ISSUES'}")
-    print(f"Total issues to create: {len(issues)}")
+    print(f"Total issues defined: {len(issues)}")
     
     epics = [i for i in issues if i["type"] == "epic"]
     features = [i for i in issues if i["type"] == "feature"]
@@ -929,6 +950,8 @@ def main():
     print(f"  - Epics: {len(epics)}")
     print(f"  - Features: {len(features)}")
     print(f"  - Stories: {len(stories)}")
+    print(f"\nNOTE: This script currently has complete definitions for Epic 1.")
+    print(f"      Epic 2 and Epic 3 need additional feature/story definitions.")
     print(f"{'='*80}\n")
     
     if not args.dry_run:
@@ -945,7 +968,7 @@ def main():
     # Create issues
     for i, issue in enumerate(issues, 1):
         print(f"\n[{i}/{len(issues)}] Processing {issue['type'].upper()} {issue['number']}")
-        create_github_issue(issue["data"], dry_run=args.dry_run)
+        create_github_issue(issue["data"], args.repo, dry_run=args.dry_run)
     
     print(f"\n{'='*80}")
     print(f"Done! {'Preview complete' if args.dry_run else 'Issues created'}")
@@ -953,7 +976,12 @@ def main():
     
     if args.dry_run:
         print("To create issues for real, run without --dry-run:")
-        print("  python scripts/create_roadmap_issues.py")
+        print(f"  python scripts/create_roadmap_issues.py --repo {args.repo}")
+    else:
+        print("\nNext steps:")
+        print(f"1. Add issues to project board: https://github.com/{args.repo.split('/')[0]}/{args.repo.split('/')[1]}/projects")
+        print("2. Create parent-child links by editing epic/feature issues")
+        print("3. See docs/how-to/roadmap/create-roadmap-issues.md for details")
 
 
 if __name__ == "__main__":
