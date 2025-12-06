@@ -15,7 +15,7 @@ Enable teams to deploy software quickly and reliably using automated pipelines.
 **Implementation:**
 - [Pattern: Continuous Delivery](patterns/continuous-delivery.md)
 - Tools:
-  - [Spinnaker](tools/spinnaker.md)
+  - [ArgoCD](https://argo-cd.readthedocs.io/)
   - [Jenkins](tools/jenkins.md)
 
 ### Infrastructure as Code
