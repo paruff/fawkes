@@ -5,7 +5,7 @@ description: Extend the Fawkes platform by creating a Backstage software templat
 
 # Create a Golden Path Template
 
-**Time to Complete**: 30-35 minutes  
+**Time to Complete**: 35 minutes  
 **Goal**: Create a Backstage software template that encodes best practices and enables self-service application creation.
 
 ## What You'll Learn

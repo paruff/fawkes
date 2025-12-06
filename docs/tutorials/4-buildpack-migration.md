@@ -5,7 +5,7 @@ description: Move from Dockerfiles to Cloud Native Buildpacks for automated, sec
 
 # Migrate to Cloud Native Buildpacks
 
-**Time to Complete**: 20-25 minutes  
+**Time to Complete**: 25 minutes  
 **Goal**: Replace your Dockerfile with Cloud Native Buildpacks (CNB) for automated, secure, and maintainable container builds.
 
 ## What You'll Learn

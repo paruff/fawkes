@@ -5,7 +5,7 @@ description: Analyze your service's performance using DORA metrics in Apache Dev
 
 # Measure DORA Metrics
 
-**Time to Complete**: 25-30 minutes  
+**Time to Complete**: 30 minutes  
 **Goal**: Understand how your service contributes to team DORA metrics and use data to drive improvements.
 
 ## What You'll Learn

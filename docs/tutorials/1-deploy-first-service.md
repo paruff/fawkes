@@ -5,7 +5,7 @@ description: Get your first application running on Fawkes in under 30 minutes
 
 # Deploy Your First Service
 
-**Time to Complete**: 25-30 minutes  
+**Time to Complete**: 30 minutes  
 **Goal**: Deploy a simple web service to the Fawkes platform and see it running, secured, and visible in Backstage.
 
 ## What You'll Learn
