@@ -1,0 +1,92 @@
+{# Jinja2 template for Kubernetes Deployment from SCORE #}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ name }}
+  namespace: {{ namespace }}
+  labels:
+    app: {{ name }}
+    team: {{ team }}
+    environment: {{ environment }}
+    managed-by: score
+  annotations:
+    score.dev/source: "score.yaml"
+spec:
+  {% if extensions.fawkes and extensions.fawkes.deployment %}
+  replicas: {{ extensions.fawkes.deployment.replicas | default(2) }}
+  {% else %}
+  replicas: 2
+  {% endif %}
+  selector:
+    matchLabels:
+      app: {{ name }}
+  template:
+    metadata:
+      labels:
+        app: {{ name }}
+        team: {{ team }}
+        environment: {{ environment }}
+      annotations:
+        {% if extensions.fawkes and extensions.fawkes.observability and extensions.fawkes.observability.metrics %}
+        prometheus.io/scrape: "{{ extensions.fawkes.observability.metrics.enabled | lower }}"
+        prometheus.io/port: "{{ extensions.fawkes.observability.metrics.port | default(9090) }}"
+        prometheus.io/path: "{{ extensions.fawkes.observability.metrics.path | default('/metrics') }}"
+        {% endif %}
+    spec:
+      {% if extensions.fawkes and extensions.fawkes.security %}
+      securityContext:
+        runAsNonRoot: {{ extensions.fawkes.security.runAsNonRoot | default(true) }}
+        runAsUser: {{ extensions.fawkes.security.runAsUser | default(65534) }}
+        fsGroup: {{ extensions.fawkes.security.runAsUser | default(65534) }}
+      {% endif %}
+      containers:
+      {% for container_name, container_spec in containers.items() %}
+        - name: {{ container_name }}
+          image: {{ container_spec.image }}
+          imagePullPolicy: IfNotPresent
+          {% if container_spec.resources %}
+          resources:
+            {% if container_spec.resources.requests %}
+            requests:
+              {% for key, value in container_spec.resources.requests.items() %}
+              {{ key }}: "{{ value }}"
+              {% endfor %}
+            {% endif %}
+            {% if container_spec.resources.limits %}
+            limits:
+              {% for key, value in container_spec.resources.limits.items() %}
+              {{ key }}: "{{ value }}"
+              {% endfor %}
+            {% endif %}
+          {% endif %}
+          {% if container_spec.variables %}
+          env:
+          {% for var_name, var_value in container_spec.variables.items() %}
+            - name: {{ var_name }}
+              value: "{{ var_value }}"
+          {% endfor %}
+          {% endif %}
+          {% if container_spec.livenessProbe %}
+          livenessProbe:
+            httpGet:
+              path: {{ container_spec.livenessProbe.httpGet.path }}
+              port: {{ container_spec.livenessProbe.httpGet.port }}
+            initialDelaySeconds: {{ container_spec.livenessProbe.initialDelaySeconds | default(30) }}
+            periodSeconds: {{ container_spec.livenessProbe.periodSeconds | default(10) }}
+          {% endif %}
+          {% if container_spec.readinessProbe %}
+          readinessProbe:
+            httpGet:
+              path: {{ container_spec.readinessProbe.httpGet.path }}
+              port: {{ container_spec.readinessProbe.httpGet.port }}
+            initialDelaySeconds: {{ container_spec.readinessProbe.initialDelaySeconds | default(10) }}
+            periodSeconds: {{ container_spec.readinessProbe.periodSeconds | default(5) }}
+          {% endif %}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+      {% endfor %}

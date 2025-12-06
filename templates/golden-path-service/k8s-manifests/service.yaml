@@ -1,0 +1,33 @@
+# ============================================================================
+# FILE: templates/golden-path-service/k8s-manifests/service.yaml
+# PURPOSE: Kubernetes Service manifest (generated from score.yaml)
+# NOTE: Generated from score.yaml service.ports definition
+# ============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+  namespace: my-team
+  labels:
+    app: my-service
+    component: web
+    team: my-team
+    managed-by: score
+  annotations:
+    score.dev/source: "score.yaml"
+spec:
+  type: ClusterIP
+  selector:
+    app: my-service
+    component: web
+  ports:
+    # Port from score.yaml service.ports.web
+    - name: http
+      port: 80
+      targetPort: 8080
+      protocol: TCP
+    # Metrics port (from extensions.fawkes.observability.metrics)
+    - name: metrics
+      port: 9090
+      targetPort: 9090
+      protocol: TCP

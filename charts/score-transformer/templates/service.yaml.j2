@@ -1,0 +1,21 @@
+{# Jinja2 template for Kubernetes Service from SCORE #}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ name }}
+  namespace: {{ namespace }}
+  labels:
+    app: {{ name }}
+    team: {{ team }}
+    managed-by: score
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ name }}
+  ports:
+  {% for port_name, port_spec in ports.items() %}
+    - name: {{ port_name }}
+      port: {{ port_spec.port }}
+      targetPort: {{ port_spec.targetPort }}
+      protocol: {{ port_spec.protocol | upper }}
+  {% endfor %}
