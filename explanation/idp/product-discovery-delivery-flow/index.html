@@ -1,0 +1,4075 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Understanding the Internal Platform Product Discovery and Delivery Process">
+      
+      
+      
+      
+        <link rel="prev" href="../../observability/unified-telemetry/">
+      
+      
+        <link rel="next" href="../../governance/policy-as-code-tiers/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Product Discovery and Delivery Flow (IP3dP) - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#product-discovery-and-delivery-flow-the-ip3dp-concept" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Product Discovery and Delivery Flow (IP3dP)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../tutorials/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../how-to/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Explanation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../playbooks/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Playbooks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../tutorials/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dojo Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dojo Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/white-belt/module-01-what-is-idp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    White Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/yellow-belt/module-05-ci-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yellow Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/green-belt/module-09-gitops-argocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Green Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/brown-belt/module-13-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brown Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../dojo/modules/black-belt/module-17-platform-product/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Black Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../how-to/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GitOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/gitops/onboard-service-argocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Onboard Service to ArgoCD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/gitops/sync-argocd-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync ArgoCD Application
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/observability/trace-request-tempo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Requests with Tempo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/observability/view-dora-metrics-devlake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    View DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/security/rotate-vault-secrets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rotate Vault Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/development/debug-buildpack-failure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/networking/configure-ingress-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Ingress with TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Policy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/policy/troubleshoot-kyverno-violation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshoot Kyverno Violations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patterns
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explanation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Explanation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/gitops-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../containers/buildpacks-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Buildpacks Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/zero-trust-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zero Trust Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/unified-telemetry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unified Telemetry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IDP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IDP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Discovery & Delivery Flow
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Discovery & Delivery Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem-build-it-and-they-will-come-doesnt-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem: "Build It and They Will Come" Doesn't Work
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Problem: &#34;Build It and They Will Come&#34; Doesn&#39;t Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-traditional-idp-anti-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Traditional IDP Anti-Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-feature-factory-trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Feature Factory Trap
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-metrics-mirage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Metrics Mirage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-solution-ip3dp-platform-as-product" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Solution: IP3dP - Platform as Product
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Solution: IP3dP - Platform as Product">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-four-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Four Phases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Four Phases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-discovery-what-problems-do-developers-have" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Discovery: What Problems Do Developers Have?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-prioritization-what-should-we-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Prioritization: What Should We Build?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-delivery-build-measure-learn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Delivery: Build, Measure, Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-measurement-did-it-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Measurement: Did It Work?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-platform-roadmap-continuous-discovery-and-delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Platform Roadmap: Continuous Discovery and Delivery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trade-offs-product-discipline-vs-execution-speed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trade-Offs: Product Discipline vs. Execution Speed
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Trade-Offs: Product Discipline vs. Execution Speed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-ip3dp-gives-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What IP3dP Gives You
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-ip3dp-costs-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What IP3dP Costs You
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-examples-ip3dp-in-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practical Examples: IP3dP in Action
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical Examples: IP3dP in Action">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#case-study-1-the-kubernetes-dashboard-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case Study 1: The "Kubernetes Dashboard" Request
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-study-2-the-faster-builds-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case Study 2: The "Faster Builds" Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Governance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../governance/policy-as-code-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policy as Code Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../business_case/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business Case
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../capabilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spinnaker (Deprecated)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--deprecated"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools/focalboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Focalboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../playbooks/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playbooks
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playbooks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../playbooks/TEMPLATE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../playbooks/dora-metrics-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem-build-it-and-they-will-come-doesnt-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem: "Build It and They Will Come" Doesn't Work
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Problem: &#34;Build It and They Will Come&#34; Doesn&#39;t Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-traditional-idp-anti-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Traditional IDP Anti-Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-feature-factory-trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Feature Factory Trap
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-metrics-mirage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Metrics Mirage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-solution-ip3dp-platform-as-product" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Solution: IP3dP - Platform as Product
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Solution: IP3dP - Platform as Product">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-four-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Four Phases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Four Phases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-discovery-what-problems-do-developers-have" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Discovery: What Problems Do Developers Have?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-prioritization-what-should-we-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Prioritization: What Should We Build?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-delivery-build-measure-learn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Delivery: Build, Measure, Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-measurement-did-it-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Measurement: Did It Work?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-platform-roadmap-continuous-discovery-and-delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Platform Roadmap: Continuous Discovery and Delivery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trade-offs-product-discipline-vs-execution-speed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trade-Offs: Product Discipline vs. Execution Speed
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Trade-Offs: Product Discipline vs. Execution Speed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-ip3dp-gives-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What IP3dP Gives You
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-ip3dp-costs-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What IP3dP Costs You
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-examples-ip3dp-in-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practical Examples: IP3dP in Action
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical Examples: IP3dP in Action">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#case-study-1-the-kubernetes-dashboard-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case Study 1: The "Kubernetes Dashboard" Request
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-study-2-the-faster-builds-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case Study 2: The "Faster Builds" Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="product-discovery-and-delivery-flow-the-ip3dp-concept">Product Discovery and Delivery Flow: The IP3dP Concept</h1>
+<h2 id="context">Context</h2>
+<p>Most internal developer platforms (IDPs) fail not because of technical problems, but because of <strong>product problems</strong>:
+- Built features nobody uses
+- Solved problems teams don't have
+- Ignored the problems teams actually face
+- Failed to measure whether the platform improves developer productivity</p>
+<p><strong>The Challenge</strong>: How do you treat your platform like a product when your "customers" (developers) can't choose a competitor and you have no revenue to measure success?</p>
+<p>Fawkes introduces the <strong>IP3dP</strong> framework: <strong>Internal Platform Product Discovery and Delivery Process</strong>—a structured methodology for running your platform as a product, not a project.</p>
+<h2 id="the-problem-build-it-and-they-will-come-doesnt-work">The Problem: "Build It and They Will Come" Doesn't Work</h2>
+<h3 id="the-traditional-idp-anti-pattern">The Traditional IDP Anti-Pattern</h3>
+<p><strong>Month 1</strong>: Platform team decides "We need a developer portal!"<br />
+<strong>Month 2-6</strong>: Build Backstage, integrate with GitHub, ArgoCD, Jenkins<br />
+<strong>Month 7</strong>: Launch with fanfare, send Slack announcement<br />
+<strong>Month 8</strong>: 12% adoption. Developers still use <code>kubectl</code> and Slack for everything.<br />
+<strong>Month 9</strong>: Platform team confused: "Why don't they use it?"</p>
+<p><strong>Root Cause</strong>: Nobody asked developers what problems they actually have.</p>
+<h3 id="the-feature-factory-trap">The Feature Factory Trap</h3>
+<p>Platform team operates like a feature factory:
+1. Stakeholder requests feature ("We need Vault integration!")
+2. Team builds feature
+3. Ship feature, move to next request
+4. Repeat indefinitely</p>
+<p><strong>Missing</strong>:
+- <strong>Discovery</strong>: Is this solving a real pain point?
+- <strong>Validation</strong>: Will developers actually use this?
+- <strong>Measurement</strong>: Did this improve productivity?
+- <strong>Iteration</strong>: How do we make it better?</p>
+<p><strong>Result</strong>: A Frankenstein platform with 50 features, 5 actually used, and developers still frustrated.</p>
+<h3 id="the-metrics-mirage">The Metrics Mirage</h3>
+<p>Platform teams measure the <strong>wrong things</strong>:
+- ❌ <strong>Deployment frequency</strong> (platform metric, not developer outcome)
+- ❌ <strong>Number of features shipped</strong> (output, not outcome)
+- ❌ <strong>Uptime of platform services</strong> (necessary but not sufficient)</p>
+<p><strong>What Should Be Measured</strong>:
+- ✅ <strong>Developer productivity</strong> (time from idea to production)
+- ✅ <strong>Cognitive load</strong> (how many tools/concepts to learn)
+- ✅ <strong>Task success rate</strong> (can devs complete common tasks?)
+- ✅ <strong>Developer satisfaction</strong> (Net Promoter Score for internal platform)</p>
+<h2 id="the-solution-ip3dp-platform-as-product">The Solution: IP3dP - Platform as Product</h2>
+<p>The <strong>IP3dP framework</strong> applies product management principles to platform engineering:</p>
+<pre class="mermaid"><code>graph TB
+    A[Discovery] --&gt;|Problems| B[Prioritization]
+    B --&gt;|Roadmap| C[Delivery]
+    C --&gt;|Features| D[Measurement]
+    D --&gt;|Learnings| A
+
+    style A fill:#4CAF50
+    style B fill:#FF9800
+    style C fill:#2196F3
+    style D fill:#9C27B0</code></pre>
+<h3 id="the-four-phases">The Four Phases</h3>
+<h4 id="1-discovery-what-problems-do-developers-have">1. Discovery: What Problems Do Developers Have?</h4>
+<p><strong>Goal</strong>: Deeply understand developer pain points before building anything.</p>
+<p><strong>Methods:</strong></p>
+<p><strong>User Research (Qualitative)</strong>:
+- <strong>Developer Interviews</strong>: 1-on-1 conversations (30-45 min)
+  - "Walk me through your last deployment"
+  - "What's the most frustrating part of your workflow?"
+  - "If you had a magic wand, what would you change?"</p>
+<ul>
+<li><strong>Shadowing</strong>: Sit with developers, observe their workflow</li>
+<li>Watch them struggle with <code>kubectl</code> copy-pasting from Slack</li>
+<li>See them waste 20 minutes finding the right config file</li>
+<li>
+<p>Notice they rebuild images unnecessarily because unclear when cache invalidated</p>
+</li>
+<li>
+<p><strong>Surveys</strong>: Structured feedback at scale</p>
+</li>
+<li>SPACE Framework metrics (Satisfaction, Performance, Activity, Communication, Efficiency)</li>
+<li>Net Promoter Score: "How likely are you to recommend this platform to a colleague?"</li>
+</ul>
+<p><strong>Data Analysis (Quantitative)</strong>:
+- <strong>Platform Analytics</strong>: What features are used? What's ignored?
+  - Backstage: 80% use service catalog, 10% use docs, 2% use templates
+  - Jenkins: 60% of pipelines copy-pasted from "blessed-pipeline" repo (hint: make template)</p>
+<ul>
+<li><strong>Support Tickets</strong>: What breaks? What confuses people?</li>
+<li>40% of tickets: "How do I deploy to production?" (hint: docs/onboarding problem)</li>
+<li>
+<p>25% of tickets: "My build is slow" (hint: buildpack caching issue)</p>
+</li>
+<li>
+<p><strong>DORA Metrics Correlation</strong>: Does platform usage correlate with team performance?</p>
+</li>
+<li>Teams using GitOps: 3x higher deployment frequency</li>
+<li>Teams not using GitOps: Higher change failure rate</li>
+</ul>
+<p><strong>Jobs-to-be-Done Framework</strong>:</p>
+<p>Instead of "What features do you want?", ask "What job are you trying to do?"</p>
+<table>
+<thead>
+<tr>
+<th>Developer Says</th>
+<th>What They Want</th>
+<th>Actual Job-to-be-Done</th>
+<th>Platform Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"I need a Kubernetes dashboard"</td>
+<td>UI to see pods</td>
+<td><strong>Monitor application health</strong></td>
+<td>Grafana dashboard showing SLIs, not low-level K8s resources</td>
+</tr>
+<tr>
+<td>"I need SSH access to pods"</td>
+<td>Debug production</td>
+<td><strong>Troubleshoot application issues</strong></td>
+<td>Structured logs in Loki, traces in Tempo, ephemeral debug containers</td>
+</tr>
+<tr>
+<td>"I need a faster build"</td>
+<td>Reduce CI time</td>
+<td><strong>Deploy changes quickly</strong></td>
+<td>Buildpack layer caching, parallel test execution</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example Discovery Insight</strong>:</p>
+<p><strong>Initial Request</strong>: "We need a feature flag service"<br />
+<strong>Discovery Conversation</strong>:
+- <em>Why do you need feature flags?</em>
+- "To deploy without breaking production"
+- <em>What breaks today when you deploy?</em>
+- "We push code Friday, it breaks, we roll back"
+- <em>Why Friday? Why not earlier in the week?</em>
+- "Deployment process takes 2 hours, only time we have is end-of-sprint"</p>
+<p><strong>Real Problem</strong>: Deployment is too slow and risky, so teams batch changes and deploy infrequently.<br />
+<strong>Solution</strong>: Not feature flags—fix deployment speed and reliability (canary deployments, automated rollback).</p>
+<h4 id="2-prioritization-what-should-we-build">2. Prioritization: What Should We Build?</h4>
+<p><strong>Goal</strong>: Choose high-impact problems to solve, not just loudest requests.</p>
+<p><strong>Prioritization Framework: RICE</strong></p>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Measurement</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Reach</strong></td>
+<td>How many developers affected?</td>
+<td>80% of teams deploy daily (high reach)</td>
+</tr>
+<tr>
+<td><strong>Impact</strong></td>
+<td>How much does it improve productivity?</td>
+<td>Saves 2 hours/week per developer (high impact)</td>
+</tr>
+<tr>
+<td><strong>Confidence</strong></td>
+<td>How certain are we this solves the problem?</td>
+<td>Validated via user interviews (80% confidence)</td>
+</tr>
+<tr>
+<td><strong>Effort</strong></td>
+<td>How long to build?</td>
+<td>2 sprints (medium effort)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>RICE Score</strong> = (Reach × Impact × Confidence) / Effort</p>
+<p><strong>Example:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Initiative</th>
+<th>Reach</th>
+<th>Impact</th>
+<th>Confidence</th>
+<th>Effort</th>
+<th>RICE Score</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Auto-deploy on merge</strong></td>
+<td>200 devs</td>
+<td>3 (high)</td>
+<td>90%</td>
+<td>3 weeks</td>
+<td>180</td>
+<td><strong>1</strong></td>
+</tr>
+<tr>
+<td><strong>Custom Backstage theme</strong></td>
+<td>200 devs</td>
+<td>1 (low)</td>
+<td>100%</td>
+<td>1 week</td>
+<td>200</td>
+<td><strong>2</strong></td>
+</tr>
+<tr>
+<td><strong>Vault auto-rotation</strong></td>
+<td>50 devs</td>
+<td>3 (high)</td>
+<td>70%</td>
+<td>4 weeks</td>
+<td>26</td>
+<td><strong>3</strong></td>
+</tr>
+<tr>
+<td><strong>AI code assistant</strong></td>
+<td>200 devs</td>
+<td>2 (med)</td>
+<td>50%</td>
+<td>8 weeks</td>
+<td>25</td>
+<td><strong>4</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decision</strong>: Build auto-deploy first (highest impact, reasonable effort).</p>
+<p><strong>Ruthless De-Prioritization</strong>:
+- "We won't build feature flags this quarter" (low confidence it solves real problem)
+- "We won't support Python 2.7" (reach is 2 legacy apps, sunset them instead)</p>
+<h4 id="3-delivery-build-measure-learn">3. Delivery: Build, Measure, Learn</h4>
+<p><strong>Goal</strong>: Ship iteratively, get feedback fast, pivot if needed.</p>
+<p><strong>Lean Delivery Approach:</strong></p>
+<p><strong>Week 1-2: Spike / Prototype</strong>
+- Build minimal proof-of-concept
+- Test with 2-3 friendly developer teams
+- <strong>Question</strong>: "Does this solve your problem?"</p>
+<p><strong>Week 3-4: Alpha</strong>
+- Functional but rough
+- 10-20 early adopters
+- <strong>Measurement</strong>: Can they complete the task? Where do they struggle?</p>
+<p><strong>Week 5-6: Beta</strong>
+- Polished UX, docs, error messages
+- Opt-in for all teams
+- <strong>Measurement</strong>: Adoption rate, support tickets</p>
+<p><strong>Week 7-8: General Availability</strong>
+- Default for new services
+- Gradual rollout to existing services
+- <strong>Measurement</strong>: DORA metrics, developer satisfaction</p>
+<p><strong>Example: GitOps Rollout</strong></p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Timeline</th>
+<th>Audience</th>
+<th>Success Criteria</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Prototype</strong></td>
+<td>Week 1-2</td>
+<td>2 teams</td>
+<td>Can deploy via Git commit (manual sync)</td>
+</tr>
+<tr>
+<td><strong>Alpha</strong></td>
+<td>Week 3-4</td>
+<td>10 teams</td>
+<td>Auto-sync working, 80% uptime</td>
+</tr>
+<tr>
+<td><strong>Beta</strong></td>
+<td>Week 5-8</td>
+<td>50 teams</td>
+<td>Self-service onboarding docs, &lt;5 min to onboard</td>
+</tr>
+<tr>
+<td><strong>GA</strong></td>
+<td>Week 9+</td>
+<td>All teams</td>
+<td>Default for new services, 99.5% uptime</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Feedback Loops:</strong>
+- <strong>Office Hours</strong>: Weekly drop-in for developers to ask questions
+- <strong>Retrospectives</strong>: After each phase, what worked? What didn't?
+- <strong>Metrics Dashboard</strong>: Real-time visibility into adoption, errors</p>
+<h4 id="4-measurement-did-it-work">4. Measurement: Did It Work?</h4>
+<p><strong>Goal</strong>: Quantify impact, not just activity.</p>
+<p><strong>North Star Metric: Developer Productivity</strong></p>
+<p>Operationalized as:
+- <strong>Lead Time for Changes</strong> (DORA) - Time from commit to production
+- <strong>Deployment Frequency</strong> (DORA) - How often teams deploy
+- <strong>Change Failure Rate</strong> (DORA) - % of deployments requiring rollback
+- <strong>Time to Restore Service</strong> (DORA) - MTTR for incidents</p>
+<p><strong>SPACE Framework (Developer Experience)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Metric</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>S</strong>atisfaction</td>
+<td>NPS, survey scores</td>
+<td>&gt;40 NPS</td>
+</tr>
+<tr>
+<td><strong>P</strong>erformance</td>
+<td>DORA metrics</td>
+<td>Elite tier (deploy multiple/day, &lt;15% CFR)</td>
+</tr>
+<tr>
+<td><strong>A</strong>ctivity</td>
+<td>Commits, PRs, deploys</td>
+<td>Trending up over time</td>
+</tr>
+<tr>
+<td><strong>C</strong>ommunication</td>
+<td>Slack messages, support tickets</td>
+<td>Trending down (less confusion)</td>
+</tr>
+<tr>
+<td><strong>E</strong>fficiency</td>
+<td>Time to complete tasks</td>
+<td>&lt;5 min to deploy, &lt;30 min to onboard new service</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example Dashboard:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">Fawkes Platform Health Dashboard</span>
+
+<span class="l l-Scalar l-Scalar-Plain">DORA Metrics (This Month)</span><span class="p p-Indicator">:</span>
+<span class="w">  </span><span class="nt">Deployment Frequency</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">5.2 deploys/day/team  ↑ 30% vs. last month</span>
+<span class="w">  </span><span class="nt">Lead Time for Changes</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">42 minutes            ↓ 15% vs. last month</span>
+<span class="w">  </span><span class="nt">Change Failure Rate</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">8%                    → (stable)</span>
+<span class="w">  </span><span class="nt">MTTR</span><span class="p">:</span><span class="w">                     </span><span class="l l-Scalar l-Scalar-Plain">22 minutes            ↓ 40% vs. last month</span>
+
+<span class="nt">Developer Satisfaction</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">NPS Score</span><span class="p">:</span><span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">+42                   ↑ 8 points</span>
+<span class="w">  </span><span class="nt">Most Loved Feature</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">GitOps auto-deploy   (80% positive mentions)</span>
+<span class="w">  </span><span class="nt">Most Frustrating</span><span class="p">:</span><span class="w">         </span><span class="l l-Scalar l-Scalar-Plain">Vault secret rotation (30% negative mentions)</span>
+
+<span class="nt">Platform Adoption</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Backstage Users</span><span class="p">:</span><span class="w">          </span><span class="l l-Scalar l-Scalar-Plain">220 / 250 devs (88%)</span>
+<span class="w">  </span><span class="nt">GitOps Enabled</span><span class="p">:</span><span class="w">           </span><span class="l l-Scalar l-Scalar-Plain">45 / 60 teams (75%)</span>
+<span class="w">  </span><span class="nt">Buildpacks Adoption</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">50 / 60 teams (83%)</span>
+
+<span class="nt">Support</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Tickets/Week</span><span class="p">:</span><span class="w">             </span><span class="l l-Scalar l-Scalar-Plain">12                    ↓ 40% vs. 3 months ago</span>
+<span class="w">  </span><span class="nt">Avg Resolution Time</span><span class="p">:</span><span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">4.2 hours             ↓ 20%</span>
+</code></pre></div>
+<p><strong>What to Do With Data:</strong></p>
+<p><strong>If metrics improving</strong>: Double down, expand adoption<br />
+<strong>If metrics flat</strong>: Investigate (wrong solution? Adoption barriers?)<br />
+<strong>If metrics declining</strong>: Pivot or sunset the feature</p>
+<p><strong>Example Decision Tree:</strong></p>
+<div class="highlight"><pre><span></span><code>Feature: Buildpacks
+Adoption: 83% ✅
+DORA Improvement: Lead time ↓25% ✅
+Satisfaction: 72% positive ✅
+→ Decision: Make default for all new services
+
+Feature: Custom Helm Charts
+Adoption: 12% ⚠️
+DORA Improvement: Unclear (data insufficient) ⚠️
+Satisfaction: 40% say &quot;too complex&quot; ❌
+→ Decision: Deprecate in favor of Buildpacks
+</code></pre></div>
+<h2 id="the-platform-roadmap-continuous-discovery-and-delivery">The Platform Roadmap: Continuous Discovery and Delivery</h2>
+<pre class="mermaid"><code>gantt
+    title Fawkes Platform Roadmap (Example Quarter)
+    dateFormat  YYYY-MM-DD
+    section Discovery
+    Developer Interviews       :done,    disc1, 2024-10-01, 2w
+    Survey Deployment          :done,    disc2, 2024-10-15, 1w
+    Data Analysis              :active,  disc3, 2024-10-22, 1w
+
+    section Delivery
+    GitOps Auto-Deploy Alpha   :active,  del1, 2024-11-01, 3w
+    Vault Auto-Rotation Beta   :         del2, 2024-11-22, 4w
+    Backstage Templates GA     :         del3, 2024-12-20, 2w
+
+    section Measurement
+    DORA Metrics Dashboard     :done,    meas1, 2024-10-01, 12w
+    NPS Survey Monthly         :         meas2, 2024-11-01, 4w</code></pre>
+<p><strong>Key Principles:</strong></p>
+<ol>
+<li><strong>Always in Discovery</strong>: Continuous conversations with developers</li>
+<li><strong>Validate Before Building</strong>: Prototype first, scale later</li>
+<li><strong>Measure Outcomes</strong>: Developer productivity, not feature count</li>
+<li><strong>Iterate Ruthlessly</strong>: Kill features that don't work</li>
+</ol>
+<h2 id="trade-offs-product-discipline-vs-execution-speed">Trade-Offs: Product Discipline vs. Execution Speed</h2>
+<h3 id="what-ip3dp-gives-you">What IP3dP Gives You</h3>
+<table>
+<thead>
+<tr>
+<th>Benefit</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Build the Right Thing</strong></td>
+<td>Solve actual problems, not imagined ones</td>
+</tr>
+<tr>
+<td><strong>Higher Adoption</strong></td>
+<td>Developers use features you validate with them</td>
+</tr>
+<tr>
+<td><strong>Better Prioritization</strong></td>
+<td>Focus on high-impact work, not loudest request</td>
+</tr>
+<tr>
+<td><strong>Measurable Value</strong></td>
+<td>Quantify platform impact on business outcomes</td>
+</tr>
+<tr>
+<td><strong>Developer Trust</strong></td>
+<td>Teams see you listen and respond to feedback</td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-ip3dp-costs-you">What IP3dP Costs You</h3>
+<table>
+<thead>
+<tr>
+<th>Challenge</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Slower Initial Delivery</strong></td>
+<td>Discovery takes time before building. <strong>Mitigation</strong>: Better to ship right feature slowly than wrong feature fast</td>
+</tr>
+<tr>
+<td><strong>Complexity</strong></td>
+<td>User research, surveys, data analysis. <strong>Mitigation</strong>: Start small (10 interviews vs. 100), scale as you learn</td>
+</tr>
+<tr>
+<td><strong>Saying "No"</strong></td>
+<td>Can't build every request. <strong>Mitigation</strong>: Transparent prioritization (RICE scores public)</td>
+</tr>
+<tr>
+<td><strong>Measurement Overhead</strong></td>
+<td>Setting up metrics, analyzing results. <strong>Mitigation</strong>: DORA metrics automated, NPS surveys quarterly</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The Bet</strong>: Spending 20% time on discovery prevents 80% waste on wrong features.</p>
+<h2 id="practical-examples-ip3dp-in-action">Practical Examples: IP3dP in Action</h2>
+<h3 id="case-study-1-the-kubernetes-dashboard-request">Case Study 1: The "Kubernetes Dashboard" Request</h3>
+<p><strong>Request</strong>: "We need a Kubernetes dashboard so developers can see pods"</p>
+<p><strong>Traditional Approach</strong>: Install K8s Dashboard, grant access, done.</p>
+<p><strong>IP3dP Approach</strong>:</p>
+<ol>
+<li><strong>Discovery</strong>: Why do they need to see pods?</li>
+<li>Interview reveals: "Want to know if my app is healthy"</li>
+<li>
+<p>Real job-to-be-done: <strong>Monitor application health</strong></p>
+</li>
+<li>
+<p><strong>Prioritization</strong>: </p>
+</li>
+<li>Reach: All teams (200 devs)</li>
+<li>Impact: High (currently checking Slack or kubectl)</li>
+<li>Confidence: Medium (is Grafana better than K8s Dashboard?)</li>
+<li>Effort: 2 weeks</li>
+<li>
+<p><strong>RICE</strong>: High priority</p>
+</li>
+<li>
+<p><strong>Delivery</strong>:</p>
+</li>
+<li>Prototype: Grafana dashboard showing service SLIs (latency, error rate, throughput)</li>
+<li>Alpha: 5 teams test, feedback: "This is what we actually need!"</li>
+<li>Beta: Template for all services</li>
+<li>
+<p>GA: Auto-generated Grafana dashboard for every service</p>
+</li>
+<li>
+<p><strong>Measurement</strong>:</p>
+</li>
+<li>Before: 30 <code>kubectl get pods</code> per developer per week</li>
+<li>After: 5 <code>kubectl get pods</code> per developer per week (↓83%)</li>
+<li>NPS: +15 points for "platform helps me understand app health"</li>
+</ol>
+<p><strong>Outcome</strong>: Built Grafana dashboards (right solution) instead of K8s Dashboard (requested solution).</p>
+<h3 id="case-study-2-the-faster-builds-problem">Case Study 2: The "Faster Builds" Problem</h3>
+<p><strong>Request</strong>: "Our builds are too slow, need faster build servers"</p>
+<p><strong>Traditional Approach</strong>: Provision larger Jenkins agents, increase CPU/RAM.</p>
+<p><strong>IP3dP Approach</strong>:</p>
+<ol>
+<li><strong>Discovery</strong>: What makes builds slow?</li>
+<li>Data analysis: 70% of build time is <code>npm install</code> (Node.js dependency download)</li>
+<li>
+<p>50% of builds fetch identical dependencies (no caching)</p>
+</li>
+<li>
+<p><strong>Prioritization</strong>:</p>
+</li>
+<li>Reach: 30 teams (Node.js services)</li>
+<li>Impact: Very high (40 min → 8 min builds)</li>
+<li>Confidence: High (buildpack caching proven)</li>
+<li>Effort: 2 weeks</li>
+<li>
+<p><strong>RICE</strong>: Highest priority</p>
+</li>
+<li>
+<p><strong>Delivery</strong>:</p>
+</li>
+<li>Implement buildpack layer caching</li>
+<li>Alpha: 5 teams, validate caching works</li>
+<li>
+<p>Beta: Gradual rollout to all Node.js services</p>
+</li>
+<li>
+<p><strong>Measurement</strong>:</p>
+</li>
+<li>Before: 40 min average build time</li>
+<li>After: 8 min average build time (↓80%)</li>
+<li>DORA: Deployment frequency ↑3x (faster builds = more deploys)</li>
+</ol>
+<p><strong>Outcome</strong>: Solved with caching, not more powerful servers (saved $50K/year in infrastructure).</p>
+<h2 id="related-reading">Related Reading</h2>
+<ul>
+<li><strong>ADR</strong>: <a href="../../../adr/ADR-020%20Platform-as-Product%20Operating%20Model/">ADR-020: Platform-as-Product Operating Model</a></li>
+<li><strong>ADR</strong>: <a href="../../../adr/ADR-018%20Developer%20Experience%20Measurement%20Framework%20SPACE/">ADR-018: Developer Experience Measurement Framework (SPACE)</a></li>
+<li><strong>ADR</strong>: <a href="../../../adr/ADR-019%20UserResearch%20%26%20Feedback%20Collection%20System/">ADR-019: User Research &amp; Feedback Collection System</a></li>
+<li><strong>Tutorial</strong>: <a href="../../../dojo/modules/black-belt/module-17-platform-product/">Module 17: Platform as Product</a></li>
+<li><strong>Reference</strong>: <a href="https://queue.acm.org/detail.cfm?id=3454124">SPACE Framework</a></li>
+<li><strong>Reference</strong>: <a href="https://teamtopologies.com/key-concepts">Team Topologies (Platform as Product)</a></li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p><strong>Internal Platform ≠ Just Infrastructure</strong>—it's a <strong>product</strong> with developers as customers.</p>
+<p>The IP3dP framework (Product Discovery and Delivery Process) ensures you:
+1. <strong>Discover</strong> real developer problems (not imagined ones)
+2. <strong>Prioritize</strong> high-impact solutions (not every request)
+3. <strong>Deliver</strong> iteratively (prototype → alpha → beta → GA)
+4. <strong>Measure</strong> outcomes (productivity, satisfaction, DORA metrics)</p>
+<p><strong>The Core Insight</strong>: Developers won't use a platform just because you built it. They'll use it if it <strong>solves their problems better than alternatives</strong> (including <code>kubectl</code>, manual processes, or shadow IT).</p>
+<p><strong>The Commitment</strong>: Treat developers like customers. Listen, validate, measure, iterate.</p>
+<p><strong>This is Platform as Product.</strong> This is IP3dP.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
