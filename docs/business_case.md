@@ -149,7 +149,7 @@ Fawkes is a **production-ready, open-source Internal Delivery Platform** that pr
 **Observability**:
 - **Prometheus & Grafana**: Metrics and dashboards
 - **OpenSearch**: Log aggregation and analysis
-- **Jaeger**: Distributed tracing
+- **Grafana Tempo**: Distributed tracing
 - **Custom DORA metrics automation**
 
 **Collaboration**:

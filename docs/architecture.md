@@ -420,7 +420,7 @@ gitops-repo/
 - Log correlation with traces
 - Retention policies
 
-**Tracing** (Jaeger + OpenTelemetry):
+**Tracing** (Grafana Tempo + OpenTelemetry):
 - Distributed tracing
 - Service dependency mapping
 - Performance analysis
@@ -669,7 +669,7 @@ Applications emit telemetry
         │
         ├──> Logs → Fluent Bit → OpenSearch
         │
-        └──> Traces → OpenTelemetry Collector → Jaeger
+        └──> Traces → OpenTelemetry Collector → Grafana Tempo
                                 │
                                 ▼
                 All data queryable via Grafana
@@ -1102,7 +1102,7 @@ Application consumes database
 | Visualization | Grafana | 10+ | Rich dashboards, multi-source support |
 | Logging | OpenSearch | 2.11+ | Open source, Elasticsearch-compatible |
 | Log Collection | Fluent Bit | 2.2+ | Lightweight, high-performance |
-| Tracing | Jaeger | 1.52+ | CNCF graduated, OpenTelemetry support |
+| Tracing | Grafana Tempo | 2.3+ | Scalable, cost-effective, Grafana-native |
 | Instrumentation | OpenTelemetry | 1.21+ | CNCF project, vendor-neutral |
 
 ### Security

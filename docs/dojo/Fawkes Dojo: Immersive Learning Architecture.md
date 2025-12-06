@@ -491,7 +491,7 @@ Total Time per Module: 45-60 minutes
 - Three pillars of observability
 - Prometheus metrics collection
 - OpenSearch log aggregation
-- Jaeger distributed tracing
+- Grafana Tempo distributed tracing
 - **Lab**: Configure full observability stack
 
 **Module 14: DORA Metrics Deep Dive** (60 min)
