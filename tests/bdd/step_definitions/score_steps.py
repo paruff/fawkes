@@ -5,6 +5,7 @@ These steps test the SCORE workload specification integration in Fawkes.
 """
 
 import os
+import shutil
 import yaml
 import tempfile
 from pathlib import Path
@@ -303,7 +304,6 @@ def step_impl(context):
 def after_scenario(context, scenario):
     """Cleanup temporary files after each scenario."""
     if hasattr(context, 'generated_manifests'):
-        import shutil
         if os.path.exists(context.generated_manifests):
             shutil.rmtree(context.generated_manifests)
     

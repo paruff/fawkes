@@ -137,7 +137,10 @@ resources:
 # Route/Ingress configuration (optional)
 # If specified, creates an Ingress for external access
 route:
-  host: "my-service.${ENVIRONMENT}.fawkes.idp"  # Environment-specific hostname
+  # Environment-specific hostname using ${ENVIRONMENT} placeholder
+  # This is replaced during deployment: dev → my-service.dev.fawkes.idp, prod → my-service.prod.fawkes.idp
+  # See docs/reference/score-specification.md for more on environment interpolation
+  host: "my-service.${ENVIRONMENT}.fawkes.idp"
   path: "/"
   tls:
     enabled: true
