@@ -1,3 +1,4 @@
+---
 name: "EPIC: Concise Epic Name — Area/Team"
 description: "Canonical Epic template for grouping features and stories. Use this to capture goals, scope, milestones, and instructions for Copilot agents."
 title: "EPIC: {epic_short} — {area_or_team}"
