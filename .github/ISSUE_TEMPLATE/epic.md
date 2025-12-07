@@ -1,1 +1,30 @@
-name: 🗺️ Epic (Strategic Goal)about: A large, high-level strategic initiative that defines a significant business or platform outcome.title: 'Epic: 'labels:'type:epic''priority:high'assignees: ''Epic: Establish Foundational Security & Compliance Layer (V2.0)Strategic GoalTo establish a fully compliant, auditable, and secure core platform foundation. This includes eliminating all hardcoded secrets, guaranteeing least-privilege access for all workloads, and implementing infrastructure-level governance necessary for SOC/ISO certification readiness.Affected StakeholdersPlatform Architects: Design and deployment of all security components.Security/Audit Teams: Will consume audit logs and use the platform's compliance features.Application Developers: Will use the new secrets management workflow.Exit CriteriaSecrets Management: The Vault HA cluster is operational, configured with Kubernetes Auth, and the new Golden Path templates enforce the use of the Vault Agent Sidecar (Feature #101 closed).Platform Governance: All core services have mandatory Kyverno policies applied (e.g., non-root user, resource limits) to guarantee baseline compliance.Audit Logging: All critical platform services (Vault, ArgoCD) are forwarding audit logs to the Observability platform.Related Features (Children)(Use this checklist to link to the specific Feature issues that compose this Epic.)[ ] #101 Feature: Centralized Secrets Management via Vault[ ] #102 Feature: Runtime Security Enforcement (Kyverno)[ ] #103 Feature: Integrated Platform Audit Logging
+---
+name: Epic
+about: A large body of work that spans multiple features or stories.
+title: "[Epic]: "
+labels: ["epic", "planning"]
+---
+
+## 🎯 Goal & Problem Statement
+
+What is the main objective or goal of this Epic? What specific problem is this Epic solving for the users or the business?
+
+## 📝 Background / Motivation
+
+Provide context and explain why this Epic is necessary right now. Why is this important?
+
+## 🏗️ Proposed Features/Stories
+
+List the high-level features or user stories that will make up this Epic. Each item should be broken down into its own issue using the appropriate template.
+
+- [ ] Feature/Story 1
+- [ ] Feature/Story 2
+- [ ] Feature/Story 3
+
+## ✅ Acceptance Criteria (Epic Definition of Done)
+
+What must be true for this entire Epic to be considered complete? (e.g., all listed features are merged and deployed, or a specific metric is achieved).
+
+## 🔗 Related Resources
+
+Links to design documents, user research, or other relevant information (e.g., JIRA, Figma, external documents).
