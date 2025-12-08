@@ -15,24 +15,28 @@ body:
     id: feature_short
     attributes:
       label: Feature short name (used in title)
+    validations:
       required: true
   - type: input
     id: component
     attributes:
       label: Service / Component
       description: e.g. control-plane, provisioning, ui
+    validations:
       required: true
   - type: textarea
     id: background
     attributes:
       label: Background & Motivation
       description: Why do this? Who benefits?
+    validations:
       required: true
   - type: textarea
     id: goals_acceptance
     attributes:
       label: Goals & Acceptance Criteria (specific, testable)
       description: "Use Gherkin where helpful. Example: Given..., When..., Then..."
+    validations:
       required: true
   - type: textarea
     id: design_notes
@@ -83,6 +87,7 @@ body:
         - Run CI jobs: ci/unit, ci/integration
         - Create PR with title: "FEATURE: {feature_short} — implement <subfeature>"
         - Add checklists and link story issues.
+    validations:
       required: true
   - type: markdown
     attributes:
