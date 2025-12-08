@@ -10,6 +10,7 @@ body:
     id: story_short
     attributes:
       label: Short story title (used in title)
+    validations:
       required: true
   - type: input
     id: feature
@@ -21,6 +22,7 @@ body:
     attributes:
       label: Summary
       description: Short description of the deliverable
+    validations:
       required: true
   - type: textarea
     id: preconditions
@@ -32,11 +34,13 @@ body:
     attributes:
       label: Implementation steps (detailed)
       description: Step-by-step tasks to complete (be explicit)
+    validations:
       required: true
   - type: textarea
     id: acceptance_criteria
     attributes:
       label: Acceptance Criteria (clear, testable)
+    validations:
       required: true
   - type: textarea
     id: tests_to_add
@@ -71,6 +75,7 @@ body:
         - Add tests: tests/unit/test_new_handler.py
         - Create branch: story/{story_short}/{ticket}
         - PR title: "STORY: {story_short} — implement <task>"
+    validations:
       required: true
   - type: markdown
     attributes:
