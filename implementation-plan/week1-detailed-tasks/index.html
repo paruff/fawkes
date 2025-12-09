@@ -1,0 +1,4554 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Week 1 Detailed Tasks - Epic 1: Infrastructure & GitOps - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#week-1-detailed-tasks-epic-1-infrastructure-gitops" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Week 1 Detailed Tasks - Epic 1: Infrastructure &amp; GitOps
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorials/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../how-to/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../explanation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Explanation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../playbooks/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Playbooks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tutorials/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/1-deploy-first-service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Deploy Your First Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/2-add-tracing-tempo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Add Distributed Tracing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/3-consume-vault-secret/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Consume Vault Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/4-buildpack-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Migrate to Buildpacks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/5-create-golden-path-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Create a Golden Path Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/6-measure-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Measure DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dojo Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dojo Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/white-belt/module-01-what-is-idp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    White Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/yellow-belt/module-05-ci-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yellow Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/green-belt/module-09-gitops-argocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Green Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/brown-belt/module-13-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brown Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/black-belt/module-17-platform-product/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Black Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../how-to/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GitOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/gitops/onboard-service-argocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Onboard Service to ArgoCD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/gitops/sync-argocd-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync ArgoCD Application
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/observability/trace-request-tempo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Requests with Tempo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/observability/view-dora-metrics-devlake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    View DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/security/rotate-vault-secrets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rotate Vault Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/development/debug-buildpack-failure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/networking/configure-ingress-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Ingress with TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Policy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/policy/troubleshoot-kyverno-violation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshoot Kyverno Violations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patterns
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../explanation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explanation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Explanation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/gitops-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/containers/buildpacks-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Buildpacks Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/security/zero-trust-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zero Trust Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/observability/unified-telemetry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unified Telemetry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IDP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IDP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/idp/product-discovery-delivery-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Discovery & Delivery Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Governance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/governance/policy-as-code-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policy as Code Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../business_case/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business Case
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/backstage-plugins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backstage Plugins API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/jenkins-webhook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins Webhook API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CRDs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CRDs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/crds/golden-path-crd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Path Devfile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Configuration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/config/jenkins-values/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins Helm Values
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/config/prometheus-values/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Helm Values
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policies
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Policies
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/policies/kyverno-policy-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kyverno Policy List
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_6" id="__nav_6_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Catalog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Catalog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/catalogue/service-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_8" id="__nav_6_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spinnaker (Deprecated)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--deprecated"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/focalboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Focalboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../playbooks/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playbooks
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playbooks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playbooks/TEMPLATE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playbooks/dora-metrics-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#day-by-day-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📅 Day-by-Day Breakdown
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📅 Day-by-Day Breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#day-1-local-kubernetes-cluster-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Day 1: Local Kubernetes Cluster Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Day 1: Local Kubernetes Cluster Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#morning-4-hours-issue-1-k8s-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Morning (4 hours): Issue #1 - K8s Cluster
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#afternoon-2-3-hours-issues-2-3-ingress-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Afternoon (2-3 hours): Issues #2 &amp; #3 - Ingress &amp; Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#day-2-argocd-deployment-git-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Day 2: ArgoCD Deployment &amp; Git Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Day 2: ArgoCD Deployment &amp; Git Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#morning-4-hours-issue-5-deploy-argocd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Morning (4 hours): Issue #5 - Deploy ArgoCD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#afternoon-3-4-hours-issues-6-7-git-structure-app-of-apps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Afternoon (3-4 hours): Issues #6 &amp; #7 - Git Structure &amp; App-of-Apps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#day-3-documentation-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Day 3: Documentation &amp; Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Day 3: Documentation &amp; Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#morning-4-hours-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Morning (4 hours): Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#afternoon-3-4-hours-validation-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Afternoon (3-4 hours): Validation &amp; Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#days-4-5-buffer-week-2-prep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Days 4-5: Buffer &amp; Week 2 Prep
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#week-1-definition-of-done" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Week 1 Definition of Done
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#progress-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📊 Progress Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#handoff-to-week-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Handoff to Week 2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🆘 Getting Help
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="week-1-detailed-tasks-epic-1-infrastructure-gitops">Week 1 Detailed Tasks - Epic 1: Infrastructure &amp; GitOps</h1>
+<p><strong>Epic</strong>: Epic 1 - DORA 2023 Foundation<br />
+<strong>Week</strong>: 1 of 4<br />
+<strong>Milestone</strong>: 1.1 - Local Infrastructure &amp; 1.2 - GitOps Foundation<br />
+<strong>Duration</strong>: 5 working days<br />
+<strong>Goal</strong>: Deploy local K8s cluster with ArgoCD managing platform</p>
+<hr />
+<h2 id="day-by-day-breakdown">📅 Day-by-Day Breakdown</h2>
+<h3 id="day-1-local-kubernetes-cluster-setup">Day 1: Local Kubernetes Cluster Setup</h3>
+<p><strong>Issues</strong>: #1, #2, #3<br />
+<strong>Estimated Time</strong>: 6-8 hours<br />
+<strong>Goal</strong>: Functional 4-node local K8s cluster with ingress and storage</p>
+<h4 id="morning-4-hours-issue-1-k8s-cluster">Morning (4 hours): Issue #1 - K8s Cluster</h4>
+<p><strong>Task 1.1: Create Terraform module</strong> (90 min)
+<div class="highlight"><pre><span></span><code><span class="c1"># Location: infra/local/cluster/</span>
+
+<span class="c1"># Create directory structure</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>infra/local/cluster/<span class="o">{</span>terraform,inspec/controls,scripts<span class="o">}</span>
+
+<span class="c1"># File: infra/local/cluster/terraform/main.tf</span>
+</code></pre></div></p>
+<p><strong>Copilot Prompt for main.tf</strong>:
+<div class="highlight"><pre><span></span><code>Create a Terraform configuration for deploying a local Kubernetes cluster using kind:
+
+Requirements:
+1. Create a kind cluster named &quot;fawkes-local&quot;
+2. Configure 4 worker nodes
+3. Each node: 4 CPU, 8GB memory
+4. Enable ingress (extraPortMappings for ports 80, 443)
+5. Configure local-path-provisioner as default StorageClass
+6. Output the kubeconfig path
+
+Include:
+- variables.tf (cluster_name, node_count, resources_per_node)
+- outputs.tf (kubeconfig_path, cluster_name, node_count)
+- versions.tf (terraform &gt;= 1.0, required providers)
+
+Use kind_cluster resource from tehcyx/kind provider.
+Add comments explaining each configuration block.
+</code></pre></div></p>
+<p><strong>Task 1.2: Create InSpec validation</strong> (45 min)
+<div class="highlight"><pre><span></span><code><span class="c1"># Location: infra/local/cluster/inspec/controls/cluster.rb</span>
+</code></pre></div></p>
+<p><strong>Copilot Prompt</strong>:
+<div class="highlight"><pre><span></span><code>Create an InSpec test suite for validating Kubernetes cluster deployment:
+
+Test cases:
+1. Exactly 4 nodes exist in the cluster
+2. All nodes have status &quot;Ready&quot;
+3. All system pods in kube-system namespace are &quot;Running&quot;
+4. A StorageClass named &quot;local-path&quot; exists and is marked as default
+5. Kubernetes version is &gt;= 1.28.0
+6. No nodes have MemoryPressure or DiskPressure conditions
+
+Use kubectl commands via command() InSpec resource.
+Include descriptive test descriptions and impact levels.
+</code></pre></div></p>
+<p><strong>Task 1.3: Create deployment script</strong> (90 min)
+<div class="highlight"><pre><span></span><code><span class="c1"># Location: scripts/deploy-local-cluster.sh</span>
+</code></pre></div></p>
+<p><strong>Copilot Prompt</strong>:
+<div class="highlight"><pre><span></span><code>Create a bash deployment script that:
+
+1. Checks prerequisites:
+   - Docker is installed and running
+   - kind CLI is installed (&gt;= 0.20.0)
+   - kubectl is installed (&gt;= 1.28.0)
+   - terraform is installed (&gt;= 1.0.0)
+   - inspec is installed (&gt;= 5.0.0)
+
+2. Deployment steps:
+   - cd to infra/local/cluster/terraform
+   - Run terraform init
+   - Run terraform plan
+   - Run terraform apply -auto-approve
+   - Export KUBECONFIG from terraform output
+   - Wait for all nodes to be Ready (timeout 5 minutes)
+   - Wait for all system pods Running (timeout 5 minutes)
+
+3. Validation:
+   - Run InSpec tests
+   - Print cluster info (nodes, pods, storageclasses)
+
+4. Error handling:
+   - Trap errors and provide clear messages
+   - Offer rollback option on failure
+   - Log all output to logs/cluster-deployment.log
+
+Use colors for output (green=success, red=error, yellow=warning).
+Include functions for each major step.
+</code></pre></div></p>
+<p><strong>Task 1.4: Create documentation</strong> (45 min)
+<div class="highlight"><pre><span></span><code><span class="c1"># Location: docs/runbooks/local-cluster-setup.md</span>
+</code></pre></div></p>
+<p><strong>Copilot Prompt</strong>:
+<div class="highlight"><pre><span></span><code>Create comprehensive documentation for local K8s cluster setup:
+
+Sections:
+1. Overview (what, why, architecture diagram in mermaid)
+2. Prerequisites (system requirements, software versions)
+3. Quick Start (5-minute getting started)
+4. Detailed Setup (step-by-step with commands)
+5. Verification (how to validate deployment)
+6. Troubleshooting (common issues and solutions)
+7. Cluster Management (start, stop, destroy, reset)
+8. Advanced Configuration (resource tuning, multi-cluster)
+9. References (links to kind docs, k8s docs)
+
+Use clear language, code blocks with bash syntax highlighting.
+Include expected output for verification commands.
+Add troubleshooting for:
+- Docker not running
+- Insufficient resources
+- Port conflicts
+- StorageClass issues
+</code></pre></div></p>
+<p><strong>Validation Commands</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Test Terraform</span>
+<span class="nb">cd</span><span class="w"> </span>infra/local/cluster/terraform
+terraform<span class="w"> </span>init
+terraform<span class="w"> </span>validate
+
+<span class="c1"># Test deployment script</span>
+chmod<span class="w"> </span>+x<span class="w"> </span>scripts/deploy-local-cluster.sh
+./scripts/deploy-local-cluster.sh
+
+<span class="c1"># Verify cluster</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+<span class="c1"># Expected: 4 nodes, all Ready</span>
+
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A
+<span class="c1"># Expected: All Running</span>
+
+kubectl<span class="w"> </span>get<span class="w"> </span>storageclass
+<span class="c1"># Expected: local-path (default)</span>
+
+<span class="c1"># Run InSpec tests</span>
+inspec<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>infra/local/cluster/inspec/<span class="w"> </span>-t<span class="w"> </span>k8s://
+
+<span class="c1"># Check resource usage</span>
+kubectl<span class="w"> </span>top<span class="w"> </span>nodes
+<span class="c1"># Expected: &lt;50% CPU, &lt;50% Memory</span>
+</code></pre></div></p>
+<h4 id="afternoon-2-3-hours-issues-2-3-ingress-storage">Afternoon (2-3 hours): Issues #2 &amp; #3 - Ingress &amp; Storage</h4>
+<p><strong>Task 2.1: Deploy nginx-ingress</strong> (90 min)
+<div class="highlight"><pre><span></span><code><span class="c1"># Location: platform/apps/ingress-nginx/</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>platform/apps/ingress-nginx
+</code></pre></div></p>
+<p><strong>Copilot Prompt</strong>:
+<div class="highlight"><pre><span></span><code>Create ArgoCD Application and Helm values for nginx-ingress-controller:
+
+Files needed:
+1. values.yaml - Helm values for ingress-nginx chart
+   - Enable metrics for Prometheus
+   - Configure for local development (NodePort)
+   - Set resource limits (500m CPU, 512Mi memory)
+   - Enable default SSL certificate
+
+2. application.yaml - ArgoCD Application manifest
+   - Name: ingress-nginx
+   - Namespace: ingress-nginx (create if not exists)
+   - Source: helm chart ingress-nginx/ingress-nginx
+   - Sync policy: automated, self-heal
+   - Sync options: CreateNamespace=true
+
+3. test-ingress.yaml - Test ingress resource
+   - Host: test.local
+   - Path: /
+   - Backend: test service (port 80)
+   - Include TLS with self-signed cert
+
+4. README.md - Setup and usage instructions
+</code></pre></div></p>
+<p><strong>Task 3.1: Configure persistent storage</strong> (60 min)
+<div class="highlight"><pre><span></span><code><span class="c1"># Location: platform/apps/local-path-storage/</span>
+</code></pre></div></p>
+<p><strong>Copilot Prompt</strong>:
+<div class="highlight"><pre><span></span><code>Create configuration for local-path-provisioner:
+
+Files:
+1. application.yaml - ArgoCD Application
+   - Deploy rancher/local-path-provisioner
+   - Set as default StorageClass
+   - Configure storage path: /opt/local-path-provisioner
+
+2. test-pvc.yaml - Test PersistentVolumeClaim
+   - Name: test-pvc
+   - Size: 1Gi
+   - AccessMode: ReadWriteOnce
+   - StorageClass: local-path
+
+3. test-pod.yaml - Pod that uses test-pvc
+   - Mount PVC at /data
+   - Run busybox
+   - Create test file in /data
+
+Include cleanup script to delete test resources.
+</code></pre></div></p>
+<p><strong>End of Day 1 Validation</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Cluster healthy</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A
+
+<span class="c1"># Ingress working</span>
+curl<span class="w"> </span>http://localhost:80
+<span class="c1"># Or: curl http://test.local (if configured in /etc/hosts)</span>
+
+<span class="c1"># Storage working</span>
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/local-path-storage/test-pvc.yaml
+kubectl<span class="w"> </span>get<span class="w"> </span>pvc
+<span class="c1"># Should show: Bound</span>
+
+<span class="c1"># Run acceptance test AT-E1-001</span>
+./tests/acceptance/run-test.sh<span class="w"> </span>AT-E1-001
+</code></pre></div></p>
+<hr />
+<h3 id="day-2-argocd-deployment-git-structure">Day 2: ArgoCD Deployment &amp; Git Structure</h3>
+<p><strong>Issues</strong>: #5, #6, #7<br />
+<strong>Estimated Time</strong>: 6-8 hours<br />
+<strong>Goal</strong>: ArgoCD managing all platform components via GitOps</p>
+<h4 id="morning-4-hours-issue-5-deploy-argocd">Morning (4 hours): Issue #5 - Deploy ArgoCD</h4>
+<p><strong>Task 5.1: Deploy ArgoCD</strong> (90 min)
+<div class="highlight"><pre><span></span><code><span class="c1"># Location: platform/apps/argocd/</span>
+</code></pre></div></p>
+<p><strong>Copilot Prompt</strong>:
+<div class="highlight"><pre><span></span><code>Create ArgoCD deployment configuration:
+
+1. install.yaml - ArgoCD installation manifest
+   - Use official ArgoCD install manifest (v2.9+)
+   - Namespace: argocd
+   - High availability disabled (for local)
+   - Ingress enabled
+
+2. ingress.yaml - Ingress for ArgoCD UI
+   - Host: argocd.local
+   - HTTPS with self-signed cert
+   - Backend: argocd-server:443
+
+3. initial-admin-secret.yaml (optional)
+   - Configure initial admin password
+   - Store securely or document retrieval method
+
+4. argocd-cm.yaml - ConfigMap for ArgoCD settings
+   - Enable anonymous read access (for local dev)
+   - Configure repository credentials
+   - Set default app project
+
+5. deploy.sh - Deployment script
+   - Apply install.yaml
+   - Wait for ArgoCD pods Ready
+   - Get initial admin password
+   - Configure argocd CLI
+   - Login and change password
+   - Print ArgoCD URL
+
+Include README with:
+- How to access UI
+- How to login via CLI
+- Initial configuration steps
+</code></pre></div></p>
+<p><strong>Task 5.2: Configure ArgoCD CLI</strong> (30 min)
+<div class="highlight"><pre><span></span><code><span class="c1"># Location: scripts/configure-argocd.sh</span>
+</code></pre></div></p>
+<p><strong>Copilot Prompt</strong>:
+<div class="highlight"><pre><span></span><code>Create script to configure ArgoCD CLI:
+
+1. Install argocd CLI if not present
+2. Port-forward to argocd-server (8080:443)
+3. Login with credentials
+4. Add local cluster
+5. Create app project &quot;platform&quot;
+6. Set up repository credentials for GitHub
+7. Verify configuration
+
+Include error handling and validation steps.
+</code></pre></div></p>
+<p><strong>Validation</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Deploy ArgoCD</span>
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/argocd/install.yaml
+kubectl<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>--for<span class="o">=</span><span class="nv">condition</span><span class="o">=</span>Ready<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>--all<span class="w"> </span>--timeout<span class="o">=</span>300s
+
+<span class="c1"># Access UI</span>
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>svc/argocd-server<span class="w"> </span><span class="m">8080</span>:443<span class="w"> </span><span class="p">&amp;</span>
+<span class="c1"># Open browser: https://localhost:8080</span>
+
+<span class="c1"># CLI login</span>
+argocd<span class="w"> </span>login<span class="w"> </span>localhost:8080<span class="w"> </span>--username<span class="w"> </span>admin<span class="w"> </span>--password<span class="w"> </span><span class="k">$(</span>kubectl<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>argocd-initial-admin-secret<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.password}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="k">)</span>
+
+<span class="c1"># Verify</span>
+argocd<span class="w"> </span>cluster<span class="w"> </span>list
+argocd<span class="w"> </span>app<span class="w"> </span>list
+</code></pre></div></p>
+<h4 id="afternoon-3-4-hours-issues-6-7-git-structure-app-of-apps">Afternoon (3-4 hours): Issues #6 &amp; #7 - Git Structure &amp; App-of-Apps</h4>
+<p><strong>Task 6.1: Create Git repository structure</strong> (90 min)
+<div class="highlight"><pre><span></span><code><span class="c1"># Location: platform/apps/</span>
+</code></pre></div></p>
+<p><strong>Copilot Prompt</strong>:
+<div class="highlight"><pre><span></span><code>Create comprehensive Git repository structure for platform components:
+
+Directory structure:
+platform/
+├── apps/
+│   ├── argocd/                 # ArgoCD itself
+│   ├── ingress-nginx/          # Ingress controller
+│   ├── local-path-storage/     # Storage provisioner
+│   ├── backstage/              # Developer portal (future)
+│   ├── jenkins/                # CI/CD (future)
+│   ├── harbor/                 # Container registry (future)
+│   ├── sonarqube/              # Code quality (future)
+│   ├── prometheus/             # Monitoring (future)
+│   ├── grafana/                # Dashboards (future)
+│   └── dora-metrics/           # DORA service (future)
+├── bootstrap/
+│   ├── app-of-apps.yaml        # Root application
+│   └── README.md               # Bootstrap instructions
+└── README.md                   # Platform apps overview
+
+Each app directory contains:
+- application.yaml (ArgoCD Application manifest)
+- values.yaml (Helm values if using Helm)
+- kustomization.yaml (if using Kustomize)
+- README.md (app-specific documentation)
+
+Create placeholder directories for future apps.
+Add .gitkeep files to maintain empty directories.
+</code></pre></div></p>
+<p><strong>Task 6.2: Create app templates</strong> (60 min)
+<div class="highlight"><pre><span></span><code><span class="c1"># Location: platform/templates/</span>
+</code></pre></div></p>
+<p><strong>Copilot Prompt</strong>:
+<div class="highlight"><pre><span></span><code>Create reusable templates for ArgoCD Applications:
+
+1. helm-app-template.yaml
+   - Template for Helm-based apps
+   - Variables: {APP_NAME}, {NAMESPACE}, {CHART_REPO}, {CHART_NAME}
+   - Standard sync policy
+   - Automated pruning and self-heal
+
+2. kustomize-app-template.yaml
+   - Template for Kustomize-based apps
+   - Variables: {APP_NAME}, {NAMESPACE}, {PATH}
+
+3. generate-app.sh
+   - Script to generate application from template
+   - Usage: ./generate-app.sh --name myapp --type helm --chart mychart
+
+Include documentation on template usage.
+</code></pre></div></p>
+<p><strong>Task 7.1: Implement app-of-apps pattern</strong> (90 min)
+<div class="highlight"><pre><span></span><code><span class="c1"># Location: platform/bootstrap/</span>
+</code></pre></div></p>
+<p><strong>Copilot Prompt</strong>:
+<div class="highlight"><pre><span></span><code>Create app-of-apps pattern for managing all platform applications:
+
+1. app-of-apps.yaml - Root ArgoCD Application
+   - Name: platform-bootstrap
+   - Source: platform/apps/
+   - Destination: Multiple namespaces
+   - Sync wave: 0 (deploy first)
+   - Automated sync with prune
+   - Uses ApplicationSet for dynamic app discovery
+
+2. applicationset.yaml - ApplicationSet for auto-discovery
+   - Git directory generator
+   - Path: platform/apps/*/application.yaml
+   - Exclude certain directories (templates, common)
+   - Preserve application order with sync waves
+
+3. bootstrap.sh - Bootstrap script
+   - Apply app-of-apps.yaml
+   - Wait for sync
+   - Verify all apps deployed
+   - Print status
+
+4. README.md - App-of-apps documentation
+   - Explain the pattern
+   - How to add new apps
+   - Sync wave ordering
+   - Troubleshooting
+
+Include sync waves:
+- Wave 0: Infrastructure (ArgoCD, ingress, storage)
+- Wave 1: Platform services (Backstage, Jenkins)
+- Wave 2: Observability (Prometheus, Grafana)
+- Wave 3: Applications
+</code></pre></div></p>
+<p><strong>End of Day 2 Validation</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Apply app-of-apps</span>
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/bootstrap/app-of-apps.yaml
+
+<span class="c1"># Wait for sync</span>
+argocd<span class="w"> </span>app<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>platform-bootstrap<span class="w"> </span>--timeout<span class="w"> </span><span class="m">300</span>
+
+<span class="c1"># Verify all apps</span>
+argocd<span class="w"> </span>app<span class="w"> </span>list
+
+<span class="c1"># Check sync status</span>
+argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>platform-bootstrap
+
+<span class="c1"># Verify applications in cluster</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>applications<span class="w"> </span>-n<span class="w"> </span>argocd
+
+<span class="c1"># Run acceptance test AT-E1-002</span>
+./tests/acceptance/run-test.sh<span class="w"> </span>AT-E1-002
+</code></pre></div></p>
+<hr />
+<h3 id="day-3-documentation-validation">Day 3: Documentation &amp; Validation</h3>
+<p><strong>Issue</strong>: #8, plus documentation<br />
+<strong>Estimated Time</strong>: 6-8 hours<br />
+<strong>Goal</strong>: Complete documentation and validate Week 1 deliverables</p>
+<h4 id="morning-4-hours-documentation">Morning (4 hours): Documentation</h4>
+<p><strong>Task: Create comprehensive Week 1 documentation</strong></p>
+<ol>
+<li><strong>Architecture Diagrams</strong> (90 min)
+<div class="highlight"><pre><span></span><code><span class="c1"># Location: docs/architecture/diagrams/</span>
+</code></pre></div></li>
+</ol>
+<p>Create:
+- infrastructure-overview.mermaid (C4 Context)
+- kubernetes-cluster.mermaid (Nodes, pods, services)
+- gitops-workflow.mermaid (Git → ArgoCD → K8s)
+- network-topology.mermaid (Ingress, services, pods)</p>
+<p><strong>Copilot Prompt</strong>:
+<div class="highlight"><pre><span></span><code>Create Mermaid diagrams for Fawkes architecture:
+
+1. infrastructure-overview.mermaid
+   - C4 Context diagram
+   - Show: Developer, Git Repo, K8s Cluster, Platform Components
+   - Relationships and data flows
+
+2. kubernetes-cluster.mermaid
+   - Show 4-node cluster
+   - Control plane components
+   - Worker node components
+   - Storage and networking
+
+3. gitops-workflow.mermaid
+   - Sequence diagram
+   - Developer commits → Git push → ArgoCD sync → K8s apply
+   - Include rollback flow
+
+4. network-topology.mermaid
+   - Show ingress controller
+   - Service mesh (if applicable)
+   - Pod networking
+   - External access points
+</code></pre></div></p>
+<ol>
+<li><strong>Runbook Updates</strong> (90 min)</li>
+</ol>
+<p>Update these runbooks:
+- docs/runbooks/local-cluster-setup.md
+- docs/runbooks/argocd-management.md (new)
+- docs/runbooks/gitops-workflow.md (new)
+- docs/runbooks/troubleshooting-week1.md (new)</p>
+<ol>
+<li><strong>README Updates</strong> (60 min)</li>
+</ol>
+<p>Update:
+- platform/apps/README.md
+- infra/README.md
+- Root README.md (add Week 1 status)</p>
+<h4 id="afternoon-3-4-hours-validation-testing">Afternoon (3-4 hours): Validation &amp; Testing</h4>
+<p><strong>Task 8.1: Run all acceptance tests</strong> (90 min)</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run AT-E1-001</span>
+./tests/acceptance/run-test.sh<span class="w"> </span>AT-E1-001
+
+<span class="c1"># Run AT-E1-002</span>
+./tests/acceptance/run-test.sh<span class="w"> </span>AT-E1-002
+
+<span class="c1"># Generate test report</span>
+./tests/acceptance/generate-report.sh<span class="w"> </span>--week<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p><strong>Task 8.2: Resource optimization</strong> (60 min)</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check resource usage</span>
+kubectl<span class="w"> </span>top<span class="w"> </span>nodes
+kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A
+
+<span class="c1"># Optimize if needed:</span>
+<span class="c1"># - Reduce replica counts</span>
+<span class="c1"># - Adjust resource requests/limits</span>
+<span class="c1"># - Enable pod disruption budgets</span>
+
+<span class="c1"># Document optimizations in:</span>
+<span class="c1"># docs/optimization/week1-resource-tuning.md</span>
+</code></pre></div>
+<p><strong>Task 8.3: Create demo video</strong> (90 min)</p>
+<p>Record screen capture demonstrating:
+1. Cluster deployment (2 min)
+2. ArgoCD UI tour (3 min)
+3. Deploying an app via GitOps (5 min)
+4. Viewing synced resources (2 min)
+5. Rollback demonstration (3 min)</p>
+<p>Upload to: docs/videos/week1-demo.mp4</p>
+<p><strong>End of Day 3 Validation</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># All tests passing</span>
+./tests/acceptance/run-all-week1.sh
+
+<span class="c1"># Documentation complete</span>
+find<span class="w"> </span>docs/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.md&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="w">  </span><span class="c1"># Should be increased</span>
+
+<span class="c1"># Resource usage acceptable</span>
+kubectl<span class="w"> </span>top<span class="w"> </span>nodes<span class="w">  </span><span class="c1"># All &lt;70%</span>
+
+<span class="c1"># Demo video created</span>
+<span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>docs/videos/week1-demo.mp4
+</code></pre></div></p>
+<hr />
+<h3 id="days-4-5-buffer-week-2-prep">Days 4-5: Buffer &amp; Week 2 Prep</h3>
+<p><strong>Use for</strong>:
+- Catching up on any delayed tasks
+- Fixing bugs discovered during testing
+- Additional documentation
+- Preparing for Week 2 (Backstage, Jenkins)
+- Team review (if applicable)</p>
+<hr />
+<h2 id="week-1-definition-of-done">✅ Week 1 Definition of Done</h2>
+<ul>
+<li>[ ] Local 4-node K8s cluster deployed and healthy</li>
+<li>[ ] Ingress controller serving traffic</li>
+<li>[ ] Persistent storage working</li>
+<li>[ ] ArgoCD managing all platform components</li>
+<li>[ ] Git repository structure established</li>
+<li>[ ] App-of-apps pattern implemented</li>
+<li>[ ] AT-E1-001 acceptance test passing</li>
+<li>[ ] AT-E1-002 acceptance test passing</li>
+<li>[ ] All documentation complete</li>
+<li>[ ] Demo video created</li>
+<li>[ ] Resource usage &lt;70% CPU/Memory</li>
+<li>[ ] Zero critical bugs outstanding</li>
+</ul>
+<hr />
+<h2 id="progress-tracking">📊 Progress Tracking</h2>
+<p>Update daily in PROJECT_STATUS.md:</p>
+<div class="highlight"><pre><span></span><code><span class="gu">### Week 1 Progress</span>
+
+<span class="gs">**Day 1**</span>: ✅ Cluster deployment complete
+<span class="k">-</span><span class="w"> </span>Issue <span class="ni">#1:</span> ✅ Complete
+<span class="k">-</span><span class="w"> </span>Issue <span class="ni">#2:</span> ✅ Complete
+<span class="k">-</span><span class="w"> </span>Issue <span class="ni">#3:</span> ✅ Complete
+
+<span class="gs">**Day 2**</span>: ✅ ArgoCD and GitOps complete
+<span class="k">-</span><span class="w"> </span>Issue <span class="ni">#5:</span> ✅ Complete
+<span class="k">-</span><span class="w"> </span>Issue <span class="ni">#6:</span> ✅ Complete
+<span class="k">-</span><span class="w"> </span>Issue <span class="ni">#7:</span> ✅ Complete
+
+<span class="gs">**Day 3**</span>: ✅ Documentation and validation
+<span class="k">-</span><span class="w"> </span>Issue <span class="ni">#8:</span> ✅ Complete
+<span class="k">-</span><span class="w"> </span>All Week 1 docs: ✅ Complete
+
+<span class="gs">**Days 4-5**</span>: Buffer used for [describe what was done]
+
+<span class="gs">**Week 1 Status**</span>: ✅ COMPLETE
+</code></pre></div>
+<hr />
+<h2 id="handoff-to-week-2">🚀 Handoff to Week 2</h2>
+<p>Once Week 1 is complete, you're ready for:</p>
+<p><strong>Week 2 Focus</strong>: Developer Portal &amp; CI/CD
+- Issue #9: Deploy Backstage
+- Issue #14: Deploy Jenkins
+- Issue #17: Deploy Harbor</p>
+<p><strong>Prerequisites Met</strong>:
+- ✅ K8s cluster operational
+- ✅ GitOps workflow established
+- ✅ Can deploy new apps via ArgoCD</p>
+<p><strong>Start Week 2 with</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Begin Backstage deployment</span>
+argocd<span class="w"> </span>app<span class="w"> </span>create<span class="w"> </span>backstage<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--repo<span class="w"> </span>https://github.com/paruff/fawkes<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--path<span class="w"> </span>platform/apps/backstage<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dest-server<span class="w"> </span>https://kubernetes.default.svc<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dest-namespace<span class="w"> </span>backstage<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--sync-policy<span class="w"> </span>automated
+</code></pre></div></p>
+<hr />
+<h2 id="getting-help">🆘 Getting Help</h2>
+<p>If stuck on any task:</p>
+<ol>
+<li><strong>Check docs</strong>: Search docs/ for related content</li>
+<li><strong>Review ADRs</strong>: See why decisions were made</li>
+<li><strong>Test commands</strong>: Validation commands in each task</li>
+<li><strong>New chat</strong>: Start fresh chat with specific question</li>
+<li><strong>GitHub search</strong>: Look for similar issues/PRs</li>
+</ol>
+<p><strong>Chat template</strong>:
+<div class="highlight"><pre><span></span><code>Working on Fawkes Epic 1, Week 1, Day X.
+
+Current task: Issue #Y - [Title]
+Problem: [Specific issue]
+What I&#39;ve tried: [Commands/approaches]
+Error message: [If applicable]
+
+Context: See Week 1 Detailed Tasks document.
+</code></pre></div></p>
+<hr />
+<p><strong>END OF WEEK 1 DETAILED TASKS</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
