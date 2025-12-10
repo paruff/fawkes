@@ -1,0 +1,50 @@
+# ============================================================================
+# FILE: platform/apps/ingress-nginx/values.yaml
+# PURPOSE: Helm values for local development ingress controller configuration
+# ============================================================================
+
+controller:
+  # Local development uses single replica for resource efficiency
+  replicaCount: 1
+
+  # Reduced resources for local development
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+  # Service configuration for local development
+  service:
+    type: LoadBalancer
+    annotations:
+      # Use nip.io for local DNS resolution
+      external-dns.alpha.kubernetes.io/hostname: "*.127.0.0.1.nip.io"
+
+  # TLS disabled for local development
+  config:
+    ssl-redirect: "false"
+    force-ssl-redirect: "false"
+    hsts: "false"
+    hide-server-tokens: "true"
+    proxy-body-size: "50m"
+
+  # Metrics enabled for local testing
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: false
+
+# Default backend for 404
+defaultBackend:
+  enabled: true
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 5m
+      memory: 10Mi
+    limits:
+      cpu: 20m
+      memory: 30Mi

@@ -1,0 +1,141 @@
+# ============================================================================
+# FILE: platform/apps/ingress-nginx/ingress-nginx-application.yaml
+# PURPOSE: ArgoCD Application for NGINX Ingress Controller deployment
+#          Provides Layer 7 ingress with TLS termination and metrics
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx
+  namespace: fawkes
+  labels:
+    app: ingress-nginx
+    component: networking
+    environment: dev
+    team: platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  project: default
+
+  source:
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    chart: ingress-nginx
+    targetRevision: 4.11.3
+    helm:
+      valuesObject:
+        controller:
+          # High availability configuration
+          replicaCount: 2
+
+          # Pod disruption budget for HA
+          minAvailable: 1
+
+          # Resource requests and limits
+          resources:
+            requests:
+              cpu: 100m
+              memory: 90Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+
+          # Affinity for spreading across nodes
+          affinity:
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  podAffinityTerm:
+                    labelSelector:
+                      matchExpressions:
+                        - key: app.kubernetes.io/name
+                          operator: In
+                          values:
+                            - ingress-nginx
+                        - key: app.kubernetes.io/component
+                          operator: In
+                          values:
+                            - controller
+                    topologyKey: kubernetes.io/hostname
+
+          # Service configuration for local development
+          service:
+            type: LoadBalancer
+            annotations:
+              # For local development (e.g., with MetalLB or Docker Desktop)
+              external-dns.alpha.kubernetes.io/hostname: "*.127.0.0.1.nip.io"
+            externalTrafficPolicy: Local
+
+          # Enable watching Ingress resources without IngressClass annotation
+          watchIngressWithoutClass: true
+
+          # Default IngressClass
+          ingressClassResource:
+            name: nginx
+            enabled: true
+            default: true
+
+          # TLS and security configuration
+          config:
+            # Force HTTPS redirect
+            ssl-redirect: "false"  # Disabled for local development
+            force-ssl-redirect: "false"
+            # HSTS settings - disabled for local
+            hsts: "false"
+            # Security headers
+            hide-server-tokens: "true"
+            # Proxy settings
+            proxy-body-size: "50m"
+            proxy-read-timeout: "60"
+            proxy-send-timeout: "60"
+            # Use forwarded headers
+            use-forwarded-headers: "true"
+            compute-full-forwarded-for: "true"
+
+          # Metrics for Prometheus
+          metrics:
+            enabled: true
+            serviceMonitor:
+              enabled: false
+
+          # Allow snippet annotations (disabled for security)
+          allowSnippetAnnotations: false
+
+        # Default backend for 404 responses
+        defaultBackend:
+          enabled: true
+          replicaCount: 1
+          resources:
+            requests:
+              cpu: 10m
+              memory: 20Mi
+            limits:
+              cpu: 50m
+              memory: 50Mi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ingress-nginx
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+
+  revisionHistoryLimit: 10
