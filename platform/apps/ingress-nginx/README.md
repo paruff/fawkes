@@ -38,6 +38,16 @@ helm install ingress-nginx ingress-nginx/ingress-nginx \
 
 ## Testing
 
+### Automated Validation
+
+Run the validation script to check the deployment:
+
+```bash
+./validate.sh
+```
+
+### Manual Testing
+
 Deploy the test ingress:
 
 ```bash
