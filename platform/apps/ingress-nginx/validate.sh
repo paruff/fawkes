@@ -23,7 +23,7 @@ TEST_NAMESPACE="ingress-test"
 
 # Functions
 check_command() {
-    if command -v $1 &> /dev/null; then
+    if command -v "$1" &> /dev/null; then
         echo -e "${GREEN}✅${NC} $1 is installed"
         return 0
     else
@@ -33,7 +33,7 @@ check_command() {
 }
 
 check_namespace() {
-    if kubectl get namespace $1 &> /dev/null; then
+    if kubectl get namespace "$1" &> /dev/null; then
         echo -e "${GREEN}✅${NC} Namespace $1 exists"
         return 0
     else
