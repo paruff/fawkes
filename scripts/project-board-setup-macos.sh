@@ -139,31 +139,32 @@ create_milestone() {
         -f due_on="$due_date" 2>/dev/null || true
 }
 
-# Calculate due dates (4 weeks per epic)
-EPIC1_START=$(date -u -d "+1 week" +"%Y-%m-%dT00:00:00Z")
-EPIC1_END=$(date -u -d "+5 weeks" +"%Y-%m-%dT00:00:00Z")
-EPIC2_START=$(date -u -d "+5 weeks" +"%Y-%m-%dT00:00:00Z")
-EPIC2_END=$(date -u -d "+9 weeks" +"%Y-%m-%dT00:00:00Z")
-EPIC3_START=$(date -u -d "+9 weeks" +"%Y-%m-%dT00:00:00Z")
-EPIC3_END=$(date -u -d "+13 weeks" +"%Y-%m-%dT00:00:00Z")
+# Calculate due dates (4 weeks per epic) - macOS/BSD compatible
+if date --version >/dev/null 2>&1; then
+    # GNU date (Linux)
+    calc_date() { date -u -d "$1" +"%Y-%m-%dT23:59:59Z"; }
+else
+    # BSD date (macOS)
+    calc_date() { date -u -v "$1" +"%Y-%m-%dT23:59:59Z"; }
+fi
 
 # Epic 1 milestones
-create_milestone "1.1 - Local Infrastructure" "Week 1: K8s cluster, ArgoCD, Git structure" "$(date -u -d "+1 week" +"%Y-%m-%dT23:59:59Z")"
-create_milestone "1.2 - Developer Portal & CI/CD" "Week 2: Backstage, Jenkins, Harbor" "$(date -u -d "+2 weeks" +"%Y-%m-%dT23:59:59Z")"
-create_milestone "1.3 - Security & Observability" "Week 3: SonarQube, Prometheus, Grafana" "$(date -u -d "+3 weeks" +"%Y-%m-%dT23:59:59Z")"
-create_milestone "1.4 - DORA Metrics & Integration" "Week 4: DORA service, E2E testing, docs" "$(date -u -d "+4 weeks" +"%Y-%m-%dT23:59:59Z")"
+create_milestone "1.1 - Local Infrastructure" "Week 1: K8s cluster, ArgoCD, Git structure" "$(calc_date '+1w')"
+create_milestone "1.2 - Developer Portal & CI/CD" "Week 2: Backstage, Jenkins, Harbor" "$(calc_date '+2w')"
+create_milestone "1.3 - Security & Observability" "Week 3: SonarQube, Prometheus, Grafana" "$(calc_date '+3w')"
+create_milestone "1.4 - DORA Metrics & Integration" "Week 4: DORA service, E2E testing, docs" "$(calc_date '+4w')"
 
 # Epic 2 milestones
-create_milestone "2.1 - AI Foundation" "Week 5: Vector DB, RAG, AI assistant" "$(date -u -d "+5 weeks" +"%Y-%m-%dT23:59:59Z")"
-create_milestone "2.2 - Data Platform" "Week 6: DataHub, Great Expectations" "$(date -u -d "+6 weeks" +"%Y-%m-%dT23:59:59Z")"
-create_milestone "2.3 - VSM & APIs" "Week 7: Value stream mapping, GraphQL API" "$(date -u -d "+7 weeks" +"%Y-%m-%dT23:59:59Z")"
-create_milestone "2.4 - AI-Enhanced Operations" "Week 8: AI code review, anomaly detection" "$(date -u -d "+8 weeks" +"%Y-%m-%dT23:59:59Z")"
+create_milestone "2.1 - AI Foundation" "Week 5: Vector DB, RAG, AI assistant" "$(calc_date '+5w')"
+create_milestone "2.2 - Data Platform" "Week 6: DataHub, Great Expectations" "$(calc_date '+6w')"
+create_milestone "2.3 - VSM & APIs" "Week 7: Value stream mapping, GraphQL API" "$(calc_date '+7w')"
+create_milestone "2.4 - AI-Enhanced Operations" "Week 8: AI code review, anomaly detection" "$(calc_date '+8w')"
 
 # Epic 3 milestones
-create_milestone "3.1 - User Research Infrastructure" "Week 9: Research tools, DevEx metrics" "$(date -u -d "+9 weeks" +"%Y-%m-%dT23:59:59Z")"
-create_milestone "3.2 - Feedback & Design" "Week 10: Feedback systems, design system" "$(date -u -d "+10 weeks" +"%Y-%m-%dT23:59:59Z")"
-create_milestone "3.3 - Analytics & Experimentation" "Week 11: Analytics, feature flags" "$(date -u -d "+11 weeks" +"%Y-%m-%dT23:59:59Z")"
-create_milestone "3.4 - Process & Integration" "Week 12: Discovery workflow, final testing" "$(date -u -d "+12 weeks" +"%Y-%m-%dT23:59:59Z")"
+create_milestone "3.1 - User Research Infrastructure" "Week 9: Research tools, DevEx metrics" "$(calc_date '+9w')"
+create_milestone "3.2 - Feedback & Design" "Week 10: Feedback systems, design system" "$(calc_date '+10w')"
+create_milestone "3.3 - Analytics & Experimentation" "Week 11: Analytics, feature flags" "$(calc_date '+11w')"
+create_milestone "3.4 - Process & Integration" "Week 12: Discovery workflow, final testing" "$(calc_date '+12w')"
 
 echo -e "${GREEN}✓ Milestones created${NC}"
 
