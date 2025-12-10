@@ -165,6 +165,10 @@ kubectl get application -n fawkes ingress-nginx
 **Estimated Time**: 10 minutes
 
 ```bash
+# Generate self-signed TLS certificate for testing
+cd platform/apps/ingress-nginx
+./generate-test-cert.sh
+
 # Deploy the test ingress with echo server
 kubectl apply -f test-ingress.yaml
 ```
@@ -181,6 +185,9 @@ kubectl get ingress -n ingress-test
     echo-server       nginx   test.127.0.0.1.nip.io      192.168.1.100   80      1m
     echo-server-tls   nginx   test-tls.127.0.0.1.nip.io  192.168.1.100   80,443  1m
     ```
+
+!!! info "TLS Certificate"
+    The `generate-test-cert.sh` script creates a self-signed certificate valid for `*.127.0.0.1.nip.io`. This certificate is only for testing and should not be used in production. For production, use cert-manager with Let's Encrypt.
 
 ### Step 4: Test HTTP Access
 
