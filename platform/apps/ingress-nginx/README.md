@@ -48,6 +48,18 @@ Run the validation script to check the deployment:
 
 ### Manual Testing
 
+#### 1. Generate TLS Certificate (Required for HTTPS testing)
+
+Before deploying the test ingress, generate a self-signed TLS certificate:
+
+```bash
+./generate-test-cert.sh
+```
+
+This will create a self-signed certificate valid for `*.127.0.0.1.nip.io` and store it in a Kubernetes secret.
+
+#### 2. Deploy Test Ingress
+
 Deploy the test ingress:
 
 ```bash
@@ -61,7 +73,9 @@ kubectl get pods -n ingress-nginx
 kubectl get svc -n ingress-nginx
 ```
 
-Test the ingress route:
+#### 3. Test HTTP and HTTPS Access
+
+Test the HTTP endpoint:
 
 ```bash
 # Get the LoadBalancer IP
@@ -69,6 +83,13 @@ kubectl get svc -n ingress-nginx ingress-nginx-controller
 
 # Test HTTP endpoint
 curl http://test.127.0.0.1.nip.io
+```
+
+Test the HTTPS endpoint (requires generate-test-cert.sh to be run first):
+
+```bash
+# Test HTTPS endpoint (use -k to accept self-signed certificate)
+curl -k https://test-tls.127.0.0.1.nip.io
 ```
 
 ## Configuration
