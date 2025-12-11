@@ -1,0 +1,54 @@
+# AKS Terraform Module (Fawkes)
+
+This module provisions a compliant Azure Kubernetes Service (AKS) cluster aligned with Fawkes conventions: declarative IaC, GitOps-first, immutable infra, and observability tags.
+
+## Structure
+- `providers.tf`: Terraform and providers (`azurerm`, `azuread`) with `features {}`
+- `variables.tf`: Inputs for RG, network, cluster, and conventions
+- `network.tf`: Resource Group, VNet, Subnet for AKS
+- `aks.tf`: AKS cluster with system node pool, RBAC, MI, network profile
+- `outputs.tf`: Kubeconfigs and node resource group
+- `terraform.tfvars.example`: Example values to copy and edit
+
+## Prereqs
+- Azure CLI authenticated and subscription set
+- Terraform >= 1.6
+
+## Quick Start
+```zsh
+# 1) Authenticate and set subscription
+az login
+az account set --subscription "<SUBSCRIPTION_ID>"
+
+# 2) Check supported Kubernetes versions in region
+az aks get-versions -l "<region>" -o table
+
+# 3) Configure variables
+cd infra/terraform/aks
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars with your values
+
+# 4) Plan and apply
+terraform init
+terraform fmt -check -recursive
+terraform validate
+terraform plan -out tfplan
+terraform apply tfplan
+
+# 5) Use kubeconfig
+# Export a temporary kubeconfig from outputs, or use az aks get-credentials
+az aks get-credentials -g "<rg_name>" -n "<cluster_name>" --admin
+kubectl get nodes
+```
+
+## Notes
+- Default network plugin is Azure CNI; ensure `subnet_cidr` is sized appropriately.
+- For API server IP allow-list, add your public IP to `api_server_authorized_ip_ranges`.
+- Use Managed Identity by default and grant `AcrPull` to pull images from ACR if needed.
+- Keep tags consistent (`app`, `component`, `environment`) for observability.
+
+## Troubleshooting
+- Provider features missing: ensure `provider "azurerm" { features {} }`.
+- Version mismatch: pick a `kubernetes_version` supported in your region.
+- Quota/SKU: verify VM SKU availability with `az vm list-skus -l <region>`.
+- Networking: ensure `service_cidr` and `dns_service_ip` align; subnet exists and is large enough.
