@@ -7,6 +7,7 @@ This module provisions a compliant Azure Kubernetes Service (AKS) cluster aligne
 - `variables.tf`: Inputs for RG, network, cluster, and conventions
 - `network.tf`: Resource Group, VNet, Subnet for AKS
 - `aks.tf`: AKS cluster with system node pool, RBAC, MI, network profile
+	- If `kubernetes_version` is omitted, AKS selects the default supported version for the region (recommended for Free tier).
 - `outputs.tf`: Kubeconfigs and node resource group
 - `terraform.tfvars.example`: Example values to copy and edit
 
@@ -28,7 +29,7 @@ az aks get-versions -l "<region>" -o table
 cd infra/terraform/aks
 cp terraform.tfvars.example terraform.tfvars
 # Edit terraform.tfvars with your values
-# Set exact Kubernetes version supported in your region (e.g., 1.30.x)
+# Optionally set exact Kubernetes version; otherwise omit to use AKS default (non-LTS) for Free tier.
 
 # (Alt) Set env vars if not using tfvars for subscription/tenant
 export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
@@ -56,6 +57,10 @@ kubectl get nodes
 ## Troubleshooting
 - Provider features missing: ensure `provider "azurerm" { features {} }`.
 - Subscription/Tenant missing: set `subscription_id` and `tenant_id` in `terraform.tfvars`, or export `ARM_SUBSCRIPTION_ID` and `ARM_TENANT_ID`.
-- Version mismatch: pick a `kubernetes_version` supported in your region.
+ - Version mismatch: either pick a `kubernetes_version` supported in your region and plan tier, or omit it to use AKS default.
 - Quota/SKU: verify VM SKU availability with `az vm list-skus -l <region>`.
 - Networking: ensure `service_cidr` and `dns_service_ip` align; subnet exists and is large enough.
+ - VM size not allowed: pick an allowed SKU (e.g., `Standard_B2ms` for dev), and confirm availability:
+	 ```zsh
+	 az vm list-skus -l eastus -o table | grep -i '^standard_b2ms\|^standard_b2s'
+	 ```

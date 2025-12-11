@@ -55,14 +55,15 @@ variable "cluster_name" {
 }
 
 variable "kubernetes_version" {
-  description = "AKS Kubernetes version (must be supported in region)"
+  description = "AKS Kubernetes version (optional). If not set, AKS defaults to a supported non-LTS version for the region."
   type        = string
+  default     = null
 }
 
 variable "node_vm_size" {
-  description = "Default node pool VM size"
+  description = "Default node pool VM size (use an allowed SKU in your region)"
   type        = string
-  default     = "Standard_DS2_v2"
+  default     = "Standard_B2ms"
 }
 
 variable "node_count" {
