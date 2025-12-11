@@ -6,7 +6,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "${var.cluster_name}-dns"
 
-  kubernetes_version = var.kubernetes_version
 
   default_node_pool {
     name       = "systemnp"
@@ -17,7 +16,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
     upgrade_settings {
       max_surge = "33%"
     }
-    orchestrator_version = var.kubernetes_version
     only_critical_addons_enabled = true
   }
 
