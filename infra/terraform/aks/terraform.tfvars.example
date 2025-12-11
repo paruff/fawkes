@@ -1,0 +1,25 @@
+# Fill in values and copy to terraform.tfvars
+subscription_id = "00000000-0000-0000-0000-000000000000"
+tenant_id       = "00000000-0000-0000-0000-000000000000"
+location        = "eastus"
+rg_name         = "fawkes-aks-rg"
+
+vnet_name   = "fawkes-aks-vnet"
+vnet_cidr   = "10.20.0.0/16"
+subnet_name = "aks-subnet"
+subnet_cidr = "10.20.0.0/20"
+
+cluster_name        = "fawkes-aks"
+kubernetes_version  = "1.29.5" # Check supported version in region
+node_vm_size        = "Standard_DS2_v2"
+node_count          = 3
+network_plugin      = "azure"
+service_cidr        = "10.21.0.0/16"
+dns_service_ip      = "10.21.0.10"
+api_server_authorized_ip_ranges = ["<your-public-ip>/32"]
+
+tags = {
+  app       = "fawkes"
+  component = "platform"
+  environment = "dev"
+}

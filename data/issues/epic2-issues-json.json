@@ -1,0 +1,1017 @@
+{
+  "epic": 2,
+  "name": "AI & Data Platform",
+  "issues": [
+    {
+      "number": 39,
+      "title": "Deploy vector database (Weaviate)",
+      "milestone": "2.1 - AI Foundation",
+      "priority": "p0-critical",
+      "effort": 4,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-infrastructure", "comp-ai", "type-ai-agent"],
+      "depends_on": [38],
+      "blocks": [40],
+      "description": "Deploy Weaviate vector database for RAG (Retrieval Augmented Generation) system. This will store embeddings of internal documentation, code, and chat history for AI context retrieval.",
+      "acceptance_criteria": [
+        "Weaviate deployed via ArgoCD",
+        "GraphQL endpoint accessible",
+        "Test data indexed successfully",
+        "Search queries working with >0.7 relevance",
+        "Persistent storage configured (10GB)",
+        "Passes AT-E2-002 (partial)"
+      ],
+      "tasks": [
+        {
+          "id": "39.1",
+          "name": "Deploy Weaviate via Helm",
+          "location": "platform/apps/weaviate/",
+          "prompt": "Create Helm values and ArgoCD application for Weaviate:\n1. Install Weaviate Helm chart (latest stable)\n2. Configure with text2vec-transformers module\n3. Set up persistent storage (10GB PVC)\n4. Enable GraphQL API\n5. Configure resource limits (2Gi memory, 1 CPU)\n6. Enable Prometheus metrics\nCreate ArgoCD Application manifest with sync wave 10."
+        },
+        {
+          "id": "39.2",
+          "name": "Create test data indexing script",
+          "location": "services/rag/scripts/test-indexing.py",
+          "prompt": "Create Python script to test Weaviate indexing:\n1. Connect to Weaviate GraphQL API\n2. Create test schema for documents\n3. Index sample documents (ADRs, README files)\n4. Perform test queries\n5. Validate relevance scores >0.7\nUse weaviate-client Python library."
+        },
+        {
+          "id": "39.3",
+          "name": "Document vector database setup",
+          "location": "docs/ai/vector-database.md",
+          "prompt": "Create documentation explaining:\n1. What is a vector database and why Weaviate\n2. Architecture and data model\n3. How to index new documents\n4. How to query and retrieve context\n5. Performance tuning\n6. Troubleshooting common issues"
+        }
+      ],
+      "validation": "kubectl get pods -n ai-platform\ncurl http://weaviate.local/v1/meta\npython services/rag/scripts/test-indexing.py"
+    },
+    {
+      "number": 40,
+      "title": "Implement RAG service for AI context",
+      "milestone": "2.1 - AI Foundation",
+      "priority": "p0-critical",
+      "effort": 6,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-feature", "comp-ai", "type-ai-agent"],
+      "depends_on": [39],
+      "blocks": [42],
+      "description": "Create RAG (Retrieval Augmented Generation) service that retrieves relevant context from Weaviate for AI assistants.",
+      "acceptance_criteria": [
+        "RAG service API deployed",
+        "Context retrieval working (<500ms)",
+        "Relevance scoring >0.7",
+        "Integration with vector database",
+        "API documented (OpenAPI spec)",
+        "Passes AT-E2-002"
+      ],
+      "tasks": [
+        {
+          "id": "40.1",
+          "name": "Create RAG service API",
+          "location": "services/rag/",
+          "prompt": "Create FastAPI service for RAG:\n1. POST /api/v1/query endpoint (query, top_k, threshold)\n2. GET /api/v1/health endpoint\n3. Weaviate client integration\n4. Embedding generation (OpenAI or local model)\n5. Context ranking and filtering\n6. Response format: {query, results: [{content, relevance, source}]}\nInclude Docker multi-stage build."
+        },
+        {
+          "id": "40.2",
+          "name": "Index internal documentation",
+          "location": "services/rag/scripts/index-docs.py",
+          "prompt": "Create script to index Fawkes internal docs:\n1. Scan docs/, platform/, infra/ directories\n2. Extract markdown, YAML, code files\n3. Chunk documents (512 tokens max)\n4. Generate embeddings\n5. Store in Weaviate with metadata\n6. Schedule daily re-indexing\nHandle incremental updates."
+        },
+        {
+          "id": "40.3",
+          "name": "Deploy RAG service to K8s",
+          "location": "platform/apps/rag-service/",
+          "prompt": "Create Kubernetes manifests for RAG service:\n1. Deployment (2 replicas)\n2. Service (ClusterIP)\n3. Ingress (rag-service.local)\n4. ConfigMap for settings\n5. Resource limits (1Gi memory, 500m CPU)\n6. Health/readiness probes\nCreate ArgoCD Application."
+        }
+      ],
+      "validation": "curl -X POST http://rag-service.local/api/v1/query \\\n  -d '{\"query\": \"How do I deploy a new service?\"}' | \\\n  jq '.results[0].relevance_score'"
+    },
+    {
+      "number": 41,
+      "title": "Index all internal documentation in RAG system",
+      "milestone": "2.1 - AI Foundation",
+      "priority": "p0-critical",
+      "effort": 3,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-feature", "comp-ai", "type-ai-agent"],
+      "depends_on": [40],
+      "blocks": [42],
+      "description": "Index all Fawkes documentation (ADRs, runbooks, code, repos) into the RAG system for AI context.",
+      "acceptance_criteria": [
+        "All GitHub repositories indexed",
+        "All Backstage TechDocs indexed",
+        "All ADRs indexed",
+        "All runbooks indexed",
+        "Code comments indexed (optional)",
+        "Search working across all sources"
+      ],
+      "tasks": [
+        {
+          "id": "41.1",
+          "name": "Index GitHub repositories",
+          "location": "services/rag/indexers/github.py",
+          "prompt": "Create GitHub repository indexer:\n1. Use GitHub API to fetch all repos\n2. Extract README, docs/, *.md files\n3. Chunk and embed content\n4. Store with metadata (repo, file path, last updated)\n5. Handle rate limiting\n6. Skip binary files"
+        },
+        {
+          "id": "41.2",
+          "name": "Index Backstage TechDocs",
+          "location": "services/rag/indexers/techdocs.py",
+          "prompt": "Create TechDocs indexer:\n1. Fetch all TechDocs from Backstage API\n2. Parse markdown content\n3. Extract sections and headings\n4. Chunk and embed\n5. Link back to Backstage URLs"
+        },
+        {
+          "id": "41.3",
+          "name": "Create indexing dashboard",
+          "location": "platform/apps/rag-service/dashboard.html",
+          "prompt": "Create simple HTML dashboard showing:\n1. Total documents indexed\n2. Index freshness (last updated)\n3. Storage usage\n4. Search performance metrics\n5. Re-index button\nFetch data from RAG service API."
+        }
+      ],
+      "validation": "curl http://rag-service.local/api/v1/stats\npython services/rag/indexers/github.py --dry-run\npython services/rag/indexers/techdocs.py --dry-run"
+    },
+    {
+      "number": 42,
+      "title": "Configure AI coding assistant (GitHub Copilot)",
+      "milestone": "2.1 - AI Foundation",
+      "priority": "p0-critical",
+      "effort": 3,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-feature", "comp-ai", "type-ai-agent"],
+      "depends_on": [40, 41],
+      "blocks": [43],
+      "description": "Configure GitHub Copilot (or Continue.dev alternative) with internal context from RAG system.",
+      "acceptance_criteria": [
+        "GitHub Copilot configured for org",
+        "IDE extensions documented",
+        "Integration with RAG system (if possible)",
+        "Test code generation working",
+        "Usage telemetry configured (opt-in)",
+        "Passes AT-E2-001"
+      ],
+      "tasks": [
+        {
+          "id": "42.1",
+          "name": "Set up GitHub Copilot for organization",
+          "location": "docs/ai/copilot-setup.md",
+          "prompt": "Create guide for GitHub Copilot setup:\n1. Enable Copilot for GitHub organization\n2. Configure user access and permissions\n3. Document IDE setup (VSCode, IntelliJ, vim)\n4. Test code completion and generation\n5. Document limitations and best practices"
+        },
+        {
+          "id": "42.2",
+          "name": "Create usage telemetry dashboard",
+          "location": "platform/apps/ai-telemetry/",
+          "prompt": "Create telemetry dashboard for AI usage:\n1. Track Copilot acceptance rate\n2. Track lines of AI-generated code\n3. Track time saved metrics\n4. Privacy-compliant (aggregated only)\n5. Grafana dashboard integration\nData collection is opt-in."
+        },
+        {
+          "id": "42.3",
+          "name": "Test AI code generation",
+          "location": "tests/ai/code-generation-test.sh",
+          "prompt": "Create test script for AI code generation:\n1. Generate sample REST API with AI\n2. Generate Terraform module with AI\n3. Generate test cases with AI\n4. Verify syntax correctness\n5. Check for common issues\nDocument test results."
+        }
+      ],
+      "validation": "# Manual: Test Copilot in IDE\n# Verify suggestions appear and are relevant\ncurl http://ai-telemetry.local/api/metrics"
+    },
+    {
+      "number": 43,
+      "title": "Create AI usage policy documentation",
+      "milestone": "2.1 - AI Foundation",
+      "priority": "p0-critical",
+      "effort": 3,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-documentation"],
+      "depends_on": [42],
+      "blocks": [],
+      "description": "Create comprehensive AI usage policy and guidelines for the platform.",
+      "acceptance_criteria": [
+        "AI usage policy published in TechDocs",
+        "Approved tools list documented",
+        "Security guidelines created",
+        "Training materials available",
+        "AI tools catalog in Backstage",
+        "Passes AT-E2-006"
+      ],
+      "tasks": [
+        {
+          "id": "43.1",
+          "name": "Write AI usage policy",
+          "location": "docs/ai/usage-policy.md",
+          "prompt": "Create AI usage policy covering:\n1. Approved AI tools (Copilot, ChatGPT guidelines)\n2. What can/cannot be shared with AI\n3. Code review requirements for AI-generated code\n4. Data privacy and security\n5. Intellectual property considerations\n6. Compliance and audit requirements\nUse clear, developer-friendly language."
+        },
+        {
+          "id": "43.2",
+          "name": "Create AI tools catalog",
+          "location": "catalog-info-ai.yaml",
+          "prompt": "Create Backstage catalog for AI tools:\n1. List approved AI tools\n2. Each with: name, purpose, access instructions, limitations\n3. Link to usage policy\n4. Link to training materials\n5. Contact for questions\nIntegrate with Backstage."
+        },
+        {
+          "id": "43.3",
+          "name": "Create AI training quiz",
+          "location": "docs/ai/training-quiz.md",
+          "prompt": "Create training quiz for AI usage:\n1. 10 questions covering policy\n2. Scenario-based questions\n3. 90% passing score required\n4. Track completion (optional)\n5. Certificate of completion\nSimple markdown format."
+        }
+      ],
+      "validation": "curl http://backstage.local/docs/default/component/ai-usage-policy\ncurl http://backstage.local/api/catalog/entities?kind=Tool | jq '.[] | select(.metadata.tags[] == \"ai\")'"
+    },
+    {
+      "number": 44,
+      "title": "Run AT-E2-001 and AT-E2-002 validation tests",
+      "milestone": "2.1 - AI Foundation",
+      "priority": "p0-critical",
+      "effort": 2,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-testing", "acceptance-test"],
+      "depends_on": [39, 40, 41, 42, 43],
+      "blocks": [],
+      "description": "Run and validate AT-E2-001 (AI Integration) and AT-E2-002 (RAG Architecture) acceptance tests.",
+      "acceptance_criteria": [
+        "AT-E2-001 test suite passes",
+        "AT-E2-002 test suite passes",
+        "AI assistant functional",
+        "RAG system operational",
+        "Test reports generated"
+      ],
+      "validation": "./tests/acceptance/run-test.sh AT-E2-001\n./tests/acceptance/run-test.sh AT-E2-002\n./tests/acceptance/generate-report.sh --epic 2 --week 1"
+    },
+    {
+      "number": 45,
+      "title": "Deploy DataHub data catalog",
+      "milestone": "2.2 - Data Platform",
+      "priority": "p0-critical",
+      "effort": 6,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-infrastructure", "comp-data", "type-ai-agent"],
+      "depends_on": [38],
+      "blocks": [46, 47],
+      "description": "Deploy DataHub for data discovery, cataloging, and lineage tracking across all platform data sources.",
+      "acceptance_criteria": [
+        "DataHub deployed via ArgoCD",
+        "PostgreSQL backend configured",
+        "Elasticsearch configured",
+        "Kafka or alternative for events",
+        "DataHub UI accessible",
+        "Initial metadata ingested",
+        "Passes AT-E2-003 (partial)"
+      ],
+      "tasks": [
+        {
+          "id": "45.1",
+          "name": "Deploy DataHub components",
+          "location": "platform/apps/datahub/",
+          "prompt": "Create Helm values for DataHub:\n1. Deploy GMS (metadata service)\n2. Deploy Frontend (React UI)\n3. Deploy MAE/MCE consumers\n4. PostgreSQL backend (reuse or new)\n5. Elasticsearch for search\n6. Kafka for metadata events (or use Postgres-only mode)\nConfigure resource limits appropriately."
+        },
+        {
+          "id": "45.2",
+          "name": "Configure DataHub authentication",
+          "location": "platform/apps/datahub/values.yaml",
+          "prompt": "Configure DataHub auth:\n1. Enable OIDC with GitHub (or basic auth for local)\n2. Set up RBAC roles\n3. Configure user/group mappings\n4. Test login and permissions\nDocument authentication setup."
+        },
+        {
+          "id": "45.3",
+          "name": "Create DataHub documentation",
+          "location": "docs/data-platform/datahub-overview.md",
+          "prompt": "Create DataHub documentation:\n1. What is DataHub and why we use it\n2. Architecture overview\n3. How to search for data\n4. How to add metadata\n5. Understanding lineage graphs\n6. Troubleshooting common issues"
+        }
+      ],
+      "validation": "kubectl get pods -n data-platform\ncurl http://datahub.local/api/v2/graphql \\\n  -d '{\"query\": \"{ search(input: {type: DATASET, query: \\\"*\\\"}) { total } }\"}'"
+    },
+    {
+      "number": 46,
+      "title": "Configure data source ingestion for DataHub",
+      "milestone": "2.2 - Data Platform",
+      "priority": "p0-critical",
+      "effort": 5,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-feature", "comp-data", "type-ai-agent"],
+      "depends_on": [45],
+      "blocks": [48],
+      "description": "Configure DataHub to ingest metadata from all platform data sources (databases, Kubernetes, Git, CI/CD).",
+      "acceptance_criteria": [
+        "PostgreSQL databases ingested",
+        "Kubernetes resources ingested",
+        "Git repositories ingested",
+        "Jenkins jobs ingested",
+        "Metadata lineage visible",
+        "Automated daily ingestion",
+        "Passes AT-E2-003"
+      ],
+      "tasks": [
+        {
+          "id": "46.1",
+          "name": "Configure PostgreSQL ingestion",
+          "location": "platform/apps/datahub/ingestion/postgres.yaml",
+          "prompt": "Create DataHub ingestion recipe for PostgreSQL:\n1. Ingest Backstage DB schema\n2. Ingest Harbor DB schema\n3. Ingest SonarQube DB schema\n4. Ingest DORA metrics DB schema\n5. Extract table schemas, columns, relationships\n6. Schedule daily ingestion\nUse datahub CLI."
+        },
+        {
+          "id": "46.2",
+          "name": "Configure Kubernetes ingestion",
+          "location": "platform/apps/datahub/ingestion/kubernetes.yaml",
+          "prompt": "Create Kubernetes ingestion recipe:\n1. Ingest Deployments, Services, ConfigMaps\n2. Extract ownership annotations\n3. Link to Backstage components\n4. Track resource relationships\n5. Schedule hourly ingestion"
+        },
+        {
+          "id": "46.3",
+          "name": "Configure Git and CI/CD ingestion",
+          "location": "platform/apps/datahub/ingestion/github-jenkins.yaml",
+          "prompt": "Create ingestion recipes:\n1. GitHub: repos, branches, commits, PRs\n2. Jenkins: jobs, builds, pipelines\n3. Link jobs to repos\n4. Extract pipeline lineage\n5. Schedule ingestion every 6 hours"
+        }
+      ],
+      "validation": "datahub check local-system\ndatahub ingest -c platform/apps/datahub/ingestion/postgres.yaml\ncurl http://datahub.local/api/v2/graphql -d '{\"query\": \"{ search(input: {type: DATASET, query: \\\"backstage\\\"}) { total } }\"}'"
+    },
+    {
+      "number": 47,
+      "title": "Deploy Great Expectations for data quality",
+      "milestone": "2.2 - Data Platform",
+      "priority": "p0-critical",
+      "effort": 5,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-feature", "comp-data", "type-ai-agent"],
+      "depends_on": [45],
+      "blocks": [48, 49],
+      "description": "Deploy Great Expectations framework for automated data quality validation and monitoring.",
+      "acceptance_criteria": [
+        "Great Expectations configured",
+        "Data sources connected",
+        "Expectation suites created",
+        "Validation running automatically",
+        "Data docs generated",
+        "Passes AT-E2-004 (partial)"
+      ],
+      "tasks": [
+        {
+          "id": "47.1",
+          "name": "Set up Great Expectations project",
+          "location": "services/data-quality/",
+          "prompt": "Initialize Great Expectations:\n1. Run great_expectations init\n2. Configure PostgreSQL datasources\n3. Set up data docs site\n4. Configure checkpoints for automated validation\n5. Integrate with CI/CD\n6. Store expectations in Git"
+        },
+        {
+          "id": "47.2",
+          "name": "Create expectation suites for databases",
+          "location": "services/data-quality/expectations/",
+          "prompt": "Create expectation suites:\n1. Backstage DB: schema validation, null checks, uniqueness\n2. Harbor DB: referential integrity, value ranges\n3. DORA metrics DB: data freshness, completeness\n4. Common: column types, min/max values\nUse great_expectations CLI to generate."
+        },
+        {
+          "id": "47.3",
+          "name": "Configure data quality alerting",
+          "location": "services/data-quality/alerting.yaml",
+          "prompt": "Set up alerting for data quality:\n1. Slack/Mattermost webhook integration\n2. Alert on validation failures\n3. Alert on data freshness issues\n4. Daily summary reports\n5. Integrate with Grafana for dashboards"
+        }
+      ],
+      "validation": "cd services/data-quality\ngreat_expectations checkpoint run backstage_db_checkpoint\ngreat_expectations checkpoint script backstage_db_checkpoint --json | jq '.success'"
+    },
+    {
+      "number": 48,
+      "title": "Create expectation suites for all data sources",
+      "milestone": "2.2 - Data Platform",
+      "priority": "p0-critical",
+      "effort": 4,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-feature", "comp-data", "type-ai-agent"],
+      "depends_on": [47],
+      "blocks": [49],
+      "description": "Create comprehensive data quality expectation suites for all platform databases and data sources.",
+      "acceptance_criteria": [
+        "Expectation suites for all databases",
+        "Schema validation expectations",
+        "Data quality expectations",
+        "Freshness expectations",
+        "All suites passing",
+        "Passes AT-E2-004"
+      ],
+      "tasks": [
+        {
+          "id": "48.1",
+          "name": "Create comprehensive expectations",
+          "location": "services/data-quality/expectations/",
+          "prompt": "Create detailed expectation suites:\n1. Column presence and types\n2. Null value constraints\n3. Uniqueness constraints\n4. Value ranges and enums\n5. Referential integrity\n6. Data freshness (timestamps)\n7. Row count sanity checks\nFor each: Backstage, Harbor, SonarQube, DORA metrics DBs."
+        },
+        {
+          "id": "48.2",
+          "name": "Set up automated validation",
+          "location": "services/data-quality/checkpoints/",
+          "prompt": "Configure automated validation:\n1. Create checkpoints for each data source\n2. Schedule via cron or K8s CronJob\n3. Run after data ingestion/updates\n4. Store results in DataHub\n5. Trigger alerts on failures"
+        }
+      ],
+      "validation": "great_expectations checkpoint list\nfor checkpoint in $(great_expectations checkpoint list | grep -v 'Checkpoint'); do\n  great_expectations checkpoint run $checkpoint\ndone"
+    },
+    {
+      "number": 49,
+      "title": "Build data quality dashboard in Grafana",
+      "milestone": "2.2 - Data Platform",
+      "priority": "p0-critical",
+      "effort": 3,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-feature", "comp-observability", "type-ai-agent"],
+      "depends_on": [47, 48],
+      "blocks": [],
+      "description": "Create Grafana dashboard showing data quality metrics and validation results.",
+      "acceptance_criteria": [
+        "Data quality dashboard created",
+        "Validation pass/fail rates visible",
+        "Data freshness metrics shown",
+        "Alerts configured for failures",
+        "Historical trending available"
+      ],
+      "tasks": [
+        {
+          "id": "49.1",
+          "name": "Export Great Expectations metrics to Prometheus",
+          "location": "services/data-quality/prometheus-exporter.py",
+          "prompt": "Create Prometheus exporter:\n1. Parse Great Expectations validation results\n2. Expose metrics: validation_success, validation_duration, expectation_failures\n3. Label by datasource, suite, expectation\n4. HTTP endpoint on :9110/metrics\n5. Run as sidecar or cronjob"
+        },
+        {
+          "id": "49.2",
+          "name": "Create Grafana dashboard",
+          "location": "platform/apps/grafana/dashboards/data-quality.json",
+          "prompt": "Create Grafana dashboard with:\n1. Overall data quality score (% passing)\n2. Validation results by datasource\n3. Failed expectations breakdown\n4. Data freshness by table\n5. Historical trends (7/30 days)\n6. Alert annotations\nUse Prometheus datasource."
+        }
+      ],
+      "validation": "curl http://data-quality-exporter.local:9110/metrics | grep validation_success\ncurl http://grafana.local/api/dashboards/uid/data-quality"
+    },
+    {
+      "number": 50,
+      "title": "Run AT-E2-003 and AT-E2-004 validation tests",
+      "milestone": "2.2 - Data Platform",
+      "priority": "p0-critical",
+      "effort": 2,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-testing", "acceptance-test"],
+      "depends_on": [45, 46, 47, 48, 49],
+      "blocks": [],
+      "description": "Run and validate AT-E2-003 (Data Catalog) and AT-E2-004 (Data Quality) acceptance tests.",
+      "acceptance_criteria": [
+        "AT-E2-003 test suite passes",
+        "AT-E2-004 test suite passes",
+        "DataHub fully operational",
+        "Data quality monitoring working",
+        "Test reports generated"
+      ],
+      "validation": "./tests/acceptance/run-test.sh AT-E2-003\n./tests/acceptance/run-test.sh AT-E2-004\n./tests/acceptance/generate-report.sh --epic 2 --week 2"
+    },
+    {
+      "number": 51,
+      "title": "Implement VSM (Value Stream Mapping) tracking service",
+      "milestone": "2.3 - VSM & APIs",
+      "priority": "p0-critical",
+      "effort": 6,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-feature", "type-ai-agent"],
+      "depends_on": [38],
+      "blocks": [52, 54],
+      "description": "Create service to track work items through value stream stages from idea to production.",
+      "acceptance_criteria": [
+        "VSM service API deployed",
+        "Work item tracking across stages",
+        "Cycle time calculation per stage",
+        "Flow metrics collection",
+        "API documented",
+        "Passes AT-E2-005 (partial)"
+      ],
+      "tasks": [
+        {
+          "id": "51.1",
+          "name": "Create VSM service API",
+          "location": "services/vsm/",
+          "prompt": "Create FastAPI service for VSM:\n1. POST /api/v1/work-items - Create work item\n2. PUT /api/v1/work-items/{id}/transition - Move between stages\n3. GET /api/v1/metrics - Flow metrics (WIP, throughput, cycle time)\n4. GET /api/v1/work-items/{id}/history - Stage history\n5. PostgreSQL for persistence\n6. OpenAPI spec generation\nInclude Docker build."
+        },
+        {
+          "id": "51.2",
+          "name": "Create database schema for VSM",
+          "location": "services/vsm/migrations/",
+          "prompt": "Create database schema:\n1. work_items table (id, title, type, created_at)\n2. stages table (id, name, order, type)\n3. stage_transitions table (work_item_id, from_stage, to_stage, timestamp)\n4. flow_metrics table (aggregated metrics by day/week)\nUse Alembic for migrations."
+        },
+        {
+          "id": "51.3",
+          "name": "Deploy VSM service",
+          "location": "platform/apps/vsm-service/",
+          "prompt": "Create K8s manifests:\n1. Deployment (2 replicas)\n2. Service (ClusterIP)\n3. Ingress\n4. PostgreSQL connection secret\n5. Health/readiness probes\n6. Resource limits\nCreate ArgoCD Application."
+        }
+      ],
+      "validation": "curl http://vsm-service.local/api/v1/health\ncurl -X POST http://vsm-service.local/api/v1/work-items \\\n  -d '{\"title\": \"Test feature\", \"type\": \"feature\"}'"
+    },
+    {
+      "number": 52,
+      "title": "Define value stream stages and workflow",
+      "milestone": "2.3 - VSM & APIs",
+      "priority": "p0-critical",
+      "effort": 3,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-feature", "type-ai-agent"],
+      "depends_on": [51],
+      "blocks": [54],
+      "description": "Define and configure value stream stages for tracking work from idea to production.",
+      "acceptance_criteria": [
+        "Value stream stages defined",
+        "Stage transitions configured",
+        "WIP limits per stage",
+        "Stage types categorized (wait/active)",
+        "Workflow documented",
+        "Stages loaded in VSM service"
+      ],
+      "tasks": [
+        {
+          "id": "52.1",
+          "name": "Define value stream stages",
+          "location": "services/vsm/config/stages.yaml",
+          "prompt": "Create value stream stages config:\n1. Backlog (wait)\n2. Design (active)\n3. Development (active)\n4. Code Review (wait)\n5. Testing (active)\n6. Deployment Approval (wait)\n7. Deploy (active)\n8. Production (done)\nInclude: name, type (wait/active), WIP limit, description."
+        },
+        {
+          "id": "52.2",
+          "name": "Create stage transition rules",
+          "location": "services/vsm/config/transitions.yaml",
+          "prompt": "Define transition rules:\n1. Allowed transitions (from → to)\n2. Required fields per transition\n3. Automated transitions (e.g., deploy success → production)\n4. Validation rules\n5. Notifications on transition"
+        },
+        {
+          "id": "52.3",
+          "name": "Document VSM workflow",
+          "location": "docs/vsm/value-stream-mapping.md",
+          "prompt": "Create VSM documentation:\n1. What is Value Stream Mapping\n2. Fawkes value stream stages explained\n3. How to track work items\n4. Understanding flow metrics\n5. Identifying bottlenecks\n6. Continuous improvement process"
+        }
+      ],
+      "validation": "curl http://vsm-service.local/api/v1/stages | jq '.stages | length'  # Should be 8\npython services/vsm/scripts/load-stages.py"
+    },
+    {
+      "number": 53,
+      "title": "Deploy unified GraphQL data API",
+      "milestone": "2.3 - VSM & APIs",
+      "priority": "p0-critical",
+      "effort": 6,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-infrastructure", "comp-data", "type-ai-agent"],
+      "depends_on": [38],
+      "blocks": [54],
+      "description": "Deploy unified GraphQL API providing access to all platform data (DORA metrics, builds, deployments, catalog, VSM).",
+      "acceptance_criteria": [
+        "GraphQL server deployed",
+        "Schema covering all data sources",
+        "RBAC enforced",
+        "Query performance <1s P95",
+        "GraphQL Playground accessible",
+        "Passes AT-E2-008 (partial)"
+      ],
+      "tasks": [
+        {
+          "id": "53.1",
+          "name": "Deploy Hasura GraphQL engine",
+          "location": "platform/apps/hasura/",
+          "prompt": "Deploy Hasura:\n1. Hasura GraphQL engine via Helm\n2. Connect to PostgreSQL databases\n3. Configure metadata for tables/views\n4. Set up admin secret\n5. Enable console UI\n6. Configure resource limits\nCreate ArgoCD Application."
+        },
+        {
+          "id": "53.2",
+          "name": "Configure GraphQL schema",
+          "location": "services/data-api/schema/",
+          "prompt": "Configure Hasura schema:\n1. Track DORA metrics tables\n2. Track Backstage catalog tables\n3. Track VSM work items\n4. Track Jenkins builds (via foreign data wrapper or API)\n5. Create views for common queries\n6. Define relationships between entities\nExport metadata to Git."
+        },
+        {
+          "id": "53.3",
+          "name": "Implement RBAC for data API",
+          "location": "services/data-api/rbac/",
+          "prompt": "Configure Hasura permissions:\n1. Role-based access (admin, developer, viewer)\n2. Row-level security rules\n3. Column-level permissions\n4. Query depth limiting\n5. Rate limiting per role\nDocument permission model."
+        },
+        {
+          "id": "53.4",
+          "name": "Set up Redis caching layer",
+          "location": "platform/apps/hasura/redis.yaml",
+          "prompt": "Deploy Redis for GraphQL caching:\n1. Redis deployment\n2. Configure Hasura caching\n3. Set TTL per query type\n4. Cache warming strategy\n5. Monitor cache hit rate"
+        }
+      ],
+      "validation": "curl http://hasura.local/v1/graphql \\\n  -d '{\"query\": \"{ doraMetrics { deploymentFrequency } }\"}' | \\\n  jq '.data.doraMetrics'\nk6 run tests/performance/graphql-load-test.js"
+    },
+    {
+      "number": 54,
+      "title": "Create flow metrics dashboard",
+      "milestone": "2.3 - VSM & APIs",
+      "priority": "p0-critical",
+      "effort": 4,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-feature", "comp-observability", "type-ai-agent"],
+      "depends_on": [51, 52, 53],
+      "blocks": [55],
+      "description": "Create Grafana dashboard showing VSM flow metrics (WIP, throughput, cycle time, lead time).",
+      "acceptance_criteria": [
+        "Flow metrics dashboard created",
+        "WIP by stage visible",
+        "Throughput trending shown",
+        "Cycle time per stage",
+        "Lead time trending",
+        "Bottleneck detection",
+        "Passes AT-E2-005 (partial)"
+      ],
+      "tasks": [
+        {
+          "id": "54.1",
+          "name": "Export VSM metrics to Prometheus",
+          "location": "services/vsm/metrics.py",
+          "prompt": "Add Prometheus metrics to VSM service:\n1. work_items_by_stage (gauge)\n2. stage_cycle_time_seconds (histogram)\n3. throughput_per_day (counter)\n4. lead_time_seconds (histogram)\n5. stage_transitions_total (counter)\nExpose on /metrics endpoint."
+        },
+        {
+          "id": "54.2",
+          "name": "Create flow metrics dashboard",
+          "location": "platform/apps/grafana/dashboards/vsm-flow-metrics.json",
+          "prompt": "Create Grafana dashboard:\n1. Cumulative flow diagram (WIP by stage over time)\n2. Throughput chart (items completed per day/week)\n3. Cycle time by stage (box plots)\n4. Lead time trend (P50, P75, P95)\n5. Bottleneck identification (stages with high WIP)\n6. Age of oldest item per stage\nUse Prometheus and GraphQL datasources."
+        }
+      ],
+      "validation": "curl http://vsm-service.local/metrics | grep work_items_by_stage\ncurl http://grafana.local/api/dashboards/uid/vsm-flow-metrics"
+    },
+    {
+      "number": 55,
+      "title": "Integrate VSM with Focalboard",
+      "milestone": "2.3 - VSM & APIs",
+      "priority": "p1-high",
+      "effort": 4,
+      "labels": ["epic-2-ai-data", "p1-high", "type-feature", "type-ai-agent"],
+      "depends_on": [51, 54],
+      "blocks": [],
+      "description": "Integrate VSM service with Focalboard for work tracking and visualization.",
+      "acceptance_criteria": [
+        "Focalboard boards synced with VSM",
+        "Card movements tracked in VSM",
+        "VSM metrics visible in Focalboard",
+        "Bidirectional sync working",
+        "Webhook integration functional"
+      ],
+      "tasks": [
+        {
+          "id": "55.1",
+          "name": "Create Focalboard webhook integration",
+          "location": "services/vsm/integrations/focalboard.py",
+          "prompt": "Create Focalboard integration:\n1. Listen for Focalboard webhooks (card moved, created, deleted)\n2. Map Focalboard columns to VSM stages\n3. Create/update VSM work items\n4. Sync work item status back to Focalboard\n5. Handle conflicts and errors\nUse Focalboard API."
+        },
+        {
+          "id": "55.2",
+          "name": "Create VSM metrics widget for Focalboard",
+          "location": "services/vsm/focalboard-widget/",
+          "prompt": "Create Focalboard custom widget:\n1. Display flow metrics in board\n2. Show cycle time per column\n3. Highlight bottlenecks\n4. WIP limit warnings\n5. Link to full Grafana dashboard\nJavaScript/TypeScript widget."
+        }
+      ],
+      "validation": "# Create test card in Focalboard, verify it appears in VSM\ncurl http://vsm-service.local/api/v1/work-items | jq '.items[] | select(.source == \"focalboard\")'"
+    },
+    {
+      "number": 56,
+      "title": "Run AT-E2-005 and AT-E2-008 validation tests",
+      "milestone": "2.3 - VSM & APIs",
+      "priority": "p0-critical",
+      "effort": 2,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-testing", "acceptance-test"],
+      "depends_on": [51, 52, 53, 54, 55],
+      "blocks": [],
+      "description": "Run and validate AT-E2-005 (VSM) and AT-E2-008 (Unified API) acceptance tests.",
+      "acceptance_criteria": [
+        "AT-E2-005 test suite passes",
+        "AT-E2-008 test suite passes",
+        "VSM tracking functional",
+        "GraphQL API performant",
+        "Test reports generated"
+      ],
+      "validation": "./tests/acceptance/run-test.sh AT-E2-005\n./tests/acceptance/run-test.sh AT-E2-008\n./tests/acceptance/generate-report.sh --epic 2 --week 3"
+    },
+    {
+      "number": 57,
+      "title": "Deploy AI code review bot",
+      "milestone": "2.4 - AI-Enhanced Operations",
+      "priority": "p1-high",
+      "effort": 5,
+      "labels": ["epic-2-ai-data", "p1-high", "type-feature", "comp-ai", "type-ai-agent"],
+      "depends_on": [40, 42],
+      "blocks": [],
+      "description": "Deploy AI-powered code review bot that automatically reviews pull requests.",
+      "acceptance_criteria": [
+        "AI review bot deployed",
+        "Integration with GitHub/GitLab",
+        "Reviews posted on PRs automatically",
+        "Categories: quality, security, performance, best practices",
+        "False positive rate <20%",
+        "Passes AT-E2-007 (partial)"
+      ],
+      "tasks": [
+        {
+          "id": "57.1",
+          "name": "Create AI code review service",
+          "location": "services/ai-code-review/",
+          "prompt": "Create code review service:\n1. Listen for PR webhooks from GitHub\n2. Fetch PR diff and context\n3. Query RAG for relevant patterns/standards\n4. Use LLM to analyze code (GPT-4 or Claude)\n5. Post review comments via GitHub API\n6. Track review accuracy metrics\nUse FastAPI, include async processing."
+        },
+        {
+          "id": "57.2",
+          "name": "Create review prompt templates",
+          "location": "services/ai-code-review/prompts/",
+          "prompt": "Create AI review prompts:\n1. Security review prompt (injection, auth, secrets)\n2. Performance review prompt (N+1, inefficient loops)\n3. Best practices prompt (naming, structure, patterns)\n4. Test coverage prompt (missing tests)\n5. Documentation prompt (missing docs)\nInclude few-shot examples."
+        },
+        {
+          "id": "57.3",
+          "name": "Integrate with SonarQube",
+          "location": "services/ai-code-review/integrations/sonarqube.py",
+          "prompt": "Integrate AI review with SonarQube:\n1. Fetch SonarQube analysis results\n2. Combine with AI review\n3. Deduplicate findings\n4. Prioritize issues by severity\n5. Link to SonarQube for details"
+        }
+      ],
+      "validation": "# Create test PR, verify AI review appears\ngh pr create --title \"Test PR\" --body \"Testing AI review\"\ngh pr view --json reviews"
+    },
+    {
+      "number": 58,
+      "title": "Configure AI-powered anomaly detection",
+      "milestone": "2.4 - AI-Enhanced Operations",
+      "priority": "p1-high",
+      "effort": 5,
+      "labels": ["epic-2-ai-data", "p1-high", "type-feature", "comp-observability", "type-ai-agent"],
+      "depends_on": [24],
+      "blocks": [59, 60],
+      "description": "Implement AI-powered anomaly detection for metrics, logs, and system behavior.",
+      "acceptance_criteria": [
+        "Anomaly detection models trained",
+        "Real-time anomaly detection running",
+        "Anomalies detected with <5% false positives",
+        "Root cause suggestions provided",
+        "Integration with alerting",
+        "Passes AT-E2-009 (partial)"
+      ],
+      "tasks": [
+        {
+          "id": "58.1",
+          "name": "Deploy Prometheus-AI or similar",
+          "location": "platform/apps/prometheus-ai/",
+          "prompt": "Set up AI anomaly detection:\n1. Deploy anomaly detection service\n2. Train models on historical Prometheus data\n3. Detect: metric spikes, drops, pattern changes\n4. Output: anomaly scores, confidence, affected metrics\n5. Expose via API and Prometheus metrics\nConsider: Prophet, LSTM, or Isolation Forest."
+        },
+        {
+          "id": "58.2",
+          "name": "Create anomaly detection for common patterns",
+          "location": "services/anomaly-detection/models/",
+          "prompt": "Create detection models for:\n1. Deployment failures (error rate spikes)\n2. Build time anomalies (unusually long builds)\n3. Resource usage spikes (CPU/memory)\n4. API latency increases\n5. Log error rate spikes\nTrain on last 30 days of data."
+        },
+        {
+          "id": "58.3",
+          "name": "Implement root cause analysis",
+          "location": "services/anomaly-detection/rca.py",
+          "prompt": "Create root cause analysis:\n1. When anomaly detected, collect context (recent deployments, config changes)\n2. Query logs for errors\n3. Check correlated metrics\n4. Use LLM to suggest likely root causes\n5. Provide remediation suggestions\n6. Link to runbooks"
+        }
+      ],
+      "validation": "# Inject test anomaly\n./tests/chaos/inject-high-error-rate.sh\n# Verify detection within 5 minutes\ncurl http://anomaly-detection.local/api/v1/anomalies"
+    },
+    {
+      "number": 59,
+      "title": "Implement smart alerting system",
+      "milestone": "2.4 - AI-Enhanced Operations",
+      "priority": "p1-high",
+      "effort": 4,
+      "labels": ["epic-2-ai-data", "p1-high", "type-feature", "comp-observability", "type-ai-agent"],
+      "depends_on": [58],
+      "blocks": [60],
+      "description": "Implement intelligent alerting that reduces noise and groups related alerts.",
+      "acceptance_criteria": [
+        "Alert grouping working",
+        "Alert suppression for known issues",
+        "Priority scoring implemented",
+        "Alert fatigue reduced >50%",
+        "False alert rate <10%",
+        "Integration with Mattermost/Slack"
+      ],
+      "tasks": [
+        {
+          "id": "59.1",
+          "name": "Create alert correlation engine",
+          "location": "services/smart-alerting/",
+          "prompt": "Create alert correlation service:\n1. Ingest alerts from Prometheus, Grafana, DataHub\n2. Group related alerts by time, service, symptom\n3. Suppress duplicate alerts\n4. Calculate priority score (severity × impact × frequency)\n5. Deduplicate based on root cause\n6. Send grouped alerts to channels\nUse FastAPI, Redis for state."
+        },
+        {
+          "id": "59.2",
+          "name": "Implement alert suppression rules",
+          "location": "services/smart-alerting/rules/",
+          "prompt": "Create suppression rules:\n1. Maintenance window suppression\n2. Known issue suppression (with links to tickets)\n3. Flapping alert suppression (if fires >3x in 10min)\n4. Cascade suppression (if root cause alert exists)\n5. Time-based suppression (off-hours for non-critical)\nRules in YAML format."
+        },
+        {
+          "id": "59.3",
+          "name": "Create intelligent alert routing",
+          "location": "services/smart-alerting/routing.py",
+          "prompt": "Implement smart routing:\n1. Route by service owner (from Backstage)\n2. Escalate if not acknowledged in 15min\n3. Different channels by severity (P0 → PagerDuty, P1 → Slack)\n4. On-call rotation awareness\n5. Include context: recent changes, logs, similar incidents"
+        }
+      ],
+      "validation": "# Trigger multiple related alerts\n./tests/alerting/trigger-test-alerts.sh\n# Verify they're grouped\ncurl http://smart-alerting.local/api/v1/alert-groups"
+    },
+    {
+      "number": 60,
+      "title": "Create AI observability dashboard",
+      "milestone": "2.4 - AI-Enhanced Operations",
+      "priority": "p1-high",
+      "effort": 3,
+      "labels": ["epic-2-ai-data", "p1-high", "type-feature", "comp-observability", "type-ai-agent"],
+      "depends_on": [58, 59],
+      "blocks": [],
+      "description": "Create dashboard showing AI-detected anomalies, smart alerts, and system intelligence.",
+      "acceptance_criteria": [
+        "AI observability dashboard created",
+        "Real-time anomaly feed",
+        "Alert grouping visualization",
+        "Root cause suggestions visible",
+        "Historical anomaly trends",
+        "Passes AT-E2-009"
+      ],
+      "tasks": [
+        {
+          "id": "60.1",
+          "name": "Create AI observability dashboard",
+          "location": "platform/apps/grafana/dashboards/ai-observability.json",
+          "prompt": "Create Grafana dashboard:\n1. Active anomalies feed (real-time)\n2. Anomaly detection accuracy metrics\n3. Smart alert groups (active and recent)\n4. Alert reduction rate (vs traditional alerting)\n5. Root cause analysis success rate\n6. AI model performance metrics\n7. Time to detection for incidents\nUse Prometheus and custom API datasources."
+        },
+        {
+          "id": "60.2",
+          "name": "Create anomaly timeline view",
+          "location": "services/anomaly-detection/ui/timeline.html",
+          "prompt": "Create interactive timeline showing:\n1. Anomalies over time\n2. Correlated events (deployments, config changes)\n3. Incident markers\n4. Click to see details and root cause\n5. Filter by service, severity, type\nSimple HTML/JS with API backend."
+        }
+      ],
+      "validation": "curl http://grafana.local/api/dashboards/uid/ai-observability\ncurl http://anomaly-detection.local/timeline?hours=24"
+    },
+    {
+      "number": 61,
+      "title": "Run AT-E2-007 and AT-E2-009 validation tests",
+      "milestone": "2.4 - AI-Enhanced Operations",
+      "priority": "p1-high",
+      "effort": 2,
+      "labels": ["epic-2-ai-data", "p1-high", "type-testing", "acceptance-test"],
+      "depends_on": [57, 58, 59, 60],
+      "blocks": [],
+      "description": "Run and validate AT-E2-007 (AI Code Review) and AT-E2-009 (AI Observability) acceptance tests.",
+      "acceptance_criteria": [
+        "AT-E2-007 test suite passes",
+        "AT-E2-009 test suite passes",
+        "AI code review functional",
+        "Anomaly detection working",
+        "Test reports generated"
+      ],
+      "validation": "./tests/acceptance/run-test.sh AT-E2-007\n./tests/acceptance/run-test.sh AT-E2-009\n./tests/acceptance/generate-report.sh --epic 2 --week 4"
+    },
+    {
+      "number": 62,
+      "title": "Deploy feedback widget in Backstage",
+      "milestone": "2.5 - Discovery Foundation",
+      "priority": "p0-critical",
+      "effort": 3,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-feature", "comp-backstage", "type-ai-agent"],
+      "depends_on": [9],
+      "blocks": [65],
+      "description": "Deploy in-platform feedback widget allowing users to submit feedback from within Backstage.",
+      "acceptance_criteria": [
+        "Feedback widget visible in Backstage",
+        "Feedback submissions working",
+        "Feedback stored in database",
+        "Categories and ratings supported",
+        "Admin can view all feedback",
+        "Passes AT-E2-010 (partial)"
+      ],
+      "tasks": [
+        {
+          "id": "62.1",
+          "name": "Create Backstage feedback plugin",
+          "location": "platform/apps/backstage/plugins/feedback/",
+          "prompt": "Create Backstage feedback plugin:\n1. Feedback button in header/sidebar\n2. Modal form: rating (1-5), category, comment, email (optional)\n3. Submit to feedback API\n4. Success/error notifications\n5. Admin page to view all feedback\nFollow Backstage plugin development guide."
+        },
+        {
+          "id": "62.2",
+          "name": "Create feedback API service",
+          "location": "services/feedback/",
+          "prompt": "Create feedback API:\n1. POST /api/v1/feedback - Submit feedback\n2. GET /api/v1/feedback - List feedback (admin only)\n3. PUT /api/v1/feedback/{id}/status - Update status\n4. GET /api/v1/feedback/stats - Aggregated stats\n5. PostgreSQL storage\n6. Authentication via Backstage token\nFastAPI implementation."
+        },
+        {
+          "id": "62.3",
+          "name": "Deploy feedback service",
+          "location": "platform/apps/feedback-service/",
+          "prompt": "Create K8s manifests for feedback service:\n1. Deployment\n2. Service\n3. Ingress\n4. Database migration job\n5. ConfigMap for settings\nCreate ArgoCD Application."
+        }
+      ],
+      "validation": "# In Backstage UI, click feedback button, submit test feedback\ncurl http://feedback-service.local/api/v1/feedback | jq '.items | length'"
+    },
+    {
+      "number": 63,
+      "title": "Configure NPS survey automation",
+      "milestone": "2.5 - Discovery Foundation",
+      "priority": "p1-high",
+      "effort": 3,
+      "labels": ["epic-2-ai-data", "p1-high", "type-feature", "type-ai-agent"],
+      "depends_on": [62],
+      "blocks": [65],
+      "description": "Set up automated NPS (Net Promoter Score) surveys sent quarterly to platform users.",
+      "acceptance_criteria": [
+        "NPS survey automation configured",
+        "Quarterly schedule set",
+        "Survey responses collected",
+        "NPS score calculated automatically",
+        "Results visible in dashboard",
+        "Response rate >30%"
+      ],
+      "tasks": [
+        {
+          "id": "63.1",
+          "name": "Create NPS survey service",
+          "location": "services/nps/",
+          "prompt": "Create NPS survey service:\n1. Schedule quarterly surveys (CronJob)\n2. Generate unique survey links per user\n3. Send via email or Mattermost\n4. Collect responses (0-10 score + comment)\n5. Calculate NPS: (% promoters - % detractors)\n6. Store results in database\nPython service with Celery for scheduling."
+        },
+        {
+          "id": "63.2",
+          "name": "Create survey UI",
+          "location": "services/nps/ui/",
+          "prompt": "Create simple survey UI:\n1. Single-page survey (score 0-10, comment box)\n2. Thank you page after submission\n3. Mobile-responsive\n4. Anonymous or authenticated\n5. Links expire after 30 days\nHTML/JavaScript, minimal dependencies."
+        },
+        {
+          "id": "63.3",
+          "name": "Integrate with Mattermost",
+          "location": "services/nps/integrations/mattermost.py",
+          "prompt": "Create Mattermost integration:\n1. Send survey DM to users\n2. Include survey link\n3. Track who received survey\n4. Send reminder after 1 week\n5. Don't spam users who already responded"
+        }
+      ],
+      "validation": "# Manually trigger survey\npython services/nps/scripts/send-survey.py --test-users\n# Check survey link works\ncurl http://nps.local/survey/test-token"
+    },
+    {
+      "number": 64,
+      "title": "Create user research templates",
+      "milestone": "2.5 - Discovery Foundation",
+      "priority": "p1-high",
+      "effort": 2,
+      "labels": ["epic-2-ai-data", "p1-high", "type-documentation"],
+      "depends_on": [],
+      "blocks": [],
+      "description": "Create templates for user interviews, persona development, and journey mapping.",
+      "acceptance_criteria": [
+        "Interview guide template created",
+        "Persona template created",
+        "Journey map template created",
+        "Templates in Backstage or Focalboard",
+        "Example templates filled out"
+      ],
+      "tasks": [
+        {
+          "id": "64.1",
+          "name": "Create interview guide templates",
+          "location": "docs/research/templates/interview-guide.md",
+          "prompt": "Create interview guide templates for:\n1. Discovery interviews (problem exploration)\n2. Usability testing (feature validation)\n3. Feedback interviews (improvement areas)\n4. Onboarding interviews (new user experience)\nEach with: objectives, screener questions, main questions, follow-ups."
+        },
+        {
+          "id": "64.2",
+          "name": "Create persona templates",
+          "location": "docs/research/templates/persona.md",
+          "prompt": "Create persona template:\n1. Name and photo (placeholder)\n2. Role and responsibilities\n3. Goals and motivations\n4. Pain points and frustrations\n5. Tools and workflows\n6. Technical skill level\n7. Quotes from research\nInclude 2 example personas: Platform Engineer, App Developer."
+        },
+        {
+          "id": "64.3",
+          "name": "Create journey map template",
+          "location": "docs/research/templates/journey-map.md",
+          "prompt": "Create journey map template:\n1. Persona and scenario\n2. Stages of journey\n3. Actions per stage\n4. Thoughts and emotions\n5. Pain points\n6. Opportunities for improvement\n7. Touchpoints with platform\nMermaid diagram format."
+        }
+      ],
+      "validation": "test -f docs/research/templates/interview-guide.md\ntest -f docs/research/templates/persona.md\ntest -f docs/research/templates/journey-map.md"
+    },
+    {
+      "number": 65,
+      "title": "Build feedback analytics dashboard",
+      "milestone": "2.5 - Discovery Foundation",
+      "priority": "p1-high",
+      "effort": 3,
+      "labels": ["epic-2-ai-data", "p1-high", "type-feature", "comp-observability", "type-ai-agent"],
+      "depends_on": [62, 63],
+      "blocks": [],
+      "description": "Create dashboard showing feedback trends, NPS scores, and sentiment analysis.",
+      "acceptance_criteria": [
+        "Feedback analytics dashboard created",
+        "NPS trends visible",
+        "Feedback categorization shown",
+        "Sentiment analysis (optional)",
+        "Top issues highlighted",
+        "Passes AT-E2-010"
+      ],
+      "tasks": [
+        {
+          "id": "65.1",
+          "name": "Export feedback metrics to Prometheus",
+          "location": "services/feedback/metrics.py",
+          "prompt": "Add Prometheus metrics:\n1. feedback_submissions_total (by category, rating)\n2. nps_score (gauge, latest)\n3. nps_promoters_percentage\n4. nps_detractors_percentage\n5. feedback_response_rate\nExpose on /metrics endpoint."
+        },
+        {
+          "id": "65.2",
+          "name": "Create feedback analytics dashboard",
+          "location": "platform/apps/grafana/dashboards/feedback-analytics.json",
+          "prompt": "Create Grafana dashboard:\n1. Current NPS score (big number)\n2. NPS trend over time (quarters)\n3. Feedback volume by category\n4. Rating distribution (1-5 stars)\n5. Recent feedback feed\n6. Top mentioned issues (word cloud or list)\n7. Response rate tracking\nUse Prometheus and feedback API datasources."
+        },
+        {
+          "id": "65.3",
+          "name": "Implement basic sentiment analysis",
+          "location": "services/feedback/sentiment.py",
+          "prompt": "Add sentiment analysis:\n1. Analyze feedback comments for sentiment (positive/neutral/negative)\n2. Use simple NLP library (TextBlob or VADER)\n3. Store sentiment score with feedback\n4. Aggregate by category\n5. Show in dashboard\nOptional: Use LLM for better analysis."
+        }
+      ],
+      "validation": "curl http://feedback-service.local/metrics | grep nps_score\ncurl http://grafana.local/api/dashboards/uid/feedback-analytics"
+    },
+    {
+      "number": 66,
+      "title": "Run AT-E2-010 validation tests",
+      "milestone": "2.5 - Discovery Foundation",
+      "priority": "p1-high",
+      "effort": 1,
+      "labels": ["epic-2-ai-data", "p1-high", "type-testing", "acceptance-test"],
+      "depends_on": [62, 63, 64, 65],
+      "blocks": [],
+      "description": "Run and validate AT-E2-010 acceptance test for discovery foundation.",
+      "acceptance_criteria": [
+        "AT-E2-010 test suite passes",
+        "Feedback system functional",
+        "NPS automation working",
+        "Test report generated"
+      ],
+      "validation": "./tests/acceptance/run-test.sh AT-E2-010\n./tests/acceptance/generate-report.sh --epic 2 --week 5-partial"
+    },
+    {
+      "number": 67,
+      "title": "Create AI training modules (3 modules)",
+      "milestone": "2.6 - Training & Documentation",
+      "priority": "p0-critical",
+      "effort": 8,
+      "labels": ["epic-2-ai-data", "p0-critical", "type-documentation"],
+      "depends_on": [42, 43],
+      "blocks": [],
+      "description": "Create 3 comprehensive AI training modules for the dojo learning system.",
+      "acceptance_criteria": [
+        "Module: AI-Assisted Development Best Practices (2 hours)",
+        "Module: Prompt Engineering for Developers (2 hours)",
+        "Module: AI Code Review & Validation (2 hours)",
+        "Each with video, written content, hands-on exercises",
+        "Modules integrated into Backstage dojo"
+      ],
+      "tasks": [
+        {
+          "id": "67.1",
+          "name": "Create AI-Assisted Development module",
+          "location": "docs/dojo/modules/ai-assisted-development.md",
+          "prompt
