@@ -13,6 +13,7 @@ This module provisions a compliant Azure Kubernetes Service (AKS) cluster aligne
 ## Prereqs
 - Azure CLI authenticated and subscription set
 - Terraform >= 1.6
+- Provide `subscription_id` and `tenant_id` via `terraform.tfvars` (recommended) or export env vars `ARM_SUBSCRIPTION_ID` and `ARM_TENANT_ID`.
 
 ## Quick Start
 ```zsh
@@ -27,6 +28,11 @@ az aks get-versions -l "<region>" -o table
 cd infra/terraform/aks
 cp terraform.tfvars.example terraform.tfvars
 # Edit terraform.tfvars with your values
+# Set exact Kubernetes version supported in your region (e.g., 1.30.x)
+
+# (Alt) Set env vars if not using tfvars for subscription/tenant
+export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+export ARM_TENANT_ID=$(az account show --query tenantId -o tsv)
 
 # 4) Plan and apply
 terraform init
@@ -49,6 +55,7 @@ kubectl get nodes
 
 ## Troubleshooting
 - Provider features missing: ensure `provider "azurerm" { features {} }`.
+- Subscription/Tenant missing: set `subscription_id` and `tenant_id` in `terraform.tfvars`, or export `ARM_SUBSCRIPTION_ID` and `ARM_TENANT_ID`.
 - Version mismatch: pick a `kubernetes_version` supported in your region.
 - Quota/SKU: verify VM SKU availability with `az vm list-skus -l <region>`.
 - Networking: ensure `service_cidr` and `dns_service_ip` align; subnet exists and is large enough.

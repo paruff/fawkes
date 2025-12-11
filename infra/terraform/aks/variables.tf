@@ -1,11 +1,13 @@
 variable "subscription_id" {
-  description = "Azure subscription ID"
+  description = "Azure subscription ID (optional; defaults to Azure CLI context if not set)"
   type        = string
+  default     = null
 }
 
 variable "tenant_id" {
-  description = "Azure tenant ID"
+  description = "Azure tenant ID (optional; defaults to Azure CLI context if not set)"
   type        = string
+  default     = null
 }
 
 variable "location" {
