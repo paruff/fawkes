@@ -1,0 +1,132 @@
+# ============================================================================
+# FILE: platform/apps/ingress-nginx/test-ingress.yaml
+# PURPOSE: Test ingress resource to validate NGINX Ingress Controller
+#          Includes echo server backend for testing
+# ============================================================================
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress-test
+  labels:
+    app: ingress-test
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-server
+  namespace: ingress-test
+  labels:
+    app: echo-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo-server
+  template:
+    metadata:
+      labels:
+        app: echo-server
+    spec:
+      containers:
+        - name: echo-server
+          image: ealen/echo-server:0.9.2
+          ports:
+            - containerPort: 80
+              name: http
+          env:
+            - name: PORT
+              value: "80"
+          resources:
+            requests:
+              cpu: 10m
+              memory: 20Mi
+            limits:
+              cpu: 50m
+              memory: 50Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo-server
+  namespace: ingress-test
+  labels:
+    app: echo-server
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: echo-server
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: echo-server
+  namespace: ingress-test
+  annotations:
+    # Optional: Custom configuration
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: test.127.0.0.1.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: echo-server
+                port:
+                  number: 80
+---
+# TLS-enabled ingress for testing HTTPS (with self-signed cert)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: echo-server-tls
+  namespace: ingress-test
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - test-tls.127.0.0.1.nip.io
+      secretName: echo-server-tls
+  rules:
+    - host: test-tls.127.0.0.1.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: echo-server
+                port:
+                  number: 80
+---
+# NOTE: TLS Secret must be created before deploying this ingress
+# Run the generate-test-cert.sh script to create the echo-server-tls secret:
+#   ./generate-test-cert.sh
+# Or manually create with:
+#   kubectl create secret tls echo-server-tls \
+#     --cert=/path/to/tls.crt \
+#     --key=/path/to/tls.key \
+#     -n ingress-test
