@@ -34,6 +34,14 @@ This directory contains Kubernetes StorageClass definitions for Azure persistent
   - Immediate binding mode
   - Suitable for shared data scenarios
 
+### 4. csi-azuredisk-vsc (VolumeSnapshotClass)
+- **Purpose**: Snapshot and restore for Azure Disks
+- **Driver**: disk.csi.azure.com
+- **Features**:
+  - Incremental snapshots
+  - Set as default snapshot class
+  - Delete policy on removal
+
 ## Usage
 
 ### Create a PVC with Premium Disk (Default)
@@ -66,6 +74,38 @@ spec:
   resources:
     requests:
       storage: 100Gi
+```
+
+### Create a Volume Snapshot
+
+```yaml
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: my-pvc-snapshot
+spec:
+  volumeSnapshotClassName: csi-azuredisk-vsc
+  source:
+    persistentVolumeClaimName: my-pvc
+```
+
+### Restore from Snapshot
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-pvc-restored
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  dataSource:
+    name: my-pvc-snapshot
+    kind: VolumeSnapshot
+    apiGroup: snapshot.storage.k8s.io
 ```
 
 ## Backup Configuration
@@ -113,13 +153,13 @@ kubectl apply -f storage-application.yaml
 
 ### Premium SSD
 - Best for: Databases (PostgreSQL, MySQL), high I/O applications
-- IOPS: Up to 20,000 IOPS (depending on size)
-- Throughput: Up to 900 MB/s
+- IOPS: Scales with size (120 IOPS baseline, up to 20,000 IOPS for >1TB)
+- Throughput: Scales with size (25 MB/s baseline, up to 900 MB/s for >1TB)
 
 ### Standard SSD
 - Best for: Web servers, dev/test environments
-- IOPS: Up to 6,000 IOPS (depending on size)
-- Throughput: Up to 750 MB/s
+- IOPS: Scales with size (120 IOPS baseline, up to 6,000 IOPS for larger disks)
+- Throughput: Scales with size (25 MB/s baseline, up to 750 MB/s for larger disks)
 
 ### Azure Files
 - Best for: Shared storage, content management

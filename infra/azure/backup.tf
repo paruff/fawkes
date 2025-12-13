@@ -59,8 +59,8 @@ resource "azurerm_data_protection_backup_policy_disk" "disk_backup_policy" {
   name     = "${var.cluster_name}-disk-backup-policy"
   vault_id = azurerm_data_protection_backup_vault.disk_backup_vault.id
 
-  # Backup schedule - hourly snapshots
-  backup_repeating_time_intervals = ["R/2024-01-01T00:00:00+00:00/PT4H"]
+  # Backup schedule - every 4 hours
+  backup_repeating_time_intervals = ["R/2023-05-01T00:00:00+00:00/PT4H"]
 
   # Retention rules
   default_retention_duration = "P7D"

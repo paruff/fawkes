@@ -30,6 +30,8 @@ Before running tests, ensure:
 2. **kubectl**: Configured to access the cluster
 3. **Storage Classes**: Deployed via ArgoCD or manually applied
 4. **CSI Drivers**: Azure Disk and Azure File CSI drivers should be installed (included in AKS)
+5. **VolumeSnapshotClass**: For snapshot tests, ensure `csi-azuredisk-vsc` VolumeSnapshotClass
+   exists (typically pre-installed in AKS clusters with snapshot support)
 
 ## Running Tests
 
@@ -157,14 +159,14 @@ az disk list --resource-group <node-resource-group> -o table
 
 ### Expected Performance (Azure Disk Premium - 5Gi)
 
-- **IOPS**: Up to 120 IOPS
-- **Throughput**: Up to 25 MB/s
+- **IOPS**: 120 IOPS (baseline)
+- **Throughput**: 25 MB/s (baseline)
 - **Latency**: < 10ms
 
 ### Expected Performance (Azure Disk Standard - 5Gi)
 
-- **IOPS**: Up to 500 IOPS  
-- **Throughput**: Up to 60 MB/s
+- **IOPS**: 120 IOPS (baseline)
+- **Throughput**: 25 MB/s (baseline)
 - **Latency**: < 20ms
 
 ### Expected Performance (Azure Files Standard)
@@ -173,7 +175,9 @@ az disk list --resource-group <node-resource-group> -o table
 - **Throughput**: Up to 60 MB/s for Standard
 - **Latency**: Higher than disk (network-based)
 
-> **Note**: Performance scales with disk size. Larger disks provide better IOPS and throughput.
+> **Note**: Performance scales with disk size. For Premium SSD, performance can reach up to
+> 20,000 IOPS and 900 MB/s for disks >1TB. Standard SSD can reach up to 6,000 IOPS and
+> 750 MB/s for larger disks. The values above are baseline performance for 5Gi disks.
 
 ## Cleanup
 
