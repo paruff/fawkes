@@ -1,0 +1,23 @@
+# ============================================================================
+# FILE: platform/apps/storage/azure-disk-volumesnapshotclass.yaml
+# PURPOSE: VolumeSnapshotClass for Azure Disk snapshots
+#          Enables snapshot/restore functionality for Azure Disks
+# ============================================================================
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: csi-azuredisk-vsc
+  labels:
+    app: storage
+    component: volumesnapshotclass
+    environment: production
+    team: platform
+  annotations:
+    description: "Azure Disk volume snapshot class"
+    snapshot.storage.kubernetes.io/is-default-class: "true"
+driver: disk.csi.azure.com
+deletionPolicy: Delete
+parameters:
+  incremental: "true"
+  # Tags for backup and cost tracking
+  tags: backup=enabled,managed-by=kubernetes,platform=fawkes
