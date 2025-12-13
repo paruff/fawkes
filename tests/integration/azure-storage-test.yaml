@@ -90,7 +90,7 @@ spec:
           echo "Writing test data to premium disk..."
           date > /data/test-premium.txt
           echo "Test data from premium disk" >> /data/test-premium.txt
-          dd if=/dev/zero of=/data/testfile bs=1M count=100
+          dd if=/dev/zero of=/data/testfile bs=1M count=10
           echo "Write completed. File info:"
           ls -lh /data/
           echo "Sleeping to keep pod running..."
@@ -126,7 +126,7 @@ spec:
           echo "Writing test data to standard disk..."
           date > /data/test-standard.txt
           echo "Test data from standard disk" >> /data/test-standard.txt
-          dd if=/dev/zero of=/data/testfile bs=1M count=50
+          dd if=/dev/zero of=/data/testfile bs=1M count=10
           echo "Write completed. File info:"
           ls -lh /data/
           echo "Sleeping to keep pod running..."
