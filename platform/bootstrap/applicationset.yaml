@@ -1,0 +1,68 @@
+# ============================================================================
+# FILE: platform/bootstrap/applicationset.yaml
+# PURPOSE: ApplicationSet for auto-discovery of platform applications
+#          Dynamically creates ArgoCD Applications for all components in platform/apps/
+# PATTERN: Git Directory Generator - Discovers apps based on directory structure
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: platform-applications
+  namespace: fawkes
+  labels:
+    app: platform-applications
+    component: gitops
+    environment: all
+    team: platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "-15"
+spec:
+  # Use Git directory generator to discover all application directories
+  generators:
+    - git:
+        repoURL: https://github.com/paruff/fawkes.git
+        revision: HEAD
+        directories:
+          # Discover all directories containing *-application.yaml files
+          - path: platform/apps/*
+            exclude: false
+  
+  # Template for creating ArgoCD Applications
+  template:
+    metadata:
+      name: '{{path.basename}}'
+      namespace: fawkes
+      labels:
+        app: '{{path.basename}}'
+        component: platform
+        managed-by: applicationset
+      annotations:
+        argocd.argoproj.io/manifest-generate-paths: '{{path}}'
+    
+    spec:
+      project: default
+      
+      source:
+        repoURL: https://github.com/paruff/fawkes.git
+        path: '{{path}}'
+        targetRevision: HEAD
+      
+      destination:
+        server: https://kubernetes.default.svc
+        # Each app defines its own namespace in the Application manifest
+      
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - PrunePropagationPolicy=foreground
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m
+      
+      revisionHistoryLimit: 10
