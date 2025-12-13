@@ -1,0 +1,73 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: component-name
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: component-name
+    app.kubernetes.io/part-of: fawkes-platform
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  
+  source:
+    repoURL: https://github.com/paruff/fawkes
+    targetRevision: main
+    path: platform/apps/component-name
+    
+    # Use one of the following source types:
+    
+    # Option 1: Plain Kubernetes manifests with Kustomize
+    # kustomize:
+    #   namePrefix: ""
+    #   nameSuffix: ""
+    
+    # Option 2: Helm chart from this repo
+    # helm:
+    #   valueFiles:
+    #     - values.yaml
+    #   parameters:
+    #     - name: image.tag
+    #       value: "latest"
+    
+    # Option 3: External Helm chart
+    # chart: component-name
+    # helm:
+    #   valueFiles:
+    #     - values.yaml
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: component-namespace
+  
+  syncPolicy:
+    automated:
+      prune: true      # Delete resources not in Git
+      selfHeal: true   # Force sync when drift detected
+      allowEmpty: false
+    
+    syncOptions:
+      - CreateNamespace=true  # Auto-create namespace
+      - PruneLast=true        # Prune resources at the end
+      - ServerSideApply=true  # Use server-side apply
+    
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  
+  # Ignore differences in certain fields
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas  # Ignore HPA-controlled replicas
+  
+  # Health assessment
+  health:
+    check:
+      - kind: Deployment
+        timeout: 5m
