@@ -95,3 +95,19 @@ output "aks_subnet_id" {
   description = "ID of the AKS subnet"
   value       = azurerm_subnet.aks_subnet.id
 }
+
+output "dns_zone_id" {
+  description = "ID of the DNS zone (if created)"
+  value       = var.dns_zone_name != null ? azurerm_dns_zone.fawkes[0].id : null
+}
+
+output "dns_zone_name" {
+  description = "Name of the DNS zone (if created)"
+  value       = var.dns_zone_name
+}
+
+output "ingress_public_ip" {
+  description = "Public IP address of the ingress controller (if DNS records are created)"
+  value       = var.dns_zone_name != null && var.create_dns_records ? data.azurerm_public_ip.ingress[0].ip_address : null
+}
+

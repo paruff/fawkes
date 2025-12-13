@@ -1,0 +1,194 @@
+# ============================================================================
+# FILE: platform/apps/ingress-nginx/values-azure.yaml
+# PURPOSE: Helm values for Azure AKS ingress controller configuration
+#          Optimized for Azure Load Balancer with PROXY protocol support
+# ============================================================================
+
+controller:
+  # High availability configuration for production
+  replicaCount: 2
+
+  # Pod disruption budget for HA
+  minAvailable: 1
+
+  # Resource requests and limits appropriate for Azure
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+
+  # Affinity for spreading across nodes
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                    - ingress-nginx
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                    - controller
+            topologyKey: kubernetes.io/hostname
+
+  # Service configuration for Azure Load Balancer
+  service:
+    type: LoadBalancer
+    annotations:
+      # Azure Load Balancer specific annotations
+      service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+      # Optional: Use standard SKU for production
+      # service.beta.kubernetes.io/azure-load-balancer-sku: standard
+      # Optional: Static public IP (requires pre-created IP resource)
+      # service.beta.kubernetes.io/azure-load-balancer-resource-group: "MC_fawkes-rg_fawkes-aks_eastus"
+      # service.beta.kubernetes.io/azure-pip-name: "fawkes-ingress-pip"
+      # Optional: Enable internal load balancer
+      # service.beta.kubernetes.io/azure-load-balancer-internal: "false"
+    externalTrafficPolicy: Local
+    # Session affinity for better performance
+    sessionAffinity: ClientIP
+
+  # Enable watching Ingress resources without IngressClass annotation
+  watchIngressWithoutClass: true
+
+  # Default IngressClass
+  ingressClassResource:
+    name: nginx
+    enabled: true
+    default: true
+
+  # TLS and security configuration
+  config:
+    # Force HTTPS redirect in production
+    ssl-redirect: "true"
+    force-ssl-redirect: "true"
+    # HSTS settings for security
+    hsts: "true"
+    hsts-max-age: "31536000"
+    hsts-include-subdomains: "true"
+    # Security headers
+    hide-server-tokens: "true"
+    # Proxy settings for Azure Load Balancer
+    proxy-body-size: "100m"
+    proxy-read-timeout: "120"
+    proxy-send-timeout: "120"
+    proxy-connect-timeout: "120"
+    # PROXY protocol support for Azure Load Balancer
+    # Note: Enable this if Azure LB is configured with PROXY protocol
+    use-proxy-protocol: "false"
+    # Use forwarded headers
+    use-forwarded-headers: "true"
+    compute-full-forwarded-for: "true"
+    # Real IP extraction from Azure Load Balancer
+    enable-real-ip: "true"
+    # Performance tuning
+    worker-processes: "auto"
+    max-worker-connections: "16384"
+    # Gzip compression
+    use-gzip: "true"
+    gzip-level: "5"
+
+  # Metrics for Prometheus
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      namespace: ingress-nginx
+      additionalLabels:
+        prometheus: kube-prometheus
+    prometheusRule:
+      enabled: true
+      additionalLabels:
+        prometheus: kube-prometheus
+      rules:
+        # Alert if ingress controller is down
+        - alert: NginxIngressDown
+          expr: up{job="ingress-nginx-controller-metrics"} == 0
+          for: 5m
+          labels:
+            severity: critical
+            component: ingress
+          annotations:
+            summary: "Nginx Ingress Controller is down"
+            description: "Nginx Ingress Controller has been down for more than 5 minutes"
+        # Alert on high error rate
+        - alert: NginxIngressHighErrorRate
+          expr: rate(nginx_ingress_controller_requests{status=~"5.."}[5m]) > 0.05
+          for: 5m
+          labels:
+            severity: warning
+            component: ingress
+          annotations:
+            summary: "High error rate in Nginx Ingress"
+            description: "Error rate is above 5% for more than 5 minutes"
+
+  # Allow snippet annotations (disabled for security - enable only if needed)
+  allowSnippetAnnotations: false
+
+  # Auto-scaling configuration
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+  # Health probes
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 10254
+      scheme: HTTP
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /healthz
+      port: 10254
+      scheme: HTTP
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 3
+
+# Default backend for 404 responses
+defaultBackend:
+  enabled: true
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 10m
+      memory: 20Mi
+    limits:
+      cpu: 50m
+      memory: 50Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+
+# Pod Security Standards
+podSecurityPolicy:
+  enabled: false
+
+# Service account configuration
+serviceAccount:
+  create: true
+  name: ingress-nginx
+
+# RBAC configuration
+rbac:
+  create: true

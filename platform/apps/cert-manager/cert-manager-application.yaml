@@ -1,0 +1,136 @@
+# ============================================================================
+# FILE: platform/apps/cert-manager/cert-manager-application.yaml
+# PURPOSE: ArgoCD Application for cert-manager deployment
+#          Provides automated TLS certificate management with Let's Encrypt
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: fawkes
+  labels:
+    app: cert-manager
+    component: security
+    environment: production
+    team: platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "-3"  # Deploy before ingress
+spec:
+  project: default
+
+  source:
+    repoURL: https://charts.jetstack.io
+    chart: cert-manager
+    targetRevision: v1.15.3
+    helm:
+      valuesObject:
+        # Install CRDs with the chart
+        crds:
+          enabled: true
+          keep: true
+
+        # Global configuration
+        global:
+          leaderElection:
+            namespace: cert-manager
+
+        # Resource configuration
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
+
+        # Webhook configuration
+        webhook:
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              cpu: 50m
+              memory: 128Mi
+
+        # CA Injector configuration
+        cainjector:
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+
+        # Enable Prometheus monitoring
+        prometheus:
+          enabled: true
+          servicemonitor:
+            enabled: true
+            namespace: cert-manager
+            prometheusInstance: default
+            targetPort: 9402
+            path: /metrics
+            interval: 60s
+            scrapeTimeout: 30s
+            labels:
+              prometheus: kube-prometheus
+
+        # Security context
+        securityContext:
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+
+        # Pod security context for webhook
+        webhook:
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+
+        # Pod security context for cainjector
+        cainjector:
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+
+        # Enable startupapicheck (validates cert-manager API is ready)
+        startupapicheck:
+          enabled: true
+          timeout: 5m
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      jqPathExpressions:
+        - .webhooks[].clientConfig.caBundle
+        - .webhooks[].failurePolicy
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+      jqPathExpressions:
+        - .webhooks[].clientConfig.caBundle
+        - .webhooks[].failurePolicy
+
+  revisionHistoryLimit: 10
