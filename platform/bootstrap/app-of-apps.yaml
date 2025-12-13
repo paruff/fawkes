@@ -47,12 +47,5 @@ spec:
         factor: 2
         maxDuration: 3m
 
-  # Ignore differences in replicas (managed by HPA)
-  ignoreDifferences:
-    - group: argoproj.io
-      kind: Application
-      jsonPointers:
-        - /spec/source/targetRevision
-
   # Keep history limited
   revisionHistoryLimit: 10
