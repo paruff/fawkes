@@ -196,8 +196,7 @@ wait_for_sync() {
   
   # List all applications
   log_info "Discovered applications:"
-  kubectl get applications -n "${ARGO_NS}" \
-    -o custom-columns=NAME:.metadata.name,SYNC:.status.sync.status,HEALTH:.status.health.status,AGE:.metadata.creationTimestamp
+  kubectl get applications -n "${ARGO_NS}"
   
   log_success "All applications discovered"
 }
