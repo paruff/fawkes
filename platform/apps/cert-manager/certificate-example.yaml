@@ -1,0 +1,118 @@
+# ============================================================================
+# FILE: platform/apps/cert-manager/certificate-example.yaml
+# PURPOSE: Example Certificate resource for automatic TLS certificate management
+#          This demonstrates how to request certificates for your services
+# ============================================================================
+
+# Example: Single domain certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: jenkins-tls
+  namespace: fawkes
+  labels:
+    app: jenkins
+    component: security
+spec:
+  # Secret name where the certificate will be stored
+  secretName: jenkins-tls
+  
+  # Certificate duration (default: 90 days)
+  duration: 2160h  # 90 days
+  
+  # Renew certificate before expiration
+  renewBefore: 360h  # 15 days
+  
+  # Subject configuration
+  subject:
+    organizations:
+      - Fawkes Platform
+  
+  # Common name
+  commonName: jenkins.fawkes.yourdomain.com
+  
+  # DNS names for the certificate
+  dnsNames:
+    - jenkins.fawkes.yourdomain.com
+  
+  # Reference to ClusterIssuer
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
+
+---
+# Example: Wildcard certificate (requires DNS-01 challenge)
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-tls
+  namespace: fawkes
+  labels:
+    app: platform
+    component: security
+spec:
+  secretName: wildcard-tls
+  duration: 2160h  # 90 days
+  renewBefore: 360h  # 15 days
+  
+  subject:
+    organizations:
+      - Fawkes Platform
+  
+  commonName: "*.fawkes.yourdomain.com"
+  
+  # Wildcard DNS name
+  dnsNames:
+    - "*.fawkes.yourdomain.com"
+    - fawkes.yourdomain.com
+  
+  # Must use DNS-01 challenge for wildcard certificates
+  issuerRef:
+    name: letsencrypt-dns-azure
+    kind: ClusterIssuer
+    group: cert-manager.io
+
+---
+# Example: Multiple domains certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: platform-services-tls
+  namespace: fawkes
+  labels:
+    app: platform
+    component: security
+spec:
+  secretName: platform-services-tls
+  duration: 2160h
+  renewBefore: 360h
+  
+  subject:
+    organizations:
+      - Fawkes Platform
+  
+  # Multiple DNS names in one certificate
+  dnsNames:
+    - backstage.fawkes.yourdomain.com
+    - jenkins.fawkes.yourdomain.com
+    - focalboard.fawkes.yourdomain.com
+    - grafana.fawkes.yourdomain.com
+  
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
+
+---
+# NOTE: To use certificates in Ingress resources, add:
+# spec:
+#   tls:
+#     - hosts:
+#         - jenkins.fawkes.yourdomain.com
+#       secretName: jenkins-tls
+#
+# Or use cert-manager annotations for automatic certificate creation:
+# metadata:
+#   annotations:
+#     cert-manager.io/cluster-issuer: letsencrypt-prod

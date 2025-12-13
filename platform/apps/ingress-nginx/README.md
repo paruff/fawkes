@@ -13,20 +13,29 @@ The NGINX Ingress Controller provides Layer 7 HTTP/HTTPS routing for Kubernetes 
 
 ## Files
 
-- `ingress-nginx-application.yaml` - ArgoCD Application manifest
+- `ingress-nginx-application.yaml` - ArgoCD Application manifest (local/generic)
+- `ingress-nginx-azure-application.yaml` - ArgoCD Application manifest for Azure AKS
 - `values.yaml` - Helm values for local development
+- `values-azure.yaml` - Helm values for Azure AKS
 - `test-ingress.yaml` - Test ingress resource with echo server
 
 ## Deployment
 
 ### Via ArgoCD
 
+For local development:
 ```bash
 kubectl apply -f ingress-nginx-application.yaml
 ```
 
+For Azure AKS:
+```bash
+kubectl apply -f ingress-nginx-azure-application.yaml
+```
+
 ### Via Helm (for local testing)
 
+For local development:
 ```bash
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
@@ -34,6 +43,16 @@ helm install ingress-nginx ingress-nginx/ingress-nginx \
   --namespace ingress-nginx \
   --create-namespace \
   -f values.yaml
+```
+
+For Azure AKS:
+```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install ingress-nginx ingress-nginx/ingress-nginx \
+  --namespace ingress-nginx \
+  --create-namespace \
+  -f values-azure.yaml
 ```
 
 ## Testing
@@ -102,14 +121,35 @@ For local development (Docker Desktop, Minikube, etc.):
 - TLS redirect disabled
 - Uses nip.io for DNS resolution
 
-### Production
+### Azure AKS
 
-For production environments, update the following in `ingress-nginx-application.yaml`:
-- Increase replica count (2+)
-- Enable TLS redirect
-- Configure proper domain names
-- Adjust resource limits based on load
-- Enable ServiceMonitor for Prometheus
+For Azure AKS environments, use `ingress-nginx-azure-application.yaml` which includes:
+- Azure Load Balancer annotations
+- Health probe configuration
+- High availability (2+ replicas with auto-scaling)
+- TLS redirect enabled
+- Prometheus metrics with ServiceMonitor
+- Performance tuning for Azure
+- Session affinity for better performance
+
+Azure-specific configuration options (in values-azure.yaml):
+- Static public IP (requires pre-created IP in node resource group)
+- Internal Load Balancer (for private ingress)
+- PROXY protocol support (if needed)
+- External-DNS integration (for automatic DNS management)
+
+To use a static public IP:
+1. Create a public IP in the node resource group:
+   ```bash
+   az network public-ip create \
+     --resource-group MC_fawkes-rg_fawkes-aks_eastus \
+     --name fawkes-ingress-pip \
+     --sku Standard \
+     --allocation-method Static
+   ```
+2. Uncomment the annotations in `values-azure.yaml`:
+   - `service.beta.kubernetes.io/azure-load-balancer-resource-group`
+   - `service.beta.kubernetes.io/azure-pip-name`
 
 ## Metrics
 
