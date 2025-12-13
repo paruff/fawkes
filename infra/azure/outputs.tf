@@ -111,3 +111,34 @@ output "ingress_public_ip" {
   value       = var.dns_zone_name != null && var.create_dns_records ? data.azurerm_public_ip.ingress[0].ip_address : null
 }
 
+# Backup outputs
+output "recovery_vault_name" {
+  description = "Name of the Recovery Services vault for backups"
+  value       = azurerm_recovery_services_vault.aks_backup.name
+}
+
+output "recovery_vault_id" {
+  description = "ID of the Recovery Services vault"
+  value       = azurerm_recovery_services_vault.aks_backup.id
+}
+
+output "disk_backup_vault_name" {
+  description = "Name of the Data Protection backup vault for disk backups"
+  value       = azurerm_data_protection_backup_vault.disk_backup_vault.name
+}
+
+output "disk_backup_vault_id" {
+  description = "ID of the Data Protection backup vault"
+  value       = azurerm_data_protection_backup_vault.disk_backup_vault.id
+}
+
+output "backup_policy_id" {
+  description = "ID of the daily backup policy"
+  value       = azurerm_backup_policy_vm.daily_backup.id
+}
+
+output "disk_backup_policy_id" {
+  description = "ID of the disk backup policy"
+  value       = azurerm_data_protection_backup_policy_disk.disk_backup_policy.id
+}
+
