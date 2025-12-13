@@ -1,185 +1,288 @@
 {
   "epic": 1,
-  "name": "DORA 2023 Foundation",
+  "name": "DORA 2023 Foundation (Azure AKS)",
   "issues": [
     {
       "number": 1,
-      "title": "Set up 4-node local K8s cluster",
-      "milestone": "1.1 - Local Infrastructure",
+      "title": "Set up Azure AKS cluster with Terraform",
+      "milestone": "1.1 - Azure Infrastructure",
       "priority": "p0-critical",
-      "effort": 4,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-kubernetes", "type-ai-agent"],
+      "effort": 6,
+      "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-kubernetes", "comp-azure", "type-ai-agent"],
       "depends_on": [],
       "blocks": [2, 3, 4, 5, 6, 7, 8, 9],
-      "description": "Deploy a local 4-node Kubernetes cluster using Docker Desktop, kind, or k3d. This is the foundation for all platform components.",
+      "description": "Deploy Azure Kubernetes Service (AKS) cluster using Terraform with proper networking, node pools, and Azure integrations.",
       "acceptance_criteria": [
-        "4 worker nodes running and schedulable",
+        "AKS cluster deployed in Azure",
+        "3-5 nodes running and schedulable (adjust based on budget)",
+        "Azure CNI networking configured",
+        "System node pool and user node pool separated",
         "kubectl configured and working",
-        "Cluster metrics available",
-        "StorageClass configured for PVs",
+        "Cluster metrics available via Azure Monitor (optional)",
+        "Azure AD integration configured (optional)",
         "Cluster passes AT-E1-001"
       ],
       "tasks": [
         {
           "id": "1.1",
-          "name": "Create Terraform module for local K8s cluster",
-          "location": "infra/local/cluster/main.tf",
-          "prompt": "Create a Terraform module that:\n1. Deploys a local K8s cluster with 4 nodes (kind or k3d)\n2. Configures StorageClass for local-path-provisioner\n3. Outputs kubeconfig path\n4. Includes variables for node resources (CPU, memory)\nUse best practices for local development."
+          "name": "Create Terraform modules for Azure infrastructure",
+          "location": "infra/azure/",
+          "prompt": "Create Terraform configuration for Azure AKS:\n1. Resource Group for Fawkes platform\n2. Virtual Network with subnets (AKS nodes, services, pods)\n3. AKS cluster with:\n   - System node pool (2 nodes, Standard_D4s_v3)\n   - User node pool (2-3 nodes, Standard_D4s_v3)\n   - Auto-scaling enabled (min 2, max 10)\n   - Azure CNI networking\n   - Managed identity\n   - Azure Monitor integration (optional)\n4. Azure Container Registry (ACR)\n5. Azure Key Vault for secrets\n6. Storage account for Terraform state\n7. Log Analytics workspace\nUse azurerm provider, follow Azure best practices."
         },
         {
           "id": "1.2",
-          "name": "Create InSpec tests",
-          "location": "infra/local/cluster/inspec/controls/cluster.rb",
-          "prompt": "Create InSpec tests that verify:\n1. 4 nodes exist and are Ready\n2. All system pods are Running\n3. StorageClass is available\n4. Cluster version is supported (1.28+)\n5. Resource limits are within acceptable range"
+          "name": "Create deployment script for Azure",
+          "location": "scripts/deploy-azure-cluster.sh",
+          "prompt": "Create bash deployment script:\n1. Check prerequisites: az CLI, terraform, kubectl\n2. Authenticate to Azure (az login)\n3. Create resource group if not exists\n4. Initialize Terraform with Azure backend\n5. Run terraform plan and apply\n6. Get AKS credentials (az aks get-credentials)\n7. Verify cluster health (nodes, system pods)\n8. Enable add-ons (monitoring, policy, if desired)\n9. Output cluster info (endpoint, resource group, node count)\nInclude error handling and rollback options."
         },
         {
           "id": "1.3",
-          "name": "Create deployment script",
-          "location": "scripts/deploy-local-cluster.sh",
-          "prompt": "Create a bash script that:\n1. Checks prerequisites (Docker, kind/k3d, kubectl)\n2. Runs terraform apply\n3. Configures kubectl context\n4. Waits for all nodes to be Ready\n5. Runs InSpec validation\nIncludes error handling and rollback on failure."
+          "name": "Create Azure cost estimation tool",
+          "location": "scripts/azure-cost-estimate.sh",
+          "prompt": "Create cost estimation script:\n1. Calculate monthly costs for:\n   - AKS cluster (control plane + nodes)\n   - Storage (disks, files)\n   - Load balancer\n   - Public IPs\n   - Bandwidth\n   - Container registry\n2. Output cost breakdown by service\n3. Compare to budget target ($300-500/month)\n4. Suggest optimizations if over budget\nUse Azure pricing API or hardcoded rates."
         },
         {
           "id": "1.4",
-          "name": "Document cluster setup",
-          "location": "docs/runbooks/local-cluster-setup.md",
-          "prompt": "Create documentation explaining:\n1. Prerequisites and system requirements\n2. Step-by-step setup instructions\n3. Troubleshooting common issues\n4. How to reset/destroy the cluster\n5. Resource requirements and tuning"
+          "name": "Document Azure AKS setup",
+          "location": "docs/runbooks/azure-aks-setup.md",
+          "prompt": "Create comprehensive documentation:\n1. Azure prerequisites (subscription, permissions)\n2. Cost considerations and budgeting\n3. Architecture diagram (VNet, AKS, ACR, etc.)\n4. Step-by-step deployment guide\n5. Access management (RBAC, Azure AD)\n6. Scaling considerations\n7. Backup and disaster recovery\n8. Troubleshooting common Azure issues\n9. Cost optimization tips\n10. Upgrade procedures"
+        },
+        {
+          "id": "1.5",
+          "name": "Create InSpec tests for AKS",
+          "location": "infra/azure/inspec/controls/aks.rb",
+          "prompt": "Create InSpec tests for AKS:\n1. Cluster exists and is running\n2. Node count meets minimum (2+ nodes)\n3. All nodes are Ready\n4. System pods are Running\n5. Azure CNI configured\n6. Managed identity enabled\n7. Network policy enabled (if configured)\n8. RBAC enabled\nUse azure and kubernetes InSpec resources."
         }
       ],
-      "validation": "terraform plan && terraform apply\n./scripts/deploy-local-cluster.sh\ninspec exec infra/local/cluster/inspec/\nkubectl get nodes  # Should show 4 Ready nodes"
+      "validation": "# Authenticate to Azure\naz login\n\n# Deploy cluster\n./scripts/deploy-azure-cluster.sh\n\n# Verify cluster\nkubectl get nodes\nkubectl get pods -A\naz aks show --resource-group fawkes-rg --name fawkes-aks\n\n# Run tests\ninspec exec infra/azure/inspec/ -t azure://\n\n# Check costs\n./scripts/azure-cost-estimate.sh"
     },
     {
       "number": 2,
-      "title": "Deploy ingress controller (nginx or traefik)",
-      "milestone": "1.1 - Local Infrastructure",
+      "title": "Configure Azure Load Balancer and Ingress",
+      "milestone": "1.1 - Azure Infrastructure",
       "priority": "p0-critical",
-      "effort": 2,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-kubernetes", "type-ai-agent"],
+      "effort": 3,
+      "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-kubernetes", "comp-azure", "type-ai-agent"],
       "depends_on": [1],
       "blocks": [5, 9, 14],
-      "description": "Deploy an ingress controller to expose platform services via HTTP/HTTPS.",
+      "description": "Configure Azure Load Balancer and deploy nginx-ingress controller for external access.",
       "acceptance_criteria": [
-        "Ingress controller deployed (nginx-ingress or traefik)",
-        "LoadBalancer service functional",
-        "Test ingress route working",
-        "TLS support configured (self-signed for local)"
-      ]
+        "nginx-ingress controller deployed",
+        "Azure Load Balancer created automatically",
+        "Public IP assigned",
+        "Custom domain configured (optional)",
+        "TLS certificates configured (Let's Encrypt or Azure)",
+        "Test ingress route working"
+      ],
+      "tasks": [
+        {
+          "id": "2.1",
+          "name": "Deploy nginx-ingress with Azure LB",
+          "location": "platform/apps/ingress-nginx/",
+          "prompt": "Create Helm values for nginx-ingress on Azure:\n1. Enable Azure Load Balancer (type: LoadBalancer)\n2. Configure static public IP (optional)\n3. Enable PROXY protocol for Azure LB\n4. Set up annotations for Azure LB configuration\n5. Configure TLS termination\n6. Enable metrics for Prometheus\n7. Resource limits appropriate for Azure\nCreate ArgoCD Application."
+        },
+        {
+          "id": "2.2",
+          "name": "Configure Azure DNS (optional)",
+          "location": "infra/azure/dns.tf",
+          "prompt": "Create Terraform for Azure DNS:\n1. Azure DNS zone (if using custom domain)\n2. A records for ingress public IP\n3. Wildcard record for subdomains (*.fawkes.yourdomain.com)\n4. DNS zone delegation if needed\nOptional: Use external-dns for automatic DNS management."
+        },
+        {
+          "id": "2.3",
+          "name": "Configure cert-manager with Let's Encrypt",
+          "location": "platform/apps/cert-manager/",
+          "prompt": "Deploy cert-manager for TLS:\n1. Install cert-manager via Helm\n2. Configure ClusterIssuer for Let's Encrypt (or Azure Key Vault)\n3. Create Certificate resources for services\n4. Configure ACME DNS challenge (if using Azure DNS)\n5. Test certificate issuance\nCreate ArgoCD Application."
+        }
+      ],
+      "validation": "# Check Load Balancer\nkubectl get svc -n ingress-nginx\naz network lb list --resource-group MC_fawkes-rg_fawkes-aks_*\n\n# Test ingress\ncurl https://test.yourdomain.com\n\n# Check certificates\nkubectl get certificates -A"
     },
     {
       "number": 3,
-      "title": "Configure persistent storage (StorageClass)",
-      "milestone": "1.1 - Local Infrastructure",
+      "title": "Configure Azure persistent storage (Disks and Files)",
+      "milestone": "1.1 - Azure Infrastructure",
       "priority": "p0-critical",
-      "effort": 2,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-kubernetes", "type-ai-agent"],
+      "effort": 3,
+      "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-kubernetes", "comp-azure", "type-ai-agent"],
       "depends_on": [1],
       "blocks": [9, 14, 19],
-      "description": "Set up persistent storage for stateful services (databases, etc.).",
+      "description": "Configure Azure Disk and Azure Files storage classes for persistent storage.",
       "acceptance_criteria": [
-        "StorageClass configured",
+        "Azure Disk StorageClass configured",
+        "Azure Files StorageClass configured",
         "Dynamic volume provisioning working",
         "Test PVC can be created and bound",
-        "Performance acceptable for local dev"
-      ]
+        "Performance acceptable (Premium SSD recommended)",
+        "Backup policies configured"
+      ],
+      "tasks": [
+        {
+          "id": "3.1",
+          "name": "Create Azure storage classes",
+          "location": "platform/apps/storage/",
+          "prompt": "Create StorageClass manifests:\n1. azure-disk-premium (Premium SSD, for databases)\n2. azure-disk-standard (Standard SSD, for less critical)\n3. azure-file (Azure Files, for ReadWriteMany)\n4. Set appropriate reclaim policies\n5. Enable volume expansion\n6. Configure backup tags\nSet azure-disk-premium as default."
+        },
+        {
+          "id": "3.2",
+          "name": "Configure Azure Backup for persistent volumes",
+          "location": "infra/azure/backup.tf",
+          "prompt": "Configure Azure Backup:\n1. Create Recovery Services vault\n2. Configure backup policies for disks\n3. Enable automatic backup for tagged PVCs\n4. Set retention policy (7 days daily, 4 weeks weekly)\n5. Configure backup alerts\nUse Terraform azurerm_recovery_services_vault."
+        },
+        {
+          "id": "3.3",
+          "name": "Create storage testing manifests",
+          "location": "tests/integration/azure-storage-test.yaml",
+          "prompt": "Create test manifests:\n1. PVC for Azure Disk\n2. PVC for Azure Files\n3. Test pods that write/read from volumes\n4. Verify volume expansion\n5. Test snapshot/restore\nInclude cleanup scripts."
+        }
+      ],
+      "validation": "# Check storage classes\nkubectl get storageclass\n\n# Create test PVCs\nkubectl apply -f tests/integration/azure-storage-test.yaml\nkubectl get pvc\n\n# Verify bound and working\nkubectl describe pvc test-azure-disk\nkubectl describe pvc test-azure-file"
     },
     {
       "number": 4,
-      "title": "Run AT-E1-001 validation tests",
-      "milestone": "1.1 - Local Infrastructure",
+      "title": "Run AT-E1-001 validation tests (Azure)",
+      "milestone": "1.1 - Azure Infrastructure",
       "priority": "p0-critical",
       "effort": 1,
       "labels": ["epic-1-dora-2023", "p0-critical", "type-testing", "acceptance-test"],
       "depends_on": [1, 2, 3],
       "blocks": [],
-      "description": "Run and validate AT-E1-001 acceptance test for local infrastructure.",
+      "description": "Run and validate AT-E1-001 acceptance test for Azure AKS infrastructure.",
       "acceptance_criteria": [
-        "AT-E1-001 test suite passes",
+        "AT-E1-001 test suite passes (Azure version)",
         "All validation checks green",
+        "Azure-specific checks included",
+        "Cost within budget",
         "Test report generated"
-      ]
+      ],
+      "validation": "./tests/acceptance/run-test.sh AT-E1-001 --platform azure\n./scripts/azure-cost-estimate.sh"
     },
     {
       "number": 5,
-      "title": "Deploy ArgoCD via Helm",
-      "milestone": "1.1 - Local Infrastructure",
+      "title": "Deploy ArgoCD via Helm to AKS",
+      "milestone": "1.1 - Azure Infrastructure",
       "priority": "p0-critical",
       "effort": 4,
       "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-argocd", "type-ai-agent"],
       "depends_on": [1, 2, 3],
       "blocks": [6, 7, 8],
-      "description": "Deploy ArgoCD for GitOps continuous delivery management.",
+      "description": "Deploy ArgoCD for GitOps continuous delivery management on AKS.",
       "acceptance_criteria": [
         "ArgoCD deployed in argocd namespace",
-        "ArgoCD UI accessible via ingress",
+        "ArgoCD UI accessible via Azure Load Balancer",
+        "TLS configured with cert-manager",
         "ArgoCD CLI configured and working",
-        "Initial admin credentials secured"
-      ]
+        "Azure AD SSO configured (optional)",
+        "Initial admin credentials secured in Key Vault"
+      ],
+      "tasks": [
+        {
+          "id": "5.1",
+          "name": "Deploy ArgoCD with Azure integration",
+          "location": "platform/apps/argocd/",
+          "prompt": "Create Helm values for ArgoCD on Azure:\n1. Install ArgoCD via Helm\n2. Configure ingress with Azure Load Balancer\n3. Enable TLS with cert-manager\n4. Configure persistent storage (Azure Disk)\n5. Integrate with Azure AD (optional, OIDC)\n6. Enable Azure Key Vault for secrets (optional)\n7. Configure resource limits for Azure\n8. Enable metrics for Azure Monitor\nCreate ArgoCD Application for bootstrap."
+        },
+        {
+          "id": "5.2",
+          "name": "Configure ArgoCD with Azure Key Vault",
+          "location": "platform/apps/argocd/azure-keyvault-plugin.yaml",
+          "prompt": "Integrate ArgoCD with Azure Key Vault:\n1. Deploy argocd-vault-plugin or Azure Key Vault secrets provider\n2. Configure workload identity for ArgoCD\n3. Create Key Vault access policies\n4. Test secret retrieval from Key Vault\n5. Document secret management workflow\nOptional but recommended for production."
+        }
+      ],
+      "validation": "# Check ArgoCD deployment\nkubectl get pods -n argocd\n\n# Access UI\nkubectl get ingress -n argocd\ncurl https://argocd.yourdomain.com\n\n# CLI login\nargocd login argocd.yourdomain.com"
     },
     {
       "number": 6,
       "title": "Create Git repository structure for platform apps",
-      "milestone": "1.1 - Local Infrastructure",
+      "milestone": "1.1 - Azure Infrastructure",
       "priority": "p0-critical",
       "effort": 3,
       "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-argocd", "type-ai-agent"],
       "depends_on": [5],
       "blocks": [7],
-      "description": "Create comprehensive directory structure for all platform components.",
+      "description": "Create comprehensive directory structure for all platform components (same as local version).",
       "acceptance_criteria": [
         "platform/apps/ directory structure created",
+        "Azure-specific configurations included",
         "Placeholder directories for all components",
         "README files in each directory",
         "Template files for new applications"
-      ]
+      ],
+      "validation": "# Same as local version, issue #6 from original epic1.json\n# No changes needed for Azure"
     },
     {
       "number": 7,
       "title": "Implement app-of-apps pattern",
-      "milestone": "1.1 - Local Infrastructure",
+      "milestone": "1.1 - Azure Infrastructure",
       "priority": "p0-critical",
       "effort": 4,
       "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-argocd", "type-ai-agent"],
       "depends_on": [5, 6],
       "blocks": [9, 14, 17, 19, 24],
-      "description": "Create app-of-apps pattern for managing all platform applications.",
+      "description": "Create app-of-apps pattern for managing all platform applications (same as local version).",
       "acceptance_criteria": [
         "app-of-apps.yaml created",
         "ApplicationSet for auto-discovery",
         "Sync waves configured correctly",
-        "Bootstrap script working"
-      ]
+        "Bootstrap script working",
+        "Azure-specific apps included"
+      ],
+      "validation": "# Same as local version, issue #7 from original epic1.json\n# No changes needed for Azure"
     },
     {
       "number": 8,
-      "title": "Run AT-E1-002 validation tests",
-      "milestone": "1.1 - Local Infrastructure",
+      "title": "Run AT-E1-002 validation tests (Azure)",
+      "milestone": "1.1 - Azure Infrastructure",
       "priority": "p0-critical",
       "effort": 1,
       "labels": ["epic-1-dora-2023", "p0-critical", "type-testing", "acceptance-test"],
       "depends_on": [5, 6, 7],
       "blocks": [],
-      "description": "Run and validate AT-E1-002 acceptance test for GitOps.",
+      "description": "Run and validate AT-E1-002 acceptance test for GitOps on Azure.",
       "acceptance_criteria": [
         "AT-E1-002 test suite passes",
-        "ArgoCD managing components",
+        "ArgoCD managing components on Azure",
         "Test report generated"
-      ]
+      ],
+      "validation": "./tests/acceptance/run-test.sh AT-E1-002 --platform azure"
     },
     {
       "number": 9,
-      "title": "Deploy Backstage with PostgreSQL backend",
+      "title": "Deploy Backstage with Azure PostgreSQL",
       "milestone": "1.2 - Developer Portal & CI/CD",
       "priority": "p0-critical",
       "effort": 6,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "comp-backstage", "type-ai-agent"],
+      "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "comp-backstage", "comp-azure", "type-ai-agent"],
       "depends_on": [1, 3, 7],
       "blocks": [10, 11, 12],
-      "description": "Deploy Backstage developer portal as the central platform interface.",
+      "description": "Deploy Backstage developer portal with Azure Database for PostgreSQL.",
       "acceptance_criteria": [
         "Backstage deployed via ArgoCD",
-        "PostgreSQL backend configured",
-        "Backstage UI accessible",
-        "Initial catalog populated"
-      ]
+        "Azure Database for PostgreSQL configured",
+        "Connection secured via managed identity",
+        "Backstage UI accessible via ingress",
+        "Initial catalog populated",
+        "Azure AD authentication configured (optional)"
+      ],
+      "tasks": [
+        {
+          "id": "9.1",
+          "name": "Deploy Azure Database for PostgreSQL",
+          "location": "infra/azure/postgres.tf",
+          "prompt": "Create Terraform for Azure PostgreSQL:\n1. Azure Database for PostgreSQL Flexible Server\n2. Database: backstage\n3. Private endpoint or VNet integration\n4. Firewall rules for AKS subnet\n5. Enable Azure AD authentication\n6. Configure backup retention (7 days)\n7. Enable monitoring\n8. Appropriate tier (Burstable B2s or General Purpose)\nUse azurerm_postgresql_flexible_server."
+        },
+        {
+          "id": "9.2",
+          "name": "Deploy Backstage with Azure integration",
+          "location": "platform/apps/backstage/",
+          "prompt": "Create Helm values for Backstage on Azure:\n1. Deploy Backstage via Helm\n2. Configure PostgreSQL connection (Azure)\n3. Use workload identity for DB auth\n4. Configure Azure AD OAuth (optional)\n5. Enable TLS ingress\n6. Configure Azure Blob for TechDocs (optional)\n7. Resource limits for Azure\nCreate ArgoCD Application."
+        },
+        {
+          "id": "9.3",
+          "name": "Configure workload identity for Backstage",
+          "location": "platform/apps/backstage/workload-identity.yaml",
+          "prompt": "Set up Azure workload identity:\n1. Create managed identity for Backstage\n2. Grant PostgreSQL access\n3. Grant Azure Blob access (for TechDocs)\n4. Configure service account with identity\n5. Test identity-based authentication\nUse Azure AD Workload Identity."
+        }
+      ],
+      "validation": "# Check PostgreSQL\naz postgres flexible-server show --resource-group fawkes-rg --name fawkes-postgres\n\n# Check Backstage\nkubectl get pods -n backstage\ncurl https://backstage.yourdomain.com"
     },
     {
       "number": 10,
@@ -190,13 +293,14 @@
       "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "comp-backstage"],
       "depends_on": [9],
       "blocks": [],
-      "description": "Set up GitHub OAuth authentication for Backstage users.",
+      "description": "Set up GitHub OAuth authentication for Backstage users (same as local version).",
       "acceptance_criteria": [
         "GitHub OAuth app created",
         "Backstage configured for GitHub auth",
         "Users can login with GitHub",
         "Permissions working correctly"
-      ]
+      ],
+      "validation": "# Same as local version, issue #10 from original epic1.json\n# No Azure-specific changes"
     },
     {
       "number": 11,
@@ -207,14 +311,24 @@
       "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "comp-backstage", "type-ai-agent"],
       "depends_on": [9],
       "blocks": [33],
-      "description": "Create software templates for Java Spring Boot, Python FastAPI, and Node.js Express.",
+      "description": "Create software templates for Java Spring Boot, Python FastAPI, and Node.js Express (same as local, but with Azure-specific configs).",
       "acceptance_criteria": [
         "Java Spring Boot template working",
         "Python FastAPI template working",
         "Node.js Express template working",
         "Each includes Dockerfile, Jenkinsfile, K8s manifests",
+        "Azure-specific configurations (ACR, Azure Disks, managed identity)",
         "Templates can scaffold new projects"
-      ]
+      ],
+      "tasks": [
+        {
+          "id": "11.1",
+          "name": "Create golden path templates with Azure configs",
+          "location": "platform/apps/backstage/templates/",
+          "prompt": "Create Backstage templates adapted for Azure:\n1. Java Spring Boot template with:\n   - Azure Spring Apps configuration (optional)\n   - ACR image registry\n   - Azure Database connection\n   - Azure Key Vault secrets\n   - Managed identity setup\n2. Python FastAPI template with Azure configs\n3. Node.js Express template with Azure configs\nEach includes: Dockerfile, Jenkinsfile, K8s manifests, ArgoCD app, README."
+        }
+      ],
+      "validation": "# Same validation as local version but verify Azure integrations\n# Test ACR push, managed identity, Azure DB connections"
     },
     {
       "number": 12,
@@ -225,46 +339,75 @@
       "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "comp-backstage", "type-ai-agent"],
       "depends_on": [9],
       "blocks": [],
-      "description": "Enable and configure TechDocs for documentation-as-code.",
+      "description": "Enable and configure TechDocs with Azure Blob Storage backend.",
       "acceptance_criteria": [
         "TechDocs plugin enabled",
+        "Azure Blob Storage configured for docs",
         "Documentation generator configured",
         "Sample docs rendering correctly",
         "Docs integrated with templates"
-      ]
+      ],
+      "tasks": [
+        {
+          "id": "12.1",
+          "name": "Configure TechDocs with Azure Blob",
+          "location": "platform/apps/backstage/techdocs-config.yaml",
+          "prompt": "Configure TechDocs for Azure:\n1. Enable TechDocs plugin\n2. Configure Azure Blob Storage as publisher\n3. Create storage container: techdocs\n4. Configure workload identity for Blob access\n5. Set up automated doc generation\n6. Configure CDN (optional)\nUse @backstage/plugin-techdocs-backend-azure-blob."
+        }
+      ],
+      "validation": "# Same as local plus verify Azure Blob storage\naz storage blob list --account-name fawkesstorage --container techdocs"
     },
     {
       "number": 13,
-      "title": "Run AT-E1-003 validation tests",
+      "title": "Run AT-E1-003 validation tests (Azure)",
       "milestone": "1.2 - Developer Portal & CI/CD",
       "priority": "p0-critical",
       "effort": 1,
       "labels": ["epic-1-dora-2023", "p0-critical", "type-testing", "acceptance-test"],
       "depends_on": [9, 10, 11, 12],
       "blocks": [],
-      "description": "Run and validate AT-E1-003 acceptance test for Backstage.",
+      "description": "Run and validate AT-E1-003 acceptance test for Backstage on Azure.",
       "acceptance_criteria": [
         "AT-E1-003 test suite passes",
-        "Backstage fully functional",
+        "Backstage fully functional on Azure",
+        "Azure integrations working",
         "Test report generated"
-      ]
+      ],
+      "validation": "./tests/acceptance/run-test.sh AT-E1-003 --platform azure"
     },
     {
       "number": 14,
-      "title": "Deploy Jenkins with Kubernetes plugin",
+      "title": "Deploy Jenkins with Kubernetes plugin on AKS",
       "milestone": "1.2 - Developer Portal & CI/CD",
       "priority": "p0-critical",
       "effort": 5,
       "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "comp-jenkins", "type-ai-agent"],
       "depends_on": [1, 2, 3, 7],
       "blocks": [15, 16],
-      "description": "Deploy Jenkins for CI/CD pipelines with dynamic Kubernetes agents.",
+      "description": "Deploy Jenkins for CI/CD pipelines with dynamic Kubernetes agents on AKS.",
       "acceptance_criteria": [
         "Jenkins deployed via ArgoCD",
-        "Kubernetes plugin configured",
+        "Kubernetes plugin configured for AKS",
         "Dynamic agent provisioning working",
-        "Jenkins UI accessible"
-      ]
+        "Azure Disk for Jenkins home",
+        "Jenkins UI accessible via ingress",
+        "Integration with ACR"
+      ],
+      "tasks": [
+        {
+          "id": "14.1",
+          "name": "Deploy Jenkins on AKS",
+          "location": "platform/apps/jenkins/",
+          "prompt": "Create Helm values for Jenkins on Azure:\n1. Deploy Jenkins via Helm\n2. Configure Kubernetes plugin for AKS\n3. Use Azure Disk for persistent storage\n4. Configure ACR integration (workload identity)\n5. Enable TLS ingress\n6. Configure resource limits\n7. Enable backup to Azure Blob\nCreate ArgoCD Application."
+        },
+        {
+          "id": "14.2",
+          "name": "Configure Jenkins with ACR",
+          "location": "platform/apps/jenkins/acr-config.yaml",
+          "prompt": "Integrate Jenkins with Azure Container Registry:\n1. Create workload identity for Jenkins\n2. Grant ACRPush role\n3. Configure Jenkins credentials for ACR\n4. Test image push to ACR\n5. Configure image scanning (optional, Azure Defender)\nUse az aks update --attach-acr if needed."
+        }
+      ],
+      "validation": "# Check Jenkins\nkubectl get pods -n jenkins\ncurl https://jenkins.yourdomain.com\n\n# Test ACR access\naz acr repository list --name fawkesacr"
     },
     {
       "number": 15,
@@ -275,409 +418,40 @@
       "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "comp-jenkins", "type-ai-agent"],
       "depends_on": [14],
       "blocks": [16],
-      "description": "Set up Jenkins Configuration as Code for reproducible configuration.",
+      "description": "Set up Jenkins Configuration as Code for reproducible configuration (same as local version).",
       "acceptance_criteria": [
         "JCasC YAML configuration created",
         "Plugins configured via code",
-        "Credentials managed securely",
+        "Credentials from Azure Key Vault",
         "Configuration version controlled"
-      ]
-    },
-    {
-      "number": 16,
-      "title": "Create shared library with 3 Jenkinsfiles",
-      "milestone": "1.2 - Developer Portal & CI/CD",
-      "priority": "p0-critical",
-      "effort": 6,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "comp-jenkins", "type-ai-agent"],
-      "depends_on": [14, 15],
-      "blocks": [29],
-      "description": "Create Jenkins shared library with golden path Jenkinsfiles for Java, Python, Node.js.",
-      "acceptance_criteria": [
-        "Shared library repository created",
-        "Java pipeline (Maven/Gradle) working",
-        "Python pipeline (pytest) working",
-        "Node.js pipeline (npm/jest) working",
-        "Library loaded in Jenkins"
-      ]
-    },
-    {
-      "number": 17,
-      "title": "Deploy Harbor container registry",
-      "milestone": "1.2 - Developer Portal & CI/CD",
-      "priority": "p0-critical",
-      "effort": 4,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-kubernetes", "type-ai-agent"],
-      "depends_on": [1, 3, 7],
-      "blocks": [16],
-      "description": "Deploy Harbor for container image storage and scanning.",
-      "acceptance_criteria": [
-        "Harbor deployed via ArgoCD",
-        "PostgreSQL and Redis configured",
-        "Project structure created",
-        "Robot accounts for CI/CD created",
-        "Harbor UI accessible"
-      ]
-    },
-    {
-      "number": 18,
-      "title": "Run AT-E1-004 and AT-E1-009 validation tests",
-      "milestone": "1.2 - Developer Portal & CI/CD",
-      "priority": "p0-critical",
-      "effort": 2,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-testing", "acceptance-test"],
-      "depends_on": [14, 15, 16, 17],
-      "blocks": [],
-      "description": "Run and validate AT-E1-004 (CI/CD) and AT-E1-009 (Harbor) acceptance tests.",
-      "acceptance_criteria": [
-        "AT-E1-004 test suite passes",
-        "AT-E1-009 test suite passes",
-        "Jenkins pipelines working",
-        "Harbor functional",
-        "Test reports generated"
-      ]
-    },
-    {
-      "number": 19,
-      "title": "Deploy SonarQube for code quality",
-      "milestone": "1.3 - Security & Observability",
-      "priority": "p0-critical",
-      "effort": 4,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "comp-kubernetes", "type-ai-agent"],
-      "depends_on": [1, 3, 7],
-      "blocks": [20, 21, 22],
-      "description": "Deploy SonarQube for static code analysis and quality gates.",
-      "acceptance_criteria": [
-        "SonarQube deployed via ArgoCD",
-        "PostgreSQL backend configured",
-        "Quality profiles created",
-        "SonarQube UI accessible"
-      ]
-    },
-    {
-      "number": 20,
-      "title": "Integrate Trivy container scanning",
-      "milestone": "1.3 - Security & Observability",
-      "priority": "p0-critical",
-      "effort": 3,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "type-ai-agent"],
-      "depends_on": [19],
-      "blocks": [22],
-      "description": "Integrate Trivy for container image vulnerability scanning.",
-      "acceptance_criteria": [
-        "Trivy integrated with Jenkins pipelines",
-        "Trivy integrated with Harbor",
-        "Vulnerability scanning automated",
-        "Scan results visible in dashboards"
-      ]
-    },
-    {
-      "number": 21,
-      "title": "Add git-secrets to pipelines",
-      "milestone": "1.3 - Security & Observability",
-      "priority": "p0-critical",
-      "effort": 2,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "type-ai-agent"],
-      "depends_on": [19],
-      "blocks": [22],
-      "description": "Add git-secrets or TruffleHog for secrets scanning in pipelines.",
-      "acceptance_criteria": [
-        "git-secrets or TruffleHog integrated",
-        "Pipelines fail on detected secrets",
-        "Pre-commit hooks available",
-        "Documentation for developers"
-      ]
-    },
-    {
-      "number": 22,
-      "title": "Configure security quality gates",
-      "milestone": "1.3 - Security & Observability",
-      "priority": "p0-critical",
-      "effort": 3,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "type-ai-agent"],
-      "depends_on": [19, 20, 21],
-      "blocks": [],
-      "description": "Configure quality gates to fail builds on high/critical vulnerabilities.",
-      "acceptance_criteria": [
-        "Quality gates configured in SonarQube",
-        "Pipeline gates for Trivy results",
-        "Severity thresholds defined",
-        "Override process documented"
-      ]
-    },
-    {
-      "number": 23,
-      "title": "Run AT-E1-005 validation tests",
-      "milestone": "1.3 - Security & Observability",
-      "priority": "p0-critical",
-      "effort": 1,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-testing", "acceptance-test"],
-      "depends_on": [19, 20, 21, 22],
-      "blocks": [],
-      "description": "Run and validate AT-E1-005 acceptance test for security scanning.",
-      "acceptance_criteria": [
-        "AT-E1-005 test suite passes",
-        "Security scanning functional",
-        "Test report generated"
-      ]
-    },
-    {
-      "number": 24,
-      "title": "Deploy kube-prometheus-stack",
-      "milestone": "1.3 - Security & Observability",
-      "priority": "p0-critical",
-      "effort": 5,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-observability", "type-ai-agent"],
-      "depends_on": [1, 7],
-      "blocks": [25, 27],
-      "description": "Deploy Prometheus Operator with Grafana for metrics and monitoring.",
-      "acceptance_criteria": [
-        "kube-prometheus-stack deployed via ArgoCD",
-        "Prometheus scraping metrics",
-        "Grafana accessible",
-        "ServiceMonitors configured for platform components"
-      ]
-    },
-    {
-      "number": 25,
-      "title": "Deploy OpenTelemetry Collector",
-      "milestone": "1.3 - Security & Observability",
-      "priority": "p0-critical",
-      "effort": 3,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-observability", "type-ai-agent"],
-      "depends_on": [24],
-      "blocks": [],
-      "description": "Deploy OpenTelemetry Collector for traces, metrics, and logs.",
-      "acceptance_criteria": [
-        "OTel Collector deployed as DaemonSet",
-        "Receivers configured (OTLP, Prometheus)",
-        "Exporters configured (Prometheus, OpenSearch)",
-        "Sample traces flowing"
-      ]
-    },
-    {
-      "number": 26,
-      "title": "Deploy Fluent Bit and OpenSearch for logging",
-      "milestone": "1.3 - Security & Observability",
-      "priority": "p0-critical",
-      "effort": 5,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure", "comp-observability", "type-ai-agent"],
-      "depends_on": [1, 7],
-      "blocks": [27],
-      "description": "Deploy log aggregation with Fluent Bit and OpenSearch.",
-      "acceptance_criteria": [
-        "OpenSearch cluster deployed",
-        "Fluent Bit collecting logs",
-        "Index patterns created",
-        "Log retention policy configured (30 days)"
-      ]
-    },
-    {
-      "number": 27,
-      "title": "Create Grafana dashboards",
-      "milestone": "1.3 - Security & Observability",
-      "priority": "p0-critical",
-      "effort": 4,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "comp-observability", "type-ai-agent"],
-      "depends_on": [24, 26],
-      "blocks": [],
-      "description": "Create Grafana dashboards for cluster health, platform components, and DORA metrics.",
-      "acceptance_criteria": [
-        "Kubernetes cluster health dashboard",
-        "Platform component health dashboard",
-        "DORA metrics dashboard (placeholder)",
-        "Application metrics dashboard template"
-      ]
-    },
-    {
-      "number": 28,
-      "title": "Run AT-E1-006 validation tests",
-      "milestone": "1.3 - Security & Observability",
-      "priority": "p0-critical",
-      "effort": 1,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-testing", "acceptance-test"],
-      "depends_on": [24, 25, 26, 27],
-      "blocks": [],
-      "description": "Run and validate AT-E1-006 acceptance test for observability stack.",
-      "acceptance_criteria": [
-        "AT-E1-006 test suite passes",
-        "Observability stack functional",
-        "Test report generated"
-      ]
-    },
-    {
-      "number": 29,
-      "title": "Implement DORA metrics collection service",
-      "milestone": "1.4 - DORA Metrics & Integration",
-      "priority": "p0-critical",
-      "effort": 8,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "type-ai-agent"],
-      "depends_on": [16, 24],
-      "blocks": [30, 31],
-      "description": "Create microservice to collect and calculate DORA metrics.",
-      "acceptance_criteria": [
-        "DORA metrics service deployed",
-        "Database schema created",
-        "API endpoints functional",
-        "Metrics exposed to Prometheus"
-      ]
-    },
-    {
-      "number": 30,
-      "title": "Configure webhooks for DORA metrics",
-      "milestone": "1.4 - DORA Metrics & Integration",
-      "priority": "p0-critical",
-      "effort": 4,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "type-ai-agent"],
-      "depends_on": [29],
-      "blocks": [31],
-      "description": "Configure webhooks from GitHub, Jenkins, and ArgoCD to DORA service.",
-      "acceptance_criteria": [
-        "GitHub webhooks configured (commits)",
-        "Jenkins webhooks configured (builds)",
-        "ArgoCD webhooks configured (deployments)",
-        "Test webhooks firing correctly"
-      ]
-    },
-    {
-      "number": 31,
-      "title": "Create DORA metrics Grafana dashboard",
-      "milestone": "1.4 - DORA Metrics & Integration",
-      "priority": "p0-critical",
-      "effort": 3,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "comp-observability", "type-ai-agent"],
-      "depends_on": [29, 30],
-      "blocks": [],
-      "description": "Create comprehensive DORA metrics dashboard in Grafana.",
-      "acceptance_criteria": [
-        "Dashboard shows all 4 key metrics",
-        "Team-level filtering available",
-        "30-day trending visible",
-        "Benchmark comparison included"
-      ]
-    },
-    {
-      "number": 32,
-      "title": "Run AT-E1-007 validation tests",
-      "milestone": "1.4 - DORA Metrics & Integration",
-      "priority": "p0-critical",
-      "effort": 1,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-testing", "acceptance-test"],
-      "depends_on": [29, 30, 31],
-      "blocks": [],
-      "description": "Run and validate AT-E1-007 acceptance test for DORA metrics.",
-      "acceptance_criteria": [
-        "AT-E1-007 test suite passes",
-        "All 4 DORA metrics collecting data",
-        "Test report generated"
-      ]
-    },
-    {
-      "number": 33,
-      "title": "Deploy 3 sample applications for testing",
-      "milestone": "1.4 - DORA Metrics & Integration",
-      "priority": "p0-critical",
-      "effort": 4,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "type-ai-agent"],
-      "depends_on": [11, 31],
-      "blocks": [34],
-      "description": "Deploy sample Java, Python, and Node.js apps using golden path templates.",
-      "acceptance_criteria": [
-        "Sample Java Spring Boot app deployed",
-        "Sample Python FastAPI app deployed",
-        "Sample Node.js Express app deployed",
-        "All apps accessible via ingress",
-        "DORA metrics being collected for all apps"
-      ]
-    },
-    {
-      "number": 34,
-      "title": "End-to-end integration testing",
-      "milestone": "1.4 - DORA Metrics & Integration",
-      "priority": "p0-critical",
-      "effort": 6,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-testing", "type-ai-agent"],
-      "depends_on": [33],
-      "blocks": [],
-      "description": "Perform comprehensive end-to-end integration testing of entire platform.",
-      "acceptance_criteria": [
-        "Full workflow test passes (scaffold → deploy → metrics)",
-        "All platform components integrated",
-        "No manual interventions required",
-        "E2E test automation created"
-      ]
-    },
-    {
-      "number": 35,
-      "title": "Resource optimization and tuning",
-      "milestone": "1.4 - DORA Metrics & Integration",
-      "priority": "p0-critical",
-      "effort": 4,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-infrastructure"],
-      "depends_on": [34],
-      "blocks": [],
-      "description": "Optimize resource usage to stay within 70% CPU/Memory target.",
-      "acceptance_criteria": [
-        "Resource limits tuned for all components",
-        "CPU usage <70% average",
-        "Memory usage <70% average",
-        "No pod evictions",
-        "Performance acceptable"
-      ]
-    },
-    {
-      "number": 36,
-      "title": "Complete Epic 1 documentation",
-      "milestone": "1.4 - DORA Metrics & Integration",
-      "priority": "p0-critical",
-      "effort": 6,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-documentation"],
-      "depends_on": [34],
-      "blocks": [],
-      "description": "Complete all documentation, runbooks, and architecture diagrams for Epic 1.",
-      "acceptance_criteria": [
-        "All runbooks complete",
-        "Architecture diagrams created",
-        "Troubleshooting guide complete",
-        "API documentation generated",
-        "Documentation passes linting"
-      ]
-    },
-    {
-      "number": 37,
-      "title": "Create Epic 1 demo video walkthrough",
-      "milestone": "1.4 - DORA Metrics & Integration",
-      "priority": "p1-high",
-      "effort": 3,
-      "labels": ["epic-1-dora-2023", "p1-high", "type-documentation"],
-      "depends_on": [34, 36],
-      "blocks": [],
-      "description": "Record comprehensive video walkthrough demonstrating Epic 1 deliverables.",
-      "acceptance_criteria": [
-        "30-minute video walkthrough recorded",
-        "Shows complete platform functionality",
-        "Demonstrates golden path workflow",
-        "Shows DORA metrics dashboard",
-        "Video uploaded and accessible"
-      ]
-    },
-    {
-      "number": 38,
-      "title": "Run AT-E1-012 final validation",
-      "milestone": "1.4 - DORA Metrics & Integration",
-      "priority": "p0-critical",
-      "effort": 2,
-      "labels": ["epic-1-dora-2023", "p0-critical", "type-testing", "acceptance-test"],
-      "depends_on": [34, 35, 36, 37],
-      "blocks": [],
-      "description": "Run comprehensive AT-E1-012 acceptance test for complete Epic 1 validation.",
-      "acceptance_criteria": [
-        "AT-E1-012 test suite passes",
-        "All Epic 1 deliverables validated",
-        "Platform ready for Epic 2",
-        "Final test report generated",
-        "Epic 1 retrospective completed"
+      ],
+      "tasks": [
+        {
+          "id": "15.1",
+          "name": "Integrate Jenkins with Azure Key Vault",
+          "location": "platform/apps/jenkins/keyvault-plugin.yaml",
+          "prompt": "Configure Jenkins Azure Key Vault plugin:\n1. Install Azure Key Vault plugin\n2. Configure workload identity\n3. Reference secrets from Key Vault in JCasC\n4. Test secret retrieval\n5. Rotate secrets policy\nSecrets: GitHub token, ACR credentials, etc."
+        }
+      ],
+          "validation": "# Same as local plus verify Key Vault integration\naz keyvault secret list --vault-name fawkes-kv"
+        },
+        {
+          "number": 16,
+          "title": "Create shared Jenkins pipeline library",
+          "milestone": "1.2 - Developer Portal & CI/CD",
+          "priority": "p0-critical",
+          "effort": 5,
+          "labels": ["epic-1-dora-2023", "p0-critical", "type-feature", "comp-jenkins", "type-ai-agent"],
+          "depends_on": [14, 15],
+          "blocks": [33],
+          "description": "Create reusable Jenkins pipeline library for common CI/CD tasks.",
+          "acceptance_criteria": [
+            "Shared library repository created",
+            "Jenkins configured to use library",
+            "Common pipeline steps available",
+            "Documentation for library usage"
+          ],
+          "validation": "# Verify shared library is loaded\n# Test pipeline using library functions"
+        }
       ]
     }
-  ]
-}
