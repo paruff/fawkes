@@ -99,8 +99,9 @@ record_test() {
         log_error "$test_name: $message"
     fi
     
-    # Store result for JSON report
-    TEST_RESULTS+=("{\"test\":\"$test_name\",\"status\":\"$status\",\"message\":\"$message\"}")
+    # Store result for JSON report (escape quotes in message)
+    local escaped_message="${message//\"/\\\"}"
+    TEST_RESULTS+=("{\"test\":\"$test_name\",\"status\":\"$status\",\"message\":\"$escaped_message\"}")
 }
 
 # =============================================================================
@@ -310,14 +311,16 @@ check_resource_limits() {
         local memory_percent=$(echo "$line" | awk '{print $5}' | tr -d '%')
         local node_name=$(echo "$line" | awk '{print $1}')
         
-        # Validate that percentages are numeric
-        if ! [[ "$cpu_percent" =~ ^[0-9]+$ ]] || ! [[ "$memory_percent" =~ ^[0-9]+$ ]]; then
+        # Validate that percentages are numeric (integer or decimal)
+        if ! [[ "$cpu_percent" =~ ^[0-9]+(\.[0-9]+)?$ ]] || ! [[ "$memory_percent" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
             [ "$VERBOSE" = true ] && log_warning "Node $node_name: Invalid metrics format"
             continue
         fi
         
-        # Check if over limits
-        if [ "$cpu_percent" -ge "$MAX_CPU_PERCENT" ] || [ "$memory_percent" -ge "$MAX_MEMORY_PERCENT" ]; then
+        # Check if over limits (convert to integer for comparison)
+        local cpu_int=${cpu_percent%.*}
+        local memory_int=${memory_percent%.*}
+        if [ "$cpu_int" -ge "$MAX_CPU_PERCENT" ] || [ "$memory_int" -ge "$MAX_MEMORY_PERCENT" ]; then
             nodes_over_limit=$((nodes_over_limit + 1))
             [ "$VERBOSE" = true ] && log_warning "Node $node_name: CPU=${cpu_percent}%, Memory=${memory_percent}%"
         fi
@@ -347,6 +350,12 @@ generate_report() {
         success_rate=$(awk "BEGIN {printf \"%.2f\", ($PASSED_TESTS/$TOTAL_TESTS)*100}")
     fi
     
+    # Build test results JSON array
+    local tests_json="[]"
+    if [ "${#TEST_RESULTS[@]}" -gt 0 ]; then
+        tests_json="[$(IFS=,; echo "${TEST_RESULTS[*]}")]"
+    fi
+    
     # Create JSON report
     cat > "$REPORT_FILE" << EOF
 {
@@ -362,9 +371,7 @@ generate_report() {
     "failed": $FAILED_TESTS,
     "success_rate": $success_rate
   },
-  "tests": [
-    $(IFS=,; echo "${TEST_RESULTS[*]}")
-  ]
+  "tests": $tests_json
 }
 EOF
     

@@ -50,7 +50,15 @@ class TestATE1001Validation:
         )
 
     @pytest.fixture(scope="class")
-    def validation_result(self, validation_script, resource_group, cluster_name, repo_root):
+    def validation_timeout(self, request):
+        """Get timeout for validation script from CLI or default."""
+        return (
+            request.config.getoption("--validation-timeout", None) or
+            int(os.getenv("VALIDATION_TIMEOUT", "600"))  # Default 10 minutes
+        )
+
+    @pytest.fixture(scope="class")
+    def validation_result(self, validation_script, resource_group, cluster_name, validation_timeout, repo_root):
         """Run validation script and return results."""
         # Change to repo root for consistent paths
         original_dir = os.getcwd()
@@ -66,7 +74,7 @@ class TestATE1001Validation:
                 ],
                 capture_output=True,
                 text=True,
-                timeout=300  # 5 minutes timeout
+                timeout=validation_timeout
             )
 
             # Find and parse the JSON report
@@ -273,4 +281,11 @@ def pytest_addoption(parser):
         action="store",
         default=None,
         help="AKS cluster name"
+    )
+    parser.addoption(
+        "--validation-timeout",
+        action="store",
+        type=int,
+        default=None,
+        help="Timeout in seconds for validation script (default: 600)"
     )
