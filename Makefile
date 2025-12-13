@@ -6,6 +6,7 @@ COMPONENT ?= all
 ENVIRONMENT ?= dev
 AZURE_RESOURCE_GROUP ?= fawkes-rg
 AZURE_CLUSTER_NAME ?= fawkes-aks
+ARGO_NAMESPACE ?= fawkes
 
 help: ## Show this help message
 	@echo "Fawkes Development Commands:"
@@ -47,8 +48,14 @@ test-integration: ## Run integration tests
 
 test-all: test-unit test-bdd test-integration ## Run all tests
 
+test-e2e-argocd: ## Run ArgoCD E2E sync tests
+	@./tests/e2e/argocd-sync-test.sh --namespace $(ARGO_NAMESPACE)
+
 validate-at-e1-001: ## Run AT-E1-001 acceptance test validation for AKS cluster
 	@./scripts/validate-at-e1-001.sh --resource-group $(AZURE_RESOURCE_GROUP) --cluster-name $(AZURE_CLUSTER_NAME)
+
+validate-at-e1-002: ## Run AT-E1-002 acceptance test validation for GitOps/ArgoCD
+	@./scripts/validate-at-e1-002.sh --namespace $(ARGO_NAMESPACE)
 
 clean-local: ## Clean up local K8s deployments
 	@kubectl delete namespace $(NAMESPACE) --ignore-not-found=true
