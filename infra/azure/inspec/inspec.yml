@@ -1,0 +1,28 @@
+name: fawkes-azure-aks
+title: Fawkes Azure AKS Infrastructure Tests
+maintainer: Fawkes Platform Team
+copyright: Fawkes Platform Team
+copyright_email: platform@fawkes.example.com
+license: Apache-2.0
+summary: InSpec tests for validating Azure AKS cluster deployment
+version: 1.0.0
+
+supports:
+  - platform: azure
+
+depends:
+  - name: inspec-azure
+    url: https://github.com/inspec/inspec-azure/archive/main.tar.gz
+
+attributes:
+  - name: resource_group
+    type: string
+    required: false
+    default: fawkes-rg
+    description: Azure resource group name containing the AKS cluster
+
+  - name: cluster_name
+    type: string
+    required: false
+    default: fawkes-aks
+    description: Name of the AKS cluster to test
