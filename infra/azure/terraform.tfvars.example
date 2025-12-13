@@ -1,27 +1,63 @@
 ###############################################
-# Fawkes AKS Example Variables (Nov 2025)
-# Copy to terraform.tfvars and adjust as needed.
+# Fawkes AKS Configuration Example
+# Copy to terraform.tfvars and customize for your environment
 ###############################################
 
+# Azure region and resource naming
 location            = "East US"
-resource_group_name = "aks-resource-group"
+resource_group_name = "fawkes-rg"
 cluster_name        = "fawkes-aks"
-dns_prefix          = "fawkes-aks"
+dns_prefix          = "fawkes"
+environment         = "dev"
 
-# Node pool configuration (autoscaling enabled)
-vm_size   = "Standard_D2s_v5"
-min_count = 2
-max_count = 5
+# Network configuration
+vnet_address_space         = "10.0.0.0/16"
+aks_subnet_address_prefix  = "10.0.1.0/24"
+service_cidr               = "10.1.0.0/16"
+dns_service_ip             = "10.1.0.10"
+network_policy             = "azure"
 
-# Set to null to let Azure choose default supported version
+# System node pool (critical system workloads)
+system_node_pool_vm_size = "Standard_D4s_v3"
+system_node_pool_count   = 2
+
+# User node pool (application workloads with auto-scaling)
+user_node_pool_vm_size    = "Standard_D4s_v3"
+user_node_pool_min_count  = 2
+user_node_pool_max_count  = 10
+
+# Azure Container Registry (must be globally unique)
+acr_name = "fawkesacr"
+acr_sku  = "Standard"
+
+# Azure Key Vault (must be globally unique, alphanumeric and hyphens only)
+key_vault_name = "fawkes-kv"
+
+# Key Vault security settings
+# For production: set retention to 90 days, enable purge protection, and restrict network access
+key_vault_soft_delete_retention_days    = 7      # Use 90 for production
+key_vault_purge_protection_enabled      = false  # Set true for production
+key_vault_network_acls_default_action   = "Allow" # Use "Deny" for production
+
+# Storage Account for Terraform state (must be globally unique, lowercase alphanumeric only)
+storage_account_name     = "fawkestfstate"
+storage_replication_type = "LRS"
+
+# Log Analytics for monitoring
+log_analytics_sku  = "PerGB2018"
+log_retention_days = 30
+
+# Set to null to let Azure choose the latest stable version
 kubernetes_version = null
 
-# Identity & OIDC
+# Identity & OIDC for workload identity
 oidc_issuer_enabled       = true
 workload_identity_enabled = true
 
+# Resource tags
 tags = {
-  Project     = "fawkes"
-  Environment = "dev"
-  Owner       = "platform-team"
+  platform    = "fawkes"
+  environment = "dev"
+  managed_by  = "terraform"
+  owner       = "platform-team"
 }
