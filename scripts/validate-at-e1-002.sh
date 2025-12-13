@@ -96,7 +96,14 @@ record_test() {
         log_error "$test_name: $message"
     fi
     
-    TEST_RESULTS+=("{\"name\":\"$test_name\",\"status\":\"$status\",\"message\":\"$(echo "$message" | sed 's/"/\\"/g')\"}")
+    # Use jq to properly escape JSON strings
+    local json_entry
+    json_entry=$(jq -n \
+        --arg name "$test_name" \
+        --arg status "$status" \
+        --arg message "$message" \
+        '{name: $name, status: $status, message: $message}')
+    TEST_RESULTS+=("$json_entry")
 }
 
 check_prerequisites() {
@@ -362,23 +369,36 @@ generate_report() {
         pass_rate=$(awk "BEGIN {printf \"%.2f\", ($PASSED_TESTS/$TOTAL_TESTS)*100}")
     fi
     
-    cat > "$REPORT_FILE" << EOF
-{
-  "test_id": "AT-E1-002",
-  "test_name": "GitOps with ArgoCD",
-  "timestamp": "$timestamp",
-  "namespace": "$ARGO_NAMESPACE",
-  "summary": {
-    "total": $TOTAL_TESTS,
-    "passed": $PASSED_TESTS,
-    "failed": $FAILED_TESTS,
-    "pass_rate": "$pass_rate%"
-  },
-  "results": [
-    $(IFS=,; echo "${TEST_RESULTS[*]}")
-  ]
-}
-EOF
+    # Build results array properly
+    local results_json="[]"
+    if [ ${#TEST_RESULTS[@]} -gt 0 ]; then
+        results_json=$(printf '%s\n' "${TEST_RESULTS[@]}" | jq -s '.')
+    fi
+    
+    # Generate report using jq for proper JSON formatting
+    jq -n \
+        --arg test_id "AT-E1-002" \
+        --arg test_name "GitOps with ArgoCD" \
+        --arg timestamp "$timestamp" \
+        --arg namespace "$ARGO_NAMESPACE" \
+        --argjson total "$TOTAL_TESTS" \
+        --argjson passed "$PASSED_TESTS" \
+        --argjson failed "$FAILED_TESTS" \
+        --arg pass_rate "${pass_rate}%" \
+        --argjson results "$results_json" \
+        '{
+            test_id: $test_id,
+            test_name: $test_name,
+            timestamp: $timestamp,
+            namespace: $namespace,
+            summary: {
+                total: $total,
+                passed: $passed,
+                failed: $failed,
+                pass_rate: $pass_rate
+            },
+            results: $results
+        }' > "$REPORT_FILE"
     
     log_info "Report saved to: $REPORT_FILE"
 }

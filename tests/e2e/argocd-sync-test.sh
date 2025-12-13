@@ -136,7 +136,7 @@ test_application_sync() {
     # Trigger hard refresh
     log_info "Triggering hard refresh for application '$app_name'..."
     if command -v argocd &> /dev/null; then
-        argocd app get "$app_name" --hard-refresh --refresh &> /dev/null || true
+        argocd app get "$app_name" --hard-refresh &> /dev/null || true
     else
         log_warning "argocd CLI not found, skipping hard refresh"
     fi
