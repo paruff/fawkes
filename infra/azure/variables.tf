@@ -117,6 +117,29 @@ variable "key_vault_name" {
   default     = "fawkes-kv"
 }
 
+variable "key_vault_soft_delete_retention_days" {
+  description = "Number of days to retain soft-deleted Key Vault items (7-90). Use 90 for production."
+  type        = number
+  default     = 7
+}
+
+variable "key_vault_purge_protection_enabled" {
+  description = "Enable purge protection for Key Vault. Set to true for production to prevent permanent deletion."
+  type        = bool
+  default     = false
+}
+
+variable "key_vault_network_acls_default_action" {
+  description = "Default action for Key Vault network ACLs (Allow or Deny). Use Deny for production."
+  type        = string
+  default     = "Allow"
+  
+  validation {
+    condition     = contains(["Allow", "Deny"], var.key_vault_network_acls_default_action)
+    error_message = "key_vault_network_acls_default_action must be either 'Allow' or 'Deny'."
+  }
+}
+
 # Storage Account
 variable "storage_account_name" {
   description = "Name of the storage account for Terraform state (must be globally unique)"

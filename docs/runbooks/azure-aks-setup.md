@@ -243,6 +243,27 @@ key_vault_name       = "fawkes-kv-20241213"
 storage_account_name = "fawkestfstate20241213"
 ```
 
+**Production Security Settings**:
+
+For production environments, update these security-critical settings:
+
+```hcl
+environment = "prod"
+
+# Key Vault security (production-ready)
+key_vault_soft_delete_retention_days    = 90      # Longer retention for recovery
+key_vault_purge_protection_enabled      = true    # Prevent permanent deletion
+key_vault_network_acls_default_action   = "Deny"  # Restrict network access
+
+# Then configure allowed IP ranges or VNets in main.tf:
+# network_acls {
+#   ip_rules = ["YOUR_OFFICE_IP/32", "YOUR_CI_IP/32"]
+#   virtual_network_subnet_ids = [azurerm_subnet.aks_subnet.id]
+# }
+```
+
+**Note**: The default configuration is optimized for development/testing. Production environments should enable additional security controls as shown above.
+
 ### Phase 3: Initialize Terraform
 
 ```bash
