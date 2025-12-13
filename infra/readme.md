@@ -110,6 +110,50 @@ Scripts to bootstrap local developer environments and infrastructure, so teams c
 
 ---
 
+## ✅ Testing and Validation
+
+After provisioning infrastructure, validate that it meets acceptance criteria:
+
+### Azure AKS Validation
+
+Run the AT-E1-001 validation test suite for Azure AKS:
+
+```sh
+# Using the validation script
+../scripts/validate-at-e1-001.sh --resource-group fawkes-rg --cluster-name fawkes-aks
+
+# Using Make
+make validate-at-e1-001 AZURE_RESOURCE_GROUP=fawkes-rg AZURE_CLUSTER_NAME=fawkes-aks
+
+# Using pytest
+pytest tests/integration/test_at_e1_001_validation.py -v
+```
+
+The validation checks:
+- ✅ Cluster is running and accessible
+- ✅ Minimum 4 nodes are healthy and schedulable
+- ✅ Cluster metrics available (kubelet, cAdvisor)
+- ✅ StorageClass configured for persistent volumes
+- ✅ Ingress controller deployed
+- ✅ Resource limits within acceptable thresholds
+
+For detailed documentation, see:
+- [AT-E1-001 Validation Guide](../docs/runbooks/at-e1-001-validation.md)
+- [Azure AKS Validation Checklist](../docs/runbooks/azure-aks-validation-checklist.md)
+
+### InSpec Compliance Tests
+
+Run InSpec compliance tests for infrastructure validation:
+
+```sh
+inspec exec azure/inspec/ -t azure:// \
+  --input resource_group=fawkes-rg \
+  --input cluster_name=fawkes-aks \
+  --reporter cli json:../reports/aks-inspec.json
+```
+
+---
+
 ## 🛠️ Troubleshooting
 
 If you encounter issues during setup or deployment:
