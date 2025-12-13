@@ -434,8 +434,9 @@ def crds_exist(table, context: Dict):
 def crds_established(context: Dict):
     """Verify all ArgoCD CRDs are established."""
     all_crds = context.get("all_crds", [])
-    argocd_crds = [crd for crd in all_crds if "argoproj.io" in crd["metadata"]["name"]]
-    
+    # Filter CRDs that are part of ArgoCD (ending with argoproj.io)
+    argocd_crds = [crd for crd in all_crds if crd["metadata"]["name"].endswith(".argoproj.io")]
+
     for crd in argocd_crds:
         conditions = crd.get("status", {}).get("conditions", [])
         established = any(c.get("type") == "Established" and c.get("status") == "True"
