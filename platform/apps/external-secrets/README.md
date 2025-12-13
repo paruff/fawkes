@@ -129,4 +129,4 @@ kubectl get externalsecret -n fawkes -o yaml
 ## Related Documentation
 
 - [External Secrets Documentation](https://external-secrets.io/)
-- [ADR-009: Secrets Management](../../../docs/adr/ADR-009-secrets-managment.md)
+- [ADR-009: Secrets Management](../../../docs/adr/ADR-009-secrets-management.md)
