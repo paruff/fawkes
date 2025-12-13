@@ -55,13 +55,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   # System node pool
   default_node_pool {
-    name                = "system"
-    vm_size             = var.system_node_pool_vm_size
-    node_count          = var.system_node_pool_count
-    vnet_subnet_id      = azurerm_subnet.aks_subnet.id
-    enable_auto_scaling = false
-    type                = "VirtualMachineScaleSets"
-    os_disk_size_gb     = 128
+    name           = "system"
+    vm_size        = var.system_node_pool_vm_size
+    node_count     = var.system_node_pool_count
+    vnet_subnet_id = azurerm_subnet.aks_subnet.id
+    type           = "VirtualMachineScaleSets"
+    os_disk_size_gb = 128
     
     node_labels = {
       "nodepool-type" = "system"
@@ -92,7 +91,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   # Enable Azure RBAC
   azure_active_directory_role_based_access_control {
-    managed                = true
+    admin_group_object_ids = []
     azure_rbac_enabled     = true
   }
 
