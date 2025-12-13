@@ -176,10 +176,16 @@ def ingress_has_class(classname: str, context: Dict):
 @then(parsers.cfparse('the ArgoCD UI should be accessible at "{url}"'))
 def ui_accessible(url: str):
     """Verify ArgoCD UI is accessible (basic check)."""
+    # Validate URL format to prevent SSRF
+    if not url.startswith(('http://argocd.', 'https://argocd.')):
+        pytest.skip(f"Invalid URL format for security: {url}")
+
     # Note: This may fail in CI without proper DNS/routing
     # Consider it a soft check or skip in certain environments
     try:
-        response = requests.get(url, timeout=10, allow_redirects=True)
+        # For HTTPS, verify SSL; for HTTP (local dev), allow insecure
+        verify_ssl = url.startswith('https://')
+        response = requests.get(url, timeout=10, allow_redirects=True, verify=verify_ssl)
         # ArgoCD UI should return something (200, 301, etc.)
         assert response.status_code < 500, f"ArgoCD UI returned {response.status_code}"
     except requests.RequestException as e:
