@@ -1,0 +1,38 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test-application
+  namespace: fawkes
+  labels:
+    app.kubernetes.io/name: test-application
+    app.kubernetes.io/part-of: fawkes-platform
+    test: integration
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    targetRevision: HEAD
+    path: tests/integration/argocd/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: test-argocd-integration
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  info:
+    - name: Test ID
+      value: AT-E1-002
+    - name: Purpose
+      value: Integration test for ArgoCD sync validation
