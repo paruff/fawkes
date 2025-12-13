@@ -10,11 +10,11 @@ from __future__ import annotations
 
 import json
 import subprocess
-import time
 from typing import Dict
-import requests
+from urllib.parse import urlparse
 
 import pytest
+import requests
 from pytest_bdd import given, when, then, parsers, scenarios
 
 # Load all scenarios from the feature file
@@ -109,10 +109,11 @@ def pods_running(namespace: str, table, context: Dict):
     """Verify specified pods are running."""
     pods = context.get("argocd_pods", [])
     pod_names = [pod["metadata"]["name"] for pod in pods]
-    
+
     for row in table:
         component = row["component"]
-        found = any(component in name for name in pod_names)
+        # Use startswith for more precise matching
+        found = any(name.startswith(component) for name in pod_names)
         assert found, f"Pod with component '{component}' not found in namespace {namespace}"
 
 
@@ -176,15 +177,23 @@ def ingress_has_class(classname: str, context: Dict):
 @then(parsers.cfparse('the ArgoCD UI should be accessible at "{url}"'))
 def ui_accessible(url: str):
     """Verify ArgoCD UI is accessible (basic check)."""
-    # Validate URL format to prevent SSRF
-    if not url.startswith(('http://argocd.', 'https://argocd.')):
-        pytest.skip(f"Invalid URL format for security: {url}")
+    # Validate URL format using proper parsing
+    try:
+        parsed = urlparse(url)
+        # Verify URL has scheme and hostname
+        if not parsed.scheme or not parsed.netloc:
+            pytest.skip(f"Invalid URL format: {url}")
+        # Verify hostname starts with argocd for security
+        if not parsed.netloc.startswith('argocd.'):
+            pytest.skip(f"URL hostname must start with 'argocd.' for security: {url}")
+    except Exception as e:
+        pytest.skip(f"Failed to parse URL {url}: {e}")
 
     # Note: This may fail in CI without proper DNS/routing
     # Consider it a soft check or skip in certain environments
     try:
         # For HTTPS, verify SSL; for HTTP (local dev), allow insecure
-        verify_ssl = url.startswith('https://')
+        verify_ssl = parsed.scheme == 'https'
         response = requests.get(url, timeout=10, allow_redirects=True, verify=verify_ssl)
         # ArgoCD UI should return something (200, 301, etc.)
         assert response.status_code < 500, f"ArgoCD UI returned {response.status_code}"
