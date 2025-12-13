@@ -1,0 +1,68 @@
+# ============================================================================
+# FILE: platform/apps/cert-manager/cluster-issuer-letsencrypt-dns-azure.yaml
+# PURPOSE: Let's Encrypt ClusterIssuer with Azure DNS challenge
+#          Uses DNS-01 challenge for wildcard certificates
+#          Requires Azure Workload Identity or Service Principal
+# ============================================================================
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-dns-azure
+  labels:
+    app: cert-manager
+    component: cluster-issuer
+spec:
+  acme:
+    # Let's Encrypt production server
+    server: https://acme-v02.api.letsencrypt.org/directory
+
+    # Email address for ACME registration
+    # REQUIRED: Update this with your actual email address
+    email: platform-team@example.com
+
+    # Private key secret for ACME account
+    privateKeySecretRef:
+      name: letsencrypt-dns-azure
+
+    # Enable DNS-01 challenge solver with Azure DNS
+    solvers:
+      - dns01:
+          azureDNS:
+            # REQUIRED: Azure subscription ID
+            # Get from: az account show --query id -o tsv
+            subscriptionID: YOUR_SUBSCRIPTION_ID
+
+            # Resource group containing the DNS zone
+            resourceGroupName: fawkes-rg
+
+            # DNS zone name
+            hostedZoneName: fawkes.yourdomain.com
+
+            # Environment (AzurePublicCloud, AzureChinaCloud, AzureGermanCloud, AzureUSGovernmentCloud)
+            environment: AzurePublicCloud
+
+            # Authentication using Managed Identity (recommended)
+            # Requires Azure Workload Identity to be configured
+            # REQUIRED: Managed Identity client ID
+            # Get from: az identity show -g <resource-group> -n <identity-name> --query clientId -o tsv
+            managedIdentity:
+              clientID: YOUR_MANAGED_IDENTITY_CLIENT_ID
+
+            # Alternative: Authentication using Service Principal
+            # Uncomment and configure if not using Managed Identity
+            # clientSecretSecretRef:
+            #   name: azuredns-credentials
+            #   key: client-secret
+            # clientID: YOUR_CLIENT_ID
+            # tenantID: YOUR_TENANT_ID
+
+---
+# Secret for Azure Service Principal (if not using Managed Identity)
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: azuredns-credentials
+#   namespace: cert-manager
+# type: Opaque
+# stringData:
+#   client-secret: YOUR_CLIENT_SECRET
