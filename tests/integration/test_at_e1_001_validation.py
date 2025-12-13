@@ -52,10 +52,16 @@ class TestATE1001Validation:
     @pytest.fixture(scope="class")
     def validation_timeout(self, request):
         """Get timeout for validation script from CLI or default."""
-        return (
-            request.config.getoption("--validation-timeout", None) or
-            int(os.getenv("VALIDATION_TIMEOUT", "600"))  # Default 10 minutes
-        )
+        timeout = request.config.getoption("--validation-timeout", None)
+        if timeout is not None:
+            return timeout  # Already converted to int by pytest type=int
+        env_timeout = os.getenv("VALIDATION_TIMEOUT")
+        if env_timeout:
+            try:
+                return int(env_timeout)
+            except (ValueError, TypeError):
+                pass
+        return 600  # Default 10 minutes
 
     @pytest.fixture(scope="class")
     def validation_result(self, validation_script, resource_group, cluster_name, validation_timeout, repo_root):

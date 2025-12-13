@@ -307,8 +307,8 @@ check_resource_limits() {
         fi
         
         # Parse metrics (format: NAME CPU(cores) CPU% MEMORY(bytes) MEMORY%)
-        local cpu_percent=$(echo "$line" | awk '{print $3}' | tr -d '%')
-        local memory_percent=$(echo "$line" | awk '{print $5}' | tr -d '%')
+        local cpu_percent=$(echo "$line" | awk '{print $3}' | tr -d '%' | xargs)
+        local memory_percent=$(echo "$line" | awk '{print $5}' | tr -d '%' | xargs)
         local node_name=$(echo "$line" | awk '{print $1}')
         
         # Validate that percentages are numeric (integer or decimal)
@@ -317,10 +317,11 @@ check_resource_limits() {
             continue
         fi
         
-        # Check if over limits (convert to integer for comparison)
-        local cpu_int=${cpu_percent%.*}
-        local memory_int=${memory_percent%.*}
-        if [ "$cpu_int" -ge "$MAX_CPU_PERCENT" ] || [ "$memory_int" -ge "$MAX_MEMORY_PERCENT" ]; then
+        # Check if over limits using awk for proper decimal comparison
+        local cpu_over=$(awk "BEGIN {print ($cpu_percent >= $MAX_CPU_PERCENT) ? 1 : 0}")
+        local memory_over=$(awk "BEGIN {print ($memory_percent >= $MAX_MEMORY_PERCENT) ? 1 : 0}")
+        
+        if [ "$cpu_over" -eq 1 ] || [ "$memory_over" -eq 1 ]; then
             nodes_over_limit=$((nodes_over_limit + 1))
             [ "$VERBOSE" = true ] && log_warning "Node $node_name: CPU=${cpu_percent}%, Memory=${memory_percent}%"
         fi
