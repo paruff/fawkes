@@ -1,0 +1,1227 @@
+{
+  "epic": {
+    "id": 1,
+    "name": "DORA 2023 Foundation",
+    "description": "Deploy core IDP with automated DORA metrics on Azure AKS (dev) and GCP GKE (staging)",
+    "duration_weeks": 4,
+    "target_completion": "Month 1 Complete",
+    "resource_target": "<70% CPU/Memory utilization",
+    "acceptance_tests": [
+      "AT-E1-001", "AT-E1-002", "AT-E1-003", "AT-E1-004",
+      "AT-E1-005", "AT-E1-006", "AT-E1-007", "AT-E1-008",
+      "AT-E1-009", "AT-E1-010", "AT-E1-011", "AT-E1-012"
+    ]
+  },
+  "issues": [
+    {
+      "number": 1,
+      "title": "Initialize ignite.sh control script for multi-cloud management",
+      "milestone": "Week 1: Infrastructure & GitOps",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-infrastructure", "comp-ignite", "priority-p0"],
+      "description": "Create the ignite.sh control script for managing Azure AKS (dev) and GCP GKE (staging). Single entry point for all cluster operations.",
+      "acceptance_criteria": [
+        "ignite.sh created with commands: init, start, stop, status, destroy, validate",
+        "Environment selection works (--env dev/staging)",
+        "Azure and GCP configs defined in configs/clusters.yaml",
+        "Pre-flight checks for az, gcloud, kubectl, terraform",
+        "Logging and error handling functional"
+      ],
+      "dependencies": [],
+      "blocks": []
+    },
+    {
+      "number": 2,
+      "title": "Deploy Azure AKS cluster for development",
+      "milestone": "Week 1: Infrastructure & GitOps",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-1", "type-infrastructure", "comp-kubernetes", "priority-p0", "cloud-azure"],
+      "description": "Deploy 4-node AKS cluster with Azure CNI, monitoring, RBAC. Terraform state in Azure Storage.",
+      "acceptance_criteria": [
+        "4 Standard_D4s_v3 nodes running and Ready",
+        "kubectl connects successfully",
+        "Azure CNI networking configured",
+        "Azure Monitor enabled",
+        "RBAC configured with AAD",
+        "AT-E1-001 passes"
+      ],
+      "dependencies": ["#1"],
+      "blocks": ["#3", "#4", "#5"]
+    },
+    {
+      "number": 3,
+      "title": "Configure NGINX Ingress Controller on AKS",
+      "milestone": "Week 1: Infrastructure & GitOps",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-infrastructure", "comp-ingress", "priority-p0"],
+      "description": "Deploy NGINX Ingress with Azure Load Balancer, cert-manager for TLS",
+      "acceptance_criteria": [
+        "NGINX Ingress Controller running (2 replicas)",
+        "Azure LB has public IP assigned",
+        "cert-manager installed with ClusterIssuers",
+        "Health endpoint returns 200 OK",
+        "Test ingress routes traffic"
+      ],
+      "dependencies": ["#2"],
+      "blocks": ["#6", "#9"]
+    },
+    {
+      "number": 4,
+      "title": "Configure Azure Disk CSI persistent storage",
+      "milestone": "Week 1: Infrastructure & GitOps",
+      "priority": "P0",
+      "estimated_hours": 3,
+      "labels": ["epic-1", "type-infrastructure", "comp-storage", "priority-p0"],
+      "description": "Setup Azure Disk CSI with StorageClasses for different workloads",
+      "acceptance_criteria": [
+        "3 StorageClasses created (standard/database/shared)",
+        "Default StorageClass set",
+        "Test PVC provisions in <2min",
+        "VolumeSnapshotClass configured",
+        "Resource quotas set"
+      ],
+      "dependencies": ["#2"],
+      "blocks": ["#9", "#14"]
+    },
+    {
+      "number": 5,
+      "title": "Create AT-E1-001 infrastructure acceptance test",
+      "milestone": "Week 1: Infrastructure & GitOps",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Automated test validating complete AKS infrastructure",
+      "acceptance_criteria": [
+        "Test framework created in tests/acceptance/",
+        "7 infrastructure tests implemented",
+        "JSON output format",
+        "Integrated with ignite.sh validate",
+        "HTML report generation works"
+      ],
+      "dependencies": ["#2", "#3", "#4"]
+    },
+    {
+      "number": 6,
+      "title": "Deploy ArgoCD for GitOps",
+      "milestone": "Week 1: Infrastructure & GitOps",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-1", "type-gitops", "comp-argocd", "priority-p0"],
+      "description": "Deploy ArgoCD with GitHub integration, RBAC, and ingress",
+      "acceptance_criteria": [
+        "ArgoCD deployed via Helm",
+        "UI accessible via ingress with TLS",
+        "GitHub integration configured",
+        "RBAC roles configured",
+        "ArgoCD CLI functional",
+        "Initial Applications CRD configured"
+      ],
+      "dependencies": ["#3"],
+      "blocks": ["#7", "#8"]
+    },
+    {
+      "number": 7,
+      "title": "Design GitOps repository structure",
+      "milestone": "Week 1: Infrastructure & GitOps",
+      "priority": "P0",
+      "estimated_hours": 3,
+      "labels": ["epic-1", "type-gitops", "comp-git", "priority-p0"],
+      "description": "Create clear repo structure with Kustomize overlays for multi-env",
+      "acceptance_criteria": [
+        "Directory structure documented",
+        "Kustomize base manifests created",
+        "Dev/staging overlays functional",
+        "Promotion workflow documented",
+        "Example app demonstrates usage"
+      ],
+      "dependencies": ["#6"],
+      "blocks": ["#8"]
+    },
+    {
+      "number": 8,
+      "title": "Implement app-of-apps pattern",
+      "milestone": "Week 1: Infrastructure & GitOps",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-gitops", "comp-argocd", "priority-p0"],
+      "description": "Deploy root app managing all platform components via ArgoCD",
+      "acceptance_criteria": [
+        "Root application deployed",
+        "All child apps syncing",
+        "Auto-sync and self-heal enabled",
+        "Sync waves configured",
+        "AT-E1-002 passes"
+      ],
+      "dependencies": ["#6", "#7"],
+      "blocks": ["#9"]
+    },
+    {
+      "number": 9,
+      "title": "Deploy Backstage developer portal",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 8,
+      "labels": ["epic-1", "type-portal", "comp-backstage", "priority-p0"],
+      "description": "Deploy Backstage with PostgreSQL, GitHub OAuth, catalog, TechDocs",
+      "acceptance_criteria": [
+        "Backstage running (2 replicas)",
+        "PostgreSQL with persistent storage",
+        "GitHub OAuth working",
+        "Software catalog populated",
+        "TechDocs enabled",
+        "Accessible via ingress"
+      ],
+      "dependencies": ["#3", "#4", "#8"],
+      "blocks": ["#11", "#12"]
+    },
+    {
+      "number": 10,
+      "title": "Configure GitHub OAuth for Backstage",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-portal", "comp-backstage", "priority-p0"],
+      "description": "Setup GitHub OAuth application and configure Backstage authentication",
+      "acceptance_criteria": [
+        "GitHub OAuth app created",
+        "Secrets stored in Kubernetes",
+        "Authentication flow works",
+        "User can log in via GitHub",
+        "Proper redirect URLs configured"
+      ],
+      "dependencies": ["#9"],
+      "blocks": []
+    },
+    {
+      "number": 11,
+      "title": "Create Java Spring Boot software template",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-portal", "comp-templates", "priority-p0"],
+      "description": "Create Backstage template for Java Spring Boot microservice",
+      "acceptance_criteria": [
+        "Template scaffolds complete Spring Boot app",
+        "Includes Dockerfile, Jenkinsfile, K8s manifests",
+        "catalog-info.yaml generated",
+        "GitHub repo created automatically",
+        "Template visible in Backstage UI"
+      ],
+      "dependencies": ["#9"],
+      "blocks": []
+    },
+    {
+      "number": 12,
+      "title": "Create Python FastAPI software template",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-portal", "comp-templates", "priority-p0"],
+      "description": "Create Backstage template for Python FastAPI microservice",
+      "acceptance_criteria": [
+        "Template scaffolds FastAPI app with poetry",
+        "Includes Dockerfile, Jenkinsfile, K8s manifests",
+        "pytest and coverage configured",
+        "Template works end-to-end"
+      ],
+      "dependencies": ["#9"],
+      "blocks": []
+    },
+    {
+      "number": 13,
+      "title": "Create Node.js Express software template",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-portal", "comp-templates", "priority-p0"],
+      "description": "Create Backstage template for Node.js Express API",
+      "acceptance_criteria": [
+        "Template scaffolds Express app with TypeScript",
+        "Includes Dockerfile, Jenkinsfile, K8s manifests",
+        "jest and eslint configured",
+        "Template works end-to-end"
+      ],
+      "dependencies": ["#9"],
+      "blocks": []
+    },
+    {
+      "number": 14,
+      "title": "Integrate TechDocs plugin in Backstage",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 3,
+      "labels": ["epic-1", "type-portal", "comp-backstage", "priority-p0"],
+      "description": "Enable and configure TechDocs for documentation-as-code",
+      "acceptance_criteria": [
+        "TechDocs plugin enabled",
+        "MkDocs configured",
+        "Sample docs render correctly",
+        "Docs stored in Azure Blob or local",
+        "Search working"
+      ],
+      "dependencies": ["#9"],
+      "blocks": []
+    },
+    {
+      "number": 15,
+      "title": "Create AT-E1-003 developer portal test",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Test validating Backstage portal is functional",
+      "acceptance_criteria": [
+        "Test checks Backstage health",
+        "Test validates 3 templates exist",
+        "Test scaffolds sample app",
+        "Test validates catalog entities",
+        "AT-E1-003 passes"
+      ],
+      "dependencies": ["#11", "#12", "#13"]
+    },
+    {
+      "number": 16,
+      "title": "Deploy Jenkins with Kubernetes plugin",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-1", "type-cicd", "comp-jenkins", "priority-p0"],
+      "description": "Deploy Jenkins with Configuration as Code and Kubernetes plugin",
+      "acceptance_criteria": [
+        "Jenkins deployed via Helm",
+        "JCasC configured",
+        "Kubernetes plugin working",
+        "Dynamic agents provisioning",
+        "Persistent storage for jobs",
+        "Accessible via ingress"
+      ],
+      "dependencies": ["#3", "#4", "#8"],
+      "blocks": []
+    },
+    {
+      "number": 17,
+      "title": "Configure Jenkins JCasC",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-cicd", "comp-jenkins", "priority-p0"],
+      "description": "Configure Jenkins using Configuration as Code for reproducibility",
+      "acceptance_criteria": [
+        "JCasC YAML configures all settings",
+        "Plugins installed automatically",
+        "Credentials managed via secrets",
+        "GitHub integration configured",
+        "No manual configuration needed"
+      ],
+      "dependencies": ["#16"],
+      "blocks": []
+    },
+    {
+      "number": 18,
+      "title": "Create Jenkins shared library",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-1", "type-cicd", "comp-jenkins", "priority-p0"],
+      "description": "Create shared library with reusable pipeline functions",
+      "acceptance_criteria": [
+        "Shared library repo created",
+        "Functions for: build, test, scan, containerize, deploy",
+        "Loaded automatically in Jenkins",
+        "Used by all 3 Jenkinsfiles",
+        "Documentation complete"
+      ],
+      "dependencies": ["#16"],
+      "blocks": []
+    },
+    {
+      "number": 19,
+      "title": "Create Java Spring Boot Jenkinsfile",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-cicd", "comp-jenkins", "priority-p0"],
+      "description": "Create golden path Jenkinsfile for Java/Maven projects",
+      "acceptance_criteria": [
+        "Stages: checkout, build, test, scan, containerize, push, deploy",
+        "Uses shared library functions",
+        "Integrates with SonarQube",
+        "Triggers ArgoCD sync",
+        "Collects DORA metrics"
+      ],
+      "dependencies": ["#18"],
+      "blocks": []
+    },
+    {
+      "number": 20,
+      "title": "Create Python FastAPI Jenkinsfile",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-cicd", "comp-jenkins", "priority-p0"],
+      "description": "Create golden path Jenkinsfile for Python/Poetry projects",
+      "acceptance_criteria": [
+        "Stages: checkout, install, test, scan, containerize, push, deploy",
+        "Poetry dependency management",
+        "pytest with coverage",
+        "Integrates with SonarQube"
+      ],
+      "dependencies": ["#18"],
+      "blocks": []
+    },
+    {
+      "number": 21,
+      "title": "Create Node.js Express Jenkinsfile",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-cicd", "comp-jenkins", "priority-p0"],
+      "description": "Create golden path Jenkinsfile for Node.js/npm projects",
+      "acceptance_criteria": [
+        "Stages: checkout, install, lint, test, scan, containerize, push, deploy",
+        "npm/yarn support",
+        "jest with coverage",
+        "eslint integration"
+      ],
+      "dependencies": ["#18"],
+      "blocks": []
+    },
+    {
+      "number": 22,
+      "title": "Deploy Harbor container registry",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-1", "type-cicd", "comp-harbor", "priority-p0"],
+      "description": "Deploy Harbor with security scanning and RBAC",
+      "acceptance_criteria": [
+        "Harbor deployed via Helm",
+        "PostgreSQL backend",
+        "Trivy scanner integrated",
+        "RBAC configured",
+        "Accessible via ingress",
+        "AT-E1-009 passes"
+      ],
+      "dependencies": ["#3", "#4", "#8"],
+      "blocks": []
+    },
+    {
+      "number": 23,
+      "title": "Create AT-E1-004 CI/CD pipeline test",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Test validating Jenkins pipelines work end-to-end",
+      "acceptance_criteria": [
+        "Test triggers builds for 3 templates",
+        "Test validates image pushed to Harbor",
+        "Test validates deployment to K8s",
+        "AT-E1-004 passes"
+      ],
+      "dependencies": ["#19", "#20", "#21", "#22"],
+      "blocks": []
+    },
+    {
+      "number": 24,
+      "title": "Deploy SonarQube for code quality",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-1", "type-security", "comp-sonarqube", "priority-p0"],
+      "description": "Deploy SonarQube with PostgreSQL and quality gates",
+      "acceptance_criteria": [
+        "SonarQube deployed via Helm",
+        "PostgreSQL backend",
+        "Quality gates configured",
+        "Jenkins integration working",
+        "Accessible via ingress"
+      ],
+      "dependencies": ["#3", "#4", "#8"],
+      "blocks": []
+    },
+    {
+      "number": 25,
+      "title": "Integrate Trivy container scanning",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 3,
+      "labels": ["epic-1", "type-security", "comp-trivy", "priority-p0"],
+      "description": "Integrate Trivy scanning in pipelines and Harbor",
+      "acceptance_criteria": [
+        "Trivy scans images in Jenkins",
+        "Harbor uses Trivy for registry scanning",
+        "Critical/high vulns fail builds",
+        "Reports available in Jenkins"
+      ],
+      "dependencies": ["#16", "#22"],
+      "blocks": []
+    },
+    {
+      "number": 26,
+      "title": "Add git-secrets to pipelines",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-security", "comp-secrets", "priority-p0"],
+      "description": "Integrate git-secrets to prevent credential commits",
+      "acceptance_criteria": [
+        "git-secrets installed in Jenkins agents",
+        "Scans run on every commit",
+        "Secrets detected fail builds",
+        "Pre-commit hooks documented"
+      ],
+      "dependencies": ["#16"],
+      "blocks": []
+    },
+    {
+      "number": 27,
+      "title": "Configure security gates in pipelines",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 3,
+      "labels": ["epic-1", "type-security", "comp-jenkins", "priority-p0"],
+      "description": "Add security gates that fail builds on critical issues",
+      "acceptance_criteria": [
+        "SonarQube gate fails on quality threshold",
+        "Trivy gate fails on critical CVEs",
+        "git-secrets gate fails on secrets",
+        "Gates configurable per project",
+        "AT-E1-005 passes"
+      ],
+      "dependencies": ["#24", "#25", "#26"],
+      "blocks": []
+    },
+    {
+      "number": 28,
+      "title": "Create AT-E1-005 security scanning test",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Test validating all security scanning is functional",
+      "acceptance_criteria": [
+        "Test validates SonarQube integration",
+        "Test validates Trivy scanning",
+        "Test validates git-secrets",
+        "Test validates security gates work",
+        "AT-E1-005 passes"
+      ],
+      "dependencies": ["#27"],
+      "blocks": []
+    },
+    {
+      "number": 29,
+      "title": "Deploy kube-prometheus-stack",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-1", "type-observability", "comp-prometheus", "priority-p0"],
+      "description": "Deploy Prometheus Operator with Grafana and Alertmanager",
+      "acceptance_criteria": [
+        "Prometheus Operator deployed",
+        "Grafana accessible via ingress",
+        "ServiceMonitors configured",
+        "Alertmanager configured",
+        "Persistent storage for metrics"
+      ],
+      "dependencies": ["#3", "#4", "#8"],
+      "blocks": []
+    },
+    {
+      "number": 30,
+      "title": "Configure ServiceMonitors for platform",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-observability", "comp-prometheus", "priority-p0"],
+      "description": "Create ServiceMonitors for Jenkins, ArgoCD, Backstage, Harbor",
+      "acceptance_criteria": [
+        "ServiceMonitors for all platform components",
+        "Metrics flowing to Prometheus",
+        "Basic dashboards in Grafana",
+        "No missing metrics warnings"
+      ],
+      "dependencies": ["#29"],
+      "blocks": []
+    },
+    {
+      "number": 31,
+      "title": "Deploy OpenTelemetry Collector",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-observability", "comp-otel", "priority-p0"],
+      "description": "Deploy OTel Collector for traces, metrics, logs",
+      "acceptance_criteria": [
+        "OTel Collector deployed as DaemonSet",
+        "Receivers configured",
+        "Exporters to Prometheus and OpenSearch",
+        "Sample apps instrumented"
+      ],
+      "dependencies": ["#29"],
+      "blocks": []
+    },
+    {
+      "number": 32,
+      "title": "Deploy OpenSearch for log aggregation",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-1", "type-observability", "comp-opensearch", "priority-p0"],
+      "description": "Deploy OpenSearch with Fluent Bit for log aggregation",
+      "acceptance_criteria": [
+        "OpenSearch cluster deployed (3 nodes)",
+        "Fluent Bit collecting logs",
+        "Index patterns configured",
+        "Dashboards created",
+        "Retention policies set"
+      ],
+      "dependencies": ["#4", "#8"],
+      "blocks": []
+    },
+    {
+      "number": 33,
+      "title": "Create Grafana dashboards for platform",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-1", "type-observability", "comp-grafana", "priority-p0"],
+      "description": "Create comprehensive Grafana dashboards for platform monitoring",
+      "acceptance_criteria": [
+        "Cluster overview dashboard",
+        "Application metrics dashboard",
+        "CI/CD pipeline dashboard",
+        "Cost monitoring dashboard",
+        "AT-E1-006 passes"
+      ],
+      "dependencies": ["#29", "#30"],
+      "blocks": []
+    },
+    {
+      "number": 34,
+      "title": "Create AT-E1-006 observability test",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Test validating observability stack is functional",
+      "acceptance_criteria": [
+        "Test validates Prometheus collecting metrics",
+        "Test validates Grafana accessible",
+        "Test validates OpenSearch receiving logs",
+        "Test validates dashboards load",
+        "AT-E1-006 passes"
+      ],
+      "dependencies": ["#33"],
+      "blocks": []
+    },
+    {
+      "number": 35,
+      "title": "Design DORA metrics collection service",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-1", "type-metrics", "comp-dora", "priority-p0"],
+      "description": "Design and implement Go/Python service for DORA metrics collection",
+      "acceptance_criteria": [
+        "Service receives webhooks from Git, Jenkins, ArgoCD",
+        "Calculates all 4 DORA metrics",
+        "Exposes Prometheus metrics endpoint",
+        "Stores historical data in PostgreSQL",
+        "REST API for queries"
+      ],
+      "dependencies": ["#16", "#6"],
+      "blocks": []
+    },
+    {
+      "number": 36,
+      "title": "Configure webhooks for DORA metrics",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-metrics", "comp-dora", "priority-p0"],
+      "description": "Configure webhooks from Jenkins, ArgoCD, GitHub to DORA service",
+      "acceptance_criteria": [
+        "GitHub webhooks for commits",
+        "Jenkins webhooks for builds",
+        "ArgoCD webhooks for deployments",
+        "Incident webhook configured",
+        "All webhooks tested"
+      ],
+      "dependencies": ["#35"],
+      "blocks": []
+    },
+    {
+      "number": 37,
+      "title": "Create DORA metrics dashboard in Grafana",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-metrics", "comp-dora", "priority-p0"],
+      "description": "Create comprehensive DORA dashboard with 4 key metrics",
+      "acceptance_criteria": [
+        "Dashboard shows all 4 DORA metrics",
+        "Team-level filtering works",
+        "30-day trending visible",
+        "Benchmark comparison included",
+        "AT-E1-007 passes"
+      ],
+      "dependencies": ["#36"],
+      "blocks": []
+    },
+    {
+      "number": 38,
+      "title": "Create AT-E1-007 DORA metrics test",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Test validating DORA metrics are collecting and displaying",
+      "acceptance_criteria": [
+        "Test triggers sample deployments",
+        "Test validates metrics collected",
+        "Test validates dashboard displays data",
+        "Test validates all 4 metrics present",
+        "AT-E1-007 passes"
+      ],
+      "dependencies": ["#37"],
+      "blocks": []
+    },
+    {
+      "number": 39,
+      "title": "Deploy 3 sample applications via templates",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-1", "type-apps", "comp-samples", "priority-p0"],
+      "description": "Deploy Java, Python, Node.js sample apps using Backstage templates",
+      "acceptance_criteria": [
+        "Java Spring Boot app deployed",
+        "Python FastAPI app deployed",
+        "Node.js Express app deployed",
+        "All apps accessible via ingress",
+        "All apps in Backstage catalog",
+        "AT-E1-008 passes"
+      ],
+      "dependencies": ["#11", "#12", "#13"],
+      "blocks": []
+    },
+    {
+      "number": 40,
+      "title": "Create AT-E1-008 golden paths test",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Test validating all 3 templates work end-to-end",
+      "acceptance_criteria": [
+        "Test scaffolds app from each template",
+        "Test triggers CI/CD pipeline",
+        "Test validates deployment successful",
+        "Test validates app responds",
+        "AT-E1-008 passes"
+      ],
+      "dependencies": ["#39"],
+      "blocks": []
+    },
+    {
+      "number": 41,
+      "title": "Perform end-to-end integration testing",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 8,
+      "labels": ["epic-1", "type-testing", "comp-integration", "priority-p0"],
+      "description": "Comprehensive E2E testing of entire platform workflow",
+      "acceptance_criteria": [
+        "New developer can onboard",
+        "Template scaffolds and deploys app",
+        "Full CI/CD pipeline runs",
+        "DORA metrics collected",
+        "Observability data flowing",
+        "AT-E1-012 passes"
+      ],
+      "dependencies": ["#40"],
+      "blocks": []
+    },
+    {
+      "number": 42,
+      "title": "Optimize platform resource utilization",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-1", "type-optimization", "comp-platform", "priority-p0"],
+      "description": "Optimize resources to achieve <70% CPU/Memory utilization",
+      "acceptance_criteria": [
+        "Resource limits tuned for all components",
+        "HPA configured where appropriate",
+        "Cluster utilization <70%",
+        "Cost estimate documented",
+        "AT-E1-010 passes"
+      ],
+      "dependencies": ["#41"],
+      "blocks": []
+    },
+    {
+      "number": 19,
+      "title": "Create Java Spring Boot Jenkinsfile",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-cicd", "comp-jenkins", "priority-p0"],
+      "description": "Create golden path Jenkinsfile for Java/Maven projects",
+      "acceptance_criteria": [
+        "Stages: checkout, build, test, scan, containerize, push, deploy",
+        "Uses shared library functions",
+        "Integrates with SonarQube",
+        "Triggers ArgoCD sync",
+        "Collects DORA metrics"
+      ],
+      "dependencies": ["#18"]
+    },
+    {
+      "number": 20,
+      "title": "Create Python FastAPI Jenkinsfile",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-cicd", "comp-jenkins", "priority-p0"],
+      "description": "Create golden path Jenkinsfile for Python/Poetry projects",
+      "acceptance_criteria": [
+        "Stages: checkout, install, test, scan, containerize, push, deploy",
+        "Poetry dependency management",
+        "pytest with coverage",
+        "Integrates with SonarQube"
+      ],
+      "dependencies": ["#18"]
+    },
+    {
+      "number": 21,
+      "title": "Create Node.js Express Jenkinsfile",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-cicd", "comp-jenkins", "priority-p0"],
+      "description": "Create golden path Jenkinsfile for Node.js/npm projects",
+      "acceptance_criteria": [
+        "Stages: checkout, install, lint, test, scan, containerize, push, deploy",
+        "npm/yarn support",
+        "jest with coverage",
+        "eslint integration"
+      ],
+      "dependencies": ["#18"]
+    },
+    {
+      "number": 22,
+      "title": "Deploy Harbor container registry",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-1", "type-cicd", "comp-harbor", "priority-p0"],
+      "description": "Deploy Harbor with security scanning and RBAC",
+      "acceptance_criteria": [
+        "Harbor deployed via Helm",
+        "PostgreSQL backend",
+        "Trivy scanner integrated",
+        "RBAC configured",
+        "Accessible via ingress",
+        "AT-E1-009 passes"
+      ],
+      "dependencies": ["#3", "#4", "#8"]
+    },
+    {
+      "number": 23,
+      "title": "Create AT-E1-004 CI/CD pipeline test",
+      "milestone": "Week 2: Developer Portal & CI/CD",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Test validating Jenkins pipelines work end-to-end",
+      "acceptance_criteria": [
+        "Test triggers builds for 3 templates",
+        "Test validates image pushed to Harbor",
+        "Test validates deployment to K8s",
+        "AT-E1-004 passes"
+      ],
+      "dependencies": ["#19", "#20", "#21", "#22"]
+    },
+    {
+      "number": 24,
+      "title": "Deploy SonarQube for code quality",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-1", "type-security", "comp-sonarqube", "priority-p0"],
+      "description": "Deploy SonarQube with PostgreSQL and quality gates",
+      "acceptance_criteria": [
+        "SonarQube deployed via Helm",
+        "PostgreSQL backend",
+        "Quality gates configured",
+        "Jenkins integration working",
+        "Accessible via ingress"
+      ],
+      "dependencies": ["#3", "#4", "#8"]
+    },
+    {
+      "number": 25,
+      "title": "Integrate Trivy container scanning",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 3,
+      "labels": ["epic-1", "type-security", "comp-trivy", "priority-p0"],
+      "description": "Integrate Trivy scanning in pipelines and Harbor",
+      "acceptance_criteria": [
+        "Trivy scans images in Jenkins",
+        "Harbor uses Trivy for registry scanning",
+        "Critical/high vulns fail builds",
+        "Reports available in Jenkins"
+      ],
+      "dependencies": ["#16", "#22"]
+    },
+    {
+      "number": 26,
+      "title": "Add git-secrets to pipelines",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-security", "comp-secrets", "priority-p0"],
+      "description": "Integrate git-secrets to prevent credential commits",
+      "acceptance_criteria": [
+        "git-secrets installed in Jenkins agents",
+        "Scans run on every commit",
+        "Secrets detected fail builds",
+        "Pre-commit hooks documented"
+      ],
+      "dependencies": ["#16"]
+    },
+    {
+      "number": 27,
+      "title": "Configure security gates in pipelines",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 3,
+      "labels": ["epic-1", "type-security", "comp-jenkins", "priority-p0"],
+      "description": "Add security gates that fail builds on critical issues",
+      "acceptance_criteria": [
+        "SonarQube gate fails on quality threshold",
+        "Trivy gate fails on critical CVEs",
+        "git-secrets gate fails on secrets",
+        "Gates configurable per project",
+        "AT-E1-005 passes"
+      ],
+      "dependencies": ["#24", "#25", "#26"]
+    },
+    {
+      "number": 28,
+      "title": "Create AT-E1-005 security scanning test",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Test validating all security scanning is functional",
+      "acceptance_criteria": [
+        "Test validates SonarQube integration",
+        "Test validates Trivy scanning",
+        "Test validates git-secrets",
+        "Test validates security gates work",
+        "AT-E1-005 passes"
+      ],
+      "dependencies": ["#27"]
+    },
+    {
+      "number": 29,
+      "title": "Deploy kube-prometheus-stack",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-1", "type-observability", "comp-prometheus", "priority-p0"],
+      "description": "Deploy Prometheus Operator with Grafana and Alertmanager",
+      "acceptance_criteria": [
+        "Prometheus Operator deployed",
+        "Grafana accessible via ingress",
+        "ServiceMonitors configured",
+        "Alertmanager configured",
+        "Persistent storage for metrics"
+      ],
+      "dependencies": ["#3", "#4", "#8"]
+    },
+    {
+      "number": 30,
+      "title": "Configure ServiceMonitors for platform",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-observability", "comp-prometheus", "priority-p0"],
+      "description": "Create ServiceMonitors for Jenkins, ArgoCD, Backstage, Harbor",
+      "acceptance_criteria": [
+        "ServiceMonitors for all platform components",
+        "Metrics flowing to Prometheus",
+        "Basic dashboards in Grafana",
+        "No missing metrics warnings"
+      ],
+      "dependencies": ["#29"]
+    },
+    {
+      "number": 31,
+      "title": "Deploy OpenTelemetry Collector",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-observability", "comp-otel", "priority-p0"],
+      "description": "Deploy OTel Collector for traces, metrics, logs",
+      "acceptance_criteria": [
+        "OTel Collector deployed as DaemonSet",
+        "Receivers configured",
+        "Exporters to Prometheus and OpenSearch",
+        "Sample apps instrumented"
+      ],
+      "dependencies": ["#29"]
+    },
+    {
+      "number": 32,
+      "title": "Deploy OpenSearch for log aggregation",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-1", "type-observability", "comp-opensearch", "priority-p0"],
+      "description": "Deploy OpenSearch with Fluent Bit for log aggregation",
+      "acceptance_criteria": [
+        "OpenSearch cluster deployed (3 nodes)",
+        "Fluent Bit collecting logs",
+        "Index patterns configured",
+        "Dashboards created",
+        "Retention policies set"
+      ],
+      "dependencies": ["#4", "#8"]
+    },
+    {
+      "number": 33,
+      "title": "Create Grafana dashboards for platform",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-1", "type-observability", "comp-grafana", "priority-p0"],
+      "description": "Create comprehensive Grafana dashboards for platform monitoring",
+      "acceptance_criteria": [
+        "Cluster overview dashboard",
+        "Application metrics dashboard",
+        "CI/CD pipeline dashboard",
+        "Cost monitoring dashboard",
+        "AT-E1-006 passes"
+      ],
+      "dependencies": ["#29", "#30"]
+    },
+    {
+      "number": 34,
+      "title": "Create AT-E1-006 observability test",
+      "milestone": "Week 3: Security & Observability",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Test validating observability stack is functional",
+      "acceptance_criteria": [
+        "Test validates Prometheus collecting metrics",
+        "Test validates Grafana accessible",
+        "Test validates OpenSearch receiving logs",
+        "Test validates dashboards load",
+        "AT-E1-006 passes"
+      ],
+      "dependencies": ["#33"]
+    },
+    {
+      "number": 35,
+      "title": "Design DORA metrics collection service",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-1", "type-metrics", "comp-dora", "priority-p0"],
+      "description": "Design and implement Go/Python service for DORA metrics collection",
+      "acceptance_criteria": [
+        "Service receives webhooks from Git, Jenkins, ArgoCD",
+        "Calculates all 4 DORA metrics",
+        "Exposes Prometheus metrics endpoint",
+        "Stores historical data in PostgreSQL",
+        "REST API for queries"
+      ],
+      "dependencies": ["#16", "#6"]
+    },
+    {
+      "number": 36,
+      "title": "Configure webhooks for DORA metrics",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-metrics", "comp-dora", "priority-p0"],
+      "description": "Configure webhooks from Jenkins, ArgoCD, GitHub to DORA service",
+      "acceptance_criteria": [
+        "GitHub webhooks for commits",
+        "Jenkins webhooks for builds",
+        "ArgoCD webhooks for deployments",
+        "Incident webhook configured",
+        "All webhooks tested"
+      ],
+      "dependencies": ["#35"]
+    },
+    {
+      "number": 37,
+      "title": "Create DORA metrics dashboard in Grafana",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-metrics", "comp-dora", "priority-p0"],
+      "description": "Create comprehensive DORA dashboard with 4 key metrics",
+      "acceptance_criteria": [
+        "Dashboard shows all 4 DORA metrics",
+        "Team-level filtering works",
+        "30-day trending visible",
+        "Benchmark comparison included",
+        "AT-E1-007 passes"
+      ],
+      "dependencies": ["#36"]
+    },
+    {
+      "number": 38,
+      "title": "Create AT-E1-007 DORA metrics test",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Test validating DORA metrics are collecting and displaying",
+      "acceptance_criteria": [
+        "Test triggers sample deployments",
+        "Test validates metrics collected",
+        "Test validates dashboard displays data",
+        "Test validates all 4 metrics present",
+        "AT-E1-007 passes"
+      ],
+      "dependencies": ["#37"]
+    },
+    {
+      "number": 39,
+      "title": "Deploy 3 sample applications via templates",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-1", "type-apps", "comp-samples", "priority-p0"],
+      "description": "Deploy Java, Python, Node.js sample apps using Backstage templates",
+      "acceptance_criteria": [
+        "Java Spring Boot app deployed",
+        "Python FastAPI app deployed",
+        "Node.js Express app deployed",
+        "All apps accessible via ingress",
+        "All apps in Backstage catalog",
+        "AT-E1-008 passes"
+      ],
+      "dependencies": ["#11", "#12", "#13"]
+    },
+    {
+      "number": 40,
+      "title": "Create AT-E1-008 golden paths test",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-1", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Test validating all 3 templates work end-to-end",
+      "acceptance_criteria": [
+        "Test scaffolds app from each template",
+        "Test triggers CI/CD pipeline",
+        "Test validates deployment successful",
+        "Test validates app responds",
+        "AT-E1-008 passes"
+      ],
+      "dependencies": ["#39"]
+    },
+    {
+      "number": 41,
+      "title": "Perform end-to-end integration testing",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 8,
+      "labels": ["epic-1", "type-testing", "comp-integration", "priority-p0"],
+      "description": "Comprehensive E2E testing of entire platform workflow",
+      "acceptance_criteria": [
+        "New developer can onboard",
+        "Template scaffolds and deploys app",
+        "Full CI/CD pipeline runs",
+        "DORA metrics collected",
+        "Observability data flowing",
+        "AT-E1-012 passes"
+      ],
+      "dependencies": ["#40"]
+    },
+    {
+      "number": 42,
+      "title": "Optimize platform resource utilization",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-1", "type-optimization", "comp-platform", "priority-p0"],
+      "description": "Optimize resources to achieve <70% CPU/Memory utilization",
+      "acceptance_criteria": [
+        "Resource limits tuned for all components",
+        "HPA configured where appropriate",
+        "Cluster utilization <70%",
+        "Cost estimate documented",
+        "AT-E1-010 passes"
+      ],
+      "dependencies": ["#41"],
+      "blocks": []
+    },
+    {
+      "number": 43,
+      "title": "Create complete Epic 1 documentation",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 8,
+      "labels": ["epic-1", "type-docs", "comp-documentation", "priority-p0"],
+      "description": "Create comprehensive documentation for all Epic 1 components",
+      "acceptance_criteria": [
+        "Architecture diagrams created",
+        "Runbooks for all components",
+        "Troubleshooting guide complete",
+        "Getting started guide updated",
+        "AT-E1-011 passes"
+      ],
+      "dependencies": ["#41"],
+      "blocks": []
+    },
+    {
+      "number": 44,
+      "title": "Create Epic 1 video walkthrough",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P1",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-docs", "comp-documentation", "priority-p1"],
+      "description": "Record video demonstrating complete platform capabilities",
+      "acceptance_criteria": [
+        "15-20 minute walkthrough video",
+        "Shows: cluster, portal, templates, CI/CD, metrics",
+        "Posted to YouTube/internal wiki",
+        "Transcript provided"
+      ],
+      "dependencies": ["#43"],
+      "blocks": []
+    },
+    {
+      "number": 45,
+      "title": "Run all Epic 1 acceptance tests",
+      "milestone": "Week 4: DORA Metrics & Integration",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-1", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Execute all 12 Epic 1 acceptance tests and generate report",
+      "acceptance_criteria": [
+        "All 12 tests execute successfully",
+        "AT-E1-001 through AT-E1-012 pass",
+        "HTML report generated",
+        "Results saved to logs/",
+        "Epic 1 marked complete"
+      ],
+      "dependencies": ["#42", "#43"],
+      "blocks": []
+    }
+  ]
+}
