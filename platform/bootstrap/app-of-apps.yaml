@@ -1,0 +1,51 @@
+# ============================================================================
+# FILE: platform/bootstrap/app-of-apps.yaml
+# PURPOSE: Root ArgoCD Application implementing the App-of-Apps pattern
+#          Manages all platform applications via ApplicationSet auto-discovery
+# PATTERN: App-of-Apps - Single root app that manages child applications
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-bootstrap
+  namespace: fawkes
+  labels:
+    app: platform-bootstrap
+    component: gitops
+    environment: all
+    team: platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+    argocd.argoproj.io/docs: "https://github.com/paruff/fawkes/blob/main/platform/bootstrap/README.md"
+spec:
+  project: default
+
+  # Source: ApplicationSet and Application manifests for all platform apps
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    path: platform/bootstrap
+    targetRevision: HEAD
+
+  # Destination: ArgoCD namespace (Applications are cluster-scoped)
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+
+  # Sync Policy: Automated with self-heal and prune
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Keep history limited
+  revisionHistoryLimit: 10
