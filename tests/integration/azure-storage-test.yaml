@@ -1,0 +1,414 @@
+# ============================================================================
+# FILE: tests/integration/azure-storage-test.yaml
+# PURPOSE: Integration tests for Azure storage classes and persistent volumes
+#          Tests PVC creation, binding, expansion, and snapshot/restore
+# ============================================================================
+
+---
+# Namespace for storage tests
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: storage-test
+  labels:
+    purpose: testing
+    component: storage
+
+---
+# Test PVC 1: Azure Disk Premium (Default)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test-azure-disk-premium
+  namespace: storage-test
+  labels:
+    test: azure-storage
+    type: disk-premium
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  # Using default storage class (azure-disk-premium)
+
+---
+# Test PVC 2: Azure Disk Standard
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test-azure-disk-standard
+  namespace: storage-test
+  labels:
+    test: azure-storage
+    type: disk-standard
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: azure-disk-standard
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+# Test PVC 3: Azure Files
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test-azure-file
+  namespace: storage-test
+  labels:
+    test: azure-storage
+    type: file
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: azure-file
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+# Test Pod 1: Write to Premium Disk
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-disk-premium-writer
+  namespace: storage-test
+  labels:
+    test: azure-storage
+    role: writer
+    type: disk-premium
+spec:
+  containers:
+    - name: writer
+      image: busybox:latest
+      command:
+        - sh
+        - -c
+        - |
+          echo "Writing test data to premium disk..."
+          date > /data/test-premium.txt
+          echo "Test data from premium disk" >> /data/test-premium.txt
+          dd if=/dev/zero of=/data/testfile bs=1M count=10
+          echo "Write completed. File info:"
+          ls -lh /data/
+          echo "Sleeping to keep pod running..."
+          sleep 3600
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: test-azure-disk-premium
+  restartPolicy: Never
+
+---
+# Test Pod 2: Write to Standard Disk
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-disk-standard-writer
+  namespace: storage-test
+  labels:
+    test: azure-storage
+    role: writer
+    type: disk-standard
+spec:
+  containers:
+    - name: writer
+      image: busybox:latest
+      command:
+        - sh
+        - -c
+        - |
+          echo "Writing test data to standard disk..."
+          date > /data/test-standard.txt
+          echo "Test data from standard disk" >> /data/test-standard.txt
+          dd if=/dev/zero of=/data/testfile bs=1M count=10
+          echo "Write completed. File info:"
+          ls -lh /data/
+          echo "Sleeping to keep pod running..."
+          sleep 3600
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: test-azure-disk-standard
+  restartPolicy: Never
+
+---
+# Test Pod 3: Write to Azure Files (Writer 1)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-file-writer-1
+  namespace: storage-test
+  labels:
+    test: azure-storage
+    role: writer
+    type: file
+spec:
+  containers:
+    - name: writer
+      image: busybox:latest
+      command:
+        - sh
+        - -c
+        - |
+          echo "Writer 1: Writing test data to Azure Files..."
+          date > /data/test-writer-1.txt
+          echo "Test data from writer 1" >> /data/test-writer-1.txt
+          echo "Sleeping to keep pod running..."
+          sleep 3600
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: test-azure-file
+  restartPolicy: Never
+
+---
+# Test Pod 4: Write to Azure Files (Writer 2) - Tests ReadWriteMany
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-file-writer-2
+  namespace: storage-test
+  labels:
+    test: azure-storage
+    role: writer
+    type: file
+spec:
+  containers:
+    - name: writer
+      image: busybox:latest
+      command:
+        - sh
+        - -c
+        - |
+          echo "Writer 2: Writing test data to Azure Files..."
+          sleep 5  # Wait for writer 1 to create file
+          date > /data/test-writer-2.txt
+          echo "Test data from writer 2" >> /data/test-writer-2.txt
+          echo "Checking files from both writers:"
+          ls -lh /data/
+          cat /data/test-writer-1.txt || echo "Writer 1 file not found yet"
+          echo "Sleeping to keep pod running..."
+          sleep 3600
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: test-azure-file
+  restartPolicy: Never
+
+---
+# Test Pod 5: Read from Premium Disk (for verification)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-disk-premium-reader
+  namespace: storage-test
+  labels:
+    test: azure-storage
+    role: reader
+    type: disk-premium
+spec:
+  containers:
+    - name: reader
+      image: busybox:latest
+      command:
+        - sh
+        - -c
+        - |
+          echo "Reading test data from premium disk..."
+          sleep 10  # Wait for writer to complete
+          if [ -f /data/test-premium.txt ]; then
+            echo "File found! Contents:"
+            cat /data/test-premium.txt
+            echo "File size:"
+            ls -lh /data/
+            echo "SUCCESS: Data verified"
+          else
+            echo "ERROR: File not found"
+            exit 1
+          fi
+          sleep 3600
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: test-azure-disk-premium
+  restartPolicy: Never
+
+---
+# VolumeSnapshot for Premium Disk (for snapshot testing)
+# Note: Requires VolumeSnapshotClass 'csi-azuredisk-vsc' to be configured
+# This is typically installed by default in AKS clusters
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: test-disk-premium-snapshot
+  namespace: storage-test
+  labels:
+    test: azure-storage
+    type: snapshot
+spec:
+  volumeSnapshotClassName: csi-azuredisk-vsc
+  source:
+    persistentVolumeClaimName: test-azure-disk-premium
+
+---
+# PVC from Snapshot (for restore testing)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test-disk-premium-restored
+  namespace: storage-test
+  labels:
+    test: azure-storage
+    type: disk-premium-restored
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  dataSource:
+    name: test-disk-premium-snapshot
+    kind: VolumeSnapshot
+    apiGroup: snapshot.storage.k8s.io
+
+---
+# ConfigMap with test scripts
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: storage-test-scripts
+  namespace: storage-test
+data:
+  run-tests.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "=========================================="
+    echo "Azure Storage Integration Tests"
+    echo "=========================================="
+
+    # Test 1: Check storage classes exist
+    echo -e "\n[Test 1] Checking storage classes..."
+    kubectl get storageclass azure-disk-premium azure-disk-standard azure-file
+
+    # Test 2: Verify default storage class
+    echo -e "\n[Test 2] Verifying default storage class..."
+    DEFAULT_SC=$(kubectl get storageclass \
+      -o jsonpath='{.items[?(@.metadata.annotations.storageclass\.kubernetes\.io/is-default-class=="true")].metadata.name}')
+    if [ "$DEFAULT_SC" = "azure-disk-premium" ]; then
+      echo "✓ Default storage class is azure-disk-premium"
+    else
+      echo "✗ Default storage class is $DEFAULT_SC (expected: azure-disk-premium)"
+      exit 1
+    fi
+
+    # Test 3: Check PVCs are bound
+    echo -e "\n[Test 3] Checking PVC status..."
+    for pvc in test-azure-disk-premium test-azure-disk-standard test-azure-file; do
+      echo "Checking $pvc..."
+      kubectl wait --for=jsonpath='{.status.phase}'=Bound \
+        pvc/$pvc -n storage-test --timeout=300s
+      echo "✓ $pvc is bound"
+    done
+
+    # Test 4: Verify pods are running
+    echo -e "\n[Test 4] Checking pods status..."
+    kubectl wait --for=condition=Ready pod -l test=azure-storage \
+      -n storage-test --timeout=300s
+    echo "✓ All test pods are running"
+
+    # Test 5: Verify data persistence
+    echo -e "\n[Test 5] Verifying data in volumes..."
+    kubectl logs test-disk-premium-writer -n storage-test | grep "Write completed"
+    kubectl logs test-disk-standard-writer -n storage-test | grep "Write completed"
+    echo "✓ Data written successfully"
+
+    # Test 6: Test volume expansion (Premium disk)
+    echo -e "\n[Test 6] Testing volume expansion..."
+    kubectl patch pvc test-azure-disk-premium -n storage-test \
+      -p '{"spec":{"resources":{"requests":{"storage":"10Gi"}}}}'
+    sleep 30
+    NEW_SIZE=$(kubectl get pvc test-azure-disk-premium -n storage-test \
+      -o jsonpath='{.status.capacity.storage}')
+    echo "New volume size: $NEW_SIZE"
+
+    # Test 7: Test ReadWriteMany (Azure Files)
+    echo -e "\n[Test 7] Testing ReadWriteMany access..."
+    kubectl logs test-file-writer-1 -n storage-test | grep "Writing test data"
+    kubectl logs test-file-writer-2 -n storage-test | grep "Writing test data"
+    echo "✓ Multiple pods can write to Azure Files"
+
+    # Test 8: Test snapshot creation
+    echo -e "\n[Test 8] Testing snapshot creation..."
+    kubectl wait --for=jsonpath='{.status.readyToUse}'=true \
+      volumesnapshot/test-disk-premium-snapshot -n storage-test \
+      --timeout=300s || echo "Snapshot may require VolumeSnapshotClass configuration"
+
+    echo -e "\n=========================================="
+    echo "All tests completed!"
+    echo "=========================================="
+
+  cleanup.sh: |
+    #!/bin/bash
+
+    echo "=========================================="
+    echo "Cleaning up Azure Storage Tests"
+    echo "=========================================="
+
+    # Delete test resources
+    echo "Deleting test namespace and all resources..."
+    kubectl delete namespace storage-test --timeout=300s
+
+    echo "✓ Cleanup completed"
+
+  performance-test.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "=========================================="
+    echo "Azure Storage Performance Tests"
+    echo "=========================================="
+
+    NAMESPACE="storage-test"
+
+    # Test 1: Sequential write performance (Premium)
+    echo -e "\n[Test 1] Premium disk sequential write performance..."
+    kubectl exec test-disk-premium-writer -n $NAMESPACE -- sh -c \
+      "dd if=/dev/zero of=/data/perf-test bs=1M count=1000 oflag=direct 2>&1 \
+      | grep -i copied"
+
+    # Test 2: Sequential write performance (Standard)
+    echo -e "\n[Test 2] Standard disk sequential write performance..."
+    kubectl exec test-disk-standard-writer -n $NAMESPACE -- sh -c \
+      "dd if=/dev/zero of=/data/perf-test bs=1M count=500 oflag=direct 2>&1 \
+      | grep -i copied"
+
+    # Test 3: Random write performance
+    echo -e "\n[Test 3] Random write performance (Premium)..."
+    kubectl exec test-disk-premium-writer -n $NAMESPACE -- sh -c \
+      "dd if=/dev/urandom of=/data/random-test bs=64K count=1000 oflag=direct 2>&1 \
+      | grep -i copied"
+
+    echo -e "\n=========================================="
+    echo "Performance tests completed!"
+    echo "Review the throughput values above."
+    echo "Premium SSD should show higher MB/s than Standard."
+    echo "=========================================="

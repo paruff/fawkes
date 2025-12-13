@@ -1,0 +1,36 @@
+# ============================================================================
+# FILE: platform/apps/storage/azure-file-storageclass.yaml
+# PURPOSE: Azure Files StorageClass for ReadWriteMany workloads
+#          Enables multiple pods to access shared storage simultaneously
+# ============================================================================
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: azure-file
+  labels:
+    app: storage
+    component: storageclass
+    environment: production
+    team: platform
+    backup: "true"
+  annotations:
+    description: "Azure Files for ReadWriteMany shared storage"
+provisioner: file.csi.azure.com
+parameters:
+  # SKU for Azure Files
+  skuName: Standard_LRS
+  # Protocol
+  protocol: smb
+  # Tags for backup and cost tracking
+  tags: backup=enabled,managed-by=kubernetes,platform=fawkes
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+mountOptions:
+  - dir_mode=0777
+  - file_mode=0777
+  - uid=0
+  - gid=0
+  - mfsymlinks
+  - cache=strict
+  - nosharesock
