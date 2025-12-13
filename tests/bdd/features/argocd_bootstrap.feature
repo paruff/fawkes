@@ -12,12 +12,14 @@ Feature: Argo CD GitOps Bootstrap
     When I list Argo CD Applications in namespace "fawkes"
     Then Application "fawkes-app" is Synced and Healthy
     And Application "fawkes-infra" is Synced and Healthy
+    And Application "platform-bootstrap" is Synced and Healthy
 
   Scenario Outline: Specific Application health check
     When I list Argo CD Applications in namespace "fawkes"
     Then Application "<appName>" is Synced and Healthy
 
     Examples:
-      | appName       |
-      | fawkes-app    |
-      | fawkes-infra  |
+      | appName            |
+      | fawkes-app         |
+      | fawkes-infra       |
+      | platform-bootstrap |
