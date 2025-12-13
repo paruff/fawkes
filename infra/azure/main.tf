@@ -105,12 +105,12 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
   vm_size               = var.user_node_pool_vm_size
   vnet_subnet_id        = azurerm_subnet.aks_subnet.id
   
-  enable_auto_scaling = true
-  min_count           = var.user_node_pool_min_count
-  max_count           = var.user_node_pool_max_count
+  # Auto-scaling is enabled by specifying both min_count and max_count
+  min_count = var.user_node_pool_min_count
+  max_count = var.user_node_pool_max_count
   
-  mode              = "User"
-  os_disk_size_gb   = 128
+  mode            = "User"
+  os_disk_size_gb = 128
   
   node_labels = {
     "nodepool-type" = "user"
