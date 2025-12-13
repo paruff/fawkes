@@ -166,4 +166,4 @@ kubectl exec vault-0 -n vault -- \
 
 - [Secrets Store CSI Driver](https://secrets-store-csi-driver.sigs.k8s.io/)
 - [Vault CSI Provider](https://developer.hashicorp.com/vault/docs/platform/k8s/csi)
-- [ADR-009: Secrets Management](../../../docs/adr/ADR-009-secrets-managment.md)
+- [ADR-009: Secrets Management](../../../docs/adr/ADR-009-secrets-management.md)
