@@ -205,7 +205,7 @@ check_nodes_ready() {
 check_nodes_schedulable() {
     log_info "Checking if nodes are schedulable..."
     
-    local unschedulable=$(kubectl get nodes -o json 2>/dev/null | jq '[.items[] | select(.spec.unschedulable == true)] | length')
+    local unschedulable=$(kubectl get nodes -o json 2>/dev/null | jq '[.items[] | select(.spec.unschedulable // false == true)] | length')
     local total=$(kubectl get nodes --no-headers 2>/dev/null | wc -l)
     
     if [ "$unschedulable" -eq 0 ]; then
@@ -310,8 +310,14 @@ check_resource_limits() {
         local memory_percent=$(echo "$line" | awk '{print $5}' | tr -d '%')
         local node_name=$(echo "$line" | awk '{print $1}')
         
+        # Validate that percentages are numeric
+        if ! [[ "$cpu_percent" =~ ^[0-9]+$ ]] || ! [[ "$memory_percent" =~ ^[0-9]+$ ]]; then
+            [ "$VERBOSE" = true ] && log_warning "Node $node_name: Invalid metrics format"
+            continue
+        fi
+        
         # Check if over limits
-        if [ "${cpu_percent%.*}" -ge "$MAX_CPU_PERCENT" ] || [ "${memory_percent%.*}" -ge "$MAX_MEMORY_PERCENT" ]; then
+        if [ "$cpu_percent" -ge "$MAX_CPU_PERCENT" ] || [ "$memory_percent" -ge "$MAX_MEMORY_PERCENT" ]; then
             nodes_over_limit=$((nodes_over_limit + 1))
             [ "$VERBOSE" = true ] && log_warning "Node $node_name: CPU=${cpu_percent}%, Memory=${memory_percent}%"
         fi
@@ -335,6 +341,12 @@ generate_report() {
     
     mkdir -p "$(dirname "$REPORT_FILE")"
     
+    # Calculate success rate, handling division by zero
+    local success_rate=0
+    if [ "$TOTAL_TESTS" -gt 0 ]; then
+        success_rate=$(awk "BEGIN {printf \"%.2f\", ($PASSED_TESTS/$TOTAL_TESTS)*100}")
+    fi
+    
     # Create JSON report
     cat > "$REPORT_FILE" << EOF
 {
@@ -348,7 +360,7 @@ generate_report() {
     "total": $TOTAL_TESTS,
     "passed": $PASSED_TESTS,
     "failed": $FAILED_TESTS,
-    "success_rate": $(awk "BEGIN {printf \"%.2f\", ($PASSED_TESTS/$TOTAL_TESTS)*100}")
+    "success_rate": $success_rate
   },
   "tests": [
     $(IFS=,; echo "${TEST_RESULTS[*]}")
@@ -360,6 +372,12 @@ EOF
 }
 
 print_summary() {
+    # Calculate success rate, handling division by zero
+    local success_rate=0
+    if [ "$TOTAL_TESTS" -gt 0 ]; then
+        success_rate=$(awk "BEGIN {printf \"%.1f\", ($PASSED_TESTS/$TOTAL_TESTS)*100}")
+    fi
+    
     echo ""
     echo "========================================"
     echo "  AT-E1-001 Validation Summary"
@@ -368,11 +386,11 @@ print_summary() {
     echo "Total Tests: $TOTAL_TESTS"
     echo -e "Passed: ${GREEN}$PASSED_TESTS${NC}"
     echo -e "Failed: ${RED}$FAILED_TESTS${NC}"
-    echo "Success Rate: $(awk "BEGIN {printf \"%.1f\", ($PASSED_TESTS/$TOTAL_TESTS)*100}")%"
+    echo "Success Rate: ${success_rate}%"
     echo "========================================"
     echo ""
     
-    if [ "$FAILED_TESTS" -eq 0 ]; then
+    if [ "$FAILED_TESTS" -eq 0 ] && [ "$TOTAL_TESTS" -gt 0 ]; then
         log_success "All AT-E1-001 acceptance criteria validated successfully!"
         return 0
     else
