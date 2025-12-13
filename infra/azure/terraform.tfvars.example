@@ -33,6 +33,12 @@ acr_sku  = "Standard"
 # Azure Key Vault (must be globally unique, alphanumeric and hyphens only)
 key_vault_name = "fawkes-kv"
 
+# Key Vault security settings
+# For production: set retention to 90 days, enable purge protection, and restrict network access
+key_vault_soft_delete_retention_days    = 7      # Use 90 for production
+key_vault_purge_protection_enabled      = false  # Set true for production
+key_vault_network_acls_default_action   = "Allow" # Use "Deny" for production
+
 # Storage Account for Terraform state (must be globally unique, lowercase alphanumeric only)
 storage_account_name     = "fawkestfstate"
 storage_replication_type = "LRS"

@@ -23,6 +23,8 @@ BUDGET_TARGET_MAX=500
 LOCATION="eastus"
 
 # Pricing data (USD/month, approximate as of Dec 2024)
+# Note: These are estimates and may not reflect current pricing.
+# For accurate pricing, use Azure Pricing Calculator or Azure Cost Management.
 # These are East US prices; adjust for your region
 declare -A PRICES=(
     # AKS - Free control plane, only pay for nodes

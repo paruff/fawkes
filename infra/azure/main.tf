@@ -1,7 +1,9 @@
 provider "azurerm" {
   features {
     key_vault {
-      purge_soft_delete_on_destroy = true
+      # Only purge soft-deleted Key Vaults on destroy in dev environments
+      # In production, this should always be false to prevent accidental permanent deletion
+      purge_soft_delete_on_destroy = var.environment == "dev" ? true : false
     }
   }
 }
@@ -150,12 +152,15 @@ resource "azurerm_key_vault" "aks_kv" {
   resource_group_name        = azurerm_resource_group.aks_rg.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "standard"
-  soft_delete_retention_days = 7
-  purge_protection_enabled   = false
+  soft_delete_retention_days = var.key_vault_soft_delete_retention_days
+  purge_protection_enabled   = var.key_vault_purge_protection_enabled
 
   network_acls {
-    default_action = "Allow"
+    default_action = var.key_vault_network_acls_default_action
     bypass         = "AzureServices"
+    # In production, add specific IP ranges or virtual networks:
+    # ip_rules       = ["1.2.3.4/32"]
+    # virtual_network_subnet_ids = [azurerm_subnet.aks_subnet.id]
   }
 
   tags = var.tags
