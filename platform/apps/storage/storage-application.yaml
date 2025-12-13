@@ -1,0 +1,45 @@
+# ============================================================================
+# FILE: platform/apps/storage/storage-application.yaml
+# PURPOSE: ArgoCD Application for Azure storage classes deployment
+#          Manages StorageClasses for Azure Disk and Azure Files
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: storage-classes
+  namespace: fawkes
+  labels:
+    app: storage
+    component: storageclass
+    environment: production
+    team: platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"  # Deploy early in bootstrap
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    targetRevision: HEAD
+    path: platform/apps/storage
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - PrunePropagationPolicy=foreground
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  revisionHistoryLimit: 10
