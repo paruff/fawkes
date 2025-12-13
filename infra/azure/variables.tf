@@ -206,3 +206,45 @@ variable "ingress_public_ip_name" {
   default     = "kubernetes"
 }
 
+# Backup configuration
+variable "backup_timezone" {
+  description = "Timezone for backup schedule (e.g., UTC, Eastern Standard Time)"
+  type        = string
+  default     = "UTC"
+}
+
+variable "backup_time" {
+  description = "Time of day to run daily backups (24-hour format, e.g., 02:00)"
+  type        = string
+  default     = "02:00"
+}
+
+variable "backup_retention_daily" {
+  description = "Number of daily backups to retain"
+  type        = number
+  default     = 7
+}
+
+variable "backup_retention_weekly" {
+  description = "Number of weekly backups to retain"
+  type        = number
+  default     = 4
+}
+
+variable "backup_storage_redundancy" {
+  description = "Storage redundancy for backup vault (LocallyRedundant or GeoRedundant)"
+  type        = string
+  default     = "LocallyRedundant"
+
+  validation {
+    condition     = contains(["LocallyRedundant", "GeoRedundant"], var.backup_storage_redundancy)
+    error_message = "backup_storage_redundancy must be either 'LocallyRedundant' or 'GeoRedundant'."
+  }
+}
+
+variable "backup_alert_email" {
+  description = "Email address for backup failure alerts"
+  type        = string
+  default     = "platform-team@example.com"
+}
+

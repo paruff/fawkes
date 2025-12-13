@@ -1,0 +1,30 @@
+# ============================================================================
+# FILE: platform/apps/storage/azure-disk-standard-storageclass.yaml
+# PURPOSE: Azure Disk Standard SSD StorageClass for general workloads
+#          Cost-effective option for less critical applications
+# ============================================================================
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: azure-disk-standard
+  labels:
+    app: storage
+    component: storageclass
+    environment: production
+    team: platform
+    backup: "true"
+  annotations:
+    description: "Standard SSD managed disk for general workloads"
+provisioner: disk.csi.azure.com
+parameters:
+  # SKU for Standard SSD
+  skuName: StandardSSD_LRS
+  # Cache mode
+  cachingMode: ReadOnly
+  # Use managed disk
+  kind: Managed
+  # Tags for backup and cost tracking
+  tags: backup=enabled,managed-by=kubernetes,platform=fawkes
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
