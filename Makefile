@@ -1,9 +1,11 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001
 
 # Variables
 NAMESPACE ?= fawkes-local
 COMPONENT ?= all
 ENVIRONMENT ?= dev
+AZURE_RESOURCE_GROUP ?= fawkes-rg
+AZURE_CLUSTER_NAME ?= fawkes-aks
 
 help: ## Show this help message
 	@echo "Fawkes Development Commands:"
@@ -44,6 +46,9 @@ test-integration: ## Run integration tests
 	@pytest tests/integration -v
 
 test-all: test-unit test-bdd test-integration ## Run all tests
+
+validate-at-e1-001: ## Run AT-E1-001 acceptance test validation for AKS cluster
+	@./scripts/validate-at-e1-001.sh --resource-group $(AZURE_RESOURCE_GROUP) --cluster-name $(AZURE_CLUSTER_NAME)
 
 clean-local: ## Clean up local K8s deployments
 	@kubectl delete namespace $(NAMESPACE) --ignore-not-found=true
