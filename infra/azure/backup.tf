@@ -60,6 +60,8 @@ resource "azurerm_data_protection_backup_policy_disk" "disk_backup_policy" {
   vault_id = azurerm_data_protection_backup_vault.disk_backup_vault.id
 
   # Backup schedule - every 4 hours
+  # Note: The date is a reference point for the recurring schedule (ISO 8601 format)
+  # The schedule will repeat every 4 hours (PT4H) regardless of the start date
   backup_repeating_time_intervals = ["R/2023-05-01T00:00:00+00:00/PT4H"]
 
   # Retention rules
@@ -163,12 +165,14 @@ resource "azurerm_monitor_metric_alert" "backup_failure" {
 
 # Storage account for backup staging (optional, for certain backup scenarios)
 resource "azurerm_storage_account" "backup_staging" {
-  name                     = replace("${var.cluster_name}bkpstg", "-", "")
+  # Azure storage account names: 3-24 chars, lowercase alphanumeric only
+  # Remove hyphens, underscores, and convert to lowercase, then truncate
+  name                     = lower(substr(replace(replace("${var.cluster_name}bkpstg", "-", ""), "_", ""), 0, 24))
   resource_group_name      = azurerm_resource_group.aks_rg.name
   location                 = azurerm_resource_group.aks_rg.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
-  
+
   tags = merge(var.tags, {
     component = "backup"
     purpose   = "backup-staging"
