@@ -80,6 +80,9 @@ configs:
 
   # Admin credentials
   # For initial deployment, auto-generate the secret
-  # For production, integrate with External Secrets Operator
+  # For production, integrate with External Secrets Operator:
+  # 1. Set createSecret: false
+  # 2. Create ExternalSecret referencing your secret store
+  # 3. See: platform/apps/external-secrets/externalsecret-argocd-admin.yaml
   secret:
     createSecret: true
