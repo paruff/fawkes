@@ -1,5 +1,9 @@
 installCRDs: true
 
+# Global configuration
+global:
+  domain: argocd.127.0.0.1.nip.io
+
 server:
   # Enable HTTP UI (no TLS) for local development convenience
   insecure: true
@@ -11,19 +15,74 @@ server:
   ingress:
     enabled: true
     ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     hosts:
       - argocd.127.0.0.1.nip.io
     paths:
       - /
+    pathType: Prefix
     https: false
+
+  # Resource configuration for local development
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# Controller configuration
+controller:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+# Repo server configuration
+repoServer:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# Redis configuration
+redis:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+# Dex (SSO) - disabled for MVP
+dex:
+  enabled: false
+
+# Notifications controller - disabled for MVP
+notifications:
+  enabled: false
 
 # ArgoCD configuration
 configs:
   cm:
     application.instanceLabelKey: "argocd.argoproj.io/instance"
-  # Admin credentials managed via External Secrets
-  # See: platform/apps/external-secrets/externalsecret-argocd-admin.yaml
-  # The ExternalSecret creates 'argocd-initial-admin-secret' with the admin password
+    admin.enabled: "true"
+
+  # Admin credentials
+  # For initial deployment, auto-generate the secret
+  # For production, integrate with External Secrets Operator:
+  # 1. Set createSecret: false
+  # 2. Create ExternalSecret referencing your secret store
+  # 3. See: platform/apps/external-secrets/externalsecret-argocd-admin.yaml
   secret:
-    # Don't auto-generate the admin secret - use ExternalSecret instead
-    createSecret: false
+    createSecret: true
