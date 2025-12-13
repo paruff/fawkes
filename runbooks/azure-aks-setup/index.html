@@ -1,0 +1,5135 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Azure AKS Setup Guide for Fawkes - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#azure-aks-setup-guide-for-fawkes" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Azure AKS Setup Guide for Fawkes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorials/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../how-to/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../explanation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Explanation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../playbooks/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Playbooks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tutorials/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/1-deploy-first-service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Deploy Your First Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/2-add-tracing-tempo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Add Distributed Tracing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/3-consume-vault-secret/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Consume Vault Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/4-buildpack-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Migrate to Buildpacks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/5-create-golden-path-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Create a Golden Path Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/6-measure-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Measure DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dojo Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dojo Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/white-belt/module-01-what-is-idp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    White Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/yellow-belt/module-05-ci-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yellow Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/green-belt/module-09-gitops-argocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Green Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/brown-belt/module-13-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brown Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/black-belt/module-17-platform-product/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Black Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../how-to/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GitOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/gitops/onboard-service-argocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Onboard Service to ArgoCD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/gitops/sync-argocd-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync ArgoCD Application
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/observability/trace-request-tempo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Requests with Tempo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/observability/view-dora-metrics-devlake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    View DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/security/rotate-vault-secrets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rotate Vault Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/development/debug-buildpack-failure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/networking/configure-ingress-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Ingress with TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Policy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/policy/troubleshoot-kyverno-violation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshoot Kyverno Violations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patterns
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../explanation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explanation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Explanation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/gitops-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/containers/buildpacks-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Buildpacks Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/security/zero-trust-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zero Trust Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/observability/unified-telemetry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unified Telemetry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IDP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IDP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/idp/product-discovery-delivery-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Discovery & Delivery Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Governance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/governance/policy-as-code-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policy as Code Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../business_case/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business Case
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/backstage-plugins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backstage Plugins API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/jenkins-webhook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins Webhook API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CRDs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CRDs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/crds/golden-path-crd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Path Devfile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Configuration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/config/jenkins-values/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins Helm Values
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/config/prometheus-values/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Helm Values
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policies
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Policies
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/policies/kyverno-policy-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kyverno Policy List
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_6" id="__nav_6_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Catalog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Catalog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/catalogue/service-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_8" id="__nav_6_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spinnaker (Deprecated)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--deprecated"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/focalboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Focalboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../playbooks/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playbooks
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playbooks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playbooks/TEMPLATE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playbooks/dora-metrics-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#azure-subscription" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Subscription
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#required-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#azure-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#budget-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Budget Planning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-optimization-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost Optimization Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#infrastructure-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#node-pool-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Pool Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-by-step-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-Step Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-Step Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-azure-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Azure Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-customize-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Customize Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-initialize-terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Initialize Terraform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-deploy-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4: Deploy Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-configure-kubectl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5: Configure kubectl
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-6-verify-azure-integrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6: Verify Azure Integrations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-7-deploy-fawkes-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 7: Deploy Fawkes Platform
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Access Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#azure-rbac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure RBAC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#container-registry-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Container Registry Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-vault-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Vault Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scaling-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scaling Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scaling Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-pool-auto-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Pool Auto-Scaling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#horizontal-pod-autoscaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Horizontal Pod Autoscaling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vertical-pod-autoscaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vertical Pod Autoscaling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-and-disaster-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup and Disaster Recovery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backup and Disaster Recovery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cluster-backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Backups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persistent-volume-backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persistent Volume Backups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gitops-state-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitOps State Recovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disaster-recovery-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disaster Recovery Plan
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#issue-terraform-fails-with-name-not-available" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Terraform fails with "name not available"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-nodes-not-joining-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Nodes not joining cluster
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-cannot-pull-images-from-acr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Cannot pull images from ACR
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-high-costs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: High costs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issue-pods-evicted-due-to-disk-pressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue: Pods evicted due to disk pressure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagnostic-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#development-environment-optimizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Development Environment Optimizations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auto-shutdown-for-dev-clusters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auto-Shutdown for Dev Clusters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-azure-spot-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Azure Spot Instances
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reserved-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reserved Instances
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-procedures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Procedures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Upgrade Procedures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-version-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Version Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraform-state-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform State Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolling-node-upgrades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rolling Node Upgrades
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="azure-aks-setup-guide-for-fawkes">Azure AKS Setup Guide for Fawkes</h1>
+<p><strong>Document Purpose</strong>: Complete guide for deploying Fawkes platform on Azure Kubernetes Service (AKS)
+<strong>Target Audience</strong>: DevOps engineers, Platform engineers, System administrators
+<strong>Estimated Time</strong>: 2-3 hours for full deployment
+<strong>Last Updated</strong>: December 2024</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#cost-considerations">Cost Considerations</a></li>
+<li><a href="#architecture-overview">Architecture Overview</a></li>
+<li><a href="#step-by-step-deployment">Step-by-Step Deployment</a></li>
+<li><a href="#access-management">Access Management</a></li>
+<li><a href="#scaling-considerations">Scaling Considerations</a></li>
+<li><a href="#backup-and-disaster-recovery">Backup and Disaster Recovery</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#cost-optimization">Cost Optimization</a></li>
+<li><a href="#upgrade-procedures">Upgrade Procedures</a></li>
+</ol>
+<hr />
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="azure-subscription">Azure Subscription</h3>
+<ul>
+<li>Active Azure subscription with sufficient quota</li>
+<li>Owner or Contributor role on the subscription</li>
+<li>Resource Provider registrations:</li>
+<li>Microsoft.ContainerService</li>
+<li>Microsoft.Storage</li>
+<li>Microsoft.Network</li>
+<li>Microsoft.KeyVault</li>
+<li>Microsoft.OperationalInsights</li>
+</ul>
+<h3 id="required-tools">Required Tools</h3>
+<p>Install the following tools on your local machine:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Azure CLI (version 2.50.0 or later)</span>
+curl<span class="w"> </span>-sL<span class="w"> </span>https://aka.ms/InstallAzureCLIDeb<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>bash
+az<span class="w"> </span>--version
+
+<span class="c1"># kubectl (Kubernetes CLI)</span>
+az<span class="w"> </span>aks<span class="w"> </span>install-cli
+
+<span class="c1"># Terraform (1.6.0 or later)</span>
+wget<span class="w"> </span>https://releases.hashicorp.com/terraform/1.6.0/terraform_1.6.0_linux_amd64.zip
+unzip<span class="w"> </span>terraform_1.6.0_linux_amd64.zip
+sudo<span class="w"> </span>mv<span class="w"> </span>terraform<span class="w"> </span>/usr/local/bin/
+terraform<span class="w"> </span>--version
+
+<span class="c1"># jq (for JSON processing)</span>
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>jq
+
+<span class="c1"># Helm (optional, for manual operations)</span>
+curl<span class="w"> </span>https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+</code></pre></div>
+<h3 id="azure-permissions">Azure Permissions</h3>
+<p>Ensure you have the following permissions:</p>
+<ul>
+<li>Create and manage Resource Groups</li>
+<li>Create and manage AKS clusters</li>
+<li>Create and manage Virtual Networks</li>
+<li>Create and manage Azure Container Registry</li>
+<li>Create and manage Key Vaults</li>
+<li>Create and manage Storage Accounts</li>
+<li>Create and manage Log Analytics workspaces</li>
+<li>Assign Azure RBAC roles</li>
+</ul>
+<hr />
+<h2 id="cost-considerations">Cost Considerations</h2>
+<h3 id="budget-planning">Budget Planning</h3>
+<p>Expected monthly costs for the default configuration:</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Configuration</th>
+<th>Est. Monthly Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AKS Control Plane</td>
+<td>Standard tier</td>
+<td>$0 (Free)</td>
+</tr>
+<tr>
+<td>System Node Pool</td>
+<td>2x Standard_D4s_v3</td>
+<td>$280</td>
+</tr>
+<tr>
+<td>User Node Pool</td>
+<td>2-10x Standard_D4s_v3 (avg 4)</td>
+<td>$560</td>
+</tr>
+<tr>
+<td>Storage (OS Disks)</td>
+<td>6x 128GB Premium SSD</td>
+<td>$118</td>
+</tr>
+<tr>
+<td>Container Registry</td>
+<td>Standard tier</td>
+<td>$20</td>
+</tr>
+<tr>
+<td>Load Balancer</td>
+<td>Standard tier</td>
+<td>$18</td>
+</tr>
+<tr>
+<td>Public IP</td>
+<td>Static</td>
+<td>$4</td>
+</tr>
+<tr>
+<td>Log Analytics</td>
+<td>~5GB/month</td>
+<td>$14</td>
+</tr>
+<tr>
+<td>Key Vault</td>
+<td>Standard</td>
+<td>$1</td>
+</tr>
+<tr>
+<td>Storage Account</td>
+<td>~50GB LRS</td>
+<td>$1</td>
+</tr>
+<tr>
+<td>Data Transfer</td>
+<td>~100GB</td>
+<td>$8</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td></td>
+<td><strong>~$1,024/month</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cost-optimization-options">Cost Optimization Options</h3>
+<p>For development/testing environments, consider:</p>
+<ol>
+<li><strong>Reduced VM sizes</strong>: Use Standard_D2s_v3 (~$500/month savings)</li>
+<li><strong>Fewer nodes</strong>: Min 2, Max 5 for user pool (~$280/month savings)</li>
+<li><strong>Basic ACR</strong>: Use Basic tier (~$15/month savings)</li>
+<li><strong>Spot instances</strong>: Use Azure Spot VMs for non-critical workloads (up to 90% savings)</li>
+<li><strong>Azure Reservations</strong>: Commit to 1 or 3 years for significant savings</li>
+</ol>
+<p><strong>Recommended budget</strong>: $300-500/month for dev, $800-1500/month for production</p>
+<p>Run the cost estimation script:
+<div class="highlight"><pre><span></span><code>./scripts/azure-cost-estimate.sh
+</code></pre></div></p>
+<hr />
+<h2 id="architecture-overview">Architecture Overview</h2>
+<h3 id="infrastructure-components">Infrastructure Components</h3>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────┐
+│                     Azure Subscription                       │
+│                                                               │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Resource Group: fawkes-rg                            │  │
+│  │                                                        │  │
+│  │  ┌──────────────────────────────────────────────┐   │  │
+│  │  │  Virtual Network: fawkes-aks-vnet             │   │  │
+│  │  │  Address Space: 10.0.0.0/16                   │   │  │
+│  │  │                                                 │   │  │
+│  │  │  ┌────────────────────────────────────────┐  │   │  │
+│  │  │  │  AKS Subnet: 10.0.1.0/24                │  │   │  │
+│  │  │  │                                          │  │   │  │
+│  │  │  │  ┌──────────────────────────────────┐  │  │   │  │
+│  │  │  │  │  AKS Cluster: fawkes-aks          │  │  │   │  │
+│  │  │  │  │  - Control Plane (Managed)        │  │  │   │  │
+│  │  │  │  │  - System Pool: 2 nodes           │  │  │   │  │
+│  │  │  │  │  - User Pool: 2-10 nodes (auto)   │  │  │   │  │
+│  │  │  │  │  - Azure CNI networking           │  │  │   │  │
+│  │  │  │  │  - Managed Identity               │  │  │   │  │
+│  │  │  │  └──────────────────────────────────┘  │  │   │  │
+│  │  │  └────────────────────────────────────────┘  │   │  │
+│  │  └──────────────────────────────────────────────┘   │  │
+│  │                                                        │  │
+│  │  ┌──────────────────────────────────────────────┐   │  │
+│  │  │  Azure Container Registry (ACR)               │   │  │
+│  │  │  fawkesacr.azurecr.io                         │   │  │
+│  │  └──────────────────────────────────────────────┘   │  │
+│  │                                                        │  │
+│  │  ┌──────────────────────────────────────────────┐   │  │
+│  │  │  Azure Key Vault                              │   │  │
+│  │  │  fawkes-kv                                    │   │  │
+│  │  └──────────────────────────────────────────────┘   │  │
+│  │                                                        │  │
+│  │  ┌──────────────────────────────────────────────┐   │  │
+│  │  │  Storage Account (Terraform State)            │   │  │
+│  │  │  fawkestfstate                                │   │  │
+│  │  └──────────────────────────────────────────────┘   │  │
+│  │                                                        │  │
+│  │  ┌──────────────────────────────────────────────┐   │  │
+│  │  │  Log Analytics Workspace                      │   │  │
+│  │  │  fawkes-aks-logs                              │   │  │
+│  │  └──────────────────────────────────────────────┘   │  │
+│  │                                                        │  │
+│  │  ┌──────────────────────────────────────────────┐   │  │
+│  │  │  Azure Load Balancer + Public IP              │   │  │
+│  │  └──────────────────────────────────────────────┘   │  │
+│  └──────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="network-architecture">Network Architecture</h3>
+<ul>
+<li><strong>VNet CIDR</strong>: 10.0.0.0/16</li>
+<li><strong>AKS Subnet</strong>: 10.0.1.0/24 (for nodes)</li>
+<li><strong>Service CIDR</strong>: 10.1.0.0/16 (for Kubernetes services)</li>
+<li><strong>DNS Service IP</strong>: 10.1.0.10</li>
+<li><strong>Network Plugin</strong>: Azure CNI (Container Networking Interface)</li>
+<li><strong>Network Policy</strong>: Azure Network Policy</li>
+</ul>
+<h3 id="node-pool-strategy">Node Pool Strategy</h3>
+<p><strong>System Node Pool</strong>:
+- Purpose: Critical system components (kube-system, ArgoCD, monitoring)
+- VM Size: Standard_D4s_v3 (4 vCPU, 16 GB RAM)
+- Node Count: 2 (fixed, no auto-scaling)
+- OS Disk: 128 GB Premium SSD</p>
+<p><strong>User Node Pool</strong>:
+- Purpose: Application workloads (Backstage, Jenkins, Focalboard, etc.)
+- VM Size: Standard_D4s_v3 (4 vCPU, 16 GB RAM)
+- Node Count: 2-10 (auto-scaling enabled)
+- OS Disk: 128 GB Premium SSD</p>
+<hr />
+<h2 id="step-by-step-deployment">Step-by-Step Deployment</h2>
+<h3 id="phase-1-azure-authentication">Phase 1: Azure Authentication</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Login to Azure</span>
+az<span class="w"> </span>login
+
+<span class="c1"># Set your subscription</span>
+az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span><span class="s2">&quot;YOUR_SUBSCRIPTION_ID&quot;</span>
+
+<span class="c1"># Verify current subscription</span>
+az<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>--output<span class="w"> </span>table
+
+<span class="c1"># Register required resource providers</span>
+az<span class="w"> </span>provider<span class="w"> </span>register<span class="w"> </span>--namespace<span class="w"> </span>Microsoft.ContainerService
+az<span class="w"> </span>provider<span class="w"> </span>register<span class="w"> </span>--namespace<span class="w"> </span>Microsoft.Storage
+az<span class="w"> </span>provider<span class="w"> </span>register<span class="w"> </span>--namespace<span class="w"> </span>Microsoft.Network
+az<span class="w"> </span>provider<span class="w"> </span>register<span class="w"> </span>--namespace<span class="w"> </span>Microsoft.KeyVault
+az<span class="w"> </span>provider<span class="w"> </span>register<span class="w"> </span>--namespace<span class="w"> </span>Microsoft.OperationalInsights
+</code></pre></div>
+<h3 id="phase-2-customize-configuration">Phase 2: Customize Configuration</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Navigate to infrastructure directory</span>
+<span class="nb">cd</span><span class="w"> </span>infra/azure
+
+<span class="c1"># Copy example configuration</span>
+cp<span class="w"> </span>terraform.tfvars.example<span class="w"> </span>terraform.tfvars
+
+<span class="c1"># Edit configuration (update globally unique names)</span>
+nano<span class="w"> </span>terraform.tfvars
+</code></pre></div>
+<p><strong>Important</strong>: Update these values to be globally unique:
+- <code>acr_name</code>: Must be globally unique (lowercase alphanumeric only)
+- <code>key_vault_name</code>: Must be globally unique (alphanumeric and hyphens)
+- <code>storage_account_name</code>: Must be globally unique (lowercase alphanumeric only)</p>
+<p>Example customization:
+<div class="highlight"><pre><span></span><code><span class="na">acr_name</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkesacr20241213&quot;</span>
+<span class="na">key_vault_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes-kv-20241213&quot;</span>
+<span class="na">storage_account_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkestfstate20241213&quot;</span>
+</code></pre></div></p>
+<p><strong>Production Security Settings</strong>:</p>
+<p>For production environments, update these security-critical settings:</p>
+<div class="highlight"><pre><span></span><code><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span>
+
+<span class="c1"># Key Vault security (production-ready)</span>
+<span class="na">key_vault_soft_delete_retention_days</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">90</span><span class="c1">      # Longer retention for recovery</span>
+<span class="na">key_vault_purge_protection_enabled</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">    # Prevent permanent deletion</span>
+<span class="na">key_vault_network_acls_default_action</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deny&quot;</span><span class="c1">  # Restrict network access</span>
+
+<span class="c1"># Then configure allowed IP ranges or VNets in main.tf:</span>
+<span class="c1"># network_acls {</span>
+<span class="c1">#   ip_rules = [&quot;YOUR_OFFICE_IP/32&quot;, &quot;YOUR_CI_IP/32&quot;]</span>
+<span class="c1">#   virtual_network_subnet_ids = [azurerm_subnet.aks_subnet.id]</span>
+<span class="c1"># }</span>
+</code></pre></div>
+<p><strong>Note</strong>: The default configuration is optimized for development/testing. Production environments should enable additional security controls as shown above.</p>
+<h3 id="phase-3-initialize-terraform">Phase 3: Initialize Terraform</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Initialize Terraform</span>
+terraform<span class="w"> </span>init
+
+<span class="c1"># Validate configuration</span>
+terraform<span class="w"> </span>validate
+
+<span class="c1"># Review planned changes</span>
+terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>tfplan
+</code></pre></div>
+<h3 id="phase-4-deploy-infrastructure">Phase 4: Deploy Infrastructure</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Apply Terraform configuration</span>
+terraform<span class="w"> </span>apply<span class="w"> </span>tfplan
+
+<span class="c1"># This will create:</span>
+<span class="c1"># - Resource Group</span>
+<span class="c1"># - Virtual Network and Subnet</span>
+<span class="c1"># - AKS Cluster with system and user node pools</span>
+<span class="c1"># - Azure Container Registry</span>
+<span class="c1"># - Azure Key Vault</span>
+<span class="c1"># - Storage Account</span>
+<span class="c1"># - Log Analytics Workspace</span>
+<span class="c1"># - All necessary IAM role assignments</span>
+
+<span class="c1"># Deployment typically takes 10-15 minutes</span>
+</code></pre></div>
+<h3 id="phase-5-configure-kubectl">Phase 5: Configure kubectl</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Get AKS credentials</span>
+az<span class="w"> </span>aks<span class="w"> </span>get-credentials<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--overwrite-existing
+
+<span class="c1"># Verify cluster access</span>
+kubectl<span class="w"> </span>cluster-info
+
+<span class="c1"># Check nodes</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+
+<span class="c1"># Expected output: 4 nodes (2 system + 2 user)</span>
+<span class="c1"># NAME                                STATUS   ROLE    AGE   VERSION</span>
+<span class="c1"># aks-system-12345678-vmss000000     Ready    agent   5m    v1.28.x</span>
+<span class="c1"># aks-system-12345678-vmss000001     Ready    agent   5m    v1.28.x</span>
+<span class="c1"># aks-user-12345678-vmss000000       Ready    agent   4m    v1.28.x</span>
+<span class="c1"># aks-user-12345678-vmss000001       Ready    agent   4m    v1.28.x</span>
+
+<span class="c1"># Check system pods</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A
+
+<span class="c1"># Verify all system pods are running</span>
+</code></pre></div>
+<h3 id="phase-6-verify-azure-integrations">Phase 6: Verify Azure Integrations</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify ACR integration</span>
+az<span class="w"> </span>aks<span class="w"> </span>check-acr<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--acr<span class="w"> </span>fawkesacr.azurecr.io
+
+<span class="c1"># Verify Azure Monitor integration</span>
+az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;addonProfiles.omsagent.enabled&quot;</span>
+
+<span class="c1"># Should return: true</span>
+
+<span class="c1"># View cluster details</span>
+az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>table
+</code></pre></div>
+<h3 id="phase-7-deploy-fawkes-platform">Phase 7: Deploy Fawkes Platform</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Navigate back to repository root</span>
+<span class="nb">cd</span><span class="w"> </span>../..
+
+<span class="c1"># Deploy Fawkes platform components via ignite script</span>
+./scripts/ignite.sh<span class="w"> </span>--provider<span class="w"> </span>azure<span class="w"> </span>--skip-cluster<span class="w"> </span>dev
+
+<span class="c1"># This will:</span>
+<span class="c1"># - Deploy ArgoCD</span>
+<span class="c1"># - Deploy platform applications</span>
+<span class="c1"># - Configure GitOps sync</span>
+</code></pre></div>
+<hr />
+<h2 id="access-management">Access Management</h2>
+<h3 id="azure-rbac">Azure RBAC</h3>
+<p>The cluster is configured with Azure RBAC for Kubernetes authorization:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Grant user AKS admin role</span>
+az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--assignee<span class="w"> </span>user@example.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--role<span class="w"> </span><span class="s2">&quot;Azure Kubernetes Service RBAC Cluster Admin&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--scope<span class="w"> </span><span class="k">$(</span>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span>-g<span class="w"> </span>fawkes-rg<span class="w"> </span>-n<span class="w"> </span>fawkes-aks<span class="w"> </span>--query<span class="w"> </span>id<span class="w"> </span>-o<span class="w"> </span>tsv<span class="k">)</span>
+
+<span class="c1"># Grant user AKS reader role</span>
+az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--assignee<span class="w"> </span>user@example.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--role<span class="w"> </span><span class="s2">&quot;Azure Kubernetes Service RBAC Reader&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--scope<span class="w"> </span><span class="k">$(</span>az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span>-g<span class="w"> </span>fawkes-rg<span class="w"> </span>-n<span class="w"> </span>fawkes-aks<span class="w"> </span>--query<span class="w"> </span>id<span class="w"> </span>-o<span class="w"> </span>tsv<span class="k">)</span>
+</code></pre></div>
+<h3 id="container-registry-access">Container Registry Access</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Login to ACR</span>
+az<span class="w"> </span>acr<span class="w"> </span>login<span class="w"> </span>--name<span class="w"> </span>fawkesacr
+
+<span class="c1"># Grant push permissions to CI/CD service principal</span>
+az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--assignee<span class="w"> </span>&lt;service-principal-id&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--role<span class="w"> </span>AcrPush<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--scope<span class="w"> </span><span class="k">$(</span>az<span class="w"> </span>acr<span class="w"> </span>show<span class="w"> </span>-n<span class="w"> </span>fawkesacr<span class="w"> </span>--query<span class="w"> </span>id<span class="w"> </span>-o<span class="w"> </span>tsv<span class="k">)</span>
+</code></pre></div>
+<h3 id="key-vault-access">Key Vault Access</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Grant user access to secrets</span>
+az<span class="w"> </span>keyvault<span class="w"> </span>set-policy<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>fawkes-kv<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--upn<span class="w"> </span>user@example.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--secret-permissions<span class="w"> </span>get<span class="w"> </span>list<span class="w"> </span><span class="nb">set</span><span class="w"> </span>delete
+</code></pre></div>
+<hr />
+<h2 id="scaling-considerations">Scaling Considerations</h2>
+<h3 id="node-pool-auto-scaling">Node Pool Auto-Scaling</h3>
+<p>The user node pool automatically scales between 2-10 nodes:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check current node count</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-l<span class="w"> </span>nodepool-type<span class="o">=</span>user
+
+<span class="c1"># View auto-scaler events</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>cluster-autoscaler
+
+<span class="c1"># Manually adjust scaling limits</span>
+az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cluster-name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>user<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--min-count<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--max-count<span class="w"> </span><span class="m">8</span>
+</code></pre></div>
+<h3 id="horizontal-pod-autoscaling">Horizontal Pod Autoscaling</h3>
+<p>Configure HPA for your applications:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">autoscaling/v2</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HorizontalPodAutoscaler</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-hpa</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">scaleTargetRef</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+<span class="w">  </span><span class="nt">minReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">maxReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">  </span><span class="nt">metrics</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Resource</span>
+<span class="w">    </span><span class="nt">resource</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpu</span>
+<span class="w">      </span><span class="nt">target</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Utilization</span>
+<span class="w">        </span><span class="nt">averageUtilization</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">70</span>
+</code></pre></div>
+<h3 id="vertical-pod-autoscaling">Vertical Pod Autoscaling</h3>
+<p>Enable VPA addon:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install VPA</span>
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubernetes/autoscaler/releases/download/vertical-pod-autoscaler-0.13.0/vpa-v0.13.0.yaml
+</code></pre></div>
+<hr />
+<h2 id="backup-and-disaster-recovery">Backup and Disaster Recovery</h2>
+<h3 id="cluster-backups">Cluster Backups</h3>
+<p>Use Azure Backup for AKS:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Enable backup extension</span>
+az<span class="w"> </span>aks<span class="w"> </span>enable-addons<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--addons<span class="w"> </span>azure-backup
+
+<span class="c1"># Configure backup policy (via Azure Portal or ARM template)</span>
+</code></pre></div>
+<h3 id="persistent-volume-backups">Persistent Volume Backups</h3>
+<p>Azure automatically creates volume snapshots. Configure retention:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snapshot.storage.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VolumeSnapshotClass</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default-snapshot-class</span>
+<span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disk.csi.azure.com</span>
+<span class="nt">deletionPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Retain</span>
+</code></pre></div>
+<h3 id="gitops-state-recovery">GitOps State Recovery</h3>
+<p>All platform configuration is in Git:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Full platform recovery</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/paruff/fawkes.git
+<span class="nb">cd</span><span class="w"> </span>fawkes
+./scripts/ignite.sh<span class="w"> </span>--provider<span class="w"> </span>azure<span class="w"> </span>dev
+</code></pre></div>
+<h3 id="disaster-recovery-plan">Disaster Recovery Plan</h3>
+<ol>
+<li><strong>Infrastructure</strong>: Terraform state in Azure Storage (with versioning)</li>
+<li><strong>Applications</strong>: ArgoCD syncs from Git (declarative)</li>
+<li><strong>Data</strong>: Regular volume snapshots + external database backups</li>
+<li><strong>Secrets</strong>: Azure Key Vault (with soft delete enabled)</li>
+</ol>
+<p><strong>RTO</strong>: 2-4 hours (new cluster + ArgoCD sync)
+<strong>RPO</strong>: 1 hour (snapshot frequency)</p>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="common-issues">Common Issues</h3>
+<h4 id="issue-terraform-fails-with-name-not-available">Issue: Terraform fails with "name not available"</h4>
+<p><strong>Symptom</strong>: ACR, Key Vault, or Storage Account name already taken</p>
+<p><strong>Solution</strong>: Update names in <code>terraform.tfvars</code> to be globally unique:
+<div class="highlight"><pre><span></span><code><span class="nv">acr_name</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkesacr</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">key_vault_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes-kv-</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">storage_account_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tfstate</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div></p>
+<h4 id="issue-nodes-not-joining-cluster">Issue: Nodes not joining cluster</h4>
+<p><strong>Symptom</strong>: <code>kubectl get nodes</code> shows NotReady or missing nodes</p>
+<p><strong>Solution</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check node pool status</span>
+az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cluster-name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>table
+
+<span class="c1"># Check Azure activity logs</span>
+az<span class="w"> </span>monitor<span class="w"> </span>activity-log<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--offset<span class="w"> </span>1h
+
+<span class="c1"># Restart node pool</span>
+az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>stop<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cluster-name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>user
+
+az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>start<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cluster-name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>user
+</code></pre></div></p>
+<h4 id="issue-cannot-pull-images-from-acr">Issue: Cannot pull images from ACR</h4>
+<p><strong>Symptom</strong>: Pods stuck in ImagePullBackOff</p>
+<p><strong>Solution</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify ACR integration</span>
+az<span class="w"> </span>aks<span class="w"> </span>check-acr<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--acr<span class="w"> </span>fawkesacr.azurecr.io
+
+<span class="c1"># Re-attach ACR if needed</span>
+az<span class="w"> </span>aks<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--attach-acr<span class="w"> </span>fawkesacr
+</code></pre></div></p>
+<h4 id="issue-high-costs">Issue: High costs</h4>
+<p><strong>Symptom</strong>: Azure bill exceeds budget</p>
+<p><strong>Solution</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check current costs</span>
+az<span class="w"> </span>cost-management<span class="w"> </span>query<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--type<span class="w"> </span>Usage<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dataset-filter<span class="w"> </span><span class="s2">&quot;{\&quot;and\&quot;:[{\&quot;dimensions\&quot;:{\&quot;name\&quot;:\&quot;ResourceGroup\&quot;,\&quot;operator\&quot;:\&quot;In\&quot;,\&quot;values\&quot;:[\&quot;fawkes-rg\&quot;]}}]}&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--timeframe<span class="w"> </span>MonthToDate
+
+<span class="c1"># Scale down user pool</span>
+az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>scale<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cluster-name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>user<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--node-count<span class="w"> </span><span class="m">2</span>
+
+<span class="c1"># Run cost estimation</span>
+./scripts/azure-cost-estimate.sh
+</code></pre></div></p>
+<h4 id="issue-pods-evicted-due-to-disk-pressure">Issue: Pods evicted due to disk pressure</h4>
+<p><strong>Symptom</strong>: Pods restarting, kubelet reporting disk pressure</p>
+<p><strong>Solution</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check disk usage on nodes</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>custom-columns<span class="o">=</span>NAME:.metadata.name,DISK:.status.allocatable.ephemeral-storage
+
+<span class="c1"># Clean up unused images</span>
+kubectl<span class="w"> </span>debug<span class="w"> </span>node/aks-user-12345678-vmss000000<span class="w"> </span>-it<span class="w"> </span>--image<span class="o">=</span>alpine
+<span class="c1"># In debug pod:</span>
+<span class="c1"># crictl rmi --prune</span>
+
+<span class="c1"># Increase OS disk size (requires recreation)</span>
+<span class="c1"># Update terraform.tfvars and re-apply</span>
+</code></pre></div></p>
+<h3 id="diagnostic-commands">Diagnostic Commands</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># View cluster health</span>
+az<span class="w"> </span>aks<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;{provisioningState:provisioningState,powerState:powerState.code}&quot;</span>
+
+<span class="c1"># View node pool health</span>
+az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cluster-name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>user<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;{provisioningState:provisioningState,powerState:powerState.code}&quot;</span>
+
+<span class="c1"># Check Azure Monitor logs</span>
+az<span class="w"> </span>monitor<span class="w"> </span>log-analytics<span class="w"> </span>query<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--workspace<span class="w"> </span>&lt;workspace-id&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--analytics-query<span class="w"> </span><span class="s2">&quot;ContainerLog | where TimeGenerated &gt; ago(1h) | limit 100&quot;</span>
+
+<span class="c1"># Get kubectl diagnostics</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span>
+kubectl<span class="w"> </span>top<span class="w"> </span>nodes
+kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A
+</code></pre></div>
+<hr />
+<h2 id="cost-optimization">Cost Optimization</h2>
+<h3 id="development-environment-optimizations">Development Environment Optimizations</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># terraform.tfvars for dev environment</span>
+<span class="na">system_node_pool_vm_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard_D2s_v3&quot;</span>
+<span class="na">system_node_pool_count</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
+
+<span class="na">user_node_pool_vm_size</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard_D2s_v3&quot;</span>
+<span class="na">user_node_pool_min_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
+<span class="na">user_node_pool_max_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+
+<span class="na">acr_sku</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Basic&quot;</span>
+<span class="na">log_retention_days</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span>
+</code></pre></div>
+<p>Estimated savings: ~$550/month</p>
+<h3 id="auto-shutdown-for-dev-clusters">Auto-Shutdown for Dev Clusters</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Stop cluster (nodes only, control plane remains)</span>
+az<span class="w"> </span>aks<span class="w"> </span>stop<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>fawkes-aks
+
+<span class="c1"># Start cluster</span>
+az<span class="w"> </span>aks<span class="w"> </span>start<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>fawkes-aks
+
+<span class="c1"># Schedule with cron or Azure Automation</span>
+</code></pre></div>
+<h3 id="use-azure-spot-instances">Use Azure Spot Instances</h3>
+<p>Add a spot node pool for batch workloads:</p>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cluster-name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>spot<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--priority<span class="w"> </span>Spot<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--eviction-policy<span class="w"> </span>Delete<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--spot-max-price<span class="w"> </span>-1<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--enable-cluster-autoscaler<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--min-count<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--max-count<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--node-vm-size<span class="w"> </span>Standard_D4s_v3<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--node-taints<span class="w"> </span>kubernetes.azure.com/scalesetpriority<span class="o">=</span>spot:NoSchedule<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--labels<span class="w"> </span>kubernetes.azure.com/scalesetpriority<span class="o">=</span>spot
+</code></pre></div>
+<p>Schedule workloads on spot nodes:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">tolerations</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;kubernetes.azure.com/scalesetpriority&quot;</span>
+<span class="w">    </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Equal&quot;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;spot&quot;</span>
+<span class="w">    </span><span class="nt">effect</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NoSchedule&quot;</span>
+<span class="w">  </span><span class="nt">nodeSelector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">kubernetes.azure.com/scalesetpriority</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spot</span>
+</code></pre></div>
+<h3 id="reserved-instances">Reserved Instances</h3>
+<p>Purchase reserved instances for predictable workloads:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># View reservation options</span>
+az<span class="w"> </span>reservations<span class="w"> </span>catalog<span class="w"> </span>show<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--subscription-id<span class="w"> </span>&lt;subscription-id&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--reserved-resource-type<span class="w"> </span>VirtualMachines<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--location<span class="w"> </span>eastus
+</code></pre></div>
+<p>Expected savings: 38% (1-year) or 62% (3-year)</p>
+<hr />
+<h2 id="upgrade-procedures">Upgrade Procedures</h2>
+<h3 id="kubernetes-version-upgrade">Kubernetes Version Upgrade</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check available versions</span>
+az<span class="w"> </span>aks<span class="w"> </span>get-upgrades<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>table
+
+<span class="c1"># Upgrade control plane</span>
+az<span class="w"> </span>aks<span class="w"> </span>upgrade<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.29.0
+
+<span class="c1"># Upgrade node pools</span>
+az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>upgrade<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cluster-name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>system<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.29.0
+
+az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>upgrade<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cluster-name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>user<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.29.0
+</code></pre></div>
+<h3 id="terraform-state-upgrade">Terraform State Upgrade</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Backup state</span>
+az<span class="w"> </span>storage<span class="w"> </span>blob<span class="w"> </span>download<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--account-name<span class="w"> </span>fawkestfstate<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--container-name<span class="w"> </span>tfstate<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>terraform.tfstate<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--file<span class="w"> </span>terraform.tfstate.backup
+
+<span class="c1"># Update Terraform</span>
+terraform<span class="w"> </span>init<span class="w"> </span>-upgrade
+
+<span class="c1"># Apply changes</span>
+terraform<span class="w"> </span>plan
+terraform<span class="w"> </span>apply
+</code></pre></div>
+<h3 id="rolling-node-upgrades">Rolling Node Upgrades</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Cordon and drain nodes one at a time</span>
+kubectl<span class="w"> </span>cordon<span class="w"> </span>aks-user-12345678-vmss000000
+kubectl<span class="w"> </span>drain<span class="w"> </span>aks-user-12345678-vmss000000<span class="w"> </span>--ignore-daemonsets<span class="w"> </span>--delete-emptydir-data
+
+<span class="c1"># Upgrade via Azure</span>
+az<span class="w"> </span>aks<span class="w"> </span>nodepool<span class="w"> </span>upgrade<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-group<span class="w"> </span>fawkes-rg<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cluster-name<span class="w"> </span>fawkes-aks<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>user<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--node-image-only
+
+<span class="c1"># Uncordon when complete</span>
+kubectl<span class="w"> </span>uncordon<span class="w"> </span>aks-user-12345678-vmss000000
+</code></pre></div>
+<hr />
+<h2 id="additional-resources">Additional Resources</h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/azure/aks/">Azure AKS Documentation</a></li>
+<li><a href="../../architecture/">Fawkes Architecture</a></li>
+<li><a href="../../AWS_deployment_guide/">Fawkes AWS Deployment Guide</a></li>
+<li><a href="https://azure.microsoft.com/en-us/pricing/calculator/">Azure Pricing Calculator</a></li>
+<li><a href="https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs">Terraform AzureRM Provider</a></li>
+</ul>
+<hr />
+<h2 id="support">Support</h2>
+<p>For issues or questions:</p>
+<ol>
+<li>Check this documentation and troubleshooting section</li>
+<li>Review <a href="../../troubleshooting/">Fawkes Troubleshooting Guide</a></li>
+<li>Search existing <a href="https://github.com/paruff/fawkes/issues">GitHub Issues</a></li>
+<li>Open a new issue with the <code>comp-azure</code> label</li>
+</ol>
+<hr />
+<p><strong>Document Version</strong>: 1.0
+<strong>Last Review</strong>: December 2024
+<strong>Next Review</strong>: March 2025</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
