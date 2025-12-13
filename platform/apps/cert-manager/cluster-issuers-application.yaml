@@ -1,0 +1,47 @@
+# ============================================================================
+# FILE: platform/apps/cert-manager/cluster-issuers-application.yaml
+# PURPOSE: ArgoCD Application for cert-manager ClusterIssuers
+#          Deploys Let's Encrypt issuers for automated certificate management
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager-issuers
+  namespace: fawkes
+  labels:
+    app: cert-manager
+    component: issuers
+    environment: production
+    team: platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"  # Deploy after cert-manager
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    targetRevision: HEAD
+    path: platform/apps/cert-manager
+    directory:
+      recurse: false
+      include: cluster-issuer-*.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false  # cert-manager namespace already created
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  revisionHistoryLimit: 10

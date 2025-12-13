@@ -1,0 +1,32 @@
+# ============================================================================
+# FILE: platform/apps/cert-manager/cluster-issuer-letsencrypt-staging.yaml
+# PURPOSE: Let's Encrypt staging ClusterIssuer for testing
+#          Uses HTTP-01 challenge for certificate validation
+# ============================================================================
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+  labels:
+    app: cert-manager
+    component: cluster-issuer
+spec:
+  acme:
+    # Let's Encrypt staging server for testing
+    # Use this for testing before switching to production
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+
+    # Email address for ACME registration
+    # REQUIRED: Update this with your actual email address
+    email: platform-team@example.com
+
+    # Private key secret for ACME account
+    privateKeySecretRef:
+      name: letsencrypt-staging
+
+    # Enable HTTP-01 challenge solver
+    solvers:
+      # HTTP-01 challenge using ingress
+      - http01:
+          ingress:
+            ingressClassName: nginx
