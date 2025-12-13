@@ -342,6 +342,8 @@ Comprehensive documentation for all aspects of Fawkes:
 - [Monitoring & Alerting](docs/operations/monitoring.md)
 - [Security Best Practices](docs/operations/security.md)
 - [Troubleshooting Guide](docs/troubleshooting.md)
+- [AT-E1-001 Validation Tests](docs/runbooks/at-e1-001-validation.md)
+- [Azure AKS Validation Checklist](docs/runbooks/azure-aks-validation-checklist.md)
 
 ### Contributing
 - [Contributing Guide](CONTRIBUTING.md)
