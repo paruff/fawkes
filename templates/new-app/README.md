@@ -253,9 +253,9 @@ kube-linter lint platform/apps/my-component/
 
 See existing components for reference:
 
-- **Simple Component**: [cert-manager](../platform/apps/cert-manager/)
-- **Medium Complexity**: [grafana](../platform/apps/grafana/)
-- **Complex Component**: [backstage](../platform/apps/backstage/)
+- **Simple Component**: [cert-manager](../../platform/apps/cert-manager/)
+- **Medium Complexity**: [grafana](../../platform/apps/grafana/)
+- **Complex Component**: [backstage](../../platform/apps/backstage/)
 
 ## Best Practices
 
