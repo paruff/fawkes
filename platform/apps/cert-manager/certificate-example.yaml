@@ -16,25 +16,25 @@ metadata:
 spec:
   # Secret name where the certificate will be stored
   secretName: jenkins-tls
-  
+
   # Certificate duration (default: 90 days)
   duration: 2160h  # 90 days
-  
+
   # Renew certificate before expiration
   renewBefore: 360h  # 15 days
-  
+
   # Subject configuration
   subject:
     organizations:
       - Fawkes Platform
-  
+
   # Common name
   commonName: jenkins.fawkes.yourdomain.com
-  
+
   # DNS names for the certificate
   dnsNames:
     - jenkins.fawkes.yourdomain.com
-  
+
   # Reference to ClusterIssuer
   issuerRef:
     name: letsencrypt-prod
@@ -55,18 +55,18 @@ spec:
   secretName: wildcard-tls
   duration: 2160h  # 90 days
   renewBefore: 360h  # 15 days
-  
+
   subject:
     organizations:
       - Fawkes Platform
-  
+
   commonName: "*.fawkes.yourdomain.com"
-  
+
   # Wildcard DNS name
   dnsNames:
     - "*.fawkes.yourdomain.com"
     - fawkes.yourdomain.com
-  
+
   # Must use DNS-01 challenge for wildcard certificates
   issuerRef:
     name: letsencrypt-dns-azure
@@ -87,18 +87,18 @@ spec:
   secretName: platform-services-tls
   duration: 2160h
   renewBefore: 360h
-  
+
   subject:
     organizations:
       - Fawkes Platform
-  
+
   # Multiple DNS names in one certificate
   dnsNames:
     - backstage.fawkes.yourdomain.com
     - jenkins.fawkes.yourdomain.com
     - focalboard.fawkes.yourdomain.com
     - grafana.fawkes.yourdomain.com
-  
+
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
