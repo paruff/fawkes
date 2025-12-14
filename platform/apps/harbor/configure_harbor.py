@@ -202,7 +202,8 @@ class HarborConfigurer:
         if response.status_code == 201:
             robot_info = response.json()
             logger.info(f"Robot account created: {robot_info['name']}")
-            logger.info(f"Robot token: {robot_info['secret']}")
+            # Note: Token is returned in robot_info['secret'] but not logged for security
+            logger.info("Robot token generated successfully (returned in response)")
             return robot_info
         else:
             logger.error(
@@ -330,8 +331,11 @@ def main():
         if robot:
             logger.info(f"\n{'='*60}")
             logger.info(f"Robot Account: {robot['name']}")
-            logger.info(f"Token: {robot['secret']}")
-            logger.info(f"Use this in Jenkins credentials or GitLab CI/CD variables")
+            # Security: Token is sensitive and should be stored securely
+            # Print to stdout (not logged) for one-time retrieval by admin
+            print(f"Token: {robot['secret']}")
+            print("⚠️  IMPORTANT: Save this token securely. It will not be displayed again.")
+            logger.info(f"Use this token in Jenkins credentials or GitLab CI/CD variables")
             logger.info(f"{'='*60}\n")
 
     logger.info("Harbor configuration completed successfully!")
