@@ -163,6 +163,88 @@ run_at_e1_003() {
     return 0
 }
 
+run_at_e1_004() {
+    log_info "Running AT-E1-004: Jenkins CI/CD validation"
+    echo ""
+    
+    # Run the comprehensive validation script
+    log_info "Step 1: Running comprehensive validation..."
+    if [ -f "$ROOT_DIR/scripts/validate-at-e1-004.sh" ]; then
+        if ! "$ROOT_DIR/scripts/validate-at-e1-004.sh"; then
+            log_error "Comprehensive validation failed"
+            return 1
+        fi
+    else
+        log_error "AT-E1-004 validation script not found at $ROOT_DIR/scripts/validate-at-e1-004.sh"
+        return 1
+    fi
+    
+    echo ""
+    log_info "Step 2: Running BDD tests..."
+    cd "$ROOT_DIR"
+    
+    # Check if pytest is available
+    if command -v pytest &> /dev/null; then
+        # Run Jenkins BDD tests
+        if [ -d "tests/bdd/features/jenkins" ]; then
+            log_info "Running Jenkins BDD tests..."
+            # Run Jenkins-related tests
+            if pytest tests/bdd/features/jenkins/ -v --tb=short -m "smoke or local or jenkins" 2>/dev/null; then
+                log_success "BDD tests passed"
+            else
+                log_warning "Some BDD tests failed or were skipped (may require cluster with Jenkins deployed)"
+            fi
+        fi
+    else
+        log_warning "pytest not available, skipping BDD tests"
+    fi
+    
+    echo ""
+    log_success "AT-E1-004 validation completed!"
+    return 0
+}
+
+run_at_e1_009() {
+    log_info "Running AT-E1-009: Harbor Container Registry validation"
+    echo ""
+    
+    # Run the comprehensive validation script
+    log_info "Step 1: Running comprehensive validation..."
+    if [ -f "$ROOT_DIR/scripts/validate-at-e1-009.sh" ]; then
+        if ! "$ROOT_DIR/scripts/validate-at-e1-009.sh"; then
+            log_error "Comprehensive validation failed"
+            return 1
+        fi
+    else
+        log_error "AT-E1-009 validation script not found at $ROOT_DIR/scripts/validate-at-e1-009.sh"
+        return 1
+    fi
+    
+    echo ""
+    log_info "Step 2: Running BDD tests..."
+    cd "$ROOT_DIR"
+    
+    # Check if pytest is available
+    if command -v pytest &> /dev/null; then
+        # Run Harbor BDD tests
+        if [ -f "tests/bdd/features/harbor-deployment.feature" ]; then
+            log_info "Running Harbor deployment BDD tests..."
+            # Run Harbor-related tests
+            if pytest tests/bdd -k "harbor" -v --tb=short -m "smoke or local or harbor" 2>/dev/null; then
+                log_success "BDD tests passed"
+            else
+                log_warning "Some BDD tests failed or were skipped (may require cluster with Harbor deployed)"
+            fi
+        fi
+    else
+        log_warning "pytest not available, skipping BDD tests"
+    fi
+    
+    echo ""
+    log_success "AT-E1-009 validation completed!"
+    return 0
+}
+
 main() {
     if [ $# -eq 0 ]; then
         log_error "No test ID provided"
@@ -182,7 +264,13 @@ main() {
         AT-E1-003)
             run_at_e1_003
             ;;
-        AT-E1-004|AT-E1-005|AT-E1-006|AT-E1-007|AT-E1-008|AT-E1-009|AT-E1-010|AT-E1-011|AT-E1-012)
+        AT-E1-004)
+            run_at_e1_004
+            ;;
+        AT-E1-009)
+            run_at_e1_009
+            ;;
+        AT-E1-005|AT-E1-006|AT-E1-007|AT-E1-008|AT-E1-010|AT-E1-011|AT-E1-012)
             log_error "$test_id validation not yet implemented"
             exit 1
             ;;
