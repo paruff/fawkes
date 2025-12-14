@@ -85,9 +85,13 @@ spec:
         # ============================================================
         # Harbor Core Service Configuration
         # ============================================================
-        harborAdminPassword: "Harbor12345"  # CHANGE IN PRODUCTION
+        # Admin password - stored in harbor-admin-credentials secret for production
+        # For MVP/dev: Default password Harbor12345
+        # For production: Override with --set harborAdminPassword from secret
+        harborAdminPassword: "Harbor12345"
 
-        # Secret key for encryption
+        # Secret key for encryption - MUST be changed in production
+        # Generate with: openssl rand -base64 32
         secretKey: "not-a-secure-key-change-in-production"
 
         # ============================================================
