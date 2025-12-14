@@ -15,7 +15,8 @@ import re
 from pathlib import Path
 
 # Configuration constants
-PLACEHOLDER_PATTERNS = ['CHANGE_ME', 'changeme', 'example.com', 'CHANGEME']
+# Placeholder patterns for detecting template/example values (case-insensitive)
+PLACEHOLDER_PATTERNS = ['change_me', 'changeme', 'example.com', 'template_value', 'replace_with']
 REQUIRED_JCASC_SECTIONS = ['jenkins', 'securityRealm', 'authorizationStrategy']
 REQUIRED_K8S_CLOUD_FIELDS = ['name', 'namespace', 'jenkinsUrl', 'jenkinsTunnel']
 
@@ -102,15 +103,18 @@ def check_no_hardcoded_credentials(content, file_path):
         (r'token:\s*["\'](?!.*\$\{)[a-zA-Z0-9]{20,}["\']', 'hardcoded token'),
         (r'secret:\s*["\'](?!.*\$\{)[a-zA-Z0-9]{20,}["\']', 'hardcoded secret'),
         (r'apiKey:\s*["\'](?!.*\$\{)[a-zA-Z0-9]{20,}["\']', 'hardcoded API key'),
+        (r'accessToken:\s*["\'](?!.*\$\{)[a-zA-Z0-9]{20,}["\']', 'hardcoded access token'),
+        (r'privateKey:\s*["\'](?!.*\$\{)[a-zA-Z0-9\+/=]{40,}["\']', 'hardcoded private key'),
     ]
 
     issues = []
     for pattern, description in suspicious_patterns:
         matches = re.findall(pattern, content, re.IGNORECASE)
         if matches:
-            # Filter out known placeholder patterns
+            # Filter out known placeholder patterns (case-insensitive)
             real_matches = [m for m in matches
-                          if not any(placeholder in m for placeholder in PLACEHOLDER_PATTERNS)]
+                          if not any(placeholder.lower() in m.lower()
+                                   for placeholder in PLACEHOLDER_PATTERNS)]
             if real_matches:
                 issues.append(description)
 

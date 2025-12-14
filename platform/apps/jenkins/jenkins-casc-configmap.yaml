@@ -266,6 +266,10 @@ data:
     # ============================================================================
     # Script approval whitelist for pipeline security
     # Only approved methods can be called from pipeline scripts
+    #
+    # SECURITY NOTE: Be cautious when approving methods that access environment
+    # variables (e.g., System.getenv) as they could expose sensitive information.
+    # Only approve if necessary for legitimate pipeline use cases.
     security:
       scriptApproval:
         approvedSignatures:
@@ -273,6 +277,7 @@ data:
           - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods take java.lang.CharSequence int"
           # Add more as needed for pipeline scripts
           - "method java.util.Properties getProperty java.lang.String"
+          # Environment access - use carefully, consider alternatives like credentials binding
           - "staticMethod java.lang.System getenv java.lang.String"
 
     # ============================================================================
@@ -388,3 +393,4 @@ data:
     #   kubectl exec -n fawkes jenkins-0 -- jenkins-plugin-cli --list
     #
     # ============================================================================
+
