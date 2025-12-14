@@ -96,7 +96,7 @@ Update the Kubernetes secret with your GitHub OAuth credentials:
 
 ```bash
 # Edit the secrets file
-cd /home/runner/work/fawkes/fawkes
+cd /path/to/fawkes  # Navigate to your Fawkes repository root
 vim platform/apps/backstage/secrets.yaml
 ```
 

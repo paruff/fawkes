@@ -10,6 +10,11 @@ import os
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
+# Constants for test validation
+PLACEHOLDER_SECRET_VALUE = 'CHANGE_ME'
+EXPECTED_OAUTH_REDIRECT_CODES = ['404', '400', '302']
+EXPECTED_AUTH_REQUIRED_CODES = [302, 401, 403]
+
 
 def load_kube_clients():
     """Load kube config (prefers local kubeconfig then in-cluster) and return API clients."""
@@ -347,7 +352,7 @@ def step_when_user_completes_sso_login(context):
         env_cmd = ['printenv', 'AUTH_GITHUB_CLIENT_ID']
         try:
             response = exec_in_pod(context.core_api, namespace, pod_name, env_cmd)
-            has_client_id = bool(response and response.strip() and 'CHANGE_ME' not in response)
+            has_client_id = bool(response and response.strip() and PLACEHOLDER_SECRET_VALUE not in response)
         except:
             has_client_id = False
         
@@ -388,7 +393,7 @@ def step_then_redirected_to_homepage(context):
         
         # 404 is expected when accessing callback without auth code
         # 500 would indicate configuration error
-        assert response.strip() in ['404', '400', '302'], \
+        assert response.strip() in EXPECTED_OAUTH_REDIRECT_CODES, \
             f"OAuth callback endpoint returned unexpected status: {response.strip()}"
         
         logger.info(f"OAuth callback endpoint is configured (returned {response.strip()})")
@@ -459,7 +464,7 @@ def step_then_request_intercepted(context):
     
     if response:
         # Should get redirect or 401/403
-        assert response.status_code in [302, 401, 403], \
+        assert response.status_code in EXPECTED_AUTH_REQUIRED_CODES, \
             f"Expected redirect or auth error, got {response.status_code}"
         logger.info("Unauthenticated request was properly intercepted")
     else:
