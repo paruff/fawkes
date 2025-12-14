@@ -10,7 +10,7 @@ This directory contains acceptance test runners for Fawkes platform validation.
 |---------|----------|-------------|--------|
 | AT-E1-001 | Infrastructure | Local 4-node K8s cluster deployed | ✅ Implemented |
 | AT-E1-002 | GitOps | ArgoCD manages all platform components | ✅ Implemented |
-| AT-E1-003 | Developer Portal | Backstage with 3 templates functional | 🚧 Pending |
+| AT-E1-003 | Developer Portal | Backstage with 3 templates functional | ✅ Implemented |
 | AT-E1-004 | CI/CD | Jenkins pipelines build/test/deploy | 🚧 Pending |
 | AT-E1-005 | Security | DevSecOps scanning integrated | 🚧 Pending |
 | AT-E1-006 | Observability | Prometheus/Grafana stack deployed | 🚧 Pending |
@@ -37,6 +37,80 @@ make validate-at-e1-001
 
 # Run AT-E1-002 validation
 make validate-at-e1-002
+
+# Run AT-E1-003 validation
+make validate-at-e1-003
+```
+
+## AT-E1-003: Backstage Developer Portal
+
+### Acceptance Criteria
+
+- [x] Backstage deployed from platform/apps/backstage/
+- [x] PostgreSQL backend deployed and initialized
+- [x] GitHub OAuth configured
+- [x] Software catalog populated with 3 templates:
+  * Java Spring Boot
+  * Python FastAPI
+  * Node.js Express
+- [x] TechDocs plugin enabled and rendering
+- [x] Service catalog shows deployed apps
+- [x] Backstage UI loads in <3 seconds
+- [x] API responds with <500ms latency
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e1-003.sh`)
+   - Checks prerequisites (kubectl, cluster access)
+   - Validates namespace exists
+   - Verifies Backstage deployment and replicas
+   - Checks PostgreSQL backend connectivity
+   - Validates OAuth configuration
+   - Verifies 3 templates in catalog (Java, Python, Node.js)
+   - Checks TechDocs plugin configuration
+   - Validates service catalog has components
+   - Tests health check endpoint
+   - Measures API performance (<500ms)
+   - Validates ingress configuration
+
+2. **E2E Validation Tests** (`tests/e2e/backstage-validation-test.sh`)
+   - Tests Backstage pods are running
+   - Validates health endpoint responds
+   - Checks catalog API accessibility
+   - Verifies templates exist in catalog
+   - Tests PostgreSQL connectivity
+   - Validates service exists
+   - Checks ConfigMap configuration
+   - Measures API response time
+
+3. **BDD Tests** (`tests/bdd/features/backstage-deployment.feature`)
+   - Service accessibility
+   - Authentication success and failure
+   - Core service functionality
+   - High availability configuration
+   - External PostgreSQL connection
+   - Secure ingress configuration
+   - Prometheus metrics exposure
+   - Resource allocation and stability
+
+### Test Reports
+
+Test reports are generated in JSON format at:
+```
+reports/at-e1-003-validation-YYYYMMDD-HHMMSS.json
+```
+
+### Validation Commands
+
+Manual validation commands from the issue:
+
+```bash
+# Health check
+curl -f http://backstage.local/api/health
+
+# Count catalog entities (must be ≥3 templates)
+curl -f http://backstage.local/api/catalog/entities | \
+  jq '.items | length'
 ```
 
 ## AT-E1-002: GitOps with ArgoCD
