@@ -15,7 +15,7 @@ This is a Spring Boot microservice following the Fawkes Golden Path. It includes
 
 ## Prerequisites
 
-- Java 17+
+- Java 21 LTS
 - Maven 3.9+
 - Docker
 - kubectl (for deployment)

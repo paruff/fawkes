@@ -55,7 +55,7 @@ Each template includes:
 
 ### 1. Java Spring Boot Template
 
-**Framework:** Spring Boot 3.4.1 with Java 17
+**Framework:** Spring Boot 3.4.1 with Java 21 LTS
 
 **Key Dependencies:**
 - spring-boot-starter-web
@@ -79,7 +79,7 @@ Each template includes:
 
 ### 2. Python FastAPI Template
 
-**Framework:** FastAPI 0.115.5 with Python 3.11
+**Framework:** FastAPI 0.115.5 with Python 3.12
 
 **Key Dependencies:**
 - fastapi (latest secure version)
@@ -102,7 +102,7 @@ Each template includes:
 
 ### 3. Node.js Express Template
 
-**Framework:** Express 4.21.1 with Node.js 18+
+**Framework:** Express 4.21.1 with Node.js 20 LTS
 
 **Key Dependencies:**
 - express (latest secure version)
