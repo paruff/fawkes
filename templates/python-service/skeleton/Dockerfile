@@ -1,6 +1,6 @@
 # Multi-stage Dockerfile for Python FastAPI
 # Stage 1: Build
-FROM python:3.11-slim AS build
+FROM python:3.12-slim AS build
 WORKDIR /app
 
 # Install build dependencies
@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # Stage 2: Runtime
-FROM python:3.11-slim
+FROM python:3.12-slim
 WORKDIR /app
 
 # Create non-root user
@@ -22,7 +22,7 @@ RUN addgroup --gid 65534 appuser && \
     adduser --uid 65534 --gid 65534 --disabled-password --gecos "" appuser
 
 # Copy installed packages from build stage
-COPY --from=build /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=build /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=build /usr/local/bin /usr/local/bin
 
 # Copy application code

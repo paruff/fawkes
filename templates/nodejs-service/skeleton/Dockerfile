@@ -1,6 +1,6 @@
 # Multi-stage Dockerfile for Node.js Express
 # Stage 1: Build
-FROM node:18-alpine AS build
+FROM node:20-alpine AS build
 WORKDIR /app
 
 # Copy package files
@@ -10,7 +10,7 @@ COPY package*.json ./
 RUN npm ci --only=production
 
 # Stage 2: Runtime
-FROM node:18-alpine
+FROM node:20-alpine
 WORKDIR /app
 
 # Create non-root user

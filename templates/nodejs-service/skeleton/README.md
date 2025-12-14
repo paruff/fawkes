@@ -15,7 +15,7 @@ This is a Node.js Express microservice following the Fawkes Golden Path. It incl
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 20 LTS
 - npm
 - Docker
 - kubectl (for deployment)
