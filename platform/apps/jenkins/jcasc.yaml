@@ -174,14 +174,14 @@ credentials:
               id: "github-token"
               secret: "${GITHUB_TOKEN}"
               description: "GitHub Personal Access Token for repository access and webhooks"
-          
+
           # SonarQube authentication token
           - string:
               scope: GLOBAL
               id: "sonarqube-token"
               secret: "${SONARQUBE_TOKEN}"
               description: "SonarQube token for code quality scanning"
-          
+
           # Docker registry credentials (Harbor)
           - usernamePassword:
               scope: GLOBAL
@@ -189,7 +189,7 @@ credentials:
               username: "${DOCKER_REGISTRY_USERNAME}"
               password: "${DOCKER_REGISTRY_PASSWORD}"
               description: "Docker registry credentials for image push"
-          
+
           # GitHub App credentials (alternative to PAT for enterprise)
           # Uncomment when GitHub App is configured
           # - gitHubApp:
@@ -258,7 +258,7 @@ tool:
     installations:
       - name: "Default"
         home: "git"
-  
+
   maven:
     installations:
       - name: "Maven 3.9"
@@ -267,7 +267,7 @@ tool:
               installers:
                 - maven:
                     id: "3.9.6"
-  
+
   # Additional tools can be added here:
   # nodejs, jdk, gradle, etc.
   # Example:

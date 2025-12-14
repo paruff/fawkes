@@ -109,3 +109,9 @@ vibe-start: ## Start vibe coding session
 	@echo "4. Test: make test-bdd"
 	@echo "5. Iterate: Edit → Deploy → Test"
 	@echo "6. Sync: make sync ENVIRONMENT=dev"
+
+validate-jcasc: ## Validate Jenkins Configuration as Code (JCasC) files
+	@echo "🔍 Validating Jenkins Configuration as Code..."
+	@python scripts/validate-jcasc.py
+
+validate-jenkins: validate-jcasc ## Alias for validate-jcasc
