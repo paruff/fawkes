@@ -1,0 +1,118 @@
+# ============================================================================
+# FILE: templates/python-service/template.yaml
+# PURPOSE: Backstage software template for creating Python microservices
+#          Provides a golden path with CI/CD, GitOps, and observability
+# ============================================================================
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: python-service
+  title: Python Microservice
+  description: |
+    Create a new Python microservice with FastAPI, Docker, CI/CD pipeline,
+    and GitOps deployment configuration. Includes observability, security
+    scanning, and automated DORA metrics collection.
+  tags:
+    - python
+    - fastapi
+    - microservice
+    - recommended
+spec:
+  owner: platform-team
+  type: service
+  
+  parameters:
+    - title: Service Information
+      required:
+        - name
+        - description
+        - owner
+      properties:
+        name:
+          title: Service Name
+          type: string
+          description: Unique name for your service (lowercase, hyphen-separated)
+          pattern: '^[a-z][a-z0-9-]*[a-z0-9]$'
+          ui:autofocus: true
+          ui:help: 'Example: user-authentication-service'
+        
+        description:
+          title: Description
+          type: string
+          description: Brief description of what this service does
+          ui:widget: textarea
+          ui:help: 'Example: Handles user authentication and JWT token generation'
+        
+        owner:
+          title: Owner Team
+          type: string
+          description: Team responsible for this service
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
+    
+    - title: Repository Configuration
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+    
+    - title: Deployment Configuration
+      properties:
+        environment:
+          title: Initial Environment
+          type: string
+          description: Where should this service be deployed initially?
+          default: dev
+          enum:
+            - dev
+            - staging
+            - production
+        
+        port:
+          title: Service Port
+          type: number
+          description: Port your service listens on
+          default: 8000
+  
+  steps:
+    - id: fetch-base
+      name: Fetch Python Service Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          port: ${{ parameters.port }}
+    
+    - id: publish
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        allowedHosts:
+          - github.com
+        description: ${{ parameters.description }}
+        repoUrl: ${{ parameters.repoUrl }}
+    
+    - id: register
+      name: Register with Backstage Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+  
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: View in Catalog
+        url: ${{ steps.register.output.catalogInfoUrl }}
