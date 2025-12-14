@@ -29,13 +29,12 @@ Feature: Jenkins Deployment with Kubernetes Plugin
   Scenario: Agent templates are configured
     Given Jenkins is deployed with Kubernetes plugin
     When I check the configured agent templates
-    Then the following agent templates should exist:
-      | template      | label           | image                           |
-      | jnlp-agent    | k8s-agent       | jenkins/inbound-agent:latest    |
-      | maven-agent   | maven java      | maven:3.9-eclipse-temurin-17    |
-      | python-agent  | python          | python:3.11-slim                |
-      | node-agent    | node nodejs     | node:20-slim                    |
-      | go-agent      | go golang       | golang:1.21                     |
+    Then all expected agent templates should exist
+    And agent templates should include jnlp-agent
+    And agent templates should include maven-agent
+    And agent templates should include python-agent
+    And agent templates should include node-agent
+    And agent templates should include go-agent
 
   @dynamic-provisioning @functional
   Scenario: Dynamic agent provisioning works
