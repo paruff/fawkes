@@ -6,11 +6,11 @@ ${{ values.description }}
 
 ## Quick Start
 
-This service is part of the Fawkes platform and follows the golden path for Python microservices.
+This service is part of the Fawkes platform and follows the golden path for Node.js microservices.
 
 ### Prerequisites
 
-- Python 3.11+
+- Node.js 18+ and npm
 - Docker
 - Access to the Fawkes platform
 
@@ -18,10 +18,10 @@ This service is part of the Fawkes platform and follows the golden path for Pyth
 
 ```bash
 # Install dependencies
-pip install -r requirements.txt
+npm install
 
 # Run the service
-python -m app.main
+npm start
 ```
 
 The service will be available at `http://localhost:${{ values.port }}`.
@@ -30,8 +30,8 @@ The service will be available at `http://localhost:${{ values.port }}`.
 
 This service is built using:
 
-- **FastAPI**: Modern, fast web framework for building APIs
-- **Pydantic**: Data validation using Python type annotations
+- **Express**: Fast, unopinionated web framework for Node.js
+- **TypeScript**: Typed superset of JavaScript for better code quality
 - **OpenTelemetry**: Distributed tracing and observability
 
 ## Features

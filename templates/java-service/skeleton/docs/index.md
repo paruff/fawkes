@@ -6,22 +6,24 @@ ${{ values.description }}
 
 ## Quick Start
 
-This service is part of the Fawkes platform and follows the golden path for Python microservices.
+This service is part of the Fawkes platform and follows the golden path for Java microservices.
 
 ### Prerequisites
 
-- Python 3.11+
+- Java 17+ and Maven or Gradle
 - Docker
 - Access to the Fawkes platform
 
 ### Running Locally
 
 ```bash
-# Install dependencies
-pip install -r requirements.txt
+# Using Maven
+mvn clean install
+mvn spring-boot:run
 
-# Run the service
-python -m app.main
+# Using Gradle
+./gradlew build
+./gradlew bootRun
 ```
 
 The service will be available at `http://localhost:${{ values.port }}`.
@@ -30,14 +32,14 @@ The service will be available at `http://localhost:${{ values.port }}`.
 
 This service is built using:
 
-- **FastAPI**: Modern, fast web framework for building APIs
-- **Pydantic**: Data validation using Python type annotations
+- **Spring Boot**: Framework for production-ready Spring applications
+- **Spring Framework**: Comprehensive programming and configuration model
 - **OpenTelemetry**: Distributed tracing and observability
 
 ## Features
 
 - RESTful API with OpenAPI documentation
-- Health check endpoints
+- Health check endpoints (Spring Boot Actuator)
 - Prometheus metrics
 - Distributed tracing with OpenTelemetry
 - Structured logging

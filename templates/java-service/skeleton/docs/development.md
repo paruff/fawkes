@@ -19,84 +19,87 @@
 
 ## Code Style
 
-### Python Style Guide
+### Java Style Guide
 
-We follow [PEP 8](https://pep8.org/) with the following additions:
+We follow standard Java conventions with these additions:
 
-- Line length: 100 characters
-- Use type hints for all function signatures
-- Use docstrings for all public functions and classes
+- Use Java 17+ features
+- Follow Google Java Style Guide or similar
+- Maximum line length: 120 characters
+- Use meaningful variable and method names
+- Write clear Javadoc comments for public APIs
 
 ### Code Formatting
 
 We use the following tools:
 
-- **Black**: Code formatting
-- **isort**: Import sorting
-- **flake8**: Linting
-- **mypy**: Type checking
+- **Checkstyle**: Enforce code style
+- **SpotBugs**: Find bugs through static analysis
+- **SonarQube**: Code quality and security analysis
 
 ```bash
-# Format code
-black app tests
+# Format code (Maven)
+mvn spotless:apply
 
-# Sort imports
-isort app tests
+# Check code style (Maven)
+mvn checkstyle:check
 
-# Lint
-flake8 app tests
+# Run SpotBugs (Maven)
+mvn spotbugs:check
 
-# Type check
-mypy app
+# Format code (Gradle)
+./gradlew spotlessApply
+
+# Check code style (Gradle)
+./gradlew checkstyleMain
 ```
 
 ## Testing
 
 ### Writing Tests
 
-- Place unit tests in `tests/unit/`
-- Place integration tests in `tests/integration/`
-- Use pytest fixtures for common setup
+- Use JUnit 5 for unit tests
+- Use Mockito for mocking dependencies
+- Place tests in `src/test/java/`
 - Aim for >80% code coverage
 
 ### Test Structure
 
-```python
-def test_function_name():
-    # Arrange
-    setup_test_data()
+```java
+@Test
+void shouldReturnExpectedValue() {
+    // Arrange
+    var input = setupTestData();
     
-    # Act
-    result = function_under_test()
+    // Act
+    var result = myService.process(input);
     
-    # Assert
-    assert result == expected_value
+    // Assert
+    assertEquals(expectedValue, result);
+}
 ```
 
 ## Documentation
 
 ### Code Documentation
 
-- All public functions must have docstrings
-- Use Google-style docstrings
-- Include parameter types and return types
+- Use Javadoc for all public classes and methods
+- Include parameter descriptions and return values
+- Document exceptions
 
 Example:
 
-```python
-def calculate_total(items: list[Item]) -> float:
-    """Calculate the total price of items.
-    
-    Args:
-        items: List of items to calculate total for
-        
-    Returns:
-        Total price as a float
-        
-    Raises:
-        ValueError: If items list is empty
-    """
-    pass
+```java
+/**
+ * Calculate the total price of items.
+ * 
+ * @param items List of items to calculate total for
+ * @return Total price as BigDecimal
+ * @throws IllegalArgumentException if items list is empty
+ */
+public BigDecimal calculateTotal(List<Item> items) {
+    // implementation
+}
 ```
 
 ### Documentation Site
@@ -125,39 +128,40 @@ mkdocs build
 
 ### Logging
 
-Use structured logging with the standard library:
+Use SLF4J with Logback or Log4j2:
 
-```python
-import logging
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-logger = logging.getLogger(__name__)
+private static final Logger logger = LoggerFactory.getLogger(MyClass.class);
 
-logger.info("Processing request", extra={
-    "user_id": user_id,
-    "request_id": request_id
-})
+logger.info("Processing request for user: {}", userId);
 ```
 
 ### Metrics
 
-Expose Prometheus metrics for:
+Use Spring Boot Actuator and Micrometer:
 
-- Request count and duration
-- Error rates
-- Business metrics
+- Expose metrics endpoint
+- Track request count and duration
+- Monitor error rates
+- Custom business metrics
 
 ### Tracing
 
-Use OpenTelemetry for distributed tracing:
+Use Spring Boot with OpenTelemetry:
 
-```python
-from opentelemetry import trace
+```java
+@Autowired
+private Tracer tracer;
 
-tracer = trace.get_tracer(__name__)
-
-with tracer.start_as_current_span("operation_name"):
-    # Your code here
-    pass
+Span span = tracer.spanBuilder("operation_name").startSpan();
+try (Scope scope = span.makeCurrent()) {
+    // Your code here
+} finally {
+    span.end();
+}
 ```
 
 ## Security
@@ -165,13 +169,14 @@ with tracer.start_as_current_span("operation_name"):
 ### Secrets Management
 
 - Never commit secrets to Git
-- Use environment variables for configuration
-- Use Vault for sensitive data
+- Use Spring Cloud Vault for secret management
+- Use environment variables or external configuration
 
 ### Dependencies
 
 - Keep dependencies up to date
-- Run security scans with `safety check`
+- Use Dependabot or Renovate
+- Run OWASP Dependency Check
 - Review dependency licenses
 
 ## CI/CD Pipeline

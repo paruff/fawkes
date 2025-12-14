@@ -19,84 +19,86 @@
 
 ## Code Style
 
-### Python Style Guide
+### JavaScript/TypeScript Style Guide
 
-We follow [PEP 8](https://pep8.org/) with the following additions:
+We follow industry best practices with the following guidelines:
 
+- Use ES6+ features
+- Prefer `const` and `let` over `var`
+- Use arrow functions where appropriate
+- Use async/await for asynchronous operations
 - Line length: 100 characters
-- Use type hints for all function signatures
-- Use docstrings for all public functions and classes
+- Use JSDoc comments for public functions
 
 ### Code Formatting
 
 We use the following tools:
 
-- **Black**: Code formatting
-- **isort**: Import sorting
-- **flake8**: Linting
-- **mypy**: Type checking
+- **Prettier**: Code formatting
+- **ESLint**: Linting and code quality
+- **TypeScript**: Type checking (if using TypeScript)
 
 ```bash
 # Format code
-black app tests
+npm run format
 
-# Sort imports
-isort app tests
+# Lint code
+npm run lint
 
-# Lint
-flake8 app tests
+# Fix linting issues
+npm run lint:fix
 
-# Type check
-mypy app
+# Type check (TypeScript)
+npm run type-check
 ```
 
 ## Testing
 
 ### Writing Tests
 
-- Place unit tests in `tests/unit/`
+- Place unit tests alongside source files or in `tests/unit/`
 - Place integration tests in `tests/integration/`
-- Use pytest fixtures for common setup
+- Use Jest or Mocha for testing
 - Aim for >80% code coverage
 
 ### Test Structure
 
-```python
-def test_function_name():
-    # Arrange
-    setup_test_data()
+```javascript
+describe('MyFunction', () => {
+  it('should return expected value', () => {
+    // Arrange
+    const input = setupTestData();
     
-    # Act
-    result = function_under_test()
+    // Act
+    const result = myFunction(input);
     
-    # Assert
-    assert result == expected_value
+    // Assert
+    expect(result).toBe(expectedValue);
+  });
+});
 ```
 
 ## Documentation
 
 ### Code Documentation
 
-- All public functions must have docstrings
-- Use Google-style docstrings
+- All public functions should have JSDoc comments
 - Include parameter types and return types
+- Document exceptions/errors
 
 Example:
 
-```python
-def calculate_total(items: list[Item]) -> float:
-    """Calculate the total price of items.
-    
-    Args:
-        items: List of items to calculate total for
-        
-    Returns:
-        Total price as a float
-        
-    Raises:
-        ValueError: If items list is empty
-    """
-    pass
+```javascript
+/**
+ * Calculate the total price of items.
+ * 
+ * @param {Array<Item>} items - List of items to calculate total for
+ * @returns {number} Total price
+ * @throws {Error} If items list is empty
+ */
+function calculateTotal(items) {
+  // implementation
+}
 ```
 
 ### Documentation Site
@@ -125,17 +127,15 @@ mkdocs build
 
 ### Logging
 
-Use structured logging with the standard library:
+Use a structured logging library like Winston or Pino:
 
-```python
-import logging
+```javascript
+const logger = require('winston');
 
-logger = logging.getLogger(__name__)
-
-logger.info("Processing request", extra={
-    "user_id": user_id,
-    "request_id": request_id
-})
+logger.info('Processing request', {
+  userId: userId,
+  requestId: requestId
+});
 ```
 
 ### Metrics
@@ -150,14 +150,17 @@ Expose Prometheus metrics for:
 
 Use OpenTelemetry for distributed tracing:
 
-```python
-from opentelemetry import trace
+```javascript
+const { trace } = require('@opentelemetry/api');
 
-tracer = trace.get_tracer(__name__)
+const tracer = trace.getTracer('my-service');
 
-with tracer.start_as_current_span("operation_name"):
-    # Your code here
-    pass
+const span = tracer.startSpan('operation_name');
+try {
+  // Your code here
+} finally {
+  span.end();
+}
 ```
 
 ## Security
@@ -171,7 +174,7 @@ with tracer.start_as_current_span("operation_name"):
 ### Dependencies
 
 - Keep dependencies up to date
-- Run security scans with `safety check`
+- Run security audits with `npm audit`
 - Review dependency licenses
 
 ## CI/CD Pipeline

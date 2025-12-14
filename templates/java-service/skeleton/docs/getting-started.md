@@ -13,32 +13,36 @@ git clone <repository-url>
 cd ${{ values.name }}
 ```
 
-2. **Install dependencies**
+2. **Build the project**
 
 ```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Using Maven
+mvn clean install
 
-# Install dependencies
-pip install -r requirements.txt
-pip install -r requirements-dev.txt
+# Using Gradle
+./gradlew build
 ```
 
 3. **Configure environment**
 
 ```bash
-# Copy example environment file
-cp .env.example .env
+# Copy example application properties
+cp src/main/resources/application.properties.example src/main/resources/application.properties
 
-# Edit .env with your configuration
+# Edit application.properties with your configuration
 ```
 
 4. **Run the service**
 
 ```bash
-# Development mode with auto-reload
-uvicorn app.main:app --reload --port ${{ values.port }}
+# Using Maven
+mvn spring-boot:run
+
+# Using Gradle
+./gradlew bootRun
+
+# Or run the JAR directly
+java -jar target/${{ values.name }}-0.0.1-SNAPSHOT.jar
 ```
 
 ## Testing
@@ -46,23 +50,34 @@ uvicorn app.main:app --reload --port ${{ values.port }}
 ### Run Unit Tests
 
 ```bash
-pytest tests/
+# Using Maven
+mvn test
+
+# Using Gradle
+./gradlew test
 ```
 
 ### Run with Coverage
 
 ```bash
-pytest --cov=app tests/
+# Using Maven with JaCoCo
+mvn test jacoco:report
+
+# Using Gradle with JaCoCo
+./gradlew test jacocoTestReport
 ```
 
 ### Linting
 
 ```bash
-# Run flake8
-flake8 app tests
+# Run Checkstyle (Maven)
+mvn checkstyle:check
 
-# Run type checking
-mypy app
+# Run SpotBugs (Maven)
+mvn spotbugs:check
+
+# Run Checkstyle (Gradle)
+./gradlew checkstyleMain checkstyleTest
 ```
 
 ## Deployment
