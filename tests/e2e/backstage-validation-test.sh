@@ -191,15 +191,14 @@ test_api_response_time() {
     fi
     
     local response_time=$(kubectl exec -n "$NAMESPACE" "$pod_name" -- curl -s -o /dev/null -w '%{time_total}' http://127.0.0.1:7007/api/catalog/entities 2>/dev/null || echo "999")
-    local response_time_ms=$(echo "$response_time * 1000" | bc 2>/dev/null || echo "999")
-    local response_time_ms_int=${response_time_ms%.*}
+    local response_time_ms=$(echo "$response_time" | awk '{print int($1 * 1000)}')
     
-    log_info "  API response time: ${response_time_ms_int}ms"
+    log_info "  API response time: ${response_time_ms}ms"
     
-    if [ "$response_time_ms_int" -lt 500 ]; then
+    if [ "$response_time_ms" -lt 500 ]; then
         return 0
     else
-        log_warning "  API response time ${response_time_ms_int}ms exceeds 500ms target"
+        log_warning "  API response time ${response_time_ms}ms exceeds 500ms target"
         return 0  # Warning, not failure
     fi
 }
