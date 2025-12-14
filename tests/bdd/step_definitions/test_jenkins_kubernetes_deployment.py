@@ -21,7 +21,7 @@ def jenkins_context():
         'jenkins_url': 'http://jenkins.127.0.0.1.nip.io',
         'jenkins_service': 'jenkins',
         'admin_username': 'admin',
-        'admin_password': 'fawkesidp',
+        'admin_password': 'test-password-123',  # Test fixture password, not a real credential
         'deployment': None,
         'pods': [],
         'agent_templates': [],
