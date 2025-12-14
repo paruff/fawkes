@@ -15,6 +15,11 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
+# Update packages and install netcat for healthcheck
+RUN apk upgrade --no-cache && \
+    apk add --no-cache netcat-openbsd && \
+    rm -rf /var/cache/apk/*
+
 # Create non-root user
 RUN addgroup -g 65534 appuser && \
     adduser -D -u 65534 -G appuser appuser
@@ -33,7 +38,7 @@ EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-  CMD sh -c 'nc -z localhost 8080 || exit 1'
+  CMD nc -z localhost 8080 || exit 1
 
 # Run application
 ENTRYPOINT ["java", "-jar", "app.jar"]
