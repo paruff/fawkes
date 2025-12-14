@@ -90,6 +90,50 @@ globalLibraries:
 - Credentials managed via Kubernetes secrets
 - Security scanning with SonarQube and Trivy
 
+**⚠️ Development Credentials:**
+
+The default configuration uses placeholder credentials that must be changed:
+- Username: `admin`
+- Password: `CHANGE_ME_jenkins_admin_password`
+
+**🔒 Production Deployment:**
+
+For production deployments, you MUST:
+
+1. Update the secrets file:
+   ```bash
+   # Edit platform/apps/jenkins/secrets.yaml
+   # Replace CHANGE_ME_jenkins_admin_password with a strong password
+   
+   # Apply the secret
+   kubectl apply -f platform/apps/jenkins/secrets.yaml
+   ```
+
+2. Update jenkins-application.yaml to reference the secret:
+   ```yaml
+   extraEnv:
+     - name: ADMIN_PASSWORD
+       valueFrom:
+         secretKeyRef:
+           name: jenkins-admin-credentials
+           key: password
+   
+   admin:
+     password: "{{ .Values.adminPassword }}"  # Reference from secret
+   
+   JENKINS_OPTS: "--argumentsRealm.passwd.admin={{ .Values.adminPassword }} -Djenkins.install.runSetupWizard=false"
+   ```
+
+3. For production, use External Secrets Operator:
+   ```bash
+   # Configure external secret to pull from AWS Secrets Manager or Azure Key Vault
+   kubectl apply -f platform/apps/external-secrets/externalsecret-jenkins-admin.yaml
+   ```
+
+4. Consider using OAuth/OIDC integration for authentication (see `jcasc.yaml` for GitHub OAuth example)
+
+**Note:** Never commit actual passwords to Git. Always use `CHANGE_ME_*` placeholders.
+
 ## Troubleshooting
 
 ### Common Issues
@@ -112,6 +156,6 @@ Local development:
 http://jenkins.127.0.0.1.nip.io
 ```
 
-Default credentials:
+Credentials:
 - Username: `admin`
-- Password: `fawkesidp` (change in production!)
+- Password: Set in `platform/apps/jenkins/secrets.yaml` (must be configured before deployment)

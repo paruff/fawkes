@@ -1,0 +1,19 @@
+# GitGuardian configuration file
+# This file configures which paths to exclude from GitGuardian secret scanning
+# Documentation: https://docs.gitguardian.com/ggshield-docs/reference/client-configuration
+
+version: 2
+
+# Paths to exclude from scanning (supports glob patterns)
+paths-ignore:
+  - "tests/**"
+  - "**/test_*.py"
+  - "**/conftest.py"
+  - "**/*_test.py"
+  - "**/tests/**"
+  - "**/test/**"
+
+# Specific matches to ignore (for historical commits with test fixtures)
+matches-ignore:
+  - name: "Test fixture password in commit bc60493"
+    match: "fawkesidp"
