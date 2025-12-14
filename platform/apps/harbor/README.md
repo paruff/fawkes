@@ -57,6 +57,12 @@ Default credentials:
 - Username: `admin`
 - Password: `Harbor12345` (⚠️ CHANGE IN PRODUCTION!)
 
+**⚠️ Security Note**: The default password is only suitable for local development. For production deployments:
+1. Change the admin password immediately after first login via Harbor UI
+2. Generate a secure secret key: `openssl rand -base64 32`
+3. Use External Secrets Operator to manage credentials from Vault/cloud provider
+4. Enable HTTPS/TLS with proper certificates via cert-manager
+
 ### Docker Login
 
 ```bash
