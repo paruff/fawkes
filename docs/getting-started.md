@@ -96,7 +96,32 @@ git push origin feature/add-new-service
 
 ## 4. Platform Services
 
-Services are deployed automatically via GitOps controllers. To add a new service:
+### Deploy Core Services
+
+Services are deployed automatically via GitOps controllers. The core platform includes:
+
+- **Backstage** - Developer portal (requires GitHub OAuth)
+- **Jenkins** - CI/CD pipelines
+- **ArgoCD** - GitOps deployment
+- **Prometheus/Grafana** - Observability
+- **SonarQube** - Code quality
+
+### Configure GitHub OAuth for Backstage
+
+Before accessing Backstage, configure GitHub OAuth authentication:
+
+**Quick Setup:**
+
+1. Create GitHub OAuth App at https://github.com/settings/developers
+2. Configure callback URL: `https://backstage.fawkes.idp/api/auth/github/handler/frame`
+3. Update secrets in `platform/apps/backstage/secrets.yaml`
+4. Apply: `kubectl apply -f platform/apps/backstage/secrets.yaml`
+
+**For detailed instructions, see**: [GitHub OAuth Setup Guide](how-to/security/github-oauth-setup.md)
+
+### Deploy Services
+
+To deploy or add a new service:
 
 1. Define the service in `platform/apps/`:
 ```yaml
