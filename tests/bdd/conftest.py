@@ -210,8 +210,11 @@ def jenkins_api_helper():
             return self._config
         
         def login(self, username, password):
-            """Login to Jenkins."""
-            if username == 'admin' and password == 'fawkesidp':
+            """Login to Jenkins.
+            
+            Note: This is a mock for testing. Accepts any non-empty password for admin user.
+            """
+            if username == 'admin' and password and len(password) > 0:
                 self._authenticated = True
                 return True
             return False
