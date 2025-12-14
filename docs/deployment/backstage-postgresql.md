@@ -108,23 +108,67 @@ Each template includes:
 
 ## Deployment Steps
 
-### Step 1: Update Secrets (REQUIRED)
+### Step 0: Prerequisites - Configure GitHub OAuth (REQUIRED)
 
-Before deploying, update all placeholder secrets:
+Before deploying Backstage, you must configure GitHub OAuth authentication. Without this, users won't be able to login.
+
+**Quick Setup:**
+
+1. Create a GitHub OAuth App:
+   - Go to: https://github.com/settings/developers (personal) or
+   - Go to: https://github.com/organizations/YOUR_ORG/settings/applications (organization)
+   - Click "New OAuth App"
+   - Fill in:
+     - **Application name**: `Fawkes Backstage - Development` (or Production)
+     - **Homepage URL**: `https://backstage.fawkes.idp`
+     - **Authorization callback URL**: `https://backstage.fawkes.idp/api/auth/github/handler/frame`
+   - Copy the **Client ID**
+   - Generate and copy the **Client Secret**
+
+2. Update the secrets file:
+   ```bash
+   vim platform/apps/backstage/secrets.yaml
+   ```
+   
+   Replace these lines:
+   ```yaml
+   github-client-id: CHANGE_ME_github_oauth_client_id
+   github-client-secret: CHANGE_ME_github_oauth_client_secret
+   ```
+   
+   With your actual values:
+   ```yaml
+   github-client-id: "your-actual-client-id"
+   github-client-secret: "your-actual-client-secret"
+   ```
+
+3. Apply the secret:
+   ```bash
+   kubectl apply -f platform/apps/backstage/secrets.yaml
+   ```
+
+**For detailed OAuth setup instructions, see**: [GitHub OAuth Setup Guide](../how-to/security/github-oauth-setup.md)
+
+### Step 1: Update Secrets
+
+### Step 1: Update Additional Secrets
+
+In addition to GitHub OAuth (configured in Step 0), you need to update other integration secrets:
 
 ```bash
 # Edit PostgreSQL credentials
 vim platform/apps/postgresql/db-backstage-credentials.yaml
 # Change: CHANGE_ME_backstage_password
 
-# Edit Backstage secrets
+# Edit Backstage integration secrets
 vim platform/apps/backstage/secrets.yaml
 # Update:
-# - GitHub OAuth client ID and secret
-# - GitHub personal access token
-# - ArgoCD credentials
-# - Jenkins credentials
+# - GitHub personal access token (for repo integration)
+# - ArgoCD credentials (optional)
+# - Jenkins credentials (optional)
 ```
+
+**Note**: GitHub OAuth credentials (client-id and client-secret) should already be configured from Step 0.
 
 **Security Note:** For production, use External Secrets Operator with Vault instead of storing secrets in Git.
 
