@@ -6,7 +6,13 @@ from kubernetes import client, config
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+
+# Only configure logging if not already configured
+if not logger.handlers:
+    logging.basicConfig(level=logging.INFO)
+
+# Get repository root directory (works in different environments)
+REPO_ROOT = Path(os.getenv('GITHUB_WORKSPACE', Path(__file__).resolve().parent.parent.parent.parent))
 
 
 def load_kube_clients():
@@ -222,7 +228,7 @@ def step_then_volume_writable(context):
 def step_given_catalog_loaded(context):
     """Verify catalog is accessible."""
     # Load catalog-info.yaml from repository
-    catalog_path = Path('/home/runner/work/fawkes/fawkes/catalog-info.yaml')
+    catalog_path = REPO_ROOT / 'catalog-info.yaml'
     
     if not catalog_path.exists():
         raise AssertionError(f"Catalog file not found at {catalog_path}")
@@ -275,7 +281,7 @@ def step_then_annotation_value(context, expected_value):
 @given('I have the Python service template')
 def step_given_python_template(context):
     """Load Python service template."""
-    template_path = Path('/home/runner/work/fawkes/fawkes/templates/python-service/skeleton')
+    template_path = REPO_ROOT / 'templates' / 'python-service' / 'skeleton'
     
     assert template_path.exists(), f"Python template not found at {template_path}"
     context.template_path = template_path
@@ -324,7 +330,7 @@ def step_then_docs_contains(context, filename):
 def step_given_service_template(context):
     """Load a service template skeleton."""
     # Use Python template as example
-    template_path = Path('/home/runner/work/fawkes/fawkes/templates/python-service/skeleton')
+    template_path = REPO_ROOT / 'templates' / 'python-service' / 'skeleton'
     assert template_path.exists(), f"Template not found at {template_path}"
     context.template_path = template_path
 
@@ -353,7 +359,7 @@ def step_then_annotation_points_to(context, expected_value):
 def step_given_service_with_docs(context):
     """Verify service has documentation structure."""
     # Use the main repository as an example
-    repo_path = Path('/home/runner/work/fawkes/fawkes')
+    repo_path = REPO_ROOT
     mkdocs_path = repo_path / 'mkdocs.yml'
     docs_path = repo_path / 'docs'
     
@@ -384,7 +390,7 @@ def step_when_techdocs_processes(context):
 def step_then_docs_generated(context):
     """Verify documentation can be generated."""
     # Verify mkdocs.yml is valid by attempting to parse it
-    repo_path = getattr(context, 'docs_repo_path', Path('/home/runner/work/fawkes/fawkes'))
+    repo_path = getattr(context, 'docs_repo_path', REPO_ROOT)
     mkdocs_path = repo_path / 'mkdocs.yml'
     
     try:
