@@ -250,16 +250,25 @@ def jenkins_with_ingress(jenkins_context, kubectl_helper):
 
 @when(parsers.parse('I access the Jenkins URL "{url}"'))
 def access_jenkins_url(jenkins_context, url):
-    """Access Jenkins via HTTP (mocked for unit test)."""
+    """Access Jenkins via HTTP (mocked for unit test).
+    
+    Note: In integration tests, this would actually make HTTP request.
+    For unit tests, we mock a successful response.
+    """
     # Mock a successful response for unit tests
-    # In integration tests, this would actually make HTTP request
+    # In integration tests, replace with: requests.get(url, timeout=10)
+    jenkins_context['response'] = _create_mock_response()
+    jenkins_context['url_accessed'] = url
+
+
+def _create_mock_response():
+    """Create mock HTTP response for testing."""
     class MockResponse:
+        """Mock HTTP response object."""
         status_code = 200
         text = '<html><title>Jenkins</title><body>Jenkins login</body></html>'
         headers = {'Server': 'nginx'}
-    
-    jenkins_context['response'] = MockResponse()
-    jenkins_context['url_accessed'] = url
+    return MockResponse()
 
 
 @then('I should receive a successful HTTP response')

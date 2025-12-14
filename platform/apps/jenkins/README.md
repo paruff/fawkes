@@ -90,6 +90,37 @@ globalLibraries:
 - Credentials managed via Kubernetes secrets
 - Security scanning with SonarQube and Trivy
 
+**⚠️ Development Credentials:**
+
+The default configuration uses hardcoded credentials for local development:
+- Username: `admin`
+- Password: `fawkesidp`
+
+**🔒 Production Deployment:**
+
+For production deployments, you MUST:
+
+1. Replace hardcoded password with Secret reference:
+   ```yaml
+   extraEnv:
+     - name: ADMIN_PASSWORD
+       valueFrom:
+         secretKeyRef:
+           name: jenkins-admin-secret
+           key: password
+   ```
+
+2. Create the secret:
+   ```bash
+   kubectl create secret generic jenkins-admin-secret \
+     --from-literal=password='YOUR_SECURE_PASSWORD' \
+     -n fawkes
+   ```
+
+3. Update the ArgoCD Application to reference the secret instead of hardcoded value
+
+4. Consider using OAuth/OIDC integration for authentication (see `jcasc.yaml` for GitHub OAuth example)
+
 ## Troubleshooting
 
 ### Common Issues
