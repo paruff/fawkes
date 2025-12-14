@@ -200,13 +200,20 @@ cd fawkes
 cp config/example.tfvars config/terraform.tfvars
 # Edit terraform.tfvars with your settings
 
-# 3. Provision infrastructure and deploy platform via Argo CD
+# 3. Configure GitHub OAuth for Backstage (REQUIRED)
+# See: docs/how-to/security/github-oauth-quickstart.md
+# Quick: Create OAuth app at https://github.com/settings/developers
+#        Update secrets in platform/apps/backstage/secrets.yaml
+
+# 4. Provision infrastructure and deploy platform via Argo CD
 ./scripts/ignite.sh --provider aws dev
 
 # 5. Access your platform
 kubectl get ingress -n fawkes-platform
-# Navigate to Backstage URL shown
+# Navigate to Backstage URL shown and login with GitHub
 ```
+
+**Important**: Before first login, configure GitHub OAuth - see [OAuth Quick Start](docs/how-to/security/github-oauth-quickstart.md)
 
 **[Detailed Getting Started Guide →](docs/getting-started.md)**
 
