@@ -52,6 +52,25 @@ That's it! The pipeline automatically handles:
 - Building and pushing Docker images
 - Updating GitOps manifests for ArgoCD
 
+### 3. Example Jenkinsfiles
+
+Ready-to-use example Jenkinsfiles are available in the `examples/` directory:
+
+| File | Language | Description |
+|------|----------|-------------|
+| [Jenkinsfile.java](examples/Jenkinsfile.java) | Java | Maven-based Java application with Cucumber BDD |
+| [Jenkinsfile.python](examples/Jenkinsfile.python) | Python | Python application with pytest and Behave |
+| [Jenkinsfile.node](examples/Jenkinsfile.node) | Node.js | Node.js application with Jest and BDD tests |
+| [Jenkinsfile.go](examples/Jenkinsfile.go) | Go | Go application with Go test framework |
+| [Jenkinsfile.minimal](examples/Jenkinsfile.minimal) | Any | Minimal configuration using all defaults |
+| [Jenkinsfile.sample](examples/Jenkinsfile.sample) | Any | Comprehensive example with all configuration options |
+
+**To use an example:**
+1. Copy the appropriate `Jenkinsfile.*` from the examples directory
+2. Rename it to `Jenkinsfile` in your repository root
+3. Update the `appName` to match your application
+4. Customize commands and settings as needed
+
 ## Pipeline Stages
 
 ### For Main Branch (Artifact Production)
