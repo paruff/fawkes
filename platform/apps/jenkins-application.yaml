@@ -34,10 +34,131 @@ spec:
             password: fawkesidp
           # Disable setup wizard and set password consistently
           JENKINS_OPTS: "--argumentsRealm.passwd.admin=fawkesidp -Djenkins.install.runSetupWizard=false"
+          # Inject admin password from secret for JCasC
+          extraEnv:
+            - name: ADMIN_PASSWORD
+              value: "fawkesidp"
           JCasC:
             enabled: true
             defaultConfig: false
-            configScripts: {}
+            configScripts:
+              jcasc: |
+                jenkins:
+                  systemMessage: "Fawkes CI/CD Platform - Golden Path Enabled"
+                  mode: NORMAL
+                  numExecutors: 0
+                  clouds:
+                    - kubernetes:
+                        name: "kubernetes"
+                        namespace: "fawkes"
+                        jenkinsUrl: "http://jenkins:8080"
+                        jenkinsTunnel: "jenkins-agent:50000"
+                        containerCapStr: "20"
+                        templates:
+                          - name: "jnlp-agent"
+                            label: "k8s-agent"
+                            remoteFs: "/home/jenkins"
+                            instanceCapStr: "10"
+                            idleTerminationMinutes: 10
+                            containers:
+                              - name: "jnlp"
+                                image: "jenkins/inbound-agent:latest"
+                                args: "${computer.jnlpmac} ${computer.name}"
+                                workingDir: "/home/jenkins"
+                          - name: "maven-agent"
+                            label: "maven java"
+                            remoteFs: "/home/jenkins"
+                            instanceCapStr: "5"
+                            idleTerminationMinutes: 10
+                            containers:
+                              - name: "maven"
+                                image: "maven:3.9-eclipse-temurin-17"
+                                command: "cat"
+                                ttyEnabled: true
+                                resourceRequestCpu: "1"
+                                resourceRequestMemory: "2Gi"
+                                resourceLimitCpu: "2"
+                                resourceLimitMemory: "4Gi"
+                              - name: "jnlp"
+                                image: "jenkins/inbound-agent:latest"
+                                args: "${computer.jnlpmac} ${computer.name}"
+                          - name: "python-agent"
+                            label: "python"
+                            remoteFs: "/home/jenkins"
+                            instanceCapStr: "5"
+                            idleTerminationMinutes: 10
+                            containers:
+                              - name: "python"
+                                image: "python:3.11-slim"
+                                command: "cat"
+                                ttyEnabled: true
+                                resourceRequestCpu: "500m"
+                                resourceRequestMemory: "1Gi"
+                                resourceLimitCpu: "1"
+                                resourceLimitMemory: "2Gi"
+                              - name: "jnlp"
+                                image: "jenkins/inbound-agent:latest"
+                                args: "${computer.jnlpmac} ${computer.name}"
+                          - name: "node-agent"
+                            label: "node nodejs"
+                            remoteFs: "/home/jenkins"
+                            instanceCapStr: "5"
+                            idleTerminationMinutes: 10
+                            containers:
+                              - name: "node"
+                                image: "node:20-slim"
+                                command: "cat"
+                                ttyEnabled: true
+                                resourceRequestCpu: "500m"
+                                resourceRequestMemory: "1Gi"
+                                resourceLimitCpu: "1"
+                                resourceLimitMemory: "2Gi"
+                              - name: "jnlp"
+                                image: "jenkins/inbound-agent:latest"
+                                args: "${computer.jnlpmac} ${computer.name}"
+                          - name: "go-agent"
+                            label: "go golang"
+                            remoteFs: "/home/jenkins"
+                            instanceCapStr: "5"
+                            idleTerminationMinutes: 10
+                            containers:
+                              - name: "golang"
+                                image: "golang:1.21"
+                                command: "cat"
+                                ttyEnabled: true
+                                resourceRequestCpu: "500m"
+                                resourceRequestMemory: "1Gi"
+                                resourceLimitCpu: "1"
+                                resourceLimitMemory: "2Gi"
+                              - name: "jnlp"
+                                image: "jenkins/inbound-agent:latest"
+                                args: "${computer.jnlpmac} ${computer.name}"
+                securityRealm:
+                  local:
+                    allowsSignup: false
+                    users:
+                      - id: "admin"
+                        password: "${ADMIN_PASSWORD}"
+                authorizationStrategy:
+                  loggedInUsersCanDoAnything:
+                    allowAnonymousRead: false
+                unclassified:
+                  location:
+                    adminAddress: "ci-admin@fawkes.local"
+                    url: "http://jenkins.127.0.0.1.nip.io"
+                tool:
+                  git:
+                    installations:
+                      - name: "Default"
+                        home: "git"
+                  maven:
+                    installations:
+                      - name: "Maven 3.9"
+                        properties:
+                          - installSource:
+                              installers:
+                                - maven:
+                                    id: "3.9.6"
           ingress:
             enabled: true
             # Let the chart choose apiVersion based on the cluster; avoids template mismatch
