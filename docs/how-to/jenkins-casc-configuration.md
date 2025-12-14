@@ -188,16 +188,37 @@ See `platform/apps/jenkins/jcasc.yaml` (bottom section) for complete list.
 
 ### Development/Local Setup
 
-1. Create a Kubernetes Secret:
+1. Create a Kubernetes Secret (using secure method to avoid shell history):
 
 ```bash
+# Method 1: Using --from-file (recommended)
+echo -n "ghp_your_token" > /tmp/github-token
+echo -n "squ_your_token" > /tmp/sonarqube-token
+echo -n "admin" > /tmp/docker-username
+echo -n "your_password" > /tmp/docker-password
+
 kubectl create secret generic jenkins-credentials \
   -n fawkes \
-  --from-literal=GITHUB_TOKEN="ghp_your_token" \
-  --from-literal=SONARQUBE_TOKEN="squ_your_token" \
-  --from-literal=DOCKER_REGISTRY_USERNAME="admin" \
-  --from-literal=DOCKER_REGISTRY_PASSWORD="your_password"
+  --from-file=GITHUB_TOKEN=/tmp/github-token \
+  --from-file=SONARQUBE_TOKEN=/tmp/sonarqube-token \
+  --from-file=DOCKER_REGISTRY_USERNAME=/tmp/docker-username \
+  --from-file=DOCKER_REGISTRY_PASSWORD=/tmp/docker-password
+
+# Clean up temporary files
+shred -u /tmp/github-token /tmp/sonarqube-token /tmp/docker-username /tmp/docker-password
+
+# Method 2: Using stdin (also recommended)
+kubectl create secret generic jenkins-credentials -n fawkes \
+  --from-literal=GITHUB_TOKEN="$(read -s -p 'GitHub Token: ' token && echo $token)" \
+  --from-literal=SONARQUBE_TOKEN="$(read -s -p 'SonarQube Token: ' token && echo $token)" \
+  --from-literal=DOCKER_REGISTRY_USERNAME="$(read -p 'Docker Username: ' user && echo $user)" \
+  --from-literal=DOCKER_REGISTRY_PASSWORD="$(read -s -p 'Docker Password: ' pass && echo $pass)"
 ```
+
+**Security Note**: Never use `--from-literal` with plaintext values as shown in simple examples, as this exposes credentials in:
+- Shell history (`.bash_history`, `.zsh_history`)
+- Process listings (`ps aux`)
+- Kubernetes audit logs
 
 2. Reference in Jenkins pod:
 

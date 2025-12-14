@@ -66,7 +66,7 @@ Feature: Jenkins Configuration as Code (JCasC)
     And the library default version should be "main"
     And the library should be marked as implicit
     And the library should allow version override
-    And the library should use GitHub repository "https://github.com/paruff/fawkes"
+    And the library should use the configured GitHub repository
     And the library path should be "jenkins-shared-library"
 
   @configuration @security
