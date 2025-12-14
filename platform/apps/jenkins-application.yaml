@@ -28,16 +28,18 @@ spec:
           # Use Ingress locally to avoid port conflicts
           serviceType: ClusterIP
           executors: 0
-          # Local default admin credentials
+          # Admin credentials - CHANGE BEFORE DEPLOYING
+          # For production, use valueFrom.secretKeyRef to reference jenkins-admin Secret
           admin:
             username: admin
-            password: fawkesidp
+            password: CHANGE_ME_jenkins_admin_password
           # Disable setup wizard and set password consistently
-          JENKINS_OPTS: "--argumentsRealm.passwd.admin=fawkesidp -Djenkins.install.runSetupWizard=false"
+          JENKINS_OPTS: "--argumentsRealm.passwd.admin=CHANGE_ME_jenkins_admin_password -Djenkins.install.runSetupWizard=false"
           # Inject admin password from secret for JCasC
+          # For production: reference jenkins-admin Secret using valueFrom.secretKeyRef
           extraEnv:
             - name: ADMIN_PASSWORD
-              value: "fawkesidp"
+              value: "CHANGE_ME_jenkins_admin_password"
           JCasC:
             enabled: true
             defaultConfig: false

@@ -102,11 +102,16 @@ Open a browser and navigate to: `http://jenkins.127.0.0.1.nip.io`
 - No certificate errors (if TLS is configured)
 - Page loads without errors
 
-Login with default credentials:
+Login with credentials (after setting them up):
 - **Username:** `admin`
-- **Password:** `fawkesidp`
+- **Password:** Value from `platform/apps/jenkins/secrets.yaml`
 
-**Note:** Change these credentials in production!
+**⚠️ Important:** Before accessing Jenkins:
+1. Update password in `platform/apps/jenkins/secrets.yaml`
+2. Apply the secret: `kubectl apply -f platform/apps/jenkins/secrets.yaml`
+3. Sync ArgoCD: `argocd app sync jenkins`
+
+**Note:** Never commit actual passwords to Git!
 
 ### 7. Verify JCasC Configuration
 
