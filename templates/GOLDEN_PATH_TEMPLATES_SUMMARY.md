@@ -55,13 +55,13 @@ Each template includes:
 
 ### 1. Java Spring Boot Template
 
-**Framework:** Spring Boot 3.2.0 with Java 17
+**Framework:** Spring Boot 3.4.1 with Java 17
 
 **Key Dependencies:**
 - spring-boot-starter-web
 - spring-boot-starter-actuator
 - micrometer-registry-prometheus
-- cucumber (BDD testing)
+- cucumber 7.20.1 (BDD testing)
 
 **Testing:**
 - JUnit 5 for unit tests
@@ -79,13 +79,13 @@ Each template includes:
 
 ### 2. Python FastAPI Template
 
-**Framework:** FastAPI 0.109.0 with Python 3.11
+**Framework:** FastAPI 0.115.5 with Python 3.11
 
 **Key Dependencies:**
-- fastapi
-- uvicorn (ASGI server)
+- fastapi (latest secure version)
+- uvicorn 0.32.1 (ASGI server)
 - prometheus-client
-- pytest (testing)
+- pytest 8.3.4 (testing)
 - behave (BDD)
 
 **Testing:**
@@ -102,14 +102,14 @@ Each template includes:
 
 ### 3. Node.js Express Template
 
-**Framework:** Express 4.18.2 with Node.js 18+
+**Framework:** Express 4.21.1 with Node.js 18+
 
 **Key Dependencies:**
-- express
-- prom-client (Prometheus metrics)
-- jest (testing)
-- @cucumber/cucumber (BDD)
-- winston (logging)
+- express (latest secure version)
+- prom-client 15.1.3 (Prometheus metrics)
+- jest 29.7.0 (testing)
+- @cucumber/cucumber 11.0.1 (BDD)
+- winston 3.17.0 (logging)
 
 **Testing:**
 - Jest for unit tests
