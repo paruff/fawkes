@@ -101,7 +101,11 @@ record_test() {
         log_error "$test_name: $message"
     fi
     
-    TEST_RESULTS+=("{\"name\":\"$test_name\",\"status\":\"$status\",\"message\":\"$message\"}")
+    # Escape JSON special characters
+    local escaped_name=$(echo "$test_name" | sed 's/\\/\\\\/g; s/"/\\"/g')
+    local escaped_message=$(echo "$message" | sed 's/\\/\\\\/g; s/"/\\"/g')
+    
+    TEST_RESULTS+=("{\"name\":\"$escaped_name\",\"status\":\"$status\",\"message\":\"$escaped_message\"}")
 }
 
 generate_report() {
@@ -110,6 +114,12 @@ generate_report() {
     local status="FAILED"
     if [ "$FAILED_TESTS" -eq 0 ]; then
         status="PASSED"
+    fi
+    
+    # Build tests JSON array
+    local tests_json=""
+    if [ ${#TEST_RESULTS[@]} -gt 0 ]; then
+        tests_json=$(printf '%s\n' "${TEST_RESULTS[@]}" | paste -sd ',' -)
     fi
     
     cat > "$REPORT_FILE" <<EOF
@@ -124,7 +134,7 @@ generate_report() {
     "failed": $FAILED_TESTS
   },
   "tests": [
-    $(IFS=,; echo "${TEST_RESULTS[*]}")
+    $tests_json
   ]
 }
 EOF
@@ -144,7 +154,14 @@ validate_prerequisites() {
         record_test "Prerequisites" "FAIL" "kubectl not found"
         return 1
     fi
-    record_test "Prerequisites" "PASS" "kubectl available"
+    
+    # Check jq
+    if ! command -v jq &> /dev/null; then
+        record_test "Prerequisites" "FAIL" "jq not found (required for JSON processing)"
+        return 1
+    fi
+    
+    record_test "Prerequisites" "PASS" "kubectl and jq available"
     
     # Check cluster access
     if ! kubectl cluster-info &> /dev/null; then
