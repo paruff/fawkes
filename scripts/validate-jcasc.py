@@ -14,6 +14,11 @@ import yaml
 import re
 from pathlib import Path
 
+# Configuration constants
+PLACEHOLDER_PATTERNS = ['CHANGE_ME', 'changeme', 'example.com', 'CHANGEME']
+REQUIRED_JCASC_SECTIONS = ['jenkins', 'securityRealm', 'authorizationStrategy']
+REQUIRED_K8S_CLOUD_FIELDS = ['name', 'namespace', 'jenkinsUrl', 'jenkinsTunnel']
+
 
 def validate_yaml_syntax(file_path):
     """Validate YAML syntax."""
@@ -29,10 +34,9 @@ def validate_yaml_syntax(file_path):
 
 def check_required_sections(config, file_path):
     """Check that required JCasC sections are present."""
-    required_sections = ['jenkins', 'securityRealm', 'authorizationStrategy']
     missing = []
 
-    for section in required_sections:
+    for section in REQUIRED_JCASC_SECTIONS:
         if section not in config:
             missing.append(section)
 
@@ -62,8 +66,7 @@ def check_kubernetes_cloud(config, file_path):
         return True
 
     k8s = k8s_clouds[0]['kubernetes']
-    required_fields = ['name', 'namespace', 'jenkinsUrl', 'jenkinsTunnel']
-    missing = [f for f in required_fields if f not in k8s]
+    missing = [f for f in REQUIRED_K8S_CLOUD_FIELDS if f not in k8s]
 
     if missing:
         print(f"❌ Kubernetes cloud missing fields in {file_path}: {', '.join(missing)}")
@@ -105,8 +108,9 @@ def check_no_hardcoded_credentials(content, file_path):
     for pattern, description in suspicious_patterns:
         matches = re.findall(pattern, content, re.IGNORECASE)
         if matches:
-            # Filter out CHANGE_ME placeholders and example values
-            real_matches = [m for m in matches if 'CHANGE_ME' not in m and 'changeme' not in m.lower()]
+            # Filter out known placeholder patterns
+            real_matches = [m for m in matches
+                          if not any(placeholder in m for placeholder in PLACEHOLDER_PATTERNS)]
             if real_matches:
                 issues.append(description)
 
