@@ -35,7 +35,6 @@ The following how-to guides help you accomplish specific tasks with Fawkes.
 | Guide | Description | Status |
 |-------|-------------|--------|
 | Provision Infrastructure with Terraform | Create cloud resources declaratively | See [Infrastructure as Code Pattern](../patterns/infrastructure-as-code.md) |
-| [Rotate Vault Secrets](security/rotate-vault-secrets.md) | Securely rotate secrets and update applications | ✅ Available |
 | [Configure Ingress with TLS](networking/configure-ingress-tls.md) | Set up HTTPS access with automatic certificates | ✅ Available |
 
 ### Observability
@@ -51,7 +50,10 @@ The following how-to guides help you accomplish specific tasks with Fawkes.
 
 | Guide | Description | Status |
 |-------|-------------|--------|
+| [Configure GitHub OAuth for Backstage](security/github-oauth-setup.md) | Set up GitHub authentication for Backstage portal | ✅ Available |
+| [GitHub OAuth Quick Start](security/github-oauth-quickstart.md) | 5-minute OAuth setup guide | ✅ Available |
 | [Troubleshoot Kyverno Policy Violations](policy/troubleshoot-kyverno-violation.md) | Resolve policy blocks and enforcement issues | ✅ Available |
+| [Rotate Vault Secrets](security/rotate-vault-secrets.md) | Securely rotate secrets and update applications | ✅ Available |
 | Implement Security Scanning | Add SAST and container scanning | See [Security](../security.md) |
 | Set Up RBAC | Configure role-based access control | 🚧 Coming soon |
 

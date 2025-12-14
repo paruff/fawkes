@@ -45,6 +45,49 @@ Backstage is the central developer portal for the Fawkes platform, providing a u
 
 ## Quick Start
 
+### Prerequisites
+
+- Kubernetes cluster running
+- PostgreSQL database deployed (via CloudNativePG)
+- GitHub OAuth app configured (see below)
+
+### Configure GitHub OAuth
+
+Before deploying Backstage, you need to set up GitHub OAuth for authentication:
+
+1. **Create GitHub OAuth App**:
+   - Go to https://github.com/settings/developers (personal) or
+   - Go to https://github.com/organizations/YOUR_ORG/settings/applications (organization)
+   - Click "New OAuth App"
+   - Fill in:
+     - Application name: `Fawkes Backstage - Development`
+     - Homepage URL: `https://backstage.fawkes.idp`
+     - Authorization callback URL: `https://backstage.fawkes.idp/api/auth/github/handler/frame`
+   - Note the Client ID and generate a Client Secret
+
+2. **Update Kubernetes Secrets**:
+   ```bash
+   # Edit secrets file
+   vim platform/apps/backstage/secrets.yaml
+   
+   # Update github-client-id and github-client-secret
+   # Then apply:
+   kubectl apply -f platform/apps/backstage/secrets.yaml
+   ```
+
+3. **Deploy Backstage**:
+   ```bash
+   # Apply via ArgoCD
+   kubectl apply -f platform/apps/backstage-application.yaml
+   
+   # Or deploy directly with Helm
+   helm install backstage backstage/backstage \
+     -f platform/apps/backstage/values.yaml \
+     -n fawkes
+   ```
+
+**For detailed OAuth setup instructions, see**: [GitHub OAuth Setup Guide](../../docs/how-to/security/github-oauth-setup.md)
+
 ### Accessing Backstage
 
 Local development:
