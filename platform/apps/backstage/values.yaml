@@ -61,12 +61,17 @@ extraVolumes:
       items:
         - key: app-config.yaml
           path: app-config.yaml
+  - name: techdocs
+    emptyDir: {}
 
 extraVolumeMounts:
   - name: app-config
     mountPath: /app/app-config.yaml
     subPath: app-config.yaml
     readOnly: true
+  - name: techdocs
+    mountPath: /app/techdocs
+    readOnly: false
 
 # ============================================================
 # Environment Variables for Secrets
