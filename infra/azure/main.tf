@@ -6,6 +6,8 @@ provider "azurerm" {
       purge_soft_delete_on_destroy = var.environment == "dev" ? true : false
     }
   }
+  subscription_id = var.subscription_id
+  tenant_id       = var.tenant_id
 }
 
 # Resource Group for Fawkes platform

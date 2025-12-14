@@ -10,6 +10,10 @@ cluster_name        = "fawkes-aks"
 dns_prefix          = "fawkes"
 environment         = "dev"
 
+# Optional: explicit subscription and tenant (otherwise Azure CLI context is used)
+# subscription_id      = "00000000-0000-0000-0000-000000000000"
+# tenant_id            = "00000000-0000-0000-0000-000000000000"
+
 # Network configuration
 vnet_address_space         = "10.0.0.0/16"
 aks_subnet_address_prefix  = "10.0.1.0/24"
@@ -18,13 +22,13 @@ dns_service_ip             = "10.1.0.10"
 network_policy             = "azure"
 
 # System node pool (critical system workloads)
-system_node_pool_vm_size = "Standard_D4s_v3"
-system_node_pool_count   = 2
+system_node_pool_vm_size = "Standard_B2ms"
+system_node_pool_count   = 1
 
 # User node pool (application workloads with auto-scaling)
-user_node_pool_vm_size    = "Standard_D4s_v3"
-user_node_pool_min_count  = 2
-user_node_pool_max_count  = 10
+user_node_pool_vm_size    = "Standard_B2ms"
+user_node_pool_min_count  = 1
+user_node_pool_max_count  = 3
 
 # Azure Container Registry (must be globally unique)
 acr_name = "fawkesacr"

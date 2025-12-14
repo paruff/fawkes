@@ -1,3 +1,14 @@
+variable "subscription_id" {
+  description = "Azure subscription ID (optional; defaults to Azure CLI context if not set)"
+  type        = string
+  default     = null
+}
+
+variable "tenant_id" {
+  description = "Azure tenant ID (optional; defaults to Azure CLI context if not set)"
+  type        = string
+  default     = null
+}
 variable "location" {
   description = "Azure region for the AKS resource group and cluster"
   type        = string
@@ -67,34 +78,34 @@ variable "network_policy" {
 
 # System node pool configuration
 variable "system_node_pool_vm_size" {
-  description = "VM size for the system node pool"
+  description = "VM size for the system node pool (choose an allowed, economical SKU)"
   type        = string
-  default     = "Standard_D4s_v3"
+  default     = "Standard_B2ms"
 }
 
 variable "system_node_pool_count" {
   description = "Number of nodes in the system node pool"
   type        = number
-  default     = 2
+  default     = 1
 }
 
 # User node pool configuration
 variable "user_node_pool_vm_size" {
-  description = "VM size for the user node pool"
+  description = "VM size for the user node pool (choose an allowed, economical SKU)"
   type        = string
-  default     = "Standard_D4s_v3"
+  default     = "Standard_B2ms"
 }
 
 variable "user_node_pool_min_count" {
   description = "Minimum node count for user node pool (auto-scaling)"
   type        = number
-  default     = 2
+  default     = 1
 }
 
 variable "user_node_pool_max_count" {
   description = "Maximum node count for user node pool (auto-scaling)"
   type        = number
-  default     = 10
+  default     = 3
 }
 
 # Azure Container Registry

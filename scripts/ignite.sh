@@ -589,6 +589,11 @@ tf_apply_dir() {
   fi
   echo "🚀 Running Terraform in $dir"
   pushd "$dir" >/dev/null
+  # Ensure Azure subscription and tenant env vars are set from az CLI context if available
+  if command -v az >/dev/null 2>&1; then
+    export ARM_SUBSCRIPTION_ID="${ARM_SUBSCRIPTION_ID:-$(az account show --query id -o tsv 2>/dev/null || true)}"
+    export ARM_TENANT_ID="${ARM_TENANT_ID:-$(az account show --query tenantId -o tsv 2>/dev/null || true)}"
+  fi
   terraform init -upgrade -input=false 2>&1 | tee terraform.log
   terraform plan -input=false -out=plan.tfplan 2>&1 | tee -a terraform.log
   local rc=0
@@ -653,6 +658,9 @@ provision_azure_cluster() {
   echo "🔧 Provider=azure selected. Applying Terraform under infra/azure..."
   local dir
   dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../infra/azure" && pwd)"
+  # Ensure required TF_VARS are exported if provided via flags
+  if [[ -n "$LOCATION" ]]; then export TF_VAR_location="$LOCATION"; fi
+  if [[ -n "$CLUSTER_NAME" ]]; then export TF_VAR_cluster_name="$CLUSTER_NAME"; fi
   tf_apply_dir "$dir"
   try_set_kubeconfig_from_tf_outputs "$dir"
   if [[ $DRY_RUN -eq 0 ]] && ! kubectl cluster-info &>/dev/null; then
