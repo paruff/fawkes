@@ -3,6 +3,10 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 
+# Update packages for security
+RUN apk upgrade --no-cache && \
+    rm -rf /var/cache/apk/*
+
 # Copy package files
 COPY package*.json ./
 
@@ -12,6 +16,10 @@ RUN npm ci --only=production
 # Stage 2: Runtime
 FROM node:20-alpine
 WORKDIR /app
+
+# Update packages for security
+RUN apk upgrade --no-cache && \
+    rm -rf /var/cache/apk/*
 
 # Create non-root user
 RUN addgroup -g 65534 appuser && \

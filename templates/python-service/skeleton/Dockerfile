@@ -3,8 +3,9 @@
 FROM python:3.12-slim AS build
 WORKDIR /app
 
-# Install build dependencies
+# Update packages for security
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y --no-install-recommends gcc && \
     rm -rf /var/lib/apt/lists/*
 
@@ -16,6 +17,11 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Stage 2: Runtime
 FROM python:3.12-slim
 WORKDIR /app
+
+# Update packages for security
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
 RUN addgroup --gid 65534 appuser && \
