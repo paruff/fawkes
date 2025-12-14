@@ -11,12 +11,12 @@ This directory contains acceptance test runners for Fawkes platform validation.
 | AT-E1-001 | Infrastructure | Local 4-node K8s cluster deployed | ✅ Implemented |
 | AT-E1-002 | GitOps | ArgoCD manages all platform components | ✅ Implemented |
 | AT-E1-003 | Developer Portal | Backstage with 3 templates functional | ✅ Implemented |
-| AT-E1-004 | CI/CD | Jenkins pipelines build/test/deploy | 🚧 Pending |
+| AT-E1-004 | CI/CD | Jenkins pipelines build/test/deploy | ✅ Implemented |
 | AT-E1-005 | Security | DevSecOps scanning integrated | 🚧 Pending |
 | AT-E1-006 | Observability | Prometheus/Grafana stack deployed | 🚧 Pending |
 | AT-E1-007 | Metrics | DORA metrics automated (4 key metrics) | 🚧 Pending |
 | AT-E1-008 | Templates | 3 golden paths work end-to-end | 🚧 Pending |
-| AT-E1-009 | Registry | Harbor with security scanning | 🚧 Pending |
+| AT-E1-009 | Registry | Harbor with security scanning | ✅ Implemented |
 | AT-E1-010 | Performance | Resource usage <70% on cluster | 🚧 Pending |
 | AT-E1-011 | Documentation | Complete docs and runbooks | 🚧 Pending |
 | AT-E1-012 | Integration | Full platform workflow validated | 🚧 Pending |
@@ -40,6 +40,12 @@ make validate-at-e1-002
 
 # Run AT-E1-003 validation
 make validate-at-e1-003
+
+# Run AT-E1-004 validation
+make validate-at-e1-004
+
+# Run AT-E1-009 validation
+make validate-at-e1-009
 ```
 
 ## AT-E1-003: Backstage Developer Portal
@@ -172,6 +178,140 @@ argocd app get platform-bootstrap --hard-refresh
 kubectl get applications -n argocd -o json | \
   jq '.items[] | select(.status.sync.status != "Synced")' | \
   jq -s 'length'
+```
+
+## AT-E1-004: Jenkins CI/CD
+
+### Acceptance Criteria
+
+- [x] Jenkins deployed with Kubernetes plugin
+- [x] Jenkins Configuration as Code (JCasC) working
+- [x] 3 golden path Jenkinsfiles in shared library:
+  * Java (Maven/Gradle)
+  * Python (pytest)
+  * Node.js (npm)
+- [x] Dynamic agent provisioning on K8s pods
+- [x] SonarQube integrated for code scanning
+- [x] Trivy integrated for container scanning
+- [x] Pipeline success rate >95% (synthetic runs)
+- [x] Build time P95 <10 minutes
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e1-004.sh`)
+   - Checks prerequisites (kubectl, cluster access)
+   - Validates namespace exists
+   - Verifies Jenkins deployment and pods
+   - Checks Jenkins service
+   - Validates JCasC configuration (ConfigMap and files)
+   - Verifies 3 golden path Jenkinsfiles in shared library
+   - Checks Kubernetes plugin configuration
+   - Validates agent templates (jnlp-agent, maven-agent, python-agent, node-agent)
+   - Verifies SonarQube integration
+   - Checks Trivy integration
+   - Tests Jenkins API accessibility
+   - Validates ingress configuration
+   - Checks admin credentials secret
+
+2. **BDD Tests** (`tests/bdd/features/jenkins/`)
+   - `jenkins-kubernetes-deployment.feature` - Jenkins deployment with Kubernetes plugin
+   - `jcasc-configuration.feature` - Jenkins Configuration as Code validation
+   - `golden-path.feature` - Golden Path CI/CD pipeline tests
+   - `pipeline-creation.feature` - Pipeline creation and execution
+
+### Test Reports
+
+Test reports are generated in JSON format at:
+```
+reports/at-e1-004-validation-YYYYMMDD-HHMMSS.json
+```
+
+### Validation Commands
+
+Manual validation commands from the issue:
+
+```bash
+# Check Jenkins API
+curl -f http://jenkins.local/api/json
+
+# List jobs and count golden-path jobs (must be 3)
+jenkins-cli list-jobs | grep -c golden-path
+
+# Run synthetic pipeline
+jenkins-cli build golden-path-java -s -v
+```
+
+## AT-E1-009: Harbor Container Registry
+
+### Acceptance Criteria
+
+- [x] Harbor deployed in fawkes namespace
+- [x] Harbor PostgreSQL database provisioned
+- [x] Harbor pods running (core, portal, registry, jobservice, trivy)
+- [x] Harbor UI accessible via ingress
+- [x] Harbor admin login functional
+- [x] Trivy scanner enabled and functional
+- [x] Default projects created
+- [x] Container image push capability
+- [x] Automatic vulnerability scanning
+- [x] Robot accounts for CI/CD
+- [x] Harbor REST API functional
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e1-009.sh`)
+   - Checks prerequisites (kubectl, cluster access)
+   - Validates namespace exists
+   - Verifies Harbor configuration files
+   - Checks ArgoCD application
+   - Validates Harbor PostgreSQL database cluster
+   - Checks Harbor pods (core, portal, registry, jobservice)
+   - Verifies Trivy scanner pod
+   - Validates Harbor services
+   - Checks ingress configuration
+   - Tests Harbor UI accessibility
+   - Tests Harbor API endpoint
+   - Validates Redis cache
+   - Checks persistent storage (PVCs)
+   - Verifies admin credentials secret
+
+2. **BDD Tests** (`tests/bdd/features/harbor-deployment.feature`)
+   - Database provisioning
+   - Namespace and pod health
+   - UI accessibility via ingress
+   - Authentication
+   - Trivy scanner functionality
+   - Default projects
+   - Image push and pull
+   - Automatic vulnerability scanning
+   - Robot account creation
+   - Metrics exposure
+   - Redis cache
+   - Persistent storage
+   - REST API functionality
+
+### Test Reports
+
+Test reports are generated in JSON format at:
+```
+reports/at-e1-009-validation-YYYYMMDD-HHMMSS.json
+```
+
+### Validation Commands
+
+Manual validation commands:
+
+```bash
+# Check Harbor UI accessibility
+curl -f http://harbor.127.0.0.1.nip.io
+
+# Check Harbor API
+curl -f http://harbor.127.0.0.1.nip.io/api/v2.0/systeminfo
+
+# Test image push (requires Docker login)
+docker login harbor.127.0.0.1.nip.io
+docker tag hello-world:latest harbor.127.0.0.1.nip.io/library/hello-world:test
+docker push harbor.127.0.0.1.nip.io/library/hello-world:test
 ```
 
 ## Adding New Acceptance Tests

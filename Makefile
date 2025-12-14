@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-009
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -59,6 +59,12 @@ validate-at-e1-002: ## Run AT-E1-002 acceptance test validation for GitOps/ArgoC
 
 validate-at-e1-003: ## Run AT-E1-003 acceptance test validation for Backstage Developer Portal
 	@./scripts/validate-at-e1-003.sh --namespace $(ARGO_NAMESPACE)
+
+validate-at-e1-004: ## Run AT-E1-004 acceptance test validation for Jenkins CI/CD
+	@./scripts/validate-at-e1-004.sh --namespace $(ARGO_NAMESPACE)
+
+validate-at-e1-009: ## Run AT-E1-009 acceptance test validation for Harbor Container Registry
+	@./scripts/validate-at-e1-009.sh --namespace $(ARGO_NAMESPACE)
 
 clean-local: ## Clean up local K8s deployments
 	@kubectl delete namespace $(NAMESPACE) --ignore-not-found=true
