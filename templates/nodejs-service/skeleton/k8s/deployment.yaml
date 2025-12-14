@@ -22,6 +22,7 @@ spec:
         prometheus.io/port: "3000"
         prometheus.io/path: "/metrics"
     spec:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
@@ -30,8 +31,8 @@ spec:
       
       containers:
         - name: app
-          image: harbor.fawkes.local/${{ values.owner }}/${{ values.name }}:latest
-          imagePullPolicy: IfNotPresent
+          image: harbor.fawkes.local/${{ values.owner }}/${{ values.name }}:${{ values.imageTag | default('v0.1.0') }}
+          imagePullPolicy: Always
           
           ports:
             - name: http
