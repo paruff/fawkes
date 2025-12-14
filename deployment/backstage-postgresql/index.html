@@ -3794,10 +3794,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-update-secrets-required" class="md-nav__link">
+  <a href="#step-0-prerequisites-configure-github-oauth-required" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Update Secrets (REQUIRED)
+        Step 0: Prerequisites - Configure GitHub OAuth (REQUIRED)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-update-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Update Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-update-additional-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Update Additional Secrets
       
     </span>
   </a>
@@ -4036,20 +4058,59 @@
 - Automatic catalog registration
 - Documentation templates</p>
 <h2 id="deployment-steps">Deployment Steps</h2>
-<h3 id="step-1-update-secrets-required">Step 1: Update Secrets (REQUIRED)</h3>
-<p>Before deploying, update all placeholder secrets:</p>
+<h3 id="step-0-prerequisites-configure-github-oauth-required">Step 0: Prerequisites - Configure GitHub OAuth (REQUIRED)</h3>
+<p>Before deploying Backstage, you must configure GitHub OAuth authentication. Without this, users won't be able to login.</p>
+<p><strong>Quick Setup:</strong></p>
+<ol>
+<li>Create a GitHub OAuth App:</li>
+<li>Go to: https://github.com/settings/developers (personal) or</li>
+<li>Go to: https://github.com/organizations/YOUR_ORG/settings/applications (organization)</li>
+<li>Click "New OAuth App"</li>
+<li>Fill in:<ul>
+<li><strong>Application name</strong>: <code>Fawkes Backstage - Development</code> (or Production)</li>
+<li><strong>Homepage URL</strong>: <code>https://backstage.fawkes.idp</code></li>
+<li><strong>Authorization callback URL</strong>: <code>https://backstage.fawkes.idp/api/auth/github/handler/frame</code></li>
+</ul>
+</li>
+<li>Copy the <strong>Client ID</strong></li>
+<li>
+<p>Generate and copy the <strong>Client Secret</strong></p>
+</li>
+<li>
+<p>Update the secrets file:
+   <div class="highlight"><pre><span></span><code>vim<span class="w"> </span>platform/apps/backstage/secrets.yaml
+</code></pre></div></p>
+</li>
+</ol>
+<p>Replace these lines:
+   <div class="highlight"><pre><span></span><code><span class="nt">github-client-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CHANGE_ME_github_oauth_client_id</span>
+<span class="nt">github-client-secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CHANGE_ME_github_oauth_client_secret</span>
+</code></pre></div></p>
+<p>With your actual values:
+   <div class="highlight"><pre><span></span><code><span class="nt">github-client-id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-actual-client-id&quot;</span>
+<span class="nt">github-client-secret</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-actual-client-secret&quot;</span>
+</code></pre></div></p>
+<ol>
+<li>Apply the secret:
+   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>platform/apps/backstage/secrets.yaml
+</code></pre></div></li>
+</ol>
+<p><strong>For detailed OAuth setup instructions, see</strong>: <a href="../../how-to/security/github-oauth-setup/">GitHub OAuth Setup Guide</a></p>
+<h3 id="step-1-update-secrets">Step 1: Update Secrets</h3>
+<h3 id="step-1-update-additional-secrets">Step 1: Update Additional Secrets</h3>
+<p>In addition to GitHub OAuth (configured in Step 0), you need to update other integration secrets:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Edit PostgreSQL credentials</span>
 vim<span class="w"> </span>platform/apps/postgresql/db-backstage-credentials.yaml
 <span class="c1"># Change: CHANGE_ME_backstage_password</span>
 
-<span class="c1"># Edit Backstage secrets</span>
+<span class="c1"># Edit Backstage integration secrets</span>
 vim<span class="w"> </span>platform/apps/backstage/secrets.yaml
 <span class="c1"># Update:</span>
-<span class="c1"># - GitHub OAuth client ID and secret</span>
-<span class="c1"># - GitHub personal access token</span>
-<span class="c1"># - ArgoCD credentials</span>
-<span class="c1"># - Jenkins credentials</span>
+<span class="c1"># - GitHub personal access token (for repo integration)</span>
+<span class="c1"># - ArgoCD credentials (optional)</span>
+<span class="c1"># - Jenkins credentials (optional)</span>
 </code></pre></div>
+<p><strong>Note</strong>: GitHub OAuth credentials (client-id and client-secret) should already be configured from Step 0.</p>
 <p><strong>Security Note:</strong> For production, use External Secrets Operator with Vault instead of storing secrets in Git.</p>
 <h3 id="step-2-deploy-via-argocd">Step 2: Deploy via ArgoCD</h3>
 <p>The platform uses the App-of-Apps pattern. Deploy the root application:</p>
