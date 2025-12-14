@@ -16,13 +16,8 @@ cd ${{ values.name }}
 2. **Install dependencies**
 
 ```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
 # Install dependencies
-pip install -r requirements.txt
-pip install -r requirements-dev.txt
+npm install
 ```
 
 3. **Configure environment**
@@ -38,7 +33,10 @@ cp .env.example .env
 
 ```bash
 # Development mode with auto-reload
-uvicorn app.main:app --reload --port ${{ values.port }}
+npm run dev
+
+# Or production mode
+npm start
 ```
 
 ## Testing
@@ -46,23 +44,26 @@ uvicorn app.main:app --reload --port ${{ values.port }}
 ### Run Unit Tests
 
 ```bash
-pytest tests/
+npm test
 ```
 
 ### Run with Coverage
 
 ```bash
-pytest --cov=app tests/
+npm run test:coverage
 ```
 
 ### Linting
 
 ```bash
-# Run flake8
-flake8 app tests
+# Run ESLint
+npm run lint
 
-# Run type checking
-mypy app
+# Fix linting issues automatically
+npm run lint:fix
+
+# Run type checking (if using TypeScript)
+npm run type-check
 ```
 
 ## Deployment
