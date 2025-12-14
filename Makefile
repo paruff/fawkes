@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -10,7 +10,7 @@ ARGO_NAMESPACE ?= fawkes
 
 help: ## Show this help message
 	@echo "Fawkes Development Commands:"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 deploy-local: ## Deploy component to local K8s (COMPONENT=backstage|argocd|all)
 	@./infra/local-dev/deploy-local.sh $(NAMESPACE) $(COMPONENT)
@@ -56,6 +56,9 @@ validate-at-e1-001: ## Run AT-E1-001 acceptance test validation for AKS cluster
 
 validate-at-e1-002: ## Run AT-E1-002 acceptance test validation for GitOps/ArgoCD
 	@./scripts/validate-at-e1-002.sh --namespace $(ARGO_NAMESPACE)
+
+validate-at-e1-003: ## Run AT-E1-003 acceptance test validation for Backstage Developer Portal
+	@./scripts/validate-at-e1-003.sh --namespace $(ARGO_NAMESPACE)
 
 clean-local: ## Clean up local K8s deployments
 	@kubectl delete namespace $(NAMESPACE) --ignore-not-found=true
