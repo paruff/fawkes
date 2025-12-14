@@ -203,9 +203,16 @@ validate_harbor_pods() {
     for component in "${required_components[@]}"; do
         local pod_count=$(kubectl get pods -n "$NAMESPACE" -l "component=harbor-${component}" -o json 2>/dev/null | jq '.items | length' || echo "0")
         
+        if [ -z "$pod_count" ] || [ "$pod_count" = "null" ]; then
+            pod_count=0
+        fi
+        
         if [ "$pod_count" -gt 0 ]; then
             found_count=$((found_count + 1))
             local running=$(kubectl get pods -n "$NAMESPACE" -l "component=harbor-${component}" -o json 2>/dev/null | jq '[.items[] | select(.status.phase=="Running")] | length' || echo "0")
+            if [ -z "$running" ] || [ "$running" = "null" ]; then
+                running=0
+            fi
             if [ "$running" -eq "$pod_count" ]; then
                 running_count=$((running_count + 1))
                 log_success "Harbor $component pod(s) running"
@@ -215,9 +222,15 @@ validate_harbor_pods() {
         else
             # Try alternative label format
             pod_count=$(kubectl get pods -n "$NAMESPACE" -l "app.kubernetes.io/component=${component}" -o json 2>/dev/null | jq '.items | length' || echo "0")
+            if [ -z "$pod_count" ] || [ "$pod_count" = "null" ]; then
+                pod_count=0
+            fi
             if [ "$pod_count" -gt 0 ]; then
                 found_count=$((found_count + 1))
                 local running=$(kubectl get pods -n "$NAMESPACE" -l "app.kubernetes.io/component=${component}" -o json 2>/dev/null | jq '[.items[] | select(.status.phase=="Running")] | length' || echo "0")
+                if [ -z "$running" ] || [ "$running" = "null" ]; then
+                    running=0
+                fi
                 if [ "$running" -eq "$pod_count" ]; then
                     running_count=$((running_count + 1))
                     log_success "Harbor $component pod(s) running"
