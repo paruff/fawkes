@@ -1,0 +1,25 @@
+/**
+ * Jenkinsfile for ${{ values.name }}
+ * Generated from Node.js Express template
+ */
+
+@Library('fawkes-pipeline-library') _
+
+goldenPathPipeline {
+    appName = '${{ values.name }}'
+    language = 'node'
+    
+    // Node.js build commands
+    buildCommand = 'npm ci'
+    testCommand = 'npm test -- --ci --reporters=jest-junit'
+    bddTestCommand = 'npm run test:bdd'
+    
+    // Docker registry configuration
+    dockerRegistry = 'harbor.fawkes.local'
+    
+    // SonarQube configuration
+    sonarProject = '${{ values.name }}'
+    
+    // Notification channel
+    notifyChannel = 'ci-builds'
+}

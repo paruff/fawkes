@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${{ values.name }}
+  namespace: default
+  labels:
+    app: ${{ values.name }}
+    team: ${{ values.owner }}
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - ${{ values.name }}.fawkes.idp
+      secretName: ${{ values.name }}-tls
+  rules:
+    - host: ${{ values.name }}.fawkes.idp
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ${{ values.name }}
+                port:
+                  number: 80
