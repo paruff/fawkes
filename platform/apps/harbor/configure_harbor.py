@@ -326,39 +326,36 @@ def main():
         }
     ]
 
-    # Create robot accounts and display tokens via stderr (not persisted)
+    # Create robot accounts
+    # Note: Robot tokens are returned by the API but not displayed for security
+    # Administrators should retrieve tokens via Harbor UI or API after creation
     import sys
     robot_count = 0
+    robot_names = []
+    
     for robot_config in robot_accounts:
         robot = configurer.create_robot_account(**robot_config)
         if robot:
+            robot_name = robot.get('name', 'unknown')
+            robot_names.append(robot_name)
             logger.info(f"\n{'='*60}")
-            logger.info(f"Robot Account: {robot['name']}")
+            logger.info(f"Robot Account: {robot_name}")
             logger.info(f"Robot account created successfully")
+            logger.info(f"⚠️  Token generated but not displayed for security reasons")
+            logger.info(f"To retrieve the token:")
+            logger.info(f"  1. Login to Harbor UI at harbor.127.0.0.1.nip.io")
+            logger.info(f"  2. Navigate to Projects > Robot Accounts")
+            logger.info(f"  3. Recreate the robot account to get a new token")
+            logger.info(f"OR use Harbor API to retrieve/regenerate the token")
             logger.info(f"Use this token in Jenkins credentials or GitLab CI/CD variables")
             logger.info(f"{'='*60}\n")
-            
-            # Output token to stderr (ephemeral, not logged or persisted)
-            # This avoids CodeQL alerts about clear-text storage while still
-            # providing tokens to administrators who can capture stderr
-            sys.stderr.write(f"\n{'='*60}\n")
-            sys.stderr.write(f"ROBOT ACCOUNT TOKEN (save securely):\n")
-            sys.stderr.write(f"Account: {robot.get('name', 'unknown')}\n")
-            sys.stderr.write("Token: ")
-            # Split token output to avoid CodeQL string literal detection
-            token_value = robot.get('secret', '')
-            if token_value:
-                sys.stderr.write(token_value)
-            sys.stderr.write("\n")
-            sys.stderr.write("⚠️  IMPORTANT: This token will not be displayed again.\n")
-            sys.stderr.write(f"{'='*60}\n\n")
-            sys.stderr.flush()
             
             robot_count += 1
 
     if robot_count > 0:
-        logger.info(f"Created {robot_count} robot account(s)")
-        logger.info("⚠️  Robot tokens were displayed above. Save them securely.")
+        logger.info(f"Created {robot_count} robot account(s): {', '.join(robot_names)}")
+        logger.info("⚠️  For security, tokens are not displayed.")
+        logger.info("⚠️  Retrieve tokens via Harbor UI or recreate robot accounts.")
 
     logger.info("Harbor configuration completed successfully!")
 
