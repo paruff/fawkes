@@ -193,14 +193,22 @@ validate_jenkins_deployment() {
 validate_jenkins_pods() {
     log_info "Checking Jenkins pods..."
     
-    local pod_count=$(kubectl get pods -n "$NAMESPACE" -l app.kubernetes.io/name=jenkins -o json | jq '.items | length')
+    local pod_count=$(kubectl get pods -n "$NAMESPACE" -l app.kubernetes.io/name=jenkins -o json 2>/dev/null | jq '.items | length' || echo "0")
+    
+    if [ -z "$pod_count" ] || [ "$pod_count" = "null" ]; then
+        pod_count=0
+    fi
     
     if [ "$pod_count" -eq 0 ]; then
         record_test "Jenkins Pods" "FAIL" "No Jenkins pods found"
         return 1
     fi
     
-    local running_count=$(kubectl get pods -n "$NAMESPACE" -l app.kubernetes.io/name=jenkins -o json | jq '[.items[] | select(.status.phase=="Running")] | length')
+    local running_count=$(kubectl get pods -n "$NAMESPACE" -l app.kubernetes.io/name=jenkins -o json 2>/dev/null | jq '[.items[] | select(.status.phase=="Running")] | length' || echo "0")
+    
+    if [ -z "$running_count" ] || [ "$running_count" = "null" ]; then
+        running_count=0
+    fi
     
     if [ "$running_count" -eq "$pod_count" ]; then
         record_test "Jenkins Pods" "PASS" "All Jenkins pods running ($running_count/$pod_count)"
