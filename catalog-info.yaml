@@ -1,0 +1,269 @@
+# ============================================================================
+# FILE: catalog-info.yaml
+# PURPOSE: Root catalog file for Fawkes Platform
+#          Defines the platform system, components, and initial catalog entries
+# ============================================================================
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: fawkes-platform
+  title: Fawkes Internal Product Delivery Platform
+  description: |
+    Complete internal product delivery platform combining infrastructure, CI/CD,
+    collaboration, observability, and security with integrated dojo learning.
+  tags:
+    - platform-engineering
+    - devops
+    - gitops
+    - dora-metrics
+  links:
+    - url: https://github.com/paruff/fawkes
+      title: GitHub Repository
+      icon: github
+    - url: https://backstage.fawkes.idp
+      title: Developer Portal
+      icon: dashboard
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/techdocs-ref: dir:.
+spec:
+  owner: platform-team
+  domain: platform-engineering
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: platform-engineering
+  title: Platform Engineering
+  description: Platform engineering tools and services
+spec:
+  owner: platform-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: platform-team
+  title: Platform Team
+  description: Core platform engineering team
+spec:
+  type: team
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage
+  title: Backstage Developer Portal
+  description: Central developer portal providing service catalog, software templates, and documentation
+  tags:
+    - typescript
+    - react
+    - nodejs
+    - developer-portal
+  links:
+    - url: https://backstage.fawkes.idp
+      title: Production Portal
+      icon: dashboard
+    - url: https://backstage.io/docs
+      title: Backstage Documentation
+      icon: docs
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/kubernetes-id: backstage
+    backstage.io/kubernetes-namespace: fawkes
+    argocd/app-name: backstage
+    backstage.io/techdocs-ref: dir:./docs
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: fawkes-platform
+  providesApis:
+    - backstage-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: backstage-api
+  title: Backstage API
+  description: REST API for Backstage catalog and plugins
+  tags:
+    - rest
+    - openapi
+spec:
+  type: openapi
+  lifecycle: production
+  owner: platform-team
+  system: fawkes-platform
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: Backstage API
+      version: 1.0.0
+      description: Backstage catalog and plugin APIs
+    paths:
+      /api/catalog/entities:
+        get:
+          summary: List catalog entities
+          responses:
+            '200':
+              description: List of entities
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: argocd
+  title: ArgoCD GitOps
+  description: Declarative GitOps continuous delivery for Kubernetes
+  tags:
+    - gitops
+    - kubernetes
+    - cd
+  links:
+    - url: https://argocd.fawkes.idp
+      title: ArgoCD UI
+      icon: dashboard
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/kubernetes-id: argocd-server
+    backstage.io/kubernetes-namespace: argocd
+    argocd/app-name: argocd
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: fawkes-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: jenkins
+  title: Jenkins CI/CD
+  description: Continuous integration and build automation
+  tags:
+    - ci
+    - jenkins
+    - automation
+  links:
+    - url: https://jenkins.fawkes.idp
+      title: Jenkins UI
+      icon: dashboard
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/kubernetes-id: jenkins
+    backstage.io/kubernetes-namespace: fawkes
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: fawkes-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: prometheus
+  title: Prometheus Metrics
+  description: Monitoring and alerting toolkit
+  tags:
+    - monitoring
+    - metrics
+    - observability
+  links:
+    - url: https://prometheus.fawkes.idp
+      title: Prometheus UI
+      icon: dashboard
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/kubernetes-id: prometheus
+    backstage.io/kubernetes-namespace: fawkes
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: fawkes-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: grafana
+  title: Grafana Dashboards
+  description: Visualization and analytics platform
+  tags:
+    - monitoring
+    - dashboards
+    - observability
+  links:
+    - url: https://grafana.fawkes.idp
+      title: Grafana UI
+      icon: dashboard
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/kubernetes-id: grafana
+    backstage.io/kubernetes-namespace: fawkes
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: fawkes-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sonarqube
+  title: SonarQube Code Quality
+  description: Static code analysis and quality gates
+  tags:
+    - security
+    - code-quality
+    - sast
+  links:
+    - url: https://sonarqube.fawkes.idp
+      title: SonarQube UI
+      icon: dashboard
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/kubernetes-id: sonarqube
+    backstage.io/kubernetes-namespace: fawkes
+    argocd/app-name: sonarqube
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: fawkes-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: db-backstage-dev
+  title: Backstage PostgreSQL Database
+  description: PostgreSQL database cluster for Backstage (CloudNativePG)
+  tags:
+    - database
+    - postgresql
+    - cloudnativepg
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/kubernetes-id: db-backstage-dev
+    backstage.io/kubernetes-namespace: fawkes
+spec:
+  type: database
+  lifecycle: production
+  owner: platform-team
+  system: fawkes-platform
+  dependencyOf:
+    - component:backstage
+---
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: fawkes-templates
+  title: Fawkes Software Templates
+  description: Golden path templates for creating new services
+  annotations:
+    backstage.io/managed-by-location: url:https://github.com/paruff/fawkes/blob/main/catalog-info.yaml
+spec:
+  type: url
+  targets:
+    - https://github.com/paruff/fawkes/blob/main/templates/python-service/template.yaml
+    - https://github.com/paruff/fawkes/blob/main/templates/java-service/template.yaml
+    - https://github.com/paruff/fawkes/blob/main/templates/nodejs-service/template.yaml
