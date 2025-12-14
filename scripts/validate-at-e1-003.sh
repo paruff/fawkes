@@ -388,13 +388,12 @@ validate_api_performance() {
     local response_time=$(kubectl exec -n "$NAMESPACE" "$pod_name" -- curl -s -o /dev/null -w '%{time_total}' http://127.0.0.1:7007/api/catalog/entities 2>/dev/null || echo "999")
     
     # Convert to milliseconds (response_time is in seconds)
-    local response_time_ms=$(echo "$response_time * 1000" | bc 2>/dev/null || echo "999")
-    local response_time_ms_int=${response_time_ms%.*}
+    local response_time_ms=$(echo "$response_time" | awk '{print int($1 * 1000)}')
     
-    if [ "$response_time_ms_int" -lt 500 ]; then
-        record_test "API Performance" "PASS" "API responds in ${response_time_ms_int}ms (<500ms)"
+    if [ "$response_time_ms" -lt 500 ]; then
+        record_test "API Performance" "PASS" "API responds in ${response_time_ms}ms (<500ms)"
     else
-        record_test "API Performance" "WARN" "API responds in ${response_time_ms_int}ms (target: <500ms)"
+        record_test "API Performance" "WARN" "API responds in ${response_time_ms}ms (target: <500ms)"
     fi
     
     return 0

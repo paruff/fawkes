@@ -147,7 +147,8 @@ run_at_e1_003() {
         # Run Backstage deployment tests
         if [ -f "tests/bdd/features/backstage-deployment.feature" ]; then
             log_info "Running Backstage deployment BDD tests..."
-            if pytest tests/bdd -k "backstage" -v -m "smoke or local or service-deployment" --tb=short 2>/dev/null; then
+            # Run with flexible markers - tests that are available
+            if pytest tests/bdd -k "backstage" -v --tb=short 2>/dev/null; then
                 log_success "BDD tests passed"
             else
                 log_warning "Some BDD tests failed or were skipped (may require cluster)"
