@@ -1,0 +1,15 @@
+# GitGuardian configuration file
+# Documentation: https://docs.gitguardian.com/internal-repositories-monitoring/integrations/git_hooks/pre_commit
+
+version: 2
+
+# Paths to exclude from GitGuardian scanning
+paths-ignore:
+  - tests/**/*  # Exclude all test files - may contain test fixtures with mock credentials
+  - "**/test_*.py"  # Exclude test files
+  - "**/conftest.py"  # Exclude pytest configuration files
+
+# Specific files to exclude
+exclude:
+  - tests/bdd/step_definitions/test_jenkins_kubernetes_deployment.py
+  - tests/bdd/conftest.py
