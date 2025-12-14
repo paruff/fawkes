@@ -564,6 +564,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4. Platform Services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-core-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy Core Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-github-oauth-for-backstage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure GitHub OAuth for Backstage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3914,6 +3953,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="4. Platform Services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-core-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy Core Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-github-oauth-for-backstage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure GitHub OAuth for Backstage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -4084,7 +4162,27 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 </li>
 </ol>
 <h2 id="4-platform-services">4. Platform Services</h2>
-<p>Services are deployed automatically via GitOps controllers. To add a new service:</p>
+<h3 id="deploy-core-services">Deploy Core Services</h3>
+<p>Services are deployed automatically via GitOps controllers. The core platform includes:</p>
+<ul>
+<li><strong>Backstage</strong> - Developer portal (requires GitHub OAuth)</li>
+<li><strong>Jenkins</strong> - CI/CD pipelines</li>
+<li><strong>ArgoCD</strong> - GitOps deployment</li>
+<li><strong>Prometheus/Grafana</strong> - Observability</li>
+<li><strong>SonarQube</strong> - Code quality</li>
+</ul>
+<h3 id="configure-github-oauth-for-backstage">Configure GitHub OAuth for Backstage</h3>
+<p>Before accessing Backstage, configure GitHub OAuth authentication:</p>
+<p><strong>Quick Setup:</strong></p>
+<ol>
+<li>Create GitHub OAuth App at https://github.com/settings/developers</li>
+<li>Configure callback URL: <code>https://backstage.fawkes.idp/api/auth/github/handler/frame</code></li>
+<li>Update secrets in <code>platform/apps/backstage/secrets.yaml</code></li>
+<li>Apply: <code>kubectl apply -f platform/apps/backstage/secrets.yaml</code></li>
+</ol>
+<p><strong>For detailed instructions, see</strong>: <a href="../how-to/security/github-oauth-setup/">GitHub OAuth Setup Guide</a></p>
+<h3 id="deploy-services">Deploy Services</h3>
+<p>To deploy or add a new service:</p>
 <ol>
 <li>
 <p>Define the service in <code>platform/apps/</code>:
