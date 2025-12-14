@@ -3,10 +3,46 @@ kind: Component
 metadata:
   name: ${{ values.name }}
   description: ${{ values.description }}
+  annotations:
+    github.com/project-slug: ${{ (values.repoUrl | parseRepoUrl).owner }}/${{ (values.repoUrl | parseRepoUrl).repo }}
+    backstage.io/kubernetes-id: ${{ values.name }}
+    backstage.io/techdocs-ref: dir:.
+    jenkins.io/job-full-name: ${{ values.name }}
   tags:
     - java
     - spring-boot
+    - rest-api
 spec:
   type: service
   lifecycle: experimental
   owner: ${{ values.owner }}
+  providesApis:
+    - ${{ values.name }}-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ${{ values.name }}-api
+  description: REST API for ${{ values.name }}
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: ${{ values.owner }}
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: ${{ values.name }} API
+      version: 0.1.0
+    paths:
+      /api/health:
+        get:
+          summary: Health check
+          responses:
+            '200':
+              description: Service is healthy
+      /api/info:
+        get:
+          summary: Service information
+          responses:
+            '200':
+              description: Service details
