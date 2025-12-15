@@ -113,13 +113,17 @@ test_dashboard_load_time() {
     local dashboards=$(curl -sf -u "${GRAFANA_USER}:${GRAFANA_PASSWORD}" \
         "${GRAFANA_URL}/api/search?type=dash-db&limit=1" 2>/dev/null || echo '[]')
     
+    # Note: Using grep for simplicity. For production, consider using jq:
+    # local uid=$(echo "$dashboards" | jq -r '.[0].uid // empty')
     local uid=$(echo "$dashboards" | grep -o '"uid":"[^"]*"' | head -1 | cut -d'"' -f4)
     
     if [ -n "$uid" ]; then
-        local start_time=$(date +%s%N)
+        # Note: date +%s%N may not be available on all systems (e.g., macOS)
+        # Fallback to seconds if nanosecond precision is not available
+        local start_time=$(date +%s%N 2>/dev/null || echo "$(date +%s)000000000")
         curl -sf -u "${GRAFANA_USER}:${GRAFANA_PASSWORD}" \
             "${GRAFANA_URL}/api/dashboards/uid/${uid}" >/dev/null 2>&1
-        local end_time=$(date +%s%N)
+        local end_time=$(date +%s%N 2>/dev/null || echo "$(date +%s)000000000")
         
         local load_time=$(( (end_time - start_time) / 1000000 ))  # Convert to milliseconds
         
