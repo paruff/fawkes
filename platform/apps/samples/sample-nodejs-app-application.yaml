@@ -1,0 +1,56 @@
+# ============================================================================
+# FILE: platform/apps/samples/sample-nodejs-app-application.yaml
+# PURPOSE: ArgoCD Application for sample Node.js Express app
+#          Testing and demonstration of Fawkes platform capabilities
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sample-nodejs-app
+  namespace: fawkes
+  labels:
+    app: sample-nodejs-app
+    component: sample-app
+    environment: dev
+    team: platform
+    language: nodejs
+  annotations:
+    argocd.argoproj.io/docs: "https://github.com/paruff/fawkes/tree/main/services/samples/sample-nodejs-app"
+    # Enable DORA metrics collection
+    dora.fawkes.io/collect-metrics: "true"
+    dora.fawkes.io/environment: "dev"
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    path: services/samples/sample-nodejs-app/k8s
+    targetRevision: HEAD
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes-samples
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+
+  revisionHistoryLimit: 10

@@ -1,0 +1,30 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-python-app
+  description: Sample Python FastAPI application for testing
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/kubernetes-id: sample-python-app
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - python
+    - fastapi
+spec:
+  type: service
+  lifecycle: experimental
+  owner: platform-team
+  providesApis:
+    - sample-python-app-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: sample-python-app-api
+  description: API for sample-python-app
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: platform-team
+  definition:
+    $text: ./openapi.yaml
