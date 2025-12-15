@@ -110,8 +110,10 @@ if [ -d "$SAMPLE_APP_DIR" ]; then
     docker build -t otel-sample-app:latest "$SAMPLE_APP_DIR" > /dev/null 2>&1
     echo -e "${GREEN}✓${NC} Sample application image built"
     
-    # Load image into kind if using kind cluster
-    if kind get clusters 2>/dev/null | grep -q "kind"; then
+    # Load image into kind cluster if detected
+    # Check for kind cluster by looking for kind-specific context
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    if [[ "$CURRENT_CONTEXT" == kind-* ]] || kind get clusters 2>/dev/null | grep -q "^${CURRENT_CONTEXT#kind-}$"; then
         kind load docker-image otel-sample-app:latest > /dev/null 2>&1
         echo -e "${GREEN}✓${NC} Image loaded into kind cluster"
     fi
@@ -188,13 +190,15 @@ echo ""
 echo -e "${YELLOW}[TEST 8]${NC} Checking collector logs for trace activity..."
 
 if [ -n "$COLLECTOR_POD" ]; then
-    # Get recent logs
-    RECENT_LOGS=$(kubectl logs -n $MONITORING_NS $COLLECTOR_POD --tail=50 2>/dev/null || echo "")
+    # Get recent logs and look for specific trace processing patterns
+    RECENT_LOGS=$(kubectl logs -n $MONITORING_NS $COLLECTOR_POD --tail=100 2>/dev/null || echo "")
     
-    if echo "$RECENT_LOGS" | grep -q "traces"; then
-        echo -e "${GREEN}✓${NC} Collector is processing traces"
+    # Check for span-related activity indicating trace processing
+    if echo "$RECENT_LOGS" | grep -qE "(span|trace_id|SpanData|ExportTraceServiceRequest)"; then
+        echo -e "${GREEN}✓${NC} Collector is processing traces (span data detected)"
     else
-        echo -e "${YELLOW}⚠${NC} No trace activity detected in recent logs"
+        echo -e "${YELLOW}⚠${NC} No specific trace activity detected in recent logs"
+        echo "  Note: This is normal if no traces have been sent yet"
     fi
 fi
 echo ""

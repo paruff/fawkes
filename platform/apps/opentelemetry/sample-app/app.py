@@ -16,12 +16,27 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='{"timestamp":"%(asctime)s","level":"%(levelname)s","message":"%(message)s","traceId":"%(otelTraceID)s","spanId":"%(otelSpanID)s"}'
-)
+# Configure logging with JSON structure
+# Note: For production, consider using python-json-logger or structlog
+import json
+
+class JSONFormatter(logging.Formatter):
+    """Format logs as JSON for structured logging."""
+    def format(self, record):
+        log_data = {
+            "timestamp": self.formatTime(record),
+            "level": record.levelname,
+            "message": record.getMessage(),
+            "traceId": getattr(record, 'otelTraceID', ''),
+            "spanId": getattr(record, 'otelSpanID', ''),
+        }
+        return json.dumps(log_data)
+
+handler = logging.StreamHandler()
+handler.setFormatter(JSONFormatter())
 logger = logging.getLogger(__name__)
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 # OpenTelemetry Collector endpoint
 OTEL_EXPORTER_OTLP_ENDPOINT = os.getenv(
