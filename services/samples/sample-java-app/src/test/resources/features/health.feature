@@ -7,10 +7,10 @@ Feature: Health Check
     When I request the health endpoint
     Then the response status should be 200
     And the response should contain status "UP"
-    And the response should contain service name "${{ values.name }}"
+    And the response should contain service name "sample-java-app"
 
   Scenario: Service info endpoint returns service details
     When I request the info endpoint
     Then the response status should be 200
-    And the response should contain name "${{ values.name }}"
+    And the response should contain name "sample-java-app"
     And the response should contain version "0.1.0"

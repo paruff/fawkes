@@ -41,11 +41,11 @@ RUN chown -R appuser:appuser /app
 USER appuser
 
 # Expose port
-EXPOSE ${{ values.port }}
+EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-  CMD python -c "import socket; sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM); result = sock.connect_ex(('localhost', ${{ values.port }})); exit(0 if result == 0 else 1)"
+  CMD python -c "import socket; sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM); result = sock.connect_ex(('localhost', 8000)); exit(0 if result == 0 else 1)"
 
 # Run application
-CMD uvicorn app.main:app --host 0.0.0.0 --port ${{ values.port }}
+CMD uvicorn app.main:app --host 0.0.0.0 --port 8000

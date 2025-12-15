@@ -1,4 +1,4 @@
-package com.fawkes.${{ values.name | replace("-", "") }}.controller;
+package com.fawkes.samplejavapp.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,15 +15,15 @@ public class HealthController {
     public ResponseEntity<Map<String, String>> health() {
         return ResponseEntity.ok(Map.of(
             "status", "UP",
-            "service", "${{ values.name }}"
+            "service", "sample-java-app"
         ));
     }
 
     @GetMapping("/info")
     public ResponseEntity<Map<String, String>> info() {
         return ResponseEntity.ok(Map.of(
-            "name", "${{ values.name }}",
-            "description", "${{ values.description }}",
+            "name", "sample-java-app",
+            "description", "Sample Java Spring Boot application for testing",
             "version", "0.1.0"
         ));
     }

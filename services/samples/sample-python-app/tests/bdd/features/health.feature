@@ -7,7 +7,7 @@ Feature: Health Check
     When I request the health endpoint
     Then the response status should be 200
     And the response should contain status "UP"
-    And the response should contain service "${{ values.name }}"
+    And the response should contain service "sample-python-app"
 
   Scenario: Service readiness check returns READY
     When I request the ready endpoint
@@ -17,5 +17,5 @@ Feature: Health Check
   Scenario: Service info endpoint returns details
     When I request the info endpoint
     Then the response status should be 200
-    And the response should contain name "${{ values.name }}"
+    And the response should contain name "sample-python-app"
     And the response should contain version "0.1.0"

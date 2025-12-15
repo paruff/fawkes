@@ -1,5 +1,5 @@
 """
-FastAPI application for ${{ values.name }}
+FastAPI application for sample-python-app
 """
 from fastapi import FastAPI
 from prometheus_client import make_asgi_app, Counter, Histogram
@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 
 # Create FastAPI app
 app = FastAPI(
-    title="${{ values.name }}",
-    description="${{ values.description }}",
+    title="sample-python-app",
+    description="Sample Python FastAPI application for testing",
     version="0.1.0"
 )
 
@@ -56,7 +56,7 @@ async def add_metrics(request, call_next):
 async def root():
     """Root endpoint"""
     return {
-        "service": "${{ values.name }}",
+        "service": "sample-python-app",
         "status": "running",
         "version": "0.1.0"
     }
@@ -67,7 +67,7 @@ async def health():
     """Health check endpoint"""
     return {
         "status": "UP",
-        "service": "${{ values.name }}"
+        "service": "sample-python-app"
     }
 
 
@@ -77,7 +77,7 @@ async def ready():
     # Add any readiness checks here (database connection, etc.)
     return {
         "status": "READY",
-        "service": "${{ values.name }}"
+        "service": "sample-python-app"
     }
 
 
@@ -85,12 +85,12 @@ async def ready():
 async def info():
     """Service information endpoint"""
     return {
-        "name": "${{ values.name }}",
-        "description": "${{ values.description }}",
+        "name": "sample-python-app",
+        "description": "Sample Python FastAPI application for testing",
         "version": "0.1.0"
     }
 
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=${{ values.port }})
+    uvicorn.run(app, host="0.0.0.0", port=8000)
