@@ -170,14 +170,13 @@ test_service_filtering() {
     if grep -q '"name": "service"' "$REPO_ROOT/$DASHBOARD_FILE"; then
         log_success "Service filter template variable found"
         
-        # Check if service filter query references team filter
+        # Check if service filter query references team filter (cascading)
         if grep -q 'label_values.*team=~' "$REPO_ROOT/$DASHBOARD_FILE"; then
             log_success "Service filter is cascaded from team filter"
-            return 0
         else
-            log_info "Service filter exists independently"
-            return 0
+            log_warning "Service filter does not cascade from team filter"
         fi
+        return 0
     else
         log_error "Service filter template variable not found"
         return 1
@@ -191,7 +190,7 @@ test_panel_count() {
     # Use jq if available for accurate counting, otherwise use grep
     local panel_count
     if command -v jq &> /dev/null; then
-        panel_count=$(jq '[.dashboard.panels // [] | .[] | select(.id)] | length' "$REPO_ROOT/$DASHBOARD_FILE" 2>/dev/null || echo "0")
+        panel_count=$(jq '[.dashboard.panels // [] | .[] | select(has("id"))] | length' "$REPO_ROOT/$DASHBOARD_FILE" 2>/dev/null || echo "0")
     else
         panel_count=$(grep -c '"id": [0-9]*' "$REPO_ROOT/$DASHBOARD_FILE" || echo "0")
     fi
