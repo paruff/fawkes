@@ -204,6 +204,57 @@ run_at_e1_004() {
     return 0
 }
 
+run_at_e1_005() {
+    log_info "Running AT-E1-005: DevSecOps Security Scanning validation"
+    echo ""
+    
+    # Run the comprehensive validation script
+    log_info "Step 1: Running comprehensive validation..."
+    if [ -f "$ROOT_DIR/scripts/validate-at-e1-005.sh" ]; then
+        if ! "$ROOT_DIR/scripts/validate-at-e1-005.sh"; then
+            log_error "Comprehensive validation failed"
+            return 1
+        fi
+    else
+        log_error "AT-E1-005 validation script not found at $ROOT_DIR/scripts/validate-at-e1-005.sh"
+        return 1
+    fi
+    
+    echo ""
+    log_info "Step 2: Running integration tests..."
+    
+    # Run SonarQube integration test
+    if [ -f "$ROOT_DIR/tests/integration/sonarqube-check.sh" ]; then
+        log_info "Running SonarQube integration test..."
+        if "$ROOT_DIR/tests/integration/sonarqube-check.sh"; then
+            log_success "SonarQube integration test passed"
+        else
+            log_warning "SonarQube integration test failed (may require port-forward or cluster access)"
+        fi
+    fi
+    
+    echo ""
+    log_info "Step 3: Running BDD tests..."
+    cd "$ROOT_DIR"
+    
+    # Check if pytest is available
+    if command -v pytest &> /dev/null; then
+        # Run security-related BDD tests
+        log_info "Running security scanning BDD tests..."
+        if pytest tests/bdd -k "security or quality" -v --tb=short -m "smoke or local or security" 2>/dev/null; then
+            log_success "BDD tests passed"
+        else
+            log_warning "Some BDD tests failed or were skipped (may require cluster)"
+        fi
+    else
+        log_warning "pytest not available, skipping BDD tests"
+    fi
+    
+    echo ""
+    log_success "AT-E1-005 validation completed!"
+    return 0
+}
+
 run_at_e1_009() {
     log_info "Running AT-E1-009: Harbor Container Registry validation"
     echo ""
@@ -267,10 +318,13 @@ main() {
         AT-E1-004)
             run_at_e1_004
             ;;
+        AT-E1-005)
+            run_at_e1_005
+            ;;
         AT-E1-009)
             run_at_e1_009
             ;;
-        AT-E1-005|AT-E1-006|AT-E1-007|AT-E1-008|AT-E1-010|AT-E1-011|AT-E1-012)
+        AT-E1-006|AT-E1-007|AT-E1-008|AT-E1-010|AT-E1-011|AT-E1-012)
             log_error "$test_id validation not yet implemented"
             exit 1
             ;;

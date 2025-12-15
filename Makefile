@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-009
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-009
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -62,6 +62,9 @@ validate-at-e1-003: ## Run AT-E1-003 acceptance test validation for Backstage De
 
 validate-at-e1-004: ## Run AT-E1-004 acceptance test validation for Jenkins CI/CD
 	@./scripts/validate-at-e1-004.sh --namespace $(ARGO_NAMESPACE)
+
+validate-at-e1-005: ## Run AT-E1-005 acceptance test validation for DevSecOps Security Scanning
+	@./scripts/validate-at-e1-005.sh --namespace $(ARGO_NAMESPACE)
 
 validate-at-e1-009: ## Run AT-E1-009 acceptance test validation for Harbor Container Registry
 	@./scripts/validate-at-e1-009.sh --namespace $(ARGO_NAMESPACE)
