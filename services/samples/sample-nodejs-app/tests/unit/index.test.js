@@ -6,7 +6,7 @@ describe('API Endpoints', () => {
     it('should return service information', async () => {
       const res = await request(app).get('/');
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveProperty('service', '${{ values.name }}');
+      expect(res.body).toHaveProperty('service', 'sample-nodejs-app');
       expect(res.body).toHaveProperty('status', 'running');
       expect(res.body).toHaveProperty('version');
     });
@@ -17,7 +17,7 @@ describe('API Endpoints', () => {
       const res = await request(app).get('/health');
       expect(res.statusCode).toBe(200);
       expect(res.body).toHaveProperty('status', 'UP');
-      expect(res.body).toHaveProperty('service', '${{ values.name }}');
+      expect(res.body).toHaveProperty('service', 'sample-nodejs-app');
     });
   });
 
@@ -26,7 +26,7 @@ describe('API Endpoints', () => {
       const res = await request(app).get('/ready');
       expect(res.statusCode).toBe(200);
       expect(res.body).toHaveProperty('status', 'READY');
-      expect(res.body).toHaveProperty('service', '${{ values.name }}');
+      expect(res.body).toHaveProperty('service', 'sample-nodejs-app');
     });
   });
 
@@ -34,7 +34,7 @@ describe('API Endpoints', () => {
     it('should return service details', async () => {
       const res = await request(app).get('/info');
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveProperty('name', '${{ values.name }}');
+      expect(res.body).toHaveProperty('name', 'sample-nodejs-app');
       expect(res.body).toHaveProperty('description');
       expect(res.body).toHaveProperty('version', '0.1.0');
     });

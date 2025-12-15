@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide will help you get started with the ${{ values.name }} service.
+This guide will help you get started with the sample-nodejs-app service.
 
 ## Installation
 
@@ -10,7 +10,7 @@ This guide will help you get started with the ${{ values.name }} service.
 
 ```bash
 git clone <repository-url>
-cd ${{ values.name }}
+cd sample-nodejs-app
 ```
 
 2. **Install dependencies**

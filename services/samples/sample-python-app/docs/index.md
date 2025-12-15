@@ -1,8 +1,8 @@
-# ${{ values.name }}
+# sample-python-app
 
 ## Overview
 
-${{ values.description }}
+Sample Python FastAPI application for testing
 
 ## Quick Start
 
@@ -24,7 +24,7 @@ pip install -r requirements.txt
 python -m app.main
 ```
 
-The service will be available at `http://localhost:${{ values.port }}`.
+The service will be available at `http://localhost:8000`.
 
 ## Architecture
 

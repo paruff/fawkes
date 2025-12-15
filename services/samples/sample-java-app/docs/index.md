@@ -1,8 +1,8 @@
-# ${{ values.name }}
+# sample-java-app
 
 ## Overview
 
-${{ values.description }}
+Sample Java Spring Boot application for testing
 
 ## Quick Start
 
@@ -26,7 +26,7 @@ mvn spring-boot:run
 ./gradlew bootRun
 ```
 
-The service will be available at `http://localhost:${{ values.port }}`.
+The service will be available at `http://localhost:8080`.
 
 ## Architecture
 

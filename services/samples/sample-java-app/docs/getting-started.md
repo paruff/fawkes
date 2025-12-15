@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide will help you get started with the ${{ values.name }} service.
+This guide will help you get started with the sample-java-app service.
 
 ## Installation
 
@@ -10,7 +10,7 @@ This guide will help you get started with the ${{ values.name }} service.
 
 ```bash
 git clone <repository-url>
-cd ${{ values.name }}
+cd sample-java-app
 ```
 
 2. **Build the project**
@@ -42,7 +42,7 @@ mvn spring-boot:run
 ./gradlew bootRun
 
 # Or run the JAR directly
-java -jar target/${{ values.name }}-0.0.1-SNAPSHOT.jar
+java -jar target/sample-java-app-0.0.1-SNAPSHOT.jar
 ```
 
 ## Testing

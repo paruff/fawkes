@@ -2,7 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: sample-python-app
-  description: ${{ values.description }}
+  description: Sample Python FastAPI application for testing
   annotations:
     github.com/project-slug: paruff/fawkes
     backstage.io/kubernetes-id: sample-python-app
@@ -13,7 +13,7 @@ metadata:
 spec:
   type: service
   lifecycle: experimental
-  owner: ${{ values.owner }}
+  owner: platform-team
   providesApis:
     - sample-python-app-api
 ---
@@ -25,6 +25,6 @@ metadata:
 spec:
   type: openapi
   lifecycle: experimental
-  owner: ${{ values.owner }}
+  owner: platform-team
   definition:
     $text: ./openapi.yaml

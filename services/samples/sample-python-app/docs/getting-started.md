@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide will help you get started with the ${{ values.name }} service.
+This guide will help you get started with the sample-python-app service.
 
 ## Installation
 
@@ -10,7 +10,7 @@ This guide will help you get started with the ${{ values.name }} service.
 
 ```bash
 git clone <repository-url>
-cd ${{ values.name }}
+cd sample-python-app
 ```
 
 2. **Install dependencies**
@@ -38,7 +38,7 @@ cp .env.example .env
 
 ```bash
 # Development mode with auto-reload
-uvicorn app.main:app --reload --port ${{ values.port }}
+uvicorn app.main:app --reload --port 8000
 ```
 
 ## Testing
