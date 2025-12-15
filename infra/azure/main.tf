@@ -57,18 +57,18 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   # System node pool
   default_node_pool {
-    name           = "system"
-    vm_size        = var.system_node_pool_vm_size
-    node_count     = var.system_node_pool_count
-    vnet_subnet_id = azurerm_subnet.aks_subnet.id
-    type           = "VirtualMachineScaleSets"
+    name            = "system"
+    vm_size         = var.system_node_pool_vm_size
+    node_count      = var.system_node_pool_count
+    vnet_subnet_id  = azurerm_subnet.aks_subnet.id
+    type            = "VirtualMachineScaleSets"
     os_disk_size_gb = 128
-    
+
     node_labels = {
       "nodepool-type" = "system"
       "environment"   = var.environment
     }
-    
+
     tags = merge(var.tags, {
       nodepool = "system"
     })
@@ -79,11 +79,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   network_profile {
-    network_plugin     = "azure"
-    network_policy     = var.network_policy
-    dns_service_ip     = var.dns_service_ip
-    service_cidr       = var.service_cidr
-    load_balancer_sku  = "standard"
+    network_plugin    = "azure"
+    network_policy    = var.network_policy
+    dns_service_ip    = var.dns_service_ip
+    service_cidr      = var.service_cidr
+    load_balancer_sku = "standard"
   }
 
   # Enable Azure Monitor for containers
@@ -97,6 +97,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
     azure_rbac_enabled     = true
   }
 
+  # Private cluster configuration
+  private_cluster_enabled = var.private_cluster_enabled
+
   tags = var.tags
 }
 
@@ -106,13 +109,13 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
   vm_size               = var.user_node_pool_vm_size
   vnet_subnet_id        = azurerm_subnet.aks_subnet.id
-  
+
   auto_scaling_enabled = var.user_node_pool_enable_autoscaling
   # When autoscaling is enabled, specify min/max. Otherwise, set a fixed node_count.
-  min_count           = var.user_node_pool_enable_autoscaling ? var.user_node_pool_min_count : null
-  max_count           = var.user_node_pool_enable_autoscaling ? var.user_node_pool_max_count : null
-  node_count          = var.user_node_pool_enable_autoscaling ? null : var.user_node_pool_node_count
-  
+  min_count  = var.user_node_pool_enable_autoscaling ? var.user_node_pool_min_count : null
+  max_count  = var.user_node_pool_enable_autoscaling ? var.user_node_pool_max_count : null
+  node_count = var.user_node_pool_enable_autoscaling ? null : var.user_node_pool_node_count
+
   mode            = "User"
   os_disk_size_gb = 128
 
@@ -123,88 +126,32 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
 
   # Required when updating properties like vm_size on existing pools
   temporary_name_for_rotation = "userrot"
-  
+
   node_labels = {
     "nodepool-type" = "user"
     "environment"   = var.environment
   }
-  
+
   tags = merge(var.tags, {
     nodepool = "user"
   })
 }
 
-# Azure Container Registry
-resource "random_string" "acr_suffix" {
-  length  = 6
-  upper   = false
-  special = false
-}
+# NOTE: Automated shutdown for cost optimization
+# Azure AKS Start/Stop feature allows stopping and starting the cluster to save costs during off-hours.
+# To manually stop the cluster:
+#   az aks stop --name ${var.cluster_name} --resource-group ${var.resource_group_name}
+# To manually start the cluster:
+#   az aks start --name ${var.cluster_name} --resource-group ${var.resource_group_name}
+#
+# For automated shutdown schedules, consider using Azure Automation Runbooks or GitHub Actions
+# to run the above commands on a schedule (e.g., stop at 8:00 PM EST, start at 8:00 AM EST)
 
-resource "azurerm_container_registry" "acr" {
-  # ACR names must be alphanumeric and lowercase, no hyphens
-  name                = lower(replace("${var.acr_name}${random_string.acr_suffix.result}", "-", ""))
-  resource_group_name = azurerm_resource_group.aks_rg.name
-  location            = azurerm_resource_group.aks_rg.location
-  sku                 = var.acr_sku
-  admin_enabled       = false
-  
-  tags = var.tags
-}
+# NOTE: Azure Container Registry (ACR) is NOT provisioned here.
+# Fawkes uses a self-hosted Harbor instance for container registry.
 
-# Assign AcrPull role to AKS cluster
-resource "azurerm_role_assignment" "aks_acr_pull" {
-  principal_id                     = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
-  role_definition_name             = "AcrPull"
-  scope                            = azurerm_container_registry.acr.id
-  skip_service_principal_aad_check = true
-}
-
-# Data source for current client configuration
-data "azurerm_client_config" "current" {}
-
-# Azure Key Vault for secrets
-resource "azurerm_key_vault" "aks_kv" {
-  name                       = var.key_vault_name
-  location                   = azurerm_resource_group.aks_rg.location
-  resource_group_name        = azurerm_resource_group.aks_rg.name
-  tenant_id                  = data.azurerm_client_config.current.tenant_id
-  sku_name                   = "standard"
-  soft_delete_retention_days = var.key_vault_soft_delete_retention_days
-  purge_protection_enabled   = var.key_vault_purge_protection_enabled
-
-  network_acls {
-    default_action = var.key_vault_network_acls_default_action
-    bypass         = "AzureServices"
-    # In production, add specific IP ranges or virtual networks:
-    # ip_rules       = ["1.2.3.4/32"]
-    # virtual_network_subnet_ids = [azurerm_subnet.aks_subnet.id]
-  }
-
-  tags = var.tags
-}
-
-# Grant Key Vault access to current user/service principal
-resource "azurerm_key_vault_access_policy" "deployer" {
-  key_vault_id = azurerm_key_vault.aks_kv.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azurerm_client_config.current.object_id
-
-  secret_permissions = [
-    "Get", "List", "Set", "Delete", "Purge", "Recover"
-  ]
-}
-
-# Grant Key Vault access to AKS cluster
-resource "azurerm_key_vault_access_policy" "aks" {
-  key_vault_id = azurerm_key_vault.aks_kv.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
-
-  secret_permissions = [
-    "Get", "List"
-  ]
-}
+# NOTE: Azure Key Vault is NOT provisioned here.
+# Fawkes uses a self-hosted HashiCorp Vault instance for secret management.
 
 # Storage account for Terraform state and general storage
 resource "azurerm_storage_account" "terraform_state" {
@@ -213,7 +160,7 @@ resource "azurerm_storage_account" "terraform_state" {
   location                 = azurerm_resource_group.aks_rg.location
   account_tier             = "Standard"
   account_replication_type = var.storage_replication_type
-  
+
   tags = var.tags
 }
 
