@@ -24,6 +24,7 @@ REPORT_FILE="reports/at-e1-007-validation-$(date +%Y%m%d-%H%M%S).json"
 REPORT_DIR="reports"
 DEVLAKE_URL="http://devlake.127.0.0.1.nip.io"
 GRAFANA_URL="http://devlake-grafana.127.0.0.1.nip.io"
+DASHBOARD_FILE="platform/apps/grafana/dashboards/dora-metrics-dashboard.json"
 
 # Test results
 TOTAL_TESTS=0
@@ -252,7 +253,7 @@ validate_database() {
     log_info "Validating database..."
     
     # Check MySQL pod is ready
-    local mysql_pod=$(kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/component=mysql -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
+    local mysql_pod=$(kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/component=mysql -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
     
     if [ -z "$mysql_pod" ]; then
         record_test "Database pod" "FAIL" "MySQL pod not found"
@@ -261,8 +262,17 @@ validate_database() {
     
     record_test "Database pod" "PASS" "MySQL pod found: $mysql_pod"
     
+    # Try to get MySQL password from secret
+    local mysql_password=$(kubectl get secret devlake-db -n "$DEVLAKE_NAMESPACE" -o jsonpath='{.data.mysql-root-password}' 2>/dev/null | base64 -d || echo "")
+    
+    if [ -z "$mysql_password" ]; then
+        record_test "Database credentials" "FAIL" "Unable to retrieve MySQL password from secret"
+        log_warning "Skipping database schema checks - credentials not available"
+        return 1
+    fi
+    
     # Check database exists
-    local db_check=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$mysql_pod" -- mysql -u root -p"${MYSQL_ROOT_PASSWORD:-devlake}" -e "SHOW DATABASES LIKE 'lake';" 2>/dev/null | grep -c "lake" || echo "0")
+    local db_check=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$mysql_pod" -- mysql -u root -p"${mysql_password}" -e "SHOW DATABASES LIKE 'lake';" 2>/dev/null | grep -c "lake" || echo "0")
     
     if [ "$db_check" -gt 0 ]; then
         record_test "Database lake" "PASS" "Database exists"
@@ -270,7 +280,7 @@ validate_database() {
         # Check key tables for DORA metrics
         local tables=("deployments" "commits" "incidents" "cicd_deployments")
         for table in "${tables[@]}"; do
-            local table_check=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$mysql_pod" -- mysql -u root -p"${MYSQL_ROOT_PASSWORD:-devlake}" lake -e "SHOW TABLES LIKE '$table';" 2>/dev/null | grep -c "$table" || echo "0")
+            local table_check=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$mysql_pod" -- mysql -u root -p"${mysql_password}" lake -e "SHOW TABLES LIKE '$table';" 2>/dev/null | grep -c "$table" || echo "0")
             
             if [ "$table_check" -gt 0 ]; then
                 record_test "Database table $table" "PASS" "Table exists"
@@ -287,7 +297,7 @@ validate_api_endpoints() {
     log_info "Validating API endpoints..."
     
     # Get DevLake pod
-    local devlake_pod=$(kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/component=lake -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
+    local devlake_pod=$(kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/component=lake -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
     
     if [ -z "$devlake_pod" ]; then
         record_test "DevLake API pod" "FAIL" "Pod not found"
@@ -319,8 +329,9 @@ validate_api_endpoints() {
         record_test "Prometheus metrics endpoint" "FAIL" "Metrics endpoint not responding"
     fi
     
-    # Check GraphQL endpoint
-    local graphql_check=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$devlake_pod" -- curl -s -X POST http://localhost:8080/api/graphql -H "Content-Type: application/json" -d '{"query":"{ __schema { types { name } } }"}' 2>/dev/null || echo "")
+    # Check GraphQL endpoint with simple query
+    local graphql_query='{"query":"{ __schema { types { name } } }"}'
+    local graphql_check=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$devlake_pod" -- curl -s -X POST http://localhost:8080/api/graphql -H "Content-Type: application/json" -d "$graphql_query" 2>/dev/null || echo "")
     if echo "$graphql_check" | grep -q "types"; then
         record_test "GraphQL API endpoint" "PASS" "GraphQL responds"
     else
@@ -331,10 +342,13 @@ validate_api_endpoints() {
 validate_webhook_receivers() {
     log_info "Validating webhook receivers..."
     
+    # Get script directory for absolute paths
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+    
     # Check webhook configuration documentation
-    local webhook_docs=("platform/apps/devlake/config/github-webhook-setup.md" 
-                        "platform/apps/devlake/config/jenkins-webhook-setup.md"
-                        "platform/apps/devlake/config/argocd-notifications.yaml")
+    local webhook_docs=("$script_dir/platform/apps/devlake/config/github-webhook-setup.md" 
+                        "$script_dir/platform/apps/devlake/config/jenkins-webhook-setup.md"
+                        "$script_dir/platform/apps/devlake/config/argocd-notifications.yaml")
     
     for doc in "${webhook_docs[@]}"; do
         if [ -f "$doc" ]; then
@@ -345,23 +359,23 @@ validate_webhook_receivers() {
     done
     
     # Check Jenkins shared library for DORA metrics
-    if [ -f "jenkins-shared-library/vars/doraMetrics.groovy" ]; then
+    if [ -f "$script_dir/jenkins-shared-library/vars/doraMetrics.groovy" ]; then
         record_test "Jenkins DORA metrics library" "PASS" "doraMetrics.groovy exists"
         
         # Check for webhook functions
-        if grep -q "recordBuild" "jenkins-shared-library/vars/doraMetrics.groovy"; then
+        if grep -q "recordBuild" "$script_dir/jenkins-shared-library/vars/doraMetrics.groovy"; then
             record_test "Jenkins recordBuild function" "PASS" "Function found"
         else
             record_test "Jenkins recordBuild function" "FAIL" "Function not found"
         fi
         
-        if grep -q "recordQualityGate" "jenkins-shared-library/vars/doraMetrics.groovy"; then
+        if grep -q "recordQualityGate" "$script_dir/jenkins-shared-library/vars/doraMetrics.groovy"; then
             record_test "Jenkins recordQualityGate function" "PASS" "Function found"
         else
             record_test "Jenkins recordQualityGate function" "FAIL" "Function not found"
         fi
         
-        if grep -q "recordIncident" "jenkins-shared-library/vars/doraMetrics.groovy"; then
+        if grep -q "recordIncident" "$script_dir/jenkins-shared-library/vars/doraMetrics.groovy"; then
             record_test "Jenkins recordIncident function" "PASS" "Function found"
         else
             record_test "Jenkins recordIncident function" "FAIL" "Function not found"
@@ -374,16 +388,18 @@ validate_webhook_receivers() {
 validate_dora_metrics() {
     log_info "Validating DORA metrics calculation..."
     
+    # Get script directory for absolute paths
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+    
     # Check for metric calculation queries/scripts
     local metrics=("Deployment Frequency" "Lead Time for Changes" "Change Failure Rate" "Mean Time to Restore")
     
     # Validate dashboard contains all 4 metrics
-    local dashboard_file="platform/apps/grafana/dashboards/dora-metrics-dashboard.json"
-    if [ -f "$dashboard_file" ]; then
+    if [ -f "$script_dir/$DASHBOARD_FILE" ]; then
         record_test "DORA dashboard file" "PASS" "Dashboard file exists"
         
         for metric in "${metrics[@]}"; do
-            if grep -q "$metric" "$dashboard_file"; then
+            if grep -q "$metric" "$script_dir/$DASHBOARD_FILE"; then
                 record_test "Metric: $metric" "PASS" "Metric found in dashboard"
             else
                 record_test "Metric: $metric" "FAIL" "Metric not found in dashboard"
@@ -398,7 +414,7 @@ validate_grafana_dashboard() {
     log_info "Validating Grafana dashboard deployment..."
     
     # Check Grafana pod
-    local grafana_pod=$(kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/component=grafana -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
+    local grafana_pod=$(kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/component=grafana -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
     
     if [ -n "$grafana_pod" ]; then
         record_test "Grafana pod" "PASS" "Pod found: $grafana_pod"
@@ -443,21 +459,23 @@ validate_prometheus_integration() {
 validate_benchmark_comparison() {
     log_info "Validating benchmark comparison..."
     
+    # Get script directory for absolute paths
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+    
     # Check dashboard includes benchmark thresholds
-    local dashboard_file="platform/apps/grafana/dashboards/dora-metrics-dashboard.json"
-    if [ -f "$dashboard_file" ]; then
+    if [ -f "$script_dir/$DASHBOARD_FILE" ]; then
         local has_benchmarks=false
         
         # Check for DORA performance levels
-        if grep -q "Elite" "$dashboard_file" && \
-           grep -q "High" "$dashboard_file" && \
-           grep -q "Medium" "$dashboard_file" && \
-           grep -q "Low" "$dashboard_file"; then
+        if grep -q "Elite" "$script_dir/$DASHBOARD_FILE" && \
+           grep -q "High" "$script_dir/$DASHBOARD_FILE" && \
+           grep -q "Medium" "$script_dir/$DASHBOARD_FILE" && \
+           grep -q "Low" "$script_dir/$DASHBOARD_FILE"; then
             record_test "Benchmark thresholds" "PASS" "All DORA performance levels included"
             has_benchmarks=true
         fi
         
-        if grep -q "Benchmark" "$dashboard_file"; then
+        if grep -q "Benchmark" "$script_dir/$DASHBOARD_FILE"; then
             record_test "Benchmark comparison panel" "PASS" "Benchmark panel found"
         else
             record_test "Benchmark comparison panel" "FAIL" "Benchmark panel not found"
