@@ -140,8 +140,12 @@ spec:
       serviceAccountName: opensearch
       containers:
         - name: apply-policy
-          image: curlimages/curl:8.5.0
-          command: ["/bin/sh", "/scripts/apply-policy.sh"]
+          image: alpine:3.19
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              apk add --no-cache curl jq
+              /scripts/apply-policy.sh
           env:
             - name: OPENSEARCH_HOST
               value: "opensearch-cluster-master.logging.svc.cluster.local"
