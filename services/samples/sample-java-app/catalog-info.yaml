@@ -1,0 +1,48 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-java-app
+  description: Sample Java Spring Boot application for testing
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/kubernetes-id: sample-java-app
+    backstage.io/techdocs-ref: dir:.
+    jenkins.io/job-full-name: sample-java-app
+  tags:
+    - java
+    - spring-boot
+    - rest-api
+spec:
+  type: service
+  lifecycle: experimental
+  owner: ${{ values.owner }}
+  providesApis:
+    - sample-java-app-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: sample-java-app-api
+  description: REST API for sample-java-app
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: ${{ values.owner }}
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: sample-java-app API
+      version: 0.1.0
+    paths:
+      /api/health:
+        get:
+          summary: Health check
+          responses:
+            '200':
+              description: Service is healthy
+      /api/info:
+        get:
+          summary: Service information
+          responses:
+            '200':
+              description: Service details
