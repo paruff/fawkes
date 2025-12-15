@@ -13,6 +13,10 @@ from kubernetes import client, config
 from kubernetes.client.rest import ApiException
 
 
+# Configuration constants
+DEFAULT_NAMESPACE = 'fawkes'
+
+
 # ============================================================================
 # Background Steps
 # ============================================================================
@@ -24,12 +28,14 @@ def step_jenkins_deployed(context):
         Given I have kubectl configured for the cluster
     ''')
     
+    namespace = getattr(context, 'namespace', DEFAULT_NAMESPACE)
+    
     # Check Jenkins deployment
     apps_v1 = client.AppsV1Api()
     try:
         deployment = apps_v1.read_namespaced_deployment(
             name='jenkins',
-            namespace='fawkes'
+            namespace=namespace
         )
         assert deployment.status.ready_replicas >= 1, "Jenkins not ready"
         context.jenkins_deployed = True
@@ -41,13 +47,14 @@ def step_jenkins_deployed(context):
 @given('Harbor is deployed with Trivy scanner enabled')
 def step_harbor_with_trivy(context):
     """Verify Harbor is deployed with Trivy scanner enabled."""
+    namespace = getattr(context, 'namespace', DEFAULT_NAMESPACE)
     apps_v1 = client.AppsV1Api()
     
     # Check Harbor core deployment
     try:
         harbor_core = apps_v1.read_namespaced_deployment(
             name='harbor-core',
-            namespace='fawkes'
+            namespace=namespace
         )
         assert harbor_core.status.ready_replicas >= 1, "Harbor core not ready"
     except ApiException as e:
@@ -57,7 +64,7 @@ def step_harbor_with_trivy(context):
     v1 = client.CoreV1Api()
     try:
         pods = v1.list_namespaced_pod(
-            namespace='fawkes',
+            namespace=namespace,
             label_selector='component=trivy'
         )
         assert len(pods.items) > 0, "Trivy scanner pod not found"
@@ -69,12 +76,14 @@ def step_harbor_with_trivy(context):
 @given('the Golden Path pipeline is configured')
 def step_golden_path_configured(context):
     """Verify Golden Path shared library is configured."""
+    namespace = getattr(context, 'namespace', DEFAULT_NAMESPACE)
+    
     # Check Jenkins ConfigMap for shared library configuration
     v1 = client.CoreV1Api()
     try:
         cm = v1.read_namespaced_config_map(
             name='jenkins-casc-config',
-            namespace='fawkes'
+            namespace=namespace
         )
         config_yaml = cm.data.get('jenkins.yaml', '')
         assert 'fawkes-pipeline-library' in config_yaml, \
@@ -334,7 +343,7 @@ def step_pod_has_database(context):
         for container in pod.spec.containers 
         for vm in container.volume_mounts or []
     )
-    assert has_volume or True, "Trivy database volume not found"
+    assert has_volume, "Trivy database volume not found"
 
 
 # ============================================================================
@@ -403,11 +412,19 @@ def step_trivy_configured_severity(context, severity_filter):
 @then('the pipeline should "{result}"')
 def step_pipeline_result(context, result):
     """Verify pipeline result matches expected."""
+    # Determine expected pipeline status based on vulnerability severity and filter
+    if context.vulnerability_severity in ['CRITICAL', 'HIGH']:
+        if context.severity_filter in ['HIGH,CRITICAL', 'CRITICAL']:
+            expected_status = 'FAILURE'
+        else:
+            expected_status = 'SUCCESS'
+    else:  # MEDIUM, LOW
+        expected_status = 'SUCCESS'
+    
+    # Verify against actual result
     if result == 'fail':
-        # HIGH/CRITICAL should cause failure
-        if context.vulnerability_severity in ['CRITICAL', 'HIGH']:
-            assert context.severity_filter in ['HIGH,CRITICAL', 'CRITICAL']
+        assert expected_status == 'FAILURE', \
+            f"Expected pipeline to fail but expected status is {expected_status}"
     elif result == 'pass':
-        # MEDIUM/LOW should pass
-        if context.vulnerability_severity in ['MEDIUM', 'LOW']:
-            pass  # Expected to pass
+        assert expected_status == 'SUCCESS', \
+            f"Expected pipeline to pass but expected status is {expected_status}"
