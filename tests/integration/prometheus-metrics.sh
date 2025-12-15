@@ -47,6 +47,8 @@ test_prometheus_targets() {
     log_info "Testing Prometheus scrape targets..."
     
     local response=$(curl -sf "${PROMETHEUS_URL}/api/v1/targets" 2>/dev/null || echo '{}')
+    # Note: Using grep for simplicity. For production, consider using jq:
+    # local active_targets=$(echo "$response" | jq '.data.activeTargets | map(select(.health == "up")) | length')
     local active_targets=$(echo "$response" | grep -o '"health":"up"' | wc -l)
     
     if [ "$active_targets" -gt 0 ]; then

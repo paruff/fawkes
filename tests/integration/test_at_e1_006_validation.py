@@ -135,9 +135,8 @@ class TestATE1006Validation:
     @pytest.mark.smoke
     def test_all_acceptance_criteria_pass(self, validation_result):
         """Test that all AT-E1-006 acceptance criteria pass."""
-        assert validation_result["exit_code"] == 0, \
-            f"Validation failed. Check output:\n{validation_result['stdout']}\n{validation_result['stderr']}"
-        
+        # Exit code is already checked by test_validation_script_runs
+        # This test focuses on the report summary
         if validation_result["report"]:
             summary = validation_result["report"]["summary"]
             assert summary["failed"] == 0, \
