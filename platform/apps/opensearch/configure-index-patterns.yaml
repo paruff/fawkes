@@ -1,0 +1,244 @@
+# ============================================================================
+# FILE: platform/apps/opensearch/configure-index-patterns.yaml
+# PURPOSE: Job to configure OpenSearch index patterns and templates
+# FEATURES: Creates index templates for Fluent Bit logs with proper mappings
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opensearch-index-config
+  namespace: logging
+  labels:
+    app: opensearch
+    component: observability
+data:
+  # ============================================================================
+  # Index Template for Fluent Bit Application Logs
+  # ============================================================================
+  fawkes-logs-template.json: |
+    {
+      "index_patterns": ["fawkes-logs-*"],
+      "priority": 100,
+      "template": {
+        "settings": {
+          "number_of_shards": 3,
+          "number_of_replicas": 1,
+          "index.refresh_interval": "30s",
+          "index.codec": "best_compression",
+          "index.mapping.total_fields.limit": 2000,
+          "index.lifecycle.name": "fawkes-log-retention-policy",
+          "index.lifecycle.rollover_alias": "fawkes-logs"
+        },
+        "mappings": {
+          "properties": {
+            "@timestamp": {
+              "type": "date"
+            },
+            "message": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "log.iostream": {
+              "type": "keyword"
+            },
+            "k8s.namespace.name": {
+              "type": "keyword"
+            },
+            "k8s.pod.name": {
+              "type": "keyword"
+            },
+            "k8s.pod.uid": {
+              "type": "keyword"
+            },
+            "k8s.container.name": {
+              "type": "keyword"
+            },
+            "k8s.node.name": {
+              "type": "keyword"
+            },
+            "cluster": {
+              "type": "keyword"
+            },
+            "environment": {
+              "type": "keyword"
+            },
+            "traceId": {
+              "type": "keyword"
+            },
+            "spanId": {
+              "type": "keyword"
+            },
+            "level": {
+              "type": "keyword"
+            },
+            "trace_id": {
+              "type": "keyword"
+            },
+            "span_id": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    }
+
+  # ============================================================================
+  # Index Template for Host Logs
+  # ============================================================================
+  fawkes-host-logs-template.json: |
+    {
+      "index_patterns": ["fawkes-host-logs-*"],
+      "priority": 100,
+      "template": {
+        "settings": {
+          "number_of_shards": 2,
+          "number_of_replicas": 1,
+          "index.refresh_interval": "30s",
+          "index.codec": "best_compression",
+          "index.lifecycle.name": "fawkes-log-retention-policy",
+          "index.lifecycle.rollover_alias": "fawkes-host-logs"
+        },
+        "mappings": {
+          "properties": {
+            "@timestamp": {
+              "type": "date"
+            },
+            "message": {
+              "type": "text"
+            },
+            "k8s.node.name": {
+              "type": "keyword"
+            },
+            "cluster": {
+              "type": "keyword"
+            },
+            "environment": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    }
+
+  # ============================================================================
+  # Configuration Script
+  # ============================================================================
+  configure-indices.sh: |
+    #!/bin/sh
+    set -e
+
+    OPENSEARCH_HOST="${OPENSEARCH_HOST:-opensearch-cluster-master.logging.svc.cluster.local}"
+    OPENSEARCH_PORT="${OPENSEARCH_PORT:-9200}"
+
+    echo "Waiting for OpenSearch to be ready..."
+    until curl -s "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_cluster/health" > /dev/null; do
+      echo "OpenSearch not ready yet, waiting..."
+      sleep 5
+    done
+
+    echo "OpenSearch is ready. Configuring index templates..."
+
+    # Create index template for application logs
+    echo "Creating fawkes-logs index template..."
+    curl -X PUT "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_index_template/fawkes-logs-template" \
+      -H 'Content-Type: application/json' \
+      -d @/config/fawkes-logs-template.json
+
+    # Create index template for host logs
+    echo "Creating fawkes-host-logs index template..."
+    curl -X PUT "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_index_template/fawkes-host-logs-template" \
+      -H 'Content-Type: application/json' \
+      -d @/config/fawkes-host-logs-template.json
+
+    # Create initial indices with aliases
+    echo "Creating initial log indices..."
+    TODAY=$(date +%Y.%m.%d)
+    
+    curl -X PUT "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/fawkes-logs-${TODAY}" \
+      -H 'Content-Type: application/json' \
+      -d '{
+        "aliases": {
+          "fawkes-logs": {
+            "is_write_index": true
+          }
+        }
+      }'
+
+    curl -X PUT "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/fawkes-host-logs-${TODAY}" \
+      -H 'Content-Type: application/json' \
+      -d '{
+        "aliases": {
+          "fawkes-host-logs": {
+            "is_write_index": true
+          }
+        }
+      }'
+
+    echo "Index patterns and templates configured successfully."
+
+    # List templates to verify
+    echo "Existing index templates:"
+    curl -s "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_index_template" | jq '.index_templates[] | .name'
+
+---
+# ============================================================================
+# Job to Configure Index Patterns
+# ============================================================================
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: opensearch-configure-indices
+  namespace: logging
+  labels:
+    app: opensearch
+    component: observability
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  template:
+    metadata:
+      name: opensearch-configure-indices
+      labels:
+        app: opensearch
+        job: configure-indices
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: opensearch
+      containers:
+        - name: configure-indices
+          image: curlimages/curl:8.5.0
+          command: ["/bin/sh", "/scripts/configure-indices.sh"]
+          env:
+            - name: OPENSEARCH_HOST
+              value: "opensearch-cluster-master.logging.svc.cluster.local"
+            - name: OPENSEARCH_PORT
+              value: "9200"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: config
+          configMap:
+            name: opensearch-index-config
+            items:
+              - key: fawkes-logs-template.json
+                path: fawkes-logs-template.json
+              - key: fawkes-host-logs-template.json
+                path: fawkes-host-logs-template.json
+        - name: scripts
+          configMap:
+            name: opensearch-index-config
+            items:
+              - key: configure-indices.sh
+                path: configure-indices.sh
+                mode: 0755
+  backoffLimit: 5

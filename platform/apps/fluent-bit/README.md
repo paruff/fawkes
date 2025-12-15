@@ -1,4 +1,30 @@
-# Fluent Bit - Log Collection and Forwarding
+# Log Collection and Forwarding
+
+## Note
+
+**This platform uses OpenTelemetry Collector for log collection, not Fluent Bit.**
+
+For log collection configuration, see:
+- `platform/apps/opentelemetry/otel-collector-application.yaml` - OpenTelemetry Collector configuration
+- `platform/apps/opentelemetry/README.md` - OpenTelemetry documentation
+
+The OpenTelemetry Collector provides unified telemetry collection (logs, metrics, traces) with:
+- Native Kubernetes metadata enrichment via k8sattributes processor
+- Trace correlation support (traceId, spanId)
+- Direct export to OpenSearch
+- Efficient batching and buffering
+
+## Historical Context
+
+Fluent Bit was originally considered for log collection but was replaced by OpenTelemetry Collector to provide a unified observability pipeline. This decision aligns with:
+- ADR-011: Centralized Log Management
+- ADR-013: Distributed Tracing
+
+The content below is kept for reference purposes only.
+
+---
+
+# Fluent Bit - Log Collection and Forwarding (Reference)
 
 ## Purpose
 

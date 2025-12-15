@@ -1,0 +1,216 @@
+# ============================================================================
+# FILE: platform/apps/opensearch/opensearch-application.yaml
+# PURPOSE: ArgoCD Application for OpenSearch cluster deployment
+# FEATURES: Centralized log storage with 30-day retention policy
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opensearch
+  namespace: fawkes
+  labels:
+    app: opensearch
+    component: observability
+    environment: dev
+    team: platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"  # Deploy before Fluent Bit
+spec:
+  project: default
+
+  source:
+    repoURL: https://opensearch-project.github.io/helm-charts/
+    chart: opensearch
+    targetRevision: "2.17.0"
+    helm:
+      valuesObject:
+        # Cluster Configuration
+        clusterName: "opensearch-cluster"
+        nodeGroup: "master"
+
+        # Single node for MVP
+        replicas: 1
+        minimumMasterNodes: 1
+
+        # Node roles
+        roles:
+          - master
+          - ingest
+          - data
+          - remote_cluster_client
+
+        # OpenSearch Version
+        opensearchVersion: "2.11.1"
+
+        # Image Configuration
+        image:
+          repository: "opensearchproject/opensearch"
+          tag: "2.11.1"
+          pullPolicy: "IfNotPresent"
+
+        # Resources
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "2Gi"
+          limits:
+            cpu: "1000m"
+            memory: "2Gi"
+
+        # JVM Heap Size
+        opensearchJavaOpts: "-Xmx1g -Xms1g"
+
+        # Storage
+        persistence:
+          enabled: true
+          enableInitChown: true
+          storageClass: "standard"
+          accessModes:
+            - ReadWriteOnce
+          size: 50Gi
+
+        # Network Configuration
+        httpPort: 9200
+        transportPort: 9300
+
+        # Service Configuration
+        service:
+          type: ClusterIP
+          httpPort: 9200
+          transportPort: 9300
+
+        # Security Configuration - MVP: Basic
+        config:
+          opensearch.yml: |
+            cluster.name: opensearch-cluster
+            network.host: 0.0.0.0
+
+            # MVP: Disable security for simplicity
+            plugins.security.disabled: true
+
+            # Discovery settings for single node
+            discovery.type: single-node
+
+            # Index settings
+            action.auto_create_index: true
+
+            # Performance tuning
+            thread_pool.write.queue_size: 500
+            thread_pool.search.queue_size: 1000
+
+            # Circuit breakers
+            indices.breaker.total.limit: 70%
+            indices.breaker.request.limit: 40%
+            indices.breaker.fielddata.limit: 40%
+
+        # Lifecycle Settings
+        lifecycle:
+          preStop:
+            exec:
+              command:
+                - bash
+                - -c
+                - |
+                  #!/bin/bash
+                  sleep 15
+
+        # Security Context
+        securityContext:
+          capabilities:
+            drop:
+              - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+          fsGroup: 1000
+
+        podSecurityContext:
+          fsGroup: 1000
+          runAsUser: 1000
+
+        # Sysctls
+        sysctlInit:
+          enabled: true
+
+        sysctl:
+          enabled: true
+
+        # Service Account
+        rbac:
+          create: true
+          serviceAccountName: opensearch
+
+        serviceAccount:
+          create: true
+          name: opensearch
+
+        # Environment Variables
+        extraEnvs:
+          - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+            value: "Admin123!"
+          - name: DISABLE_INSTALL_DEMO_CONFIG
+            value: "true"
+
+        # Anti-Affinity
+        antiAffinityTopologyKey: "kubernetes.io/hostname"
+        antiAffinity: "soft"
+
+        # Pod Disruption Budget
+        podDisruptionBudget:
+          enabled: false
+
+        # Ingress
+        ingress:
+          enabled: false
+
+        # Probes
+        readinessProbe:
+          tcpSocket:
+            port: 9200
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        livenessProbe:
+          tcpSocket:
+            port: 9200
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 5
+
+        startupProbe:
+          tcpSocket:
+            port: 9200
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logging
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/replicas
+
+  revisionHistoryLimit: 10
