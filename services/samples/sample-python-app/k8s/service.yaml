@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-python-app
+  namespace: fawkes-samples
+  labels:
+    app: sample-python-app
+    team: platform-team
+spec:
+  type: ClusterIP
+  selector:
+    app: sample-python-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+      protocol: TCP
