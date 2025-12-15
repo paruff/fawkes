@@ -107,12 +107,22 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
   vm_size               = var.user_node_pool_vm_size
   vnet_subnet_id        = azurerm_subnet.aks_subnet.id
   
-  # Auto-scaling is enabled by specifying both min_count and max_count
-  min_count = var.user_node_pool_min_count
-  max_count = var.user_node_pool_max_count
+  auto_scaling_enabled = var.user_node_pool_enable_autoscaling
+  # When autoscaling is enabled, specify min/max. Otherwise, set a fixed node_count.
+  min_count           = var.user_node_pool_enable_autoscaling ? var.user_node_pool_min_count : null
+  max_count           = var.user_node_pool_enable_autoscaling ? var.user_node_pool_max_count : null
+  node_count          = var.user_node_pool_enable_autoscaling ? null : var.user_node_pool_node_count
   
   mode            = "User"
   os_disk_size_gb = 128
+
+  # Spot instances for cost savings in dev (keep system pool Regular)
+  priority        = var.user_node_pool_priority
+  eviction_policy = var.user_node_pool_priority == "Spot" ? var.user_node_pool_eviction_policy : null
+  spot_max_price  = var.user_node_pool_priority == "Spot" ? var.user_node_pool_spot_max_price : null
+
+  # Required when updating properties like vm_size on existing pools
+  temporary_name_for_rotation = "userrot"
   
   node_labels = {
     "nodepool-type" = "user"
@@ -125,8 +135,15 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
 }
 
 # Azure Container Registry
+resource "random_string" "acr_suffix" {
+  length  = 6
+  upper   = false
+  special = false
+}
+
 resource "azurerm_container_registry" "acr" {
-  name                = var.acr_name
+  # ACR names must be alphanumeric and lowercase, no hyphens
+  name                = lower(replace("${var.acr_name}${random_string.acr_suffix.result}", "-", ""))
   resource_group_name = azurerm_resource_group.aks_rg.name
   location            = azurerm_resource_group.aks_rg.location
   sku                 = var.acr_sku
@@ -203,6 +220,6 @@ resource "azurerm_storage_account" "terraform_state" {
 # Container for Terraform state
 resource "azurerm_storage_container" "terraform_state" {
   name                  = "tfstate"
-  storage_account_name  = azurerm_storage_account.terraform_state.name
+  storage_account_id    = azurerm_storage_account.terraform_state.id
   container_access_type = "private"
 }

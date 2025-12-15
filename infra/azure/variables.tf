@@ -93,7 +93,7 @@ variable "system_node_pool_count" {
 variable "user_node_pool_vm_size" {
   description = "VM size for the user node pool (choose an allowed, economical SKU)"
   type        = string
-  default     = "Standard_B2ms"
+  default     = "Standard_D2s_v3"
 }
 
 variable "user_node_pool_min_count" {
@@ -106,6 +106,44 @@ variable "user_node_pool_max_count" {
   description = "Maximum node count for user node pool (auto-scaling)"
   type        = number
   default     = 3
+}
+
+variable "user_node_pool_enable_autoscaling" {
+  description = "Enable autoscaling for the user node pool. When false, min/max must be null."
+  type        = bool
+  default     = true
+}
+
+variable "user_node_pool_node_count" {
+  description = "Fixed node count when autoscaling is disabled"
+  type        = number
+  default     = 1
+}
+
+variable "user_node_pool_priority" {
+  description = "VM priority for user node pool: Regular or Spot"
+  type        = string
+  default     = "Spot"
+  validation {
+    condition     = contains(["Regular", "Spot"], var.user_node_pool_priority)
+    error_message = "user_node_pool_priority must be either 'Regular' or 'Spot'"
+  }
+}
+
+variable "user_node_pool_eviction_policy" {
+  description = "Eviction policy for Spot VMs: Delete or Deallocate"
+  type        = string
+  default     = "Delete"
+  validation {
+    condition     = contains(["Delete", "Deallocate"], var.user_node_pool_eviction_policy)
+    error_message = "user_node_pool_eviction_policy must be either 'Delete' or 'Deallocate'"
+  }
+}
+
+variable "user_node_pool_spot_max_price" {
+  description = "Maximum price for Spot instances in USD per hour. Use -1 for on-demand price cap."
+  type        = number
+  default     = -1
 }
 
 # Azure Container Registry
