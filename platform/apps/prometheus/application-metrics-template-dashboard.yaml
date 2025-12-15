@@ -1,0 +1,585 @@
+# ============================================================================
+# FILE: platform/apps/prometheus/application-metrics-template-dashboard.yaml
+# PURPOSE: ConfigMap containing Grafana dashboard template for Application Metrics
+#          Based on Golden Signals (Latency, Traffic, Errors, Saturation)
+#          This is a template that teams can clone and customize
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-application-metrics-template
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+    app: grafana
+data:
+  application-metrics-template.json: |
+    {
+      "dashboard": {
+        "title": "Application Metrics Template",
+        "tags": ["application", "template", "golden-signals", "sre"],
+        "timezone": "browser",
+        "schemaVersion": 38,
+        "version": 1,
+        "refresh": "30s",
+        "description": "Template dashboard for monitoring application metrics using the Golden Signals approach (Latency, Traffic, Errors, Saturation). Clone and customize for your application.",
+        "panels": [
+          {
+            "id": 1,
+            "title": "Getting Started",
+            "type": "text",
+            "gridPos": {"x": 0, "y": 0, "w": 24, "h": 4},
+            "options": {
+              "mode": "markdown",
+              "content": "# Application Metrics Dashboard Template\n\nThis is a template dashboard based on the **Golden Signals** approach from Google's SRE book.\n\n## How to Use:\n1. **Clone this dashboard**: Save a copy with your application name\n2. **Update variables**: Set the `service` variable to match your application's service label\n3. **Customize queries**: Adjust metric names to match your application's exposed metrics\n4. **Add custom panels**: Extend with application-specific metrics\n\n## Required Labels:\n- `service`: Your application name\n- `namespace`: Kubernetes namespace\n- `method`: HTTP method (for request metrics)\n- `status`: HTTP status code\n\n## Required Metrics Format:\nYour application should expose metrics in Prometheus format at `/metrics` endpoint."
+            }
+          },
+          {
+            "id": 2,
+            "title": "Golden Signals Overview",
+            "type": "row",
+            "gridPos": {"x": 0, "y": 4, "w": 24, "h": 1},
+            "collapsed": false
+          },
+          {
+            "id": 3,
+            "title": "Request Rate (Traffic)",
+            "type": "stat",
+            "gridPos": {"x": 0, "y": 5, "w": 6, "h": 5},
+            "description": "Requests per second to the application",
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total{service=\"$service\",namespace=\"$namespace\"}[5m]))",
+                "refId": "A",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "decimals": 2,
+                "color": {"mode": "palette-classic"}
+              }
+            },
+            "options": {
+              "textMode": "value_and_name",
+              "colorMode": "value",
+              "graphMode": "area"
+            }
+          },
+          {
+            "id": 4,
+            "title": "Error Rate",
+            "type": "stat",
+            "gridPos": {"x": 6, "y": 5, "w": 6, "h": 5},
+            "description": "Percentage of requests resulting in errors (5xx)",
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total{service=\"$service\",namespace=\"$namespace\",status=~\"5..\"}[5m])) / sum(rate(http_requests_total{service=\"$service\",namespace=\"$namespace\"}[5m])) * 100",
+                "refId": "A",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "percent",
+                "decimals": 2,
+                "color": {"mode": "thresholds"},
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {"color": "green", "value": null},
+                    {"color": "yellow", "value": 1},
+                    {"color": "orange", "value": 5},
+                    {"color": "red", "value": 10}
+                  ]
+                }
+              }
+            },
+            "options": {
+              "textMode": "value_and_name",
+              "colorMode": "background",
+              "graphMode": "area"
+            }
+          },
+          {
+            "id": 5,
+            "title": "P95 Latency",
+            "type": "stat",
+            "gridPos": {"x": 12, "y": 5, "w": 6, "h": 5},
+            "description": "95th percentile request duration",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{service=\"$service\",namespace=\"$namespace\"}[5m])))",
+                "refId": "A",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "s",
+                "decimals": 3,
+                "color": {"mode": "thresholds"},
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {"color": "green", "value": null},
+                    {"color": "yellow", "value": 0.5},
+                    {"color": "orange", "value": 1},
+                    {"color": "red", "value": 3}
+                  ]
+                }
+              }
+            },
+            "options": {
+              "textMode": "value_and_name",
+              "colorMode": "background",
+              "graphMode": "area"
+            }
+          },
+          {
+            "id": 6,
+            "title": "CPU Usage (Saturation)",
+            "type": "gauge",
+            "gridPos": {"x": 18, "y": 5, "w": 6, "h": 5},
+            "description": "CPU usage percentage",
+            "targets": [
+              {
+                "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"$namespace\",pod=~\"$service.*\"}[5m])) / sum(container_spec_cpu_quota{namespace=\"$namespace\",pod=~\"$service.*\"}/container_spec_cpu_period{namespace=\"$namespace\",pod=~\"$service.*\"}) * 100",
+                "refId": "A",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "percent",
+                "min": 0,
+                "max": 100,
+                "color": {"mode": "thresholds"},
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {"color": "green", "value": null},
+                    {"color": "yellow", "value": 70},
+                    {"color": "red", "value": 90}
+                  ]
+                }
+              }
+            },
+            "options": {
+              "showThresholdLabels": false,
+              "showThresholdMarkers": true
+            }
+          },
+          {
+            "id": 7,
+            "title": "Traffic - Request Rate",
+            "type": "row",
+            "gridPos": {"x": 0, "y": 10, "w": 24, "h": 1},
+            "collapsed": false
+          },
+          {
+            "id": 8,
+            "title": "Request Rate Over Time",
+            "type": "timeseries",
+            "gridPos": {"x": 0, "y": 11, "w": 12, "h": 8},
+            "description": "HTTP request rate by method",
+            "targets": [
+              {
+                "expr": "sum by (method) (rate(http_requests_total{service=\"$service\",namespace=\"$namespace\"}[5m]))",
+                "refId": "A",
+                "legendFormat": "{{method}}",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "color": {"mode": "palette-classic"},
+                "custom": {
+                  "drawStyle": "line",
+                  "lineInterpolation": "smooth",
+                  "fillOpacity": 10,
+                  "showPoints": "never"
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "title": "Request Rate by Status",
+            "type": "timeseries",
+            "gridPos": {"x": 12, "y": 11, "w": 12, "h": 8},
+            "description": "HTTP request rate by status code",
+            "targets": [
+              {
+                "expr": "sum by (status) (rate(http_requests_total{service=\"$service\",namespace=\"$namespace\"}[5m]))",
+                "refId": "A",
+                "legendFormat": "{{status}}",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "color": {"mode": "palette-classic"},
+                "custom": {
+                  "drawStyle": "line",
+                  "lineInterpolation": "smooth",
+                  "fillOpacity": 10,
+                  "stacking": {"mode": "normal"}
+                }
+              }
+            }
+          },
+          {
+            "id": 10,
+            "title": "Latency - Response Time",
+            "type": "row",
+            "gridPos": {"x": 0, "y": 19, "w": 24, "h": 1},
+            "collapsed": false
+          },
+          {
+            "id": 11,
+            "title": "Response Time Percentiles",
+            "type": "timeseries",
+            "gridPos": {"x": 0, "y": 20, "w": 12, "h": 8},
+            "description": "Request duration percentiles (P50, P95, P99)",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.50, sum by (le) (rate(http_request_duration_seconds_bucket{service=\"$service\",namespace=\"$namespace\"}[5m])))",
+                "refId": "A",
+                "legendFormat": "P50",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              },
+              {
+                "expr": "histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{service=\"$service\",namespace=\"$namespace\"}[5m])))",
+                "refId": "B",
+                "legendFormat": "P95",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              },
+              {
+                "expr": "histogram_quantile(0.99, sum by (le) (rate(http_request_duration_seconds_bucket{service=\"$service\",namespace=\"$namespace\"}[5m])))",
+                "refId": "C",
+                "legendFormat": "P99",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "s",
+                "color": {"mode": "palette-classic"},
+                "custom": {
+                  "drawStyle": "line",
+                  "lineInterpolation": "smooth",
+                  "fillOpacity": 5
+                }
+              }
+            }
+          },
+          {
+            "id": 12,
+            "title": "Average Response Time by Endpoint",
+            "type": "timeseries",
+            "gridPos": {"x": 12, "y": 20, "w": 12, "h": 8},
+            "description": "Average request duration by endpoint",
+            "targets": [
+              {
+                "expr": "sum by (handler) (rate(http_request_duration_seconds_sum{service=\"$service\",namespace=\"$namespace\"}[5m])) / sum by (handler) (rate(http_request_duration_seconds_count{service=\"$service\",namespace=\"$namespace\"}[5m]))",
+                "refId": "A",
+                "legendFormat": "{{handler}}",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "s",
+                "color": {"mode": "palette-classic"},
+                "custom": {
+                  "drawStyle": "line",
+                  "lineInterpolation": "smooth",
+                  "fillOpacity": 10
+                }
+              }
+            }
+          },
+          {
+            "id": 13,
+            "title": "Errors - Error Rate",
+            "type": "row",
+            "gridPos": {"x": 0, "y": 28, "w": 24, "h": 1},
+            "collapsed": false
+          },
+          {
+            "id": 14,
+            "title": "Error Rate by Status Code",
+            "type": "timeseries",
+            "gridPos": {"x": 0, "y": 29, "w": 12, "h": 8},
+            "description": "Rate of 4xx and 5xx errors",
+            "targets": [
+              {
+                "expr": "sum by (status) (rate(http_requests_total{service=\"$service\",namespace=\"$namespace\",status=~\"4..\"}[5m]))",
+                "refId": "A",
+                "legendFormat": "4xx - {{status}}",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              },
+              {
+                "expr": "sum by (status) (rate(http_requests_total{service=\"$service\",namespace=\"$namespace\",status=~\"5..\"}[5m]))",
+                "refId": "B",
+                "legendFormat": "5xx - {{status}}",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "color": {"mode": "palette-classic"},
+                "custom": {
+                  "drawStyle": "line",
+                  "lineInterpolation": "smooth",
+                  "fillOpacity": 20
+                }
+              }
+            }
+          },
+          {
+            "id": 15,
+            "title": "Error Rate Percentage",
+            "type": "timeseries",
+            "gridPos": {"x": 12, "y": 29, "w": 12, "h": 8},
+            "description": "Percentage of requests with errors",
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total{service=\"$service\",namespace=\"$namespace\",status=~\"5..\"}[5m])) / sum(rate(http_requests_total{service=\"$service\",namespace=\"$namespace\"}[5m])) * 100",
+                "refId": "A",
+                "legendFormat": "5xx Error Rate",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              },
+              {
+                "expr": "sum(rate(http_requests_total{service=\"$service\",namespace=\"$namespace\",status=~\"4..\"}[5m])) / sum(rate(http_requests_total{service=\"$service\",namespace=\"$namespace\"}[5m])) * 100",
+                "refId": "B",
+                "legendFormat": "4xx Error Rate",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "percent",
+                "color": {"mode": "palette-classic"},
+                "custom": {
+                  "drawStyle": "line",
+                  "lineInterpolation": "smooth",
+                  "fillOpacity": 10
+                },
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {"color": "green", "value": null},
+                    {"color": "yellow", "value": 1},
+                    {"color": "red", "value": 5}
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 16,
+            "title": "Saturation - Resource Usage",
+            "type": "row",
+            "gridPos": {"x": 0, "y": 37, "w": 24, "h": 1},
+            "collapsed": false
+          },
+          {
+            "id": 17,
+            "title": "CPU Usage",
+            "type": "timeseries",
+            "gridPos": {"x": 0, "y": 38, "w": 8, "h": 8},
+            "description": "CPU usage by pod",
+            "targets": [
+              {
+                "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"$namespace\",pod=~\"$service.*\"}[5m]))",
+                "refId": "A",
+                "legendFormat": "{{pod}}",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "cores",
+                "color": {"mode": "palette-classic"},
+                "custom": {
+                  "drawStyle": "line",
+                  "lineInterpolation": "smooth",
+                  "fillOpacity": 10
+                }
+              }
+            }
+          },
+          {
+            "id": 18,
+            "title": "Memory Usage",
+            "type": "timeseries",
+            "gridPos": {"x": 8, "y": 38, "w": 8, "h": 8},
+            "description": "Memory working set by pod",
+            "targets": [
+              {
+                "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"$namespace\",pod=~\"$service.*\"})",
+                "refId": "A",
+                "legendFormat": "{{pod}}",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "bytes",
+                "color": {"mode": "palette-classic"},
+                "custom": {
+                  "drawStyle": "line",
+                  "lineInterpolation": "smooth",
+                  "fillOpacity": 10
+                }
+              }
+            }
+          },
+          {
+            "id": 19,
+            "title": "Pod Count",
+            "type": "timeseries",
+            "gridPos": {"x": 16, "y": 38, "w": 8, "h": 8},
+            "description": "Number of running pods",
+            "targets": [
+              {
+                "expr": "count(kube_pod_info{namespace=\"$namespace\",pod=~\"$service.*\"})",
+                "refId": "A",
+                "legendFormat": "Running Pods",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "color": {"mode": "palette-classic"},
+                "custom": {
+                  "drawStyle": "line",
+                  "lineInterpolation": "stepAfter",
+                  "fillOpacity": 20
+                }
+              }
+            }
+          },
+          {
+            "id": 20,
+            "title": "Application-Specific Metrics",
+            "type": "row",
+            "gridPos": {"x": 0, "y": 46, "w": 24, "h": 1},
+            "collapsed": false
+          },
+          {
+            "id": 21,
+            "title": "Custom Metric 1",
+            "type": "timeseries",
+            "gridPos": {"x": 0, "y": 47, "w": 12, "h": 6},
+            "description": "Add your application-specific metrics here",
+            "targets": [
+              {
+                "expr": "# Replace with your metric query\n# Example: my_app_custom_metric{service=\"$service\"}",
+                "refId": "A",
+                "legendFormat": "Custom Metric",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "color": {"mode": "palette-classic"},
+                "custom": {
+                  "drawStyle": "line",
+                  "lineInterpolation": "smooth",
+                  "fillOpacity": 10
+                }
+              }
+            }
+          },
+          {
+            "id": 22,
+            "title": "Custom Metric 2",
+            "type": "timeseries",
+            "gridPos": {"x": 12, "y": 47, "w": 12, "h": 6},
+            "description": "Add your application-specific metrics here",
+            "targets": [
+              {
+                "expr": "# Replace with your metric query\n# Example: my_app_business_metric{service=\"$service\"}",
+                "refId": "A",
+                "legendFormat": "Business Metric",
+                "datasource": {"type": "prometheus", "uid": "${datasource}"}
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "color": {"mode": "palette-classic"},
+                "custom": {
+                  "drawStyle": "line",
+                  "lineInterpolation": "smooth",
+                  "fillOpacity": 10
+                }
+              }
+            }
+          }
+        ],
+        "templating": {
+          "list": [
+            {
+              "name": "datasource",
+              "type": "datasource",
+              "query": "prometheus",
+              "current": {
+                "value": "prometheus",
+                "text": "Prometheus"
+              }
+            },
+            {
+              "name": "namespace",
+              "type": "query",
+              "query": "label_values(kube_namespace_status_phase{phase=\"Active\"}, namespace)",
+              "current": {
+                "value": "default",
+                "text": "default"
+              },
+              "datasource": {"type": "prometheus", "uid": "${datasource}"},
+              "refresh": 1
+            },
+            {
+              "name": "service",
+              "type": "query",
+              "query": "label_values(http_requests_total{namespace=\"$namespace\"}, service)",
+              "current": {
+                "value": "my-app",
+                "text": "my-app"
+              },
+              "datasource": {"type": "prometheus", "uid": "${datasource}"},
+              "refresh": 1
+            }
+          ]
+        },
+        "time": {
+          "from": "now-1h",
+          "to": "now"
+        },
+        "timepicker": {
+          "refresh_intervals": ["10s", "30s", "1m", "5m", "15m", "30m", "1h"]
+        },
+        "annotations": {
+          "list": [
+            {
+              "name": "Deployments",
+              "datasource": {"type": "prometheus", "uid": "${datasource}"},
+              "expr": "changes(kube_deployment_status_replicas{namespace=\"$namespace\"}[1m]) > 0",
+              "titleFormat": "Deployment",
+              "textFormat": "{{deployment}}",
+              "iconColor": "blue"
+            }
+          ]
+        }
+      }
+    }
