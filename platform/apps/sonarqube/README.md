@@ -164,5 +164,9 @@ kubectl exec -n fawkes deployment/sonarqube -- \
 
 ## Related Documentation
 
+- [Quality Profiles Guide](quality-profiles.md) - Detailed setup for Java, Python, Node.js profiles
+- [Deployment Guide](../../../docs/deployment/sonarqube-deployment.md) - Complete deployment instructions
+- [Deployment Summary](../../../docs/deployment/sonarqube-deployment-summary.md) - Implementation summary for issue #19
+- [ADR-014: SonarQube Quality Gates](../../../docs/adr/ADR-014%20sonarqube%20quality%20gates.md) - Architecture decision
 - [SonarQube Documentation](https://docs.sonarqube.org/)
 - [Quality Gates](https://docs.sonarqube.org/latest/user-guide/quality-gates/)
