@@ -12,7 +12,7 @@ variable "tenant_id" {
 variable "location" {
   description = "Azure region for the AKS resource group and cluster"
   type        = string
-  default     = "East US"
+  default     = "eastus2"
 }
 
 variable "resource_group_name" {
@@ -80,7 +80,7 @@ variable "network_policy" {
 variable "system_node_pool_vm_size" {
   description = "VM size for the system node pool (choose an allowed, economical SKU)"
   type        = string
-  default     = "Standard_B2ms"
+  default     = "Standard_B2s"
 }
 
 variable "system_node_pool_count" {
@@ -105,7 +105,7 @@ variable "user_node_pool_min_count" {
 variable "user_node_pool_max_count" {
   description = "Maximum node count for user node pool (auto-scaling)"
   type        = number
-  default     = 3
+  default     = 5
 }
 
 variable "user_node_pool_enable_autoscaling" {
@@ -146,48 +146,15 @@ variable "user_node_pool_spot_max_price" {
   default     = -1
 }
 
-# Azure Container Registry
-variable "acr_name" {
-  description = "Name of the Azure Container Registry (must be globally unique)"
-  type        = string
-  default     = "fawkesacr"
-}
-
-variable "acr_sku" {
-  description = "SKU for Azure Container Registry (Basic, Standard, Premium)"
-  type        = string
-  default     = "Standard"
-}
-
-# Key Vault
-variable "key_vault_name" {
-  description = "Name of the Azure Key Vault (must be globally unique)"
-  type        = string
-  default     = "fawkes-kv"
-}
-
-variable "key_vault_soft_delete_retention_days" {
-  description = "Number of days to retain soft-deleted Key Vault items (7-90). Use 90 for production."
-  type        = number
-  default     = 7
-}
-
-variable "key_vault_purge_protection_enabled" {
-  description = "Enable purge protection for Key Vault. Set to true for production to prevent permanent deletion."
+# Private cluster configuration
+variable "private_cluster_enabled" {
+  description = "Enable private cluster (API server not exposed to public internet)"
   type        = bool
-  default     = false
+  default     = true
 }
 
-variable "key_vault_network_acls_default_action" {
-  description = "Default action for Key Vault network ACLs (Allow or Deny). Use Deny for production."
-  type        = string
-  default     = "Allow"
-  
-  validation {
-    condition     = contains(["Allow", "Deny"], var.key_vault_network_acls_default_action)
-    error_message = "key_vault_network_acls_default_action must be either 'Allow' or 'Deny'."
-  }
-}
+# NOTE: Azure Container Registry variables removed - Fawkes uses Harbor
+# NOTE: Azure Key Vault variables removed - Fawkes uses HashiCorp Vault
 
 # Storage Account
 variable "storage_account_name" {
@@ -231,8 +198,8 @@ variable "tags" {
   description = "Tags to apply to all Azure resources"
   type        = map(string)
   default = {
-    platform    = "fawkes"
-    managed_by  = "terraform"
+    platform   = "fawkes"
+    managed_by = "terraform"
   }
 }
 
