@@ -4233,11 +4233,20 @@ pre-commit<span class="w"> </span>install
 </ul>
 <h3 id="security">🔒 Security</h3>
 <ul>
-<li>✅ Gitleaks (secret detection)</li>
-<li>✅ detect-secrets (secret baseline)</li>
-<li>✅ Private key detection</li>
-<li>✅ tfsec (Terraform security)</li>
+<li>✅ <strong>Gitleaks</strong> (comprehensive secret detection)</li>
+<li>Detects 100+ types of secrets (API keys, passwords, tokens)</li>
+<li>Configurable via <code>.gitleaks.toml</code></li>
+<li>Fast and accurate scanning</li>
+<li>✅ <strong>detect-secrets</strong> (baseline-based detection)</li>
+<li>Manages known false positives via <code>.secrets.baseline</code></li>
+<li>Complementary to Gitleaks</li>
+<li>✅ <strong>Private key detection</strong> (SSH keys, certificates)</li>
+<li>Prevents accidental commit of private keys</li>
+<li>✅ <strong>tfsec</strong> (Terraform security scanning)</li>
+<li>Infrastructure security best practices</li>
 </ul>
+<p><strong>⚠️ Pipeline Integration</strong>: Secrets scanning also runs in Jenkins CI/CD pipelines. If secrets are detected, the pipeline <strong>fails immediately</strong> to prevent deployment of vulnerable code.</p>
+<p><strong>📖 Learn More</strong>: See <a href="../how-to/security/secrets-management/">Secrets Management Guide</a> for detailed information on handling secrets securely.</p>
 <h3 id="python">🐍 Python</h3>
 <ul>
 <li>✅ Black formatting</li>
