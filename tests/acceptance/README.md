@@ -12,7 +12,7 @@ This directory contains acceptance test runners for Fawkes platform validation.
 | AT-E1-002 | GitOps | ArgoCD manages all platform components | ✅ Implemented |
 | AT-E1-003 | Developer Portal | Backstage with 3 templates functional | ✅ Implemented |
 | AT-E1-004 | CI/CD | Jenkins pipelines build/test/deploy | ✅ Implemented |
-| AT-E1-005 | Security | DevSecOps scanning integrated | 🚧 Pending |
+| AT-E1-005 | Security | DevSecOps scanning integrated | ✅ Implemented |
 | AT-E1-006 | Observability | Prometheus/Grafana stack deployed | 🚧 Pending |
 | AT-E1-007 | Metrics | DORA metrics automated (4 key metrics) | 🚧 Pending |
 | AT-E1-008 | Templates | 3 golden paths work end-to-end | 🚧 Pending |
@@ -43,6 +43,9 @@ make validate-at-e1-003
 
 # Run AT-E1-004 validation
 make validate-at-e1-004
+
+# Run AT-E1-005 validation
+make validate-at-e1-005
 
 # Run AT-E1-009 validation
 make validate-at-e1-009
@@ -313,6 +316,131 @@ docker login harbor.127.0.0.1.nip.io
 docker tag hello-world:latest harbor.127.0.0.1.nip.io/library/hello-world:test
 docker push harbor.127.0.0.1.nip.io/library/hello-world:test
 ```
+
+## AT-E1-005: DevSecOps Security Scanning
+
+### Acceptance Criteria
+
+- [x] SonarQube deployed and integrated with Jenkins
+- [x] Trivy scanning all container images
+- [x] git-secrets or Gitleaks in pipelines
+- [x] Quality gates enforced (fail on high/critical)
+- [x] Security scan results accessible
+- [x] SBOM generation capability available
+- [x] Security policy-as-code (OPA/Kyverno) optional
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e1-005.sh`)
+   - Checks prerequisites (kubectl, cluster access)
+   - Validates SonarQube deployment and database
+   - Checks SonarQube accessibility and API
+   - Verifies Trivy integration in Harbor
+   - Checks Trivy integration in Jenkins shared library
+   - Validates secrets scanning (Gitleaks) integration
+   - Verifies quality gates configuration
+   - Checks Jenkins security scanning integration
+   - Validates security documentation
+   - Checks SBOM generation capability
+   - Verifies security policy-as-code deployment (optional)
+   - Validates BDD test coverage
+
+2. **Integration Tests** (`tests/integration/sonarqube-check.sh`)
+   - Tests SonarQube health endpoint
+   - Validates system status
+   - Checks quality gates configuration
+   - Verifies authentication setup
+   - Tests plugins endpoint
+   - Checks metrics endpoint for Prometheus
+   - Validates web interface
+
+3. **Security Tests** (`tests/security/scan-all-images.sh`)
+   - Discovers all container images in namespace
+   - Scans each image with Trivy
+   - Filters by HIGH,CRITICAL vulnerabilities
+   - Generates individual scan reports
+   - Creates summary report
+   - Tracks vulnerable images
+
+4. **BDD Tests** (`tests/bdd/features/`)
+   - `security-quality-gates.feature` - Quality gates configuration and enforcement
+   - `secrets-scanning.feature` - Secrets detection in CI/CD pipelines
+
+### Test Reports
+
+Test reports are generated in JSON format at:
+```
+reports/at-e1-005-validation-YYYYMMDD-HHMMSS.json
+```
+
+Trivy scan reports are generated at:
+```
+reports/trivy-scans/trivy-scan-*-YYYYMMDD-HHMMSS.txt
+reports/trivy-scans/trivy-scan-*-YYYYMMDD-HHMMSS.json
+reports/trivy-scans/scan-summary-YYYYMMDD-HHMMSS.txt
+```
+
+### Validation Commands
+
+Manual validation commands from the issue:
+
+```bash
+# Run SonarQube scanner
+sonar-scanner -Dsonar.host.url=http://sonarqube.127.0.0.1.nip.io
+
+# Scan image with Trivy
+trivy image --severity HIGH,CRITICAL \
+  harbor.127.0.0.1.nip.io/fawkes/sample-app:latest \
+  --exit-code 1  # Must exit 0 (no vulns)
+```
+
+### Running the Tests
+
+```bash
+# Run via test runner
+./tests/acceptance/run-test.sh AT-E1-005
+
+# Run via Makefile
+make validate-at-e1-005
+
+# Run individual components
+./scripts/validate-at-e1-005.sh
+./tests/integration/sonarqube-check.sh
+./tests/security/scan-all-images.sh fawkes
+```
+
+### Prerequisites
+
+- kubectl with cluster access
+- SonarQube deployed in cluster
+- Harbor with Trivy scanner deployed
+- Jenkins with shared library configured
+- curl (for API testing)
+- jq (optional, for JSON processing)
+- trivy CLI (for image scanning)
+
+### Troubleshooting
+
+**SonarQube API not accessible:**
+```bash
+# Port forward to SonarQube
+kubectl port-forward -n fawkes svc/sonarqube 9000:9000
+
+# Run test with port-forwarded URL
+./tests/integration/sonarqube-check.sh http://localhost:9000
+```
+
+**Trivy not installed:**
+```bash
+# Install Trivy
+brew install aquasecurity/trivy/trivy  # macOS
+# or
+curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+```
+
+**Jenkins shared library not found:**
+- Ensure repository is cloned completely with submodules
+- Check `jenkins-shared-library/vars/` directory exists
 
 ## Adding New Acceptance Tests
 
