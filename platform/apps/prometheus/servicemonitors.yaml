@@ -97,6 +97,39 @@ spec:
           targetLabel: service_name
 ---
 # ============================================================================
+# ServiceMonitor for DevLake DORA Metrics
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: devlake-metrics
+  namespace: monitoring
+  labels:
+    app: devlake
+    component: dora-metrics
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: devlake
+      app.kubernetes.io/component: lake
+  namespaceSelector:
+    matchNames:
+      - fawkes
+      - fawkes-devlake
+  endpoints:
+    - port: http
+      interval: 60s
+      path: /metrics
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod_name
+        - sourceLabels: [__meta_kubernetes_service_name]
+          targetLabel: service_name
+---
+# ============================================================================
 # ServiceMonitor for SonarQube Metrics
 # ============================================================================
 apiVersion: monitoring.coreos.com/v1
