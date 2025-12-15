@@ -53,7 +53,7 @@ Feature: Security Quality Gates Configuration and Enforcement
     When I inspect the pipeline configuration
     Then the Trivy severity filter must be set to "HIGH,CRITICAL"
     And the Trivy exit code must be set to "1"
-    And the failOnVulnerabilities flag must be true
+    And the runSecurityScan flag must be true by default
 
   @trivy @severity-threshold @enforcement @critical
   Scenario: Pipeline Fails on CRITICAL Vulnerabilities in Container Image

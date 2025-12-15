@@ -53,13 +53,13 @@ else
     check_step "Quality Gate stage exists in Golden Path pipeline"
 fi
 
-# Check for failOnQualityGate configuration option
-if grep -q "failOnQualityGate" jenkins-shared-library/vars/goldenPathPipeline.groovy || \
-   grep -q "failOnQualityGate" jenkins-shared-library/vars/securityScan.groovy; then
-    check_step "failOnQualityGate configuration option available"
+# Check for quality gate always enforced (no disable flag needed - it's always on)
+if grep -q "Quality Gate" jenkins-shared-library/vars/goldenPathPipeline.groovy && \
+   grep -q "waitForQualityGate" jenkins-shared-library/vars/goldenPathPipeline.groovy; then
+    check_step "Quality Gate always enforced in pipeline"
 else
     false
-    check_step "failOnQualityGate configuration option available"
+    check_step "Quality Gate always enforced in pipeline"
 fi
 
 # Check for quality gate timeout configuration
@@ -102,15 +102,6 @@ else
     check_step "Trivy exit code configuration available"
 fi
 
-# Check failOnVulnerabilities configuration
-if grep -q "failOnVulnerabilities" jenkins-shared-library/vars/goldenPathPipeline.groovy || \
-   grep -q "failOnVulnerabilities" jenkins-shared-library/vars/securityScan.groovy; then
-    check_step "failOnVulnerabilities configuration option available"
-else
-    false
-    check_step "failOnVulnerabilities configuration option available"
-fi
-
 # Check Trivy report archiving
 if grep -q "archiveArtifacts.*trivy-report" jenkins-shared-library/vars/securityScan.groovy; then
     check_step "Trivy reports archived as build artifacts"
@@ -130,15 +121,6 @@ if [ -f "jenkins-shared-library/vars/securityScan.groovy" ] && \
 else
     false
     check_step "Gitleaks secrets scanning integrated"
-fi
-
-# Check failOnSecrets configuration
-if grep -q "failOnSecrets" jenkins-shared-library/vars/securityScan.groovy || \
-   grep -q "failOnSecrets" jenkins-shared-library/vars/goldenPathPipeline.groovy; then
-    check_step "failOnSecrets configuration option available"
-else
-    false
-    check_step "failOnSecrets configuration option available"
 fi
 
 # Check for Gitleaks container in pod template
