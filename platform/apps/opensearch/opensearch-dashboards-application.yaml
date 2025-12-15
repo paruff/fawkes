@@ -1,0 +1,162 @@
+# ============================================================================
+# FILE: platform/apps/opensearch/opensearch-dashboards-application.yaml
+# PURPOSE: ArgoCD Application for OpenSearch Dashboards deployment
+# FEATURES: Log visualization and search interface
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opensearch-dashboards
+  namespace: fawkes
+  labels:
+    app: opensearch-dashboards
+    component: observability
+    environment: dev
+    team: platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"  # Deploy after OpenSearch
+spec:
+  project: default
+
+  source:
+    repoURL: https://opensearch-project.github.io/helm-charts/
+    chart: opensearch-dashboards
+    targetRevision: "2.16.0"
+    helm:
+      valuesObject:
+        # OpenSearch Dashboards Version
+        opensearchDashboardsVersion: "2.11.1"
+
+        # Image Configuration
+        image:
+          repository: "opensearchproject/opensearch-dashboards"
+          tag: "2.11.1"
+          pullPolicy: "IfNotPresent"
+
+        # Replicas
+        replicaCount: 1
+
+        # Resources
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "1Gi"
+
+        # OpenSearch Connection
+        opensearchHosts: "http://opensearch-cluster-master:9200"
+        opensearchAccount:
+          secret: ""
+          keyPassphrase:
+            enabled: false
+
+        # Service Configuration
+        service:
+          type: ClusterIP
+          port: 5601
+
+        # Configuration
+        config:
+          opensearch_dashboards.yml: |
+            server.host: '0.0.0.0'
+            server.name: 'opensearch-dashboards'
+
+            # OpenSearch connection
+            opensearch.hosts: ['http://opensearch-cluster-master:9200']
+
+            # MVP: Disable security
+            opensearch.ssl.verificationMode: none
+            opensearch.username: ''
+            opensearch.password: ''
+            opensearch_security.auth.type: []
+
+            # Disable telemetry
+            telemetry.enabled: false
+            telemetry.optIn: false
+
+            # Session timeout
+            opensearch_security.session.ttl: 86400000
+            opensearch_security.session.keepalive: false
+
+        # Ingress
+        ingress:
+          enabled: true
+          ingressClassName: nginx
+          hosts:
+            - host: opensearch-dashboards.127.0.0.1.nip.io
+              paths:
+                - path: /
+                  backend:
+                    serviceName: opensearch-dashboards
+                    servicePort: 5601
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /
+
+        # Security Context
+        securityContext:
+          capabilities:
+            drop:
+              - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+
+        podSecurityContext:
+          fsGroup: 1000
+          runAsUser: 1000
+
+        # RBAC
+        rbac:
+          create: true
+
+        serviceAccount:
+          create: true
+          name: opensearch-dashboards
+
+        # Probes
+        livenessProbe:
+          httpGet:
+            path: /api/status
+            port: 5601
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 5
+
+        readinessProbe:
+          httpGet:
+            path: /api/status
+            port: 5601
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logging
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+
+  revisionHistoryLimit: 10
