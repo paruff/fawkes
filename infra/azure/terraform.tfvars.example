@@ -26,12 +26,17 @@ system_node_pool_vm_size = "Standard_B2ms"
 system_node_pool_count   = 1
 
 # User node pool (application workloads with auto-scaling)
-user_node_pool_vm_size    = "Standard_B2ms"
+user_node_pool_vm_size    = "Standard_D2s_v3"
 user_node_pool_min_count  = 1
-user_node_pool_max_count  = 3
+user_node_pool_max_count  = 10
+user_node_pool_enable_autoscaling = true   # Enable autoscaling in dev
+user_node_pool_node_count         = 1      # Used when autoscaling is disabled
+user_node_pool_priority           = "Spot"       # Use Spot for cost savings in dev
+user_node_pool_eviction_policy    = "Delete"     # Delete or Deallocate when evicted
+user_node_pool_spot_max_price     = -1           # -1 caps at on-demand price
 
-# Azure Container Registry (must be globally unique)
-acr_name = "fawkesacr"
+# Azure Container Registry (base name; an alphanumeric lowercase suffix is appended for global uniqueness)
+acr_name = "fawkesidpacr"
 acr_sku  = "Standard"
 
 # Azure Key Vault (must be globally unique, alphanumeric and hyphens only)

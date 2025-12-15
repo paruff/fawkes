@@ -595,6 +595,18 @@ tf_apply_dir() {
     export ARM_TENANT_ID="${ARM_TENANT_ID:-$(az account show --query tenantId -o tsv 2>/dev/null || true)}"
   fi
   terraform init -upgrade -input=false 2>&1 | tee terraform.log
+  # Attempt to import existing AKS user node pool into state to avoid conflicts
+  if command -v az >/dev/null 2>&1; then
+    local rg="${TF_VAR_resource_group_name:-fawkes-rg}"
+    local cluster="${TF_VAR_cluster_name:-fawkes-dev}"
+    local pool_name="user"
+    if az aks nodepool show -g "$rg" --cluster-name "$cluster" -n "$pool_name" >/dev/null 2>&1; then
+      echo "🔗 Importing existing AKS node pool '$pool_name' into Terraform state"
+      terraform import -input=false azurerm_kubernetes_cluster_node_pool.user \
+"/subscriptions/${ARM_SUBSCRIPTION_ID}/resourceGroups/${rg}/providers/Microsoft.ContainerService/managedClusters/${cluster}/agentPools/${pool_name}" \
+        2>&1 | tee -a terraform.log || true
+    fi
+  fi
   terraform plan -input=false -out=plan.tfplan 2>&1 | tee -a terraform.log
   local rc=0
   if [[ $DRY_RUN -eq 1 ]]; then
@@ -606,6 +618,37 @@ tf_apply_dir() {
   popd >/dev/null
   if [[ $rc -ne 0 ]]; then
     error_exit "Terraform apply failed for $dir; see $dir/terraform.log"
+  fi
+
+  # Export KUBECONFIG from Terraform outputs or fallback to az aks get-credentials
+  echo "🔑 Resolving kubeconfig for AKS access..."
+  local tfjson
+  tfjson=$(cd "$dir" && terraform output -json 2>/dev/null || true)
+  local kubeconfig_path
+  local rg_name cluster_name
+  rg_name="${TF_VAR_resource_group_name:-fawkes-rg}"
+  cluster_name="${TF_VAR_cluster_name:-fawkes-dev}"
+  if [[ -n "$tfjson" ]]; then
+    kubeconfig_path=$(echo "$tfjson" | jq -r '.kubeconfig_path.value // empty' 2>/dev/null || true)
+    if [[ -n "$kubeconfig_path" ]]; then
+      export KUBECONFIG="$dir/$kubeconfig_path"
+      echo "✅ KUBECONFIG set to $KUBECONFIG"
+    else
+      echo "[WARN] kubeconfig_path not found in Terraform outputs. Attempting az aks get-credentials..."
+      if command -v az >/dev/null 2>&1; then
+        az aks get-credentials --resource-group "$rg_name" --name "$cluster_name" --overwrite-existing || true
+      fi
+    fi
+  else
+    echo "[WARN] Terraform outputs not available. Attempting az aks get-credentials..."
+    if command -v az >/dev/null 2>&1; then
+      az aks get-credentials --resource-group "$rg_name" --name "$cluster_name" --overwrite-existing || true
+    fi
+  fi
+
+  # Quick connectivity check
+  if command -v kubectl >/dev/null 2>&1; then
+    kubectl get nodes || echo "[ERROR] Unable to reach cluster with current kubeconfig."
   fi
 }
 
