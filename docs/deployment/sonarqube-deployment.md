@@ -254,7 +254,7 @@ Or configure via UI:
 1. Navigate to **Quality Gates**
 2. Click **Create**
 3. Name: `Fawkes Gate`
-4. Add conditions as per [ADR-014](../adr/ADR-014%20sonarqube%20quality%20gates.md)
+4. Add conditions as per [ADR-014](../adr/ADR-014 sonarqube quality gates.md)
 5. Set as default
 
 ### Step 6: Test Integration with Jenkins
@@ -605,7 +605,7 @@ kubectl logs -n fawkes -l app=sonarqube -f
 - [SonarQube Documentation](https://docs.sonarqube.org/)
 - [SonarQube Helm Chart](https://artifacthub.io/packages/helm/sonarqube/sonarqube)
 - [CloudNativePG Documentation](https://cloudnative-pg.io/)
-- [Fawkes ADR-014: SonarQube Quality Gates](../adr/ADR-014%20sonarqube%20quality%20gates.md)
+- [Fawkes ADR-014: SonarQube Quality Gates](../adr/ADR-014 sonarqube quality gates.md)
 - [Quality Profiles Guide](../../platform/apps/sonarqube/quality-profiles.md)
 - [Jenkins Integration](../../platform/apps/jenkins/README.md)
 
