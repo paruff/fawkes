@@ -23,7 +23,7 @@
         "description": "Number of deployments to production per day/week. Elite: On-demand (multiple deploys per day)",
         "targets": [
           {
-            "expr": "sum(increase(dora_deployments_total[7d]))",
+            "expr": "sum(increase(dora_deployments_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[7d]))",
             "refId": "A",
             "datasource": {"type": "prometheus", "uid": "prometheus"}
           }
@@ -58,7 +58,7 @@
         "description": "Time from commit to production deployment. Elite: Less than one hour",
         "targets": [
           {
-            "expr": "avg(dora_lead_time_seconds) / 3600",
+            "expr": "avg(dora_lead_time_seconds{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / 3600",
             "refId": "A",
             "datasource": {"type": "prometheus", "uid": "prometheus"}
           }
@@ -93,7 +93,7 @@
         "description": "Percentage of deployments causing failures in production. Elite: 0-15%",
         "targets": [
           {
-            "expr": "sum(dora_deployment_failures_total) / sum(dora_deployments_total) * 100",
+            "expr": "sum(dora_deployment_failures_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / sum(dora_deployments_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) * 100",
             "refId": "A",
             "datasource": {"type": "prometheus", "uid": "prometheus"}
           }
@@ -128,7 +128,7 @@
         "description": "Time to restore service after an incident. Elite: Less than one hour",
         "targets": [
           {
-            "expr": "avg(dora_mttr_seconds) / 3600",
+            "expr": "avg(dora_mttr_seconds{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / 3600",
             "refId": "A",
             "datasource": {"type": "prometheus", "uid": "prometheus"}
           }
@@ -170,7 +170,7 @@
         "description": "Daily deployment count trend",
         "targets": [
           {
-            "expr": "sum(increase(dora_deployments_total[1d]))",
+            "expr": "sum(increase(dora_deployments_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[1d]))",
             "refId": "A",
             "legendFormat": "Deployments per day",
             "datasource": {"type": "prometheus", "uid": "prometheus"}
@@ -198,7 +198,7 @@
         "description": "Deployment frequency breakdown by service",
         "targets": [
           {
-            "expr": "sum by (service) (increase(dora_deployments_total[1d]))",
+            "expr": "sum by (service) (increase(dora_deployments_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[1d]))",
             "refId": "A",
             "legendFormat": "{{service}}",
             "datasource": {"type": "prometheus", "uid": "prometheus"}
@@ -232,7 +232,7 @@
         "description": "Average lead time from commit to production",
         "targets": [
           {
-            "expr": "avg(dora_lead_time_seconds) / 3600",
+            "expr": "avg(dora_lead_time_seconds{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / 3600",
             "refId": "A",
             "legendFormat": "Avg Lead Time",
             "datasource": {"type": "prometheus", "uid": "prometheus"}
@@ -266,19 +266,19 @@
         "description": "Lead time percentiles over time",
         "targets": [
           {
-            "expr": "histogram_quantile(0.50, sum(rate(dora_lead_time_seconds_bucket[5m])) by (le)) / 3600",
+            "expr": "histogram_quantile(0.50, sum(rate(dora_lead_time_seconds_bucket{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[5m])) by (le)) / 3600",
             "refId": "A",
             "legendFormat": "P50",
             "datasource": {"type": "prometheus", "uid": "prometheus"}
           },
           {
-            "expr": "histogram_quantile(0.95, sum(rate(dora_lead_time_seconds_bucket[5m])) by (le)) / 3600",
+            "expr": "histogram_quantile(0.95, sum(rate(dora_lead_time_seconds_bucket{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[5m])) by (le)) / 3600",
             "refId": "B",
             "legendFormat": "P95",
             "datasource": {"type": "prometheus", "uid": "prometheus"}
           },
           {
-            "expr": "histogram_quantile(0.99, sum(rate(dora_lead_time_seconds_bucket[5m])) by (le)) / 3600",
+            "expr": "histogram_quantile(0.99, sum(rate(dora_lead_time_seconds_bucket{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[5m])) by (le)) / 3600",
             "refId": "C",
             "legendFormat": "P99",
             "datasource": {"type": "prometheus", "uid": "prometheus"}
@@ -311,7 +311,7 @@
         "description": "Change failure rate trend",
         "targets": [
           {
-            "expr": "sum(increase(dora_deployment_failures_total[1d])) / sum(increase(dora_deployments_total[1d])) * 100",
+            "expr": "sum(increase(dora_deployment_failures_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[1d])) / sum(increase(dora_deployments_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[1d])) * 100",
             "refId": "A",
             "legendFormat": "Failure Rate",
             "datasource": {"type": "prometheus", "uid": "prometheus"}
@@ -345,7 +345,7 @@
         "description": "Distribution of deployment failures by service",
         "targets": [
           {
-            "expr": "sum by (service) (increase(dora_deployment_failures_total[7d]))",
+            "expr": "sum by (service) (increase(dora_deployment_failures_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[7d]))",
             "refId": "A",
             "legendFormat": "{{service}}",
             "datasource": {"type": "prometheus", "uid": "prometheus"}
@@ -367,7 +367,7 @@
         "description": "Mean time to restore service after incident",
         "targets": [
           {
-            "expr": "avg(dora_mttr_seconds) / 60",
+            "expr": "avg(dora_mttr_seconds{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / 60",
             "refId": "A",
             "legendFormat": "Avg MTTR",
             "datasource": {"type": "prometheus", "uid": "prometheus"}
@@ -401,7 +401,7 @@
         "description": "Number of incidents over time",
         "targets": [
           {
-            "expr": "sum(increase(dora_incidents_total[1d]))",
+            "expr": "sum(increase(dora_incidents_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[1d]))",
             "refId": "A",
             "legendFormat": "Incidents per day",
             "datasource": {"type": "prometheus", "uid": "prometheus"}
@@ -421,16 +421,103 @@
       },
       {
         "id": 18,
-        "title": "Performance Category",
+        "title": "DORA Benchmark Comparison",
         "type": "row",
         "gridPos": {"x": 0, "y": 43, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 20,
+        "title": "Performance vs Benchmarks",
+        "type": "table",
+        "gridPos": {"x": 0, "y": 44, "w": 24, "h": 8},
+        "description": "Comparison of current metrics against DORA performance benchmarks",
+        "targets": [
+          {
+            "expr": "sum(increase(dora_deployments_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[7d])) / 7",
+            "refId": "A",
+            "legendFormat": "Deployment Frequency",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "instant": true
+          },
+          {
+            "expr": "avg(dora_lead_time_seconds{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / 3600",
+            "refId": "B",
+            "legendFormat": "Lead Time",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "instant": true
+          },
+          {
+            "expr": "sum(dora_deployment_failures_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / sum(dora_deployments_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) * 100",
+            "refId": "C",
+            "legendFormat": "Change Failure Rate",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "instant": true
+          },
+          {
+            "expr": "avg(dora_mttr_seconds{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / 3600",
+            "refId": "D",
+            "legendFormat": "MTTR",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "instant": true
+          }
+        ],
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "renameByName": {
+                "Metric": "DORA Metric",
+                "Value": "Current Value"
+              }
+            }
+          }
+        ],
+        "options": {
+          "showHeader": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "align": "center",
+              "width": 200
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {"id": "byName", "options": "Metric"},
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 200
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": 21,
+        "title": "Benchmark Reference",
+        "type": "text",
+        "gridPos": {"x": 0, "y": 52, "w": 24, "h": 6},
+        "options": {
+          "mode": "markdown",
+          "content": "## DORA Performance Benchmarks\n\nBased on the 2023 State of DevOps Report, performance levels are classified as:\n\n| Metric | Elite | High | Medium | Low |\n|--------|-------|------|--------|-----|\n| **Deployment Frequency** | Multiple per day (>1/day) | Once per day to once per week | Once per week to once per month | < Once per month |\n| **Lead Time for Changes** | < 1 hour | 1 hour to 1 day | 1 day to 1 week | > 1 week |\n| **Change Failure Rate** | 0-15% | 16-30% | 31-45% | > 45% |\n| **Mean Time to Restore** | < 1 hour | 1 hour to 1 day | 1 day to 1 week | > 1 week |\n\n### Color Coding:\n- 🟢 **Green**: Elite/High performer\n- 🟡 **Yellow**: Medium performer\n- 🔴 **Red**: Low performer\n\n### How to Improve:\n1. **Deployment Frequency**: Automate deployment pipelines, reduce batch sizes, implement feature flags\n2. **Lead Time**: Optimize CI/CD pipeline, improve code review speed, automate testing\n3. **Change Failure Rate**: Enhance testing coverage, implement progressive delivery, improve monitoring\n4. **MTTR**: Improve observability, automate rollbacks, practice incident response\n\n### Resources:\n- [DORA Metrics Implementation Playbook](../../../docs/playbooks/dora-metrics-implementation.md)\n- [DORA Metrics Guide](../../../docs/observability/dora-metrics-guide.md)"
+        }
+      },
+      {
+        "id": 18,
+        "title": "Performance Category",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 58, "w": 24, "h": 1},
         "collapsed": false
       },
       {
         "id": 19,
         "title": "DORA Performance Level",
         "type": "text",
-        "gridPos": {"x": 0, "y": 44, "w": 24, "h": 6},
+        "gridPos": {"x": 0, "y": 59, "w": 24, "h": 6},
         "options": {
           "mode": "markdown",
           "content": "## DORA Performance Classification\n\n**Note**: This dashboard shows placeholder metrics. Configure the DORA metrics collector to populate actual data.\n\n### Elite Performance Targets:\n- **Deployment Frequency**: On-demand (multiple deploys per day)\n- **Lead Time for Changes**: Less than one hour\n- **Change Failure Rate**: 0-15%\n- **Mean Time to Restore**: Less than one hour\n\n### Implementation Status:\n🔄 **Metrics collection pending** - Refer to [DORA Metrics Implementation Playbook](../../../docs/playbooks/dora-metrics-implementation.md) for setup instructions.\n\n### Next Steps:\n1. Configure deployment event collection from ArgoCD\n2. Configure Jenkins pipeline metrics integration\n3. Set up incident tracking for MTTR\n4. Enable metrics export to Prometheus\n5. Wait 2-4 weeks for baseline data collection\n6. Analyze trends and identify improvement opportunities"
@@ -459,9 +546,23 @@
           "datasource": {"type": "prometheus", "uid": "prometheus"}
         },
         {
+          "name": "team",
+          "type": "query",
+          "query": "label_values(dora_deployments_total{environment=\"$environment\"}, team)",
+          "multi": true,
+          "includeAll": true,
+          "current": {
+            "value": "All",
+            "text": "All"
+          },
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "label": "Team",
+          "description": "Filter metrics by team"
+        },
+        {
           "name": "service",
           "type": "query",
-          "query": "label_values(dora_deployments_total, service)",
+          "query": "label_values(dora_deployments_total{environment=\"$environment\",team=~\"$team\"}, service)",
           "multi": true,
           "includeAll": true,
           "datasource": {"type": "prometheus", "uid": "prometheus"}
@@ -469,7 +570,7 @@
       ]
     },
     "time": {
-      "from": "now-7d",
+      "from": "now-30d",
       "to": "now"
     },
     "timepicker": {
