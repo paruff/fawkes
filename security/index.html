@@ -3869,10 +3869,14 @@
 <h2 id="secrets-management">Secrets Management</h2>
 <ul>
 <li><strong>Never commit secrets to version control.</strong></li>
-<li>Use secret management tools (e.g., AWS Secrets Manager, Azure Key Vault, GCP Secret Manager, or Kubernetes Secrets).</li>
+<li>Use secret management tools (e.g., HashiCorp Vault, AWS Secrets Manager, Azure Key Vault, GCP Secret Manager, or Kubernetes Secrets).</li>
 <li>Store only encrypted secrets in infrastructure code; inject secrets at deploy time.</li>
 <li>Add secret files and templates to <code>.gitignore</code>.</li>
 </ul>
+<p><strong>Automated Secret Detection:</strong>
+- Fawkes uses <strong>Gitleaks</strong> and <strong>detect-secrets</strong> in pre-commit hooks and CI/CD pipelines
+- Pipelines <strong>fail immediately</strong> if secrets are detected
+- See the <a href="../how-to/security/secrets-management/">Secrets Management Guide</a> for detailed information</p>
 <hr />
 <h2 id="identity-and-access-management-iam">Identity and Access Management (IAM)</h2>
 <ul>
@@ -3913,6 +3917,7 @@
 <li>Use environment variables or secret stores for pipeline secrets.</li>
 <li>Limit pipeline permissions to only required resources.</li>
 <li>Scan code and dependencies for vulnerabilities on every build.</li>
+<li><strong>Automated secrets scanning</strong> with Gitleaks in every pipeline run</li>
 </ul>
 <hr />
 <h2 id="monitoring-and-incident-response">Monitoring and Incident Response</h2>
@@ -3937,91 +3942,7 @@
 <li><a href="https://kubernetes.io/docs/concepts/security/">CNCF Kubernetes Security Best Practices</a></li>
 <li><a href="https://owasp.org/www-project-top-ten/">OWASP Top Ten</a></li>
 <li><a href="https://aws.amazon.com/security/, https://docs.microsoft.com/en-us/azure/security/, https://cloud.google.com/security">Cloud Provider Security Docs</a></li>
-</ul>
-<hr />
-<p>```<!-- filepath: /Users/philruff/projects/github/paruff/fawkes/docs/security.md --></p>
-<h1 id="security_1">Security</h1>
-<p>This document outlines the security model, practices, and recommendations for the Fawkes Internal Developer Platform (IDP).</p>
-<hr />
-<h2 id="principles_1">Principles</h2>
-<ul>
-<li><strong>Least Privilege:</strong> All components and users are granted only the permissions they need.</li>
-<li><strong>Separation of Duties:</strong> Infrastructure, platform, and application responsibilities are separated.</li>
-<li><strong>Defense in Depth:</strong> Multiple layers of security controls are implemented across the stack.</li>
-<li><strong>Transparency:</strong> All security controls and configurations are documented and open for review.</li>
-</ul>
-<hr />
-<h2 id="secrets-management_1">Secrets Management</h2>
-<ul>
-<li><strong>Never commit secrets to version control.</strong></li>
-<li>Use secret management tools (e.g., AWS Secrets Manager, Azure Key Vault, GCP Secret Manager, or Kubernetes Secrets).</li>
-<li>Store only encrypted secrets in infrastructure code; inject secrets at deploy time.</li>
-<li>Add secret files and templates to <code>.gitignore</code>.</li>
-</ul>
-<hr />
-<h2 id="identity-and-access-management-iam_1">Identity and Access Management (IAM)</h2>
-<ul>
-<li>Use cloud-native IAM (AWS IAM, Azure AD, GCP IAM) for resource access control.</li>
-<li>Use Kubernetes RBAC for fine-grained access within clusters.</li>
-<li>Rotate credentials and keys regularly.</li>
-<li>Use service accounts for automation and CI/CD, with minimal permissions.</li>
-</ul>
-<hr />
-<h2 id="network-security_1">Network Security</h2>
-<ul>
-<li>Deploy resources in private subnets where possible.</li>
-<li>Restrict public ingress using security groups, firewalls, and Kubernetes network policies.</li>
-<li>Use TLS/SSL for all service endpoints.</li>
-<li>Enable logging and monitoring for network traffic.</li>
-</ul>
-<hr />
-<h2 id="platform-security_1">Platform Security</h2>
-<ul>
-<li>Enable audit logging for all infrastructure and platform components.</li>
-<li>Regularly update dependencies and base images to address vulnerabilities.</li>
-<li>Use vulnerability scanning tools (e.g., Trivy, Gitleaks) in CI/CD pipelines.</li>
-<li>Enforce code reviews and automated tests for all changes.</li>
-</ul>
-<hr />
-<h2 id="kubernetes-security_1">Kubernetes Security</h2>
-<ul>
-<li>Use namespaces to isolate workloads.</li>
-<li>Apply Pod Security Standards (PSS) or PodSecurityPolicies.</li>
-<li>Limit container privileges (no root, no privilege escalation).</li>
-<li>Use network policies to restrict pod-to-pod communication.</li>
-<li>Scan container images for vulnerabilities before deployment.</li>
-</ul>
-<hr />
-<h2 id="cicd-security_1">CI/CD Security</h2>
-<ul>
-<li>Store CI/CD credentials securely (never in code).</li>
-<li>Use environment variables or secret stores for pipeline secrets.</li>
-<li>Limit pipeline permissions to only required resources.</li>
-<li>Scan code and dependencies for vulnerabilities on every build.</li>
-</ul>
-<hr />
-<h2 id="monitoring-and-incident-response_1">Monitoring and Incident Response</h2>
-<ul>
-<li>Enable and monitor audit logs for all cloud and platform resources.</li>
-<li>Set up alerts for suspicious activity or failed authentication attempts.</li>
-<li>Document incident response procedures and regularly review them.</li>
-</ul>
-<hr />
-<h2 id="user-responsibilities_1">User Responsibilities</h2>
-<ul>
-<li>Use strong, unique passwords and enable MFA where possible.</li>
-<li>Report any suspected security issues to the project maintainers.</li>
-<li>Follow the <a href="../development/">contributing guidelines</a> for secure code contributions.</li>
-</ul>
-<hr />
-<h2 id="reporting-vulnerabilities_1">Reporting Vulnerabilities</h2>
-<p>If you discover a security vulnerability, please report it responsibly by opening a private issue or contacting the maintainers directly.</p>
-<hr />
-<h2 id="references_1">References</h2>
-<ul>
-<li><a href="https://kubernetes.io/docs/concepts/security/">CNCF Kubernetes Security Best Practices</a></li>
-<li><a href="https://owasp.org/www-project-top-ten/">OWASP Top Ten</a></li>
-<li><a href="https://aws.amazon.com/security/, https://docs.microsoft.com/en-us/azure/security/, https://cloud.google.com/security">Cloud Provider Security Docs</a></li>
+<li><a href="../how-to/security/secrets-management/">Fawkes Secrets Management Guide</a></li>
 </ul>
 <hr />
 
