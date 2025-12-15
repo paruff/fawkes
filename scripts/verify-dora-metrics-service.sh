@@ -112,20 +112,23 @@ print_header "2. Checking Database Schema"
 if kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/component=mysql -o jsonpath='{.items[0].status.phase}' | grep -q "Running"; then
     print_success "MySQL pod is running"
     
-    # Check if database exists
-    DB_CHECK=$(kubectl exec -n "$DEVLAKE_NAMESPACE" -it \
-        $(kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/component=mysql -o jsonpath='{.items[0].metadata.name}') \
-        -- mysql -u root -e "SHOW DATABASES LIKE 'lake';" 2>/dev/null | grep -c "lake" || echo "0")
+    # Get MySQL root password
+    MYSQL_ROOT_PASSWORD=$(kubectl get secret devlake-db -n "$DEVLAKE_NAMESPACE" -o jsonpath='{.data.mysql-root-password}' 2>/dev/null | base64 -d || echo "")
+    MYSQL_POD=$(kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/component=mysql -o jsonpath='{.items[0].metadata.name}')
     
-    if [ "$DB_CHECK" -gt 0 ]; then
-        print_success "Database 'lake' exists"
+    if [ -n "$MYSQL_ROOT_PASSWORD" ] && [ -n "$MYSQL_POD" ]; then
+        # Check if database exists
+        DB_CHECK=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$MYSQL_POD" -- \
+            mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "SHOW DATABASES LIKE 'lake';" 2>/dev/null | grep -c "lake" || echo "0")
         
-        # Check key tables
-        TABLES=("deployments" "commits" "incidents" "cicd_deployments" "project_metric_settings")
-        for table in "${TABLES[@]}"; do
-            TABLE_CHECK=$(kubectl exec -n "$DEVLAKE_NAMESPACE" -it \
-                $(kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/component=mysql -o jsonpath='{.items[0].metadata.name}') \
-                -- mysql -u root lake -e "SHOW TABLES LIKE '$table';" 2>/dev/null | grep -c "$table" || echo "0")
+        if [ "$DB_CHECK" -gt 0 ]; then
+            print_success "Database 'lake' exists"
+            
+            # Check key tables
+            TABLES=("deployments" "commits" "incidents" "cicd_deployments" "project_metric_settings")
+            for table in "${TABLES[@]}"; do
+                TABLE_CHECK=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$MYSQL_POD" -- \
+                    mysql -u root -p"${MYSQL_ROOT_PASSWORD}" lake -e "SHOW TABLES LIKE '$table';" 2>/dev/null | grep -c "$table" || echo "0")
             
             if [ "$TABLE_CHECK" -gt 0 ]; then
                 print_success "Table '$table' exists"
@@ -135,6 +138,10 @@ if kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/component=mysql
         done
     else
         print_failure "Database 'lake' does not exist"
+    fi
+    else
+        print_warning "MySQL credentials not available, skipping database schema checks"
+        echo "  To check manually: kubectl exec -n $DEVLAKE_NAMESPACE \$MYSQL_POD -- mysql -u root -p"
     fi
 else
     print_failure "MySQL pod is not running, skipping database checks"
