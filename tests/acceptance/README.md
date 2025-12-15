@@ -14,7 +14,7 @@ This directory contains acceptance test runners for Fawkes platform validation.
 | AT-E1-004 | CI/CD | Jenkins pipelines build/test/deploy | ✅ Implemented |
 | AT-E1-005 | Security | DevSecOps scanning integrated | ✅ Implemented |
 | AT-E1-006 | Observability | Prometheus/Grafana stack deployed | 🚧 Pending |
-| AT-E1-007 | Metrics | DORA metrics automated (4 key metrics) | 🚧 Pending |
+| AT-E1-007 | Metrics | DORA metrics automated (4 key metrics) | ✅ Implemented |
 | AT-E1-008 | Templates | 3 golden paths work end-to-end | 🚧 Pending |
 | AT-E1-009 | Registry | Harbor with security scanning | ✅ Implemented |
 | AT-E1-010 | Performance | Resource usage <70% on cluster | 🚧 Pending |
@@ -441,6 +441,123 @@ curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/inst
 **Jenkins shared library not found:**
 - Ensure repository is cloned completely with submodules
 - Check `jenkins-shared-library/vars/` directory exists
+
+## AT-E1-007: DORA Metrics
+
+### Acceptance Criteria
+
+- [x] DORA metrics service deployed (DevLake microservice)
+- [x] Webhook receivers configured for:
+  * Git commits (GitHub)
+  * CI builds (Jenkins)
+  * Deployments (ArgoCD)
+  * Incidents (synthetic/manual)
+- [x] All 4 key metrics calculated and exposed:
+  * Deployment Frequency (per day)
+  * Lead Time for Changes (hours)
+  * Change Failure Rate (%)
+  * Time to Restore Service (hours)
+- [x] Grafana DORA dashboard deployed
+- [x] Historical data stored (PostgreSQL/MySQL)
+- [x] Metrics updated in real-time (<1 min lag)
+- [x] Benchmark comparison (elite/high/medium/low)
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e1-007.sh`)
+   - Validates DevLake deployment and health
+   - Checks all components (lake, UI, MySQL, Grafana)
+   - Verifies database schema and tables
+   - Tests API endpoints (health, metrics, GraphQL)
+   - Validates webhook receiver configuration
+   - Checks all 4 DORA metrics in dashboard
+   - Verifies Grafana deployment and health
+   - Validates Prometheus ServiceMonitor integration
+   - Checks benchmark comparison functionality
+   - Generates JSON test report
+
+2. **Integration Tests** (`tests/integration/validate-dora-dashboard.sh`)
+   - Validates DORA dashboard JSON structure
+   - Checks presence of all 4 key metrics
+   - Verifies team-level filtering
+   - Tests 30-day trending configuration
+   - Validates benchmark comparison panels
+   - Checks environment and service filtering
+
+3. **Webhook Tests** (`scripts/test-dora-webhooks.sh`)
+   - Tests DevLake service accessibility
+   - Validates webhook endpoints
+   - Checks GitHub, Jenkins, ArgoCD webhook configuration
+   - Tests incident webhook receiver
+
+4. **BDD Tests** (`tests/bdd/features/`)
+   - `devlake-dora-metrics.feature` - Complete DORA metrics validation
+   - `dora-webhooks.feature` - Webhook configuration and integration
+
+### Test Reports
+
+Test reports are generated in JSON format at:
+```
+reports/at-e1-007-validation-YYYYMMDD-HHMMSS.json
+```
+
+### Validation Commands
+
+Manual validation commands from the issue:
+
+```bash
+# Check DevLake API and metrics
+curl -f http://devlake.127.0.0.1.nip.io/api/ping
+
+# Verify all metrics are present (must return 0 null values)
+curl -s http://devlake.127.0.0.1.nip.io/api/v1/metrics | \
+  jq '.deployment_frequency, .lead_time, .cfr, .mttr' | \
+  grep -c null  # Must be 0 (all metrics present)
+```
+
+### Running the Tests
+
+```bash
+# Run via test runner
+./tests/acceptance/run-test.sh AT-E1-007
+
+# Run via Makefile
+make validate-at-e1-007
+
+# Run individual components
+./scripts/validate-at-e1-007.sh
+./tests/integration/validate-dora-dashboard.sh
+./scripts/test-dora-webhooks.sh
+```
+
+### Prerequisites
+
+- kubectl with cluster access
+- DevLake deployed in cluster
+- Grafana dashboard configured
+- curl (for API testing)
+- jq (optional, for JSON processing)
+
+### Troubleshooting
+
+**DevLake API not accessible:**
+```bash
+# Port forward to DevLake
+kubectl port-forward -n fawkes-devlake svc/devlake-lake 8080:8080
+
+# Run test with port-forwarded URL
+./scripts/validate-at-e1-007.sh --devlake-url http://localhost:8080
+```
+
+**Database schema missing:**
+- Check DevLake logs for migration errors
+- Verify MySQL pod is running and accessible
+- Check database initialization jobs
+
+**Grafana dashboard not found:**
+- Verify Grafana pod is running
+- Check ConfigMap for dashboard definitions
+- Ensure dashboard JSON is valid
 
 ## Adding New Acceptance Tests
 
