@@ -54,7 +54,8 @@ data:
             "server": "{{.app.spec.destination.server}}",
             "repo_url": "{{.app.spec.source.repoURL}}",
             "environment": "{{index .app.metadata.labels \"environment\"}}",
-            "service_name": "{{index .app.metadata.labels \"app.kubernetes.io/name\"}}",
+            "service_name":
+              "{{index .app.metadata.labels \"app.kubernetes.io/name\"}}",
             "timestamp": "{{.app.status.operationState.finishedAt}}"
           }
 
@@ -83,7 +84,8 @@ data:
             "server": "{{.app.spec.destination.server}}",
             "repo_url": "{{.app.spec.source.repoURL}}",
             "environment": "{{index .app.metadata.labels \"environment\"}}",
-            "service_name": "{{index .app.metadata.labels \"app.kubernetes.io/name\"}}",
+            "service_name":
+              "{{index .app.metadata.labels \"app.kubernetes.io/name\"}}",
             "timestamp": "{{.app.status.operationState.finishedAt}}"
           }
 
@@ -104,7 +106,8 @@ data:
             "previous_health": "Healthy",
             "current_health": "{{.app.status.health.status}}",
             "health_message": "{{.app.status.health.message}}",
-            "service_name": "{{index .app.metadata.labels \"app.kubernetes.io/name\"}}",
+            "service_name":
+              "{{index .app.metadata.labels \"app.kubernetes.io/name\"}}",
             "environment": "{{index .app.metadata.labels \"environment\"}}",
             "timestamp": "{{time.Now}}"
           }
@@ -113,7 +116,7 @@ data:
   # Triggers Configuration
   # Define when to send notifications
   # ============================================================
-  
+
   # Trigger on successful sync
   trigger.on-sync-succeeded: |
     - when: app.status.operationState.phase in ['Succeeded']
