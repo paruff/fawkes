@@ -97,16 +97,28 @@ echo "-------------------------------------------------"
 OTEL_POD=$(kubectl get pods -n "$MONITORING_NAMESPACE" -l app.kubernetes.io/name=opentelemetry-collector -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
 
 if [ -n "$OTEL_POD" ]; then
-  if kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- wget -qO- http://localhost:13133 &>/dev/null; then
-    check_pass "OpenTelemetry Collector health endpoint is accessible"
+  # Try curl first, fallback to wget if not available
+  if kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- sh -c "command -v curl" &>/dev/null; then
+    HTTP_CLIENT="curl -s"
+  elif kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- sh -c "command -v wget" &>/dev/null; then
+    HTTP_CLIENT="wget -qO-"
   else
-    check_fail "OpenTelemetry Collector health endpoint is not accessible"
+    check_fail "Neither curl nor wget available in OpenTelemetry Collector pod"
+    HTTP_CLIENT=""
   fi
-  
-  if kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- wget -qO- http://localhost:55679/debug/servicez &>/dev/null; then
-    check_pass "OpenTelemetry Collector zpages endpoint is accessible"
-  else
-    check_fail "OpenTelemetry Collector zpages endpoint is not accessible"
+
+  if [ -n "$HTTP_CLIENT" ]; then
+    if kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- sh -c "$HTTP_CLIENT http://localhost:13133" &>/dev/null; then
+      check_pass "OpenTelemetry Collector health endpoint is accessible"
+    else
+      check_fail "OpenTelemetry Collector health endpoint is not accessible"
+    fi
+    
+    if kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- sh -c "$HTTP_CLIENT http://localhost:55679/debug/servicez" &>/dev/null; then
+      check_pass "OpenTelemetry Collector zpages endpoint is accessible"
+    else
+      check_fail "OpenTelemetry Collector zpages endpoint is not accessible"
+    fi
   fi
 else
   check_fail "No OpenTelemetry Collector pod found"
