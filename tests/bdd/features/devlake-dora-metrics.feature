@@ -120,6 +120,24 @@ Feature: DevLake DORA Metrics Visualization
     And metrics can be filtered by team and time range
     And drill-down links are available for each metric
 
+  @grafana @dashboards @team-filtering
+  Scenario: Team-level Filtering in DORA Dashboard
+    Given the DevLake Grafana dashboards are deployed
+    And multiple teams have deployment data
+    When a developer selects a specific team filter
+    Then only metrics for the selected team are displayed
+    And service dropdown is filtered to show only services from that team
+    And 30-day trending data is visible by default
+
+  @grafana @dashboards @benchmarks
+  Scenario: DORA Benchmark Comparison
+    Given the DevLake Grafana dashboards are deployed
+    When a developer views the DORA dashboard
+    Then a benchmark comparison panel is visible
+    And current metric values are compared against DORA performance levels
+    And Elite, High, Medium, and Low benchmark thresholds are displayed
+    And the dashboard shows performance improvement recommendations
+
   @backstage @integration
   Scenario: Backstage Developer Portal Integration
     Given the DevLake plugin is configured in Backstage
