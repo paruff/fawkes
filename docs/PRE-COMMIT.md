@@ -66,10 +66,21 @@ Our pre-commit hooks validate the following areas:
 - ✅ Platform component configuration
 
 ### 🔒 Security
-- ✅ Gitleaks (secret detection)
-- ✅ detect-secrets (secret baseline)
-- ✅ Private key detection
-- ✅ tfsec (Terraform security)
+- ✅ **Gitleaks** (comprehensive secret detection)
+  - Detects 100+ types of secrets (API keys, passwords, tokens)
+  - Configurable via `.gitleaks.toml`
+  - Fast and accurate scanning
+- ✅ **detect-secrets** (baseline-based detection)
+  - Manages known false positives via `.secrets.baseline`
+  - Complementary to Gitleaks
+- ✅ **Private key detection** (SSH keys, certificates)
+  - Prevents accidental commit of private keys
+- ✅ **tfsec** (Terraform security scanning)
+  - Infrastructure security best practices
+
+**⚠️ Pipeline Integration**: Secrets scanning also runs in Jenkins CI/CD pipelines. If secrets are detected, the pipeline **fails immediately** to prevent deployment of vulnerable code.
+
+**📖 Learn More**: See [Secrets Management Guide](how-to/security/secrets-management.md) for detailed information on handling secrets securely.
 
 ### 🐍 Python
 - ✅ Black formatting
