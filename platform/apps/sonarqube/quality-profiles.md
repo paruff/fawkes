@@ -233,7 +233,7 @@ Quality Profiles work with Quality Gates. The default Fawkes Quality Gate requir
 | New Duplicated Lines (%) | Is Greater Than | 3% |
 | New Maintainability Rating | Is Worse Than | A |
 
-See [ADR-014](../../../docs/adr/ADR-014%20sonarqube%20quality%20gates.md) for details.
+See [ADR-014](../../../docs/adr/ADR-014 sonarqube quality gates.md) for details.
 
 ## Maintenance
 
@@ -297,4 +297,4 @@ curl -u admin:${SONAR_PASSWORD} \
 - [SonarQube Quality Profiles Documentation](https://docs.sonarqube.org/latest/instance-administration/quality-profiles/)
 - [SonarQube Rules](https://rules.sonarsource.com/)
 - [SonarQube Web API](https://docs.sonarqube.org/latest/extend/web-api/)
-- [Fawkes ADR-014](../../../docs/adr/ADR-014%20sonarqube%20quality%20gates.md)
+- [Fawkes ADR-014](../../../docs/adr/ADR-014 sonarqube quality gates.md)
