@@ -60,7 +60,7 @@ app.use((req, res, next) => {
 // Routes
 app.get('/', (req, res) => {
   res.json({
-    service: '${{ values.name }}',
+    service: 'sample-nodejs-app',
     status: 'running',
     version: '0.1.0'
   });
@@ -69,7 +69,7 @@ app.get('/', (req, res) => {
 app.get('/health', (req, res) => {
   res.json({
     status: 'UP',
-    service: '${{ values.name }}'
+    service: 'sample-nodejs-app'
   });
 });
 
@@ -77,14 +77,14 @@ app.get('/ready', (req, res) => {
   // Add any readiness checks here (database connection, etc.)
   res.json({
     status: 'READY',
-    service: '${{ values.name }}'
+    service: 'sample-nodejs-app'
   });
 });
 
 app.get('/info', (req, res) => {
   res.json({
-    name: '${{ values.name }}',
-    description: '${{ values.description }}',
+    name: 'sample-nodejs-app',
+    description: 'Sample Node.js Express application for testing',
     version: '0.1.0'
   });
 });
@@ -103,7 +103,7 @@ app.use((err, req, res, next) => {
 // Start server
 if (require.main === module) {
   app.listen(port, () => {
-    logger.info(`${{ values.name }} listening on port ${port}`);
+    logger.info(`sample-nodejs-app listening on port ${port}`);
   });
 }
 

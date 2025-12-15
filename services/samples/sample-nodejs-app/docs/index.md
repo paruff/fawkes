@@ -1,8 +1,8 @@
-# ${{ values.name }}
+# sample-nodejs-app
 
 ## Overview
 
-${{ values.description }}
+Sample Node.js Express application for testing
 
 ## Quick Start
 
@@ -24,7 +24,7 @@ npm install
 npm start
 ```
 
-The service will be available at `http://localhost:${{ values.port }}`.
+The service will be available at `http://localhost:3000`.
 
 ## Architecture
 

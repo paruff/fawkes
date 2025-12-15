@@ -1,4 +1,4 @@
-# ${{ values.name }}
+# sample-python-app
 
 Sample Python FastAPI application for testing
 
@@ -17,7 +17,7 @@ Sample Python FastAPI application for testing
 pip install -r requirements.txt
 
 # Run locally
-uvicorn app.main:app --reload --port ${{ values.port }}
+uvicorn app.main:app --reload --port 8000
 
 # Run tests
 pytest tests/ -v
@@ -30,8 +30,8 @@ flake8 app/ tests/
 ### API Documentation
 
 Once running, visit:
-- Swagger UI: http://localhost:${{ values.port }}/docs
-- ReDoc: http://localhost:${{ values.port }}/redoc
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
 
 ## Deployment
 
@@ -39,14 +39,14 @@ This service is deployed via GitOps using ArgoCD. Push to main branch to trigger
 
 ```bash
 # Check deployment status
-argocd app get ${{ values.name }}
+argocd app get sample-python-app
 
 # Manual sync
-argocd app sync ${{ values.name }}
+argocd app sync sample-python-app
 ```
 
 ## Monitoring
 
-- Metrics: https://grafana.fawkes.idp/d/${{ values.name }}
+- Metrics: https://grafana.fawkes.idp/d/sample-python-app
 - Logs: https://opensearch.fawkes.idp
 - Traces: https://grafana.fawkes.idp/explore?ds=tempo

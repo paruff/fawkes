@@ -2,9 +2,9 @@
 
 ## Base URL
 
-- **Local Development**: `http://localhost:${{ values.port }}`
-- **Development**: `https://${{ values.name }}.dev.fawkes.idp`
-- **Production**: `https://${{ values.name }}.fawkes.idp`
+- **Local Development**: `http://localhost:3000`
+- **Development**: `https://sample-nodejs-app.dev.fawkes.idp`
+- **Production**: `https://sample-nodejs-app.fawkes.idp`
 
 ## Authentication
 
@@ -48,7 +48,7 @@ Welcome endpoint.
 
 ```json
 {
-  "message": "Welcome to ${{ values.name }}",
+  "message": "Welcome to sample-nodejs-app",
   "version": "1.0.0"
 }
 ```
@@ -57,9 +57,9 @@ Welcome endpoint.
 
 Interactive API documentation is available at:
 
-- Swagger UI: `http://localhost:${{ values.port }}/docs`
-- ReDoc: `http://localhost:${{ values.port }}/redoc`
-- OpenAPI JSON: `http://localhost:${{ values.port }}/openapi.json`
+- Swagger UI: `http://localhost:3000/docs`
+- ReDoc: `http://localhost:3000/redoc`
+- OpenAPI JSON: `http://localhost:3000/openapi.json`
 
 ## Error Responses
 

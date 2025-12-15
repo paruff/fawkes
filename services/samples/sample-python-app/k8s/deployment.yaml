@@ -19,7 +19,7 @@ spec:
         team: platform-team
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "${{ values.port }}"
+        prometheus.io/port: "8000"
         prometheus.io/path: "/metrics"
     spec:
       automountServiceAccountToken: false
@@ -36,7 +36,7 @@ spec:
           
           ports:
             - name: http
-              containerPort: ${{ values.port }}
+              containerPort: 8000
               protocol: TCP
           
           env:
