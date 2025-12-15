@@ -81,7 +81,7 @@ Ready-to-use example Jenkinsfiles are available in the `examples/` directory:
 | Build | Compile/build application |
 | Unit Test | Run unit tests |
 | BDD/Gherkin Test | Run behavior-driven tests |
-| Security Scan | SonarQube analysis, dependency check |
+| Security Scan | **Secrets scan (Gitleaks)**, SonarQube analysis, dependency check |
 | Quality Gate | Wait for SonarQube quality gate |
 | Build Docker Image | Create container image |
 | Container Security Scan | Trivy vulnerability scan |
@@ -261,6 +261,55 @@ Given('the API is running', function() {
 ```
 
 ## Security Scanning
+
+### Secrets Scanning (Gitleaks)
+
+**NEW**: The Golden Path pipeline now includes automated secrets detection using Gitleaks. This prevents hardcoded secrets from being deployed.
+
+#### How It Works
+
+1. **Pre-commit Protection**: Gitleaks runs in pre-commit hooks to catch secrets before they're committed
+2. **Pipeline Protection**: Every pipeline run includes a Secrets Scan stage that fails immediately if secrets are detected
+3. **Parallel Execution**: Runs in parallel with other security scans for fast feedback
+
+#### What Gets Detected
+
+- API Keys (AWS, Azure, GCP, GitHub, Slack, etc.)
+- Passwords and credentials
+- Private keys (SSH, SSL certificates, JWT secrets)
+- OAuth tokens and session tokens
+- Database connection strings with credentials
+
+#### Configuration
+
+```groovy
+goldenPathPipeline {
+    appName = 'my-service'
+    runSecurityScan = true  // Includes secrets scanning (default)
+}
+```
+
+#### Handling False Positives
+
+Add exceptions to `.gitleaks.toml`:
+
+```toml
+[allowlist]
+description = "Allow test fixtures"
+paths = [
+  '''tests/fixtures/.*''',
+]
+```
+
+#### When Secrets Are Detected
+
+The pipeline:
+- ❌ Fails immediately
+- 📄 Archives a detailed JSON report
+- 📋 Shows remediation steps
+- 🔗 Links to secrets management documentation
+
+**Learn More**: See [Secrets Management Guide](../docs/how-to/security/secrets-management.md)
 
 ### SonarQube
 
