@@ -320,9 +320,10 @@ function driver_extra_args() {
 }
 
 function usage {
-  echo "Usage: $0 [--provider local|aws|azure|gcp] [--cluster-name NAME] [--region REGION|--location LOCATION] [--only-cluster|--only-apps|--skip-cluster] [--dry-run] [--resume] [--verbose] <environment|cleanup>"
+  echo "Usage: $0 [--provider local|aws|azure|gcp] [--cluster-name NAME] [--region REGION|--location LOCATION] [--only-cluster|--only-apps|--skip-cluster] [--dry-run] [--resume] [--verbose] <environment|cleanup|destroy>"
   echo "  environment: local | dev | stage | production"
   echo "  cleanup: remove ArgoCD and Fawkes resources for a fresh start"
+  echo "  destroy: run Terraform destroy for the selected provider"
   echo "  flags:"
   echo "    --provider|-p        One of local|aws|azure|gcp"
   echo "    --cluster-name|-n    Cluster name for provider Terraform (TF_VAR_cluster_name)"
@@ -648,7 +649,66 @@ tf_apply_dir() {
 
   # Quick connectivity check
   if command -v kubectl >/dev/null 2>&1; then
-    kubectl get nodes || echo "[ERROR] Unable to reach cluster with current kubeconfig."
+    if ! kubectl get nodes >/dev/null 2>&1; then
+      echo "[WARN] kubectl cannot reach cluster. Attempting az aks get-credentials..."
+      if command -v az >/dev/null 2>&1; then
+        az aks get-credentials --resource-group "$rg_name" --name "$cluster_name" --overwrite-existing || true
+      else
+        echo "[ERROR] Azure CLI not available to fetch kubeconfig."
+      fi
+
+      # Install kubelogin if missing (required for AAD-enabled AKS)
+      if ! command -v kubelogin >/dev/null 2>&1; then
+        echo "[INFO] kubelogin not found. Installing via az aks install-cli..."
+        if command -v az >/dev/null 2>&1; then
+          az aks install-cli || echo "[WARN] az aks install-cli failed; install kubelogin manually: https://github.com/Azure/kubelogin"
+        fi
+      fi
+
+      # Convert kubeconfig to use azurecli auth if kubelogin is available
+      if command -v kubelogin >/dev/null 2>&1; then
+        echo "[INFO] Converting kubeconfig authentication to azurecli using kubelogin..."
+        kubelogin convert-kubeconfig -l azurecli -k "$KUBECONFIG" || echo "[WARN] kubeconfig conversion skipped or failed."
+      fi
+
+      # Retry once after installing/converting
+      if ! kubectl get nodes >/dev/null 2>&1; then
+        echo "[ERROR] Unable to reach cluster after fetching credentials."
+        echo "[HINT] If device login is required, run: kubelogin convert-kubeconfig -l devicecode -k $KUBECONFIG"
+        echo "[HINT] Or ensure Azure CLI is logged in: az login && az account set --subscription ${ARM_SUBSCRIPTION_ID:-<your-subscription>}"
+      else
+        echo "✅ kubectl connectivity verified."
+      fi
+    else
+      echo "✅ kubectl connectivity verified."
+    fi
+  fi
+}
+
+# Run Terraform destroy in a given directory
+tf_destroy_dir() {
+  local dir="$1"
+  if [[ ! -d "$dir" ]]; then
+    error_exit "Terraform directory not found: $dir"
+  fi
+  echo "🗑️  Destroying Terraform in $dir"
+  pushd "$dir" >/dev/null
+  # Ensure Azure subscription and tenant env vars are set from az CLI context if available
+  if command -v az >/dev/null 2>&1; then
+    export ARM_SUBSCRIPTION_ID="${ARM_SUBSCRIPTION_ID:-$(az account show --query id -o tsv 2>/dev/null || true)}"
+    export ARM_TENANT_ID="${ARM_TENANT_ID:-$(az account show --query tenantId -o tsv 2>/dev/null || true)}"
+  fi
+  terraform init -upgrade -input=false 2>&1 | tee terraform.log
+  local rc=0
+  if [[ $DRY_RUN -eq 1 ]]; then
+    echo "[DRY-RUN] Skipping terraform destroy in $dir"
+  else
+    terraform destroy -auto-approve -input=false 2>&1 | tee -a terraform.log
+    rc=${PIPESTATUS[0]}
+  fi
+  popd >/dev/null
+  if [[ $rc -ne 0 ]]; then
+    error_exit "Terraform destroy failed for $dir; see $dir/terraform.log"
   fi
 }
 
@@ -709,6 +769,38 @@ provision_azure_cluster() {
   if [[ $DRY_RUN -eq 0 ]] && ! kubectl cluster-info &>/dev/null; then
     error_exit "Cluster not reachable after Azure Terraform apply. Ensure your Azure creds and outputs provide kubeconfig."
   fi
+}
+
+# Provider-specific destroy commands
+destroy_aws_cluster() {
+  echo "🔧 Provider=aws selected. Destroying Terraform under infra/aws..."
+  local dir
+  dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../infra/aws" && pwd)"
+  tf_destroy_dir "$dir"
+}
+
+destroy_azure_cluster() {
+  echo "🔧 Provider=azure selected. Destroying Terraform under infra/azure..."
+  local dir
+  dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../infra/azure" && pwd)"
+  # Ensure required TF_VARS are exported if provided via flags
+  if [[ -n "$LOCATION" ]]; then export TF_VAR_location="$LOCATION"; fi
+  if [[ -n "$CLUSTER_NAME" ]]; then export TF_VAR_cluster_name="$CLUSTER_NAME"; fi
+  tf_destroy_dir "$dir"
+  # Optional: clean KUBECONFIG if pointing to destroyed cluster
+  if [[ -n "${KUBECONFIG:-}" && -f "$KUBECONFIG" ]]; then
+    echo "[INFO] Destroy complete. Keeping existing KUBECONFIG at $KUBECONFIG; remove manually if desired."
+  fi
+}
+
+destroy_gcp_cluster() {
+  echo "🔧 Provider=gcp selected. Destroying Terraform under infra/gcp..."
+  local dir
+  dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../infra/gcp" 2>/dev/null || true)"
+  if [[ -z "$dir" || ! -d "$dir" ]]; then
+    error_exit "infra/gcp not found yet. GCP provisioning not implemented."
+  fi
+  tf_destroy_dir "$dir"
 }
 
 provision_gcp_cluster() {
@@ -1029,8 +1121,8 @@ main() {
     usage
   fi
   case "$ENV" in
-    local|dev|stage|production) ;;
-    *) error_exit "Invalid environment: $ENV. Must be one of: local, dev, stage, production." ;;
+    local|dev|stage|production|destroy|cleanup) ;;
+    *) error_exit "Invalid command/environment: $ENV. Must be one of: local, dev, stage, production, destroy, cleanup." ;;
   esac
   # Verbose
   if [[ $VERBOSE -eq 1 ]]; then set -x; fi
@@ -1051,6 +1143,21 @@ main() {
   # Mark prereqs completed when not dry-run
   if [[ $DRY_RUN -eq 0 ]]; then
     state_mark_done "check_prereqs"
+  fi
+
+  # Handle destroy subcommand early
+  if [[ "$ENV" == "destroy" ]]; then
+    if [[ -z "${PROVIDER}" ]]; then
+      error_exit "Destroy requires --provider to be specified (local|aws|azure|gcp)."
+    fi
+    case "${PROVIDER}" in
+      aws) run_step "destroy_cluster" destroy_aws_cluster ;;
+      azure) run_step "destroy_cluster" destroy_azure_cluster ;;
+      gcp) run_step "destroy_cluster" destroy_gcp_cluster ;;
+      local) error_exit "Destroy for local provider not implemented via Terraform; use minikube delete or docker-desktop reset." ;;
+    esac
+    echo "✅ Destroy completed for provider '${PROVIDER}'."
+    return 0
   fi
 
   local do_provision=1
