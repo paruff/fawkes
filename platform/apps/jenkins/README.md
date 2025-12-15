@@ -30,10 +30,52 @@ See [jenkins-shared-library/README.md](../../jenkins-shared-library/README.md) f
 
 ## Files
 
-- `jcasc.yaml` - Jenkins Configuration as Code (JCasC)
-- `values.yaml` - Helm values for Jenkins deployment
-- `jenkins-admin-secret.yaml` - Admin credentials secret
-- `jenkins-casc-configmap.yaml` - JCasC ConfigMap
+- `jcasc.yaml` - Jenkins Configuration as Code (JCasC) - Main configuration file
+- `jenkins-application.yaml` - ArgoCD Application with Helm values and plugin list
+- `credentials-secrets.yaml` - Kubernetes Secrets for Jenkins credentials (template)
+- `jenkins-admin-secret.yaml` - Admin credentials secret (deprecated, use credentials-secrets.yaml)
+- `jenkins-casc-configmap.yaml` - JCasC ConfigMap (standalone deployment option)
+- `secrets.yaml` - Legacy secrets file (superseded by credentials-secrets.yaml)
+- `values.yaml` - Standalone Helm values file (optional)
+
+## Jenkins Configuration as Code (JCasC)
+
+Jenkins is configured entirely through code using the JCasC plugin. This provides:
+
+✅ **Reproducible Configuration** - Same setup every time
+✅ **Version Control** - All config changes tracked in Git
+✅ **GitOps Ready** - ArgoCD manages Jenkins deployment
+✅ **No Manual Setup** - Zero UI clicks required
+✅ **Disaster Recovery** - Restore from Git in minutes
+
+### Quick Start with JCasC
+
+1. **Review Configuration**: See `jcasc.yaml` for full configuration
+2. **Set Credentials**: Create secrets in Kubernetes (see `credentials-secrets.yaml`)
+3. **Deploy**: ArgoCD automatically deploys and applies configuration
+4. **Verify**: Check Jenkins UI to confirm settings
+
+### JCasC Configuration Sections
+
+| Section | Purpose | Configured Items |
+|---------|---------|------------------|
+| `jenkins` | Core settings | System message, executors, mode |
+| `clouds` | Kubernetes plugin | Agent templates, pod specs |
+| `credentials` | Secret management | GitHub, SonarQube, Docker credentials |
+| `securityRealm` | Authentication | Local users, OAuth/OIDC |
+| `authorizationStrategy` | Access control | Permissions, RBAC |
+| `unclassified` | Integrations | Libraries, SonarQube, Mattermost |
+| `tool` | Build tools | Git, Maven, Node.js |
+| `security` | Script approval | Whitelisted methods |
+
+### Documentation
+
+📚 **Comprehensive Guide**: See [docs/how-to/jenkins-casc-configuration.md](../../../docs/how-to/jenkins-casc-configuration.md) for:
+- Architecture overview
+- Configuration examples
+- Credentials management
+- Troubleshooting guide
+- Best practices
 
 ## Configuration
 
@@ -90,6 +132,50 @@ globalLibraries:
 - Credentials managed via Kubernetes secrets
 - Security scanning with SonarQube and Trivy
 
+**⚠️ Development Credentials:**
+
+The default configuration uses placeholder credentials that must be changed:
+- Username: `admin`
+- Password: `CHANGE_ME_jenkins_admin_password`
+
+**🔒 Production Deployment:**
+
+For production deployments, you MUST:
+
+1. Update the secrets file:
+   ```bash
+   # Edit platform/apps/jenkins/secrets.yaml
+   # Replace CHANGE_ME_jenkins_admin_password with a strong password
+   
+   # Apply the secret
+   kubectl apply -f platform/apps/jenkins/secrets.yaml
+   ```
+
+2. Update jenkins-application.yaml to reference the secret:
+   ```yaml
+   extraEnv:
+     - name: ADMIN_PASSWORD
+       valueFrom:
+         secretKeyRef:
+           name: jenkins-admin-credentials
+           key: password
+   
+   admin:
+     password: "{{ .Values.adminPassword }}"  # Reference from secret
+   
+   JENKINS_OPTS: "--argumentsRealm.passwd.admin={{ .Values.adminPassword }} -Djenkins.install.runSetupWizard=false"
+   ```
+
+3. For production, use External Secrets Operator:
+   ```bash
+   # Configure external secret to pull from AWS Secrets Manager or Azure Key Vault
+   kubectl apply -f platform/apps/external-secrets/externalsecret-jenkins-admin.yaml
+   ```
+
+4. Consider using OAuth/OIDC integration for authentication (see `jcasc.yaml` for GitHub OAuth example)
+
+**Note:** Never commit actual passwords to Git. Always use `CHANGE_ME_*` placeholders.
+
 ## Troubleshooting
 
 ### Common Issues
@@ -112,6 +198,6 @@ Local development:
 http://jenkins.127.0.0.1.nip.io
 ```
 
-Default credentials:
+Credentials:
 - Username: `admin`
-- Password: `fawkesidp` (change in production!)
+- Password: Set in `platform/apps/jenkins/secrets.yaml` (must be configured before deployment)

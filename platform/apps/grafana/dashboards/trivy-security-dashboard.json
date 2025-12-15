@@ -1,0 +1,101 @@
+{
+  "dashboard": {
+    "title": "Trivy Container Security Scanning",
+    "tags": ["security", "trivy", "vulnerabilities", "container-scanning"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "30s",
+    "description": "Monitor container vulnerability scanning with Trivy across Jenkins pipelines and Harbor registry",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Critical & High Vulnerabilities",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 0, "w": 8, "h": 4},
+        "description": "Total count of CRITICAL and HIGH severity vulnerabilities across all scanned images"
+      },
+      {
+        "id": 2,
+        "title": "Images Scanned Today",
+        "type": "stat",
+        "gridPos": {"x": 8, "y": 0, "w": 8, "h": 4},
+        "description": "Number of container images scanned in the last 24 hours"
+      },
+      {
+        "id": 3,
+        "title": "Scan Success Rate",
+        "type": "gauge",
+        "gridPos": {"x": 16, "y": 0, "w": 8, "h": 4},
+        "description": "Percentage of successful Trivy scans vs failed scans"
+      },
+      {
+        "id": 4,
+        "title": "Vulnerability Trends (7 Days)",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 4, "w": 12, "h": 8},
+        "description": "Trend of vulnerabilities by severity over the last 7 days"
+      },
+      {
+        "id": 5,
+        "title": "Top 10 Vulnerable Images",
+        "type": "table",
+        "gridPos": {"x": 12, "y": 4, "w": 12, "h": 8},
+        "description": "Container images with the highest number of HIGH and CRITICAL vulnerabilities"
+      },
+      {
+        "id": 6,
+        "title": "Scan Activity by Source",
+        "type": "piechart",
+        "gridPos": {"x": 0, "y": 12, "w": 8, "h": 6},
+        "description": "Distribution of scans between Jenkins CI/CD and Harbor registry"
+      },
+      {
+        "id": 7,
+        "title": "Average Scan Duration",
+        "type": "stat",
+        "gridPos": {"x": 8, "y": 12, "w": 8, "h": 6},
+        "description": "Average time to complete a Trivy scan"
+      },
+      {
+        "id": 8,
+        "title": "Failed Scans (24h)",
+        "type": "stat",
+        "gridPos": {"x": 16, "y": 12, "w": 8, "h": 6},
+        "description": "Number of failed Trivy scans in the last 24 hours"
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "namespace",
+          "type": "constant",
+          "current": {"value": "fawkes", "text": "fawkes"},
+          "label": "Namespace"
+        },
+        {
+          "name": "severity",
+          "type": "custom",
+          "options": [
+            {"text": "All", "value": "all", "selected": true},
+            {"text": "Critical", "value": "critical"},
+            {"text": "High", "value": "high"},
+            {"text": "Medium", "value": "medium"},
+            {"text": "Low", "value": "low"}
+          ],
+          "label": "Severity Filter"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-7d",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["30s", "1m", "5m", "15m", "30m", "1h"]
+    }
+  },
+  "overwrite": true,
+  "folderTitle": "Security",
+  "message": "Trivy container security scanning dashboard"
+}

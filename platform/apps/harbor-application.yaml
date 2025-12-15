@@ -1,0 +1,275 @@
+# ============================================================================
+# FILE: platform/apps/harbor-application.yaml
+# PURPOSE: ArgoCD Application for Harbor container registry deployment
+#          Provides enterprise-grade container registry with security scanning.
+# PREREQ: PostgreSQL cluster (db-harbor-dev) must be deployed first.
+#         Ingress-nginx controller must be running.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: harbor
+  namespace: fawkes
+  labels:
+    app: harbor
+    component: container-registry
+    environment: dev
+    team: platform
+  annotations:
+    # Link to documentation
+    argocd.argoproj.io/docs: "https://goharbor.io/docs/"
+    # Sync wave to ensure database is deployed first
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: default
+
+  source:
+    repoURL: https://helm.goharbor.io
+    chart: harbor
+    targetRevision: "1.15.2"
+    helm:
+      values: |
+        # ============================================================
+        # Harbor Helm Chart Configuration
+        # ============================================================
+
+        # Expose Harbor via Ingress
+        expose:
+          type: ingress
+          tls:
+            enabled: false  # Set to true in production with cert-manager
+            certSource: auto
+          ingress:
+            hosts:
+              core: harbor.127.0.0.1.nip.io
+            className: nginx
+            annotations:
+              nginx.ingress.kubernetes.io/proxy-body-size: "0"
+              nginx.ingress.kubernetes.io/ssl-redirect: "false"
+              nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+              nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+              nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+
+        # External URL configuration
+        externalURL: http://harbor.127.0.0.1.nip.io
+
+        # ============================================================
+        # Database Configuration - External PostgreSQL
+        # ============================================================
+        database:
+          type: external
+          external:
+            host: "db-harbor-dev-rw.fawkes.svc.cluster.local"
+            port: "5432"
+            username: "harbor_user"
+            coreDatabase: "harbor"
+            existingSecret: "db-harbor-credentials"
+            # SSL mode for database connection
+            sslmode: "prefer"
+
+        # ============================================================
+        # Redis Configuration - Internal (for MVP)
+        # ============================================================
+        redis:
+          type: internal
+          internal:
+            # Resource configuration
+            resources:
+              requests:
+                memory: 256Mi
+                cpu: 100m
+              limits:
+                memory: 512Mi
+                cpu: 500m
+
+        # ============================================================
+        # Harbor Core Service Configuration
+        # ============================================================
+        # Admin password - stored in harbor-admin-credentials secret for production
+        # For MVP/dev: Default password Harbor12345
+        # For production: Override with --set harborAdminPassword from secret
+        harborAdminPassword: "Harbor12345"
+
+        # Secret key for encryption - MUST be changed in production
+        # Generate with: openssl rand -base64 32
+        secretKey: "not-a-secure-key-change-in-production"
+
+        # ============================================================
+        # Storage Configuration
+        # ============================================================
+        persistence:
+          enabled: true
+          # Set to 'keep' to keep PVCs when deleting release
+          resourcePolicy: "keep"
+          persistentVolumeClaim:
+            registry:
+              # Use the existing storage class
+              storageClass: standard
+              accessMode: ReadWriteOnce
+              size: 50Gi
+            jobservice:
+              jobLog:
+                storageClass: standard
+                accessMode: ReadWriteOnce
+                size: 1Gi
+            trivy:
+              storageClass: standard
+              accessMode: ReadWriteOnce
+              size: 5Gi
+
+        # ============================================================
+        # Image Pull Policy
+        # ============================================================
+        imagePullPolicy: IfNotPresent
+
+        # ============================================================
+        # Component Configuration
+        # ============================================================
+
+        # Portal - Web UI
+        portal:
+          replicas: 1
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+            limits:
+              memory: 512Mi
+              cpu: 500m
+
+        # Core - API server
+        core:
+          replicas: 1
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 250m
+            limits:
+              memory: 1Gi
+              cpu: 1
+
+        # JobService - Async job execution
+        jobservice:
+          replicas: 1
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 250m
+            limits:
+              memory: 1Gi
+              cpu: 1
+
+        # Registry - Docker registry
+        registry:
+          replicas: 1
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 250m
+            limits:
+              memory: 1Gi
+              cpu: 1
+
+        # ============================================================
+        # Trivy Scanner Configuration
+        # ============================================================
+        trivy:
+          enabled: true
+          replicas: 1
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          # GitHubToken for Trivy vulnerability DB updates
+          # For production, use a secret
+          # gitHubToken: ""
+
+        # ============================================================
+        # Notary - Content trust (optional, disabled for MVP)
+        # ============================================================
+        notary:
+          enabled: false
+
+        # ============================================================
+        # Metrics Configuration
+        # ============================================================
+        metrics:
+          enabled: true
+          serviceMonitor:
+            enabled: true
+            interval: 30s
+          core:
+            path: /metrics
+            port: 8001
+          registry:
+            path: /metrics
+            port: 8001
+          jobservice:
+            path: /metrics
+            port: 8001
+          exporter:
+            path: /metrics
+            port: 8001
+
+        # ============================================================
+        # Security Context
+        # ============================================================
+        containerSecurityContext:
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          seccompProfile:
+            type: RuntimeDefault
+
+        # ============================================================
+        # Service Account
+        # ============================================================
+        serviceAccount:
+          create: true
+          name: harbor
+
+        # ============================================================
+        # Chart Dependencies Configuration
+        # ============================================================
+        # Disable internal PostgreSQL (using external CloudNativePG)
+        postgresql:
+          enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Keep ArgoCD from flagging differences you expect
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/replicas
+
+  # Basic health and retention tuning
+  revisionHistoryLimit: 10

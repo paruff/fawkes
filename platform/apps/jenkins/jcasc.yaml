@@ -1,5 +1,27 @@
-# Jenkins Configuration as Code (JCasC) - security + Kubernetes agents
-# Golden Path CI/CD Pipeline Configuration
+# ============================================================================
+# Jenkins Configuration as Code (JCasC)
+# Purpose: Reproducible Jenkins configuration for Fawkes CI/CD Platform
+# ============================================================================
+# This file defines Jenkins configuration declaratively, eliminating the need
+# for manual UI-based configuration. All settings are version-controlled and
+# can be applied automatically on Jenkins startup.
+#
+# Key Benefits:
+# - Reproducible configuration across environments
+# - Version-controlled changes with Git history
+# - Automated configuration on container restart
+# - No manual UI clicks required
+# - Easy disaster recovery
+#
+# Configuration Categories:
+# 1. Jenkins Core Settings (system message, executors, security)
+# 2. Kubernetes Cloud (dynamic agent provisioning)
+# 3. Credentials (GitHub, SonarQube, Docker)
+# 4. Tool Installations (Git, Maven, Node.js)
+# 5. Global Libraries (Fawkes pipeline library)
+# 6. Integration Plugins (SonarQube, Mattermost)
+# ============================================================================
+
 jenkins:
   systemMessage: "Fawkes CI/CD Platform - Golden Path Enabled"
   mode: NORMAL
@@ -7,14 +29,25 @@ jenkins:
   # for security and resource isolation - all builds run on Kubernetes agents
   numExecutors: 0
 
-  # Kubernetes cloud configuration for ephemeral agents
+  # ============================================================================
+  # Kubernetes Cloud Configuration
+  # ============================================================================
+  # Dynamic agent provisioning using Kubernetes plugin
+  # - Creates ephemeral pods for each build
+  # - Automatically scales based on demand
+  # - Destroys pods after build completion
+  # - Resource-efficient and secure
   clouds:
     - kubernetes:
         name: "kubernetes"
         namespace: "fawkes"
         jenkinsUrl: "http://jenkins:8080"
         jenkinsTunnel: "jenkins-agent:50000"
-        containerCapStr: "20"
+        containerCapStr: "20"  # Maximum concurrent Kubernetes pods
+        connectTimeout: 30
+        readTimeout: 15
+        maxRequestsPerHostStr: "32"
+        retentionTimeout: 5
         templates:
           # Default JNLP agent
           - name: "jnlp-agent"
@@ -115,6 +148,57 @@ authorizationStrategy:
   loggedInUsersCanDoAnything:
     allowAnonymousRead: false
 
+# ============================================================================
+# Credentials Configuration
+# ============================================================================
+# Credentials are sourced from Kubernetes Secrets for security
+# In production, use External Secrets Operator to sync from Vault/AWS/Azure
+#
+# Required Secrets in Kubernetes:
+# - jenkins-github-credentials (for repository access, webhooks)
+# - jenkins-sonarqube-credentials (for code quality integration)
+# - jenkins-docker-credentials (for container registry push)
+#
+# To create secrets:
+#   kubectl apply -f platform/apps/jenkins/secrets.yaml
+#
+# For production with External Secrets Operator:
+#   kubectl apply -f platform/apps/external-secrets/externalsecret-jenkins-*.yaml
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          # GitHub Personal Access Token for repository access
+          - string:
+              scope: GLOBAL
+              id: "github-token"
+              secret: "${GITHUB_TOKEN}"
+              description: "GitHub Personal Access Token for repository access and webhooks"
+
+          # SonarQube authentication token
+          - string:
+              scope: GLOBAL
+              id: "sonarqube-token"
+              secret: "${SONARQUBE_TOKEN}"
+              description: "SonarQube token for code quality scanning"
+
+          # Docker registry credentials (Harbor)
+          - usernamePassword:
+              scope: GLOBAL
+              id: "docker-registry"
+              username: "${DOCKER_REGISTRY_USERNAME}"
+              password: "${DOCKER_REGISTRY_PASSWORD}"
+              description: "Docker registry credentials for image push"
+
+          # GitHub App credentials (alternative to PAT for enterprise)
+          # Uncomment when GitHub App is configured
+          # - gitHubApp:
+          #     scope: GLOBAL
+          #     id: "github-app"
+          #     appID: "${GITHUB_APP_ID}"
+          #     privateKey: "${GITHUB_APP_PRIVATE_KEY}"
+          #     description: "GitHub App for enhanced security and API rate limits"
+
 unclassified:
   location:
     adminAddress: "ci-admin@fawkes.local"
@@ -150,19 +234,36 @@ unclassified:
     icon: ":jenkins:"
     buildServerUrl: "http://jenkins.127.0.0.1.nip.io"
 
-# Security hardening
+# ============================================================================
+# Security Configuration
+# ============================================================================
+# Script approval whitelist for pipeline security
+# Only approved methods can be called from pipeline scripts
+#
+# SECURITY NOTE: Be cautious when approving methods that access environment
+# variables (e.g., System.getenv) as they could expose sensitive information.
+# Only approve if necessary for legitimate pipeline use cases.
 security:
   scriptApproval:
     approvedSignatures:
       - "method groovy.lang.GroovyObject invokeMethod java.lang.String java.lang.Object"
       - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods take java.lang.CharSequence int"
+      # Add more as needed for pipeline scripts
+      - "method java.util.Properties getProperty java.lang.String"
+      # Environment access - use carefully, consider alternatives like credentials binding
+      - "staticMethod java.lang.System getenv java.lang.String"
 
-# Tool installations
+# ============================================================================
+# Tool Installations
+# ============================================================================
+# Automatic installation of build tools
+# Tools are installed on-demand on agents during first use
 tool:
   git:
     installations:
       - name: "Default"
         home: "git"
+
   maven:
     installations:
       - name: "Maven 3.9"
@@ -171,3 +272,97 @@ tool:
               installers:
                 - maven:
                     id: "3.9.6"
+
+  # Additional tools can be added here:
+  # nodejs, jdk, gradle, etc.
+  # Example:
+  # nodejs:
+  #   installations:
+  #     - name: "Node 20"
+  #       properties:
+  #         - installSource:
+  #             installers:
+  #               - nodeJSInstaller:
+  #                   id: "20.10.0"
+
+# ============================================================================
+# Required Plugins Configuration
+# ============================================================================
+# NOTE: Plugins are installed via Helm values in jenkins-application.yaml
+# The following plugins are REQUIRED for this JCasC configuration to work:
+#
+# Core Pipeline Plugins:
+# - kubernetes                    # Kubernetes plugin for dynamic agents
+# - workflow-aggregator           # Pipeline suite
+# - workflow-job                  # Pipeline job type
+# - workflow-multibranch          # Multi-branch pipeline support
+# - pipeline-stage-view           # Pipeline visualization
+# - pipeline-utility-steps        # Additional pipeline steps
+#
+# Source Control Management:
+# - git                           # Git plugin
+# - github                        # GitHub integration
+# - github-branch-source          # GitHub branch discovery
+#
+# Credentials & Security:
+# - credentials-binding           # Credentials in environment variables
+# - credentials                   # Core credentials functionality
+#
+# Configuration as Code:
+# - configuration-as-code         # JCasC plugin (REQUIRED)
+#
+# Shared Libraries:
+# - pipeline-github-lib           # GitHub shared libraries
+#
+# Quality & Testing:
+# - junit                         # JUnit test results
+# - jacoco                        # Code coverage
+# - warnings-ng                   # Static analysis results
+# - htmlpublisher                 # HTML reports
+# - cucumber-reports              # BDD test reports
+#
+# Security Scanning:
+# - sonar                         # SonarQube integration
+#
+# Notifications:
+# - mattermost                    # Mattermost notifications
+# - email-ext                     # Extended email notifications
+#
+# Kubernetes Integration:
+# - kubernetes-cli                # kubectl in pipelines
+#
+# Build Tools:
+# - maven-plugin                  # Maven support
+# - nodejs                        # Node.js support
+#
+# Utilities:
+# - http_request                  # HTTP request step
+# - pipeline-input-step           # Manual approval
+# - docker-workflow               # Docker pipeline steps
+# - timestamper                   # Timestamp console output
+# - ansicolor                     # ANSI color output
+# - build-discarder               # Automatic build cleanup
+#
+# Plugin Installation:
+# Plugins are installed automatically via Helm chart values:
+#   controller:
+#     installPlugins:
+#       - kubernetes:latest
+#       - workflow-aggregator:latest
+#       ... (see jenkins-application.yaml for full list)
+#
+# For manual plugin management (not recommended):
+#   1. Add plugin to jenkins-application.yaml installPlugins list
+#   2. Sync ArgoCD application: argocd app sync jenkins
+#   3. Jenkins will restart with new plugins
+#
+# Plugin Version Management:
+# - Use "latest" for automatic updates (recommended for development)
+# - Pin specific versions for production stability
+#   Example: kubernetes:4029.v5712230ccb_f8
+#
+# Verify Plugin Installation:
+# After deployment, verify plugins are installed:
+#   kubectl exec -n fawkes jenkins-0 -- jenkins-plugin-cli --list
+#
+# ============================================================================
