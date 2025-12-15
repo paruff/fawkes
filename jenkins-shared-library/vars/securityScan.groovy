@@ -28,6 +28,7 @@ def call(Map config = [:]) {
         trivyExitCode: '1',
         failOnVulnerabilities: true,
         failOnQualityGate: true,
+        failOnSecrets: true,
         sonarQubeTimeout: 5,
         sonarHostUrl: env.SONARQUBE_URL ?: 'http://sonarqube.fawkes.svc:9000',
         sonarBranch: env.BRANCH_NAME ?: 'main'
@@ -37,6 +38,9 @@ def call(Map config = [:]) {
 
     stage('Security Scan') {
         parallel(
+            'Secrets Scan': {
+                secretsScan(config)
+            },
             'Container Scan': {
                 if (config.image) {
                     containerScan(config)
@@ -255,6 +259,80 @@ def getSonarQubeUrl(String projectKey, String branch = 'main') {
     }
     def baseUrl = env.SONARQUBE_URL ?: 'http://sonarqube.fawkes.svc:9000'
     return "${baseUrl}/dashboard?id=${projectKey}&branch=${branch}"
+}
+
+/**
+ * Run secrets detection with Gitleaks
+ * 
+ * Scans the repository for hardcoded secrets, API keys, passwords, and other
+ * sensitive information using Gitleaks. This is a critical security step that
+ * helps prevent accidental exposure of credentials.
+ * 
+ * The scan uses the .gitleaks.toml configuration file if present for custom
+ * rules and allowlists. Results are archived as JSON for audit purposes.
+ * 
+ * @param config Configuration map with the following options:
+ *   - failOnSecrets: Whether to fail the pipeline if secrets are detected (default: true)
+ * 
+ * @example
+ * secretsScan([failOnSecrets: true])
+ */
+def secretsScan(Map config) {
+    echo "=============================================="
+    echo "Scanning for secrets with Gitleaks"
+    echo "=============================================="
+    
+    def exitCode = config.failOnSecrets ? '1' : '0'
+    
+    container('gitleaks') {
+        try {
+            sh """
+                gitleaks detect \
+                    --source . \
+                    --verbose \
+                    --report-format json \
+                    --report-path gitleaks-report.json \
+                    --exit-code ${exitCode}
+            """
+            echo "✅ No secrets detected!"
+            
+            // Archive report even on success for audit trail
+            archiveArtifacts artifacts: 'gitleaks-report.json', allowEmptyArchive: true
+            
+        } catch (Exception e) {
+            echo """
+============================================
+❌ SECRETS DETECTED IN CODE
+============================================
+Gitleaks has detected potential secrets in your code.
+This is a critical security issue that must be resolved.
+
+Common secrets detected:
+- API keys and tokens
+- Passwords and credentials  
+- Private keys and certificates
+- Database connection strings
+- OAuth tokens
+
+Next steps:
+1. Review the Gitleaks report: gitleaks-report.json
+2. Remove or encrypt any sensitive data
+3. Use environment variables or secret management tools
+4. Update .gitleaks.toml if this is a false positive
+
+For help, see: docs/how-to/security/secrets-management.md
+============================================
+"""
+            // Archive the report for review
+            archiveArtifacts artifacts: 'gitleaks-report.json', allowEmptyArchive: true
+            
+            if (config.failOnSecrets) {
+                error "Secrets detected in code. Pipeline failed for security reasons."
+            } else {
+                unstable "Secrets detected but pipeline continues (failOnSecrets=false)"
+            }
+        }
+    }
 }
 
 return this
