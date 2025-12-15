@@ -30,9 +30,10 @@ The quality gate is automatically enforced in the Golden Path pipeline:
 goldenPathPipeline {
     appName = 'my-service'
     language = 'java'
-    sonarProject = 'my-service'
+    dockerImage = 'harbor.fawkes.local/fawkes/my-service'
     // SonarQube quality gate is automatically enforced
-    // failOnQualityGate = true (default)
+    // To skip security scanning entirely (not recommended):
+    // runSecurityScan = false  // Requires approval!
 }
 ```
 
@@ -99,18 +100,21 @@ To customize the quality gate for a specific project:
 3. **Quality Gate Exception** (Requires approval):
    - Document the issue in a JIRA ticket
    - Get approval from Tech Lead and Security Team
-   - Temporarily disable quality gate for the branch:
+   - Option: Disable entire security scanning stage:
      ```groovy
      goldenPathPipeline {
          appName = 'my-service'
-         failOnQualityGate = false  // Requires justification!
+         runSecurityScan = false  // Requires justification!
      }
      ```
-   - Add comment in Jenkinsfile explaining the exception
+   - Add detailed comment in Jenkinsfile explaining the exception
+   - Schedule full security review for next sprint
+
+**Note**: The `runSecurityScan = false` option disables the entire Security Scan stage, including SonarQube, Trivy, and secrets scanning. There is no way to disable only the SonarQube quality gate check. This is intentional - if you need to bypass quality gates, you must do so consciously for all security scanning.
 
 **Exception Documentation Template**:
 ```groovy
-// EXCEPTION: Quality Gate disabled for hotfix deployment
+// EXCEPTION: Security scanning disabled for hotfix deployment
 // Reason: Critical production issue requires immediate fix
 // Issue: JIRA-1234
 // Approved by: tech-lead@example.com, security@example.com
@@ -118,9 +122,11 @@ To customize the quality gate for a specific project:
 // Expiration: 2024-12-31
 goldenPathPipeline {
     appName = 'my-service'
-    failOnQualityGate = false
+    runSecurityScan = false  // Disables entire security scan stage
 }
 ```
+
+**Note**: The `runSecurityScan` flag disables the entire Security Scan stage, including SonarQube, Trivy, and secrets scanning. Use with extreme caution and only for approved emergency deployments.
 
 ### 2. Trivy Quality Gates (Container Scanning)
 
@@ -146,9 +152,8 @@ goldenPathPipeline {
     language = 'java'
     dockerImage = 'harbor.fawkes.local/fawkes/my-service'
     // Trivy scanning is automatically enabled
-    trivySeverity = 'HIGH,CRITICAL'  // Default
-    trivyExitCode = '1'              // Fail on vulnerabilities
-    failOnVulnerabilities = true     // Default
+    trivySeverity = 'HIGH,CRITICAL'  // Default severity filter
+    trivyExitCode = '1'              // Fail on vulnerabilities (default)
 }
 ```
 
@@ -163,13 +168,16 @@ goldenPathPipeline {
 }
 ```
 
-**Option 2: Disable Failure** (Not recommended):
+**Option 2: Disable Failure** (Emergency use only, requires approval):
 
 ```groovy
+// URGENT: Relaxed container scanning for production hotfix
+// Issue: INCIDENT-789
+// Approved by: incident-commander@example.com, security@example.com
+// Full scan required within 24 hours
 goldenPathPipeline {
     appName = 'my-service'
-    trivyExitCode = '0'          // Never fail pipeline
-    failOnVulnerabilities = false
+    trivyExitCode = '0'  // Don't fail pipeline on vulnerabilities
 }
 ```
 
@@ -304,14 +312,21 @@ Gitleaks scans for hardcoded secrets, API keys, and credentials in the codebase.
    - **Date**: 2024-11-01
    ```
 
-**IMPORTANT**: Never disable secrets scanning entirely. If you must bypass it temporarily:
+**IMPORTANT**: Never disable secrets scanning entirely. If you absolutely must bypass it temporarily for an emergency (not recommended):
 
 ```groovy
-// NEVER DO THIS IN PRODUCTION
-securityScan {
-    failOnSecrets = false  // Requires security team approval
+// EMERGENCY ONLY - Never use in normal circumstances
+// Issue: INCIDENT-999
+// Approved by: CTO, CISO, Incident Commander
+// Temporary bypass for critical production fix
+// Full security review required within 2 hours
+goldenPathPipeline {
+    appName = 'my-service'
+    runSecurityScan = false  // Disables ALL security scans including secrets
 }
 ```
+
+**Note**: This disables the entire security scan stage. There is no way to disable only secrets scanning while keeping other security checks. This is by design to prevent accidental security lapses.
 
 ## Multi-Gate Enforcement Strategy
 
@@ -393,11 +408,10 @@ goldenPathPipeline {
     dockerImage = 'harbor.fawkes.local/fawkes/user-service'
     sonarProject = 'user-service'
     
-    // Quality gates (defaults shown)
-    failOnQualityGate = true
-    trivySeverity = 'HIGH,CRITICAL'
-    failOnVulnerabilities = true
-    failOnSecrets = true
+    // Quality gates (using defaults)
+    // trivySeverity = 'HIGH,CRITICAL'  // default
+    // trivyExitCode = '1'               // default
+    // runSecurityScan = true            // default
 }
 ```
 
@@ -420,9 +434,8 @@ goldenPathPipeline {
     language = 'python'
     dockerImage = 'harbor.fawkes.local/fawkes/analytics-api'
     
-    // Customized for data science workloads
-    failOnQualityGate = true
-    trivySeverity = 'HIGH,CRITICAL'
+    // Quality gates use defaults
+    // trivySeverity = 'HIGH,CRITICAL'
 }
 ```
 
@@ -445,9 +458,7 @@ goldenPathPipeline {
     language = 'node'
     dockerImage = 'harbor.fawkes.local/fawkes/web-frontend'
     
-    // Standard quality gates
-    failOnQualityGate = true
-    trivySeverity = 'HIGH,CRITICAL'
+    // All quality gates enabled by default
 }
 ```
 
@@ -477,9 +488,7 @@ goldenPathPipeline {
     language = 'go'
     dockerImage = 'harbor.fawkes.local/fawkes/event-processor'
     
-    // Quality gates
-    failOnQualityGate = true
-    trivySeverity = 'HIGH,CRITICAL'
+    // Quality gates enabled by default
 }
 ```
 
