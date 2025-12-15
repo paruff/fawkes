@@ -1,0 +1,70 @@
+# ============================================================================
+# FILE: platform/apps/devlake/servicemonitor-devlake.yaml
+# PURPOSE: ServiceMonitor for DevLake DORA Metrics Service
+#          Enables Prometheus to scrape DORA metrics from DevLake API
+# ============================================================================
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: devlake-metrics
+  namespace: monitoring
+  labels:
+    app: devlake
+    component: dora-metrics
+    prometheus: kube-prometheus
+    team: platform
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: devlake
+      app.kubernetes.io/component: lake
+  namespaceSelector:
+    matchNames:
+      - fawkes
+      - fawkes-devlake
+  endpoints:
+    - port: http
+      interval: 60s
+      path: /metrics
+      scheme: http
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod_name
+        - sourceLabels: [__meta_kubernetes_service_name]
+          targetLabel: service_name
+        - sourceLabels: [__meta_kubernetes_pod_label_app_kubernetes_io_component]
+          targetLabel: component
+---
+# ServiceMonitor for DevLake MySQL (database metrics)
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: devlake-mysql-metrics
+  namespace: monitoring
+  labels:
+    app: devlake
+    component: database
+    prometheus: kube-prometheus
+    team: platform
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: devlake
+      app.kubernetes.io/component: mysql
+  namespaceSelector:
+    matchNames:
+      - fawkes
+      - fawkes-devlake
+  endpoints:
+    - port: metrics
+      interval: 60s
+      path: /metrics
+      scheme: http
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod_name
