@@ -1,4 +1,4 @@
-package com.fawkes.${{ values.name | replace("-", "") }}.controller;
+package com.fawkes.samplejavapp.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +19,14 @@ class HealthControllerTest {
         mockMvc.perform(get("/api/health"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("UP"))
-                .andExpect(jsonPath("$.service").value("${{ values.name }}"));
+                .andExpect(jsonPath("$.service").value("sample-java-app"));
     }
 
     @Test
     void testInfoEndpoint() throws Exception {
         mockMvc.perform(get("/api/info"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("${{ values.name }}"))
+                .andExpect(jsonPath("$.name").value("sample-java-app"))
                 .andExpect(jsonPath("$.version").value("0.1.0"));
     }
 }

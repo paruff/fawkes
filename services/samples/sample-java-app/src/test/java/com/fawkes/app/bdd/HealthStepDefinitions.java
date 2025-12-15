@@ -1,4 +1,4 @@
-package com.fawkes.${{ values.name | replace("-", "") }}.bdd;
+package com.fawkes.samplejavapp.bdd;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
