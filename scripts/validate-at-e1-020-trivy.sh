@@ -111,7 +111,7 @@ else
 fi
 
 # Count BDD scenarios
-SCENARIO_COUNT=$(grep -c "Scenario:" tests/bdd/features/trivy-integration.feature || echo 0)
+SCENARIO_COUNT=$(grep -c '^[[:space:]]*Scenario:' tests/bdd/features/trivy-integration.feature || echo 0)
 if [ "$SCENARIO_COUNT" -ge 10 ]; then
     echo -e "${GREEN}✓ BDD feature has $SCENARIO_COUNT scenarios${NC}"
     ((PASSED++))
