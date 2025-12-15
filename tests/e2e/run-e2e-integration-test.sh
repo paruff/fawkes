@@ -154,6 +154,13 @@ check_prerequisites() {
         log_verbose "Found tool: $tool"
     done
     
+    # Check optional tools
+    if ! command -v "bc" &> /dev/null; then
+        log_warning "Optional tool 'bc' not found (used for precise resource calculations)"
+    else
+        log_verbose "Found optional tool: bc"
+    fi
+    
     # Check cluster access
     if ! kubectl cluster-info &> /dev/null; then
         log_error "Cannot access Kubernetes cluster"
@@ -519,7 +526,7 @@ test_performance() {
     
     log_section "Checking cluster resource utilization"
     
-    # Get node resource usage
+    # Get node resource usage (bc command used for calculations)
     local node_cpu=$(kubectl top nodes 2>/dev/null | awk 'NR>1 {gsub("%","",$3); sum+=$3; count++} END {if(count>0) print sum/count; else print 0}')
     local node_mem=$(kubectl top nodes 2>/dev/null | awk 'NR>1 {gsub("%","",$5); sum+=$5; count++} END {if(count>0) print sum/count; else print 0}')
     
@@ -527,12 +534,24 @@ test_performance() {
         log_info "Average node CPU usage: ${node_cpu}%"
         log_info "Average node memory usage: ${node_mem}%"
         
-        # Check if under 70% threshold
-        if (( $(echo "$node_cpu < 70" | bc -l 2>/dev/null || echo 1) )) && \
-           (( $(echo "$node_mem < 70" | bc -l 2>/dev/null || echo 1) )); then
-            log_success "Cluster resource utilization is within acceptable limits (<70%)"
+        # Check if under 70% threshold (bc command required for floating point comparison)
+        if command -v bc &> /dev/null; then
+            if (( $(echo "$node_cpu < 70" | bc -l 2>/dev/null || echo 1) )) && \
+               (( $(echo "$node_mem < 70" | bc -l 2>/dev/null || echo 1) )); then
+                log_success "Cluster resource utilization is within acceptable limits (<70%)"
+            else
+                log_warning "Cluster resource utilization is high (>70%)"
+            fi
         else
-            log_warning "Cluster resource utilization is high (>70%)"
+            log_info "Install 'bc' for precise resource threshold checking"
+            # Simple integer comparison as fallback
+            node_cpu_int=${node_cpu%.*}
+            node_mem_int=${node_mem%.*}
+            if [ "${node_cpu_int:-100}" -lt 70 ] && [ "${node_mem_int:-100}" -lt 70 ]; then
+                log_success "Cluster resource utilization is within acceptable limits (<70%)"
+            else
+                log_warning "Cluster resource utilization may be high"
+            fi
         fi
     else
         log_warning "Could not retrieve node metrics (metrics-server may not be installed)"

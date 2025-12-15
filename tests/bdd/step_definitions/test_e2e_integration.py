@@ -16,7 +16,7 @@ from kubernetes import client, config
 # Load kubernetes config
 try:
     config.load_kube_config()
-except:
+except Exception:
     config.load_incluster_config()
 
 v1 = client.CoreV1Api()
@@ -39,7 +39,7 @@ def step_platform_deployed(context):
         try:
             api.read_namespace(ns)
             context.test.log(f"✓ Namespace {ns} exists")
-        except:
+        except client.ApiException:
             raise AssertionError(f"Namespace {ns} not found")
 
 
