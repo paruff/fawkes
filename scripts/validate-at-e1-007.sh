@@ -334,13 +334,13 @@ validate_webhook_receivers() {
     # Check webhook configuration documentation
     local webhook_docs=("platform/apps/devlake/config/github-webhook-setup.md" 
                         "platform/apps/devlake/config/jenkins-webhook-setup.md"
-                        "platform/apps/devlake/config/argocd-webhook-setup.md")
+                        "platform/apps/devlake/config/argocd-notifications.yaml")
     
     for doc in "${webhook_docs[@]}"; do
         if [ -f "$doc" ]; then
-            record_test "Webhook documentation $(basename $doc)" "PASS" "Documentation exists"
+            record_test "Webhook configuration $(basename $doc)" "PASS" "Configuration file exists"
         else
-            record_test "Webhook documentation $(basename $doc)" "FAIL" "Documentation not found"
+            record_test "Webhook configuration $(basename $doc)" "FAIL" "Configuration file not found"
         fi
     done
     
@@ -355,10 +355,16 @@ validate_webhook_receivers() {
             record_test "Jenkins recordBuild function" "FAIL" "Function not found"
         fi
         
-        if grep -q "recordDeployment" "jenkins-shared-library/vars/doraMetrics.groovy"; then
-            record_test "Jenkins recordDeployment function" "PASS" "Function found"
+        if grep -q "recordQualityGate" "jenkins-shared-library/vars/doraMetrics.groovy"; then
+            record_test "Jenkins recordQualityGate function" "PASS" "Function found"
         else
-            record_test "Jenkins recordDeployment function" "FAIL" "Function not found"
+            record_test "Jenkins recordQualityGate function" "FAIL" "Function not found"
+        fi
+        
+        if grep -q "recordIncident" "jenkins-shared-library/vars/doraMetrics.groovy"; then
+            record_test "Jenkins recordIncident function" "PASS" "Function found"
+        else
+            record_test "Jenkins recordIncident function" "FAIL" "Function not found"
         fi
     else
         record_test "Jenkins DORA metrics library" "FAIL" "doraMetrics.groovy not found"
