@@ -1,0 +1,499 @@
+{
+  "dashboard": {
+    "title": "DORA Metrics",
+    "tags": ["dora", "metrics", "devops", "performance"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "5m",
+    "description": "Track DORA (DevOps Research and Assessment) four key metrics: Deployment Frequency, Lead Time for Changes, Change Failure Rate, and Mean Time to Restore",
+    "panels": [
+      {
+        "id": 1,
+        "title": "DORA Four Key Metrics Overview",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 0, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 2,
+        "title": "Deployment Frequency",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 1, "w": 6, "h": 6},
+        "description": "Number of deployments to production per day/week. Elite: On-demand (multiple deploys per day)",
+        "targets": [
+          {
+            "expr": "sum(increase(dora_deployments_total[7d]))",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 7},
+                {"color": "green", "value": 28}
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 3,
+        "title": "Lead Time for Changes",
+        "type": "gauge",
+        "gridPos": {"x": 6, "y": 1, "w": 6, "h": 6},
+        "description": "Time from commit to production deployment. Elite: Less than one hour",
+        "targets": [
+          {
+            "expr": "avg(dora_lead_time_seconds) / 3600",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "h",
+            "min": 0,
+            "max": 168,
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 1},
+                {"color": "orange", "value": 24},
+                {"color": "red", "value": 168}
+              ]
+            }
+          }
+        },
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        }
+      },
+      {
+        "id": 4,
+        "title": "Change Failure Rate",
+        "type": "gauge",
+        "gridPos": {"x": 12, "y": 1, "w": 6, "h": 6},
+        "description": "Percentage of deployments causing failures in production. Elite: 0-15%",
+        "targets": [
+          {
+            "expr": "sum(dora_deployment_failures_total) / sum(dora_deployments_total) * 100",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 15},
+                {"color": "orange", "value": 30},
+                {"color": "red", "value": 45}
+              ]
+            }
+          }
+        },
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        }
+      },
+      {
+        "id": 5,
+        "title": "Mean Time to Restore (MTTR)",
+        "type": "gauge",
+        "gridPos": {"x": 18, "y": 1, "w": 6, "h": 6},
+        "description": "Time to restore service after an incident. Elite: Less than one hour",
+        "targets": [
+          {
+            "expr": "avg(dora_mttr_seconds) / 3600",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "h",
+            "min": 0,
+            "max": 168,
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 1},
+                {"color": "orange", "value": 24},
+                {"color": "red", "value": 168}
+              ]
+            }
+          }
+        },
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        }
+      },
+      {
+        "id": 6,
+        "title": "Deployment Trends",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 7, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 7,
+        "title": "Deployment Frequency Over Time",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 8, "w": 12, "h": 8},
+        "description": "Daily deployment count trend",
+        "targets": [
+          {
+            "expr": "sum(increase(dora_deployments_total[1d]))",
+            "refId": "A",
+            "legendFormat": "Deployments per day",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "barAlignment": 0,
+              "fillOpacity": 20,
+              "showPoints": "auto"
+            }
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Deployment Frequency by Service",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8},
+        "description": "Deployment frequency breakdown by service",
+        "targets": [
+          {
+            "expr": "sum by (service) (increase(dora_deployments_total[1d]))",
+            "refId": "A",
+            "legendFormat": "{{service}}",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 10,
+              "stacking": {"mode": "normal"}
+            }
+          }
+        }
+      },
+      {
+        "id": 9,
+        "title": "Lead Time Analysis",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 16, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 10,
+        "title": "Lead Time Trend",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 17, "w": 12, "h": 8},
+        "description": "Average lead time from commit to production",
+        "targets": [
+          {
+            "expr": "avg(dora_lead_time_seconds) / 3600",
+            "refId": "A",
+            "legendFormat": "Avg Lead Time",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "h",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 20
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 1},
+                {"color": "red", "value": 24}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 11,
+        "title": "Lead Time Distribution (P50, P95, P99)",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 17, "w": 12, "h": 8},
+        "description": "Lead time percentiles over time",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(dora_lead_time_seconds_bucket[5m])) by (le)) / 3600",
+            "refId": "A",
+            "legendFormat": "P50",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(dora_lead_time_seconds_bucket[5m])) by (le)) / 3600",
+            "refId": "B",
+            "legendFormat": "P95",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(dora_lead_time_seconds_bucket[5m])) by (le)) / 3600",
+            "refId": "C",
+            "legendFormat": "P99",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "h",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 5
+            }
+          }
+        }
+      },
+      {
+        "id": 12,
+        "title": "Failure Analysis",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 25, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 13,
+        "title": "Change Failure Rate Over Time",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 26, "w": 12, "h": 8},
+        "description": "Change failure rate trend",
+        "targets": [
+          {
+            "expr": "sum(increase(dora_deployment_failures_total[1d])) / sum(increase(dora_deployments_total[1d])) * 100",
+            "refId": "A",
+            "legendFormat": "Failure Rate",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 20
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 15},
+                {"color": "red", "value": 30}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 14,
+        "title": "Failures by Service",
+        "type": "piechart",
+        "gridPos": {"x": 12, "y": 26, "w": 12, "h": 8},
+        "description": "Distribution of deployment failures by service",
+        "targets": [
+          {
+            "expr": "sum by (service) (increase(dora_deployment_failures_total[7d]))",
+            "refId": "A",
+            "legendFormat": "{{service}}",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "title": "Recovery Metrics",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 34, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 16,
+        "title": "MTTR Trend",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 35, "w": 12, "h": 8},
+        "description": "Mean time to restore service after incident",
+        "targets": [
+          {
+            "expr": "avg(dora_mttr_seconds) / 60",
+            "refId": "A",
+            "legendFormat": "Avg MTTR",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "m",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 20
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 60},
+                {"color": "red", "value": 1440}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 17,
+        "title": "Incident Count",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 35, "w": 12, "h": 8},
+        "description": "Number of incidents over time",
+        "targets": [
+          {
+            "expr": "sum(increase(dora_incidents_total[1d]))",
+            "refId": "A",
+            "legendFormat": "Incidents per day",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "bars",
+              "barAlignment": 0,
+              "fillOpacity": 80
+            }
+          }
+        }
+      },
+      {
+        "id": 18,
+        "title": "Performance Category",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 43, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 19,
+        "title": "DORA Performance Level",
+        "type": "text",
+        "gridPos": {"x": 0, "y": 44, "w": 24, "h": 6},
+        "options": {
+          "mode": "markdown",
+          "content": "## DORA Performance Classification\n\n**Note**: This dashboard shows placeholder metrics. Configure the DORA metrics collector to populate actual data.\n\n### Elite Performance Targets:\n- **Deployment Frequency**: On-demand (multiple deploys per day)\n- **Lead Time for Changes**: Less than one hour\n- **Change Failure Rate**: 0-15%\n- **Mean Time to Restore**: Less than one hour\n\n### Implementation Status:\n🔄 **Metrics collection pending** - Refer to [DORA Metrics Implementation Playbook](../../../docs/playbooks/dora-metrics-implementation.md) for setup instructions.\n\n### Next Steps:\n1. Configure deployment event collection from ArgoCD\n2. Configure Jenkins pipeline metrics integration\n3. Set up incident tracking for MTTR\n4. Enable metrics export to Prometheus\n5. Wait 2-4 weeks for baseline data collection\n6. Analyze trends and identify improvement opportunities"
+        }
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "datasource",
+          "type": "datasource",
+          "query": "prometheus",
+          "current": {
+            "value": "prometheus",
+            "text": "Prometheus"
+          }
+        },
+        {
+          "name": "environment",
+          "type": "query",
+          "query": "label_values(dora_deployments_total, environment)",
+          "current": {
+            "value": "production",
+            "text": "production"
+          },
+          "datasource": {"type": "prometheus", "uid": "prometheus"}
+        },
+        {
+          "name": "service",
+          "type": "query",
+          "query": "label_values(dora_deployments_total, service)",
+          "multi": true,
+          "includeAll": true,
+          "datasource": {"type": "prometheus", "uid": "prometheus"}
+        }
+      ]
+    },
+    "time": {
+      "from": "now-7d",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["1m", "5m", "15m", "30m", "1h", "2h", "1d"]
+    },
+    "annotations": {
+      "list": [
+        {
+          "name": "Deployments",
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "changes(dora_deployments_total[1m]) > 0",
+          "titleFormat": "Deployment",
+          "textFormat": "{{service}}",
+          "iconColor": "green"
+        },
+        {
+          "name": "Incidents",
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "changes(dora_incidents_total[1m]) > 0",
+          "titleFormat": "Incident",
+          "textFormat": "{{service}}",
+          "iconColor": "red"
+        }
+      ]
+    }
+  }
+}
