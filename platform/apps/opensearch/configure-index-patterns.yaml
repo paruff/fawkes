@@ -1,7 +1,7 @@
 # ============================================================================
 # FILE: platform/apps/opensearch/configure-index-patterns.yaml
 # PURPOSE: Job to configure OpenSearch index patterns and templates
-# FEATURES: Creates index templates for Fluent Bit logs with proper mappings
+# FEATURES: Creates index templates for OpenTelemetry Collector logs with proper mappings
 # ============================================================================
 apiVersion: v1
 kind: ConfigMap
@@ -213,8 +213,12 @@ spec:
       serviceAccountName: opensearch
       containers:
         - name: configure-indices
-          image: curlimages/curl:8.5.0
-          command: ["/bin/sh", "/scripts/configure-indices.sh"]
+          image: alpine:3.19
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              apk add --no-cache curl jq
+              /scripts/configure-indices.sh
           env:
             - name: OPENSEARCH_HOST
               value: "opensearch-cluster-master.logging.svc.cluster.local"

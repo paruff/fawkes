@@ -163,7 +163,13 @@ echo "----------------------------------"
 OPENSEARCH_POD=$(kubectl get pods -n "$LOGGING_NAMESPACE" -l app=opensearch-cluster-master -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
 
 if [ -n "$OPENSEARCH_POD" ]; then
-  CLUSTER_HEALTH=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- curl -s http://localhost:9200/_cluster/health 2>/dev/null | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+  # Check if jq is available for robust JSON parsing
+  if command -v jq &> /dev/null; then
+    CLUSTER_HEALTH=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- curl -s http://localhost:9200/_cluster/health 2>/dev/null | jq -r '.status' 2>/dev/null)
+  else
+    # Fallback to grep parsing if jq is not available
+    CLUSTER_HEALTH=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- curl -s http://localhost:9200/_cluster/health 2>/dev/null | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+  fi
   
   if [ "$CLUSTER_HEALTH" == "green" ]; then
     check_pass "OpenSearch cluster health is GREEN"
