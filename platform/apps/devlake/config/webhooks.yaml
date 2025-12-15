@@ -1,0 +1,183 @@
+# ============================================================
+# DevLake Webhooks Configuration
+# ============================================================
+# This file configures webhook endpoints for DORA metrics collection
+# from GitHub, Jenkins, and ArgoCD
+#
+# Webhooks enable real-time event ingestion for:
+# - Commits (GitHub) → Lead time calculation
+# - Builds (Jenkins) → Build success rate, rework tracking
+# - Deployments (ArgoCD) → Deployment frequency, CFR
+# - Incidents (Observability) → MTTR calculation
+# ============================================================
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: devlake-webhooks-config
+  namespace: fawkes-devlake
+  labels:
+    app: devlake
+    component: webhooks
+    team: platform
+data:
+  webhooks.json: |
+    {
+      "webhooks": [
+        {
+          "name": "github-commits",
+          "endpoint": "/api/plugins/webhook/1/commits",
+          "description": "GitHub webhook for commit events (push, PR merge)",
+          "source": "github",
+          "enabled": true,
+          "events": ["push", "pull_request"],
+          "secret_key": "github-webhook-secret",
+          "validation": {
+            "type": "hmac-sha256",
+            "header": "X-Hub-Signature-256"
+          }
+        },
+        {
+          "name": "jenkins-builds",
+          "endpoint": "/api/plugins/webhook/1/cicd",
+          "description": "Jenkins webhook for build and CI events",
+          "source": "jenkins",
+          "enabled": true,
+          "events": ["build_complete", "test_results", "quality_gate"],
+          "validation": {
+            "type": "none"
+          },
+          "note": "Jenkins uses doraMetrics.groovy shared library to send events"
+        },
+        {
+          "name": "argocd-deployments",
+          "endpoint": "/api/plugins/webhook/1/deployments",
+          "description": "ArgoCD webhook for deployment/sync events",
+          "source": "argocd",
+          "enabled": true,
+          "events": ["sync_succeeded", "sync_failed", "health_status"],
+          "validation": {
+            "type": "none"
+          }
+        },
+        {
+          "name": "incident-events",
+          "endpoint": "/api/plugins/webhook/1/incidents",
+          "description": "Observability webhook for production incidents",
+          "source": "observability",
+          "enabled": true,
+          "events": ["incident_created", "incident_resolved"],
+          "validation": {
+            "type": "none"
+          }
+        }
+      ],
+      "global_settings": {
+        "timeout_seconds": 30,
+        "retry_attempts": 3,
+        "retry_delay_seconds": 5,
+        "max_payload_size_kb": 1024
+      }
+    }
+
+---
+# ============================================================
+# External Secret for Webhook Secrets
+# ============================================================
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: devlake-webhook-secrets
+  namespace: fawkes-devlake
+  labels:
+    app: devlake
+    component: webhooks
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: devlake-webhook-secrets
+    creationPolicy: Owner
+  data:
+    - secretKey: github-webhook-secret
+      remoteRef:
+        key: secret/data/fawkes/devlake
+        property: github-webhook-secret
+    - secretKey: webhook-api-key
+      remoteRef:
+        key: secret/data/fawkes/devlake
+        property: webhook-api-key
+
+---
+# ============================================================
+# Service for Webhook Endpoints
+# ============================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: devlake-webhooks
+  namespace: fawkes-devlake
+  labels:
+    app: devlake
+    component: webhooks
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: devlake
+    app.kubernetes.io/component: lake
+
+---
+# ============================================================
+# NetworkPolicy for Webhook Ingress
+# ============================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: devlake-webhook-ingress
+  namespace: fawkes-devlake
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: devlake
+      app.kubernetes.io/component: lake
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow from GitHub webhooks (via ingress controller)
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8080
+    # Allow from Jenkins
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: fawkes
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: jenkins
+      ports:
+        - protocol: TCP
+          port: 8080
+    # Allow from ArgoCD
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: argocd
+      ports:
+        - protocol: TCP
+          port: 8080
