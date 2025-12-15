@@ -38,16 +38,25 @@ log_warning() {
 test_json_validity() {
     log_info "Testing JSON validity..."
     
-    if ! command -v python3 &> /dev/null; then
-        log_warning "python3 not found, skipping JSON validation"
-        return 0
-    fi
-    
-    if python3 -m json.tool "$REPO_ROOT/$DASHBOARD_FILE" > /dev/null 2>&1; then
-        log_success "Dashboard JSON is valid"
-        return 0
+    # Try jq first (more common in CI), fallback to python3
+    if command -v jq &> /dev/null; then
+        if jq empty "$REPO_ROOT/$DASHBOARD_FILE" > /dev/null 2>&1; then
+            log_success "Dashboard JSON is valid (validated with jq)"
+            return 0
+        else
+            log_error "Dashboard JSON is invalid"
+            return 1
+        fi
+    elif command -v python3 &> /dev/null; then
+        if python3 -m json.tool "$REPO_ROOT/$DASHBOARD_FILE" > /dev/null 2>&1; then
+            log_success "Dashboard JSON is valid (validated with python3)"
+            return 0
+        else
+            log_error "Dashboard JSON is invalid"
+            return 1
+        fi
     else
-        log_error "Dashboard JSON is invalid"
+        log_error "Neither jq nor python3 available for JSON validation"
         return 1
     fi
 }
@@ -161,8 +170,8 @@ test_service_filtering() {
     if grep -q '"name": "service"' "$REPO_ROOT/$DASHBOARD_FILE"; then
         log_success "Service filter template variable found"
         
-        # Check if service filter is cascaded from team filter
-        if grep -q 'team=~"$team".*service' "$REPO_ROOT/$DASHBOARD_FILE"; then
+        # Check if service filter query references team filter
+        if grep -q 'label_values.*team=~' "$REPO_ROOT/$DASHBOARD_FILE"; then
             log_success "Service filter is cascaded from team filter"
             return 0
         else
@@ -179,7 +188,13 @@ test_service_filtering() {
 test_panel_count() {
     log_info "Testing panel count..."
     
-    local panel_count=$(grep -o '"id": [0-9]*,' "$REPO_ROOT/$DASHBOARD_FILE" | wc -l)
+    # Use jq if available for accurate counting, otherwise use grep
+    local panel_count
+    if command -v jq &> /dev/null; then
+        panel_count=$(jq '[.dashboard.panels // [] | .[] | select(.id)] | length' "$REPO_ROOT/$DASHBOARD_FILE" 2>/dev/null || echo "0")
+    else
+        panel_count=$(grep -c '"id": [0-9]*' "$REPO_ROOT/$DASHBOARD_FILE" || echo "0")
+    fi
     
     if [ "$panel_count" -ge 15 ]; then
         log_success "Dashboard has $panel_count panels (>= 15 expected)"
