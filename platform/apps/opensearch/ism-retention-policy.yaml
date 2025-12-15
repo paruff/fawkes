@@ -1,0 +1,169 @@
+# ============================================================================
+# FILE: platform/apps/opensearch/ism-retention-policy.yaml
+# PURPOSE: OpenSearch Index State Management (ISM) policy for log retention
+# FEATURES: 30-day retention with hot/warm/delete transitions
+# SCOPE: Applied to all log indices (fawkes-logs-*, fawkes-host-logs-*)
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opensearch-ism-policy
+  namespace: logging
+  labels:
+    app: opensearch
+    component: observability
+data:
+  # ============================================================================
+  # ISM Policy for Application Logs - 30 Day Retention
+  # ============================================================================
+  ism-policy.json: |
+    {
+      "policy": {
+        "description": "Fawkes log retention policy - 30 days with hot/warm/delete transitions",
+        "default_state": "hot",
+        "states": [
+          {
+            "name": "hot",
+            "actions": [
+              {
+                "rollover": {
+                  "min_index_age": "1d",
+                  "min_primary_shard_size": "10gb"
+                }
+              }
+            ],
+            "transitions": [
+              {
+                "state_name": "warm",
+                "conditions": {
+                  "min_index_age": "7d"
+                }
+              }
+            ]
+          },
+          {
+            "name": "warm",
+            "actions": [
+              {
+                "replica_count": {
+                  "number_of_replicas": 0
+                }
+              },
+              {
+                "force_merge": {
+                  "max_num_segments": 1
+                }
+              }
+            ],
+            "transitions": [
+              {
+                "state_name": "delete",
+                "conditions": {
+                  "min_index_age": "30d"
+                }
+              }
+            ]
+          },
+          {
+            "name": "delete",
+            "actions": [
+              {
+                "delete": {}
+              }
+            ]
+          }
+        ],
+        "ism_template": [
+          {
+            "index_patterns": ["fawkes-logs-*", "fawkes-host-logs-*"],
+            "priority": 100
+          }
+        ]
+      }
+    }
+
+  # ============================================================================
+  # Script to Apply ISM Policy
+  # ============================================================================
+  apply-policy.sh: |
+    #!/bin/bash
+    set -e
+
+    OPENSEARCH_HOST="${OPENSEARCH_HOST:-opensearch-cluster-master.logging.svc.cluster.local}"
+    OPENSEARCH_PORT="${OPENSEARCH_PORT:-9200}"
+    POLICY_NAME="fawkes-log-retention-policy"
+
+    echo "Waiting for OpenSearch to be ready..."
+    until curl -s "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_cluster/health" > /dev/null; do
+      echo "OpenSearch not ready yet, waiting..."
+      sleep 5
+    done
+
+    echo "OpenSearch is ready. Applying ISM policy..."
+
+    # Create or update ISM policy
+    curl -X PUT "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_plugins/_ism/policies/${POLICY_NAME}" \
+      -H 'Content-Type: application/json' \
+      -d @/config/ism-policy.json
+
+    echo "ISM policy applied successfully."
+
+    # List existing policies to verify
+    echo "Existing ISM policies:"
+    curl -s "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_plugins/_ism/policies" | jq .
+
+---
+# ============================================================================
+# Job to Apply ISM Policy on OpenSearch Startup
+# ============================================================================
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: opensearch-apply-ism-policy
+  namespace: logging
+  labels:
+    app: opensearch
+    component: observability
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  template:
+    metadata:
+      name: opensearch-apply-ism-policy
+      labels:
+        app: opensearch
+        job: apply-ism-policy
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: opensearch
+      containers:
+        - name: apply-policy
+          image: curlimages/curl:8.5.0
+          command: ["/bin/sh", "/scripts/apply-policy.sh"]
+          env:
+            - name: OPENSEARCH_HOST
+              value: "opensearch-cluster-master.logging.svc.cluster.local"
+            - name: OPENSEARCH_PORT
+              value: "9200"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: config
+          configMap:
+            name: opensearch-ism-policy
+            items:
+              - key: ism-policy.json
+                path: ism-policy.json
+        - name: scripts
+          configMap:
+            name: opensearch-ism-policy
+            items:
+              - key: apply-policy.sh
+                path: apply-policy.sh
+                mode: 0755
+  backoffLimit: 5
