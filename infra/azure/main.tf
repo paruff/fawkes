@@ -1,11 +1,5 @@
 provider "azurerm" {
-  features {
-    key_vault {
-      # Only purge soft-deleted Key Vaults on destroy in dev environments
-      # In production, this should always be false to prevent accidental permanent deletion
-      purge_soft_delete_on_destroy = var.environment == "dev" ? true : false
-    }
-  }
+  features {}
   subscription_id = var.subscription_id
   tenant_id       = var.tenant_id
 }
