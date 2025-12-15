@@ -147,6 +147,17 @@ def call(Map config = [:]) {
                     expression { config.runSecurityScan }
                 }
                 stages {
+                    stage('Secrets Scan') {
+                        steps {
+                            container('gitleaks') {
+                                script {
+                                    echo "Scanning for secrets with Gitleaks..."
+                                    runSecretsCheck(config)
+                                }
+                            }
+                        }
+                    }
+
                     stage('SonarQube Analysis') {
                         steps {
                             container(getContainerName(config.language)) {
@@ -390,6 +401,10 @@ spec:
     image: aquasec/trivy:latest
     command: ['cat']
     tty: true
+  - name: gitleaks
+    image: zricethezav/gitleaks:latest
+    command: ['cat']
+    tty: true
   volumes:
   - name: docker-sock
     hostPath:
@@ -581,6 +596,64 @@ def runDependencyCheck(Map config) {
         case 'go':
             sh 'go install golang.org/x/vuln/cmd/govulncheck@latest && govulncheck ./...'
             break
+    }
+}
+
+/**
+ * Run secrets detection with Gitleaks
+ * 
+ * Scans the repository for hardcoded secrets, API keys, passwords, and other
+ * sensitive information. Uses the .gitleaks.toml configuration file if present.
+ * Fails the pipeline if secrets are detected to prevent accidental commits.
+ */
+def runSecretsCheck(Map config) {
+    echo "=============================================="
+    echo "Scanning for secrets with Gitleaks"
+    echo "=============================================="
+    
+    def exitCode = 0
+    
+    try {
+        // Run Gitleaks scan with verbose output
+        sh """
+            gitleaks detect \
+                --source . \
+                --verbose \
+                --report-format json \
+                --report-path gitleaks-report.json \
+                --exit-code 1
+        """
+        echo "✅ No secrets detected!"
+    } catch (Exception e) {
+        exitCode = 1
+        echo """
+============================================
+❌ SECRETS DETECTED IN CODE
+============================================
+Gitleaks has detected potential secrets in your code.
+This is a critical security issue that must be resolved.
+
+Common secrets detected:
+- API keys and tokens
+- Passwords and credentials
+- Private keys and certificates
+- Database connection strings
+- OAuth tokens
+
+Next steps:
+1. Review the Gitleaks report: gitleaks-report.json
+2. Remove or encrypt any sensitive data
+3. Use environment variables or secret management
+4. Update .gitleaks.toml if this is a false positive
+
+For help, see: docs/how-to/security/secrets-management.md
+============================================
+"""
+        // Archive the report for review
+        archiveArtifacts artifacts: 'gitleaks-report.json', allowEmptyArchive: true
+        
+        // Fail the build
+        error "Secrets detected in code. Pipeline failed for security reasons."
     }
 }
 

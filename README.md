@@ -131,9 +131,10 @@ Unlike infrastructure-only solutions, Fawkes provides everything product teams n
 - **Custom Dashboards** - Team-level visibility
 
 ### Security & Compliance
-- **Security Scanning** - SonarQube (SAST), Trivy (containers)
+- **Security Scanning** - SonarQube (SAST), Trivy (containers), Gitleaks (secrets)
+- **Automated Secrets Detection** - Pre-commit hooks and CI/CD pipeline scanning
 - **Policy Enforcement** - Kyverno for Kubernetes policies
-- **Secrets Management** - External Secrets Operator
+- **Secrets Management** - External Secrets Operator + HashiCorp Vault
 - **Zero Trust Roadmap** - Security-first architecture
 
 ### Learning & Growth

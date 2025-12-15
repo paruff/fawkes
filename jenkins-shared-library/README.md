@@ -52,6 +52,25 @@ That's it! The pipeline automatically handles:
 - Building and pushing Docker images
 - Updating GitOps manifests for ArgoCD
 
+### 3. Example Jenkinsfiles
+
+Ready-to-use example Jenkinsfiles are available in the `examples/` directory:
+
+| File | Language | Description |
+|------|----------|-------------|
+| [Jenkinsfile.java](examples/Jenkinsfile.java) | Java | Maven-based Java application with Cucumber BDD |
+| [Jenkinsfile.python](examples/Jenkinsfile.python) | Python | Python application with pytest and Behave |
+| [Jenkinsfile.node](examples/Jenkinsfile.node) | Node.js | Node.js application with Jest and BDD tests |
+| [Jenkinsfile.go](examples/Jenkinsfile.go) | Go | Go application with Go test framework |
+| [Jenkinsfile.minimal](examples/Jenkinsfile.minimal) | Any | Minimal configuration using all defaults |
+| [Jenkinsfile.sample](examples/Jenkinsfile.sample) | Any | Comprehensive example with all configuration options |
+
+**To use an example:**
+1. Copy the appropriate `Jenkinsfile.*` from the examples directory
+2. Rename it to `Jenkinsfile` in your repository root
+3. Update the `appName` to match your application
+4. Customize commands and settings as needed
+
 ## Pipeline Stages
 
 ### For Main Branch (Artifact Production)
@@ -62,7 +81,7 @@ That's it! The pipeline automatically handles:
 | Build | Compile/build application |
 | Unit Test | Run unit tests |
 | BDD/Gherkin Test | Run behavior-driven tests |
-| Security Scan | SonarQube analysis, dependency check |
+| Security Scan | **Secrets scan (Gitleaks)**, SonarQube analysis, dependency check |
 | Quality Gate | Wait for SonarQube quality gate |
 | Build Docker Image | Create container image |
 | Container Security Scan | Trivy vulnerability scan |
@@ -242,6 +261,55 @@ Given('the API is running', function() {
 ```
 
 ## Security Scanning
+
+### Secrets Scanning (Gitleaks)
+
+**NEW**: The Golden Path pipeline now includes automated secrets detection using Gitleaks. This prevents hardcoded secrets from being deployed.
+
+#### How It Works
+
+1. **Pre-commit Protection**: Gitleaks runs in pre-commit hooks to catch secrets before they're committed
+2. **Pipeline Protection**: Every pipeline run includes a Secrets Scan stage that fails immediately if secrets are detected
+3. **Parallel Execution**: Runs in parallel with other security scans for fast feedback
+
+#### What Gets Detected
+
+- API Keys (AWS, Azure, GCP, GitHub, Slack, etc.)
+- Passwords and credentials
+- Private keys (SSH, SSL certificates, JWT secrets)
+- OAuth tokens and session tokens
+- Database connection strings with credentials
+
+#### Configuration
+
+```groovy
+goldenPathPipeline {
+    appName = 'my-service'
+    runSecurityScan = true  // Includes secrets scanning (default)
+}
+```
+
+#### Handling False Positives
+
+Add exceptions to `.gitleaks.toml`:
+
+```toml
+[allowlist]
+description = "Allow test fixtures"
+paths = [
+  '''tests/fixtures/.*''',
+]
+```
+
+#### When Secrets Are Detected
+
+The pipeline:
+- ❌ Fails immediately
+- 📄 Archives a detailed JSON report
+- 📋 Shows remediation steps
+- 🔗 Links to secrets management documentation
+
+**Learn More**: See [Secrets Management Guide](../docs/how-to/security/secrets-management.md)
 
 ### SonarQube
 
