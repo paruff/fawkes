@@ -1,4 +1,6 @@
 provider "azurerm" {
+  # Features block is empty as no Azure-specific features are configured
+  # Note: Key Vault configuration removed as Fawkes uses HashiCorp Vault
   features {}
   subscription_id = var.subscription_id
   tenant_id       = var.tenant_id
