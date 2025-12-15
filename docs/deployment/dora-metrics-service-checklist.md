@@ -184,8 +184,12 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 
 - [ ] Connect to MySQL:
   ```bash
+  # Get root password first
+  MYSQL_ROOT_PASSWORD=$(kubectl get secret devlake-db -n fawkes -o jsonpath='{.data.mysql-root-password}' | base64 -d)
+  
+  # Connect to MySQL
   kubectl exec -it -n fawkes devlake-mysql-0 -- mysql -u root -p
-  # Password: kubectl get secret devlake-db -n fawkes -o jsonpath='{.data.mysql-root-password}' | base64 -d
+  # Enter the password when prompted
   ```
 
 - [ ] Verify database exists:

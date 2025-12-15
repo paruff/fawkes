@@ -130,15 +130,15 @@ if kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/component=mysql
                 TABLE_CHECK=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$MYSQL_POD" -- \
                     mysql -u root -p"${MYSQL_ROOT_PASSWORD}" lake -e "SHOW TABLES LIKE '$table';" 2>/dev/null | grep -c "$table" || echo "0")
             
-            if [ "$TABLE_CHECK" -gt 0 ]; then
-                print_success "Table '$table' exists"
-            else
-                print_failure "Table '$table' does not exist"
-            fi
-        done
-    else
-        print_failure "Database 'lake' does not exist"
-    fi
+                if [ "$TABLE_CHECK" -gt 0 ]; then
+                    print_success "Table '$table' exists"
+                else
+                    print_failure "Table '$table' does not exist"
+                fi
+            done
+        else
+            print_failure "Database 'lake' does not exist"
+        fi
     else
         print_warning "MySQL credentials not available, skipping database schema checks"
         echo "  To check manually: kubectl exec -n $DEVLAKE_NAMESPACE \$MYSQL_POD -- mysql -u root -p"
