@@ -800,51 +800,82 @@ Repository ready for development
 
 ### Security Scanning Pipeline
 
+All code changes pass through a multi-stage security scanning pipeline with automated quality gates at each stage. Each gate enforces specific thresholds and blocks progression if critical issues are detected.
+
 ```
 Code Commit
     │
     ▼
 ┌─────────────────────────────────────────┐
-│ Stage 1: Source Code Analysis          │
-│ - SonarQube (SAST)                      │
+│ Stage 1: Secrets Detection             │
+│ - Gitleaks (hardcoded secrets)         │
+│   * API keys and tokens                 │
+│   * Passwords and credentials           │
+│   * Private keys                        │
+│ Quality Gate: Zero tolerance           │
+│ ⚡ FAIL: Pipeline stops immediately     │
+│ 📋 Override: .gitleaks.toml allowlist   │
+└─────────────────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────────────────┐
+│ Stage 2: Source Code Analysis (SAST)   │
+│ - SonarQube                             │
 │   * Security vulnerability detection    │
 │   * Code quality metrics                │
 │   * Technical debt tracking             │
-│ - git-secrets (credential scanning)    │
-│ - License compliance check              │
-│ Quality Gate: Block if critical issues │
-│                                         │
+│   * Security hotspot identification     │
+│ Quality Gate: Zero new vulnerabilities │
 │ ⚡ Main Branch: MUST pass to proceed    │
 │ 📊 Dashboard: sonarqube.fawkes.local    │
+│ 📋 Override: Requires approval          │
 └─────────────────────────────────────────┘
     │
     ▼
 ┌─────────────────────────────────────────┐
-│ Stage 2: Dependency Analysis            │
+│ Stage 3: Dependency Analysis            │
 │ - OWASP Dependency Check                │
-│ - npm audit / pip audit                 │
-│ Quality Gate: Block if high CVEs       │
+│ - npm audit / pip audit / govulncheck   │
+│ Quality Gate: CVSS ≥7 blocks build     │
+│ 📋 Reports archived as artifacts        │
 └─────────────────────────────────────────┘
     │
     ▼
 ┌─────────────────────────────────────────┐
-│ Stage 3: Container Image Scan           │
+│ Stage 4: Container Image Scan           │
 │ - Trivy vulnerability scan              │
-│ - SBOM generation                       │
-│ Quality Gate: Block if critical vulns  │
+│   * OS package vulnerabilities          │
+│   * Application dependencies            │
+│   * Misconfigurations                   │
+│ - SBOM generation (CycloneDX/SPDX)     │
+│ Quality Gate: HIGH/CRITICAL = FAIL     │
+│ ⚡ Severity: HIGH,CRITICAL              │
+│ 📊 Dashboard: Grafana Trivy Dashboard   │
+│ 📋 Override: .trivyignore with expiry   │
 └─────────────────────────────────────────┘
     │
     ▼
 ┌─────────────────────────────────────────┐
-│ Stage 4: Policy Validation              │
+│ Stage 5: Policy Validation              │
 │ - Kyverno policy check                  │
 │ - Resource limits validation            │
+│ - Pod Security Standards                │
 │ Quality Gate: Enforce policies         │
 └─────────────────────────────────────────┘
     │
     ▼
 Deploy to Kubernetes
 ```
+
+**Quality Gate Enforcement Strategy**:
+- **Fail Fast**: Pipeline stops at first critical issue
+- **Defense in Depth**: Multiple gates catch different issue types
+- **Automated**: No manual approvals required for clean builds
+- **Override Path**: Documented exception process with expiration
+- **Metrics**: All gate failures tracked in DORA change failure rate
+
+For complete details on configuring and managing quality gates, see:
+[Quality Gates Configuration Guide](../how-to/security/quality-gates-configuration.md)
 
 ### SonarQube Quality Gate Integration
 
@@ -882,6 +913,24 @@ The SonarQube Quality Gate is a mandatory stage in the Golden Path CI/CD pipelin
 - ≥80% new code coverage
 - ≤3% duplicated lines
 - Maintainability rating A
+
+**Configuration and Overrides**:
+
+The platform enforces quality gates at multiple stages with defined severity thresholds:
+
+- **SonarQube SAST**: Zero tolerance for new vulnerabilities and bugs
+- **Trivy Container Scan**: HIGH and CRITICAL severity vulnerabilities block deployment
+- **Gitleaks Secrets Scan**: Zero tolerance for hardcoded secrets
+- **Dependency Checks**: CVSS ≥7 vulnerabilities require remediation
+
+For detailed configuration, customization, and override processes, see:
+- [Quality Gates Configuration Guide](../how-to/security/quality-gates-configuration.md)
+- [ADR-014: SonarQube Quality Gates](../adr/ADR-014%20sonarqube%20quality%20gates.md)
+
+**Override Process**: All quality gate exceptions require documented justification and approval from:
+- Security Team (required)
+- Technical Lead (required)
+- Product Owner (for production deployments)
 
 ### Secrets Management
 
