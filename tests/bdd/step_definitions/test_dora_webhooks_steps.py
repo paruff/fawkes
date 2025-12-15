@@ -5,7 +5,9 @@ Step definitions for DORA Metrics Webhooks BDD tests
 import json
 import hmac
 import hashlib
+import os
 import requests
+import pytest
 from datetime import datetime
 from pytest_bdd import scenarios, given, when, then, parsers
 from kubernetes import client, config
@@ -36,23 +38,23 @@ webhook_context = WebhookTestContext()
 # ============================================================
 
 @given('the DevLake DORA metrics service is deployed')
-def devlake_is_deployed(k8s_client):
+def devlake_is_deployed():
     """Verify DevLake is deployed in the cluster"""
     try:
         config.load_kube_config()
         v1 = client.CoreV1Api()
-        
+
         # Check if DevLake pods are running
         pods = v1.list_namespaced_pod(
             namespace='fawkes-devlake',
             label_selector='app.kubernetes.io/name=devlake'
         )
-        
+
         assert len(pods.items) > 0, "No DevLake pods found"
-        
+
         running_pods = [p for p in pods.items if p.status.phase == 'Running']
         assert len(running_pods) > 0, "No DevLake pods in Running state"
-        
+
     except Exception as e:
         # In test environment, skip if cluster not available
         pytest.skip(f"Kubernetes cluster not available: {e}")
@@ -161,15 +163,19 @@ def commit_timestamp_recorded():
 @given(parsers.parse('the Jenkins shared library "{library}" is available'))
 def jenkins_library_available(library):
     """Verify Jenkins shared library exists"""
-    import os
-    assert os.path.exists('jenkins-shared-library/vars/doraMetrics.groovy')
+    # Get the repository root directory
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
+    library_path = os.path.join(repo_root, 'jenkins-shared-library/vars/doraMetrics.groovy')
+    assert os.path.exists(library_path), f"Jenkins library not found at {library_path}"
 
 
 @given(parsers.parse('the Jenkins pipeline includes "{function}" calls'))
 def pipeline_includes_function(function):
     """Verify pipeline includes DORA metrics function"""
-    # Check doraMetrics.groovy contains the function
-    with open('jenkins-shared-library/vars/doraMetrics.groovy', 'r') as f:
+    # Get the repository root directory
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
+    library_path = os.path.join(repo_root, 'jenkins-shared-library/vars/doraMetrics.groovy')
+    with open(library_path, 'r') as f:
         content = f.read()
         assert 'recordBuild' in content
 
@@ -237,8 +243,10 @@ def build_metrics_stored():
 @given('ArgoCD notifications are configured with DevLake webhook')
 def argocd_notifications_configured():
     """Verify ArgoCD notifications config exists"""
-    import os
-    assert os.path.exists('platform/apps/devlake/config/argocd-notifications.yaml')
+    # Get the repository root directory
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
+    config_path = os.path.join(repo_root, 'platform/apps/devlake/config/argocd-notifications.yaml')
+    assert os.path.exists(config_path), f"ArgoCD config not found at {config_path}"
 
 
 @when('ArgoCD successfully syncs an application')
@@ -305,23 +313,27 @@ def lead_time_calculated():
 @given('the platform repository contains webhook configurations')
 def platform_has_webhook_configs():
     """Verify webhook config files exist"""
-    import os
-    assert os.path.exists('platform/apps/devlake/config')
+    # Get the repository root directory
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
+    config_dir = os.path.join(repo_root, 'platform/apps/devlake/config')
+    assert os.path.exists(config_dir), f"Config directory not found at {config_dir}"
 
 
 @then(parsers.parse('the "{filename}" configuration should exist'))
 def config_file_exists(filename):
     """Verify specific config file exists"""
-    import os
-    filepath = f'platform/apps/devlake/config/{filename}'
+    # Get the repository root directory
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
+    filepath = os.path.join(repo_root, f'platform/apps/devlake/config/{filename}')
     assert os.path.exists(filepath), f"Config file not found: {filepath}"
 
 
 @then(parsers.parse('the "{filename}" documentation should exist'))
 def documentation_exists(filename):
     """Verify documentation file exists"""
-    import os
-    filepath = f'platform/apps/devlake/config/{filename}'
+    # Get the repository root directory
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
+    filepath = os.path.join(repo_root, f'platform/apps/devlake/config/{filename}')
     assert os.path.exists(filepath), f"Documentation not found: {filepath}"
 
 
@@ -359,7 +371,9 @@ def jenkins_can_reach_devlake():
     """Verify Jenkins can reach DevLake"""
     # Would test actual network connectivity
     # For test, we verify network policy allows it
-    with open('platform/apps/devlake/config/webhooks.yaml', 'r') as f:
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
+    config_path = os.path.join(repo_root, 'platform/apps/devlake/config/webhooks.yaml')
+    with open(config_path, 'r') as f:
         content = f.read()
         assert 'jenkins' in content.lower()
 
@@ -367,7 +381,9 @@ def jenkins_can_reach_devlake():
 @then('ArgoCD should be able to reach DevLake webhook endpoint')
 def argocd_can_reach_devlake():
     """Verify ArgoCD can reach DevLake"""
-    with open('platform/apps/devlake/config/webhooks.yaml', 'r') as f:
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
+    config_path = os.path.join(repo_root, 'platform/apps/devlake/config/webhooks.yaml')
+    with open(config_path, 'r') as f:
         content = f.read()
         assert 'argocd' in content.lower()
 
