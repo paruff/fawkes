@@ -108,9 +108,15 @@ data:
 
     echo "ISM policy applied successfully."
 
-    # List existing policies to verify
+    # List existing policies to verify (with fallback if jq fails)
     echo "Existing ISM policies:"
-    curl -s "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_plugins/_ism/policies" | jq .
+    if command -v jq &> /dev/null; then
+      curl -s "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_plugins/_ism/policies" | jq . || \
+        curl -s "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_plugins/_ism/policies"
+    else
+      echo "Note: jq not available, showing raw JSON"
+      curl -s "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_plugins/_ism/policies"
+    fi
 
 ---
 # ============================================================================

@@ -181,9 +181,16 @@ data:
 
     echo "Index patterns and templates configured successfully."
 
-    # List templates to verify
+    # List templates to verify (with fallback if jq fails)
     echo "Existing index templates:"
-    curl -s "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_index_template" | jq '.index_templates[] | .name'
+    if command -v jq &> /dev/null; then
+      curl -s "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_index_template" | \
+        jq '.index_templates[] | .name' 2>/dev/null || \
+        curl -s "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_index_template"
+    else
+      echo "Note: jq not available, showing raw JSON"
+      curl -s "http://${OPENSEARCH_HOST}:${OPENSEARCH_PORT}/_index_template"
+    fi
 
 ---
 # ============================================================================

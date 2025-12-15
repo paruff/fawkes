@@ -144,9 +144,11 @@ spec:
           name: opensearch
 
         # Environment Variables
+        # Note: Password is only used when security plugin is enabled
+        # For production, use Kubernetes Secret or generate dynamically
         extraEnvs:
           - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
-            value: "Admin123!"
+            value: "Admin123!"  # WARNING: Change for production or use Secret
           - name: DISABLE_INSTALL_DEMO_CONFIG
             value: "true"
 
