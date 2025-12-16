@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -88,6 +88,9 @@ validate-at-e1-007: ## Run AT-E1-007 acceptance test validation for DORA Metrics
 
 validate-at-e1-009: ## Run AT-E1-009 acceptance test validation for Harbor Container Registry
 	@./scripts/validate-at-e1-009.sh --namespace $(ARGO_NAMESPACE)
+
+validate-at-e1-012: ## Run AT-E1-012 acceptance test validation for Full Platform Workflow
+	@./scripts/validate-at-e1-012.sh --verify-metrics --verify-observability
 
 clean-local: ## Clean up local K8s deployments
 	@kubectl delete namespace $(NAMESPACE) --ignore-not-found=true
