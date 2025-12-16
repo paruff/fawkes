@@ -21,6 +21,9 @@ test-bdd: ## Run BDD acceptance tests (COMPONENT=backstage|argocd|all)
 validate: ## Validate manifests and run policy checks
 	@./infra/local-dev/validate.sh $(NAMESPACE)
 
+validate-resources: ## Validate resource usage stays within 70% target
+	@./scripts/validate-resource-usage.sh --namespace $(NAMESPACE) --target-cpu 70 --target-memory 70
+
 sync: ## Sync to GitOps for environment (ENVIRONMENT=dev|prod)
 	@./infra/local-dev/sync-to-argocd.sh $(ENVIRONMENT)
 

@@ -22,6 +22,15 @@ controller:
   # ensure controller doesn't run builds — use agents
   executors: 0
 
+  # Resource limits - optimized for controller-only (no build execution)
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 1500m
+      memory: 2Gi
+
   # mount JCasC from ConfigMap and inject secret env var
   JCasC:
     enabled: true
