@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -50,6 +50,17 @@ test-all: test-unit test-bdd test-integration ## Run all tests
 
 test-e2e-argocd: ## Run ArgoCD E2E sync tests
 	@./tests/e2e/argocd-sync-test.sh --namespace $(ARGO_NAMESPACE)
+
+test-e2e-integration: ## Run complete E2E integration test (scaffold → deploy → metrics)
+	@./tests/e2e/run-e2e-integration-test.sh --namespace $(NAMESPACE) --argocd-ns $(ARGO_NAMESPACE)
+
+test-e2e-integration-verbose: ## Run E2E integration test with verbose output
+	@./tests/e2e/run-e2e-integration-test.sh --namespace $(NAMESPACE) --argocd-ns $(ARGO_NAMESPACE) --verbose
+
+test-e2e-integration-dry-run: ## Show what E2E test would do without executing
+	@./tests/e2e/run-e2e-integration-test.sh --dry-run
+
+test-e2e-all: test-e2e-argocd test-e2e-integration ## Run all E2E tests
 
 validate-at-e1-001: ## Run AT-E1-001 acceptance test validation for AKS cluster
 	@./scripts/validate-at-e1-001.sh --resource-group $(AZURE_RESOURCE_GROUP) --cluster-name $(AZURE_CLUSTER_NAME)
