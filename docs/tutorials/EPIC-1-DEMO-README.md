@@ -63,7 +63,7 @@ The recording script and checklist have been prepared. The video is ready to be 
 1. **Prepare Your Environment** (15 minutes)
    ```bash
    # Ensure all pods are running
-   kubectl get pods -A | grep -E 'backstage|argocd|jenkins|grafana|devlake'
+   kubectl get pods -A | grep -E 'argocd|backstage|jenkins|prometheus|grafana'
    
    # Verify all ingress routes
    kubectl get ingress -A

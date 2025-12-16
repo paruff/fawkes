@@ -290,18 +290,18 @@ Show a PR pipeline:
 
 Show a Jenkinsfile:
 
-> "The beauty is that developers don't need to maintain complex pipeline code. They just reference our shared pipeline library:
-> 
-> ```groovy
-> @Library('fawkes-pipeline-library') _
-> 
-> goldenPathPipeline {
->     appName = 'my-service'
->     language = 'node'
-> }
-> ```
-> 
-> That's it! The library handles all the complexity, and we can update the pipeline logic centrally."
+> "The beauty is that developers don't need to maintain complex pipeline code. They just reference our shared pipeline library:"
+
+```groovy
+@Library('fawkes-pipeline-library') _
+
+goldenPathPipeline {
+    appName = 'my-service'
+    language = 'node'
+}
+```
+
+> "That's it! The library handles all the complexity, and we can update the pipeline logic centrally."
 
 ---
 
