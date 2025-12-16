@@ -62,9 +62,9 @@ This is **Fawkes**, an Internal Product Delivery Platform with integrated dojo l
 ### Common Patterns
 
 #### Deploying a new component
-1. Create Helm chart or raw manifests in `manifests/base/`
-2. Create Kustomization for environment overlays
-3. Create ArgoCD Application in `manifests/argocd/apps/.yaml`
+1. Create Helm chart or raw manifests in component directory under `platform/apps/`
+2. Create Kustomization for environment overlays if needed
+3. Create ArgoCD Application manifest in `platform/apps/<component>-application.yaml`
 4. Add BDD feature for acceptance tests
 5. Deploy locally first, then sync to GitOps
 
@@ -304,14 +304,18 @@ kubectl logs <pod-name> -n fawkes-local
 
 #### ArgoCD sync issues
 ```bash
-# Check application status
-argocd app get fawkes-dev
+# Check ArgoCD status (using make target)
+make argocd-status ENVIRONMENT=dev
 
 # View diff between Git and cluster
 make argocd-diff ENVIRONMENT=dev
 
 # Force sync
 make argocd-sync ENVIRONMENT=dev
+
+# Or use ArgoCD CLI directly if needed
+# argocd app get fawkes-dev
+# argocd app sync fawkes-dev
 ```
 
 #### Resource constraints
