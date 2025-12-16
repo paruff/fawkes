@@ -239,8 +239,8 @@ Developer Access Request
 - PostgreSQL HA cluster (3 instances)
 
 **Resource Allocation**:
-- Backstage: 500m-2 CPU, 512Mi-2Gi memory
-- PostgreSQL: 500m-2 CPU, 512Mi-2Gi memory
+- Backstage: 300m-1 CPU, 384Mi-1Gi memory (optimized for <70% utilization)
+- PostgreSQL: 300m-1 CPU, 384Mi-1Gi memory per pod (3 pods for HA)
 
 **Security**:
 - TLS termination at ingress (cert-manager)
@@ -1109,16 +1109,28 @@ Application consumes database
 ### Resource Allocation (per cluster)
 
 **MVP Scale** (5 teams, 25 services):
-- Kubernetes nodes: 5-10 (16GB RAM, 4 vCPU each)
-- Total cluster capacity: ~80GB RAM, 40 vCPU
-- Platform overhead: ~30GB RAM, 15 vCPU
-- Application capacity: ~50GB RAM, 25 vCPU
+- Kubernetes nodes: 3-5 (16GB RAM, 4 vCPU each)
+- Total cluster capacity: ~48-80GB RAM, 12-20 vCPU
+- Platform overhead: ~11GB RAM, 5.5 vCPU
+- Application capacity: ~37-69GB RAM, 6.5-14.5 vCPU
+- Resource utilization target: <70% CPU/Memory average
+
+**Platform Component Resources (Optimized for <70% utilization):**
+- Backstage (2 replicas): 600m CPU request, 2 CPU limit, 768Mi-2Gi memory
+- Jenkins Controller: 500m-1.5 CPU, 1-2Gi memory
+- Prometheus: 300m-800m CPU, 768Mi-1.5Gi memory
+- PostgreSQL clusters (3 pods each): 900m-3 CPU, 1.15-3Gi memory per cluster
+- Grafana: 80m-150m CPU, 200-400Mi memory
+- OpenTelemetry Collector (DaemonSet): 150m-800m CPU, 384-768Mi memory per node
+- OpenSearch: 400m-800m CPU, 1.5Gi memory
+- Vault (3 pods): 600m-2.4 CPU, 600Mi-1.2Gi memory
+- Kyverno (7 pods total): 560m-2.8 CPU, 700Mi-1.4Gi memory
 
 **Production Scale** (20 teams, 200 services):
-- Kubernetes nodes: 20-50 (32GB RAM, 8 vCPU each)
-- Total cluster capacity: ~640GB RAM, 400 vCPU
-- Platform overhead: ~100GB RAM, 50 vCPU
-- Application capacity: ~540GB RAM, 350 vCPU
+- Kubernetes nodes: 10-20 (32GB RAM, 8 vCPU each)
+- Total cluster capacity: ~320-640GB RAM, 80-160 vCPU
+- Platform overhead: ~50GB RAM, 25 vCPU
+- Application capacity: ~270-590GB RAM, 55-135 vCPU
 
 ### Caching Strategy
 

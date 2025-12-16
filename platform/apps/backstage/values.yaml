@@ -149,14 +149,16 @@ extraEnvVars:
 
 # ============================================================
 # Resource Configuration
+# Optimized to stay within 70% target utilization
+# Based on typical Backstage workload: 2 replicas sharing load
 # ============================================================
 resources:
   requests:
-    cpu: 500m
-    memory: 512Mi
+    cpu: 300m
+    memory: 384Mi
   limits:
-    cpu: 2
-    memory: 2Gi
+    cpu: 1
+    memory: 1Gi
 
 # ============================================================
 # Health Probes

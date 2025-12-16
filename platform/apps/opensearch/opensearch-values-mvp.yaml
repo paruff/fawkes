@@ -33,19 +33,19 @@ image:
   tag: "2.11.1"
   pullPolicy: "IfNotPresent"
 
-# ===== Resources - MVP: Minimal for dev/test =====
+# ===== Resources - MVP: Optimized for 70% target =====
 # Production: Much larger (see production values)
 resources:
   requests:
-    cpu: "500m"
-    memory: "2Gi"
+    cpu: "400m"
+    memory: "1536Mi"
   limits:
-    cpu: "1000m"
-    memory: "2Gi"
+    cpu: "800m"
+    memory: "1536Mi"
 
 # ===== JVM Heap Size - MVP: Half of memory limit =====
 # Rule: Set to 50% of memory limit, max 31GB
-opensearchJavaOpts: "-Xmx1g -Xms1g"
+opensearchJavaOpts: "-Xmx768m -Xms768m"
 
 # ===== Storage - MVP: 50GB persistent volume =====
 # Production: 500GB-1TB per data node

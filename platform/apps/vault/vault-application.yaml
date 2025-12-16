@@ -43,14 +43,14 @@ spec:
           enabled: true
           replicas: 2
 
-          # Injector resources
+          # Injector resources - optimized for 70% target
           resources:
             requests:
-              cpu: 50m
-              memory: 64Mi
+              cpu: 40m
+              memory: 50Mi
             limits:
-              cpu: 250m
-              memory: 256Mi
+              cpu: 200m
+              memory: 200Mi
 
           # Metrics for Prometheus
           metrics:
@@ -97,14 +97,14 @@ spec:
             repository: hashicorp/vault
             tag: "1.17.3"
 
-          # Resource configuration
+          # Resource configuration - optimized for 70% target
           resources:
             requests:
-              cpu: 250m
-              memory: 256Mi
+              cpu: 200m
+              memory: 200Mi
             limits:
-              cpu: 1
-              memory: 512Mi
+              cpu: 800m
+              memory: 400Mi
 
           # Data storage for Raft integrated storage
           dataStorage:
