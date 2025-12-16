@@ -21,7 +21,7 @@ data "azurerm_public_ip" "ingress" {
   count               = var.dns_zone_name != null && var.create_dns_records ? 1 : 0
   name                = var.ingress_public_ip_name
   resource_group_name = azurerm_kubernetes_cluster.aks.node_resource_group
-  
+
   # Add dependency to ensure cluster is created first
   depends_on = [azurerm_kubernetes_cluster.aks]
 }

@@ -45,25 +45,8 @@ output "oidc_issuer_url" {
   value       = azurerm_kubernetes_cluster.aks.oidc_issuer_url
 }
 
-output "acr_id" {
-  description = "ID of the Azure Container Registry"
-  value       = azurerm_container_registry.acr.id
-}
-
-output "acr_login_server" {
-  description = "Login server for the Azure Container Registry"
-  value       = azurerm_container_registry.acr.login_server
-}
-
-output "key_vault_id" {
-  description = "ID of the Azure Key Vault"
-  value       = azurerm_key_vault.aks_kv.id
-}
-
-output "key_vault_uri" {
-  description = "URI of the Azure Key Vault"
-  value       = azurerm_key_vault.aks_kv.vault_uri
-}
+# NOTE: ACR outputs removed - Fawkes uses Harbor for container registry
+# NOTE: Key Vault outputs removed - Fawkes uses HashiCorp Vault for secret management
 
 output "storage_account_name" {
   description = "Name of the storage account for Terraform state"
