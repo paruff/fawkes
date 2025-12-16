@@ -19,6 +19,7 @@ This guide provides solutions to common issues encountered while using the Fawke
 ## General Issues
 
 ### 1. **Environment Variables Not Loaded**
+
 - **Symptom:** Commands fail due to missing environment variables.
 - **Solution:**
   - Ensure you have a `.env` file in the root directory.
@@ -28,6 +29,7 @@ This guide provides solutions to common issues encountered while using the Fawke
     ```
 
 ### 2. **Permission Denied Errors**
+
 - **Symptom:** You encounter `Permission Denied` errors when running scripts.
 - **Solution:**
   - Ensure the script has executable permissions:
@@ -41,6 +43,7 @@ This guide provides solutions to common issues encountered while using the Fawke
 ## Infrastructure Issues
 
 ### 1. **Terraform Apply Fails**
+
 - **Symptom:** Terraform fails with errors like "resource already exists" or "authentication failed."
 - **Solution:**
   - Run `terraform plan` to identify conflicting resources.
@@ -51,6 +54,7 @@ This guide provides solutions to common issues encountered while using the Fawke
     ```
 
 ### 2. **Infrastructure Not Destroyed Properly**
+
 - **Symptom:** Resources remain after running the destroy script.
 - **Solution:**
   - Manually inspect the resources in your cloud provider's console.
@@ -64,6 +68,7 @@ This guide provides solutions to common issues encountered while using the Fawke
 ## Kubernetes Issues
 
 ### 1. **Kubernetes Cluster Unreachable**
+
 - **Symptom:** `kubectl` commands fail with "Unable to connect to the server."
 - **Solution:**
   - Ensure your `kubeconfig` is set correctly:
@@ -76,6 +81,7 @@ This guide provides solutions to common issues encountered while using the Fawke
     ```
 
 ### 2. **Pods Stuck in Pending State**
+
 - **Symptom:** Pods remain in the `Pending` state.
 - **Solution:**
   - Check for insufficient resources:
@@ -89,12 +95,14 @@ This guide provides solutions to common issues encountered while using the Fawke
 ## CI/CD Issues
 
 ### 1. **Jenkins Pipeline Fails**
+
 - **Symptom:** Jenkins pipelines fail with errors related to missing credentials or tools.
 - **Solution:**
   - Verify that the required credentials are configured in Jenkins.
   - Ensure the Jenkins agent has the necessary tools installed.
 
 ### 2. **GitHub Actions Workflow Fails**
+
 - **Symptom:** GitHub Actions fail with errors like "command not found" or "authentication failed."
 - **Solution:**
   - Check the workflow logs for detailed error messages.
@@ -105,6 +113,7 @@ This guide provides solutions to common issues encountered while using the Fawke
 ## Azure-Specific Issues
 
 ### 1. **Azure CLI Authentication Fails**
+
 - **Symptom:** Azure CLI commands fail with "not logged in" or "authentication failed."
 - **Solution:**
   - Log in to Azure CLI:
@@ -117,6 +126,7 @@ This guide provides solutions to common issues encountered while using the Fawke
     ```
 
 ### 2. **Resource Group Not Found**
+
 - **Symptom:** Terraform or Azure CLI commands fail with "resource group not found."
 - **Solution:**
   - Verify the resource group exists:
@@ -133,6 +143,7 @@ This guide provides solutions to common issues encountered while using the Fawke
 ## Testing Issues
 
 ### 1. **Tests Fail Due to Missing Dependencies**
+
 - **Symptom:** Tests fail with errors like "module not found" or "dependency missing."
 - **Solution:**
   - Install the required dependencies:
@@ -141,6 +152,7 @@ This guide provides solutions to common issues encountered while using the Fawke
     ```
 
 ### 2. **Performance Tests Fail**
+
 - **Symptom:** Performance tests fail with timeout or resource errors.
 - **Solution:**
   - Ensure the test environment has sufficient resources.
