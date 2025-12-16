@@ -608,7 +608,7 @@ generate_final_report() {
     "total_tests": $TESTS_TOTAL,
     "passed": $TESTS_PASSED,
     "failed": $TESTS_FAILED,
-    "success_rate": $(awk "BEGIN {printf \"%.2f\", ($TESTS_PASSED * 100.0 / $TESTS_TOTAL)}")
+    "success_rate": $([ $TESTS_TOTAL -gt 0 ] && awk "BEGIN {printf \"%.2f\", ($TESTS_PASSED * 100.0 / $TESTS_TOTAL)}" || echo "0")
   },
   "acceptance_criteria": {
     "full_cycle_under_20min": $([ $duration -le $MAX_TIME ] && echo "true" || echo "false"),

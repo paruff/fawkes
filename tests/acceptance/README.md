@@ -502,6 +502,10 @@ AT-E1-012 orchestrates and validates:
 - AT-E1-007: DORA Metrics
 - AT-E1-009: Harbor Registry
 
+Note: AT-E1-008 (Templates), AT-E1-010 (Performance), and AT-E1-011 (Documentation) 
+are validated as part of the synthetic user scenario and component checks rather than
+as separate test executions.
+
 ## AT-E1-005: DevSecOps Security Scanning
 
 ### Acceptance Criteria
