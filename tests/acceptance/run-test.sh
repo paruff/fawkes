@@ -363,6 +363,28 @@ run_at_e1_009() {
     return 0
 }
 
+run_at_e1_012() {
+    log_info "Running AT-E1-012: Full Platform Workflow validation"
+    echo ""
+    
+    # Run the comprehensive validation script
+    log_info "Running comprehensive Epic 1 final validation..."
+    if [ -f "$ROOT_DIR/scripts/validate-at-e1-012.sh" ]; then
+        if ! "$ROOT_DIR/scripts/validate-at-e1-012.sh" "$@"; then
+            log_error "AT-E1-012 validation failed"
+            return 1
+        fi
+    else
+        log_error "AT-E1-012 validation script not found at $ROOT_DIR/scripts/validate-at-e1-012.sh"
+        return 1
+    fi
+    
+    echo ""
+    log_success "AT-E1-012 validation completed!"
+    log_success "Epic 1 is fully validated and ready for Epic 2!"
+    return 0
+}
+
 main() {
     if [ $# -eq 0 ]; then
         log_error "No test ID provided"
@@ -394,7 +416,11 @@ main() {
         AT-E1-009)
             run_at_e1_009
             ;;
-        AT-E1-006|AT-E1-008|AT-E1-010|AT-E1-011|AT-E1-012)
+        AT-E1-012)
+            shift  # Remove test_id from args
+            run_at_e1_012 "$@"  # Pass remaining args to AT-E1-012
+            ;;
+        AT-E1-006|AT-E1-008|AT-E1-010|AT-E1-011)
             log_error "$test_id validation not yet implemented"
             exit 1
             ;;
