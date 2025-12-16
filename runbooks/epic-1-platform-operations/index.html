@@ -1,0 +1,5202 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Epic 1: Platform Operations Runbook - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#epic-1-platform-operations-runbook" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Epic 1: Platform Operations Runbook
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorials/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../how-to/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../explanation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Explanation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../playbooks/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Playbooks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tutorials/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/1-deploy-first-service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Deploy Your First Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/2-add-tracing-tempo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Add Distributed Tracing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/3-consume-vault-secret/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Consume Vault Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/4-buildpack-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Migrate to Buildpacks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/5-create-golden-path-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Create a Golden Path Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/6-measure-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Measure DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dojo Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dojo Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/white-belt/module-01-what-is-idp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    White Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/yellow-belt/module-05-ci-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yellow Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/green-belt/module-09-gitops-argocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Green Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/brown-belt/module-13-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brown Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/black-belt/module-17-platform-product/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Black Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../how-to/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GitOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/gitops/onboard-service-argocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Onboard Service to ArgoCD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/gitops/sync-argocd-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync ArgoCD Application
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/observability/trace-request-tempo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Requests with Tempo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/observability/view-dora-metrics-devlake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    View DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/security/rotate-vault-secrets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rotate Vault Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/development/debug-buildpack-failure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/techdocs-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using TechDocs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/networking/configure-ingress-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Ingress with TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Policy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/policy/troubleshoot-kyverno-violation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshoot Kyverno Violations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patterns
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../explanation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explanation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Explanation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/gitops-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/containers/buildpacks-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Buildpacks Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/security/zero-trust-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zero Trust Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/observability/unified-telemetry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unified Telemetry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IDP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IDP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/idp/product-discovery-delivery-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Discovery & Delivery Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Governance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/governance/policy-as-code-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policy as Code Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../business_case/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business Case
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/backstage-plugins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backstage Plugins API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/jenkins-webhook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins Webhook API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CRDs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CRDs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/crds/golden-path-crd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Path Devfile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Configuration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/config/jenkins-values/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins Helm Values
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/config/prometheus-values/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Helm Values
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policies
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Policies
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/policies/kyverno-policy-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kyverno Policy List
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_6" id="__nav_6_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Catalog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Catalog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/catalogue/service-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_8" id="__nav_6_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spinnaker (Deprecated)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--deprecated"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/focalboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Focalboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../playbooks/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playbooks
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playbooks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playbooks/TEMPLATE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playbooks/dora-metrics-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-status-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Status Checks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Component Status Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-health-check-all-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Health Check (All Components)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Cluster
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#argocd-gitops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ArgoCD (GitOps)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backstage-developer-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backstage (Developer Portal)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jenkins-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jenkins (CI/CD)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sonarqube-code-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SonarQube (Code Quality)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vault-secrets-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vault (Secrets Management)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kyverno-policy-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kyverno (Policy Engine)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prometheus-grafana-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prometheus &amp; Grafana (Observability)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#harbor-container-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Harbor (Container Registry)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#devlake-dora-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DevLake (DORA Metrics)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restarting-a-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restarting a Component
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scaling-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scaling Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updating-component-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating Component Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viewing-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Viewing Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pod-not-starting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pod Not Starting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-not-accessible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Not Accessible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#argocd-application-out-of-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ArgoCD Application Out of Sync
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jenkins-build-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jenkins Build Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prometheus-metrics-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prometheus Metrics Missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vault-sealed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vault Sealed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maintenance-procedures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maintenance Procedures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Maintenance Procedures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#regular-maintenance-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regular Maintenance Schedule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-procedures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Procedures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backup Procedures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backup-vault-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Vault Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-backstage-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Backstage Database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-argocd-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup ArgoCD Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup-jenkins-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Jenkins Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-procedures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Procedures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Update Procedures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-platform-components-via-argocd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Platform Components via ArgoCD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emergency-rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emergency Rollback
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#emergency-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emergency Response
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Emergency Response">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#severity-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Severity Levels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emergency-contacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emergency Contacts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#incident-response-playbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incident Response Playbook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Incident Response Playbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-assess-severity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Assess Severity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-gather-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Gather Information
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-immediate-mitigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Immediate Mitigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-communicate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Communicate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-restore-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Restore Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-post-incident" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Post-Incident
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Checks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Health Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automated-health-check-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Health Check Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Log
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="epic-1-platform-operations-runbook">Epic 1: Platform Operations Runbook</h1>
+<p><strong>Version</strong>: 1.0<br />
+<strong>Last Updated</strong>: December 2024<br />
+<strong>Status</strong>: Production Ready<br />
+<strong>Target Audience</strong>: Platform Engineers, SREs, DevOps Engineers</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#component-status-checks">Component Status Checks</a></li>
+<li><a href="#common-operations">Common Operations</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#maintenance-procedures">Maintenance Procedures</a></li>
+<li><a href="#emergency-response">Emergency Response</a></li>
+<li><a href="#health-checks">Health Checks</a></li>
+</ol>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>This runbook provides operational procedures for the Epic 1 platform components, including:</p>
+<ul>
+<li><strong>Infrastructure</strong>: 4-node Kubernetes cluster</li>
+<li><strong>GitOps</strong>: ArgoCD</li>
+<li><strong>Developer Portal</strong>: Backstage</li>
+<li><strong>CI/CD</strong>: Jenkins</li>
+<li><strong>Security</strong>: SonarQube, Trivy, Vault, Kyverno</li>
+<li><strong>Observability</strong>: Prometheus, Grafana, OpenTelemetry, Fluent Bit</li>
+<li><strong>Registry</strong>: Harbor</li>
+<li><strong>DORA Metrics</strong>: DevLake</li>
+<li><strong>Supporting Services</strong>: cert-manager, ingress-nginx, External Secrets Operator</li>
+</ul>
+<hr />
+<h2 id="component-status-checks">Component Status Checks</h2>
+<h3 id="quick-health-check-all-components">Quick Health Check (All Components)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check all platform namespaces</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;argocd|backstage|jenkins|sonarqube|prometheus|grafana|harbor|devlake|vault|kyverno&#39;</span>
+
+<span class="c1"># Check pod status across all platform components</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;argocd|backstage|jenkins|sonarqube|prometheus|grafana|harbor|devlake|vault|kyverno&#39;</span>
+
+<span class="c1"># Check all critical services</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;argocd-server|backstage|jenkins|sonarqube|prometheus|grafana|harbor|devlake|vault&#39;</span>
+</code></pre></div>
+<h3 id="kubernetes-cluster">Kubernetes Cluster</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check node status</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+kubectl<span class="w"> </span>top<span class="w"> </span>nodes
+
+<span class="c1"># Check cluster resource utilization (should be &lt;70%)</span>
+kubectl<span class="w"> </span>top<span class="w"> </span>nodes<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">&#39;s/%//&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{sum+=$1; count++} END {print &quot;Average CPU: &quot; sum/count &quot;%&quot;}&#39;</span>
+kubectl<span class="w"> </span>top<span class="w"> </span>nodes<span class="w"> </span>--no-headers<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $5}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">&#39;s/%//&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{sum+=$1; count++} END {print &quot;Average Memory: &quot; sum/count &quot;%&quot;}&#39;</span>
+
+<span class="c1"># Check for pending pods</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Pending
+
+<span class="c1"># Check for failed pods</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;Error|CrashLoopBackOff|ImagePullBackOff&#39;</span>
+</code></pre></div>
+<h3 id="argocd-gitops">ArgoCD (GitOps)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check ArgoCD health</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>argocd
+kubectl<span class="w"> </span>get<span class="w"> </span>applications<span class="w"> </span>-n<span class="w"> </span>argocd
+
+<span class="c1"># Check application sync status</span>
+argocd<span class="w"> </span>app<span class="w"> </span>list
+
+<span class="c1"># Check for out-of-sync applications</span>
+argocd<span class="w"> </span>app<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Synced
+
+<span class="c1"># Access ArgoCD UI</span>
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/argocd-server<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span><span class="m">8080</span>:443
+<span class="c1"># Navigate to https://localhost:8080</span>
+</code></pre></div>
+<h3 id="backstage-developer-portal">Backstage (Developer Portal)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check Backstage health</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>backstage
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>backstage<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>backstage<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+
+<span class="c1"># Check PostgreSQL (Backstage database)</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>backstage<span class="w"> </span>-l<span class="w"> </span>cnpg.io/cluster<span class="o">=</span>db-backstage-dev
+
+<span class="c1"># Check Backstage service</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>backstage<span class="w"> </span>backstage
+
+<span class="c1"># Access Backstage UI</span>
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/backstage<span class="w"> </span>-n<span class="w"> </span>backstage<span class="w"> </span><span class="m">7007</span>:7007
+<span class="c1"># Navigate to http://localhost:7007</span>
+</code></pre></div>
+<h3 id="jenkins-cicd">Jenkins (CI/CD)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check Jenkins health</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>jenkins
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/component<span class="o">=</span>jenkins-controller<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+
+<span class="c1"># Check Jenkins agents</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>-l<span class="w"> </span>jenkins/label
+
+<span class="c1"># Get Jenkins admin password</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>jenkins<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.jenkins-admin-password}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>--decode
+
+<span class="c1"># Access Jenkins UI</span>
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/jenkins<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span><span class="m">8080</span>:8080
+<span class="c1"># Navigate to http://localhost:8080</span>
+</code></pre></div>
+<h3 id="sonarqube-code-quality">SonarQube (Code Quality)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check SonarQube health</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>sonarqube
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>sonarqube<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>sonarqube<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+
+<span class="c1"># Check SonarQube database</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>sonarqube<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>postgresql
+
+<span class="c1"># Access SonarQube UI</span>
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/sonarqube-sonarqube<span class="w"> </span>-n<span class="w"> </span>sonarqube<span class="w"> </span><span class="m">9000</span>:9000
+<span class="c1"># Navigate to http://localhost:9000</span>
+<span class="c1"># Default credentials: admin/admin (change immediately)</span>
+</code></pre></div>
+<h3 id="vault-secrets-management">Vault (Secrets Management)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check Vault health</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>vault
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-0<span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>status
+
+<span class="c1"># Check all Vault pods are unsealed</span>
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Checking vault-</span><span class="nv">$i</span><span class="s2">:&quot;</span>
+<span class="w">  </span>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-<span class="nv">$i</span><span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sealed&quot;</span>
+<span class="k">done</span>
+
+<span class="c1"># Check Vault operator logs</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>vault<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+</code></pre></div>
+<h3 id="kyverno-policy-engine">Kyverno (Policy Engine)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check Kyverno health</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>kyverno
+kubectl<span class="w"> </span>get<span class="w"> </span>clusterpolicies
+
+<span class="c1"># Check policy reports</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>policyreports<span class="w"> </span>-A
+
+<span class="c1"># View policy violations</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>policyreports<span class="w"> </span>-A<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.items[] | select(.results[].result==&quot;fail&quot;) | {namespace: .metadata.namespace, name: .metadata.name, violations: .results}&#39;</span>
+</code></pre></div>
+<h3 id="prometheus-grafana-observability">Prometheus &amp; Grafana (Observability)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check Prometheus health</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>prometheus
+kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>prometheus
+
+<span class="c1"># Check Grafana health</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>grafana
+kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>grafana
+
+<span class="c1"># Access Prometheus UI</span>
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/prometheus-kube-prometheus-prometheus<span class="w"> </span>-n<span class="w"> </span>prometheus<span class="w"> </span><span class="m">9090</span>:9090
+<span class="c1"># Navigate to http://localhost:9090</span>
+
+<span class="c1"># Access Grafana UI</span>
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/grafana<span class="w"> </span>-n<span class="w"> </span>grafana<span class="w"> </span><span class="m">3000</span>:80
+<span class="c1"># Navigate to http://localhost:3000</span>
+<span class="c1"># Default credentials: admin/prom-operator</span>
+</code></pre></div>
+<h3 id="harbor-container-registry">Harbor (Container Registry)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check Harbor health</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>harbor
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>harbor<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>harbor<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+
+<span class="c1"># Check Harbor services</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>harbor
+
+<span class="c1"># Access Harbor UI</span>
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/harbor<span class="w"> </span>-n<span class="w"> </span>harbor<span class="w"> </span><span class="m">8443</span>:443
+<span class="c1"># Navigate to https://localhost:8443</span>
+<span class="c1"># Default credentials: admin/Harbor12345</span>
+</code></pre></div>
+<h3 id="devlake-dora-metrics">DevLake (DORA Metrics)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check DevLake health</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>devlake
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>devlake<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>devlake<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+
+<span class="c1"># Check MySQL database</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>devlake<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>mysql
+
+<span class="c1"># Access DevLake UI</span>
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/devlake-ui<span class="w"> </span>-n<span class="w"> </span>devlake<span class="w"> </span><span class="m">4000</span>:4000
+<span class="c1"># Navigate to http://localhost:4000</span>
+</code></pre></div>
+<hr />
+<h2 id="common-operations">Common Operations</h2>
+<h3 id="restarting-a-component">Restarting a Component</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Restart ArgoCD</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>argocd-server<span class="w"> </span>-n<span class="w"> </span>argocd
+kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>argocd-repo-server<span class="w"> </span>-n<span class="w"> </span>argocd
+
+<span class="c1"># Restart Backstage</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>backstage<span class="w"> </span>-n<span class="w"> </span>backstage
+
+<span class="c1"># Restart Jenkins</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>jenkins<span class="w"> </span>-n<span class="w"> </span>jenkins
+
+<span class="c1"># Restart SonarQube</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>sonarqube-sonarqube<span class="w"> </span>-n<span class="w"> </span>sonarqube
+
+<span class="c1"># Restart Grafana</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>grafana<span class="w"> </span>-n<span class="w"> </span>grafana
+
+<span class="c1"># Restart Prometheus (statefulset)</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>statefulset<span class="w"> </span>prometheus-kube-prometheus-prometheus<span class="w"> </span>-n<span class="w"> </span>prometheus
+</code></pre></div>
+<h3 id="scaling-components">Scaling Components</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Scale Backstage</span>
+kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>backstage<span class="w"> </span>-n<span class="w"> </span>backstage<span class="w"> </span>--replicas<span class="o">=</span><span class="m">3</span>
+
+<span class="c1"># Scale Jenkins agents (not the controller)</span>
+<span class="c1"># Note: Jenkins agents are ephemeral and scale automatically</span>
+
+<span class="c1"># Scale Grafana</span>
+kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>grafana<span class="w"> </span>-n<span class="w"> </span>grafana<span class="w"> </span>--replicas<span class="o">=</span><span class="m">2</span>
+
+<span class="c1"># Note: Some components like Prometheus, Vault are StatefulSets</span>
+<span class="c1"># and require special procedures for scaling</span>
+</code></pre></div>
+<h3 id="updating-component-configuration">Updating Component Configuration</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Update ArgoCD configuration</span>
+kubectl<span class="w"> </span>edit<span class="w"> </span>configmap<span class="w"> </span>argocd-cm<span class="w"> </span>-n<span class="w"> </span>argocd
+kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>argocd-server<span class="w"> </span>-n<span class="w"> </span>argocd
+
+<span class="c1"># Update Backstage configuration</span>
+kubectl<span class="w"> </span>edit<span class="w"> </span>configmap<span class="w"> </span>backstage-app-config<span class="w"> </span>-n<span class="w"> </span>backstage
+kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>backstage<span class="w"> </span>-n<span class="w"> </span>backstage
+
+<span class="c1"># Update Jenkins configuration (JCasC)</span>
+kubectl<span class="w"> </span>edit<span class="w"> </span>configmap<span class="w"> </span>jenkins-casc-config<span class="w"> </span>-n<span class="w"> </span>jenkins
+kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>jenkins<span class="w"> </span>-n<span class="w"> </span>jenkins
+</code></pre></div>
+<h3 id="checking-logs">Checking Logs</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Stream logs from a component</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>-l<span class="w"> </span>&lt;label-selector&gt;<span class="w"> </span>-f
+
+<span class="c1"># Get recent logs from all replicas</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>-l<span class="w"> </span>&lt;label-selector&gt;<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span>--all-containers<span class="o">=</span><span class="nb">true</span>
+
+<span class="c1"># Get logs from a specific pod</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;container-name&gt;
+
+<span class="c1"># Export logs for analysis</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>-l<span class="w"> </span>&lt;label-selector&gt;<span class="w"> </span>--since<span class="o">=</span>1h<span class="w"> </span>&gt;<span class="w"> </span>component-logs.txt
+</code></pre></div>
+<h3 id="viewing-events">Viewing Events</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Get recent events for a namespace</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span>
+
+<span class="c1"># Watch events in real-time</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>-w
+
+<span class="c1"># Filter events by type</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--field-selector<span class="w"> </span><span class="nv">type</span><span class="o">=</span>Warning
+</code></pre></div>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="pod-not-starting">Pod Not Starting</h3>
+<p><strong>Symptoms</strong>: Pod stuck in <code>Pending</code>, <code>ContainerCreating</code>, or <code>CrashLoopBackOff</code> state</p>
+<p><strong>Diagnosis</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check pod status and events</span>
+kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+
+<span class="c1"># Check pod logs</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+
+<span class="c1"># Check previous container logs if pod restarted</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--previous
+</code></pre></div></p>
+<p><strong>Common Causes</strong>:
+1. <strong>Insufficient Resources</strong>: Node doesn't have enough CPU/memory
+   <div class="highlight"><pre><span></span><code><span class="c1"># Check node resources</span>
+kubectl<span class="w"> </span>top<span class="w"> </span>nodes
+kubectl<span class="w"> </span>describe<span class="w"> </span>nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;Allocated resources&quot;</span>
+</code></pre></div>
+   <strong>Solution</strong>: Scale down other workloads or add nodes</p>
+<ol>
+<li>
+<p><strong>Image Pull Errors</strong>: Cannot pull container image
+   <div class="highlight"><pre><span></span><code><span class="c1"># Check image pull secrets</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</code></pre></div>
+   <strong>Solution</strong>: Verify Harbor credentials or image name</p>
+</li>
+<li>
+<p><strong>Configuration Errors</strong>: Invalid ConfigMap or Secret references
+   <div class="highlight"><pre><span></span><code><span class="c1"># Verify ConfigMap exists</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+
+<span class="c1"># Verify Secret exists</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</code></pre></div>
+   <strong>Solution</strong>: Create missing resources or fix references</p>
+</li>
+<li>
+<p><strong>Policy Violations</strong>: Kyverno blocking pod creation
+   <div class="highlight"><pre><span></span><code><span class="c1"># Check policy reports</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>policyreports<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</code></pre></div>
+   <strong>Solution</strong>: Fix policy violations or update policies</p>
+</li>
+</ol>
+<h3 id="service-not-accessible">Service Not Accessible</h3>
+<p><strong>Symptoms</strong>: Cannot access service via port-forward or ingress</p>
+<p><strong>Diagnosis</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check service exists</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+
+<span class="c1"># Check endpoints</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>endpoints<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+
+<span class="c1"># Check ingress</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>ingress<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+
+<span class="c1"># Check ingress controller logs</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ingress-nginx<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/component<span class="o">=</span>controller
+</code></pre></div></p>
+<p><strong>Common Causes</strong>:
+1. <strong>No Healthy Pods</strong>: Service has no ready endpoints
+   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>-o<span class="w"> </span>wide
+</code></pre></div>
+   <strong>Solution</strong>: Fix pod issues first</p>
+<ol>
+<li>
+<p><strong>Incorrect Service Selector</strong>: Service not matching pods
+   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>svc<span class="w"> </span>&lt;service-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</code></pre></div>
+   <strong>Solution</strong>: Update service selector to match pod labels</p>
+</li>
+<li>
+<p><strong>Ingress Misconfiguration</strong>: TLS or path issues
+   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>ingress<span class="w"> </span>&lt;ingress-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</code></pre></div>
+   <strong>Solution</strong>: Verify hostname, paths, and TLS certificates</p>
+</li>
+</ol>
+<h3 id="argocd-application-out-of-sync">ArgoCD Application Out of Sync</h3>
+<p><strong>Symptoms</strong>: Application shows <code>OutOfSync</code> status in ArgoCD</p>
+<p><strong>Diagnosis</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check application status</span>
+argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>&lt;app-name&gt;
+
+<span class="c1"># Check differences</span>
+argocd<span class="w"> </span>app<span class="w"> </span>diff<span class="w"> </span>&lt;app-name&gt;
+
+<span class="c1"># Check sync history</span>
+argocd<span class="w"> </span>app<span class="w"> </span><span class="nb">history</span><span class="w"> </span>&lt;app-name&gt;
+</code></pre></div></p>
+<p><strong>Solutions</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Manual sync</span>
+argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </span>&lt;app-name&gt;
+
+<span class="c1"># Force sync (if resources deleted)</span>
+argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </span>&lt;app-name&gt;<span class="w"> </span>--force
+
+<span class="c1"># Sync with prune (remove extra resources)</span>
+argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </span>&lt;app-name&gt;<span class="w"> </span>--prune
+
+<span class="c1"># Hard refresh (clear cache)</span>
+argocd<span class="w"> </span>app<span class="w"> </span>get<span class="w"> </span>&lt;app-name&gt;<span class="w"> </span>--hard-refresh
+</code></pre></div></p>
+<h3 id="jenkins-build-failures">Jenkins Build Failures</h3>
+<p><strong>Symptoms</strong>: Builds failing consistently</p>
+<p><strong>Diagnosis</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check Jenkins agent pods</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>-l<span class="w"> </span>jenkins/label
+
+<span class="c1"># Check Jenkins logs</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/component<span class="o">=</span>jenkins-controller<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span>
+
+<span class="c1"># Access Jenkins and check build console output</span>
+</code></pre></div></p>
+<p><strong>Common Causes</strong>:
+1. <strong>Agent Connection Issues</strong>: Agents can't connect to controller
+   <strong>Solution</strong>: Check network policies and service endpoints</p>
+<ol>
+<li>
+<p><strong>Insufficient Agent Resources</strong>: Agents running out of memory/CPU
+   <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>-l<span class="w"> </span>jenkins/label
+</code></pre></div>
+   <strong>Solution</strong>: Increase agent resource requests/limits</p>
+</li>
+<li>
+<p><strong>Quality Gate Failures</strong>: SonarQube or security scan blocking build
+   <strong>Solution</strong>: Review scan results and fix issues or adjust quality gates</p>
+</li>
+</ol>
+<h3 id="prometheus-metrics-missing">Prometheus Metrics Missing</h3>
+<p><strong>Symptoms</strong>: Dashboards show "No data" or metrics not being collected</p>
+<p><strong>Diagnosis</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check Prometheus targets</span>
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/prometheus-kube-prometheus-prometheus<span class="w"> </span>-n<span class="w"> </span>prometheus<span class="w"> </span><span class="m">9090</span>:9090
+<span class="c1"># Navigate to http://localhost:9090/targets</span>
+
+<span class="c1"># Check ServiceMonitor resources</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>servicemonitors<span class="w"> </span>-A
+
+<span class="c1"># Check Prometheus logs</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prometheus<span class="w"> </span>prometheus-kube-prometheus-prometheus-0
+</code></pre></div></p>
+<p><strong>Solutions</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify ServiceMonitor exists for component</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>servicemonitor<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+
+<span class="c1"># Verify pod has metrics port and prometheus annotations</span>
+kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+
+<span class="c1"># Restart Prometheus to reload configuration</span>
+kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>prometheus<span class="w"> </span>prometheus-kube-prometheus-prometheus-0
+</code></pre></div></p>
+<h3 id="vault-sealed">Vault Sealed</h3>
+<p><strong>Symptoms</strong>: Vault pods show "Sealed" status</p>
+<p><strong>Diagnosis</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check Vault status</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-0<span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>status
+</code></pre></div></p>
+<p><strong>Solution</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Unseal Vault (requires unseal keys)</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-0<span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>operator<span class="w"> </span>unseal<span class="w"> </span>&lt;key-1&gt;
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-0<span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>operator<span class="w"> </span>unseal<span class="w"> </span>&lt;key-2&gt;
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-0<span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>operator<span class="w"> </span>unseal<span class="w"> </span>&lt;key-3&gt;
+
+<span class="c1"># Repeat for each Vault pod (vault-0, vault-1, vault-2)</span>
+</code></pre></div></p>
+<p><strong>Prevention</strong>: Configure auto-unseal with cloud KMS for production</p>
+<h3 id="certificate-errors">Certificate Errors</h3>
+<p><strong>Symptoms</strong>: TLS errors when accessing services</p>
+<p><strong>Diagnosis</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check certificates</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>certificates<span class="w"> </span>-A
+
+<span class="c1"># Check certificate requests</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>certificaterequests<span class="w"> </span>-A
+
+<span class="c1"># Check cert-manager logs</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>cert-manager<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>cert-manager
+</code></pre></div></p>
+<p><strong>Solutions</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check certificate status</span>
+kubectl<span class="w"> </span>describe<span class="w"> </span>certificate<span class="w"> </span>&lt;cert-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+
+<span class="c1"># Force certificate renewal</span>
+kubectl<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>&lt;tls-secret-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+kubectl<span class="w"> </span>delete<span class="w"> </span>certificaterequest<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--all
+
+<span class="c1"># Restart cert-manager</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>restart<span class="w"> </span>deployment<span class="w"> </span>cert-manager<span class="w"> </span>-n<span class="w"> </span>cert-manager
+</code></pre></div></p>
+<hr />
+<h2 id="maintenance-procedures">Maintenance Procedures</h2>
+<h3 id="regular-maintenance-schedule">Regular Maintenance Schedule</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Frequency</th>
+<th>Procedure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Check cluster resource usage</td>
+<td>Daily</td>
+<td>Run health checks, ensure &lt;70% utilization</td>
+</tr>
+<tr>
+<td>Review failed pods/jobs</td>
+<td>Daily</td>
+<td>Check for CrashLoopBackOff, fix issues</td>
+</tr>
+<tr>
+<td>Check ArgoCD sync status</td>
+<td>Daily</td>
+<td>Ensure all apps synced</td>
+</tr>
+<tr>
+<td>Review Prometheus alerts</td>
+<td>Daily</td>
+<td>Check Grafana for active alerts</td>
+</tr>
+<tr>
+<td>Update component configurations</td>
+<td>Weekly</td>
+<td>Apply configuration changes via GitOps</td>
+</tr>
+<tr>
+<td>Review security scan results</td>
+<td>Weekly</td>
+<td>Check SonarQube and Trivy reports</td>
+</tr>
+<tr>
+<td>Rotate Vault secrets</td>
+<td>Monthly</td>
+<td>Follow secret rotation procedures</td>
+</tr>
+<tr>
+<td>Update platform components</td>
+<td>Monthly</td>
+<td>Apply security patches and updates</td>
+</tr>
+<tr>
+<td>Review DORA metrics</td>
+<td>Weekly</td>
+<td>Check DevLake dashboards</td>
+</tr>
+<tr>
+<td>Backup critical data</td>
+<td>Daily</td>
+<td>Backup databases and persistent volumes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="backup-procedures">Backup Procedures</h3>
+<h4 id="backup-vault-data">Backup Vault Data</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Backup Vault data</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-0<span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>operator<span class="w"> </span>raft<span class="w"> </span>snapshot<span class="w"> </span>save<span class="w"> </span>/tmp/vault-backup.snap
+kubectl<span class="w"> </span>cp<span class="w"> </span>vault/vault-0:/tmp/vault-backup.snap<span class="w"> </span>./vault-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.snap
+</code></pre></div>
+<h4 id="backup-backstage-database">Backup Backstage Database</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Backup PostgreSQL (Backstage)</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>backstage<span class="w"> </span>db-backstage-dev-1<span class="w"> </span>--<span class="w"> </span>pg_dump<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>backstage<span class="w"> </span>&gt;<span class="w"> </span>backstage-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.sql
+</code></pre></div>
+<h4 id="backup-argocd-configuration">Backup ArgoCD Configuration</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Export ArgoCD applications</span>
+argocd<span class="w"> </span>app<span class="w"> </span>list<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span>&gt;<span class="w"> </span>argocd-apps-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.yaml
+
+<span class="c1"># Backup ArgoCD secrets</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>secrets<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span>&gt;<span class="w"> </span>argocd-secrets-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.yaml
+</code></pre></div>
+<h4 id="backup-jenkins-configuration">Backup Jenkins Configuration</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Export Jenkins configuration (JCasC)</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>configmap<span class="w"> </span>jenkins-casc-config<span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span>&gt;<span class="w"> </span>jenkins-config-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.yaml
+
+<span class="c1"># Backup Jenkins jobs (if not in Git)</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>jenkins<span class="w"> </span>jenkins-0<span class="w"> </span>--<span class="w"> </span>tar<span class="w"> </span>czf<span class="w"> </span>/tmp/jenkins-jobs.tar.gz<span class="w"> </span>/var/jenkins_home/jobs
+kubectl<span class="w"> </span>cp<span class="w"> </span>jenkins/jenkins-0:/tmp/jenkins-jobs.tar.gz<span class="w"> </span>./jenkins-jobs-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz
+</code></pre></div>
+<h3 id="update-procedures">Update Procedures</h3>
+<h4 id="update-platform-components-via-argocd">Update Platform Components via ArgoCD</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Update image tag in Git repository</span>
+<span class="nb">cd</span><span class="w"> </span>gitops-repo
+vi<span class="w"> </span>platform/&lt;component&gt;/values.yaml
+<span class="c1"># Update image.tag to new version</span>
+
+<span class="c1"># 2. Commit and push</span>
+git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update &lt;component&gt; to version &lt;version&gt;&quot;</span>
+git<span class="w"> </span>push
+
+<span class="c1"># 3. Sync ArgoCD application</span>
+argocd<span class="w"> </span>app<span class="w"> </span>sync<span class="w"> </span>&lt;app-name&gt;
+
+<span class="c1"># 4. Monitor rollout</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/&lt;deployment-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+
+<span class="c1"># 5. Verify health</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</code></pre></div>
+<h4 id="emergency-rollback">Emergency Rollback</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Rollback via ArgoCD</span>
+argocd<span class="w"> </span>app<span class="w"> </span>rollback<span class="w"> </span>&lt;app-name&gt;<span class="w"> </span>&lt;revision-id&gt;
+
+<span class="c1"># Or rollback via kubectl</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>undo<span class="w"> </span>deployment/&lt;deployment-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+
+<span class="c1"># Verify rollback</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/&lt;deployment-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</code></pre></div>
+<hr />
+<h2 id="emergency-response">Emergency Response</h2>
+<h3 id="severity-levels">Severity Levels</h3>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Definition</th>
+<th>Response Time</th>
+<th>Escalation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>P0 - Critical</strong></td>
+<td>Platform completely down, no users can access</td>
+<td>Immediate</td>
+<td>Page on-call engineer</td>
+</tr>
+<tr>
+<td><strong>P1 - High</strong></td>
+<td>Major feature broken, significant user impact</td>
+<td>&lt; 30 minutes</td>
+<td>Notify team lead</td>
+</tr>
+<tr>
+<td><strong>P2 - Medium</strong></td>
+<td>Minor feature issue, workaround available</td>
+<td>&lt; 4 hours</td>
+<td>Create ticket</td>
+</tr>
+<tr>
+<td><strong>P3 - Low</strong></td>
+<td>Cosmetic issue, no functional impact</td>
+<td>Next business day</td>
+<td>Backlog</td>
+</tr>
+</tbody>
+</table>
+<h3 id="emergency-contacts">Emergency Contacts</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Update with actual contact information</span>
+<span class="nt">Platform Team Lead</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;name&gt; &lt;email&gt; &lt;phone&gt;</span>
+<span class="nt">SRE On-Call</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;name&gt; &lt;email&gt; &lt;phone&gt;</span>
+<span class="nt">Security Team</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;name&gt; &lt;email&gt; &lt;phone&gt;</span>
+<span class="nt">Cloud Provider Support</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;phone&gt; &lt;portal-link&gt;</span>
+</code></pre></div>
+<h3 id="incident-response-playbook">Incident Response Playbook</h3>
+<h4 id="step-1-assess-severity">Step 1: Assess Severity</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check overall cluster health</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running
+
+<span class="c1"># Check critical services</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>argocd
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>backstage
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>jenkins
+</code></pre></div>
+<h4 id="step-2-gather-information">Step 2: Gather Information</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Collect logs</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>&gt;<span class="w"> </span>incident-logs.txt
+
+<span class="c1"># Collect events</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>-A<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>incident-events.txt
+
+<span class="c1"># Check resource usage</span>
+kubectl<span class="w"> </span>top<span class="w"> </span>nodes<span class="w"> </span>&gt;<span class="w"> </span>incident-resources.txt
+kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>&gt;&gt;<span class="w"> </span>incident-resources.txt
+</code></pre></div>
+<h4 id="step-3-immediate-mitigation">Step 3: Immediate Mitigation</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># If a component is causing issues, scale it down</span>
+kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>&lt;deployment-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--replicas<span class="o">=</span><span class="m">0</span>
+
+<span class="c1"># If resource exhaustion, delete completed jobs/pods</span>
+kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>--field-selector<span class="w"> </span>status.phase<span class="o">=</span>Succeeded<span class="w"> </span>-A
+kubectl<span class="w"> </span>delete<span class="w"> </span>pod<span class="w"> </span>--field-selector<span class="w"> </span>status.phase<span class="o">=</span>Failed<span class="w"> </span>-A
+
+<span class="c1"># If storage full, clean up old data</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>--<span class="w"> </span>df<span class="w"> </span>-h
+<span class="c1"># Identify and remove large files</span>
+</code></pre></div>
+<h4 id="step-4-communicate">Step 4: Communicate</h4>
+<div class="highlight"><pre><span></span><code><span class="gh"># Incident notification template</span>
+Subject: [P0/P1/P2] &lt;Brief Description&gt; - Fawkes Platform
+
+Status: Investigating/Mitigating/Resolved
+Impact: &lt;Description of user impact&gt;
+Start Time: &lt;timestamp&gt;
+Current Status: &lt;Current state&gt;
+Next Update: &lt;Expected time&gt;
+
+Actions Taken:
+<span class="k">-</span><span class="w"> </span>&lt;Action 1&gt;
+<span class="k">-</span><span class="w"> </span>&lt;Action 2&gt;
+
+Next Steps:
+<span class="k">-</span><span class="w"> </span>&lt;Next step 1&gt;
+<span class="k">-</span><span class="w"> </span>&lt;Next step 2&gt;
+</code></pre></div>
+<h4 id="step-5-restore-service">Step 5: Restore Service</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Apply fix (rollback, restart, scale up, etc.)</span>
+<span class="c1"># Verify fix</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>&lt;pod-name&gt;
+
+<span class="c1"># Run smoke tests</span>
+<span class="c1"># Access UI and verify functionality</span>
+</code></pre></div>
+<h4 id="step-6-post-incident">Step 6: Post-Incident</h4>
+<div class="highlight"><pre><span></span><code><span class="gh"># Post-incident review template</span>
+<span class="k">1.</span> Timeline of events
+<span class="k">2.</span> Root cause analysis
+<span class="k">3.</span> Impact assessment
+<span class="k">4.</span> Actions taken
+<span class="k">5.</span> Lessons learned
+<span class="k">6.</span> Action items to prevent recurrence
+</code></pre></div>
+<hr />
+<h2 id="health-checks">Health Checks</h2>
+<h3 id="automated-health-check-script">Automated Health Check Script</h3>
+<p>Save this as <code>scripts/health-check.sh</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Fawkes Platform Health Check ===&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Timestamp: </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span>
+
+<span class="c1"># Cluster health</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Cluster Health ---&quot;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+<span class="nb">echo</span>
+
+<span class="c1"># Resource utilization</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Resource Utilization ---&quot;</span>
+kubectl<span class="w"> </span>top<span class="w"> </span>nodes
+<span class="nb">echo</span>
+
+<span class="c1"># Critical namespaces</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Critical Namespaces ---&quot;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;argocd|backstage|jenkins|prometheus|grafana|vault&#39;</span>
+<span class="nb">echo</span>
+
+<span class="c1"># Pod health</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Pod Health (Non-Running) ---&quot;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Completed
+<span class="nb">echo</span>
+
+<span class="c1"># ArgoCD sync status</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- ArgoCD Applications ---&quot;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>applications<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>-o<span class="w"> </span>custom-columns<span class="o">=</span>NAME:.metadata.name,SYNC:.status.sync.status,HEALTH:.status.health.status
+<span class="nb">echo</span>
+
+<span class="c1"># Prometheus targets</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Prometheus Targets (Down) ---&quot;</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>prometheus<span class="w"> </span>prometheus-kube-prometheus-prometheus-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>wget<span class="w"> </span>-qO-<span class="w"> </span><span class="s1">&#39;http://localhost:9090/api/v1/targets&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.data.activeTargets[] | select(.health!=&quot;up&quot;) | &quot;\(.labels.job) - \(.health)&quot;&#39;</span>
+<span class="nb">echo</span>
+
+<span class="c1"># Certificate expiry</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Certificates Expiring Soon ---&quot;</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>certificates<span class="w"> </span>-A<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.items[] | select(.status.notAfter) | &quot;\(.metadata.namespace)/\(.metadata.name): \(.status.notAfter)&quot;&#39;</span>
+<span class="nb">echo</span>
+
+<span class="c1"># Vault seal status</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;--- Vault Seal Status ---&quot;</span>
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;vault-</span><span class="nv">$i</span><span class="s2">: &quot;</span>
+<span class="w">  </span>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>vault<span class="w"> </span>vault-<span class="nv">$i</span><span class="w"> </span>--<span class="w"> </span>vault<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Sealed&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Check failed&quot;</span>
+<span class="k">done</span>
+<span class="nb">echo</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Health Check Complete ===&quot;</span>
+</code></pre></div>
+<p>Make it executable:
+<div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>scripts/health-check.sh
+</code></pre></div></p>
+<p>Run daily or on-demand:
+<div class="highlight"><pre><span></span><code>./scripts/health-check.sh
+</code></pre></div></p>
+<hr />
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="../../architecture/">Architecture Overview</a></li>
+<li><a href="../../troubleshooting/">Troubleshooting Guide</a></li>
+<li><a href="../at-e1-001-validation/">AT-E1-001 Validation</a></li>
+<li><a href="../azure-aks-setup/">Azure AKS Setup</a></li>
+<li><a href="../../playbooks/dora-metrics-implementation/">DORA Metrics Implementation</a></li>
+<li><a href="../../playbooks/ingress-controller/">Ingress Controller</a></li>
+</ul>
+<hr />
+<h2 id="change-log">Change Log</h2>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Version</th>
+<th>Changes</th>
+<th>Author</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2024-12</td>
+<td>1.0</td>
+<td>Initial Epic 1 runbook</td>
+<td>Platform Team</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
