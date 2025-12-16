@@ -435,7 +435,10 @@ verify_all_health_checks() {
         fi
     done
     
-    local health_pct=$((healthy * 100 / total))
+    local health_pct=0
+    if [ $total -gt 0 ]; then
+        health_pct=$((healthy * 100 / total))
+    fi
     
     if [ $health_pct -ge 80 ]; then
         log_success "Component health checks passed (${healthy}/${total} healthy, ${health_pct}%)"
