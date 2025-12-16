@@ -10,10 +10,10 @@ resource "azurerm_recovery_services_vault" "aks_backup" {
   location            = azurerm_resource_group.aks_rg.location
   resource_group_name = azurerm_resource_group.aks_rg.name
   sku                 = "Standard"
-  
+
   # Soft delete retention (7-90 days)
   soft_delete_enabled = true
-  
+
   tags = merge(var.tags, {
     component = "backup"
     purpose   = "persistent-volume-backup"
