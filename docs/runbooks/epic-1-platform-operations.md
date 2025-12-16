@@ -561,6 +561,7 @@ kubectl rollout restart deployment cert-manager -n cert-manager
 ### Backup Procedures
 
 #### Backup Vault Data
+
 ```bash
 # Backup Vault data
 kubectl exec -n vault vault-0 -- vault operator raft snapshot save /tmp/vault-backup.snap
@@ -568,12 +569,14 @@ kubectl cp vault/vault-0:/tmp/vault-backup.snap ./vault-backup-$(date +%Y%m%d).s
 ```
 
 #### Backup Backstage Database
+
 ```bash
 # Backup PostgreSQL (Backstage)
 kubectl exec -n backstage db-backstage-dev-1 -- pg_dump -U postgres backstage > backstage-backup-$(date +%Y%m%d).sql
 ```
 
 #### Backup ArgoCD Configuration
+
 ```bash
 # Export ArgoCD applications
 argocd app list -o yaml > argocd-apps-backup-$(date +%Y%m%d).yaml
@@ -583,6 +586,7 @@ kubectl get secrets -n argocd -o yaml > argocd-secrets-backup-$(date +%Y%m%d).ya
 ```
 
 #### Backup Jenkins Configuration
+
 ```bash
 # Export Jenkins configuration (JCasC)
 kubectl get configmap jenkins-casc-config -n jenkins -o yaml > jenkins-config-backup-$(date +%Y%m%d).yaml
@@ -656,6 +660,7 @@ Cloud Provider Support: <phone> <portal-link>
 ### Incident Response Playbook
 
 #### Step 1: Assess Severity
+
 ```bash
 # Check overall cluster health
 kubectl get nodes
@@ -668,6 +673,7 @@ kubectl get pods -n jenkins
 ```
 
 #### Step 2: Gather Information
+
 ```bash
 # Collect logs
 kubectl logs -n <namespace> <pod-name> > incident-logs.txt
@@ -681,6 +687,7 @@ kubectl top pods -A >> incident-resources.txt
 ```
 
 #### Step 3: Immediate Mitigation
+
 ```bash
 # If a component is causing issues, scale it down
 kubectl scale deployment <deployment-name> -n <namespace> --replicas=0
@@ -695,6 +702,7 @@ kubectl exec -n <namespace> <pod-name> -- df -h
 ```
 
 #### Step 4: Communicate
+
 ```markdown
 # Incident notification template
 Subject: [P0/P1/P2] <Brief Description> - Fawkes Platform
@@ -715,6 +723,7 @@ Next Steps:
 ```
 
 #### Step 5: Restore Service
+
 ```bash
 # Apply fix (rollback, restart, scale up, etc.)
 # Verify fix
@@ -726,6 +735,7 @@ kubectl logs -n <namespace> <pod-name>
 ```
 
 #### Step 6: Post-Incident
+
 ```markdown
 # Post-incident review template
 1. Timeline of events
