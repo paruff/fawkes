@@ -65,6 +65,63 @@ url: http://tempo.monitoring.svc:3100
 
 ## Pre-Built Dashboards
 
+### Kubernetes Cluster Health
+
+**Location**: Dashboards → Kubernetes Cluster Health
+
+Comprehensive monitoring of Kubernetes cluster infrastructure:
+
+- **Cluster Overview**: Total nodes, ready nodes, running pods, namespaces
+- **Node Resources**: CPU and memory usage per node
+- **Pod Status**: Distribution and restart tracking
+- **Resource Utilization**: CPU and memory usage by namespace
+- **Storage**: PersistentVolume status and disk usage by node
+
+### Platform Components Health
+
+**Location**: Dashboards → Platform Components Health
+
+Monitor health and performance of Fawkes platform components:
+
+- **Component Status**: ArgoCD, Jenkins, Backstage, Harbor, PostgreSQL, OpenTelemetry
+- **ArgoCD Applications**: Sync status, health status, out-of-sync count
+- **Jenkins Metrics**: Job success rate, executor usage, queue length
+- **Container Registry**: Harbor projects, repositories, storage usage, scan rate
+- **Observability Stack**: Prometheus targets, TSDB size, trace ingestion
+- **Component Response Times**: P95 latency for platform services
+
+### DORA Metrics (Placeholder)
+
+**Location**: Dashboards → DORA Metrics
+
+Track the four key DORA metrics (requires metrics collection setup):
+
+- **Deployment Frequency**: Deploys per day/week (Elite: On-demand, multiple per day)
+- **Lead Time for Changes**: Commit to production time (Elite: < 1 hour)
+- **Change Failure Rate**: Failed deployments percentage (Elite: 0-15%)
+- **Mean Time to Restore**: Incident to restore time (Elite: < 1 hour)
+
+**Note**: This is a placeholder dashboard. Configure the DORA metrics collector following the [DORA Metrics Implementation Playbook](../../../docs/playbooks/dora-metrics-implementation.md) to populate data.
+
+### Application Metrics Template
+
+**Location**: Dashboards → Application Metrics Template
+
+Template dashboard based on the Golden Signals approach for monitoring applications:
+
+- **Golden Signals Overview**: Request rate, error rate, P95 latency, CPU usage
+- **Traffic**: Request rate over time, by method and status
+- **Latency**: Response time percentiles (P50, P95, P99), by endpoint
+- **Errors**: Error rate by status code, percentage over time
+- **Saturation**: CPU usage, memory usage, pod count
+- **Custom Metrics**: Placeholder panels for application-specific metrics
+
+**How to Use**:
+1. Clone this dashboard and rename it for your application
+2. Update the `service` and `namespace` variables
+3. Customize queries to match your application's metric names
+4. Add application-specific panels as needed
+
 ### Golden Signals Dashboard
 
 Monitor the four golden signals for all services:
@@ -75,28 +132,6 @@ Monitor the four golden signals for all services:
 - **Saturation**: CPU and memory utilization
 
 Access: Dashboards → Golden Signals
-
-### DORA Metrics Dashboard
-
-Track DORA metrics:
-
-- **Deployment Frequency**: Deploys per day/week
-- **Lead Time for Changes**: Commit to production time
-- **Change Failure Rate**: Failed deployments percentage
-- **Mean Time to Restore**: Incident to restore time
-
-Access: Dashboards → DORA Metrics
-
-### Kubernetes Cluster Dashboard
-
-Monitor cluster health:
-
-- Node metrics (CPU, memory, disk)
-- Pod status and restarts
-- Namespace resource usage
-- PersistentVolume status
-
-Access: Dashboards → Kubernetes → Cluster Overview
 
 ## Creating Custom Dashboards
 

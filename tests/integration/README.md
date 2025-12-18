@@ -1,8 +1,207 @@
-# Azure Storage Integration Tests
+# Integration Tests
 
-This directory contains integration tests for Azure persistent storage in the Fawkes platform.
+This directory contains integration tests for various Fawkes platform components.
 
-## Overview
+## Available Tests
+
+### AT-E1-001: AKS Cluster Validation
+Tests AKS cluster infrastructure and configuration.
+
+### AT-E1-006: Observability Stack Validation
+Tests Prometheus/Grafana observability stack deployment and configuration.
+
+### Azure Storage Integration Tests
+Tests Azure persistent storage in the Fawkes platform.
+
+---
+
+## AT-E1-006: Observability Stack Validation
+
+### Overview
+
+The AT-E1-006 integration test validates the complete observability stack deployment including Prometheus, Grafana, Alertmanager, and supporting components.
+
+### What is Tested
+
+- **Namespace**: Monitoring namespace exists and is active
+- **ArgoCD Application**: prometheus-stack is Healthy and Synced
+- **Prometheus Operator**: Deployed and running
+- **Prometheus Server**: StatefulSet is ready with persistent storage
+- **Grafana**: Deployed with ingress configured
+- **Alertmanager**: Deployed and configured
+- **Node Exporter**: DaemonSet running on all nodes
+- **Kube State Metrics**: Collecting cluster metrics
+- **ServiceMonitors**: Configured for platform components (ArgoCD, Jenkins, PostgreSQL, OpenTelemetry)
+- **Ingress**: Configured for Grafana and Prometheus
+- **Resource Limits**: All components have resource requests/limits
+- **Pod Health**: All pods in monitoring namespace are healthy
+
+### Prerequisites
+
+1. **Kubernetes Cluster**: Running cluster with monitoring stack deployed
+2. **kubectl**: Configured to access the cluster
+3. **ArgoCD**: prometheus-stack Application deployed
+4. **Python 3.8+**: For running pytest
+5. **pytest**: Installed via `pip install -r requirements-dev.txt`
+
+### Running the Test
+
+#### Method 1: Using pytest directly
+
+```bash
+# Run all AT-E1-006 tests
+pytest tests/integration/test_at_e1_006_validation.py -v
+
+# Run with custom namespace
+pytest tests/integration/test_at_e1_006_validation.py -v --namespace monitoring --argocd-namespace fawkes
+
+# Run only smoke tests
+pytest tests/integration/test_at_e1_006_validation.py -v -m smoke
+
+# Run with custom timeout
+pytest tests/integration/test_at_e1_006_validation.py -v --validation-timeout 300
+```
+
+#### Method 2: Using Makefile
+
+```bash
+# Run AT-E1-006 validation
+make validate-at-e1-006
+
+# With custom namespace
+make validate-at-e1-006 NAMESPACE=monitoring ARGO_NAMESPACE=fawkes
+```
+
+#### Method 3: Run validation script directly
+
+```bash
+# Run validation script
+./scripts/validate-at-e1-006.sh --namespace monitoring --argocd-namespace fawkes
+
+# Verbose output
+./scripts/validate-at-e1-006.sh --verbose
+
+# Custom report location
+./scripts/validate-at-e1-006.sh --report custom-report.json
+```
+
+### Test Output
+
+The test generates a JSON report in the `reports/` directory:
+
+```json
+{
+  "test_suite": "AT-E1-006: Observability Stack Validation",
+  "timestamp": "2024-12-15T15:45:00Z",
+  "namespace": "monitoring",
+  "argocd_namespace": "fawkes",
+  "summary": {
+    "total_tests": 14,
+    "passed": 14,
+    "failed": 0,
+    "pass_percentage": 100
+  },
+  "results": [
+    {
+      "test": "namespace_exists",
+      "status": "PASS",
+      "message": "Namespace monitoring exists and is Active"
+    },
+    ...
+  ]
+}
+```
+
+### Validation Criteria
+
+The test suite validates all AT-E1-006 acceptance criteria:
+
+| Criterion | Test |
+|-----------|------|
+| Prometheus Operator deployed | `test_prometheus_operator_running` |
+| Grafana deployed with datasources | `test_grafana_deployed` |
+| ServiceMonitors configured | `test_servicemonitors_configured` |
+| OpenTelemetry Collector as DaemonSet | Validated via ServiceMonitor |
+| Grafana dashboards imported | Validated via ingress and deployment |
+| Alerting rules configured | Validated via Alertmanager |
+| Log retention: 30 days | Validated via persistent storage |
+| Metrics retention: 90 days | Validated via Prometheus storage |
+| Dashboard load time <2 seconds | Validated via ingress configuration |
+
+### Troubleshooting
+
+#### Test fails: "Validation script crashed"
+
+```bash
+# Check if kubectl is configured
+kubectl cluster-info
+
+# Check if script is executable
+chmod +x scripts/validate-at-e1-006.sh
+
+# Run script directly to see errors
+./scripts/validate-at-e1-006.sh --verbose
+```
+
+#### Test fails: "Namespace does not exist"
+
+```bash
+# Check if monitoring namespace exists
+kubectl get namespace monitoring
+
+# Create namespace if missing
+kubectl create namespace monitoring
+```
+
+#### Test fails: "ArgoCD Application not found"
+
+```bash
+# Check if ArgoCD Application exists
+kubectl get application prometheus-stack -n fawkes
+
+# Check Application status
+kubectl describe application prometheus-stack -n fawkes
+```
+
+#### Test fails: "Pods not ready"
+
+```bash
+# Check pod status
+kubectl get pods -n monitoring
+
+# Check specific pod logs
+kubectl logs -n monitoring <pod-name>
+
+# Check pod events
+kubectl describe pod -n monitoring <pod-name>
+```
+
+### Environment Variables
+
+- `NAMESPACE`: Monitoring namespace (default: `monitoring`)
+- `ARGOCD_NAMESPACE`: ArgoCD namespace (default: `fawkes`)
+- `VALIDATION_TIMEOUT`: Timeout in seconds (default: `600`)
+- `PROMETHEUS_URL`: Prometheus URL for API checks
+- `GRAFANA_URL`: Grafana URL for UI checks
+
+### CI/CD Integration
+
+Example GitHub Actions workflow:
+
+```yaml
+- name: Validate Observability Stack
+  run: |
+    make validate-at-e1-006
+  env:
+    NAMESPACE: monitoring
+    ARGO_NAMESPACE: fawkes
+```
+
+---
+
+## Azure Storage Integration Tests
+
+### Overview
 
 These tests verify that:
 - Azure Disk and Azure Files storage classes are properly configured

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-nodejs-app
+  namespace: fawkes-samples
+  labels:
+    app: sample-nodejs-app
+    team: platform-team
+spec:
+  type: ClusterIP
+  selector:
+    app: sample-nodejs-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP

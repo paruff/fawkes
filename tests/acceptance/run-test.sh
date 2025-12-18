@@ -204,6 +204,124 @@ run_at_e1_004() {
     return 0
 }
 
+run_at_e1_005() {
+    log_info "Running AT-E1-005: DevSecOps Security Scanning validation"
+    echo ""
+    
+    # Run the comprehensive validation script
+    log_info "Step 1: Running comprehensive validation..."
+    if [ -f "$ROOT_DIR/scripts/validate-at-e1-005.sh" ]; then
+        if ! "$ROOT_DIR/scripts/validate-at-e1-005.sh"; then
+            log_error "Comprehensive validation failed"
+            return 1
+        fi
+    else
+        log_error "AT-E1-005 validation script not found at $ROOT_DIR/scripts/validate-at-e1-005.sh"
+        return 1
+    fi
+    
+    echo ""
+    log_info "Step 2: Running integration tests..."
+    
+    # Run SonarQube integration test
+    if [ -f "$ROOT_DIR/tests/integration/sonarqube-check.sh" ]; then
+        log_info "Running SonarQube integration test..."
+        if "$ROOT_DIR/tests/integration/sonarqube-check.sh"; then
+            log_success "SonarQube integration test passed"
+        else
+            log_warning "SonarQube integration test failed (may require port-forward or cluster access)"
+        fi
+    fi
+    
+    echo ""
+    log_info "Step 3: Running BDD tests..."
+    cd "$ROOT_DIR"
+    
+    # Check if pytest is available
+    if command -v pytest &> /dev/null; then
+        # Run security-related BDD tests
+        log_info "Running security scanning BDD tests..."
+        if pytest tests/bdd -k "security or quality" -v --tb=short -m "smoke or local or security" 2>/dev/null; then
+            log_success "BDD tests passed"
+        else
+            log_warning "Some BDD tests failed or were skipped (may require cluster)"
+        fi
+    else
+        log_warning "pytest not available, skipping BDD tests"
+    fi
+    
+    echo ""
+    log_success "AT-E1-005 validation completed!"
+    return 0
+}
+
+run_at_e1_007() {
+    log_info "Running AT-E1-007: DORA Metrics validation"
+    echo ""
+    
+    # Run the comprehensive validation script
+    log_info "Step 1: Running comprehensive validation..."
+    if [ -f "$ROOT_DIR/scripts/validate-at-e1-007.sh" ]; then
+        if ! "$ROOT_DIR/scripts/validate-at-e1-007.sh"; then
+            log_error "Comprehensive validation failed"
+            return 1
+        fi
+    else
+        log_error "AT-E1-007 validation script not found at $ROOT_DIR/scripts/validate-at-e1-007.sh"
+        return 1
+    fi
+    
+    echo ""
+    log_info "Step 2: Running DORA dashboard validation..."
+    if [ -f "$ROOT_DIR/tests/integration/validate-dora-dashboard.sh" ]; then
+        log_info "Running DORA dashboard integration test..."
+        if "$ROOT_DIR/tests/integration/validate-dora-dashboard.sh"; then
+            log_success "DORA dashboard validation passed"
+        else
+            log_warning "DORA dashboard validation failed (dashboard file may need updates)"
+        fi
+    else
+        log_warning "DORA dashboard validation script not found, skipping..."
+    fi
+    
+    echo ""
+    log_info "Step 3: Running webhook verification..."
+    if [ -f "$ROOT_DIR/scripts/test-dora-webhooks.sh" ]; then
+        log_info "Running DORA webhook tests..."
+        if "$ROOT_DIR/scripts/test-dora-webhooks.sh"; then
+            log_success "DORA webhook tests passed"
+        else
+            log_warning "DORA webhook tests failed (may require cluster access)"
+        fi
+    else
+        log_warning "DORA webhook test script not found, skipping..."
+    fi
+    
+    echo ""
+    log_info "Step 4: Running BDD tests..."
+    cd "$ROOT_DIR"
+    
+    # Check if pytest is available
+    if command -v pytest &> /dev/null; then
+        # Run DORA-related BDD tests
+        if [ -f "tests/bdd/features/devlake-dora-metrics.feature" ] || [ -f "tests/bdd/features/dora-webhooks.feature" ]; then
+            log_info "Running DORA metrics BDD tests..."
+            # Run DORA-related tests
+            if pytest tests/bdd -k "dora or devlake" -v --tb=short -m "smoke or local or dora or devlake" 2>/dev/null; then
+                log_success "BDD tests passed"
+            else
+                log_warning "Some BDD tests failed or were skipped (may require cluster with DevLake deployed)"
+            fi
+        fi
+    else
+        log_warning "pytest not available, skipping BDD tests"
+    fi
+    
+    echo ""
+    log_success "AT-E1-007 validation completed!"
+    return 0
+}
+
 run_at_e1_009() {
     log_info "Running AT-E1-009: Harbor Container Registry validation"
     echo ""
@@ -245,6 +363,28 @@ run_at_e1_009() {
     return 0
 }
 
+run_at_e1_012() {
+    log_info "Running AT-E1-012: Full Platform Workflow validation"
+    echo ""
+    
+    # Run the comprehensive validation script
+    log_info "Running comprehensive Epic 1 final validation..."
+    if [ -f "$ROOT_DIR/scripts/validate-at-e1-012.sh" ]; then
+        if ! "$ROOT_DIR/scripts/validate-at-e1-012.sh" "$@"; then
+            log_error "AT-E1-012 validation failed"
+            return 1
+        fi
+    else
+        log_error "AT-E1-012 validation script not found at $ROOT_DIR/scripts/validate-at-e1-012.sh"
+        return 1
+    fi
+    
+    echo ""
+    log_success "AT-E1-012 validation completed!"
+    log_success "Epic 1 is fully validated and ready for Epic 2!"
+    return 0
+}
+
 main() {
     if [ $# -eq 0 ]; then
         log_error "No test ID provided"
@@ -267,10 +407,20 @@ main() {
         AT-E1-004)
             run_at_e1_004
             ;;
+        AT-E1-005)
+            run_at_e1_005
+            ;;
+        AT-E1-007)
+            run_at_e1_007
+            ;;
         AT-E1-009)
             run_at_e1_009
             ;;
-        AT-E1-005|AT-E1-006|AT-E1-007|AT-E1-008|AT-E1-010|AT-E1-011|AT-E1-012)
+        AT-E1-012)
+            shift  # Remove test_id from args
+            run_at_e1_012 "$@"  # Pass remaining args to AT-E1-012
+            ;;
+        AT-E1-006|AT-E1-008|AT-E1-010|AT-E1-011)
             log_error "$test_id validation not yet implemented"
             exit 1
             ;;

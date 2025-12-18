@@ -68,14 +68,14 @@ spec:
     size: 30Gi
     storageClass: standard
 
-  # Resource limits and requests
+  # Resource limits and requests - optimized for 70% target (Harbor needs more memory)
   resources:
     requests:
-      cpu: 500m
-      memory: 1Gi
+      cpu: 300m
+      memory: 768Mi
     limits:
-      cpu: 2
-      memory: 2Gi
+      cpu: 1
+      memory: 1536Mi
 
   # Affinity rules for HA - spread pods across nodes
   affinity:

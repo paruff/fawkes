@@ -1,0 +1,48 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-nodejs-app
+  description: Sample Node.js Express application for testing
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/kubernetes-id: sample-nodejs-app
+    backstage.io/techdocs-ref: dir:.
+    jenkins.io/job-full-name: sample-nodejs-app
+  tags:
+    - nodejs
+    - express
+    - rest-api
+spec:
+  type: service
+  lifecycle: experimental
+  owner: platform-team
+  providesApis:
+    - sample-nodejs-app-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: sample-nodejs-app-api
+  description: REST API for sample-nodejs-app
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: platform-team
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: sample-nodejs-app API
+      version: 0.1.0
+    paths:
+      /health:
+        get:
+          summary: Health check
+          responses:
+            '200':
+              description: Service is healthy
+      /info:
+        get:
+          summary: Service information
+          responses:
+            '200':
+              description: Service details

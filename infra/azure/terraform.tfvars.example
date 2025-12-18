@@ -1,13 +1,14 @@
 ###############################################
-# Fawkes AKS Configuration Example
+# Fawkes AKS Development Configuration Example
 # Copy to terraform.tfvars and customize for your environment
 ###############################################
 
 # Azure region and resource naming
-location            = "East US"
-resource_group_name = "fawkes-rg"
-cluster_name        = "fawkes-aks"
-dns_prefix          = "fawkes"
+# IMPORTANT: Using eastus2 for cost optimization
+location            = "eastus2"
+resource_group_name = "fawkes-dev-rg"
+cluster_name        = "fawkes-dev-aks"
+dns_prefix          = "fawkes-dev"
 environment         = "dev"
 
 # Optional: explicit subscription and tenant (otherwise Azure CLI context is used)
@@ -21,32 +22,30 @@ service_cidr               = "10.1.0.0/16"
 dns_service_ip             = "10.1.0.10"
 network_policy             = "azure"
 
+# Private cluster configuration (API server not exposed to public internet)
+private_cluster_enabled = true
+
 # System node pool (critical system workloads)
-system_node_pool_vm_size = "Standard_B2ms"
+# Using burstable SKU for cost optimization in dev
+system_node_pool_vm_size = "Standard_B2s"
 system_node_pool_count   = 1
 
 # User node pool (application workloads with auto-scaling)
+# Configured for aggressive cost optimization with Spot instances
 user_node_pool_vm_size    = "Standard_D2s_v3"
 user_node_pool_min_count  = 1
-user_node_pool_max_count  = 10
-user_node_pool_enable_autoscaling = true   # Enable autoscaling in dev
+user_node_pool_max_count  = 5   # Strict limit for Dev environment
+user_node_pool_enable_autoscaling = true
 user_node_pool_node_count         = 1      # Used when autoscaling is disabled
 user_node_pool_priority           = "Spot"       # Use Spot for cost savings in dev
-user_node_pool_eviction_policy    = "Delete"     # Delete or Deallocate when evicted
+user_node_pool_eviction_policy    = "Delete"     # Delete when evicted
 user_node_pool_spot_max_price     = -1           # -1 caps at on-demand price
 
-# Azure Container Registry (base name; an alphanumeric lowercase suffix is appended for global uniqueness)
-acr_name = "fawkesidpacr"
-acr_sku  = "Standard"
+# NOTE: Azure Container Registry (ACR) is NOT provisioned
+# Fawkes uses a self-hosted Harbor instance for container registry
 
-# Azure Key Vault (must be globally unique, alphanumeric and hyphens only)
-key_vault_name = "fawkes-kv"
-
-# Key Vault security settings
-# For production: set retention to 90 days, enable purge protection, and restrict network access
-key_vault_soft_delete_retention_days    = 7      # Use 90 for production
-key_vault_purge_protection_enabled      = false  # Set true for production
-key_vault_network_acls_default_action   = "Allow" # Use "Deny" for production
+# NOTE: Azure Key Vault is NOT provisioned
+# Fawkes uses a self-hosted HashiCorp Vault instance for secret management
 
 # Storage Account for Terraform state (must be globally unique, lowercase alphanumeric only)
 storage_account_name     = "fawkestfstate"
@@ -63,12 +62,14 @@ kubernetes_version = null
 oidc_issuer_enabled       = true
 workload_identity_enabled = true
 
-# Resource tags
+# Resource tags (Fawkes standard tags for cost tracking and automation)
 tags = {
-  platform    = "fawkes"
-  environment = "dev"
-  managed_by  = "terraform"
-  owner       = "platform-team"
+  Project     = "Fawkes"
+  Environment = "Dev"
+  CostCenter  = "Platform"
+  Schedule    = "BusinessHours"
+  ManagedBy   = "Terraform"
+  Owner       = "platform-team"
 }
 
 # DNS configuration (optional)
@@ -76,4 +77,22 @@ tags = {
 # dns_zone_name = "fawkes.yourdomain.com"
 # create_dns_records = false  # Set to true after ingress-nginx is deployed
 # ingress_public_ip_name = "kubernetes"  # Default name, or use static IP name
+
+###############################################
+# Automated Shutdown for Cost Optimization
+###############################################
+# Azure AKS Start/Stop feature allows stopping and starting the cluster to save costs.
+#
+# To manually stop the cluster:
+#   az aks stop --name fawkes-dev-aks --resource-group fawkes-dev-rg
+#
+# To manually start the cluster:
+#   az aks start --name fawkes-dev-aks --resource-group fawkes-dev-rg
+#
+# For automated shutdown schedules, consider using:
+# - Azure Automation Runbooks (https://docs.microsoft.com/en-us/azure/automation/automation-runbook-types)
+# - GitHub Actions with scheduled workflows
+# - Azure DevOps Pipelines with scheduled triggers
+#
+# Example: Stop cluster at 8:00 PM EST, start at 8:00 AM EST on weekdays
 

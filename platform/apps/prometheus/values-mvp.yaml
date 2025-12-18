@@ -16,11 +16,11 @@ prometheusOperator:
 
   resources:
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 80m
+      memory: 100Mi
     limits:
-      cpu: 200m
-      memory: 256Mi
+      cpu: 150m
+      memory: 200Mi
 
 # ===== Prometheus Server =====
 prometheus:
@@ -154,14 +154,14 @@ grafana:
   # Admin credentials - MVP: Simple (Production: OAuth/LDAP)
   adminPassword: "changeme123"  # CHANGE THIS!
 
-  # Resources - MVP: Minimal
+  # Resources - MVP: Optimized for 70% target
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 80m
+      memory: 200Mi
     limits:
-      cpu: 200m
-      memory: 512Mi
+      cpu: 150m
+      memory: 400Mi
 
   # Persistence - MVP: Enabled
   persistence:
@@ -209,11 +209,11 @@ nodeExporter:
 
   resources:
     requests:
-      cpu: 50m
-      memory: 64Mi
+      cpu: 40m
+      memory: 50Mi
     limits:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 80m
+      memory: 100Mi
 
 # ===== Kube State Metrics =====
 kubeStateMetrics:
@@ -221,21 +221,21 @@ kubeStateMetrics:
 
   resources:
     requests:
-      cpu: 50m
-      memory: 64Mi
+      cpu: 40m
+      memory: 50Mi
     limits:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 80m
+      memory: 100Mi
 
 # ===== Prometheus Node Exporter =====
 prometheus-node-exporter:
   resources:
     requests:
-      cpu: 50m
-      memory: 64Mi
+      cpu: 40m
+      memory: 50Mi
     limits:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 80m
+      memory: 100Mi
 
 # ===== Default Service Monitors =====
 # MVP: Monitor only Kubernetes core components

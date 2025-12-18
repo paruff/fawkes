@@ -79,17 +79,15 @@ livenessProbe:
 # Set extra env variables. Like proxy settings.
 extraEnv: {}
 
-resources: {}
-# We usually recommend not to specify default resources and to leave this as a conscious
-# choice for the user. This also increases chances charts run on environments with little
-# resources, such as Minikube. If you do want to specify resources, uncomment the following
-# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-# limits:
-#  cpu: 100m
-#  memory: 128Mi
-# requests:
-#  cpu: 100m
-#  memory: 128Mi
+resources:
+  # Resource limits - optimized for 70% target utilization
+  # SonarQube requires significant memory for analysis tasks
+  requests:
+    cpu: 500m
+    memory: 1536Mi
+  limits:
+    cpu: 1500m
+    memory: 3Gi
 persistence:
   enabled: false
   ## Specify an existing volume claim instead of creating a new one.
@@ -154,9 +152,14 @@ plugins:
 
   # initContainerImage: alpine:3.9
 
-  resources: {}
-  # We allow the plugins init container to have a separate resources declaration because
-  # the initContainer does not take as much resources.
+  resources:
+    # Plugin init container resources - optimized
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
 
 # A custom sonar.properties file can be provided using a multiline YAML string.
 # For example:
