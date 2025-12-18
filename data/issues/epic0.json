@@ -1,0 +1,1776 @@
+{
+  "epic": {
+    "id": 0,
+    "name": "Comprehensive Codebase Refactoring",
+    "description": "Systematic refactoring of scripts, configurations, and infrastructure code to improve code quality, reduce technical debt, enhance maintainability, and establish best practices",
+    "duration_weeks": 2,
+    "target_completion": "Pre-Epic 1 Foundation",
+    "priority": "P0",
+    "business_value": "Establishes clean foundation for all future development, reduces onboarding time, improves reliability, and prevents compounding technical debt",
+    "acceptance_tests": [
+      "AT-E0-001",
+      "AT-E0-002",
+      "AT-E0-003",
+      "AT-E0-004",
+      "AT-E0-005",
+      "AT-E0-006",
+      "AT-E0-007",
+      "AT-E0-008"
+    ]
+  },
+  "issues": [
+    {
+      "number": 109,
+      "title": "Establish code quality standards and linting configuration",
+      "milestone": "Week 1: Standards & Script Refactoring",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": [
+        "epic-0",
+        "type-standards",
+        "comp-quality",
+        "priority-p0"
+      ],
+      "description": "Define and document comprehensive code quality standards for all languages used in Fawkes (Bash, Python, Go, YAML, HCL/Terraform, Markdown). Configure linters and formatters.",
+      "acceptance_criteria": [
+        "Documented coding standards for each language",
+        "ShellCheck configured for Bash scripts",
+        "Black/Flake8/Pylint configured for Python",
+        "golangci-lint configured for Go",
+        "yamllint configured for YAML",
+        "terraform fmt and tflint configured",
+        "markdownlint configured for documentation",
+        "EditorConfig file for consistent formatting",
+        "Pre-commit hooks configured",
+        "CI/CD linting pipeline created"
+      ],
+      "dependencies": [],
+      "blocks": [
+        "#110",
+        "#111",
+        "#112"
+      ],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 110,
+      "title": "Refactor ignite.sh into modular architecture",
+      "milestone": "Week 1: Standards & Script Refactoring",
+      "priority": "P0",
+      "estimated_hours": 8,
+      "labels": [
+        "epic-0",
+        "type-refactor",
+        "comp-ignite",
+        "priority-p0"
+      ],
+      "description": "Break down monolithic ignite.sh into modular, testable components following Single Responsibility Principle. Create library structure for reusable functions.",
+      "acceptance_criteria": [
+        "ignite.sh remains as main entry point (<200 lines)",
+        "lib/common.sh - Common utilities (logging, validation)",
+        "lib/cloud-azure.sh - Azure-specific functions",
+        "lib/cloud-gcp.sh - GCP-specific functions",
+        "lib/kubernetes.sh - Kubernetes operations",
+        "lib/argocd.sh - ArgoCD operations",
+        "lib/validation.sh - Validation and testing functions",
+        "All functions have docstrings with examples",
+        "Unit tests for critical functions",
+        "ShellCheck passes with zero warnings"
+      ],
+      "dependencies": [
+        "#109"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 111,
+      "title": "Implement comprehensive error handling in scripts",
+      "milestone": "Week 1: Standards & Script Refactoring",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": [
+        "epic-0",
+        "type-refactor",
+        "comp-error-handling",
+        "priority-p0"
+      ],
+      "description": "Add robust error handling, recovery mechanisms, and user-friendly error messages throughout all Bash scripts.",
+      "acceptance_criteria": [
+        "All scripts use set -euo pipefail",
+        "trap handlers for cleanup on exit/error",
+        "Consistent error message format with context",
+        "Error codes documented (1-255 range)",
+        "Retry logic for transient failures",
+        "Graceful degradation where appropriate",
+        "Error logging to structured log files",
+        "User-actionable error messages",
+        "Validation of all external command availability",
+        "No silent failures"
+      ],
+      "dependencies": [
+        "#109",
+        "#110"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 112,
+      "title": "Create comprehensive script testing framework",
+      "milestone": "Week 1: Standards & Script Refactoring",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": [
+        "epic-0",
+        "type-testing",
+        "comp-scripts",
+        "priority-p0"
+      ],
+      "description": "Implement BATS (Bash Automated Testing System) framework for testing shell scripts with mocking and fixtures.",
+      "acceptance_criteria": [
+        "BATS framework configured",
+        "Test structure: tests/unit/ and tests/integration/",
+        "Mock helpers for external commands (kubectl, az, gcloud)",
+        "Test fixtures for common scenarios",
+        "At least 80% code coverage for critical paths",
+        "Tests run in CI/CD pipeline",
+        "Test documentation and examples",
+        "Performance benchmarks for scripts",
+        "Parallel test execution",
+        "Test results in JUnit XML format"
+      ],
+      "dependencies": [
+        "#110"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 113,
+      "title": "Refactor Terraform modules for reusability",
+      "milestone": "Week 1: Standards & Script Refactoring",
+      "priority": "P0",
+      "estimated_hours": 8,
+      "labels": [
+        "epic-0",
+        "type-refactor",
+        "comp-terraform",
+        "priority-p0"
+      ],
+      "description": "Restructure Terraform modules following best practices: DRY principle, composition over inheritance, clear input/output contracts.",
+      "acceptance_criteria": [
+        "modules/ directory with reusable modules",
+        "Each module has: README, variables.tf, outputs.tf, main.tf",
+        "Module versioning strategy documented",
+        "Input validation for all variables",
+        "Comprehensive outputs with descriptions",
+        "Examples directory for each module",
+        "No hardcoded values (use variables)",
+        "Consistent naming conventions",
+        "terraform-docs generated documentation",
+        "Module dependency graph documented"
+      ],
+      "dependencies": [
+        "#109"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 114,
+      "title": "Implement Terraform state management best practices",
+      "milestone": "Week 1: Standards & Script Refactoring",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": [
+        "epic-0",
+        "type-refactor",
+        "comp-terraform",
+        "priority-p0"
+      ],
+      "description": "Enhance Terraform state management with remote backends, state locking, encryption, and backup strategies.",
+      "acceptance_criteria": [
+        "Remote state backends configured (Azure/GCP)",
+        "State locking enabled",
+        "State encryption at rest and in transit",
+        "Automated state backup process",
+        "State file naming conventions",
+        "Workspace strategy documented",
+        "State migration procedures",
+        "State import/export utilities",
+        "State validation checks",
+        "Disaster recovery procedures"
+      ],
+      "dependencies": [
+        "#113"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 115,
+      "title": "Create Terraform testing with Terratest",
+      "milestone": "Week 1: Standards & Script Refactoring",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": [
+        "epic-0",
+        "type-testing",
+        "comp-terraform",
+        "priority-p0"
+      ],
+      "description": "Implement automated testing for Terraform modules using Terratest framework with unit and integration tests.",
+      "acceptance_criteria": [
+        "Terratest framework configured",
+        "Unit tests for module validation",
+        "Integration tests for actual deployment",
+        "Cost estimation tests (infracost)",
+        "Security tests (tfsec, checkov)",
+        "Compliance tests (policies)",
+        "Test fixtures and mock data",
+        "Tests run in CI/CD (with proper cleanup)",
+        "Test documentation",
+        "Performance benchmarks"
+      ],
+      "dependencies": [
+        "#113"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 116,
+      "title": "Standardize Kubernetes manifest structure",
+      "milestone": "Week 1: Standards & Script Refactoring",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": [
+        "epic-0",
+        "type-refactor",
+        "comp-kubernetes",
+        "priority-p0"
+      ],
+      "description": "Reorganize Kubernetes manifests with consistent structure, naming conventions, and Kustomize best practices.",
+      "acceptance_criteria": [
+        "Consistent directory structure across all components",
+        "Standard naming: <component>-<resource-type>.yaml",
+        "All manifests pass kubectl validation",
+        "Kustomization.yaml in all base/overlay directories",
+        "Resource ordering with dependencies",
+        "Consistent label and annotation strategy",
+        "ConfigMap and Secret naming conventions",
+        "ResourceQuota and LimitRange defined",
+        "PodDisruptionBudgets for critical workloads",
+        "NetworkPolicies for all namespaces"
+      ],
+      "dependencies": [
+        "#109"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 117,
+      "title": "Create AT-E0-001 code quality test",
+      "milestone": "Week 1: Standards & Script Refactoring",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": [
+        "epic-0",
+        "type-testing",
+        "comp-tests",
+        "priority-p0"
+      ],
+      "description": "Automated test validating all code quality standards are met across the codebase.",
+      "acceptance_criteria": [
+        "Test runs all linters (shellcheck, yamllint, etc.)",
+        "Test validates code formatting",
+        "Test checks for TODO/FIXME comments",
+        "Test validates documentation completeness",
+        "Test checks file permissions",
+        "Test validates naming conventions",
+        "Zero high/critical issues allowed",
+        "AT-E0-001 passes"
+      ],
+      "dependencies": [
+        "#109",
+        "#110",
+        "#111"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 118,
+      "title": "Refactor configuration management strategy",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 7,
+      "labels": [
+        "epic-0",
+        "type-refactor",
+        "comp-configuration",
+        "priority-p0"
+      ],
+      "description": "Consolidate and standardize configuration management using environment-specific config files, secrets management, and the 12-factor methodology.",
+      "acceptance_criteria": [
+        "Configuration hierarchy: defaults → environment → local",
+        "configs/ directory with clear structure",
+        "Environment-specific configs (dev/staging/prod)",
+        "No secrets in configuration files",
+        "Configuration validation schema (JSON Schema)",
+        "Configuration documentation generated",
+        "Template system for config generation",
+        "Configuration versioning strategy",
+        "Migration path for config changes",
+        "Configuration diff and audit tools"
+      ],
+      "dependencies": [],
+      "blocks": [
+        "#119"
+      ],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 119,
+      "title": "Implement secure secrets management",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": [
+        "epic-0",
+        "type-security",
+        "comp-secrets",
+        "priority-p0"
+      ],
+      "description": "Establish secure secrets management using Sealed Secrets, SOPS, or similar tools. Remove any hardcoded secrets.",
+      "acceptance_criteria": [
+        "Sealed Secrets or SOPS configured",
+        "All secrets encrypted at rest",
+        "Secret rotation procedures documented",
+        "No secrets in git history (audit completed)",
+        "Development secrets strategy (local .env)",
+        "Secret templating for different environments",
+        "Access control for secret management",
+        "Secret backup and recovery procedures",
+        "Documentation for secret operations",
+        "CI/CD secrets management"
+      ],
+      "dependencies": [
+        "#118"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 120,
+      "title": "Create comprehensive Helm chart values strategy",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": [
+        "epic-0",
+        "type-refactor",
+        "comp-helm",
+        "priority-p0"
+      ],
+      "description": "Standardize Helm values files with consistent structure, comprehensive comments, and environment-specific overrides.",
+      "acceptance_criteria": [
+        "helm/values/ directory structure",
+        "Base values.yaml with all options",
+        "Environment-specific overrides",
+        "Comprehensive inline documentation",
+        "Values schema validation",
+        "Default values are production-safe",
+        "Resource limits/requests defined",
+        "Security contexts configured",
+        "Service account configurations",
+        "Values diff tool for comparisons"
+      ],
+      "dependencies": [
+        "#118"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 121,
+      "title": "Refactor documentation structure and content",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 8,
+      "labels": [
+        "epic-0",
+        "type-documentation",
+        "comp-docs",
+        "priority-p0"
+      ],
+      "description": "Reorganize documentation with clear information architecture, comprehensive coverage, and consistent formatting.",
+      "acceptance_criteria": [
+        "docs/ directory restructured logically",
+        "Documentation site structure (if using tool)",
+        "README files in every major directory",
+        "Architecture documentation (C4 diagrams)",
+        "Runbooks for operational tasks",
+        "Troubleshooting guides",
+        "Development setup guide",
+        "Contributing guidelines",
+        "API documentation",
+        "All docs pass markdown linting"
+      ],
+      "dependencies": [],
+      "blocks": [
+        "#122"
+      ],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 122,
+      "title": "Generate automated documentation",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": [
+        "epic-0",
+        "type-documentation",
+        "comp-automation",
+        "priority-p0"
+      ],
+      "description": "Implement automated documentation generation for code, APIs, configurations, and infrastructure.",
+      "acceptance_criteria": [
+        "terraform-docs for Terraform modules",
+        "Swagger/OpenAPI for APIs",
+        "Helm-docs for Helm charts",
+        "Script documentation from docstrings",
+        "Automated diagram generation (PlantUML)",
+        "Documentation CI/CD pipeline",
+        "Version-specific documentation",
+        "Changelog automation",
+        "Documentation search functionality",
+        "Documentation quality checks"
+      ],
+      "dependencies": [
+        "#121"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 123,
+      "title": "Create comprehensive code commenting standards",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": [
+        "epic-0",
+        "type-standards",
+        "comp-documentation",
+        "priority-p0"
+      ],
+      "description": "Establish and implement code commenting standards with examples for all languages used in Fawkes.",
+      "acceptance_criteria": [
+        "Commenting standards documented",
+        "Function/method documentation requirements",
+        "Inline comment guidelines",
+        "TODO/FIXME/HACK conventions",
+        "Documentation comment format (JSDoc-style)",
+        "Examples for each language",
+        "Comment quality validation in CI",
+        "Automated comment coverage checks",
+        "Guidelines for self-documenting code",
+        "Comment anti-patterns documented"
+      ],
+      "dependencies": [
+        "#121"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 124,
+      "title": "Implement dependency management and security scanning",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": [
+        "epic-0",
+        "type-security",
+        "comp-dependencies",
+        "priority-p0"
+      ],
+      "description": "Establish dependency management strategy with version pinning, security scanning, and automated updates.",
+      "acceptance_criteria": [
+        "Dependency files for all languages (requirements.txt, go.mod)",
+        "Version pinning strategy documented",
+        "Dependabot or Renovate configured",
+        "Security scanning (Snyk, GitHub Dependabot)",
+        "Dependency update policy",
+        "License compliance checking",
+        "Dependency graph documentation",
+        "Automated dependency updates (with testing)",
+        "Vulnerability alerting",
+        "Supply chain security measures"
+      ],
+      "dependencies": [],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 125,
+      "title": "Create AT-E0-002 configuration management test",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": [
+        "epic-0",
+        "type-testing",
+        "comp-tests",
+        "priority-p0"
+      ],
+      "description": "Test validating configuration management system and secrets handling.",
+      "acceptance_criteria": [
+        "Test validates config file structure",
+        "Test validates no secrets in configs",
+        "Test validates config schema compliance",
+        "Test validates environment overrides",
+        "Test validates sealed secrets work",
+        "AT-E0-002 passes"
+      ],
+      "dependencies": [
+        "#118",
+        "#119",
+        "#120"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 126,
+      "title": "Refactor CI/CD pipeline configuration",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": [
+        "epic-0",
+        "type-refactor",
+        "comp-cicd",
+        "priority-p0"
+      ],
+      "description": "Optimize CI/CD pipelines for speed, reliability, and maintainability with reusable workflows and proper caching.",
+      "acceptance_criteria": [
+        "GitHub Actions workflows refactored",
+        "Reusable workflow components",
+        "Proper caching strategy (dependencies, docker layers)",
+        "Parallel job execution where possible",
+        "Matrix builds for multi-environment testing",
+        "Pipeline visualization/documentation",
+        "Build time optimization (<10 min target)",
+        "Proper artifact management",
+        "Pipeline failure notifications",
+        "Cost optimization for cloud resources"
+      ],
+      "dependencies": [],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 127,
+      "title": "Implement code metrics and technical debt tracking",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P1",
+      "estimated_hours": 5,
+      "labels": [
+        "epic-0",
+        "type-metrics",
+        "comp-quality",
+        "priority-p1"
+      ],
+      "description": "Establish automated code metrics collection and technical debt tracking with SonarQube or similar tools.",
+      "acceptance_criteria": [
+        "Code complexity metrics (cyclomatic complexity)",
+        "Code duplication detection",
+        "Test coverage metrics",
+        "Technical debt ratio calculation",
+        "Code smell detection",
+        "Metrics dashboard",
+        "Historical trend tracking",
+        "Quality gates based on metrics",
+        "Automated reporting",
+        "Integration with pull request reviews"
+      ],
+      "dependencies": [],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 128,
+      "title": "Create comprehensive .gitignore and .dockerignore files",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 3,
+      "labels": [
+        "epic-0",
+        "type-configuration",
+        "comp-git",
+        "priority-p0"
+      ],
+      "description": "Create and validate comprehensive .gitignore and .dockerignore files to prevent accidental commits of sensitive or unnecessary files.",
+      "acceptance_criteria": [
+        ".gitignore covers all languages/tools used",
+        ".dockerignore optimizes Docker build context",
+        "No secrets or credentials can be committed",
+        "Build artifacts excluded",
+        "IDE-specific files excluded",
+        "OS-specific files excluded",
+        "Validation in pre-commit hooks",
+        "Documentation of ignore patterns",
+        "Git history audit for violations",
+        "Automated ignore file generation"
+      ],
+      "dependencies": [],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 129,
+      "title": "Implement logging standardization",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": [
+        "epic-0",
+        "type-refactor",
+        "comp-logging",
+        "priority-p0"
+      ],
+      "description": "Standardize logging across all scripts and applications with structured logging, log levels, and centralized configuration.",
+      "acceptance_criteria": [
+        "Consistent log format (timestamp, level, message, context)",
+        "Log level hierarchy (DEBUG, INFO, WARN, ERROR, FATAL)",
+        "Structured logging (JSON format for parsing)",
+        "Log rotation and retention policies",
+        "Centralized logging configuration",
+        "Context propagation (correlation IDs)",
+        "Sensitive data masking in logs",
+        "Log aggregation compatibility",
+        "Performance impact minimal",
+        "Documentation for logging best practices"
+      ],
+      "dependencies": [],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 130,
+      "title": "Create AT-E0-003 documentation quality test",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": [
+        "epic-0",
+        "type-testing",
+        "comp-tests",
+        "priority-p0"
+      ],
+      "description": "Test validating documentation completeness, accuracy, and quality standards.",
+      "acceptance_criteria": [
+        "Test validates all modules have README",
+        "Test validates documentation links work",
+        "Test validates code examples are valid",
+        "Test validates markdown formatting",
+        "Test validates documentation coverage",
+        "AT-E0-003 passes"
+      ],
+      "dependencies": [
+        "#121",
+        "#122",
+        "#123"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 131,
+      "title": "Refactor directory structure for scalability",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": [
+        "epic-0",
+        "type-refactor",
+        "comp-structure",
+        "priority-p0"
+      ],
+      "description": "Reorganize repository directory structure for better organization, discoverability, and scalability as platform grows.",
+      "acceptance_criteria": [
+        "Logical top-level directory structure",
+        "Clear separation of concerns",
+        "Consistent naming conventions",
+        "README in every directory",
+        "Path documentation",
+        "Migration guide for moved files",
+        "Updated all references and imports",
+        "No broken links or paths",
+        "Git history preserved for moved files",
+        "Structure documented in architecture docs"
+      ],
+      "dependencies": [],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 132,
+      "title": "Implement pre-commit hooks framework",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": [
+        "epic-0",
+        "type-quality",
+        "comp-git",
+        "priority-p0"
+      ],
+      "description": "Configure comprehensive pre-commit hooks to catch issues before they enter version control.",
+      "acceptance_criteria": [
+        "pre-commit framework configured",
+        "Hooks for all linters",
+        "Secret detection (git-secrets, gitleaks)",
+        "File size limits",
+        "Commit message validation",
+        "Trailing whitespace removal",
+        "YAML/JSON validation",
+        "Terraform fmt check",
+        "Documentation for hook bypass (rare cases)",
+        "Fast hook execution (<5 seconds)"
+      ],
+      "dependencies": [
+        "#109"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 133,
+      "title": "Create performance benchmarking suite",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P1",
+      "estimated_hours": 5,
+      "labels": [
+        "epic-0",
+        "type-testing",
+        "comp-performance",
+        "priority-p1"
+      ],
+      "description": "Implement performance benchmarking for critical operations to track and prevent performance regressions.",
+      "acceptance_criteria": [
+        "Benchmark suite for ignite.sh operations",
+        "Terraform apply/destroy benchmarks",
+        "Script execution time tracking",
+        "Resource utilization benchmarks",
+        "Performance regression detection",
+        "Benchmarks run in CI (with thresholds)",
+        "Historical performance tracking",
+        "Performance reports",
+        "Optimization recommendations",
+        "Documentation of performance targets"
+      ],
+      "dependencies": [
+        "#110",
+        "#113"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 134,
+      "title": "Implement code review checklist and automation",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P1",
+      "estimated_hours": 4,
+      "labels": [
+        "epic-0",
+        "type-process",
+        "comp-review",
+        "priority-p1"
+      ],
+      "description": "Create comprehensive code review checklist and automate checks where possible to ensure consistent quality.",
+      "acceptance_criteria": [
+        "Code review checklist documented",
+        "Automated checks in PR workflow",
+        "Review bot for common issues",
+        "Required reviewers based on CODEOWNERS",
+        "PR template with checklist",
+        "Review guidelines and examples",
+        "SLA for review response time",
+        "Review metrics tracking",
+        "Training materials for reviewers",
+        "Escalation process for stale PRs"
+      ],
+      "dependencies": [],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 135,
+      "title": "Create comprehensive backup and disaster recovery procedures",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": [
+        "epic-0",
+        "type-operations",
+        "comp-backup",
+        "priority-p0"
+      ],
+      "description": "Document and implement backup procedures for all critical data and configurations with tested recovery processes.",
+      "acceptance_criteria": [
+        "Backup strategy documented",
+        "Automated backup scripts",
+        "Backup verification procedures",
+        "Recovery procedures with RTO/RPO",
+        "Disaster recovery runbooks",
+        "Backup encryption at rest",
+        "Off-site backup storage",
+        "Regular recovery testing (quarterly)",
+        "Backup monitoring and alerting",
+        "Documentation of backup inventory"
+      ],
+      "dependencies": [],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 136,
+      "title": "Create AT-E0-004 and AT-E0-005 tests",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 3,
+      "labels": [
+        "epic-0",
+        "type-testing",
+        "comp-tests",
+        "priority-p0"
+      ],
+      "description": "Tests for script refactoring quality and Terraform module validation.",
+      "acceptance_criteria": [
+        "AT-E0-004: Script testing framework operational",
+        "Test validates BATS tests pass",
+        "Test validates code coverage >80%",
+        "AT-E0-005: Terraform modules validated",
+        "Test validates terraform fmt/validate",
+        "Test validates tfsec/checkov pass",
+        "Both tests pass"
+      ],
+      "dependencies": [
+        "#112",
+        "#115"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 137,
+      "title": "Implement change management and migration strategy",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P1",
+      "estimated_hours": 5,
+      "labels": [
+        "epic-0",
+        "type-process",
+        "comp-change-management",
+        "priority-p1"
+      ],
+      "description": "Establish formal change management process and migration strategy for refactored code to minimize disruption.",
+      "acceptance_criteria": [
+        "Change management policy documented",
+        "Migration plan for refactored components",
+        "Backward compatibility strategy",
+        "Deprecation policy and timeline",
+        "Change communication process",
+        "Rollback procedures",
+        "Impact assessment template",
+        "Change approval workflow",
+        "Post-migration validation checklist",
+        "Lessons learned documentation"
+      ],
+      "dependencies": [],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 138,
+      "title": "Create technical debt register and tracking",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P1",
+      "estimated_hours": 4,
+      "labels": [
+        "epic-0",
+        "type-metrics",
+        "comp-debt",
+        "priority-p1"
+      ],
+      "description": "Establish systematic tracking of technical debt with prioritization framework and remediation planning.",
+      "acceptance_criteria": [
+        "Technical debt register created",
+        "Debt categorization system",
+        "Priority scoring framework",
+        "Remediation effort estimates",
+        "Debt trends dashboard",
+        "Quarterly debt review process",
+        "Integration with issue tracking",
+        "Debt-to-feature ratio tracking",
+        "Debt impact on velocity measured",
+        "Documentation of debt items"
+      ],
+      "dependencies": [
+        "#127"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 139,
+      "title": "Optimize Docker images and multi-stage builds",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P1",
+      "estimated_hours": 5,
+      "labels": [
+        "epic-0",
+        "type-optimization",
+        "comp-docker",
+        "priority-p1"
+      ],
+      "description": "Optimize all Dockerfiles using multi-stage builds, minimal base images, and layer caching strategies.",
+      "acceptance_criteria": [
+        "Multi-stage builds for all images",
+        "Minimal base images (alpine, distroless)",
+        "Layer optimization and caching",
+        "Security scanning (trivy, snyk)",
+        "Image size reduction >30%",
+        "Build time optimization",
+        "Non-root user execution",
+        "Health checks defined",
+        "Image tagging strategy",
+        "Documentation of Dockerfile patterns"
+      ],
+      "dependencies": [],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 140,
+      "title": "Create AT-E0-006 Kubernetes manifest test",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": [
+        "epic-0",
+        "type-testing",
+        "comp-tests",
+        "priority-p0"
+      ],
+      "description": "Test validating Kubernetes manifest quality and standards compliance.",
+      "acceptance_criteria": [
+        "Test validates kubectl validation",
+        "Test validates kustomize builds",
+        "Test validates resource limits defined",
+        "Test validates security contexts",
+        "Test validates label consistency",
+        "AT-E0-006 passes"
+      ],
+      "dependencies": [
+        "#116"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 141,
+      "title": "Implement resource tagging and labeling standards",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": [
+        "epic-0",
+        "type-standards",
+        "comp-tagging",
+        "priority-p0"
+      ],
+      "description": "Establish comprehensive tagging/labeling standards for cloud resources, Kubernetes resources, and Git resources.",
+      "acceptance_criteria": [
+        "Tagging policy documented",
+        "Required tags/labels defined (env, owner, cost-center, etc.)",
+        "Terraform resource tagging",
+        "Kubernetes label standards",
+        "Consistent naming conventions",
+        "Tag validation in CI/CD",
+        "Cost allocation by tags",
+        "Audit and compliance tagging",
+        "Tag automation scripts",
+        "Documentation and examples"
+      ],
+      "dependencies": [],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 142,
+      "title": "Create comprehensive troubleshooting guides",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": [
+        "epic-0",
+        "type-documentation",
+        "comp-troubleshooting",
+        "priority-p0"
+      ],
+      "description": "Develop detailed troubleshooting guides for common issues with decision trees, diagnostic commands, and resolution steps.",
+      "acceptance_criteria": [
+        "Troubleshooting guide for each major component",
+        "Common error messages documented",
+        "Decision trees for problem diagnosis",
+        "Diagnostic command reference",
+        "Resolution steps with examples",
+        "Known issues and workarounds",
+        "Escalation procedures",
+        "Links to relevant logs and metrics",
+        "Interactive troubleshooting tool",
+        "Regular updates from support tickets"
+      ],
+      "dependencies": [
+        "#121"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 143,
+      "title": "Implement monitoring and alerting for scripts",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P1",
+      "estimated_hours": 5,
+      "labels": [
+        "epic-0",
+        "type-monitoring",
+        "comp-scripts",
+        "priority-p1"
+      ],
+      "description": "Add monitoring, alerting, and observability for critical scripts and automation tasks.",
+      "acceptance_criteria": [
+        "Script execution metrics collected",
+        "Success/failure rate tracking",
+        "Execution time monitoring",
+        "Alert on repeated failures",
+        "Integration with Prometheus/Grafana",
+        "Script health dashboard",
+        "Automated notifications (Slack/email)",
+        "Audit logging for script executions",
+        "Performance anomaly detection",
+        "Documentation of monitoring setup"
+      ],
+      "dependencies": [
+        "#110",
+        "#129"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 144,
+      "title": "Create AT-E0-007 security and secrets test",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": [
+        "epic-0",
+        "type-testing",
+        "comp-tests",
+        "priority-p0"
+      ],
+      "description": "Test validating secrets management and security practices across codebase.",
+      "acceptance_criteria": [
+        "Test validates no secrets in git history",
+        "Test validates sealed secrets working",
+        "Test validates .gitignore effectiveness",
+        "Test validates dependency security",
+        "Test validates Docker security practices",
+        "AT-E0-007 passes"
+      ],
+      "dependencies": [
+        "#119",
+        "#124",
+        "#128"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 145,
+      "title": "Refactor variable naming for consistency",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P1",
+      "estimated_hours": 5,
+      "labels": [
+        "epic-0",
+        "type-refactor",
+        "comp-naming",
+        "priority-p1"
+      ],
+      "description": "Standardize variable, function, and file naming conventions across entire codebase for consistency and readability.",
+      "acceptance_criteria": [
+        "Naming conventions documented by language",
+        "snake_case for Bash variables",
+        "camelCase for JavaScript/TypeScript",
+        "kebab-case for file names",
+        "SCREAMING_SNAKE_CASE for constants",
+        "Descriptive names (no single letters except loops)",
+        "Consistent abbreviation standards",
+        "Automated naming validation",
+        "Refactoring guide for legacy code",
+        "Example reference for each pattern"
+      ],
+      "dependencies": [
+        "#109"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 146,
+      "title": "Implement configuration drift detection",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P1",
+      "estimated_hours": 5,
+      "labels": [
+        "epic-0",
+        "type-monitoring",
+        "comp-drift",
+        "priority-p1"
+      ],
+      "description": "Create automated detection and alerting for configuration drift between actual state and desired state.",
+      "acceptance_criteria": [
+        "Drift detection for Terraform state",
+        "Drift detection for Kubernetes resources",
+        "Drift detection for configurations",
+        "Automated drift reports",
+        "Alert on critical drift",
+        "Drift remediation procedures",
+        "Scheduled drift checks (daily)",
+        "Drift visualization dashboard",
+        "Manual drift resolution tools",
+        "Documentation of common drift scenarios"
+      ],
+      "dependencies": [
+        "#114",
+        "#116"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 147,
+      "title": "Create comprehensive onboarding documentation",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": [
+        "epic-0",
+        "type-documentation",
+        "comp-onboarding",
+        "priority-p0"
+      ],
+      "description": "Develop detailed onboarding documentation for new contributors covering setup, development workflow, and contribution process.",
+      "acceptance_criteria": [
+        "Day 1 setup guide (<30 minutes)",
+        "Development environment setup",
+        "Tool installation guide",
+        "First contribution walkthrough",
+        "Code review process explained",
+        "Testing procedures",
+        "Deployment procedures",
+        "Team communication channels",
+        "FAQ for common issues",
+        "Video walkthrough created"
+      ],
+      "dependencies": [
+        "#121",
+        "#142"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 148,
+      "title": "Implement cost optimization tracking",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P1",
+      "estimated_hours": 5,
+      "labels": [
+        "epic-0",
+        "type-optimization",
+        "comp-cost",
+        "priority-p1"
+      ],
+      "description": "Establish cost tracking and optimization recommendations for cloud resources and infrastructure.",
+      "acceptance_criteria": [
+        "Cost tracking by environment/component",
+        "Resource utilization analysis",
+        "Cost anomaly detection",
+        "Optimization recommendations",
+        "Budget alerts configured",
+        "Cost allocation reports",
+        "Historical cost trends",
+        "Right-sizing recommendations",
+        "Unused resource identification",
+        "Cost optimization documentation"
+      ],
+      "dependencies": [
+        "#141"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 149,
+      "title": "Create AT-E0-008 comprehensive refactoring validation",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": [
+        "epic-0",
+        "type-testing",
+        "comp-tests",
+        "priority-p0"
+      ],
+      "description": "Comprehensive test suite validating all refactoring work meets quality standards and nothing is broken.",
+      "acceptance_criteria": [
+        "All AT-E0-001 through AT-E0-007 passing",
+        "Integration tests for refactored components",
+        "Performance benchmarks meeting targets",
+        "Documentation completeness validated",
+        "Code coverage targets met (>80%)",
+        "No regressions in functionality",
+        "All linters passing",
+        "Security scans clean",
+        "AT-E0-008 passes",
+        "Epic 0 marked complete"
+      ],
+      "dependencies": [
+        "#117",
+        "#125",
+        "#130",
+        "#136",
+        "#140",
+        "#144"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    },
+    {
+      "number": 150,
+      "title": "Create refactoring impact report and metrics",
+      "milestone": "Week 2: Configuration & Documentation",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": [
+        "epic-0",
+        "type-documentation",
+        "comp-metrics",
+        "priority-p0"
+      ],
+      "description": "Generate comprehensive report documenting refactoring impact with before/after metrics and improvements achieved.",
+      "acceptance_criteria": [
+        "Code quality metrics comparison",
+        "Technical debt reduction measured",
+        "Performance improvements documented",
+        "Test coverage increase",
+        "Documentation completeness improvement",
+        "Maintainability index improvement",
+        "Time-to-onboard reduction estimate",
+        "Build/deploy time improvements",
+        "Cost optimization achieved",
+        "Executive summary created"
+      ],
+      "dependencies": [
+        "#149"
+      ],
+      "blocks": [],
+      "tasks": [
+        {
+          "id": "1",
+          "name": "Placeholder task - needs definition",
+          "location": "TBD",
+          "type": "configuration",
+          "copilot_prompt": "Define specific tasks for this issue",
+          "validation": "echo \"Task needs to be defined\""
+        }
+      ]
+    }
+  ],
+  "refactoring_metrics": {
+    "code_quality_targets": {
+      "shellcheck_warnings": "0 errors, <10 warnings",
+      "test_coverage": ">80% for critical paths",
+      "cyclomatic_complexity": "<15 per function",
+      "code_duplication": "<5%",
+      "documentation_coverage": ">90%"
+    },
+    "performance_targets": {
+      "script_execution_time": "-30% reduction",
+      "terraform_apply_time": "-20% reduction",
+      "docker_build_time": "-40% reduction",
+      "ci_pipeline_time": "<10 minutes"
+    },
+    "maintainability_targets": {
+      "average_function_length": "<50 lines",
+      "file_length": "<500 lines",
+      "module_coupling": "Low",
+      "module_cohesion": "High",
+      "time_to_understand": "<30 minutes per module"
+    }
+  },
+  "technical_debt_categories": {
+    "code_debt": [
+      "Duplicate code across scripts",
+      "Complex functions without documentation",
+      "Missing error handling",
+      "Hardcoded values",
+      "Global variables overuse"
+    ],
+    "infrastructure_debt": [
+      "Inconsistent Terraform module patterns",
+      "Missing state management",
+      "No testing for infrastructure",
+      "Hardcoded configurations",
+      "Missing resource tags"
+    ],
+    "documentation_debt": [
+      "Outdated architecture docs",
+      "Missing API documentation",
+      "Incomplete troubleshooting guides",
+      "No runbooks for operations",
+      "Missing code comments"
+    ],
+    "testing_debt": [
+      "Low test coverage",
+      "No integration tests",
+      "Manual testing only",
+      "No performance tests",
+      "Missing test documentation"
+    ]
+  },
+  "success_criteria": {
+    "quantitative": [
+      "All 42 refactoring issues completed",
+      "All 8 acceptance tests passing",
+      "Code coverage >80%",
+      "Zero high-priority linting errors",
+      "Documentation coverage >90%",
+      "Build time reduced >30%",
+      "Technical debt reduced >50%"
+    ],
+    "qualitative": [
+      "New contributor can set up environment in <30 minutes",
+      "Code is self-documenting and readable",
+      "Testing is automated and reliable",
+      "Configuration management is clear and secure",
+      "Documentation is comprehensive and up-to-date",
+      "CI/CD is fast and reliable",
+      "Codebase follows consistent patterns"
+    ]
+  },
+  "post_refactoring_benefits": {
+    "developer_experience": [
+      "Faster onboarding for new team members",
+      "Easier to find and fix bugs",
+      "Confident code changes with good tests",
+      "Clear documentation reduces questions",
+      "Automated quality checks catch issues early"
+    ],
+    "operational_benefits": [
+      "Faster deployments with optimized pipelines",
+      "Fewer production issues from better testing",
+      "Easier troubleshooting with structured logs",
+      "Better visibility with monitoring",
+      "Simplified disaster recovery"
+    ],
+    "business_value": [
+      "Reduced time to implement new features",
+      "Lower maintenance burden",
+      "Improved platform reliability",
+      "Better security posture",
+      "Reduced cloud costs from optimization"
+    ]
+  }
+}
