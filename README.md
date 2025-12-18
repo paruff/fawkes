@@ -327,6 +327,8 @@ Comprehensive documentation for all aspects of Fawkes:
 - [Quick Start Tutorial](docs/tutorials/quick-start.md)
 - [Architecture Overview](docs/architecture.md)
 - [Configuration Reference](docs/configuration.md)
+- 🎥 [Epic 1 Demo Video Script](docs/tutorials/epic-1-demo-video-script.md) - 30-minute platform walkthrough
+- 📋 [Epic 1 Demo Checklist](docs/tutorials/epic-1-demo-video-checklist.md) - Quick reference for recording
 
 ### Dojo Learning
 - [Dojo Architecture](docs/dojo/DOJO_ARCHITECTURE.md)

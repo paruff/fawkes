@@ -29,6 +29,13 @@ These tutorials help you get hands-on experience with the Fawkes platform. **Com
 | [5. Create a Golden Path Template](5-create-golden-path-template.md) | 35 min | Build a Backstage template to enable platform self-service | ✅ Available |
 | [6. Measure DORA Metrics](6-measure-dora-metrics.md) | 30 min | Analyze your service performance with DORA metrics in DevLake | ✅ Available |
 
+## Platform Demo Resources
+
+| Resource | Purpose | Status |
+|----------|---------|--------|
+| [Epic 1 Demo Video Script](epic-1-demo-video-script.md) | Comprehensive script for recording 30-minute Epic 1 platform demo | ✅ Available |
+| [Epic 1 Demo Video Checklist](epic-1-demo-video-checklist.md) | Quick reference checklist for recording the demo video | ✅ Available |
+
 !!! success "Start Here for Time to First Success!"
     Begin with [Tutorial 1: Deploy Your First Service](1-deploy-first-service.md) to get your first application running on Fawkes in under 30 minutes.
 

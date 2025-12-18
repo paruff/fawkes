@@ -32,11 +32,11 @@ spec:
 
           resources:
             requests:
-              cpu: 200m
-              memory: 512Mi
+              cpu: 150m
+              memory: 384Mi
             limits:
-              cpu: 1000m
-              memory: 2Gi
+              cpu: 800m
+              memory: 1536Mi
 
           # Use secret references for sensitive values
           extraEnv:
@@ -59,11 +59,11 @@ spec:
 
           resources:
             requests:
-              cpu: 100m
-              memory: 128Mi
+              cpu: 80m
+              memory: 100Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 400m
+              memory: 400Mi
 
         # ============================================================
         # Grafana Configuration for DORA Dashboards
@@ -76,11 +76,11 @@ spec:
             pullPolicy: IfNotPresent
           resources:
             requests:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 80m
+              memory: 200Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 400m
+              memory: 400Mi
           # Admin credentials sourced from Secret (no inline password)
           adminUser: admin
           adminPasswordSecretName: devlake-grafana-secrets
@@ -101,11 +101,11 @@ spec:
             pullPolicy: IfNotPresent
           resources:
             requests:
-              cpu: 500m
-              memory: 1Gi
+              cpu: 400m
+              memory: 768Mi
             limits:
-              cpu: 2000m
-              memory: 4Gi
+              cpu: 1600m
+              memory: 3Gi
           persistence:
             enabled: true
             storageClass: ""

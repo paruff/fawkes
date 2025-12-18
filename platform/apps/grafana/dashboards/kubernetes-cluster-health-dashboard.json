@@ -1,0 +1,366 @@
+{
+  "dashboard": {
+    "title": "Kubernetes Cluster Health",
+    "tags": ["kubernetes", "cluster", "health", "infrastructure"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "30s",
+    "description": "Monitor Kubernetes cluster health including nodes, pods, namespaces, and resource utilization",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Cluster Overview",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 0, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 2,
+        "title": "Total Nodes",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 1, "w": 6, "h": 4},
+        "description": "Total number of nodes in the cluster",
+        "targets": [
+          {
+            "expr": "count(kube_node_info)",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 1},
+                {"color": "green", "value": 3}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Ready Nodes",
+        "type": "stat",
+        "gridPos": {"x": 6, "y": 1, "w": 6, "h": 4},
+        "description": "Number of nodes in Ready state",
+        "targets": [
+          {
+            "expr": "sum(kube_node_status_condition{condition=\"Ready\",status=\"true\"})",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 1},
+                {"color": "green", "value": 3}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Running Pods",
+        "type": "stat",
+        "gridPos": {"x": 12, "y": 1, "w": 6, "h": 4},
+        "description": "Total number of running pods",
+        "targets": [
+          {
+            "expr": "sum(kube_pod_status_phase{phase=\"Running\"})",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "Namespaces",
+        "type": "stat",
+        "gridPos": {"x": 18, "y": 1, "w": 6, "h": 4},
+        "description": "Total number of namespaces",
+        "targets": [
+          {
+            "expr": "count(kube_namespace_status_phase{phase=\"Active\"})",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "Node Resources",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 5, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 7,
+        "title": "CPU Usage by Node",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 6, "w": 12, "h": 8},
+        "description": "CPU usage percentage per node",
+        "targets": [
+          {
+            "expr": "(1 - avg by (node) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m]))) * 100",
+            "refId": "A",
+            "legendFormat": "{{node}}",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 10
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 70},
+                {"color": "red", "value": 90}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Memory Usage by Node",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 6, "w": 12, "h": 8},
+        "description": "Memory usage percentage per node",
+        "targets": [
+          {
+            "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100",
+            "refId": "A",
+            "legendFormat": "{{node}}",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 10
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 80},
+                {"color": "red", "value": 95}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 9,
+        "title": "Pod Status",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 14, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 10,
+        "title": "Pod Status Distribution",
+        "type": "piechart",
+        "gridPos": {"x": 0, "y": 15, "w": 8, "h": 8},
+        "description": "Distribution of pod statuses",
+        "targets": [
+          {
+            "expr": "sum by (phase) (kube_pod_status_phase)",
+            "refId": "A",
+            "legendFormat": "{{phase}}",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "title": "Pod Restarts (Last Hour)",
+        "type": "table",
+        "gridPos": {"x": 8, "y": 15, "w": 16, "h": 8},
+        "description": "Pods with restarts in the last hour",
+        "targets": [
+          {
+            "expr": "topk(10, sum by (namespace, pod) (increase(kube_pod_container_status_restarts_total[1h])) > 0)",
+            "refId": "A",
+            "format": "table",
+            "instant": true,
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "title": "Resource Utilization",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 23, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 13,
+        "title": "CPU Usage by Namespace",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 24, "w": 12, "h": 8},
+        "description": "CPU usage by namespace",
+        "targets": [
+          {
+            "expr": "sum by (namespace) (rate(container_cpu_usage_seconds_total{container!=\"\"}[5m]))",
+            "refId": "A",
+            "legendFormat": "{{namespace}}",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "cores",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 5,
+              "stacking": {"mode": "normal"}
+            }
+          }
+        }
+      },
+      {
+        "id": 14,
+        "title": "Memory Usage by Namespace",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 24, "w": 12, "h": 8},
+        "description": "Memory usage by namespace",
+        "targets": [
+          {
+            "expr": "sum by (namespace) (container_memory_working_set_bytes{container!=\"\"})",
+            "refId": "A",
+            "legendFormat": "{{namespace}}",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "bytes",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 5,
+              "stacking": {"mode": "normal"}
+            }
+          }
+        }
+      },
+      {
+        "id": 15,
+        "title": "Storage",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 32, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 16,
+        "title": "PersistentVolume Status",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 33, "w": 8, "h": 4},
+        "description": "PersistentVolumes by status",
+        "targets": [
+          {
+            "expr": "count by (phase) (kube_persistentvolume_status_phase)",
+            "refId": "A",
+            "legendFormat": "{{phase}}",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ]
+      },
+      {
+        "id": 17,
+        "title": "Disk Usage by Node",
+        "type": "timeseries",
+        "gridPos": {"x": 8, "y": 33, "w": 16, "h": 8},
+        "description": "Filesystem usage percentage by node",
+        "targets": [
+          {
+            "expr": "(1 - (node_filesystem_avail_bytes{fstype!=\"tmpfs\"} / node_filesystem_size_bytes{fstype!=\"tmpfs\"})) * 100",
+            "refId": "A",
+            "legendFormat": "{{node}} - {{mountpoint}}",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 10
+            },
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 80},
+                {"color": "red", "value": 95}
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "datasource",
+          "type": "datasource",
+          "query": "prometheus",
+          "current": {
+            "value": "prometheus",
+            "text": "Prometheus"
+          }
+        }
+      ]
+    },
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["10s", "30s", "1m", "5m", "15m", "30m"]
+    }
+  }
+}

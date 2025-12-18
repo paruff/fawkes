@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sample-python-app
+  namespace: fawkes-samples
+  labels:
+    app: sample-python-app
+    team: platform-team
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - sample-python-app.fawkes.idp
+      secretName: sample-python-app-tls
+  rules:
+    - host: sample-python-app.fawkes.idp
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sample-python-app
+                port:
+                  number: 80

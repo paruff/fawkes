@@ -1,0 +1,187 @@
+# ============================================================
+# ArgoCD Notifications Configuration for DORA Metrics
+# ============================================================
+# This ConfigMap configures ArgoCD to send deployment events
+# to DevLake for DORA metrics collection
+#
+# Events captured:
+# - Sync succeeded → Deployment frequency, Lead time
+# - Sync failed → Change failure rate
+# - Health status changes → Service availability
+# ============================================================
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-notifications-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-notifications
+    app.kubernetes.io/part-of: argocd
+data:
+  # ============================================================
+  # Webhook Service Configuration for DevLake
+  # ============================================================
+  service.webhook.devlake: |
+    url: http://devlake.fawkes-devlake.svc:8080/api/plugins/webhook/1/deployments
+    headers:
+    - name: Content-Type
+      value: application/json
+    - name: X-Webhook-Source
+      value: argocd
+
+  # ============================================================
+  # Deployment Success Template
+  # Triggers on successful ArgoCD sync (deployment)
+  # ============================================================
+  template.deployment-succeeded: |
+    webhook:
+      devlake:
+        method: POST
+        body: |
+          {
+            "event_type": "deployment",
+            "status": "success",
+            "application": "{{.app.metadata.name}}",
+            "namespace": "{{.app.spec.destination.namespace}}",
+            "project": "{{.app.spec.project}}",
+            "revision": "{{.app.status.sync.revision}}",
+            "commit_sha": "{{.app.status.sync.revision}}",
+            "sync_started_at": "{{.app.status.operationState.startedAt}}",
+            "sync_finished_at": "{{.app.status.operationState.finishedAt}}",
+            "health_status": "{{.app.status.health.status}}",
+            "sync_status": "{{.app.status.sync.status}}",
+            "server": "{{.app.spec.destination.server}}",
+            "repo_url": "{{.app.spec.source.repoURL}}",
+            "environment": "{{index .app.metadata.labels \"environment\"}}",
+            "service_name":
+              "{{index .app.metadata.labels \"app.kubernetes.io/name\"}}",
+            "timestamp": "{{.app.status.operationState.finishedAt}}"
+          }
+
+  # ============================================================
+  # Deployment Failure Template
+  # Triggers on failed ArgoCD sync
+  # ============================================================
+  template.deployment-failed: |
+    webhook:
+      devlake:
+        method: POST
+        body: |
+          {
+            "event_type": "deployment",
+            "status": "failure",
+            "application": "{{.app.metadata.name}}",
+            "namespace": "{{.app.spec.destination.namespace}}",
+            "project": "{{.app.spec.project}}",
+            "revision": "{{.app.status.sync.revision}}",
+            "commit_sha": "{{.app.status.sync.revision}}",
+            "sync_started_at": "{{.app.status.operationState.startedAt}}",
+            "sync_finished_at": "{{.app.status.operationState.finishedAt}}",
+            "health_status": "{{.app.status.health.status}}",
+            "sync_status": "{{.app.status.sync.status}}",
+            "error_message": "{{.app.status.operationState.message}}",
+            "server": "{{.app.spec.destination.server}}",
+            "repo_url": "{{.app.spec.source.repoURL}}",
+            "environment": "{{index .app.metadata.labels \"environment\"}}",
+            "service_name":
+              "{{index .app.metadata.labels \"app.kubernetes.io/name\"}}",
+            "timestamp": "{{.app.status.operationState.finishedAt}}"
+          }
+
+  # ============================================================
+  # Health Status Degraded Template
+  # Triggers when application health degrades
+  # ============================================================
+  template.health-degraded: |
+    webhook:
+      devlake:
+        method: POST
+        body: |
+          {
+            "event_type": "health_change",
+            "status": "degraded",
+            "application": "{{.app.metadata.name}}",
+            "namespace": "{{.app.spec.destination.namespace}}",
+            "previous_health": "Healthy",
+            "current_health": "{{.app.status.health.status}}",
+            "health_message": "{{.app.status.health.message}}",
+            "service_name":
+              "{{index .app.metadata.labels \"app.kubernetes.io/name\"}}",
+            "environment": "{{index .app.metadata.labels \"environment\"}}",
+            "timestamp": "{{time.Now}}"
+          }
+
+  # ============================================================
+  # Triggers Configuration
+  # Define when to send notifications
+  # ============================================================
+
+  # Trigger on successful sync
+  trigger.on-sync-succeeded: |
+    - when: app.status.operationState.phase in ['Succeeded']
+      send: [deployment-succeeded]
+
+  # Trigger on sync failure
+  trigger.on-sync-failed: |
+    - when: app.status.operationState.phase in ['Error', 'Failed']
+      send: [deployment-failed]
+
+  # Trigger on health degradation
+  trigger.on-health-degraded: |
+    - when: app.status.health.status in ['Degraded', 'Missing', 'Unknown']
+      oncePer: app.metadata.name
+      send: [health-degraded]
+
+  # ============================================================
+  # Default Subscriptions
+  # Applications can override with annotations
+  # ============================================================
+  subscriptions: |
+    - recipients:
+      - devlake
+      triggers:
+      - on-sync-succeeded
+      - on-sync-failed
+      - on-health-degraded
+
+---
+# ============================================================
+# ArgoCD Notifications Secret
+# Contains webhook credentials if needed
+# ============================================================
+apiVersion: v1
+kind: Secret
+metadata:
+  name: argocd-notifications-secret
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-notifications
+    app.kubernetes.io/part-of: argocd
+type: Opaque
+stringData:
+  # Placeholder for webhook authentication if needed
+  # For DevLake, authentication is handled via internal network
+  webhook-token: ""
+
+---
+# ============================================================
+# Instructions for Application-Level Webhook Configuration
+# ============================================================
+# To enable webhook notifications for a specific application,
+# add these annotations to the Application manifest:
+#
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   annotations:
+#     notifications.argoproj.io/subscribe.on-sync-succeeded.devlake: ""
+#     notifications.argoproj.io/subscribe.on-sync-failed.devlake: ""
+#     notifications.argoproj.io/subscribe.on-health-degraded.devlake: ""
+#   labels:
+#     environment: production  # Used in webhook payload
+#     app.kubernetes.io/name: my-service  # Used in webhook payload
+#
+# The global subscriptions above apply to all applications by default.
+# Application-specific annotations override or supplement global config.
+# ============================================================

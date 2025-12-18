@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-009
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -20,6 +20,9 @@ test-bdd: ## Run BDD acceptance tests (COMPONENT=backstage|argocd|all)
 
 validate: ## Validate manifests and run policy checks
 	@./infra/local-dev/validate.sh $(NAMESPACE)
+
+validate-resources: ## Validate resource usage stays within 70% target
+	@./scripts/validate-resource-usage.sh --namespace $(NAMESPACE) --target-cpu 70 --target-memory 70
 
 sync: ## Sync to GitOps for environment (ENVIRONMENT=dev|prod)
 	@./infra/local-dev/sync-to-argocd.sh $(ENVIRONMENT)
@@ -51,6 +54,17 @@ test-all: test-unit test-bdd test-integration ## Run all tests
 test-e2e-argocd: ## Run ArgoCD E2E sync tests
 	@./tests/e2e/argocd-sync-test.sh --namespace $(ARGO_NAMESPACE)
 
+test-e2e-integration: ## Run complete E2E integration test (scaffold → deploy → metrics)
+	@./tests/e2e/run-e2e-integration-test.sh --namespace $(NAMESPACE) --argocd-ns $(ARGO_NAMESPACE)
+
+test-e2e-integration-verbose: ## Run E2E integration test with verbose output
+	@./tests/e2e/run-e2e-integration-test.sh --namespace $(NAMESPACE) --argocd-ns $(ARGO_NAMESPACE) --verbose
+
+test-e2e-integration-dry-run: ## Show what E2E test would do without executing
+	@./tests/e2e/run-e2e-integration-test.sh --dry-run
+
+test-e2e-all: test-e2e-argocd test-e2e-integration ## Run all E2E tests
+
 validate-at-e1-001: ## Run AT-E1-001 acceptance test validation for AKS cluster
 	@./scripts/validate-at-e1-001.sh --resource-group $(AZURE_RESOURCE_GROUP) --cluster-name $(AZURE_CLUSTER_NAME)
 
@@ -63,8 +77,20 @@ validate-at-e1-003: ## Run AT-E1-003 acceptance test validation for Backstage De
 validate-at-e1-004: ## Run AT-E1-004 acceptance test validation for Jenkins CI/CD
 	@./scripts/validate-at-e1-004.sh --namespace $(ARGO_NAMESPACE)
 
+validate-at-e1-005: ## Run AT-E1-005 acceptance test validation for DevSecOps Security Scanning
+	@./scripts/validate-at-e1-005.sh --namespace $(ARGO_NAMESPACE)
+
+validate-at-e1-006: ## Run AT-E1-006 acceptance test validation for Observability Stack (Prometheus/Grafana)
+	@./scripts/validate-at-e1-006.sh --namespace monitoring --argocd-namespace $(ARGO_NAMESPACE)
+
+validate-at-e1-007: ## Run AT-E1-007 acceptance test validation for DORA Metrics
+	@./scripts/validate-at-e1-007.sh --namespace $(ARGO_NAMESPACE)
+
 validate-at-e1-009: ## Run AT-E1-009 acceptance test validation for Harbor Container Registry
 	@./scripts/validate-at-e1-009.sh --namespace $(ARGO_NAMESPACE)
+
+validate-at-e1-012: ## Run AT-E1-012 acceptance test validation for Full Platform Workflow
+	@./scripts/validate-at-e1-012.sh --verify-metrics --verify-observability
 
 clean-local: ## Clean up local K8s deployments
 	@kubectl delete namespace $(NAMESPACE) --ignore-not-found=true

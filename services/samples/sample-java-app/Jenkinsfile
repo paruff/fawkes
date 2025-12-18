@@ -1,0 +1,25 @@
+/**
+ * Jenkinsfile for sample-java-app
+ * Generated from Java Spring Boot template
+ */
+
+@Library('fawkes-pipeline-library') _
+
+goldenPathPipeline {
+    appName = 'sample-java-app'
+    language = 'java'
+    
+    // Maven build commands
+    buildCommand = 'mvn clean package -DskipTests'
+    testCommand = 'mvn test'
+    bddTestCommand = 'mvn verify -Pfailsafe'
+    
+    // Docker registry configuration
+    dockerRegistry = 'harbor.fawkes.local'
+    
+    // SonarQube configuration
+    sonarProject = 'sample-java-app'
+    
+    // Notification channel
+    notifyChannel = 'ci-builds'
+}
