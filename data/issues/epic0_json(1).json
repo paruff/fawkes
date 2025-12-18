@@ -1,0 +1,353 @@
+{
+  "epic": {
+    "number": 0,
+    "name": "Technical Excellence & Refactoring",
+    "description": "Systematic refactoring to establish code quality standards, modularize scripts, improve infrastructure code, implement proper configuration management, and enhance documentation. This foundational work reduces technical debt and accelerates future development.",
+    "milestones": [
+      {
+        "title": "M0.1: Standards & Code Quality",
+        "description": "Establish linting, formatting, and quality standards for all code",
+        "due_date": "2025-01-10"
+      },
+      {
+        "title": "M0.2: Script Refactoring & Testing",
+        "description": "Modularize scripts, add error handling, and implement comprehensive testing",
+        "due_date": "2025-01-17"
+      },
+      {
+        "title": "M0.3: Infrastructure & Configuration",
+        "description": "Refactor Terraform, implement configuration management, secure secrets",
+        "due_date": "2025-01-24"
+      },
+      {
+        "title": "M0.4: Documentation & CI/CD Optimization",
+        "description": "Restructure documentation, optimize pipelines, implement monitoring",
+        "due_date": "2025-01-31"
+      }
+    ]
+  },
+  "issues": [
+    {
+      "number": 109,
+      "title": "Establish Code Quality Standards and Linting",
+      "milestone": "M0.1: Standards & Code Quality",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-0", "type-standards", "comp-quality", "priority-critical"],
+      "description": "Define and implement comprehensive code quality standards with automated linting for Bash, Python, Go, YAML, JSON, Markdown, and Terraform. Configure pre-commit hooks and CI/CD quality gates.",
+      "acceptance_criteria": [
+        "Linting rules defined for all languages",
+        "Pre-commit hooks configured and tested",
+        "CI/CD quality gates implemented",
+        "Documentation of standards published",
+        "All existing code passes linting (or has suppress comments)",
+        "Developer setup guide created"
+      ],
+      "tasks": [
+        {
+          "id": "T109.1",
+          "name": "Create .editorconfig for consistent formatting",
+          "location": ".editorconfig",
+          "type": "configuration",
+          "copilot_prompt": "Create a comprehensive .editorconfig file for Fawkes:\n\n```ini\nroot = true\n\n[*]\ncharset = utf-8\nend_of_line = lf\ninsert_final_newline = true\ntrim_trailing_whitespace = true\nindent_style = space\nindent_size = 2\n\n[*.{sh,bash}]\nindent_size = 2\n\n[*.{py}]\nindent_size = 4\n\n[*.{go}]\nindent_style = tab\nindent_size = 4\n\n[*.{md,mdx}]\ntrim_trailing_whitespace = false\n\n[Makefile]\nindent_style = tab\n\n[*.{yml,yaml}]\nindent_size = 2\n\n[*.{json,jsonc}]\nindent_size = 2\n\n[*.tf]\nindent_size = 2\n```",
+          "validation": "cat .editorconfig"
+        },
+        {
+          "id": "T109.2",
+          "name": "Configure pre-commit framework",
+          "location": ".pre-commit-config.yaml",
+          "type": "yaml",
+          "copilot_prompt": "Create comprehensive pre-commit configuration:\n\n```yaml\nrepos:\n  # General checks\n  - repo: https://github.com/pre-commit/pre-commit-hooks\n    rev: v4.5.0\n    hooks:\n      - id: trailing-whitespace\n      - id: end-of-file-fixer\n      - id: check-yaml\n        args: [--allow-multiple-documents]\n      - id: check-json\n      - id: check-added-large-files\n        args: [--maxkb=1000]\n      - id: check-merge-conflict\n      - id: check-case-conflict\n      - id: mixed-line-ending\n\n  # Bash/Shell scripts\n  - repo: https://github.com/shellcheck-py/shellcheck-py\n    rev: v0.9.0.6\n    hooks:\n      - id: shellcheck\n        args: [-x, -e, SC1091]\n\n  - repo: https://github.com/openstack/bashate\n    rev: 2.1.1\n    hooks:\n      - id: bashate\n        args: [-i, E006]\n\n  # Python\n  - repo: https://github.com/psf/black\n    rev: 23.12.1\n    hooks:\n      - id: black\n        language_version: python3.11\n\n  - repo: https://github.com/pycqa/flake8\n    rev: 7.0.0\n    hooks:\n      - id: flake8\n        args: [--max-line-length=100, --extend-ignore=E203]\n\n  - repo: https://github.com/pycqa/isort\n    rev: 5.13.2\n    hooks:\n      - id: isort\n        args: [--profile, black]\n\n  # Go\n  - repo: https://github.com/golangci/golangci-lint\n    rev: v1.55.2\n    hooks:\n      - id: golangci-lint\n\n  # Terraform\n  - repo: https://github.com/antonbabenko/pre-commit-terraform\n    rev: v1.86.0\n    hooks:\n      - id: terraform_fmt\n      - id: terraform_validate\n      - id: terraform_tflint\n      - id: terraform_docs\n\n  # Markdown\n  - repo: https://github.com/igorshubovych/markdownlint-cli\n    rev: v0.38.0\n    hooks:\n      - id: markdownlint\n        args: [--fix]\n\n  # YAML\n  - repo: https://github.com/adrienverge/yamllint\n    rev: v1.33.0\n    hooks:\n      - id: yamllint\n        args: [-c, .yamllint.yml]\n\n  # Secrets detection\n  - repo: https://github.com/gitleaks/gitleaks\n    rev: v8.18.1\n    hooks:\n      - id: gitleaks\n```",
+          "validation": "pre-commit run --all-files"
+        },
+        {
+          "id": "T109.3",
+          "name": "Create linting configuration files",
+          "location": "various",
+          "type": "configuration",
+          "copilot_prompt": "Create configuration files for each linter:\n\n**1. .yamllint.yml**\n```yaml\nextends: default\n\nrules:\n  line-length:\n    max: 120\n    level: warning\n  indentation:\n    spaces: 2\n  comments:\n    min-spaces-from-content: 1\n  document-start: disable\n```\n\n**2. .flake8**\n```ini\n[flake8]\nmax-line-length = 100\nextend-ignore = E203, W503\nexclude =\n    .git,\n    __pycache__,\n    .venv,\n    venv,\n    build,\n    dist\n```\n\n**3. .golangci.yml**\n```yaml\nlinters:\n  enable:\n    - gofmt\n    - golint\n    - govet\n    - errcheck\n    - staticcheck\n    - gosimple\n    - ineffassign\n    - unused\n\nlinters-settings:\n  golint:\n    min-confidence: 0.8\n```\n\n**4. .markdownlint.json**\n```json\n{\n  \"default\": true,\n  \"MD013\": false,\n  \"MD033\": false,\n  \"MD041\": false\n}\n```\n\n**5. .tflint.hcl**\n```hcl\nconfig {\n  module = true\n  force = false\n}\n\nplugin \"aws\" {\n  enabled = true\n  version = \"0.28.0\"\n  source  = \"github.com/terraform-linters/tflint-ruleset-aws\"\n}\n\nrule \"terraform_naming_convention\" {\n  enabled = true\n}\n\nrule \"terraform_typed_variables\" {\n  enabled = true\n}\n```",
+          "validation": "ls -la | grep -E '\\.(yamllint|flake8|golangci|markdownlint|tflint)'"
+        }
+      ],
+      "depends_on": [],
+      "blocks": [110, 111],
+      "acceptance_test": "AT-E0-001",
+      "resources": [
+        "https://pre-commit.com/",
+        "https://editorconfig.org/",
+        "https://github.com/antonbabenko/pre-commit-terraform"
+      ]
+    },
+    {
+      "number": 110,
+      "title": "Implement Automated Code Formatting",
+      "milestone": "M0.1: Standards & Code Quality",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-0", "type-automation", "comp-quality", "priority-critical"],
+      "description": "Set up automated code formatting with Black (Python), gofmt (Go), shfmt (Bash), prettier (JSON/YAML/Markdown), and terraform fmt. Integrate with pre-commit and CI/CD.",
+      "acceptance_criteria": [
+        "All formatters configured",
+        "Format-on-save enabled for common editors",
+        "CI/CD checks formatting compliance",
+        "All existing code formatted",
+        "Developer guide updated with formatter setup"
+      ],
+      "tasks": [
+        {
+          "id": "T110.1",
+          "name": "Configure formatters in Makefile",
+          "location": "Makefile",
+          "type": "makefile",
+          "copilot_prompt": "Add formatting targets to Makefile:\n\n```makefile\n.PHONY: format format-check format-python format-go format-bash format-terraform format-yaml\n\n# Format all code\nformat: format-python format-go format-bash format-terraform format-yaml\n\t@echo \"✓ All code formatted\"\n\n# Check formatting without modifying files\nformat-check:\n\t@echo \"Checking code formatting...\"\n\t@black --check .\n\t@gofmt -l .\n\t@shfmt -l -d .\n\t@terraform fmt -check -recursive .\n\nformat-python:\n\t@echo \"Formatting Python code...\"\n\t@black .\n\t@isort .\n\nformat-go:\n\t@echo \"Formatting Go code...\"\n\t@gofmt -w .\n\nformat-bash:\n\t@echo \"Formatting Bash scripts...\"\n\t@find . -name '*.sh' -not -path './.git/*' -exec shfmt -w {} \\;\n\nformat-terraform:\n\t@echo \"Formatting Terraform code...\"\n\t@terraform fmt -recursive .\n\nformat-yaml:\n\t@echo \"Formatting YAML files...\"\n\t@prettier --write '**/*.{yml,yaml}'\n```",
+          "validation": "make format-check"
+        },
+        {
+          "id": "T110.2",
+          "name": "Create VS Code settings",
+          "location": ".vscode/settings.json",
+          "type": "json",
+          "copilot_prompt": "Create VS Code workspace settings for auto-formatting:\n\n```json\n{\n  \"editor.formatOnSave\": true,\n  \"editor.codeActionsOnSave\": {\n    \"source.fixAll\": true,\n    \"source.organizeImports\": true\n  },\n  \"[python]\": {\n    \"editor.defaultFormatter\": \"ms-python.black-formatter\",\n    \"editor.formatOnSave\": true\n  },\n  \"[go]\": {\n    \"editor.defaultFormatter\": \"golang.go\",\n    \"editor.formatOnSave\": true\n  },\n  \"[terraform]\": {\n    \"editor.defaultFormatter\": \"hashicorp.terraform\",\n    \"editor.formatOnSave\": true\n  },\n  \"[json]\": {\n    \"editor.defaultFormatter\": \"esbenp.prettier-vscode\"\n  },\n  \"[yaml]\": {\n    \"editor.defaultFormatter\": \"esbenp.prettier-vscode\"\n  },\n  \"[markdown]\": {\n    \"editor.defaultFormatter\": \"esbenp.prettier-vscode\"\n  },\n  \"files.trimTrailingWhitespace\": true,\n  \"files.insertFinalNewline\": true,\n  \"files.trimFinalNewlines\": true\n}\n```",
+          "validation": "cat .vscode/settings.json"
+        }
+      ],
+      "depends_on": [109],
+      "blocks": [112],
+      "acceptance_test": "AT-E0-001",
+      "resources": [
+        "https://black.readthedocs.io/",
+        "https://github.com/mvdan/sh#shfmt",
+        "https://prettier.io/"
+      ]
+    },
+    {
+      "number": 111,
+      "title": "Create Code Quality CI/CD Pipeline",
+      "milestone": "M0.1: Standards & Code Quality",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-0", "type-cicd", "comp-quality", "priority-critical"],
+      "description": "Implement GitHub Actions workflow enforcing code quality gates: linting, formatting checks, security scanning, and test coverage thresholds.",
+      "acceptance_criteria": [
+        "Quality check workflow created",
+        "All linters run on every PR",
+        "Formatting compliance enforced",
+        "Security scanning integrated",
+        "Coverage thresholds defined and enforced",
+        "Quality badges added to README"
+      ],
+      "tasks": [
+        {
+          "id": "T111.1",
+          "name": "Create quality check workflow",
+          "location": ".github/workflows/quality.yml",
+          "type": "yaml",
+          "copilot_prompt": "Create comprehensive quality check workflow:\n\n```yaml\nname: Code Quality Checks\n\non:\n  pull_request:\n    branches: [main, develop]\n  push:\n    branches: [main, develop]\n\njobs:\n  lint:\n    name: Lint Code\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      \n      - name: Set up Python\n        uses: actions/setup-python@v5\n        with:\n          python-version: '3.11'\n      \n      - name: Set up Go\n        uses: actions/setup-go@v5\n        with:\n          go-version: '1.21'\n      \n      - name: Install dependencies\n        run: |\n          pip install black flake8 isort\n          go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest\n      \n      - name: Run pre-commit\n        uses: pre-commit/action@v3.0.0\n\n  format-check:\n    name: Check Formatting\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      \n      - name: Check Python formatting\n        run: black --check .\n      \n      - name: Check Go formatting\n        run: |\n          if [ -n \"$(gofmt -l .)\" ]; then\n            echo \"Go files not formatted:\"\n            gofmt -l .\n            exit 1\n          fi\n      \n      - name: Check Terraform formatting\n        run: terraform fmt -check -recursive .\n\n  security-scan:\n    name: Security Scanning\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      \n      - name: Run Gitleaks\n        uses: gitleaks/gitleaks-action@v2\n      \n      - name: Run Trivy vulnerability scanner\n        uses: aquasecurity/trivy-action@master\n        with:\n          scan-type: 'fs'\n          scan-ref: '.'\n          severity: 'CRITICAL,HIGH'\n\n  test-coverage:\n    name: Test Coverage\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      \n      - name: Run tests with coverage\n        run: make test-coverage\n      \n      - name: Check coverage threshold\n        run: |\n          COVERAGE=$(cat coverage.txt | grep -oP 'total.*\\K[0-9.]+(?=%)')\n          if (( $(echo \"$COVERAGE < 70\" | bc -l) )); then\n            echo \"Coverage $COVERAGE% below 70% threshold\"\n            exit 1\n          fi\n      \n      - name: Upload coverage to Codecov\n        uses: codecov/codecov-action@v3\n        with:\n          file: ./coverage.txt\n```",
+          "validation": "gh workflow view quality.yml"
+        }
+      ],
+      "depends_on": [109, 110],
+      "blocks": [113],
+      "acceptance_test": "AT-E0-001",
+      "resources": [
+        "https://docs.github.com/en/actions/automating-builds-and-tests",
+        "https://pre-commit.ci/"
+      ]
+    },
+    {
+      "number": 112,
+      "title": "Document Code Quality Standards",
+      "milestone": "M0.1: Standards & Code Quality",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-0", "type-documentation", "comp-quality", "priority-high"],
+      "description": "Create comprehensive documentation of code quality standards, linting rules, formatting conventions, and developer setup instructions.",
+      "acceptance_criteria": [
+        "CODING_STANDARDS.md created",
+        "Language-specific style guides documented",
+        "Developer setup guide complete",
+        "Examples of good vs bad code",
+        "FAQ for common linting issues"
+      ],
+      "tasks": [
+        {
+          "id": "T112.1",
+          "name": "Create coding standards document",
+          "location": "docs/development/CODING_STANDARDS.md",
+          "type": "markdown",
+          "copilot_prompt": "Create comprehensive coding standards documentation:\n\n# Coding Standards\n\n## Overview\n\nThis document defines code quality standards for Fawkes. All contributions must adhere to these standards.\n\n## Automated Enforcement\n\n- **Pre-commit hooks**: Run `pre-commit install` after cloning\n- **CI/CD checks**: All PRs must pass quality gates\n- **Format-on-save**: Configure your editor (see setup guide)\n\n## General Principles\n\n1. **Readability over cleverness**: Code is read more than written\n2. **Consistency**: Follow language idioms and conventions\n3. **Documentation**: Comment the \"why\", not the \"what\"\n4. **Testing**: All code must have tests (70%+ coverage)\n5. **Security**: Never commit secrets or sensitive data\n\n## Language-Specific Standards\n\n### Bash/Shell Scripts\n\n**Style Guide**: [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html)\n\n**Key Rules**:\n- Use `#!/usr/bin/env bash` shebang\n- Enable strict mode: `set -euo pipefail`\n- Quote variables: `\"${var}\"` not `$var`\n- Use functions for reusability\n- Error messages to stderr: `>&2`\n- Exit codes: 0 success, non-zero failure\n\n**Example**:\n```bash\n#!/usr/bin/env bash\nset -euo pipefail\n\nfunction error() {\n  echo \"ERROR: $*\" >&2\n  exit 1\n}\n\nfunction main() {\n  local input=\"${1:-}\"\n  if [[ -z \"${input}\" ]]; then\n    error \"Input required\"\n  fi\n}\n\nmain \"$@\"\n```\n\n**Linters**: shellcheck, bashate\n**Formatter**: shfmt (2-space indent)\n\n### Python\n\n**Style Guide**: [PEP 8](https://pep8.org/)\n\n**Key Rules**:\n- Use type hints for functions\n- Docstrings for all public functions\n- 100 character line length (Black default)\n- Use f-strings for formatting\n- Import order: stdlib, third-party, local\n\n**Example**:\n```python\nfrom typing import Optional\n\ndef calculate_dora_score(deployments: int, failures: int) -> Optional[float]:\n    \"\"\"Calculate DORA performance score.\n    \n    Args:\n        deployments: Total deployment count\n        failures: Failed deployment count\n    \n    Returns:\n        Score from 0-100, or None if invalid input\n    \"\"\"\n    if deployments <= 0:\n        return None\n    return ((deployments - failures) / deployments) * 100\n```\n\n**Linters**: flake8, black, isort\n**Formatter**: black (automatic)\n\n### Go\n\n**Style Guide**: [Effective Go](https://go.dev/doc/effective_go)\n\n**Key Rules**:\n- Use gofmt for formatting\n- Error handling: always check errors\n- Package comments required\n- Use context for cancellation\n- Interfaces: accept, return concrete\n\n**Linters**: golangci-lint\n**Formatter**: gofmt (automatic)\n\n### Terraform\n\n**Style Guide**: [HashiCorp Terraform Style](https://developer.hashicorp.com/terraform/language/style)\n\n**Key Rules**:\n- Use modules for reusability\n- Variables: type constraints required\n- Outputs: descriptions required\n- Resource naming: `<resource_type>_<name>`\n- Use data sources instead of hardcoding\n\n**Example**:\n```hcl\nvariable \"cluster_name\" {\n  description = \"Kubernetes cluster name\"\n  type        = string\n  validation {\n    condition     = length(var.cluster_name) > 0\n    error_message = \"Cluster name cannot be empty\"\n  }\n}\n```\n\n**Linters**: tflint\n**Formatter**: terraform fmt\n\n## Code Review Checklist\n\n- [ ] All linters pass\n- [ ] Code is formatted correctly\n- [ ] Tests added/updated\n- [ ] Documentation updated\n- [ ] No secrets in code\n- [ ] Error handling present\n- [ ] Security implications considered\n- [ ] Performance implications considered\n\n## Common Issues & Solutions\n\nSee FAQ section for solutions to common linting errors.\n\nInclude 20+ common issues with solutions.",
+          "validation": "cat docs/development/CODING_STANDARDS.md | grep -c \"##\""
+        }
+      ],
+      "depends_on": [109, 110, 111],
+      "blocks": [113],
+      "acceptance_test": "AT-E0-001",
+      "resources": []
+    },
+    {
+      "number": 113,
+      "title": "Validate Code Quality Standards (AT-E0-001)",
+      "milestone": "M0.1: Standards & Code Quality",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-0", "type-testing", "comp-quality", "priority-critical"],
+      "description": "Execute acceptance test validating all code quality standards, linting, formatting, and CI/CD checks are operational.",
+      "acceptance_criteria": [
+        "All linters configured and passing",
+        "Pre-commit hooks working",
+        "CI/CD quality gates enforced",
+        "All code formatted correctly",
+        "Documentation complete",
+        "Developer setup tested"
+      ],
+      "depends_on": [109, 110, 111, 112],
+      "blocks": [114],
+      "acceptance_test": "AT-E0-001"
+    },
+    {
+      "number": 114,
+      "title": "Refactor ignite.sh into Modular Architecture",
+      "milestone": "M0.2: Script Refactoring & Testing",
+      "priority": "P0",
+      "estimated_hours": 12,
+      "labels": ["epic-0", "type-refactoring", "comp-scripts", "priority-critical"],
+      "description": "Break monolithic ignite.sh into modular, testable components with clear separation of concerns. Create lib/ directory with reusable modules.",
+      "acceptance_criteria": [
+        "ignite.sh reduced to orchestration only (<200 lines)",
+        "lib/ modules created for each concern",
+        "All modules independently testable",
+        "No code duplication",
+        "Comprehensive error handling",
+        "Backward compatibility maintained"
+      ],
+      "depends_on": [113],
+      "blocks": [115, 116],
+      "acceptance_test": "AT-E0-002"
+    },
+    {
+      "number": 115,
+      "title": "Implement Comprehensive Error Handling",
+      "milestone": "M0.2: Script Refactoring & Testing",
+      "priority": "P0",
+      "estimated_hours": 8,
+      "labels": ["epic-0", "type-refactoring", "comp-scripts", "priority-critical"],
+      "description": "Add robust error handling to all scripts with proper exit codes, error messages, rollback mechanisms, and recovery strategies.",
+      "acceptance_criteria": [
+        "All scripts use set -euo pipefail",
+        "Error functions implemented",
+        "Trap handlers for cleanup",
+        "Meaningful error messages",
+        "Exit codes documented",
+        "Rollback mechanisms where needed"
+      ],
+      "depends_on": [114],
+      "blocks": [116],
+      "acceptance_test": "AT-E0-002"
+    },
+    {
+      "number": 116,
+      "title": "Create BATS Testing Framework for Scripts",
+      "milestone": "M0.2: Script Refactoring & Testing",
+      "priority": "P0",
+      "estimated_hours": 10,
+      "labels": ["epic-0", "type-testing", "comp-scripts", "priority-critical"],
+      "description": "Implement comprehensive BATS test suite for all Bash scripts achieving 80%+ code coverage.",
+      "acceptance_criteria": [
+        "BATS framework installed",
+        "Tests for all lib/ modules",
+        "80%+ code coverage achieved",
+        "Tests run in CI/CD",
+        "Test documentation complete",
+        "Mocking framework for external calls"
+      ],
+      "depends_on": [114, 115],
+      "blocks": [117],
+      "acceptance_test": "AT-E0-002"
+    },
+    {
+      "number": 117,
+      "title": "Validate Script Refactoring (AT-E0-002)",
+      "milestone": "M0.2: Script Refactoring & Testing",
+      "priority": "P0",
+      "estimated_hours": 3,
+      "labels": ["epic-0", "type-testing", "comp-scripts", "priority-critical"],
+      "description": "Execute acceptance test validating script modularization, error handling, and testing framework.",
+      "acceptance_criteria": [
+        "ignite.sh is modular",
+        "Error handling comprehensive",
+        "BATS tests passing",
+        "80%+ coverage achieved",
+        "No regressions in functionality",
+        "Documentation complete"
+      ],
+      "depends_on": [114, 115, 116],
+      "blocks": [118],
+      "acceptance_test": "AT-E0-002"
+    },
+    {
+      "number": 118,
+      "title": "Refactor Terraform for Module Reusability",
+      "milestone": "M0.2: Script Refactoring & Testing",
+      "priority": "P0",
+      "estimated_hours": 10,
+      "labels": ["epic-0", "type-refactoring", "comp-terraform", "priority-critical"],
+      "description": "Restructure Terraform code into reusable modules following HashiCorp best practices with proper variable validation and outputs.",
+      "acceptance_criteria": [
+        "Modules created for common patterns",
+        "Variable validation implemented",
+        "Comprehensive outputs defined",
+        "No hardcoded values",
+        "Module documentation complete",
+        "Example usage provided"
+      ],
+      "depends_on": [117],
+      "blocks": [119],
+      "acceptance_test": "AT-E0-003"
+    },
+    {
+      "number": 119,
+      "title": "Implement Terraform State Management Best Practices",
+      "milestone": "M0.2: Script Refactoring & Testing",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-0", "type-infrastructure", "comp-terraform", "priority-high"],
+      "description": "Configure remote state backend with locking, state file encryption, and proper workspace management.",
+      "acceptance_criteria": [
+        "Remote state configured (S3 or equivalent)",
+        "State locking enabled (DynamoDB)",
+        "State encryption at rest",
+        "Workspace strategy documented",
+        "State backup automation",
+        "Access controls configured"
+      ],
+      "depends_on": [118],
+      "blocks": [120],
+      "acceptance_test": "AT-E0-003"
+    },
+    {
+      "number": 120,
+      "title": "Create Terratest Suite for Infrastructure",
+      "milestone": "M0.2: Script Refactoring & Testing",
+      "priority": "P1",
+      "estimated_hours": 12,
+      "labels": ["epic-0", "type-testing", "comp-terraform", "priority-medium"],
+      "description": "Implement Terratest framework for testing Terraform modules with automated validation of infrastructure.",
+      "acceptance_criteria": [
+        "Terratest framework configured",
+        "Tests for all modules",
+        "Integration tests for full deployment",
+        "Tests run in CI/CD",
+        "Cost estimation integrated",
+        "Documentation complete"
+      ],
+      "depends_on": [118, 119],
+      "blocks": [121],
+      "acceptance_test": "AT-E0-003"
+    },
+    {
+      "number": 121,
+      "title": "Standardize Kubernetes Manifests",
+      "milestone": "M0.2: Script Refactoring & Testing",
+      "priority": "P1",
+      "estimated_hours": 8,
+      "labels": ["

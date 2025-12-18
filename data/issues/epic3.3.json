@@ -1,0 +1,706 @@
+{
+  "epic": {
+    "id": 3,
+    "name": "Product Discovery & UX",
+    "description": "Implement comprehensive product discovery capabilities with user research, DevEx measurement, feedback systems, and continuous discovery process",
+    "duration_weeks": 4,
+    "target_completion": "Month 3 Complete",
+    "resource_target": "<75% CPU/Memory utilization (optimized)",
+    "acceptance_tests": [
+      "AT-E3-001", "AT-E3-002", "AT-E3-003", "AT-E3-004",
+      "AT-E3-005", "AT-E3-006", "AT-E3-007", "AT-E3-008",
+      "AT-E3-009", "AT-E3-010", "AT-E3-011", "AT-E3-012"
+    ]
+  },
+  "issues": [
+    {
+      "number": 73,
+      "title": "Create user research repository structure",
+      "milestone": "Week 1: Research Infrastructure & DevEx",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-3", "type-research", "comp-discovery", "priority-p0"],
+      "description": "Establish structured repository for user research artifacts, interview notes, personas, and insights database to support continuous discovery.",
+      "acceptance_criteria": [
+        "Research repository created with clear structure",
+        "Templates for interviews, surveys, personas",
+        "Insights database schema defined",
+        "Research artifact taxonomy established",
+        "Version control for research documents",
+        "Access controls for sensitive user data"
+      ],
+      "dependencies": [],
+      "blocks": ["#74", "#75", "#76"]
+    },
+    {
+      "number": 74,
+      "title": "Create persona templates and framework",
+      "milestone": "Week 1: Research Infrastructure & DevEx",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-3", "type-research", "comp-personas", "priority-p0"],
+      "description": "Develop comprehensive persona templates based on developer archetypes (platform engineer, application developer, DevOps engineer, etc.).",
+      "acceptance_criteria": [
+        "Persona template with goals, pain points, behaviors",
+        "At least 5 initial persona types defined",
+        "Persona validation criteria established",
+        "Markdown templates for easy updates",
+        "Visual persona cards generated",
+        "Persona distribution in Backstage"
+      ],
+      "dependencies": ["#73"],
+      "blocks": ["#76"]
+    },
+    {
+      "number": 75,
+      "title": "Create interview guides and protocols",
+      "milestone": "Week 1: Research Infrastructure & DevEx",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-3", "type-research", "comp-interviews", "priority-p0"],
+      "description": "Develop structured interview guides for user research, including discovery interviews, usability testing, and feedback sessions.",
+      "acceptance_criteria": [
+        "Discovery interview guide (30-45 min)",
+        "Usability testing protocol",
+        "Feature validation interview guide",
+        "JTBD (Jobs-to-be-Done) interview template",
+        "Consent forms and data privacy templates",
+        "Interview note-taking templates"
+      ],
+      "dependencies": ["#73"],
+      "blocks": ["#76"]
+    },
+    {
+      "number": 76,
+      "title": "Build insights database and tagging system",
+      "milestone": "Week 1: Research Infrastructure & DevEx",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-3", "type-research", "comp-database", "priority-p0"],
+      "description": "Create centralized database for storing and retrieving user insights with tagging, search, and trend analysis capabilities.",
+      "acceptance_criteria": [
+        "PostgreSQL schema for insights storage",
+        "Tagging taxonomy (pain points, opportunities, quotes, behaviors)",
+        "Full-text search capability",
+        "Trend analysis queries",
+        "REST API for insights CRUD",
+        "Web UI for browsing insights"
+      ],
+      "dependencies": ["#73", "#74", "#75"],
+      "blocks": []
+    },
+    {
+      "number": 77,
+      "title": "Create research dashboard in Grafana",
+      "milestone": "Week 1: Research Infrastructure & DevEx",
+      "priority": "P1",
+      "estimated_hours": 4,
+      "labels": ["epic-3", "type-research", "comp-dashboard", "priority-p1"],
+      "description": "Build dashboard showing research activity metrics: interviews conducted, insights collected, personas updated, research velocity.",
+      "acceptance_criteria": [
+        "Dashboard shows research KPIs",
+        "Interview count by week/month",
+        "Insights tagged by category",
+        "Persona coverage metrics",
+        "Research backlog visualization",
+        "AT-E3-001 passes"
+      ],
+      "dependencies": ["#76"],
+      "blocks": []
+    },
+    {
+      "number": 78,
+      "title": "Create AT-E3-001 user research infrastructure test",
+      "milestone": "Week 1: Research Infrastructure & DevEx",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-3", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Automated test validating user research infrastructure is operational and can store/retrieve insights.",
+      "acceptance_criteria": [
+        "Test creates sample persona",
+        "Test adds insights to database",
+        "Test validates search functionality",
+        "Test validates API endpoints",
+        "Test validates dashboard loads",
+        "AT-E3-001 passes"
+      ],
+      "dependencies": ["#77"],
+      "blocks": []
+    },
+    {
+      "number": 79,
+      "title": "Implement SPACE framework metrics collection",
+      "milestone": "Week 1: Research Infrastructure & DevEx",
+      "priority": "P0",
+      "estimated_hours": 6,
+      "labels": ["epic-3", "type-devex", "comp-space", "priority-p0"],
+      "description": "Implement SPACE framework (Satisfaction, Performance, Activity, Communication, Efficiency) for measuring developer experience.",
+      "acceptance_criteria": [
+        "Satisfaction metrics: NPS, satisfaction surveys",
+        "Performance metrics: perceived productivity",
+        "Activity metrics: commits, PRs, deployments",
+        "Communication metrics: collaboration frequency",
+        "Efficiency metrics: time spent on value work",
+        "Data collection automated"
+      ],
+      "dependencies": [],
+      "blocks": ["#80"]
+    },
+    {
+      "number": 80,
+      "title": "Create DevEx dashboard with SPACE metrics",
+      "milestone": "Week 1: Research Infrastructure & DevEx",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-3", "type-devex", "comp-dashboard", "priority-p0"],
+      "description": "Build comprehensive DevEx dashboard showing all SPACE framework dimensions with trends and team comparisons.",
+      "acceptance_criteria": [
+        "Dashboard displays all 5 SPACE dimensions",
+        "Team-level and platform-level views",
+        "Trend analysis (30/60/90 days)",
+        "Benchmark comparisons",
+        "Drill-down into individual metrics",
+        "Exportable reports"
+      ],
+      "dependencies": ["#79"],
+      "blocks": []
+    },
+    {
+      "number": 81,
+      "title": "Implement quarterly NPS survey automation",
+      "milestone": "Week 1: Research Infrastructure & DevEx",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-3", "type-devex", "comp-nps", "priority-p0"],
+      "description": "Automate quarterly Net Promoter Score surveys with follow-up questions and automated analysis.",
+      "acceptance_criteria": [
+        "NPS survey template created",
+        "Automated scheduling (quarterly)",
+        "Multi-channel delivery (email, Slack, Backstage)",
+        "Automated score calculation",
+        "Follow-up question branching logic",
+        "Results stored in insights database"
+      ],
+      "dependencies": ["#76"],
+      "blocks": []
+    },
+    {
+      "number": 82,
+      "title": "Implement friction logging system",
+      "milestone": "Week 1: Research Infrastructure & DevEx",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-3", "type-devex", "comp-friction", "priority-p0"],
+      "description": "Build system for developers to log friction points in real-time, with categorization and trend analysis.",
+      "acceptance_criteria": [
+        "CLI tool for logging friction (fawkes friction log)",
+        "Web widget for in-app friction reporting",
+        "Friction categorization (tooling, process, documentation)",
+        "Severity rating (blocker, major, minor)",
+        "Automated aggregation and trending",
+        "Weekly friction reports"
+      ],
+      "dependencies": ["#76"],
+      "blocks": []
+    },
+    {
+      "number": 83,
+      "title": "Create cognitive load assessment tool",
+      "milestone": "Week 1: Research Infrastructure & DevEx",
+      "priority": "P1",
+      "estimated_hours": 4,
+      "labels": ["epic-3", "type-devex", "comp-cognitive-load", "priority-p1"],
+      "description": "Develop tool to measure and track cognitive load based on task switching, context complexity, and tool sprawl.",
+      "acceptance_criteria": [
+        "Cognitive load scoring algorithm",
+        "Integration with activity tracking",
+        "Context switch detection",
+        "Tool complexity scoring",
+        "Weekly cognitive load reports",
+        "Recommendations for improvement"
+      ],
+      "dependencies": ["#79"],
+      "blocks": []
+    },
+    {
+      "number": 84,
+      "title": "Create AT-E3-002 DevEx measurement test",
+      "milestone": "Week 1: Research Infrastructure & DevEx",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-3", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Test validating SPACE framework implementation and DevEx metrics collection.",
+      "acceptance_criteria": [
+        "Test validates all 5 SPACE dimensions collecting",
+        "Test validates NPS survey workflow",
+        "Test validates friction logging",
+        "Test validates DevEx dashboard displays data",
+        "AT-E3-002 passes"
+      ],
+      "dependencies": ["#80", "#81", "#82", "#83"],
+      "blocks": []
+    },
+    {
+      "number": 85,
+      "title": "Enhance Backstage feedback widget",
+      "milestone": "Week 2: Feedback Systems & Design",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-3", "type-feedback", "comp-backstage", "priority-p0"],
+      "description": "Enhance existing Backstage feedback widget with contextual feedback, screenshots, and better categorization.",
+      "acceptance_criteria": [
+        "Widget accessible from all Backstage pages",
+        "Contextual feedback (includes current page/component)",
+        "Screenshot capture capability",
+        "Feedback categorization (bug, feature, improvement)",
+        "Sentiment rating (emoji or 1-5 scale)",
+        "Automatic ticket creation in GitHub"
+      ],
+      "dependencies": [],
+      "blocks": []
+    },
+    {
+      "number": 86,
+      "title": "Create CLI feedback tool",
+      "milestone": "Week 2: Feedback Systems & Design",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-3", "type-feedback", "comp-cli", "priority-p0"],
+      "description": "Build command-line tool for developers to submit feedback without leaving terminal workflow.",
+      "acceptance_criteria": [
+        "fawkes feedback command implemented",
+        "Interactive prompts for feedback details",
+        "Support for different feedback types",
+        "Optional file/log attachment",
+        "Offline queueing for later submission",
+        "Integration with insights database"
+      ],
+      "dependencies": ["#76"],
+      "blocks": []
+    },
+    {
+      "number": 87,
+      "title": "Create Mattermost feedback bot",
+      "milestone": "Week 2: Feedback Systems & Design",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-3", "type-feedback", "comp-mattermost", "priority-p0"],
+      "description": "Develop Mattermost bot for collecting feedback through conversational interface in team chat.",
+      "acceptance_criteria": [
+        "Bot responds to @fawkes-feedback mentions",
+        "Conversational feedback collection",
+        "Slash command support (/feedback)",
+        "Threaded discussions for feedback items",
+        "Automatic categorization using NLP",
+        "Integration with insights database"
+      ],
+      "dependencies": ["#76"],
+      "blocks": []
+    },
+    {
+      "number": 88,
+      "title": "Implement feedback-to-issue automation",
+      "milestone": "Week 2: Feedback Systems & Design",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-3", "type-feedback", "comp-automation", "priority-p0"],
+      "description": "Automate creation of GitHub issues from high-priority feedback with proper labeling and assignment.",
+      "acceptance_criteria": [
+        "Automatic issue creation for high-priority feedback",
+        "AI-powered categorization and labeling",
+        "Duplicate detection",
+        "Auto-assignment based on component",
+        "Template population with feedback details",
+        "Bi-directional linking (feedback ↔ issue)"
+      ],
+      "dependencies": ["#85", "#86", "#87"],
+      "blocks": []
+    },
+    {
+      "number": 89,
+      "title": "Build feedback analytics dashboard",
+      "milestone": "Week 2: Feedback Systems & Design",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-3", "type-feedback", "comp-analytics", "priority-p0"],
+      "description": "Create analytics dashboard showing feedback trends, sentiment analysis, and actionable insights.",
+      "acceptance_criteria": [
+        "Feedback volume trends over time",
+        "Sentiment analysis visualization",
+        "Category breakdown (bugs, features, etc.)",
+        "Top pain points identification",
+        "Time-to-resolution metrics",
+        "AT-E3-003 passes"
+      ],
+      "dependencies": ["#88"],
+      "blocks": []
+    },
+    {
+      "number": 90,
+      "title": "Create AT-E3-003 feedback systems test",
+      "milestone": "Week 2: Feedback Systems & Design",
+      "priority": "P0",
+      "estimated_hours": 2,
+      "labels": ["epic-3", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Test validating all feedback channels are functional and integrated.",
+      "acceptance_criteria": [
+        "Test submits feedback via Backstage widget",
+        "Test submits feedback via CLI",
+        "Test submits feedback via Mattermost",
+        "Test validates issue creation automation",
+        "Test validates analytics dashboard",
+        "AT-E3-003 passes"
+      ],
+      "dependencies": ["#89"],
+      "blocks": []
+    },
+    {
+      "number": 91,
+      "title": "Create design system component library",
+      "milestone": "Week 2: Feedback Systems & Design",
+      "priority": "P1",
+      "estimated_hours": 8,
+      "labels": ["epic-3", "type-design", "comp-design-system", "priority-p1"],
+      "description": "Build comprehensive design system with reusable components for consistent UX across Fawkes platform.",
+      "acceptance_criteria": [
+        "Component library with 20+ components",
+        "Design tokens (colors, typography, spacing)",
+        "Accessibility compliance (WCAG 2.1 AA)",
+        "React and Web Component versions",
+        "Comprehensive documentation",
+        "Dark mode support"
+      ],
+      "dependencies": [],
+      "blocks": []
+    },
+    {
+      "number": 92,
+      "title": "Integrate Figma or Penpot for design collaboration",
+      "milestone": "Week 2: Feedback Systems & Design",
+      "priority": "P1",
+      "estimated_hours": 4,
+      "labels": ["epic-3", "type-design", "comp-tools", "priority-p1"],
+      "description": "Set up design tool (Figma or open-source Penpot) for design collaboration and handoff to engineering.",
+      "acceptance_criteria": [
+        "Design tool account/instance configured",
+        "Fawkes design system imported",
+        "Collaboration workflow documented",
+        "Design-to-code pipeline established",
+        "Plugin/integration with Backstage",
+        "Team trained on design tool"
+      ],
+      "dependencies": ["#91"],
+      "blocks": []
+    },
+    {
+      "number": 93,
+      "title": "Deploy Storybook for component documentation",
+      "milestone": "Week 2: Feedback Systems & Design",
+      "priority": "P1",
+      "estimated_hours": 5,
+      "labels": ["epic-3", "type-design", "comp-storybook", "priority-p1"],
+      "description": "Deploy Storybook as living documentation for design system components with interactive examples.",
+      "acceptance_criteria": [
+        "Storybook deployed and accessible",
+        "All design system components documented",
+        "Interactive controls for component props",
+        "Accessibility testing integrated",
+        "Visual regression testing configured",
+        "Published to platform documentation"
+      ],
+      "dependencies": ["#91"],
+      "blocks": []
+    },
+    {
+      "number": 94,
+      "title": "Implement automated accessibility testing",
+      "milestone": "Week 2: Feedback Systems & Design",
+      "priority": "P1",
+      "estimated_hours": 4,
+      "labels": ["epic-3", "type-design", "comp-accessibility", "priority-p1"],
+      "description": "Integrate automated accessibility testing using axe-core and Lighthouse in CI/CD pipelines.",
+      "acceptance_criteria": [
+        "axe-core integrated in test suites",
+        "Lighthouse CI configured",
+        "Accessibility gates in pipelines",
+        "WCAG 2.1 AA compliance target",
+        "Accessibility score tracked over time",
+        "Violation reports in dashboards"
+      ],
+      "dependencies": ["#91"],
+      "blocks": []
+    },
+    {
+      "number": 95,
+      "title": "Create 5 key user journey maps",
+      "milestone": "Week 2: Feedback Systems & Design",
+      "priority": "P1",
+      "estimated_hours": 6,
+      "labels": ["epic-3", "type-design", "comp-journey-maps", "priority-p1"],
+      "description": "Document 5 critical user journeys with current state, pain points, and future state vision.",
+      "acceptance_criteria": [
+        "Journey 1: Developer onboarding (day 1 to first deploy)",
+        "Journey 2: Creating new service from template",
+        "Journey 3: Debugging production issue",
+        "Journey 4: Updating platform component",
+        "Journey 5: Learning new platform feature",
+        "Each journey includes: stages, actions, pain points, opportunities"
+      ],
+      "dependencies": ["#74"],
+      "blocks": []
+    },
+    {
+      "number": 96,
+      "title": "Create AT-E3-004, AT-E3-005, AT-E3-009 tests",
+      "milestone": "Week 2: Feedback Systems & Design",
+      "priority": "P1",
+      "estimated_hours": 3,
+      "labels": ["epic-3", "type-testing", "comp-tests", "priority-p1"],
+      "description": "Create acceptance tests for design system, journey maps, and accessibility compliance.",
+      "acceptance_criteria": [
+        "AT-E3-004: Design system components render correctly",
+        "AT-E3-005: All 5 journey maps documented",
+        "AT-E3-009: Accessibility compliance >90%",
+        "Tests validate Storybook deployment",
+        "Tests validate axe-core integration",
+        "All three tests pass"
+      ],
+      "dependencies": ["#93", "#94", "#95"],
+      "blocks": []
+    },
+    {
+      "number": 97,
+      "title": "Deploy product analytics platform",
+      "milestone": "Week 3: Analytics & Experimentation",
+      "priority": "P1",
+      "estimated_hours": 6,
+      "labels": ["epic-3", "type-analytics", "comp-platform", "priority-p1"],
+      "description": "Deploy privacy-focused analytics platform (Plausible or Matomo) for tracking platform usage and feature adoption.",
+      "acceptance_criteria": [
+        "Analytics platform deployed (Plausible or Matomo)",
+        "GDPR-compliant configuration",
+        "Cookie-less tracking implemented",
+        "Custom event tracking configured",
+        "Dashboard accessible to team",
+        "Data retention policies set"
+      ],
+      "dependencies": [],
+      "blocks": ["#98"]
+    },
+    {
+      "number": 98,
+      "title": "Implement comprehensive event tracking",
+      "milestone": "Week 3: Analytics & Experimentation",
+      "priority": "P1",
+      "estimated_hours": 5,
+      "labels": ["epic-3", "type-analytics", "comp-events", "priority-p1"],
+      "description": "Instrument platform with event tracking for key user actions, feature usage, and workflow completion.",
+      "acceptance_criteria": [
+        "Event taxonomy defined (categories, actions, labels)",
+        "Tracking for 20+ key user actions",
+        "Feature usage metrics",
+        "Funnel completion tracking",
+        "Error event tracking",
+        "Custom dimension tracking (team, role)"
+      ],
+      "dependencies": ["#97"],
+      "blocks": []
+    },
+    {
+      "number": 99,
+      "title": "Deploy feature flags system (Unleash)",
+      "milestone": "Week 3: Analytics & Experimentation",
+      "priority": "P1",
+      "estimated_hours": 6,
+      "labels": ["epic-3", "type-experimentation", "comp-feature-flags", "priority-p1"],
+      "description": "Deploy Unleash or similar feature flag system for progressive rollouts and experimentation.",
+      "acceptance_criteria": [
+        "Unleash deployed and accessible",
+        "SDK integrated in Backstage",
+        "Feature flag management UI configured",
+        "Gradual rollout strategies configured",
+        "User targeting capabilities",
+        "Flag analytics and metrics"
+      ],
+      "dependencies": [],
+      "blocks": ["#100"]
+    },
+    {
+      "number": 100,
+      "title": "Build experimentation framework",
+      "milestone": "Week 3: Analytics & Experimentation",
+      "priority": "P1",
+      "estimated_hours": 5,
+      "labels": ["epic-3", "type-experimentation", "comp-framework", "priority-p1"],
+      "description": "Create framework for running A/B tests and experiments with statistical analysis.",
+      "acceptance_criteria": [
+        "Experiment design template",
+        "A/B testing implementation guide",
+        "Statistical significance calculator",
+        "Experiment tracking in database",
+        "Results analysis dashboard",
+        "Documentation for running experiments"
+      ],
+      "dependencies": ["#99"],
+      "blocks": []
+    },
+    {
+      "number": 101,
+      "title": "Create analytics dashboards for product insights",
+      "milestone": "Week 3: Analytics & Experimentation",
+      "priority": "P1",
+      "estimated_hours": 6,
+      "labels": ["epic-3", "type-analytics", "comp-dashboards", "priority-p1"],
+      "description": "Build comprehensive analytics dashboards showing feature adoption, user retention, and engagement metrics.",
+      "acceptance_criteria": [
+        "Feature adoption dashboard",
+        "User retention and churn metrics",
+        "Engagement metrics (DAU, WAU, MAU)",
+        "Funnel analysis visualizations",
+        "Cohort analysis capabilities",
+        "Custom report generation"
+      ],
+      "dependencies": ["#98"],
+      "blocks": []
+    },
+    {
+      "number": 102,
+      "title": "Create AT-E3-006 and AT-E3-007 tests",
+      "milestone": "Week 3: Analytics & Experimentation",
+      "priority": "P1",
+      "estimated_hours": 2,
+      "labels": ["epic-3", "type-testing", "comp-tests", "priority-p1"],
+      "description": "Tests validating experimentation framework and analytics platform functionality.",
+      "acceptance_criteria": [
+        "AT-E3-006: Feature flags working correctly",
+        "AT-E3-007: Analytics platform collecting events",
+        "Test validates A/B test setup",
+        "Test validates event tracking",
+        "Test validates dashboards display data",
+        "Both tests pass"
+      ],
+      "dependencies": ["#100", "#101"],
+      "blocks": []
+    },
+    {
+      "number": 103,
+      "title": "Document continuous discovery workflow",
+      "milestone": "Week 4: Process & Final Integration",
+      "priority": "P0",
+      "estimated_hours": 5,
+      "labels": ["epic-3", "type-process", "comp-documentation", "priority-p0"],
+      "description": "Create comprehensive documentation of continuous discovery process including research, feedback, experimentation, and iteration.",
+      "acceptance_criteria": [
+        "Discovery workflow documented end-to-end",
+        "Research cadence and rituals defined",
+        "Feedback review process documented",
+        "Experiment design and analysis process",
+        "Decision-making framework",
+        "Team roles and responsibilities"
+      ],
+      "dependencies": [],
+      "blocks": []
+    },
+    {
+      "number": 104,
+      "title": "Set up usability testing infrastructure",
+      "milestone": "Week 4: Process & Final Integration",
+      "priority": "P1",
+      "estimated_hours": 5,
+      "labels": ["epic-3", "type-research", "comp-usability", "priority-p1"],
+      "description": "Establish infrastructure for conducting remote usability testing sessions with screen recording and analysis.",
+      "acceptance_criteria": [
+        "Screen recording tool configured",
+        "Usability testing lab setup (remote)",
+        "Test plan templates created",
+        "Participant recruitment process",
+        "Analysis framework established",
+        "Findings documentation template"
+      ],
+      "dependencies": ["#75"],
+      "blocks": []
+    },
+    {
+      "number": 105,
+      "title": "Create discovery metrics dashboard",
+      "milestone": "Week 4: Process & Final Integration",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-3", "type-process", "comp-dashboard", "priority-p0"],
+      "description": "Build meta-dashboard tracking discovery process health: research velocity, feedback response time, experiment throughput.",
+      "acceptance_criteria": [
+        "Research activity metrics",
+        "Feedback volume and response time",
+        "Experiment velocity",
+        "Insight-to-action tracking",
+        "Discovery OKRs visualization",
+        "Process improvement recommendations"
+      ],
+      "dependencies": ["#103"],
+      "blocks": []
+    },
+    {
+      "number": 106,
+      "title": "Establish customer advisory board",
+      "milestone": "Week 4: Process & Final Integration",
+      "priority": "P2",
+      "estimated_hours": 6,
+      "labels": ["epic-3", "type-process", "comp-community", "priority-p2"],
+      "description": "Form customer advisory board with key platform users for strategic feedback and co-creation.",
+      "acceptance_criteria": [
+        "Advisory board charter created",
+        "5-7 members identified and invited",
+        "Quarterly meeting cadence established",
+        "Collaboration tools set up",
+        "Feedback loop to product team",
+        "First advisory board meeting held"
+      ],
+      "dependencies": ["#74"],
+      "blocks": []
+    },
+    {
+      "number": 107,
+      "title": "Create complete Epic 3 documentation",
+      "milestone": "Week 4: Process & Final Integration",
+      "priority": "P0",
+      "estimated_hours": 8,
+      "labels": ["epic-3", "type-documentation", "comp-docs", "priority-p0"],
+      "description": "Comprehensive documentation covering all Epic 3 components: research, DevEx, feedback, design, analytics, and discovery process.",
+      "acceptance_criteria": [
+        "User research playbook complete",
+        "DevEx measurement guide",
+        "Feedback system documentation",
+        "Design system guidelines",
+        "Analytics implementation guide",
+        "Continuous discovery handbook",
+        "Video tutorials for key workflows",
+        "Troubleshooting guides"
+      ],
+      "dependencies": ["#103", "#105"],
+      "blocks": []
+    },
+    {
+      "number": 108,
+      "title": "Run all Epic 3 acceptance tests and final validation",
+      "milestone": "Week 4: Process & Final Integration",
+      "priority": "P0",
+      "estimated_hours": 4,
+      "labels": ["epic-3", "type-testing", "comp-tests", "priority-p0"],
+      "description": "Execute all 12 Epic 3 acceptance tests, validate entire discovery system, and prepare final report.",
+      "acceptance_criteria": [
+        "AT-E3-001 through AT-E3-012 all pass",
+        "Complete end-to-end discovery workflow tested",
+        "Integration with Epics 1 and 2 validated",
+        "Resource utilization optimized (<75%)",
+        "HTML test report generated",
+        "Epic 3 marked complete",
+        "AT-E3-008: Continuous discovery process operational",
+        "AT-E3-010: Usability testing infrastructure ready",
+        "AT-E3-011: Advisory board established",
+        "AT-E3-012: Complete documentation published"
+      ],
+      "dependencies": ["#107"],
+      "blocks": []
+    }
+  ]
+}
