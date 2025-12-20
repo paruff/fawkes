@@ -67,9 +67,8 @@ SKIP_CLUSTER=0
 DRY_RUN=0
 RESUME=0
 VERBOSE=0
+SHOW_ACCESS_ONLY=0  # Add this line
 ENV=""
-PREFER_MINIKUBE=0
-PREFER_DOCKER=0
 
 # State tracking (for --resume)
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -320,7 +319,7 @@ function driver_extra_args() {
 }
 
 function usage {
-  echo "Usage: $0 [--provider local|aws|azure|gcp] [--cluster-name NAME] [--region REGION|--location LOCATION] [--only-cluster|--only-apps|--skip-cluster] [--dry-run] [--resume] [--verbose] <environment|cleanup|destroy>"
+  echo "Usage: $0 [--provider local|aws|azure|gcp] [--cluster-name NAME] [--region REGION|--location LOCATION] [--only-cluster|--only-apps|--skip-cluster] [--dry-run] [--resume] [--verbose] [--access] <environment|cleanup|destroy>"
   echo "  environment: local | dev | stage | production"
   echo "  cleanup: remove ArgoCD and Fawkes resources for a fresh start"
   echo "  destroy: run Terraform destroy for the selected provider"
@@ -335,8 +334,9 @@ function usage {
   echo "    --only-apps          Deploy Argo CD & apps only (skip cluster)"
   echo "    --skip-cluster       Alias for --only-apps"
   echo "    --dry-run            Plan-only (no apply), print intended actions"
-  echo "    --resume             Attempt to resume a previous run (placeholder)"
+  echo "    --resume             Attempt to resume a previous run"
   echo "    --verbose|-v         Verbose output (set -x)"
+  echo "    --access             Show access summary only (no deployment)"
   exit 1
 }
 
@@ -408,6 +408,8 @@ parse_flags() {
         PREFER_MINIKUBE=1; i=$((i+1)); continue ;;
       --prefer-docker-desktop)
         PREFER_DOCKER=1; i=$((i+1)); continue ;;
+      --access)
+        SHOW_ACCESS_ONLY=1; i=$((i+1)); continue ;;  # Add this case
       --help|-h)
         usage ;;
       *)
@@ -435,7 +437,7 @@ parse_flags() {
   if [[ $ONLY_CLUSTER -eq 1 && ( $ONLY_APPS -eq 1 || $SKIP_CLUSTER -eq 1 ) ]]; then
     error_exit "--only-cluster cannot be combined with --only-apps/--skip-cluster"
   fi
-  if [[ $PREFER_MINIKUBE -eq 1 && $PREFER_DOCKER -eq 1 ]]; then
+  if [[ ${PREFER_MINIKUBE:-0} -eq 1 && ${PREFER_DOCKER:-0} -eq 1 ]]; then
     error_exit "--prefer-minikube cannot be combined with --prefer-docker-desktop"
   fi
 }
@@ -469,7 +471,7 @@ check_prereqs() {
           if [[ "$RUN_INSTALL" =~ ^[Yy]$ ]]; then
             echo "Running installer helper..."
             if [[ "$(uname -s)" == "Darwin" && -f "$(dirname "${BASH_SOURCE[0]}")/brew-install.sh" ]]; then
-              bash "$(dirname "${BASH_SOURCE[0]}")/brew-install.sh"
+              bash "$(dirname "${BASH_SOURCE[0]}")"/brew-install.sh
             else
               bash "$(dirname "${BASH_SOURCE[0]}")/tools-install.sh"
             fi
@@ -665,8 +667,11 @@ tf_apply_dir() {
     
     # Verify cluster exists and is running
     echo "🔍 Checking AKS cluster status..."
-    local cluster_state
-    cluster_state=$(az aks show -g "$rg_name" -n "$cluster_name" --query "provisioningState" -o tsv 2>/dev/null || echo "Unknown")
+    local cluster_state cluster_info
+    cluster_info=$(az aks show -g "$rg_name" -n "$cluster_name" --query '{state:provisioningState,azureRbac:aadProfile.enableAzureRbac}' -o json 2>/dev/null || echo '{}')
+    cluster_state=$(echo "$cluster_info" | jq -r '.state // "Unknown"')
+    local azure_rbac_enabled
+    azure_rbac_enabled=$(echo "$cluster_info" | jq -r '.azureRbac // false')
     
     if [[ "$cluster_state" != "Succeeded" ]]; then
       error_exit "AKS cluster is not in 'Succeeded' state (current: $cluster_state). Wait for cluster to be ready."
@@ -674,7 +679,57 @@ tf_apply_dir() {
     
     echo "✅ AKS cluster status: $cluster_state"
     
-    # Get credentials (will merge into kubeconfig)
+    # Clean up old cluster contexts before adding new credentials
+    echo "🧹 Removing old cluster contexts..."
+    kubectl config delete-context "$cluster_name" 2>/dev/null || true
+    kubectl config delete-cluster "$cluster_name" 2>/dev/null || true
+    kubectl config unset "users.clusterUser_${rg_name}_${cluster_name}" 2>/dev/null || true
+    
+    # Check if Azure RBAC is enabled
+    if [[ "$azure_rbac_enabled" == "true" ]]; then
+      echo "🔐 Azure RBAC for Kubernetes is enabled"
+      
+      # Get user info
+      local user_oid user_email
+      user_oid=$(az ad signed-in-user show --query id -o tsv 2>/dev/null || echo "")
+      user_email=$(az ad signed-in-user show --query userPrincipalName -o tsv 2>/dev/null || echo "unknown")
+      
+      if [[ -n "$user_oid" ]]; then
+        echo "👤 Current user: $user_email (OID: $user_oid)"
+        
+        # Check if user has cluster admin role
+        echo "🔍 Checking for Azure Kubernetes Service RBAC Cluster Admin role..."
+        local has_admin_role
+        has_admin_role=$(az role assignment list \
+          --assignee "$user_oid" \
+          --scope "/subscriptions/${ARM_SUBSCRIPTION_ID}/resourceGroups/${rg_name}/providers/Microsoft.ContainerService/managedClusters/${cluster_name}" \
+          --query "[?roleDefinitionName=='Azure Kubernetes Service RBAC Cluster Admin'].roleDefinitionName" \
+          -o tsv 2>/dev/null || echo "")
+        
+        if [[ -z "$has_admin_role" ]]; then
+          echo "⚠️  User does not have cluster admin role yet"
+          echo "🔧 Granting Azure Kubernetes Service RBAC Cluster Admin role..."
+          
+          if az role assignment create \
+            --role "Azure Kubernetes Service RBAC Cluster Admin" \
+            --assignee "$user_oid" \
+            --scope "/subscriptions/${ARM_SUBSCRIPTION_ID}/resourceGroups/${rg_name}/providers/Microsoft.ContainerService/managedClusters/${cluster_name}" \
+            >/dev/null 2>&1; then
+            echo "✅ Cluster admin role granted"
+          else
+            echo "⚠️  Role may already exist or creation failed (continuing anyway)"
+          fi
+        else
+          echo "✅ User already has cluster admin role"
+        fi
+        
+        # Always wait for RBAC propagation after checking/creating role
+        echo "⏳ Waiting 30 seconds for Azure RBAC propagation..."
+        sleep 30
+      fi
+    fi
+    
+    # Get credentials
     echo "📥 Downloading cluster credentials..."
     az aks get-credentials \
       --resource-group "$rg_name" \
@@ -686,29 +741,21 @@ tf_apply_dir() {
     if ! command -v kubelogin >/dev/null 2>&1; then
       install_kubelogin || {
         echo "[ERROR] kubelogin installation failed"
-        echo "[HINT] Install manually: brew install Azure/kubelogin/kubelogin"
-        echo "[HINT] Or visit: https://github.com/Azure/kubelogin"
         return 1
       }
     fi
 
     # Convert kubeconfig to use azurecli authentication
-    echo "[INFO] Converting kubeconfig to azurecli authentication..."
+    echo "🔐 Converting kubeconfig to azurecli authentication..."
     if kubelogin convert-kubeconfig -l azurecli --kubeconfig "${KUBECONFIG:-$HOME/.kube/config}"; then
       echo "✅ Kubeconfig converted to azurecli auth"
     else
-      echo "[WARN] azurecli conversion failed, trying devicecode..."
-      if kubelogin convert-kubeconfig -l devicecode --kubeconfig "${KUBECONFIG:-$HOME/.kube/config}"; then
-        echo "✅ Kubeconfig converted to devicecode auth"
-        echo "[INFO] You may need to authenticate via browser on first kubectl command"
-      else
-        echo "[ERROR] Kubeconfig conversion failed"
-        return 1
-      fi
+      echo "[ERROR] Kubeconfig conversion failed"
+      return 1
     fi
 
-    # Verify connectivity (with retries for newly created clusters)
-    echo "🔍 Verifying cluster connectivity (may take up to 60s for new clusters)..."
+    # Verify connectivity with retries (RBAC may still be propagating)
+    echo "🔍 Verifying cluster connectivity (may take up to 60s for RBAC propagation)..."
     local max_attempts=12
     local attempt=1
     local connected=0
@@ -721,6 +768,18 @@ tf_apply_dir() {
         kubectl get nodes -o wide
         connected=1
         break
+      fi
+      
+      # Check for RBAC permission error
+      local last_error
+      last_error=$(kubectl get nodes 2>&1 || true)
+      if echo "$last_error" | grep -q "Forbidden.*does not have access"; then
+        if [[ $attempt -lt 6 ]]; then
+          echo "   ℹ️  RBAC permissions still propagating..."
+        else
+          echo "   ⚠️  RBAC propagation taking longer than expected"
+          echo "   Tip: Azure RBAC can take up to 5 minutes to propagate"
+        fi
       fi
       
       if [[ $attempt -lt $max_attempts ]]; then
@@ -737,33 +796,17 @@ tf_apply_dir() {
       echo "[ERROR] Unable to reach cluster after $max_attempts attempts"
       echo "════════════════════════════════════════════════════════════════════════════════"
       echo ""
-      echo "Troubleshooting checklist:"
+      echo "Azure RBAC permissions may still be propagating. Options:"
       echo ""
-      echo "1️⃣  Verify Azure CLI authentication:"
-      echo "    az account show"
-      echo "    If not logged in: az login"
-      echo ""
-      echo "2️⃣  Set correct subscription:"
-      echo "    az account set --subscription ${ARM_SUBSCRIPTION_ID}"
-      echo ""
-      echo "3️⃣  Check AKS cluster status:"
-      echo "    az aks show -g $rg_name -n $cluster_name --query '{name:name, state:provisioningState, powerState:powerState.code}'"
-      echo ""
-      echo "4️⃣  Verify network connectivity:"
-      echo "    az aks show -g $rg_name -n $cluster_name --query 'apiServerAccessProfile'"
-      echo ""
-      echo "5️⃣  Try manual kubeconfig setup:"
-      echo "    az aks get-credentials -g $rg_name -n $cluster_name --overwrite-existing"
-      echo "    kubelogin convert-kubeconfig -l azurecli"
+      echo "1️⃣  Wait a few more minutes and retry:"
       echo "    kubectl get nodes"
       echo ""
-      echo "6️⃣  Check if cluster has authorized IP ranges:"
-      echo "    az aks show -g $rg_name -n $cluster_name --query 'apiServerAccessProfile.authorizedIpRanges'"
-      echo "    Your IP: $(curl -s ifconfig.me || echo 'unknown')"
-      echo ""
-      echo "7️⃣  Try device code authentication:"
-      echo "    kubelogin convert-kubeconfig -l devicecode --kubeconfig ${KUBECONFIG:-$HOME/.kube/config}"
+      echo "2️⃣  Use admin credentials (dev only - bypasses RBAC):"
+      echo "    az aks get-credentials -g $rg_name -n $cluster_name --admin --overwrite-existing"
       echo "    kubectl get nodes"
+      echo ""
+      echo "3️⃣  Verify role assignment:"
+      echo "    az role assignment list --assignee $user_oid --scope /subscriptions/${ARM_SUBSCRIPTION_ID}/resourceGroups/${rg_name}/providers/Microsoft.ContainerService/managedClusters/${cluster_name}"
       echo ""
       echo "════════════════════════════════════════════════════════════════════════════════"
       return 1
@@ -1377,6 +1420,7 @@ print_access_summary() {
     echo "   Local URL:    http://localhost:3000"
     echo "   Port Forward: kubectl -n $grafana_ns port-forward svc/grafana 3000:80"
     echo "   Username:     admin"
+
     local grafana_pwd
     grafana_pwd=$(get_service_password "grafana" "$grafana_ns" "admin-password")
     echo "   Password:     $grafana_pwd"
@@ -1460,6 +1504,17 @@ post_deploy_summary() {
 
 main() {
   parse_flags "$@"
+  
+  # Handle --access flag early
+  if [[ $SHOW_ACCESS_ONLY -eq 1 ]]; then
+    if [[ -x "$(dirname "${BASH_SOURCE[0]}")/access-summary.sh" ]]; then
+      exec "$(dirname "${BASH_SOURCE[0]}")/access-summary.sh" "${PROVIDER:-all}"
+    else
+      post_deploy_summary
+    fi
+    exit 0
+  fi
+  
   # Validate environment after flag parsing
   if [[ -z "$ENV" ]]; then
     usage

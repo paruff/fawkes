@@ -149,7 +149,7 @@ validate-jcasc: ## Validate Jenkins Configuration as Code (JCasC) files
 validate-jenkins: validate-jcasc ## Alias for validate-jcasc
 
 ## Azure Infrastructure Management
-.PHONY: azure-init azure-plan azure-apply azure-destroy azure-refresh-kubeconfig azure-clean-rebuild
+.PHONY: azure-init azure-plan azure-apply azure-destroy azure-refresh-kubeconfig azure-clean-rebuild azure-access
 
 azure-init: ## Initialize Terraform for Azure
     @echo "🔧 Initializing Terraform for Azure..."
@@ -171,6 +171,7 @@ azure-apply: ## Apply Azure infrastructure changes
         export ARM_TENANT_ID=$$(az account show --query tenantId -o tsv) && \
         terraform apply tfplan
     @echo "✅ Changes applied. Refreshing kubeconfig..."
+    @sleep 5
     @$(MAKE) azure-refresh-kubeconfig
 
 azure-refresh-kubeconfig: ## Refresh AKS kubeconfig and test connectivity
@@ -179,29 +180,68 @@ azure-refresh-kubeconfig: ## Refresh AKS kubeconfig and test connectivity
     @echo "🔐 Converting kubeconfig to azurecli auth..."
     @kubelogin convert-kubeconfig -l azurecli
     @echo "✅ Testing connectivity..."
-    @kubectl get nodes -o wide || echo "⚠️  Cluster unreachable. May be private cluster - see 'make azure-clean-rebuild'"
+    @kubectl get nodes -o wide || echo "⚠️  Cluster unreachable - see troubleshooting guide"
 
 azure-destroy: ## Destroy Azure infrastructure (use with caution!)
     @echo "⚠️  WARNING: This will destroy all Azure infrastructure!"
-    @echo "Press Ctrl+C to cancel, or wait 10 seconds to proceed..."
+    @echo "⚠️  Press Ctrl+C within 10 seconds to cancel..."
     @sleep 10
+    @echo "💥 Destroying infrastructure..."
     @cd infra/azure && \
         export ARM_SUBSCRIPTION_ID=$$(az account show --query id -o tsv) && \
         export ARM_TENANT_ID=$$(az account show --query tenantId -o tsv) && \
         terraform destroy -auto-approve
 
-azure-clean-rebuild: ## Clean rebuild of Azure infrastructure (destroy + apply)
-    @echo "🔄 Clean rebuild: This will destroy and recreate the AKS cluster"
-    @echo "⚠️  All workloads will be lost!"
-    @echo "Press Ctrl+C to cancel, or wait 10 seconds to proceed..."
+azure-clean-rebuild: ## Clean rebuild of Azure infrastructure (destroy + recreate)
+    @echo "🔄 Starting clean rebuild of Azure infrastructure"
+    @echo "⚠️  This will:"
+    @echo "   1. Destroy existing cluster"
+    @echo "   2. Clean Terraform state"
+    @echo "   3. Reinitialize providers"
+    @echo "   4. Create new public cluster with IPv4 access"
+    @echo "   5. Test connectivity"
+    @echo ""
+    @echo "⚠️  Press Ctrl+C within 10 seconds to cancel..."
     @sleep 10
-    @$(MAKE) azure-destroy
-    @echo "🧹 Cleaning Terraform state..."
+    @echo ""
+    @echo "Step 1/5: Destroying existing infrastructure..."
+    @$(MAKE) azure-destroy || echo "Destroy failed or nothing to destroy"
+    @echo ""
+    @echo "Step 2/5: Cleaning Terraform state..."
     @cd infra/azure && rm -rf .terraform .terraform.lock.hcl terraform.tfstate.backup
-    @echo "📦 Reinitializing Terraform..."
+    @echo "✅ State cleaned"
+    @echo ""
+    @echo "Step 3/5: Reinitializing Terraform..."
     @$(MAKE) azure-init
-    @echo "📋 Planning new infrastructure..."
+    @echo ""
+    @echo "Step 4/5: Planning new infrastructure..."
     @$(MAKE) azure-plan
-    @echo "🚀 Applying new infrastructure..."
+    @echo ""
+    @echo "Step 5/5: Applying new infrastructure (this takes ~15-20 minutes)..."
     @$(MAKE) azure-apply
+    @echo ""
+    @echo "════════════════════════════════════════════════════════════════"
     @echo "✅ Clean rebuild complete!"
+    @echo "════════════════════════════════════════════════════════════════"
+    @kubectl get nodes -o wide
+
+azure-access: ## Show access information for Azure cluster and services
+    @./scripts/access-summary.sh azure
+
+## Platform Access Management
+.PHONY: access access-argocd access-jenkins access-backstage access-grafana
+
+access: ## Show access information for all platform services
+    @./scripts/access-summary.sh
+
+access-argocd: ## Show ArgoCD access information and open port-forward
+    @./scripts/access-summary.sh argocd
+
+access-jenkins: ## Show Jenkins access information and open port-forward
+    @./scripts/access-summary.sh jenkins
+
+access-backstage: ## Show Backstage access information and open port-forward
+    @./scripts/access-summary.sh backstage
+
+access-grafana: ## Show Grafana access information and open port-forward
+    @./scripts/access-summary.sh grafana
