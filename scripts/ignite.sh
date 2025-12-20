@@ -593,8 +593,19 @@ tf_apply_dir() {
   
   # Ensure Azure subscription and tenant env vars are set from az CLI context if available
   if command -v az >/dev/null 2>&1; then
+    # Verify Azure CLI is logged in before proceeding
+    if ! az account show >/dev/null 2>&1; then
+      echo "[ERROR] Azure CLI is not logged in"
+      echo "[ACTION] Running: az login"
+      if ! az login; then
+        error_exit "Azure login failed. Please authenticate and try again."
+      fi
+    fi
+    
     export ARM_SUBSCRIPTION_ID="${ARM_SUBSCRIPTION_ID:-$(az account show --query id -o tsv 2>/dev/null || true)}"
     export ARM_TENANT_ID="${ARM_TENANT_ID:-$(az account show --query tenantId -o tsv 2>/dev/null || true)}"
+    
+    echo "✅ Using Azure subscription: ${ARM_SUBSCRIPTION_ID}"
   fi
   
   terraform init -upgrade -input=false 2>&1 | tee terraform.log
@@ -652,7 +663,19 @@ tf_apply_dir() {
   if [[ "$PROVIDER" == "azure" ]] && command -v az >/dev/null 2>&1; then
     echo "🔄 Refreshing AKS credentials..."
     
+    # Verify cluster exists and is running
+    echo "🔍 Checking AKS cluster status..."
+    local cluster_state
+    cluster_state=$(az aks show -g "$rg_name" -n "$cluster_name" --query "provisioningState" -o tsv 2>/dev/null || echo "Unknown")
+    
+    if [[ "$cluster_state" != "Succeeded" ]]; then
+      error_exit "AKS cluster is not in 'Succeeded' state (current: $cluster_state). Wait for cluster to be ready."
+    fi
+    
+    echo "✅ AKS cluster status: $cluster_state"
+    
     # Get credentials (will merge into kubeconfig)
+    echo "📥 Downloading cluster credentials..."
     az aks get-credentials \
       --resource-group "$rg_name" \
       --name "$cluster_name" \
@@ -684,18 +707,65 @@ tf_apply_dir() {
       fi
     fi
 
-    # Verify connectivity
-    echo "🔍 Verifying cluster connectivity..."
-    if kubectl get nodes >/dev/null 2>&1; then
-      echo "✅ kubectl connectivity verified"
-    else
-      echo "[ERROR] Unable to reach cluster"
+    # Verify connectivity (with retries for newly created clusters)
+    echo "🔍 Verifying cluster connectivity (may take up to 60s for new clusters)..."
+    local max_attempts=12
+    local attempt=1
+    local connected=0
+    
+    while [[ $attempt -le $max_attempts ]]; do
+      echo "   Attempt $attempt/$max_attempts..."
+      
+      if kubectl get nodes >/dev/null 2>&1; then
+        echo "✅ kubectl connectivity verified"
+        kubectl get nodes -o wide
+        connected=1
+        break
+      fi
+      
+      if [[ $attempt -lt $max_attempts ]]; then
+        echo "   Waiting 5 seconds before retry..."
+        sleep 5
+      fi
+      
+      attempt=$((attempt + 1))
+    done
+    
+    if [[ $connected -eq 0 ]]; then
       echo ""
-      echo "Troubleshooting steps:"
-      echo "1. Ensure Azure CLI is logged in: az login"
-      echo "2. Set correct subscription: az account set --subscription ${ARM_SUBSCRIPTION_ID}"
-      echo "3. Try manual auth: kubelogin convert-kubeconfig -l devicecode --kubeconfig ${KUBECONFIG:-$HOME/.kube/config}"
-      echo "4. Verify AKS is running: az aks show -g $rg_name -n $cluster_name"
+      echo "════════════════════════════════════════════════════════════════════════════════"
+      echo "[ERROR] Unable to reach cluster after $max_attempts attempts"
+      echo "════════════════════════════════════════════════════════════════════════════════"
+      echo ""
+      echo "Troubleshooting checklist:"
+      echo ""
+      echo "1️⃣  Verify Azure CLI authentication:"
+      echo "    az account show"
+      echo "    If not logged in: az login"
+      echo ""
+      echo "2️⃣  Set correct subscription:"
+      echo "    az account set --subscription ${ARM_SUBSCRIPTION_ID}"
+      echo ""
+      echo "3️⃣  Check AKS cluster status:"
+      echo "    az aks show -g $rg_name -n $cluster_name --query '{name:name, state:provisioningState, powerState:powerState.code}'"
+      echo ""
+      echo "4️⃣  Verify network connectivity:"
+      echo "    az aks show -g $rg_name -n $cluster_name --query 'apiServerAccessProfile'"
+      echo ""
+      echo "5️⃣  Try manual kubeconfig setup:"
+      echo "    az aks get-credentials -g $rg_name -n $cluster_name --overwrite-existing"
+      echo "    kubelogin convert-kubeconfig -l azurecli"
+      echo "    kubectl get nodes"
+      echo ""
+      echo "6️⃣  Check if cluster has authorized IP ranges:"
+      echo "    az aks show -g $rg_name -n $cluster_name --query 'apiServerAccessProfile.authorizedIpRanges'"
+      echo "    Your IP: $(curl -s ifconfig.me || echo 'unknown')"
+      echo ""
+      echo "7️⃣  Try device code authentication:"
+      echo "    kubelogin convert-kubeconfig -l devicecode --kubeconfig ${KUBECONFIG:-$HOME/.kube/config}"
+      echo "    kubectl get nodes"
+      echo ""
+      echo "════════════════════════════════════════════════════════════════════════════════"
       return 1
     fi
   fi
@@ -1342,7 +1412,7 @@ print_access_summary() {
   if kubectl get namespace focalboard >/dev/null 2>&1; then
     echo "🔷 Focalboard (Project Management)"
     local fb_host
-    fb_host=$(kubectl get ingress -n focalboard focalboard -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
+    fb_host=$(kubectl get ingress -n focalboard focalboard -o jsonpath='{.spec.rules[0].host}' 2>/devnull || echo "")
     if [[ -n "$fb_host" ]]; then
       echo "   External URL: https://$fb_host"
     fi

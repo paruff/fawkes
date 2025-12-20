@@ -147,3 +147,61 @@ validate-jcasc: ## Validate Jenkins Configuration as Code (JCasC) files
 	@python scripts/validate-jcasc.py
 
 validate-jenkins: validate-jcasc ## Alias for validate-jcasc
+
+## Azure Infrastructure Management
+.PHONY: azure-init azure-plan azure-apply azure-destroy azure-refresh-kubeconfig azure-clean-rebuild
+
+azure-init: ## Initialize Terraform for Azure
+    @echo "🔧 Initializing Terraform for Azure..."
+    @cd infra/azure && terraform init -upgrade
+
+azure-plan: ## Plan Azure infrastructure changes
+    @echo "📋 Planning Azure infrastructure changes..."
+    @echo "🔐 Setting Azure credentials from az CLI..."
+    @cd infra/azure && \
+        export ARM_SUBSCRIPTION_ID=$$(az account show --query id -o tsv) && \
+        export ARM_TENANT_ID=$$(az account show --query tenantId -o tsv) && \
+        echo "✅ Using subscription: $$ARM_SUBSCRIPTION_ID" && \
+        terraform plan -out=tfplan
+
+azure-apply: ## Apply Azure infrastructure changes
+    @echo "🚀 Applying Azure infrastructure changes..."
+    @cd infra/azure && \
+        export ARM_SUBSCRIPTION_ID=$$(az account show --query id -o tsv) && \
+        export ARM_TENANT_ID=$$(az account show --query tenantId -o tsv) && \
+        terraform apply tfplan
+    @echo "✅ Changes applied. Refreshing kubeconfig..."
+    @$(MAKE) azure-refresh-kubeconfig
+
+azure-refresh-kubeconfig: ## Refresh AKS kubeconfig and test connectivity
+    @echo "🔑 Refreshing AKS credentials..."
+    @az aks get-credentials -g fawkes-rg -n fawkes-dev --overwrite-existing
+    @echo "🔐 Converting kubeconfig to azurecli auth..."
+    @kubelogin convert-kubeconfig -l azurecli
+    @echo "✅ Testing connectivity..."
+    @kubectl get nodes -o wide || echo "⚠️  Cluster unreachable. May be private cluster - see 'make azure-clean-rebuild'"
+
+azure-destroy: ## Destroy Azure infrastructure (use with caution!)
+    @echo "⚠️  WARNING: This will destroy all Azure infrastructure!"
+    @echo "Press Ctrl+C to cancel, or wait 10 seconds to proceed..."
+    @sleep 10
+    @cd infra/azure && \
+        export ARM_SUBSCRIPTION_ID=$$(az account show --query id -o tsv) && \
+        export ARM_TENANT_ID=$$(az account show --query tenantId -o tsv) && \
+        terraform destroy -auto-approve
+
+azure-clean-rebuild: ## Clean rebuild of Azure infrastructure (destroy + apply)
+    @echo "🔄 Clean rebuild: This will destroy and recreate the AKS cluster"
+    @echo "⚠️  All workloads will be lost!"
+    @echo "Press Ctrl+C to cancel, or wait 10 seconds to proceed..."
+    @sleep 10
+    @$(MAKE) azure-destroy
+    @echo "🧹 Cleaning Terraform state..."
+    @cd infra/azure && rm -rf .terraform .terraform.lock.hcl terraform.tfstate.backup
+    @echo "📦 Reinitializing Terraform..."
+    @$(MAKE) azure-init
+    @echo "📋 Planning new infrastructure..."
+    @$(MAKE) azure-plan
+    @echo "🚀 Applying new infrastructure..."
+    @$(MAKE) azure-apply
+    @echo "✅ Clean rebuild complete!"
