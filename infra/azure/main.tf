@@ -178,3 +178,20 @@ resource "azurerm_storage_container" "terraform_state" {
 data "http" "my_ip" {
   url = "https://ipv4.icanhazip.com"  # Forces IPv4 response
 }
+
+# Get current Azure client configuration
+data "azurerm_client_config" "current" {}
+
+# Grant cluster admin role to the current user
+resource "azurerm_role_assignment" "aks_cluster_admin" {
+  scope                = azurerm_kubernetes_cluster.aks.id
+  role_definition_name = "Azure Kubernetes Service RBAC Cluster Admin"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
+# Wait for role assignment propagation
+resource "time_sleep" "wait_for_rbac" {
+  depends_on = [azurerm_role_assignment.aks_cluster_admin]
+  
+  create_duration = "30s"
+}
