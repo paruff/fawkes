@@ -94,7 +94,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   # Private cluster configuration
-  private_cluster_enabled = var.private_cluster_enabled
+  private_cluster_enabled = false
+
+  # Allow access from your current IPv4 address
+  api_server_access_profile {
+    authorized_ip_ranges = [
+      "${chomp(data.http.my_ip.response_body)}/32"
+    ]
+  }
 
   tags = var.tags
 }
@@ -165,4 +172,9 @@ resource "azurerm_storage_container" "terraform_state" {
   name                  = "tfstate"
   storage_account_id    = azurerm_storage_account.terraform_state.id
   container_access_type = "private"
+}
+
+# Get your current public IP (IPv4 only for AKS)
+data "http" "my_ip" {
+  url = "https://ipv4.icanhazip.com"  # Forces IPv4 response
 }
