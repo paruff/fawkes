@@ -290,7 +290,7 @@ test_api_health() {
     run_test
     gms_pod=$(kubectl get pods -n "$NAMESPACE" -l "app.kubernetes.io/component=datahub-gms" --field-selector=status.phase=Running -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
     if [ -n "$gms_pod" ]; then
-        if kubectl exec -n "$NAMESPACE" "$gms_pod" -- curl -s -f http://localhost:8080/health 2>/dev/null | grep -q "healthy\|ok\|UP" || [ $? -eq 0 ]; then
+        if kubectl exec -n "$NAMESPACE" "$gms_pod" -- curl -s -f http://localhost:8080/health 2>/dev/null | grep -q "healthy\|ok\|UP"; then
             pass "DataHub GMS health check passed"
         else
             info "DataHub GMS health check not available (may be initializing)"
@@ -303,7 +303,7 @@ test_api_health() {
     run_test
     frontend_pod=$(kubectl get pods -n "$NAMESPACE" -l "app.kubernetes.io/component=datahub-frontend" --field-selector=status.phase=Running -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
     if [ -n "$frontend_pod" ]; then
-        if kubectl exec -n "$NAMESPACE" "$frontend_pod" -- curl -s -f http://localhost:9002/admin 2>/dev/null >/dev/null || [ $? -eq 0 ]; then
+        if kubectl exec -n "$NAMESPACE" "$frontend_pod" -- curl -s -f http://localhost:9002/admin 2>/dev/null >/dev/null; then
             pass "DataHub Frontend health check passed"
         else
             info "DataHub Frontend health check not available (may be initializing)"
