@@ -1,0 +1,33 @@
+# ============================================================================
+# FILE: platform/apps/data-quality/configmap.yaml
+# PURPOSE: ConfigMap for Great Expectations data quality service
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data-quality-config
+  namespace: fawkes
+  labels:
+    app: data-quality
+    component: config
+data:
+  # Alert configuration
+  ALERT_ON_FAILURE: "true"
+  ALERT_ON_WARNING: "false"
+  SEND_DAILY_SUMMARY: "true"
+  
+  # Database connection templates (actual credentials from secrets)
+  BACKSTAGE_DB_HOST: "db-backstage-rw.fawkes.svc.cluster.local"
+  BACKSTAGE_DB_PORT: "5432"
+  BACKSTAGE_DB_NAME: "backstage"
+  
+  HARBOR_DB_HOST: "db-harbor-rw.fawkes.svc.cluster.local"
+  HARBOR_DB_PORT: "5432"
+  HARBOR_DB_NAME: "registry"
+  
+  DATAHUB_DB_HOST: "db-datahub-rw.fawkes.svc.cluster.local"
+  DATAHUB_DB_PORT: "5432"
+  DATAHUB_DB_NAME: "datahub"
+  
+  # Checkpoint schedule
+  CHECKPOINT_SCHEDULE: "0 */6 * * *"  # Every 6 hours

@@ -1,0 +1,48 @@
+# ============================================================================
+# FILE: platform/apps/data-quality-application.yaml
+# PURPOSE: ArgoCD Application for Great Expectations data quality service
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: data-quality
+  namespace: fawkes
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  labels:
+    app.kubernetes.io/name: data-quality
+    app.kubernetes.io/component: data-quality
+    app.kubernetes.io/part-of: fawkes
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    path: platform/apps/data-quality
+    targetRevision: HEAD
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  ignoreDifferences:
+    - group: batch
+      kind: CronJob
+      jsonPointers:
+        - /status
+
+  revisionHistoryLimit: 10
