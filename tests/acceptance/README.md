@@ -21,6 +21,13 @@ This directory contains acceptance test runners for Fawkes platform validation.
 | AT-E1-011 | Documentation | Complete docs and runbooks | 🚧 Pending |
 | AT-E1-012 | Integration | Full platform workflow validated | ✅ Implemented |
 
+### Epic 2: AI & Data Platform
+
+| Test ID | Category | Description | Status |
+|---------|----------|-------------|--------|
+| AT-E2-001 | AI Integration | GitHub Copilot configured and working | ✅ Implemented |
+| AT-E2-002 | RAG Architecture | RAG service deployed and functional | ✅ Implemented |
+
 ## Usage
 
 ### Run Specific Acceptance Test
@@ -750,7 +757,7 @@ kubectl port-forward -n fawkes-devlake svc/devlake-lake 8080:8080
 
 ## Adding New Acceptance Tests
 
-1. Create validation script in `scripts/validate-at-e1-XXX.sh`
+1. Create validation script in `scripts/validate-at-e1-XXX.sh` or `scripts/validate-at-e2-XXX.sh`
 2. Create E2E tests in `tests/e2e/` if needed
 3. Create integration tests in `tests/integration/` if needed
 4. Add BDD feature file in `tests/bdd/features/` if applicable
@@ -758,10 +765,219 @@ kubectl port-forward -n fawkes-devlake svc/devlake-lake 8080:8080
 6. Add Makefile target for convenience
 7. Update this README with test details
 
+## AT-E2-001: AI Coding Assistant (GitHub Copilot)
+
+### Acceptance Criteria
+
+- [x] GitHub Copilot configured for organization
+- [x] IDE extensions documented (VSCode, IntelliJ, Vim)
+- [x] Integration with RAG system documented
+- [x] Test code generation working
+- [x] Usage telemetry configured (opt-in)
+- [x] Documentation complete and accessible
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e2-001.sh`)
+   - Validates Copilot documentation exists and is comprehensive
+   - Checks IDE extension documentation (VSCode, IntelliJ, Vim)
+   - Verifies RAG integration documentation
+   - Validates code generation test script exists and works
+   - Checks telemetry configuration and opt-in mechanism
+   - Verifies privacy considerations documented
+   - Validates Grafana dashboard exists and is valid JSON
+   - Checks metrics documentation
+   - Verifies all documentation is accessible
+   - Generates JSON test report
+
+2. **Code Generation Tests** (`tests/ai/code-generation-test.sh`)
+   - Tests REST API generation
+   - Tests Terraform code generation
+   - Tests test case generation
+   - Validates generated code quality
+
+### Test Reports
+
+Test reports are generated in JSON format at:
+```
+reports/at-e2-001-validation-YYYYMMDD-HHMMSS.json
+```
+
+### Validation Commands
+
+Run the test:
+
+```bash
+# Run via test runner
+./tests/acceptance/run-test.sh AT-E2-001
+
+# Run via Makefile
+make validate-at-e2-001
+
+# Run directly
+./scripts/validate-at-e2-001.sh --namespace fawkes
+```
+
+### Prerequisites
+
+- Documentation files must exist:
+  - `docs/ai/copilot-setup.md`
+  - `platform/apps/ai-telemetry/README.md`
+  - `platform/apps/ai-telemetry/dashboards/ai-telemetry-dashboard.json`
+  - `tests/ai/code-generation-test.sh`
+- Python 3 for JSON validation
+- bash for running tests
+
+### Troubleshooting
+
+**Documentation not found:**
+- Verify all required documentation files exist
+- Check file paths match expected locations
+- Ensure files are committed to repository
+
+**Code generation tests fail:**
+- Review test script logs
+- Check if required tools are installed
+- Verify test script has execute permissions
+
+## AT-E2-002: RAG Architecture
+
+### Acceptance Criteria
+
+- [x] Weaviate vector database deployed
+- [x] RAG service deployed with 2 replicas
+- [x] RAG service accessible via ingress
+- [x] Health endpoint working
+- [x] Context retrieval working (<500ms)
+- [x] Relevance scoring >0.7
+- [x] Resource limits configured properly
+- [x] Integration with Weaviate validated
+- [x] API documented (OpenAPI)
+- [x] Prometheus metrics exposed
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e2-002.sh`)
+   - Phase 1: Prerequisites (kubectl, cluster access, namespace)
+   - Phase 2: Weaviate Integration (deployment, pods ready)
+   - Phase 3: RAG Service Deployment (deployment, replicas, service, ingress, ConfigMap)
+   - Phase 4: Resource Limits (CPU/memory requests and limits)
+   - Phase 5: API Endpoints (health, OpenAPI docs, metrics)
+   - Phase 6: Context Retrieval (query endpoint, performance, relevance)
+   - Generates test summary with pass/fail counts
+
+2. **BDD Tests** (`tests/bdd/features/rag-service.feature`)
+   - RAG service deployment and running
+   - Service accessibility via ClusterIP
+   - Ingress configuration
+   - Health check working
+   - Context retrieval performance (<500ms)
+   - Relevance scoring (>0.7)
+   - Weaviate integration
+   - Resource limits
+   - Security context
+   - OpenAPI documentation
+   - Prometheus metrics
+
+### Test Reports
+
+Test output is shown in terminal with pass/fail status for each phase.
+
+### Validation Commands
+
+Run the test:
+
+```bash
+# Run via test runner
+./tests/acceptance/run-test.sh AT-E2-002
+
+# Run via Makefile
+make validate-at-e2-002
+
+# Run directly
+./scripts/validate-at-e2-002.sh
+
+# Run BDD tests
+pytest tests/bdd -k "rag" -v --tb=short
+```
+
+### Prerequisites
+
+- kubectl with cluster access
+- Weaviate deployed in namespace `fawkes`
+- RAG service deployed in namespace `fawkes`
+- curl (for API testing)
+- jq (for JSON processing)
+- bc (for calculations)
+- pytest (for BDD tests)
+
+### Troubleshooting
+
+**RAG service not accessible:**
+```bash
+# Check pod status
+kubectl get pods -n fawkes -l app=rag-service
+
+# Check service
+kubectl get svc rag-service -n fawkes
+
+# Check ingress
+kubectl get ingress rag-service -n fawkes
+
+# Port forward for testing
+kubectl port-forward -n fawkes svc/rag-service 8080:80
+```
+
+**Weaviate connection failed:**
+```bash
+# Check Weaviate status
+kubectl get pods -n fawkes -l app=weaviate
+
+# Check Weaviate service
+kubectl get svc weaviate -n fawkes
+
+# Verify ConfigMap has correct Weaviate URL
+kubectl get configmap rag-service-config -n fawkes -o yaml
+```
+
+**Performance issues (>500ms):**
+- Check Weaviate resource usage
+- Verify network latency
+- Review indexed document size
+- Check query parameters (top_k, threshold)
+
+## Generating Reports
+
+Use the `generate-report.sh` script to create consolidated reports:
+
+```bash
+# Generate HTML report for Epic 2, Week 1
+./tests/acceptance/generate-report.sh --epic 2 --week 1
+
+# Generate JSON report for Epic 1
+./tests/acceptance/generate-report.sh --epic 1 --format json
+
+# Generate markdown report with custom output
+./tests/acceptance/generate-report.sh --epic 2 --week 1 --format markdown --output my-report.md
+
+# Generate report for all tests
+./tests/acceptance/generate-report.sh --format html
+```
+
+Report formats:
+- **HTML**: Interactive report with summary cards and tables
+- **JSON**: Machine-readable format for CI/CD integration
+- **Markdown**: Documentation-friendly format
+
+Reports are saved in the `reports/` directory by default.
+
 ## Dependencies
 
 - kubectl
 - argocd CLI (optional but recommended)
 - pytest (for BDD tests)
 - jq (for JSON processing)
+- bc (for calculations)
+- curl (for API testing)
+- python3 (for JSON validation)
 - Kubernetes cluster access
