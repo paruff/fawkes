@@ -4,6 +4,52 @@
 
 DataHub provides a unified data catalog for discovering, understanding, and governing data assets across the Fawkes platform. It tracks data lineage, quality, and usage metrics.
 
+## Quick Start
+
+### Deploy DataHub
+
+DataHub is deployed via ArgoCD using the application manifest:
+
+```bash
+# Apply the ArgoCD application
+kubectl apply -f ../datahub-application.yaml
+
+# Wait for deployment to complete
+kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=datahub -n fawkes --timeout=300s
+
+# Validate deployment
+./validate-datahub.sh --namespace fawkes
+```
+
+### Access DataHub UI
+
+Local development:
+```
+http://datahub.127.0.0.1.nip.io
+```
+
+Default credentials (MVP):
+- Username: `datahub`
+- Password: `datahub`
+
+### Ingest Metadata
+
+1. Install DataHub CLI:
+```bash
+pip install 'acryl-datahub[all]'
+```
+
+2. Set credentials:
+```bash
+export POSTGRES_USER="backstage_user"
+export POSTGRES_PASSWORD="your-password"
+```
+
+3. Run ingestion:
+```bash
+datahub ingest -c postgres-ingestion-recipe.yml
+```
+
 ## Key Features
 
 - **Data Discovery**: Search and browse all data assets
