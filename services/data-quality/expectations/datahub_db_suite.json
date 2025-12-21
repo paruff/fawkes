@@ -1,0 +1,70 @@
+{
+  "data_asset_type": "Dataset",
+  "expectation_suite_name": "datahub_db_suite",
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 0,
+        "max_value": 10000000
+      },
+      "meta": {
+        "notes": "DataHub metadata should be within reasonable limits"
+      }
+    },
+    {
+      "expectation_type": "expect_table_columns_to_match_set",
+      "kwargs": {
+        "column_set": [
+          "urn",
+          "aspect",
+          "version",
+          "metadata",
+          "systemmetadata",
+          "createdon",
+          "createdby"
+        ],
+        "exact_match": false
+      },
+      "meta": {
+        "notes": "Core DataHub metadata aspect columns"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "urn"
+      },
+      "meta": {
+        "notes": "URN is required for all metadata"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "aspect"
+      },
+      "meta": {
+        "notes": "Aspect name is required"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "urn",
+        "regex": "^urn:li:[a-zA-Z]+:.*"
+      },
+      "meta": {
+        "notes": "URN should follow DataHub format"
+      }
+    }
+  ],
+  "ge_cloud_id": null,
+  "meta": {
+    "great_expectations_version": "0.18.12",
+    "description": "Expectation suite for DataHub database validation",
+    "database": "datahub",
+    "schema": "public",
+    "table": "metadata_aspect_v2"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "data_asset_type": "Dataset",
+  "expectation_suite_name": "harbor_db_suite",
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 0,
+        "max_value": 1000000
+      },
+      "meta": {
+        "notes": "Harbor registry should have reasonable number of artifacts"
+      }
+    },
+    {
+      "expectation_type": "expect_table_columns_to_match_set",
+      "kwargs": {
+        "column_set": [
+          "id",
+          "project_id",
+          "repository_id",
+          "digest",
+          "size",
+          "push_time",
+          "pull_time"
+        ],
+        "exact_match": false
+      },
+      "meta": {
+        "notes": "Core Harbor artifact columns"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "id"
+      },
+      "meta": {
+        "notes": "id is primary key"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_unique",
+      "kwargs": {
+        "column": "id"
+      },
+      "meta": {
+        "notes": "id should be unique"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "digest"
+      },
+      "meta": {
+        "notes": "digest is required for artifacts"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "size",
+        "min_value": 0,
+        "max_value": 10737418240
+      },
+      "meta": {
+        "notes": "Size should be between 0 and 10GB"
+      }
+    }
+  ],
+  "ge_cloud_id": null,
+  "meta": {
+    "great_expectations_version": "0.18.12",
+    "description": "Expectation suite for Harbor database validation",
+    "database": "registry",
+    "schema": "public",
+    "table": "artifact"
+  }
+}

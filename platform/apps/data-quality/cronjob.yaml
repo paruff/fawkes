@@ -1,0 +1,108 @@
+# ============================================================================
+# FILE: platform/apps/data-quality/cronjob.yaml
+# PURPOSE: CronJob for scheduled data quality validation
+# ============================================================================
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: data-quality-validation
+  namespace: fawkes
+  labels:
+    app: data-quality
+    component: cronjob
+spec:
+  # Run every 6 hours
+  schedule: "0 */6 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: data-quality
+            component: job
+        spec:
+          serviceAccountName: data-quality
+          restartPolicy: OnFailure
+          containers:
+            - name: validator
+              image: python:3.11-slim
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  set -e
+                  echo "Installing dependencies..."
+                  pip install -q great-expectations==0.18.12 sqlalchemy==2.0.25 psycopg2-binary==2.9.9 requests==2.31.0
+
+                  echo "Setting up Great Expectations..."
+                  cd /app
+
+                  echo "Running all database checkpoints..."
+                  python3 /app/scripts/run_checkpoint.py all_databases_checkpoint --gx-dir /app/gx --json
+
+                  echo "Data quality validation completed"
+              workingDir: /app
+              env:
+                - name: POSTGRES_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: data-quality-secrets
+                      key: POSTGRES_USER
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: data-quality-secrets
+                      key: POSTGRES_PASSWORD
+                - name: BACKSTAGE_DB_CONNECTION_STRING
+                  valueFrom:
+                    secretKeyRef:
+                      name: data-quality-secrets
+                      key: BACKSTAGE_DB_CONNECTION_STRING
+                - name: HARBOR_DB_CONNECTION_STRING
+                  valueFrom:
+                    secretKeyRef:
+                      name: data-quality-secrets
+                      key: HARBOR_DB_CONNECTION_STRING
+                - name: DATAHUB_DB_CONNECTION_STRING
+                  valueFrom:
+                    secretKeyRef:
+                      name: data-quality-secrets
+                      key: DATAHUB_DB_CONNECTION_STRING
+                - name: DORA_METRICS_DB_CONNECTION_STRING
+                  valueFrom:
+                    secretKeyRef:
+                      name: data-quality-secrets
+                      key: DORA_METRICS_DB_CONNECTION_STRING
+                - name: MATTERMOST_WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: data-quality-secrets
+                      key: MATTERMOST_WEBHOOK_URL
+                - name: ALERT_ON_FAILURE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-quality-config
+                      key: ALERT_ON_FAILURE
+              volumeMounts:
+                - name: gx-config
+                  mountPath: /app/gx
+                - name: scripts
+                  mountPath: /app/scripts
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  cpu: 500m
+                  memory: 512Mi
+          volumes:
+            - name: gx-config
+              configMap:
+                name: gx-full-config
+            - name: scripts
+              configMap:
+                name: gx-scripts
+                defaultMode: 0755

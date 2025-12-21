@@ -1,0 +1,37 @@
+name: all_databases_checkpoint
+config_version: 1.0
+class_name: Checkpoint
+module_name: great_expectations.checkpoint
+
+validations:
+  - batch_request:
+      datasource_name: backstage_db
+      data_connector_name: default_inferred_data_connector
+      data_asset_name: public.refresh_state
+    expectation_suite_name: backstage_db_suite
+  - batch_request:
+      datasource_name: harbor_db
+      data_connector_name: default_inferred_data_connector
+      data_asset_name: public.artifact
+    expectation_suite_name: harbor_db_suite
+  - batch_request:
+      datasource_name: datahub_db
+      data_connector_name: default_inferred_data_connector
+      data_asset_name: public.metadata_aspect_v2
+    expectation_suite_name: datahub_db_suite
+
+action_list:
+  - name: store_validation_result
+    action:
+      class_name: StoreValidationResultAction
+  - name: update_data_docs
+    action:
+      class_name: UpdateDataDocsAction
+  - name: send_alert_on_failure
+    action:
+      class_name: PythonAction
+      module_name: scripts.alert_handler
+      function_name: send_mattermost_alert
+
+evaluation_parameters: {}
+runtime_configuration: {}
