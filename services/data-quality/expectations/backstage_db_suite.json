@@ -54,14 +54,61 @@
       "meta": {
         "notes": "entity_ref is required"
       }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "column": "entity_id",
+        "type_": "VARCHAR"
+      },
+      "meta": {
+        "notes": "entity_id should be VARCHAR/TEXT type"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "hash"
+      },
+      "meta": {
+        "notes": "hash is required for entity versioning"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "entity_ref",
+        "regex": "^[a-z0-9-]+:[a-z0-9-/]+$"
+      },
+      "meta": {
+        "notes": "entity_ref should follow Backstage format (kind:namespace/name)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_type_list",
+      "kwargs": {
+        "column": "final_entity",
+        "type_list": ["TEXT", "VARCHAR", "JSON", "JSONB"]
+      },
+      "meta": {
+        "notes": "final_entity should be text or JSON type"
+      }
     }
   ],
   "ge_cloud_id": null,
   "meta": {
     "great_expectations_version": "0.18.12",
-    "description": "Expectation suite for Backstage database validation",
+    "description": "Comprehensive expectation suite for Backstage database validation",
     "database": "backstage",
     "schema": "public",
-    "table": "refresh_state"
+    "table": "refresh_state",
+    "validations": [
+      "Column presence and types",
+      "Null value constraints on all required fields",
+      "Uniqueness constraints on primary key",
+      "Entity reference format validation",
+      "Data type validations",
+      "Row count sanity checks"
+    ]
   }
 }

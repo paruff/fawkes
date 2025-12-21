@@ -67,14 +67,94 @@
       "meta": {
         "notes": "Size should be between 0 and 10GB"
       }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "column": "id",
+        "type_": "INTEGER"
+      },
+      "meta": {
+        "notes": "id should be INTEGER type"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "column": "size",
+        "type_": "BIGINT"
+      },
+      "meta": {
+        "notes": "size should be BIGINT for large artifacts"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "project_id"
+      },
+      "meta": {
+        "notes": "project_id is required (referential integrity)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "repository_id"
+      },
+      "meta": {
+        "notes": "repository_id is required (referential integrity)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "digest",
+        "regex": "^sha256:[a-f0-9]{64}$"
+      },
+      "meta": {
+        "notes": "digest should be SHA256 hash format"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "push_time"
+      },
+      "meta": {
+        "notes": "push_time should be valid timestamp"
+      }
+    },
+    {
+      "expectation_type": "expect_column_max_to_be_between",
+      "kwargs": {
+        "column": "push_time",
+        "min_value": "2024-01-01",
+        "max_value": "2030-12-31",
+        "parse_strings_as_datetimes": true
+      },
+      "meta": {
+        "notes": "Data freshness - recent artifacts should exist"
+      }
     }
   ],
   "ge_cloud_id": null,
   "meta": {
     "great_expectations_version": "0.18.12",
-    "description": "Expectation suite for Harbor database validation",
+    "description": "Comprehensive expectation suite for Harbor database validation",
     "database": "registry",
     "schema": "public",
-    "table": "artifact"
+    "table": "artifact",
+    "validations": [
+      "Column presence and types",
+      "Null value constraints on required fields",
+      "Uniqueness constraint on primary key",
+      "Value range validation for size (0-10GB)",
+      "Referential integrity (project_id, repository_id)",
+      "Digest format validation (SHA256)",
+      "Timestamp validity",
+      "Data freshness check",
+      "Row count sanity checks"
+    ]
   }
 }
