@@ -1,0 +1,192 @@
+# ============================================================================
+# FILE: platform/apps/weaviate/values.yaml
+# PURPOSE: Helm values for Weaviate vector database deployment
+#          Provides vector search engine for RAG (Retrieval Augmented Generation)
+# ============================================================================
+
+# Weaviate replicas for HA (start with 1 for MVP)
+replicas: 1
+
+# Image configuration
+image:
+  registry: docker.io
+  repository: semitechnologies/weaviate
+  tag: 1.24.1
+  pullPolicy: IfNotPresent
+
+# Resource configuration
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 1
+    memory: 2Gi
+
+# Persistent storage configuration
+persistence:
+  enabled: true
+  size: 10Gi
+  storageClass: standard
+  accessMode: ReadWriteOnce
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+  name: weaviate
+
+# Weaviate configuration
+weaviate:
+  # Enable GraphQL API
+  graphql:
+    enabled: true
+  
+  # Persistence directory
+  persistence:
+    dataPath: /var/lib/weaviate
+  
+  # Authentication (optional - disabled for MVP)
+  authentication:
+    anonymous_access:
+      enabled: true
+  
+  # Query defaults
+  query:
+    defaults:
+      limit: 25
+
+# Environment variables for Weaviate configuration
+env:
+  # Enable text2vec-transformers module
+  ENABLE_MODULES: "text2vec-transformers"
+  
+  # Transformers inference API
+  TRANSFORMERS_INFERENCE_API: "http://t2v-transformers:8080"
+  
+  # Default vectorizer
+  DEFAULT_VECTORIZER_MODULE: "text2vec-transformers"
+  
+  # Persistence
+  PERSISTENCE_DATA_PATH: "/var/lib/weaviate"
+  
+  # Query settings
+  QUERY_DEFAULTS_LIMIT: "25"
+  
+  # Authentication
+  AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+  
+  # Cluster settings
+  CLUSTER_HOSTNAME: "weaviate"
+  CLUSTER_GOSSIP_BIND_PORT: "7100"
+  CLUSTER_DATA_BIND_PORT: "7101"
+
+# text2vec-transformers deployment
+modules:
+  text2vec-transformers:
+    enabled: true
+    replicas: 1
+    image:
+      registry: docker.io
+      repository: semitechnologies/transformers-inference
+      tag: sentence-transformers-all-MiniLM-L6-v2
+      pullPolicy: IfNotPresent
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 1
+        memory: 2Gi
+    service:
+      type: ClusterIP
+      port: 8080
+      name: t2v-transformers
+
+# Ingress configuration (optional)
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+  hosts:
+    - host: weaviate.127.0.0.1.nip.io
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# Service account
+serviceAccount:
+  create: true
+  name: weaviate
+
+# Security context
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: 1000
+  capabilities:
+    drop:
+      - ALL
+  seccompProfile:
+    type: RuntimeDefault
+
+# Health probes
+livenessProbe:
+  httpGet:
+    path: /v1/.well-known/live
+    port: 8080
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  timeoutSeconds: 10
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /v1/.well-known/ready
+    port: 8080
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# Prometheus metrics
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    namespace: fawkes
+    interval: 30s
+    path: /metrics
+
+# Pod disruption budget (for HA)
+podDisruptionBudget:
+  enabled: false  # Enable when replicas > 1
+  minAvailable: 1
+
+# Affinity rules (for HA)
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - weaviate
+          topologyKey: kubernetes.io/hostname
