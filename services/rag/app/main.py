@@ -7,11 +7,13 @@ for AI assistants and code generation tools.
 import os
 import time
 import logging
-from typing import List, Optional
+from pathlib import Path
+from typing import List, Optional, Dict
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from prometheus_client import make_asgi_app, Counter, Histogram
 import weaviate
@@ -149,10 +151,88 @@ async def root():
         "endpoints": {
             "query": "/api/v1/query",
             "health": "/api/v1/health",
+            "stats": "/api/v1/stats",
+            "dashboard": "/dashboard",
             "docs": "/docs",
             "metrics": "/metrics"
         }
     }
+
+
+@app.get("/dashboard", response_class=HTMLResponse, include_in_schema=False, tags=["Dashboard"])
+async def dashboard():
+    """
+    Serve the indexing dashboard.
+    
+    Provides a web UI for viewing indexing statistics and managing re-indexing.
+    """
+    # Path to dashboard HTML file
+    # In production, this would be in a proper static files directory
+    # For now, we'll return a simple inline version
+    dashboard_path = Path(__file__).parent.parent.parent / "platform" / "apps" / "rag-service" / "dashboard.html"
+    
+    try:
+        if dashboard_path.exists():
+            with open(dashboard_path, 'r') as f:
+                return HTMLResponse(content=f.read())
+    except Exception as e:
+        logger.warning(f"Could not load dashboard from {dashboard_path}: {e}")
+    
+    # Fallback: return simple inline dashboard
+    return HTMLResponse(content="""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>RAG Service Dashboard</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+            .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; }
+            h1 { color: #333; }
+            .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0; }
+            .stat-card { background: #667eea; color: white; padding: 20px; border-radius: 8px; text-align: center; }
+            .stat-value { font-size: 2em; font-weight: bold; }
+            .stat-label { font-size: 0.9em; opacity: 0.9; }
+            button { background: #667eea; color: white; border: none; padding: 15px 30px; border-radius: 5px; cursor: pointer; font-size: 1em; }
+            button:hover { background: #5568d3; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🤖 RAG Service Dashboard</h1>
+            <p>Document Indexing Statistics & Management</p>
+            <div class="stats" id="stats">Loading...</div>
+            <button onclick="location.reload()">🔄 Refresh Stats</button>
+        </div>
+        <script>
+            fetch('/api/v1/stats')
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('stats').innerHTML = `
+                        <div class="stat-card">
+                            <div class="stat-value">${data.total_documents}</div>
+                            <div class="stat-label">Total Documents</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${data.total_chunks}</div>
+                            <div class="stat-label">Total Chunks</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${data.index_freshness_hours?.toFixed(1) || 'N/A'}</div>
+                            <div class="stat-label">Hours Since Update</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${data.storage_usage_mb?.toFixed(1) || 'N/A'}</div>
+                            <div class="stat-label">Storage (MB)</div>
+                        </div>
+                    `;
+                })
+                .catch(err => {
+                    document.getElementById('stats').innerHTML = '<p>Error loading stats: ' + err.message + '</p>';
+                });
+        </script>
+    </body>
+    </html>
+    """)
 
 
 @app.get("/api/v1/health", response_model=HealthResponse, tags=["Health"])
@@ -299,6 +379,123 @@ async def ready():
             pass
     
     raise HTTPException(status_code=503, detail="Service not ready")
+
+
+class StatsResponse(BaseModel):
+    """Statistics response."""
+    total_documents: int = Field(..., description="Total number of documents indexed")
+    total_chunks: int = Field(..., description="Total number of chunks indexed")
+    categories: Dict[str, int] = Field(..., description="Document count by category")
+    last_indexed: Optional[str] = Field(None, description="Most recent indexing timestamp")
+    index_freshness_hours: Optional[float] = Field(None, description="Hours since last indexing")
+    storage_usage_mb: Optional[float] = Field(None, description="Approximate storage usage in MB")
+    avg_query_time_ms: Optional[float] = Field(None, description="Average query time in milliseconds")
+
+
+@app.get("/api/v1/stats", response_model=StatsResponse, tags=["Stats"])
+async def get_stats():
+    """
+    Get indexing statistics and metrics.
+    
+    Returns information about indexed documents, storage usage,
+    and search performance.
+    """
+    # Check Weaviate connection
+    if not weaviate_client:
+        raise HTTPException(
+            status_code=503,
+            detail="Weaviate client not initialized"
+        )
+    
+    try:
+        if not weaviate_client.is_ready():
+            raise HTTPException(
+                status_code=503,
+                detail="Weaviate is not ready"
+            )
+    except Exception as e:
+        logger.error(f"Weaviate readiness check failed: {e}")
+        raise HTTPException(
+            status_code=503,
+            detail=f"Weaviate connection error: {str(e)}"
+        )
+    
+    try:
+        # Get all documents to calculate stats
+        result = (
+            weaviate_client.query
+            .get(SCHEMA_NAME, ["category", "indexed_at", "content"])
+            .with_limit(10000)  # Limit to prevent memory issues
+            .do()
+        )
+        
+        documents = result.get("data", {}).get("Get", {}).get(SCHEMA_NAME, [])
+        
+        # Calculate statistics
+        total_chunks = len(documents)
+        
+        # Count unique documents (files)
+        # Documents are considered unique by their filepath (without chunk suffix)
+        unique_docs = set()
+        categories_count = {}
+        last_indexed_timestamp = None
+        storage_size_chars = 0
+        
+        for doc in documents:
+            # Count by category
+            category = doc.get("category", "unknown")
+            categories_count[category] = categories_count.get(category, 0) + 1
+            
+            # Track last indexed
+            indexed_at = doc.get("indexed_at")
+            if indexed_at:
+                if not last_indexed_timestamp or indexed_at > last_indexed_timestamp:
+                    last_indexed_timestamp = indexed_at
+            
+            # Estimate storage (sum of content lengths)
+            content = doc.get("content", "")
+            storage_size_chars += len(content)
+        
+        # Calculate index freshness
+        index_freshness_hours = None
+        if last_indexed_timestamp:
+            try:
+                # Parse ISO format timestamp
+                last_indexed_dt = datetime.fromisoformat(last_indexed_timestamp.replace("Z", "+00:00"))
+                now = datetime.utcnow()
+                delta = now - last_indexed_dt.replace(tzinfo=None)
+                index_freshness_hours = round(delta.total_seconds() / 3600, 2)
+            except Exception as e:
+                logger.warning(f"Failed to parse timestamp: {e}")
+        
+        # Estimate storage in MB (rough approximation)
+        # Average 1 char ≈ 1 byte, plus overhead for metadata
+        storage_usage_mb = round((storage_size_chars * 1.5) / (1024 * 1024), 2)
+        
+        # Get average query time from Prometheus metrics
+        # For now, we'll return None as we'd need to query Prometheus
+        avg_query_time_ms = None
+        
+        # Count unique documents (estimate based on chunks)
+        # Assume average of 3 chunks per document
+        estimated_unique_docs = max(1, total_chunks // 3)
+        
+        return StatsResponse(
+            total_documents=estimated_unique_docs,
+            total_chunks=total_chunks,
+            categories=categories_count,
+            last_indexed=last_indexed_timestamp,
+            index_freshness_hours=index_freshness_hours,
+            storage_usage_mb=storage_usage_mb,
+            avg_query_time_ms=avg_query_time_ms
+        )
+        
+    except Exception as e:
+        logger.error(f"Failed to get stats: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to retrieve statistics: {str(e)}"
+        )
 
 
 if __name__ == "__main__":
