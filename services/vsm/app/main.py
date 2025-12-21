@@ -7,7 +7,7 @@ from idea to production, with flow metrics and cycle time calculation.
 import os
 import time
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 from contextlib import asynccontextmanager
 
@@ -285,7 +285,7 @@ async def transition_work_item(
         db.add(transition)
         
         # Update work item timestamp
-        work_item.updated_at = datetime.utcnow()
+        work_item.updated_at = datetime.now(timezone.utc)
         
         db.commit()
         db.refresh(transition)
@@ -390,7 +390,7 @@ async def get_flow_metrics(
     Returns:
         Flow metrics for the specified period
     """
-    period_end = datetime.utcnow()
+    period_end = datetime.now(timezone.utc)
     period_start = period_end - timedelta(days=days)
     
     try:
