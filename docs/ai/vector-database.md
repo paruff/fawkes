@@ -756,7 +756,7 @@ kubectl exec -n fawkes weaviate-0 -- \
 ## Related Documentation
 
 - [Weaviate Official Documentation](https://weaviate.io/developers/weaviate)
-- [ADR-020: Vector Database Selection](../adr/ADR-020-vector-database.md)
+- [ADR-031: Vector Database Selection](../adr/ADR-031%20Vector%20Database%20Selection.md)
 - [RAG Service README](../../services/rag/README.md)
 - [Platform Architecture](../architecture.md)
 - [Weaviate Application Manifest](../../platform/apps/weaviate-application.yaml)
