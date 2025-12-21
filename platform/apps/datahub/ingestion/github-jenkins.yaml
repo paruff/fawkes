@@ -1,0 +1,291 @@
+# ==============================================================================
+# FILE: platform/apps/datahub/ingestion/github-jenkins.yaml
+# PURPOSE: GitHub repositories and Jenkins jobs ingestion recipe for DataHub
+# USAGE: datahub ingest -c github-jenkins.yaml
+# SCHEDULE: Every 6 hours via CronJob (see cronjob-git-ci-ingestion.yaml)
+# ==============================================================================
+
+# ==============================================================================
+# Part 1: GitHub Repository Ingestion
+# ==============================================================================
+source:
+  type: github
+  config:
+    # GitHub connection
+    # Use personal access token with repo scope
+    github_host: "github.com"
+    token: "${GITHUB_TOKEN}"
+    
+    # Repository patterns
+    # Include all repos from the organization/user
+    repo_pattern:
+      allow:
+        - "paruff/fawkes"
+        - "paruff/.*"  # Include all repos in organization
+      deny:
+        - ".*/.*-archive"  # Exclude archived repos
+        - ".*/.*-deprecated"
+    
+    # What to ingest from GitHub
+    extract_repos: true
+    extract_branches: true
+    extract_commits: true
+    extract_pull_requests: true
+    extract_issues: false  # Optional: Set to true if needed
+    extract_teams: true
+    extract_users: true
+    
+    # Commit extraction settings
+    commit_extraction:
+      # Extract commits from main/master branch
+      branches:
+        - "main"
+        - "master"
+        - "develop"
+      # Limit commit history (days)
+      max_commit_age_days: 90
+      # Extract commit authors and link to users
+      extract_authors: true
+      # Extract commit statistics (additions, deletions)
+      extract_stats: true
+    
+    # Pull Request extraction settings
+    pull_request_extraction:
+      # Extract closed PRs as well
+      include_closed: true
+      # Time window for PRs (days)
+      max_pr_age_days: 90
+      # Extract PR reviews and comments
+      extract_reviews: true
+      extract_comments: false  # Can be expensive
+    
+    # Branch extraction settings
+    branch_extraction:
+      # Include all branches or just main
+      include_all_branches: false
+      # Protected branches only
+      protected_branches_only: true
+      # Extract branch protection rules
+      extract_protection_rules: true
+    
+    # Team and user mapping
+    extract_ownership:
+      # Map repositories to teams
+      from_github_teams: true
+      # Map repositories to users via CODEOWNERS
+      from_codeowners: true
+    
+    # Profiling
+    profiling:
+      enabled: true
+      # Extract repository statistics
+      extract_repo_stats: true
+      extract_language_stats: true
+      extract_contributor_stats: true
+
+# Sink configuration - DataHub GMS endpoint
+sink:
+  type: datahub-rest
+  config:
+    server: "http://datahub-datahub-gms.fawkes.svc:8080"
+    timeout_sec: 60
+    max_retries: 5
+
+# Transformation pipeline
+transformers:
+  # Add GitHub tags
+  - type: simple_add_dataset_tags
+    config:
+      tag_urns:
+        - "urn:li:tag:GitHub"
+        - "urn:li:tag:SourceControl"
+        - "urn:li:tag:Git"
+  
+  # Add ownership
+  - type: simple_add_dataset_ownership
+    config:
+      owner_urns:
+        - "urn:li:corpuser:platform-team"
+      ownership_type: "TECHNICAL_OWNER"
+  
+  # Map to source control domain
+  - type: pattern_add_dataset_domain
+    config:
+      domain_pattern:
+        rules:
+          ".*fawkes.*": "urn:li:domain:platform-engineering"
+          ".*service.*": "urn:li:domain:microservices"
+          ".*infra.*": "urn:li:domain:infrastructure"
+
+# Reporting configuration
+datahub:
+  report_to_datahub: true
+  pipeline_name: "github-6hourly-ingestion"
+  stateful_ingestion:
+    enabled: true
+    remove_stale_metadata: true
+
+---
+# ==============================================================================
+# Part 2: Jenkins CI/CD Jobs Ingestion
+# ==============================================================================
+source:
+  type: jenkins
+  config:
+    # Jenkins connection
+    jenkins_url: "http://jenkins.fawkes.svc.cluster.local:8080"
+    
+    # Authentication
+    username: "${JENKINS_USER}"
+    # Use API token, not password
+    password: "${JENKINS_TOKEN}"
+    
+    # Job extraction settings
+    extract_jobs: true
+    extract_builds: true
+    extract_pipelines: true
+    
+    # Build history settings
+    build_extraction:
+      # How many recent builds to extract per job
+      max_builds_per_job: 50
+      # Time window for builds (days)
+      max_build_age_days: 90
+      # Extract build parameters
+      extract_parameters: true
+      # Extract build artifacts
+      extract_artifacts: true
+      # Extract test results
+      extract_test_results: true
+      # Extract build console logs (metadata only, not full logs)
+      extract_log_metadata: true
+    
+    # Pipeline extraction settings
+    pipeline_extraction:
+      # Extract Jenkinsfile from repo
+      extract_jenkinsfile: true
+      # Parse pipeline stages
+      extract_stages: true
+      # Extract pipeline parameters
+      extract_pipeline_params: true
+    
+    # Job patterns to include/exclude
+    job_pattern:
+      allow:
+        - ".*"  # All jobs
+      deny:
+        - ".*-test-.*"  # Exclude test jobs
+        - ".*-experimental"
+    
+    # Extract job folder structure
+    extract_folders: true
+    
+    # Profiling
+    profiling:
+      enabled: true
+      # Extract job statistics
+      extract_success_rate: true
+      extract_average_duration: true
+      extract_failure_patterns: true
+
+# Sink configuration
+sink:
+  type: datahub-rest
+  config:
+    server: "http://datahub-datahub-gms.fawkes.svc:8080"
+    timeout_sec: 60
+    max_retries: 5
+
+# Transformation pipeline
+transformers:
+  # Add Jenkins tags
+  - type: simple_add_dataset_tags
+    config:
+      tag_urns:
+        - "urn:li:tag:Jenkins"
+        - "urn:li:tag:CICD"
+        - "urn:li:tag:Pipeline"
+        - "urn:li:tag:Automation"
+  
+  # Add platform team ownership
+  - type: simple_add_dataset_ownership
+    config:
+      owner_urns:
+        - "urn:li:corpuser:platform-team"
+      ownership_type: "TECHNICAL_OWNER"
+  
+  # Map to CI/CD domain
+  - type: pattern_add_dataset_domain
+    config:
+      domain_pattern:
+        rules:
+          ".*deploy.*": "urn:li:domain:deployment"
+          ".*build.*": "urn:li:domain:build"
+          ".*test.*": "urn:li:domain:testing"
+
+# Lineage extraction configuration
+# Link Jenkins jobs to GitHub repositories
+lineage:
+  # Extract lineage from Jenkins job configuration
+  extract_from_job_config: true
+  
+  # Link jobs to source repositories
+  link_jobs_to_repos:
+    enabled: true
+    # Parse SCM configuration to find repo URLs
+    extract_scm_urls: true
+    # Map Jenkins jobs to GitHub repos
+    repo_url_pattern: "https://github.com/(.*?)/(.*?)(.git)?"
+  
+  # Link pipelines to their stages
+  link_pipeline_stages:
+    enabled: true
+    # Extract upstream/downstream job relationships
+    extract_job_dependencies: true
+  
+  # Link builds to artifacts
+  link_builds_to_artifacts:
+    enabled: true
+    # Link to Harbor container images if pushed
+    link_to_container_registry: true
+
+# Reporting configuration
+datahub:
+  report_to_datahub: true
+  pipeline_name: "jenkins-6hourly-ingestion"
+  stateful_ingestion:
+    enabled: true
+    remove_stale_metadata: true
+
+# DORA metrics extraction
+# Extract DORA metrics from Jenkins builds
+dora_metrics:
+  enabled: true
+  
+  # Deployment frequency
+  deployment_frequency:
+    # Jobs that represent deployments
+    deployment_job_pattern: ".*deploy.*"
+    # Calculate frequency per environment
+    calculate_per_environment: true
+  
+  # Lead time for changes
+  lead_time:
+    # Extract from commit to deployment
+    extract_commit_to_deploy: true
+    # Link to GitHub commits
+    link_to_github_commits: true
+  
+  # Change failure rate
+  change_failure_rate:
+    # Jobs that rollback or fix issues
+    failure_job_pattern: ".*rollback.*|.*hotfix.*"
+    # Calculate rate per service
+    calculate_per_service: true
+  
+  # Mean time to recovery
+  mttr:
+    # Extract from failure detection to recovery
+    extract_failure_to_recovery: true
+    # Link to incident management (future)
+    link_to_incidents: false

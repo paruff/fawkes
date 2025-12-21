@@ -34,6 +34,27 @@ Default credentials (MVP):
 
 ### Ingest Metadata
 
+#### Automated Ingestion (Recommended)
+
+Automated ingestion is configured via CronJobs:
+- **PostgreSQL** (Backstage, Harbor, SonarQube): Daily at 2 AM UTC
+- **Kubernetes resources**: Hourly
+- **GitHub & Jenkins**: Every 6 hours
+
+CronJobs are automatically deployed. See `ingestion/README.md` for details.
+
+```bash
+# Check ingestion job status
+kubectl get cronjobs -n fawkes -l component=ingestion
+
+# View recent job logs
+kubectl logs -n fawkes -l component=ingestion,source=postgres --tail=100
+```
+
+#### Manual Ingestion
+
+For manual or one-time ingestion:
+
 1. Install DataHub CLI:
 ```bash
 pip install 'acryl-datahub[all]'
@@ -41,14 +62,25 @@ pip install 'acryl-datahub[all]'
 
 2. Set credentials:
 ```bash
-export POSTGRES_USER="backstage_user"
-export POSTGRES_PASSWORD="your-password"
+export POSTGRES_BACKSTAGE_USER="backstage_user"
+export POSTGRES_BACKSTAGE_PASSWORD="your-password"
 ```
 
 3. Run ingestion:
 ```bash
-datahub ingest -c postgres-ingestion-recipe.yml
+# PostgreSQL databases
+datahub ingest -c ingestion/postgres.yaml
+
+# Kubernetes resources
+datahub ingest -c ingestion/kubernetes.yaml
+
+# GitHub and Jenkins
+export GITHUB_TOKEN="your-token"
+export JENKINS_TOKEN="your-token"
+datahub ingest -c ingestion/github-jenkins.yaml
 ```
+
+See `ingestion/README.md` for comprehensive ingestion documentation.
 
 ## Key Features
 

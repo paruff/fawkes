@@ -113,3 +113,59 @@ Feature: DataHub Data Catalog Deployment
     Then the search must return relevant results
     And I must be able to navigate to the dataset details page
     And I must see the schema, description, and other metadata
+
+  @ingestion-automation @cronjobs @AT-E2-003
+  Scenario: Automated Metadata Ingestion
+    Given DataHub is deployed and running
+    When I check for ingestion CronJobs
+    Then the PostgreSQL ingestion CronJob must exist with daily schedule
+    And the Kubernetes ingestion CronJob must exist with hourly schedule
+    And the Git/CI ingestion CronJob must exist with 6-hour schedule
+    And all CronJobs must have proper RBAC configuration
+    And ingestion credentials must be configured in Secrets
+
+  @ingestion-postgres @metadata-extraction
+  Scenario: PostgreSQL Metadata Ingestion
+    Given DataHub is deployed and running
+    And PostgreSQL databases exist (Backstage, Harbor, SonarQube)
+    When the PostgreSQL ingestion job runs
+    Then database schemas must be ingested into DataHub
+    And table metadata must be visible in the UI
+    And column definitions and data types must be captured
+    And relationships between tables must be extracted
+
+  @ingestion-kubernetes @resource-tracking
+  Scenario: Kubernetes Resources Ingestion
+    Given DataHub is deployed and running
+    And Kubernetes resources exist in platform namespaces
+    When the Kubernetes ingestion job runs
+    Then Deployments, Services, and ConfigMaps must be ingested
+    And ownership annotations must be extracted and linked to Backstage
+    And resource relationships must be tracked
+    And Kubernetes resources must be searchable in DataHub
+
+  @ingestion-git-ci @pipeline-lineage
+  Scenario: GitHub and Jenkins Metadata Ingestion
+    Given DataHub is deployed and running
+    And GitHub repositories and Jenkins jobs exist
+    When the Git/CI ingestion job runs
+    Then GitHub repositories must be ingested with branches and commits
+    And Jenkins jobs must be ingested with build history
+    And pipeline lineage must link jobs to repositories
+    And DORA metrics data must be extracted from builds
+
+  @metadata-lineage @end-to-end
+  Scenario: End-to-End Metadata Lineage Visibility
+    Given DataHub is deployed and running
+    And all ingestion jobs have completed successfully
+    When I navigate to a service in the DataHub UI
+    Then I must see lineage showing:
+      | Source Type | Example |
+      | Database Tables | PostgreSQL tables used by the service |
+      | GitHub Repository | Source code repository |
+      | Jenkins Pipeline | CI/CD pipeline that builds the service |
+      | Container Image | Docker image in Harbor registry |
+      | Kubernetes Resources | Deployment and Service in K8s |
+    And the lineage graph must show upstream and downstream dependencies
+    And I must be able to navigate between related entities
+
