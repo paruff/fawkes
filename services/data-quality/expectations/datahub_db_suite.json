@@ -57,14 +57,95 @@
       "meta": {
         "notes": "URN should follow DataHub format"
       }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "version"
+      },
+      "meta": {
+        "notes": "version is required for aspect versioning"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "column": "version",
+        "type_": "BIGINT"
+      },
+      "meta": {
+        "notes": "version should be BIGINT/INTEGER type"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "version",
+        "min_value": 0,
+        "max_value": 999999999
+      },
+      "meta": {
+        "notes": "version should be non-negative and within reasonable range"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_type_list",
+      "kwargs": {
+        "column": "metadata",
+        "type_list": ["TEXT", "VARCHAR", "JSON", "JSONB"]
+      },
+      "meta": {
+        "notes": "metadata should be text or JSON type"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "createdon"
+      },
+      "meta": {
+        "notes": "createdon should be valid timestamp"
+      }
+    },
+    {
+      "expectation_type": "expect_column_max_to_be_between",
+      "kwargs": {
+        "column": "createdon",
+        "min_value": "2024-01-01",
+        "max_value": "2030-12-31",
+        "parse_strings_as_datetimes": true
+      },
+      "meta": {
+        "notes": "Data freshness - recent metadata should exist"
+      }
+    },
+    {
+      "expectation_type": "expect_compound_columns_to_be_unique",
+      "kwargs": {
+        "column_list": ["urn", "aspect", "version"]
+      },
+      "meta": {
+        "notes": "Composite uniqueness constraint for URN + aspect + version"
+      }
     }
   ],
   "ge_cloud_id": null,
   "meta": {
     "great_expectations_version": "0.18.12",
-    "description": "Expectation suite for DataHub database validation",
+    "description": "Comprehensive expectation suite for DataHub database validation",
     "database": "datahub",
     "schema": "public",
-    "table": "metadata_aspect_v2"
+    "table": "metadata_aspect_v2",
+    "validations": [
+      "Column presence and types",
+      "Null value constraints on required fields",
+      "URN format validation (DataHub standard)",
+      "Version range and type validation",
+      "Composite uniqueness constraint",
+      "Metadata type validation",
+      "Timestamp validity",
+      "Data freshness check",
+      "Row count sanity checks"
+    ]
   }
 }

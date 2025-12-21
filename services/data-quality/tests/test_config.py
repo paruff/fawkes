@@ -53,6 +53,7 @@ class TestGreatExpectationsConfig:
         assert "harbor_db" in datasources
         assert "datahub_db" in datasources
         assert "dora_metrics_db" in datasources
+        assert "sonarqube_db" in datasources
 
 
 class TestExpectationSuites:
@@ -64,7 +65,8 @@ class TestExpectationSuites:
             "backstage_db_suite.json",
             "harbor_db_suite.json",
             "datahub_db_suite.json",
-            "dora_metrics_suite.json"
+            "dora_metrics_suite.json",
+            "sonarqube_db_suite.json"
         ]
         
         for suite_file in suites:
@@ -105,6 +107,8 @@ class TestCheckpoints:
             "backstage_db_checkpoint.yml",
             "harbor_db_checkpoint.yml",
             "datahub_db_checkpoint.yml",
+            "dora_metrics_checkpoint.yml",
+            "sonarqube_db_checkpoint.yml",
             "all_databases_checkpoint.yml"
         ]
         
@@ -132,11 +136,13 @@ class TestCheckpoints:
         validations = checkpoint["validations"]
         datasources = [v["batch_request"]["datasource_name"] for v in validations]
         
-        # Should have at least 3 datasources (backstage, harbor, datahub)
-        assert len(datasources) >= 3
+        # Should have all 5 datasources (backstage, harbor, datahub, dora, sonarqube)
+        assert len(datasources) >= 5
         assert "backstage_db" in datasources
         assert "harbor_db" in datasources
         assert "datahub_db" in datasources
+        assert "dora_metrics_db" in datasources
+        assert "sonarqube_db" in datasources
 
 
 class TestAlertConfiguration:

@@ -185,6 +185,14 @@ test_datasources() {
         info "DataHub database cluster not found (may not be deployed yet)"
     fi
     
+    # Check SonarQube DB
+    run_test
+    if kubectl get cluster db-sonarqube-dev -n "$NAMESPACE" &> /dev/null; then
+        pass "SonarQube database cluster exists"
+    else
+        info "SonarQube database cluster not found (may not be deployed yet)"
+    fi
+    
     echo ""
 }
 
@@ -221,6 +229,13 @@ test_expectation_suites() {
         pass "DORA metrics expectation suite exists"
     else
         fail "DORA metrics expectation suite not found in ConfigMap"
+    fi
+    
+    run_test
+    if kubectl get configmap gx-full-config -n "$NAMESPACE" -o jsonpath='{.data}' | grep -q "sonarqube_db_suite.json"; then
+        pass "SonarQube expectation suite exists"
+    else
+        fail "SonarQube expectation suite not found in ConfigMap"
     fi
     
     echo ""
@@ -281,6 +296,20 @@ test_checkpoints() {
         pass "All databases checkpoint exists"
     else
         fail "All databases checkpoint not found"
+    fi
+    
+    run_test
+    if kubectl get configmap gx-full-config -n "$NAMESPACE" -o jsonpath='{.data}' | grep -q "dora_metrics_checkpoint.yml"; then
+        pass "DORA metrics checkpoint exists"
+    else
+        fail "DORA metrics checkpoint not found"
+    fi
+    
+    run_test
+    if kubectl get configmap gx-full-config -n "$NAMESPACE" -o jsonpath='{.data}' | grep -q "sonarqube_db_checkpoint.yml"; then
+        pass "SonarQube checkpoint exists"
+    else
+        fail "SonarQube checkpoint not found"
     fi
     
     echo ""
