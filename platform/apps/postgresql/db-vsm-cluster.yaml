@@ -1,0 +1,105 @@
+# ============================================================================
+# FILE: platform/apps/postgresql/db-vsm-cluster.yaml
+# PURPOSE: CloudNativePG Cluster custom resource for VSM database
+#          with HA (3 replicas), automated failover, TLS, and backup config.
+# NAMING: Following convention db-{service}-{environment}
+# ============================================================================
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: db-vsm-dev
+  namespace: fawkes
+  labels:
+    app: vsm-service
+    component: database
+    environment: dev
+    team: platform
+spec:
+  # HA Configuration: 1 primary + 2 replicas
+  instances: 3
+
+  # PostgreSQL version and image
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.4
+
+  # Primary update strategy for rolling updates
+  primaryUpdateStrategy: unsupervised
+
+  # PostgreSQL configuration
+  postgresql:
+    parameters:
+      # Connection settings
+      max_connections: "200"
+      shared_buffers: "256MB"
+      effective_cache_size: "768MB"
+      maintenance_work_mem: "128MB"
+      checkpoint_completion_target: "0.9"
+      wal_buffers: "16MB"
+      default_statistics_target: "100"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "200"
+      min_wal_size: "1GB"
+      max_wal_size: "4GB"
+      # Logging
+      log_statement: "ddl"
+      log_min_duration_statement: "1000"
+      # Security
+      password_encryption: "scram-sha-256"
+    pg_hba:
+      # Allow TLS connections from the cluster
+      - host all all 10.0.0.0/8 scram-sha-256
+      - host all all 172.16.0.0/12 scram-sha-256
+      - host all all 192.168.0.0/16 scram-sha-256
+      # Allow replication
+      - host replication streaming_replica all scram-sha-256
+
+  # Database bootstrap configuration
+  bootstrap:
+    initdb:
+      database: vsm_db
+      owner: vsm_user
+      secret:
+        name: db-vsm-credentials
+      postInitSQL:
+        - CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+        - CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+  # Storage configuration
+  storage:
+    size: 10Gi
+    storageClass: standard
+
+  # Resource limits and requests - optimized for 70% target
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  # Affinity rules for HA - spread pods across nodes
+  affinity:
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: preferred
+
+  # Enable monitoring
+  monitoring:
+    enablePodMonitor: true
+    customQueriesConfigMap:
+      - name: cnpg-default-monitoring
+        key: queries
+
+  # Failover configuration
+  failoverDelay: 30
+  switchoverDelay: 60
+
+  # Managed services configuration
+  managed:
+    services:
+      # Read-write service (primary)
+      primary:
+        enabled: true
+      # Read-only service (replicas)
+      ro:
+        enabled: true
