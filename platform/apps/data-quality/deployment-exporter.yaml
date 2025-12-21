@@ -29,6 +29,9 @@ spec:
       containers:
         - name: exporter
           image: python:3.11-slim
+          # Note: Dependencies are installed at runtime for simplicity in this deployment
+          # For production, consider creating a custom Docker image with pre-installed dependencies
+          # or using an init container for better reliability and faster startup times
           command:
             - /bin/bash
             - -c
