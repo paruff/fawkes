@@ -1,0 +1,129 @@
+# ==============================================================================
+# FILE: platform/apps/datahub/postgres-ingestion-recipe.yml
+# PURPOSE: Sample DataHub ingestion recipe for PostgreSQL metadata
+# USAGE: datahub ingest -c postgres-ingestion-recipe.yml
+# ==============================================================================
+
+# Source configuration for PostgreSQL
+source:
+  type: postgres
+  config:
+    # Connection details
+    host_port: "db-backstage-dev-rw.fawkes.svc.cluster.local:5432"
+    database: "backstage_db"
+    
+    # Credentials (use environment variables for security)
+    username: "${POSTGRES_USER}"
+    password: "${POSTGRES_PASSWORD}"
+    
+    # What to include
+    include_tables: true
+    include_views: true
+    
+    # Schema filtering (optional)
+    # schema_pattern:
+    #   allow:
+    #     - "public"
+    #   deny:
+    #     - "information_schema"
+    #     - "pg_catalog"
+    
+    # Table filtering (optional)
+    # table_pattern:
+    #   allow:
+    #     - ".*"
+    #   deny:
+    #     - ".*_tmp"
+    #     - ".*_backup"
+    
+    # Profiling configuration
+    profiling:
+      enabled: true
+      profile_table_level_only: false
+      max_workers: 4
+      
+      # Statistics to collect
+      row_count: true
+      column_count: true
+      unique_count: true
+      null_count: true
+      
+      # Sample queries
+      include_field_null_count: true
+      include_field_distinct_count: true
+      include_field_min_value: true
+      include_field_max_value: true
+      include_field_mean_value: true
+      include_field_median_value: true
+      include_field_stddev_value: true
+      include_field_quantiles: false
+      
+      # Sampling configuration
+      sample_size: 1000
+      sample_values: true
+    
+    # Metadata extraction options
+    domain:
+      # Map tables to business domains
+      "public.services": "Engineering"
+      "public.users": "User Management"
+      "public.catalog": "Product Catalog"
+    
+    # Add default tags
+    # tags:
+    #   - "backstage"
+    #   - "production"
+
+# Sink configuration - where to send metadata
+sink:
+  type: datahub-rest
+  config:
+    server: "http://datahub-datahub-gms.fawkes.svc:8080"
+    # For external access (outside cluster):
+    # server: "http://datahub.127.0.0.1.nip.io/api"
+    
+    # Authentication (if enabled)
+    # token: "${DATAHUB_TOKEN}"
+    
+    # Extra headers (optional)
+    # extra_headers:
+    #   X-Custom-Header: value
+    
+    # Timeout configuration
+    timeout_sec: 30
+    
+    # Retry configuration
+    max_retries: 3
+    retry_backoff_multiplier: 2
+
+# Transformation pipeline (optional)
+# transformers:
+#   - type: simple_add_dataset_tags
+#     config:
+#       tag_urns:
+#         - "urn:li:tag:PostgreSQL"
+#         - "urn:li:tag:Backstage"
+#   
+#   - type: simple_add_dataset_ownership
+#     config:
+#       owner_urns:
+#         - "urn:li:corpuser:platform-team"
+#       ownership_type: "TECHNICAL_OWNER"
+#   
+#   - type: pattern_add_dataset_domain
+#     config:
+#       domain_pattern:
+#         rules:
+#           ".*\.users.*": "urn:li:domain:user-management"
+#           ".*\.catalog.*": "urn:li:domain:product-catalog"
+
+# Reporting configuration
+datahub:
+  # Report ingestion progress
+  report_to_datahub: true
+  
+  # Pipeline name
+  pipeline_name: "postgres-backstage-ingestion"
+  
+  # Dry run mode (for testing)
+  # dry_run: true
