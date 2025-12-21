@@ -284,3 +284,96 @@ def test_openapi_docs(client):
     assert "openapi" in schema
     assert "/api/v1/query" in schema["paths"]
     assert "/api/v1/health" in schema["paths"]
+
+
+def test_stats_endpoint_no_weaviate(client):
+    """Test stats endpoint when Weaviate is not connected."""
+    with patch("app.main.weaviate_client", None):
+        response = client.get("/api/v1/stats")
+        assert response.status_code == 503
+        assert "Weaviate client not initialized" in response.json()["detail"]
+
+
+def test_stats_endpoint_with_data(client, mock_weaviate_client):
+    """Test stats endpoint with data."""
+    # Mock query response with documents
+    mock_query = MagicMock()
+    mock_query.get.return_value = mock_query
+    mock_query.with_limit.return_value = mock_query
+    mock_query.do.return_value = {
+        "data": {
+            "Get": {
+                SCHEMA_NAME: [
+                    {
+                        "category": "doc",
+                        "indexed_at": "2024-12-21T14:00:00Z",
+                        "content": "Test content 1" * 100  # Longer content
+                    },
+                    {
+                        "category": "doc",
+                        "indexed_at": "2024-12-21T15:00:00Z",
+                        "content": "Test content 2" * 100
+                    },
+                    {
+                        "category": "code",
+                        "indexed_at": "2024-12-21T14:30:00Z",
+                        "content": "Test code" * 100
+                    }
+                ]
+            }
+        }
+    }
+    
+    mock_weaviate_client.query = mock_query
+    
+    with patch("app.main.weaviate_client", mock_weaviate_client):
+        response = client.get("/api/v1/stats")
+        
+        assert response.status_code == 200
+        data = response.json()
+        
+        # Verify stats structure
+        assert "total_documents" in data
+        assert "total_chunks" in data
+        assert "categories" in data
+        assert "last_indexed" in data
+        assert "index_freshness_hours" in data
+        assert "storage_usage_mb" in data
+        
+        # Verify data
+        assert data["total_chunks"] == 3
+        assert data["categories"]["doc"] == 2
+        assert data["categories"]["code"] == 1
+        assert data["last_indexed"] == "2024-12-21T15:00:00Z"
+        assert data["storage_usage_mb"] >= 0  # Can be 0 for small content
+
+
+def test_stats_endpoint_empty_database(client, mock_weaviate_client):
+    """Test stats endpoint with empty database."""
+    # Mock query response with no documents
+    mock_query = MagicMock()
+    mock_query.get.return_value = mock_query
+    mock_query.with_limit.return_value = mock_query
+    mock_query.do.return_value = {
+        "data": {"Get": {SCHEMA_NAME: []}}
+    }
+    
+    mock_weaviate_client.query = mock_query
+    
+    with patch("app.main.weaviate_client", mock_weaviate_client):
+        response = client.get("/api/v1/stats")
+        
+        assert response.status_code == 200
+        data = response.json()
+        
+        assert data["total_chunks"] == 0
+        assert data["categories"] == {}
+        assert data["last_indexed"] is None
+
+
+def test_dashboard_endpoint(client):
+    """Test dashboard endpoint returns HTML."""
+    response = client.get("/dashboard")
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+    assert "RAG Service" in response.text or "Dashboard" in response.text
