@@ -521,7 +521,10 @@ async def list_stages(db: Session = Depends(get_db)):
             id=stage.id,
             name=stage.name,
             order=stage.order,
-            type=stage.type
+            type=stage.type,
+            category=stage.category,
+            wip_limit=stage.wip_limit,
+            description=stage.description
         )
         for stage in stages
     ]

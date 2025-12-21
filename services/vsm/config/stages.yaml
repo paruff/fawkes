@@ -1,0 +1,84 @@
+# Value Stream Stages Configuration
+# Defines stages for tracking work items from idea to production
+
+stages:
+  - name: Backlog
+    type: wait
+    order: 1
+    wip_limit: null  # No limit for backlog
+    description: >
+      Work items waiting to be analyzed and prioritized.
+      Items enter the value stream here before being pulled into active work.
+    
+  - name: Design
+    type: active
+    order: 2
+    wip_limit: 5
+    description: >
+      Active design and analysis phase where requirements are refined,
+      architecture is designed, and implementation approach is planned.
+      Includes creating design documents, user stories, and acceptance criteria.
+    
+  - name: Development
+    type: active
+    order: 3
+    wip_limit: 10
+    description: >
+      Active implementation phase where code is written, unit tests are created,
+      and features are implemented according to design specifications.
+      Developers work on assigned work items in this stage.
+    
+  - name: Code Review
+    type: wait
+    order: 4
+    wip_limit: 8
+    description: >
+      Work items waiting for peer review. Code changes are reviewed for quality,
+      security, maintainability, and adherence to standards. This is a wait state
+      while reviewers provide feedback.
+    
+  - name: Testing
+    type: active
+    order: 5
+    wip_limit: 8
+    description: >
+      Active testing phase including integration testing, acceptance testing,
+      and quality assurance. QA team validates functionality against requirements
+      and identifies any defects.
+    
+  - name: Deployment Approval
+    type: wait
+    order: 6
+    wip_limit: 5
+    description: >
+      Work items waiting for deployment approval from stakeholders or release managers.
+      This gate ensures proper change management and coordination before production deployment.
+    
+  - name: Deploy
+    type: active
+    order: 7
+    wip_limit: 3
+    description: >
+      Active deployment phase where changes are rolled out to production.
+      Includes deployment execution, smoke testing, and initial monitoring
+      to ensure successful release.
+    
+  - name: Production
+    type: done
+    order: 8
+    wip_limit: null  # No limit for completed items
+    description: >
+      Work items successfully deployed and running in production.
+      This is the final stage indicating value delivery to end users.
+      Items in this stage contribute to throughput metrics.
+
+# Stage type definitions:
+# - wait: Items are idle, waiting for someone else (increases lead time)
+# - active: Items are being actively worked on (increases cycle time)
+# - done: Items are completed and delivered (no longer in WIP)
+
+# WIP (Work In Progress) limits:
+# - Prevents overloading teams and reduces multitasking
+# - Forces flow and identifies bottlenecks
+# - null means no limit (typically for Backlog and Production)
+# - Lower limits for deployment stages to control risk

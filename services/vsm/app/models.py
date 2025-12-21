@@ -31,6 +31,13 @@ class StageType(str, enum.Enum):
     PRODUCTION = "production"
 
 
+class StageCategory(str, enum.Enum):
+    """Stage category types for flow metrics."""
+    WAIT = "wait"
+    ACTIVE = "active"
+    DONE = "done"
+
+
 class WorkItem(Base):
     """Work item model."""
     __tablename__ = "work_items"
@@ -53,6 +60,9 @@ class Stage(Base):
     name = Column(String(100), unique=True, nullable=False, index=True)
     order = Column(Integer, nullable=False)
     type = Column(SQLEnum(StageType), nullable=False)
+    category = Column(SQLEnum(StageCategory), nullable=True)  # wait/active/done for flow metrics
+    wip_limit = Column(Integer, nullable=True)  # Work in progress limit, NULL means no limit
+    description = Column(String(1000), nullable=True)  # Stage description
     created_at = Column(DateTime, default=utcnow, nullable=False)
     
     # Relationships
