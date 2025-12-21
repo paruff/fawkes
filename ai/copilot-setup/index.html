@@ -1,0 +1,5037 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Internal Developer Platform for Elite Performance">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>GitHub Copilot Setup Guide - Fawkes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#github-copilot-setup-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Fawkes" class="md-header__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fawkes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              GitHub Copilot Setup Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorials/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../how-to/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../explanation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Explanation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../playbooks/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Playbooks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Fawkes" class="md-nav__button md-logo" aria-label="Fawkes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fawkes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tutorials/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/1-deploy-first-service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Deploy Your First Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/2-add-tracing-tempo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Add Distributed Tracing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/3-consume-vault-secret/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Consume Vault Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/4-buildpack-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Migrate to Buildpacks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/5-create-golden-path-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Create a Golden Path Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/6-measure-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Measure DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dojo Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dojo Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/white-belt/module-01-what-is-idp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    White Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/yellow-belt/module-05-ci-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yellow Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/green-belt/module-09-gitops-argocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Green Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/brown-belt/module-13-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brown Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dojo/modules/black-belt/module-17-platform-product/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Black Belt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../how-to/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GitOps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/gitops/onboard-service-argocd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Onboard Service to ArgoCD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/gitops/sync-argocd-app/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync ArgoCD Application
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/observability/trace-request-tempo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trace Requests with Tempo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/observability/view-dora-metrics-devlake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    View DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/security/rotate-vault-secrets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rotate Vault Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/development/debug-buildpack-failure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/techdocs-usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using TechDocs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/networking/configure-ingress-tls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Ingress with TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Policy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/policy/troubleshoot-kyverno-violation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshoot Kyverno Violations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../patterns/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Patterns
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Patterns
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/continuous-delivery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Continuous Delivery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/infrastructure-as-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infrastructure as Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patterns/test-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../explanation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explanation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Explanation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/gitops-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Containers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/containers/buildpacks-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Buildpacks Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/security/zero-trust-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zero Trust Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/observability/unified-telemetry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unified Telemetry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IDP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IDP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/idp/product-discovery-delivery-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Discovery & Delivery Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Governance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/governance/policy-as-code-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policy as Code Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../business_case/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Business Case
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../capabilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/backstage-plugins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backstage Plugins API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/jenkins-webhook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins Webhook API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CRDs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CRDs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/crds/golden-path-crd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Golden Path Devfile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Configuration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/config/jenkins-values/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins Helm Values
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/config/prometheus-values/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus Helm Values
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policies
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Policies
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/policies/kyverno-policy-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kyverno Policy List
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_6" id="__nav_6_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Catalog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Catalog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/catalogue/service-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_8" id="__nav_6_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/spinnaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spinnaker (Deprecated)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--deprecated"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/jenkins/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/prometheus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prometheus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/focalboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Focalboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../playbooks/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playbooks
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playbooks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playbooks/TEMPLATE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playbooks/dora-metrics-implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DORA Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#organization-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Organization Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Organization Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-enable-github-copilot-for-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Enable GitHub Copilot for Organization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-configure-user-access-and-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Configure User Access and Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ide-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IDE Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IDE Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vscode-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VSCode Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intellij-idea-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IntelliJ IDEA Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vimneovim-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vim/Neovim Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-rag-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with RAG System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration with RAG System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-1-workspace-context-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach 1: Workspace Context (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-2-comment-based-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach 2: Comment-Based Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-3-rag-query-tool-custom-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach 3: RAG Query Tool (Custom Integration)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-4-custom-copilot-instructions-future" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach 4: Custom Copilot Instructions (Future)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-code-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Code Completion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Code Completion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-1-basic-code-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test 1: Basic Code Completion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-2-contextual-suggestions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test 2: Contextual Suggestions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-3-code-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test 3: Code Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Security Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-code-quality-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Code Quality Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-productivity-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Productivity Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-privacy-and-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Privacy and Compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-and-known-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitations and Known Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations and Known Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Limitations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-telemetry-opt-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Telemetry (Opt-in)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#copilot-not-suggesting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copilot Not Suggesting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#suggestions-not-relevant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suggestions Not Relevant
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Resources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Additional Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training-and-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Training and Support
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FAQ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-is-my-code-sent-to-githubopenai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Is my code sent to GitHub/OpenAI?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-use-copilot-for-proprietaryconfidential-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I use Copilot for proprietary/confidential code?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-copilot-suggests-copyrighted-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if Copilot suggests copyrighted code?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-how-accurate-is-copilot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: How accurate is Copilot?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-customize-copilot-for-fawkes-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I customize Copilot for Fawkes conventions?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-does-copilot-replace-code-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Does Copilot replace code review?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-how-do-i-report-problematic-suggestions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: How do I report problematic suggestions?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-use-copilot-offline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I use Copilot offline?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="github-copilot-setup-guide">GitHub Copilot Setup Guide</h1>
+<h2 id="overview">Overview</h2>
+<p>GitHub Copilot is an AI-powered coding assistant that helps developers write code faster and with fewer errors. This guide covers setup, configuration, and integration with Fawkes' internal RAG (Retrieval Augmented Generation) system.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>GitHub account with Copilot access</li>
+<li>Appropriate IDE (VSCode, IntelliJ IDEA, or Vim/Neovim)</li>
+<li>Organization admin access (for org-level setup)</li>
+</ul>
+<h2 id="organization-setup">Organization Setup</h2>
+<h3 id="1-enable-github-copilot-for-organization">1. Enable GitHub Copilot for Organization</h3>
+<p><strong>For Organization Admins:</strong></p>
+<ol>
+<li>Navigate to your organization settings: <code>https://github.com/organizations/[YOUR-ORG]/settings/copilot</code></li>
+<li>Click <strong>"Enable GitHub Copilot"</strong></li>
+<li>Configure access policies:</li>
+<li><strong>Allowed for</strong>: Select teams or all organization members</li>
+<li><strong>Public code matching</strong>: Enable/disable suggestions matching public code</li>
+<li>
+<p><strong>Block suggestions</strong>: Configure to block suggestions matching public code (recommended for security)</p>
+</li>
+<li>
+<p>Review and configure policies:
+   <div class="highlight"><pre><span></span><code>Settings → Copilot → Policies
+- Enable/Disable for all members
+- Allow/Block public code suggestions
+- Configure content exclusions (optional)
+</code></pre></div></p>
+</li>
+<li>
+<p>Set up billing:</p>
+</li>
+<li>Navigate to <strong>Billing and Plans</strong></li>
+<li>Add payment method</li>
+<li>Confirm Copilot subscription for users</li>
+</ol>
+<h3 id="2-configure-user-access-and-permissions">2. Configure User Access and Permissions</h3>
+<p><strong>Access Levels:</strong></p>
+<ul>
+<li><strong>Full Access</strong>: All features including code completion and chat</li>
+<li><strong>Limited Access</strong>: Code completion only</li>
+<li><strong>No Access</strong>: Copilot disabled</li>
+</ul>
+<p><strong>Grant Access:</strong></p>
+<ol>
+<li>Go to Organization Settings → Copilot → Access</li>
+<li>Add users or teams</li>
+<li>Set permission level</li>
+<li>Save changes</li>
+</ol>
+<p><strong>Team-based Access (Recommended):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Example: Grant access to development team</span>
+Settings<span class="w"> </span>→<span class="w"> </span>Copilot<span class="w"> </span>→<span class="w"> </span>Access<span class="w"> </span>→<span class="w"> </span>Add<span class="w"> </span>teams
+Select:<span class="w"> </span>@org/developers
+Permission:<span class="w"> </span>Full<span class="w"> </span>Access
+</code></pre></div>
+<h2 id="ide-setup">IDE Setup</h2>
+<h3 id="vscode-setup">VSCode Setup</h3>
+<p><strong>Installation:</strong></p>
+<ol>
+<li>Open VSCode</li>
+<li>Go to Extensions (Ctrl+Shift+X / Cmd+Shift+X)</li>
+<li>Search for "GitHub Copilot"</li>
+<li>Install both:</li>
+<li><strong>GitHub Copilot</strong> (code completion)</li>
+<li><strong>GitHub Copilot Chat</strong> (conversational AI)</li>
+</ol>
+<p><strong>Configuration:</strong></p>
+<ol>
+<li>Sign in to GitHub:</li>
+<li>Click <strong>Accounts</strong> icon (bottom left)</li>
+<li>Select <strong>Sign in with GitHub</strong></li>
+<li>
+<p>Authorize VSCode</p>
+</li>
+<li>
+<p>Configure settings (<code>settings.json</code>):</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Enable Copilot</span>
+<span class="w">  </span><span class="nt">&quot;github.copilot.enable&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;*&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;yaml&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;markdown&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;terraform&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">},</span>
+
+<span class="w">  </span><span class="c1">// Copilot behavior</span>
+<span class="w">  </span><span class="nt">&quot;github.copilot.editor.enableAutoCompletions&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;github.copilot.editor.enableCodeActions&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+
+<span class="w">  </span><span class="c1">// Advanced settings</span>
+<span class="w">  </span><span class="nt">&quot;github.copilot.advanced&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;debug.overrideEngine&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;debug.overrideProxyUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">500</span><span class="w">  </span><span class="c1">// Max suggestion length</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Keyboard Shortcuts:</strong></p>
+<ul>
+<li><strong>Accept suggestion</strong>: <code>Tab</code></li>
+<li><strong>Dismiss suggestion</strong>: <code>Esc</code></li>
+<li><strong>Next suggestion</strong>: <code>Alt+]</code> / <code>Option+]</code></li>
+<li><strong>Previous suggestion</strong>: <code>Alt+[</code> / <code>Option+[</code></li>
+<li><strong>Open Copilot Chat</strong>: <code>Ctrl+Shift+I</code> / <code>Cmd+Shift+I</code></li>
+</ul>
+<h3 id="intellij-idea-setup">IntelliJ IDEA Setup</h3>
+<p><strong>Installation:</strong></p>
+<ol>
+<li>Open IntelliJ IDEA</li>
+<li>Go to <strong>Settings/Preferences</strong> → <strong>Plugins</strong></li>
+<li>Search for "GitHub Copilot"</li>
+<li>Click <strong>Install</strong></li>
+<li>Restart IDE</li>
+</ol>
+<p><strong>Configuration:</strong></p>
+<ol>
+<li>Authenticate:</li>
+<li><strong>Settings</strong> → <strong>Tools</strong> → <strong>GitHub Copilot</strong></li>
+<li>Click <strong>Sign in to GitHub</strong></li>
+<li>
+<p>Complete OAuth flow</p>
+</li>
+<li>
+<p>Configure settings:</p>
+</li>
+<li><strong>Enable GitHub Copilot</strong>: ✓</li>
+<li><strong>Show completions automatically</strong>: ✓</li>
+<li><strong>Enable for languages</strong>: Select all relevant languages</li>
+</ol>
+<p><strong>Keyboard Shortcuts:</strong></p>
+<ul>
+<li><strong>Accept suggestion</strong>: <code>Tab</code></li>
+<li><strong>Dismiss suggestion</strong>: <code>Esc</code></li>
+<li><strong>Show all suggestions</strong>: <code>Alt+\</code> (Windows/Linux), <code>Option+\</code> (Mac)</li>
+<li><strong>Next suggestion</strong>: <code>Alt+]</code></li>
+<li><strong>Previous suggestion</strong>: <code>Alt+[</code></li>
+</ul>
+<h3 id="vimneovim-setup">Vim/Neovim Setup</h3>
+<p><strong>Prerequisites:</strong></p>
+<ul>
+<li>Vim 8.0+ or Neovim 0.6+</li>
+<li>Node.js 18+</li>
+</ul>
+<p><strong>Installation (vim-plug):</strong></p>
+<p>Add to <code>.vimrc</code> or <code>init.vim</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">&quot; GitHub Copilot</span>
+Plug <span class="s1">&#39;github/copilot.vim&#39;</span>
+</code></pre></div>
+<p>Then run:
+<div class="highlight"><pre><span></span><code><span class="p">:</span>PlugInstall
+</code></pre></div></p>
+<p><strong>Authentication:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">:</span>Copilot setup
+</code></pre></div>
+<p><strong>Configuration:</strong></p>
+<p>Add to <code>.vimrc</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c">&quot; Enable Copilot</span>
+<span class="k">let</span> <span class="k">g</span>:copilot_enabled <span class="p">=</span> <span class="m">1</span>
+
+<span class="c">&quot; Filetypes to enable</span>
+<span class="k">let</span> <span class="k">g</span>:copilot_filetypes <span class="p">=</span> {
+    \ <span class="s1">&#39;yaml&#39;</span>: <span class="k">v</span>:true<span class="p">,</span>
+    \ <span class="s1">&#39;markdown&#39;</span>: <span class="k">v</span>:true<span class="p">,</span>
+    \ <span class="s1">&#39;terraform&#39;</span>: <span class="k">v</span>:true<span class="p">,</span>
+    \ <span class="s1">&#39;*&#39;</span>: <span class="k">v</span>:true<span class="p">,</span>
+    \ }
+
+<span class="c">&quot; Disable for specific files</span>
+<span class="k">let</span> <span class="k">g</span>:copilot_filetypes <span class="p">=</span> {
+    \ <span class="s1">&#39;gitcommit&#39;</span>: <span class="k">v</span>:false<span class="p">,</span>
+    \ <span class="s1">&#39;gitrebase&#39;</span>: <span class="k">v</span>:false<span class="p">,</span>
+    \ }
+</code></pre></div>
+<p><strong>Keyboard Shortcuts:</strong></p>
+<ul>
+<li><strong>Accept suggestion</strong>: <code>&lt;Tab&gt;</code> (in insert mode)</li>
+<li><strong>Dismiss</strong>: <code>&lt;Esc&gt;</code></li>
+<li><strong>Next suggestion</strong>: <code>&lt;M-]&gt;</code> or <code>Alt-]</code></li>
+<li><strong>Previous suggestion</strong>: <code>&lt;M-[&gt;</code> or <code>Alt-[</code></li>
+<li><strong>Disable Copilot</strong>: <code>:Copilot disable</code></li>
+<li><strong>Enable Copilot</strong>: <code>:Copilot enable</code></li>
+</ul>
+<h2 id="integration-with-rag-system">Integration with RAG System</h2>
+<h3 id="overview_1">Overview</h3>
+<p>Fawkes uses a RAG (Retrieval Augmented Generation) system powered by Weaviate vector database to provide context-aware AI assistance. While GitHub Copilot doesn't natively integrate with custom RAG systems, we can enhance its effectiveness using the following approaches:</p>
+<h3 id="approach-1-workspace-context-recommended">Approach 1: Workspace Context (Recommended)</h3>
+<p><strong>Strategy</strong>: Keep relevant documentation in workspace</p>
+<p>GitHub Copilot uses open files and workspace context for suggestions. To leverage internal documentation:</p>
+<ol>
+<li>
+<p><strong>Open relevant docs</strong> alongside code:
+   <div class="highlight"><pre><span></span><code><span class="c1"># Open in split panes</span>
+code<span class="w"> </span>docs/architecture.md<span class="w"> </span>src/service.py
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Use workspace-relative paths</strong>:</p>
+</li>
+<li>Keep docs in same workspace</li>
+<li>Reference docs in comments</li>
+<li>Copilot will use open files as context</li>
+</ol>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># See docs/ai/vector-database.md for Weaviate setup</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">weaviate</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">search_documentation</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Search internal docs using Weaviate.</span>
+
+<span class="sd">    Based on patterns from docs/ai/vector-database.md</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">weaviate</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="s2">&quot;http://weaviate.fawkes.svc:80&quot;</span><span class="p">)</span>
+    <span class="c1"># Copilot will suggest code based on open documentation</span>
+</code></pre></div>
+<h3 id="approach-2-comment-based-context">Approach 2: Comment-Based Context</h3>
+<p><strong>Strategy</strong>: Provide context in comments</p>
+<p>Use detailed comments to guide Copilot with internal conventions:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Fawkes pattern: Use ErrKind wrapper for all public API errors</span>
+<span class="c1"># See docs/patterns/error-handling.md</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_request</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">api_call</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># Copilot learns from this pattern</span>
+        <span class="k">raise</span> <span class="n">ErrKind</span><span class="o">.</span><span class="n">from_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="approach-3-rag-query-tool-custom-integration">Approach 3: RAG Query Tool (Custom Integration)</h3>
+<p><strong>For advanced users</strong>: Create a wrapper tool that queries RAG before prompting:</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># rag-query.sh - Query internal docs before coding</span>
+
+<span class="nv">QUERY</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
+
+<span class="c1"># Query RAG service</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://rag-service.fawkes.svc:8000/api/v1/query<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;query\&quot;: \&quot;</span><span class="nv">$QUERY</span><span class="s2">\&quot;, \&quot;limit\&quot;: 3}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.results[].content&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/context.txt
+
+<span class="c1"># Open context in editor</span>
+code<span class="w"> </span>/tmp/context.txt
+
+<span class="c1"># Now use Copilot with context loaded</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Context loaded. Start coding with Copilot.&quot;</span>
+</code></pre></div>
+<p><strong>Usage:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Load context before coding</span>
+./rag-query.sh<span class="w"> </span><span class="s2">&quot;How to deploy ArgoCD applications&quot;</span>
+
+<span class="c1"># Copilot now has context from open file</span>
+</code></pre></div></p>
+<h3 id="approach-4-custom-copilot-instructions-future">Approach 4: Custom Copilot Instructions (Future)</h3>
+<p>GitHub is developing workspace-level instructions for Copilot. When available:</p>
+<ol>
+<li>Create <code>.github/copilot-instructions.md</code></li>
+<li>Add Fawkes-specific guidelines</li>
+<li>Copilot will follow these instructions</li>
+</ol>
+<p><strong>Example <code>.github/copilot-instructions.md</code>:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="gh"># Fawkes Coding Guidelines for Copilot</span>
+
+<span class="gu">## Architecture Principles</span>
+<span class="k">-</span><span class="w"> </span>GitOps-first: All config in Git
+<span class="k">-</span><span class="w"> </span>Declarative over imperative
+<span class="k">-</span><span class="w"> </span>Kubernetes-native patterns
+
+<span class="gu">## Conventions</span>
+<span class="k">-</span><span class="w"> </span>Use ErrKind for error handling
+<span class="k">-</span><span class="w"> </span>Terraform 1.6+ syntax
+<span class="k">-</span><span class="w"> </span>Kustomize for K8s overlays
+<span class="k">-</span><span class="w"> </span>BDD tests with Gherkin
+
+<span class="gu">## Security</span>
+<span class="k">-</span><span class="w"> </span>Never commit secrets
+<span class="k">-</span><span class="w"> </span>Use External Secrets Operator
+<span class="k">-</span><span class="w"> </span>Scan with Trivy
+</code></pre></div>
+<h2 id="testing-code-completion">Testing Code Completion</h2>
+<h3 id="test-1-basic-code-completion">Test 1: Basic Code Completion</h3>
+<p><strong>Python:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Type this comment and wait for Copilot suggestion:</span>
+<span class="c1"># Function to connect to Weaviate and query for documents</span>
+
+<span class="c1"># Copilot should suggest something like:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">query_weaviate</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">weaviate</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">weaviate</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="s2">&quot;http://weaviate.fawkes.svc:80&quot;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;FawkesDocument&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">])</span> \
+        <span class="o">.</span><span class="n">with_near_text</span><span class="p">({</span><span class="s2">&quot;concepts&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">query</span><span class="p">]})</span> \
+        <span class="o">.</span><span class="n">with_limit</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">do</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<p><strong>Terraform:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Type this comment:</span>
+<span class="c1"># Create an AKS cluster with 3 nodes</span>
+
+<span class="c1"># Copilot should suggest:</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;azurerm_kubernetes_cluster&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes-aks&quot;</span>
+<span class="w">  </span><span class="na">location</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_resource_group.main.location</span>
+<span class="w">  </span><span class="na">resource_group_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">azurerm_resource_group.main.name</span>
+<span class="w">  </span><span class="na">dns_prefix</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;fawkes&quot;</span>
+
+<span class="w">  </span><span class="nb">default_node_pool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;default&quot;</span>
+<span class="w">    </span><span class="na">node_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+<span class="w">    </span><span class="na">vm_size</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Standard_D2_v2&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="test-2-contextual-suggestions">Test 2: Contextual Suggestions</h3>
+<p><strong>Create test file:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create a test service</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>/tmp/test-copilot.py<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s">import weaviate</span>
+
+<span class="s"># Query Fawkes documentation about ArgoCD</span>
+<span class="s"># Copilot should provide context-aware completion</span>
+<span class="s">EOF</span>
+
+<span class="c1"># Open in your IDE and test</span>
+code<span class="w"> </span>/tmp/test-copilot.py
+</code></pre></div>
+<h3 id="test-3-code-generation">Test 3: Code Generation</h3>
+<p>Use Copilot Chat to generate complete components:</p>
+<p><strong>VSCode:</strong></p>
+<ol>
+<li>Open Copilot Chat (<code>Ctrl+Shift+I</code>)</li>
+<li>Ask: "Generate a FastAPI endpoint that queries Weaviate for Fawkes documentation"</li>
+<li>Review and accept code</li>
+</ol>
+<p><strong>Expected output:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">HTTPException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">weaviate</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">weaviate</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="s2">&quot;http://weaviate.fawkes.svc:80&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Query</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/v1/search&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">search_docs</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="n">Query</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;FawkesDocument&quot;</span><span class="p">,</span> 
+            <span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="s2">&quot;filepath&quot;</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">with_near_text</span><span class="p">({</span>
+            <span class="s2">&quot;concepts&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">query</span><span class="o">.</span><span class="n">query</span><span class="p">]</span>
+        <span class="p">})</span><span class="o">.</span><span class="n">with_limit</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">limit</span><span class="p">)</span><span class="o">.</span><span class="n">do</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;Get&quot;</span><span class="p">][</span><span class="s2">&quot;FawkesDocument&quot;</span><span class="p">]}</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="1-security-best-practices">1. Security Best Practices</h3>
+<p><strong>✅ DO:</strong>
+- Review all Copilot suggestions before accepting
+- Scan for hardcoded credentials or secrets
+- Use Copilot for boilerplate, verify for security-critical code
+- Enable "Block public code suggestions" for sensitive projects</p>
+<p><strong>❌ DON'T:</strong>
+- Blindly accept suggestions without review
+- Use Copilot-generated code in production without testing
+- Share proprietary code patterns publicly
+- Disable security scanning tools</p>
+<h3 id="2-code-quality-best-practices">2. Code Quality Best Practices</h3>
+<p><strong>✅ DO:</strong>
+- Use descriptive variable and function names (helps Copilot context)
+- Write clear comments explaining intent
+- Provide examples in comments for complex logic
+- Test all generated code
+- Refactor suggestions to match team style</p>
+<p><strong>❌ DON'T:</strong>
+- Accept verbose or overly complex suggestions
+- Skip code review for Copilot-generated code
+- Ignore linting warnings on generated code
+- Use outdated patterns suggested by Copilot</p>
+<h3 id="3-productivity-best-practices">3. Productivity Best Practices</h3>
+<p><strong>✅ DO:</strong>
+- Learn keyboard shortcuts for faster workflow
+- Use Copilot Chat for explaining complex code
+- Leverage Copilot for documentation and tests
+- Provide context through comments and open files
+- Iterate on suggestions (reject and try again)</p>
+<p><strong>❌ DON'T:</strong>
+- Rely solely on Copilot without understanding code
+- Spend more time fixing suggestions than writing code
+- Accept first suggestion without exploring alternatives
+- Use Copilot as a substitute for learning</p>
+<h3 id="4-privacy-and-compliance">4. Privacy and Compliance</h3>
+<p><strong>✅ DO:</strong>
+- Review organization's Copilot policies
+- Opt-in to telemetry collection (helps improve Copilot)
+- Report inappropriate or problematic suggestions
+- Use content exclusions for sensitive files</p>
+<p><strong>❌ DON'T:</strong>
+- Share Copilot suggestions containing sensitive data
+- Use Copilot on code with export restrictions
+- Ignore licensing concerns for suggested code
+- Disable audit logging (if required by org)</p>
+<h2 id="limitations-and-known-issues">Limitations and Known Issues</h2>
+<h3 id="current-limitations">Current Limitations</h3>
+<ol>
+<li><strong>Context Window</strong>: Limited to open files and immediate workspace</li>
+<li>
+<p><strong>Mitigation</strong>: Keep relevant docs open in workspace</p>
+</li>
+<li>
+<p><strong>No Custom RAG Integration</strong>: Cannot directly query internal knowledge base</p>
+</li>
+<li>
+<p><strong>Mitigation</strong>: Use comment-based context or wrapper scripts</p>
+</li>
+<li>
+<p><strong>Public Code Bias</strong>: May suggest patterns from public repos over internal conventions</p>
+</li>
+<li>
+<p><strong>Mitigation</strong>: Provide context through comments and examples</p>
+</li>
+<li>
+<p><strong>Language Support</strong>: Best for popular languages (Python, JavaScript, Go, Java)</p>
+</li>
+<li>
+<p><strong>Mitigation</strong>: Less common languages may have lower-quality suggestions</p>
+</li>
+<li>
+<p><strong>Security Awareness</strong>: May suggest insecure patterns</p>
+</li>
+<li><strong>Mitigation</strong>: Always scan with security tools (Trivy, SonarQube)</li>
+</ol>
+<h3 id="known-issues">Known Issues</h3>
+<p><strong>Issue 1: Incomplete Suggestions</strong></p>
+<ul>
+<li><strong>Symptom</strong>: Copilot stops mid-suggestion</li>
+<li><strong>Fix</strong>: Press <code>Alt+]</code> for next suggestion or retype comment</li>
+</ul>
+<p><strong>Issue 2: Irrelevant Suggestions</strong></p>
+<ul>
+<li><strong>Symptom</strong>: Suggestions don't match intent</li>
+<li><strong>Fix</strong>: Add more context in comments or variable names</li>
+</ul>
+<p><strong>Issue 3: Copilot Not Working</strong></p>
+<ul>
+<li><strong>Symptom</strong>: No suggestions appearing</li>
+<li><strong>Fixes</strong>:
+  <div class="highlight"><pre><span></span><code><span class="c1"># Check authentication</span>
+<span class="c1"># VSCode: Cmd+Shift+P → &quot;GitHub Copilot: Sign In&quot;</span>
+
+<span class="c1"># Check status</span>
+<span class="c1"># VSCode: Look for Copilot icon in status bar</span>
+
+<span class="c1"># Restart extension</span>
+<span class="c1"># VSCode: Cmd+Shift+P → &quot;Developer: Reload Window&quot;</span>
+</code></pre></div></li>
+</ul>
+<p><strong>Issue 4: High Latency</strong></p>
+<ul>
+<li><strong>Symptom</strong>: Slow suggestion response</li>
+<li><strong>Fixes</strong>:</li>
+<li>Check internet connection</li>
+<li>Reduce file size or complexity</li>
+<li>Disable temporarily for large files</li>
+<li>Check GitHub status page</li>
+</ul>
+<h2 id="usage-telemetry-opt-in">Usage Telemetry (Opt-in)</h2>
+<p>Fawkes collects opt-in telemetry to measure AI coding assistant effectiveness:</p>
+<p><strong>Metrics Collected:</strong></p>
+<ul>
+<li>Copilot acceptance rate (% of suggestions accepted)</li>
+<li>Lines of AI-generated code (daily/weekly)</li>
+<li>Time saved estimates (based on typing speed)</li>
+<li>Most used languages and features</li>
+</ul>
+<p><strong>Privacy:</strong></p>
+<ul>
+<li>All metrics are aggregated and anonymized</li>
+<li>No code content is collected</li>
+<li>Opt-in only (disabled by default)</li>
+<li>Data retained for 90 days</li>
+</ul>
+<p><strong>Enable Telemetry:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Set environment variable</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">FAWKES_AI_TELEMETRY</span><span class="o">=</span>enabled
+
+<span class="c1"># Or in your shell profile</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export FAWKES_AI_TELEMETRY=enabled&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+</code></pre></div>
+<p><strong>View Your Metrics:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Access AI telemetry dashboard</span>
+<span class="c1"># Requires VPN/cluster access</span>
+open<span class="w"> </span>http://grafana.fawkes.local/d/ai-telemetry
+</code></pre></div>
+<p>See <a href="../../platform/apps/ai-telemetry/README.md">AI Telemetry Dashboard</a> for details.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="copilot-not-suggesting">Copilot Not Suggesting</h3>
+<ol>
+<li>
+<p><strong>Check authentication</strong>:
+   <div class="highlight"><pre><span></span><code><span class="c1"># VSCode</span>
+Cmd+Shift+P<span class="w"> </span>→<span class="w"> </span><span class="s2">&quot;GitHub Copilot: Check Status&quot;</span>
+
+<span class="c1"># CLI</span>
+gh<span class="w"> </span>copilot<span class="w"> </span>status
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Verify subscription</strong>:</p>
+</li>
+<li>Check organization settings</li>
+<li>Confirm user has access</li>
+<li>
+<p>Review billing status</p>
+</li>
+<li>
+<p><strong>Check file type</strong>:</p>
+</li>
+<li>Ensure file extension is supported</li>
+<li>Check language mode in IDE</li>
+<li>
+<p>Try <code>.py</code>, <code>.js</code>, <code>.tf</code> files</p>
+</li>
+<li>
+<p><strong>Network issues</strong>:</p>
+</li>
+<li>Check firewall/proxy settings</li>
+<li>Verify GitHub API access</li>
+<li>Test with: <code>curl https://api.github.com/copilot_internal/v2/token</code></li>
+</ol>
+<h3 id="suggestions-not-relevant">Suggestions Not Relevant</h3>
+<ol>
+<li>
+<p><strong>Add more context</strong>:
+   <div class="highlight"><pre><span></span><code><span class="c1"># Add detailed comment</span>
+<span class="c1"># Function to query Weaviate for Fawkes docs</span>
+<span class="c1"># Uses semantic search with vector embeddings</span>
+<span class="c1"># Returns top 5 results with certainty &gt; 0.7</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">search_fawkes_docs</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="c1"># Copilot now has better context</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Open reference files</strong>:</p>
+</li>
+<li>Open similar existing code</li>
+<li>Open relevant documentation</li>
+<li>
+<p>Keep examples in workspace</p>
+</li>
+<li>
+<p><strong>Adjust settings</strong>:
+   <div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;github.copilot.advanced&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="w">  </span><span class="c1">// Increase for more complete suggestions</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></p>
+</li>
+</ol>
+<h3 id="performance-issues">Performance Issues</h3>
+<ol>
+<li><strong>Reduce file size</strong>:</li>
+<li>Close large files</li>
+<li>Split complex files</li>
+<li>
+<p>Work in smaller modules</p>
+</li>
+<li>
+<p><strong>Disable for specific files</strong>:
+   <div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;github.copilot.enable&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;log&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;xml&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Check system resources</strong>:</p>
+</li>
+<li>Close unused applications</li>
+<li>Increase IDE memory</li>
+<li>Monitor CPU usage</li>
+</ol>
+<h2 id="additional-resources">Additional Resources</h2>
+<h3 id="documentation">Documentation</h3>
+<ul>
+<li><a href="https://docs.github.com/en/copilot">GitHub Copilot Official Docs</a></li>
+<li><a href="https://docs.github.com/en/copilot/overview-of-github-copilot/about-github-copilot-for-business">Copilot for Business</a></li>
+<li><a href="https://marketplace.visualstudio.com/items?itemName=GitHub.copilot">VSCode Copilot Extension</a></li>
+<li><a href="https://plugins.jetbrains.com/plugin/17718-github-copilot">IntelliJ Copilot Plugin</a></li>
+<li><a href="https://github.com/github/copilot.vim">Vim Copilot</a></li>
+</ul>
+<h3 id="internal-resources">Internal Resources</h3>
+<ul>
+<li><a href="../../architecture/">Fawkes Architecture</a></li>
+<li><a href="../../services/rag/README.md">RAG Service Documentation</a></li>
+<li><a href="../vector-database/">Vector Database Guide</a></li>
+<li><a href="../../platform/apps/ai-telemetry/README.md">AI Telemetry Dashboard</a></li>
+<li><a href="../../development/">Development Guide</a></li>
+</ul>
+<h3 id="training-and-support">Training and Support</h3>
+<ul>
+<li><a href="#">Copilot Best Practices (Internal Wiki)</a></li>
+<li><a href="#">AI Coding Assistant Office Hours</a> - Tuesdays 2-3pm</li>
+<li><a href="#">Slack: #ai-coding-help</a> - For questions and support</li>
+<li><a href="#">Feedback Form</a> - Report issues or suggestions</li>
+</ul>
+<h2 id="faq">FAQ</h2>
+<h3 id="q-is-my-code-sent-to-githubopenai">Q: Is my code sent to GitHub/OpenAI?</h3>
+<p><strong>A:</strong> Yes, code snippets are sent to GitHub's Copilot service for processing. GitHub states that:
+- Copilot for Business: Code snippets are NOT used for model training
+- Copilot for Individuals: Code may be used for training (can opt out)
+- All transmission is encrypted (HTTPS)</p>
+<h3 id="q-can-i-use-copilot-for-proprietaryconfidential-code">Q: Can I use Copilot for proprietary/confidential code?</h3>
+<p><strong>A:</strong> With Copilot for Business, yes. GitHub provides:
+- No training on your code
+- No code retention after processing
+- SOC 2 Type II compliance
+- Enterprise-grade security</p>
+<p>Verify your organization's policy before using on sensitive code.</p>
+<h3 id="q-what-if-copilot-suggests-copyrighted-code">Q: What if Copilot suggests copyrighted code?</h3>
+<p><strong>A:</strong> GitHub provides:
+- Copyright filter to block verbatim code from public repos
+- Legal protection for Business users (in some plans)
+- Attribution for code similar to public sources</p>
+<p>Best practice: Review suggestions, add attribution, and run license compliance tools.</p>
+<h3 id="q-how-accurate-is-copilot">Q: How accurate is Copilot?</h3>
+<p><strong>A:</strong> Accuracy varies by:
+- Language (better for popular languages like Python, JavaScript)
+- Context (better with clear comments and examples)
+- Complexity (better for common patterns than novel algorithms)</p>
+<p><strong>Typical acceptance rates:</strong>
+- Simple boilerplate: 70-90%
+- Business logic: 40-60%
+- Complex algorithms: 20-40%</p>
+<p>Always review and test suggested code.</p>
+<h3 id="q-can-i-customize-copilot-for-fawkes-conventions">Q: Can I customize Copilot for Fawkes conventions?</h3>
+<p><strong>A:</strong> Currently limited, but you can:
+- Use detailed comments with conventions
+- Keep style guides in workspace
+- Open example files for context
+- Wait for workspace-level instructions feature (coming soon)</p>
+<h3 id="q-does-copilot-replace-code-review">Q: Does Copilot replace code review?</h3>
+<p><strong>A:</strong> No. Code review is still essential:
+- Verify logic correctness
+- Check security implications
+- Ensure style consistency
+- Validate test coverage</p>
+<p>Treat Copilot as a pair programmer, not a replacement for review.</p>
+<h3 id="q-how-do-i-report-problematic-suggestions">Q: How do I report problematic suggestions?</h3>
+<p><strong>A:</strong> 
+1. In VSCode: Right-click suggestion → "Report Issue"
+2. Via GitHub: <a href="https://github.com/github/feedback/discussions/categories/copilot-feedback">GitHub Copilot Feedback</a>
+3. Internal: Post in #ai-coding-help Slack channel</p>
+<h3 id="q-can-i-use-copilot-offline">Q: Can I use Copilot offline?</h3>
+<p><strong>A:</strong> No, Copilot requires internet connection to:
+- Send code context to GitHub's servers
+- Receive AI-generated suggestions
+- Authenticate your account</p>
+<p>For offline development, Copilot will be unavailable.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>GitHub Copilot is a powerful tool for accelerating development in the Fawkes platform. By following this guide and best practices, you can:</p>
+<ul>
+<li>Set up Copilot across your organization</li>
+<li>Integrate with Fawkes' internal documentation and patterns</li>
+<li>Write code faster with fewer errors</li>
+<li>Maintain security and code quality standards</li>
+</ul>
+<p>For questions or support, reach out to the platform team via #ai-coding-help on Slack.</p>
+<p><strong>Happy coding! 🚀</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
