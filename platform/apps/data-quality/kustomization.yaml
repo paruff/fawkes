@@ -13,6 +13,9 @@ resources:
   - configmap.yaml
   - service.yaml
   - cronjob.yaml
+  - deployment-exporter.yaml
+  - service-exporter.yaml
+  - servicemonitor.yaml
 
 configMapGenerator:
   - name: gx-full-config
@@ -34,6 +37,9 @@ configMapGenerator:
     files:
       - scripts/alert_handler.py=../../../services/data-quality/scripts/alert_handler.py
       - scripts/run_checkpoint.py=../../../services/data-quality/scripts/run_checkpoint.py
+  - name: prometheus-exporter-config
+    files:
+      - prometheus-exporter.py=../../../services/data-quality/prometheus-exporter.py
 
 labels:
   - pairs:

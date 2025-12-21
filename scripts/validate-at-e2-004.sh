@@ -317,7 +317,112 @@ test_checkpoints() {
 
 test_argocd_application() {
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "Phase 7: ArgoCD Application"
+    echo "Phase 7: Prometheus Exporter"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    
+    # Check Prometheus exporter deployment
+    run_test
+    if kubectl get deployment data-quality-exporter -n "$NAMESPACE" &> /dev/null; then
+        pass "Prometheus exporter deployment exists"
+        
+        # Check deployment status
+        ready_replicas=$(kubectl get deployment data-quality-exporter -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo "0")
+        desired_replicas=$(kubectl get deployment data-quality-exporter -n "$NAMESPACE" -o jsonpath='{.spec.replicas}' 2>/dev/null || echo "1")
+        
+        run_test
+        if [ "$ready_replicas" = "$desired_replicas" ] && [ "$ready_replicas" != "0" ]; then
+            pass "Prometheus exporter is ready ($ready_replicas/$desired_replicas replicas)"
+        else
+            fail "Prometheus exporter not ready ($ready_replicas/$desired_replicas replicas)"
+        fi
+    else
+        info "Prometheus exporter deployment not found (optional component)"
+    fi
+    
+    # Check exporter service
+    run_test
+    if kubectl get service data-quality-exporter -n "$NAMESPACE" &> /dev/null; then
+        pass "Prometheus exporter service exists"
+        
+        # Check service port
+        port=$(kubectl get service data-quality-exporter -n "$NAMESPACE" -o jsonpath='{.spec.ports[0].port}' 2>/dev/null || echo "")
+        if [ "$port" = "9110" ]; then
+            pass "Service port is 9110"
+        else
+            info "Service port: $port (expected: 9110)"
+        fi
+    else
+        info "Prometheus exporter service not found (optional component)"
+    fi
+    
+    # Check ServiceMonitor
+    run_test
+    if kubectl get servicemonitor data-quality-exporter -n "$NAMESPACE" &> /dev/null; then
+        pass "ServiceMonitor exists for Prometheus scraping"
+    else
+        info "ServiceMonitor not found (optional, depends on Prometheus Operator)"
+    fi
+    
+    # Check metrics endpoint (if exporter is running)
+    if kubectl get deployment data-quality-exporter -n "$NAMESPACE" &> /dev/null; then
+        run_test
+        pod_name=$(kubectl get pods -n "$NAMESPACE" -l app=data-quality-exporter -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
+        if [ -n "$pod_name" ]; then
+            if kubectl exec -n "$NAMESPACE" "$pod_name" -- wget -q -O- http://localhost:9110/health 2>/dev/null | grep -q "healthy"; then
+                pass "Metrics endpoint health check passed"
+            else
+                info "Metrics endpoint health check not available yet"
+            fi
+        fi
+    fi
+    
+    echo ""
+}
+
+test_grafana_dashboard() {
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "Phase 8: Grafana Dashboard"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    
+    # Check if dashboard file exists
+    run_test
+    dashboard_file="platform/apps/grafana/dashboards/data-quality.json"
+    if [ -f "$dashboard_file" ]; then
+        pass "Grafana dashboard JSON file exists"
+        
+        # Validate JSON syntax
+        run_test
+        if python3 -c "import json; json.load(open('$dashboard_file'))" 2>/dev/null; then
+            pass "Dashboard JSON is valid"
+            
+            # Check dashboard content
+            title=$(python3 -c "import json; print(json.load(open('$dashboard_file'))['dashboard']['title'])" 2>/dev/null || echo "")
+            panel_count=$(python3 -c "import json; print(len(json.load(open('$dashboard_file'))['dashboard']['panels']))" 2>/dev/null || echo "0")
+            
+            info "Dashboard title: $title"
+            info "Number of panels: $panel_count"
+            
+            run_test
+            if [ "$panel_count" -ge "10" ]; then
+                pass "Dashboard has adequate panels (${panel_count} panels)"
+            else
+                fail "Dashboard has insufficient panels (${panel_count} panels, expected >= 10)"
+            fi
+        else
+            fail "Dashboard JSON is invalid"
+        fi
+    else
+        fail "Grafana dashboard file not found at $dashboard_file"
+    fi
+    
+    echo ""
+}
+
+test_argocd_application_final() {
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "Phase 9: ArgoCD Application"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
     
@@ -347,6 +452,8 @@ test_expectation_suites
 test_validation_automation
 test_checkpoints
 test_argocd_application
+test_grafana_dashboard
+test_argocd_application_final
 
 # Summary
 echo "================================================================================"

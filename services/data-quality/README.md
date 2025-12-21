@@ -20,6 +20,7 @@ The data quality service validates data in the following databases:
 3. **Checkpoints**: Automated validation runners
 4. **Alerting**: Mattermost integration for failure notifications
 5. **CronJob**: Scheduled validation runs (every 6 hours)
+6. **Prometheus Exporter**: Metrics exporter for monitoring and dashboards
 
 ### Directory Structure
 
@@ -42,9 +43,10 @@ services/data-quality/
 │   ├── dora_metrics_checkpoint.yml
 │   ├── sonarqube_db_checkpoint.yml
 │   └── all_databases_checkpoint.yml
-└── scripts/                      # Helper scripts
-    ├── alert_handler.py          # Mattermost alerting
-    └── run_checkpoint.py         # Checkpoint runner
+├── scripts/                      # Helper scripts
+│   ├── alert_handler.py          # Mattermost alerting
+│   └── run_checkpoint.py         # Checkpoint runner
+└── prometheus-exporter.py        # Prometheus metrics exporter
 ```
 
 ## Expectation Suites
@@ -203,6 +205,85 @@ kubectl edit secret data-quality-secrets -n fawkes
 ```
 
 ## Monitoring
+
+### Prometheus Metrics
+
+The data quality service exposes metrics for Prometheus monitoring via a dedicated exporter:
+
+#### Available Metrics
+
+- **`data_quality_validation_success`** (gauge): Success status of last validation (1=success, 0=failure)
+  - Labels: datasource, suite, checkpoint
+- **`data_quality_validation_duration_seconds`** (histogram): Duration of validation runs
+  - Labels: datasource, suite, checkpoint
+- **`data_quality_expectation_failures_total`** (counter): Total count of failed expectations
+  - Labels: datasource, suite, expectation_type, checkpoint
+- **`data_quality_data_freshness_seconds`** (gauge): Seconds since last validation per datasource
+  - Labels: datasource, suite
+- **`data_quality_validation_runs_total`** (counter): Total number of validation runs
+  - Labels: datasource, suite, checkpoint, status
+- **`data_quality_expectations_total`** (gauge): Total number of expectations evaluated
+  - Labels: datasource, suite, checkpoint
+- **`data_quality_expectations_successful`** (gauge): Number of successful expectations
+  - Labels: datasource, suite, checkpoint
+- **`data_quality_success_rate_percent`** (gauge): Percentage of successful expectations
+  - Labels: datasource, suite, checkpoint
+
+#### Accessing Metrics
+
+The Prometheus exporter runs as a separate deployment and exposes metrics on port 9110:
+
+```bash
+# Port-forward to the exporter
+kubectl port-forward -n fawkes deployment/data-quality-exporter 9110:9110
+
+# View metrics
+curl http://localhost:9110/metrics
+
+# Check health
+curl http://localhost:9110/health
+```
+
+#### ServiceMonitor
+
+Prometheus automatically scrapes metrics via the ServiceMonitor configuration:
+
+```bash
+kubectl get servicemonitor data-quality-exporter -n fawkes
+```
+
+### Grafana Dashboard
+
+A comprehensive Grafana dashboard is available for visualizing data quality metrics:
+
+**Dashboard Location**: `platform/apps/grafana/dashboards/data-quality.json`
+
+**Dashboard Features**:
+- Overall data quality score (% passing)
+- Validation pass/fail summary
+- Validation status by datasource
+- Failed expectations breakdown
+- Data freshness by datasource
+- Historical trends (7 and 30 day views)
+- Alert annotations
+
+**Accessing the Dashboard**:
+
+1. Import the dashboard in Grafana:
+   ```bash
+   # Via Grafana UI
+   # Dashboard > Import > Upload JSON file
+   # Select: platform/apps/grafana/dashboards/data-quality.json
+   ```
+
+2. Or access via URL (if auto-imported):
+   ```
+   http://grafana.local/d/data-quality/data-quality-dashboard
+   ```
+
+**Dashboard Variables**:
+- `datasource`: Filter by specific datasource(s)
+- `suite`: Filter by specific expectation suite(s)
 
 ### CronJob Schedule
 

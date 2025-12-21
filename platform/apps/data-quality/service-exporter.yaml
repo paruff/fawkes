@@ -1,0 +1,21 @@
+# ============================================================================
+# FILE: platform/apps/data-quality/service-exporter.yaml
+# PURPOSE: Service for Prometheus exporter
+# ============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-quality-exporter
+  namespace: fawkes
+  labels:
+    app: data-quality-exporter
+    component: metrics
+spec:
+  selector:
+    app: data-quality-exporter
+  ports:
+    - name: metrics
+      port: 9110
+      targetPort: 9110
+      protocol: TCP
+  type: ClusterIP
