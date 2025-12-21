@@ -176,7 +176,7 @@ class TestRequirements:
         
         assert "great-expectations" in content
         assert "sqlalchemy" in content
-        assert "psycopg2" in content
+        assert "psycopg2-binary" in content
 
 
 if __name__ == "__main__":
