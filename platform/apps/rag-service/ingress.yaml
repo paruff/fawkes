@@ -1,0 +1,31 @@
+# ============================================================================
+# FILE: platform/apps/rag-service/ingress.yaml
+# PURPOSE: Ingress for RAG service external access
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rag-service
+  namespace: fawkes
+  labels:
+    app: rag-service
+    component: ai
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: rag-service.127.0.0.1.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: rag-service
+            port:
+              number: 80
