@@ -14,6 +14,16 @@ import sys
 import yaml
 from pathlib import Path
 
+# Try to import StageCategory for validation, but don't fail if not available
+try:
+    # Add parent directory to path for imports
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from app.models import StageCategory
+    VALID_STAGE_TYPES = [e.value for e in StageCategory]
+except ImportError:
+    # Fallback to hardcoded values if import fails
+    VALID_STAGE_TYPES = ['wait', 'active', 'done']
+
 def validate_stages(config_path):
     """Validate stages configuration."""
     print("=" * 60)
@@ -81,8 +91,8 @@ def validate_stages(config_path):
         
         # Validate stage type
         stage_type = stage.get('type')
-        if stage_type and stage_type not in ['wait', 'active', 'done']:
-            errors.append(f"Stage {stage_num} ({name}): Invalid type '{stage_type}', must be wait/active/done")
+        if stage_type and stage_type not in VALID_STAGE_TYPES:
+            errors.append(f"Stage {stage_num} ({name}): Invalid type '{stage_type}', must be one of {VALID_STAGE_TYPES}")
             print(f"❌ {errors[-1]}")
         
         # Validate WIP limit

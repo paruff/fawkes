@@ -13,7 +13,6 @@ def test_stage_category_enum_values():
 
 def test_stage_model_has_new_fields():
     """Test that Stage model includes new fields."""
-    from app.models import Stage
     from datetime import datetime, timezone
     
     # Create a stage instance with new fields
