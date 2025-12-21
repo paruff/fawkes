@@ -430,7 +430,10 @@ run_at_e2_002() {
     
     echo ""
     log_info "Step 2: Running BDD tests..."
-    cd "$ROOT_DIR"
+    if ! cd "$ROOT_DIR"; then
+        log_error "Failed to change to root directory: $ROOT_DIR"
+        return 1
+    fi
     
     # Check if pytest is available
     if command -v pytest &> /dev/null; then

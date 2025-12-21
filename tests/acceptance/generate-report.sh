@@ -66,7 +66,12 @@ find_test_reports() {
     
     if [ ! -d "$REPORTS_DIR" ]; then
         log_warning "Reports directory not found: $REPORTS_DIR"
-        return 1
+        log_info "Creating reports directory..."
+        mkdir -p "$REPORTS_DIR"
+        if [ ! -d "$REPORTS_DIR" ]; then
+            log_error "Failed to create reports directory"
+            return 1
+        fi
     fi
     
     find "$REPORTS_DIR" -name "$pattern" -type f 2>/dev/null | sort -r
@@ -301,24 +306,22 @@ EOF
         success_rate=$(awk "BEGIN {printf \"%.1f\", ($passed_tests * 100 / $total_tests)}")
     fi
     
-    # Use awk to replace placeholders to avoid sed escaping issues
-    awk -v epic="$epic_name" \
-        -v ts="$timestamp" \
-        -v total="$total_tests" \
-        -v passed="$passed_tests" \
-        -v failed="$failed_tests" \
-        -v rate="$success_rate" \
-        -v rows="$test_rows" \
-        '{
-            gsub(/\{\{EPIC\}\}/, epic);
-            gsub(/\{\{TIMESTAMP\}\}/, ts);
-            gsub(/\{\{TOTAL_TESTS\}\}/, total);
-            gsub(/\{\{PASSED_TESTS\}\}/, passed);
-            gsub(/\{\{FAILED_TESTS\}\}/, failed);
-            gsub(/\{\{SUCCESS_RATE\}\}/, rate);
-            gsub(/\{\{TEST_ROWS\}\}/, rows);
-            print;
-        }' "$output_file" > "$output_file.tmp" && mv "$output_file.tmp" "$output_file"
+    # Write test rows to a temporary file
+    echo "$test_rows" > "$output_file.rows.tmp"
+    
+    # Use sed for simple replacements
+    sed -i "s|{{EPIC}}|$epic_name|g" "$output_file"
+    sed -i "s|{{TIMESTAMP}}|$timestamp|g" "$output_file"
+    sed -i "s|{{TOTAL_TESTS}}|$total_tests|g" "$output_file"
+    sed -i "s|{{PASSED_TESTS}}|$passed_tests|g" "$output_file"
+    sed -i "s|{{FAILED_TESTS}}|$failed_tests|g" "$output_file"
+    sed -i "s|{{SUCCESS_RATE}}|$success_rate|g" "$output_file"
+    
+    # Replace {{TEST_ROWS}} with the content of the temp file
+    sed -i -e '/{{TEST_ROWS}}/{' -e "r $output_file.rows.tmp" -e 'd' -e '}' "$output_file"
+    
+    # Clean up temp file
+    rm -f "$output_file.rows.tmp"
 }
 
 generate_json_report() {
