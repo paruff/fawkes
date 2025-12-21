@@ -1,0 +1,63 @@
+{
+  "data_asset_type": "Dataset",
+  "expectation_suite_name": "dora_metrics_suite",
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 1,
+        "max_value": 1000000
+      },
+      "meta": {
+        "notes": "DORA metrics should have active data"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "timestamp"
+      },
+      "meta": {
+        "notes": "Timestamp is critical for time-series data"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "timestamp"
+      },
+      "meta": {
+        "notes": "Every metric must have a timestamp"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "timestamp"
+      },
+      "meta": {
+        "notes": "Timestamp should be valid date"
+      }
+    },
+    {
+      "expectation_type": "expect_column_max_to_be_between",
+      "kwargs": {
+        "column": "timestamp",
+        "min_value": "2024-01-01",
+        "max_value": "2030-12-31",
+        "parse_strings_as_datetimes": true
+      },
+      "meta": {
+        "notes": "Latest data should be recent (data freshness check)"
+      }
+    }
+  ],
+  "ge_cloud_id": null,
+  "meta": {
+    "great_expectations_version": "0.18.12",
+    "description": "Expectation suite for DORA metrics validation (data freshness, completeness)",
+    "database": "backstage",
+    "schema": "public",
+    "notes": "DORA metrics are stored in deployment_events or similar table"
+  }
+}
