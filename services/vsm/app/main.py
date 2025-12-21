@@ -79,6 +79,8 @@ async def lifespan(app: FastAPI):
         logger.info("✅ Database initialized successfully")
     except Exception as e:
         logger.error(f"❌ Failed to initialize database: {e}")
+        # Re-raise to prevent app from starting with broken DB
+        raise RuntimeError(f"Database initialization failed: {e}") from e
     
     yield
     
@@ -450,15 +452,18 @@ async def get_flow_metrics(
         
         if cycle_times:
             cycle_times.sort()
-            cycle_time_avg = sum(cycle_times) / len(cycle_times)
-            cycle_time_p50 = cycle_times[int(len(cycle_times) * 0.5)]
-            cycle_time_p85 = cycle_times[int(len(cycle_times) * 0.85)]
-            cycle_time_p95 = cycle_times[int(len(cycle_times) * 0.95)]
+            n = len(cycle_times)
+            cycle_time_avg = sum(cycle_times) / n
+            # Use safe index calculation with bounds checking
+            cycle_time_p50 = cycle_times[min(int(n * 0.5), n - 1)]
+            cycle_time_p85 = cycle_times[min(int(n * 0.85), n - 1)]
+            cycle_time_p95 = cycle_times[min(int(n * 0.95), n - 1)]
         
         # Update WIP gauge - count items currently in each stage
         # A work item is in a stage if its most recent transition is to that stage
         # and it hasn't moved to production yet
-        for stage in stages:
+        all_stages = db.query(Stage).all()
+        for stage in all_stages:
             # Get work items whose most recent transition is to this stage
             # Subquery to get the latest transition for each work item
             latest_transitions = (
