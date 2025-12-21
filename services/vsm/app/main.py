@@ -455,21 +455,30 @@ async def get_flow_metrics(
             cycle_time_p85 = cycle_times[int(len(cycle_times) * 0.85)]
             cycle_time_p95 = cycle_times[int(len(cycle_times) * 0.95)]
         
-        # Update WIP gauge
-        stages = db.query(Stage).all()
+        # Update WIP gauge - count items currently in each stage
+        # A work item is in a stage if its most recent transition is to that stage
+        # and it hasn't moved to production yet
         for stage in stages:
-            stage_wip = (
-                db.query(WorkItem)
-                .join(StageTransition)
-                .filter(
-                    StageTransition.to_stage_id == stage.id,
-                    WorkItem.id.notin_(
-                        db.query(StageTransition.work_item_id)
-                        .filter(StageTransition.timestamp > StageTransition.timestamp)
-                        .subquery()
-                    )
+            # Get work items whose most recent transition is to this stage
+            # Subquery to get the latest transition for each work item
+            latest_transitions = (
+                db.query(
+                    StageTransition.work_item_id,
+                    func.max(StageTransition.timestamp).label('max_timestamp')
                 )
-                .distinct()
+                .group_by(StageTransition.work_item_id)
+                .subquery()
+            )
+            
+            # Count work items where the latest transition is to this stage
+            stage_wip = (
+                db.query(StageTransition)
+                .join(
+                    latest_transitions,
+                    (StageTransition.work_item_id == latest_transitions.c.work_item_id) &
+                    (StageTransition.timestamp == latest_transitions.c.max_timestamp)
+                )
+                .filter(StageTransition.to_stage_id == stage.id)
                 .count()
             )
             WIP_GAUGE.labels(stage=stage.name).set(stage_wip)
