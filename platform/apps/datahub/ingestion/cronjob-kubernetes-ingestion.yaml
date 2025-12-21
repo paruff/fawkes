@@ -1,0 +1,234 @@
+# ==============================================================================
+# FILE: platform/apps/datahub/ingestion/cronjob-kubernetes-ingestion.yaml
+# PURPOSE: Kubernetes CronJob for automated Kubernetes resources ingestion
+# SCHEDULE: Hourly
+# ==============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: datahub-kubernetes-ingestion-config
+  namespace: fawkes
+  labels:
+    app: datahub
+    component: ingestion
+    source: kubernetes
+data:
+  kubernetes.yaml: |
+    # Kubernetes resources ingestion recipe
+    source:
+      type: kubernetes
+      config:
+        cluster_name: "fawkes-local"
+
+        namespace_pattern:
+          allow:
+            - "fawkes"
+            - "argocd"
+            - "monitoring"
+            - "logging"
+            - "ingress-nginx"
+          deny:
+            - "kube-system"
+            - "kube-public"
+
+        resource_types:
+          - "Deployment"
+          - "StatefulSet"
+          - "Service"
+          - "ConfigMap"
+          - "Ingress"
+          - "PersistentVolumeClaim"
+
+        extract_ownership_from_annotations: true
+        ownership_source_type: "backstage"
+
+        annotation_keys:
+          - "backstage.io/kubernetes-id"
+          - "app.kubernetes.io/name"
+          - "app.kubernetes.io/component"
+          - "team"
+          - "owner"
+
+        label_keys:
+          - "app"
+          - "component"
+          - "environment"
+          - "team"
+
+    sink:
+      type: datahub-rest
+      config:
+        server: "http://datahub-datahub-gms.fawkes.svc:8080"
+        timeout_sec: 60
+        max_retries: 5
+
+    transformers:
+      - type: simple_add_dataset_tags
+        config:
+          tag_urns:
+            - "urn:li:tag:Kubernetes"
+            - "urn:li:tag:Infrastructure"
+      - type: simple_add_dataset_ownership
+        config:
+          owner_urns:
+            - "urn:li:corpuser:platform-team"
+          ownership_type: "TECHNICAL_OWNER"
+
+    datahub:
+      report_to_datahub: true
+      pipeline_name: "kubernetes-hourly-ingestion"
+      stateful_ingestion:
+        enabled: true
+        remove_stale_metadata: true
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: datahub-kubernetes-ingestion
+  namespace: fawkes
+  labels:
+    app: datahub
+    component: ingestion
+    source: kubernetes
+spec:
+  # Schedule: Every hour at minute 15
+  schedule: "15 * * * *"
+
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+
+  concurrencyPolicy: Forbid
+
+  jobTemplate:
+    metadata:
+      labels:
+        app: datahub
+        component: ingestion
+        source: kubernetes
+    spec:
+      backoffLimit: 2
+      ttlSecondsAfterFinished: 86400
+
+      template:
+        metadata:
+          labels:
+            app: datahub
+            component: ingestion
+            source: kubernetes
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: datahub-k8s-ingestion
+
+          containers:
+          - name: datahub-ingestion
+            image: acryldata/datahub-ingestion:latest
+            imagePullPolicy: IfNotPresent
+
+            command:
+            - /bin/bash
+            - -c
+            - |
+              set -e
+              echo "Starting Kubernetes resources metadata ingestion..."
+
+              # Verify DataHub is accessible
+              if ! curl -f -s http://datahub-datahub-gms.fawkes.svc:8080/health > /dev/null; then
+                echo "ERROR: DataHub GMS is not accessible"
+                exit 1
+              fi
+
+              echo "DataHub GMS is healthy"
+              echo "Ingesting Kubernetes resources from namespaces: fawkes, argocd, monitoring..."
+
+              # Run ingestion
+              datahub ingest -c /config/kubernetes.yaml
+
+              echo "Kubernetes metadata ingestion completed successfully"
+
+            volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+
+            resources:
+              requests:
+                cpu: 200m
+                memory: 512Mi
+              limits:
+                cpu: 500m
+                memory: 1Gi
+
+          volumes:
+          - name: config
+            configMap:
+              name: datahub-kubernetes-ingestion-config
+
+---
+# ServiceAccount for Kubernetes ingestion (needs cluster-wide read access)
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: datahub-k8s-ingestion
+  namespace: fawkes
+  labels:
+    app: datahub
+    component: ingestion
+
+---
+# ClusterRole for reading Kubernetes resources across namespaces
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: datahub-k8s-ingestion
+  labels:
+    app: datahub
+    component: ingestion
+rules:
+# Read access to Kubernetes resources
+- apiGroups: [""]
+  resources:
+  - "pods"
+  - "services"
+  - "configmaps"
+  - "secrets"
+  - "persistentvolumeclaims"
+  - "namespaces"
+  verbs: ["get", "list"]
+
+- apiGroups: ["apps"]
+  resources:
+  - "deployments"
+  - "statefulsets"
+  - "daemonsets"
+  - "replicasets"
+  verbs: ["get", "list"]
+
+- apiGroups: ["batch"]
+  resources:
+  - "jobs"
+  - "cronjobs"
+  verbs: ["get", "list"]
+
+- apiGroups: ["networking.k8s.io"]
+  resources:
+  - "ingresses"
+  verbs: ["get", "list"]
+
+---
+# ClusterRoleBinding for Kubernetes ingestion ServiceAccount
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: datahub-k8s-ingestion
+  labels:
+    app: datahub
+    component: ingestion
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: datahub-k8s-ingestion
+subjects:
+- kind: ServiceAccount
+  name: datahub-k8s-ingestion
+  namespace: fawkes

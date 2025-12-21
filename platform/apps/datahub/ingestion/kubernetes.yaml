@@ -1,0 +1,192 @@
+# ==============================================================================
+# FILE: platform/apps/datahub/ingestion/kubernetes.yaml
+# PURPOSE: Kubernetes resources ingestion recipe for DataHub
+# USAGE: datahub ingest -c kubernetes.yaml
+# SCHEDULE: Hourly via CronJob (see cronjob-kubernetes-ingestion.yaml)
+# ==============================================================================
+
+# Source configuration for Kubernetes resources
+source:
+  type: kubernetes
+  config:
+    # Kubernetes cluster connection
+    # Uses in-cluster config when running in a pod with service account
+    cluster_name: "fawkes-local"
+
+    # For external access, specify kubeconfig
+    # kubeconfig_path: "/root/.kube/config"
+
+    # Namespaces to ingest (limit to platform namespaces)
+    namespace_pattern:
+      allow:
+        - "fawkes"
+        - "argocd"
+        - "monitoring"
+        - "logging"
+        - "ingress-nginx"
+        - "cert-manager"
+      deny:
+        - "kube-system"
+        - "kube-public"
+        - "kube-node-lease"
+
+    # Resource types to ingest
+    resource_types:
+      - "Deployment"
+      - "StatefulSet"
+      - "DaemonSet"
+      - "Service"
+      - "ConfigMap"
+      - "Secret"
+      - "Ingress"
+      - "PersistentVolumeClaim"
+      - "Pod"
+      - "Job"
+      - "CronJob"
+
+    # Extract ownership from annotations
+    # Links K8s resources to Backstage components
+    extract_ownership_from_annotations: true
+    ownership_source_type: "backstage"
+
+    # Annotation patterns to extract
+    annotation_keys:
+      # Backstage component annotations
+      - "backstage.io/kubernetes-id"
+      - "backstage.io/component-id"
+      - "app.kubernetes.io/name"
+      - "app.kubernetes.io/component"
+      - "app.kubernetes.io/part-of"
+      - "app.kubernetes.io/managed-by"
+      # Team and ownership
+      - "team"
+      - "owner"
+      - "contact"
+
+    # Label patterns to extract as tags
+    label_keys:
+      - "app"
+      - "component"
+      - "environment"
+      - "team"
+      - "version"
+      - "release"
+
+    # Extract resource relationships
+    extract_resource_relationships: true
+
+    # Extract container images and link to Harbor
+    extract_container_images: true
+
+    # Profiling and stats
+    profiling:
+      enabled: true
+      # Extract resource usage statistics
+      extract_resource_requests: true
+      extract_resource_limits: true
+
+# Sink configuration - DataHub GMS endpoint
+sink:
+  type: datahub-rest
+  config:
+    server: "http://datahub-datahub-gms.fawkes.svc:8080"
+
+    # Authentication (add token if auth is enabled)
+    # token: "${DATAHUB_TOKEN}"
+
+    # Timeout and retry configuration
+    timeout_sec: 60
+    max_retries: 5
+    retry_backoff_multiplier: 2
+
+# Transformation pipeline to enrich metadata
+transformers:
+  # Add Kubernetes tags
+  - type: simple_add_dataset_tags
+    config:
+      tag_urns:
+        - "urn:li:tag:Kubernetes"
+        - "urn:li:tag:Infrastructure"
+        - "urn:li:tag:Platform"
+
+  # Add platform team ownership
+  - type: simple_add_dataset_ownership
+    config:
+      owner_urns:
+        - "urn:li:corpuser:platform-team"
+      ownership_type: "TECHNICAL_OWNER"
+
+  # Map resources to domains based on namespace
+  - type: pattern_add_dataset_domain
+    config:
+      domain_pattern:
+        rules:
+          ".*fawkes.*": "urn:li:domain:platform-services"
+          ".*argocd.*": "urn:li:domain:gitops"
+          ".*monitoring.*": "urn:li:domain:observability"
+          ".*logging.*": "urn:li:domain:observability"
+          ".*ingress.*": "urn:li:domain:networking"
+
+  # Add environment tags based on labels
+  - type: pattern_add_dataset_tags
+    config:
+      tag_pattern:
+        rules:
+          ".*-dev-.*": ["urn:li:tag:Development"]
+          ".*-staging-.*": ["urn:li:tag:Staging"]
+          ".*-prod-.*": ["urn:li:tag:Production"]
+
+# Lineage extraction configuration
+# Link Kubernetes resources to related entities
+lineage:
+  # Link Deployments to Services
+  - source_type: "Deployment"
+    target_type: "Service"
+    relationship: "serves"
+
+  # Link ConfigMaps to Deployments that use them
+  - source_type: "ConfigMap"
+    target_type: "Deployment"
+    relationship: "configures"
+
+  # Link Secrets to Deployments that use them
+  - source_type: "Secret"
+    target_type: "Deployment"
+    relationship: "provides_credentials"
+
+  # Link PVCs to StatefulSets
+  - source_type: "PersistentVolumeClaim"
+    target_type: "StatefulSet"
+    relationship: "provides_storage"
+
+  # Link Ingresses to Services
+  - source_type: "Ingress"
+    target_type: "Service"
+    relationship: "routes_to"
+
+# Reporting configuration
+datahub:
+  # Report ingestion progress to DataHub
+  report_to_datahub: true
+
+  # Pipeline name for tracking
+  pipeline_name: "kubernetes-hourly-ingestion"
+
+  # Stateful ingestion to track changes
+  stateful_ingestion:
+    enabled: true
+    remove_stale_metadata: true
+
+# Additional metadata enrichment
+metadata_enrichment:
+  # Extract pod status and health
+  extract_pod_status: true
+
+  # Extract deployment strategy
+  extract_deployment_strategy: true
+
+  # Extract service endpoints
+  extract_service_endpoints: true
+
+  # Track resource changes over time
+  track_resource_changes: true
