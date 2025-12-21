@@ -1,0 +1,171 @@
+# ============================================================================
+# FILE: services/data-quality/alerting.yaml
+# PURPOSE: Alerting configuration for data quality monitoring
+# ============================================================================
+
+# Alert Rules
+rules:
+  # Alert when validation fails
+  - name: data_quality_validation_failed
+    enabled: true
+    severity: high
+    description: "Data quality validation has failed"
+    condition:
+      metric: data_quality_validation_failed_total
+      threshold: 1
+      duration: 5m
+    action:
+      type: mattermost
+      webhook_url: ${MATTERMOST_WEBHOOK_URL}
+      message_template: |
+        ## 🚨 Data Quality Alert
+        
+        **Alert**: Data Quality Validation Failed
+        **Database**: {{database}}
+        **Suite**: {{expectation_suite}}
+        **Failed Expectations**: {{failed_count}}
+        **Time**: {{timestamp}}
+        
+        **Action Required**: Review failed expectations and investigate data issues.
+        
+        [View Details]({{data_docs_url}})
+
+  # Alert on data freshness issues
+  - name: data_quality_stale_data
+    enabled: true
+    severity: medium
+    description: "Data has not been validated recently"
+    condition:
+      metric: data_quality_last_validation_timestamp
+      threshold: 28800  # 8 hours in seconds
+      duration: 1h
+    action:
+      type: mattermost
+      webhook_url: ${MATTERMOST_WEBHOOK_URL}
+      message_template: |
+        ## ⚠️  Data Freshness Alert
+        
+        **Alert**: Data validation is overdue
+        **Database**: {{database}}
+        **Last Validation**: {{last_validation_time}}
+        **Expected Interval**: 6 hours
+        
+        **Action Required**: Check CronJob status and ensure validations are running.
+
+  # Alert on high failure rate
+  - name: data_quality_high_failure_rate
+    enabled: true
+    severity: critical
+    description: "Data quality failure rate is too high"
+    condition:
+      metric: data_quality_failure_rate
+      threshold: 0.2  # 20% failure rate
+      duration: 1h
+    action:
+      type: mattermost
+      webhook_url: ${MATTERMOST_WEBHOOK_URL}
+      message_template: |
+        ## 🔥 Critical Data Quality Alert
+        
+        **Alert**: High failure rate detected
+        **Failure Rate**: {{failure_rate}}%
+        **Period**: Last hour
+        
+        **Action Required**: Immediate investigation required. Multiple data quality issues detected.
+        
+        [View Dashboard]({{grafana_dashboard_url}})
+
+# Daily Summary Configuration
+daily_summary:
+  enabled: true
+  schedule: "0 9 * * *"  # 9 AM daily
+  webhook_url: ${MATTERMOST_WEBHOOK_URL}
+  message_template: |
+    ## 📊 Daily Data Quality Summary
+    
+    **Date**: {{date}}
+    
+    ### Overall Status
+    - Total Validations: {{total_validations}}
+    - Successful: ✅ {{successful_validations}}
+    - Failed: ❌ {{failed_validations}}
+    - Success Rate: {{success_rate}}%
+    
+    ### By Database
+    {{#databases}}
+    - **{{name}}**: {{status}} ({{last_validation}})
+    {{/databases}}
+    
+    ### Top Issues
+    {{#top_failures}}
+    - {{expectation_type}}: {{count}} failures
+    {{/top_failures}}
+    
+    [View Full Report]({{data_docs_url}})
+
+# Notification Channels
+channels:
+  mattermost:
+    enabled: true
+    webhook_url: ${MATTERMOST_WEBHOOK_URL}
+    channel: "#data-quality"
+    username: "Data Quality Bot"
+    icon_emoji: ":chart_with_upwards_trend:"
+  
+  # Future: Add email, Slack, PagerDuty, etc.
+  email:
+    enabled: false
+    smtp_host: smtp.example.com
+    smtp_port: 587
+    from_address: data-quality@fawkes.local
+    to_addresses:
+      - data-team@example.com
+  
+  slack:
+    enabled: false
+    webhook_url: ${SLACK_WEBHOOK_URL}
+    channel: "#data-quality"
+
+# Alert Thresholds
+thresholds:
+  critical:
+    failure_rate: 0.5  # 50% or more failures
+    stale_data_hours: 24
+  
+  high:
+    failure_rate: 0.2  # 20% or more failures
+    stale_data_hours: 12
+  
+  medium:
+    failure_rate: 0.1  # 10% or more failures
+    stale_data_hours: 8
+  
+  low:
+    failure_rate: 0.05  # 5% or more failures
+    stale_data_hours: 6
+
+# Alert Deduplication
+deduplication:
+  enabled: true
+  window: 1h  # Don't send duplicate alerts within 1 hour
+  group_by:
+    - database
+    - expectation_suite
+
+# Escalation
+escalation:
+  enabled: false
+  rules:
+    - condition:
+        severity: critical
+        duration: 1h
+      action:
+        type: pagerduty
+        service_key: ${PAGERDUTY_SERVICE_KEY}
+    - condition:
+        severity: high
+        duration: 4h
+      action:
+        type: email
+        recipients:
+          - oncall@example.com

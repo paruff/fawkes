@@ -1,0 +1,248 @@
+{
+  "dashboard": {
+    "title": "Data Quality Monitoring",
+    "tags": ["data-quality", "great-expectations", "monitoring"],
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 0,
+    "refresh": "5m",
+    "panels": [
+      {
+        "id": 1,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "type": "stat",
+        "title": "Validation Success Rate (Last 24h)",
+        "targets": [
+          {
+            "expr": "(sum(data_quality_validation_success) / sum(data_quality_validation_total)) * 100",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "values": false,
+            "calcs": ["lastNotNull"]
+          },
+          "orientation": "auto",
+          "textMode": "auto",
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "value": 0,
+                  "color": "red"
+                },
+                {
+                  "value": 80,
+                  "color": "yellow"
+                },
+                {
+                  "value": 95,
+                  "color": "green"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "type": "stat",
+        "title": "Failed Validations (Last 24h)",
+        "targets": [
+          {
+            "expr": "sum(increase(data_quality_validation_failed_total[24h]))",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "values": false,
+            "calcs": ["lastNotNull"]
+          },
+          "textMode": "auto",
+          "colorMode": "value"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "value": 0,
+                  "color": "green"
+                },
+                {
+                  "value": 1,
+                  "color": "yellow"
+                },
+                {
+                  "value": 5,
+                  "color": "red"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 8
+        },
+        "type": "graph",
+        "title": "Validation Results Over Time",
+        "targets": [
+          {
+            "expr": "sum(rate(data_quality_validation_success[5m]))",
+            "legendFormat": "Success",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(rate(data_quality_validation_failed_total[5m]))",
+            "legendFormat": "Failed",
+            "refId": "B"
+          }
+        ],
+        "xaxis": {
+          "mode": "time"
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": "Validations/sec"
+          },
+          {
+            "format": "short"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 16
+        },
+        "type": "table",
+        "title": "Database Validation Status",
+        "targets": [
+          {
+            "expr": "data_quality_validation_success_by_database",
+            "refId": "A",
+            "format": "table"
+          }
+        ],
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {},
+              "indexByName": {},
+              "renameByName": {
+                "database": "Database",
+                "Value": "Status"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 16
+        },
+        "type": "table",
+        "title": "Recent Validation Failures",
+        "targets": [
+          {
+            "expr": "topk(10, data_quality_validation_failed_expectations)",
+            "refId": "A",
+            "format": "table"
+          }
+        ],
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {},
+              "indexByName": {},
+              "renameByName": {
+                "database": "Database",
+                "expectation_suite": "Suite",
+                "Value": "Failed Count"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 24
+        },
+        "type": "heatmap",
+        "title": "Data Freshness by Database",
+        "targets": [
+          {
+            "expr": "time() - data_quality_last_validation_timestamp",
+            "legendFormat": "{{database}}",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "calculate": false,
+          "cellGap": 2,
+          "cellRadius": 0,
+          "color": {
+            "mode": "scheme",
+            "scheme": "Spectral"
+          },
+          "yAxis": {
+            "decimals": 0
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s"
+          }
+        }
+      }
+    ],
+    "time": {
+      "from": "now-24h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["5m", "15m", "30m", "1h", "2h", "1d"]
+    }
+  }
+}
