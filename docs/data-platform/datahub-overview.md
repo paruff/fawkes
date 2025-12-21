@@ -462,7 +462,9 @@ kubectl exec -it -n logging opensearch-cluster-master-0 -- \
 **Solutions**:
 1. Rebuild search index:
    ```bash
-   curl -X POST http://datahub.127.0.0.1.nip.io/gms/reindex
+   # Access DataHub pod and trigger reindex
+   kubectl exec -n fawkes deployment/datahub-datahub-gms -- \
+     curl -X POST http://localhost:8080/gms/operations?action=restoreIndices
    ```
 2. Verify OpenSearch connectivity from DataHub pods
 3. Check OpenSearch resource limits

@@ -127,17 +127,28 @@ validate_postgresql() {
 
 validate_opensearch() {
   log_info "Checking OpenSearch..."
-  
+
   # Check if OpenSearch pods are running
-  local pod_count
-  pod_count=$(kubectl get pods -n "$LOGGING_NAMESPACE" -l "app=opensearch" --field-selector=status.phase=Running -o json 2>/dev/null | jq '.items | length' 2>/dev/null || echo "0")
-  
-  if [ "$pod_count" -lt 1 ]; then
-    log_error "No OpenSearch pods are running in namespace '$LOGGING_NAMESPACE'"
-    return 1
+  if command -v jq &> /dev/null; then
+    local pod_count
+    pod_count=$(kubectl get pods -n "$LOGGING_NAMESPACE" -l "app=opensearch" --field-selector=status.phase=Running -o json 2>/dev/null | jq '.items | length' 2>/dev/null || echo "0")
+
+    if [ "$pod_count" -lt 1 ]; then
+      log_error "No OpenSearch pods are running in namespace '$LOGGING_NAMESPACE'"
+      return 1
+    fi
+
+    log_info "✓ OpenSearch has $pod_count running pod(s)"
+  else
+    # Fallback without jq
+    if kubectl get pods -n "$LOGGING_NAMESPACE" -l "app=opensearch" --field-selector=status.phase=Running 2>/dev/null | grep -q "opensearch"; then
+      log_info "✓ OpenSearch pods are running"
+    else
+      log_error "No OpenSearch pods are running in namespace '$LOGGING_NAMESPACE'"
+      return 1
+    fi
   fi
-  
-  log_info "✓ OpenSearch has $pod_count running pod(s)"
+
   return 0
 }
 
