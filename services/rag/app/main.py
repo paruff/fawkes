@@ -10,6 +10,7 @@ import logging
 from pathlib import Path
 from typing import List, Optional, Dict
 from contextlib import asynccontextmanager
+from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
@@ -462,7 +463,7 @@ async def get_stats():
             try:
                 # Parse ISO format timestamp
                 last_indexed_dt = datetime.fromisoformat(last_indexed_timestamp.replace("Z", "+00:00"))
-                now = datetime.utcnow()
+                now = datetime.now(last_indexed_dt.tzinfo) if last_indexed_dt.tzinfo else datetime.now()
                 delta = now - last_indexed_dt.replace(tzinfo=None)
                 index_freshness_hours = round(delta.total_seconds() / 3600, 2)
             except Exception as e:
