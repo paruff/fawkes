@@ -1,12 +1,16 @@
 """Database models for VSM service."""
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float, Enum as SQLEnum
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import declarative_base, relationship
 import enum
 
 Base = declarative_base()
+
+
+def utcnow():
+    """Get current UTC time."""
+    return datetime.now(timezone.utc)
 
 
 class WorkItemType(str, enum.Enum):
@@ -34,8 +38,8 @@ class WorkItem(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(500), nullable=False)
     type = Column(SQLEnum(WorkItemType), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
+    updated_at = Column(DateTime, default=utcnow, onupdate=utcnow, nullable=False)
     
     # Relationships
     transitions = relationship("StageTransition", back_populates="work_item", cascade="all, delete-orphan")
@@ -49,7 +53,7 @@ class Stage(Base):
     name = Column(String(100), unique=True, nullable=False, index=True)
     order = Column(Integer, nullable=False)
     type = Column(SQLEnum(StageType), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
     
     # Relationships
     transitions_from = relationship(
@@ -72,7 +76,7 @@ class StageTransition(Base):
     work_item_id = Column(Integer, ForeignKey("work_items.id"), nullable=False, index=True)
     from_stage_id = Column(Integer, ForeignKey("stages.id"), nullable=True)  # NULL for initial state
     to_stage_id = Column(Integer, ForeignKey("stages.id"), nullable=False)
-    timestamp = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
+    timestamp = Column(DateTime, default=utcnow, nullable=False, index=True)
     
     # Relationships
     work_item = relationship("WorkItem", back_populates="transitions")
@@ -96,4 +100,4 @@ class FlowMetrics(Base):
     cycle_time_p85 = Column(Float, nullable=True)  # 85th percentile
     cycle_time_p95 = Column(Float, nullable=True)  # 95th percentile
     
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utcnow, nullable=False)

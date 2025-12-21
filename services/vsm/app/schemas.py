@@ -1,7 +1,7 @@
 """Pydantic schemas for API request/response models."""
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from app.models import WorkItemType, StageType
 
 
@@ -14,15 +14,14 @@ class WorkItemCreate(BaseModel):
 
 class WorkItemResponse(BaseModel):
     """Response model for work item."""
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int = Field(..., description="Work item ID")
     title: str = Field(..., description="Work item title")
     type: WorkItemType = Field(..., description="Work item type")
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
     current_stage: Optional[str] = Field(None, description="Current stage name")
-    
-    class Config:
-        from_attributes = True
 
 
 # Stage Transition Schemas
@@ -33,14 +32,13 @@ class StageTransitionCreate(BaseModel):
 
 class StageTransitionResponse(BaseModel):
     """Response model for stage transition."""
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int = Field(..., description="Transition ID")
     work_item_id: int = Field(..., description="Work item ID")
     from_stage: Optional[str] = Field(None, description="Source stage name")
     to_stage: str = Field(..., description="Target stage name")
     timestamp: datetime = Field(..., description="Transition timestamp")
-    
-    class Config:
-        from_attributes = True
 
 
 # Work Item History Schema
@@ -64,16 +62,15 @@ class FlowMetricsResponse(BaseModel):
     period_end: datetime = Field(..., description="Period end date")
 
 
-# Stage Schema
+# Stage Response
 class StageResponse(BaseModel):
     """Response model for stage."""
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int = Field(..., description="Stage ID")
     name: str = Field(..., description="Stage name")
     order: int = Field(..., description="Stage order in value stream")
     type: StageType = Field(..., description="Stage type")
-    
-    class Config:
-        from_attributes = True
 
 
 # Health Check Schema

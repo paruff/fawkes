@@ -34,9 +34,9 @@ spec:
       # Security context
       securityContext:
         runAsNonRoot: true
-        runAsUser: 65534
-        runAsGroup: 65534
-        fsGroup: 65534
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
       
       containers:
       - name: vsm-service
@@ -114,7 +114,7 @@ spec:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false
           runAsNonRoot: true
-          runAsUser: 65534
+          runAsUser: 10001
           capabilities:
             drop:
               - ALL
