@@ -279,5 +279,5 @@ Optimize with:
 ## Related Documentation
 
 - [Weaviate Documentation](https://weaviate.io/developers/weaviate)
-- [ADR-020: Vector Database Selection](../../../docs/adr/ADR-020-vector-database.md)
-- [RAG Architecture Guide](../../../docs/patterns/rag-architecture.md)
+- [ADR-031: Vector Database Selection](../../../docs/adr/ADR-031%20Vector%20Database%20Selection.md)
+- [RAG Architecture Guide](../../../docs/ai/vector-database.md)
