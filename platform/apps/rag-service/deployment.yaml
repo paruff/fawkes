@@ -1,0 +1,126 @@
+# ============================================================================
+# FILE: platform/apps/rag-service/deployment.yaml
+# PURPOSE: Kubernetes Deployment for RAG (Retrieval Augmented Generation) service
+#          Provides AI context retrieval from Weaviate vector database
+# ============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rag-service
+  namespace: fawkes
+  labels:
+    app: rag-service
+    component: ai
+    environment: dev
+    team: platform
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rag-service
+  template:
+    metadata:
+      labels:
+        app: rag-service
+        component: ai
+        version: v0.1.0
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: rag-service
+      
+      # Security context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+      
+      containers:
+      - name: rag-service
+        image: rag-service:latest
+        imagePullPolicy: IfNotPresent
+        
+        ports:
+        - name: http
+          containerPort: 8000
+          protocol: TCP
+        
+        env:
+        - name: WEAVIATE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: rag-service-config
+              key: weaviate_url
+        - name: SCHEMA_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: rag-service-config
+              key: schema_name
+        - name: DEFAULT_TOP_K
+          valueFrom:
+            configMapKeyRef:
+              name: rag-service-config
+              key: default_top_k
+        - name: DEFAULT_THRESHOLD
+          valueFrom:
+            configMapKeyRef:
+              name: rag-service-config
+              key: default_threshold
+        
+        # Resource limits
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 1
+            memory: 1Gi
+        
+        # Liveness probe
+        livenessProbe:
+          httpGet:
+            path: /api/v1/health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        # Readiness probe
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        
+        # Security context
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
+          runAsUser: 65534
+          capabilities:
+            drop:
+              - ALL
+          seccompProfile:
+            type: RuntimeDefault
+      
+      # Pod affinity to spread across nodes
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - rag-service
+              topologyKey: kubernetes.io/hostname

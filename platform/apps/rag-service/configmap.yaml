@@ -1,0 +1,22 @@
+# ============================================================================
+# FILE: platform/apps/rag-service/configmap.yaml
+# PURPOSE: ConfigMap for RAG service configuration
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rag-service-config
+  namespace: fawkes
+  labels:
+    app: rag-service
+    component: ai
+data:
+  # Weaviate connection
+  weaviate_url: "http://weaviate.fawkes.svc:80"
+  
+  # Schema configuration
+  schema_name: "FawkesDocument"
+  
+  # Query defaults
+  default_top_k: "5"
+  default_threshold: "0.7"
