@@ -1,0 +1,92 @@
+# ============================================================================
+# FILE: platform/apps/data-quality/deployment-exporter.yaml
+# PURPOSE: Deployment for Prometheus exporter
+# ============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-quality-exporter
+  namespace: fawkes
+  labels:
+    app: data-quality-exporter
+    component: metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-quality-exporter
+  template:
+    metadata:
+      labels:
+        app: data-quality-exporter
+        component: metrics
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9110"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: data-quality
+      containers:
+        - name: exporter
+          image: python:3.11-slim
+          command:
+            - /bin/bash
+            - -c
+            - |
+              set -e
+              echo "Installing dependencies..."
+              pip install -q prometheus-client==0.19.0 great-expectations==0.18.12 sqlalchemy==2.0.25 psycopg2-binary==2.9.9 requests==2.31.0
+              
+              echo "Starting Prometheus exporter..."
+              python3 /app/prometheus-exporter.py --port 9110 --results-dir /app/gx/uncommitted/validations
+          workingDir: /app
+          ports:
+            - name: metrics
+              containerPort: 9110
+              protocol: TCP
+          env:
+            - name: METRICS_PORT
+              value: "9110"
+            - name: GX_RESULTS_DIR
+              value: "/app/gx/uncommitted/validations"
+          volumeMounts:
+            - name: exporter-script
+              mountPath: /app/prometheus-exporter.py
+              subPath: prometheus-exporter.py
+            - name: gx-config
+              mountPath: /app/gx
+            - name: validation-results
+              mountPath: /app/gx/uncommitted/validations
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 9110
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 9110
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+      volumes:
+        - name: exporter-script
+          configMap:
+            name: prometheus-exporter-config
+            defaultMode: 0755
+        - name: gx-config
+          configMap:
+            name: gx-full-config
+        - name: validation-results
+          emptyDir: {}

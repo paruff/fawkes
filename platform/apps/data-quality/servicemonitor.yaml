@@ -1,0 +1,21 @@
+# ============================================================================
+# FILE: platform/apps/data-quality/servicemonitor.yaml
+# PURPOSE: ServiceMonitor for Prometheus scraping
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: data-quality-exporter
+  namespace: fawkes
+  labels:
+    app: data-quality-exporter
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: data-quality-exporter
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+      scheme: http
