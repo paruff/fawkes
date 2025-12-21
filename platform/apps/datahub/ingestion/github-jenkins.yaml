@@ -15,7 +15,7 @@ source:
     # Use personal access token with repo scope
     github_host: "github.com"
     token: "${GITHUB_TOKEN}"
-    
+
     # Repository patterns
     # Include all repos from the organization/user
     repo_pattern:
@@ -25,7 +25,7 @@ source:
       deny:
         - ".*/.*-archive"  # Exclude archived repos
         - ".*/.*-deprecated"
-    
+
     # What to ingest from GitHub
     extract_repos: true
     extract_branches: true
@@ -34,7 +34,7 @@ source:
     extract_issues: false  # Optional: Set to true if needed
     extract_teams: true
     extract_users: true
-    
+
     # Commit extraction settings
     commit_extraction:
       # Extract commits from main/master branch
@@ -48,7 +48,7 @@ source:
       extract_authors: true
       # Extract commit statistics (additions, deletions)
       extract_stats: true
-    
+
     # Pull Request extraction settings
     pull_request_extraction:
       # Extract closed PRs as well
@@ -58,7 +58,7 @@ source:
       # Extract PR reviews and comments
       extract_reviews: true
       extract_comments: false  # Can be expensive
-    
+
     # Branch extraction settings
     branch_extraction:
       # Include all branches or just main
@@ -67,14 +67,14 @@ source:
       protected_branches_only: true
       # Extract branch protection rules
       extract_protection_rules: true
-    
+
     # Team and user mapping
     extract_ownership:
       # Map repositories to teams
       from_github_teams: true
       # Map repositories to users via CODEOWNERS
       from_codeowners: true
-    
+
     # Profiling
     profiling:
       enabled: true
@@ -100,14 +100,14 @@ transformers:
         - "urn:li:tag:GitHub"
         - "urn:li:tag:SourceControl"
         - "urn:li:tag:Git"
-  
+
   # Add ownership
   - type: simple_add_dataset_ownership
     config:
       owner_urns:
         - "urn:li:corpuser:platform-team"
       ownership_type: "TECHNICAL_OWNER"
-  
+
   # Map to source control domain
   - type: pattern_add_dataset_domain
     config:
@@ -134,17 +134,17 @@ source:
   config:
     # Jenkins connection
     jenkins_url: "http://jenkins.fawkes.svc.cluster.local:8080"
-    
+
     # Authentication
     username: "${JENKINS_USER}"
     # Use API token, not password
     password: "${JENKINS_TOKEN}"
-    
+
     # Job extraction settings
     extract_jobs: true
     extract_builds: true
     extract_pipelines: true
-    
+
     # Build history settings
     build_extraction:
       # How many recent builds to extract per job
@@ -159,7 +159,7 @@ source:
       extract_test_results: true
       # Extract build console logs (metadata only, not full logs)
       extract_log_metadata: true
-    
+
     # Pipeline extraction settings
     pipeline_extraction:
       # Extract Jenkinsfile from repo
@@ -168,7 +168,7 @@ source:
       extract_stages: true
       # Extract pipeline parameters
       extract_pipeline_params: true
-    
+
     # Job patterns to include/exclude
     job_pattern:
       allow:
@@ -176,10 +176,10 @@ source:
       deny:
         - ".*-test-.*"  # Exclude test jobs
         - ".*-experimental"
-    
+
     # Extract job folder structure
     extract_folders: true
-    
+
     # Profiling
     profiling:
       enabled: true
@@ -206,14 +206,14 @@ transformers:
         - "urn:li:tag:CICD"
         - "urn:li:tag:Pipeline"
         - "urn:li:tag:Automation"
-  
+
   # Add platform team ownership
   - type: simple_add_dataset_ownership
     config:
       owner_urns:
         - "urn:li:corpuser:platform-team"
       ownership_type: "TECHNICAL_OWNER"
-  
+
   # Map to CI/CD domain
   - type: pattern_add_dataset_domain
     config:
@@ -228,7 +228,7 @@ transformers:
 lineage:
   # Extract lineage from Jenkins job configuration
   extract_from_job_config: true
-  
+
   # Link jobs to source repositories
   link_jobs_to_repos:
     enabled: true
@@ -236,13 +236,13 @@ lineage:
     extract_scm_urls: true
     # Map Jenkins jobs to GitHub repos
     repo_url_pattern: "https://github.com/(.*?)/(.*?)(.git)?"
-  
+
   # Link pipelines to their stages
   link_pipeline_stages:
     enabled: true
     # Extract upstream/downstream job relationships
     extract_job_dependencies: true
-  
+
   # Link builds to artifacts
   link_builds_to_artifacts:
     enabled: true
@@ -261,28 +261,28 @@ datahub:
 # Extract DORA metrics from Jenkins builds
 dora_metrics:
   enabled: true
-  
+
   # Deployment frequency
   deployment_frequency:
     # Jobs that represent deployments
     deployment_job_pattern: ".*deploy.*"
     # Calculate frequency per environment
     calculate_per_environment: true
-  
+
   # Lead time for changes
   lead_time:
     # Extract from commit to deployment
     extract_commit_to_deploy: true
     # Link to GitHub commits
     link_to_github_commits: true
-  
+
   # Change failure rate
   change_failure_rate:
     # Jobs that rollback or fix issues
     failure_job_pattern: ".*rollback.*|.*hotfix.*"
     # Calculate rate per service
     calculate_per_service: true
-  
+
   # Mean time to recovery
   mttr:
     # Extract from failure detection to recovery

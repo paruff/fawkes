@@ -19,7 +19,7 @@ data:
       type: kubernetes
       config:
         cluster_name: "fawkes-local"
-        
+
         namespace_pattern:
           allow:
             - "fawkes"
@@ -30,7 +30,7 @@ data:
           deny:
             - "kube-system"
             - "kube-public"
-        
+
         resource_types:
           - "Deployment"
           - "StatefulSet"
@@ -38,30 +38,30 @@ data:
           - "ConfigMap"
           - "Ingress"
           - "PersistentVolumeClaim"
-        
+
         extract_ownership_from_annotations: true
         ownership_source_type: "backstage"
-        
+
         annotation_keys:
           - "backstage.io/kubernetes-id"
           - "app.kubernetes.io/name"
           - "app.kubernetes.io/component"
           - "team"
           - "owner"
-        
+
         label_keys:
           - "app"
           - "component"
           - "environment"
           - "team"
-    
+
     sink:
       type: datahub-rest
       config:
         server: "http://datahub-datahub-gms.fawkes.svc:8080"
         timeout_sec: 60
         max_retries: 5
-    
+
     transformers:
       - type: simple_add_dataset_tags
         config:
@@ -73,7 +73,7 @@ data:
           owner_urns:
             - "urn:li:corpuser:platform-team"
           ownership_type: "TECHNICAL_OWNER"
-    
+
     datahub:
       report_to_datahub: true
       pipeline_name: "kubernetes-hourly-ingestion"
@@ -94,12 +94,12 @@ metadata:
 spec:
   # Schedule: Every hour at minute 15
   schedule: "15 * * * *"
-  
+
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
-  
+
   concurrencyPolicy: Forbid
-  
+
   jobTemplate:
     metadata:
       labels:
@@ -109,7 +109,7 @@ spec:
     spec:
       backoffLimit: 2
       ttlSecondsAfterFinished: 86400
-      
+
       template:
         metadata:
           labels:
@@ -119,38 +119,38 @@ spec:
         spec:
           restartPolicy: OnFailure
           serviceAccountName: datahub-k8s-ingestion
-          
+
           containers:
           - name: datahub-ingestion
             image: acryldata/datahub-ingestion:latest
             imagePullPolicy: IfNotPresent
-            
+
             command:
-              - /bin/bash
-              - -c
-              - |
-                set -e
-                echo "Starting Kubernetes resources metadata ingestion..."
-                
-                # Verify DataHub is accessible
-                if ! curl -f -s http://datahub-datahub-gms.fawkes.svc:8080/health > /dev/null; then
-                  echo "ERROR: DataHub GMS is not accessible"
-                  exit 1
-                fi
-                
-                echo "DataHub GMS is healthy"
-                echo "Ingesting Kubernetes resources from namespaces: fawkes, argocd, monitoring..."
-                
-                # Run ingestion
-                datahub ingest -c /config/kubernetes.yaml
-                
-                echo "Kubernetes metadata ingestion completed successfully"
-            
+            - /bin/bash
+            - -c
+            - |
+              set -e
+              echo "Starting Kubernetes resources metadata ingestion..."
+
+              # Verify DataHub is accessible
+              if ! curl -f -s http://datahub-datahub-gms.fawkes.svc:8080/health > /dev/null; then
+                echo "ERROR: DataHub GMS is not accessible"
+                exit 1
+              fi
+
+              echo "DataHub GMS is healthy"
+              echo "Ingesting Kubernetes resources from namespaces: fawkes, argocd, monitoring..."
+
+              # Run ingestion
+              datahub ingest -c /config/kubernetes.yaml
+
+              echo "Kubernetes metadata ingestion completed successfully"
+
             volumeMounts:
-              - name: config
-                mountPath: /config
-                readOnly: true
-            
+            - name: config
+              mountPath: /config
+              readOnly: true
+
             resources:
               requests:
                 cpu: 200m
@@ -158,11 +158,11 @@ spec:
               limits:
                 cpu: 500m
                 memory: 1Gi
-          
+
           volumes:
-            - name: config
-              configMap:
-                name: datahub-kubernetes-ingestion-config
+          - name: config
+            configMap:
+              name: datahub-kubernetes-ingestion-config
 
 ---
 # ServiceAccount for Kubernetes ingestion (needs cluster-wide read access)
@@ -185,35 +185,35 @@ metadata:
     app: datahub
     component: ingestion
 rules:
-  # Read access to Kubernetes resources
-  - apiGroups: [""]
-    resources:
-      - "pods"
-      - "services"
-      - "configmaps"
-      - "secrets"
-      - "persistentvolumeclaims"
-      - "namespaces"
-    verbs: ["get", "list"]
-  
-  - apiGroups: ["apps"]
-    resources:
-      - "deployments"
-      - "statefulsets"
-      - "daemonsets"
-      - "replicasets"
-    verbs: ["get", "list"]
-  
-  - apiGroups: ["batch"]
-    resources:
-      - "jobs"
-      - "cronjobs"
-    verbs: ["get", "list"]
-  
-  - apiGroups: ["networking.k8s.io"]
-    resources:
-      - "ingresses"
-    verbs: ["get", "list"]
+# Read access to Kubernetes resources
+- apiGroups: [""]
+  resources:
+  - "pods"
+  - "services"
+  - "configmaps"
+  - "secrets"
+  - "persistentvolumeclaims"
+  - "namespaces"
+  verbs: ["get", "list"]
+
+- apiGroups: ["apps"]
+  resources:
+  - "deployments"
+  - "statefulsets"
+  - "daemonsets"
+  - "replicasets"
+  verbs: ["get", "list"]
+
+- apiGroups: ["batch"]
+  resources:
+  - "jobs"
+  - "cronjobs"
+  verbs: ["get", "list"]
+
+- apiGroups: ["networking.k8s.io"]
+  resources:
+  - "ingresses"
+  verbs: ["get", "list"]
 
 ---
 # ClusterRoleBinding for Kubernetes ingestion ServiceAccount
@@ -229,6 +229,6 @@ roleRef:
   kind: ClusterRole
   name: datahub-k8s-ingestion
 subjects:
-  - kind: ServiceAccount
-    name: datahub-k8s-ingestion
-    namespace: fawkes
+- kind: ServiceAccount
+  name: datahub-k8s-ingestion
+  namespace: fawkes
