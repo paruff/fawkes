@@ -50,14 +50,109 @@
       "meta": {
         "notes": "Latest data should be recent (data freshness check)"
       }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "metric_type"
+      },
+      "meta": {
+        "notes": "metric_type identifies the DORA metric category"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "metric_type"
+      },
+      "meta": {
+        "notes": "metric_type is required for all metrics"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "metric_type",
+        "value_set": [
+          "deployment_frequency",
+          "lead_time",
+          "change_failure_rate",
+          "mttr"
+        ]
+      },
+      "meta": {
+        "notes": "metric_type should be one of the four DORA metrics"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "value"
+      },
+      "meta": {
+        "notes": "value contains the metric measurement"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "value"
+      },
+      "meta": {
+        "notes": "value is required for all metrics"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "column": "value",
+        "type_": "NUMERIC"
+      },
+      "meta": {
+        "notes": "value should be numeric type (NUMERIC, FLOAT, or DOUBLE)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "value",
+        "min_value": 0,
+        "max_value": 999999999
+      },
+      "meta": {
+        "notes": "value should be non-negative and within reasonable range"
+      }
+    },
+    {
+      "expectation_type": "expect_column_min_to_be_between",
+      "kwargs": {
+        "column": "timestamp",
+        "min_value": "2024-01-01",
+        "max_value": "2030-12-31",
+        "parse_strings_as_datetimes": true
+      },
+      "meta": {
+        "notes": "Oldest data should not be too old (data retention check)"
+      }
     }
   ],
   "ge_cloud_id": null,
   "meta": {
     "great_expectations_version": "0.18.12",
-    "description": "Expectation suite for DORA metrics validation (data freshness, completeness)",
+    "description": "Comprehensive expectation suite for DORA metrics validation",
     "database": "backstage",
     "schema": "public",
-    "notes": "DORA metrics are stored in deployment_events or similar table"
+    "table": "deployment_events",
+    "validations": [
+      "Column presence for required fields",
+      "Null value constraints on all required columns",
+      "Timestamp validity and format",
+      "Data freshness (latest and oldest data)",
+      "Metric type enumeration validation",
+      "Value type and range validation",
+      "Time-series completeness",
+      "Row count sanity checks"
+    ],
+    "notes": "DORA metrics are stored in deployment_events or similar table with four key metrics: deployment_frequency, lead_time, change_failure_rate, and mttr"
   }
 }

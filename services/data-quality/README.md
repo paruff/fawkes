@@ -9,6 +9,7 @@ The data quality service validates data in the following databases:
 - **Harbor**: Container registry metadata
 - **DataHub**: Data catalog metadata
 - **DORA Metrics**: Deployment and performance metrics
+- **SonarQube**: Code quality and analysis data
 
 ## Architecture
 
@@ -32,11 +33,14 @@ services/data-quality/
 │   ├── backstage_db_suite.json
 │   ├── harbor_db_suite.json
 │   ├── datahub_db_suite.json
-│   └── dora_metrics_suite.json
+│   ├── dora_metrics_suite.json
+│   └── sonarqube_db_suite.json
 ├── checkpoints/                  # Validation runners
 │   ├── backstage_db_checkpoint.yml
 │   ├── harbor_db_checkpoint.yml
 │   ├── datahub_db_checkpoint.yml
+│   ├── dora_metrics_checkpoint.yml
+│   ├── sonarqube_db_checkpoint.yml
 │   └── all_databases_checkpoint.yml
 └── scripts/                      # Helper scripts
     ├── alert_handler.py          # Mattermost alerting
@@ -73,6 +77,18 @@ Validates:
 - Timestamp column exists and is valid
 - Data freshness (latest data is recent)
 - Completeness of time-series data
+- Metric type enumeration (deployment_frequency, lead_time, change_failure_rate, mttr)
+- Value type and range validation
+
+### SonarQube Database (`sonarqube_db_suite.json`)
+Validates:
+- Project row counts
+- Required columns (uuid, kee, name, timestamps)
+- Primary key uniqueness
+- UUID format validation
+- Project key (kee) uniqueness
+- Timestamp validity
+- Data freshness
 
 ## Deployment
 
