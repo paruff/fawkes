@@ -39,18 +39,18 @@ spec:
             # System update configuration
             systemUpdate:
               enabled: true
-            
+
             # App version
             appVersion: "head"
-            
+
             # Monitoring
             monitoring:
               enablePrometheus: true
-            
+
             # Managed ingestion settings
             managed_ingestion:
               enabled: false  # Enable later for scheduled ingestion
-          
+
           # Elasticsearch configuration (using OpenSearch)
           elasticsearch:
             host: "opensearch-cluster-master.logging.svc.cluster.local"
@@ -61,7 +61,7 @@ spec:
               password:
                 secretRef: ""
                 secretKey: ""
-          
+
           # SQL (PostgreSQL) configuration
           sql:
             datasource:
@@ -74,17 +74,17 @@ spec:
               password:
                 secretRef: "db-datahub-credentials"
                 secretKey: "password"
-          
+
           # Kafka configuration - using PostgreSQL mode instead
           kafka:
             bootstrap:
               server: ""
             zookeeper:
               server: ""
-          
+
           # Neo4j disabled for MVP (using SQL-based graph)
           graph_service_impl: elasticsearch
-          
+
           # Datahub metadata service configuration
           datahub_analytics_enabled: true
           datahub_standalone_consumers_enabled: false  # No Kafka consumers
@@ -95,11 +95,11 @@ spec:
         datahub-gms:
           enabled: true
           replicaCount: 1
-          
+
           image:
             repository: acryldata/datahub-gms
             tag: "head"
-          
+
           # Resource configuration
           resources:
             requests:
@@ -108,7 +108,7 @@ spec:
             limits:
               cpu: 1
               memory: 2Gi
-          
+
           # Health probes
           livenessProbe:
             httpGet:
@@ -117,7 +117,7 @@ spec:
             initialDelaySeconds: 60
             periodSeconds: 30
             failureThreshold: 4
-          
+
           readinessProbe:
             httpGet:
               path: /health
@@ -125,16 +125,16 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 10
             failureThreshold: 4
-          
+
           # Service configuration
           service:
             type: ClusterIP
             port: 8080
-          
+
           # Ingress for GMS API
           ingress:
             enabled: false  # Access through frontend
-          
+
           # Environment variables
           env:
             - name: ELASTICSEARCH_USE_SSL
@@ -149,13 +149,13 @@ spec:
               value: "quickstart"  # Simplified mode
             - name: METADATA_SERVICE_AUTH_ENABLED
               value: "false"  # Enable for production
-          
+
           # Security context
           podSecurityContext:
             runAsUser: 1000
             runAsGroup: 1000
             fsGroup: 1000
-          
+
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
@@ -170,11 +170,11 @@ spec:
         datahub-frontend:
           enabled: true
           replicaCount: 1
-          
+
           image:
             repository: acryldata/datahub-frontend-react
             tag: "head"
-          
+
           # Resource configuration
           resources:
             requests:
@@ -183,7 +183,7 @@ spec:
             limits:
               cpu: 1
               memory: 1Gi
-          
+
           # Health probes
           livenessProbe:
             httpGet:
@@ -192,7 +192,7 @@ spec:
             initialDelaySeconds: 60
             periodSeconds: 30
             failureThreshold: 4
-          
+
           readinessProbe:
             httpGet:
               path: /admin
@@ -200,12 +200,12 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 10
             failureThreshold: 4
-          
+
           # Service configuration
           service:
             type: ClusterIP
             port: 9002
-          
+
           # Ingress configuration for external access
           ingress:
             enabled: true
@@ -222,7 +222,7 @@ spec:
                   - path: /
                     pathType: Prefix
             tls: []
-          
+
           # Environment variables
           env:
             - name: DATAHUB_GMS_HOST
@@ -230,26 +230,35 @@ spec:
             - name: DATAHUB_GMS_PORT
               value: "8080"
             - name: DATAHUB_SECRET
-              value: "YouKnowNothing"  # Change for production
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-frontend-secret
+                  key: secret
+                  optional: true
             - name: DATAHUB_APP_VERSION
               value: "1.0"
             - name: DATAHUB_PLAY_MEM_BUFFER_SIZE
               value: "10MB"
             - name: JAVA_OPTS
-              value: "-Xms512m -Xmx1024m -Dhttp.port=9002 -Dconfig.file=datahub-frontend/conf/application.conf -Djava.security.auth.login.config=datahub-frontend/conf/jaas.conf -Dlogback.configurationFile=datahub-frontend/conf/logback.xml -Dlogback.debug=false"
+              value: >-
+                -Xms512m -Xmx1024m -Dhttp.port=9002
+                -Dconfig.file=datahub-frontend/conf/application.conf
+                -Djava.security.auth.login.config=datahub-frontend/conf/jaas.conf
+                -Dlogback.configurationFile=datahub-frontend/conf/logback.xml
+                -Dlogback.debug=false
             - name: KAFKA_BOOTSTRAP_SERVER
               value: ""  # Not using Kafka
             - name: AUTH_JAAS_ENABLED
               value: "false"  # Simple auth for MVP
             - name: AUTH_OIDC_ENABLED
               value: "false"  # Enable for production with GitHub OAuth
-          
+
           # Security context
           podSecurityContext:
             runAsUser: 1000
             runAsGroup: 1000
             fsGroup: 1000
-          
+
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
@@ -269,7 +278,7 @@ spec:
         # ============================================================
         datahub-mae-consumer:
           enabled: false  # Requires Kafka - disable for PostgreSQL-only mode
-        
+
         datahub-mce-consumer:
           enabled: false  # Requires Kafka - disable for PostgreSQL-only mode
 
@@ -278,11 +287,11 @@ spec:
         # ============================================================
         datahub-system-update-job:
           enabled: true
-          
+
           image:
             repository: acryldata/datahub-upgrade
             tag: "head"
-          
+
           # Resource configuration
           resources:
             requests:
@@ -291,12 +300,12 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
-          
+
           podSecurityContext:
             runAsUser: 1000
             runAsGroup: 1000
             fsGroup: 1000
-          
+
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
@@ -308,23 +317,23 @@ spec:
         # ============================================================
         # Embedded Components (Disabled - using external services)
         # ============================================================
-        
+
         # PostgreSQL (using CloudNativePG instead)
         postgresql:
           enabled: false
-        
+
         # Elasticsearch (using OpenSearch instead)
         elasticsearch:
           enabled: false
-        
+
         # Kafka (not using for MVP)
         kafka:
           enabled: false
-        
+
         # Neo4j (using SQL-based graph)
         neo4j:
           enabled: false
-        
+
         # MySQL (using PostgreSQL)
         mysql:
           enabled: false
