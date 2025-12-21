@@ -5,11 +5,31 @@ Value Stream Mapping service for tracking work items through stages from idea to
 ## Features
 
 - **Work Item Tracking**: Track work items (features, bugs, tasks, epics) through value stream stages
-- **Stage Transitions**: Record work item movement between stages (Backlog → Analysis → Development → Testing → Deployment → Production)
-- **Flow Metrics**: Calculate throughput, WIP, and cycle time
+- **8-Stage Value Stream**: Backlog → Design → Development → Code Review → Testing → Deployment Approval → Deploy → Production
+- **Stage Metadata**: Each stage includes type (wait/active/done), WIP limits, and descriptions
+- **Stage Transitions**: Record work item movement between stages with validation rules
+- **Flow Metrics**: Calculate throughput, WIP, and cycle time with percentiles (P50, P85, P95)
 - **Prometheus Metrics**: Export metrics for monitoring and dashboards
 - **RESTful API**: OpenAPI documented endpoints
 - **PostgreSQL Storage**: Persistent storage with CloudNativePG
+- **Configuration Management**: YAML-based stage and transition configuration
+
+## Value Stream Stages
+
+The VSM service uses an 8-stage value stream:
+
+| Stage | Type | WIP Limit | Description |
+|-------|------|-----------|-------------|
+| Backlog | wait | - | Work items waiting to be analyzed |
+| Design | active | 5 | Active design and analysis phase |
+| Development | active | 10 | Active implementation phase |
+| Code Review | wait | 8 | Waiting for peer review |
+| Testing | active | 8 | Active testing and QA phase |
+| Deployment Approval | wait | 5 | Waiting for deployment approval |
+| Deploy | active | 3 | Active deployment to production |
+| Production | done | - | Successfully deployed and running |
+
+See [config/stages.yaml](config/stages.yaml) for detailed stage definitions and [docs/vsm/value-stream-mapping.md](../../docs/vsm/value-stream-mapping.md) for complete VSM documentation.
 
 ## API Endpoints
 
@@ -50,12 +70,17 @@ export DATABASE_PASSWORD=changeme
 alembic upgrade head
 ```
 
-4. Start the service:
+4. Load stage configurations:
+```bash
+python scripts/load-stages.py --config config/stages.yaml
+```
+
+5. Start the service:
 ```bash
 uvicorn app.main:app --reload
 ```
 
-5. Access the API:
+6. Access the API:
 - API docs: http://localhost:8000/docs
 - Health check: http://localhost:8000/api/v1/health
 
