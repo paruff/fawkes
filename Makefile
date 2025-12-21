@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -92,6 +92,9 @@ validate-at-e1-009: ## Run AT-E1-009 acceptance test validation for Harbor Conta
 validate-at-e1-012: ## Run AT-E1-012 acceptance test validation for Full Platform Workflow
 	@./scripts/validate-at-e1-012.sh --verify-metrics --verify-observability
 
+validate-at-e2-001: ## Run AT-E2-001 acceptance test validation for AI Coding Assistant (GitHub Copilot)
+	@./scripts/validate-at-e2-001.sh --namespace $(NAMESPACE)
+
 validate-at-e2-002: ## Run AT-E2-002 acceptance test validation for RAG Service
 	@./scripts/validate-at-e2-002.sh --namespace $(NAMESPACE)
 
@@ -155,96 +158,96 @@ validate-jenkins: validate-jcasc ## Alias for validate-jcasc
 .PHONY: azure-init azure-plan azure-apply azure-destroy azure-refresh-kubeconfig azure-clean-rebuild azure-access
 
 azure-init: ## Initialize Terraform for Azure
-    @echo "🔧 Initializing Terraform for Azure..."
-    @cd infra/azure && terraform init -upgrade
+	@echo "🔧 Initializing Terraform for Azure..."
+	@cd infra/azure && terraform init -upgrade
 
 azure-plan: ## Plan Azure infrastructure changes
-    @echo "📋 Planning Azure infrastructure changes..."
-    @echo "🔐 Setting Azure credentials from az CLI..."
-    @cd infra/azure && \
-        export ARM_SUBSCRIPTION_ID=$$(az account show --query id -o tsv) && \
-        export ARM_TENANT_ID=$$(az account show --query tenantId -o tsv) && \
-        echo "✅ Using subscription: $$ARM_SUBSCRIPTION_ID" && \
-        terraform plan -out=tfplan
+	@echo "📋 Planning Azure infrastructure changes..."
+	@echo "🔐 Setting Azure credentials from az CLI..."
+	@cd infra/azure && \
+		export ARM_SUBSCRIPTION_ID=$$(az account show --query id -o tsv) && \
+		export ARM_TENANT_ID=$$(az account show --query tenantId -o tsv) && \
+		echo "✅ Using subscription: $$ARM_SUBSCRIPTION_ID" && \
+		terraform plan -out=tfplan
 
 azure-apply: ## Apply Azure infrastructure changes
-    @echo "🚀 Applying Azure infrastructure changes..."
-    @cd infra/azure && \
-        export ARM_SUBSCRIPTION_ID=$$(az account show --query id -o tsv) && \
-        export ARM_TENANT_ID=$$(az account show --query tenantId -o tsv) && \
-        terraform apply tfplan
-    @echo "✅ Changes applied. Refreshing kubeconfig..."
-    @sleep 5
-    @$(MAKE) azure-refresh-kubeconfig
+	@echo "🚀 Applying Azure infrastructure changes..."
+	@cd infra/azure && \
+		export ARM_SUBSCRIPTION_ID=$$(az account show --query id -o tsv) && \
+		export ARM_TENANT_ID=$$(az account show --query tenantId -o tsv) && \
+		terraform apply tfplan
+	@echo "✅ Changes applied. Refreshing kubeconfig..."
+	@sleep 5
+	@$(MAKE) azure-refresh-kubeconfig
 
 azure-refresh-kubeconfig: ## Refresh AKS kubeconfig and test connectivity
-    @echo "🔑 Refreshing AKS credentials..."
-    @az aks get-credentials -g fawkes-rg -n fawkes-dev --overwrite-existing
-    @echo "🔐 Converting kubeconfig to azurecli auth..."
-    @kubelogin convert-kubeconfig -l azurecli
-    @echo "✅ Testing connectivity..."
-    @kubectl get nodes -o wide || echo "⚠️  Cluster unreachable - see troubleshooting guide"
+	@echo "🔑 Refreshing AKS credentials..."
+	@az aks get-credentials -g fawkes-rg -n fawkes-dev --overwrite-existing
+	@echo "🔐 Converting kubeconfig to azurecli auth..."
+	@kubelogin convert-kubeconfig -l azurecli
+	@echo "✅ Testing connectivity..."
+	@kubectl get nodes -o wide || echo "⚠️  Cluster unreachable - see troubleshooting guide"
 
 azure-destroy: ## Destroy Azure infrastructure (use with caution!)
-    @echo "⚠️  WARNING: This will destroy all Azure infrastructure!"
-    @echo "⚠️  Press Ctrl+C within 10 seconds to cancel..."
-    @sleep 10
-    @echo "💥 Destroying infrastructure..."
-    @cd infra/azure && \
-        export ARM_SUBSCRIPTION_ID=$$(az account show --query id -o tsv) && \
-        export ARM_TENANT_ID=$$(az account show --query tenantId -o tsv) && \
-        terraform destroy -auto-approve
+	@echo "⚠️  WARNING: This will destroy all Azure infrastructure!"
+	@echo "⚠️  Press Ctrl+C within 10 seconds to cancel..."
+	@sleep 10
+	@echo "💥 Destroying infrastructure..."
+	@cd infra/azure && \
+		export ARM_SUBSCRIPTION_ID=$$(az account show --query id -o tsv) && \
+		export ARM_TENANT_ID=$$(az account show --query tenantId -o tsv) && \
+		terraform destroy -auto-approve
 
 azure-clean-rebuild: ## Clean rebuild of Azure infrastructure (destroy + recreate)
-    @echo "🔄 Starting clean rebuild of Azure infrastructure"
-    @echo "⚠️  This will:"
-    @echo "   1. Destroy existing cluster"
-    @echo "   2. Clean Terraform state"
-    @echo "   3. Reinitialize providers"
-    @echo "   4. Create new public cluster with IPv4 access"
-    @echo "   5. Test connectivity"
-    @echo ""
-    @echo "⚠️  Press Ctrl+C within 10 seconds to cancel..."
-    @sleep 10
-    @echo ""
-    @echo "Step 1/5: Destroying existing infrastructure..."
-    @$(MAKE) azure-destroy || echo "Destroy failed or nothing to destroy"
-    @echo ""
-    @echo "Step 2/5: Cleaning Terraform state..."
-    @cd infra/azure && rm -rf .terraform .terraform.lock.hcl terraform.tfstate.backup
-    @echo "✅ State cleaned"
-    @echo ""
-    @echo "Step 3/5: Reinitializing Terraform..."
-    @$(MAKE) azure-init
-    @echo ""
-    @echo "Step 4/5: Planning new infrastructure..."
-    @$(MAKE) azure-plan
-    @echo ""
-    @echo "Step 5/5: Applying new infrastructure (this takes ~15-20 minutes)..."
-    @$(MAKE) azure-apply
-    @echo ""
-    @echo "════════════════════════════════════════════════════════════════"
-    @echo "✅ Clean rebuild complete!"
-    @echo "════════════════════════════════════════════════════════════════"
-    @kubectl get nodes -o wide
+	@echo "🔄 Starting clean rebuild of Azure infrastructure"
+	@echo "⚠️  This will:"
+	@echo "   1. Destroy existing cluster"
+	@echo "   2. Clean Terraform state"
+	@echo "   3. Reinitialize providers"
+	@echo "   4. Create new public cluster with IPv4 access"
+	@echo "   5. Test connectivity"
+	@echo ""
+	@echo "⚠️  Press Ctrl+C within 10 seconds to cancel..."
+	@sleep 10
+	@echo ""
+	@echo "Step 1/5: Destroying existing infrastructure..."
+	@$(MAKE) azure-destroy || echo "Destroy failed or nothing to destroy"
+	@echo ""
+	@echo "Step 2/5: Cleaning Terraform state..."
+	@cd infra/azure && rm -rf .terraform .terraform.lock.hcl terraform.tfstate.backup
+	@echo "✅ State cleaned"
+	@echo ""
+	@echo "Step 3/5: Reinitializing Terraform..."
+	@$(MAKE) azure-init
+	@echo ""
+	@echo "Step 4/5: Planning new infrastructure..."
+	@$(MAKE) azure-plan
+	@echo ""
+	@echo "Step 5/5: Applying new infrastructure (this takes ~15-20 minutes)..."
+	@$(MAKE) azure-apply
+	@echo ""
+	@echo "════════════════════════════════════════════════════════════════"
+	@echo "✅ Clean rebuild complete!"
+	@echo "════════════════════════════════════════════════════════════════"
+	@kubectl get nodes -o wide
 
 azure-access: ## Show access information for Azure cluster and services
-    @./scripts/access-summary.sh azure
+	@./scripts/access-summary.sh azure
 
 ## Platform Access Management
 .PHONY: access access-argocd access-jenkins access-backstage access-grafana
 
 access: ## Show access information for all platform services
-    @./scripts/access-summary.sh
+	@./scripts/access-summary.sh
 
 access-argocd: ## Show ArgoCD access information and open port-forward
-    @./scripts/access-summary.sh argocd
+	@./scripts/access-summary.sh argocd
 
 access-jenkins: ## Show Jenkins access information and open port-forward
-    @./scripts/access-summary.sh jenkins
+	@./scripts/access-summary.sh jenkins
 
 access-backstage: ## Show Backstage access information and open port-forward
-    @./scripts/access-summary.sh backstage
+	@./scripts/access-summary.sh backstage
 
 access-grafana: ## Show Grafana access information and open port-forward
-    @./scripts/access-summary.sh grafana
+	@./scripts/access-summary.sh grafana
