@@ -178,6 +178,92 @@ See [Trivy Dashboard README](README.md) in this directory for details.
 
 ---
 
+### 6. Data Quality Dashboard
+
+**File**: `data-quality.json`  
+**ConfigMap**: Loaded via Grafana provisioning  
+**Namespace**: monitoring
+
+Comprehensive monitoring of data quality metrics from Great Expectations validations.
+
+#### Panels
+
+- **Overview Section**:
+  - Overall Data Quality Score: Percentage of all expectations passing
+  - Validation Pass/Fail Summary: Current status counts
+  - Total Validation Runs: Activity in last 24 hours
+
+- **Validation Results by Datasource**:
+  - Status table: Per-datasource validation status with success rates
+  - Success rate bar gauges: Visual comparison across datasources
+
+- **Failed Expectations**:
+  - Pie chart: Distribution of failures by datasource
+  - Time series: Trend of failed expectations over time
+
+- **Data Freshness**:
+  - Status indicators: Time since last validation per datasource
+
+- **Historical Trends**:
+  - 7-day trend: Success rate over last week
+  - 30-day trend: Success rate over last month
+  - Validation runs by status: Success vs failure counts
+  - Expectations evaluated: Total expectations tracked over time
+
+#### Key Metrics
+
+```promql
+# Validation success status
+data_quality_validation_success{datasource="backstage",suite="backstage_db_suite"}
+
+# Success rate percentage
+data_quality_success_rate_percent{datasource="backstage"}
+
+# Failed expectations count
+data_quality_expectation_failures_total{datasource="backstage"}
+
+# Data freshness
+data_quality_data_freshness_seconds{datasource="backstage"}
+
+# Validation runs
+data_quality_validation_runs_total{datasource="backstage",status="success"}
+
+# Total and successful expectations
+data_quality_expectations_total{datasource="backstage"}
+data_quality_expectations_successful{datasource="backstage"}
+```
+
+#### Variables
+
+- **datasource**: Filter by specific datasource(s) - Backstage, Harbor, DataHub, DORA, SonarQube
+- **suite**: Filter by expectation suite name
+
+#### Thresholds
+
+- **Quality Score**:
+  - 🔴 Red: < 70%
+  - 🟠 Orange: 70-85%
+  - 🟡 Yellow: 85-95%
+  - 🟢 Green: ≥ 95%
+
+- **Data Freshness**:
+  - 🟢 Green: < 6 hours
+  - 🟡 Yellow: 6-12 hours
+  - 🟠 Orange: 12-24 hours
+  - 🔴 Red: > 24 hours
+
+#### Implementation Notes
+
+Requires:
+1. Great Expectations data quality service running
+2. Prometheus exporter deployed (see `platform/apps/data-quality/`)
+3. ServiceMonitor configured for metrics scraping
+4. Data quality validations executed (CronJob runs every 6 hours)
+
+See [Data Quality Service README](../../../../services/data-quality/README.md) for setup details.
+
+---
+
 ## Installation
 
 ### Automatic (Recommended)
