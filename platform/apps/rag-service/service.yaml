@@ -1,0 +1,25 @@
+# ============================================================================
+# FILE: platform/apps/rag-service/service.yaml
+# PURPOSE: Kubernetes Service for RAG service
+# ============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: rag-service
+  namespace: fawkes
+  labels:
+    app: rag-service
+    component: ai
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8000"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  selector:
+    app: rag-service
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
