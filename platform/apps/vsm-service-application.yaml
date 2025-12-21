@@ -1,0 +1,55 @@
+# ============================================================================
+# FILE: platform/apps/vsm-service-application.yaml
+# PURPOSE: ArgoCD Application for VSM service deployment
+#          Provides value stream mapping and work item tracking
+# PREREQ: fawkes namespace and PostgreSQL cluster must exist
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vsm-service
+  namespace: fawkes
+  labels:
+    app: vsm-service
+    component: vsm
+    environment: dev
+    team: platform
+  annotations:
+    # Sync wave to ensure dependencies are deployed first
+    argocd.argoproj.io/sync-wave: "25"
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/paruff/fawkes
+    targetRevision: HEAD
+    path: platform/apps/vsm-service
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false  # Namespace should already exist
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Keep ArgoCD from flagging differences you expect
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+
+  # Basic health and retention tuning
+  revisionHistoryLimit: 10

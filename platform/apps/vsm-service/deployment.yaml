@@ -1,0 +1,136 @@
+# ============================================================================
+# FILE: platform/apps/vsm-service/deployment.yaml
+# PURPOSE: Kubernetes Deployment for VSM (Value Stream Mapping) service
+#          Provides work item tracking and flow metrics
+# ============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vsm-service
+  namespace: fawkes
+  labels:
+    app: vsm-service
+    component: vsm
+    environment: dev
+    team: platform
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vsm-service
+  template:
+    metadata:
+      labels:
+        app: vsm-service
+        component: vsm
+        version: v0.1.0
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: vsm-service
+      
+      # Security context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      
+      containers:
+      - name: vsm-service
+        image: vsm-service:latest
+        imagePullPolicy: IfNotPresent
+        
+        ports:
+        - name: http
+          containerPort: 8000
+          protocol: TCP
+        
+        env:
+        - name: DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: vsm-service-config
+              key: database_host
+        - name: DATABASE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: vsm-service-config
+              key: database_port
+        - name: DATABASE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: vsm-service-config
+              key: database_name
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-vsm-credentials
+              key: username
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-vsm-credentials
+              key: password
+        - name: SQL_ECHO
+          valueFrom:
+            configMapKeyRef:
+              name: vsm-service-config
+              key: sql_echo
+        
+        # Resource limits
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        
+        # Liveness probe
+        livenessProbe:
+          httpGet:
+            path: /api/v1/health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        # Readiness probe
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        
+        # Security context
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+              - ALL
+          seccompProfile:
+            type: RuntimeDefault
+      
+      # Pod affinity to spread across nodes
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - vsm-service
+              topologyKey: kubernetes.io/hostname

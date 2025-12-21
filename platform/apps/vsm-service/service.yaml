@@ -1,0 +1,25 @@
+# ============================================================================
+# FILE: platform/apps/vsm-service/service.yaml
+# PURPOSE: Kubernetes Service for VSM service
+# ============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: vsm-service
+  namespace: fawkes
+  labels:
+    app: vsm-service
+    component: vsm
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8000"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  selector:
+    app: vsm-service
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
