@@ -70,8 +70,13 @@ jobs:
 
       - name: Install kustomize
         run: |
-          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          # Use direct binary download to avoid GitHub API rate limits
+          VERSION="v5.3.0"
+          wget -O kustomize.tar.gz "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${VERSION}/kustomize_${VERSION}_linux_amd64.tar.gz"
+          tar -xzf kustomize.tar.gz
           sudo mv kustomize /usr/local/bin/
+          rm kustomize.tar.gz
+          kustomize version
 
       - name: Install yq
         run: |
