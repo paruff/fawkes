@@ -1,0 +1,21 @@
+# ============================================================================
+# FILE: platform/apps/data-quality/service.yaml
+# PURPOSE: Service for data quality (data docs access)
+# ============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-quality
+  namespace: fawkes
+  labels:
+    app: data-quality
+    component: service
+spec:
+  selector:
+    app: data-quality
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  type: ClusterIP

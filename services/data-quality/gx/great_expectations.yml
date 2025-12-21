@@ -1,0 +1,58 @@
+# ============================================================================
+# FILE: services/data-quality/gx/great_expectations.yml
+# PURPOSE: Great Expectations configuration for data quality validation
+# ============================================================================
+
+config_version: 3.0
+
+# The config_variables_file_path specifies the YAML config file
+config_variables_file_path: uncommitted/config_variables.yml
+
+# Data Docs sites
+data_docs_sites:
+  local_site:
+    class_name: SiteBuilder
+    show_how_to_buttons: true
+    store_backend:
+      class_name: TupleFilesystemStoreBackend
+      base_directory: uncommitted/data_docs/local_site/
+    site_index_builder:
+      class_name: DefaultSiteIndexBuilder
+
+# Stores
+stores:
+  expectations_store:
+    class_name: ExpectationsStore
+    store_backend:
+      class_name: TupleFilesystemStoreBackend
+      base_directory: expectations/
+      
+  validations_store:
+    class_name: ValidationsStore
+    store_backend:
+      class_name: TupleFilesystemStoreBackend
+      base_directory: uncommitted/validations/
+      
+  evaluation_parameter_store:
+    class_name: EvaluationParameterStore
+    
+  checkpoint_store:
+    class_name: CheckpointStore
+    store_backend:
+      class_name: TupleFilesystemStoreBackend
+      base_directory: checkpoints/
+
+expectations_store_name: expectations_store
+validations_store_name: validations_store
+evaluation_parameter_store_name: evaluation_parameter_store
+checkpoint_store_name: checkpoint_store
+
+# Data Context ID
+data_context_id: fawkes-data-quality
+
+# Plugins directory
+plugins_directory: plugins/
+
+# Anonymous usage statistics (disabled for enterprise use)
+anonymous_usage_statistics:
+  enabled: false

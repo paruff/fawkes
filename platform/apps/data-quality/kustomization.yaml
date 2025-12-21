@@ -1,0 +1,39 @@
+# ============================================================================
+# FILE: platform/apps/data-quality/kustomization.yaml
+# PURPOSE: Kustomize configuration for data quality resources
+# ============================================================================
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: fawkes
+
+resources:
+  - serviceaccount.yaml
+  - secret.yaml
+  - configmap.yaml
+  - service.yaml
+  - cronjob.yaml
+
+configMapGenerator:
+  - name: gx-full-config
+    files:
+      - gx/great_expectations.yml=../../../services/data-quality/gx/great_expectations.yml
+      - gx/datasources.yml=../../../services/data-quality/gx/datasources.yml
+      - expectations/backstage_db_suite.json=../../../services/data-quality/expectations/backstage_db_suite.json
+      - expectations/harbor_db_suite.json=../../../services/data-quality/expectations/harbor_db_suite.json
+      - expectations/datahub_db_suite.json=../../../services/data-quality/expectations/datahub_db_suite.json
+      - expectations/dora_metrics_suite.json=../../../services/data-quality/expectations/dora_metrics_suite.json
+      - checkpoints/backstage_db_checkpoint.yml=../../../services/data-quality/checkpoints/backstage_db_checkpoint.yml
+      - checkpoints/harbor_db_checkpoint.yml=../../../services/data-quality/checkpoints/harbor_db_checkpoint.yml
+      - checkpoints/datahub_db_checkpoint.yml=../../../services/data-quality/checkpoints/datahub_db_checkpoint.yml
+      - checkpoints/all_databases_checkpoint.yml=../../../services/data-quality/checkpoints/all_databases_checkpoint.yml
+  - name: gx-scripts
+    files:
+      - scripts/alert_handler.py=../../../services/data-quality/scripts/alert_handler.py
+      - scripts/run_checkpoint.py=../../../services/data-quality/scripts/run_checkpoint.py
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: data-quality
+      app.kubernetes.io/component: data-quality
+      app.kubernetes.io/part-of: fawkes
