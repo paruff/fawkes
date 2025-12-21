@@ -343,9 +343,11 @@ main() {
     log_info "=== ✓ All validations passed ==="
     log_info ""
     log_info "DataHub UI should be accessible at: $DATAHUB_URL"
-    log_info "Default credentials:"
+    log_info "Default credentials (MVP/dev only):"
     log_info "  Username: datahub"
-    log_info "  Password: datahub"
+    log_info "  Password: <same as username>"
+    log_info ""
+    log_info "Note: Change credentials for production deployment"
     exit 0
   fi
 }
