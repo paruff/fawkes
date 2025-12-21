@@ -301,14 +301,24 @@ EOF
         success_rate=$(awk "BEGIN {printf \"%.1f\", ($passed_tests * 100 / $total_tests)}")
     fi
     
-    # Replace all placeholders
-    sed -i "s/{{EPIC}}/$epic_name/g" "$output_file"
-    sed -i "s/{{TIMESTAMP}}/$timestamp/g" "$output_file"
-    sed -i "s/{{TOTAL_TESTS}}/$total_tests/g" "$output_file"
-    sed -i "s/{{PASSED_TESTS}}/$passed_tests/g" "$output_file"
-    sed -i "s/{{FAILED_TESTS}}/$failed_tests/g" "$output_file"
-    sed -i "s/{{SUCCESS_RATE}}/$success_rate/g" "$output_file"
-    sed -i "s|{{TEST_ROWS}}|$test_rows|g" "$output_file"
+    # Use awk to replace placeholders to avoid sed escaping issues
+    awk -v epic="$epic_name" \
+        -v ts="$timestamp" \
+        -v total="$total_tests" \
+        -v passed="$passed_tests" \
+        -v failed="$failed_tests" \
+        -v rate="$success_rate" \
+        -v rows="$test_rows" \
+        '{
+            gsub(/\{\{EPIC\}\}/, epic);
+            gsub(/\{\{TIMESTAMP\}\}/, ts);
+            gsub(/\{\{TOTAL_TESTS\}\}/, total);
+            gsub(/\{\{PASSED_TESTS\}\}/, passed);
+            gsub(/\{\{FAILED_TESTS\}\}/, failed);
+            gsub(/\{\{SUCCESS_RATE\}\}/, rate);
+            gsub(/\{\{TEST_ROWS\}\}/, rows);
+            print;
+        }' "$output_file" > "$output_file.tmp" && mv "$output_file.tmp" "$output_file"
 }
 
 generate_json_report() {
