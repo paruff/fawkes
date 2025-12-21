@@ -1,0 +1,373 @@
+# ============================================================================
+# FILE: platform/apps/datahub-application.yaml
+# PURPOSE: ArgoCD Application for DataHub data catalog deployment
+#          Provides data discovery, cataloging, and lineage tracking
+# PREREQ: PostgreSQL cluster (db-datahub-dev) and OpenSearch must be deployed
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: datahub
+  namespace: fawkes
+  labels:
+    app: datahub
+    component: data-catalog
+    environment: dev
+    team: platform
+  annotations:
+    # Link to documentation
+    argocd.argoproj.io/docs: "https://datahubproject.io/docs"
+    # Sync wave to ensure dependencies are deployed first
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  project: default
+
+  source:
+    repoURL: https://helm.datahubproject.io/
+    chart: datahub
+    targetRevision: "0.4.26"
+    helm:
+      values: |
+        # ============================================================
+        # DataHub Helm Chart Configuration
+        # MVP deployment with PostgreSQL + OpenSearch (no Kafka)
+        # ============================================================
+
+        # Global settings
+        global:
+          datahub:
+            # System update configuration
+            systemUpdate:
+              enabled: true
+
+            # App version
+            appVersion: "head"
+
+            # Monitoring
+            monitoring:
+              enablePrometheus: true
+
+            # Managed ingestion settings
+            managed_ingestion:
+              enabled: false  # Enable later for scheduled ingestion
+
+          # Elasticsearch configuration (using OpenSearch)
+          elasticsearch:
+            host: "opensearch-cluster-master.logging.svc.cluster.local"
+            port: "9200"
+            useSSL: false
+            auth:
+              username: ""
+              password:
+                secretRef: ""
+                secretKey: ""
+
+          # SQL (PostgreSQL) configuration
+          sql:
+            datasource:
+              host: "db-datahub-dev-rw.fawkes.svc.cluster.local:5432"
+              hostForMysqlClient: "db-datahub-dev-rw.fawkes.svc.cluster.local:5432"
+              port: "5432"
+              url: "jdbc:postgresql://db-datahub-dev-rw.fawkes.svc.cluster.local:5432/datahub?sslmode=disable"
+              driver: "org.postgresql.Driver"
+              username: "datahub_user"
+              password:
+                secretRef: "db-datahub-credentials"
+                secretKey: "password"
+
+          # Kafka configuration - using PostgreSQL mode instead
+          kafka:
+            bootstrap:
+              server: ""
+            zookeeper:
+              server: ""
+
+          # Neo4j disabled for MVP (using SQL-based graph)
+          graph_service_impl: elasticsearch
+
+          # Datahub metadata service configuration
+          datahub_analytics_enabled: true
+          datahub_standalone_consumers_enabled: false  # No Kafka consumers
+
+        # ============================================================
+        # DataHub GMS (Graph Metadata Service) Configuration
+        # ============================================================
+        datahub-gms:
+          enabled: true
+          replicaCount: 1
+
+          image:
+            repository: acryldata/datahub-gms
+            tag: "head"
+
+          # Resource configuration
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: 1
+              memory: 2Gi
+
+          # Health probes
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 4
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 4
+
+          # Service configuration
+          service:
+            type: ClusterIP
+            port: 8080
+
+          # Ingress for GMS API
+          ingress:
+            enabled: false  # Access through frontend
+
+          # Environment variables
+          env:
+            - name: ELASTICSEARCH_USE_SSL
+              value: "false"
+            - name: SKIP_ELASTICSEARCH_CHECK
+              value: "false"
+            - name: ENTITY_REGISTRY_CONFIG_PATH
+              value: /datahub/datahub-gms/resources/entity-registry.yml
+            - name: DATAHUB_ANALYTICS_ENABLED
+              value: "true"
+            - name: DATAHUB_SERVER_TYPE
+              value: "quickstart"  # Simplified mode
+            - name: METADATA_SERVICE_AUTH_ENABLED
+              value: "false"  # Enable for production
+
+          # Security context
+          podSecurityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL
+
+        # ============================================================
+        # DataHub Frontend Configuration
+        # ============================================================
+        datahub-frontend:
+          enabled: true
+          replicaCount: 1
+
+          image:
+            repository: acryldata/datahub-frontend-react
+            tag: "head"
+
+          # Resource configuration
+          resources:
+            requests:
+              cpu: 300m
+              memory: 512Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+
+          # Health probes
+          livenessProbe:
+            httpGet:
+              path: /admin
+              port: 9002
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 4
+
+          readinessProbe:
+            httpGet:
+              path: /admin
+              port: 9002
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 4
+
+          # Service configuration
+          service:
+            type: ClusterIP
+            port: 9002
+
+          # Ingress configuration for external access
+          ingress:
+            enabled: true
+            className: nginx
+            annotations:
+              nginx.ingress.kubernetes.io/ssl-redirect: "false"
+              nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+              nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+              nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+              nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+            hosts:
+              - host: datahub.127.0.0.1.nip.io
+                paths:
+                  - path: /
+                    pathType: Prefix
+            tls: []
+
+          # Environment variables
+          env:
+            - name: DATAHUB_GMS_HOST
+              value: "datahub-datahub-gms"
+            - name: DATAHUB_GMS_PORT
+              value: "8080"
+            - name: DATAHUB_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: datahub-frontend-secret
+                  key: secret
+                  optional: true
+            - name: DATAHUB_APP_VERSION
+              value: "1.0"
+            - name: DATAHUB_PLAY_MEM_BUFFER_SIZE
+              value: "10MB"
+            - name: JAVA_OPTS
+              value: >-
+                -Xms512m -Xmx1024m -Dhttp.port=9002
+                -Dconfig.file=datahub-frontend/conf/application.conf
+                -Djava.security.auth.login.config=datahub-frontend/conf/jaas.conf
+                -Dlogback.configurationFile=datahub-frontend/conf/logback.xml
+                -Dlogback.debug=false
+            - name: KAFKA_BOOTSTRAP_SERVER
+              value: ""  # Not using Kafka
+            - name: AUTH_JAAS_ENABLED
+              value: "false"  # Simple auth for MVP
+            - name: AUTH_OIDC_ENABLED
+              value: "false"  # Enable for production with GitHub OAuth
+
+          # Security context
+          podSecurityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL
+
+        # ============================================================
+        # DataHub Actions (Optional - for real-time notifications)
+        # ============================================================
+        datahub-actions:
+          enabled: false  # Enable later when Kafka is available
+
+        # ============================================================
+        # DataHub MAE/MCE Consumer (Metadata Change Events)
+        # ============================================================
+        datahub-mae-consumer:
+          enabled: false  # Requires Kafka - disable for PostgreSQL-only mode
+
+        datahub-mce-consumer:
+          enabled: false  # Requires Kafka - disable for PostgreSQL-only mode
+
+        # ============================================================
+        # DataHub System Update Job
+        # ============================================================
+        datahub-system-update-job:
+          enabled: true
+
+          image:
+            repository: acryldata/datahub-upgrade
+            tag: "head"
+
+          # Resource configuration
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+          podSecurityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL
+
+        # ============================================================
+        # Embedded Components (Disabled - using external services)
+        # ============================================================
+
+        # PostgreSQL (using CloudNativePG instead)
+        postgresql:
+          enabled: false
+
+        # Elasticsearch (using OpenSearch instead)
+        elasticsearch:
+          enabled: false
+
+        # Kafka (not using for MVP)
+        kafka:
+          enabled: false
+
+        # Neo4j (using SQL-based graph)
+        neo4j:
+          enabled: false
+
+        # MySQL (using PostgreSQL)
+        mysql:
+          enabled: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Keep ArgoCD from flagging differences you expect
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    - group: batch
+      kind: Job
+      jsonPointers:
+        - /spec/template/metadata/labels
+
+  # Basic health and retention tuning
+  revisionHistoryLimit: 10
