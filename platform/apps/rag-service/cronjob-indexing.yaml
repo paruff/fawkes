@@ -1,0 +1,93 @@
+# ============================================================================
+# FILE: platform/apps/rag-service/cronjob-indexing.yaml
+# PURPOSE: CronJob for scheduled documentation indexing
+#          Re-indexes documentation daily to keep embeddings up-to-date
+# ============================================================================
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: rag-indexing
+  namespace: fawkes
+  labels:
+    app: rag-service
+    component: ai
+    job-type: indexing
+spec:
+  # Run daily at 2 AM UTC
+  schedule: "0 2 * * *"
+  
+  # Keep last 3 successful and 1 failed job
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  
+  # Don't allow concurrent runs
+  concurrencyPolicy: Forbid
+  
+  jobTemplate:
+    metadata:
+      labels:
+        app: rag-service
+        component: ai
+        job-type: indexing
+    spec:
+      # Clean up completed job after 24 hours
+      ttlSecondsAfterFinished: 86400
+      
+      template:
+        metadata:
+          labels:
+            app: rag-service
+            component: ai
+            job-type: indexing
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: rag-service
+          
+          # Security context
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+          
+          containers:
+          - name: indexer
+            image: rag-service:latest
+            imagePullPolicy: IfNotPresent
+            
+            # Override command to run indexing script
+            command: ["python"]
+            args: ["-m", "scripts.index-docs"]
+            
+            env:
+            - name: WEAVIATE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: rag-service-config
+                  key: weaviate_url
+            - name: SCHEMA_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: rag-service-config
+                  key: schema_name
+            
+            # Resource limits for indexing job
+            resources:
+              requests:
+                cpu: 250m
+                memory: 512Mi
+              limits:
+                cpu: 500m
+                memory: 1Gi
+            
+            # Security context
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              runAsNonRoot: true
+              runAsUser: 65534
+              capabilities:
+                drop:
+                  - ALL
+              seccompProfile:
+                type: RuntimeDefault

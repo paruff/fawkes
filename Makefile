@@ -92,6 +92,9 @@ validate-at-e1-009: ## Run AT-E1-009 acceptance test validation for Harbor Conta
 validate-at-e1-012: ## Run AT-E1-012 acceptance test validation for Full Platform Workflow
 	@./scripts/validate-at-e1-012.sh --verify-metrics --verify-observability
 
+validate-at-e2-002: ## Run AT-E2-002 acceptance test validation for RAG Service
+	@./scripts/validate-at-e2-002.sh --namespace $(NAMESPACE)
+
 clean-local: ## Clean up local K8s deployments
 	@kubectl delete namespace $(NAMESPACE) --ignore-not-found=true
 
