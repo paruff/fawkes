@@ -1,0 +1,272 @@
+# ==============================================================================
+# FILE: platform/apps/datahub/ingestion/cronjob-postgres-ingestion.yaml
+# PURPOSE: Kubernetes CronJob for automated PostgreSQL metadata ingestion
+# SCHEDULE: Daily at 2 AM UTC
+# ==============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: datahub-postgres-ingestion-config
+  namespace: fawkes
+  labels:
+    app: datahub
+    component: ingestion
+    source: postgres
+data:
+  postgres.yaml: |
+    # Ingestion recipe embedded in ConfigMap
+    # See platform/apps/datahub/ingestion/postgres.yaml for full recipe
+    source:
+      type: postgres
+      config:
+        host_port: "db-backstage-dev-rw.fawkes.svc.cluster.local:5432"
+        database: "backstage_db"
+        username: "${POSTGRES_BACKSTAGE_USER}"
+        password: "${POSTGRES_BACKSTAGE_PASSWORD}"
+        include_tables: true
+        include_views: true
+        schema_pattern:
+          allow:
+            - "public"
+          deny:
+            - "information_schema"
+            - "pg_catalog"
+            - "pg_toast"
+        profiling:
+          enabled: true
+          profile_table_level_only: false
+          max_workers: 4
+          row_count: true
+          column_count: true
+        stateful_ingestion:
+          enabled: true
+          remove_stale_metadata: true
+    
+    sink:
+      type: datahub-rest
+      config:
+        server: "http://datahub-datahub-gms.fawkes.svc:8080"
+        timeout_sec: 60
+        max_retries: 5
+    
+    transformers:
+      - type: simple_add_dataset_tags
+        config:
+          tag_urns:
+            - "urn:li:tag:PostgreSQL"
+            - "urn:li:tag:Backstage"
+      - type: simple_add_dataset_ownership
+        config:
+          owner_urns:
+            - "urn:li:corpuser:platform-team"
+          ownership_type: "TECHNICAL_OWNER"
+    
+    datahub:
+      report_to_datahub: true
+      pipeline_name: "postgres-backstage-daily-ingestion"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: datahub-postgres-ingestion-credentials
+  namespace: fawkes
+  labels:
+    app: datahub
+    component: ingestion
+    source: postgres
+type: Opaque
+stringData:
+  # Backstage DB credentials
+  POSTGRES_BACKSTAGE_USER: "backstage_user"
+  POSTGRES_BACKSTAGE_PASSWORD: "CHANGE_ME_backstage_password"
+  
+  # Harbor DB credentials
+  POSTGRES_HARBOR_USER: "harbor_user"
+  POSTGRES_HARBOR_PASSWORD: "dev_harbor_7n8K2mP9xQ4wR5tY"
+  
+  # SonarQube DB credentials
+  POSTGRES_SONARQUBE_USER: "sonarqube_user"
+  POSTGRES_SONARQUBE_PASSWORD: "CHANGE_ME_sonarqube_password"
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: datahub-postgres-ingestion
+  namespace: fawkes
+  labels:
+    app: datahub
+    component: ingestion
+    source: postgres
+spec:
+  # Schedule: Daily at 2 AM UTC
+  schedule: "0 2 * * *"
+  
+  # Keep last 3 successful jobs and 1 failed job for debugging
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  
+  # Don't start a new job if previous is still running
+  concurrencyPolicy: Forbid
+  
+  jobTemplate:
+    metadata:
+      labels:
+        app: datahub
+        component: ingestion
+        source: postgres
+    spec:
+      # Retry up to 2 times on failure
+      backoffLimit: 2
+      
+      # Clean up completed pods after 24 hours
+      ttlSecondsAfterFinished: 86400
+      
+      template:
+        metadata:
+          labels:
+            app: datahub
+            component: ingestion
+            source: postgres
+          annotations:
+            # Prometheus annotations for monitoring
+            prometheus.io/scrape: "false"
+        spec:
+          restartPolicy: OnFailure
+          
+          serviceAccountName: datahub-ingestion
+          
+          containers:
+          - name: datahub-ingestion
+            # Use official DataHub ingestion image
+            image: acryldata/datahub-ingestion:latest
+            imagePullPolicy: IfNotPresent
+            
+            command:
+              - /bin/bash
+              - -c
+              - |
+                set -e
+                echo "Starting PostgreSQL metadata ingestion..."
+                echo "Target: DataHub GMS at http://datahub-datahub-gms.fawkes.svc:8080"
+                
+                # Verify DataHub is accessible
+                if ! curl -f -s http://datahub-datahub-gms.fawkes.svc:8080/health > /dev/null; then
+                  echo "ERROR: DataHub GMS is not accessible"
+                  exit 1
+                fi
+                
+                echo "DataHub GMS is healthy"
+                
+                # Run ingestion for Backstage database
+                echo "Ingesting Backstage database..."
+                datahub ingest -c /config/postgres.yaml
+                
+                # TODO: Add ingestion for Harbor and SonarQube databases
+                # For multi-database ingestion, create separate recipes or
+                # run multiple datahub ingest commands with different configs
+                
+                echo "PostgreSQL metadata ingestion completed successfully"
+            
+            env:
+              # Database credentials from Secret
+              - name: POSTGRES_BACKSTAGE_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: datahub-postgres-ingestion-credentials
+                    key: POSTGRES_BACKSTAGE_USER
+              
+              - name: POSTGRES_BACKSTAGE_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: datahub-postgres-ingestion-credentials
+                    key: POSTGRES_BACKSTAGE_PASSWORD
+              
+              - name: POSTGRES_HARBOR_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: datahub-postgres-ingestion-credentials
+                    key: POSTGRES_HARBOR_USER
+              
+              - name: POSTGRES_HARBOR_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: datahub-postgres-ingestion-credentials
+                    key: POSTGRES_HARBOR_PASSWORD
+              
+              - name: POSTGRES_SONARQUBE_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: datahub-postgres-ingestion-credentials
+                    key: POSTGRES_SONARQUBE_USER
+              
+              - name: POSTGRES_SONARQUBE_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: datahub-postgres-ingestion-credentials
+                    key: POSTGRES_SONARQUBE_PASSWORD
+            
+            volumeMounts:
+              - name: config
+                mountPath: /config
+                readOnly: true
+            
+            resources:
+              requests:
+                cpu: 200m
+                memory: 512Mi
+              limits:
+                cpu: 500m
+                memory: 1Gi
+          
+          volumes:
+            - name: config
+              configMap:
+                name: datahub-postgres-ingestion-config
+
+---
+# ServiceAccount for ingestion jobs
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: datahub-ingestion
+  namespace: fawkes
+  labels:
+    app: datahub
+    component: ingestion
+
+---
+# Role for ingestion jobs (minimal permissions)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: datahub-ingestion
+  namespace: fawkes
+  labels:
+    app: datahub
+    component: ingestion
+rules:
+  # Allow reading ConfigMaps and Secrets for configuration
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list"]
+
+---
+# RoleBinding for ingestion ServiceAccount
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: datahub-ingestion
+  namespace: fawkes
+  labels:
+    app: datahub
+    component: ingestion
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: datahub-ingestion
+subjects:
+  - kind: ServiceAccount
+    name: datahub-ingestion
+    namespace: fawkes

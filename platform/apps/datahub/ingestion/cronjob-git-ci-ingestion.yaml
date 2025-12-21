@@ -1,0 +1,273 @@
+# ==============================================================================
+# FILE: platform/apps/datahub/ingestion/cronjob-git-ci-ingestion.yaml
+# PURPOSE: Kubernetes CronJob for automated GitHub and Jenkins metadata ingestion
+# SCHEDULE: Every 6 hours
+# ==============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: datahub-git-ci-ingestion-config
+  namespace: fawkes
+  labels:
+    app: datahub
+    component: ingestion
+    source: git-ci
+data:
+  github.yaml: |
+    # GitHub repositories ingestion recipe
+    source:
+      type: github
+      config:
+        github_host: "github.com"
+        token: "${GITHUB_TOKEN}"
+        
+        repo_pattern:
+          allow:
+            - "paruff/fawkes"
+            - "paruff/.*"
+          deny:
+            - ".*/.*-archive"
+        
+        extract_repos: true
+        extract_branches: true
+        extract_commits: true
+        extract_pull_requests: true
+        extract_teams: true
+        extract_users: true
+        
+        commit_extraction:
+          branches:
+            - "main"
+            - "master"
+          max_commit_age_days: 90
+          extract_authors: true
+          extract_stats: true
+        
+        pull_request_extraction:
+          include_closed: true
+          max_pr_age_days: 90
+          extract_reviews: true
+        
+        extract_ownership:
+          from_github_teams: true
+          from_codeowners: true
+    
+    sink:
+      type: datahub-rest
+      config:
+        server: "http://datahub-datahub-gms.fawkes.svc:8080"
+        timeout_sec: 60
+        max_retries: 5
+    
+    transformers:
+      - type: simple_add_dataset_tags
+        config:
+          tag_urns:
+            - "urn:li:tag:GitHub"
+            - "urn:li:tag:SourceControl"
+      - type: simple_add_dataset_ownership
+        config:
+          owner_urns:
+            - "urn:li:corpuser:platform-team"
+          ownership_type: "TECHNICAL_OWNER"
+    
+    datahub:
+      report_to_datahub: true
+      pipeline_name: "github-6hourly-ingestion"
+      stateful_ingestion:
+        enabled: true
+        remove_stale_metadata: true
+
+  jenkins.yaml: |
+    # Jenkins CI/CD jobs ingestion recipe
+    source:
+      type: jenkins
+      config:
+        jenkins_url: "http://jenkins.fawkes.svc.cluster.local:8080"
+        username: "${JENKINS_USER}"
+        password: "${JENKINS_TOKEN}"
+        
+        extract_jobs: true
+        extract_builds: true
+        extract_pipelines: true
+        
+        build_extraction:
+          max_builds_per_job: 50
+          max_build_age_days: 90
+          extract_parameters: true
+          extract_test_results: true
+        
+        pipeline_extraction:
+          extract_jenkinsfile: true
+          extract_stages: true
+        
+        job_pattern:
+          allow:
+            - ".*"
+          deny:
+            - ".*-test-.*"
+        
+        extract_folders: true
+    
+    sink:
+      type: datahub-rest
+      config:
+        server: "http://datahub-datahub-gms.fawkes.svc:8080"
+        timeout_sec: 60
+        max_retries: 5
+    
+    transformers:
+      - type: simple_add_dataset_tags
+        config:
+          tag_urns:
+            - "urn:li:tag:Jenkins"
+            - "urn:li:tag:CICD"
+      - type: simple_add_dataset_ownership
+        config:
+          owner_urns:
+            - "urn:li:corpuser:platform-team"
+          ownership_type: "TECHNICAL_OWNER"
+    
+    datahub:
+      report_to_datahub: true
+      pipeline_name: "jenkins-6hourly-ingestion"
+      stateful_ingestion:
+        enabled: true
+        remove_stale_metadata: true
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: datahub-git-ci-ingestion-credentials
+  namespace: fawkes
+  labels:
+    app: datahub
+    component: ingestion
+    source: git-ci
+type: Opaque
+stringData:
+  # GitHub personal access token (needs repo scope)
+  # Generate at: https://github.com/settings/tokens
+  GITHUB_TOKEN: "REPLACE_WITH_GITHUB_TOKEN"
+  
+  # Jenkins credentials (use API token, not password)
+  # Generate at: http://jenkins.fawkes.svc/user/{username}/configure
+  JENKINS_USER: "admin"
+  JENKINS_TOKEN: "REPLACE_WITH_JENKINS_TOKEN"
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: datahub-git-ci-ingestion
+  namespace: fawkes
+  labels:
+    app: datahub
+    component: ingestion
+    source: git-ci
+spec:
+  # Schedule: Every 6 hours at minute 30
+  schedule: "30 */6 * * *"
+  
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  
+  concurrencyPolicy: Forbid
+  
+  jobTemplate:
+    metadata:
+      labels:
+        app: datahub
+        component: ingestion
+        source: git-ci
+    spec:
+      backoffLimit: 2
+      ttlSecondsAfterFinished: 86400
+      
+      template:
+        metadata:
+          labels:
+            app: datahub
+            component: ingestion
+            source: git-ci
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: datahub-ingestion
+          
+          containers:
+          - name: datahub-ingestion
+            image: acryldata/datahub-ingestion:latest
+            imagePullPolicy: IfNotPresent
+            
+            command:
+              - /bin/bash
+              - -c
+              - |
+                set -e
+                echo "Starting GitHub and Jenkins metadata ingestion..."
+                
+                # Verify DataHub is accessible
+                if ! curl -f -s http://datahub-datahub-gms.fawkes.svc:8080/health > /dev/null; then
+                  echo "ERROR: DataHub GMS is not accessible"
+                  exit 1
+                fi
+                
+                echo "DataHub GMS is healthy"
+                
+                # Ingest GitHub repositories
+                echo "Ingesting GitHub repositories..."
+                if [ -n "$GITHUB_TOKEN" ] && [ "$GITHUB_TOKEN" != "REPLACE_WITH_GITHUB_TOKEN" ]; then
+                  datahub ingest -c /config/github.yaml
+                  echo "GitHub ingestion completed"
+                else
+                  echo "WARNING: GitHub token not configured, skipping GitHub ingestion"
+                fi
+                
+                # Ingest Jenkins jobs
+                echo "Ingesting Jenkins jobs..."
+                if [ -n "$JENKINS_TOKEN" ] && [ "$JENKINS_TOKEN" != "REPLACE_WITH_JENKINS_TOKEN" ]; then
+                  datahub ingest -c /config/jenkins.yaml
+                  echo "Jenkins ingestion completed"
+                else
+                  echo "WARNING: Jenkins token not configured, skipping Jenkins ingestion"
+                fi
+                
+                echo "Git/CI metadata ingestion completed successfully"
+            
+            env:
+              - name: GITHUB_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: datahub-git-ci-ingestion-credentials
+                    key: GITHUB_TOKEN
+              
+              - name: JENKINS_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: datahub-git-ci-ingestion-credentials
+                    key: JENKINS_USER
+              
+              - name: JENKINS_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: datahub-git-ci-ingestion-credentials
+                    key: JENKINS_TOKEN
+            
+            volumeMounts:
+              - name: config
+                mountPath: /config
+                readOnly: true
+            
+            resources:
+              requests:
+                cpu: 200m
+                memory: 512Mi
+              limits:
+                cpu: 500m
+                memory: 1Gi
+          
+          volumes:
+            - name: config
+              configMap:
+                name: datahub-git-ci-ingestion-config

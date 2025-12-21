@@ -1,0 +1,309 @@
+# ==============================================================================
+# FILE: platform/apps/datahub/ingestion/postgres.yaml
+# PURPOSE: Comprehensive PostgreSQL ingestion recipe for all Fawkes platform databases
+# USAGE: datahub ingest -c postgres.yaml
+# SCHEDULE: Daily via CronJob (see cronjob-postgres-ingestion.yaml)
+# ==============================================================================
+
+# Source configuration for multiple PostgreSQL databases
+source:
+  type: postgres
+  config:
+    # Note: This recipe ingests multiple databases by running ingestion for each.
+    # For production, consider running separate ingestion jobs per database.
+    
+    # Backstage Database - Developer Portal metadata
+    # Contains services, components, users, catalog items
+    host_port: "db-backstage-dev-rw.fawkes.svc.cluster.local:5432"
+    database: "backstage_db"
+    
+    # Credentials from environment variables (set in CronJob via Secret)
+    username: "${POSTGRES_BACKSTAGE_USER}"
+    password: "${POSTGRES_BACKSTAGE_PASSWORD}"
+    
+    # Include tables and views
+    include_tables: true
+    include_views: true
+    
+    # Schema filtering - exclude internal PostgreSQL schemas
+    schema_pattern:
+      allow:
+        - "public"
+      deny:
+        - "information_schema"
+        - "pg_catalog"
+        - "pg_toast"
+    
+    # Table filtering - exclude temporary and internal tables
+    table_pattern:
+      allow:
+        - ".*"
+      deny:
+        - ".*_tmp"
+        - ".*_backup"
+        - ".*_old"
+        - "knex_.*"  # Exclude migration tables
+    
+    # Profiling configuration for data quality insights
+    profiling:
+      enabled: true
+      profile_table_level_only: false
+      max_workers: 4
+      
+      # Statistics to collect
+      row_count: true
+      column_count: true
+      unique_count: true
+      null_count: true
+      
+      # Sample statistics for deeper insights
+      include_field_null_count: true
+      include_field_distinct_count: true
+      include_field_min_value: true
+      include_field_max_value: true
+      include_field_mean_value: true
+      include_field_median_value: false  # Expensive operation
+      include_field_stddev_value: true
+      include_field_quantiles: false  # Expensive operation
+      
+      # Sampling configuration
+      sample_size: 1000
+      sample_values: true
+    
+    # Domain mapping - organize tables by business domain
+    domain:
+      "public.entities": "Engineering"
+      "public.component": "Engineering"
+      "public.location": "Engineering"
+      "public.refresh_state": "Engineering"
+      "public.search": "Engineering"
+    
+    # Metadata extraction options
+    stateful_ingestion:
+      enabled: true
+      remove_stale_metadata: true
+
+# Sink configuration - DataHub GMS endpoint
+sink:
+  type: datahub-rest
+  config:
+    server: "http://datahub-datahub-gms.fawkes.svc:8080"
+    
+    # Authentication (add token if auth is enabled)
+    # token: "${DATAHUB_TOKEN}"
+    
+    # Timeout and retry configuration
+    timeout_sec: 60
+    max_retries: 5
+    retry_backoff_multiplier: 2
+    retry_max_times: 5
+
+# Transformation pipeline to enrich metadata
+transformers:
+  # Add tags to identify source database
+  - type: simple_add_dataset_tags
+    config:
+      tag_urns:
+        - "urn:li:tag:PostgreSQL"
+        - "urn:li:tag:Backstage"
+        - "urn:li:tag:DeveloperPortal"
+  
+  # Add ownership
+  - type: simple_add_dataset_ownership
+    config:
+      owner_urns:
+        - "urn:li:corpuser:platform-team"
+      ownership_type: "TECHNICAL_OWNER"
+  
+  # Map to domains based on patterns
+  - type: pattern_add_dataset_domain
+    config:
+      domain_pattern:
+        rules:
+          ".*backstage.*": "urn:li:domain:developer-portal"
+          ".*catalog.*": "urn:li:domain:service-catalog"
+
+# Reporting configuration
+datahub:
+  # Report ingestion progress to DataHub
+  report_to_datahub: true
+  
+  # Pipeline name for tracking
+  pipeline_name: "postgres-backstage-daily-ingestion"
+
+---
+# ==============================================================================
+# Harbor Database Ingestion Recipe
+# Container registry metadata including images, repositories, projects
+# ==============================================================================
+source:
+  type: postgres
+  config:
+    host_port: "db-harbor-dev-rw.fawkes.svc.cluster.local:5432"
+    database: "harbor"
+    
+    username: "${POSTGRES_HARBOR_USER}"
+    password: "${POSTGRES_HARBOR_PASSWORD}"
+    
+    include_tables: true
+    include_views: true
+    
+    schema_pattern:
+      allow:
+        - "public"
+      deny:
+        - "information_schema"
+        - "pg_catalog"
+        - "pg_toast"
+    
+    table_pattern:
+      allow:
+        - ".*"
+      deny:
+        - ".*_tmp"
+        - ".*_backup"
+        - "schema_migrations"
+    
+    profiling:
+      enabled: true
+      profile_table_level_only: false
+      max_workers: 4
+      row_count: true
+      column_count: true
+      unique_count: true
+      null_count: true
+      include_field_null_count: true
+      include_field_distinct_count: true
+      sample_size: 1000
+    
+    domain:
+      "public.artifact": "Container Registry"
+      "public.repository": "Container Registry"
+      "public.project": "Container Registry"
+      "public.harbor_user": "User Management"
+    
+    stateful_ingestion:
+      enabled: true
+      remove_stale_metadata: true
+
+sink:
+  type: datahub-rest
+  config:
+    server: "http://datahub-datahub-gms.fawkes.svc:8080"
+    timeout_sec: 60
+    max_retries: 5
+
+transformers:
+  - type: simple_add_dataset_tags
+    config:
+      tag_urns:
+        - "urn:li:tag:PostgreSQL"
+        - "urn:li:tag:Harbor"
+        - "urn:li:tag:ContainerRegistry"
+  
+  - type: simple_add_dataset_ownership
+    config:
+      owner_urns:
+        - "urn:li:corpuser:platform-team"
+      ownership_type: "TECHNICAL_OWNER"
+  
+  - type: pattern_add_dataset_domain
+    config:
+      domain_pattern:
+        rules:
+          ".*harbor.*": "urn:li:domain:container-registry"
+          ".*artifact.*": "urn:li:domain:artifacts"
+
+datahub:
+  report_to_datahub: true
+  pipeline_name: "postgres-harbor-daily-ingestion"
+
+---
+# ==============================================================================
+# SonarQube Database Ingestion Recipe
+# Code quality metrics, issues, security vulnerabilities
+# ==============================================================================
+source:
+  type: postgres
+  config:
+    host_port: "db-sonarqube-dev-rw.fawkes.svc.cluster.local:5432"
+    database: "sonarqube"
+    
+    username: "${POSTGRES_SONARQUBE_USER}"
+    password: "${POSTGRES_SONARQUBE_PASSWORD}"
+    
+    include_tables: true
+    include_views: true
+    
+    schema_pattern:
+      allow:
+        - "public"
+      deny:
+        - "information_schema"
+        - "pg_catalog"
+        - "pg_toast"
+    
+    table_pattern:
+      allow:
+        - ".*"
+      deny:
+        - ".*_tmp"
+        - ".*_backup"
+        - "schema_migrations"
+    
+    profiling:
+      enabled: true
+      profile_table_level_only: false
+      max_workers: 4
+      row_count: true
+      column_count: true
+      unique_count: true
+      null_count: true
+      include_field_null_count: true
+      include_field_distinct_count: true
+      sample_size: 1000
+    
+    domain:
+      "public.projects": "Code Quality"
+      "public.issues": "Code Quality"
+      "public.rules": "Code Quality"
+      "public.metrics": "Code Quality"
+      "public.quality_gates": "Code Quality"
+    
+    stateful_ingestion:
+      enabled: true
+      remove_stale_metadata: true
+
+sink:
+  type: datahub-rest
+  config:
+    server: "http://datahub-datahub-gms.fawkes.svc:8080"
+    timeout_sec: 60
+    max_retries: 5
+
+transformers:
+  - type: simple_add_dataset_tags
+    config:
+      tag_urns:
+        - "urn:li:tag:PostgreSQL"
+        - "urn:li:tag:SonarQube"
+        - "urn:li:tag:CodeQuality"
+        - "urn:li:tag:Security"
+  
+  - type: simple_add_dataset_ownership
+    config:
+      owner_urns:
+        - "urn:li:corpuser:platform-team"
+      ownership_type: "TECHNICAL_OWNER"
+  
+  - type: pattern_add_dataset_domain
+    config:
+      domain_pattern:
+        rules:
+          ".*sonarqube.*": "urn:li:domain:code-quality"
+          ".*issues.*": "urn:li:domain:security"
+          ".*vulnerabilities.*": "urn:li:domain:security"
+
+datahub:
+  report_to_datahub: true
+  pipeline_name: "postgres-sonarqube-daily-ingestion"
