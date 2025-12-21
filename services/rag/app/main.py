@@ -423,10 +423,13 @@ async def get_stats():
     
     try:
         # Get all documents to calculate stats
+        # Note: Limited to 10000 to prevent memory issues
+        # For larger deployments, consider implementing pagination
+        MAX_STATS_DOCUMENTS = 10000
         result = (
             weaviate_client.query
             .get(SCHEMA_NAME, ["category", "indexed_at", "content"])
-            .with_limit(10000)  # Limit to prevent memory issues
+            .with_limit(MAX_STATS_DOCUMENTS)
             .do()
         )
         
@@ -461,10 +464,16 @@ async def get_stats():
         index_freshness_hours = None
         if last_indexed_timestamp:
             try:
-                # Parse ISO format timestamp
+                # Parse ISO format timestamp and ensure timezone awareness
                 last_indexed_dt = datetime.fromisoformat(last_indexed_timestamp.replace("Z", "+00:00"))
-                now = datetime.now(last_indexed_dt.tzinfo) if last_indexed_dt.tzinfo else datetime.now()
-                delta = now - last_indexed_dt.replace(tzinfo=None)
+                # Use timezone-aware datetime for comparison
+                if last_indexed_dt.tzinfo:
+                    now = datetime.now(last_indexed_dt.tzinfo)
+                else:
+                    now = datetime.now()
+                    last_indexed_dt = last_indexed_dt.replace(tzinfo=None)
+                
+                delta = now - last_indexed_dt
                 index_freshness_hours = round(delta.total_seconds() / 3600, 2)
             except Exception as e:
                 logger.warning(f"Failed to parse timestamp: {e}")
@@ -478,8 +487,9 @@ async def get_stats():
         avg_query_time_ms = None
         
         # Count unique documents (estimate based on chunks)
-        # Assume average of 3 chunks per document
-        estimated_unique_docs = max(1, total_chunks // 3)
+        # Average chunks per document - this is an approximation
+        AVG_CHUNKS_PER_DOCUMENT = 3
+        estimated_unique_docs = max(1, total_chunks // AVG_CHUNKS_PER_DOCUMENT)
         
         return StatsResponse(
             total_documents=estimated_unique_docs,

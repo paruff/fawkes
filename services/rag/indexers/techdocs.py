@@ -102,7 +102,7 @@ class BackstageIndexer:
             self._connect_weaviate()
     
     def _connect_weaviate(self):
-        """Connect to Weaviate."""
+        """Connect to Weaviate. Exits on failure since this is a CLI script."""
         print(f"🔗 Connecting to Weaviate at {self.weaviate_url}...")
         try:
             self.weaviate_client = weaviate.Client(self.weaviate_url)
@@ -110,10 +110,10 @@ class BackstageIndexer:
                 print("✅ Connected to Weaviate successfully")
             else:
                 print("❌ Weaviate is not ready")
-                sys.exit(1)
+                sys.exit(1)  # Fatal error for CLI script
         except Exception as e:
             print(f"❌ Failed to connect to Weaviate: {e}")
-            sys.exit(1)
+            sys.exit(1)  # Fatal error for CLI script
     
     def _backstage_request(self, path: str, params: Optional[Dict] = None) -> Optional[Any]:
         """

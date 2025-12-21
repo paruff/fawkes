@@ -159,7 +159,7 @@ class GitHubIndexer:
             self._connect_weaviate()
     
     def _connect_weaviate(self):
-        """Connect to Weaviate."""
+        """Connect to Weaviate. Exits on failure since this is a CLI script."""
         print(f"🔗 Connecting to Weaviate at {self.weaviate_url}...")
         try:
             self.weaviate_client = weaviate.Client(self.weaviate_url)
@@ -167,10 +167,10 @@ class GitHubIndexer:
                 print("✅ Connected to Weaviate successfully")
             else:
                 print("❌ Weaviate is not ready")
-                sys.exit(1)
+                sys.exit(1)  # Fatal error for CLI script
         except Exception as e:
             print(f"❌ Failed to connect to Weaviate: {e}")
-            sys.exit(1)
+            sys.exit(1)  # Fatal error for CLI script
     
     def _github_request(self, url: str, params: Optional[Dict] = None) -> Optional[Any]:
         """
@@ -199,8 +199,7 @@ class GitHubIndexer:
                 return None
             elif response.status_code == 403:
                 print(f"  ❌ Forbidden (rate limit?): {url}")
-                # Wait and retry once
-                self.rate_limiter.wait_if_needed()
+                # Note: Rate limit handled by rate_limiter.wait_if_needed()
                 return None
             else:
                 print(f"  ❌ API request failed: {response.status_code} - {url}")
