@@ -1,0 +1,55 @@
+# ============================================================================
+# FILE: platform/apps/rag-service-application.yaml
+# PURPOSE: ArgoCD Application for RAG service deployment
+#          Provides AI context retrieval from Weaviate vector database
+# PREREQ: fawkes namespace and Weaviate must exist
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rag-service
+  namespace: fawkes
+  labels:
+    app: rag-service
+    component: ai
+    environment: dev
+    team: platform
+  annotations:
+    # Sync wave to ensure dependencies are deployed first
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/paruff/fawkes
+    targetRevision: HEAD
+    path: platform/apps/rag-service
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false  # Namespace should already exist
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Keep ArgoCD from flagging differences you expect
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+
+  # Basic health and retention tuning
+  revisionHistoryLimit: 10
