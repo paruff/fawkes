@@ -91,8 +91,8 @@ platform/apps/
 | Component | Purpose | Namespace |
 |-----------|---------|-----------|
 | [DevLake](devlake/) | DORA metrics collection | `devlake` |
-| [DataHub](datahub/) | Data catalog and lineage | `datahub` |
-| [Weaviate](weaviate/) | Vector database for AI/ML | `weaviate` |
+| [DataHub](datahub/) | Data catalog and lineage | `fawkes` |
+| [Weaviate](weaviate/) | Vector database for AI/ML | `fawkes` |
 | [PostgreSQL](postgresql/) | Relational database | `fawkes` |
 
 ### Collaboration
