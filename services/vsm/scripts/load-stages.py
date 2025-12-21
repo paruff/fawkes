@@ -33,7 +33,7 @@ service_dir = script_dir.parent
 sys.path.insert(0, str(service_dir))
 
 from app.models import Base, Stage, StageType, StageCategory
-from app.database import get_database_url
+from app.database import DATABASE_URL
 
 # Configure logging
 logging.basicConfig(
@@ -241,11 +241,10 @@ def main():
     config = load_stages_config(str(config_path))
     
     # Get database connection
-    database_url = get_database_url()
     logger.info(f"Connecting to database...")
     
     try:
-        engine = create_engine(database_url)
+        engine = create_engine(DATABASE_URL)
         SessionLocal = sessionmaker(bind=engine)
         session = SessionLocal()
         
