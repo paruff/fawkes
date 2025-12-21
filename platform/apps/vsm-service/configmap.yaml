@@ -1,0 +1,20 @@
+# ============================================================================
+# FILE: platform/apps/vsm-service/configmap.yaml
+# PURPOSE: ConfigMap for VSM service configuration
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vsm-service-config
+  namespace: fawkes
+  labels:
+    app: vsm-service
+    component: vsm
+data:
+  # Database connection
+  database_host: "db-vsm-dev-rw.fawkes.svc"
+  database_port: "5432"
+  database_name: "vsm_db"
+  
+  # Logging
+  sql_echo: "false"
