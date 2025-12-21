@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-006 test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -97,6 +97,9 @@ validate-at-e2-001: ## Run AT-E2-001 acceptance test validation for AI Coding As
 
 validate-at-e2-002: ## Run AT-E2-002 acceptance test validation for RAG Service
 	@./scripts/validate-at-e2-002.sh --namespace $(NAMESPACE)
+
+validate-at-e2-006: ## Run AT-E2-006 acceptance test validation for AI Governance
+	@./scripts/validate-at-e2-006.sh --namespace $(NAMESPACE)
 
 clean-local: ## Clean up local K8s deployments
 	@kubectl delete namespace $(NAMESPACE) --ignore-not-found=true

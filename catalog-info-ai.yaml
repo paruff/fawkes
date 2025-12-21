@@ -1,0 +1,567 @@
+# ============================================================================
+# FILE: catalog-info-ai.yaml
+# PURPOSE: Backstage catalog for AI tools and resources
+#          Defines approved AI tools with documentation and access information
+# ============================================================================
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: ai-platform
+  title: AI & Data Platform
+  description: |
+    AI and machine learning tools integrated into the Fawkes platform,
+    including code assistants, RAG systems, and data analysis tools.
+  tags:
+    - ai
+    - machine-learning
+    - developer-productivity
+    - code-generation
+  links:
+    - url: https://backstage.fawkes.idp/docs/default/component/ai-usage-policy
+      title: AI Usage Policy
+      icon: docs
+    - url: https://backstage.fawkes.idp/docs/default/component/ai-training-quiz
+      title: Training Quiz
+      icon: school
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/techdocs-ref: dir:./docs/ai
+spec:
+  owner: platform-team
+  domain: platform-engineering
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ai-usage-policy
+  title: AI Usage Policy
+  description: Comprehensive policy for responsible AI tool usage
+  tags:
+    - documentation
+    - policy
+    - ai
+    - governance
+  links:
+    - url: https://backstage.fawkes.idp/docs/default/component/ai-usage-policy
+      title: View Policy
+      icon: docs
+  annotations:
+    backstage.io/techdocs-ref: dir:./docs/ai
+spec:
+  type: documentation
+  lifecycle: production
+  owner: platform-team
+  system: ai-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: github-copilot
+  title: GitHub Copilot
+  description: AI-powered code completion and generation assistant
+  tags:
+    - ai
+    - code-assistant
+    - productivity
+    - github
+  links:
+    - url: https://github.com/features/copilot
+      title: GitHub Copilot
+      icon: github
+    - url: https://backstage.fawkes.idp/docs/default/component/copilot-setup
+      title: Setup Guide
+      icon: docs
+    - url: https://docs.github.com/en/copilot
+      title: Official Documentation
+      icon: docs
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/techdocs-ref: dir:./docs/ai
+spec:
+  type: tool
+  subtype: ai
+  lifecycle: production
+  owner: platform-team
+  system: ai-platform
+  definition: |
+    # GitHub Copilot
+
+    ## Overview
+    GitHub Copilot is an AI pair programmer that helps you write code faster
+    and with fewer errors. It draws context from comments and code to suggest
+    individual lines and whole functions instantly.
+
+    ## Access Instructions
+
+    ### Prerequisites
+    - Complete [AI Usage Policy Training](https://backstage.fawkes.idp/docs/ai/training-quiz)
+    - Pass certification quiz with 90% score
+    - Approval from Platform Team
+
+    ### Request Access
+    1. Visit the [AI Tools Request Form](https://backstage.fawkes.idp/ai-tool-request)
+    2. Select "GitHub Copilot"
+    3. Confirm training completion
+    4. Receive license assignment within 1 business day
+
+    ### Installation
+
+    **VS Code:**
+    ```bash
+    code --install-extension GitHub.copilot
+    code --install-extension GitHub.copilot-chat
+    ```
+
+    **IntelliJ IDEA:**
+    - File → Settings → Plugins
+    - Search "GitHub Copilot"
+    - Install and restart
+
+    **Vim/Neovim:**
+    ```vim
+    Plug 'github/copilot.vim'
+    ```
+
+    ### Configuration
+
+    Enable security features in your settings:
+    ```json
+    {
+      "github.copilot.enable": true,
+      "github.copilot.advanced": {
+        "blockSuggestions": {
+          "matchingPublicCode": true
+        }
+      }
+    }
+    ```
+
+    ## Use Cases
+
+    ✅ **Recommended:**
+    - Code completion and auto-suggestion
+    - Boilerplate generation
+    - Test case creation
+    - Documentation writing
+    - Refactoring assistance
+    - Learning new APIs/frameworks
+
+    ⚠️ **Use with Caution:**
+    - Security-critical code (requires thorough review)
+    - Complex business logic (verify correctness)
+    - Database queries (check for SQL injection)
+    - Authentication/authorization code
+
+    ❌ **Not Recommended:**
+    - Generating secrets or credentials
+    - Creating cryptographic implementations
+    - Safety-critical systems (without expert review)
+
+    ## Limitations
+
+    - **Context Window**: Limited to current file and nearby files
+    - **Training Data**: Based on public code (may suggest outdated patterns)
+    - **No Guarantee**: Suggestions may be incorrect or insecure
+    - **License Risk**: May suggest code matching copyrighted sources
+    - **Language Support**: Best for popular languages (Python, JavaScript, Java, Go)
+
+    ## Best Practices
+
+    1. **Review All Suggestions**: Never blindly accept without understanding
+    2. **Tag Commits**: Use `[AI-assisted]` for AI-generated code
+    3. **Test Thoroughly**: Add tests for all AI-generated code
+    4. **Security Review**: Enhanced review for sensitive code
+    5. **Follow Style**: Ensure AI code matches team conventions
+    6. **Document Usage**: Note AI assistance in PR descriptions
+
+    ## Support
+
+    - **Internal**: #copilot-support (Slack)
+    - **Platform Team**: platform-team@fawkes.idp
+    - **Office Hours**: Tuesday 2-3 PM
+    - **GitHub Support**: https://support.github.com
+
+    ## Related Resources
+
+    - [AI Usage Policy](https://backstage.fawkes.idp/docs/ai/usage-policy)
+    - [Copilot Setup Guide](https://backstage.fawkes.idp/docs/ai/copilot-setup)
+    - [Code Review Guidelines](https://backstage.fawkes.idp/docs/contributing)
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: weaviate-rag
+  title: Weaviate RAG System
+  description: Internal retrieval-augmented generation system for code and documentation search
+  tags:
+    - ai
+    - rag
+    - vector-database
+    - internal
+    - search
+  links:
+    - url: https://weaviate.fawkes.idp
+      title: Weaviate UI
+      icon: dashboard
+    - url: https://backstage.fawkes.idp/docs/default/component/vector-database
+      title: Documentation
+      icon: docs
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/kubernetes-id: weaviate
+    backstage.io/kubernetes-namespace: fawkes
+    backstage.io/techdocs-ref: dir:./docs/ai
+spec:
+  type: tool
+  subtype: ai
+  lifecycle: production
+  owner: platform-team
+  system: ai-platform
+  definition: |
+    # Weaviate RAG System
+
+    ## Overview
+    Weaviate is our internal Retrieval-Augmented Generation (RAG) system that
+    provides AI-powered search over internal documentation, codebases, and
+    knowledge bases. All data stays within our infrastructure.
+
+    ## Access Instructions
+
+    ### Prerequisites
+    - Employee account with SSO enabled
+    - Complete AI Usage Policy training
+    - Network access to internal services
+
+    ### Access Points
+
+    **Web UI:**
+    - URL: https://weaviate.fawkes.idp
+    - Login with SSO credentials
+
+    **API Access:**
+    - Endpoint: https://weaviate.fawkes.idp/v1
+    - Authentication: Bearer token from SSO
+
+    **Backstage Integration:**
+    - Available in search bar
+    - Context-aware suggestions
+    - Integrated in TechDocs
+
+    ### Getting Started
+
+    ```python
+    import weaviate
+
+    client = weaviate.Client(
+        url="https://weaviate.fawkes.idp",
+        auth_client_secret=weaviate.AuthApiKey(api_key="YOUR_TOKEN")
+    )
+
+    # Search internal documentation
+    result = client.query.get("Documentation", ["title", "content"]) \
+        .with_near_text({"concepts": ["kubernetes deployment"]}) \
+        .with_limit(5) \
+        .do()
+    ```
+
+    ## Use Cases
+
+    ✅ **Ideal For:**
+    - Searching internal documentation
+    - Finding code examples in company repos
+    - Discovering similar implementations
+    - Policy and compliance lookups
+    - Architecture decision records (ADRs)
+    - Best practices and patterns
+
+    ✅ **Safe For Sensitive Data:**
+    - Business logic queries
+    - Internal API documentation
+    - Proprietary algorithms (within system)
+    - Confidential documentation
+
+    ## Data Sources
+
+    The RAG system indexes:
+    - ✅ Internal documentation (TechDocs)
+    - ✅ Company GitHub repositories
+    - ✅ Confluence pages (if integrated)
+    - ✅ Approved internal wikis
+    - ✅ Architecture Decision Records
+    - ✅ Incident post-mortems
+    - ✅ Engineering blog posts
+
+    ## Advantages Over External AI
+
+    1. **Data Privacy**: All data stays in our infrastructure
+    2. **Context-Aware**: Understands company-specific terminology
+    3. **Up-to-Date**: Continuously updated with latest docs and code
+    4. **Access Control**: Respects existing permissions
+    5. **Audit Trail**: All queries logged for compliance
+    6. **No Training**: Your queries don't train external models
+
+    ## Limitations
+
+    - **Scope**: Only searches indexed internal data
+    - **Knowledge Cutoff**: Limited to what we've indexed
+    - **No Code Generation**: Search and retrieval only (use with Copilot for generation)
+    - **Query Complexity**: Best for semantic search, not complex reasoning
+
+    ## Best Practices
+
+    1. **Use Descriptive Queries**: "How do we handle rate limiting in microservices?"
+    2. **Filter by Source**: Narrow to specific repos or documentation
+    3. **Verify Results**: Always validate information from search results
+    4. **Provide Feedback**: Rate results to improve relevance
+    5. **Combine with Tools**: Use RAG for context, Copilot for generation
+
+    ## Support
+
+    - **Internal**: #rag-support (Slack)
+    - **Platform Team**: rag-support@fawkes.idp
+    - **Documentation**: https://backstage.fawkes.idp/docs/ai/vector-database
+
+    ## Related Resources
+
+    - [Vector Database Guide](https://backstage.fawkes.idp/docs/ai/vector-database)
+    - [AI Usage Policy](https://backstage.fawkes.idp/docs/ai/usage-policy)
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: chatgpt-claude
+  title: ChatGPT / Claude
+  description: External AI assistants for general programming help (restricted use)
+  tags:
+    - ai
+    - external
+    - restricted
+    - chat
+  links:
+    - url: https://chat.openai.com
+      title: ChatGPT
+      icon: chat
+    - url: https://claude.ai
+      title: Claude
+      icon: chat
+    - url: https://backstage.fawkes.idp/docs/default/component/ai-usage-policy#chatgpt-claude
+      title: Usage Guidelines
+      icon: docs
+  annotations:
+    backstage.io/techdocs-ref: dir:./docs/ai
+spec:
+  type: tool
+  subtype: ai
+  lifecycle: production
+  owner: platform-team
+  system: ai-platform
+  definition: |
+    # ChatGPT / Claude
+
+    ## Overview
+    External AI chatbots useful for learning and general programming questions.
+    ⚠️ **RESTRICTED USE** - Do not share proprietary or sensitive information.
+
+    ## Access Instructions
+
+    ### Prerequisites
+    - Complete AI Usage Policy training
+    - Pass certification quiz
+    - Understand data sharing restrictions
+
+    ### Recommended Plans
+    - **ChatGPT Plus** ($20/month): GPT-4 access, faster responses
+    - **Claude Pro** ($20/month): Longer context window
+    - **Free Tiers**: Available but rate-limited
+
+    ### Account Setup
+    1. Sign up with personal or work email
+    2. Do NOT enable data sharing for model training (opt-out)
+    3. Enable privacy mode if available
+    4. Use strong password and 2FA
+
+    ## Approved Use Cases
+
+    ✅ **SAFE to Ask:**
+    - "Explain the concept of dependency injection"
+    - "What are best practices for REST API versioning?"
+    - "Help me understand this algorithm: [pseudocode]"
+    - "Compare microservices vs monolithic architecture"
+    - "How does OAuth 2.0 work?"
+    - "Write example code for [public concept]"
+
+    ❌ **DO NOT Share:**
+    - Proprietary source code
+    - API keys, secrets, credentials
+    - Customer data or PII
+    - Internal architecture diagrams
+    - Business logic or algorithms
+    - Database schemas
+    - Production configurations
+    - Anything marked Confidential or Restricted
+
+    ## Best Practices
+
+    ### 1. Anonymize Before Sharing
+
+    **Bad:**
+    ```python
+    # DO NOT DO THIS
+    def process_payment(card_number, cvv, customer_id):
+        # Our proprietary payment logic
+        validate_card(card_number)
+        ...
+    ```
+
+    **Good:**
+    ```python
+    # This is fine - pseudocode, no real logic
+    def process_transaction(payment_method, user_id):
+        # How should I structure error handling for payment processing?
+        ...
+    ```
+
+    ### 2. Ask Conceptual Questions
+    - Focus on "how" and "why", not specific implementation
+    - Use examples from public documentation
+    - Verify answers with official docs
+
+    ### 3. Use for Learning
+    - Understand new frameworks
+    - Explore design patterns
+    - Learn programming concepts
+    - Get coding style suggestions
+
+    ## Limitations
+
+    - **Data Privacy**: Everything you share leaves our organization
+    - **Training Data**: May be used to train future models (unless opted out)
+    - **No Context**: Doesn't know about our codebase
+    - **Hallucinations**: May confidently provide incorrect information
+    - **Outdated**: Training data has a cutoff date
+    - **No Compliance**: Not audited for regulatory requirements
+
+    ## When to Use Internal Tools Instead
+
+    Use **Weaviate RAG** for:
+    - Company-specific questions
+    - Internal documentation search
+    - Finding code in our repos
+
+    Use **GitHub Copilot** for:
+    - Code completion in IDE
+    - Generating code based on context
+    - Working with our codebases
+
+    ## Security Reminders
+
+    🚨 **If you accidentally share sensitive data:**
+    1. Stop using the tool immediately
+    2. Delete the conversation
+    3. Report to security@fawkes.idp
+    4. Rotate any exposed credentials
+    5. Document the incident
+
+    ## Support
+
+    - **Questions**: #ai-tools (Slack)
+    - **Policy Clarifications**: platform-team@fawkes.idp
+    - **Security Concerns**: security@fawkes.idp
+
+    ## Related Resources
+
+    - [AI Usage Policy - ChatGPT Section](https://backstage.fawkes.idp/docs/ai/usage-policy#chatgpt-claude)
+    - [Data Classification Guide](https://backstage.fawkes.idp/docs/security)
+    - [Security Incident Reporting](https://backstage.fawkes.idp/security-incident)
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ai-training
+  title: AI Usage Training & Certification
+  description: Training materials and certification for AI tool users
+  tags:
+    - training
+    - certification
+    - ai
+    - learning
+  links:
+    - url: https://backstage.fawkes.idp/docs/default/component/ai-training-quiz
+      title: Take the Quiz
+      icon: school
+    - url: https://backstage.fawkes.idp/docs/default/component/ai-usage-policy
+      title: Study Guide
+      icon: docs
+  annotations:
+    backstage.io/techdocs-ref: dir:./docs/ai
+spec:
+  type: documentation
+  lifecycle: production
+  owner: platform-team
+  system: ai-platform
+  definition: |
+    # AI Usage Training & Certification
+
+    ## Overview
+    Required training for all developers who want to use AI tools on the platform.
+
+    ## Training Modules
+
+    ### 1. AI Usage Policy (1 hour)
+    - Policy overview
+    - Approved tools
+    - Security guidelines
+    - Code review requirements
+
+    ### 2. Hands-On Tools (2 hours)
+    - GitHub Copilot setup
+    - Weaviate RAG system
+    - Effective prompting
+    - Best practices
+
+    ### 3. Security Awareness (30 minutes)
+    - Data classification
+    - Common pitfalls
+    - Incident reporting
+    - Case studies
+
+    ## Certification Process
+
+    1. Read the [AI Usage Policy](https://backstage.fawkes.idp/docs/ai/usage-policy)
+    2. Complete training modules
+    3. Take the [certification quiz](https://backstage.fawkes.idp/docs/ai/training-quiz)
+    4. Pass with 90% score (9/10 correct)
+    5. Receive certificate via email
+
+    ## Certification Details
+
+    - **Validity**: 1 year from issue date
+    - **Renewal**: Annual recertification required
+    - **Attempts**: Unlimited quiz retakes
+    - **Access**: Grants permission to use AI tools
+
+    ## After Certification
+
+    - Join #ai-tools Slack channel
+    - Request AI tool access
+    - Set renewal reminder
+    - Participate in community
+
+    ## Support
+
+    - **Questions**: #ai-tools (Slack)
+    - **Training Issues**: platform-team@fawkes.idp
+    - **Office Hours**: Tuesday 2-3 PM
+---
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: ai-tools-catalog
+  title: AI Tools Catalog Location
+  description: Location for AI tools and resources catalog
+  annotations:
+    backstage.io/managed-by-location: url:https://github.com/paruff/fawkes/blob/main/catalog-info-ai.yaml
+spec:
+  type: url
+  targets:
+    - https://github.com/paruff/fawkes/blob/main/catalog-info-ai.yaml
