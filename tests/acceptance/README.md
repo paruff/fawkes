@@ -27,6 +27,8 @@ This directory contains acceptance test runners for Fawkes platform validation.
 |---------|----------|-------------|--------|
 | AT-E2-001 | AI Integration | GitHub Copilot configured and working | ✅ Implemented |
 | AT-E2-002 | RAG Architecture | RAG service deployed and functional | ✅ Implemented |
+| AT-E2-003 | Data Catalog | DataHub operational | ✅ Implemented |
+| AT-E2-004 | Data Quality | Great Expectations monitoring | ✅ Implemented |
 
 ## Usage
 
@@ -945,6 +947,266 @@ kubectl get configmap rag-service-config -n fawkes -o yaml
 - Verify network latency
 - Review indexed document size
 - Check query parameters (top_k, threshold)
+
+## AT-E2-003: DataHub Data Catalog
+
+### Acceptance Criteria
+
+- [x] DataHub deployed with GMS and Frontend
+- [x] PostgreSQL backend operational
+- [x] OpenSearch for search indexing
+- [x] DataHub UI accessible via ingress
+- [x] GraphQL API functional
+- [x] Metadata ingestion working
+- [x] Automated ingestion CronJobs:
+  * PostgreSQL ingestion (daily)
+  * Kubernetes ingestion (hourly)
+  * Git/CI ingestion (6-hour)
+- [x] Data lineage visualization
+- [x] Resource limits configured
+- [x] Prometheus metrics exposed
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e2-003.sh`)
+    - Phase 1: Prerequisites (kubectl, cluster access, namespace)
+    - Phase 2: PostgreSQL Database (cluster health, pods, service)
+    - Phase 3: OpenSearch (pods, service)
+    - Phase 4: DataHub Deployment (GMS, Frontend replicas)
+    - Phase 5: Services (GMS service, Frontend service)
+    - Phase 6: Ingress Configuration (ingress exists, hosts configured)
+    - Phase 7: API Health (GMS health, Frontend health)
+    - Phase 8: Ingestion Automation (CronJobs for PostgreSQL, K8s, Git/CI)
+    - Phase 9: Resource Limits (CPU/memory requests and limits)
+    - Phase 10: ArgoCD Application (sync status, health status)
+    - Generates test summary with pass/fail counts and JSON report
+
+2. **BDD Tests** (`tests/bdd/features/datahub-deployment.feature`)
+    - Service deployment and accessibility
+    - GraphQL API health
+    - Metadata storage with PostgreSQL
+    - Search indexing with OpenSearch
+    - PostgreSQL metadata ingestion
+    - Basic authentication
+    - Data lineage visualization
+    - Resource allocation and stability
+    - Prometheus metrics exposure
+    - PostgreSQL high availability
+    - Data governance with tags
+    - REST API integration
+    - UI search and discovery
+    - Automated metadata ingestion (CronJobs)
+    - End-to-end metadata lineage
+
+### Test Reports
+
+Test reports are generated in JSON format at:
+```
+reports/at-e2-003-validation-YYYYMMDD-HHMMSS.json
+```
+
+### Validation Commands
+
+Run the test:
+
+```bash
+# Run via test runner
+./tests/acceptance/run-test.sh AT-E2-003
+
+# Run via Makefile
+make validate-at-e2-003
+
+# Run directly
+./scripts/validate-at-e2-003.sh --namespace fawkes
+
+# Run BDD tests
+pytest tests/bdd -k "datahub" -v --tb=short
+```
+
+### Prerequisites
+
+- kubectl with cluster access
+- PostgreSQL cluster deployed (db-datahub-dev)
+- OpenSearch deployed in logging namespace
+- DataHub deployed in namespace `fawkes`
+- curl (for API testing)
+- jq (optional, for JSON processing)
+- pytest (for BDD tests)
+
+### Troubleshooting
+
+**DataHub pods not starting:**
+```bash
+# Check pod status
+kubectl get pods -n fawkes -l "app.kubernetes.io/instance=datahub"
+
+# Check GMS logs
+kubectl logs -n fawkes deployment/datahub-datahub-gms
+
+# Check Frontend logs
+kubectl logs -n fawkes deployment/datahub-datahub-frontend
+```
+
+**PostgreSQL connection issues:**
+```bash
+# Check PostgreSQL cluster
+kubectl get cluster db-datahub-dev -n fawkes
+
+# Check PostgreSQL pods
+kubectl get pods -n fawkes -l "cnpg.io/cluster=db-datahub-dev"
+
+# Test connection from GMS pod
+kubectl exec -n fawkes deployment/datahub-datahub-gms -- \
+  curl -f http://db-datahub-dev-rw:5432
+```
+
+**OpenSearch not accessible:**
+```bash
+# Check OpenSearch pods
+kubectl get pods -n logging -l "app=opensearch"
+
+# Port-forward for testing
+kubectl port-forward -n logging svc/opensearch 9200:9200
+```
+
+**Ingestion jobs not running:**
+```bash
+# Check CronJobs
+kubectl get cronjobs -n fawkes | grep datahub
+
+# Manually trigger a job
+kubectl create job --from=cronjob/datahub-postgres-ingestion manual-run -n fawkes
+
+# Check job logs
+kubectl logs -n fawkes job/manual-run
+```
+
+## AT-E2-004: Great Expectations Data Quality
+
+### Acceptance Criteria
+
+- [x] Great Expectations configuration deployed
+- [x] Data source connections configured:
+  * Backstage database
+  * Harbor database
+  * DataHub database
+  * SonarQube database
+  * DORA metrics database
+- [x] Expectation suites created for all databases
+- [x] Validation running automatically (CronJob)
+- [x] Checkpoints configured
+- [x] Prometheus exporter for metrics
+- [x] Grafana dashboard for visualization
+- [x] ArgoCD application deployed
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e2-004.sh`)
+    - Phase 1: Prerequisites (kubectl, cluster access, namespace)
+    - Phase 2: Great Expectations Configuration (ConfigMaps, Secrets)
+    - Phase 3: Data Sources Connected (all database clusters)
+    - Phase 4: Expectation Suites Created (5 suites for different databases)
+    - Phase 5: Validation Running Automatically (CronJob schedule)
+    - Phase 6: Checkpoints Configuration (checkpoint YAML files)
+    - Phase 7: Prometheus Exporter (deployment, service, ServiceMonitor)
+    - Phase 8: Grafana Dashboard (JSON file validation, panel count)
+    - Phase 9: ArgoCD Application (sync and health status)
+    - Generates test summary with pass/fail counts
+
+2. **BDD Tests** (to be created in `tests/bdd/features/`)
+    - Data quality configuration
+    - Database connections
+    - Expectation suite validation
+    - Automated validation runs
+    - Prometheus metrics exposure
+    - Grafana dashboard visualization
+
+### Test Reports
+
+Test reports are shown in terminal output. Future enhancement will generate JSON reports at:
+```
+reports/at-e2-004-validation-YYYYMMDD-HHMMSS.json
+```
+
+### Validation Commands
+
+Run the test:
+
+```bash
+# Run via test runner
+./tests/acceptance/run-test.sh AT-E2-004
+
+# Run via Makefile
+make validate-at-e2-004
+
+# Run directly
+./scripts/validate-at-e2-004.sh --namespace fawkes
+
+# Run BDD tests (when available)
+pytest tests/bdd -k "data_quality or great_expectations" -v --tb=short
+```
+
+### Prerequisites
+
+- kubectl with cluster access
+- All database clusters deployed:
+  - db-backstage
+  - db-harbor
+  - db-datahub
+  - db-sonarqube-dev
+- Data quality ConfigMaps and Secrets
+- Great Expectations configuration
+- Python 3 (for JSON validation)
+- pytest (for BDD tests)
+
+### Troubleshooting
+
+**ConfigMaps not found:**
+```bash
+# Check ConfigMaps
+kubectl get configmap -n fawkes | grep -E "data-quality|gx-"
+
+# View ConfigMap contents
+kubectl get configmap gx-full-config -n fawkes -o yaml
+```
+
+**Database connections failing:**
+```bash
+# Check database cluster status
+kubectl get clusters -n fawkes
+
+# Test connection to a database
+kubectl exec -n fawkes deployment/data-quality-exporter -- \
+  psql -h db-backstage-rw -U postgres -d backstage -c "SELECT 1"
+```
+
+**CronJob not running:**
+```bash
+# Check CronJob
+kubectl get cronjob data-quality-validation -n fawkes
+
+# Check job history
+kubectl get jobs -n fawkes -l app=data-quality
+
+# Manually trigger validation
+kubectl create job --from=cronjob/data-quality-validation manual-validation -n fawkes
+
+# Check job logs
+kubectl logs -n fawkes job/manual-validation
+```
+
+**Prometheus metrics not available:**
+```bash
+# Check exporter deployment
+kubectl get deployment data-quality-exporter -n fawkes
+
+# Check exporter logs
+kubectl logs -n fawkes deployment/data-quality-exporter
+
+# Port-forward and test metrics endpoint
+kubectl port-forward -n fawkes svc/data-quality-exporter 9110:9110
+curl http://localhost:9110/metrics
+```
 
 ## Generating Reports
 
