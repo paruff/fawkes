@@ -55,7 +55,7 @@ class TestBackstageIndexer:
         assert "Authorization" in indexer.session.headers
     
     def test_extract_text_from_html(self):
-        """Test HTML text extraction."""
+        """Test HTML text extraction using BeautifulSoup."""
         indexer = BackstageIndexer(
             backstage_url="http://test",
             dry_run=True
@@ -75,10 +75,13 @@ class TestBackstageIndexer:
         
         text = indexer._extract_text_from_html(html)
         
+        # BeautifulSoup properly extracts text
         assert "Main Title" in text
         assert "This is a paragraph" in text
+        # Script and style content should be removed
         assert "console.log" not in text
         assert ".hidden" not in text
+        assert "display: none" not in text
     
     def test_extract_sections_with_headings(self):
         """Test section extraction from content with headings."""

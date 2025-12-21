@@ -41,6 +41,13 @@ except ImportError:
     sys.exit(1)
 
 try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    print("❌ Error: beautifulsoup4 library not installed")
+    print("Install with: pip install beautifulsoup4 lxml")
+    sys.exit(1)
+
+try:
     import weaviate
     from weaviate.util import generate_uuid5
 except ImportError:
@@ -231,23 +238,32 @@ class BackstageIndexer:
     
     def _extract_text_from_html(self, html: str) -> str:
         """
-        Extract readable text from HTML.
+        Extract readable text from HTML using BeautifulSoup.
         
-        Simple HTML stripping - removes tags but preserves structure.
-        For better parsing, consider using BeautifulSoup.
+        This provides secure HTML parsing and proper text extraction.
         """
-        # Remove script and style tags
-        html = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL | re.IGNORECASE)
-        html = re.sub(r'<style[^>]*>.*?</style>', '', html, flags=re.DOTALL | re.IGNORECASE)
-        
-        # Remove HTML tags
-        text = re.sub(r'<[^>]+>', ' ', html)
-        
-        # Clean up whitespace
-        text = re.sub(r'\s+', ' ', text)
-        text = text.strip()
-        
-        return text
+        try:
+            # Parse HTML with BeautifulSoup
+            soup = BeautifulSoup(html, 'lxml')
+            
+            # Remove script and style elements
+            for element in soup(['script', 'style', 'meta', 'link', 'noscript']):
+                element.decompose()
+            
+            # Get text content
+            text = soup.get_text(separator=' ', strip=True)
+            
+            # Clean up whitespace
+            text = re.sub(r'\s+', ' ', text)
+            text = text.strip()
+            
+            return text
+        except Exception as e:
+            print(f"  ⚠️  Failed to parse HTML with BeautifulSoup: {e}")
+            # Fallback to simple text extraction if parsing fails
+            text = re.sub(r'<[^>]+>', ' ', html)
+            text = re.sub(r'\s+', ' ', text)
+            return text.strip()
     
     def extract_sections(self, content: str) -> List[Dict[str, str]]:
         """
