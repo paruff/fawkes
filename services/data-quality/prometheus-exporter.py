@@ -129,8 +129,18 @@ class MetricsExporter:
             statistics = result_data.get('statistics', {})
             run_time = result_data.get('run_time', time.time())
             
-            # Extract suite name from checkpoint (e.g., "backstage_db_checkpoint" -> "backstage")
-            datasource = checkpoint_name.replace('_checkpoint', '').replace('_db', '')
+            # Extract suite name from checkpoint
+            # Note: This uses a simple naming convention: checkpoint names should end with "_checkpoint"
+            # and optionally contain "_db" before that. Examples:
+            # - "backstage_db_checkpoint" -> datasource="backstage"
+            # - "harbor_checkpoint" -> datasource="harbor"
+            # For non-standard naming, the full checkpoint name is used as datasource
+            datasource = checkpoint_name
+            if checkpoint_name.endswith('_checkpoint'):
+                datasource = checkpoint_name.replace('_checkpoint', '')
+            if '_db' in datasource:
+                datasource = datasource.replace('_db', '')
+            
             suite_name = result_data.get('expectation_suite_name', checkpoint_name)
             
             # Update validation success metric
@@ -254,6 +264,9 @@ class MetricsExporter:
 class MetricsHandler(BaseHTTPRequestHandler):
     """HTTP handler for Prometheus metrics endpoint."""
     
+    # Note: Using a class attribute for simplicity in single-threaded HTTP server
+    # For production multi-threaded environments, consider passing exporter through
+    # handler constructor or using a thread-safe approach
     exporter: MetricsExporter = None
     
     def do_GET(self):
