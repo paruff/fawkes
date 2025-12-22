@@ -11,6 +11,12 @@ from .main import ReviewComment, ReviewResult
 
 logger = logging.getLogger(__name__)
 
+# Configuration constants for review processing
+MAX_FILES_TO_QUERY_RAG = 10  # Maximum files to include in RAG query
+MAX_FILES_TO_REVIEW = 20  # Maximum files to review per PR
+MAX_PATCH_SIZE = 2000  # Maximum patch size to send to LLM (chars)
+MAX_COMMENTS_PER_REVIEW = 50  # Maximum comments to post in single review
+
 
 class ReviewEngine:
     """Engine for performing AI-powered code reviews."""
@@ -119,7 +125,7 @@ class ReviewEngine:
         try:
             # Build query from changed files
             file_extensions = set()
-            for file in files[:10]:  # Limit to first 10 files
+            for file in files[:MAX_FILES_TO_QUERY_RAG]:
                 filename = file.get('filename', '')
                 if '.' in filename:
                     file_extensions.add(filename.split('.')[-1])
@@ -152,7 +158,7 @@ class ReviewEngine:
     ) -> List[Dict]:
         """Fetch SonarQube analysis findings."""
         try:
-            # Import SonarQube integration
+            # Lazy import to avoid loading unless needed
             from ..integrations.sonarqube import SonarQubeIntegration
             
             integration = SonarQubeIntegration(
@@ -176,12 +182,12 @@ class ReviewEngine:
         """Generate review comments using LLM."""
         comments = []
         
-        # Load prompts
+        # Load prompts (lazy import to avoid circular dependency)
         from ..prompts.loader import PromptLoader
         prompt_loader = PromptLoader()
         
         # Analyze each file
-        for file_data in files[:20]:  # Limit to first 20 files
+        for file_data in files[:MAX_FILES_TO_REVIEW]:
             filename = file_data.get('filename', '')
             patch = file_data.get('patch', '')
             
@@ -231,7 +237,7 @@ class ReviewEngine:
 
 Code changes:
 ```
-{patch[:2000]}  # Limit patch size
+{patch[:MAX_PATCH_SIZE]}
 ```
 
 Provide review comments in JSON format:
@@ -367,9 +373,9 @@ Provide review comments in JSON format:
     ):
         """Post review comments to GitHub PR."""
         try:
-            # Prepare review comments
+            # Prepare review comments (limit to avoid API rate limits)
             review_comments = []
-            for comment in comments[:50]:  # Limit to 50 comments per review
+            for comment in comments[:MAX_COMMENTS_PER_REVIEW]:
                 review_comments.append({
                     "path": comment.path,
                     "line": comment.line,
