@@ -198,8 +198,9 @@ def test_deduplicate_with_ai_findings(sonarqube_integration):
     assert len(deduplicated) == 3
     
     # Check that duplicate SQ finding was removed
-    sq_count = sum(1 for f in deduplicated if f.get("file") == "src/main.py")
-    assert sq_count == 1  # Only AI finding, SQ duplicate removed
+    # AI findings have 'path', SQ findings have 'file' 
+    main_py_count = sum(1 for f in deduplicated if f.get("path") == "src/main.py" or f.get("file") == "src/main.py")
+    assert main_py_count == 1  # Only AI finding, SQ duplicate removed
 
 
 @pytest.mark.asyncio
