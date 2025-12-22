@@ -108,8 +108,8 @@ def test_webhook_card_created_validation():
     invalid_payload = {
         "action": "card.created",
         "card": {
-            "id": "card-1"
-            # Missing required fields
+            "id": "card-1",
+            # Missing required fields like title, boardId, status, etc.
         }
     }
     
