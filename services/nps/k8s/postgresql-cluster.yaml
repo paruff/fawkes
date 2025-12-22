@@ -1,0 +1,78 @@
+# ============================================================================
+# FILE: services/nps/k8s/postgresql-cluster.yaml
+# PURPOSE: CloudNativePG cluster for NPS Survey Service
+# ============================================================================
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: db-nps-dev
+  namespace: fawkes
+  labels:
+    app: nps-service
+    component: database
+spec:
+  instances: 3
+  
+  # PostgreSQL version
+  imageName: ghcr.io/cloudnative-pg/postgresql:15
+  
+  # Storage
+  storage:
+    size: 5Gi
+    storageClass: standard
+  
+  # Bootstrap
+  bootstrap:
+    initdb:
+      database: nps_db
+      owner: nps
+      secret:
+        name: db-nps-credentials
+  
+  # Resource limits (optimized for <70% utilization)
+  resources:
+    requests:
+      cpu: 300m
+      memory: 384Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+  
+  # Backup configuration
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://fawkes-backups/nps-db
+      s3Credentials:
+        accessKeyId:
+          name: backup-credentials
+          key: access-key-id
+        secretAccessKey:
+          name: backup-credentials
+          key: secret-access-key
+      wal:
+        compression: gzip
+    retentionPolicy: "30d"
+  
+  # Monitoring
+  monitoring:
+    enablePodMonitor: true
+  
+  # High Availability
+  minSyncReplicas: 1
+  maxSyncReplicas: 2
+  
+  # PostgreSQL configuration
+  postgresql:
+    parameters:
+      max_connections: "100"
+      shared_buffers: "256MB"
+      effective_cache_size: "768MB"
+      maintenance_work_mem: "64MB"
+      checkpoint_completion_target: "0.9"
+      wal_buffers: "16MB"
+      default_statistics_target: "100"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "200"
+      work_mem: "2621kB"
+      min_wal_size: "1GB"
+      max_wal_size: "4GB"
