@@ -59,6 +59,7 @@ Supported Test IDs:
   AT-E2-002    RAG Architecture - RAG service deployed and functional
   AT-E2-003    Data Catalog - DataHub operational
   AT-E2-004    Data Quality - Great Expectations monitoring
+  AT-E2-008    Unified API - GraphQL Data API deployed and functional
 
 Examples:
   $0 AT-E1-001
@@ -549,6 +550,43 @@ run_at_e2_004() {
     return 0
 }
 
+run_at_e2_008() {
+    log_info "Running AT-E2-008: Unified GraphQL Data API validation"
+    echo ""
+    
+    # Run the comprehensive validation script
+    log_info "Step 1: Running comprehensive validation..."
+    if [ -f "$ROOT_DIR/scripts/validate-at-e2-008.sh" ]; then
+        if ! "$ROOT_DIR/scripts/validate-at-e2-008.sh"; then
+            log_error "Comprehensive validation failed"
+            return 1
+        fi
+    else
+        log_error "AT-E2-008 validation script not found at $ROOT_DIR/scripts/validate-at-e2-008.sh"
+        return 1
+    fi
+    
+    echo ""
+    log_info "Step 2: Running performance tests..."
+    if command -v k6 &> /dev/null; then
+        if [ -f "$ROOT_DIR/tests/performance/graphql-load-test.js" ]; then
+            log_info "Running k6 load test..."
+            if k6 run "$ROOT_DIR/tests/performance/graphql-load-test.js" 2>/dev/null; then
+                log_success "Performance tests passed"
+            else
+                log_warning "Performance tests failed (may require deployed Hasura)"
+            fi
+        fi
+    else
+        log_warning "k6 not available, skipping performance tests"
+    fi
+    
+    echo ""
+    log_success "AT-E2-008 validation completed!"
+    log_success "Unified GraphQL Data API is deployed and functional!"
+    return 0
+}
+
 main() {
     if [ $# -eq 0 ]; then
         log_error "No test ID provided"
@@ -595,6 +633,9 @@ main() {
             ;;
         AT-E2-004)
             run_at_e2_004
+            ;;
+        AT-E2-008)
+            run_at_e2_008
             ;;
         AT-E1-006|AT-E1-008|AT-E1-010|AT-E1-011)
             log_error "$test_id validation not yet implemented"

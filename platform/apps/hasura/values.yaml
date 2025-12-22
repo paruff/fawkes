@@ -1,0 +1,206 @@
+# ============================================================================
+# FILE: platform/apps/hasura/values.yaml
+# PURPOSE: Helm values for Hasura GraphQL Engine deployment
+#          Unified GraphQL API for all platform data
+# ============================================================================
+
+# Hasura GraphQL Engine configuration
+hasura:
+  image:
+    repository: hasura/graphql-engine
+    tag: v2.36.0
+    pullPolicy: IfNotPresent
+
+  # Enable Hasura console for schema management
+  console:
+    enabled: true
+
+  # Resource limits optimized for 70% cluster utilization target
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  # Replicas for high availability
+  replicas: 2
+
+  # Admin secret for Hasura console access
+  # In production, this should come from a Secret
+  adminSecret:
+    existingSecret: hasura-admin-secret
+    key: admin-secret
+
+  # PostgreSQL database connections
+  databases:
+    # Default database for Hasura metadata
+    - name: default
+      connectionString:
+        existingSecret: db-vsm-credentials
+        key: connection-string
+    
+    # VSM database for work items and flow metrics
+    - name: vsm
+      connectionString:
+        existingSecret: db-vsm-credentials
+        key: connection-string
+    
+    # Backstage database for catalog
+    - name: backstage
+      connectionString:
+        existingSecret: db-backstage-credentials
+        key: connection-string
+    
+    # DevLake database for DORA metrics
+    # Note: Will need to configure this based on DevLake DB setup
+    - name: devlake
+      connectionString:
+        existingSecret: devlake-db-credentials
+        key: connection-string
+
+  # Environment variables
+  env:
+    # Enable console
+    - name: HASURA_GRAPHQL_ENABLE_CONSOLE
+      value: "true"
+    
+    # Enable dev mode for local development (disable in production)
+    - name: HASURA_GRAPHQL_DEV_MODE
+      value: "true"
+    
+    # Enable remote schema permissions
+    - name: HASURA_GRAPHQL_ENABLE_REMOTE_SCHEMA_PERMISSIONS
+      value: "true"
+    
+    # Enable telemetry (can be disabled if needed)
+    - name: HASURA_GRAPHQL_ENABLE_TELEMETRY
+      value: "false"
+    
+    # CORS settings
+    - name: HASURA_GRAPHQL_CORS_DOMAIN
+      value: "*"
+    
+    # Unauthorized role for public access (limited permissions)
+    - name: HASURA_GRAPHQL_UNAUTHORIZED_ROLE
+      value: "anonymous"
+    
+    # Query depth limit to prevent abuse
+    - name: HASURA_GRAPHQL_QUERY_PLAN_CACHE_SIZE
+      value: "100"
+    
+    # Rate limiting
+    - name: HASURA_GRAPHQL_RATE_LIMIT_PER_ROLE
+      value: '{"admin":{"max_req_per_min":10000},"developer":{"max_req_per_min":1000},"viewer":{"max_req_per_min":100}}'
+    
+    # Log level
+    - name: HASURA_GRAPHQL_LOG_LEVEL
+      value: "info"
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 8080
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "8080"
+      prometheus.io/path: "/v1/metrics"
+
+  # Health checks
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /healthz
+      port: 8080
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+  # Ingress configuration
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-staging
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    hosts:
+      - host: hasura.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: hasura-tls
+        hosts:
+          - hasura.local
+
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+    capabilities:
+      drop:
+        - ALL
+
+  # Pod annotations
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: "/v1/metrics"
+
+  # Affinity rules for HA
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                    - hasura
+            topologyKey: kubernetes.io/hostname
+
+# Redis cache configuration (for Task 53.4)
+redis:
+  enabled: true
+  
+  image:
+    repository: redis
+    tag: 7-alpine
+    pullPolicy: IfNotPresent
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+  
+  persistence:
+    enabled: false  # In-memory cache, no persistence needed
+  
+  service:
+    type: ClusterIP
+    port: 6379
+
+# Monitoring
+monitoring:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    scrapeTimeout: 10s

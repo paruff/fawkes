@@ -1,0 +1,141 @@
+# ============================================================================
+# FILE: platform/apps/hasura/deployment.yaml
+# PURPOSE: Hasura GraphQL Engine deployment
+# ============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hasura
+  namespace: fawkes
+  labels:
+    app: hasura
+    component: data-api
+    environment: dev
+    team: platform
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hasura
+  template:
+    metadata:
+      labels:
+        app: hasura
+        component: data-api
+        environment: dev
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/v1/metrics"
+    spec:
+      serviceAccountName: hasura
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      
+      containers:
+        - name: hasura
+          image: hasura/graphql-engine:v2.36.0
+          imagePullPolicy: IfNotPresent
+          
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          
+          env:
+            # Admin secret
+            - name: HASURA_GRAPHQL_ADMIN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: hasura-admin-secret
+                  key: admin-secret
+            
+            # Database URL (primary connection to VSM DB for metadata)
+            - name: HASURA_GRAPHQL_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-vsm-credentials
+                  key: uri
+            
+            # Console settings
+            - name: HASURA_GRAPHQL_ENABLE_CONSOLE
+              value: "true"
+            
+            - name: HASURA_GRAPHQL_DEV_MODE
+              value: "true"
+            
+            # Remote schema permissions
+            - name: HASURA_GRAPHQL_ENABLE_REMOTE_SCHEMA_PERMISSIONS
+              value: "true"
+            
+            # Telemetry
+            - name: HASURA_GRAPHQL_ENABLE_TELEMETRY
+              value: "false"
+            
+            # CORS
+            - name: HASURA_GRAPHQL_CORS_DOMAIN
+              value: "*"
+            
+            # Unauthorized role
+            - name: HASURA_GRAPHQL_UNAUTHORIZED_ROLE
+              value: "anonymous"
+            
+            # Log level
+            - name: HASURA_GRAPHQL_LOG_LEVEL
+              value: "info"
+            
+            # Redis cache URL (will be configured in Task 53.4)
+            - name: HASURA_GRAPHQL_REDIS_URL
+              value: "redis://hasura-redis:6379"
+            
+            # Rate limiting
+            - name: HASURA_GRAPHQL_RATE_LIMIT_PER_ROLE
+              value: '{"admin":{"max_req_per_min":10000},"developer":{"max_req_per_min":1000},"viewer":{"max_req_per_min":100}}'
+          
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: false
+      
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - hasura
+                topologyKey: kubernetes.io/hostname

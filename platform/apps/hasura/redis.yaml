@@ -1,0 +1,135 @@
+# ============================================================================
+# FILE: platform/apps/hasura/redis.yaml
+# PURPOSE: Redis deployment for GraphQL query caching
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hasura-redis-config
+  namespace: fawkes
+  labels:
+    app: hasura-redis
+    component: cache
+data:
+  redis.conf: |
+    # Redis configuration for Hasura caching
+    
+    # Memory settings
+    maxmemory 256mb
+    maxmemory-policy allkeys-lru
+    
+    # Persistence disabled for cache
+    save ""
+    appendonly no
+    
+    # Network
+    tcp-backlog 511
+    timeout 300
+    tcp-keepalive 60
+    
+    # Logging
+    loglevel notice
+    
+    # Performance
+    databases 16
+    
+    # Security
+    protected-mode yes
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hasura-redis
+  namespace: fawkes
+  labels:
+    app: hasura-redis
+    component: cache
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hasura-redis
+  template:
+    metadata:
+      labels:
+        app: hasura-redis
+        component: cache
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        fsGroup: 999
+      
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          imagePullPolicy: IfNotPresent
+          
+          ports:
+            - name: redis
+              containerPort: 6379
+              protocol: TCP
+          
+          command:
+            - redis-server
+            - /etc/redis/redis.conf
+          
+          volumeMounts:
+            - name: config
+              mountPath: /etc/redis
+          
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          
+          readinessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      
+      volumes:
+        - name: config
+          configMap:
+            name: hasura-redis-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hasura-redis
+  namespace: fawkes
+  labels:
+    app: hasura-redis
+    component: cache
+spec:
+  type: ClusterIP
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: 6379
+      protocol: TCP
+  selector:
+    app: hasura-redis

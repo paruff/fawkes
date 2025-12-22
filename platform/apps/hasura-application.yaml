@@ -1,0 +1,55 @@
+# ============================================================================
+# FILE: platform/apps/hasura-application.yaml
+# PURPOSE: ArgoCD Application for Hasura GraphQL Engine deployment
+#          Unified GraphQL API for all platform data
+# PREREQ: fawkes namespace and PostgreSQL clusters must exist
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hasura
+  namespace: fawkes
+  labels:
+    app: hasura
+    component: data-api
+    environment: dev
+    team: platform
+  annotations:
+    # Sync wave to ensure dependencies are deployed first
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/paruff/fawkes
+    targetRevision: HEAD
+    path: platform/apps/hasura
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false  # Namespace should already exist
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Keep ArgoCD from flagging differences you expect
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+
+  # Basic health and retention tuning
+  revisionHistoryLimit: 10

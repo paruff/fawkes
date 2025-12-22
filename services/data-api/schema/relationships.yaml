@@ -1,0 +1,76 @@
+# ============================================================================
+# FILE: services/data-api/schema/relationships.yaml
+# PURPOSE: Hasura relationship definitions
+#          Enables nested GraphQL queries across tables
+# ============================================================================
+
+# VSM Database Relationships
+- database: vsm
+  table: work_items
+  object_relationships:
+    # Work item has one current stage
+    - name: currentStage
+      using:
+        foreign_key_constraint_on: current_stage_id
+  
+  array_relationships:
+    # Work item has many transitions
+    - name: transitions
+      using:
+        foreign_key_constraint_on:
+          column: work_item_id
+          table:
+            schema: public
+            name: stage_transitions
+
+- database: vsm
+  table: stage_transitions
+  object_relationships:
+    # Transition belongs to one work item
+    - name: workItem
+      using:
+        foreign_key_constraint_on: work_item_id
+    
+    # Transition has from_stage
+    - name: fromStage
+      using:
+        foreign_key_constraint_on: from_stage_id
+    
+    # Transition has to_stage
+    - name: toStage
+      using:
+        foreign_key_constraint_on: to_stage_id
+
+- database: vsm
+  table: stages
+  array_relationships:
+    # Stage has many work items currently in it
+    - name: currentWorkItems
+      using:
+        foreign_key_constraint_on:
+          column: current_stage_id
+          table:
+            schema: public
+            name: work_items
+
+# Backstage Database Relationships
+- database: backstage
+  table: final_entities
+  object_relationships:
+    # Component belongs to a system (if specified)
+    - name: system
+      using:
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: final_entities
+          column_mapping:
+            spec.system: entity_id
+          insertion_order: null
+
+# Cross-Database Relationships (if needed)
+# These require Hasura remote schemas or actions
+
+# Example: VSM work_item -> Backstage component
+# This would be configured via remote relationships in Hasura console
+# or using remote schemas
