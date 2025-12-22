@@ -99,6 +99,8 @@ spec:
         - name: rules
           mountPath: /app/rules
           readOnly: true
+        - name: tmp
+          mountPath: /tmp
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
@@ -109,6 +111,8 @@ spec:
       - name: rules
         configMap:
           name: smart-alerting-rules
+      - name: tmp
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

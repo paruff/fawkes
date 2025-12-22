@@ -5,6 +5,14 @@ set -e
 
 SMART_ALERTING_URL="${SMART_ALERTING_URL:-http://smart-alerting.fawkes.local}"
 
+# Check for jq
+if ! command -v jq &> /dev/null; then
+    echo "Warning: jq is not installed. Output will not be formatted."
+    JQ_AVAILABLE=false
+else
+    JQ_AVAILABLE=true
+fi
+
 echo "🔔 Triggering test alerts to Smart Alerting Service"
 echo "Target: $SMART_ALERTING_URL"
 echo ""
@@ -18,7 +26,7 @@ send_alert() {
     
     echo "Sending alert: $alertname (severity: $severity, service: $service)"
     
-    curl -X POST "$SMART_ALERTING_URL/api/v1/alerts/generic" \
+    response=$(curl -X POST "$SMART_ALERTING_URL/api/v1/alerts/generic" \
         -H "Content-Type: application/json" \
         -d "{
             \"alerts\": [{
@@ -36,7 +44,13 @@ send_alert() {
                 \"status\": \"firing\"
             }]
         }" \
-        --silent --show-error | jq .
+        --silent --show-error)
+    
+    if [ "$JQ_AVAILABLE" = true ]; then
+        echo "$response" | jq .
+    else
+        echo "$response"
+    fi
     
     echo ""
 }
@@ -86,6 +100,12 @@ sleep 2
 echo "✅ Test alerts sent successfully!"
 echo ""
 echo "Verify results:"
-echo "  - View alert groups: curl $SMART_ALERTING_URL/api/v1/alert-groups | jq ."
-echo "  - View statistics: curl $SMART_ALERTING_URL/api/v1/stats | jq ."
-echo "  - View reduction: curl $SMART_ALERTING_URL/api/v1/stats/reduction | jq ."
+if [ "$JQ_AVAILABLE" = true ]; then
+    echo "  - View alert groups: curl $SMART_ALERTING_URL/api/v1/alert-groups | jq ."
+    echo "  - View statistics: curl $SMART_ALERTING_URL/api/v1/stats | jq ."
+    echo "  - View reduction: curl $SMART_ALERTING_URL/api/v1/stats/reduction | jq ."
+else
+    echo "  - View alert groups: curl $SMART_ALERTING_URL/api/v1/alert-groups"
+    echo "  - View statistics: curl $SMART_ALERTING_URL/api/v1/stats"
+    echo "  - View reduction: curl $SMART_ALERTING_URL/api/v1/stats/reduction"
+fi
