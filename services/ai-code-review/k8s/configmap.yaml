@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-code-review-config
+  namespace: fawkes
+  labels:
+    app: ai-code-review
+    component: ai-platform
+data:
+  RAG_SERVICE_URL: "http://rag-service.fawkes.svc:8000"
+  SONARQUBE_URL: "http://sonarqube.fawkes.svc:9000"
+  LLM_API_URL: "https://api.openai.com/v1/chat/completions"
+  LLM_MODEL: "gpt-4"
+  FALSE_POSITIVE_THRESHOLD: "0.8"

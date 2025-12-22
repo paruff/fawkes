@@ -565,3 +565,42 @@ spec:
   type: url
   targets:
     - https://github.com/paruff/fawkes/blob/main/catalog-info-ai.yaml
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ai-code-review-service
+  title: AI Code Review Service
+  description: |
+    Automated code review bot that analyzes pull requests using AI/LLM.
+    Provides intelligent feedback on security, performance, code quality,
+    test coverage, and documentation. Integrates with GitHub webhooks,
+    RAG service for context-aware reviews, and SonarQube for comprehensive
+    static analysis.
+  tags:
+    - ai
+    - code-review
+    - automation
+    - python
+    - fastapi
+    - llm
+  links:
+    - url: https://github.com/paruff/fawkes/tree/main/services/ai-code-review
+      title: Source Code
+      icon: github
+    - url: http://ai-code-review.fawkes.svc:8000/metrics
+      title: Metrics
+      icon: dashboard
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/techdocs-ref: dir:./services/ai-code-review
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: ai-platform
+  dependsOn:
+    - component:rag-service
+    - component:sonarqube
+  providesApis:
+    - ai-code-review-api
