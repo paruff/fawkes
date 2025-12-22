@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel, Field, ConfigDict
-from app.models import WorkItemType, StageType
+from app.models import WorkItemType, StageType, StageCategory
 
 
 # Work Item Schemas
@@ -71,6 +71,9 @@ class StageResponse(BaseModel):
     name: str = Field(..., description="Stage name")
     order: int = Field(..., description="Stage order in value stream")
     type: StageType = Field(..., description="Stage type")
+    category: Optional[StageCategory] = Field(None, description="Stage category (wait/active/done)")
+    wip_limit: Optional[int] = Field(None, description="Work in progress limit")
+    description: Optional[str] = Field(None, description="Stage description")
 
 
 # Health Check Schema
