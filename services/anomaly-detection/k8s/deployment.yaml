@@ -35,6 +35,9 @@ data:
   ANOMALY_THRESHOLD: "0.7"
   LOOKBACK_MINUTES: "60"
   MIN_SAMPLES: "10"
+  ZSCORE_THRESHOLD: "3.0"
+  IQR_MULTIPLIER: "1.5"
+  CONFIDENCE_LOW_THRESHOLD: "0.7"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -109,12 +112,18 @@ spec:
           failureThreshold: 3
         securityContext:
           allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: false
+          readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
           capabilities:
             drop:
             - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

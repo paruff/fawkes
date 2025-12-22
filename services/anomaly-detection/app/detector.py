@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 PROMETHEUS_URL = os.getenv("PROMETHEUS_URL", "http://prometheus-kube-prometheus-prometheus.fawkes.svc:9090")
 DETECTION_INTERVAL_SECONDS = int(os.getenv("DETECTION_INTERVAL_SECONDS", "60"))
 ALERTMANAGER_URL = os.getenv("ALERTMANAGER_URL", "http://prometheus-kube-prometheus-alertmanager.fawkes.svc:9093")
+CONFIDENCE_LOW_THRESHOLD = float(os.getenv("CONFIDENCE_LOW_THRESHOLD", "0.7"))
 
 
 async def run_continuous_detection():
@@ -105,7 +106,7 @@ async def run_continuous_detection():
             # Update false positive rate estimate
             if len(recent_anomalies) > 10:
                 # Simple heuristic: anomalies with low confidence are likely false positives
-                low_confidence = sum(1 for a in recent_anomalies[:50] if a.anomaly.confidence < 0.7)
+                low_confidence = sum(1 for a in recent_anomalies[:50] if a.anomaly.confidence < CONFIDENCE_LOW_THRESHOLD)
                 fp_rate = low_confidence / min(50, len(recent_anomalies))
                 FALSE_POSITIVE_RATE_GAUGE.set(fp_rate)
             

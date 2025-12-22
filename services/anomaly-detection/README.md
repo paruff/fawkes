@@ -86,6 +86,9 @@ Environment variables:
 | `ANOMALY_THRESHOLD` | `0.7` | Anomaly score threshold (0-1) |
 | `LOOKBACK_MINUTES` | `60` | Historical data lookback window |
 | `MIN_SAMPLES` | `10` | Minimum samples required for detection |
+| `ZSCORE_THRESHOLD` | `3.0` | Z-score threshold for statistical detection |
+| `IQR_MULTIPLIER` | `1.5` | IQR multiplier for outlier detection |
+| `CONFIDENCE_LOW_THRESHOLD` | `0.7` | Threshold below which anomalies are considered low confidence |
 
 ## Deployment
 
