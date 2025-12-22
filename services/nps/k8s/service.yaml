@@ -1,0 +1,21 @@
+# ============================================================================
+# FILE: services/nps/k8s/service.yaml
+# PURPOSE: Kubernetes Service for NPS Survey Service
+# ============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: nps-service
+  namespace: fawkes
+  labels:
+    app: nps-service
+    component: platform
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8000
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: nps-service
