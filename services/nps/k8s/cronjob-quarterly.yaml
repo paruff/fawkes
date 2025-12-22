@@ -1,0 +1,118 @@
+# ============================================================================
+# FILE: services/nps/k8s/cronjob-quarterly.yaml
+# PURPOSE: CronJob for quarterly NPS survey distribution
+# SCHEDULE: First day of every quarter at 9 AM UTC (Jan 1, Apr 1, Jul 1, Oct 1)
+# ============================================================================
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: nps-survey-quarterly
+  namespace: fawkes
+  labels:
+    app: nps-service
+    component: platform
+    job-type: survey-distribution
+spec:
+  # Run on the first day of each quarter at 9 AM UTC
+  # 0 9 1 */3 * = minute=0, hour=9, day=1, month=every 3 months
+  schedule: "0 9 1 */3 *"
+  
+  # Keep last 3 successful and 1 failed job
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  
+  # Don't allow concurrent runs
+  concurrencyPolicy: Forbid
+  
+  jobTemplate:
+    metadata:
+      labels:
+        app: nps-service
+        component: platform
+        job-type: survey-distribution
+    spec:
+      # Clean up completed job after 7 days
+      ttlSecondsAfterFinished: 604800
+      
+      template:
+        metadata:
+          labels:
+            app: nps-service
+            component: platform
+            job-type: survey-distribution
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: nps-service
+          
+          # Security context
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+          
+          containers:
+          - name: survey-sender
+            image: nps-service:latest
+            imagePullPolicy: IfNotPresent
+            
+            # Override command to run survey distribution script
+            command: ["python"]
+            args: ["scripts/send-survey.py", "--all-users"]
+            
+            env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: nps-service-secret
+                  key: database_url
+            - name: MATTERMOST_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: nps-service-config
+                  key: mattermost_url
+            - name: MATTERMOST_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: nps-service-secret
+                  key: mattermost_token
+            - name: MATTERMOST_BOT_USER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: nps-service-secret
+                  key: mattermost_bot_user_id
+            - name: BASE_SURVEY_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: nps-service-config
+                  key: base_survey_url
+            
+            # Resource limits for job
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 200m
+                memory: 256Mi
+            
+            # Security context
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              runAsUser: 65534
+              capabilities:
+                drop:
+                  - ALL
+              seccompProfile:
+                type: RuntimeDefault
+            
+            # Volume mounts for writable directories
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          
+          volumes:
+          - name: tmp
+            emptyDir: {}

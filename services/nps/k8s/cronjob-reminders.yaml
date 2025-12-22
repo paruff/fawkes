@@ -1,0 +1,120 @@
+# ============================================================================
+# FILE: services/nps/k8s/cronjob-reminders.yaml
+# PURPOSE: CronJob for weekly NPS survey reminders
+# SCHEDULE: Every Monday at 10 AM UTC
+# ============================================================================
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: nps-survey-reminders
+  namespace: fawkes
+  labels:
+    app: nps-service
+    component: platform
+    job-type: survey-reminders
+spec:
+  # Run every Monday at 10 AM UTC
+  # 0 10 * * 1 = minute=0, hour=10, day=any, month=any, weekday=Monday
+  schedule: "0 10 * * 1"
+  
+  # Keep last 3 successful and 1 failed job
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  
+  # Don't allow concurrent runs
+  concurrencyPolicy: Forbid
+  
+  jobTemplate:
+    metadata:
+      labels:
+        app: nps-service
+        component: platform
+        job-type: survey-reminders
+    spec:
+      # Clean up completed job after 7 days
+      ttlSecondsAfterFinished: 604800
+      
+      template:
+        metadata:
+          labels:
+            app: nps-service
+            component: platform
+            job-type: survey-reminders
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: nps-service
+          
+          # Security context
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+          
+          containers:
+          - name: reminder-sender
+            image: nps-service:latest
+            imagePullPolicy: IfNotPresent
+            
+            # Override command to run reminder script
+            command: ["python"]
+            args: ["scripts/send-survey.py", "--send-reminders"]
+            
+            env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: nps-service-secret
+                  key: database_url
+            - name: MATTERMOST_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: nps-service-config
+                  key: mattermost_url
+            - name: MATTERMOST_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: nps-service-secret
+                  key: mattermost_token
+            - name: MATTERMOST_BOT_USER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: nps-service-secret
+                  key: mattermost_bot_user_id
+            - name: BASE_SURVEY_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: nps-service-config
+                  key: base_survey_url
+            - name: REMINDER_DAYS
+              value: "7"
+            
+            # Resource limits for job
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 200m
+                memory: 256Mi
+            
+            # Security context
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              runAsUser: 65534
+              capabilities:
+                drop:
+                  - ALL
+              seccompProfile:
+                type: RuntimeDefault
+            
+            # Volume mounts for writable directories
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          
+          volumes:
+          - name: tmp
+            emptyDir: {}

@@ -1,0 +1,21 @@
+# ============================================================================
+# FILE: services/nps/k8s/servicemonitor.yaml
+# PURPOSE: ServiceMonitor for Prometheus metrics scraping
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nps-service
+  namespace: fawkes
+  labels:
+    app: nps-service
+    component: platform
+spec:
+  selector:
+    matchLabels:
+      app: nps-service
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
