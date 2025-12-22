@@ -1,0 +1,23 @@
+# ============================================================================
+# FILE: platform/apps/feedback-service/servicemonitor.yaml
+# PURPOSE: Prometheus ServiceMonitor for Feedback Service metrics
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: feedback-service
+  namespace: fawkes
+  labels:
+    app: feedback-service
+    component: feedback
+    environment: dev
+    team: platform
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: feedback-service
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s

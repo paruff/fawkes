@@ -1,0 +1,24 @@
+# ============================================================================
+# FILE: platform/apps/feedback-service/kustomization.yaml
+# PURPOSE: Kustomize configuration for Feedback Service
+# ============================================================================
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: fawkes
+
+resources:
+  - serviceaccount.yaml
+  - configmap.yaml
+  - secrets.yaml
+  - database.yaml
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - servicemonitor.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: feedback-service
+      app.kubernetes.io/part-of: fawkes
+      app.kubernetes.io/managed-by: argocd
