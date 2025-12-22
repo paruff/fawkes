@@ -25,6 +25,14 @@ from app.schemas import (
     StageResponse, HealthResponse
 )
 
+# Import Focalboard integration
+try:
+    from integrations.focalboard import router as focalboard_router
+    FOCALBOARD_INTEGRATION_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"Focalboard integration not available: {e}")
+    FOCALBOARD_INTEGRATION_AVAILABLE = False
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -115,6 +123,13 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Add Focalboard integration router
+if FOCALBOARD_INTEGRATION_AVAILABLE:
+    app.include_router(focalboard_router)
+    logger.info("✅ Focalboard integration enabled")
+else:
+    logger.warning("⚠️ Focalboard integration not available")
+
 # Add prometheus metrics endpoint
 metrics_app = make_asgi_app()
 app.mount("/metrics", metrics_app)
@@ -138,19 +153,30 @@ async def add_metrics(request, call_next):
 @app.get("/", include_in_schema=False)
 async def root():
     """Root endpoint."""
+    endpoints = {
+        "work_items": "/api/v1/work-items",
+        "transition": "/api/v1/work-items/{id}/transition",
+        "metrics": "/api/v1/metrics",
+        "history": "/api/v1/work-items/{id}/history",
+        "stages": "/api/v1/stages",
+        "health": "/api/v1/health",
+        "prometheus": "/metrics"
+    }
+    
+    # Add Focalboard endpoints if integration is available
+    if FOCALBOARD_INTEGRATION_AVAILABLE:
+        endpoints["focalboard_webhook"] = "/api/v1/focalboard/webhook"
+        endpoints["focalboard_sync"] = "/api/v1/focalboard/sync"
+        endpoints["focalboard_mapping"] = "/api/v1/focalboard/stages/mapping"
+    
     return {
         "service": "vsm-service",
         "status": "running",
         "version": VERSION,
-        "endpoints": {
-            "work_items": "/api/v1/work-items",
-            "transition": "/api/v1/work-items/{id}/transition",
-            "metrics": "/api/v1/metrics",
-            "history": "/api/v1/work-items/{id}/history",
-            "stages": "/api/v1/stages",
-            "health": "/api/v1/health",
-            "prometheus": "/metrics"
-        }
+        "integrations": {
+            "focalboard": FOCALBOARD_INTEGRATION_AVAILABLE
+        },
+        "endpoints": endpoints
     }
 
 

@@ -139,6 +139,63 @@ The dashboard includes:
 
 The service is deployed to Kubernetes using ArgoCD. See `platform/apps/vsm-service/` for manifests.
 
+## Focalboard Integration
+
+The VSM service provides bidirectional integration with Focalboard for work tracking and flow metrics visualization.
+
+### Webhook Integration
+
+The VSM service can receive webhooks from Focalboard to automatically sync work items:
+
+**Webhook Endpoint**: `POST /api/v1/focalboard/webhook`
+
+Supported webhook actions:
+- `card.created` - Creates a new VSM work item when a Focalboard card is created
+- `card.moved` - Updates work item stage when a card is moved between columns
+- `card.updated` - Updates work item metadata
+- `card.deleted` - Logs deletion (preserves VSM history)
+
+**Column to Stage Mapping**:
+- Focalboard columns are automatically mapped to VSM stages
+- See `GET /api/v1/focalboard/stages/mapping` for current mappings
+- Default mappings:
+  - "Backlog" / "To Do" → Backlog
+  - "In Progress" / "Development" → Development
+  - "In Review" / "Code Review" → Code Review
+  - "Testing" → Testing
+  - "Done" / "Production" → Production
+
+### Manual Sync
+
+Sync an entire Focalboard board to VSM:
+
+```bash
+curl -X POST http://vsm-service.fawkes.svc:8000/api/v1/focalboard/sync \
+  -H "Content-Type: application/json" \
+  -d '{"board_id": "your-board-id"}'
+```
+
+### VSM Metrics Widget
+
+A custom Focalboard widget displays real-time flow metrics directly in your boards.
+
+**Features**:
+- Throughput, WIP, and cycle time display
+- Per-stage WIP counts
+- Bottleneck detection and warnings
+- WIP limit tracking
+- Link to full Grafana dashboard
+
+**Installation**: See `focalboard-widget/README.md` for installation and configuration instructions.
+
+### API Endpoints
+
+**Focalboard Integration Endpoints**:
+- `POST /api/v1/focalboard/webhook` - Receive Focalboard webhooks
+- `POST /api/v1/focalboard/sync` - Manually sync a board
+- `GET /api/v1/focalboard/work-items/{id}/sync-to-focalboard` - Push work item to Focalboard
+- `GET /api/v1/focalboard/stages/mapping` - Get column-to-stage mapping
+
 ## Environment Variables
 
 - `DATABASE_HOST` - PostgreSQL host (default: db-vsm-dev-rw.fawkes.svc)
