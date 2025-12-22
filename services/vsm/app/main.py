@@ -67,6 +67,25 @@ WIP_GAUGE = Gauge(
     ['stage']
 )
 
+STAGE_CYCLE_TIME = Histogram(
+    'vsm_stage_cycle_time_seconds',
+    'Cycle time per stage in seconds',
+    ['stage'],
+    buckets=[3600, 14400, 28800, 86400, 172800, 259200, 604800, 1209600, 2592000]  # 1h to 30 days
+)
+
+THROUGHPUT_COUNTER = Counter(
+    'vsm_throughput_per_day',
+    'Number of items completed per day',
+    ['date']
+)
+
+LEAD_TIME = Histogram(
+    'vsm_lead_time_seconds',
+    'Lead time from backlog to production in seconds',
+    buckets=[3600, 14400, 28800, 86400, 172800, 259200, 604800, 1209600, 2592000]  # 1h to 30 days
+)
+
 
 # Lifespan context manager for startup/shutdown
 @asynccontextmanager
@@ -298,11 +317,25 @@ async def transition_work_item(
             to_stage=to_stage.name
         ).inc()
         
-        # If moved to production, calculate cycle time
+        # Calculate stage cycle time (time spent in from_stage)
+        if from_stage_id and current_transition:
+            stage_duration_seconds = (transition.timestamp - current_transition.timestamp).total_seconds()
+            STAGE_CYCLE_TIME.labels(stage=from_stage_name).observe(stage_duration_seconds)
+        
+        # If moved to production, calculate cycle time and lead time
         if to_stage.name == "Production":
             cycle_time_hours = calculate_cycle_time(work_item_id, db)
             if cycle_time_hours:
                 CYCLE_TIME.observe(cycle_time_hours)
+            
+            # Calculate lead time (from first transition to production)
+            lead_time_seconds = calculate_lead_time(work_item_id, db)
+            if lead_time_seconds:
+                LEAD_TIME.observe(lead_time_seconds)
+            
+            # Increment throughput counter with current date
+            current_date = transition.timestamp.strftime('%Y-%m-%d')
+            THROUGHPUT_COUNTER.labels(date=current_date).inc()
         
         logger.info(f"Transitioned work item {work_item_id} from {from_stage_name} to {to_stage.name}")
         
@@ -559,6 +592,39 @@ def calculate_cycle_time(work_item_id: int, db: Session) -> Optional[float]:
     cycle_time_hours = cycle_time_seconds / 3600
     
     return cycle_time_hours
+
+
+def calculate_lead_time(work_item_id: int, db: Session) -> Optional[float]:
+    """
+    Calculate lead time for a work item in seconds (from backlog to production).
+    
+    Lead time is the total time from when work item enters the system (first transition)
+    to when it reaches production.
+    
+    Args:
+        work_item_id: Work item ID
+        db: Database session
+        
+    Returns:
+        Lead time in seconds or None if cannot be calculated
+    """
+    transitions = (
+        db.query(StageTransition)
+        .filter(StageTransition.work_item_id == work_item_id)
+        .order_by(StageTransition.timestamp.asc())
+        .all()
+    )
+    
+    if len(transitions) < 2:
+        return None
+    
+    # Calculate time from first transition to production
+    start_time = transitions[0].timestamp
+    end_time = transitions[-1].timestamp
+    
+    lead_time_seconds = (end_time - start_time).total_seconds()
+    
+    return lead_time_seconds
 
 
 if __name__ == "__main__":

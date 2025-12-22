@@ -1,0 +1,693 @@
+{
+  "dashboard": {
+    "title": "VSM Flow Metrics",
+    "tags": ["vsm", "flow", "metrics", "value-stream", "kanban"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "5m",
+    "uid": "vsm-flow-metrics",
+    "description": "Value Stream Mapping flow metrics dashboard showing WIP, throughput, cycle time, lead time, and bottleneck detection",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Flow Metrics Overview",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 0, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 2,
+        "title": "Total WIP (Work in Progress)",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 1, "w": 6, "h": 6},
+        "description": "Total number of work items currently in progress across all stages",
+        "targets": [
+          {
+            "expr": "sum(vsm_work_in_progress)",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 20},
+                {"color": "orange", "value": 50},
+                {"color": "red", "value": 100}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 3,
+        "title": "Throughput (Last 7 Days)",
+        "type": "stat",
+        "gridPos": {"x": 6, "y": 1, "w": 6, "h": 6},
+        "description": "Number of work items completed in the last 7 days",
+        "targets": [
+          {
+            "expr": "sum(increase(vsm_throughput_per_day[7d]))",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 5},
+                {"color": "green", "value": 15}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 4,
+        "title": "Lead Time (P50)",
+        "type": "gauge",
+        "gridPos": {"x": 12, "y": 1, "w": 6, "h": 6},
+        "description": "Median lead time from backlog to production",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(vsm_lead_time_seconds_bucket[7d])) by (le)) / 3600",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "h",
+            "min": 0,
+            "max": 720,
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 24},
+                {"color": "orange", "value": 168},
+                {"color": "red", "value": 336}
+              ]
+            }
+          }
+        },
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        }
+      },
+      {
+        "id": 5,
+        "title": "Avg Cycle Time (Hours)",
+        "type": "gauge",
+        "gridPos": {"x": 18, "y": 1, "w": 6, "h": 6},
+        "description": "Average cycle time for completed work items",
+        "targets": [
+          {
+            "expr": "avg(vsm_cycle_time_hours)",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "h",
+            "min": 0,
+            "max": 720,
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 48},
+                {"color": "orange", "value": 168},
+                {"color": "red", "value": 336}
+              ]
+            }
+          }
+        },
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        }
+      },
+      {
+        "id": 6,
+        "title": "Cumulative Flow Diagram",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 7, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 7,
+        "title": "WIP by Stage Over Time",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 8, "w": 24, "h": 10},
+        "description": "Cumulative flow diagram showing work in progress by stage",
+        "targets": [
+          {
+            "expr": "vsm_work_in_progress{stage=\"Backlog\"}",
+            "refId": "A",
+            "legendFormat": "Backlog",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "vsm_work_in_progress{stage=\"Analysis\"}",
+            "refId": "B",
+            "legendFormat": "Analysis",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "vsm_work_in_progress{stage=\"Development\"}",
+            "refId": "C",
+            "legendFormat": "Development",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "vsm_work_in_progress{stage=\"Testing\"}",
+            "refId": "D",
+            "legendFormat": "Testing",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "vsm_work_in_progress{stage=\"Deployment\"}",
+            "refId": "E",
+            "legendFormat": "Deployment",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "vsm_work_in_progress{stage=\"Production\"}",
+            "refId": "F",
+            "legendFormat": "Production",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "barAlignment": 0,
+              "fillOpacity": 70,
+              "showPoints": "never",
+              "stacking": {"mode": "normal"}
+            }
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "none"
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Throughput & Flow",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 18, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 9,
+        "title": "Daily Throughput",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 19, "w": 12, "h": 8},
+        "description": "Number of work items completed per day",
+        "targets": [
+          {
+            "expr": "sum(increase(vsm_throughput_per_day[1d]))",
+            "refId": "A",
+            "legendFormat": "Items Completed",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "bars",
+              "lineInterpolation": "linear",
+              "barAlignment": 0,
+              "fillOpacity": 80,
+              "showPoints": "never"
+            }
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          }
+        }
+      },
+      {
+        "id": 10,
+        "title": "Weekly Throughput Trend",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 19, "w": 12, "h": 8},
+        "description": "Rolling 7-day average of throughput",
+        "targets": [
+          {
+            "expr": "avg_over_time(sum(increase(vsm_throughput_per_day[1d]))[7d:1d])",
+            "refId": "A",
+            "legendFormat": "7-day Average",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "barAlignment": 0,
+              "fillOpacity": 20,
+              "showPoints": "auto"
+            }
+          }
+        }
+      },
+      {
+        "id": 11,
+        "title": "Cycle Time Analysis",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 27, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 12,
+        "title": "Cycle Time by Stage",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 28, "w": 12, "h": 8},
+        "description": "Average time spent in each stage (in hours)",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(vsm_stage_cycle_time_seconds_bucket{stage=\"Analysis\"}[7d])) by (le)) / 3600",
+            "refId": "A",
+            "legendFormat": "Analysis",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(vsm_stage_cycle_time_seconds_bucket{stage=\"Development\"}[7d])) by (le)) / 3600",
+            "refId": "B",
+            "legendFormat": "Development",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(vsm_stage_cycle_time_seconds_bucket{stage=\"Testing\"}[7d])) by (le)) / 3600",
+            "refId": "C",
+            "legendFormat": "Testing",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(vsm_stage_cycle_time_seconds_bucket{stage=\"Deployment\"}[7d])) by (le)) / 3600",
+            "refId": "D",
+            "legendFormat": "Deployment",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "h",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "barAlignment": 0,
+              "fillOpacity": 10,
+              "showPoints": "auto"
+            }
+          }
+        }
+      },
+      {
+        "id": 13,
+        "title": "Stage Cycle Time Distribution (Current)",
+        "type": "bargauge",
+        "gridPos": {"x": 12, "y": 28, "w": 12, "h": 8},
+        "description": "Current median time spent in each stage",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(vsm_stage_cycle_time_seconds_bucket{stage=\"Backlog\"}[1h])) by (le)) / 3600",
+            "refId": "A",
+            "legendFormat": "Backlog",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(vsm_stage_cycle_time_seconds_bucket{stage=\"Analysis\"}[1h])) by (le)) / 3600",
+            "refId": "B",
+            "legendFormat": "Analysis",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(vsm_stage_cycle_time_seconds_bucket{stage=\"Development\"}[1h])) by (le)) / 3600",
+            "refId": "C",
+            "legendFormat": "Development",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(vsm_stage_cycle_time_seconds_bucket{stage=\"Testing\"}[1h])) by (le)) / 3600",
+            "refId": "D",
+            "legendFormat": "Testing",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(vsm_stage_cycle_time_seconds_bucket{stage=\"Deployment\"}[1h])) by (le)) / 3600",
+            "refId": "E",
+            "legendFormat": "Deployment",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "h",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 24},
+                {"color": "orange", "value": 72},
+                {"color": "red", "value": 168}
+              ]
+            }
+          }
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "showUnfilled": true
+        }
+      },
+      {
+        "id": 14,
+        "title": "Lead Time Trends",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 36, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 15,
+        "title": "Lead Time Percentiles",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 37, "w": 24, "h": 8},
+        "description": "Lead time distribution showing P50, P75, and P95 percentiles",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(vsm_lead_time_seconds_bucket[7d])) by (le)) / 3600",
+            "refId": "A",
+            "legendFormat": "P50 (Median)",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "histogram_quantile(0.75, sum(rate(vsm_lead_time_seconds_bucket[7d])) by (le)) / 3600",
+            "refId": "B",
+            "legendFormat": "P75",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(vsm_lead_time_seconds_bucket[7d])) by (le)) / 3600",
+            "refId": "C",
+            "legendFormat": "P95",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "h",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "barAlignment": 0,
+              "fillOpacity": 0,
+              "showPoints": "auto",
+              "lineWidth": 2
+            }
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          }
+        }
+      },
+      {
+        "id": 16,
+        "title": "Bottleneck Detection",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 45, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 17,
+        "title": "WIP by Stage (Current)",
+        "type": "piechart",
+        "gridPos": {"x": 0, "y": 46, "w": 8, "h": 8},
+        "description": "Distribution of work in progress across stages - identifies bottlenecks",
+        "targets": [
+          {
+            "expr": "vsm_work_in_progress",
+            "refId": "A",
+            "legendFormat": "{{stage}}",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"}
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "showLegend": true,
+            "values": ["value", "percent"]
+          },
+          "pieType": "pie",
+          "tooltip": {
+            "mode": "multi"
+          }
+        }
+      },
+      {
+        "id": 18,
+        "title": "Stage Transition Rate",
+        "type": "timeseries",
+        "gridPos": {"x": 8, "y": 46, "w": 16, "h": 8},
+        "description": "Rate of transitions between stages - slow transitions indicate bottlenecks",
+        "targets": [
+          {
+            "expr": "sum(rate(vsm_stage_transitions_total{to_stage=\"Analysis\"}[5m])) * 3600",
+            "refId": "A",
+            "legendFormat": "→ Analysis",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "sum(rate(vsm_stage_transitions_total{to_stage=\"Development\"}[5m])) * 3600",
+            "refId": "B",
+            "legendFormat": "→ Development",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "sum(rate(vsm_stage_transitions_total{to_stage=\"Testing\"}[5m])) * 3600",
+            "refId": "C",
+            "legendFormat": "→ Testing",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "sum(rate(vsm_stage_transitions_total{to_stage=\"Deployment\"}[5m])) * 3600",
+            "refId": "D",
+            "legendFormat": "→ Deployment",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "sum(rate(vsm_stage_transitions_total{to_stage=\"Production\"}[5m])) * 3600",
+            "refId": "E",
+            "legendFormat": "→ Production",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "trans/h",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "barAlignment": 0,
+              "fillOpacity": 10,
+              "showPoints": "auto"
+            }
+          }
+        }
+      },
+      {
+        "id": 19,
+        "title": "Stage Health Indicators",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 54, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 20,
+        "title": "High WIP Stages (Bottlenecks)",
+        "type": "table",
+        "gridPos": {"x": 0, "y": 55, "w": 12, "h": 8},
+        "description": "Stages with high work in progress - potential bottlenecks",
+        "targets": [
+          {
+            "expr": "sort_desc(vsm_work_in_progress > 5)",
+            "refId": "A",
+            "format": "table",
+            "instant": true,
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 10},
+                {"color": "orange", "value": 20},
+                {"color": "red", "value": 30}
+              ]
+            }
+          }
+        },
+        "options": {
+          "showHeader": true
+        },
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "Time": true,
+                "__name__": true,
+                "job": true,
+                "instance": true
+              },
+              "renameByName": {
+                "stage": "Stage",
+                "Value": "WIP Count"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 21,
+        "title": "Stage Cycle Time Comparison",
+        "type": "bargauge",
+        "gridPos": {"x": 12, "y": 55, "w": 12, "h": 8},
+        "description": "Compare cycle times across stages to identify slow stages",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(vsm_stage_cycle_time_seconds_bucket[24h])) by (le, stage)) / 3600",
+            "refId": "A",
+            "legendFormat": "{{stage}}",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "h",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 24},
+                {"color": "orange", "value": 72},
+                {"color": "red", "value": 168}
+              ]
+            },
+            "max": 168
+          }
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "showUnfilled": true
+        }
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "time_range",
+          "type": "interval",
+          "query": "1h,6h,12h,1d,7d,30d",
+          "current": {
+            "value": "7d",
+            "text": "7d"
+          },
+          "label": "Time Range",
+          "description": "Time range for metrics aggregation"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-7d",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["30s", "1m", "5m", "15m", "30m", "1h", "2h", "1d"]
+    },
+    "annotations": {
+      "list": [
+        {
+          "name": "Work Item Completions",
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "changes(vsm_throughput_per_day[1m]) > 0",
+          "titleFormat": "Item Completed",
+          "iconColor": "green"
+        }
+      ]
+    }
+  }
+}
