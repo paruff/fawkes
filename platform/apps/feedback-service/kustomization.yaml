@@ -17,7 +17,8 @@ resources:
   - ingress.yaml
   - servicemonitor.yaml
 
-commonLabels:
-  app.kubernetes.io/name: feedback-service
-  app.kubernetes.io/part-of: fawkes
-  app.kubernetes.io/managed-by: argocd
+labels:
+  - pairs:
+      app.kubernetes.io/name: feedback-service
+      app.kubernetes.io/part-of: fawkes
+      app.kubernetes.io/managed-by: argocd
