@@ -64,16 +64,26 @@ def test_ready_endpoint_success(mock_env):
     assert data["status"] == "READY"
 
 
-def test_ready_endpoint_missing_config(monkeypatch):
+def test_ready_endpoint_missing_config():
     """Test readiness endpoint fails when not configured."""
-    monkeypatch.delenv("GITHUB_TOKEN", raising=False)
-    monkeypatch.delenv("LLM_API_KEY", raising=False)
+    from app import main
     
-    from app.main import app
-    client = TestClient(app)
+    # Save original values
+    original_github_token = main.GITHUB_TOKEN
+    original_llm_key = main.LLM_API_KEY
     
-    response = client.get("/ready")
-    assert response.status_code == 503
+    try:
+        # Set to empty
+        main.GITHUB_TOKEN = ""
+        main.LLM_API_KEY = ""
+        
+        client = TestClient(main.app)
+        response = client.get("/ready")
+        assert response.status_code == 503
+    finally:
+        # Restore original values
+        main.GITHUB_TOKEN = original_github_token
+        main.LLM_API_KEY = original_llm_key
 
 
 def test_verify_github_signature_valid(mock_env):
