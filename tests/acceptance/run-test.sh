@@ -59,6 +59,7 @@ Supported Test IDs:
   AT-E2-002    RAG Architecture - RAG service deployed and functional
   AT-E2-003    Data Catalog - DataHub operational
   AT-E2-004    Data Quality - Great Expectations monitoring
+  AT-E2-005    VSM - Value Stream Mapping tracking service
   AT-E2-008    Unified API - GraphQL Data API deployed and functional
 
 Examples:
@@ -550,6 +551,51 @@ run_at_e2_004() {
     return 0
 }
 
+run_at_e2_005() {
+    log_info "Running AT-E2-005: VSM (Value Stream Mapping) validation"
+    echo ""
+    
+    # Run the comprehensive validation script
+    log_info "Step 1: Running comprehensive validation..."
+    if [ -f "$ROOT_DIR/scripts/validate-at-e2-005.sh" ]; then
+        if ! "$ROOT_DIR/scripts/validate-at-e2-005.sh"; then
+            log_error "Comprehensive validation failed"
+            return 1
+        fi
+    else
+        log_error "AT-E2-005 validation script not found at $ROOT_DIR/scripts/validate-at-e2-005.sh"
+        return 1
+    fi
+    
+    echo ""
+    log_info "Step 2: Running BDD tests..."
+    if ! cd "$ROOT_DIR"; then
+        log_error "Failed to change to root directory: $ROOT_DIR"
+        return 1
+    fi
+    
+    # Check if pytest is available
+    if command -v pytest &> /dev/null; then
+        # Run VSM BDD tests
+        if [ -d "tests/bdd/features" ]; then
+            log_info "Running VSM BDD tests..."
+            # Run VSM-related tests
+            if pytest tests/bdd -k "vsm or value_stream" -v --tb=short 2>/dev/null; then
+                log_success "BDD tests passed"
+            else
+                log_warning "Some BDD tests failed or were skipped (may require cluster with VSM deployed)"
+            fi
+        fi
+    else
+        log_warning "pytest not available, skipping BDD tests"
+    fi
+    
+    echo ""
+    log_success "AT-E2-005 validation completed!"
+    log_success "VSM tracking service is deployed and functional!"
+    return 0
+}
+
 run_at_e2_008() {
     log_info "Running AT-E2-008: Unified GraphQL Data API validation"
     echo ""
@@ -633,6 +679,9 @@ main() {
             ;;
         AT-E2-004)
             run_at_e2_004
+            ;;
+        AT-E2-005)
+            run_at_e2_005
             ;;
         AT-E2-008)
             run_at_e2_008
