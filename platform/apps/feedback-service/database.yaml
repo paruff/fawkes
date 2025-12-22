@@ -45,14 +45,20 @@ spec:
   monitoring:
     enabled: true
   
-  backup:
-    retentionPolicy: "7d"
-    barmanObjectStore:
-      destinationPath: s3://fawkes-backups/feedback-db
-      s3Credentials:
-        accessKeyId:
-          name: backup-s3-credentials
-          key: ACCESS_KEY_ID
-        secretAccessKey:
-          name: backup-s3-credentials
-          key: SECRET_ACCESS_KEY
+  # Backup configuration disabled - requires S3 credentials setup
+  # To enable backups:
+  # 1. Create S3 bucket for backups
+  # 2. Create secret 'backup-s3-credentials' with ACCESS_KEY_ID and SECRET_ACCESS_KEY
+  # 3. Uncomment backup section below
+  #
+  # backup:
+  #   retentionPolicy: "7d"
+  #   barmanObjectStore:
+  #     destinationPath: s3://fawkes-backups/feedback-db
+  #     s3Credentials:
+  #       accessKeyId:
+  #         name: backup-s3-credentials
+  #         key: ACCESS_KEY_ID
+  #       secretAccessKey:
+  #         name: backup-s3-credentials
+  #         key: SECRET_ACCESS_KEY
