@@ -1,0 +1,10 @@
+# Example Flapping Detection Rule
+# This rule suppresses alerts that fire repeatedly (flapping)
+
+name: "Flapping Network Alerts"
+type: flapping
+enabled: true  # Enabled by default
+threshold: 3  # Number of occurrences to trigger suppression
+window: 600  # Time window in seconds (10 minutes)
+alert_pattern: "Network.*"  # Pattern to match alert names
+action: suppress  # Action to take when flapping detected

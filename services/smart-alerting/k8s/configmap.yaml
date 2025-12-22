@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smart-alerting-rules
+  namespace: fawkes
+data:
+  example-maintenance-window.yaml: |
+    name: "Weekly Maintenance Window"
+    type: maintenance_window
+    enabled: false
+    schedule: "0 2 * * 0"
+    duration: 7200
+    services:
+      - api-gateway
+      - database
+    suppress_severity:
+      - medium
+      - low
+
+  example-known-issue.yaml: |
+    name: "Known Database Connection Issue"
+    type: known_issue
+    enabled: false
+    alert_pattern: "DatabaseConnection.*"
+    services:
+      - api-gateway
+    ticket_url: "https://jira.example.com/ISSUE-123"
+    expires_at: "2025-12-31T23:59:59Z"
+
+  example-flapping.yaml: |
+    name: "Flapping Network Alerts"
+    type: flapping
+    enabled: true
+    threshold: 3
+    window: 600
+    alert_pattern: "Network.*"
+    action: suppress
+
+  example-cascade.yaml: |
+    name: "Database Down Cascade"
+    type: cascade
+    enabled: true
+    root_cause_alert: "DatabaseDown"
+    dependent_alerts:
+      - "HighLatency"
+      - "ConnectionTimeout"
+      - "ServiceUnavailable"
+    suppress_duration: 1800
+
+  example-time-based.yaml: |
+    name: "Off-Hours Suppression"
+    type: time_based
+    enabled: false
+    suppress_hours: [0, 1, 2, 3, 4, 5, 6]
+    suppress_days: ["saturday", "sunday"]
+    suppress_severity: ["low", "info", "medium"]
