@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: smart-alerting
+  namespace: fawkes
+  labels:
+    app: smart-alerting
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - smart-alerting.fawkes.local
+    secretName: smart-alerting-tls
+  rules:
+  - host: smart-alerting.fawkes.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: smart-alerting
+            port:
+              number: 8000

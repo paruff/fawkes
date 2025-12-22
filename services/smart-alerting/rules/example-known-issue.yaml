@@ -1,0 +1,12 @@
+# Example Known Issue Rule
+# This rule suppresses alerts for known issues with links to tracking tickets
+
+name: "Known Database Connection Issue"
+type: known_issue
+enabled: false  # Set to true to enable
+alert_pattern: "DatabaseConnection.*"  # Regex pattern to match alert names
+services:
+  - api-gateway
+  - backend-service
+ticket_url: "https://jira.example.com/ISSUE-123"
+expires_at: "2025-12-31T23:59:59Z"  # Rule expires after this date
