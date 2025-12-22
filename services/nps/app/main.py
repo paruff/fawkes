@@ -38,6 +38,8 @@ SURVEY_EXPIRY_DAYS = int(os.getenv("SURVEY_EXPIRY_DAYS", "30"))
 REMINDER_DAYS = int(os.getenv("REMINDER_DAYS", "7"))
 
 # Global database pool
+# NOTE: Using global for simplicity. For better testability, consider
+# dependency injection pattern with app.state.db_pool
 db_pool = None
 
 # Prometheus metrics
@@ -256,9 +258,12 @@ app = FastAPI(
 )
 
 # Add CORS middleware
+# SECURITY: In production, set ALLOWED_ORIGINS environment variable
+# Example: ALLOWED_ORIGINS=https://backstage.fawkes.idp,https://nps.fawkes.idp
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # TODO: Restrict in production
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

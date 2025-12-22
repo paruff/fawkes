@@ -43,6 +43,8 @@ spec:
           protocol: TCP
         
         env:
+        - name: ALLOWED_ORIGINS
+          value: "https://nps.fawkes.idp,https://backstage.fawkes.idp"
         - name: DATABASE_URL
           valueFrom:
             secretKeyRef:
@@ -104,7 +106,7 @@ spec:
         # Security context
         securityContext:
           allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: false
+          readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
           capabilities:
@@ -112,6 +114,15 @@ spec:
               - ALL
           seccompProfile:
             type: RuntimeDefault
+        
+        # Volume mounts for writable directories
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      
+      volumes:
+      - name: tmp
+        emptyDir: {}
       
       # Pod anti-affinity for high availability
       affinity:
