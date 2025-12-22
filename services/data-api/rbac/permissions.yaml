@@ -1,0 +1,424 @@
+# ============================================================================
+# FILE: services/data-api/rbac/permissions.yaml
+# PURPOSE: Hasura permission definitions for all roles
+# ============================================================================
+
+# =============================================================================
+# VSM Database Permissions
+# =============================================================================
+
+# Work Items Permissions
+- table:
+    schema: public
+    name: work_items
+  role: admin
+  permission:
+    select:
+      columns: '*'
+      filter: {}
+      allow_aggregations: true
+    insert:
+      columns: '*'
+      check: {}
+    update:
+      columns: '*'
+      filter: {}
+    delete:
+      filter: {}
+
+- table:
+    schema: public
+    name: work_items
+  role: developer
+  permission:
+    select:
+      columns:
+        - id
+        - title
+        - type
+        - status
+        - current_stage_id
+        - created_at
+        - updated_at
+        - created_by
+        - team
+      filter:
+        _or:
+          - team: { _eq: X-Hasura-Team-Id }
+          - team: { _in: X-Hasura-Allowed-Teams }
+      allow_aggregations: true
+    insert:
+      columns:
+        - title
+        - type
+        - status
+        - team
+      check:
+        team: { _eq: X-Hasura-Team-Id }
+    update:
+      columns:
+        - title
+        - status
+        - current_stage_id
+      filter:
+        team: { _eq: X-Hasura-Team-Id }
+
+- table:
+    schema: public
+    name: work_items
+  role: viewer
+  permission:
+    select:
+      columns:
+        - id
+        - title
+        - type
+        - status
+        - current_stage_id
+        - created_at
+        - updated_at
+      filter:
+        _or:
+          - team: { _eq: X-Hasura-Team-Id }
+          - team: { _in: X-Hasura-Allowed-Teams }
+      allow_aggregations: true
+      limit: 100
+
+# Stage Transitions Permissions
+- table:
+    schema: public
+    name: stage_transitions
+  role: admin
+  permission:
+    select:
+      columns: '*'
+      filter: {}
+      allow_aggregations: true
+    insert:
+      columns: '*'
+      check: {}
+
+- table:
+    schema: public
+    name: stage_transitions
+  role: developer
+  permission:
+    select:
+      columns: '*'
+      filter:
+        workItem:
+          team: { _eq: X-Hasura-Team-Id }
+      allow_aggregations: true
+    insert:
+      columns:
+        - work_item_id
+        - from_stage_id
+        - to_stage_id
+        - timestamp
+      check:
+        workItem:
+          team: { _eq: X-Hasura-Team-Id }
+
+- table:
+    schema: public
+    name: stage_transitions
+  role: viewer
+  permission:
+    select:
+      columns: '*'
+      filter:
+        workItem:
+          team: { _eq: X-Hasura-Team-Id }
+      allow_aggregations: true
+      limit: 1000
+
+# Stages Permissions (read-only for most)
+- table:
+    schema: public
+    name: stages
+  role: admin
+  permission:
+    select:
+      columns: '*'
+      filter: {}
+      allow_aggregations: true
+    insert:
+      columns: '*'
+      check: {}
+    update:
+      columns: '*'
+      filter: {}
+    delete:
+      filter: {}
+
+- table:
+    schema: public
+    name: stages
+  role: developer
+  permission:
+    select:
+      columns: '*'
+      filter: {}
+      allow_aggregations: false
+
+- table:
+    schema: public
+    name: stages
+  role: viewer
+  permission:
+    select:
+      columns: '*'
+      filter: {}
+      allow_aggregations: false
+
+- table:
+    schema: public
+    name: stages
+  role: anonymous
+  permission:
+    select:
+      columns:
+        - id
+        - name
+        - type
+      filter: {}
+      allow_aggregations: false
+
+# Flow Metrics Permissions
+- table:
+    schema: public
+    name: flow_metrics
+  role: admin
+  permission:
+    select:
+      columns: '*'
+      filter: {}
+      allow_aggregations: true
+
+- table:
+    schema: public
+    name: flow_metrics
+  role: developer
+  permission:
+    select:
+      columns: '*'
+      filter: {}
+      allow_aggregations: true
+      limit: 1000
+
+- table:
+    schema: public
+    name: flow_metrics
+  role: viewer
+  permission:
+    select:
+      columns:
+        - date
+        - wip_by_stage
+        - throughput
+        - average_cycle_time
+        - average_lead_time
+      filter: {}
+      allow_aggregations: true
+      limit: 365
+
+# =============================================================================
+# Backstage Database Permissions
+# =============================================================================
+
+# Catalog Entities Permissions
+- table:
+    schema: public
+    name: final_entities
+  role: admin
+  permission:
+    select:
+      columns: '*'
+      filter: {}
+      allow_aggregations: true
+
+- table:
+    schema: public
+    name: final_entities
+  role: developer
+  permission:
+    select:
+      columns: '*'
+      filter:
+        _or:
+          - final_entity->spec->owner: { _eq: X-Hasura-Team-Id }
+          - final_entity->metadata->visibility: { _eq: "public" }
+      allow_aggregations: true
+
+- table:
+    schema: public
+    name: final_entities
+  role: viewer
+  permission:
+    select:
+      columns:
+        - entity_id
+        - entity_ref
+        - final_entity
+      filter:
+        _or:
+          - final_entity->metadata->visibility: { _eq: "public" }
+          - final_entity->spec->owner: { _eq: X-Hasura-Team-Id }
+      allow_aggregations: true
+      limit: 100
+
+- table:
+    schema: public
+    name: final_entities
+  role: anonymous
+  permission:
+    select:
+      columns:
+        - entity_id
+        - entity_ref
+        - final_entity
+      filter:
+        final_entity->metadata->visibility: { _eq: "public" }
+      allow_aggregations: false
+      limit: 50
+
+# =============================================================================
+# DevLake Database Permissions (DORA Metrics)
+# =============================================================================
+
+# Deployments Permissions
+- table:
+    schema: public
+    name: cicd_deployments
+  role: admin
+  permission:
+    select:
+      columns: '*'
+      filter: {}
+      allow_aggregations: true
+
+- table:
+    schema: public
+    name: cicd_deployments
+  role: developer
+  permission:
+    select:
+      columns:
+        - id
+        - name
+        - environment
+        - status
+        - started_date
+        - finished_date
+        - result
+      filter:
+        _or:
+          - environment: { _in: ["dev", "staging"] }
+          - environment: { _eq: "production" }
+      allow_aggregations: true
+
+- table:
+    schema: public
+    name: cicd_deployments
+  role: viewer
+  permission:
+    select:
+      columns:
+        - id
+        - name
+        - environment
+        - status
+        - started_date
+        - finished_date
+      filter: {}
+      allow_aggregations: true
+      limit: 1000
+
+# Builds/Pipelines Permissions
+- table:
+    schema: public
+    name: cicd_pipelines
+  role: admin
+  permission:
+    select:
+      columns: '*'
+      filter: {}
+      allow_aggregations: true
+
+- table:
+    schema: public
+    name: cicd_pipelines
+  role: developer
+  permission:
+    select:
+      columns:
+        - id
+        - name
+        - status
+        - type
+        - started_date
+        - finished_date
+        - result
+      filter: {}
+      allow_aggregations: true
+
+- table:
+    schema: public
+    name: cicd_pipelines
+  role: viewer
+  permission:
+    select:
+      columns:
+        - id
+        - name
+        - status
+        - started_date
+        - finished_date
+      filter: {}
+      allow_aggregations: true
+      limit: 1000
+
+# Pull Requests Permissions
+- table:
+    schema: public
+    name: pull_requests
+  role: admin
+  permission:
+    select:
+      columns: '*'
+      filter: {}
+      allow_aggregations: true
+
+- table:
+    schema: public
+    name: pull_requests
+  role: developer
+  permission:
+    select:
+      columns:
+        - id
+        - title
+        - url
+        - status
+        - author_name
+        - created_date
+        - merged_date
+      filter: {}
+      allow_aggregations: true
+
+- table:
+    schema: public
+    name: pull_requests
+  role: viewer
+  permission:
+    select:
+      columns:
+        - id
+        - title
+        - status
+        - created_date
+        - merged_date
+      filter:
+        status: { _eq: "merged" }
+      allow_aggregations: true
+      limit: 1000

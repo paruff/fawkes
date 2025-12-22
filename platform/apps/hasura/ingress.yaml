@@ -1,0 +1,35 @@
+# ============================================================================
+# FILE: platform/apps/hasura/ingress.yaml
+# PURPOSE: Ingress for Hasura GraphQL Engine and console
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hasura
+  namespace: fawkes
+  labels:
+    app: hasura
+    component: data-api
+    environment: dev
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: hasura.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hasura
+                port:
+                  number: 8080
+  tls:
+    - secretName: hasura-tls
+      hosts:
+        - hasura.local

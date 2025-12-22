@@ -1,0 +1,22 @@
+# ============================================================================
+# FILE: platform/apps/hasura/servicemonitor.yaml
+# PURPOSE: Prometheus ServiceMonitor for Hasura metrics
+# ============================================================================
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: hasura
+  namespace: fawkes
+  labels:
+    app: hasura
+    component: data-api
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: hasura
+  endpoints:
+    - port: http
+      path: /v1/metrics
+      interval: 30s
+      scrapeTimeout: 10s
