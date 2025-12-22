@@ -1,0 +1,38 @@
+{
+  "id": "vsm-metrics-widget",
+  "name": "VSM Flow Metrics",
+  "description": "Display Value Stream Mapping flow metrics in Focalboard",
+  "version": "0.1.0",
+  "author": "Fawkes Platform Team",
+  "homepage": "https://github.com/paruff/fawkes",
+  "icon": "chart-line",
+  "min_server_version": "7.0.0",
+  "webapp": {
+    "bundle_path": "main.js"
+  },
+  "settings_schema": {
+    "settings": [
+      {
+        "key": "vsm_api_url",
+        "display_name": "VSM Service API URL",
+        "type": "text",
+        "default": "http://vsm-service.fawkes.svc:8000/api/v1",
+        "help_text": "URL of the VSM service API"
+      },
+      {
+        "key": "refresh_interval",
+        "display_name": "Refresh Interval (seconds)",
+        "type": "number",
+        "default": 30,
+        "help_text": "How often to refresh metrics (in seconds)"
+      },
+      {
+        "key": "show_bottlenecks",
+        "display_name": "Show Bottleneck Warnings",
+        "type": "bool",
+        "default": true,
+        "help_text": "Highlight stages with high WIP or slow cycle times"
+      }
+    ]
+  }
+}
