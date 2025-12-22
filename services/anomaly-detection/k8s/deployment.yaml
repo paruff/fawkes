@@ -1,0 +1,162 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: anomaly-detection
+  namespace: fawkes
+  labels:
+    app: anomaly-detection
+    component: ai-platform
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: anomaly-detection-secrets
+  namespace: fawkes
+  labels:
+    app: anomaly-detection
+type: Opaque
+stringData:
+  LLM_API_KEY: ""  # Set this via External Secrets or manually
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: anomaly-detection-config
+  namespace: fawkes
+  labels:
+    app: anomaly-detection
+data:
+  PROMETHEUS_URL: "http://prometheus-kube-prometheus-prometheus.fawkes.svc:9090"
+  ALERTMANAGER_URL: "http://prometheus-kube-prometheus-alertmanager.fawkes.svc:9093"
+  LLM_API_URL: "https://api.openai.com/v1/chat/completions"
+  LLM_MODEL: "gpt-4"
+  FALSE_POSITIVE_THRESHOLD: "0.05"
+  DETECTION_INTERVAL_SECONDS: "60"
+  ANOMALY_THRESHOLD: "0.7"
+  LOOKBACK_MINUTES: "60"
+  MIN_SAMPLES: "10"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anomaly-detection
+  namespace: fawkes
+  labels:
+    app: anomaly-detection
+    component: ai-platform
+    version: v0.1.0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: anomaly-detection
+  template:
+    metadata:
+      labels:
+        app: anomaly-detection
+        component: ai-platform
+        version: v0.1.0
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: anomaly-detection
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        fsGroup: 65534
+      containers:
+      - name: anomaly-detection
+        image: anomaly-detection:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8000
+          protocol: TCP
+        env:
+        - name: LLM_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: anomaly-detection-secrets
+              key: LLM_API_KEY
+              optional: true
+        envFrom:
+        - configMapRef:
+            name: anomaly-detection-config
+        resources:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
+          runAsUser: 65534
+          capabilities:
+            drop:
+            - ALL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: anomaly-detection
+  namespace: fawkes
+  labels:
+    app: anomaly-detection
+    component: ai-platform
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8000"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8000
+    targetPort: http
+    protocol: TCP
+  selector:
+    app: anomaly-detection
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: anomaly-detection
+  namespace: fawkes
+  labels:
+    app: anomaly-detection
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: anomaly-detection.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: anomaly-detection
+            port:
+              number: 8000
