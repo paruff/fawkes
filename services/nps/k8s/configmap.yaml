@@ -1,0 +1,15 @@
+# ============================================================================
+# FILE: services/nps/k8s/configmap.yaml
+# PURPOSE: ConfigMap for NPS Survey Service
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nps-service-config
+  namespace: fawkes
+  labels:
+    app: nps-service
+    component: platform
+data:
+  mattermost_url: "http://mattermost.fawkes.svc.cluster.local:8065"
+  base_survey_url: "https://nps.fawkes.idp/survey"
