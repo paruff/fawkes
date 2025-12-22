@@ -356,6 +356,130 @@ See [Data Quality Service README](../../../../services/data-quality/README.md) f
 
 ---
 
+### 8. AI Observability Dashboard
+
+**File**: `ai-observability.json`  
+**ConfigMap**: Loaded via Grafana provisioning  
+**Namespace**: monitoring
+
+Comprehensive AI-powered observability dashboard showing anomaly detection, smart alerting, and system intelligence.
+
+#### Panels
+
+- **Active Anomalies Feed (Real-Time)**:
+  - Active Anomalies Count: Current number of detected anomalies
+  - Critical Anomalies: Critical severity anomalies requiring immediate attention
+  - Active Alert Groups: Smart alert groups currently active
+  - Mean Time to Detection: Average time to detect incidents
+  - Real-Time Anomaly Feed: Live table of detected anomalies with details
+
+- **Anomaly Detection Performance**:
+  - Anomaly Detection Accuracy: Detection accuracy percentage (target >95%)
+  - False Positive Rate: Current FP rate (target <5%)
+  - ML Models Loaded: Number of active ML models
+  - Anomaly Detection Processing Time: P50, P95, P99 latency percentiles
+  - Anomalies by Severity Over Time: Trend analysis by severity level
+
+- **Smart Alert Groups**:
+  - Alert Grouping Efficiency: Total alert groups vs individual alerts
+  - Alerts Suppressed: Number of alerts suppressed by suppression engine
+  - Alert Fatigue Reduction: Percentage of alert noise reduced (target >50%)
+  - Alerts Routed: Total alerts routed to channels
+  - Alert Groups by Service: Distribution pie chart
+  - Alerts by Source Over Time: Incoming alerts by source
+  - Suppression Reasons: Why alerts were suppressed (pie chart)
+
+- **Root Cause Analysis**:
+  - Root Cause Analysis Success Rate: Percentage of successful RCA executions
+  - RCA Executions: Total root cause analyses performed
+  - RCA Status Distribution: Success vs failure rates
+
+- **Historical Trends**:
+  - Historical Anomaly Trends (7 Days): 7-day anomaly detection trends
+  - Alert Reduction Rate Trend: Historical alert fatigue reduction
+  - Anomaly Detection Latency Trend: Time to detection over 7 days
+
+#### Key Metrics
+
+```promql
+# Anomaly detection metrics
+anomaly_detection_total{severity, metric}
+anomaly_detection_false_positive_rate
+anomaly_detection_models_loaded
+anomaly_detection_duration_seconds
+anomaly_detection_rca_total{status}
+
+# Smart alerting metrics
+smart_alerting_grouped_total
+smart_alerting_suppressed_total{reason}
+smart_alerting_fatigue_reduction
+smart_alerting_received_total{source}
+smart_alerting_routed_total{channel}
+```
+
+#### Variables
+
+- **severity**: Filter anomalies by severity (critical, high, medium, low)
+- **metric**: Filter by specific metric type
+- **alert_source**: Filter alerts by source (Prometheus, Grafana, DataHub, etc.)
+
+#### Thresholds
+
+- **Anomaly Detection Accuracy**:
+  - 🔴 Red: < 85%
+  - 🟠 Orange: 85-92%
+  - 🟡 Yellow: 92-95%
+  - 🟢 Green: ≥ 95%
+
+- **False Positive Rate**:
+  - 🟢 Green: < 3%
+  - 🟡 Yellow: 3-5%
+  - 🟠 Orange: 5-8%
+  - 🔴 Red: > 8%
+
+- **Alert Fatigue Reduction**:
+  - 🔴 Red: < 30%
+  - 🟡 Yellow: 30-50%
+  - 🟢 Green: ≥ 50%
+
+- **Mean Time to Detection**:
+  - 🟢 Green: < 60 seconds
+  - 🟡 Yellow: 60-120 seconds
+  - 🟠 Orange: 120-180 seconds
+  - 🔴 Red: > 180 seconds
+
+#### Annotations
+
+The dashboard includes automatic annotations for:
+- **Critical Anomalies**: Red markers when critical anomalies are detected
+- **Alert Groups**: Orange markers when new alert groups are created
+
+#### Implementation Notes
+
+Requires:
+1. Anomaly detection service running (see `services/anomaly-detection/`)
+2. Smart alerting service running (see `services/smart-alerting/`)
+3. Prometheus scraping both services' `/metrics` endpoints
+4. ServiceMonitors configured for metrics collection
+
+#### Anomaly Timeline UI
+
+In addition to the Grafana dashboard, an interactive HTML timeline is available at:
+- **File**: `services/anomaly-detection/ui/timeline.html`
+- **URL**: `http://anomaly-detection.local/timeline` (when deployed)
+
+The timeline provides:
+- Interactive anomaly visualization over time
+- Correlated events (deployments, config changes)
+- Incident markers
+- Click-to-view details and root cause analysis
+- Filtering by service, severity, type, and time range
+- Auto-refresh every 30 seconds
+
+See [Anomaly Detection Service README](../../../../services/anomaly-detection/README.md) and [Smart Alerting Service README](../../../../services/smart-alerting/README.md) for setup details.
+
+---
+
 ## Installation
 
 ### Automatic (Recommended)
