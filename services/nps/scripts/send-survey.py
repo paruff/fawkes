@@ -16,6 +16,8 @@ from datetime import datetime
 
 import asyncpg
 
+# NOTE: sys.path modification is a temporary solution for script execution
+# In production, install as package: pip install -e .
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 

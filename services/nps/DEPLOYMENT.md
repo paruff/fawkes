@@ -25,6 +25,16 @@
 
 ## Step 2: Configure Secrets
 
+Edit `k8s/configmap.yaml`:
+
+```yaml
+data:
+  mattermost_url: "http://mattermost.fawkes.svc.cluster.local:8065"
+  base_survey_url: "https://nps.fawkes.idp/survey"
+  # Add your allowed origins for CORS (comma-separated)
+  allowed_origins: "https://nps.fawkes.idp,https://backstage.fawkes.idp"
+```
+
 Edit `k8s/secret.yaml` and update:
 
 ```yaml
