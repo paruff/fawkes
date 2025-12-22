@@ -580,10 +580,11 @@ run_at_e2_005() {
         if [ -d "tests/bdd/features" ]; then
             log_info "Running VSM BDD tests..."
             # Run VSM-related tests
-            if pytest tests/bdd -k "vsm or value_stream" -v --tb=short 2>/dev/null; then
+            if pytest tests/bdd -k "vsm or value_stream" -v --tb=short 2>&1 | tee /tmp/vsm-bdd-tests.log | tail -20; then
                 log_success "BDD tests passed"
             else
                 log_warning "Some BDD tests failed or were skipped (may require cluster with VSM deployed)"
+                log_info "Full test output saved to /tmp/vsm-bdd-tests.log"
             fi
         fi
     else
