@@ -278,7 +278,7 @@ async def process_pull_request_review(pr_data: Dict, repo_data: Dict):
     try:
         logger.info(f"Starting review for PR #{pr_number} in {repo_full_name}")
         
-        # Import review logic modules
+        # Lazy import to avoid circular dependency and reduce startup time
         from .reviewer import ReviewEngine
         
         # Initialize review engine
