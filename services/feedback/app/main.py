@@ -11,12 +11,19 @@ from datetime import datetime
 from typing import List, Optional
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Depends, Header, Query
+from fastapi import FastAPI, HTTPException, Depends, Header, Query, BackgroundTasks
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, EmailStr
-from prometheus_client import make_asgi_app, Counter, Histogram
+from prometheus_client import make_asgi_app
 import asyncpg
+
+# Import metrics from metrics module
+from .metrics import (
+    feedback_submissions_total,
+    feedback_request_duration,
+    update_all_metrics
+)
 
 # Configure logging
 logging.basicConfig(
@@ -36,18 +43,6 @@ ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "admin-secret-token")
 
 # Global database pool
 db_pool = None
-
-# Prometheus metrics
-feedback_submissions = Counter(
-    'feedback_submissions_total',
-    'Total number of feedback submissions',
-    ['category', 'rating']
-)
-feedback_request_duration = Histogram(
-    'feedback_request_duration_seconds',
-    'Time spent processing feedback requests',
-    ['endpoint']
-)
 
 
 # Pydantic models
@@ -142,7 +137,18 @@ async def lifespan(app: FastAPI):
     """Manage application lifespan (startup/shutdown)."""
     # Startup
     await init_database()
+    
+    # Initial metrics refresh
+    if db_pool:
+        try:
+            async with db_pool.acquire() as conn:
+                await update_all_metrics(conn)
+            logger.info("✅ Initial metrics refresh completed")
+        except Exception as e:
+            logger.warning(f"⚠️  Initial metrics refresh failed: {e}")
+    
     yield
+    
     # Shutdown
     if db_pool:
         await db_pool.close()
@@ -230,7 +236,7 @@ async def submit_feedback(feedback: FeedbackSubmission):
                 )
                 
                 # Update metrics
-                feedback_submissions.labels(
+                feedback_submissions_total.labels(
                     category=feedback.category,
                     rating=str(feedback.rating)
                 ).inc()
@@ -431,6 +437,26 @@ async def get_feedback_stats(_token: str = Depends(verify_admin_token)):
             raise HTTPException(status_code=500, detail="Failed to get feedback statistics")
 
 
+# Refresh metrics endpoint (admin only)
+@app.post("/api/v1/metrics/refresh", tags=["Metrics"])
+async def refresh_metrics(_token: str = Depends(verify_admin_token)):
+    """Manually refresh all Prometheus metrics (admin only)."""
+    if not db_pool:
+        raise HTTPException(status_code=503, detail="Database not available")
+    
+    try:
+        async with db_pool.acquire() as conn:
+            await update_all_metrics(conn)
+        
+        return {
+            "status": "success",
+            "message": "All metrics refreshed successfully"
+        }
+    except Exception as e:
+        logger.error(f"Error refreshing metrics: {e}")
+        raise HTTPException(status_code=500, detail="Failed to refresh metrics")
+
+
 # Root endpoint
 @app.get("/", tags=["Info"])
 async def root():
@@ -445,6 +471,7 @@ async def root():
             "list_feedback": "GET /api/v1/feedback (admin)",
             "update_status": "PUT /api/v1/feedback/{id}/status (admin)",
             "stats": "GET /api/v1/feedback/stats (admin)",
-            "metrics": "/metrics"
+            "metrics": "/metrics",
+            "refresh_metrics": "POST /api/v1/metrics/refresh (admin)"
         }
     }
