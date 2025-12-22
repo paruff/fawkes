@@ -1,0 +1,619 @@
+{
+  "dashboard": {
+    "title": "Feedback Analytics",
+    "tags": ["feedback", "nps", "analytics", "user-experience"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "5m",
+    "description": "Comprehensive feedback analytics dashboard showing NPS scores, sentiment analysis, feedback trends, and user satisfaction metrics",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Key Metrics Overview",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 0, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 2,
+        "title": "Current NPS Score",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 1, "w": 6, "h": 6},
+        "description": "Net Promoter Score: (% Promoters - % Detractors). Score ranges from -100 to +100. Above 0 is good, above 50 is excellent.",
+        "targets": [
+          {
+            "expr": "nps_score{period=\"overall\"}",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 0,
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "orange", "value": 0},
+                {"color": "yellow", "value": 30},
+                {"color": "green", "value": 50}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 3,
+        "title": "Total Feedback",
+        "type": "stat",
+        "gridPos": {"x": 6, "y": 1, "w": 6, "h": 6},
+        "description": "Total number of feedback submissions received",
+        "targets": [
+          {
+            "expr": "sum(feedback_by_category_total)",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "blue", "value": null}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 4,
+        "title": "Response Rate",
+        "type": "gauge",
+        "gridPos": {"x": 12, "y": 1, "w": 6, "h": 6},
+        "description": "Percentage of feedback that has been addressed (resolved or in progress)",
+        "targets": [
+          {
+            "expr": "feedback_response_rate{status=\"overall\"}",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 50},
+                {"color": "green", "value": 80}
+              ]
+            }
+          }
+        },
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        }
+      },
+      {
+        "id": 5,
+        "title": "Average Rating",
+        "type": "stat",
+        "gridPos": {"x": 18, "y": 1, "w": 6, "h": 6},
+        "description": "Average feedback rating (1-5 stars)",
+        "targets": [
+          {
+            "expr": "sum(feedback_submissions_total * rating) / sum(feedback_submissions_total)",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "decimals": 2,
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "orange", "value": 2.5},
+                {"color": "yellow", "value": 3.5},
+                {"color": "green", "value": 4.0}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 6,
+        "title": "NPS Breakdown",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 7, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 7,
+        "title": "NPS Score Trend (Last 90 Days)",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 8, "w": 12, "h": 8},
+        "description": "NPS score trend over time showing overall health",
+        "targets": [
+          {
+            "expr": "nps_score{period=\"last_90d\"}",
+            "refId": "A",
+            "legendFormat": "NPS Score",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"}
+          }
+        },
+        "options": {
+          "legend": {"displayMode": "list", "placement": "bottom"},
+          "tooltip": {"mode": "multi"}
+        }
+      },
+      {
+        "id": 8,
+        "title": "NPS Components Distribution",
+        "type": "piechart",
+        "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8},
+        "description": "Distribution of Promoters (5⭐), Passives (4⭐), and Detractors (1-3⭐)",
+        "targets": [
+          {
+            "expr": "nps_promoters_percentage{period=\"overall\"}",
+            "refId": "A",
+            "legendFormat": "Promoters (5⭐)",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "nps_passives_percentage{period=\"overall\"}",
+            "refId": "B",
+            "legendFormat": "Passives (4⭐)",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "nps_detractors_percentage{period=\"overall\"}",
+            "refId": "C",
+            "legendFormat": "Detractors (1-3⭐)",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "options": {
+          "legend": {"displayMode": "table", "placement": "right", "values": ["value", "percent"]},
+          "pieType": "donut"
+        }
+      },
+      {
+        "id": 9,
+        "title": "Feedback Volume & Categories",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 16, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 10,
+        "title": "Feedback Volume Over Time",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 17, "w": 12, "h": 8},
+        "description": "Total feedback submissions over time",
+        "targets": [
+          {
+            "expr": "sum(rate(feedback_submissions_total[1h]))",
+            "refId": "A",
+            "legendFormat": "Submissions per hour",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"}
+          }
+        },
+        "options": {
+          "legend": {"displayMode": "list", "placement": "bottom"},
+          "tooltip": {"mode": "multi"}
+        }
+      },
+      {
+        "id": 11,
+        "title": "Feedback by Category",
+        "type": "bargauge",
+        "gridPos": {"x": 12, "y": 17, "w": 12, "h": 8},
+        "description": "Feedback count by category",
+        "targets": [
+          {
+            "expr": "feedback_by_category_total",
+            "refId": "A",
+            "legendFormat": "{{category}}",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null}
+              ]
+            }
+          }
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "showUnfilled": true
+        }
+      },
+      {
+        "id": 12,
+        "title": "Rating Distribution",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 25, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 13,
+        "title": "Rating Distribution (1-5 Stars)",
+        "type": "barchart",
+        "gridPos": {"x": 0, "y": 26, "w": 12, "h": 8},
+        "description": "Distribution of feedback ratings from 1 to 5 stars",
+        "targets": [
+          {
+            "expr": "sum(feedback_submissions_total) by (rating)",
+            "refId": "A",
+            "legendFormat": "{{rating}} stars",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"}
+          }
+        },
+        "options": {
+          "orientation": "horizontal",
+          "xField": "rating",
+          "legend": {"displayMode": "list", "placement": "bottom"}
+        }
+      },
+      {
+        "id": 14,
+        "title": "Rating Trend Over Time",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 26, "w": 12, "h": 8},
+        "description": "Average rating trend over time",
+        "targets": [
+          {
+            "expr": "sum(rate(feedback_submissions_total{rating=\"5\"}[1h])) by (rating)",
+            "refId": "A",
+            "legendFormat": "5 stars",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "sum(rate(feedback_submissions_total{rating=\"4\"}[1h])) by (rating)",
+            "refId": "B",
+            "legendFormat": "4 stars",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "sum(rate(feedback_submissions_total{rating=\"3\"}[1h])) by (rating)",
+            "refId": "C",
+            "legendFormat": "3 stars",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "sum(rate(feedback_submissions_total{rating=\"2\"}[1h])) by (rating)",
+            "refId": "D",
+            "legendFormat": "2 stars",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "sum(rate(feedback_submissions_total{rating=\"1\"}[1h])) by (rating)",
+            "refId": "E",
+            "legendFormat": "1 star",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"}
+          }
+        },
+        "options": {
+          "legend": {"displayMode": "list", "placement": "bottom"},
+          "tooltip": {"mode": "multi"}
+        }
+      },
+      {
+        "id": 15,
+        "title": "Sentiment Analysis",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 34, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 16,
+        "title": "Sentiment Distribution",
+        "type": "piechart",
+        "gridPos": {"x": 0, "y": 35, "w": 8, "h": 8},
+        "description": "Distribution of positive, neutral, and negative sentiment in feedback comments",
+        "targets": [
+          {
+            "expr": "sum(feedback_sentiment_score{sentiment=\"positive\"})",
+            "refId": "A",
+            "legendFormat": "Positive 😊",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "sum(feedback_sentiment_score{sentiment=\"neutral\"})",
+            "refId": "B",
+            "legendFormat": "Neutral 😐",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "sum(feedback_sentiment_score{sentiment=\"negative\"})",
+            "refId": "C",
+            "legendFormat": "Negative 😞",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "options": {
+          "legend": {"displayMode": "table", "placement": "right", "values": ["value", "percent"]},
+          "pieType": "donut"
+        }
+      },
+      {
+        "id": 17,
+        "title": "Sentiment by Category",
+        "type": "bargauge",
+        "gridPos": {"x": 8, "y": 35, "w": 16, "h": 8},
+        "description": "Average sentiment score by feedback category",
+        "targets": [
+          {
+            "expr": "avg(feedback_sentiment_score) by (category)",
+            "refId": "A",
+            "legendFormat": "{{category}}",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "min": -1,
+            "max": 1,
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": -1},
+                {"color": "yellow", "value": -0.05},
+                {"color": "green", "value": 0.05}
+              ]
+            }
+          }
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "showUnfilled": true
+        }
+      },
+      {
+        "id": 18,
+        "title": "Response Tracking",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 43, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 19,
+        "title": "Feedback Status Distribution",
+        "type": "piechart",
+        "gridPos": {"x": 0, "y": 44, "w": 12, "h": 8},
+        "description": "Distribution of feedback by status (open, in_progress, resolved, dismissed)",
+        "targets": [
+          {
+            "expr": "feedback_response_rate{status=\"open\"}",
+            "refId": "A",
+            "legendFormat": "Open",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "feedback_response_rate{status=\"in_progress\"}",
+            "refId": "B",
+            "legendFormat": "In Progress",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "feedback_response_rate{status=\"resolved\"}",
+            "refId": "C",
+            "legendFormat": "Resolved",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          },
+          {
+            "expr": "feedback_response_rate{status=\"dismissed\"}",
+            "refId": "D",
+            "legendFormat": "Dismissed",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "options": {
+          "legend": {"displayMode": "table", "placement": "right", "values": ["value", "percent"]},
+          "pieType": "pie"
+        }
+      },
+      {
+        "id": 20,
+        "title": "Response Rate Trend",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 44, "w": 12, "h": 8},
+        "description": "Feedback response rate trend over time",
+        "targets": [
+          {
+            "expr": "feedback_response_rate{status=\"overall\"}",
+            "refId": "A",
+            "legendFormat": "Response Rate",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {"mode": "palette-classic"}
+          }
+        },
+        "options": {
+          "legend": {"displayMode": "list", "placement": "bottom"},
+          "tooltip": {"mode": "multi"}
+        }
+      },
+      {
+        "id": 21,
+        "title": "Top Issues & Insights",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 52, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 22,
+        "title": "Top Categories by Volume",
+        "type": "table",
+        "gridPos": {"x": 0, "y": 53, "w": 12, "h": 8},
+        "description": "Top feedback categories by submission volume",
+        "targets": [
+          {
+            "expr": "topk(10, feedback_by_category_total)",
+            "refId": "A",
+            "format": "table",
+            "instant": true,
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "align": "left",
+              "filterable": true
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {"id": "byName", "options": "Value"},
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Feedback Count"
+                }
+              ]
+            }
+          ]
+        },
+        "options": {
+          "showHeader": true,
+          "sortBy": [{"displayName": "Feedback Count", "desc": true}]
+        }
+      },
+      {
+        "id": 23,
+        "title": "Low-Rated Feedback by Category",
+        "type": "bargauge",
+        "gridPos": {"x": 12, "y": 53, "w": 12, "h": 8},
+        "description": "Categories with most 1-2 star ratings (areas needing attention)",
+        "targets": [
+          {
+            "expr": "sum(feedback_submissions_total{rating=~\"1|2\"}) by (category)",
+            "refId": "A",
+            "legendFormat": "{{category}}",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 5},
+                {"color": "red", "value": 10}
+              ]
+            }
+          }
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "showUnfilled": true
+        }
+      },
+      {
+        "id": 24,
+        "title": "Dashboard Info",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 61, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 25,
+        "title": "About This Dashboard",
+        "type": "text",
+        "gridPos": {"x": 0, "y": 62, "w": 24, "h": 4},
+        "options": {
+          "mode": "markdown",
+          "content": "# Feedback Analytics Dashboard\n\n## Overview\nThis dashboard provides comprehensive analytics for user feedback collected through the Backstage portal.\n\n## Key Metrics\n- **NPS Score**: Net Promoter Score calculated from feedback ratings (5⭐ = Promoters, 4⭐ = Passives, 1-3⭐ = Detractors)\n- **Sentiment Analysis**: AI-powered sentiment analysis using VADER on feedback comments\n- **Response Rate**: Percentage of feedback that has been addressed by the team\n\n## How to Interpret\n- **NPS Score**: Above 0 is good, above 50 is excellent, above 70 is world-class\n- **Sentiment**: Positive (compound ≥ 0.05), Neutral (-0.05 to 0.05), Negative (≤ -0.05)\n- **Response Rate**: Target 80%+ for good user engagement\n\n## Data Sources\n- Prometheus metrics from Feedback Service\n- Real-time sentiment analysis with VADER\n- Metrics refresh every 5 minutes\n\n## Related Links\n- [Feedback Service API](http://feedback-service.fawkes.svc.cluster.local)\n- [Submit Feedback](https://backstage.example.com/feedback)\n- [Documentation](https://github.com/paruff/fawkes/tree/main/services/feedback)"
+        }
+      }
+    ],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-7d",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["5m", "15m", "30m", "1h", "2h", "1d"]
+    },
+    "uid": "feedback-analytics",
+    "editable": true
+  }
+}
