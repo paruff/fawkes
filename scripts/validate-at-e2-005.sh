@@ -15,7 +15,21 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Default values
-NAMESPACE="${1:-fawkes}"
+NAMESPACE="fawkes"
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --namespace)
+            NAMESPACE="$2"
+            shift 2
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
 VSM_HOST="${VSM_HOST:-vsm-service.127.0.0.1.nip.io}"
 REPORTS_DIR="${ROOT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}/reports"
 
@@ -104,12 +118,12 @@ run_test
 if kubectl get cluster db-vsm-dev -n "$NAMESPACE" &> /dev/null; then
     log_success "PostgreSQL cluster db-vsm-dev exists"
     
-    # Check cluster health
+    # Check cluster health - check multiple possible status values
     CLUSTER_STATUS=$(kubectl get cluster db-vsm-dev -n "$NAMESPACE" -o jsonpath='{.status.phase}' 2>/dev/null || echo "Unknown")
-    if [ "$CLUSTER_STATUS" = "Cluster in healthy state" ] || [ "$CLUSTER_STATUS" = "Ready" ]; then
-        log_success "PostgreSQL cluster is healthy"
+    if [[ "$CLUSTER_STATUS" =~ ^(Cluster in healthy state|Ready|healthy)$ ]]; then
+        log_success "PostgreSQL cluster is healthy (status: $CLUSTER_STATUS)"
     else
-        log_warning "PostgreSQL cluster status: $CLUSTER_STATUS"
+        log_warning "PostgreSQL cluster status: $CLUSTER_STATUS (may still be initializing)"
     fi
 else
     log_error "PostgreSQL cluster db-vsm-dev not found"
@@ -417,7 +431,7 @@ cat > "$REPORT_FILE" << EOF
     "total_tests": $TESTS_RUN,
     "passed": $TESTS_PASSED,
     "failed": $TESTS_FAILED,
-    "success_rate": $(awk "BEGIN {printf \"%.1f\", ($TESTS_PASSED * 100 / $TESTS_RUN)}")
+    "success_rate": $([ $TESTS_RUN -gt 0 ] && awk "BEGIN {printf \"%.1f\", ($TESTS_PASSED * 100 / $TESTS_RUN)}" || echo "0.0")
   },
   "status": "$([ $TESTS_FAILED -eq 0 ] && echo "PASSED" || echo "FAILED")",
   "phases": {
