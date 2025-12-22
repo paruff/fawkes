@@ -29,6 +29,8 @@ This directory contains acceptance test runners for Fawkes platform validation.
 | AT-E2-002 | RAG Architecture | RAG service deployed and functional | ✅ Implemented |
 | AT-E2-003 | Data Catalog | DataHub operational | ✅ Implemented |
 | AT-E2-004 | Data Quality | Great Expectations monitoring | ✅ Implemented |
+| AT-E2-005 | VSM | Value Stream Mapping tracking service | ✅ Implemented |
+| AT-E2-008 | Unified API | Unified GraphQL Data API deployed | ✅ Implemented |
 
 ## Usage
 
@@ -1207,6 +1209,248 @@ kubectl logs -n fawkes deployment/data-quality-exporter
 kubectl port-forward -n fawkes svc/data-quality-exporter 9110:9110
 curl http://localhost:9110/metrics
 ```
+
+## AT-E2-005: VSM (Value Stream Mapping)
+
+### Acceptance Criteria
+
+- [x] VSM service API deployed
+- [x] Work item tracking across stages
+- [x] Cycle time calculation per stage
+- [x] Flow metrics collection (throughput, WIP, cycle time)
+- [x] 8-stage value stream configured
+- [x] PostgreSQL database for persistence
+- [x] API documented (OpenAPI/Swagger)
+- [x] Prometheus metrics exposed
+- [x] 2+ replicas for high availability
+- [x] Resource limits configured
+
+### Value Stream Stages
+
+The VSM service uses an 8-stage value stream:
+
+1. **Backlog** (wait) - Work items waiting to be analyzed
+2. **Design** (active, WIP: 5) - Active design and analysis phase
+3. **Development** (active, WIP: 10) - Active implementation phase
+4. **Code Review** (wait, WIP: 8) - Waiting for peer review
+5. **Testing** (active, WIP: 8) - Active testing and QA phase
+6. **Deployment Approval** (wait, WIP: 5) - Waiting for deployment approval
+7. **Deploy** (active, WIP: 3) - Active deployment to production
+8. **Production** (done) - Successfully deployed and running
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e2-005.sh`)
+    - Phase 1: Prerequisites (kubectl, cluster access, namespace)
+    - Phase 2: PostgreSQL Database (cluster health, pods, service)
+    - Phase 3: VSM Service Deployment (deployment, replicas, service, ingress, ConfigMap)
+    - Phase 4: API Health Check (health endpoint, readiness endpoint)
+    - Phase 5: API Endpoints (stages, metrics, OpenAPI docs)
+    - Phase 6: Flow Metrics (throughput, WIP, cycle time calculation)
+    - Phase 7: Prometheus Metrics (metrics exposure, ServiceMonitor)
+    - Phase 8: Resource Configuration (CPU/memory requests and limits)
+    - Phase 9: ArgoCD Application (sync and health status)
+    - Generates JSON test report
+
+2. **BDD Tests** (`tests/bdd/features/`)
+    - VSM service deployment and accessibility
+    - Work item creation and tracking
+    - Stage transitions with validation
+    - Flow metrics calculation
+    - Prometheus metrics exposure
+    - Resource allocation and stability
+
+### Test Reports
+
+Test reports are generated in JSON format at:
+```
+reports/at-e2-005-validation-YYYYMMDD-HHMMSS.json
+```
+
+### Validation Commands
+
+Run the test:
+
+```bash
+# Run via test runner
+./tests/acceptance/run-test.sh AT-E2-005
+
+# Run via Makefile
+make validate-at-e2-005
+
+# Run directly
+./scripts/validate-at-e2-005.sh --namespace fawkes
+
+# Run BDD tests (when available)
+pytest tests/bdd -k "vsm or value_stream" -v --tb=short
+```
+
+### API Endpoints
+
+The VSM service provides the following endpoints:
+
+- `POST /api/v1/work-items` - Create new work item
+- `PUT /api/v1/work-items/{id}/transition` - Move work item between stages
+- `GET /api/v1/work-items/{id}/history` - Get stage history for work item
+- `GET /api/v1/metrics` - Get flow metrics (throughput, WIP, cycle time)
+- `GET /api/v1/stages` - List all available stages
+- `GET /api/v1/health` - Health check
+- `GET /ready` - Readiness check
+- `GET /metrics` - Prometheus metrics
+- `GET /docs` - OpenAPI/Swagger documentation
+
+### Prerequisites
+
+- kubectl with cluster access
+- PostgreSQL cluster deployed (db-vsm-dev)
+- VSM service deployed in namespace `fawkes`
+- curl (for API testing)
+- jq (optional, for JSON processing)
+- pytest (for BDD tests)
+
+### Troubleshooting
+
+**VSM service not accessible:**
+```bash
+# Check pod status
+kubectl get pods -n fawkes -l app=vsm-service
+
+# Check service
+kubectl get svc vsm-service -n fawkes
+
+# Check ingress
+kubectl get ingress vsm-service -n fawkes
+
+# Port forward for testing
+kubectl port-forward -n fawkes svc/vsm-service 8080:80
+```
+
+**PostgreSQL connection failed:**
+```bash
+# Check PostgreSQL cluster
+kubectl get cluster db-vsm-dev -n fawkes
+
+# Check PostgreSQL pods
+kubectl get pods -n fawkes -l "cnpg.io/cluster=db-vsm-dev"
+
+# Verify ConfigMap has correct database URL
+kubectl get configmap vsm-service-config -n fawkes -o yaml
+```
+
+**Flow metrics not calculating:**
+- Ensure work items have been created and transitioned
+- Check database has stage transitions recorded
+- Verify metrics calculation is not failing in logs
+- Check that stages are properly configured
+
+## AT-E2-008: Unified GraphQL Data API
+
+### Acceptance Criteria
+
+- [x] Hasura GraphQL Engine deployed
+- [x] GraphQL API endpoint accessible
+- [x] Schema introspection working
+- [x] Query performance <1s (P95)
+- [x] GraphQL Playground accessible
+- [x] Redis cache for performance (optional)
+- [x] RBAC configuration
+- [x] Prometheus metrics exposed
+- [x] ServiceMonitor configured
+- [x] Resource limits configured
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e2-008.sh`)
+    - Test 1: Hasura Deployment (deployment exists, replicas ready)
+    - Test 2: Hasura Service (service exists, port configured)
+    - Test 3: Hasura Ingress (ingress configured)
+    - Test 4: Redis Cache (cache deployment, if configured)
+    - Test 5: GraphQL Endpoint Health (health check)
+    - Test 6: GraphQL Schema Introspection (type count)
+    - Test 7: Query Performance Test (P95 < 1s, 20 iterations)
+    - Test 8: GraphQL Console Access (playground/console)
+    - Test 9: RBAC Configuration (permission files, anonymous role)
+    - Test 10: Monitoring Integration (ServiceMonitor, metrics endpoint)
+
+2. **Performance Tests** (`tests/performance/graphql-load-test.js`)
+    - k6 load testing for GraphQL queries
+    - Performance benchmarking
+    - Stress testing
+
+### Test Reports
+
+Test execution logs show pass/fail status for each test phase.
+
+### Validation Commands
+
+Run the test:
+
+```bash
+# Run via test runner
+./tests/acceptance/run-test.sh AT-E2-008
+
+# Run via Makefile
+make validate-at-e2-008
+
+# Run directly
+./scripts/validate-at-e2-008.sh --namespace fawkes
+
+# Run performance tests (requires k6)
+k6 run tests/performance/graphql-load-test.js
+```
+
+### API Endpoints
+
+The Hasura GraphQL API provides:
+
+- `POST /v1/graphql` - GraphQL query endpoint
+- `GET /healthz` - Health check endpoint
+- `GET /v1/metrics` - Prometheus metrics
+- `GET /console` - GraphQL Playground/Console
+- GraphQL introspection queries for schema exploration
+
+### Prerequisites
+
+- kubectl with cluster access
+- Hasura deployed in namespace `fawkes`
+- curl (for API testing)
+- jq (for JSON processing)
+- k6 (for performance tests, optional)
+
+### Troubleshooting
+
+**Hasura not accessible:**
+```bash
+# Check pod status
+kubectl get pods -n fawkes -l app=hasura
+
+# Check service
+kubectl get svc hasura -n fawkes
+
+# Check ingress
+kubectl get ingress hasura -n fawkes
+
+# Port forward for testing
+kubectl port-forward -n fawkes svc/hasura 8080:8080
+```
+
+**GraphQL schema empty:**
+- Ensure database tables are tracked in Hasura
+- Access console at http://localhost:8080/console
+- Go to Data tab and track tables
+- Verify database connections are configured
+
+**Performance issues:**
+- Check Redis cache deployment and configuration
+- Verify database connection pooling settings
+- Review query complexity and optimize if needed
+- Check resource limits on Hasura pods
+
+**RBAC not working:**
+- Verify permissions.yaml file exists
+- Apply metadata: `hasura metadata apply`
+- Check role configuration in Hasura console
+- Test with different x-hasura-role headers
 
 ## Generating Reports
 
