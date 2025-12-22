@@ -3,13 +3,18 @@ Focalboard integration for VSM service.
 
 This module provides webhook handlers and API integration for bidirectional
 sync between Focalboard boards and VSM work items.
+
+Note: This is an initial implementation. The Focalboard API client functions
+(_fetch_focalboard_cards, sync_work_item_to_focalboard) are placeholder
+implementations that need to be completed with actual HTTP API calls to
+Focalboard/Mattermost.
 """
 import logging
 from datetime import datetime, timezone
 from typing import Optional, Dict, Any, List
 from enum import Enum
 
-import httpx
+import httpx  # Required for future Focalboard API integration
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
@@ -370,14 +375,29 @@ async def _fetch_focalboard_cards(board_id: str) -> List[Dict[str, Any]]:
     """
     Fetch cards from Focalboard API.
     
+    TODO: Implement actual Focalboard API integration using httpx.
+    This requires:
+    1. Focalboard/Mattermost API authentication (token or session)
+    2. GET request to /api/v2/boards/{board_id}/cards
+    3. Error handling for network/API failures
+    4. Pagination support for large boards
+    
     Args:
         board_id: Focalboard board ID
         
     Returns:
         List of card data dictionaries
+        
+    Example implementation:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                f"{FOCALBOARD_API_URL}/boards/{board_id}/cards",
+                headers={"Authorization": f"Bearer {api_token}"}
+            )
+            response.raise_for_status()
+            return response.json()
     """
-    # This is a placeholder implementation
-    # In production, this would make actual API calls to Focalboard/Mattermost
+    # PLACEHOLDER: Return empty list until API integration is implemented
     logger.warning("Focalboard API integration not fully implemented - returning empty list")
     return []
 
@@ -423,7 +443,20 @@ async def sync_work_item_to_focalboard(
         # Map stage to Focalboard column
         column_name = FocalboardColumnStageMapping.get_column(stage_name) if stage_name else "Backlog"
         
-        # This is a placeholder - in production, this would make actual API calls
+        # TODO: Implement actual Focalboard API push using httpx
+        # This should:
+        # 1. Find or create card in Focalboard for this work item
+        # 2. Update card properties (title, status/column, custom fields)
+        # 3. Handle API authentication and error cases
+        # Example:
+        #   async with httpx.AsyncClient() as client:
+        #       await client.patch(
+        #           f"{FOCALBOARD_API_URL}/cards/{card_id}",
+        #           json={"properties": {"status": column_name}},
+        #           headers={"Authorization": f"Bearer {api_token}"}
+        #       )
+        
+        # PLACEHOLDER: Return success without actual API call
         logger.info(f"Would sync work item {work_item_id} to Focalboard column '{column_name}'")
         
         return {
