@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - smart-alerting
+
+  smart-alerting:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - PROMETHEUS_URL=http://prometheus:9090
+      - GRAFANA_URL=http://grafana:80
+      - BACKSTAGE_URL=http://backstage:7007
+      - CORRELATION_TIME_WINDOW=300
+      - FLAPPING_THRESHOLD=3
+      - FLAPPING_WINDOW=600
+      - ESCALATION_TIMEOUT=900
+      - ALERT_FATIGUE_TARGET=0.5
+      # Add your webhook URLs here
+      # - MATTERMOST_WEBHOOK_URL=https://mattermost.example.com/hooks/xxx
+      # - SLACK_WEBHOOK_URL=https://hooks.slack.com/services/xxx
+      # - PAGERDUTY_API_KEY=your-key-here
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - smart-alerting
+    volumes:
+      - ./rules:/app/rules:ro
+
+networks:
+  smart-alerting:
+    driver: bridge

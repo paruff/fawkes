@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: smart-alerting
+  namespace: argocd
+  labels:
+    app: smart-alerting
+    component: observability
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/fawkes
+    targetRevision: HEAD
+    path: services/smart-alerting/k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+  ignoreDifferences:
+  - group: ""
+    kind: Secret
+    jsonPointers:
+    - /data

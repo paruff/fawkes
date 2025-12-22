@@ -1,0 +1,13 @@
+# Example Cascade Suppression Rule
+# This rule suppresses dependent alerts when a root cause alert fires
+
+name: "Database Down Cascade"
+type: cascade
+enabled: true  # Enabled by default
+root_cause_alert: "DatabaseDown"  # The root cause alert name
+dependent_alerts:
+  - "HighLatency"
+  - "ConnectionTimeout"
+  - "ServiceUnavailable"
+  - "ApiGatewayDown"
+suppress_duration: 1800  # Suppress for 30 minutes in seconds
