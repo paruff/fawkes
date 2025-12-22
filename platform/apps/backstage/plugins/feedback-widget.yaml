@@ -1,0 +1,34 @@
+# ============================================================================
+# FILE: platform/apps/backstage/plugins/feedback-widget.yaml
+# PURPOSE: Feedback widget plugin configuration for Backstage
+#          References the feedback API proxy endpoint
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backstage-feedback-plugin
+  namespace: fawkes
+  labels:
+    app: backstage
+    component: plugin
+    plugin: feedback-widget
+    environment: dev
+    team: platform
+data:
+  plugin-config.yaml: |
+    # Feedback Widget Plugin Configuration
+    # This plugin allows users to submit feedback from within Backstage
+    
+    feedback:
+      enabled: true
+      apiEndpoint: /feedback/api
+      categories:
+        - UI/UX
+        - Performance
+        - Documentation
+        - Features
+        - Bug Report
+        - Other
+      submitEndpoint: /api/v1/feedback
+      adminEndpoint: /api/v1/feedback
+      statsEndpoint: /api/v1/feedback/stats

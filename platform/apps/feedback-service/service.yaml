@@ -1,0 +1,24 @@
+# ============================================================================
+# FILE: platform/apps/feedback-service/service.yaml
+# PURPOSE: Kubernetes Service for Feedback Service
+#          Exposes feedback API within the cluster
+# ============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: feedback-service
+  namespace: fawkes
+  labels:
+    app: feedback-service
+    component: feedback
+    environment: dev
+    team: platform
+spec:
+  type: ClusterIP
+  selector:
+    app: feedback-service
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
