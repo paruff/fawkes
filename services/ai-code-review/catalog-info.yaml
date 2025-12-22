@@ -1,0 +1,69 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ai-code-review
+  description: AI-powered code review bot for automated PR analysis
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - python
+    - fastapi
+    - ai
+    - code-review
+    - llm
+  links:
+    - url: http://ai-code-review.fawkes.svc:8000
+      title: Service Endpoint
+      icon: api
+    - url: http://ai-code-review.fawkes.svc:8000/metrics
+      title: Metrics
+      icon: dashboard
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: ai-platform
+  dependsOn:
+    - component:rag-service
+    - component:sonarqube
+  providesApis:
+    - ai-code-review-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ai-code-review-api
+  description: AI Code Review Service REST API
+spec:
+  type: openapi
+  lifecycle: production
+  owner: platform-team
+  system: ai-platform
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: AI Code Review Service API
+      version: 0.1.0
+    paths:
+      /health:
+        get:
+          summary: Health check
+          responses:
+            '200':
+              description: Service is healthy
+      /ready:
+        get:
+          summary: Readiness check
+          responses:
+            '200':
+              description: Service is ready
+      /webhook/github:
+        post:
+          summary: GitHub webhook endpoint
+          description: Receives GitHub pull request webhooks for automated code review
+          responses:
+            '202':
+              description: Review scheduled
+            '401':
+              description: Invalid signature
