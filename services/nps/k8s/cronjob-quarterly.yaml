@@ -99,7 +99,7 @@ spec:
             # Security context
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
+              readOnlyRootFilesystem: true
               runAsNonRoot: true
               runAsUser: 65534
               capabilities:
@@ -107,3 +107,12 @@ spec:
                   - ALL
               seccompProfile:
                 type: RuntimeDefault
+            
+            # Volume mounts for writable directories
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          
+          volumes:
+          - name: tmp
+            emptyDir: {}
