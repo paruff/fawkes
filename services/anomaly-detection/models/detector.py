@@ -48,8 +48,12 @@ def initialize_models():
         models_initialized = True
         logger.info("✅ Anomaly detection models initialized successfully")
         
-        from ..app.main import MODELS_LOADED
-        MODELS_LOADED.set(5)  # 5 detection models available
+        try:
+            from app.main import MODELS_LOADED
+            MODELS_LOADED.set(5)  # 5 detection models available
+        except ImportError:
+            # During testing, app.main may not be available
+            pass
         
     except Exception as e:
         logger.error(f"❌ Failed to initialize models: {e}")
@@ -98,7 +102,11 @@ async def detect_anomalies(metric_query: str, http_client) -> List:
     Returns:
         List of AnomalyScore objects
     """
-    from ..app.main import AnomalyScore, PROMETHEUS_URL
+    try:
+        from app.main import AnomalyScore, PROMETHEUS_URL
+    except ImportError:
+        # During testing
+        from ..app.main import AnomalyScore, PROMETHEUS_URL
     
     if not models_initialized:
         logger.warning("Models not initialized, skipping detection")
