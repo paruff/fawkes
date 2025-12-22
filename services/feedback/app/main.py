@@ -25,6 +25,9 @@ from .metrics import (
     update_all_metrics
 )
 
+# Import sentiment analysis
+from .sentiment import analyze_feedback_sentiment
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -64,6 +67,8 @@ class FeedbackResponse(BaseModel):
     email: Optional[str] = Field(None, description="User email")
     page_url: Optional[str] = Field(None, description="Page URL")
     status: str = Field(..., description="Feedback status")
+    sentiment: Optional[str] = Field(None, description="Sentiment classification (positive/neutral/negative)")
+    sentiment_compound: Optional[float] = Field(None, description="Sentiment compound score (-1 to +1)")
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
 
@@ -117,6 +122,11 @@ async def init_database():
                     email VARCHAR(255),
                     page_url TEXT,
                     status VARCHAR(50) DEFAULT 'open',
+                    sentiment VARCHAR(20),
+                    sentiment_compound FLOAT,
+                    sentiment_pos FLOAT,
+                    sentiment_neu FLOAT,
+                    sentiment_neg FLOAT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
@@ -124,6 +134,7 @@ async def init_database():
                 CREATE INDEX IF NOT EXISTS idx_feedback_status ON feedback(status);
                 CREATE INDEX IF NOT EXISTS idx_feedback_category ON feedback(category);
                 CREATE INDEX IF NOT EXISTS idx_feedback_created_at ON feedback(created_at DESC);
+                CREATE INDEX IF NOT EXISTS idx_feedback_sentiment ON feedback(sentiment);
             """)
             logger.info("✅ Database schema initialized")
     except Exception as e:
@@ -221,18 +232,30 @@ async def submit_feedback(feedback: FeedbackSubmission):
     
     with feedback_request_duration.labels(endpoint="submit_feedback").time():
         try:
+            # Analyze sentiment of the comment
+            sentiment, compound, pos, neu, neg = analyze_feedback_sentiment(feedback.comment)
+            
             async with db_pool.acquire() as conn:
                 row = await conn.fetchrow(
                     """
-                    INSERT INTO feedback (rating, category, comment, email, page_url, status)
-                    VALUES ($1, $2, $3, $4, $5, 'open')
-                    RETURNING id, rating, category, comment, email, page_url, status, created_at, updated_at
+                    INSERT INTO feedback (
+                        rating, category, comment, email, page_url, status,
+                        sentiment, sentiment_compound, sentiment_pos, sentiment_neu, sentiment_neg
+                    )
+                    VALUES ($1, $2, $3, $4, $5, 'open', $6, $7, $8, $9, $10)
+                    RETURNING id, rating, category, comment, email, page_url, status,
+                              sentiment, sentiment_compound, created_at, updated_at
                     """,
                     feedback.rating,
                     feedback.category,
                     feedback.comment,
                     feedback.email,
-                    feedback.page_url
+                    feedback.page_url,
+                    sentiment,
+                    compound,
+                    pos,
+                    neu,
+                    neg
                 )
                 
                 # Update metrics
@@ -241,7 +264,10 @@ async def submit_feedback(feedback: FeedbackSubmission):
                     rating=str(feedback.rating)
                 ).inc()
                 
-                logger.info(f"Feedback submitted: ID={row['id']}, category={feedback.category}, rating={feedback.rating}")
+                logger.info(
+                    f"Feedback submitted: ID={row['id']}, category={feedback.category}, "
+                    f"rating={feedback.rating}, sentiment={sentiment}"
+                )
                 
                 return FeedbackResponse(
                     id=row['id'],
@@ -251,6 +277,8 @@ async def submit_feedback(feedback: FeedbackSubmission):
                     email=row['email'],
                     page_url=row['page_url'],
                     status=row['status'],
+                    sentiment=row['sentiment'],
+                    sentiment_compound=row['sentiment_compound'],
                     created_at=row['created_at'],
                     updated_at=row['updated_at']
                 )
@@ -300,7 +328,8 @@ async def list_feedback(
                 
                 # Get paginated results
                 query = f"""
-                    SELECT id, rating, category, comment, email, page_url, status, created_at, updated_at
+                    SELECT id, rating, category, comment, email, page_url, status,
+                           sentiment, sentiment_compound, created_at, updated_at
                     FROM feedback
                     {where_sql}
                     ORDER BY created_at DESC
@@ -319,6 +348,8 @@ async def list_feedback(
                         email=row['email'],
                         page_url=row['page_url'],
                         status=row['status'],
+                        sentiment=row['sentiment'],
+                        sentiment_compound=row['sentiment_compound'],
                         created_at=row['created_at'],
                         updated_at=row['updated_at']
                     )
@@ -363,7 +394,8 @@ async def update_feedback_status(
                     UPDATE feedback
                     SET status = $1, updated_at = CURRENT_TIMESTAMP
                     WHERE id = $2
-                    RETURNING id, rating, category, comment, email, page_url, status, created_at, updated_at
+                    RETURNING id, rating, category, comment, email, page_url, status,
+                              sentiment, sentiment_compound, created_at, updated_at
                     """,
                     status_update.status,
                     feedback_id
@@ -382,6 +414,8 @@ async def update_feedback_status(
                     email=row['email'],
                     page_url=row['page_url'],
                     status=row['status'],
+                    sentiment=row['sentiment'],
+                    sentiment_compound=row['sentiment_compound'],
                     created_at=row['created_at'],
                     updated_at=row['updated_at']
                 )
