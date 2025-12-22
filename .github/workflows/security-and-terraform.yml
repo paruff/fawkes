@@ -3,6 +3,10 @@ name: Security & Terraform Validation
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'infra/**'
+      - '.github/workflows/security-and-terraform.yml'
+      - '**/*.tf'
   pull_request:
     branches: [ main ]
 
@@ -13,15 +17,29 @@ permissions:
 jobs:
   validate-and-scan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e11480ae1e31caa3f43c6f6043d4daa6e1148a  # v4.2.2
 
       # 1️⃣ Terraform validation
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd  # v3.1.2
         with:
           terraform_version: 1.9.5
+
+      # Cache Terraform providers
+      - name: Cache Terraform providers
+        uses: actions/cache@0057852d52279ba093e21d2f6cbbf3c48fb752b7  # v4.2.0
+        with:
+          path: |
+            ~/.terraform.d/plugin-cache
+            **/.terraform/providers
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+          restore-keys: |
+            ${{ runner.os }}-terraform-
 
       - name: Terraform fmt check (non-blocking)
         run: terraform fmt -check -recursive || echo "⚠️ Formatting issues found"
@@ -42,9 +60,9 @@ jobs:
             popd >/dev/null
           done
 
-      # Optional: static linting for Terraform
+      # Static linting for Terraform (required on PRs)
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v4
+        uses: terraform-linters/setup-tflint@6e87008c3b5e1f9876c5af94e24ebf25e6991b8e  # v4.1.0
         with:
           tflint_version: latest
           github_token: ${{ github.token }}
@@ -56,7 +74,6 @@ jobs:
 
       - name: Run TFLint (recursive)
         run: tflint --recursive
-        continue-on-error: true
 
       # 2️⃣ Secret scanning (install and run Gitleaks directly to avoid action input quirks)
       - name: Setup Gitleaks
@@ -82,7 +99,7 @@ jobs:
 
       # 3️⃣ Vulnerability / misconfiguration scanning
       - name: Run Trivy (repo scan)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@22438a41bbda6e4c98fa1cbdc8820f8a8c3fd6e0  # master (2025-01-06)
         with:
           scan-type: fs
           scan-ref: .
@@ -91,19 +108,19 @@ jobs:
 
       # 4️⃣ Upload SARIF results for GitHub Security tab
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@c37a8b7cd97e31de3fcbd9d84c401870edeb8d34  # v3.27.9
         with:
           sarif_file: trivy-results.sarif
 
       - name: Upload Gitleaks results to GitHub Security tab
         if: always() && hashFiles('gitleaks-results.sarif') != ''
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@c37a8b7cd97e31de3fcbd9d84c401870edeb8d34  # v3.27.9
         with:
           sarif_file: gitleaks-results.sarif
 
       # 5️⃣ Upload artifacts for later review
       - name: Upload reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8e4cf8965c7a8f4f88f034a7ca961c27d3  # v4.5.0
         with:
           name: security-reports
           path: |
