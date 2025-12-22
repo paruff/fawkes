@@ -175,7 +175,9 @@ class SuppressionEngine:
         if expires_at:
             try:
                 expiry = datetime.fromisoformat(expires_at.replace('Z', '+00:00'))
-                if datetime.now() > expiry:
+                # Compare with timezone-aware now
+                from datetime import timezone
+                if datetime.now(timezone.utc) > expiry:
                     return False
             except Exception as e:
                 logger.error(f"Error parsing expires_at: {e}")

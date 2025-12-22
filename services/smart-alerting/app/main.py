@@ -412,7 +412,18 @@ async def get_suppression_rules() -> List[SuppressionRule]:
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
     
-    return suppression_engine.rules
+    # Convert rules to Pydantic models
+    result = []
+    for rule in suppression_engine.rules:
+        if isinstance(rule, dict):
+            # Add id if missing
+            if 'id' not in rule:
+                rule['id'] = str(uuid.uuid4())
+            result.append(SuppressionRule(**rule))
+        else:
+            result.append(rule)
+    
+    return result
 
 
 @app.post("/api/v1/rules")
@@ -421,7 +432,8 @@ async def create_suppression_rule(rule: SuppressionRule) -> SuppressionRule:
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
     
-    await suppression_engine.add_rule(rule)
+    # Convert to dict for suppression engine
+    await suppression_engine.add_rule(rule.dict())
     return rule
 
 
@@ -432,7 +444,12 @@ async def get_suppression_rule(rule_id: str) -> SuppressionRule:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
     
     for rule in suppression_engine.rules:
-        if rule.id == rule_id:
+        # Handle both dict and Pydantic models
+        rid = rule.get('id') if isinstance(rule, dict) else getattr(rule, 'id', None)
+        if rid == rule_id:
+            # Convert to Pydantic model if it's a dict
+            if isinstance(rule, dict):
+                return SuppressionRule(**rule)
             return rule
     
     raise HTTPException(status_code=404, detail="Rule not found")
@@ -445,7 +462,8 @@ async def update_suppression_rule(rule_id: str, rule: SuppressionRule) -> Suppre
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
     
     rule.id = rule_id
-    await suppression_engine.update_rule(rule)
+    # Convert to dict for suppression engine
+    await suppression_engine.update_rule(rule.dict())
     return rule
 
 
