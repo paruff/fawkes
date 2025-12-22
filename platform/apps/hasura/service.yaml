@@ -1,0 +1,26 @@
+# ============================================================================
+# FILE: platform/apps/hasura/service.yaml
+# PURPOSE: Service for Hasura GraphQL Engine
+# ============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: hasura
+  namespace: fawkes
+  labels:
+    app: hasura
+    component: data-api
+    environment: dev
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: "/v1/metrics"
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: hasura

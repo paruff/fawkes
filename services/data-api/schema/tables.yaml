@@ -1,0 +1,101 @@
+# ============================================================================
+# FILE: services/data-api/schema/tables.yaml
+# PURPOSE: Hasura table tracking configuration
+#          Defines which tables to expose via GraphQL
+# ============================================================================
+
+# VSM Database Tables
+- database: vsm
+  tables:
+    # Work Items table
+    - table:
+        schema: public
+        name: work_items
+      configuration:
+        custom_name: workItems
+        custom_root_fields:
+          select: workItems
+          select_by_pk: workItem
+          select_aggregate: workItemsAggregate
+      
+    # Stages table
+    - table:
+        schema: public
+        name: stages
+      configuration:
+        custom_name: stages
+        custom_root_fields:
+          select: stages
+          select_by_pk: stage
+    
+    # Stage Transitions table
+    - table:
+        schema: public
+        name: stage_transitions
+      configuration:
+        custom_name: stageTransitions
+        custom_root_fields:
+          select: stageTransitions
+          select_by_pk: stageTransition
+          select_aggregate: stageTransitionsAggregate
+    
+    # Flow Metrics table
+    - table:
+        schema: public
+        name: flow_metrics
+      configuration:
+        custom_name: flowMetrics
+        custom_root_fields:
+          select: flowMetrics
+          select_aggregate: flowMetricsAggregate
+
+# Backstage Database Tables
+- database: backstage
+  tables:
+    # Catalog Entities table
+    - table:
+        schema: public
+        name: final_entities
+      configuration:
+        custom_name: catalogEntities
+        custom_root_fields:
+          select: catalogEntities
+          select_by_pk: catalogEntity
+          select_aggregate: catalogEntitiesAggregate
+
+# DevLake Database Tables (for DORA metrics)
+# Note: DevLake uses complex schema, may need views
+- database: devlake
+  tables:
+    # Deployments
+    - table:
+        schema: public
+        name: cicd_deployments
+      configuration:
+        custom_name: deployments
+        custom_root_fields:
+          select: deployments
+          select_by_pk: deployment
+          select_aggregate: deploymentsAggregate
+    
+    # Builds
+    - table:
+        schema: public
+        name: cicd_pipelines
+      configuration:
+        custom_name: builds
+        custom_root_fields:
+          select: builds
+          select_by_pk: build
+          select_aggregate: buildsAggregate
+    
+    # Pull Requests
+    - table:
+        schema: public
+        name: pull_requests
+      configuration:
+        custom_name: pullRequests
+        custom_root_fields:
+          select: pullRequests
+          select_by_pk: pullRequest
+          select_aggregate: pullRequestsAggregate
