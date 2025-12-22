@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Anomaly Detection Timeline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: #555;
+            white-space: nowrap;
+        }
+
+        .control-group select,
+        .control-group input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .control-group button {
+            padding: 8px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .control-group button:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px 30px;
+            background: #fafbfc;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .stat-card.critical { border-left-color: #e74c3c; }
+        .stat-card.high { border-left-color: #e67e22; }
+        .stat-card.medium { border-left-color: #f39c12; }
+        .stat-card.low { border-left-color: #3498db; }
+
+        .timeline-container {
+            padding: 30px;
+            position: relative;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .timeline-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 25px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline-item.critical::before { background: #e74c3c; }
+        .timeline-item.high::before { background: #e67e22; }
+        .timeline-item.medium::before { background: #f39c12; }
+        .timeline-item.low::before { background: #3498db; }
+
+        .timeline-item.critical { border-left: 4px solid #e74c3c; }
+        .timeline-item.high { border-left: 4px solid #e67e22; }
+        .timeline-item.medium { border-left: 4px solid #f39c12; }
+        .timeline-item.low { border-left: 4px solid #3498db; }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .timeline-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            flex: 1;
+        }
+
+        .timeline-severity {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .timeline-severity.critical { background: #fee; color: #e74c3c; }
+        .timeline-severity.high { background: #ffebe6; color: #e67e22; }
+        .timeline-severity.medium { background: #fff7e6; color: #f39c12; }
+        .timeline-severity.low { background: #e6f2ff; color: #3498db; }
+
+        .timeline-time {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .timeline-time::before {
+            content: '🕐';
+            font-size: 1rem;
+        }
+
+        .timeline-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .timeline-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .tag.event {
+            background: #e8f4f8;
+            color: #2980b9;
+        }
+
+        .tag.incident {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .details {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed #ddd;
+        }
+
+        .details.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .details h4 {
+            margin-bottom: 10px;
+            color: #667eea;
+            font-size: 1rem;
+        }
+
+        .details ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .details li {
+            padding: 6px 0;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .details li::before {
+            content: '→';
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .correlated-events {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .correlated-event {
+            padding: 10px;
+            background: #f8f9fa;
+            border-left: 3px solid #667eea;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .correlated-event strong {
+            color: #667eea;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+            font-size: 1.1rem;
+        }
+
+        .loading::before {
+            content: '⟳';
+            display: block;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state::before {
+            content: '📊';
+            display: block;
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            color: #999;
+        }
+
+        .error {
+            padding: 20px;
+            background: #fee;
+            border: 1px solid #fcc;
+            border-radius: 8px;
+            color: #c00;
+            margin: 20px 30px;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            text-align: center;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .control-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .control-group select,
+            .control-group input,
+            .control-group button {
+                width: 100%;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI Anomaly Detection Timeline</h1>
+            <p>Real-time anomaly detection with correlated events and root cause analysis</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="hoursFilter">Time Range:</label>
+                <select id="hoursFilter">
+                    <option value="1">Last 1 Hour</option>
+                    <option value="6">Last 6 Hours</option>
+                    <option value="24" selected>Last 24 Hours</option>
+                    <option value="72">Last 3 Days</option>
+                    <option value="168">Last 7 Days</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="severityFilter">Severity:</label>
+                <select id="severityFilter">
+                    <option value="">All Severities</option>
+                    <option value="critical">Critical</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="metricFilter">Metric Type:</label>
+                <select id="metricFilter">
+                    <option value="">All Metrics</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="serviceFilter">Service:</label>
+                <input type="text" id="serviceFilter" placeholder="Filter by service...">
+            </div>
+
+            <div class="control-group">
+                <button id="refreshBtn">🔄 Refresh</button>
+            </div>
+        </div>
+
+        <div class="stats" id="stats">
+            <div class="stat-card critical">
+                <h3>Critical</h3>
+                <div class="value" id="criticalCount">0</div>
+            </div>
+            <div class="stat-card high">
+                <h3>High</h3>
+                <div class="value" id="highCount">0</div>
+            </div>
+            <div class="stat-card medium">
+                <h3>Medium</h3>
+                <div class="value" id="mediumCount">0</div>
+            </div>
+            <div class="stat-card low">
+                <h3>Low</h3>
+                <div class="value" id="lowCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Anomalies</h3>
+                <div class="value" id="totalCount">0</div>
+            </div>
+        </div>
+
+        <div class="timeline-container">
+            <div id="loading" class="loading">Loading anomaly data...</div>
+            <div id="error" class="error" style="display: none;"></div>
+            <div id="timeline" class="timeline"></div>
+        </div>
+
+        <div class="footer">
+            <p>Fawkes AI Observability Platform | Real-time Anomaly Detection & Root Cause Analysis</p>
+            <p>API: <span id="apiEndpoint">Loading...</span> | Last Updated: <span id="lastUpdate">Never</span></p>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:8000' 
+            : 'http://anomaly-detection.fawkes.local';
+        
+        // State
+        let anomalies = [];
+        let metrics = new Set();
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('apiEndpoint').textContent = API_BASE_URL;
+            loadData();
+            
+            // Event listeners
+            document.getElementById('refreshBtn').addEventListener('click', loadData);
+            document.getElementById('hoursFilter').addEventListener('change', loadData);
+            document.getElementById('severityFilter').addEventListener('change', filterAndRender);
+            document.getElementById('metricFilter').addEventListener('change', filterAndRender);
+            document.getElementById('serviceFilter').addEventListener('input', filterAndRender);
+            
+            // Auto-refresh every 30 seconds
+            setInterval(loadData, 30000);
+        });
+
+        // Load data from API
+        async function loadData() {
+            const hours = document.getElementById('hoursFilter').value;
+            showLoading(true);
+            hideError();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/v1/anomalies?limit=100`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                anomalies = await response.json();
+                
+                // Extract unique metrics
+                metrics.clear();
+                anomalies.forEach(a => {
+                    if (a.anomaly && a.anomaly.metric) {
+                        metrics.add(a.anomaly.metric);
+                    }
+                });
+                
+                // Update metric filter dropdown
+                updateMetricFilter();
+                
+                // Filter by time range
+                const cutoffTime = new Date(Date.now() - hours * 60 * 60 * 1000);
+                anomalies = anomalies.filter(a => {
+                    const detectedAt = new Date(a.detected_at);
+                    return detectedAt >= cutoffTime;
+                });
+                
+                filterAndRender();
+                updateLastUpdateTime();
+                
+            } catch (error) {
+                console.error('Failed to load anomalies:', error);
+                showError(`Failed to load anomalies: ${error.message}`);
+                anomalies = [];
+                renderTimeline([]);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Update metric filter dropdown
+        function updateMetricFilter() {
+            const select = document.getElementById('metricFilter');
+            const currentValue = select.value;
+            
+            // Keep "All Metrics" option
+            select.innerHTML = '<option value="">All Metrics</option>';
+            
+            // Add metrics
+            Array.from(metrics).sort().forEach(metric => {
+                const option = document.createElement('option');
+                option.value = metric;
+                option.textContent = metric;
+                select.appendChild(option);
+            });
+            
+            // Restore selection if still valid
+            if (currentValue && metrics.has(currentValue)) {
+                select.value = currentValue;
+            }
+        }
+
+        // Filter and render
+        function filterAndRender() {
+            const severityFilter = document.getElementById('severityFilter').value;
+            const metricFilter = document.getElementById('metricFilter').value;
+            const serviceFilter = document.getElementById('serviceFilter').value.toLowerCase();
+
+            let filtered = anomalies;
+
+            if (severityFilter) {
+                filtered = filtered.filter(a => 
+                    a.anomaly && a.anomaly.severity === severityFilter
+                );
+            }
+
+            if (metricFilter) {
+                filtered = filtered.filter(a => 
+                    a.anomaly && a.anomaly.metric === metricFilter
+                );
+            }
+
+            if (serviceFilter) {
+                filtered = filtered.filter(a => 
+                    (a.anomaly && a.anomaly.metric && a.anomaly.metric.toLowerCase().includes(serviceFilter)) ||
+                    (a.root_cause && JSON.stringify(a.root_cause).toLowerCase().includes(serviceFilter))
+                );
+            }
+
+            updateStats(filtered);
+            renderTimeline(filtered);
+        }
+
+        // Update statistics
+        function updateStats(data) {
+            const stats = {
+                critical: 0,
+                high: 0,
+                medium: 0,
+                low: 0
+            };
+
+            data.forEach(item => {
+                if (item.anomaly && item.anomaly.severity) {
+                    const severity = item.anomaly.severity;
+                    if (stats.hasOwnProperty(severity)) {
+                        stats[severity]++;
+                    }
+                }
+            });
+
+            document.getElementById('criticalCount').textContent = stats.critical;
+            document.getElementById('highCount').textContent = stats.high;
+            document.getElementById('mediumCount').textContent = stats.medium;
+            document.getElementById('lowCount').textContent = stats.low;
+            document.getElementById('totalCount').textContent = data.length;
+        }
+
+        // Render timeline
+        function renderTimeline(data) {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = '';
+
+            if (data.length === 0) {
+                timeline.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No Anomalies Found</h3>
+                        <p>No anomalies detected in the selected time range and filters.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort by detected_at descending
+            data.sort((a, b) => new Date(b.detected_at) - new Date(a.detected_at));
+
+            data.forEach(item => {
+                const element = createTimelineItem(item);
+                timeline.appendChild(element);
+            });
+        }
+
+        // Create timeline item
+        function createTimelineItem(item) {
+            const div = document.createElement('div');
+            const severity = item.anomaly?.severity || 'low';
+            div.className = `timeline-item ${severity}`;
+            div.dataset.id = item.id;
+
+            const metric = item.anomaly?.metric || 'Unknown Metric';
+            const timestamp = item.anomaly?.timestamp || item.detected_at;
+            const value = item.anomaly?.value?.toFixed(2) || 'N/A';
+            const expected = item.anomaly?.expected_value?.toFixed(2) || 'N/A';
+            const confidence = ((item.anomaly?.confidence || 0) * 100).toFixed(1);
+
+            // Correlated events
+            const events = [];
+            if (item.root_cause?.recent_events) {
+                events.push(...item.root_cause.recent_events);
+            }
+
+            // Check for incidents
+            const hasIncident = events.some(e => e.toLowerCase().includes('incident'));
+
+            div.innerHTML = `
+                <div class="timeline-header">
+                    <div class="timeline-title">${metric}</div>
+                    <span class="timeline-severity ${severity}">${severity}</span>
+                </div>
+                <div class="timeline-time">${formatTimestamp(timestamp)}</div>
+                <div class="timeline-description">
+                    Detected anomaly: Value <strong>${value}</strong> vs Expected <strong>${expected}</strong>
+                    (Confidence: ${confidence}%)
+                </div>
+                <div class="timeline-tags">
+                    <span class="tag">Metric: ${metric}</span>
+                    ${events.length > 0 ? '<span class="tag event">Has Events</span>' : ''}
+                    ${hasIncident ? '<span class="tag incident">Incident</span>' : ''}
+                    ${item.root_cause ? '<span class="tag">RCA Available</span>' : ''}
+                </div>
+                <div class="details" id="details-${item.id}">
+                    ${renderDetails(item)}
+                </div>
+            `;
+
+            div.addEventListener('click', () => toggleDetails(item.id));
+
+            return div;
+        }
+
+        // Render details section
+        function renderDetails(item) {
+            let html = '<h4>📊 Anomaly Details</h4><ul>';
+            
+            if (item.anomaly) {
+                html += `
+                    <li><strong>Score:</strong> ${(item.anomaly.score || 0).toFixed(3)}</li>
+                    <li><strong>Confidence:</strong> ${((item.anomaly.confidence || 0) * 100).toFixed(1)}%</li>
+                    <li><strong>Actual Value:</strong> ${(item.anomaly.value || 0).toFixed(2)}</li>
+                    <li><strong>Expected Value:</strong> ${(item.anomaly.expected_value || 0).toFixed(2)}</li>
+                `;
+            }
+            
+            html += '</ul>';
+
+            if (item.root_cause) {
+                html += '<div class="root-cause"><h4>🔍 Root Cause Analysis</h4>';
+                
+                if (item.root_cause.likely_causes?.length > 0) {
+                    html += '<h5 style="margin-top: 10px; color: #555;">Likely Causes:</h5><ul>';
+                    item.root_cause.likely_causes.forEach(cause => {
+                        html += `<li>${cause}</li>`;
+                    });
+                    html += '</ul>';
+                }
+
+                if (item.root_cause.correlated_metrics?.length > 0) {
+                    html += '<h5 style="margin-top: 10px; color: #555;">Correlated Metrics:</h5><ul>';
+                    item.root_cause.correlated_metrics.forEach(metric => {
+                        html += `<li>${metric}</li>`;
+                    });
+                    html += '</ul>';
+                }
+
+                if (item.root_cause.recent_events?.length > 0) {
+                    html += '<h5 style="margin-top: 10px; color: #555;">Recent Events:</h5>';
+                    html += '<div class="correlated-events">';
+                    item.root_cause.recent_events.forEach(event => {
+                        html += `<div class="correlated-event"><strong>Event:</strong> ${event}</div>`;
+                    });
+                    html += '</div>';
+                }
+
+                if (item.root_cause.remediation_suggestions?.length > 0) {
+                    html += '<h5 style="margin-top: 10px; color: #555;">Remediation Suggestions:</h5><ul>';
+                    item.root_cause.remediation_suggestions.forEach(suggestion => {
+                        html += `<li>${suggestion}</li>`;
+                    });
+                    html += '</ul>';
+                }
+
+                if (item.root_cause.runbook_links?.length > 0) {
+                    html += '<h5 style="margin-top: 10px; color: #555;">Runbooks:</h5><ul>';
+                    item.root_cause.runbook_links.forEach(link => {
+                        html += `<li><a href="${link}" target="_blank" style="color: #667eea;">${link}</a></li>`;
+                    });
+                    html += '</ul>';
+                }
+                
+                html += '</div>'; // Close root-cause div
+            }
+
+            return html;
+        }
+
+        // Toggle details
+        function toggleDetails(id) {
+            const details = document.getElementById(`details-${id}`);
+            details.classList.toggle('active');
+        }
+
+        // Format timestamp
+        function formatTimestamp(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            let relative = '';
+            if (diffMins < 1) {
+                relative = 'Just now';
+            } else if (diffMins < 60) {
+                relative = `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+            } else if (diffHours < 24) {
+                relative = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+            } else {
+                relative = `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+            }
+
+            const formatted = date.toLocaleString();
+            return `${formatted} (${relative})`;
+        }
+
+        // Show/hide loading
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        // Show error
+        function showError(message) {
+            const error = document.getElementById('error');
+            error.textContent = message;
+            error.style.display = 'block';
+        }
+
+        // Hide error
+        function hideError() {
+            document.getElementById('error').style.display = 'none';
+        }
+
+        // Update last update time
+        function updateLastUpdateTime() {
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+        }
+    </script>
+</body>
+</html>
