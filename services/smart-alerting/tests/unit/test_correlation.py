@@ -32,6 +32,7 @@ async def test_correlate_alerts_groups_by_service(correlator, redis_mock):
     alerts = [
         {
             "id": "1",
+            "fingerprint": "fp1",
             "labels": {
                 "alertname": "HighErrorRate",
                 "service": "api-gateway",
@@ -43,6 +44,7 @@ async def test_correlate_alerts_groups_by_service(correlator, redis_mock):
         },
         {
             "id": "2",
+            "fingerprint": "fp2",
             "labels": {
                 "alertname": "HighErrorRate",
                 "service": "api-gateway",

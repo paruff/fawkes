@@ -112,7 +112,7 @@ class AlertCorrelator:
     
     def _generate_group_id(self, grouping_key: str) -> str:
         """Generate unique group ID from grouping key."""
-        hash_obj = hashlib.md5(grouping_key.encode())
+        hash_obj = hashlib.md5(grouping_key.encode(), usedforsecurity=False)
         return f"group-{hash_obj.hexdigest()[:8]}"
     
     def _calculate_priority(self, alerts: List[Dict]) -> float:
@@ -172,7 +172,7 @@ class AlertCorrelator:
             fingerprint = alert.get("fingerprint")
             if not fingerprint:
                 labels = alert.get("labels", {})
-                fingerprint = hashlib.md5(json.dumps(labels, sort_keys=True).encode()).hexdigest()
+                fingerprint = hashlib.md5(json.dumps(labels, sort_keys=True).encode(), usedforsecurity=False).hexdigest()
             
             if fingerprint not in seen_fingerprints:
                 seen_fingerprints.add(fingerprint)
