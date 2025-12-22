@@ -107,6 +107,34 @@ pytest tests/unit -v
 4. **flow_metrics** - Aggregated flow metrics
    - id, date, period_type, throughput, wip, cycle_time_avg, cycle_time_p50, cycle_time_p85, cycle_time_p95
 
+## Prometheus Metrics
+
+The VSM service exposes the following Prometheus metrics at the `/metrics` endpoint:
+
+### Flow Metrics
+- `vsm_work_in_progress{stage}` (Gauge) - Current work in progress by stage
+- `vsm_throughput_per_day{date}` (Counter) - Number of items completed per day
+- `vsm_cycle_time_hours` (Histogram) - Overall cycle time in hours from start to production
+- `vsm_stage_cycle_time_seconds{stage}` (Histogram) - Time spent in each stage in seconds
+- `vsm_lead_time_seconds` (Histogram) - Lead time from backlog to production in seconds
+
+### Activity Metrics
+- `vsm_requests_total{method, endpoint, status}` (Counter) - Total API requests
+- `vsm_work_items_created_total{type}` (Counter) - Work items created by type
+- `vsm_stage_transitions_total{from_stage, to_stage}` (Counter) - Stage transitions
+
+### Grafana Dashboard
+
+A comprehensive flow metrics dashboard is available at:
+- `platform/apps/grafana/dashboards/vsm-flow-metrics.json`
+
+The dashboard includes:
+- **Cumulative Flow Diagram**: WIP by stage over time
+- **Throughput Charts**: Daily and weekly completion trends
+- **Cycle Time Analysis**: Per-stage cycle times and distributions
+- **Lead Time Trends**: P50, P75, P95 percentiles
+- **Bottleneck Detection**: Identify stages with high WIP or slow transitions
+
 ## Deployment
 
 The service is deployed to Kubernetes using ArgoCD. See `platform/apps/vsm-service/` for manifests.

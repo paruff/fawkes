@@ -178,7 +178,99 @@ See [Trivy Dashboard README](README.md) in this directory for details.
 
 ---
 
-### 6. Data Quality Dashboard
+### 6. VSM Flow Metrics Dashboard
+
+**File**: `vsm-flow-metrics.json`  
+**ConfigMap**: Loaded via Grafana provisioning  
+**Namespace**: monitoring
+
+Comprehensive Value Stream Mapping flow metrics dashboard showing WIP, throughput, cycle time, lead time, and bottleneck detection.
+
+#### Panels
+
+- **Flow Metrics Overview**:
+  - Total WIP (Work in Progress): Count across all stages
+  - Throughput: Items completed in last 7 days
+  - Lead Time (P50): Median time from backlog to production
+  - Avg Cycle Time: Average completion time
+
+- **Cumulative Flow Diagram**:
+  - WIP by Stage Over Time: Stacked area chart showing work distribution
+  - Identifies where work accumulates
+
+- **Throughput & Flow**:
+  - Daily Throughput: Bar chart of items completed per day
+  - Weekly Throughput Trend: 7-day rolling average
+
+- **Cycle Time Analysis**:
+  - Cycle Time by Stage: Median time spent in each stage
+  - Stage Cycle Time Distribution: Current stage timings
+
+- **Lead Time Trends**:
+  - Lead Time Percentiles: P50, P75, P95 over time
+
+- **Bottleneck Detection**:
+  - WIP by Stage: Pie chart identifying high-WIP stages
+  - Stage Transition Rate: Flow rate between stages
+  - High WIP Stages: Table of potential bottlenecks
+  - Stage Cycle Time Comparison: Horizontal bar gauge
+
+#### Key Metrics
+
+```promql
+# Work in progress
+vsm_work_in_progress{stage="Development"}
+
+# Throughput
+sum(increase(vsm_throughput_per_day[7d]))
+
+# Lead time percentiles
+histogram_quantile(0.50, sum(rate(vsm_lead_time_seconds_bucket[7d])) by (le))
+
+# Stage cycle time
+histogram_quantile(0.50, sum(rate(vsm_stage_cycle_time_seconds_bucket{stage="Testing"}[7d])) by (le))
+
+# Stage transitions
+sum(rate(vsm_stage_transitions_total{to_stage="Production"}[5m]))
+```
+
+#### Variables
+
+- **time_range**: Time range for metrics aggregation (1h, 6h, 12h, 1d, 7d, 30d)
+
+#### Thresholds
+
+- **WIP**:
+  - 🟢 Green: < 20 items
+  - 🟡 Yellow: 20-50 items
+  - 🟠 Orange: 50-100 items
+  - 🔴 Red: > 100 items
+
+- **Lead Time**:
+  - 🟢 Green: < 24 hours
+  - 🟡 Yellow: 24-168 hours (1-7 days)
+  - 🟠 Orange: 168-336 hours (1-2 weeks)
+  - 🔴 Red: > 336 hours (2+ weeks)
+
+- **Cycle Time**:
+  - 🟢 Green: < 48 hours
+  - 🟡 Yellow: 48-168 hours (2-7 days)
+  - 🟠 Orange: 168-336 hours (1-2 weeks)
+  - 🔴 Red: > 336 hours (2+ weeks)
+
+#### Implementation Notes
+
+Requires:
+1. VSM service running (`services/vsm/`)
+2. Work items being tracked through stages
+3. Prometheus scraping VSM `/metrics` endpoint
+4. ServiceMonitor configured for metrics collection
+
+See [VSM Service README](../../../../services/vsm/README.md) for setup details.
+
+---
+
+### 7. Data Quality Dashboard
 
 **File**: `data-quality.json`  
 **ConfigMap**: Loaded via Grafana provisioning  
