@@ -1,0 +1,20 @@
+# ============================================================================
+# FILE: platform/apps/feedback-service/configmap.yaml
+# PURPOSE: ConfigMap for Feedback Service settings
+# ============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: feedback-service-config
+  namespace: fawkes
+  labels:
+    app: feedback-service
+    component: feedback
+    environment: dev
+    team: platform
+data:
+  # Service configuration
+  LOG_LEVEL: "INFO"
+  # Database configuration (non-sensitive)
+  DB_POOL_MIN_SIZE: "2"
+  DB_POOL_MAX_SIZE: "10"
