@@ -606,7 +606,7 @@ def calculate_lead_time(work_item_id: int, db: Session) -> Optional[float]:
         db: Database session
         
     Returns:
-        Lead time in seconds or None if cannot be calculated
+        Lead time in seconds or None if cannot be calculated or not yet in production
     """
     transitions = (
         db.query(StageTransition)
@@ -616,6 +616,11 @@ def calculate_lead_time(work_item_id: int, db: Session) -> Optional[float]:
     )
     
     if len(transitions) < 2:
+        return None
+    
+    # Verify the last transition is to Production
+    production_stage = db.query(Stage).filter(Stage.name == "Production").first()
+    if not production_stage or transitions[-1].to_stage_id != production_stage.id:
         return None
     
     # Calculate time from first transition to production
