@@ -30,6 +30,8 @@ DATABASE_URL = os.getenv(
     "DATABASE_URL",
     "postgresql://feedback:feedback@db-feedback-dev-rw.fawkes.svc.cluster.local:5432/feedback_db"
 )
+# SECURITY: In production, ADMIN_TOKEN must be set via environment variable
+# This default is ONLY for development/testing purposes
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "admin-secret-token")
 
 # Global database pool
@@ -156,9 +158,11 @@ app = FastAPI(
 )
 
 # Add CORS middleware
+# SECURITY: In production, restrict allow_origins to specific domains
+# Use environment variable ALLOWED_ORIGINS for production configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, restrict to specific origins
+    allow_origins=["*"],  # TODO: Restrict to Backstage origin in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
