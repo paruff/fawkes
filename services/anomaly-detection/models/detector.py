@@ -21,6 +21,9 @@ logger = logging.getLogger(__name__)
 ANOMALY_THRESHOLD = float(os.getenv("ANOMALY_THRESHOLD", "0.7"))
 LOOKBACK_MINUTES = int(os.getenv("LOOKBACK_MINUTES", "60"))
 MIN_SAMPLES = int(os.getenv("MIN_SAMPLES", "10"))
+ZSCORE_THRESHOLD = float(os.getenv("ZSCORE_THRESHOLD", "3.0"))
+IQR_MULTIPLIER = float(os.getenv("IQR_MULTIPLIER", "1.5"))
+CONFIDENCE_LOW_THRESHOLD = float(os.getenv("CONFIDENCE_LOW_THRESHOLD", "0.7"))
 
 # Global state
 models_initialized = False
@@ -262,9 +265,9 @@ def _detect_zscore(timestamps: List[datetime], values: List[float]) -> List[Tupl
     z_scores = np.abs((arr - mean) / std)
     
     anomalies = []
-    # Consider points with |z-score| > 3 as anomalies
+    # Consider points with |z-score| > threshold as anomalies
     for i, z in enumerate(z_scores):
-        if z > 3.0:
+        if z > ZSCORE_THRESHOLD:
             score = min(1.0, z / 5.0)  # Normalize to 0-1
             anomalies.append((timestamps[i], values[i], score, mean, 'zscore'))
     
@@ -288,8 +291,8 @@ def _detect_iqr(timestamps: List[datetime], values: List[float]) -> List[Tuple]:
     if iqr == 0:
         return []
     
-    lower_bound = q1 - 1.5 * iqr
-    upper_bound = q3 + 1.5 * iqr
+    lower_bound = q1 - IQR_MULTIPLIER * iqr
+    upper_bound = q3 + IQR_MULTIPLIER * iqr
     median = np.median(arr)
     
     anomalies = []
@@ -333,7 +336,7 @@ def _detect_rate_of_change(timestamps: List[datetime], values: List[float]) -> L
     anomalies = []
     for i, rate in enumerate(rates):
         z = abs(rate - mean_rate) / std_rate
-        if z > 3.0:
+        if z > ZSCORE_THRESHOLD:
             score = min(1.0, z / 5.0)
             # i+1 because rates are offset by 1
             expected = values[i]  # Previous value
