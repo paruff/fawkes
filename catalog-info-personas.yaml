@@ -1,0 +1,152 @@
+# ============================================================================
+# FILE: catalog-info-personas.yaml
+# PURPOSE: Backstage catalog entries for Fawkes platform user personas
+#          Defines personas as User entities for discovery and reference
+# ============================================================================
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: alex-chen-persona
+  title: Alex Chen - Platform Developer Persona
+  description: |
+    Senior Platform Engineer persona representing the "Infrastructure Guardian" archetype.
+    Expert in Kubernetes, Terraform, and observability. Focused on reliability and developer experience.
+  tags:
+    - persona
+    - platform-engineer
+    - infrastructure
+    - expert-level
+  links:
+    - url: https://github.com/paruff/fawkes/blob/main/docs/research/personas/platform-developer.md
+      title: Full Persona Documentation
+      icon: docs
+  annotations:
+    backstage.io/techdocs-ref: dir:./docs/research/personas
+    persona/role: platform-developer
+    persona/skill-level: expert
+    persona/primary-goals: reliability,self-service,automation
+    persona/pain-points: alert-fatigue,observability-gaps,support-burden
+spec:
+  profile:
+    displayName: Alex Chen
+    email: persona.platform-dev@fawkes.idp
+    picture: https://api.dicebear.com/7.x/avataaars/svg?seed=AlexChen
+  memberOf:
+    - platform-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: maria-rodriguez-persona
+  title: Maria Rodriguez - Application Developer Persona
+  description: |
+    Application Developer persona representing the "Feature Shipper" archetype.
+    Intermediate technical skills, focused on shipping features quickly and reliably.
+    Works primarily with Java/Spring Boot on payment processing services.
+  tags:
+    - persona
+    - application-developer
+    - feature-development
+    - intermediate-level
+  links:
+    - url: https://github.com/paruff/fawkes/blob/main/docs/research/personas/application-developer.md
+      title: Full Persona Documentation
+      icon: docs
+  annotations:
+    backstage.io/techdocs-ref: dir:./docs/research/personas
+    persona/role: application-developer
+    persona/skill-level: intermediate
+    persona/primary-goals: feature-velocity,code-quality,work-life-balance
+    persona/pain-points: deployment-anxiety,troubleshooting,platform-complexity
+spec:
+  profile:
+    displayName: Maria Rodriguez
+    email: persona.app-dev@fawkes.idp
+    picture: https://api.dicebear.com/7.x/avataaars/svg?seed=MariaRodriguez
+  memberOf:
+    - development-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: sarah-kim-persona
+  title: Sarah Kim - Platform Consumer Persona
+  description: |
+    Senior Product Manager persona representing the "Value Navigator" archetype.
+    Technical PM focused on business outcomes, user value, and data-driven decisions.
+    Needs visibility into platform health and feature delivery status.
+  tags:
+    - persona
+    - product-manager
+    - business-stakeholder
+    - platform-consumer
+  links:
+    - url: https://github.com/paruff/fawkes/blob/main/docs/research/personas/platform-consumer.md
+      title: Full Persona Documentation
+      icon: docs
+  annotations:
+    backstage.io/techdocs-ref: dir:./docs/research/personas
+    persona/role: platform-consumer
+    persona/skill-level: beginner-intermediate
+    persona/primary-goals: business-outcomes,visibility,time-to-market
+    persona/pain-points: limited-visibility,lack-of-analytics,long-delivery-cycles
+spec:
+  profile:
+    displayName: Sarah Kim
+    email: persona.product-manager@fawkes.idp
+    picture: https://api.dicebear.com/7.x/avataaars/svg?seed=SarahKim
+  memberOf:
+    - product-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: development-team
+  title: Development Team
+  description: Application development teams building product features
+spec:
+  type: team
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: product-team
+  title: Product Team
+  description: Product management and business stakeholders
+spec:
+  type: team
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: user-personas
+  title: Fawkes User Personas
+  description: |
+    Research-validated user personas for the Fawkes platform.
+    Includes Platform Developer, Application Developer, and Platform Consumer personas
+    based on interviews with 21 participants across different roles.
+  tags:
+    - research
+    - personas
+    - user-experience
+    - product-discovery
+  links:
+    - url: https://github.com/paruff/fawkes/tree/main/docs/research/personas
+      title: Persona Documentation
+      icon: docs
+    - url: https://github.com/paruff/fawkes/blob/main/docs/research/personas/VALIDATION.md
+      title: Persona Validation Report
+      icon: docs
+    - url: https://github.com/paruff/fawkes/blob/main/docs/research/templates/persona.md
+      title: Persona Template
+      icon: docs
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/techdocs-ref: dir:./docs/research/personas
+spec:
+  type: documentation
+  lifecycle: production
+  owner: product-team
+  system: fawkes-platform
