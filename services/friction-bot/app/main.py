@@ -2,7 +2,7 @@
 
 import logging
 import os
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, Request, Form
@@ -57,7 +57,7 @@ class FrictionData(BaseModel):
     description: str = Field(..., description="Detailed description")
     category: str = Field(default="Developer Experience", description="Friction category")
     priority: str = Field(default="medium", description="Priority level")
-    tags: list[str] = Field(default_factory=list, description="Tags for categorization")
+    tags: List[str] = Field(default_factory=list, description="Tags for categorization")
     author: Optional[str] = Field(None, description="User who reported the friction")
 
 
