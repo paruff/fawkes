@@ -128,6 +128,9 @@ validate-at-e2-010: ## Run AT-E2-010 acceptance test validation for Feedback Ana
 validate-at-e3-001: ## Run AT-E3-001 acceptance test validation for Research Infrastructure
 	@./scripts/validate-at-e3-001.sh --namespace $(NAMESPACE)
 
+validate-at-e3-002: ## Run AT-E3-002 acceptance test validation for SPACE Framework Implementation
+	@./scripts/validate-at-e3-002.sh $(NAMESPACE)
+
 clean-local: ## Clean up local K8s deployments
 	@kubectl delete namespace $(NAMESPACE) --ignore-not-found=true
 
