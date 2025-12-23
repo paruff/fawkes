@@ -32,11 +32,22 @@ Personas are fictional but data-driven representations of our users. They help u
 
 ## Current Personas
 
-<!-- List your personas here as you create them -->
-<!-- Example:
-- [Senior Platform Engineer](platform-engineer-senior.md) - Infrastructure guardian focused on reliability
-- [Application Developer](app-developer-mid.md) - Feature shipper focused on velocity
--->
+### Active Personas
+
+- **[Platform Developer](platform-developer.md)** - Alex Chen, "The Infrastructure Guardian"
+  - Senior Platform Engineer focused on reliability, automation, and developer experience
+  - Expert in Kubernetes, Terraform, observability tools
+  - Key pain points: Alert fatigue, developer self-service limitations, observability gaps
+
+- **[Application Developer](application-developer.md)** - Maria Rodriguez, "The Feature Shipper"
+  - Application Developer focused on feature velocity and code quality
+  - Intermediate technical proficiency, strong in Java/Spring Boot
+  - Key pain points: Deployment complexity, difficult troubleshooting, unclear platform capabilities
+
+- **[Platform Consumer](platform-consumer.md)** - Sarah Kim, "The Value Navigator"
+  - Senior Product Manager focused on business outcomes and user value
+  - Technical PM with beginner-to-intermediate platform knowledge
+  - Key pain points: Limited visibility into progress, lack of usage analytics, long time-to-market
 
 ## Persona Lifecycle
 
