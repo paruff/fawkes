@@ -151,7 +151,7 @@ module "vpc" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 19.0" # Stable major; access entries not yet adopted here
+  version = "~> 21.10" # Stable major; access entries not yet adopted here
 
   cluster_version = var.eks_version
   subnet_ids      = module.vpc.private_subnets
