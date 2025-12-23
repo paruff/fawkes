@@ -136,6 +136,9 @@ echo ""
 log_info "Test 1: Checking if DevEx Dashboard ConfigMap exists..."
 if kubectl get configmap devex-dashboard -n "$NAMESPACE" &>/dev/null; then
     record_test_result "Dashboard ConfigMap" "PASS" "devex-dashboard ConfigMap exists in $NAMESPACE"
+    if [ "$VERBOSE" = true ]; then
+        kubectl get configmap devex-dashboard -n "$NAMESPACE" -o yaml | head -20
+    fi
 else
     record_test_result "Dashboard ConfigMap" "FAIL" "devex-dashboard ConfigMap not found in $NAMESPACE"
 fi
