@@ -6,7 +6,110 @@ This directory contains Grafana dashboard JSON definitions for the Fawkes platfo
 
 ## Available Dashboards
 
-### 1. Kubernetes Cluster Health
+### 1. Research Insights Dashboard
+
+**File**: `research-insights-dashboard.json`  
+**ConfigMap**: `platform/apps/prometheus/research-insights-dashboard.yaml`  
+**Namespace**: monitoring
+
+Comprehensive research insights visualization dashboard showing insight trends, categories, validation rates, and time-to-action metrics.
+
+#### Panels
+
+- **Overview Section**:
+  - Total Research Insights: Overall count of captured insights
+  - Validated Insights: Published insights count
+  - Published (Last 7 Days): Recent publication rate
+  - Published (Last 30 Days): Monthly publication rate
+  - Total Categories: Category count
+  - Total Tags: Tag count
+
+- **Status & Priority Analysis**:
+  - Insights by Status: Distribution pie chart (draft, published, archived)
+  - Insights by Priority: Distribution pie chart (low, medium, high, critical)
+  - Insights Status Over Time: Time series trend of status changes
+
+- **Category Analytics**:
+  - Insights by Category: Bar gauge showing count per category
+  - Category Distribution: Donut chart of proportional distribution
+
+- **Validation Metrics**:
+  - Validation Rate by Category: Percentage of published insights per category
+  - Time to Action (Hours): Average time from creation to publication
+
+- **Tag Analytics**:
+  - Top Tags by Usage: Bar gauge of most frequently used tags
+  - Tag Usage Distribution: Donut chart of tag popularity
+
+- **Trend Analysis**:
+  - Published Insights Trend (7 Days): Weekly publication trend
+  - Published Insights Trend (30 Days): Monthly publication trend
+
+#### Key Metrics
+
+```promql
+# Total insights
+research_insights_total
+
+# Validated insights
+research_insights_validated
+
+# Insights by status
+research_insights_by_status{status="published"}
+
+# Insights by category
+research_insights_by_category{category="User Experience"}
+
+# Validation rate
+research_insights_validation_rate{category="User Experience"}
+
+# Time to action (in hours)
+research_insights_time_to_action_seconds{category="User Experience"} / 3600
+
+# Tag usage
+research_tag_usage_count{tag="platform-adoption"}
+
+# Recent publications
+research_insights_published_last_7d
+research_insights_published_last_30d
+```
+
+#### Variables
+
+- **datasource**: Prometheus data source selector
+- **category**: Filter by category (multi-select, with "All" option)
+
+#### Thresholds
+
+- **Published (7 Days)**:
+  - 🔴 Red: 0 insights
+  - 🟡 Yellow: 1-4 insights
+  - 🟢 Green: ≥ 5 insights
+
+- **Validation Rate**:
+  - 🔴 Red: < 50%
+  - 🟡 Yellow: 50-75%
+  - 🟢 Green: ≥ 75%
+
+- **Time to Action**:
+  - 🟢 Green: < 48 hours
+  - 🟡 Yellow: 48-168 hours (2-7 days)
+  - 🟠 Orange: 168-336 hours (1-2 weeks)
+  - 🔴 Red: > 336 hours (2+ weeks)
+
+#### Implementation Notes
+
+Requires:
+1. Insights service running with Prometheus metrics enabled (`services/insights/`)
+2. Prometheus scraping insights service `/metrics` endpoint
+3. ServiceMonitor configured for metrics collection
+4. Data being captured through the insights API
+
+See [Insights Service README](../../../../services/insights/README.md) for setup details.
+
+---
+
+### 2. Kubernetes Cluster Health
 
 **File**: `kubernetes-cluster-health-dashboard.json`  
 **ConfigMap**: `platform/apps/prometheus/kubernetes-cluster-health-dashboard.yaml`  
@@ -40,7 +143,7 @@ kube_pod_status_phase{phase="Running"}
 
 ---
 
-### 2. Platform Components Health
+### 3. Platform Components Health
 
 **File**: `platform-components-health-dashboard.json`  
 **ConfigMap**: `platform/apps/prometheus/platform-components-health-dashboard.yaml`  
@@ -77,7 +180,7 @@ harbor_system_volumes_bytes
 
 ---
 
-### 3. DORA Metrics (Placeholder)
+### 4. DORA Metrics (Placeholder)
 
 **File**: `dora-metrics-dashboard.json`  
 **ConfigMap**: `platform/apps/prometheus/dora-metrics-dashboard.yaml`  
@@ -121,7 +224,7 @@ dora_mttr_seconds
 
 ---
 
-### 4. Application Metrics Template
+### 5. Application Metrics Template
 
 **File**: `application-metrics-template-dashboard.json`  
 **ConfigMap**: `platform/apps/prometheus/application-metrics-template-dashboard.yaml`  
@@ -169,7 +272,7 @@ container_memory_working_set_bytes{namespace="$namespace"}
 
 ---
 
-### 5. Trivy Security Dashboard
+### 6. Trivy Security Dashboard
 
 **File**: `trivy-security-dashboard.json`  
 **Purpose**: Container security scanning visibility
@@ -178,7 +281,7 @@ See [Trivy Dashboard README](README.md) in this directory for details.
 
 ---
 
-### 6. VSM Flow Metrics Dashboard
+### 7. VSM Flow Metrics Dashboard
 
 **File**: `vsm-flow-metrics.json`  
 **ConfigMap**: Loaded via Grafana provisioning  
@@ -270,7 +373,7 @@ See [VSM Service README](../../../../services/vsm/README.md) for setup details.
 
 ---
 
-### 7. Data Quality Dashboard
+### 8. Data Quality Dashboard
 
 **File**: `data-quality.json`  
 **ConfigMap**: Loaded via Grafana provisioning  
@@ -356,7 +459,7 @@ See [Data Quality Service README](../../../../services/data-quality/README.md) f
 
 ---
 
-### 8. AI Observability Dashboard
+### 9. AI Observability Dashboard
 
 **File**: `ai-observability.json`  
 **ConfigMap**: Loaded via Grafana provisioning  
