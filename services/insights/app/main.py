@@ -18,6 +18,7 @@ from app.schemas import (
     CategoryCreate, CategoryUpdate, CategoryResponse,
     InsightStatistics, HealthResponse
 )
+from app.prometheus_exporter import update_prometheus_metrics
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -63,8 +64,10 @@ async def health_check(db: Session = Depends(get_db)):
 
 # Metrics endpoint
 @app.get("/metrics", tags=["Metrics"])
-async def metrics():
+async def metrics(db: Session = Depends(get_db)):
     """Prometheus metrics endpoint."""
+    # Update metrics before returning
+    update_prometheus_metrics(db)
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 
