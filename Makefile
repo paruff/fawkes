@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-research-structure validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -23,6 +23,9 @@ validate: ## Validate manifests and run policy checks
 
 validate-resources: ## Validate resource usage stays within 70% target
 	@./scripts/validate-resource-usage.sh --namespace $(NAMESPACE) --target-cpu 70 --target-memory 70
+
+validate-research-structure: ## Validate user research repository structure
+	@python3 scripts/validate-research-structure.py
 
 sync: ## Sync to GitOps for environment (ENVIRONMENT=dev|prod)
 	@./infra/local-dev/sync-to-argocd.sh $(ENVIRONMENT)
