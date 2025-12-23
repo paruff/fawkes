@@ -15,6 +15,9 @@ jobs:
   pre-commit:
     name: Run Pre-commit Hooks
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,6 +32,7 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
+          cache-dependency-path: 'requirements*.txt'
 
       - name: Install Python dependencies
         run: |
@@ -42,6 +46,17 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.9.5
+
+      # Cache Terraform providers
+      - name: Cache Terraform providers
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.terraform.d/plugin-cache
+            **/.terraform/providers
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+          restore-keys: |
+            ${{ runner.os }}-terraform-
 
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
@@ -196,6 +211,8 @@ jobs:
   gitops-validation:
     name: GitOps & ArgoCD Validation
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -241,6 +258,8 @@ jobs:
   idp-validation:
     name: IDP Components Validation
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -249,6 +268,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'requirements*.txt'
 
       - name: Install yq
         run: |

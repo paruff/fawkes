@@ -1,0 +1,112 @@
+# Dependabot configuration for automatic updates
+# Keeps GitHub Actions and other dependencies up-to-date
+# Ref: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+
+version: 2
+updates:
+  # GitHub Actions - Keep action versions up-to-date
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "security"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    reviewers:
+      - "paruff"
+    # Group all patch updates into a single PR
+    groups:
+      github-actions-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+
+  # Python dependencies - Root requirements.txt
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  # Terraform - Main infrastructure
+  - package-ecosystem: "terraform"
+    directory: "/infra/terraform"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "terraform"
+      - "infrastructure"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  # Terraform - AWS infrastructure
+  - package-ecosystem: "terraform"
+    directory: "/infra/aws"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "terraform"
+      - "infrastructure"
+      - "aws"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  # Terraform - Azure infrastructure
+  - package-ecosystem: "terraform"
+    directory: "/infra/azure"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "terraform"
+      - "infrastructure"
+      - "azure"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  # Docker - MCP K8s Server
+  - package-ecosystem: "docker"
+    directory: "/services/mcp-k8s-server"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "docker"
+      - "mcp-k8s-server"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
