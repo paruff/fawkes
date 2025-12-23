@@ -144,7 +144,7 @@ jobs:
       # ========================================================================
       - name: Upload pre-commit results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: pre-commit-results
           path: pre-commit-output.txt
@@ -318,7 +318,7 @@ jobs:
 
       - name: Upload MkDocs build log
         if: always() && hashFiles('mkdocs-build.txt') != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: mkdocs-build-log
           path: mkdocs-build.txt
