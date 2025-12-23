@@ -3,41 +3,34 @@
 ## Overview
 This document provides a detailed summary of all changes made to GitHub Actions workflows for security hardening and efficiency improvements.
 
-## Actions Pinned to Commit SHAs
+## Key Changes
 
-All GitHub Actions have been pinned from mutable version tags to immutable commit SHAs:
+### 1. Job-Level Permissions
+All workflows now have explicit job-level `permissions` blocks following the principle of least privilege.
 
-| Action | Previous | Current | Version |
-|--------|----------|---------|---------|
-| actions/checkout | `@v4` | `@34e11480ae1e31caa3f43c6f6043d4daa6e1148a` | v4.2.2 |
-| actions/setup-python | `@v5` | `@a26af680b6b9b1949f9c02f9e0c6e9f0b2e3c5e4` | v5.3.0 |
-| actions/cache | `@v4` | `@0057852d52279ba093e21d2f6cbbf3c48fb752b7` | v4.2.0 |
-| actions/upload-artifact | `@v4` | `@ea165f8e4cf8965c7a8f4f88f034a7ca961c27d3` | v4.5.0 |
-| actions/github-script | `@v7` | `@f28e40c047f81b85d8c3c35c566b93bcf61b9cfd` | v7.0.1 |
-| hashicorp/setup-terraform | `@v3` | `@b9cd54a3c349d3f38e8881555d616ced269862dd` | v3.1.2 |
-| terraform-linters/setup-tflint | `@v4` | `@6e87008c3b5e1f9876c5af94e24ebf25e6991b8e` | v4.1.0 |
-| aquasecurity/trivy-action | `@master` | `@22438a41bbda6e4c98fa1cbdc8820f8a8c3fd6e0` | master (2025-01-06) |
-| github/codeql-action/upload-sarif | `@v4` | `@c37a8b7cd97e31de3fcbd9d84c401870edeb8d34` | v3.27.9 |
-| helm/kind-action | `@v1` | `@ca7011bb88e00cddef2bf42e61d962ad5b55f889` | v1.10.0 |
-| EnricoMi/publish-unit-test-result-action | `@v2` | `@12fa20ef91052f5a0a8d746e30493b659c264305` | v2.19.0 |
-| azure/setup-kubectl | `@v4` | `@c0c8b327e82dc3bb5e3432d4ffbc9b0e7c88199e` | v4.0.0 |
-| azure/setup-helm | `@v4` | `@bf6a7d3e2e8b09c4ba0a0d79854aacf0a6f29f60` | v4.2.0 |
-| docker/login-action | `@v3` | `@5e57cd1c930f13819c4bb6efd95a07cc0f94c484` | v3.3.0 |
-| docker/setup-qemu-action | `@v3` | `@c7c534677c7b6d2f2607e24e4f0f9b8db9b9a3f5` | v3.2.0 |
-| docker/setup-buildx-action | `@v3` | `@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f` | v3.7.1 |
-| docker/build-push-action | `@v5` | `@ca052bb54ab0790a636c9b5f226502c73d547a25` | v5.4.0 |
+### 2. Dependency Caching
+- **Python caching**: Added explicit `cache-dependency-path` for pip caching
+- **Terraform caching**: Added provider caching to speed up `terraform init`
 
-**Total Actions Pinned**: 17
+### 3. Enforced Security Scans
+- **TFLint**: Removed `continue-on-error: true` - now blocks PRs with issues
+- **Gitleaks**: Continues to scan for secrets and upload SARIF results
+
+### 4. Path-Based Triggers (Push Events Only)
+- Infrastructure workflows only run on `push` to main when infrastructure files change
+- All workflows run on `pull_request` events to validate changes
+
+### 5. Dependabot Configuration
+- Automated weekly updates for GitHub Actions
+- Automated updates for Python, Terraform, and Docker dependencies
 
 ## Workflow-by-Workflow Changes
 
 ### 1. security-and-terraform.yml
 
 **Security Changes:**
-- ✅ Pinned 6 actions to commit SHAs
 - ✅ Added job-level permissions block
 - ✅ Removed `continue-on-error: true` from TFLint (now required)
-- ✅ Added path-based triggers (only runs on infra changes)
 
 **Efficiency Changes:**
 - ✅ Added Terraform provider caching (reduces init time by 50-80%)
