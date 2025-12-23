@@ -99,3 +99,39 @@
           select: pullRequests
           select_by_pk: pullRequest
           select_aggregate: pullRequestsAggregate
+
+# Insights Database Tables
+- database: insights
+  tables:
+    # Insights
+    - table:
+        schema: public
+        name: insights
+      configuration:
+        custom_name: insights
+        custom_root_fields:
+          select: insights
+          select_by_pk: insight
+          select_aggregate: insightsAggregate
+    
+    # Categories
+    - table:
+        schema: public
+        name: categories
+      configuration:
+        custom_name: insightCategories
+        custom_root_fields:
+          select: insightCategories
+          select_by_pk: insightCategory
+          select_aggregate: insightCategoriesAggregate
+    
+    # Tags
+    - table:
+        schema: public
+        name: tags
+      configuration:
+        custom_name: insightTags
+        custom_root_fields:
+          select: insightTags
+          select_by_pk: insightTag
+          select_aggregate: insightTagsAggregate
