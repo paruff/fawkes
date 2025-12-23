@@ -5,6 +5,10 @@ metadata:
   namespace: monitoring
   labels:
     prometheus: kube-prometheus
+  annotations:
+    description: "Alerting rules for DevEx Dashboard metrics"
+    # TODO: Replace hardcoded dashboard URL with environment-specific value
+    dashboard_url: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
 data:
   devex-alerts.yaml: |
     groups:
