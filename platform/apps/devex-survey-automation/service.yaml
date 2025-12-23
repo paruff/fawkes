@@ -1,0 +1,21 @@
+# ============================================================================
+# FILE: platform/apps/devex-survey-automation/service.yaml
+# PURPOSE: Kubernetes Service for DevEx Survey Automation
+# ============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: devex-survey-automation
+  namespace: fawkes
+  labels:
+    app: devex-survey-automation
+    component: surveys
+spec:
+  type: ClusterIP
+  selector:
+    app: devex-survey-automation
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
