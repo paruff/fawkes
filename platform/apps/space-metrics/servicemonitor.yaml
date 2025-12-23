@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: space-metrics
+  namespace: monitoring
+  labels:
+    app: space-metrics
+    component: devex
+spec:
+  selector:
+    matchLabels:
+      app: space-metrics
+  namespaceSelector:
+    matchNames:
+    - fawkes-local
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
