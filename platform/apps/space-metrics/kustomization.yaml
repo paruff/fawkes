@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: fawkes-local
+
+resources:
+- deployment.yaml
+- service.yaml
+- serviceaccount.yaml
+- configmap.yaml
+- secrets.yaml
+- servicemonitor.yaml
+- ingress.yaml
+
+commonLabels:
+  app: space-metrics
+  component: devex
+  managed-by: kustomize
