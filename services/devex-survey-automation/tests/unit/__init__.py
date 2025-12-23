@@ -1,3 +1,3 @@
 """
-Unit tests for unit test directory
+Unit test package for DevEx Survey Automation Service
 """
