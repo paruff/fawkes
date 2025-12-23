@@ -1,0 +1,24 @@
+# ============================================================================
+# FILE: platform/apps/devex-survey-automation/kustomization.yaml
+# PURPOSE: Kustomize configuration for DevEx Survey Automation
+# ============================================================================
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: fawkes
+
+resources:
+  - serviceaccount.yaml
+  - secrets.yaml
+  - database.yaml
+  - deployment.yaml
+  - service.yaml
+  - servicemonitor.yaml
+  - cronjob-pulse-weekly.yaml
+  - cronjob-pulse-reminders.yaml
+  - cronjob-quarterly.yaml
+
+commonLabels:
+  app.kubernetes.io/name: devex-survey-automation
+  app.kubernetes.io/component: surveys
+  app.kubernetes.io/part-of: fawkes-platform
