@@ -1,5 +1,3 @@
-data "azurerm_subscription" "current" {}
-
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.cluster_name
   location            = azurerm_resource_group.rg.location
