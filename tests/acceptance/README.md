@@ -31,6 +31,8 @@ This directory contains acceptance test runners for Fawkes platform validation.
 | AT-E2-004 | Data Quality | Great Expectations monitoring | ✅ Implemented |
 | AT-E2-005 | VSM | Value Stream Mapping tracking service | ✅ Implemented |
 | AT-E2-008 | Unified API | Unified GraphQL Data API deployed | ✅ Implemented |
+| AT-E2-009 | AI Observability | AI-powered anomaly detection | ✅ Implemented |
+| AT-E2-010 | Discovery Foundation | Feedback Analytics Dashboard | ✅ Implemented |
 
 ## Usage
 
@@ -1451,6 +1453,221 @@ kubectl port-forward -n fawkes svc/hasura 8080:8080
 - Apply metadata: `hasura metadata apply`
 - Check role configuration in Hasura console
 - Test with different x-hasura-role headers
+
+## AT-E2-010: Feedback Analytics Dashboard
+
+### Acceptance Criteria
+
+- [x] Feedback analytics dashboard created
+- [x] NPS trends visible
+- [x] Feedback categorization shown
+- [x] Sentiment analysis working
+- [x] Top issues highlighted
+- [x] Metrics exported to Prometheus
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e2-010.sh`)
+    - AC1: Feedback analytics dashboard created
+      - Dashboard file exists at `platform/apps/grafana/dashboards/feedback-analytics.json`
+      - Dashboard JSON is valid
+      - Dashboard has correct title "Feedback Analytics"
+      - Dashboard has sufficient panels (>10)
+    - AC2: NPS trends visible
+      - NPS score panel exists
+      - NPS trend panel exists
+      - NPS components panel exists (promoters/passives/detractors)
+    - AC3: Feedback categorization shown
+      - Category panel exists
+      - Rating distribution panel exists
+    - AC4: Sentiment analysis working
+      - Sentiment module exists (`services/feedback/app/sentiment.py`)
+      - VADER dependency specified in requirements.txt
+      - Sentiment fields in database schema
+      - Sentiment panels in dashboard
+    - AC5: Top issues highlighted
+      - Top issues panel exists
+      - Low-rated feedback panel exists
+    - AC6: Metrics exported to Prometheus
+      - Metrics module exists (`services/feedback/app/metrics.py`)
+      - All required metrics defined (nps_score, nps_promoters_percentage, nps_detractors_percentage, feedback_response_rate, feedback_submissions_total, feedback_sentiment_score)
+      - Metrics integrated in main application
+    - Generates JSON test report
+
+2. **BDD Tests** (`tests/bdd/features/feedback-widget.feature`)
+    - Feedback service deployment and health
+    - Database cluster operational
+    - Feedback submission with validation
+    - Authorization and admin endpoints
+    - Feedback status management
+    - Statistics endpoint
+    - Ingress configuration
+    - Backstage proxy configuration
+    - Prometheus metrics exposure
+    - Resource limits and security
+
+### Feedback Analytics Features
+
+The feedback analytics system includes:
+
+#### NPS Metrics
+- **NPS Score**: -100 to +100 scale, calculated from 1-5 star ratings
+  - Promoters: 5 stars (would recommend)
+  - Passives: 4 stars (satisfied but not enthusiastic)
+  - Detractors: 1-3 stars (unhappy customers)
+- **Formula**: NPS = (% Promoters - % Detractors) × 100
+- **Tracking periods**: overall, last_30d, last_90d
+
+#### Sentiment Analysis
+- **AI-powered analysis** using VADER (Valence Aware Dictionary and sEntiment Reasoner)
+- **Automatic classification**: positive (≥0.05), neutral (-0.05 to 0.05), negative (≤-0.05)
+- **Compound score**: -1.0 (most negative) to +1.0 (most positive)
+- Stored with each feedback submission
+
+#### Dashboard Panels (25 total)
+1. **Key Metrics Overview**: NPS Score, Total Feedback, Response Rate, Average Rating
+2. **NPS Breakdown**: NPS Trend (90-day), NPS Components Distribution
+3. **Feedback Volume & Categories**: Volume Over Time, Feedback by Category
+4. **Rating Distribution**: 1-5 star distribution, Rating Trend
+5. **Sentiment Analysis**: Sentiment Distribution, Sentiment by Category
+6. **Response Tracking**: Status Distribution, Response Rate Trend
+7. **Top Issues & Insights**: Top Categories, Low-Rated Feedback
+
+### Test Reports
+
+Test reports are generated in JSON format at:
+```
+reports/at-e2-010-validation-YYYYMMDD-HHMMSS.json
+```
+
+### Validation Commands
+
+Run the test:
+
+```bash
+# Run via test runner
+./tests/acceptance/run-test.sh AT-E2-010
+
+# Run via Makefile
+make validate-at-e2-010
+
+# Run directly
+./scripts/validate-at-e2-010.sh --namespace fawkes
+
+# Run with verbose output
+./scripts/validate-at-e2-010.sh --namespace fawkes --verbose
+
+# Run BDD tests
+pytest tests/bdd -k "feedback" -v --tb=short
+```
+
+### Feedback Service API Endpoints
+
+The feedback service provides:
+
+#### Public Endpoints
+- `POST /api/v1/feedback` - Submit feedback (automatically analyzes sentiment)
+- `GET /health` - Health check
+
+#### Admin Endpoints (require Bearer token)
+- `GET /api/v1/feedback` - List all feedback (paginated, includes sentiment)
+- `PUT /api/v1/feedback/{id}/status` - Update feedback status
+- `GET /api/v1/feedback/stats` - Get aggregated statistics
+- `POST /api/v1/metrics/refresh` - Manually refresh Prometheus metrics
+
+#### Metrics
+- `GET /metrics` - Prometheus metrics endpoint
+
+### Prerequisites
+
+- kubectl with cluster access
+- Feedback service deployed in namespace `fawkes`
+- PostgreSQL database cluster (db-feedback-dev)
+- Grafana dashboard configured
+- Python 3 (for JSON validation)
+- pytest (for BDD tests)
+
+### Troubleshooting
+
+**Feedback service not accessible:**
+```bash
+# Check pod status
+kubectl get pods -n fawkes -l app=feedback-service
+
+# Check service
+kubectl get svc feedback-service -n fawkes
+
+# Check ingress
+kubectl get ingress feedback-service -n fawkes
+
+# Port forward for testing
+kubectl port-forward -n fawkes svc/feedback-service 8080:8000
+```
+
+**PostgreSQL connection failed:**
+```bash
+# Check PostgreSQL cluster
+kubectl get cluster db-feedback-dev -n fawkes
+
+# Check PostgreSQL pods
+kubectl get pods -n fawkes -l "cnpg.io/cluster=db-feedback-dev"
+
+# Test connection
+kubectl exec -n fawkes deployment/feedback-service -- \
+  curl -f http://db-feedback-dev-rw:5432
+```
+
+**Dashboard not found in Grafana:**
+- Verify dashboard JSON file exists: `platform/apps/grafana/dashboards/feedback-analytics.json`
+- Check if dashboard is loaded in Grafana ConfigMap
+- Access Grafana UI and manually import the dashboard
+- Check Grafana logs for import errors
+
+**Sentiment analysis not working:**
+- Verify VADER dependency installed: `grep vaderSentiment services/feedback/requirements.txt`
+- Check sentiment module exists: `services/feedback/app/sentiment.py`
+- Review feedback service logs for sentiment analysis errors
+- Test sentiment API by submitting feedback with comments
+
+**Metrics not appearing in Prometheus:**
+- Check metrics endpoint: `curl http://feedback-service:8000/metrics`
+- Verify ServiceMonitor exists for feedback service
+- Check Prometheus targets configuration
+- Manually refresh metrics: `curl -X POST http://feedback-service:8000/api/v1/metrics/refresh`
+
+### Example Usage
+
+Submit feedback with sentiment analysis:
+```bash
+curl -X POST http://feedback-service.fawkes.svc:8000/api/v1/feedback \
+  -H "Content-Type: application/json" \
+  -d '{
+    "rating": 5,
+    "category": "UI",
+    "comment": "Great user interface! Love the new design.",
+    "email": "user@example.com",
+    "page_url": "https://backstage.example.com/catalog"
+  }'
+```
+
+Response includes sentiment:
+```json
+{
+  "id": 1,
+  "rating": 5,
+  "category": "UI",
+  "comment": "Great user interface! Love the new design.",
+  "sentiment": "positive",
+  "sentiment_compound": 0.836,
+  "status": "open",
+  "created_at": "2025-12-23T12:00:00Z"
+}
+```
+
+View metrics:
+```bash
+curl http://feedback-service:8000/metrics | grep -E "nps_|feedback_|sentiment"
+```
 
 ## Generating Reports
 
