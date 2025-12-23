@@ -1,0 +1,651 @@
+{
+  "dashboard": {
+    "title": "Research Insights Dashboard",
+    "tags": ["research", "insights", "analytics", "trends"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "30s",
+    "description": "Research insights visualization dashboard showing insight trends, categories, validation rates, and time-to-action metrics",
+    "time": {
+      "from": "now-7d",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["30s", "1m", "5m", "15m", "30m", "1h"],
+      "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "7d", "30d"]
+    },
+    "templating": {
+      "list": [
+        {
+          "name": "datasource",
+          "type": "datasource",
+          "query": "prometheus",
+          "current": {
+            "text": "Prometheus",
+            "value": "prometheus"
+          }
+        },
+        {
+          "name": "category",
+          "type": "query",
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "query": "label_values(research_insights_by_category, category)",
+          "multi": true,
+          "includeAll": true,
+          "allValue": ".*",
+          "current": {
+            "text": "All",
+            "value": "$__all"
+          }
+        }
+      ]
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Research Insights Overview",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 0, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 2,
+        "title": "Total Research Insights",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 1, "w": 4, "h": 5},
+        "description": "Total number of research insights captured in the system",
+        "targets": [
+          {
+            "expr": "research_insights_total",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "blue", "value": null}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 3,
+        "title": "Validated Insights",
+        "type": "stat",
+        "gridPos": {"x": 4, "y": 1, "w": 4, "h": 5},
+        "description": "Number of insights that have been validated and published",
+        "targets": [
+          {
+            "expr": "research_insights_validated",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 4,
+        "title": "Published (Last 7 Days)",
+        "type": "stat",
+        "gridPos": {"x": 8, "y": 1, "w": 4, "h": 5},
+        "description": "Insights published in the last 7 days",
+        "targets": [
+          {
+            "expr": "research_insights_published_last_7d",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 1},
+                {"color": "green", "value": 5}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 5,
+        "title": "Published (Last 30 Days)",
+        "type": "stat",
+        "gridPos": {"x": 12, "y": 1, "w": 4, "h": 5},
+        "description": "Insights published in the last 30 days",
+        "targets": [
+          {
+            "expr": "research_insights_published_last_30d",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 5},
+                {"color": "green", "value": 20}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 6,
+        "title": "Total Categories",
+        "type": "stat",
+        "gridPos": {"x": 16, "y": 1, "w": 4, "h": 5},
+        "description": "Total number of insight categories",
+        "targets": [
+          {
+            "expr": "research_categories_total",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "purple", "value": null}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 7,
+        "title": "Total Tags",
+        "type": "stat",
+        "gridPos": {"x": 20, "y": 1, "w": 4, "h": 5},
+        "description": "Total number of insight tags",
+        "targets": [
+          {
+            "expr": "research_tags_total",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "orange", "value": null}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 8,
+        "title": "Insights by Status",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 6, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 9,
+        "title": "Insights by Status",
+        "type": "piechart",
+        "gridPos": {"x": 0, "y": 7, "w": 8, "h": 8},
+        "description": "Distribution of insights by status (draft, published, archived)",
+        "targets": [
+          {
+            "expr": "research_insights_by_status",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "legendFormat": "{{status}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short"
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": ["value", "percent"]
+          },
+          "pieType": "pie",
+          "displayLabels": ["name", "percent"]
+        }
+      },
+      {
+        "id": 10,
+        "title": "Insights by Priority",
+        "type": "piechart",
+        "gridPos": {"x": 8, "y": 7, "w": 8, "h": 8},
+        "description": "Distribution of insights by priority level",
+        "targets": [
+          {
+            "expr": "research_insights_by_priority",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "legendFormat": "{{priority}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {
+              "mode": "palette-classic"
+            }
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": ["value", "percent"]
+          },
+          "pieType": "pie",
+          "displayLabels": ["name", "percent"]
+        }
+      },
+      {
+        "id": 11,
+        "title": "Insights Status Over Time",
+        "type": "timeseries",
+        "gridPos": {"x": 16, "y": 7, "w": 8, "h": 8},
+        "description": "Trend of insights by status over time",
+        "targets": [
+          {
+            "expr": "research_insights_by_status",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "legendFormat": "{{status}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 10,
+              "showPoints": "auto",
+              "stacking": {
+                "mode": "none"
+              }
+            }
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi"
+          }
+        }
+      },
+      {
+        "id": 12,
+        "title": "Insights by Category",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 15, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 13,
+        "title": "Insights by Category",
+        "type": "bargauge",
+        "gridPos": {"x": 0, "y": 16, "w": 12, "h": 8},
+        "description": "Number of insights in each category",
+        "targets": [
+          {
+            "expr": "research_insights_by_category{category=~\"$category\"}",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "legendFormat": "{{category}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 10},
+                {"color": "orange", "value": 25},
+                {"color": "red", "value": 50}
+              ]
+            }
+          }
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "showUnfilled": true
+        }
+      },
+      {
+        "id": 14,
+        "title": "Category Distribution",
+        "type": "piechart",
+        "gridPos": {"x": 12, "y": 16, "w": 12, "h": 8},
+        "description": "Proportional distribution of insights across categories",
+        "targets": [
+          {
+            "expr": "research_insights_by_category{category=~\"$category\"}",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "legendFormat": "{{category}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short"
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": ["value", "percent"]
+          },
+          "pieType": "donut",
+          "displayLabels": ["percent"]
+        }
+      },
+      {
+        "id": 15,
+        "title": "Validation Metrics",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 24, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 16,
+        "title": "Validation Rate by Category",
+        "type": "bargauge",
+        "gridPos": {"x": 0, "y": 25, "w": 12, "h": 8},
+        "description": "Percentage of insights validated (published) in each category",
+        "targets": [
+          {
+            "expr": "research_insights_validation_rate{category=~\"$category\"}",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "legendFormat": "{{category}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 50},
+                {"color": "green", "value": 75}
+              ]
+            }
+          }
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "lcd",
+          "showUnfilled": true
+        }
+      },
+      {
+        "id": 17,
+        "title": "Time to Action (Hours)",
+        "type": "bargauge",
+        "gridPos": {"x": 12, "y": 25, "w": 12, "h": 8},
+        "description": "Average time from insight creation to publication by category (in hours)",
+        "targets": [
+          {
+            "expr": "research_insights_time_to_action_seconds{category=~\"$category\"} / 3600",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "legendFormat": "{{category}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "h",
+            "min": 0,
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 48},
+                {"color": "orange", "value": 168},
+                {"color": "red", "value": 336}
+              ]
+            }
+          }
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "lcd",
+          "showUnfilled": true
+        }
+      },
+      {
+        "id": 18,
+        "title": "Tag Analytics",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 33, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 19,
+        "title": "Top Tags by Usage",
+        "type": "bargauge",
+        "gridPos": {"x": 0, "y": 34, "w": 12, "h": 8},
+        "description": "Most frequently used tags across all insights",
+        "targets": [
+          {
+            "expr": "topk(10, research_tag_usage_count)",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "legendFormat": "{{tag}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"}
+          }
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "showUnfilled": true
+        }
+      },
+      {
+        "id": 20,
+        "title": "Tag Usage Distribution",
+        "type": "piechart",
+        "gridPos": {"x": 12, "y": 34, "w": 12, "h": 8},
+        "description": "Distribution of tag usage across top tags",
+        "targets": [
+          {
+            "expr": "topk(10, research_tag_usage_count)",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "legendFormat": "{{tag}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short"
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": ["value", "percent"]
+          },
+          "pieType": "donut",
+          "displayLabels": ["name", "percent"]
+        }
+      },
+      {
+        "id": 21,
+        "title": "Trend Analysis",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 42, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 22,
+        "title": "Published Insights Trend (7 Days)",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 43, "w": 12, "h": 8},
+        "description": "Trend of published insights over the last 7 days",
+        "targets": [
+          {
+            "expr": "research_insights_published_last_7d",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "legendFormat": "Published (7d)"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 20,
+              "showPoints": "auto",
+              "lineWidth": 2
+            },
+            "color": {"mode": "palette-classic"}
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi"
+          }
+        }
+      },
+      {
+        "id": 23,
+        "title": "Published Insights Trend (30 Days)",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 43, "w": 12, "h": 8},
+        "description": "Trend of published insights over the last 30 days",
+        "targets": [
+          {
+            "expr": "research_insights_published_last_30d",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "legendFormat": "Published (30d)"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "fillOpacity": 20,
+              "showPoints": "auto",
+              "lineWidth": 2
+            },
+            "color": {"mode": "palette-classic"}
+          }
+        },
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "multi"
+          }
+        }
+      }
+    ]
+  },
+  "folderId": 0,
+  "overwrite": true
+}
