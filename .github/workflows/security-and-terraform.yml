@@ -13,6 +13,9 @@ permissions:
 jobs:
   validate-and-scan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -22,6 +25,17 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.9.5
+
+      # Cache Terraform providers
+      - name: Cache Terraform providers
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.terraform.d/plugin-cache
+            **/.terraform/providers
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+          restore-keys: |
+            ${{ runner.os }}-terraform-
 
       - name: Terraform fmt check (non-blocking)
         run: terraform fmt -check -recursive || echo "⚠️ Formatting issues found"
@@ -42,7 +56,7 @@ jobs:
             popd >/dev/null
           done
 
-      # Optional: static linting for Terraform
+      # Static linting for Terraform (required on PRs)
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
         with:
@@ -56,7 +70,6 @@ jobs:
 
       - name: Run TFLint (recursive)
         run: tflint --recursive
-        continue-on-error: true
 
       # 2️⃣ Secret scanning (install and run Gitleaks directly to avoid action input quirks)
       - name: Setup Gitleaks

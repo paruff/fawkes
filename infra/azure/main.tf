@@ -94,7 +94,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   # Private cluster configuration
-  private_cluster_enabled = false
+  private_cluster_enabled = var.private_cluster_enabled
 
   # Allow access from your current IPv4 address
   api_server_access_profile {
