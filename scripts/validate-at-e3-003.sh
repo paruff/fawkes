@@ -173,7 +173,7 @@ fi
 
 # Test 4: Dashboard has team filtering variable
 log_info "Test 4: Checking if Dashboard has team-level filtering..."
-if echo "$DASHBOARD_JSON" | grep -q '"name":\s*"team"' && echo "$DASHBOARD_JSON" | grep -q '"type":\s*"query"'; then
+if echo "$DASHBOARD_JSON" | grep -q '"name":[[:space:]]*"team"' && echo "$DASHBOARD_JSON" | grep -q '"type":[[:space:]]*"query"'; then
     record_test_result "Team Filtering" "PASS" "Dashboard has team variable for filtering"
 else
     record_test_result "Team Filtering" "FAIL" "Dashboard missing team filtering variable"
@@ -282,7 +282,11 @@ echo "=============================================="
 echo "Total Tests:  $TOTAL_TESTS"
 echo "Passed:       $PASSED_TESTS"
 echo "Failed:       $FAILED_TESTS"
-echo "Success Rate: $(awk "BEGIN {printf \"%.2f\", ($PASSED_TESTS/$TOTAL_TESTS)*100}")%"
+if [ $TOTAL_TESTS -gt 0 ]; then
+    echo "Success Rate: $(awk "BEGIN {printf \"%.2f\", ($PASSED_TESTS/$TOTAL_TESTS)*100}")%"
+else
+    echo "Success Rate: N/A (no tests run)"
+fi
 echo "=============================================="
 echo ""
 
