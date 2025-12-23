@@ -125,7 +125,7 @@ resource "aws_security_group" "all_worker_mgmt" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  version = "~> 6.5"
 
   name                 = "fawkes-vpc"
   cidr                 = var.vpc_cidr
