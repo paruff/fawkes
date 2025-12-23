@@ -1,0 +1,203 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: devex-alerting-rules
+  namespace: monitoring
+  labels:
+    prometheus: kube-prometheus
+data:
+  devex-alerts.yaml: |
+    groups:
+      - name: devex_health
+        interval: 5m
+        rules:
+          - alert: DevExHealthScoreLow
+            expr: space_devex_health_score < 60
+            for: 15m
+            labels:
+              severity: warning
+              component: devex
+            annotations:
+              summary: "DevEx Health Score is low"
+              description: "Developer Experience health score ({{ $value }}) is below 60 for team {{ $labels.team }}. This indicates declining developer satisfaction and productivity."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+          - alert: DevExHealthScoreCritical
+            expr: space_devex_health_score < 50
+            for: 10m
+            labels:
+              severity: critical
+              component: devex
+            annotations:
+              summary: "DevEx Health Score is critical"
+              description: "Developer Experience health score ({{ $value }}) is below 50 for team {{ $labels.team }}. Immediate action required."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+      - name: devex_satisfaction
+        interval: 5m
+        rules:
+          - alert: NPSScoreLow
+            expr: space_nps_score < 40
+            for: 30m
+            labels:
+              severity: warning
+              component: devex
+            annotations:
+              summary: "NPS score is low"
+              description: "Net Promoter Score ({{ $value }}) is below 40 for team {{ $labels.team }}. Developers are not satisfied with the platform."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+          - alert: HighBurnoutRate
+            expr: space_burnout_percentage > 0.30
+            for: 30m
+            labels:
+              severity: critical
+              component: devex
+            annotations:
+              summary: "High developer burnout rate"
+              description: "{{ $value | humanizePercentage }} of developers in team {{ $labels.team }} are reporting burnout symptoms. This is above the 30% critical threshold."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+          - alert: SatisfactionRatingLow
+            expr: space_satisfaction_rating_avg < 3.0
+            for: 30m
+            labels:
+              severity: warning
+              component: devex
+            annotations:
+              summary: "Platform satisfaction rating is low"
+              description: "Average satisfaction rating ({{ $value }}/5) is below 3.0 for team {{ $labels.team }}."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+      - name: devex_performance
+        interval: 5m
+        rules:
+          - alert: BuildSuccessRateLow
+            expr: space_build_success_rate < 0.90
+            for: 15m
+            labels:
+              severity: warning
+              component: devex
+            annotations:
+              summary: "Build success rate is low"
+              description: "Build success rate ({{ $value | humanizePercentage }}) is below 90% for team {{ $labels.team }}. This indicates CI/CD pipeline issues."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+          - alert: LeadTimeHigh
+            expr: space_lead_time_hours_avg > 24
+            for: 30m
+            labels:
+              severity: warning
+              component: devex
+            annotations:
+              summary: "Lead time for changes is high"
+              description: "Lead time ({{ $value }} hours) is above 24 hours for team {{ $labels.team }}. This slows down delivery."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+          - alert: ChangeFailureRateHigh
+            expr: space_change_failure_rate > 0.30
+            for: 15m
+            labels:
+              severity: warning
+              component: devex
+            annotations:
+              summary: "Change failure rate is high"
+              description: "Change failure rate ({{ $value | humanizePercentage }}) is above 30% for team {{ $labels.team }}. Quality issues need attention."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+      - name: devex_efficiency
+        interval: 5m
+        rules:
+          - alert: HighFrictionIncidents
+            expr: sum(increase(space_friction_incidents_total[30d])) > 50
+            for: 1h
+            labels:
+              severity: warning
+              component: devex
+            annotations:
+              summary: "High number of friction incidents"
+              description: "{{ $value }} friction incidents reported in last 30 days for team {{ $labels.team }}. Target is <30 per 100 developers."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+          - alert: HighCognitiveLoad
+            expr: space_cognitive_load_avg > 4.0
+            for: 30m
+            labels:
+              severity: warning
+              component: devex
+            annotations:
+              summary: "High cognitive load"
+              description: "Average cognitive load ({{ $value }}/5) is above 4.0 for team {{ $labels.team }}. Developers are feeling overwhelmed."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+          - alert: LowFlowStateAchievement
+            expr: space_flow_state_achievement_percentage < 0.50
+            for: 1h
+            labels:
+              severity: warning
+              component: devex
+            annotations:
+              summary: "Low flow state achievement"
+              description: "Only {{ $value | humanizePercentage }} of developers in team {{ $labels.team }} are achieving flow state 3+ days per week. Target is 60%."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+          - alert: LowValuableWorkTime
+            expr: space_valuable_work_percentage_avg < 50
+            for: 1h
+            labels:
+              severity: warning
+              component: devex
+            annotations:
+              summary: "Low valuable work time"
+              description: "Developers in team {{ $labels.team }} are spending only {{ $value }}% of time on valuable work. Target is >60%."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+      - name: devex_collaboration
+        interval: 5m
+        rules:
+          - alert: HighReviewTime
+            expr: space_avg_review_time_hours > 24
+            for: 1h
+            labels:
+              severity: warning
+              component: devex
+            annotations:
+              summary: "Code review time is high"
+              description: "Average time to first code review ({{ $value }} hours) is above 24 hours for team {{ $labels.team }}. Target is <12 hours."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+          - alert: LowCrossTeamCollaboration
+            expr: space_cross_team_pr_percentage < 0.10
+            for: 6h
+            labels:
+              severity: info
+              component: devex
+            annotations:
+              summary: "Low cross-team collaboration"
+              description: "Only {{ $value | humanizePercentage }} of PRs involve cross-team collaboration for team {{ $labels.team }}. Consider increasing knowledge sharing."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+      - name: devex_activity
+        interval: 5m
+        rules:
+          - alert: LowPlatformEngagement
+            expr: space_platform_engagement_percentage < 0.70
+            for: 2h
+            labels:
+              severity: warning
+              component: devex
+            annotations:
+              summary: "Low platform engagement"
+              description: "Only {{ $value | humanizePercentage }} of developers are actively using the platform weekly for team {{ $labels.team }}. Target is >80%."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
+
+          - alert: LowAIAdoption
+            expr: space_ai_adoption_percentage < 0.50
+            for: 6h
+            labels:
+              severity: info
+              component: devex
+            annotations:
+              summary: "Low AI tool adoption"
+              description: "Only {{ $value | humanizePercentage }} of developers are using AI tools for team {{ $labels.team }}. Target is >70%."
+              dashboard: "http://grafana.127.0.0.1.nip.io/d/devex-dashboard"
