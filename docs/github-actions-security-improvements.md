@@ -4,31 +4,7 @@ This document explains the security and efficiency improvements made to the GitH
 
 ## Summary of Changes
 
-### 1. **Action Pinning to Commit SHAs** ✅
-
-All GitHub Actions have been pinned to specific commit SHAs instead of using mutable tags like `v4` or `@latest`.
-
-**Security Benefits:**
-- **Immutability**: Commit SHAs are immutable - they cannot be changed or moved, unlike tags which can be force-pushed
-- **Supply Chain Attack Prevention**: Prevents malicious actors from compromising an action's tag and injecting malicious code
-- **Reproducibility**: Ensures workflows run the exact same code every time
-- **Transparency**: Easier to audit and verify the exact version of code being executed
-
-**Example:**
-```yaml
-# Before (vulnerable to tag hijacking)
-- uses: actions/checkout@v4
-
-# After (secure, pinned to specific commit)
-- uses: actions/checkout@34e11480ae1e31caa3f43c6f6043d4daa6e1148a  # v4.2.2
-```
-
-**Maintenance Strategy:**
-- Use Dependabot to automatically create PRs when new versions are available
-- Add comments with version tags for human readability
-- Review security advisories before updating
-
-### 2. **Job-Level Permission Blocks** ✅
+### 1. **Job-Level Permission Blocks** ✅
 
 Every job now has explicit `permissions` blocks following the principle of least privilege.
 
@@ -72,7 +48,7 @@ Added caching for Python dependencies and Terraform providers to speed up workfl
 **Python Dependency Caching:**
 ```yaml
 - name: Set up Python
-  uses: actions/setup-python@a26af680b6b9b1949f9c02f9e0c6e9f0b2e3c5e4
+  uses: actions/setup-python@v5
   with:
     python-version: '3.11'
     cache: 'pip'
@@ -82,7 +58,7 @@ Added caching for Python dependencies and Terraform providers to speed up workfl
 **Terraform Provider Caching:**
 ```yaml
 - name: Cache Terraform providers
-  uses: actions/cache@0057852d52279ba093e21d2f6cbbf3c48fb752b7
+  uses: actions/cache@v4
   with:
     path: |
       ~/.terraform.d/plugin-cache
