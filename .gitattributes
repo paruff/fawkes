@@ -1,0 +1,65 @@
+# Git LFS Configuration for Fawkes Repository
+# 
+# This file configures Git Large File Storage (LFS) to handle large binary files
+# efficiently. Files matching these patterns are stored as LFS objects rather than
+# in the standard Git repository.
+#
+# Git LFS is particularly important for the user research repository where we store
+# interview recordings, user testing videos, and other large media files.
+
+# Video files - user research recordings, demos, tutorials
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+*.mov filter=lfs diff=lfs merge=lfs -text
+*.avi filter=lfs diff=lfs merge=lfs -text
+*.mkv filter=lfs diff=lfs merge=lfs -text
+*.webm filter=lfs diff=lfs merge=lfs -text
+*.flv filter=lfs diff=lfs merge=lfs -text
+*.wmv filter=lfs diff=lfs merge=lfs -text
+
+# Audio files - interview recordings, podcasts
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.m4a filter=lfs diff=lfs merge=lfs -text
+*.aac filter=lfs diff=lfs merge=lfs -text
+*.flac filter=lfs diff=lfs merge=lfs -text
+*.ogg filter=lfs diff=lfs merge=lfs -text
+*.wma filter=lfs diff=lfs merge=lfs -text
+
+# Large image files - design assets, high-res screenshots
+*.psd filter=lfs diff=lfs merge=lfs -text
+*.ai filter=lfs diff=lfs merge=lfs -text
+*.sketch filter=lfs diff=lfs merge=lfs -text
+*.fig filter=lfs diff=lfs merge=lfs -text
+*.xcf filter=lfs diff=lfs merge=lfs -text
+
+# Archives - bundled research data
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.tar.gz filter=lfs diff=lfs merge=lfs -text
+*.tgz filter=lfs diff=lfs merge=lfs -text
+*.rar filter=lfs diff=lfs merge=lfs -text
+*.7z filter=lfs diff=lfs merge=lfs -text
+
+# Database files - research data exports
+*.sqlite filter=lfs diff=lfs merge=lfs -text
+*.db filter=lfs diff=lfs merge=lfs -text
+
+# Large datasets - CSV files over 10MB (approximate, handled case-by-case)
+# Note: Small CSVs should remain as regular Git files for easy diffs
+
+# Document formats - presentations with embedded media
+*.pptx filter=lfs diff=lfs merge=lfs -text
+*.keynote filter=lfs diff=lfs merge=lfs -text
+
+# Binary executables and installers (if needed)
+*.exe filter=lfs diff=lfs merge=lfs -text
+*.dmg filter=lfs diff=lfs merge=lfs -text
+*.pkg filter=lfs diff=lfs merge=lfs -text
+*.deb filter=lfs diff=lfs merge=lfs -text
+*.rpm filter=lfs diff=lfs merge=lfs -text
+
+# Note: Git LFS must be installed on the system before cloning:
+#   git lfs install
+#   git clone <repo>
+#
+# For existing clones, pull LFS objects with:
+#   git lfs pull
