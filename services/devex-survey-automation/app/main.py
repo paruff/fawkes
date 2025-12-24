@@ -16,7 +16,14 @@ from sqlalchemy.orm import selectinload
 
 from .config import settings
 from .database import init_database, close_database, get_db_session, check_database_health
-from .models import SurveyCampaign, SurveyRecipient, PulseSurveyAggregate, SurveyOptOut
+from .models import (
+    SurveyCampaign,
+    SurveyRecipient,
+    PulseSurveyAggregate,
+    SurveyOptOut,
+    NASATLXAssessment,
+    NASATLXAggregate
+)
 from .schemas import (
     PulseSurveyResponse,
     SurveyDistributionRequest,
@@ -25,7 +32,13 @@ from .schemas import (
     WeeklyTrend,
     ResponseRateMetrics,
     HealthResponse,
-    SurveySubmissionResponse
+    SurveySubmissionResponse,
+    NASATLXRequest,
+    NASATLXResponse,
+    NASATLXSubmissionResponse,
+    NASATLXAnalytics,
+    NASATLXTrendData,
+    TaskTypeStats
 )
 from integrations.mattermost import mattermost_client
 from integrations.space_metrics import space_metrics_client
@@ -57,6 +70,47 @@ request_duration = Histogram(
     'devex_survey_request_duration_seconds',
     'Request processing duration',
     ['endpoint']
+)
+# NASA-TLX Metrics
+nasa_tlx_submissions = Counter(
+    'devex_nasa_tlx_submissions_total',
+    'Total NASA-TLX assessments submitted',
+    ['task_type']
+)
+nasa_tlx_overall_workload = Gauge(
+    'devex_nasa_tlx_overall_workload',
+    'Average overall NASA-TLX workload score',
+    ['task_type']
+)
+nasa_tlx_mental_demand = Gauge(
+    'devex_nasa_tlx_mental_demand',
+    'Average mental demand score',
+    ['task_type']
+)
+nasa_tlx_physical_demand = Gauge(
+    'devex_nasa_tlx_physical_demand',
+    'Average physical demand score',
+    ['task_type']
+)
+nasa_tlx_temporal_demand = Gauge(
+    'devex_nasa_tlx_temporal_demand',
+    'Average temporal demand score',
+    ['task_type']
+)
+nasa_tlx_effort = Gauge(
+    'devex_nasa_tlx_effort',
+    'Average effort score',
+    ['task_type']
+)
+nasa_tlx_frustration = Gauge(
+    'devex_nasa_tlx_frustration',
+    'Average frustration score',
+    ['task_type']
+)
+nasa_tlx_performance = Gauge(
+    'devex_nasa_tlx_performance',
+    'Average performance score (higher is better)',
+    ['task_type']
 )
 
 # Lifespan context manager
@@ -733,6 +787,386 @@ async def thank_you_page(token: str = Path(..., description="Survey token")):
     """)
 
 
+@app.get("/nasa-tlx", response_class=HTMLResponse, tags=["NASA-TLX"])
+async def get_nasa_tlx_page(
+    task_type: str = Query("general", description="Type of task being assessed"),
+    task_id: Optional[str] = Query(None, description="Optional task identifier"),
+    user_id: str = Query("anonymous", description="User identifier")
+):
+    """Render NASA-TLX cognitive load assessment page"""
+    return HTMLResponse(content=f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>NASA-TLX Cognitive Load Assessment</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <style>
+                body {{
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+                    max-width: 800px;
+                    margin: 30px auto;
+                    padding: 20px;
+                    background-color: #f5f5f5;
+                }}
+                .assessment-container {{
+                    background: white;
+                    padding: 40px;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                }}
+                h1 {{
+                    color: #1976d2;
+                    margin-bottom: 10px;
+                    font-size: 28px;
+                }}
+                .subtitle {{
+                    color: #666;
+                    font-size: 14px;
+                    margin-bottom: 30px;
+                }}
+                .task-info {{
+                    background: #e3f2fd;
+                    padding: 15px;
+                    border-radius: 6px;
+                    margin-bottom: 30px;
+                }}
+                .task-info strong {{
+                    color: #1976d2;
+                }}
+                .dimension {{
+                    margin-bottom: 35px;
+                }}
+                .dimension-label {{
+                    font-weight: 600;
+                    color: #333;
+                    margin-bottom: 8px;
+                    font-size: 16px;
+                }}
+                .dimension-description {{
+                    color: #666;
+                    font-size: 13px;
+                    margin-bottom: 12px;
+                    font-style: italic;
+                }}
+                .slider-container {{
+                    position: relative;
+                    margin: 15px 0;
+                }}
+                .slider {{
+                    -webkit-appearance: none;
+                    width: 100%;
+                    height: 8px;
+                    border-radius: 5px;
+                    background: #ddd;
+                    outline: none;
+                }}
+                .slider::-webkit-slider-thumb {{
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    background: #1976d2;
+                    cursor: pointer;
+                }}
+                .slider::-moz-range-thumb {{
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    background: #1976d2;
+                    cursor: pointer;
+                    border: none;
+                }}
+                .slider-labels {{
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 12px;
+                    color: #666;
+                    margin-top: 5px;
+                }}
+                .slider-value {{
+                    text-align: center;
+                    font-weight: 600;
+                    color: #1976d2;
+                    font-size: 18px;
+                    margin-top: 5px;
+                }}
+                .form-group {{
+                    margin-bottom: 20px;
+                }}
+                .form-group label {{
+                    display: block;
+                    font-weight: 600;
+                    color: #333;
+                    margin-bottom: 8px;
+                }}
+                .form-group input, .form-group textarea {{
+                    width: 100%;
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    font-size: 14px;
+                    box-sizing: border-box;
+                }}
+                textarea {{
+                    resize: vertical;
+                    min-height: 80px;
+                }}
+                .submit-button {{
+                    width: 100%;
+                    padding: 15px;
+                    background: #1976d2;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background 0.3s;
+                }}
+                .submit-button:hover {{
+                    background: #1565c0;
+                }}
+                .submit-button:disabled {{
+                    background: #ccc;
+                    cursor: not-allowed;
+                }}
+                .error-message {{
+                    display: none;
+                    background: #ffebee;
+                    color: #c62828;
+                    padding: 12px;
+                    border-radius: 4px;
+                    margin-top: 15px;
+                }}
+                .success-message {{
+                    display: none;
+                    background: #e8f5e9;
+                    color: #2e7d32;
+                    padding: 12px;
+                    border-radius: 4px;
+                    margin-top: 15px;
+                    text-align: center;
+                }}
+                .info-box {{
+                    background: #fff3e0;
+                    padding: 15px;
+                    border-radius: 6px;
+                    margin-bottom: 25px;
+                    border-left: 4px solid #ff9800;
+                }}
+                .info-box p {{
+                    margin: 5px 0;
+                    font-size: 13px;
+                    color: #666;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="assessment-container">
+                <h1>🧠 NASA-TLX Cognitive Load Assessment</h1>
+                <p class="subtitle">Help us understand your experience with platform tasks</p>
+                
+                <div class="task-info">
+                    <p><strong>Task Type:</strong> <span id="taskTypeDisplay">{task_type}</span></p>
+                    {f'<p><strong>Task ID:</strong> {task_id}</p>' if task_id else ''}
+                </div>
+                
+                <div class="info-box">
+                    <p><strong>About this assessment:</strong></p>
+                    <p>Rate each dimension on a scale from 0 (Low) to 100 (High). This helps us identify areas where we can reduce cognitive load and improve your experience.</p>
+                </div>
+                
+                <form id="nasaTlxForm">
+                    <!-- Mental Demand -->
+                    <div class="dimension">
+                        <div class="dimension-label">Mental Demand</div>
+                        <div class="dimension-description">How mentally demanding was the task?</div>
+                        <div class="slider-container">
+                            <input type="range" min="0" max="100" value="50" class="slider" id="mentalDemand">
+                            <div class="slider-labels">
+                                <span>Low</span>
+                                <span>High</span>
+                            </div>
+                            <div class="slider-value" id="mentalDemandValue">50</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Physical Demand -->
+                    <div class="dimension">
+                        <div class="dimension-label">Physical Demand</div>
+                        <div class="dimension-description">How physically demanding was the task? (e.g., typing, clicking, scrolling)</div>
+                        <div class="slider-container">
+                            <input type="range" min="0" max="100" value="25" class="slider" id="physicalDemand">
+                            <div class="slider-labels">
+                                <span>Low</span>
+                                <span>High</span>
+                            </div>
+                            <div class="slider-value" id="physicalDemandValue">25</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Temporal Demand -->
+                    <div class="dimension">
+                        <div class="dimension-label">Temporal Demand</div>
+                        <div class="dimension-description">How hurried or rushed was the pace of the task?</div>
+                        <div class="slider-container">
+                            <input type="range" min="0" max="100" value="50" class="slider" id="temporalDemand">
+                            <div class="slider-labels">
+                                <span>Low</span>
+                                <span>High</span>
+                            </div>
+                            <div class="slider-value" id="temporalDemandValue">50</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Performance -->
+                    <div class="dimension">
+                        <div class="dimension-label">Performance</div>
+                        <div class="dimension-description">How successful were you in accomplishing what you were asked to do?</div>
+                        <div class="slider-container">
+                            <input type="range" min="0" max="100" value="80" class="slider" id="performance">
+                            <div class="slider-labels">
+                                <span>Failed</span>
+                                <span>Perfect</span>
+                            </div>
+                            <div class="slider-value" id="performanceValue">80</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Effort -->
+                    <div class="dimension">
+                        <div class="dimension-label">Effort</div>
+                        <div class="dimension-description">How hard did you have to work to accomplish your level of performance?</div>
+                        <div class="slider-container">
+                            <input type="range" min="0" max="100" value="50" class="slider" id="effort">
+                            <div class="slider-labels">
+                                <span>Low</span>
+                                <span>High</span>
+                            </div>
+                            <div class="slider-value" id="effortValue">50</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Frustration -->
+                    <div class="dimension">
+                        <div class="dimension-label">Frustration</div>
+                        <div class="dimension-description">How insecure, discouraged, irritated, stressed, and annoyed were you?</div>
+                        <div class="slider-container">
+                            <input type="range" min="0" max="100" value="30" class="slider" id="frustration">
+                            <div class="slider-labels">
+                                <span>Low</span>
+                                <span>High</span>
+                            </div>
+                            <div class="slider-value" id="frustrationValue">30</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Duration -->
+                    <div class="form-group">
+                        <label for="duration">How long did the task take? (minutes, optional)</label>
+                        <input type="number" id="duration" name="duration" min="0" max="999" placeholder="e.g., 15">
+                    </div>
+                    
+                    <!-- Comment -->
+                    <div class="form-group">
+                        <label for="comment">Additional comments (optional)</label>
+                        <textarea id="comment" name="comment" placeholder="Share any thoughts about what made this task easy or difficult..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-button" id="submitButton">Submit Assessment</button>
+                    
+                    <div class="error-message" id="errorMessage"></div>
+                    <div class="success-message" id="successMessage">
+                        ✓ Assessment submitted successfully! Thank you for your feedback.
+                    </div>
+                </form>
+            </div>
+            
+            <script>
+                // Update slider values
+                const sliders = [
+                    {{'id': 'mentalDemand', 'valueId': 'mentalDemandValue'}},
+                    {{'id': 'physicalDemand', 'valueId': 'physicalDemandValue'}},
+                    {{'id': 'temporalDemand', 'valueId': 'temporalDemandValue'}},
+                    {{'id': 'performance', 'valueId': 'performanceValue'}},
+                    {{'id': 'effort', 'valueId': 'effortValue'}},
+                    {{'id': 'frustration', 'valueId': 'frustrationValue'}}
+                ];
+                
+                sliders.forEach(slider => {{
+                    const input = document.getElementById(slider.id);
+                    const value = document.getElementById(slider.valueId);
+                    
+                    input.addEventListener('input', (e) => {{
+                        value.textContent = e.target.value;
+                    }});
+                }});
+                
+                // Handle form submission
+                document.getElementById('nasaTlxForm').addEventListener('submit', async (e) => {{
+                    e.preventDefault();
+                    
+                    const submitButton = document.getElementById('submitButton');
+                    const errorMessage = document.getElementById('errorMessage');
+                    const successMessage = document.getElementById('successMessage');
+                    
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Submitting...';
+                    errorMessage.style.display = 'none';
+                    successMessage.style.display = 'none';
+                    
+                    const data = {{
+                        task_type: '{task_type}',
+                        task_id: '{task_id or ""}',
+                        mental_demand: parseFloat(document.getElementById('mentalDemand').value),
+                        physical_demand: parseFloat(document.getElementById('physicalDemand').value),
+                        temporal_demand: parseFloat(document.getElementById('temporalDemand').value),
+                        performance: parseFloat(document.getElementById('performance').value),
+                        effort: parseFloat(document.getElementById('effort').value),
+                        frustration: parseFloat(document.getElementById('frustration').value),
+                        duration_minutes: parseInt(document.getElementById('duration').value) || null,
+                        comment: document.getElementById('comment').value || null
+                    }};
+                    
+                    try {{
+                        const response = await fetch('/api/v1/nasa-tlx/submit?user_id={user_id}', {{
+                            method: 'POST',
+                            headers: {{
+                                'Content-Type': 'application/json'
+                            }},
+                            body: JSON.stringify(data)
+                        }});
+                        
+                        const result = await response.json();
+                        
+                        if (response.ok) {{
+                            successMessage.textContent = `✓ Assessment submitted successfully! Overall workload: ${{result.overall_workload.toFixed(1)}}/100`;
+                            successMessage.style.display = 'block';
+                            document.getElementById('nasaTlxForm').reset();
+                            // Reset slider values
+                            sliders.forEach(slider => {{
+                                document.getElementById(slider.valueId).textContent = document.getElementById(slider.id).value;
+                            }});
+                        }} else {{
+                            errorMessage.textContent = result.detail || 'Failed to submit assessment';
+                            errorMessage.style.display = 'block';
+                            submitButton.disabled = false;
+                            submitButton.textContent = 'Submit Assessment';
+                        }}
+                    }} catch (error) {{
+                        errorMessage.textContent = 'Network error. Please try again.';
+                        errorMessage.style.display = 'block';
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Submit Assessment';
+                    }}
+                }});
+            </script>
+        </body>
+        </html>
+    """)
+
+
 @app.get("/api/v1/analytics/pulse/weekly", response_model=List[PulseAnalytics], tags=["Analytics"])
 async def get_pulse_weekly_analytics(
     weeks: int = Query(12, ge=1, le=52, description="Number of weeks to retrieve")
@@ -792,3 +1226,316 @@ async def get_response_rate_metrics():
     except Exception as e:
         logger.error(f"Error getting response rate metrics: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============================================================================
+# NASA-TLX Cognitive Load Assessment Endpoints
+# ============================================================================
+
+@app.post("/api/v1/nasa-tlx/submit", response_model=NASATLXSubmissionResponse, tags=["NASA-TLX"])
+async def submit_nasa_tlx(
+    assessment: NASATLXRequest,
+    user_id: str = Query(..., description="User identifier")
+):
+    """Submit a NASA-TLX cognitive load assessment after completing a platform task"""
+    with request_duration.labels(endpoint="submit_nasa_tlx").time():
+        try:
+            async with get_db_session() as session:
+                # Calculate overall workload (average of all dimensions)
+                overall_workload = (
+                    assessment.mental_demand +
+                    assessment.physical_demand +
+                    assessment.temporal_demand +
+                    (100 - assessment.performance) +  # Invert performance (higher is better)
+                    assessment.effort +
+                    assessment.frustration
+                ) / 6.0
+                
+                # Create assessment record
+                tlx_assessment = NASATLXAssessment(
+                    user_id=user_id,
+                    task_type=assessment.task_type,
+                    task_id=assessment.task_id,
+                    mental_demand=assessment.mental_demand,
+                    physical_demand=assessment.physical_demand,
+                    temporal_demand=assessment.temporal_demand,
+                    performance=assessment.performance,
+                    effort=assessment.effort,
+                    frustration=assessment.frustration,
+                    overall_workload=overall_workload,
+                    duration_minutes=assessment.duration_minutes,
+                    comment=assessment.comment,
+                    platform_version=settings.version
+                )
+                
+                session.add(tlx_assessment)
+                await session.commit()
+                await session.refresh(tlx_assessment)
+                
+                # Update Prometheus metrics
+                survey_responses.labels(type="nasa_tlx").inc()
+                nasa_tlx_submissions.labels(task_type=assessment.task_type).inc()
+                nasa_tlx_overall_workload.labels(task_type=assessment.task_type).set(overall_workload)
+                nasa_tlx_mental_demand.labels(task_type=assessment.task_type).set(assessment.mental_demand)
+                nasa_tlx_physical_demand.labels(task_type=assessment.task_type).set(assessment.physical_demand)
+                nasa_tlx_temporal_demand.labels(task_type=assessment.task_type).set(assessment.temporal_demand)
+                nasa_tlx_effort.labels(task_type=assessment.task_type).set(assessment.effort)
+                nasa_tlx_frustration.labels(task_type=assessment.task_type).set(assessment.frustration)
+                nasa_tlx_performance.labels(task_type=assessment.task_type).set(assessment.performance)
+                
+                logger.info(f"✅ NASA-TLX assessment submitted by {user_id} for task {assessment.task_type} (workload: {overall_workload:.1f})")
+
+                
+                return NASATLXSubmissionResponse(
+                    success=True,
+                    message="NASA-TLX assessment submitted successfully",
+                    assessment_id=tlx_assessment.id,
+                    overall_workload=overall_workload,
+                    submitted_at=tlx_assessment.submitted_at
+                )
+        
+        except Exception as e:
+            logger.error(f"Error submitting NASA-TLX assessment: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/v1/nasa-tlx/assessments", response_model=List[NASATLXResponse], tags=["NASA-TLX"])
+async def get_nasa_tlx_assessments(
+    task_type: Optional[str] = Query(None, description="Filter by task type"),
+    limit: int = Query(50, ge=1, le=500, description="Number of assessments to return")
+):
+    """Get NASA-TLX assessments with optional filtering"""
+    try:
+        async with get_db_session() as session:
+            query = select(NASATLXAssessment).order_by(NASATLXAssessment.submitted_at.desc()).limit(limit)
+            
+            if task_type:
+                query = query.where(NASATLXAssessment.task_type == task_type)
+            
+            result = await session.execute(query)
+            assessments = result.scalars().all()
+            
+            return [NASATLXResponse.model_validate(a) for a in assessments]
+    
+    except Exception as e:
+        logger.error(f"Error getting NASA-TLX assessments: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/v1/nasa-tlx/analytics", response_model=List[NASATLXAnalytics], tags=["NASA-TLX"])
+async def get_nasa_tlx_analytics(
+    task_type: Optional[str] = Query(None, description="Filter by task type"),
+    weeks: int = Query(4, ge=1, le=52, description="Number of weeks to analyze")
+):
+    """Get aggregated NASA-TLX analytics"""
+    try:
+        async with get_db_session() as session:
+            # Get current week
+            now = datetime.now()
+            current_week = now.isocalendar()[1]
+            current_year = now.year
+            
+            # Calculate start week
+            start_week = max(1, current_week - weeks)
+            
+            # Query aggregates
+            query = select(NASATLXAggregate).where(
+                and_(
+                    NASATLXAggregate.year == current_year,
+                    NASATLXAggregate.week >= start_week
+                )
+            ).order_by(NASATLXAggregate.week)
+            
+            if task_type:
+                query = query.where(NASATLXAggregate.task_type == task_type)
+            
+            result = await session.execute(query)
+            aggregates = result.scalars().all()
+            
+            # If no aggregates exist, generate them from raw assessments
+            if not aggregates:
+                logger.info(f"No aggregates found, generating from raw assessments")
+                aggregates = await _generate_nasa_tlx_aggregates(session, task_type, start_week, current_week, current_year)
+            
+            return [NASATLXAnalytics.model_validate(a) for a in aggregates]
+    
+    except Exception as e:
+        logger.error(f"Error getting NASA-TLX analytics: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/v1/nasa-tlx/trends", response_model=List[NASATLXTrendData], tags=["NASA-TLX"])
+async def get_nasa_tlx_trends(
+    weeks: int = Query(12, ge=1, le=52, description="Number of weeks to analyze")
+):
+    """Get NASA-TLX trends by task type over time"""
+    try:
+        async with get_db_session() as session:
+            now = datetime.now()
+            current_week = now.isocalendar()[1]
+            current_year = now.year
+            start_week = max(1, current_week - weeks)
+            
+            # Get unique task types
+            task_types_result = await session.execute(
+                select(NASATLXAggregate.task_type)
+                .where(
+                    and_(
+                        NASATLXAggregate.year == current_year,
+                        NASATLXAggregate.week >= start_week
+                    )
+                )
+                .distinct()
+            )
+            task_types = [row[0] for row in task_types_result.fetchall()]
+            
+            trends = []
+            for task_type in task_types:
+                # Get aggregates for this task type
+                result = await session.execute(
+                    select(NASATLXAggregate)
+                    .where(
+                        and_(
+                            NASATLXAggregate.task_type == task_type,
+                            NASATLXAggregate.year == current_year,
+                            NASATLXAggregate.week >= start_week
+                        )
+                    )
+                    .order_by(NASATLXAggregate.week)
+                )
+                aggregates = result.scalars().all()
+                
+                if aggregates:
+                    trends.append(NASATLXTrendData(
+                        task_type=task_type,
+                        weeks=[a.week for a in aggregates],
+                        mental_demand_trend=[a.avg_mental_demand for a in aggregates],
+                        physical_demand_trend=[a.avg_physical_demand for a in aggregates],
+                        temporal_demand_trend=[a.avg_temporal_demand for a in aggregates],
+                        performance_trend=[a.avg_performance for a in aggregates],
+                        effort_trend=[a.avg_effort for a in aggregates],
+                        frustration_trend=[a.avg_frustration for a in aggregates],
+                        overall_workload_trend=[a.avg_overall_workload for a in aggregates],
+                        response_counts=[a.response_count for a in aggregates]
+                    ))
+            
+            return trends
+    
+    except Exception as e:
+        logger.error(f"Error getting NASA-TLX trends: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/v1/nasa-tlx/task-types", response_model=List[TaskTypeStats], tags=["NASA-TLX"])
+async def get_task_type_stats():
+    """Get statistics grouped by task type"""
+    try:
+        async with get_db_session() as session:
+            # Get stats by task type
+            result = await session.execute(
+                select(
+                    NASATLXAssessment.task_type,
+                    func.count(NASATLXAssessment.id).label("total"),
+                    func.avg(NASATLXAssessment.overall_workload).label("avg_workload"),
+                    func.avg(NASATLXAssessment.duration_minutes).label("avg_duration")
+                )
+                .group_by(NASATLXAssessment.task_type)
+            )
+            
+            stats = []
+            for row in result:
+                task_type = row[0]
+                total = row[1]
+                avg_workload = float(row[2]) if row[2] else 0.0
+                avg_duration = float(row[3]) if row[3] else None
+                
+                # Find most demanding dimension
+                dimension_result = await session.execute(
+                    select(
+                        func.avg(NASATLXAssessment.mental_demand).label("mental"),
+                        func.avg(NASATLXAssessment.physical_demand).label("physical"),
+                        func.avg(NASATLXAssessment.temporal_demand).label("temporal"),
+                        func.avg(NASATLXAssessment.effort).label("effort"),
+                        func.avg(NASATLXAssessment.frustration).label("frustration")
+                    )
+                    .where(NASATLXAssessment.task_type == task_type)
+                )
+                dims = dimension_result.one()
+                dimensions = {
+                    "mental_demand": float(dims[0]) if dims[0] else 0,
+                    "physical_demand": float(dims[1]) if dims[1] else 0,
+                    "temporal_demand": float(dims[2]) if dims[2] else 0,
+                    "effort": float(dims[3]) if dims[3] else 0,
+                    "frustration": float(dims[4]) if dims[4] else 0
+                }
+                most_demanding = max(dimensions, key=dimensions.get)
+                
+                # Determine health status
+                if avg_workload < 40:
+                    health_status = "healthy"
+                elif avg_workload < 60:
+                    health_status = "warning"
+                else:
+                    health_status = "critical"
+                
+                stats.append(TaskTypeStats(
+                    task_type=task_type,
+                    total_assessments=total,
+                    avg_workload=avg_workload,
+                    avg_duration_minutes=avg_duration,
+                    most_demanding_dimension=most_demanding,
+                    health_status=health_status
+                ))
+            
+            return stats
+    
+    except Exception as e:
+        logger.error(f"Error getting task type stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+async def _generate_nasa_tlx_aggregates(session, task_type_filter, start_week, end_week, year):
+    """Helper function to generate NASA-TLX aggregates from raw assessments"""
+    aggregates = []
+    
+    for week in range(start_week, end_week + 1):
+        # Get assessments for this week
+        query = select(NASATLXAssessment).where(
+            and_(
+                func.extract('year', NASATLXAssessment.submitted_at) == year,
+                func.extract('week', NASATLXAssessment.submitted_at) == week
+            )
+        )
+        
+        if task_type_filter:
+            query = query.where(NASATLXAssessment.task_type == task_type_filter)
+        
+        result = await session.execute(query)
+        assessments = result.scalars().all()
+        
+        if assessments:
+            # Calculate aggregates
+            task_types = set(a.task_type for a in assessments)
+            
+            for task_type in task_types:
+                task_assessments = [a for a in assessments if a.task_type == task_type]
+                
+                aggregate = NASATLXAggregate(
+                    task_type=task_type,
+                    week=week,
+                    year=year,
+                    avg_mental_demand=sum(a.mental_demand for a in task_assessments) / len(task_assessments),
+                    avg_physical_demand=sum(a.physical_demand for a in task_assessments) / len(task_assessments),
+                    avg_temporal_demand=sum(a.temporal_demand for a in task_assessments) / len(task_assessments),
+                    avg_performance=sum(a.performance for a in task_assessments) / len(task_assessments),
+                    avg_effort=sum(a.effort for a in task_assessments) / len(task_assessments),
+                    avg_frustration=sum(a.frustration for a in task_assessments) / len(task_assessments),
+                    avg_overall_workload=sum(a.overall_workload for a in task_assessments) / len(task_assessments),
+                    response_count=len(task_assessments)
+                )
+                
+                session.add(aggregate)
+                aggregates.append(aggregate)
+    
+    await session.commit()
+    return aggregates
