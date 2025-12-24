@@ -268,7 +268,7 @@ def step_check_ingress(context, namespace):
 @when('I check the Backstage app-config')
 def step_check_backstage_config(context):
     """Check Backstage configuration for feedback proxy."""
-    core_api, _, _ = load_kube_clients()
+    core_api, _, _, _ = load_kube_clients()
     try:
         config_map = core_api.read_namespaced_config_map("backstage-app-config", "fawkes")
         context.backstage_config = config_map.data.get("app-config.yaml", "")
@@ -557,14 +557,14 @@ def step_all_components_deployed(context):
     try:
         apps_api.read_namespaced_deployment("feedback-service", namespace)
         context.service_deployed = True
-    except:
+    except Exception:
         context.service_deployed = False
     
     # Check feedback-bot
     try:
         apps_api.read_namespaced_deployment("feedback-bot", namespace)
         context.bot_deployed = True
-    except:
+    except Exception:
         context.bot_deployed = False
     
     logger.info(f"Service deployed: {context.service_deployed}, Bot deployed: {context.bot_deployed}")
@@ -584,7 +584,7 @@ def step_grafana_deployed(context, namespace):
                 logger.info(f"Found Grafana deployment: {deployment.metadata.name}")
                 return
         context.grafana_deployed = False
-    except:
+    except Exception:
         context.grafana_deployed = False
         logger.warning(f"Could not check Grafana in {namespace}")
 
@@ -650,7 +650,7 @@ def step_check_analytics_dashboard(context):
 @when('I check the system integration')
 def step_check_system_integration(context):
     """Check overall system integration."""
-    core_api, _, _ = load_kube_clients()
+    core_api, _, _, _ = load_kube_clients()
     namespace = context.namespace
     
     # Check ServiceMonitors
@@ -664,7 +664,7 @@ def step_check_system_integration(context):
         )
         context.service_monitors = service_monitors.get("items", [])
         logger.info(f"Found {len(context.service_monitors)} ServiceMonitors")
-    except:
+    except Exception:
         context.service_monitors = []
         logger.warning("Could not list ServiceMonitors")
 
@@ -684,7 +684,7 @@ def step_check_observability(context):
         context.observability_monitors = [sm for sm in service_monitors.get("items", []) 
                                          if "feedback" in sm.get("metadata", {}).get("name", "")]
         logger.info(f"Found {len(context.observability_monitors)} feedback-related ServiceMonitors")
-    except:
+    except Exception:
         context.observability_monitors = []
 
 
@@ -705,7 +705,7 @@ def step_check_security(context):
         container = deployment.spec.template.spec.containers[0]
         if container.resources and container.resources.limits:
             context.security_checks["feedback_service"] = True
-    except:
+    except Exception:
         pass
     
     # Check feedback-bot
@@ -714,7 +714,7 @@ def step_check_security(context):
         container = deployment.spec.template.spec.containers[0]
         if container.resources and container.resources.limits:
             context.security_checks["feedback_bot"] = True
-    except:
+    except Exception:
         pass
 
 
@@ -736,7 +736,7 @@ def step_verify_all_channels(context):
     try:
         apps_api.read_namespaced_deployment("feedback-service", namespace)
         context.channels["backstage_widget"] = True
-    except:
+    except Exception:
         pass
     
     # Check CLI tool
@@ -747,14 +747,14 @@ def step_verify_all_channels(context):
     try:
         apps_api.read_namespaced_deployment("feedback-bot", namespace)
         context.channels["mattermost_bot"] = True
-    except:
+    except Exception:
         pass
     
     # Check automation
     try:
         batch_api.read_namespaced_cron_job("feedback-automation", namespace)
         context.channels["automation"] = True
-    except:
+    except Exception:
         pass
     
     # Check analytics dashboard
@@ -788,7 +788,7 @@ def step_cli_setup_exists(context):
 @then('the feedback-bot service should exist')
 def step_bot_service_exists(context):
     """Verify bot service exists."""
-    core_api, _, _ = load_kube_clients()
+    core_api, _, _, _ = load_kube_clients()
     try:
         service = core_api.read_namespaced_service("feedback-bot", context.namespace)
         assert service is not None
@@ -926,11 +926,11 @@ def step_bot_exposes_metrics(context):
 @then('the feedback service should be accessible to the bot')
 def step_service_accessible_to_bot(context):
     """Verify service is accessible."""
-    core_api, _, _ = load_kube_clients()
+    core_api, _, _, _ = load_kube_clients()
     try:
         service = core_api.read_namespaced_service("feedback-service", context.namespace)
         assert service is not None
-    except:
+    except Exception:
         assert False, "feedback-service not accessible"
 
 
@@ -938,11 +938,11 @@ def step_service_accessible_to_bot(context):
 def step_automation_reaches_service(context):
     """Verify automation can reach service."""
     # Automation uses ClusterIP service, so if service exists, it's reachable
-    core_api, _, _ = load_kube_clients()
+    core_api, _, _, _ = load_kube_clients()
     try:
         service = core_api.read_namespaced_service("feedback-service", context.namespace)
         assert service is not None
-    except:
+    except Exception:
         assert False, "feedback-service not reachable by automation"
 
 
@@ -1043,7 +1043,7 @@ def step_all_components_non_root(context):
             security_context = deployment.spec.template.spec.security_context
             # Check if security context exists (good practice)
             assert security_context is not None or deployment.spec.template.spec.containers[0].security_context is not None
-        except:
+        except Exception:
             pass  # Deployment might not exist
 
 
