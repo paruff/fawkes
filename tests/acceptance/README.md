@@ -34,6 +34,14 @@ This directory contains acceptance test runners for Fawkes platform validation.
 | AT-E2-009 | AI Observability | AI-powered anomaly detection | ✅ Implemented |
 | AT-E2-010 | Discovery Foundation | Feedback Analytics Dashboard | ✅ Implemented |
 
+### Epic 3: Product Discovery & UX
+
+| Test ID | Category | Description | Status |
+|---------|----------|-------------|--------|
+| AT-E3-001 | Research Infrastructure | User research repository and tools | 🚧 Pending |
+| AT-E3-002 | SPACE Framework | SPACE metrics collection operational | ✅ Implemented |
+| AT-E3-003 | Feedback System | Multi-channel feedback system | ✅ Implemented |
+
 ## Usage
 
 ### Run Specific Acceptance Test
@@ -1704,3 +1712,237 @@ Reports are saved in the `reports/` directory by default.
 - curl (for API testing)
 - python3 (for JSON validation)
 - Kubernetes cluster access
+
+## AT-E3-003: Multi-Channel Feedback System
+
+### Acceptance Criteria
+
+- [x] Backstage widget functional (feedback-service)
+- [x] CLI tool working (feedback-cli)
+- [x] Mattermost bot responsive (feedback-bot)
+- [x] Automation creating issues (cronjob)
+- [x] Analytics dashboard showing data (Grafana)
+- [x] All channels integrated
+
+### Feedback Channels
+
+1. **Backstage Widget** (`services/feedback/`)
+   - REST API for feedback submission
+   - PostgreSQL database storage
+   - Admin endpoints
+   - Sentiment analysis
+   - GitHub issue creation
+
+2. **CLI Tool** (`services/feedback-cli/`)
+   - Terminal-based feedback submission
+   - Interactive mode
+   - Offline queue capability
+   - Configuration management
+
+3. **Mattermost Bot** (`services/feedback-bot/`)
+   - Natural language interface
+   - `/feedback` slash command
+   - Auto-categorization
+   - Sentiment analysis (VADER)
+   - Smart rating extraction
+
+4. **Automation Pipeline** (`platform/apps/feedback-service/cronjob-automation.yaml`)
+   - Runs every 15 minutes
+   - AI-powered triage
+   - Priority calculation
+   - Duplicate detection
+   - GitHub issue creation
+
+5. **Analytics Dashboard** (`platform/apps/grafana/dashboards/feedback-analytics.json`)
+   - NPS Score tracking
+   - Sentiment visualization
+   - Feedback volume metrics
+   - Rating distribution
+   - Historical trends
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e3-003.sh`)
+    - AC1: Backstage Widget Functional
+      - Feedback service deployment exists
+      - Database cluster operational
+      - API accessible and healthy
+      - Backstage proxy configured
+    - AC2: CLI Tool Working
+      - Code exists in repository
+      - Submit and list commands present
+      - Configuration management implemented
+    - AC3: Mattermost Bot Responsive
+      - Bot deployment exists and running
+      - Service accessible
+      - NLP and sentiment analysis capabilities
+    - AC4: Automation Creating Issues
+      - CronJob scheduled (every 15 minutes)
+      - Automation endpoint available
+      - GitHub integration configured
+    - AC5: Analytics Dashboard Showing Data
+      - Dashboard file exists and valid JSON
+      - Key metrics present (NPS, sentiment, volume, ratings)
+      - Grafana operational
+    - AC6: All Channels Integrated
+      - ServiceMonitors configured
+      - Metrics exposed
+      - Components can communicate
+      - BDD test coverage
+
+2. **BDD Tests** (`tests/bdd/features/multi-channel-feedback.feature`)
+    - Backstage widget functional
+    - CLI tool working
+    - Mattermost bot responsive
+    - Automation creating issues
+    - Analytics dashboard operational
+    - System integration verified
+    - Observability configured
+    - Security and resources validated
+    - Data flow end-to-end
+    - All channels completeness
+
+3. **Individual Channel BDD Tests**
+    - `feedback-widget.feature` - Backstage widget scenarios
+    - `feedback-bot.feature` - Mattermost bot scenarios
+    - `feedback-automation.feature` - Automation pipeline scenarios
+
+### Test Reports
+
+Test reports are generated in JSON format at:
+```
+reports/at-e3-003-validation-YYYYMMDD-HHMMSS.json
+```
+
+### Validation Commands
+
+Run the test:
+
+```bash
+# Run via test runner
+./tests/acceptance/run-test.sh AT-E3-003
+
+# Run via Makefile
+make validate-at-e3-003
+
+# Run directly
+./scripts/validate-at-e3-003.sh --namespace fawkes --monitoring-ns monitoring
+
+# Run with verbose output
+./scripts/validate-at-e3-003.sh --namespace fawkes --monitoring-ns monitoring --verbose
+
+# Run BDD tests
+pytest tests/bdd -k "at-e3-003 or multi-channel" -v
+behave tests/bdd/features --tags=@at-e3-003
+behave tests/bdd/features --tags=@multi-channel
+```
+
+### Manual Validation
+
+**Submit feedback via different channels:**
+
+```bash
+# 1. Via API (Backstage widget)
+kubectl port-forward -n fawkes svc/feedback-service 8000:8000
+curl -X POST http://localhost:8000/api/v1/feedback \
+  -H "Content-Type: application/json" \
+  -d '{"rating": 5, "category": "UI", "comment": "Great platform!"}'
+
+# 2. Via CLI tool
+cd services/feedback-cli
+pip install -e .
+fawkes-feedback submit -i
+
+# 3. Via Mattermost
+# In Mattermost: /feedback This is amazing!
+
+# 4. Check automation
+kubectl get cronjob feedback-automation -n fawkes
+kubectl get jobs -n fawkes -l app=feedback-automation
+
+# 5. View analytics
+kubectl port-forward -n monitoring svc/grafana 3000:3000
+# Open http://localhost:3000 and find "Feedback Analytics" dashboard
+```
+
+### Prerequisites
+
+- kubectl with cluster access
+- Feedback service deployed in `fawkes` namespace
+- Grafana deployed in `monitoring` namespace
+- Mattermost instance (for bot testing)
+- Python 3 (for CLI tool)
+- curl (for API testing)
+- jq (optional, for JSON processing)
+
+### Troubleshooting
+
+**Feedback service not accessible:**
+```bash
+# Check deployment and logs
+kubectl get deployment feedback-service -n fawkes
+kubectl logs -n fawkes -l app=feedback-service --tail=50
+
+# Port-forward for testing
+kubectl port-forward -n fawkes svc/feedback-service 8000:8000
+curl http://localhost:8000/health
+```
+
+**Bot not responding:**
+```bash
+# Check bot deployment
+kubectl get deployment feedback-bot -n fawkes
+kubectl logs -n fawkes -l app=feedback-bot --tail=50
+
+# Verify Mattermost integration
+kubectl get secret feedback-bot-secret -n fawkes
+```
+
+**Automation not running:**
+```bash
+# Check CronJob
+kubectl get cronjob feedback-automation -n fawkes
+kubectl describe cronjob feedback-automation -n fawkes
+
+# Manually trigger
+kubectl create job --from=cronjob/feedback-automation manual-test -n fawkes
+kubectl logs -n fawkes job/manual-test
+```
+
+**Dashboard not showing data:**
+```bash
+# Check Grafana
+kubectl get pods -n monitoring -l app.kubernetes.io/name=grafana
+
+# Verify dashboard exists
+ls -la platform/apps/grafana/dashboards/feedback-analytics.json
+
+# Check metrics
+kubectl port-forward -n fawkes svc/feedback-service 8000:8000
+curl http://localhost:8000/metrics | grep feedback_
+```
+
+### Success Criteria
+
+The test passes when:
+- ✓ All 5 feedback channels are implemented
+- ✓ Code exists for all components
+- ✓ Deployments are configured correctly
+- ✓ Analytics dashboard has all required metrics
+- ✓ BDD tests exist and pass
+- ✓ Integration between components is verified
+
+### Related Tests
+
+- AT-E3-001: Research Infrastructure validation
+- AT-E3-002: SPACE Framework Implementation validation
+- AT-E2-010: Feedback Analytics Dashboard validation
+
+### Documentation References
+
+- [AT-E3-003 Implementation Guide](../../docs/validation/AT-E3-003-IMPLEMENTATION.md)
+- [Feedback Service README](../../services/feedback/README.md)
+- [CLI Tool README](../../services/feedback-cli/README.md)
+- [Bot README](../../services/feedback-bot/README.md)
+- [Multi-Channel Feedback BDD Tests](../bdd/features/multi-channel-feedback.feature)
+
