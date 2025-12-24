@@ -32,6 +32,18 @@ from .sentiment import analyze_feedback_sentiment
 # Import GitHub integration
 from .github_integration import create_github_issue, update_issue_status, is_github_enabled
 
+# Import AI triage
+from .ai_triage import triage_feedback
+
+# Import notifications
+from .notifications import (
+    notify_issue_created,
+    notify_duplicate_detected,
+    notify_high_priority_feedback,
+    notify_automation_summary,
+    is_notification_enabled
+)
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -660,6 +672,7 @@ async def refresh_metrics(_token: str = Depends(verify_admin_token)):
 async def root():
     """Root endpoint with service information."""
     github_enabled = is_github_enabled()
+    notification_enabled = is_notification_enabled()
     return {
         "service": "feedback-service",
         "version": "2.0.0",
@@ -669,6 +682,10 @@ async def root():
             "github_integration": github_enabled,
             "sentiment_analysis": True,
             "contextual_feedback": True,
+            "ai_triage": True,
+            "duplicate_detection": github_enabled,
+            "notifications": notification_enabled,
+            "automation_pipeline": github_enabled,
             "feedback_types": ["feedback", "bug_report", "feature_request"]
         },
         "endpoints": {
@@ -679,7 +696,9 @@ async def root():
             "get_screenshot": "GET /api/v1/feedback/{id}/screenshot (admin)",
             "stats": "GET /api/v1/feedback/stats (admin)",
             "metrics": "/metrics",
-            "refresh_metrics": "POST /api/v1/metrics/refresh (admin)"
+            "refresh_metrics": "POST /api/v1/metrics/refresh (admin)",
+            "triage_feedback": "POST /api/v1/feedback/{id}/triage (admin)",
+            "automate_validated": "POST /api/v1/automation/process-validated (admin)"
         }
     }
 
@@ -724,3 +743,251 @@ async def get_feedback_screenshot(
     except Exception as e:
         logger.error(f"Error retrieving screenshot: {e}")
         raise HTTPException(status_code=500, detail="Failed to retrieve screenshot")
+
+
+# Triage feedback with AI (admin only)
+@app.post("/api/v1/feedback/{feedback_id}/triage", tags=["Automation"])
+async def triage_feedback_endpoint(
+    feedback_id: int,
+    _token: str = Depends(verify_admin_token)
+):
+    """
+    Run AI triage on specific feedback submission.
+    
+    This endpoint analyzes feedback and provides:
+    - Priority score and label (P0-P3)
+    - Suggested GitHub labels
+    - Potential duplicate detection
+    - Suggested milestone
+    - Recommendation on whether to create an issue
+    """
+    if not db_pool:
+        raise HTTPException(status_code=503, detail="Database not available")
+    
+    try:
+        async with db_pool.acquire() as conn:
+            # Fetch feedback details
+            row = await conn.fetchrow(
+                """
+                SELECT id, feedback_type, category, comment, rating, 
+                       sentiment_compound, status
+                FROM feedback 
+                WHERE id = $1
+                """,
+                feedback_id
+            )
+            
+            if not row:
+                raise HTTPException(status_code=404, detail="Feedback not found")
+            
+            # Run AI triage
+            triage_result = await triage_feedback(
+                feedback_id=row['id'],
+                feedback_type=row['feedback_type'] or 'feedback',
+                category=row['category'],
+                comment=row['comment'],
+                rating=row['rating'],
+                sentiment_compound=row['sentiment_compound']
+            )
+            
+            logger.info(f"Triage completed for feedback ID {feedback_id}: {triage_result}")
+            
+            return {
+                "status": "success",
+                "triage": triage_result
+            }
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error triaging feedback: {e}")
+        raise HTTPException(status_code=500, detail="Failed to triage feedback")
+
+
+# Automated processing of validated feedback (admin only)
+@app.post("/api/v1/automation/process-validated", tags=["Automation"])
+async def automate_validated_feedback(
+    background_tasks: BackgroundTasks,
+    min_rating: int = Query(None, ge=1, le=5, description="Minimum rating filter"),
+    feedback_type: Optional[str] = Query(None, description="Filter by feedback type"),
+    limit: int = Query(10, ge=1, le=100, description="Maximum number to process"),
+    _token: str = Depends(verify_admin_token)
+):
+    """
+    Automatically process validated feedback and create GitHub issues.
+    
+    This endpoint:
+    1. Fetches validated feedback (status='open', optionally filtered)
+    2. Runs AI triage on each feedback
+    3. Creates GitHub issues for high-priority, non-duplicate feedback
+    4. Sends notifications
+    
+    This can be called manually or triggered by a cron job.
+    """
+    if not db_pool:
+        raise HTTPException(status_code=503, detail="Database not available")
+    
+    if not is_github_enabled():
+        raise HTTPException(
+            status_code=503, 
+            detail="GitHub integration not enabled. Set GITHUB_TOKEN environment variable."
+        )
+    
+    try:
+        async with db_pool.acquire() as conn:
+            # Build query to fetch validated feedback
+            query_parts = ["SELECT * FROM feedback WHERE status = 'open' AND github_issue_url IS NULL"]
+            params = []
+            param_idx = 1
+            
+            if min_rating:
+                query_parts.append(f"AND rating <= ${param_idx}")
+                params.append(min_rating)
+                param_idx += 1
+            
+            if feedback_type:
+                query_parts.append(f"AND feedback_type = ${param_idx}")
+                params.append(feedback_type)
+                param_idx += 1
+            
+            query_parts.append(f"ORDER BY created_at DESC LIMIT ${param_idx}")
+            params.append(limit)
+            
+            query = " ".join(query_parts)
+            
+            feedback_items = await conn.fetch(query, *params)
+            
+            if not feedback_items:
+                return {
+                    "status": "success",
+                    "message": "No validated feedback to process",
+                    "processed": 0,
+                    "issues_created": 0
+                }
+            
+            processed = 0
+            issues_created = 0
+            skipped_duplicates = 0
+            errors = []
+            
+            # Process each feedback item
+            for feedback in feedback_items:
+                try:
+                    # Run AI triage
+                    triage_result = await triage_feedback(
+                        feedback_id=feedback['id'],
+                        feedback_type=feedback['feedback_type'] or 'feedback',
+                        category=feedback['category'],
+                        comment=feedback['comment'],
+                        rating=feedback['rating'],
+                        sentiment_compound=feedback['sentiment_compound']
+                    )
+                    
+                    processed += 1
+                    
+                    # Skip if duplicates found
+                    if not triage_result['should_create_issue']:
+                        skipped_duplicates += 1
+                        logger.info(
+                            f"Skipping feedback ID {feedback['id']}: "
+                            f"{triage_result['triage_reason']}"
+                        )
+                        
+                        # Notify about duplicates
+                        if triage_result['potential_duplicates']:
+                            background_tasks.add_task(
+                                notify_duplicate_detected,
+                                feedback['id'],
+                                triage_result['potential_duplicates'],
+                                feedback['category'],
+                                feedback['comment']
+                            )
+                        
+                        continue
+                    
+                    # Create GitHub issue in background
+                    async def create_issue_background():
+                        success, issue_url, error = await create_github_issue(
+                            feedback_id=feedback['id'],
+                            feedback_type=feedback['feedback_type'] or 'feedback',
+                            category=feedback['category'],
+                            comment=feedback['comment'],
+                            page_url=feedback['page_url'],
+                            rating=feedback['rating'],
+                            email=feedback['email'],
+                            screenshot_data=None,  # Screenshots not auto-attached in batch
+                            browser_info=feedback['browser_info'],
+                            user_agent=feedback['user_agent']
+                        )
+                        
+                        if success and issue_url:
+                            # Update feedback with GitHub issue URL
+                            async with db_pool.acquire() as update_conn:
+                                await update_conn.execute(
+                                    """
+                                    UPDATE feedback 
+                                    SET github_issue_url = $1, 
+                                        status = 'in_progress',
+                                        updated_at = CURRENT_TIMESTAMP
+                                    WHERE id = $2
+                                    """,
+                                    issue_url,
+                                    feedback['id']
+                                )
+                            logger.info(
+                                f"✅ Automated issue created for feedback ID {feedback['id']}: "
+                                f"{issue_url} (Priority: {triage_result['priority']})"
+                            )
+                            
+                            # Send notification about issue creation
+                            await notify_issue_created(
+                                feedback_id=feedback['id'],
+                                issue_url=issue_url,
+                                priority=triage_result['priority'],
+                                category=feedback['category'],
+                                feedback_type=feedback['feedback_type'] or 'feedback',
+                                comment_preview=feedback['comment']
+                            )
+                        elif error:
+                            logger.error(
+                                f"❌ Failed to create issue for feedback ID {feedback['id']}: {error}"
+                            )
+                    
+                    background_tasks.add_task(create_issue_background)
+                    issues_created += 1
+                    
+                except Exception as e:
+                    error_msg = f"Error processing feedback ID {feedback['id']}: {str(e)}"
+                    logger.error(error_msg)
+                    errors.append(error_msg)
+            
+            result = {
+                "status": "success",
+                "message": f"Processed {processed} feedback items",
+                "processed": processed,
+                "issues_created": issues_created,
+                "skipped_duplicates": skipped_duplicates,
+                "errors": errors if errors else None
+            }
+            
+            logger.info(
+                f"Automation complete: processed={processed}, "
+                f"issues_created={issues_created}, skipped={skipped_duplicates}"
+            )
+            
+            # Send automation summary notification
+            background_tasks.add_task(
+                notify_automation_summary,
+                processed,
+                issues_created,
+                skipped_duplicates,
+                errors
+            )
+            
+            return result
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in automation pipeline: {e}")
+        raise HTTPException(status_code=500, detail="Automation pipeline failed")
