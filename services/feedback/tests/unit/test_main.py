@@ -32,8 +32,9 @@ def test_root_endpoint(client):
     assert response.status_code == 200
     data = response.json()
     assert data["service"] == "feedback-service"
-    assert data["version"] == "1.0.0"
+    assert data["version"] == "2.0.0"  # Updated version
     assert "endpoints" in data
+    assert "features" in data  # New field
 
 
 def test_health_check_healthy(client):
@@ -63,7 +64,9 @@ def test_health_check_degraded(client):
 
 def test_submit_feedback_success(client):
     """Test successful feedback submission."""
-    with patch('app.main.db_pool') as mock_pool:
+    with patch('app.main.db_pool') as mock_pool, \
+         patch('app.main.analyze_feedback_sentiment') as mock_sentiment:
+        mock_sentiment.return_value = ('positive', 0.8, 0.8, 0.1, 0.1)
         mock_conn = AsyncMock()
         mock_conn.fetchrow.return_value = {
             'id': 1,
@@ -73,6 +76,13 @@ def test_submit_feedback_success(client):
             'email': 'user@example.com',
             'page_url': 'https://backstage.example.com',
             'status': 'open',
+            'sentiment': 'positive',
+            'sentiment_compound': 0.8,
+            'feedback_type': 'feedback',
+            'browser_info': None,
+            'user_agent': None,
+            'github_issue_url': None,
+            'has_screenshot': False,
             'created_at': datetime.now(),
             'updated_at': datetime.now()
         }
@@ -146,6 +156,13 @@ def test_list_feedback_success(client):
             'email': 'user@example.com',
             'page_url': 'https://example.com',
             'status': 'open',
+            'sentiment': 'positive',
+            'sentiment_compound': 0.8,
+            'feedback_type': 'feedback',
+            'browser_info': None,
+            'user_agent': None,
+            'github_issue_url': None,
+            'has_screenshot': False,
             'created_at': datetime.now(),
             'updated_at': datetime.now()
         }]
@@ -174,6 +191,13 @@ def test_update_feedback_status_success(client):
             'email': 'user@example.com',
             'page_url': 'https://example.com',
             'status': 'resolved',
+            'sentiment': 'positive',
+            'sentiment_compound': 0.8,
+            'feedback_type': 'feedback',
+            'browser_info': None,
+            'user_agent': None,
+            'github_issue_url': None,
+            'has_screenshot': False,
             'created_at': datetime.now(),
             'updated_at': datetime.now()
         }
