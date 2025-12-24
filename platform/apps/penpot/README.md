@@ -27,6 +27,39 @@ This directory contains the Kubernetes manifests for deploying Penpot to the Faw
 
 ## Configuration
 
+### Secrets Management
+
+**IMPORTANT**: The default secrets in the deployment manifests use placeholder values (e.g., `CHANGE_ME_*`).
+
+**Before deploying**:
+1. **Local/Dev**: Update secrets in `deployment.yaml` and `db-penpot-credentials.yaml`
+2. **Production**: Use External Secrets Operator to pull from vault/secret manager
+3. Generate strong passwords (min 16 characters) for:
+   - Database password (`penpot-db-credentials`)
+   - Penpot secret key (`PENPOT_SECRET_KEY`)
+
+Example using External Secrets Operator:
+```yaml
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: penpot-secrets
+  namespace: fawkes
+spec:
+  secretStoreRef:
+    name: aws-secrets-manager
+    kind: ClusterSecretStore
+  target:
+    name: penpot-secrets
+  data:
+    - secretKey: PENPOT_DATABASE_URI
+      remoteRef:
+        key: penpot/database-uri
+    - secretKey: PENPOT_SECRET_KEY
+      remoteRef:
+        key: penpot/secret-key
+```
+
 ### Environment Variables
 
 Penpot is configured via environment variables in the deployment manifest:
