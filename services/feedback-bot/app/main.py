@@ -32,6 +32,7 @@ FEEDBACK_API_URL = os.getenv(
 FEEDBACK_API_TOKEN = os.getenv("FEEDBACK_API_TOKEN", "")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 MATTERMOST_URL = os.getenv("MATTERMOST_URL", "http://mattermost.fawkes.svc.cluster.local:8065")
+EMAIL_DOMAIN = os.getenv("EMAIL_DOMAIN", "fawkes.local")
 
 # Initialize FastAPI
 app = FastAPI(
@@ -135,9 +136,9 @@ def extract_rating(text: str) -> Optional[int]:
     """
     # Pattern: "X stars", "X/5", "rate it X", "X out of 5"
     patterns = [
-        r'(\d)[/]5',
-        r'(\d)\s+(?:stars?|out of 5)',
-        r'(?:rate|rating|score).*?(\d)',
+        r'(\d+)[/]5',
+        r'(\d+)\s+(?:stars?|out of 5)',
+        r'(?:rate|rating|score).*?(\d+)',
     ]
     
     for pattern in patterns:
@@ -291,7 +292,7 @@ Just tell me what you think, and I'll handle the rest! 🎯
     
     try:
         # Get user email from Mattermost
-        user_email = f"{user_name}@fawkes.local"  # Default if not available
+        user_email = f"{user_name}@{EMAIL_DOMAIN}"  # Configurable domain
         
         # Parse feedback
         feedback_data = parse_feedback(text, user_name, user_email)
@@ -361,7 +362,7 @@ async def api_submit_feedback(request: Request):
         data = await request.json()
         text = data.get("text", "")
         user_name = data.get("user_name", "unknown")
-        user_email = data.get("user_email", f"{user_name}@fawkes.local")
+        user_email = data.get("user_email", f"{user_name}@{EMAIL_DOMAIN}")
         
         if not text:
             raise HTTPException(status_code=400, detail="Text is required")

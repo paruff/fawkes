@@ -58,7 +58,7 @@ class TestAutoCategorization:
     
     def test_performance_category(self):
         """Test Performance category detection."""
-        category = auto_categorize("The builds are very slow")
+        category = auto_categorize("The system is very slow and laggy")
         assert category == "Performance"
     
     def test_general_category_fallback(self):

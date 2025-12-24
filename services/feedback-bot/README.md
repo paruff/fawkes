@@ -88,6 +88,8 @@ env:
         key: bot-token
   - name: MATTERMOST_URL
     value: "http://mattermost.fawkes.svc.cluster.local:8065"
+  - name: EMAIL_DOMAIN
+    value: "fawkes.local"
 ```
 
 ## Mattermost Setup
