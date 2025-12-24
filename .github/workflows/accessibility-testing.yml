@@ -1,0 +1,285 @@
+name: Accessibility Testing
+
+on:
+  pull_request:
+    paths:
+      - 'design-system/**'
+      - 'platform/apps/backstage/**'
+      - '.github/workflows/accessibility-testing.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'design-system/**'
+      - 'platform/apps/backstage/**'
+  schedule:
+    # Run daily at 9 AM UTC
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  checks: write
+
+concurrency:
+  group: a11y-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  axe-core-tests:
+    name: Axe-Core Component Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'design-system/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: ./design-system
+        run: npm ci
+
+      - name: Run accessibility tests with axe-core
+        working-directory: ./design-system
+        run: npm run test:a11y:ci
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axe-core-test-results
+          path: |
+            design-system/coverage/
+            design-system/junit.xml
+          retention-days: 30
+
+      - name: Publish test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: design-system/junit.xml
+          check_name: Axe-Core Accessibility Tests
+
+  lighthouse-ci:
+    name: Lighthouse CI Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'design-system/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: ./design-system
+        run: npm ci
+
+      - name: Build Storybook
+        working-directory: ./design-system
+        run: npm run build-storybook
+
+      - name: Run Lighthouse CI
+        working-directory: ./design-system
+        run: |
+          npm run lighthouse:ci
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: design-system/.lighthouseci/
+          retention-days: 30
+
+      - name: Comment PR with Lighthouse results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Read Lighthouse results
+            const lhciDir = 'design-system/.lighthouseci';
+            let comment = '## 🔦 Lighthouse Accessibility Results\n\n';
+            
+            try {
+              const manifestPath = path.join(lhciDir, 'manifest.json');
+              if (fs.existsSync(manifestPath)) {
+                const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+                const results = manifest[0];
+                
+                if (results && results.summary) {
+                  const accessibility = results.summary.accessibility || 0;
+                  const performanceIcon = accessibility >= 0.9 ? '✅' : accessibility >= 0.7 ? '⚠️' : '❌';
+                  
+                  comment += `${performanceIcon} **Accessibility Score**: ${Math.round(accessibility * 100)}/100\n\n`;
+                  comment += `**Status**: ${accessibility >= 0.9 ? 'PASSED ✅' : 'NEEDS IMPROVEMENT ⚠️'}\n\n`;
+                  comment += `Target: ≥90 for WCAG 2.1 AA compliance\n\n`;
+                  comment += `[View detailed reports in artifacts](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`;
+                }
+              } else {
+                comment += '⚠️ Lighthouse results not found. Check the workflow logs for details.';
+              }
+            } catch (error) {
+              comment += `⚠️ Error reading Lighthouse results: ${error.message}`;
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  create-accessibility-issues:
+    name: Create Issues for Violations
+    runs-on: ubuntu-latest
+    needs: [axe-core-tests, lighthouse-ci]
+    if: always() && (needs.axe-core-tests.result == 'failure' || needs.lighthouse-ci.result == 'failure')
+    timeout-minutes: 5
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Parse violations and create issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Check if this is a scheduled run or main branch
+            const shouldCreateIssues = context.eventName === 'schedule' || context.ref === 'refs/heads/main';
+            
+            if (!shouldCreateIssues) {
+              console.log('Skipping issue creation for PR builds');
+              return;
+            }
+            
+            let violations = [];
+            const axeResultsPath = './artifacts/axe-core-test-results/coverage/';
+            
+            // Parse axe-core results if available
+            if (fs.existsSync(axeResultsPath)) {
+              console.log('Found axe-core results, analyzing...');
+              // Add parsing logic here if needed
+            }
+            
+            // Create issues for critical violations
+            const issueTitle = `[A11Y] Accessibility Violations Detected - ${new Date().toISOString().split('T')[0]}`;
+            const issueBody = `
+            ## 🚨 Accessibility Violations Detected
+            
+            Automated accessibility testing has detected violations that need attention.
+            
+            **Detection Date**: ${new Date().toISOString()}
+            **Workflow Run**: [View Details](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})
+            
+            ### Summary
+            
+            ${needs['axe-core-tests'].result === 'failure' ? '❌ Axe-Core tests failed' : '✅ Axe-Core tests passed'}
+            ${needs['lighthouse-ci'].result === 'failure' ? '❌ Lighthouse CI failed' : '✅ Lighthouse CI passed'}
+            
+            ### Action Required
+            
+            1. Review the test results in the workflow artifacts
+            2. Fix the accessibility violations
+            3. Verify fixes with \`npm run test:a11y\` locally
+            4. Re-run the workflow after pushing fixes
+            
+            ### Resources
+            
+            - [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
+            - [Axe-Core Documentation](https://github.com/dequelabs/axe-core)
+            - [Lighthouse Accessibility Scoring](https://developer.chrome.com/docs/lighthouse/accessibility/scoring/)
+            
+            ---
+            _Auto-generated by Accessibility Testing workflow_
+            `;
+            
+            // Search for existing open issues
+            const existingIssues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'accessibility,automated',
+              state: 'open'
+            });
+            
+            // Only create if no similar issue exists in the last 7 days
+            const recentIssues = existingIssues.data.filter(issue => {
+              const createdAt = new Date(issue.created_at);
+              const daysSince = (Date.now() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
+              return daysSince < 7;
+            });
+            
+            if (recentIssues.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: issueTitle,
+                body: issueBody,
+                labels: ['accessibility', 'automated', 'bug', 'P1']
+              });
+              console.log('Created new accessibility issue');
+            } else {
+              console.log('Recent accessibility issue already exists, skipping creation');
+            }
+
+  accessibility-report:
+    name: Generate Accessibility Report
+    runs-on: ubuntu-latest
+    needs: [axe-core-tests, lighthouse-ci]
+    if: always()
+    timeout-minutes: 5
+    
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Generate summary report
+        run: |
+          echo "# 🔍 Accessibility Testing Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Suite | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Axe-Core Tests | ${{ needs.axe-core-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Lighthouse CI | ${{ needs.lighthouse-ci.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Compliance Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ needs.axe-core-tests.result }}" == "success" && "${{ needs.lighthouse-ci.result }}" == "success" ]]; then
+            echo "✅ **WCAG 2.1 AA Compliance**: PASSED" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **WCAG 2.1 AA Compliance**: NEEDS ATTENTION" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "_Generated on $(date -u)_" >> $GITHUB_STEP_SUMMARY
