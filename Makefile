@@ -131,8 +131,8 @@ validate-at-e3-001: ## Run AT-E3-001 acceptance test validation for Research Inf
 validate-at-e3-002: ## Run AT-E3-002 acceptance test validation for SPACE Framework Implementation
 	@./scripts/validate-at-e3-002.sh $(NAMESPACE)
 
-validate-at-e3-003: ## Run AT-E3-003 acceptance test validation for DevEx Dashboard in Grafana
-	@./scripts/validate-at-e3-003.sh --namespace monitoring --argocd-ns $(ARGO_NAMESPACE)
+validate-at-e3-003: ## Run AT-E3-003 acceptance test validation for Multi-Channel Feedback System
+	@./scripts/validate-at-e3-003.sh --namespace $(NAMESPACE) --monitoring-ns monitoring
 
 clean-local: ## Clean up local K8s deployments
 	@kubectl delete namespace $(NAMESPACE) --ignore-not-found=true
