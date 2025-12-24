@@ -5,10 +5,10 @@ Tests SPACE framework (Satisfaction, Performance, Activity, Communication, Effic
 metrics collection, API endpoints, survey integration, and privacy compliance.
 """
 from behave import given, when, then
-import requests
 import json
 import time
 import logging
+import math
 from kubernetes import client, config
 from kubernetes.stream import stream
 
@@ -87,18 +87,16 @@ def parse_table_to_dict(table):
             try:
                 # Try float first to handle both int and float
                 numeric_value = float(value)
-                # Check for special float values
-                if not (numeric_value != numeric_value or  # NaN check
-                        numeric_value == float('inf') or 
-                        numeric_value == float('-inf')):
+                # Check for special float values (NaN, Infinity)
+                if math.isnan(numeric_value) or math.isinf(numeric_value):
+                    # Keep special float values as strings
+                    result[key] = value
+                else:
                     # If it's a whole number, convert to int
                     if numeric_value.is_integer():
                         result[key] = int(numeric_value)
                     else:
                         result[key] = numeric_value
-                else:
-                    # Keep special float values as strings
-                    result[key] = value
             except (ValueError, AttributeError):
                 # Keep as string if not numeric
                 result[key] = value
@@ -475,9 +473,10 @@ def step_verify_aggregation_threshold(context, threshold):
         
         try:
             config_threshold = int(threshold_value)
-        except ValueError:
-            logger.error(f"Invalid aggregation threshold value: {threshold_value}")
-            assert False, f"Aggregation threshold '{threshold_value}' is not a valid integer"
+        except ValueError as e:
+            raise AssertionError(
+                f"Aggregation threshold configuration is invalid: '{threshold_value}' is not a valid integer"
+            ) from e
         
         assert config_threshold >= threshold, \
             f"Aggregation threshold {config_threshold} is less than required {threshold}"
