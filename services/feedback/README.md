@@ -7,6 +7,7 @@ FastAPI-based feedback collection and management service for Backstage with NPS 
 - Submit feedback with ratings (1-5), categories, and comments
 - **AI-powered sentiment analysis** using VADER for all feedback comments
 - **NPS (Net Promoter Score) calculation** with promoters/passives/detractors tracking
+- **Time-to-action tracking** measuring response time from submission to first action
 - Optional email for follow-up
 - Admin endpoints to view and manage feedback
 - Aggregated statistics
@@ -47,6 +48,11 @@ The service exports the following metrics for monitoring and analytics:
 - `feedback_submissions_total{category,rating}` - Total submissions by category and rating
 - `feedback_by_category_total{category}` - Total feedback count by category
 - `feedback_response_rate{status}` - Response rate by status (overall, open, resolved, etc.)
+
+### Time-to-Action Metrics
+- `feedback_time_to_action_seconds{category}` - Histogram of time from submission to first action (status change from 'open')
+  - Buckets: 1min, 5min, 15min, 30min, 1h, 2h, 4h, 8h, 24h, 48h, 7d
+- `feedback_avg_time_to_action_hours{status,category}` - Average time to action in hours by status and category
 
 ### Sentiment Metrics
 - `feedback_sentiment_score{category,sentiment}` - Average sentiment scores by category
@@ -97,6 +103,14 @@ A comprehensive analytics dashboard is available at `/grafana/d/feedback-analyti
 - Sentiment analysis visualizations
 - Response rate tracking
 - Top issues and low-rated feedback highlights
+- **Time-to-action metrics** showing average response times by status and category
+- Time-to-action distribution histogram
+
+**Dashboard Features**:
+- Auto-refresh every 5 minutes for real-time updates
+- 7-day default time range
+- Color-coded thresholds for quick insights
+- 30 panels providing comprehensive feedback analytics
 
 ## Environment Variables
 
