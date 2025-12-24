@@ -1,0 +1,108 @@
+.fawkes-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--fawkes-font-sans);
+  font-weight: 500;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.fawkes-button:focus-visible {
+  outline: 2px solid var(--fawkes-primary-500);
+  outline-offset: 2px;
+}
+
+.fawkes-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Sizes */
+.fawkes-button--sm {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.fawkes-button--md {
+  padding: 0.625rem 1rem;
+  font-size: 1rem;
+}
+
+.fawkes-button--lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+}
+
+/* Variants */
+.fawkes-button--primary {
+  background-color: var(--fawkes-primary-600);
+  color: white;
+}
+
+.fawkes-button--primary:hover:not(:disabled) {
+  background-color: var(--fawkes-primary-500);
+}
+
+.fawkes-button--secondary {
+  background-color: var(--fawkes-gray-200);
+  color: var(--fawkes-gray-900);
+}
+
+.fawkes-button--secondary:hover:not(:disabled) {
+  background-color: var(--fawkes-gray-300);
+}
+
+.fawkes-button--outline {
+  background-color: transparent;
+  border-color: var(--fawkes-gray-300);
+  color: var(--fawkes-gray-700);
+}
+
+.fawkes-button--outline:hover:not(:disabled) {
+  background-color: var(--fawkes-gray-50);
+}
+
+.fawkes-button--ghost {
+  background-color: transparent;
+  color: var(--fawkes-gray-700);
+}
+
+.fawkes-button--ghost:hover:not(:disabled) {
+  background-color: var(--fawkes-gray-100);
+}
+
+.fawkes-button--danger {
+  background-color: var(--fawkes-error);
+  color: white;
+}
+
+.fawkes-button--danger:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+/* Full width */
+.fawkes-button--full-width {
+  width: 100%;
+}
+
+/* Loading spinner */
+.fawkes-button__spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: fawkes-spin 0.6s linear infinite;
+}
+
+@keyframes fawkes-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
