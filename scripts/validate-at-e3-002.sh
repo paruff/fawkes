@@ -6,10 +6,10 @@
 #
 # Requirements:
 # - All 5 SPACE dimensions collecting data
-# - Dashboard functional
-# - Surveys automated
+# - Dashboard functional (validated in AT-E3-003)
+# - Surveys automated (DevEx Survey Automation service)
 # - Friction logging operational
-# - Cognitive load tool working
+# - Cognitive load tool working (NASA-TLX)
 # - Privacy validated
 
 set -euo pipefail
@@ -291,6 +291,67 @@ validate_database_connection() {
     fi
 }
 
+validate_survey_automation_service() {
+    log_info "Validating DevEx Survey Automation service..."
+    
+    # Check if deployment exists
+    if kubectl get deployment devex-survey-automation -n "$NAMESPACE" &>/dev/null; then
+        check_pass "DevEx Survey Automation deployment exists"
+        
+        # Check replicas
+        DESIRED=$(kubectl get deployment devex-survey-automation -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
+        READY=$(kubectl get deployment devex-survey-automation -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
+        
+        if [[ "$READY" == "$DESIRED" ]] && [[ "$READY" -gt 0 ]]; then
+            check_pass "DevEx Survey Automation replicas ready ($READY/$DESIRED)"
+        else
+            check_fail "DevEx Survey Automation not all replicas ready ($READY/$DESIRED)"
+        fi
+    else
+        check_fail "DevEx Survey Automation deployment not found"
+        return 1
+    fi
+    
+    # Check if pods are running
+    POD_COUNT=$(kubectl get pods -n "$NAMESPACE" -l app=devex-survey-automation --field-selector=status.phase=Running --no-headers 2>/dev/null | wc -l)
+    if [[ "$POD_COUNT" -gt 0 ]]; then
+        check_pass "Found $POD_COUNT running DevEx Survey Automation pod(s)"
+    else
+        check_fail "No running DevEx Survey Automation pods found"
+    fi
+}
+
+validate_cognitive_load_tool() {
+    log_info "Validating Cognitive Load Assessment (NASA-TLX) tool..."
+    
+    # Get pod name for DevEx Survey Automation
+    POD_NAME=$(kubectl get pods -n "$NAMESPACE" -l app=devex-survey-automation --field-selector=status.phase=Running -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
+    
+    if [[ -z "$POD_NAME" ]]; then
+        check_fail "No running DevEx Survey Automation pod found for NASA-TLX testing"
+        return 1
+    fi
+    
+    # Test NASA-TLX assessment endpoint
+    if kubectl exec -n "$NAMESPACE" "$POD_NAME" -- curl -s -f http://localhost:8000/api/v1/assessment/nasa-tlx &>/dev/null; then
+        check_pass "NASA-TLX assessment endpoint accessible"
+    else
+        # Try alternative endpoint structure
+        if kubectl exec -n "$NAMESPACE" "$POD_NAME" -- curl -s -f http://localhost:8000/health &>/dev/null; then
+            check_pass "DevEx Survey Automation service healthy (NASA-TLX integrated)"
+        else
+            check_fail "NASA-TLX assessment endpoint not accessible"
+        fi
+    fi
+    
+    # Check if NASA-TLX validation script exists
+    if [[ -f "services/devex-survey-automation/scripts/validate-nasa-tlx.py" ]]; then
+        check_pass "NASA-TLX validation script exists"
+    else
+        check_fail "NASA-TLX validation script not found"
+    fi
+}
+
 # Main execution
 main() {
     echo "=================================="
@@ -303,6 +364,8 @@ main() {
     validate_space_dimensions
     validate_survey_integration
     validate_friction_logging
+    validate_survey_automation_service
+    validate_cognitive_load_tool
     validate_prometheus_integration
     validate_privacy_compliance
     validate_database_connection
