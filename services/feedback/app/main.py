@@ -23,6 +23,7 @@ import asyncpg
 from .metrics import (
     feedback_submissions_total,
     feedback_request_duration,
+    feedback_time_to_action_seconds,
     update_all_metrics
 )
 
@@ -174,7 +175,8 @@ async def init_database():
                     user_agent TEXT,
                     github_issue_url TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    status_changed_at TIMESTAMP
                 );
                 
                 CREATE INDEX IF NOT EXISTS idx_feedback_status ON feedback(status);
@@ -183,6 +185,17 @@ async def init_database():
                 CREATE INDEX IF NOT EXISTS idx_feedback_sentiment ON feedback(sentiment);
                 CREATE INDEX IF NOT EXISTS idx_feedback_type ON feedback(feedback_type);
                 CREATE INDEX IF NOT EXISTS idx_feedback_github_issue ON feedback(github_issue_url);
+                
+                -- Add status_changed_at column if it doesn't exist (migration)
+                DO $$
+                BEGIN
+                    IF NOT EXISTS (
+                        SELECT 1 FROM information_schema.columns 
+                        WHERE table_name='feedback' AND column_name='status_changed_at'
+                    ) THEN
+                        ALTER TABLE feedback ADD COLUMN status_changed_at TIMESTAMP;
+                    END IF;
+                END $$;
             """)
             logger.info("✅ Database schema initialized")
     except Exception as e:
@@ -539,19 +552,56 @@ async def update_feedback_status(
     with feedback_request_duration.labels(endpoint="update_status").time():
         try:
             async with db_pool.acquire() as conn:
-                row = await conn.fetchrow(
-                    """
-                    UPDATE feedback
-                    SET status = $1, updated_at = CURRENT_TIMESTAMP
-                    WHERE id = $2
-                    RETURNING id, rating, category, comment, email, page_url, status,
-                              sentiment, sentiment_compound, feedback_type, browser_info,
-                              user_agent, github_issue_url, created_at, updated_at,
-                              (screenshot IS NOT NULL) as has_screenshot
-                    """,
-                    status_update.status,
+                # First, get the current status to check if it's changing
+                current_row = await conn.fetchrow(
+                    "SELECT status FROM feedback WHERE id = $1",
                     feedback_id
                 )
+                
+                if not current_row:
+                    raise HTTPException(status_code=404, detail="Feedback not found")
+                
+                # Update status and set status_changed_at if status is actually changing
+                # (and if it's changing from 'open' to any other status for first action tracking)
+                status_is_changing = current_row['status'] != status_update.status
+                first_action = current_row['status'] == 'open' and status_update.status != 'open'
+                
+                if status_is_changing and first_action:
+                    row = await conn.fetchrow(
+                        """
+                        UPDATE feedback
+                        SET status = $1, updated_at = CURRENT_TIMESTAMP,
+                            status_changed_at = CURRENT_TIMESTAMP
+                        WHERE id = $2
+                        RETURNING id, rating, category, comment, email, page_url, status,
+                                  sentiment, sentiment_compound, feedback_type, browser_info,
+                                  user_agent, github_issue_url, created_at, updated_at,
+                                  status_changed_at,
+                                  (screenshot IS NOT NULL) as has_screenshot
+                        """,
+                        status_update.status,
+                        feedback_id
+                    )
+                    
+                    # Record time-to-action metric (time from created_at to now)
+                    if row['created_at'] and row['status_changed_at']:
+                        time_to_action = (row['status_changed_at'] - row['created_at']).total_seconds()
+                        feedback_time_to_action_seconds.labels(category=row['category']).observe(time_to_action)
+                        logger.info(f"Time-to-action recorded: {time_to_action:.0f}s for feedback ID {feedback_id}")
+                else:
+                    row = await conn.fetchrow(
+                        """
+                        UPDATE feedback
+                        SET status = $1, updated_at = CURRENT_TIMESTAMP
+                        WHERE id = $2
+                        RETURNING id, rating, category, comment, email, page_url, status,
+                                  sentiment, sentiment_compound, feedback_type, browser_info,
+                                  user_agent, github_issue_url, created_at, updated_at,
+                                  (screenshot IS NOT NULL) as has_screenshot
+                        """,
+                        status_update.status,
+                        feedback_id
+                    )
                 
                 if not row:
                     raise HTTPException(status_code=404, detail="Feedback not found")
