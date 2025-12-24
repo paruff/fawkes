@@ -77,3 +77,57 @@ class SurveyOptOut(Base):
     email = Column(String(255), nullable=False)
     opted_out_at = Column(DateTime, default=func.now())
     reason = Column(Text, nullable=True)
+
+
+class NASATLXAssessment(Base):
+    """NASA-TLX cognitive load assessment responses"""
+    __tablename__ = "nasa_tlx_assessments"
+    
+    id = Column(Integer, primary_key=True)
+    user_id = Column(String(255), nullable=False)
+    task_type = Column(String(100), nullable=False)  # deployment, pr_review, incident_response, etc.
+    task_id = Column(String(255), nullable=True)  # Optional reference to specific task
+    
+    # NASA-TLX dimensions (0-100 scale)
+    mental_demand = Column(Float, nullable=False)  # How mentally demanding was the task?
+    physical_demand = Column(Float, nullable=False)  # How physically demanding was the task?
+    temporal_demand = Column(Float, nullable=False)  # How hurried or rushed was the pace?
+    performance = Column(Float, nullable=False)  # How successful were you?
+    effort = Column(Float, nullable=False)  # How hard did you have to work?
+    frustration = Column(Float, nullable=False)  # How insecure, discouraged, irritated were you?
+    
+    # Calculated scores
+    overall_workload = Column(Float, nullable=False)  # Average of all dimensions
+    weighted_workload = Column(Float, nullable=True)  # Optional weighted score
+    
+    # Context
+    duration_minutes = Column(Integer, nullable=True)  # How long did the task take?
+    comment = Column(Text, nullable=True)  # Optional feedback
+    platform_version = Column(String(50), nullable=True)  # Platform version during assessment
+    
+    # Metadata
+    submitted_at = Column(DateTime, default=func.now())
+    created_at = Column(DateTime, default=func.now())
+
+
+class NASATLXAggregate(Base):
+    """Aggregated NASA-TLX metrics by task type and time period"""
+    __tablename__ = "nasa_tlx_aggregates"
+    
+    id = Column(Integer, primary_key=True)
+    task_type = Column(String(100), nullable=False)
+    week = Column(Integer, nullable=False)  # ISO week number
+    year = Column(Integer, nullable=False)
+    
+    # Average scores
+    avg_mental_demand = Column(Float, nullable=True)
+    avg_physical_demand = Column(Float, nullable=True)
+    avg_temporal_demand = Column(Float, nullable=True)
+    avg_performance = Column(Float, nullable=True)
+    avg_effort = Column(Float, nullable=True)
+    avg_frustration = Column(Float, nullable=True)
+    avg_overall_workload = Column(Float, nullable=True)
+    
+    # Statistics
+    response_count = Column(Integer, default=0)
+    created_at = Column(DateTime, default=func.now())
