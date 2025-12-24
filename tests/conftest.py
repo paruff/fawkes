@@ -82,6 +82,34 @@ def pytest_configure(config):
         "markers",
         "slow: Slow-running tests (run less frequently)"
     )
+    config.addinivalue_line(
+        "markers",
+        "accessibility: Accessibility testing related tests"
+    )
+    config.addinivalue_line(
+        "markers",
+        "wcag: WCAG compliance tests"
+    )
+    config.addinivalue_line(
+        "markers",
+        "lighthouse: Lighthouse CI tests"
+    )
+    config.addinivalue_line(
+        "markers",
+        "a11y: Accessibility (a11y) shorthand marker"
+    )
+    config.addinivalue_line(
+        "markers",
+        "critical: Critical tests that must pass"
+    )
+    config.addinivalue_line(
+        "markers",
+        "important: Important tests (high priority)"
+    )
+    config.addinivalue_line(
+        "markers",
+        "normal: Normal priority tests"
+    )
 
     # DORA capability markers
     config.addinivalue_line(
