@@ -4300,10 +4300,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#9-devex-health-score-validation" class="md-nav__link">
+  <a href="#9-devex-survey-automation-service-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        9. DevEx Health Score Validation
+        9. DevEx Survey Automation Service Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-cognitive-load-assessment-tool-nasa-tlx-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Cognitive Load Assessment Tool (NASA-TLX) Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#11-devex-health-score-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. DevEx Health Score Validation
       
     </span>
   </a>
@@ -4442,10 +4464,13 @@
 <ul>
 <li>[ ] All 5 SPACE dimensions collecting data</li>
 <li>[ ] Automated data collection working</li>
-<li>[ ] Survey integration functional</li>
+<li>[ ] Survey integration functional (DevEx Survey Automation deployed)</li>
 <li>[ ] API for metrics access available</li>
 <li>[ ] Privacy-compliant (aggregation threshold, no individual data exposed)</li>
+<li>[ ] Cognitive load assessment tool working (NASA-TLX)</li>
+<li>[ ] Friction logging operational</li>
 </ul>
+<p><strong>Note</strong>: Dashboard functionality is validated separately in AT-E3-003.</p>
 <h2 id="test-procedure">Test Procedure</h2>
 <h3 id="1-service-deployment-validation">1. Service Deployment Validation</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Run validation script</span>
@@ -4545,7 +4570,37 @@ kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </
 <p><strong>Expected Result</strong>:
 - Database credentials secret exists
 - No database connection errors in logs</p>
-<h3 id="9-devex-health-score-validation">9. DevEx Health Score Validation</h3>
+<h3 id="9-devex-survey-automation-service-validation">9. DevEx Survey Automation Service Validation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check deployment exists</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>deployment<span class="w"> </span>devex-survey-automation<span class="w"> </span>-n<span class="w"> </span>fawkes-local
+
+<span class="c1"># Check pods are running</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>devex-survey-automation
+
+<span class="c1"># Check service health</span>
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>svc/devex-survey-automation<span class="w"> </span><span class="m">8080</span>:8000
+curl<span class="w"> </span>http://localhost:8080/health
+</code></pre></div>
+<p><strong>Expected Result</strong>:
+- Deployment exists with at least 1 ready replica
+- Pods are in Running state
+- Service health endpoint responds successfully
+- Automated survey CronJobs are scheduled</p>
+<h3 id="10-cognitive-load-assessment-tool-nasa-tlx-validation">10. Cognitive Load Assessment Tool (NASA-TLX) Validation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check if NASA-TLX endpoints are accessible</span>
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>fawkes-local<span class="w"> </span>svc/devex-survey-automation<span class="w"> </span><span class="m">8080</span>:8000
+
+<span class="c1"># Test NASA-TLX assessment endpoint</span>
+curl<span class="w"> </span>http://localhost:8080/api/v1/assessment/nasa-tlx
+
+<span class="c1"># Verify validation script exists</span>
+ls<span class="w"> </span>-la<span class="w"> </span>services/devex-survey-automation/scripts/validate-nasa-tlx.py
+</code></pre></div>
+<p><strong>Expected Result</strong>:
+- NASA-TLX assessment endpoint is accessible
+- Validation script exists
+- Tool is integrated with DevEx Survey Automation service</p>
+<h3 id="11-devex-health-score-validation">11. DevEx Health Score Validation</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get health score</span>
 curl<span class="w"> </span>http://localhost:8000/api/v1/metrics/space/health
 </code></pre></div>
@@ -4566,9 +4621,11 @@ make<span class="w"> </span>validate-at-e3-002
 3. All 5 SPACE dimensions
 4. Survey integration
 5. Friction logging
-6. Prometheus metrics
-7. Privacy compliance
-8. Database connectivity</p>
+6. DevEx Survey Automation service
+7. Cognitive Load Assessment (NASA-TLX)
+8. Prometheus metrics
+9. Privacy compliance
+10. Database connectivity</p>
 <h2 id="success-criteria">Success Criteria</h2>
 <p>All of the following must pass:</p>
 <ol>
@@ -4577,6 +4634,8 @@ make<span class="w"> </span>validate-at-e3-002
 <li>✅ All 5 SPACE dimension endpoints working</li>
 <li>✅ Pulse survey submission functional</li>
 <li>✅ Friction logging operational</li>
+<li>✅ DevEx Survey Automation service deployed and healthy</li>
+<li>✅ Cognitive Load Assessment (NASA-TLX) tool accessible</li>
 <li>✅ Prometheus metrics exposed</li>
 <li>✅ ServiceMonitor configured</li>
 <li>✅ Privacy threshold (&gt;=5) enforced</li>
