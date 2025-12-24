@@ -6,6 +6,7 @@ import requests
 import json
 import time
 import logging
+import os
 from kubernetes import client, config
 
 logger = logging.getLogger(__name__)
@@ -24,13 +25,14 @@ def load_kube_clients():
     core = client.CoreV1Api()
     apps = client.AppsV1Api()
     networking = client.NetworkingV1Api()
-    return core, apps, networking
+    batch = client.BatchV1Api()
+    return core, apps, networking, batch
 
 
 @given('the feedback service is deployed in namespace "{namespace}"')
 def step_feedback_service_deployed(context, namespace):
     """Verify feedback service is deployed."""
-    core_api, apps_api, _ = load_kube_clients()
+    core_api, apps_api, _, batch_api = load_kube_clients()
     context.namespace = namespace
     context.core_api = core_api
     context.apps_api = apps_api
@@ -102,7 +104,7 @@ def step_existing_feedback(context, feedback_id):
 @when('I check for the feedback-service deployment in namespace "{namespace}"')
 def step_check_feedback_deployment(context, namespace):
     """Check feedback service deployment."""
-    _, apps_api, _ = load_kube_clients()
+    _, apps_api, _, batch_api = load_kube_clients()
     try:
         context.deployment = apps_api.read_namespaced_deployment("feedback-service", namespace)
         logger.info(f"Found feedback-service deployment in {namespace}")
@@ -254,7 +256,7 @@ def step_request_stats(context):
 @when('I check the ingress configuration in namespace "{namespace}"')
 def step_check_ingress(context, namespace):
     """Check ingress configuration."""
-    _, _, networking_api = load_kube_clients()
+    _, _, networking_api, _ = load_kube_clients()
     try:
         context.ingress = networking_api.read_namespaced_ingress("feedback-service", namespace)
         logger.info(f"Found feedback-service ingress in {namespace}")
@@ -534,8 +536,6 @@ def step_deployment_non_root(context):
 # Multi-Channel Feedback System Steps (AT-E3-003)
 # =============================================================================
 
-import os
-
 
 @given('the feedback-cli code exists in the repository')
 def step_cli_code_exists(context):
@@ -550,7 +550,7 @@ def step_cli_code_exists(context):
 @given('all feedback components are deployed')
 def step_all_components_deployed(context):
     """Verify all feedback components are deployed."""
-    _, apps_api, _ = load_kube_clients()
+    _, apps_api, _, batch_api = load_kube_clients()
     namespace = context.namespace
     
     # Check feedback-service
@@ -573,7 +573,7 @@ def step_all_components_deployed(context):
 @given('Grafana is deployed in namespace "{namespace}"')
 def step_grafana_deployed(context, namespace):
     """Verify Grafana is deployed."""
-    _, apps_api, _ = load_kube_clients()
+    _, apps_api, _, batch_api = load_kube_clients()
     context.grafana_namespace = namespace
     try:
         # Look for Grafana deployment
@@ -607,7 +607,7 @@ def step_check_cli_structure(context):
 @when('I check for the feedback-bot deployment in namespace "{namespace}"')
 def step_check_bot_deployment(context, namespace):
     """Check feedback-bot deployment."""
-    _, apps_api, _ = load_kube_clients()
+    _, apps_api, _, batch_api = load_kube_clients()
     try:
         deployment = apps_api.read_namespaced_deployment("feedback-bot", namespace)
         context.bot_deployment = deployment
@@ -621,7 +621,7 @@ def step_check_bot_deployment(context, namespace):
 def step_check_automation_cronjob(context, namespace):
     """Check automation CronJob."""
     try:
-        batch_api = client.BatchV1Api()
+        _, _, _, batch_api = load_kube_clients()
         cronjob = batch_api.read_namespaced_cron_job("feedback-automation", namespace)
         context.automation_cronjob = cronjob
         logger.info(f"Found feedback-automation CronJob in {namespace}")
@@ -691,7 +691,7 @@ def step_check_observability(context):
 @when('I check security configuration')
 def step_check_security(context):
     """Check security configuration."""
-    _, apps_api, _ = load_kube_clients()
+    _, apps_api, _, batch_api = load_kube_clients()
     namespace = context.namespace
     
     context.security_checks = {
@@ -721,7 +721,7 @@ def step_check_security(context):
 @when('I verify all feedback channels')
 def step_verify_all_channels(context):
     """Verify all feedback channels."""
-    _, apps_api, _ = load_kube_clients()
+    _, apps_api, _, batch_api = load_kube_clients()
     namespace = context.namespace
     
     context.channels = {
@@ -752,7 +752,6 @@ def step_verify_all_channels(context):
     
     # Check automation
     try:
-        batch_api = client.BatchV1Api()
         batch_api.read_namespaced_cron_job("feedback-automation", namespace)
         context.channels["automation"] = True
     except:
@@ -1034,7 +1033,7 @@ def step_bot_has_limits(context):
 @then('all components should run as non-root')
 def step_all_components_non_root(context):
     """Verify all components run as non-root."""
-    _, apps_api, _ = load_kube_clients()
+    _, apps_api, _, batch_api = load_kube_clients()
     namespace = context.namespace
     
     # This is validated by checking deployment manifests
