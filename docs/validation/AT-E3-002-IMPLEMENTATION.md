@@ -25,9 +25,13 @@ Validates that the SPACE framework (Satisfaction, Performance, Activity, Communi
 
 - [ ] All 5 SPACE dimensions collecting data
 - [ ] Automated data collection working
-- [ ] Survey integration functional
+- [ ] Survey integration functional (DevEx Survey Automation deployed)
 - [ ] API for metrics access available
 - [ ] Privacy-compliant (aggregation threshold, no individual data exposed)
+- [ ] Cognitive load assessment tool working (NASA-TLX)
+- [ ] Friction logging operational
+
+**Note**: Dashboard functionality is validated separately in AT-E3-003.
 
 ## Test Procedure
 
@@ -162,7 +166,45 @@ kubectl logs -n fawkes-local -l app=space-metrics --tail=50 | grep -i "database\
 - Database credentials secret exists
 - No database connection errors in logs
 
-### 9. DevEx Health Score Validation
+### 9. DevEx Survey Automation Service Validation
+
+```bash
+# Check deployment exists
+kubectl get deployment devex-survey-automation -n fawkes-local
+
+# Check pods are running
+kubectl get pods -n fawkes-local -l app=devex-survey-automation
+
+# Check service health
+kubectl port-forward -n fawkes-local svc/devex-survey-automation 8080:8000
+curl http://localhost:8080/health
+```
+
+**Expected Result**:
+- Deployment exists with at least 1 ready replica
+- Pods are in Running state
+- Service health endpoint responds successfully
+- Automated survey CronJobs are scheduled
+
+### 10. Cognitive Load Assessment Tool (NASA-TLX) Validation
+
+```bash
+# Check if NASA-TLX endpoints are accessible
+kubectl port-forward -n fawkes-local svc/devex-survey-automation 8080:8000
+
+# Test NASA-TLX assessment endpoint
+curl http://localhost:8080/api/v1/assessment/nasa-tlx
+
+# Verify validation script exists
+ls -la services/devex-survey-automation/scripts/validate-nasa-tlx.py
+```
+
+**Expected Result**:
+- NASA-TLX assessment endpoint is accessible
+- Validation script exists
+- Tool is integrated with DevEx Survey Automation service
+
+### 11. DevEx Health Score Validation
 
 ```bash
 # Get health score
@@ -191,9 +233,11 @@ The script validates:
 3. All 5 SPACE dimensions
 4. Survey integration
 5. Friction logging
-6. Prometheus metrics
-7. Privacy compliance
-8. Database connectivity
+6. DevEx Survey Automation service
+7. Cognitive Load Assessment (NASA-TLX)
+8. Prometheus metrics
+9. Privacy compliance
+10. Database connectivity
 
 ## Success Criteria
 
@@ -204,11 +248,13 @@ All of the following must pass:
 3. ✅ All 5 SPACE dimension endpoints working
 4. ✅ Pulse survey submission functional
 5. ✅ Friction logging operational
-6. ✅ Prometheus metrics exposed
-7. ✅ ServiceMonitor configured
-8. ✅ Privacy threshold (>=5) enforced
-9. ✅ No individual data in API responses
-10. ✅ Database connection working
+6. ✅ DevEx Survey Automation service deployed and healthy
+7. ✅ Cognitive Load Assessment (NASA-TLX) tool accessible
+8. ✅ Prometheus metrics exposed
+9. ✅ ServiceMonitor configured
+10. ✅ Privacy threshold (>=5) enforced
+11. ✅ No individual data in API responses
+12. ✅ Database connection working
 
 ## Failure Handling
 
