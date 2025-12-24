@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: penpot
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/part-of: fawkes
+    app.kubernetes.io/component: design-tool
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/fawkes.git
+    targetRevision: HEAD
+    path: platform/apps/penpot
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

@@ -84,6 +84,12 @@ data:
           target: http://feedback-service.fawkes.svc:8000/
           changeOrigin: true
           secure: false
+        '/penpot/api':
+          target: http://penpot-backend.fawkes.svc:6060/api/
+          changeOrigin: true
+          secure: false
+          headers:
+            X-Forwarded-Proto: https
 
     techdocs:
       builder: local

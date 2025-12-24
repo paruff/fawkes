@@ -328,6 +328,73 @@ else
     print_fail "ArgoCD application not found"
 fi
 
+# Additional validation for Design Tool Integration (Issue #92)
+print_header "Design Tool Integration Validation"
+
+print_test "Penpot deployment manifests exist"
+if [ -f "../platform/apps/penpot/deployment.yaml" ]; then
+    print_pass
+else
+    print_fail "Penpot deployment not found"
+fi
+
+print_test "Penpot ArgoCD application exists"
+if [ -f "../platform/apps/penpot-application.yaml" ]; then
+    print_pass
+else
+    print_fail "Penpot ArgoCD application not found"
+fi
+
+print_test "Backstage Penpot plugin configured"
+if [ -f "../platform/apps/backstage/plugins/penpot-viewer.yaml" ]; then
+    print_pass
+else
+    print_fail "Backstage Penpot plugin not found"
+fi
+
+print_test "Design-to-code workflow documented"
+if [ -f "../docs/how-to/design-to-code-workflow.md" ]; then
+    print_pass
+else
+    print_fail "Design-to-code workflow documentation not found"
+fi
+
+print_test "Component mapping configuration exists"
+if grep -q "penpot-component-mapping" ../platform/apps/backstage/plugins/penpot-viewer.yaml; then
+    print_pass
+else
+    print_fail "Component mapping configuration not found"
+fi
+
+print_test "Penpot database configuration exists"
+if [ -f "../platform/apps/postgresql/db-penpot-cluster.yaml" ]; then
+    print_pass
+else
+    print_fail "Penpot database configuration not found"
+fi
+
+print_test "Penpot database credentials file exists"
+if [ -f "../platform/apps/postgresql/db-penpot-credentials.yaml" ]; then
+    print_pass
+else
+    print_fail "Penpot database credentials not found"
+fi
+
+print_test "Penpot secrets use placeholder values"
+if grep -q "CHANGE_ME_" ../platform/apps/penpot/deployment.yaml && \
+   grep -q "CHANGE_ME_" ../platform/apps/postgresql/db-penpot-credentials.yaml; then
+    print_pass
+else
+    print_fail "Penpot secrets should use CHANGE_ME_ placeholders"
+fi
+
+print_test "BDD feature file for Penpot integration exists"
+if [ -f "../tests/bdd/features/penpot-integration.feature" ]; then
+    print_pass
+else
+    print_fail "Penpot integration BDD tests not found"
+fi
+
 # Print summary
 print_summary
 

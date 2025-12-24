@@ -1,0 +1,387 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fawkes
+  labels:
+    name: fawkes
+    app.kubernetes.io/part-of: fawkes
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: penpot-config
+  namespace: fawkes
+  labels:
+    app: penpot
+    component: design-tool
+data:
+  PENPOT_PUBLIC_URI: "https://penpot.fawkes.local"
+  PENPOT_FLAGS: >-
+    enable-registration enable-login-with-password disable-email-verification
+    enable-smtp enable-prepl-server
+  PENPOT_TELEMETRY_ENABLED: "false"
+  PENPOT_ASSETS_STORAGE_BACKEND: "assets-fs"
+  PENPOT_STORAGE_ASSETS_FS_DIRECTORY: "/opt/data/assets"
+---
+# ============================================================================
+# Penpot Secrets Configuration
+# NOTE: CHANGE ALL PASSWORDS AND KEYS BEFORE DEPLOYING TO ANY ENVIRONMENT.
+#       For production, use External Secrets Operator to pull from vault.
+# ============================================================================
+apiVersion: v1
+kind: Secret
+metadata:
+  name: penpot-secrets
+  namespace: fawkes
+  labels:
+    app: penpot
+    component: design-tool
+type: Opaque
+stringData:
+  PENPOT_DATABASE_URI: "postgresql://penpot:CHANGE_ME_penpot_db_password@penpot-db-rw.fawkes.svc:5432/penpot"
+  PENPOT_REDIS_URI: "redis://penpot-redis.fawkes.svc:6379/0"
+  PENPOT_SECRET_KEY: "CHANGE_ME_penpot_secret_key_min_16_chars"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: penpot-data
+  namespace: fawkes
+  labels:
+    app: penpot
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: standard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: penpot-backend
+  namespace: fawkes
+  labels:
+    app: penpot
+    component: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: penpot
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: penpot
+        component: backend
+    spec:
+      containers:
+      - name: penpot-backend
+        image: penpotapp/backend:2.0.3
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 6060
+          name: http
+          protocol: TCP
+        envFrom:
+          - configMapRef:
+              name: penpot-config
+          - secretRef:
+              name: penpot-secrets
+        volumeMounts:
+          - name: penpot-data
+            mountPath: /opt/data
+        resources:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+        livenessProbe:
+          httpGet:
+            path: /api/_health
+            port: http
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /api/_health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+      volumes:
+        - name: penpot-data
+          persistentVolumeClaim:
+            claimName: penpot-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: penpot-frontend
+  namespace: fawkes
+  labels:
+    app: penpot
+    component: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: penpot
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: penpot
+        component: frontend
+    spec:
+      containers:
+        - name: penpot-frontend
+          image: penpotapp/frontend:2.0.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: penpot-config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: penpot-exporter
+  namespace: fawkes
+  labels:
+    app: penpot
+    component: exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: penpot
+      component: exporter
+  template:
+    metadata:
+      labels:
+        app: penpot
+        component: exporter
+    spec:
+      containers:
+        - name: penpot-exporter
+          image: penpotapp/exporter:2.0.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6061
+              name: http
+              protocol: TCP
+          env:
+            - name: PENPOT_PUBLIC_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: penpot-config
+                  key: PENPOT_PUBLIC_URI
+            - name: PENPOT_REDIS_URI
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secrets
+                  key: PENPOT_REDIS_URI
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: penpot-redis
+  namespace: fawkes
+  labels:
+    app: penpot
+    component: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: penpot
+      component: redis
+  template:
+    metadata:
+      labels:
+        app: penpot
+        component: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7.2-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+              name: redis
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          livenessProbe:
+            tcpSocket:
+              port: redis
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: redis
+            initialDelaySeconds: 5
+            periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: penpot-backend
+  namespace: fawkes
+  labels:
+    app: penpot
+    component: backend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6060
+      targetPort: 6060
+      protocol: TCP
+      name: http
+  selector:
+    app: penpot
+    component: backend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: penpot-frontend
+  namespace: fawkes
+  labels:
+    app: penpot
+    component: frontend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+  selector:
+    app: penpot
+    component: frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: penpot-exporter
+  namespace: fawkes
+  labels:
+    app: penpot
+    component: exporter
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6061
+      targetPort: 6061
+      protocol: TCP
+      name: http
+  selector:
+    app: penpot
+    component: exporter
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: penpot-redis
+  namespace: fawkes
+  labels:
+    app: penpot
+    component: redis
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6379
+      targetPort: 6379
+      protocol: TCP
+      name: redis
+  selector:
+    app: penpot
+    component: redis
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: penpot
+  namespace: fawkes
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: penpot.fawkes.local
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: penpot-backend
+                port:
+                  number: 6060
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: penpot-frontend
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - penpot.fawkes.local
+      secretName: penpot-tls
