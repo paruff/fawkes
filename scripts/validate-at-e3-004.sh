@@ -373,6 +373,21 @@ else
     print_fail "Penpot database configuration not found"
 fi
 
+print_test "Penpot database credentials file exists"
+if [ -f "../platform/apps/postgresql/db-penpot-credentials.yaml" ]; then
+    print_pass
+else
+    print_fail "Penpot database credentials not found"
+fi
+
+print_test "Penpot secrets use placeholder values"
+if grep -q "CHANGE_ME_" ../platform/apps/penpot/deployment.yaml && \
+   grep -q "CHANGE_ME_" ../platform/apps/postgresql/db-penpot-credentials.yaml; then
+    print_pass
+else
+    print_fail "Penpot secrets should use CHANGE_ME_ placeholders"
+fi
+
 print_test "BDD feature file for Penpot integration exists"
 if [ -f "../tests/bdd/features/penpot-integration.feature" ]; then
     print_pass

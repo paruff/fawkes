@@ -23,6 +23,11 @@ data:
   PENPOT_ASSETS_STORAGE_BACKEND: "assets-fs"
   PENPOT_STORAGE_ASSETS_FS_DIRECTORY: "/opt/data/assets"
 ---
+# ============================================================================
+# Penpot Secrets Configuration
+# NOTE: CHANGE ALL PASSWORDS AND KEYS BEFORE DEPLOYING TO ANY ENVIRONMENT.
+#       For production, use External Secrets Operator to pull from vault.
+# ============================================================================
 apiVersion: v1
 kind: Secret
 metadata:
@@ -33,9 +38,9 @@ metadata:
     component: design-tool
 type: Opaque
 stringData:
-  PENPOT_DATABASE_URI: "postgresql://penpot:penpot123@postgresql.fawkes.svc:5432/penpot"
+  PENPOT_DATABASE_URI: "postgresql://penpot:CHANGE_ME_penpot_db_password@penpot-db-rw.fawkes.svc:5432/penpot"
   PENPOT_REDIS_URI: "redis://penpot-redis.fawkes.svc:6379/0"
-  PENPOT_SECRET_KEY: "fawkes-penpot-secret-key-change-in-production"
+  PENPOT_SECRET_KEY: "CHANGE_ME_penpot_secret_key_min_16_chars"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
