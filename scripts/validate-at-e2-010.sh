@@ -72,6 +72,7 @@ ACCEPTANCE CRITERIA (AT-E2-010):
     ✓ Sentiment analysis working
     ✓ Top issues highlighted
     ✓ Metrics exported to Prometheus
+    ✓ Time-to-action metrics tracked
 
 EOF
 }
@@ -317,6 +318,55 @@ validate_prometheus_metrics() {
     return 0
 }
 
+# AC7: Time-to-action metrics
+validate_time_to_action_metrics() {
+    log_info "Validating time-to-action metrics..."
+    
+    # Check for status_changed_at field in schema
+    local main_file="services/feedback/app/main.py"
+    if grep -q "status_changed_at" "$main_file"; then
+        record_test_result "AC7_STATUS_CHANGED_AT_FIELD" "PASS" "status_changed_at field in schema"
+    else
+        record_test_result "AC7_STATUS_CHANGED_AT_FIELD" "FAIL" "status_changed_at field not found"
+        return 1
+    fi
+    
+    # Check for time-to-action metrics in metrics.py
+    local metrics_file="services/feedback/app/metrics.py"
+    if grep -q "feedback_time_to_action_seconds" "$metrics_file"; then
+        record_test_result "AC7_TIME_TO_ACTION_HISTOGRAM" "PASS" "Time-to-action histogram metric exists"
+    else
+        record_test_result "AC7_TIME_TO_ACTION_HISTOGRAM" "FAIL" "Time-to-action histogram metric not found"
+        return 1
+    fi
+    
+    if grep -q "feedback_avg_time_to_action_hours" "$metrics_file"; then
+        record_test_result "AC7_AVG_TIME_TO_ACTION_GAUGE" "PASS" "Average time-to-action gauge metric exists"
+    else
+        record_test_result "AC7_AVG_TIME_TO_ACTION_GAUGE" "FAIL" "Average time-to-action gauge metric not found"
+        return 1
+    fi
+    
+    # Check for update_time_to_action_metrics function
+    if grep -q "update_time_to_action_metrics" "$metrics_file"; then
+        record_test_result "AC7_UPDATE_FUNCTION" "PASS" "Time-to-action update function exists"
+    else
+        record_test_result "AC7_UPDATE_FUNCTION" "FAIL" "Time-to-action update function not found"
+        return 1
+    fi
+    
+    # Check for time-to-action panels in dashboard
+    local dashboard_file="platform/apps/grafana/dashboards/feedback-analytics.json"
+    if jq -e '.dashboard.panels[] | select(.title | contains("Time-to-Action") or contains("Time to"))' "$dashboard_file" > /dev/null 2>&1; then
+        record_test_result "AC7_DASHBOARD_PANELS" "PASS" "Time-to-action panels in dashboard"
+    else
+        record_test_result "AC7_DASHBOARD_PANELS" "FAIL" "Time-to-action panels not found"
+        return 1
+    fi
+    
+    return 0
+}
+
 # =============================================================================
 # Report Generation
 # =============================================================================
@@ -385,6 +435,7 @@ main() {
     validate_sentiment_analysis
     validate_top_issues
     validate_prometheus_metrics
+    validate_time_to_action_metrics
     
     echo ""
     log_info "==================================================================="
