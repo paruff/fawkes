@@ -1,0 +1,155 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: design-system
+  title: Fawkes Design System
+  description: Comprehensive design system with reusable components, design tokens, and style guide for Fawkes platform
+  annotations:
+    github.com/project-slug: paruff/fawkes
+    backstage.io/techdocs-ref: dir:.
+    backstage.io/source-location: url:https://github.com/paruff/fawkes/tree/main/design-system
+    storybook.io/url: http://design-system.fawkes.local
+  tags:
+    - design-system
+    - react
+    - typescript
+    - components
+    - ui-library
+    - accessibility
+  links:
+    - url: http://design-system.fawkes.local
+      title: Storybook Documentation
+      icon: dashboard
+    - url: https://github.com/paruff/fawkes/tree/main/design-system
+      title: Source Code
+      icon: github
+    - url: https://www.npmjs.com/package/@fawkes/design-system
+      title: npm Package
+      icon: catalog
+spec:
+  type: library
+  lifecycle: production
+  owner: platform-team
+  system: fawkes-platform
+  providesApis:
+    - design-system-components
+  dependsOn:
+    - resource:design-system-storybook
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: design-system-components
+  title: Design System Component API
+  description: React component library API for Fawkes platform
+  tags:
+    - react
+    - components
+    - typescript
+spec:
+  type: library
+  lifecycle: production
+  owner: platform-team
+  system: fawkes-platform
+  definition: |
+    # Fawkes Design System API
+    
+    ## Component Categories
+    
+    ### Layout Components (5)
+    - Container
+    - Grid
+    - Stack
+    - Spacer
+    - Box
+    
+    ### Typography Components (3)
+    - Heading
+    - Text
+    - Code
+    
+    ### Form Components (13)
+    - Button
+    - IconButton
+    - ButtonGroup
+    - Input
+    - Select
+    - Checkbox
+    - Radio
+    - Switch
+    - Textarea
+    - FormField
+    - FormLabel
+    - FormHelperText
+    - FormErrorMessage
+    
+    ### Feedback Components (6)
+    - Alert
+    - Toast
+    - Spinner
+    - Progress
+    - Badge
+    - Skeleton
+    
+    ### Navigation Components (5)
+    - Tabs
+    - Breadcrumbs
+    - Pagination
+    - Menu
+    - Link
+    
+    ### Display Components (8)
+    - Card
+    - Avatar
+    - Chip
+    - Tooltip
+    - Modal
+    - Drawer
+    - Divider
+    - Image
+    
+    ### Data Components (2)
+    - Table
+    - List
+    
+    ## Design Tokens
+    
+    - Colors
+    - Typography
+    - Spacing
+    - Shadows
+    - Border Radii
+    - Z-Indices
+    - Breakpoints
+    
+    ## Usage
+    
+    ```typescript
+    import { Button, Card, Alert, tokens } from '@fawkes/design-system';
+    
+    function App() {
+      return (
+        <Card>
+          <Alert variant="success">Welcome!</Alert>
+          <Button variant="primary">Get Started</Button>
+        </Card>
+      );
+    }
+    ```
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: design-system-storybook
+  title: Design System Storybook
+  description: Interactive documentation and component playground
+  tags:
+    - storybook
+    - documentation
+spec:
+  type: website
+  lifecycle: production
+  owner: platform-team
+  system: fawkes-platform
+  dependsOn:
+    - component:design-system
