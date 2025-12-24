@@ -87,11 +87,18 @@ def parse_table_to_dict(table):
             try:
                 # Try float first to handle both int and float
                 numeric_value = float(value)
-                # If it's a whole number, convert to int
-                if numeric_value.is_integer():
-                    result[key] = int(numeric_value)
+                # Check for special float values
+                if not (numeric_value != numeric_value or  # NaN check
+                        numeric_value == float('inf') or 
+                        numeric_value == float('-inf')):
+                    # If it's a whole number, convert to int
+                    if numeric_value.is_integer():
+                        result[key] = int(numeric_value)
+                    else:
+                        result[key] = numeric_value
                 else:
-                    result[key] = numeric_value
+                    # Keep special float values as strings
+                    result[key] = value
             except (ValueError, AttributeError):
                 # Keep as string if not numeric
                 result[key] = value
@@ -248,9 +255,22 @@ def step_verify_dimension_data(context, dimension):
 @then('the data should include "{field}"')
 def step_verify_field_in_data(context, field):
     """Verify specific field is in the data."""
-    assert field in context.dimension_metrics or \
-           any(field in str(v) for v in context.dimension_metrics.values()), \
-           f"Field '{field}' not found in response"
+    # Check if field exists at top level or in nested structure
+    if field in context.dimension_metrics:
+        return
+    
+    # For nested structures, check if field exists in any nested dict/object
+    def find_field_recursive(obj, target_field):
+        if isinstance(obj, dict):
+            if target_field in obj:
+                return True
+            return any(find_field_recursive(v, target_field) for v in obj.values())
+        elif isinstance(obj, list):
+            return any(find_field_recursive(item, target_field) for item in obj)
+        return False
+    
+    assert find_field_recursive(context.dimension_metrics, field), \
+        f"Field '{field}' not found in response"
 
 
 # Survey integration steps
@@ -299,9 +319,19 @@ def step_verify_survey_accepted(context):
 @then('I should receive a success confirmation')
 def step_verify_success_confirmation(context):
     """Verify success confirmation is received."""
-    assert context.survey_response.get('status') == 'success' or \
-           'success' in str(context.survey_response).lower(), \
-           f"No success confirmation: {context.survey_response}"
+    # Check for explicit success status
+    if context.survey_response.get('status') == 'success':
+        return
+    
+    # Check for common success indicators
+    success_indicators = ['status', 'result', 'message']
+    for indicator in success_indicators:
+        value = context.survey_response.get(indicator)
+        if value and 'success' in str(value).lower():
+            return
+    
+    # If no success found, fail with helpful message
+    assert False, f"No success confirmation in response: {context.survey_response}"
 
 
 # Friction logging steps

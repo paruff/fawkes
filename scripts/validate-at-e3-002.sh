@@ -298,11 +298,11 @@ validate_survey_automation_service() {
     if kubectl get deployment devex-survey-automation -n "$NAMESPACE" &>/dev/null; then
         check_pass "DevEx Survey Automation deployment exists"
         
-        # Check replicas
-        DESIRED=$(kubectl get deployment devex-survey-automation -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
-        READY=$(kubectl get deployment devex-survey-automation -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
+        # Check replicas (with safe defaults)
+        DESIRED=$(kubectl get deployment devex-survey-automation -n "$NAMESPACE" -o jsonpath='{.spec.replicas}' 2>/dev/null || echo "0")
+        READY=$(kubectl get deployment devex-survey-automation -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo "0")
         
-        if [[ "$READY" == "$DESIRED" ]] && [[ "$READY" -gt 0 ]]; then
+        if [[ -n "$READY" ]] && [[ -n "$DESIRED" ]] && [[ "$READY" == "$DESIRED" ]] && [[ "$READY" -gt 0 ]]; then
             check_pass "DevEx Survey Automation replicas ready ($READY/$DESIRED)"
         else
             check_fail "DevEx Survey Automation not all replicas ready ($READY/$DESIRED)"
@@ -324,8 +324,8 @@ validate_survey_automation_service() {
 validate_cognitive_load_tool() {
     log_info "Validating Cognitive Load Assessment (NASA-TLX) tool..."
     
-    # Get pod name for DevEx Survey Automation
-    POD_NAME=$(kubectl get pods -n "$NAMESPACE" -l app=devex-survey-automation --field-selector=status.phase=Running -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
+    # Get pod name for DevEx Survey Automation (with error suppression)
+    POD_NAME=$(kubectl get pods -n "$NAMESPACE" -l app=devex-survey-automation --field-selector=status.phase=Running -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
     
     if [[ -z "$POD_NAME" ]]; then
         check_fail "No running DevEx Survey Automation pod found for NASA-TLX testing"
