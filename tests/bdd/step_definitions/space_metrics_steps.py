@@ -4,12 +4,13 @@ BDD step definitions for SPACE metrics service tests.
 Tests SPACE framework (Satisfaction, Performance, Activity, Communication, Efficiency)
 metrics collection, API endpoints, survey integration, and privacy compliance.
 """
-from behave import given, when, then, step
+from behave import given, when, then
 import requests
 import json
 import time
 import logging
 from kubernetes import client, config
+from kubernetes.stream import stream
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -52,8 +53,6 @@ def get_pod_name(core_api, namespace, label_selector, timeout=120):
 def exec_in_pod(core_api, namespace, pod_name, command):
     """Execute a command in a pod and return the output."""
     try:
-        from kubernetes.stream import stream
-        
         resp = stream(
             core_api.connect_get_namespaced_pod_exec,
             pod_name,
@@ -68,6 +67,35 @@ def exec_in_pod(core_api, namespace, pod_name, command):
     except Exception as e:
         logger.error(f"Error executing command in pod: {e}")
         raise
+
+
+def parse_table_to_dict(table):
+    """Parse a behave table into a dictionary.
+    
+    Args:
+        table: Behave table with two columns (key, value)
+        
+    Returns:
+        dict: Dictionary with parsed values, attempting float conversion
+    """
+    result = {}
+    if table:
+        for row in table:
+            key = row[0]  # First column is the key
+            value = row[1]  # Second column is the value
+            # Try to convert to numeric type
+            try:
+                # Try float first to handle both int and float
+                numeric_value = float(value)
+                # If it's a whole number, convert to int
+                if numeric_value.is_integer():
+                    result[key] = int(numeric_value)
+                else:
+                    result[key] = numeric_value
+            except (ValueError, AttributeError):
+                # Keep as string if not numeric
+                result[key] = value
+    return result
 
 
 # Background steps
@@ -233,14 +261,9 @@ def step_submit_pulse_survey(context):
     try:
         pod_name = context.pod_name
         
-        # Build survey data from table
-        survey_data = {}
+        # Build survey data from table or use defaults
         if hasattr(context, 'table') and context.table:
-            # Behave tables have rows with cells
-            for row in context.table:
-                key = row[0]  # First column is the key
-                value = row[1]  # Second column is the value
-                survey_data[key] = float(value) if '.' in value else int(value)
+            survey_data = parse_table_to_dict(context.table)
         else:
             # Default survey data
             survey_data = {
@@ -289,14 +312,9 @@ def step_log_friction_incident(context):
     try:
         pod_name = context.pod_name
         
-        # Build friction data from table
-        friction_data = {}
+        # Build friction data from table or use defaults
         if hasattr(context, 'table') and context.table:
-            # Behave tables have rows with cells
-            for row in context.table:
-                key = row[0]  # First column is the key
-                value = row[1]  # Second column is the value
-                friction_data[key] = value
+            friction_data = parse_table_to_dict(context.table)
         else:
             # Default friction data
             friction_data = {
@@ -423,11 +441,18 @@ def step_verify_aggregation_threshold(context, threshold):
             "space-metrics-config",
             context.namespace
         )
-        config_threshold = int(configmap.data.get('aggregation-threshold', '0'))
+        threshold_value = configmap.data.get('aggregation-threshold', '0')
+        
+        try:
+            config_threshold = int(threshold_value)
+        except ValueError:
+            logger.error(f"Invalid aggregation threshold value: {threshold_value}")
+            assert False, f"Aggregation threshold '{threshold_value}' is not a valid integer"
+        
         assert config_threshold >= threshold, \
             f"Aggregation threshold {config_threshold} is less than required {threshold}"
         logger.info(f"Aggregation threshold verified: {config_threshold}")
-    except Exception as e:
+    except client.exceptions.ApiException as e:
         logger.warning(f"Could not verify aggregation threshold: {e}")
         # Don't fail test if we can't check the config
 

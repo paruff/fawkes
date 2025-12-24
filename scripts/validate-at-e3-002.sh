@@ -344,11 +344,15 @@ validate_cognitive_load_tool() {
         fi
     fi
     
-    # Check if NASA-TLX validation script exists
-    if [[ -f "services/devex-survey-automation/scripts/validate-nasa-tlx.py" ]]; then
+    # Check if NASA-TLX validation script exists (relative to script location)
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+    NASA_TLX_SCRIPT="$REPO_ROOT/services/devex-survey-automation/scripts/validate-nasa-tlx.py"
+    
+    if [[ -f "$NASA_TLX_SCRIPT" ]]; then
         check_pass "NASA-TLX validation script exists"
     else
-        check_fail "NASA-TLX validation script not found"
+        check_fail "NASA-TLX validation script not found at $NASA_TLX_SCRIPT"
     fi
 }
 
