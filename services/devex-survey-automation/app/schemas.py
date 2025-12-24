@@ -108,3 +108,113 @@ class SurveySubmissionResponse(BaseModel):
     message: str
     recipient_id: int
     submitted_at: datetime
+
+
+class NASATLXRequest(BaseModel):
+    """NASA-TLX assessment request"""
+    task_type: str = Field(..., description="Type of task: deployment, pr_review, incident_response, build, etc.")
+    task_id: Optional[str] = Field(None, description="Optional reference to specific task")
+    
+    # NASA-TLX dimensions (0-100 scale)
+    mental_demand: float = Field(..., ge=0, le=100, description="How mentally demanding was the task?")
+    physical_demand: float = Field(..., ge=0, le=100, description="How physically demanding was the task?")
+    temporal_demand: float = Field(..., ge=0, le=100, description="How hurried or rushed was the pace?")
+    performance: float = Field(..., ge=0, le=100, description="How successful were you? (100=perfect, 0=failure)")
+    effort: float = Field(..., ge=0, le=100, description="How hard did you have to work?")
+    frustration: float = Field(..., ge=0, le=100, description="How insecure, discouraged, irritated were you?")
+    
+    # Optional context
+    duration_minutes: Optional[int] = Field(None, ge=0, description="How long did the task take?")
+    comment: Optional[str] = Field(None, max_length=2000, description="Optional feedback")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "task_type": "deployment",
+                "task_id": "deploy-123",
+                "mental_demand": 45.0,
+                "physical_demand": 15.0,
+                "temporal_demand": 60.0,
+                "performance": 85.0,
+                "effort": 50.0,
+                "frustration": 30.0,
+                "duration_minutes": 25,
+                "comment": "Deployment went smoothly but monitoring was confusing"
+            }
+        }
+
+
+class NASATLXResponse(BaseModel):
+    """NASA-TLX assessment response"""
+    id: int
+    user_id: str
+    task_type: str
+    task_id: Optional[str]
+    
+    mental_demand: float
+    physical_demand: float
+    temporal_demand: float
+    performance: float
+    effort: float
+    frustration: float
+    overall_workload: float
+    
+    duration_minutes: Optional[int]
+    comment: Optional[str]
+    submitted_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
+class NASATLXSubmissionResponse(BaseModel):
+    """Response after NASA-TLX submission"""
+    success: bool
+    message: str
+    assessment_id: int
+    overall_workload: float
+    submitted_at: datetime
+
+
+class NASATLXAnalytics(BaseModel):
+    """NASA-TLX analytics by task type"""
+    task_type: str
+    week: int
+    year: int
+    
+    avg_mental_demand: float
+    avg_physical_demand: float
+    avg_temporal_demand: float
+    avg_performance: float
+    avg_effort: float
+    avg_frustration: float
+    avg_overall_workload: float
+    
+    response_count: int
+    
+    class Config:
+        from_attributes = True
+
+
+class NASATLXTrendData(BaseModel):
+    """NASA-TLX trend data over time"""
+    task_type: str
+    weeks: List[int]
+    mental_demand_trend: List[float]
+    physical_demand_trend: List[float]
+    temporal_demand_trend: List[float]
+    performance_trend: List[float]
+    effort_trend: List[float]
+    frustration_trend: List[float]
+    overall_workload_trend: List[float]
+    response_counts: List[int]
+
+
+class TaskTypeStats(BaseModel):
+    """Statistics by task type"""
+    task_type: str
+    total_assessments: int
+    avg_workload: float
+    avg_duration_minutes: Optional[float]
+    most_demanding_dimension: str  # Which dimension has highest average
+    health_status: str  # healthy, warning, critical based on workload
