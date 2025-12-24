@@ -16,7 +16,9 @@ metadata:
     component: design-tool
 data:
   PENPOT_PUBLIC_URI: "https://penpot.fawkes.local"
-  PENPOT_FLAGS: "enable-registration enable-login-with-password disable-email-verification enable-smtp enable-prepl-server"
+  PENPOT_FLAGS: >-
+    enable-registration enable-login-with-password disable-email-verification
+    enable-smtp enable-prepl-server
   PENPOT_TELEMETRY_ENABLED: "false"
   PENPOT_ASSETS_STORAGE_BACKEND: "assets-fs"
   PENPOT_STORAGE_ASSETS_FS_DIRECTORY: "/opt/data/assets"
@@ -79,13 +81,13 @@ spec:
           name: http
           protocol: TCP
         envFrom:
-        - configMapRef:
-            name: penpot-config
-        - secretRef:
-            name: penpot-secrets
+          - configMapRef:
+              name: penpot-config
+          - secretRef:
+              name: penpot-secrets
         volumeMounts:
-        - name: penpot-data
-          mountPath: /opt/data
+          - name: penpot-data
+            mountPath: /opt/data
         resources:
           requests:
             cpu: 200m
@@ -108,9 +110,9 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 5
       volumes:
-      - name: penpot-data
-        persistentVolumeClaim:
-          claimName: penpot-data
+        - name: penpot-data
+          persistentVolumeClaim:
+            claimName: penpot-data
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -133,35 +135,35 @@ spec:
         component: frontend
     spec:
       containers:
-      - name: penpot-frontend
-        image: penpotapp/frontend:2.0.3
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 80
-          name: http
-          protocol: TCP
-        envFrom:
-        - configMapRef:
-            name: penpot-config
-        resources:
-          requests:
-            cpu: 100m
-            memory: 256Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
-        livenessProbe:
-          httpGet:
-            path: /
-            port: http
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /
-            port: http
-          initialDelaySeconds: 10
-          periodSeconds: 5
+        - name: penpot-frontend
+          image: penpotapp/frontend:2.0.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: penpot-config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -184,43 +186,43 @@ spec:
         component: exporter
     spec:
       containers:
-      - name: penpot-exporter
-        image: penpotapp/exporter:2.0.3
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 6061
-          name: http
-          protocol: TCP
-        env:
-        - name: PENPOT_PUBLIC_URI
-          valueFrom:
-            configMapKeyRef:
-              name: penpot-config
-              key: PENPOT_PUBLIC_URI
-        - name: PENPOT_REDIS_URI
-          valueFrom:
-            secretKeyRef:
-              name: penpot-secrets
-              key: PENPOT_REDIS_URI
-        resources:
-          requests:
-            cpu: 100m
-            memory: 256Mi
-          limits:
-            cpu: 500m
-            memory: 1Gi
-        livenessProbe:
-          httpGet:
-            path: /
-            port: http
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /
-            port: http
-          initialDelaySeconds: 10
-          periodSeconds: 5
+        - name: penpot-exporter
+          image: penpotapp/exporter:2.0.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6061
+              name: http
+              protocol: TCP
+          env:
+            - name: PENPOT_PUBLIC_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: penpot-config
+                  key: PENPOT_PUBLIC_URI
+            - name: PENPOT_REDIS_URI
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secrets
+                  key: PENPOT_REDIS_URI
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -243,30 +245,30 @@ spec:
         component: redis
     spec:
       containers:
-      - name: redis
-        image: redis:7.2-alpine
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 6379
-          name: redis
-          protocol: TCP
-        resources:
-          requests:
-            cpu: 50m
-            memory: 128Mi
-          limits:
-            cpu: 200m
-            memory: 256Mi
-        livenessProbe:
-          tcpSocket:
-            port: redis
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          tcpSocket:
-            port: redis
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: redis
+          image: redis:7.2-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+              name: redis
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          livenessProbe:
+            tcpSocket:
+              port: redis
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: redis
+            initialDelaySeconds: 5
+            periodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
@@ -279,10 +281,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 6060
-    targetPort: 6060
-    protocol: TCP
-    name: http
+    - port: 6060
+      targetPort: 6060
+      protocol: TCP
+      name: http
   selector:
     app: penpot
     component: backend
@@ -298,10 +300,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 80
-    targetPort: 80
-    protocol: TCP
-    name: http
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
   selector:
     app: penpot
     component: frontend
@@ -317,10 +319,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 6061
-    targetPort: 6061
-    protocol: TCP
-    name: http
+    - port: 6061
+      targetPort: 6061
+      protocol: TCP
+      name: http
   selector:
     app: penpot
     component: exporter
@@ -336,10 +338,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 6379
-    targetPort: 6379
-    protocol: TCP
-    name: redis
+    - port: 6379
+      targetPort: 6379
+      protocol: TCP
+      name: redis
   selector:
     app: penpot
     component: redis
@@ -357,24 +359,24 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: penpot.fawkes.local
-    http:
-      paths:
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: penpot-backend
-            port:
-              number: 6060
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: penpot-frontend
-            port:
-              number: 80
+    - host: penpot.fawkes.local
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: penpot-backend
+                port:
+                  number: 6060
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: penpot-frontend
+                port:
+                  number: 80
   tls:
-  - hosts:
-    - penpot.fawkes.local
-    secretName: penpot-tls
+    - hosts:
+        - penpot.fawkes.local
+      secretName: penpot-tls
