@@ -1,7 +1,7 @@
 # ============================================================================
 # FILE: platform/apps/backstage/plugins/feedback-widget.yaml
-# PURPOSE: Feedback widget plugin configuration for Backstage
-#          References the feedback API proxy endpoint
+# PURPOSE: Enhanced feedback widget plugin configuration for Backstage
+#          Supports screenshot capture, GitHub integration, and contextual feedback
 # ============================================================================
 apiVersion: v1
 kind: ConfigMap
@@ -16,12 +16,15 @@ metadata:
     team: platform
 data:
   plugin-config.yaml: |
-    # Feedback Widget Plugin Configuration
-    # This plugin allows users to submit feedback from within Backstage
+    # Enhanced Feedback Widget Plugin Configuration
+    # This plugin allows users to submit contextual feedback with screenshots
+    # and automatically create GitHub issues
     
     feedback:
       enabled: true
       apiEndpoint: /feedback/api
+      
+      # Feedback categories
       categories:
         - UI/UX
         - Performance
@@ -29,6 +32,52 @@ data:
         - Features
         - Bug Report
         - Other
+      
+      # Feedback types (determines how feedback is handled)
+      feedbackTypes:
+        - id: feedback
+          label: General Feedback
+          description: Share your thoughts and suggestions
+          icon: comment
+          createGitHubIssue: false
+        - id: bug_report
+          label: Bug Report
+          description: Report a problem or error
+          icon: bug
+          createGitHubIssue: true
+        - id: feature_request
+          label: Feature Request
+          description: Suggest a new feature or improvement
+          icon: lightbulb
+          createGitHubIssue: true
+      
+      # API endpoints
       submitEndpoint: /api/v1/feedback
       adminEndpoint: /api/v1/feedback
       statsEndpoint: /api/v1/feedback/stats
+      screenshotEndpoint: /api/v1/feedback/{id}/screenshot
+      
+      # Feature flags
+      features:
+        screenshotCapture: true
+        githubIntegration: true
+        contextualInfo: true
+        sentimentAnalysis: true
+      
+      # Screenshot settings
+      screenshot:
+        enabled: true
+        maxSizeMB: 5
+        format: png
+        quality: 0.9
+      
+      # GitHub integration settings
+      github:
+        enabled: true
+        autoCreateIssue: true
+        autoCreateForTypes:
+          - bug_report
+          - feature_request
+        labels:
+          - feedback
+          - automated
