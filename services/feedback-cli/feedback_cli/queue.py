@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 
 class QueuedFeedback(BaseModel):
     """Model for queued feedback item."""
-    
+
     rating: int = Field(..., description="Rating from 1-5")
     category: str = Field(..., description="Feedback category")
     comment: str = Field(..., description="Feedback comment")
@@ -40,13 +40,13 @@ class OfflineQueue:
             feedback_data: Feedback data to queue
         """
         queue = self._load_queue()
-        
+
         queued_feedback = QueuedFeedback(
             **feedback_data,
             queued_at=datetime.now(timezone.utc).isoformat(),
             attempts=0
         )
-        
+
         queue.append(queued_feedback.model_dump())
         self._save_queue(queue)
 
@@ -100,7 +100,7 @@ class OfflineQueue:
         """
         if not self.queue_path.exists():
             return []
-        
+
         try:
             with open(self.queue_path, "r") as f:
                 return json.load(f)

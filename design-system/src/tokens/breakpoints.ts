@@ -1,6 +1,6 @@
 /**
  * Design Tokens - Breakpoints
- * 
+ *
  * Responsive breakpoints for different screen sizes
  */
 

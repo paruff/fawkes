@@ -2,11 +2,11 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: December 2025  
-**Status**: Active  
-**Owner**: Product Team  
-**Based on**: User interviews and contribution observations (Nov-Dec 2025)  
+**Version**: 1.0
+**Last Updated**: December 2025
+**Status**: Active
+**Owner**: Product Team
+**Based on**: User interviews and contribution observations (Nov-Dec 2025)
 **Related Personas**: [Application Developer](../personas/application-developer.md), [Platform Developer](../personas/platform-developer.md)
 
 ---
@@ -318,60 +318,60 @@
 ```mermaid
 graph TB
     Start([Identifies Reusable Pattern]) --> Stage1[Stage 1: Contribution Idea Formation]
-    
+
     Stage1 --> Validate{Idea Welcome?}
     Validate -->|No| Discouraged[Feels Discouraged]
     Discouraged --> ShadowSolution[Keeps Solution Private]
-    
+
     Validate -->|Yes| Encouraged[Feels Encouraged]
     Encouraged --> Stage2[Stage 2: Preparing Contribution]
-    
+
     Stage2 --> Quality{Meets Quality Bar?}
     Quality -->|No| Refine[Refine Based on Feedback]
     Refine --> Stage2
-    
+
     Quality -->|Yes| Stage3[Stage 3: Submitting Pull Request]
     Stage3 --> CIChecks{CI Passes?}
-    
+
     CIChecks -->|No| FixIssues[Fix CI Issues]
     FixIssues --> Stage3
-    
+
     CIChecks -->|Yes| Stage4[Stage 4: Review & Iteration]
     Stage4 --> Changes{Changes Requested?}
-    
+
     Changes -->|Yes| Iterate[Make Changes]
     Iterate --> Stage4
-    
+
     Changes -->|No| Approved[PR Approved! 🎉]
     Approved --> Stage5[Stage 5: Merge & Documentation]
-    
+
     Stage5 --> Merged[Contribution Merged]
     Merged --> Recognition[Recognition & Announcement]
     Recognition --> Stage6[Stage 6: Post-Contribution Engagement]
-    
+
     Stage6 --> Support[Support Other Users]
     Support --> Maintain[Maintain & Improve]
     Maintain --> MoreContributions{Contribute More?}
-    
+
     MoreContributions -->|Yes| NewIdea[New Contribution Idea]
     NewIdea --> Stage1
-    
+
     MoreContributions -->|No| End([Valued Community Member])
-    
+
     Stage1 -.->|Pain| Pain1["Unclear what's welcome<br/>Imposter syndrome"]
     Stage2 -.->|Pain| Pain2["No quality bar<br/>Fear of rejection"]
     Stage3 -.->|Pain| Pain3["Generic template<br/>Unclear timeline"]
     Stage4 -.->|Pain| Pain4["Undocumented requirements<br/>Multiple rounds"]
     Stage5 -.->|Pain| Pain5["Manual catalog update<br/>Ad-hoc recognition"]
     Stage6 -.->|Pain| Pain6["No usage visibility<br/>Unclear maintenance"]
-    
+
     Pain1 -.->|Fix| Opp1["Contribution guide<br/>Showcase examples"]
     Pain2 -.->|Fix| Opp2["Quality checklist<br/>Pre-review option"]
     Pain3 -.->|Fix| Opp3["Type-specific template<br/>Review SLA"]
     Pain4 -.->|Fix| Opp4["Auto checks<br/>Clear requirements"]
     Pain5 -.->|Fix| Opp5["Auto catalog update<br/>Recognition program"]
     Pain6 -.->|Fix| Opp6["Impact dashboard<br/>Clear ownership"]
-    
+
     style Start fill:#e1f5e1
     style End fill:#90EE90
     style Approved fill:#FFD700
@@ -406,7 +406,7 @@ graph LR
         S4 --> S5["Day 1-2<br/>Merge<br/>😊 1/5"]
         S5 --> S6["Ongoing<br/>Engagement<br/>😊 1/5"]
     end
-    
+
     style S1 fill:#98D8C8
     style S2 fill:#FFD700
     style S3 fill:#FFA500

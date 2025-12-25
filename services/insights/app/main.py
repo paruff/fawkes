@@ -81,7 +81,7 @@ async def create_tag(tag_data: TagCreate, db: Session = Depends(get_db)):
     ).first()
     if existing_tag:
         raise HTTPException(status_code=400, detail="Tag with this name or slug already exists")
-    
+
     tag = Tag(**tag_data.model_dump())
     db.add(tag)
     db.commit()
@@ -115,11 +115,11 @@ async def update_tag(tag_id: int, tag_data: TagUpdate, db: Session = Depends(get
     tag = db.query(Tag).filter(Tag.id == tag_id).first()
     if not tag:
         raise HTTPException(status_code=404, detail="Tag not found")
-    
+
     update_data = tag_data.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         setattr(tag, field, value)
-    
+
     db.commit()
     db.refresh(tag)
     return tag
@@ -131,7 +131,7 @@ async def delete_tag(tag_id: int, db: Session = Depends(get_db)):
     tag = db.query(Tag).filter(Tag.id == tag_id).first()
     if not tag:
         raise HTTPException(status_code=404, detail="Tag not found")
-    
+
     db.delete(tag)
     db.commit()
 
@@ -146,7 +146,7 @@ async def create_category(category_data: CategoryCreate, db: Session = Depends(g
     ).first()
     if existing_category:
         raise HTTPException(status_code=400, detail="Category with this name or slug already exists")
-    
+
     category = Category(**category_data.model_dump())
     db.add(category)
     db.commit()
@@ -162,7 +162,7 @@ async def list_categories(
 ):
     """List all categories."""
     categories = db.query(Category).order_by(Category.name).offset(skip).limit(limit).all()
-    
+
     # Add insight count to each category
     result = []
     for category in categories:
@@ -170,7 +170,7 @@ async def list_categories(
         insight_count = db.query(Insight).filter(Insight.category_id == category.id).count()
         category_dict['insight_count'] = insight_count
         result.append(CategoryResponse(**category_dict))
-    
+
     return result
 
 
@@ -180,7 +180,7 @@ async def get_category(category_id: int, db: Session = Depends(get_db)):
     category = db.query(Category).filter(Category.id == category_id).first()
     if not category:
         raise HTTPException(status_code=404, detail="Category not found")
-    
+
     category_dict = CategoryResponse.model_validate(category).model_dump()
     insight_count = db.query(Insight).filter(Insight.category_id == category.id).count()
     category_dict['insight_count'] = insight_count
@@ -193,11 +193,11 @@ async def update_category(category_id: int, category_data: CategoryUpdate, db: S
     category = db.query(Category).filter(Category.id == category_id).first()
     if not category:
         raise HTTPException(status_code=404, detail="Category not found")
-    
+
     update_data = category_data.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         setattr(category, field, value)
-    
+
     db.commit()
     db.refresh(category)
     return category
@@ -209,7 +209,7 @@ async def delete_category(category_id: int, db: Session = Depends(get_db)):
     category = db.query(Category).filter(Category.id == category_id).first()
     if not category:
         raise HTTPException(status_code=404, detail="Category not found")
-    
+
     # Check if category has insights
     insight_count = db.query(Insight).filter(Insight.category_id == category.id).count()
     if insight_count > 0:
@@ -217,7 +217,7 @@ async def delete_category(category_id: int, db: Session = Depends(get_db)):
             status_code=400,
             detail=f"Cannot delete category with {insight_count} insights. Remove insights first."
         )
-    
+
     db.delete(category)
     db.commit()
 
@@ -229,23 +229,23 @@ async def create_insight(insight_data: InsightCreate, db: Session = Depends(get_
     # Extract tag IDs
     tag_ids = insight_data.tag_ids if hasattr(insight_data, 'tag_ids') else []
     insight_dict = insight_data.model_dump(exclude={'tag_ids'})
-    
+
     # Create insight
     insight = Insight(**insight_dict)
-    
+
     # Add tags
     if tag_ids:
         tags = db.query(Tag).filter(Tag.id.in_(tag_ids)).all()
         insight.tags = tags
-        
+
         # Update tag usage counts
         for tag in tags:
             tag.usage_count += 1
-    
+
     db.add(insight)
     db.commit()
     db.refresh(insight)
-    
+
     insights_created.inc()
     return insight
 
@@ -262,7 +262,7 @@ async def list_insights(
 ):
     """List insights with pagination and filters."""
     query = db.query(Insight)
-    
+
     # Apply filters
     if status:
         query = query.filter(Insight.status == status)
@@ -272,14 +272,14 @@ async def list_insights(
         query = query.filter(Insight.category_id == category_id)
     if author:
         query = query.filter(Insight.author.ilike(f"%{author}%"))
-    
+
     # Get total count
     total = query.count()
-    
+
     # Apply pagination
     offset = (page - 1) * page_size
     insights = query.order_by(Insight.created_at.desc()).offset(offset).limit(page_size).all()
-    
+
     return InsightListResponse(
         total=total,
         page=page,
@@ -292,7 +292,7 @@ async def list_insights(
 async def search_insights(search_request: InsightSearchRequest, db: Session = Depends(get_db)):
     """Search insights with advanced filters."""
     query = db.query(Insight)
-    
+
     # Text search
     if search_request.query:
         search_term = f"%{search_request.query}%"
@@ -303,7 +303,7 @@ async def search_insights(search_request: InsightSearchRequest, db: Session = De
                 Insight.content.ilike(search_term)
             )
         )
-    
+
     # Apply filters
     if search_request.category_id:
         query = query.filter(Insight.category_id == search_request.category_id)
@@ -313,19 +313,19 @@ async def search_insights(search_request: InsightSearchRequest, db: Session = De
         query = query.filter(Insight.status == search_request.status)
     if search_request.author:
         query = query.filter(Insight.author.ilike(f"%{search_request.author}%"))
-    
+
     # Filter by tags (AND logic - insight must have all specified tags)
     if search_request.tag_ids:
         for tag_id in search_request.tag_ids:
             query = query.filter(Insight.tags.any(Tag.id == tag_id))
-    
+
     # Get total count
     total = query.count()
-    
+
     # Apply pagination
     offset = (search_request.page - 1) * search_request.page_size
     insights = query.order_by(Insight.created_at.desc()).offset(offset).limit(search_request.page_size).all()
-    
+
     return InsightListResponse(
         total=total,
         page=search_request.page,
@@ -349,38 +349,38 @@ async def update_insight(insight_id: int, insight_data: InsightUpdate, db: Sessi
     insight = db.query(Insight).filter(Insight.id == insight_id).first()
     if not insight:
         raise HTTPException(status_code=404, detail="Insight not found")
-    
+
     # Handle tag updates
     update_data = insight_data.model_dump(exclude_unset=True, exclude={'tag_ids'})
-    
+
     if hasattr(insight_data, 'tag_ids') and insight_data.tag_ids is not None:
         # Update tag usage counts
         old_tags = set(tag.id for tag in insight.tags)
         new_tags = set(insight_data.tag_ids)
-        
+
         # Decrease count for removed tags
         for tag_id in old_tags - new_tags:
             tag = db.query(Tag).filter(Tag.id == tag_id).first()
             if tag and tag.usage_count > 0:
                 tag.usage_count -= 1
-        
+
         # Increase count for added tags
         for tag_id in new_tags - old_tags:
             tag = db.query(Tag).filter(Tag.id == tag_id).first()
             if tag:
                 tag.usage_count += 1
-        
+
         # Update tags
         tags = db.query(Tag).filter(Tag.id.in_(insight_data.tag_ids)).all()
         insight.tags = tags
-    
+
     # Update other fields
     for field, value in update_data.items():
         setattr(insight, field, value)
-    
+
     db.commit()
     db.refresh(insight)
-    
+
     insights_updated.inc()
     return insight
 
@@ -391,15 +391,15 @@ async def delete_insight(insight_id: int, db: Session = Depends(get_db)):
     insight = db.query(Insight).filter(Insight.id == insight_id).first()
     if not insight:
         raise HTTPException(status_code=404, detail="Insight not found")
-    
+
     # Update tag usage counts
     for tag in insight.tags:
         if tag.usage_count > 0:
             tag.usage_count -= 1
-    
+
     db.delete(insight)
     db.commit()
-    
+
     insights_deleted.inc()
 
 
@@ -409,33 +409,33 @@ async def get_statistics(db: Session = Depends(get_db)):
     """Get insights statistics and aggregations."""
     # Total insights
     total_insights = db.query(Insight).count()
-    
+
     # Insights by status
     status_counts = db.query(
         Insight.status, func.count(Insight.id)
     ).group_by(Insight.status).all()
     insights_by_status = {status: count for status, count in status_counts}
-    
+
     # Insights by priority
     priority_counts = db.query(
         Insight.priority, func.count(Insight.id)
     ).group_by(Insight.priority).all()
     insights_by_priority = {priority: count for priority, count in priority_counts}
-    
+
     # Insights by category
     category_counts = db.query(
         Category.name, func.count(Insight.id)
     ).join(Insight, Category.id == Insight.category_id, isouter=True
     ).group_by(Category.name).all()
     insights_by_category = {name if name else "Uncategorized": count for name, count in category_counts}
-    
+
     # Total tags and categories
     total_tags = db.query(Tag).count()
     total_categories = db.query(Category).count()
-    
+
     # Recent insights
     recent_insights = db.query(Insight).order_by(Insight.created_at.desc()).limit(5).all()
-    
+
     return InsightStatistics(
         total_insights=total_insights,
         insights_by_status=insights_by_status,

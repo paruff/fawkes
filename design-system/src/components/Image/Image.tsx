@@ -10,7 +10,7 @@ export interface ImageProps extends BaseComponentProps {
 
 /**
  * Optimized image component
- * 
+ *
  * @component
  * @example
  * ```tsx

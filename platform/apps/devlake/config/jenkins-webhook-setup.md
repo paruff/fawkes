@@ -113,7 +113,7 @@ doraMetrics.recordPipelineComplete(
 
 pipeline {
     agent { label 'k8s-agent' }
-    
+
     stages {
         stage('Build') {
             steps {
@@ -136,14 +136,14 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Test') {
             steps {
                 sh 'mvn test'
             }
         }
     }
-    
+
     post {
         always {
             doraMetrics.recordPipelineComplete(
@@ -161,11 +161,11 @@ pipeline {
 
 pipeline {
     agent { label 'maven' }
-    
+
     environment {
         SERVICE_NAME = 'payment-service'
     }
-    
+
     stages {
         stage('Build') {
             steps {
@@ -196,15 +196,15 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Test') {
             steps {
                 script {
                     sh 'mvn test'
-                    
+
                     // Parse test results
                     def testResults = junit 'target/surefire-reports/*.xml'
-                    
+
                     doraMetrics.recordTestResults(
                         service: env.SERVICE_NAME,
                         totalTests: testResults.totalCount,
@@ -216,18 +216,18 @@ pipeline {
                 }
             }
         }
-        
+
         stage('SonarQube Analysis') {
             steps {
                 script {
                     withSonarQubeEnv('SonarQube') {
                         sh 'mvn sonar:sonar'
                     }
-                    
+
                     // Wait for quality gate
                     timeout(time: 5, unit: 'MINUTES') {
                         def qg = waitForQualityGate()
-                        
+
                         doraMetrics.recordQualityGate(
                             service: env.SERVICE_NAME,
                             passed: qg.status == 'OK',
@@ -235,7 +235,7 @@ pipeline {
                             bugs: 2,
                             vulnerabilities: 0
                         )
-                        
+
                         if (qg.status != 'OK') {
                             error "Quality gate failed: ${qg.status}"
                         }
@@ -243,7 +243,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Security Scan') {
             steps {
                 script {
@@ -267,7 +267,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Package') {
             steps {
                 script {
@@ -286,7 +286,7 @@ pipeline {
             }
         }
     }
-    
+
     post {
         always {
             doraMetrics.recordPipelineComplete(
@@ -572,10 +572,10 @@ recordWithRetry {
 
 4. **Check database**:
    ```sql
-   SELECT service, status, stage, created_at 
-   FROM cicd_deployments 
+   SELECT service, status, stage, created_at
+   FROM cicd_deployments
    WHERE service = 'payment-service'
-   ORDER BY created_at DESC 
+   ORDER BY created_at DESC
    LIMIT 5;
    ```
 

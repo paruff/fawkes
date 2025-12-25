@@ -41,10 +41,10 @@ def call(Map config = [:]) {
         container('docker') {
             // Build arguments
             def buildArgsStr = config.buildArgs.collect { k, v -> "--build-arg ${k}=${v}" }.join(' ')
-            
+
             // Labels
             def labelsStr = config.labels.collect { k, v -> "--label ${k}=${v}" }.join(' ')
-            
+
             // Add default labels
             def defaultLabels = """
                 --label org.opencontainers.image.revision=${env.GIT_COMMIT}
@@ -53,7 +53,7 @@ def call(Map config = [:]) {
             """.stripIndent().replaceAll('\n', ' ')
 
             echo "Building Docker image: ${fullImage}"
-            
+
             sh """
                 docker build \
                     -f ${config.dockerfile} \
@@ -88,7 +88,7 @@ def pushImage(Map config, String fullImage, String latestImage) {
         passwordVariable: 'REGISTRY_PASS'
     )]) {
         echo "Pushing image to registry: ${config.registry}"
-        
+
         sh """
             echo \$REGISTRY_PASS | docker login ${config.registry} -u \$REGISTRY_USER --password-stdin
             docker push ${fullImage}

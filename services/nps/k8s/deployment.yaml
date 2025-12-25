@@ -24,24 +24,24 @@ spec:
         tier: backend
     spec:
       serviceAccountName: nps-service
-      
+
       # Security context
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
         runAsGroup: 65534
         fsGroup: 65534
-      
+
       containers:
       - name: nps-service
         image: nps-service:latest
         imagePullPolicy: IfNotPresent
-        
+
         ports:
         - name: http
           containerPort: 8000
           protocol: TCP
-        
+
         env:
         - name: ALLOWED_ORIGINS
           value: "https://nps.fawkes.idp,https://backstage.fawkes.idp"
@@ -74,7 +74,7 @@ spec:
           value: "30"
         - name: REMINDER_DAYS
           value: "7"
-        
+
         # Resource limits (optimized for <70% utilization)
         resources:
           requests:
@@ -83,7 +83,7 @@ spec:
           limits:
             cpu: 500m
             memory: 512Mi
-        
+
         # Health checks
         livenessProbe:
           httpGet:
@@ -93,7 +93,7 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
-        
+
         readinessProbe:
           httpGet:
             path: /health
@@ -102,7 +102,7 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 3
-        
+
         # Security context
         securityContext:
           allowPrivilegeEscalation: false
@@ -114,16 +114,16 @@ spec:
               - ALL
           seccompProfile:
             type: RuntimeDefault
-        
+
         # Volume mounts for writable directories
         volumeMounts:
         - name: tmp
           mountPath: /tmp
-      
+
       volumes:
       - name: tmp
         emptyDir: {}
-      
+
       # Pod anti-affinity for high availability
       affinity:
         podAntiAffinity:

@@ -5,7 +5,7 @@ description: Extend the Fawkes platform by creating a Backstage software templat
 
 # Create a Golden Path Template
 
-**Time to Complete**: 35 minutes  
+**Time to Complete**: 35 minutes
 **Goal**: Create a Backstage software template that encodes best practices and enables self-service application creation.
 
 ## What You'll Learn
@@ -90,7 +90,7 @@ Let's create a template for Node.js services that includes all Fawkes best pract
    spec:
      owner: group:platform-team
      type: service
-     
+
      parameters:
        - title: Service Information
          required:
@@ -115,7 +115,7 @@ Let's create a template for Node.js services that includes all Fawkes best pract
              ui:options:
                catalogFilter:
                  kind: Group
-       
+
        - title: Configuration
          required:
            - port
@@ -135,7 +135,7 @@ Let's create a template for Node.js services that includes all Fawkes best pract
              type: boolean
              default: true
              description: Use HashiCorp Vault for secrets
-       
+
        - title: Repository
          required:
            - repoUrl

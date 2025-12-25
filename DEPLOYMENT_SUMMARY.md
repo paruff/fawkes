@@ -6,7 +6,7 @@
 
 #### 1. Backstage deployed via ArgoCD ✅
 - **Location:** `platform/apps/backstage-application.yaml`
-- **Configuration:** 
+- **Configuration:**
   - Helm chart: backstage/backstage v1.10.0
   - 2 replicas for high availability
   - Automated sync with self-heal
@@ -28,7 +28,7 @@
 - **Ingress:** https://backstage.fawkes.idp
 - **TLS:** Enabled with cert-manager
 - **Health Checks:** /healthcheck endpoint
-- **Security:** 
+- **Security:**
   - Non-root containers
   - Read-only filesystem
   - Dropped capabilities

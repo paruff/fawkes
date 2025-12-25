@@ -34,7 +34,7 @@ def step_platform_deployed(context):
     # Check that key namespaces exist
     namespaces = ['fawkes', 'argocd', 'monitoring']
     api = client.CoreV1Api()
-    
+
     for ns in namespaces:
         try:
             api.read_namespace(ns)
@@ -49,15 +49,15 @@ def step_components_healthy(context):
     for row in context.table:
         component = row['component']
         namespace = row['namespace']
-        
+
         # Check if component pods are running
         pods = v1.list_namespaced_pod(
             namespace=namespace,
             label_selector=f"app.kubernetes.io/name={component}"
         )
-        
+
         running_pods = [p for p in pods.items if p.status.phase == "Running"]
-        
+
         if not running_pods:
             # Try alternative label
             pods = v1.list_namespaced_pod(
@@ -65,7 +65,7 @@ def step_components_healthy(context):
                 label_selector=f"app={component}"
             )
             running_pods = [p for p in pods.items if p.status.phase == "Running"]
-        
+
         assert len(running_pods) > 0, f"{component} has no running pods in {namespace}"
         context.test.log(f"✓ {component} is healthy ({len(running_pods)} pods running)")
 
@@ -74,19 +74,19 @@ def step_components_healthy(context):
 def step_templates_available(context):
     """Verify golden path templates exist"""
     import os
-    
+
     template_dirs = [
         'templates/python-service',
         'templates/java-service',
         'templates/nodejs-service'
     ]
-    
+
     for template_dir in template_dirs:
         assert os.path.isdir(template_dir), f"Template directory {template_dir} not found"
-        
+
         template_file = os.path.join(template_dir, 'template.yaml')
         assert os.path.isfile(template_file), f"Template file {template_file} not found"
-        
+
         context.test.log(f"✓ Template available: {template_dir}")
 
 
@@ -101,14 +101,14 @@ def step_no_manual_intervention(context):
             namespace="fawkes",
             plural="applications"
         )
-        
+
         auto_sync_count = 0
         for app in apps.get('items', []):
             spec = app.get('spec', {})
             sync_policy = spec.get('syncPolicy', {})
             if sync_policy.get('automated'):
                 auto_sync_count += 1
-        
+
         context.test.log(f"✓ {auto_sync_count} ArgoCD apps have automated sync")
     except Exception as e:
         context.test.log(f"! Could not verify ArgoCD automation: {e}")
@@ -131,21 +131,21 @@ def step_use_golden_path_template(context):
     # In a real scenario, this would call Backstage scaffolder API
     # For testing, we validate the template structure
     import os
-    
+
     template_dir = 'templates/python-service'
     assert os.path.isdir(template_dir), "Python template not found"
-    
+
     # Check template has required files
     required_skeleton_files = [
         'skeleton/Jenkinsfile',
         'skeleton/Dockerfile',
         'skeleton/catalog-info.yaml'
     ]
-    
+
     for file_path in required_skeleton_files:
         full_path = os.path.join(template_dir, file_path)
         assert os.path.isfile(full_path), f"Template file missing: {file_path}"
-    
+
     context.test.log(f"✓ Golden path template validated")
 
 
@@ -155,7 +155,7 @@ def step_resources_created(context):
     for row in context.table:
         resource = row['resource']
         location = row['location']
-        
+
         # In a real test, we would check if these were actually created
         # For now, we validate the structure is correct
         context.test.log(f"✓ Would create {resource} at {location}")
@@ -165,9 +165,9 @@ def step_resources_created(context):
 def step_repo_has_source_code(context):
     """Verify the template includes working source code"""
     import os
-    
+
     template_skeleton = 'templates/python-service/skeleton'
-    
+
     # Check for Python source files
     if os.path.isdir(template_skeleton):
         python_files = []
@@ -175,7 +175,7 @@ def step_repo_has_source_code(context):
             for file in files:
                 if file.endswith('.py'):
                     python_files.append(os.path.join(root, file))
-        
+
         context.test.log(f"✓ Template contains {len(python_files)} Python source files")
 
 
@@ -183,9 +183,9 @@ def step_repo_has_source_code(context):
 def step_jenkinsfile_uses_golden_path(context):
     """Verify Jenkinsfile uses the golden path pipeline"""
     import os
-    
+
     jenkinsfile_path = 'templates/python-service/skeleton/Jenkinsfile'
-    
+
     if os.path.isfile(jenkinsfile_path):
         with open(jenkinsfile_path, 'r') as f:
             content = f.read()
@@ -198,9 +198,9 @@ def step_catalog_info_valid(context):
     """Verify catalog-info.yaml has valid structure"""
     import os
     import yaml
-    
+
     catalog_path = 'templates/python-service/skeleton/catalog-info.yaml'
-    
+
     if os.path.isfile(catalog_path):
         with open(catalog_path, 'r') as f:
             catalog = yaml.safe_load(f)
@@ -227,7 +227,7 @@ def step_service_has_jenkinsfile(context):
     """Verify service has proper Jenkinsfile"""
     # Validate golden path pipeline exists
     import os
-    
+
     pipeline_path = 'jenkins-shared-library/vars/goldenPathPipeline.groovy'
     assert os.path.isfile(pipeline_path), "Golden path pipeline not found"
     context.test.log("✓ Golden path pipeline available")
@@ -260,12 +260,12 @@ def step_jenkins_triggers_build(context):
 def step_build_executes_stages(context):
     """Verify pipeline stages are defined"""
     import os
-    
+
     pipeline_file = 'jenkins-shared-library/vars/goldenPathPipeline.groovy'
-    
+
     with open(pipeline_file, 'r') as f:
         content = f.read()
-        
+
         for row in context.table:
             stage_name = row['stage']
             # Check if stage is defined in pipeline
@@ -279,12 +279,12 @@ def step_build_executes_stages(context):
 def step_build_completes_in_time(context, minutes):
     """Verify build timeout is configured"""
     import os
-    
+
     pipeline_file = 'jenkins-shared-library/vars/goldenPathPipeline.groovy'
-    
+
     with open(pipeline_file, 'r') as f:
         content = f.read()
-        
+
         # Check for timeout configuration
         if 'timeout' in content:
             context.test.log(f"✓ Timeout configured in pipeline")
@@ -294,10 +294,10 @@ def step_build_completes_in_time(context, minutes):
 def step_metrics_sent_to_devlake(context):
     """Verify DevLake integration is configured"""
     import os
-    
+
     # Check if DORA metrics helpers are defined
     dora_file = 'jenkins-shared-library/vars/doraMetrics.groovy'
-    
+
     if os.path.isfile(dora_file):
         context.test.log("✓ DORA metrics integration configured")
     else:
@@ -325,7 +325,7 @@ def step_image_pushed_to_harbor(context):
 def step_image_passes_trivy(context):
     """Verify Trivy scanning is configured"""
     import os
-    
+
     # Check if Trivy scanning is in pipeline
     for groovy_file in os.listdir('jenkins-shared-library/vars'):
         if groovy_file.endswith('.groovy'):
@@ -334,7 +334,7 @@ def step_image_passes_trivy(context):
                 if 'trivy' in f.read().lower():
                     context.test.log("✓ Trivy scanning configured")
                     return
-    
+
     context.test.log("! Trivy scanning not found in pipeline")
 
 
@@ -359,7 +359,7 @@ def step_security_stages_execute(context):
 def step_gitleaks_scans(context):
     """Verify Gitleaks integration"""
     import os
-    
+
     # Check if secrets scanning is configured
     for groovy_file in os.listdir('jenkins-shared-library/vars'):
         if groovy_file.endswith('.groovy'):
@@ -369,7 +369,7 @@ def step_gitleaks_scans(context):
                 if 'gitleaks' in content.lower() or 'secrets' in content.lower():
                     context.test.log("✓ Secrets scanning configured")
                     return
-    
+
     context.test.log("! Secrets scanning not found")
 
 
@@ -395,7 +395,7 @@ def step_sonarqube_analyzes(context):
 def step_quality_gate_passes(context):
     """Verify quality gate is configured"""
     import os
-    
+
     # Check if quality gate check is in pipeline
     for groovy_file in os.listdir('jenkins-shared-library/vars'):
         if groovy_file.endswith('.groovy'):
@@ -418,7 +418,7 @@ def step_trivy_scans_image(context):
 def step_no_high_vulns(context, severity, severity2):
     """Verify severity thresholds are configured"""
     import os
-    
+
     # Check if severity levels are configured in pipeline
     for groovy_file in os.listdir('jenkins-shared-library/vars'):
         if groovy_file.endswith('.groovy'):
@@ -434,9 +434,9 @@ def step_no_high_vulns(context, severity, severity2):
 def step_reports_archived(context):
     """Verify report archiving is configured"""
     import os
-    
+
     pipeline_file = 'jenkins-shared-library/vars/goldenPathPipeline.groovy'
-    
+
     with open(pipeline_file, 'r') as f:
         content = f.read()
         if 'archiveArtifacts' in content:
@@ -497,7 +497,7 @@ def step_argocd_syncs_app(context, app_name):
             namespace="fawkes",
             plural="applications"
         )
-        
+
         app_count = len(apps.get('items', []))
         context.test.log(f"✓ ArgoCD managing {app_count} applications")
     except Exception as e:
@@ -591,7 +591,7 @@ def step_metrics_recorded(context):
         metric = row['metric']
         source = row['source']
         should_exist = row['should_exist']
-        
+
         if should_exist == 'true':
             context.test.log(f"✓ Metric '{metric}' from {source} can be collected")
 
@@ -605,7 +605,7 @@ def step_can_calculate_metric(context, metric_name):
         "Change Failure Rate",
         "Mean Time to Restore"
     ]
-    
+
     assert metric_name in dora_metrics, f"Unknown DORA metric: {metric_name}"
     context.test.log(f"✓ {metric_name} calculation supported")
 

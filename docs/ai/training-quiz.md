@@ -2,10 +2,10 @@
 
 ## Quiz Information
 
-**Duration**: 20 minutes  
-**Passing Score**: 90% (9 out of 10 correct)  
-**Attempts**: Unlimited  
-**Certification**: Valid for 1 year  
+**Duration**: 20 minutes
+**Passing Score**: 90% (9 out of 10 correct)
+**Attempts**: Unlimited
+**Certification**: Valid for 1 year
 
 ---
 
@@ -25,10 +25,10 @@
 
 **Which of the following AI tools are approved for use without restrictions?**
 
-A. GitHub Copilot with organization subscription  
-B. ChatGPT for sharing proprietary code  
-C. Internal Weaviate RAG system  
-D. Any AI tool as long as it's free  
+A. GitHub Copilot with organization subscription
+B. ChatGPT for sharing proprietary code
+C. Internal Weaviate RAG system
+D. Any AI tool as long as it's free
 
 **Correct Answer(s)**: A, C
 
@@ -40,10 +40,10 @@ D. Any AI tool as long as it's free
 
 **You need help debugging a function that processes user login credentials. Which approach is correct?**
 
-A. Paste the entire function including credentials into ChatGPT for debugging help  
-B. Ask GitHub Copilot to suggest improvements while working in your IDE  
-C. Create a pseudocode version removing sensitive data and ask ChatGPT conceptual questions  
-D. Use the internal RAG system to search for similar authentication patterns  
+A. Paste the entire function including credentials into ChatGPT for debugging help
+B. Ask GitHub Copilot to suggest improvements while working in your IDE
+C. Create a pseudocode version removing sensitive data and ask ChatGPT conceptual questions
+D. Use the internal RAG system to search for similar authentication patterns
 
 **Correct Answer(s)**: B, C, D
 
@@ -55,10 +55,10 @@ D. Use the internal RAG system to search for similar authentication patterns
 
 **You used GitHub Copilot to generate 80% of a new REST API endpoint. What are your responsibilities before submitting a PR?**
 
-A. Nothing special - Copilot-generated code doesn't need review  
-B. Review the code line-by-line and add tests  
-C. Tag the commit with `[AI-assisted]` and document AI usage in the PR  
-D. Have the code reviewed by a senior engineer with security focus  
+A. Nothing special - Copilot-generated code doesn't need review
+B. Review the code line-by-line and add tests
+C. Tag the commit with `[AI-assisted]` and document AI usage in the PR
+D. Have the code reviewed by a senior engineer with security focus
 
 **Correct Answer(s)**: B, C, D
 
@@ -70,10 +70,10 @@ D. Have the code reviewed by a senior engineer with security focus
 
 **You accidentally pasted an AWS access key into ChatGPT while asking for help with a deployment script. What should you do?**
 
-A. Don't worry about it - ChatGPT won't use it maliciously  
-B. Delete the ChatGPT conversation and pretend it didn't happen  
-C. Immediately rotate the AWS access key  
-D. Report the incident to security@fawkes.idp and follow incident response procedures  
+A. Don't worry about it - ChatGPT won't use it maliciously
+B. Delete the ChatGPT conversation and pretend it didn't happen
+C. Immediately rotate the AWS access key
+D. Report the incident to security@fawkes.idp and follow incident response procedures
 
 **Correct Answer(s)**: C, D
 
@@ -85,10 +85,10 @@ D. Report the incident to security@fawkes.idp and follow incident response proce
 
 **GitHub Copilot suggests code that looks like it might come from an open-source project. What should you do?**
 
-A. Use it without concern - Copilot has filtered out copyrighted code  
-B. Research the potential source and verify license compatibility  
-C. Add attribution if it matches a known open-source project  
-D. Ask Copilot to regenerate a different solution  
+A. Use it without concern - Copilot has filtered out copyrighted code
+B. Research the potential source and verify license compatibility
+C. Add attribution if it matches a known open-source project
+D. Ask Copilot to regenerate a different solution
 
 **Correct Answer(s)**: B, C, D
 
@@ -100,10 +100,10 @@ D. Ask Copilot to regenerate a different solution
 
 **Which of these are acceptable uses of ChatGPT according to the policy?**
 
-A. "Help me understand the concept of dependency injection with a simple example"  
-B. "Here's our production database schema with customer table structure - optimize this query"  
-C. "Explain the trade-offs between microservices and monolithic architecture"  
-D. "Here's our proprietary recommendation algorithm - help me debug it"  
+A. "Help me understand the concept of dependency injection with a simple example"
+B. "Here's our production database schema with customer table structure - optimize this query"
+C. "Explain the trade-offs between microservices and monolithic architecture"
+D. "Here's our proprietary recommendation algorithm - help me debug it"
 
 **Correct Answer(s)**: A, C
 
@@ -115,10 +115,10 @@ D. "Here's our proprietary recommendation algorithm - help me debug it"
 
 **Which types of data are you allowed to share with external AI services like ChatGPT?**
 
-A. Customer email addresses for testing email validation logic  
-B. Public documentation and open-source code examples  
-C. Internal API endpoints and service architecture  
-D. Anonymized, pseudocode versions of business logic for conceptual help  
+A. Customer email addresses for testing email validation logic
+B. Public documentation and open-source code examples
+C. Internal API endpoints and service architecture
+D. Anonymized, pseudocode versions of business logic for conceptual help
 
 **Correct Answer(s)**: B, D
 
@@ -130,10 +130,10 @@ D. Anonymized, pseudocode versions of business logic for conceptual help
 
 **You used AI assistance for part of your code. Which commit message follows policy guidelines?**
 
-A. `git commit -m "Add user service"`  
-B. `git commit -m "[AI-assisted] Add user service - Used Copilot for boilerplate, manually added validation and tests"`  
-C. `git commit -m "Add user service - Copilot did everything"`  
-D. `git commit -m "[Copilot] Add user service"`  
+A. `git commit -m "Add user service"`
+B. `git commit -m "[AI-assisted] Add user service - Used Copilot for boilerplate, manually added validation and tests"`
+C. `git commit -m "Add user service - Copilot did everything"`
+D. `git commit -m "[Copilot] Add user service"`
 
 **Correct Answer(s)**: B
 
@@ -145,10 +145,10 @@ D. `git commit -m "[Copilot] Add user service"`
 
 **An AI tool suggests code that appears to be under GPL license. What should you do?**
 
-A. Use it freely - AI-generated code is not subject to licensing  
-B. Check if your project is compatible with GPL license terms  
-C. Contact the legal team for review before using GPL code  
-D. Rewrite the functionality to avoid the GPL code entirely  
+A. Use it freely - AI-generated code is not subject to licensing
+B. Check if your project is compatible with GPL license terms
+C. Contact the legal team for review before using GPL code
+D. Rewrite the functionality to avoid the GPL code entirely
 
 **Correct Answer(s)**: B, C, D
 
@@ -160,10 +160,10 @@ D. Rewrite the functionality to avoid the GPL code entirely
 
 **How often must you renew your AI Tool User Certification?**
 
-A. Never - once certified, always certified  
-B. Every 6 months  
-C. Annually (every year)  
-D. Only when the policy changes significantly  
+A. Never - once certified, always certified
+B. Every 6 months
+C. Annually (every year)
+D. Only when the policy changes significantly
 
 **Correct Answer(s)**: C
 
@@ -216,7 +216,7 @@ Upon passing this quiz with 90% or higher, you will receive:
           has successfully completed the AI Usage Policy
                Training and demonstrated proficiency
                  in responsible AI tool usage at
-                      
+
                       Fawkes Platform
 
 Date Issued: [DATE]
@@ -231,11 +231,11 @@ Training Version: 1.0
 ═══════════════════════════════════════════════════════════
 
            This certification grants access to:
-           
+
            ✓ GitHub Copilot Organization License
            ✓ Internal Weaviate RAG System
            ✓ Approved AI Tools Catalog
-           
+
            Renewal Required: Annual
            Contact: platform-team@fawkes.idp
 
@@ -316,6 +316,6 @@ Once certified, you should:
 
 ---
 
-**Quiz Version**: 1.0  
-**Last Updated**: December 2025  
+**Quiz Version**: 1.0
+**Last Updated**: December 2025
 **Next Review**: March 2026

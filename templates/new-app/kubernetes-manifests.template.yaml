@@ -76,7 +76,7 @@ spec:
         prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: component-name
-      
+
       # Security context
       securityContext:
         runAsNonRoot: true
@@ -84,12 +84,12 @@ spec:
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
-      
+
       containers:
         - name: component-name
           image: docker.io/library/component-name:v1.0.0  # Always use specific version tags
           imagePullPolicy: IfNotPresent
-          
+
           ports:
             - name: http
               containerPort: 8080
@@ -97,7 +97,7 @@ spec:
             - name: metrics
               containerPort: 9090
               protocol: TCP
-          
+
           env:
             - name: CONFIG_FILE
               value: /config/config.yaml
@@ -106,14 +106,14 @@ spec:
                 secretKeyRef:
                   name: component-name-secret
                   key: password
-          
+
           volumeMounts:
             - name: config
               mountPath: /config
               readOnly: true
             - name: data
               mountPath: /data
-          
+
           resources:
             requests:
               cpu: 100m
@@ -121,7 +121,7 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
-          
+
           livenessProbe:
             httpGet:
               path: /health
@@ -130,7 +130,7 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 3
-          
+
           readinessProbe:
             httpGet:
               path: /ready
@@ -139,7 +139,7 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 3
             failureThreshold: 3
-          
+
           # Security context for container
           securityContext:
             allowPrivilegeEscalation: false
@@ -149,7 +149,7 @@ spec:
             capabilities:
               drop:
                 - ALL
-      
+
       volumes:
         - name: config
           configMap:

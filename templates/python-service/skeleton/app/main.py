@@ -40,15 +40,15 @@ async def add_metrics(request, call_next):
     start_time = time.time()
     response = await call_next(request)
     duration = time.time() - start_time
-    
+
     REQUEST_COUNT.labels(
         method=request.method,
         endpoint=request.url.path,
         status=response.status_code
     ).inc()
-    
+
     REQUEST_LATENCY.observe(duration)
-    
+
     return response
 
 

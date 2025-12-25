@@ -41,13 +41,13 @@ app.use(express.json());
 // Metrics middleware
 app.use((req, res, next) => {
   const start = Date.now();
-  
+
   res.on('finish', () => {
     const duration = (Date.now() - start) / 1000;
     httpRequestCounter.labels(req.method, req.route?.path || req.path, res.statusCode).inc();
     httpRequestDuration.labels(req.method, req.route?.path || req.path, res.statusCode).observe(duration);
   });
-  
+
   next();
 });
 

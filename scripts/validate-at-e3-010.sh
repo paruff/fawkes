@@ -111,7 +111,7 @@ if [ -f "docs/how-to/usability-testing-guide.md" ]; then
     if grep -q "Best Practices" "docs/how-to/usability-testing-guide.md"; then
         ((content_checks++))
     fi
-    
+
     if [ $content_checks -eq 4 ]; then
         print_pass "Guide covers all key sections"
     else
@@ -169,7 +169,7 @@ if [ -f "docs/research/templates/usability-test-script.md" ]; then
     if grep -q "Closing" "docs/research/templates/usability-test-script.md"; then
         ((sections++))
     fi
-    
+
     if [ $sections -eq 4 ]; then
         print_pass "Test script includes all required sections"
     else
@@ -201,7 +201,7 @@ fi
 print_check "OpenReplay namespace exists (optional)"
 if timeout 5 kubectl get namespace openreplay &>/dev/null 2>&1; then
     print_pass "OpenReplay namespace exists"
-    
+
     print_check "OpenReplay pods are running"
     if timeout 5 kubectl get pods -n openreplay --field-selector=status.phase=Running 2>/dev/null | grep -q "openreplay"; then
         print_pass "OpenReplay pods are running"
@@ -231,7 +231,7 @@ if [ -f "docs/research/templates/usability-analysis-template.md" ]; then
     if grep -q "Confidence" "docs/research/templates/usability-analysis-template.md"; then
         ((metrics++))
     fi
-    
+
     if [ $metrics -eq 3 ]; then
         print_pass "Analysis template includes success metrics"
     else
@@ -279,7 +279,7 @@ if [ -f "docs/research/templates/participant-screener.md" ]; then
     if grep -q "availability\|Availability" "docs/research/templates/participant-screener.md"; then
         ((criteria++))
     fi
-    
+
     if [ $criteria -eq 3 ]; then
         print_pass "Screener includes selection criteria"
     else

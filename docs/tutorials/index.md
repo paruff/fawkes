@@ -48,7 +48,7 @@ graph LR
     C --> D[4. Buildpacks]
     D --> E[5. Golden Path]
     E --> F[6. DORA Metrics]
-    
+
     style A fill:#4CAF50
     style B fill:#4CAF50
     style C fill:#4CAF50

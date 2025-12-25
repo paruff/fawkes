@@ -1,6 +1,6 @@
 /**
  * Fawkes Design System - Component Exports
- * 
+ *
  * This file exports all components from the design system.
  * Total: 41+ components
  */

@@ -21,10 +21,10 @@ Fawkes introduces the **IP3dP** framework: **Internal Platform Product Discovery
 
 ### The Traditional IDP Anti-Pattern
 
-**Month 1**: Platform team decides "We need a developer portal!"  
-**Month 2-6**: Build Backstage, integrate with GitHub, ArgoCD, Jenkins  
-**Month 7**: Launch with fanfare, send Slack announcement  
-**Month 8**: 12% adoption. Developers still use `kubectl` and Slack for everything.  
+**Month 1**: Platform team decides "We need a developer portal!"
+**Month 2-6**: Build Backstage, integrate with GitHub, ArgoCD, Jenkins
+**Month 7**: Launch with fanfare, send Slack announcement
+**Month 8**: 12% adoption. Developers still use `kubectl` and Slack for everything.
 **Month 9**: Platform team confused: "Why don't they use it?"
 
 **Root Cause**: Nobody asked developers what problems they actually have.
@@ -68,7 +68,7 @@ graph TB
     B -->|Roadmap| C[Delivery]
     C -->|Features| D[Measurement]
     D -->|Learnings| A
-    
+
     style A fill:#4CAF50
     style B fill:#FF9800
     style C fill:#2196F3
@@ -123,7 +123,7 @@ Instead of "What features do you want?", ask "What job are you trying to do?"
 
 **Example Discovery Insight**:
 
-**Initial Request**: "We need a feature flag service"  
+**Initial Request**: "We need a feature flag service"
 **Discovery Conversation**:
 - *Why do you need feature flags?*
 - "To deploy without breaking production"
@@ -132,7 +132,7 @@ Instead of "What features do you want?", ask "What job are you trying to do?"
 - *Why Friday? Why not earlier in the week?*
 - "Deployment process takes 2 hours, only time we have is end-of-sprint"
 
-**Real Problem**: Deployment is too slow and risky, so teams batch changes and deploy infrequently.  
+**Real Problem**: Deployment is too slow and risky, so teams batch changes and deploy infrequently.
 **Solution**: Not feature flags—fix deployment speed and reliability (canary deployments, automated rollback).
 
 #### 2. Prioritization: What Should We Build?
@@ -255,8 +255,8 @@ Support:
 
 **What to Do With Data:**
 
-**If metrics improving**: Double down, expand adoption  
-**If metrics flat**: Investigate (wrong solution? Adoption barriers?)  
+**If metrics improving**: Double down, expand adoption
+**If metrics flat**: Investigate (wrong solution? Adoption barriers?)
 **If metrics declining**: Pivot or sunset the feature
 
 **Example Decision Tree:**
@@ -285,12 +285,12 @@ gantt
     Developer Interviews       :done,    disc1, 2024-10-01, 2w
     Survey Deployment          :done,    disc2, 2024-10-15, 1w
     Data Analysis              :active,  disc3, 2024-10-22, 1w
-    
+
     section Delivery
     GitOps Auto-Deploy Alpha   :active,  del1, 2024-11-01, 3w
     Vault Auto-Rotation Beta   :         del2, 2024-11-22, 4w
     Backstage Templates GA     :         del3, 2024-12-20, 2w
-    
+
     section Measurement
     DORA Metrics Dashboard     :done,    meas1, 2024-10-01, 12w
     NPS Survey Monthly         :         meas2, 2024-11-01, 4w
@@ -340,7 +340,7 @@ gantt
    - Interview reveals: "Want to know if my app is healthy"
    - Real job-to-be-done: **Monitor application health**
 
-2. **Prioritization**: 
+2. **Prioritization**:
    - Reach: All teams (200 devs)
    - Impact: High (currently checking Slack or kubectl)
    - Confidence: Medium (is Grafana better than K8s Dashboard?)

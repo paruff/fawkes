@@ -333,28 +333,28 @@ The CAB is a volunteer advisory role. There is no payment or monetary compensati
 
 ## FAQs
 
-**Q: How much time does this really take?**  
+**Q: How much time does this really take?**
 A: Most members spend 4-6 hours per quarter: 2 hours for the meeting, 1-2 hours for async participation, and 2 hours for testing (optional). It's flexible - contribute as much as your schedule allows.
 
-**Q: What if I can't attend a quarterly meeting?**  
+**Q: What if I can't attend a quarterly meeting?**
 A: No problem! We record meetings (with permission) and share notes. We hope you can attend >50% of meetings over the year, but we understand schedules change.
 
-**Q: Can I share what we discuss publicly?**  
+**Q: Can I share what we discuss publicly?**
 A: Most CAB discussions are fine to share. The exception is pre-release features and confidential roadmap details. When in doubt, ask in the channel or wait until it's publicly announced.
 
-**Q: What if I want to leave the CAB?**  
+**Q: What if I want to leave the CAB?**
 A: You're welcome to step down at any time, no questions asked. Just let us know so we can properly thank you and possibly transition your spot to another member.
 
-**Q: Can I nominate someone else to join?**  
+**Q: Can I nominate someone else to join?**
 A: Absolutely! We love member referrals. Have them fill out the nomination template or send us their info.
 
-**Q: How do decisions get made?**  
+**Q: How do decisions get made?**
 A: The product team makes final decisions, considering all input including CAB feedback. We'll explain our rationale when CAB input influences decisions. Your voice matters, but you're not voting on every decision.
 
-**Q: What if I disagree with a decision?**  
+**Q: What if I disagree with a decision?**
 A: Healthy debate is encouraged! Share your perspective. Sometimes we'll disagree and choose a different path - that's okay. We'll explain why.
 
-**Q: Can I bring a colleague to meetings?**  
+**Q: Can I bring a colleague to meetings?**
 A: For quarterly meetings, members only (plus product team). However, we can invite "guest advisors" for specific topics if their expertise is needed. Just ask!
 
 ---
@@ -419,6 +419,6 @@ Don't hesitate to reach out with questions, ideas, or feedback at any time. We'r
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: December 25, 2025  
+**Document Version**: 1.0
+**Last Updated**: December 25, 2025
 **Questions?** Contact product-team@fawkes.local or post in `#cab-advisory-board`

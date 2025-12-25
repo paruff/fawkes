@@ -257,7 +257,7 @@ Ad-hoc querying for troubleshooting:
 
 **Find slow requests:**
 ```promql
-histogram_quantile(0.99, 
+histogram_quantile(0.99,
   rate(http_request_duration_seconds_bucket[5m])
 ) > 1
 ```

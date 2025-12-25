@@ -28,17 +28,17 @@ spec:
         runAsUser: 65534
         runAsGroup: 65534
         fsGroup: 65534
-      
+
       containers:
         - name: app
           image: harbor.fawkes.local/platform-team/sample-nodejs-app:latest
           imagePullPolicy: Always
-          
+
           ports:
             - name: http
               containerPort: 3000
               protocol: TCP
-          
+
           env:
             - name: NODE_ENV
               value: "production"
@@ -46,7 +46,7 @@ spec:
               value: "info"
             - name: PORT
               value: "3000"
-          
+
           resources:
             requests:
               memory: "256Mi"
@@ -54,7 +54,7 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
-          
+
           livenessProbe:
             httpGet:
               path: /health
@@ -63,7 +63,7 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 3
-          
+
           readinessProbe:
             httpGet:
               path: /ready
@@ -72,7 +72,7 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 3
             failureThreshold: 3
-          
+
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -83,11 +83,11 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
-          
+
           volumeMounts:
             - name: tmp
               mountPath: /tmp
-      
+
       volumes:
         - name: tmp
           emptyDir: {}

@@ -143,7 +143,7 @@ if [ -f "scripts/validate-at-e3-008.sh" ]; then
         AT_E3_008_EXIT=$?
         echo "$OUTPUT" | tail -20
     fi
-    
+
     if [ $AT_E3_008_EXIT -eq 0 ]; then
         TEST_RESULTS["AT-E3-008"]="PASSED"
         print_pass "AT-E3-008 validation passed"
@@ -170,7 +170,7 @@ if [ -f "scripts/validate-at-e3-010.sh" ]; then
         AT_E3_010_EXIT=$?
         echo "$OUTPUT" | tail -20
     fi
-    
+
     if [ $AT_E3_010_EXIT -eq 0 ]; then
         TEST_RESULTS["AT-E3-010"]="PASSED"
         print_pass "AT-E3-010 validation passed"
@@ -197,7 +197,7 @@ if [ -f "scripts/validate-product-analytics.sh" ]; then
         AT_E3_011_EXIT=$?
         echo "$OUTPUT" | tail -20
     fi
-    
+
     if [ $AT_E3_011_EXIT -eq 0 ]; then
         TEST_RESULTS["AT-E3-011"]="PASSED"
         print_pass "AT-E3-011 validation passed"
@@ -224,7 +224,7 @@ if [ -f "scripts/validate-at-e3-012.sh" ]; then
         AT_E3_012_EXIT=$?
         echo "$OUTPUT" | tail -20
     fi
-    
+
     if [ $AT_E3_012_EXIT -eq 0 ]; then
         TEST_RESULTS["AT-E3-012"]="PASSED"
         print_pass "AT-E3-012 validation passed"
@@ -288,7 +288,7 @@ echo ""
 # Generate JSON report
 if [ "$GENERATE_REPORT" = "true" ]; then
     REPORT_FILE="$REPORT_DIR/epic-3-final-validation-$TIMESTAMP.json"
-    
+
     cat > "$REPORT_FILE" << EOF
 {
   "test_suite": "Epic 3 Final Validation",
@@ -327,7 +327,7 @@ if [ "$GENERATE_REPORT" = "true" ]; then
   }
 }
 EOF
-    
+
     print_pass "Report generated: $REPORT_FILE"
 fi
 

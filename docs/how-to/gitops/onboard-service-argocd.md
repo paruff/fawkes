@@ -74,18 +74,18 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  
+
   # Source: Your service Git repository
   source:
     repoURL: https://github.com/your-org/my-service.git
     targetRevision: main
     path: overlays/dev
-  
+
   # Destination: Target cluster and namespace
   destination:
     server: https://kubernetes.default.svc
     namespace: my-service-dev
-  
+
   # Sync policy: Automatic synchronization
   syncPolicy:
     automated:
@@ -100,7 +100,7 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
-  
+
   # Health assessment
   ignoreDifferences:
     - group: apps

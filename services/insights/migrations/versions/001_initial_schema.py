@@ -1,7 +1,7 @@
 """Initial schema for Insights service
 
 Revision ID: 001
-Revises: 
+Revises:
 Create Date: 2025-12-23 18:00:00.000000
 
 """
@@ -40,7 +40,7 @@ def upgrade() -> None:
     op.create_index(op.f('ix_categories_name'), 'categories', ['name'], unique=True)
     op.create_index(op.f('ix_categories_slug'), 'categories', ['slug'], unique=True)
     op.create_index(op.f('ix_categories_parent_id'), 'categories', ['parent_id'], unique=False)
-    
+
     # Create tags table
     op.create_table(
         'tags',
@@ -58,7 +58,7 @@ def upgrade() -> None:
     op.create_index(op.f('ix_tags_id'), 'tags', ['id'], unique=False)
     op.create_index(op.f('ix_tags_name'), 'tags', ['name'], unique=True)
     op.create_index(op.f('ix_tags_slug'), 'tags', ['slug'], unique=True)
-    
+
     # Create insights table
     op.create_table(
         'insights',
@@ -87,7 +87,7 @@ def upgrade() -> None:
     op.create_index('idx_insights_status_priority', 'insights', ['status', 'priority'], unique=False)
     op.create_index('idx_insights_category_status', 'insights', ['category_id', 'status'], unique=False)
     op.create_index('idx_insights_author_status', 'insights', ['author', 'status'], unique=False)
-    
+
     # Create insight_tags association table
     op.create_table(
         'insight_tags',
@@ -99,7 +99,7 @@ def upgrade() -> None:
     )
     op.create_index('idx_insight_tags_insight_id', 'insight_tags', ['insight_id'], unique=False)
     op.create_index('idx_insight_tags_tag_id', 'insight_tags', ['tag_id'], unique=False)
-    
+
     # Insert default categories
     op.execute("""
         INSERT INTO categories (name, slug, description, color, icon, created_at, updated_at) VALUES
@@ -110,7 +110,7 @@ def upgrade() -> None:
         ('Security', 'security', 'Security-related insights', '#EF4444', 'shield', NOW(), NOW()),
         ('Performance', 'performance', 'Performance optimization insights', '#06B6D4', 'zap', NOW(), NOW());
     """)
-    
+
     # Insert default tags
     op.execute("""
         INSERT INTO tags (name, slug, description, color, created_at) VALUES
@@ -129,7 +129,7 @@ def downgrade() -> None:
     op.drop_index('idx_insight_tags_tag_id', table_name='insight_tags')
     op.drop_index('idx_insight_tags_insight_id', table_name='insight_tags')
     op.drop_table('insight_tags')
-    
+
     op.drop_index('idx_insights_author_status', table_name='insights')
     op.drop_index('idx_insights_category_status', table_name='insights')
     op.drop_index('idx_insights_status_priority', table_name='insights')
@@ -141,12 +141,12 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_insights_title'), table_name='insights')
     op.drop_index(op.f('ix_insights_id'), table_name='insights')
     op.drop_table('insights')
-    
+
     op.drop_index(op.f('ix_tags_slug'), table_name='tags')
     op.drop_index(op.f('ix_tags_name'), table_name='tags')
     op.drop_index(op.f('ix_tags_id'), table_name='tags')
     op.drop_table('tags')
-    
+
     op.drop_index(op.f('ix_categories_parent_id'), table_name='categories')
     op.drop_index(op.f('ix_categories_slug'), table_name='categories')
     op.drop_index(op.f('ix_categories_name'), table_name='categories')

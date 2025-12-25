@@ -79,7 +79,7 @@ graph TB
     B -->|Watches & Syncs| E[Dev Cluster]
     F[Developer] -->|Git Commit| A
     G[Jenkins CI] -->|Builds Image, Updates Manifest| A
-    
+
     style A fill:#4CAF50
     style B fill:#2196F3
 ```

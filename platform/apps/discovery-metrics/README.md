@@ -6,7 +6,7 @@ This directory contains Kubernetes manifests for deploying the Discovery Metrics
 
 The Discovery Metrics Service tracks continuous discovery activities including:
 - Interviews conducted
-- Insights captured  
+- Insights captured
 - Experiments run
 - Features validated
 - Team performance metrics
@@ -39,7 +39,7 @@ See `../postgresql/`:
 ### Prerequisites
 
 1. CloudNativePG operator installed
-2. Ingress controller configured  
+2. Ingress controller configured
 3. cert-manager for TLS
 4. Prometheus operator (optional, for metrics)
 

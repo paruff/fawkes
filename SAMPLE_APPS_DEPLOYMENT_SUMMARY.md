@@ -250,11 +250,11 @@ The sample applications depend on:
 
 ## Success Criteria Met
 
-✅ Sample Java Spring Boot app deployed  
-✅ Sample Python FastAPI app deployed  
-✅ Sample Node.js Express app deployed  
-✅ All apps accessible via ingress  
-✅ DORA metrics being collected for all apps  
+✅ Sample Java Spring Boot app deployed
+✅ Sample Python FastAPI app deployed
+✅ Sample Node.js Express app deployed
+✅ All apps accessible via ingress
+✅ DORA metrics being collected for all apps
 
 ## Next Steps
 

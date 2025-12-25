@@ -10,7 +10,7 @@ export interface SelectProps extends BaseComponentProps {
 
 /**
  * Dropdown select field
- * 
+ *
  * @component
  * @example
  * ```tsx

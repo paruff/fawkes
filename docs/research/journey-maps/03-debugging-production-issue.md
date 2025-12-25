@@ -2,11 +2,11 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: December 2025  
-**Status**: Active  
-**Owner**: Product Team  
-**Based on**: User interviews and incident observations (Nov-Dec 2025)  
+**Version**: 1.0
+**Last Updated**: December 2025
+**Status**: Active
+**Owner**: Product Team
+**Based on**: User interviews and incident observations (Nov-Dec 2025)
 **Related Personas**: [Application Developer](../personas/application-developer.md), [Platform Developer](../personas/platform-developer.md)
 
 ---
@@ -314,49 +314,49 @@
 ```mermaid
 graph TB
     Start([Alert: High Error Rate]) --> Stage1[Stage 1: Alert Reception & Assessment]
-    
+
     Stage1 --> Stage2[Stage 2: Finding Relevant Logs]
     Stage2 --> LogsFound{Found Relevant Info?}
-    
+
     LogsFound -->|No| AskHelp1[Ask Platform Team]
     AskHelp1 --> Stage2
-    
+
     LogsFound -->|Yes| Stage3[Stage 3: Root Cause Analysis]
     Stage3 --> RootCauseFound{Root Cause Identified?}
-    
+
     RootCauseFound -->|No| DeepDive[Deep Dive: Check Dependencies]
     DeepDive --> UseTracing[Use Distributed Tracing]
     UseTracing --> Stage3
-    
+
     RootCauseFound -->|Yes| Decision[Decide: Rollback or Fix?]
     Decision --> Stage4[Stage 4: Implementing Fix]
-    
+
     Stage4 --> Deploy[Deploy Fix to Production]
     Deploy --> Monitor[Monitor Error Rate]
     Monitor --> FixWorks{Error Rate Normal?}
-    
+
     FixWorks -->|No| TryAgain[Try Different Approach]
     TryAgain --> Stage4
-    
+
     FixWorks -->|Yes| Stage5[Stage 5: Verification & Communication]
     Stage5 --> CloseIncident[Close Incident]
     CloseIncident --> Stage6[Stage 6: Post-Incident Review]
     Stage6 --> End([Incident Resolved & Documented])
-    
+
     Stage1 -.->|Pain| Pain1["Lack of alert context<br/>Manual classification"]
     Stage2 -.->|Pain| Pain2["Log noise<br/>Hard to correlate"]
     Stage3 -.->|Pain| Pain3["Multiple tools<br/>Manual analysis"]
     Stage4 -.->|Pain| Pain4["No fast-track deploy<br/>Manual config"]
     Stage5 -.->|Pain| Pain5["Manual updates<br/>Unclear resolution"]
     Stage6 -.->|Pain| Pain6["Manual timeline<br/>Action items don't stick"]
-    
+
     Pain1 -.->|Fix| Opp1["Rich alerts<br/>Auto classification"]
     Pain2 -.->|Fix| Opp2["Smart log filtering<br/>Auto correlation"]
     Pain3 -.->|Fix| Opp3["Unified view<br/>Auto suggestions"]
     Pain4 -.->|Fix| Opp4["Incident mode<br/>Hot reload"]
     Pain5 -.->|Fix| Opp5["Auto notifications<br/>Clear criteria"]
     Pain6 -.->|Fix| Opp6["Auto timeline<br/>Track actions"]
-    
+
     style Start fill:#FF6B6B
     style End fill:#90EE90
     style CloseIncident fill:#FFD700
@@ -388,7 +388,7 @@ graph LR
         S4 --> S5["Verify<br/>15 min<br/>😐→😊 2/5→1/5"]
         S5 --> S6["Review<br/>Next day<br/>😐 2/5"]
     end
-    
+
     style S1 fill:#FFA500
     style S2 fill:#FF6B6B
     style S3 fill:#98D8C8

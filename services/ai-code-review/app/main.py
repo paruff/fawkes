@@ -87,7 +87,7 @@ async def lifespan(app: FastAPI):
     global http_client
     logger.info("Starting AI Code Review Service")
     http_client = httpx.AsyncClient(timeout=30.0)
-    
+
     # Check connections
     try:
         response = await http_client.get(f"{RAG_SERVICE_URL}/health")
@@ -97,9 +97,9 @@ async def lifespan(app: FastAPI):
             logger.warning(f"⚠️  RAG service returned status {response.status_code}")
     except Exception as e:
         logger.error(f"❌ Failed to connect to RAG service: {e}")
-    
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down AI Code Review Service")
     if http_client:
@@ -179,7 +179,7 @@ async def health() -> HealthResponse:
             rag_connected = response.status_code == 200
     except Exception:
         pass
-    
+
     return HealthResponse(
         status="UP",
         service="ai-code-review",
@@ -197,7 +197,7 @@ async def ready():
         raise HTTPException(status_code=503, detail="GitHub token not configured")
     if not LLM_API_KEY:
         raise HTTPException(status_code=503, detail="LLM API key not configured")
-    
+
     return {
         "status": "READY",
         "service": "ai-code-review"
@@ -209,10 +209,10 @@ def verify_github_signature(payload_body: bytes, signature_header: str) -> bool:
     if not GITHUB_WEBHOOK_SECRET:
         logger.warning("GitHub webhook secret not configured, skipping verification")
         return True
-    
+
     if not signature_header:
         return False
-    
+
     hash_algorithm, github_signature = signature_header.split('=')
     algorithm = hashlib.sha256 if hash_algorithm == 'sha256' else hashlib.sha1
     encoded_secret = GITHUB_WEBHOOK_SECRET.encode()
@@ -230,42 +230,42 @@ async def github_webhook(
     """Handle GitHub webhook events for pull requests."""
     # Read raw body for signature verification
     body = await request.body()
-    
+
     # Verify signature
     if not verify_github_signature(body, x_hub_signature_256):
         logger.warning("Invalid webhook signature")
         raise HTTPException(status_code=401, detail="Invalid signature")
-    
+
     # Parse payload
     try:
         payload = await request.json()
     except Exception as e:
         logger.error(f"Failed to parse webhook payload: {e}")
         raise HTTPException(status_code=400, detail="Invalid JSON payload")
-    
+
     # Track webhook event
     action = payload.get('action', 'unknown')
     WEBHOOK_COUNT.labels(event_type=x_github_event or 'unknown', action=action).inc()
-    
+
     # Process pull request events
     if x_github_event == 'pull_request' and action in ['opened', 'synchronize', 'reopened']:
         pr_data = payload.get('pull_request', {})
         repo_data = payload.get('repository', {})
-        
+
         logger.info(f"Processing PR #{pr_data.get('number')} in {repo_data.get('full_name')}")
-        
+
         # Process review in background
         background_tasks.add_task(
             process_pull_request_review,
             pr_data,
             repo_data
         )
-        
+
         return JSONResponse(
             status_code=202,
             content={"message": "Review scheduled for processing"}
         )
-    
+
     return JSONResponse(content={"message": "Event ignored"})
 
 
@@ -274,13 +274,13 @@ async def process_pull_request_review(pr_data: Dict, repo_data: Dict):
     start_time = time.time()
     pr_number = pr_data.get('number')
     repo_full_name = repo_data.get('full_name')
-    
+
     try:
         logger.info(f"Starting review for PR #{pr_number} in {repo_full_name}")
-        
+
         # Lazy import to avoid circular dependency and reduce startup time
         from .reviewer import ReviewEngine
-        
+
         # Initialize review engine
         engine = ReviewEngine(
             rag_service_url=RAG_SERVICE_URL,
@@ -292,32 +292,32 @@ async def process_pull_request_review(pr_data: Dict, repo_data: Dict):
             sonarqube_token=SONARQUBE_TOKEN,
             http_client=http_client
         )
-        
+
         # Perform review
         review_result = await engine.review_pull_request(pr_data, repo_data)
-        
+
         # Track metrics
         duration = time.time() - start_time
         REVIEW_DURATION.observe(duration)
         REVIEW_COUNT.labels(repository=repo_full_name, status='success').inc()
-        
+
         for comment in review_result.comments:
             COMMENT_COUNT.labels(
                 repository=repo_full_name,
                 category=comment.category,
                 severity=comment.severity
             ).inc()
-        
+
         FALSE_POSITIVE_RATE.labels(repository=repo_full_name).set(
             review_result.false_positive_rate
         )
-        
+
         logger.info(
             f"Review completed for PR #{pr_number}: "
             f"{review_result.total_issues} issues found, "
             f"FP rate: {review_result.false_positive_rate:.2%}"
         )
-        
+
     except Exception as e:
         logger.error(f"Failed to process review for PR #{pr_number}: {e}", exc_info=True)
         REVIEW_COUNT.labels(repository=repo_full_name, status='error').inc()

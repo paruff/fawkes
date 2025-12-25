@@ -83,18 +83,18 @@ kubectl get application -n fawkes backstage
   - All manifests exist and are properly configured
   - Catalog file created with platform components
   - Software templates created for golden paths
-  
+
 - [x] **Tests written and passing**
   - BDD acceptance tests exist: `tests/bdd/features/backstage-deployment.feature`
   - Step definitions implemented: `tests/bdd/step_definitions/backstage_steps.py`
   - 9 test scenarios covering all acceptance criteria
-  
+
 - [x] **Documentation updated**
   - Comprehensive deployment guide: `docs/deployment/backstage-postgresql.md`
   - Deployment directory README: `docs/deployment/README.md`
   - Architecture documented in: `docs/architecture.md`
   - Backstage README exists: `platform/apps/backstage/README.md`
-  
+
 - [x] **Acceptance test passes (if applicable)**
   - All acceptance criteria met
   - Deployment manifests ready for ArgoCD sync
@@ -152,7 +152,7 @@ kubectl get application -n fawkes backstage
    ```bash
    # Local: Port-forward
    kubectl port-forward -n fawkes svc/backstage 7007:7007
-   
+
    # Production: Access via ingress
    # https://backstage.fawkes.idp
    ```

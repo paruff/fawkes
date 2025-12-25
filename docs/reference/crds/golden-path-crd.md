@@ -161,7 +161,7 @@ components:
       volumeMounts:
         - name: pip-cache
           path: /home/user/.cache/pip
-  
+
   - name: pip-cache
     volume:
       size: 2Gi
@@ -200,7 +200,7 @@ commands:
       group:
         kind: build
         isDefault: true
-  
+
   - id: run-tests
     exec:
       label: "Run Tests"

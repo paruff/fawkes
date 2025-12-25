@@ -64,7 +64,7 @@ graph LR
     Start([Goal]) --> Stage1[Stage 1]
     Stage1 --> Stage2[Stage 2]
     Stage2 --> End([Success])
-    
+
     Stage1 -.->|Pain| Pain1[Problem]
     Pain1 -.->|Fix| Opp1[Improvement]
 ```

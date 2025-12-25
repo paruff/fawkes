@@ -1,6 +1,6 @@
 /**
  * Design Tokens - Main Export
- * 
+ *
  * Central export for all design tokens
  */
 

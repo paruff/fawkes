@@ -10,7 +10,7 @@ export interface FormLabelProps extends BaseComponentProps {
 
 /**
  * Label for form fields
- * 
+ *
  * @component
  * @example
  * ```tsx

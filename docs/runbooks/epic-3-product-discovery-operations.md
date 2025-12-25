@@ -1,8 +1,8 @@
 # Epic 3: Product Discovery & UX Operations Runbook
 
-**Version**: 1.0  
-**Last Updated**: December 2024  
-**Status**: Production Ready  
+**Version**: 1.0
+**Last Updated**: December 2024
+**Status**: Production Ready
 **Target Audience**: Platform Engineers, Product Teams, UX Researchers, DevEx Engineers
 
 ---
@@ -672,7 +672,7 @@ kubectl rollout restart deployment storybook -n fawkes
    # Check overall cluster health
    kubectl get nodes
    kubectl get pods -A | grep -v Running
-   
+
    # Identify affected Epic 3 components
    kubectl get pods -n fawkes -l epic=3
    kubectl get pods -n fawkes-local -l epic=3
@@ -683,7 +683,7 @@ kubectl rollout restart deployment storybook -n fawkes
    # Check recent events
    kubectl get events -n fawkes --sort-by='.lastTimestamp' | tail -20
    kubectl get events -n fawkes-local --sort-by='.lastTimestamp' | tail -20
-   
+
    # Review logs
    kubectl logs -n fawkes -l epic=3 --tail=100
    kubectl logs -n fawkes-local -l epic=3 --tail=100
@@ -693,10 +693,10 @@ kubectl rollout restart deployment storybook -n fawkes
    ```bash
    # Rollback to last known good version
    kubectl rollout undo deployment/<component-name> -n fawkes
-   
+
    # Scale up if resource constraints
    kubectl scale deployment/<component-name> -n fawkes --replicas=3
-   
+
    # Restart if necessary
    kubectl rollout restart deployment/<component-name> -n fawkes
    ```

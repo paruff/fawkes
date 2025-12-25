@@ -10,7 +10,7 @@ export interface AlertProps extends BaseComponentProps {
 
 /**
  * Alert message component
- * 
+ *
  * @component
  * @example
  * ```tsx

@@ -151,13 +151,13 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@34e11480ae1e31caa3f43c6f6043d4daa6e1148a
-      
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::ACCOUNT_ID:role/GitHubActionsRole
           aws-region: us-east-1
-          
+
       - name: Deploy to AWS
         run: |
           # AWS CLI commands here - automatically authenticated
@@ -263,7 +263,7 @@ These changes improve the repository's OpenSSF Scorecard score:
 
 If issues arise from these changes:
 
-1. **Action Version Issues**: 
+1. **Action Version Issues**:
    - Comment out SHA, uncomment tag temporarily
    - Investigate and update to correct SHA
 

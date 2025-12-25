@@ -10,7 +10,7 @@ export interface BadgeProps extends BaseComponentProps {
 
 /**
  * Badge for counts or status
- * 
+ *
  * @component
  * @example
  * ```tsx

@@ -42,7 +42,7 @@ class FeatureStatus(str, enum.Enum):
 class Interview(Base):
     """Interview tracking model."""
     __tablename__ = "interviews"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     participant_role = Column(String(100))
     participant_team = Column(String(100))
@@ -55,7 +55,7 @@ class Interview(Base):
     notes = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Relationships
     insights = relationship("DiscoveryInsight", back_populates="interview")
 
@@ -63,7 +63,7 @@ class Interview(Base):
 class DiscoveryInsight(Base):
     """Discovery insight model."""
     __tablename__ = "discovery_insights"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255))
     description = Column(Text)
@@ -77,7 +77,7 @@ class DiscoveryInsight(Base):
     time_to_validation_days = Column(Float, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Relationships
     interview = relationship("Interview", back_populates="insights")
     experiments = relationship("Experiment", back_populates="insight")
@@ -86,7 +86,7 @@ class DiscoveryInsight(Base):
 class Experiment(Base):
     """Experiment tracking model."""
     __tablename__ = "experiments"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255))
     description = Column(Text)
@@ -102,7 +102,7 @@ class Experiment(Base):
     roi_percentage = Column(Float, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Relationships
     insight = relationship("DiscoveryInsight", back_populates="experiments")
     features = relationship("FeatureValidation", back_populates="experiment")
@@ -111,7 +111,7 @@ class Experiment(Base):
 class FeatureValidation(Base):
     """Feature validation tracking model."""
     __tablename__ = "feature_validations"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     feature_name = Column(String(255))
     description = Column(Text)
@@ -126,7 +126,7 @@ class FeatureValidation(Base):
     user_satisfaction = Column(Float, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Relationships
     experiment = relationship("Experiment", back_populates="features")
 
@@ -134,7 +134,7 @@ class FeatureValidation(Base):
 class TeamPerformance(Base):
     """Team performance metrics model."""
     __tablename__ = "team_performance"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     team_name = Column(String(100))
     period_start = Column(DateTime)

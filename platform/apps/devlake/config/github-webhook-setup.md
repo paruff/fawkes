@@ -22,7 +22,7 @@ GitHub webhooks send real-time events to DevLake when code is pushed or PRs are 
 
 ## Webhook Endpoint
 
-**Production URL**: `https://devlake.fawkes.idp/api/plugins/webhook/1/commits`  
+**Production URL**: `https://devlake.fawkes.idp/api/plugins/webhook/1/commits`
 **Local Dev URL**: `http://devlake.127.0.0.1.nip.io/api/plugins/webhook/1/commits`
 
 ## GitHub Webhook Configuration
@@ -328,10 +328,10 @@ resource "github_repository_webhook" "devlake" {
 
 5. **Check database**:
    ```sql
-   SELECT sha, message, authored_date 
-   FROM commits 
+   SELECT sha, message, authored_date
+   FROM commits
    WHERE repo_name = 'paruff/fawkes'
-   ORDER BY authored_date DESC 
+   ORDER BY authored_date DESC
    LIMIT 5;
    ```
 

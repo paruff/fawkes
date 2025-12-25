@@ -6,7 +6,7 @@ This directory contains Kubernetes manifests for deploying the SPACE Metrics Ser
 
 The SPACE Metrics Service collects and exposes Developer Experience metrics across five dimensions:
 - **S**atisfaction
-- **P**erformance  
+- **P**erformance
 - **A**ctivity
 - **C**ommunication
 - **E**fficiency

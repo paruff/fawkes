@@ -27,7 +27,7 @@ TESTS_FAILED=0
 run_test() {
     local test_name="$1"
     local test_command="$2"
-    
+
     echo -n "Testing: $test_name... "
     if eval "$test_command" > /dev/null 2>&1; then
         echo -e "${GREEN}✓ PASSED${NC}"

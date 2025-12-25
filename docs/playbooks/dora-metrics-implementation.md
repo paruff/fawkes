@@ -5,8 +5,8 @@ description: "Implement automated collection and visualization of DORA metrics t
 
 # Playbook: DORA Metrics Implementation
 
-> **Estimated Duration**: 4-8 hours  
-> **Complexity**: ⭐⭐ Medium  
+> **Estimated Duration**: 4-8 hours
+> **Complexity**: ⭐⭐ Medium
 > **Target Audience**: Platform Engineers / DevOps Engineers / Consultants
 
 ---
@@ -262,7 +262,7 @@ def recordDeployment(Map config) {
     def startTime = config.startTime ?: currentBuild.startTimeInMillis
     def endTime = System.currentTimeMillis()
     def leadTime = endTime - startTime
-    
+
     sh """
         curl -X POST http://dora-collector.dora-metrics:8080/metrics/deployment \\
             -H 'Content-Type: application/json' \\
@@ -304,7 +304,7 @@ pipeline {
                 script {
                     // Deployment logic here
                     sh 'kubectl apply -f manifests/'
-                    
+
                     // Record deployment for DORA metrics
                     doraMetrics.recordDeployment(
                         service: 'my-service',
@@ -361,7 +361,7 @@ spec:
         dora_incident: "true"
       annotations:
         summary: "Service {{ $labels.job }} is down"
-        
+
     - alert: HighErrorRate
       expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
       for: 2m

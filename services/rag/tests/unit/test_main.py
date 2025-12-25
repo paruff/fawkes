@@ -112,9 +112,9 @@ def test_query_endpoint_success(client, mock_weaviate_client):
             }
         }
     }
-    
+
     mock_weaviate_client.query = mock_query
-    
+
     with patch("app.main.weaviate_client", mock_weaviate_client):
         response = client.post(
             "/api/v1/query",
@@ -124,7 +124,7 @@ def test_query_endpoint_success(client, mock_weaviate_client):
                 "threshold": 0.7
             }
         )
-        
+
         assert response.status_code == 200
         data = response.json()
         assert data["query"] == "test query"
@@ -166,9 +166,9 @@ def test_query_endpoint_with_threshold_filter(client, mock_weaviate_client):
             }
         }
     }
-    
+
     mock_weaviate_client.query = mock_query
-    
+
     with patch("app.main.weaviate_client", mock_weaviate_client):
         response = client.post(
             "/api/v1/query",
@@ -178,7 +178,7 @@ def test_query_endpoint_with_threshold_filter(client, mock_weaviate_client):
                 "threshold": 0.7
             }
         )
-        
+
         assert response.status_code == 200
         data = response.json()
         # Only high relevance result should be returned
@@ -200,15 +200,15 @@ def test_query_endpoint_empty_results(client, mock_weaviate_client):
             }
         }
     }
-    
+
     mock_weaviate_client.query = mock_query
-    
+
     with patch("app.main.weaviate_client", mock_weaviate_client):
         response = client.post(
             "/api/v1/query",
             json={"query": "test query"}
         )
-        
+
         assert response.status_code == 200
         data = response.json()
         assert data["count"] == 0
@@ -220,18 +220,18 @@ def test_query_endpoint_validation_errors(client):
     # Missing query
     response = client.post("/api/v1/query", json={})
     assert response.status_code == 422
-    
+
     # Empty query
     response = client.post("/api/v1/query", json={"query": ""})
     assert response.status_code == 422
-    
+
     # Invalid top_k
     response = client.post(
         "/api/v1/query",
         json={"query": "test", "top_k": 0}
     )
     assert response.status_code == 422
-    
+
     # Invalid threshold
     response = client.post(
         "/api/v1/query",
@@ -250,15 +250,15 @@ def test_query_endpoint_default_parameters(client, mock_weaviate_client):
     mock_query.do.return_value = {
         "data": {"Get": {SCHEMA_NAME: []}}
     }
-    
+
     mock_weaviate_client.query = mock_query
-    
+
     with patch("app.main.weaviate_client", mock_weaviate_client):
         response = client.post(
             "/api/v1/query",
             json={"query": "test query"}
         )
-        
+
         assert response.status_code == 200
         # Verify default parameters were used
         mock_query.with_limit.assert_called_once_with(DEFAULT_TOP_K)
@@ -276,7 +276,7 @@ def test_openapi_docs(client):
     """Test OpenAPI documentation is accessible."""
     response = client.get("/docs")
     assert response.status_code == 200
-    
+
     # Test OpenAPI JSON schema
     response = client.get("/openapi.json")
     assert response.status_code == 200
@@ -323,15 +323,15 @@ def test_stats_endpoint_with_data(client, mock_weaviate_client):
             }
         }
     }
-    
+
     mock_weaviate_client.query = mock_query
-    
+
     with patch("app.main.weaviate_client", mock_weaviate_client):
         response = client.get("/api/v1/stats")
-        
+
         assert response.status_code == 200
         data = response.json()
-        
+
         # Verify stats structure
         assert "total_documents" in data
         assert "total_chunks" in data
@@ -339,7 +339,7 @@ def test_stats_endpoint_with_data(client, mock_weaviate_client):
         assert "last_indexed" in data
         assert "index_freshness_hours" in data
         assert "storage_usage_mb" in data
-        
+
         # Verify data
         assert data["total_chunks"] == 3
         assert data["categories"]["doc"] == 2
@@ -357,15 +357,15 @@ def test_stats_endpoint_empty_database(client, mock_weaviate_client):
     mock_query.do.return_value = {
         "data": {"Get": {SCHEMA_NAME: []}}
     }
-    
+
     mock_weaviate_client.query = mock_query
-    
+
     with patch("app.main.weaviate_client", mock_weaviate_client):
         response = client.get("/api/v1/stats")
-        
+
         assert response.status_code == 200
         data = response.json()
-        
+
         assert data["total_chunks"] == 0
         assert data["categories"] == {}
         assert data["last_indexed"] is None

@@ -52,12 +52,12 @@ def _wait_for_pods_ready(namespace: str, label_selector: str, timeout: int = 120
                 "-l", label_selector,
                 "-o", "json"
             ])
-            
+
             items = pods.get("items", [])
             if not items:
                 time.sleep(5)
                 continue
-            
+
             all_ready = True
             for pod in items:
                 conditions = pod.get("status", {}).get("conditions", [])
@@ -68,14 +68,14 @@ def _wait_for_pods_ready(namespace: str, label_selector: str, timeout: int = 120
                 if not ready_condition or ready_condition.get("status") != "True":
                     all_ready = False
                     break
-            
+
             if all_ready:
                 return True
-            
+
             time.sleep(5)
         except Exception:
             time.sleep(5)
-    
+
     return False
 
 
@@ -89,12 +89,12 @@ def weaviate_deployed():
             "-n", "fawkes",
             "-o", "json"
         ])
-        
+
         # Check if replicas are ready
         status = deployment.get("status", {})
         ready_replicas = status.get("readyReplicas", 0)
         desired_replicas = status.get("replicas", 0)
-        
+
         assert ready_replicas > 0, "Weaviate has no ready replicas"
         assert ready_replicas == desired_replicas, \
             f"Weaviate replicas not ready: {ready_replicas}/{desired_replicas}"
@@ -256,7 +256,7 @@ def rag_service_running(namespace: str):
         ])
         items = pods.get("items", [])
         assert len(items) > 0, "No RAG service pods found"
-        
+
         # Check at least one pod is running
         running = any(
             pod.get("status", {}).get("phase") == "Running"
@@ -405,7 +405,7 @@ def result_has_high_relevance(threshold: float, context: Dict):
     assert response is not None
     data = response.json()
     results = data.get("results", [])
-    
+
     high_relevance = any(
         r.get("relevance_score", 0) > threshold
         for r in results
@@ -421,7 +421,7 @@ def results_have_required_fields(context: Dict):
     assert response is not None
     data = response.json()
     results = data.get("results", [])
-    
+
     for i, result in enumerate(results):
         assert "content" in result, f"Result {i} missing 'content' field"
         assert "source" in result, f"Result {i} missing 'source' field"

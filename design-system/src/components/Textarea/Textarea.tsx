@@ -10,7 +10,7 @@ export interface TextareaProps extends BaseComponentProps {
 
 /**
  * Multi-line text input
- * 
+ *
  * @component
  * @example
  * ```tsx

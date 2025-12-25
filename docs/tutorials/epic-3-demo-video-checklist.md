@@ -5,8 +5,8 @@ description: Quick reference checklist for recording the Epic 3 platform demo
 
 # Epic 3 Demo Video Recording Checklist
 
-**Epic**: Product Discovery & UX  
-**Target Duration**: 30 minutes  
+**Epic**: Product Discovery & UX
+**Target Duration**: 30 minutes
 **Last Updated**: December 2024
 
 ## Pre-Recording Setup

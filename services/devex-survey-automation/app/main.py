@@ -121,9 +121,9 @@ async def lifespan(app: FastAPI):
     logger.info("Starting DevEx Survey Automation Service")
     await init_database()
     logger.info("Service ready")
-    
+
     yield
-    
+
     # Shutdown
     await close_database()
     logger.info("Service shut down")
@@ -155,15 +155,15 @@ app.mount("/metrics", metrics_app)
 async def health_check():
     """Check service health"""
     db_healthy = await check_database_health()
-    
+
     integrations = {
         "database": db_healthy,
         "space_metrics": await space_metrics_client.check_health(),
         "mattermost": mattermost_client is not None
     }
-    
+
     status = "healthy" if all(integrations.values()) else "degraded"
-    
+
     return HealthResponse(
         status=status,
         service=settings.service_name,
@@ -204,7 +204,7 @@ async def distribute_survey(request: SurveyDistributionRequest):
                 period = f"W{now.isocalendar()[1]}"  # ISO week number
             else:  # deep_dive
                 period = f"Q{(now.month - 1) // 3 + 1}"
-            
+
             # Create campaign
             async with get_db_session() as session:
                 # Check if campaign already exists
@@ -222,7 +222,7 @@ async def distribute_survey(request: SurveyDistributionRequest):
                         status_code=400,
                         detail=f"Campaign for {request.type} {period} {now.year} already exists"
                     )
-                
+
                 # Create campaign
                 campaign = SurveyCampaign(
                     type=request.type,
@@ -232,11 +232,11 @@ async def distribute_survey(request: SurveyDistributionRequest):
                 )
                 session.add(campaign)
                 await session.flush()
-                
+
                 # Get recipients
                 recipients_list = []
                 if request.test_mode and request.test_users:
-                    recipients_list = [{"email": email, "user_id": email.split("@")[0]} 
+                    recipients_list = [{"email": email, "user_id": email.split("@")[0]}
                                       for email in request.test_users]
                 else:
                     # In production, integrate with Backstage or user directory
@@ -245,24 +245,24 @@ async def distribute_survey(request: SurveyDistributionRequest):
                         {"email": "dev1@fawkes.idp", "user_id": "dev1"},
                         {"email": "dev2@fawkes.idp", "user_id": "dev2"}
                     ]
-                
+
                 # Check opt-outs
                 opt_out_users = await session.execute(
                     select(SurveyOptOut.user_id)
                 )
                 opted_out = {row[0] for row in opt_out_users.fetchall()}
-                
+
                 # Create recipients and send surveys
                 sent_count = 0
                 for recipient_info in recipients_list:
                     if recipient_info["user_id"] in opted_out:
                         logger.info(f"Skipping opted-out user: {recipient_info['user_id']}")
                         continue
-                    
+
                     # Generate token
                     token = secrets.token_urlsafe(32)
                     survey_url = f"{settings.survey_base_url}/survey/{token}"
-                    
+
                     # Create recipient record
                     recipient = SurveyRecipient(
                         campaign_id=campaign.id,
@@ -272,7 +272,7 @@ async def distribute_survey(request: SurveyDistributionRequest):
                         sent_at=now
                     )
                     session.add(recipient)
-                    
+
                     # Send via Mattermost
                     if mattermost_client and request.type == "pulse":
                         success = await mattermost_client.send_pulse_survey(
@@ -286,16 +286,16 @@ async def distribute_survey(request: SurveyDistributionRequest):
                         # Would send via email or other channels
                         logger.info(f"Would send {request.type} survey to {recipient_info['email']}")
                         sent_count += 1
-                
+
                 # Update campaign
                 campaign.total_sent = sent_count
                 await session.commit()
-                
+
                 # Update metrics
                 surveys_distributed.labels(type=request.type).inc(sent_count)
-                
+
                 logger.info(f"✅ Distributed {sent_count} {request.type} surveys for {period} {now.year}")
-                
+
                 return {
                     "success": True,
                     "campaign_id": campaign.id,
@@ -304,7 +304,7 @@ async def distribute_survey(request: SurveyDistributionRequest):
                     "year": now.year,
                     "total_sent": sent_count
                 }
-        
+
         except HTTPException:
             raise
         except Exception as e:
@@ -323,12 +323,12 @@ async def list_campaigns(
             query = select(SurveyCampaign).order_by(SurveyCampaign.started_at.desc()).limit(limit)
             if type:
                 query = query.where(SurveyCampaign.type == type)
-            
+
             result = await session.execute(query)
             campaigns = result.scalars().all()
-            
+
             return [CampaignResponse.model_validate(c) for c in campaigns]
-    
+
     except Exception as e:
         logger.error(f"Error listing campaigns: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -343,12 +343,12 @@ async def get_campaign(campaign_id: int = Path(..., description="Campaign ID")):
                 select(SurveyCampaign).where(SurveyCampaign.id == campaign_id)
             )
             campaign = result.scalar_one_or_none()
-            
+
             if not campaign:
                 raise HTTPException(status_code=404, detail="Campaign not found")
-            
+
             return CampaignResponse.model_validate(campaign)
-    
+
     except HTTPException:
         raise
     except Exception as e:
@@ -365,7 +365,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                 select(SurveyRecipient).where(SurveyRecipient.token == token)
             )
             recipient = result.scalar_one_or_none()
-            
+
             if not recipient:
                 return HTMLResponse(content="""
                     <!DOCTYPE html>
@@ -374,7 +374,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                         <title>Invalid Survey</title>
                         <meta name="viewport" content="width=device-width, initial-scale=1">
                         <style>
-                            body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; 
+                            body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto;
                                    padding: 20px; text-align: center; }
                             .error { color: #d32f2f; }
                         </style>
@@ -385,7 +385,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                     </body>
                     </html>
                 """)
-            
+
             if recipient.responded_at:
                 return HTMLResponse(content="""
                     <!DOCTYPE html>
@@ -394,7 +394,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                         <title>Already Completed</title>
                         <meta name="viewport" content="width=device-width, initial-scale=1">
                         <style>
-                            body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; 
+                            body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto;
                                    padding: 20px; text-align: center; }
                             .success { color: #388e3c; }
                         </style>
@@ -405,18 +405,18 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                     </body>
                     </html>
                 """)
-            
+
             # Get campaign type
             result = await session.execute(
                 select(SurveyCampaign).where(SurveyCampaign.id == recipient.campaign_id)
             )
             campaign = result.scalar_one()
-            
+
             if campaign.type == "pulse":
                 return _render_pulse_survey(token)
             else:
                 return _render_deep_dive_survey(token)
-    
+
     except Exception as e:
         logger.error(f"Error rendering survey: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -525,7 +525,7 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
             <div class="survey-container">
                 <h1>📊 Weekly DevEx Pulse</h1>
                 <p class="subtitle">Help us improve your developer experience (2 minutes)</p>
-                
+
                 <form id="surveyForm">
                     <div class="question">
                         <label class="question-label">How many days this week did you achieve flow state?</label>
@@ -537,7 +537,7 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
                             <span>7 days</span>
                         </div>
                     </div>
-                    
+
                     <div class="question">
                         <label class="question-label">What % of time did you spend on valuable work?</label>
                         <div class="question-help">Valuable = Writing code, solving problems (not meetings, admin)</div>
@@ -548,7 +548,7 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
                             <span>100%</span>
                         </div>
                     </div>
-                    
+
                     <div class="question">
                         <label class="question-label">How was your cognitive load this week?</label>
                         <div class="question-help">1 = Very manageable, 5 = Overwhelming</div>
@@ -559,7 +559,7 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
                             <span>5 - Overwhelming</span>
                         </div>
                     </div>
-                    
+
                     <div class="question">
                         <label class="question-label">Did you experience significant friction this week?</label>
                         <div class="checkbox-group">
@@ -569,20 +569,20 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
                             </label>
                         </div>
                     </div>
-                    
+
                     <div class="question">
                         <label class="question-label">Any additional feedback? (Optional)</label>
                         <textarea id="comment" placeholder="What went well? What could be better?"></textarea>
                     </div>
-                    
+
                     <button type="submit" class="submit-button" id="submitButton">
                         Submit Feedback
                     </button>
-                    
+
                     <div class="error" id="errorMessage"></div>
                 </form>
             </div>
-            
+
             <script>
                 // Update range value displays
                 const flowState = document.getElementById('flowState');
@@ -591,30 +591,30 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
                 const valuableWorkValue = document.getElementById('valuableWorkValue');
                 const cognitiveLoad = document.getElementById('cognitiveLoad');
                 const cognitiveLoadValue = document.getElementById('cognitiveLoadValue');
-                
+
                 flowState.addEventListener('input', (e) => {{
                     flowStateValue.textContent = e.target.value + ' days';
                 }});
-                
+
                 valuableWork.addEventListener('input', (e) => {{
                     valuableWorkValue.textContent = e.target.value + '%';
                 }});
-                
+
                 cognitiveLoad.addEventListener('input', (e) => {{
                     cognitiveLoadValue.textContent = e.target.value;
                 }});
-                
+
                 // Form submission
                 document.getElementById('surveyForm').addEventListener('submit', async (e) => {{
                     e.preventDefault();
-                    
+
                     const submitButton = document.getElementById('submitButton');
                     const errorMessage = document.getElementById('errorMessage');
-                    
+
                     submitButton.disabled = true;
                     submitButton.textContent = 'Submitting...';
                     errorMessage.style.display = 'none';
-                    
+
                     const data = {{
                         flow_state_days: parseFloat(flowState.value),
                         valuable_work_pct: parseFloat(valuableWork.value),
@@ -622,7 +622,7 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
                         friction_incidents: document.getElementById('friction').checked,
                         comment: document.getElementById('comment').value || null
                     }};
-                    
+
                     try {{
                         const response = await fetch('/api/v1/survey/{token}/submit', {{
                             method: 'POST',
@@ -631,7 +631,7 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
                             }},
                             body: JSON.stringify(data)
                         }});
-                        
+
                         if (response.ok) {{
                             window.location.href = '/survey/{token}/thanks';
                         }} else {{
@@ -689,18 +689,18 @@ async def submit_survey(
                     select(SurveyRecipient).where(SurveyRecipient.token == token)
                 )
                 recipient = result.scalar_one_or_none()
-                
+
                 if not recipient:
                     raise HTTPException(status_code=404, detail="Invalid survey token")
-                
+
                 if recipient.responded_at:
                     raise HTTPException(status_code=400, detail="Survey already completed")
-                
+
                 # Store response
                 response_data = response.model_dump()
                 recipient.response_data = response_data
                 recipient.responded_at = datetime.now()
-                
+
                 # Update campaign stats
                 result = await session.execute(
                     select(SurveyCampaign).where(SurveyCampaign.id == recipient.campaign_id)
@@ -709,25 +709,25 @@ async def submit_survey(
                 campaign.total_responses += 1
                 if campaign.total_sent > 0:
                     campaign.response_rate = (campaign.total_responses / campaign.total_sent) * 100
-                
+
                 await session.commit()
-                
+
                 # Submit to space-metrics
                 await space_metrics_client.submit_pulse_survey(response_data)
-                
+
                 # Update metrics
                 survey_responses.labels(type=campaign.type).inc()
                 response_rate_gauge.labels(type=campaign.type).set(campaign.response_rate)
-                
+
                 logger.info(f"✅ Survey response submitted: {token}")
-                
+
                 return SurveySubmissionResponse(
                     success=True,
                     message="Survey submitted successfully",
                     recipient_id=recipient.id,
                     submitted_at=recipient.responded_at
                 )
-        
+
         except HTTPException:
             raise
         except Exception as e:
@@ -966,17 +966,17 @@ async def get_nasa_tlx_page(
             <div class="assessment-container">
                 <h1>🧠 NASA-TLX Cognitive Load Assessment</h1>
                 <p class="subtitle">Help us understand your experience with platform tasks</p>
-                
+
                 <div class="task-info">
                     <p><strong>Task Type:</strong> <span id="taskTypeDisplay">{task_type}</span></p>
                     {f'<p><strong>Task ID:</strong> {task_id}</p>' if task_id else ''}
                 </div>
-                
+
                 <div class="info-box">
                     <p><strong>About this assessment:</strong></p>
                     <p>Rate each dimension on a scale from 0 (Low) to 100 (High). This helps us identify areas where we can reduce cognitive load and improve your experience.</p>
                 </div>
-                
+
                 <form id="nasaTlxForm">
                     <!-- Mental Demand -->
                     <div class="dimension">
@@ -991,7 +991,7 @@ async def get_nasa_tlx_page(
                             <div class="slider-value" id="mentalDemandValue">50</div>
                         </div>
                     </div>
-                    
+
                     <!-- Physical Demand -->
                     <div class="dimension">
                         <div class="dimension-label">Physical Demand</div>
@@ -1005,7 +1005,7 @@ async def get_nasa_tlx_page(
                             <div class="slider-value" id="physicalDemandValue">25</div>
                         </div>
                     </div>
-                    
+
                     <!-- Temporal Demand -->
                     <div class="dimension">
                         <div class="dimension-label">Temporal Demand</div>
@@ -1019,7 +1019,7 @@ async def get_nasa_tlx_page(
                             <div class="slider-value" id="temporalDemandValue">50</div>
                         </div>
                     </div>
-                    
+
                     <!-- Performance -->
                     <div class="dimension">
                         <div class="dimension-label">Performance</div>
@@ -1033,7 +1033,7 @@ async def get_nasa_tlx_page(
                             <div class="slider-value" id="performanceValue">80</div>
                         </div>
                     </div>
-                    
+
                     <!-- Effort -->
                     <div class="dimension">
                         <div class="dimension-label">Effort</div>
@@ -1047,7 +1047,7 @@ async def get_nasa_tlx_page(
                             <div class="slider-value" id="effortValue">50</div>
                         </div>
                     </div>
-                    
+
                     <!-- Frustration -->
                     <div class="dimension">
                         <div class="dimension-label">Frustration</div>
@@ -1061,28 +1061,28 @@ async def get_nasa_tlx_page(
                             <div class="slider-value" id="frustrationValue">30</div>
                         </div>
                     </div>
-                    
+
                     <!-- Duration -->
                     <div class="form-group">
                         <label for="duration">How long did the task take? (minutes, optional)</label>
                         <input type="number" id="duration" name="duration" min="0" max="999" placeholder="e.g., 15">
                     </div>
-                    
+
                     <!-- Comment -->
                     <div class="form-group">
                         <label for="comment">Additional comments (optional)</label>
                         <textarea id="comment" name="comment" placeholder="Share any thoughts about what made this task easy or difficult..."></textarea>
                     </div>
-                    
+
                     <button type="submit" class="submit-button" id="submitButton">Submit Assessment</button>
-                    
+
                     <div class="error-message" id="errorMessage"></div>
                     <div class="success-message" id="successMessage">
                         ✓ Assessment submitted successfully! Thank you for your feedback.
                     </div>
                 </form>
             </div>
-            
+
             <script>
                 // Update slider values
                 const sliders = [
@@ -1093,29 +1093,29 @@ async def get_nasa_tlx_page(
                     {{'id': 'effort', 'valueId': 'effortValue'}},
                     {{'id': 'frustration', 'valueId': 'frustrationValue'}}
                 ];
-                
+
                 sliders.forEach(slider => {{
                     const input = document.getElementById(slider.id);
                     const value = document.getElementById(slider.valueId);
-                    
+
                     input.addEventListener('input', (e) => {{
                         value.textContent = e.target.value;
                     }});
                 }});
-                
+
                 // Handle form submission
                 document.getElementById('nasaTlxForm').addEventListener('submit', async (e) => {{
                     e.preventDefault();
-                    
+
                     const submitButton = document.getElementById('submitButton');
                     const errorMessage = document.getElementById('errorMessage');
                     const successMessage = document.getElementById('successMessage');
-                    
+
                     submitButton.disabled = true;
                     submitButton.textContent = 'Submitting...';
                     errorMessage.style.display = 'none';
                     successMessage.style.display = 'none';
-                    
+
                     const data = {{
                         task_type: '{task_type}',
                         task_id: '{task_id or ""}',
@@ -1128,7 +1128,7 @@ async def get_nasa_tlx_page(
                         duration_minutes: parseInt(document.getElementById('duration').value) || null,
                         comment: document.getElementById('comment').value || null
                     }};
-                    
+
                     try {{
                         const response = await fetch('/api/v1/nasa-tlx/submit?user_id={user_id}', {{
                             method: 'POST',
@@ -1137,9 +1137,9 @@ async def get_nasa_tlx_page(
                             }},
                             body: JSON.stringify(data)
                         }});
-                        
+
                         const result = await response.json();
-                        
+
                         if (response.ok) {{
                             successMessage.textContent = `✓ Assessment submitted successfully! Overall workload: ${{result.overall_workload.toFixed(1)}}/100`;
                             successMessage.style.display = 'block';
@@ -1180,9 +1180,9 @@ async def get_pulse_weekly_analytics(
                 .limit(weeks)
             )
             aggregates = result.scalars().all()
-            
+
             return [PulseAnalytics.model_validate(a) for a in aggregates]
-    
+
     except Exception as e:
         logger.error(f"Error getting pulse analytics: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -1199,18 +1199,18 @@ async def get_response_rate_metrics():
                 .order_by(SurveyCampaign.type, SurveyCampaign.started_at.desc())
             )
             campaigns = result.scalars().all()
-            
+
             metrics = []
             seen_types = set()
-            
+
             for campaign in campaigns:
                 if campaign.type in seen_types:
                     continue
                 seen_types.add(campaign.type)
-                
+
                 target_rate = 60.0 if campaign.type == "pulse" else 40.0
                 status = "above_target" if campaign.response_rate >= target_rate else "below_target"
-                
+
                 metrics.append(ResponseRateMetrics(
                     survey_type=campaign.type,
                     period=f"{campaign.period} {campaign.year}",
@@ -1220,9 +1220,9 @@ async def get_response_rate_metrics():
                     target_rate=target_rate,
                     status=status
                 ))
-            
+
             return metrics
-    
+
     except Exception as e:
         logger.error(f"Error getting response rate metrics: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -1250,7 +1250,7 @@ async def submit_nasa_tlx(
                     assessment.effort +
                     assessment.frustration
                 ) / 6.0
-                
+
                 # Create assessment record
                 tlx_assessment = NASATLXAssessment(
                     user_id=user_id,
@@ -1267,11 +1267,11 @@ async def submit_nasa_tlx(
                     comment=assessment.comment,
                     platform_version=settings.version
                 )
-                
+
                 session.add(tlx_assessment)
                 await session.commit()
                 await session.refresh(tlx_assessment)
-                
+
                 # Update Prometheus metrics
                 survey_responses.labels(type="nasa_tlx").inc()
                 nasa_tlx_submissions.labels(task_type=assessment.task_type).inc()
@@ -1282,10 +1282,10 @@ async def submit_nasa_tlx(
                 nasa_tlx_effort.labels(task_type=assessment.task_type).set(assessment.effort)
                 nasa_tlx_frustration.labels(task_type=assessment.task_type).set(assessment.frustration)
                 nasa_tlx_performance.labels(task_type=assessment.task_type).set(assessment.performance)
-                
+
                 logger.info(f"✅ NASA-TLX assessment submitted by {user_id} for task {assessment.task_type} (workload: {overall_workload:.1f})")
 
-                
+
                 return NASATLXSubmissionResponse(
                     success=True,
                     message="NASA-TLX assessment submitted successfully",
@@ -1293,7 +1293,7 @@ async def submit_nasa_tlx(
                     overall_workload=overall_workload,
                     submitted_at=tlx_assessment.submitted_at
                 )
-        
+
         except Exception as e:
             logger.error(f"Error submitting NASA-TLX assessment: {e}")
             raise HTTPException(status_code=500, detail=str(e))
@@ -1308,15 +1308,15 @@ async def get_nasa_tlx_assessments(
     try:
         async with get_db_session() as session:
             query = select(NASATLXAssessment).order_by(NASATLXAssessment.submitted_at.desc()).limit(limit)
-            
+
             if task_type:
                 query = query.where(NASATLXAssessment.task_type == task_type)
-            
+
             result = await session.execute(query)
             assessments = result.scalars().all()
-            
+
             return [NASATLXResponse.model_validate(a) for a in assessments]
-    
+
     except Exception as e:
         logger.error(f"Error getting NASA-TLX assessments: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -1334,10 +1334,10 @@ async def get_nasa_tlx_analytics(
             now = datetime.now()
             current_week = now.isocalendar()[1]
             current_year = now.year
-            
+
             # Calculate start week
             start_week = max(1, current_week - weeks)
-            
+
             # Query aggregates
             query = select(NASATLXAggregate).where(
                 and_(
@@ -1345,20 +1345,20 @@ async def get_nasa_tlx_analytics(
                     NASATLXAggregate.week >= start_week
                 )
             ).order_by(NASATLXAggregate.week)
-            
+
             if task_type:
                 query = query.where(NASATLXAggregate.task_type == task_type)
-            
+
             result = await session.execute(query)
             aggregates = result.scalars().all()
-            
+
             # If no aggregates exist, generate them from raw assessments
             if not aggregates:
                 logger.info(f"No aggregates found, generating from raw assessments")
                 aggregates = await _generate_nasa_tlx_aggregates(session, task_type, start_week, current_week, current_year)
-            
+
             return [NASATLXAnalytics.model_validate(a) for a in aggregates]
-    
+
     except Exception as e:
         logger.error(f"Error getting NASA-TLX analytics: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -1375,7 +1375,7 @@ async def get_nasa_tlx_trends(
             current_week = now.isocalendar()[1]
             current_year = now.year
             start_week = max(1, current_week - weeks)
-            
+
             # Get unique task types
             task_types_result = await session.execute(
                 select(NASATLXAggregate.task_type)
@@ -1388,7 +1388,7 @@ async def get_nasa_tlx_trends(
                 .distinct()
             )
             task_types = [row[0] for row in task_types_result.fetchall()]
-            
+
             trends = []
             for task_type in task_types:
                 # Get aggregates for this task type
@@ -1404,7 +1404,7 @@ async def get_nasa_tlx_trends(
                     .order_by(NASATLXAggregate.week)
                 )
                 aggregates = result.scalars().all()
-                
+
                 if aggregates:
                     trends.append(NASATLXTrendData(
                         task_type=task_type,
@@ -1418,9 +1418,9 @@ async def get_nasa_tlx_trends(
                         overall_workload_trend=[a.avg_overall_workload for a in aggregates],
                         response_counts=[a.response_count for a in aggregates]
                     ))
-            
+
             return trends
-    
+
     except Exception as e:
         logger.error(f"Error getting NASA-TLX trends: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -1441,14 +1441,14 @@ async def get_task_type_stats():
                 )
                 .group_by(NASATLXAssessment.task_type)
             )
-            
+
             stats = []
             for row in result:
                 task_type = row[0]
                 total = row[1]
                 avg_workload = float(row[2]) if row[2] else 0.0
                 avg_duration = float(row[3]) if row[3] else None
-                
+
                 # Find most demanding dimension
                 dimension_result = await session.execute(
                     select(
@@ -1469,7 +1469,7 @@ async def get_task_type_stats():
                     "frustration": float(dims[4]) if dims[4] else 0
                 }
                 most_demanding = max(dimensions, key=dimensions.get)
-                
+
                 # Determine health status
                 if avg_workload < 40:
                     health_status = "healthy"
@@ -1477,7 +1477,7 @@ async def get_task_type_stats():
                     health_status = "warning"
                 else:
                     health_status = "critical"
-                
+
                 stats.append(TaskTypeStats(
                     task_type=task_type,
                     total_assessments=total,
@@ -1486,9 +1486,9 @@ async def get_task_type_stats():
                     most_demanding_dimension=most_demanding,
                     health_status=health_status
                 ))
-            
+
             return stats
-    
+
     except Exception as e:
         logger.error(f"Error getting task type stats: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -1497,7 +1497,7 @@ async def get_task_type_stats():
 async def _generate_nasa_tlx_aggregates(session, task_type_filter, start_week, end_week, year):
     """Helper function to generate NASA-TLX aggregates from raw assessments"""
     aggregates = []
-    
+
     for week in range(start_week, end_week + 1):
         # Get assessments for this week
         query = select(NASATLXAssessment).where(
@@ -1506,20 +1506,20 @@ async def _generate_nasa_tlx_aggregates(session, task_type_filter, start_week, e
                 func.extract('week', NASATLXAssessment.submitted_at) == week
             )
         )
-        
+
         if task_type_filter:
             query = query.where(NASATLXAssessment.task_type == task_type_filter)
-        
+
         result = await session.execute(query)
         assessments = result.scalars().all()
-        
+
         if assessments:
             # Calculate aggregates
             task_types = set(a.task_type for a in assessments)
-            
+
             for task_type in task_types:
                 task_assessments = [a for a in assessments if a.task_type == task_type]
-                
+
                 aggregate = NASATLXAggregate(
                     task_type=task_type,
                     week=week,
@@ -1533,9 +1533,9 @@ async def _generate_nasa_tlx_aggregates(session, task_type_filter, start_week, e
                     avg_overall_workload=sum(a.overall_workload for a in task_assessments) / len(task_assessments),
                     response_count=len(task_assessments)
                 )
-                
+
                 session.add(aggregate)
                 aggregates.append(aggregate)
-    
+
     await session.commit()
     return aggregates

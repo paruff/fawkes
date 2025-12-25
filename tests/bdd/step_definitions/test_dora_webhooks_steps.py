@@ -29,7 +29,7 @@ class WebhookTestContext:
         self.last_commit_sha = None
         self.last_build_number = None
         self.last_incident_id = None
-        
+
 webhook_context = WebhookTestContext()
 
 
@@ -64,7 +64,7 @@ def devlake_is_deployed():
 def devlake_is_accessible(url):
     """Verify DevLake service is accessible"""
     webhook_context.devlake_url = url
-    
+
     try:
         # Try to ping DevLake
         response = requests.get(f"{url}/api/ping", timeout=5)
@@ -122,7 +122,7 @@ def devlake_receives_commit():
             "author": {"name": "Test User", "email": "test@example.com"}
         }]
     }
-    
+
     try:
         # Send webhook to DevLake
         response = requests.post(
@@ -210,7 +210,7 @@ def webhook_sent_to_url(webhook_url):
         "url": "http://jenkins.test/job/test/42/",
         "type": "ci_build"
     }
-    
+
     try:
         response = requests.post(
             f"{webhook_context.devlake_url}/api/plugins/webhook/1/cicd",
@@ -276,7 +276,7 @@ def devlake_receives_deployment():
         "health_status": "Healthy",
         "sync_status": "Synced"
     }
-    
+
     try:
         response = requests.post(
             f"{webhook_context.devlake_url}/api/plugins/webhook/1/deployments",

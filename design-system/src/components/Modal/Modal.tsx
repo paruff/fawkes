@@ -10,7 +10,7 @@ export interface ModalProps extends BaseComponentProps {
 
 /**
  * Modal dialog
- * 
+ *
  * @component
  * @example
  * ```tsx

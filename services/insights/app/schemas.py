@@ -29,7 +29,7 @@ class TagUpdate(BaseModel):
 class TagResponse(TagBase):
     """Response model for tag."""
     model_config = ConfigDict(from_attributes=True)
-    
+
     id: int = Field(..., description="Tag ID")
     created_at: datetime = Field(..., description="Creation timestamp")
     usage_count: int = Field(..., description="Number of insights using this tag")
@@ -64,7 +64,7 @@ class CategoryUpdate(BaseModel):
 class CategoryResponse(CategoryBase):
     """Response model for category."""
     model_config = ConfigDict(from_attributes=True)
-    
+
     id: int = Field(..., description="Category ID")
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
@@ -105,7 +105,7 @@ class InsightUpdate(BaseModel):
 class InsightResponse(InsightBase):
     """Response model for insight."""
     model_config = ConfigDict(from_attributes=True)
-    
+
     id: int = Field(..., description="Insight ID")
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")

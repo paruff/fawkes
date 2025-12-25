@@ -10,8 +10,8 @@ The Customer Advisory Board consists of 5-7 key users who provide strategic inpu
 
 ### Membership Status: 🚀 Forming
 
-**Board Formation**: In Progress  
-**Target Size**: 5-7 members  
+**Board Formation**: In Progress
+**Target Size**: 5-7 members
 **Current Size**: Accepting nominations
 
 ---
@@ -45,9 +45,9 @@ Interested in joining? We'd love to hear from you!
 
 ### [Member Name]
 
-**Organization**: [Company Name]  
-**Role**: [Job Title]  
-**Location**: [City, Country or Region]  
+**Organization**: [Company Name]
+**Role**: [Job Title]
+**Location**: [City, Country or Region]
 **Member Since**: [Month Year]
 
 **Bio**: [1-2 sentence bio about their background and why they joined CAB]
@@ -86,6 +86,6 @@ Use the [Nomination Template](research/templates/cab-nomination.md)
 
 ---
 
-**Last Updated**: December 25, 2025  
-**Status**: Recruiting Members  
+**Last Updated**: December 25, 2025
+**Status**: Recruiting Members
 **Next Review**: January 2026

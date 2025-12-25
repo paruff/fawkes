@@ -23,9 +23,9 @@ send_alert() {
     local service="$2"
     local severity="$3"
     local summary="$4"
-    
+
     echo "Sending alert: $alertname (severity: $severity, service: $service)"
-    
+
     response=$(curl -X POST "$SMART_ALERTING_URL/api/v1/alerts/generic" \
         -H "Content-Type: application/json" \
         -d "{
@@ -45,13 +45,13 @@ send_alert() {
             }]
         }" \
         --silent --show-error)
-    
+
     if [ "$JQ_AVAILABLE" = true ]; then
         echo "$response" | jq .
     else
         echo "$response"
     fi
-    
+
     echo ""
 }
 

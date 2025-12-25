@@ -90,9 +90,9 @@ record_test() {
     local test_name="$1"
     local status="$2"
     local message="$3"
-    
+
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
-    
+
     if [ "$status" = "PASS" ]; then
         PASSED_TESTS=$((PASSED_TESTS + 1))
         log_success "$test_name: $message"
@@ -100,28 +100,28 @@ record_test() {
         FAILED_TESTS=$((FAILED_TESTS + 1))
         log_error "$test_name: $message"
     fi
-    
+
     # Escape JSON special characters
     local escaped_name=$(echo "$test_name" | sed 's/\\/\\\\/g; s/"/\\"/g')
     local escaped_message=$(echo "$message" | sed 's/\\/\\\\/g; s/"/\\"/g')
-    
+
     TEST_RESULTS+=("{\"name\":\"$escaped_name\",\"status\":\"$status\",\"message\":\"$escaped_message\"}")
 }
 
 generate_report() {
     mkdir -p "$REPORT_DIR"
-    
+
     local status="FAILED"
     if [ "$FAILED_TESTS" -eq 0 ]; then
         status="PASSED"
     fi
-    
+
     # Build tests JSON array
     local tests_json=""
     if [ ${#TEST_RESULTS[@]} -gt 0 ]; then
         tests_json=$(printf '%s\n' "${TEST_RESULTS[@]}" | paste -sd ',' -)
     fi
-    
+
     cat > "$REPORT_FILE" <<EOF
 {
   "test_id": "AT-E1-004",
@@ -138,7 +138,7 @@ generate_report() {
   ]
 }
 EOF
-    
+
     log_info "Report generated: $REPORT_FILE"
 }
 
@@ -148,21 +148,21 @@ EOF
 
 validate_prerequisites() {
     log_info "Validating prerequisites..."
-    
+
     # Check kubectl
     if ! command -v kubectl &> /dev/null; then
         record_test "Prerequisites" "FAIL" "kubectl not found"
         return 1
     fi
-    
+
     # Check jq
     if ! command -v jq &> /dev/null; then
         record_test "Prerequisites" "FAIL" "jq not found (required for JSON processing)"
         return 1
     fi
-    
+
     record_test "Prerequisites" "PASS" "kubectl and jq available"
-    
+
     # Check cluster access
     if ! kubectl cluster-info &> /dev/null; then
         record_test "Cluster Access" "FAIL" "Cannot access Kubernetes cluster"
@@ -173,7 +173,7 @@ validate_prerequisites() {
 
 validate_namespace() {
     log_info "Checking namespace '$NAMESPACE'..."
-    
+
     if kubectl get namespace "$NAMESPACE" &> /dev/null; then
         local status=$(kubectl get namespace "$NAMESPACE" -o jsonpath='{.status.phase}')
         if [ "$status" = "Active" ]; then
@@ -190,11 +190,11 @@ validate_namespace() {
 
 validate_jenkins_deployment() {
     log_info "Checking Jenkins deployment..."
-    
+
     if kubectl get deployment jenkins -n "$NAMESPACE" &> /dev/null; then
         local ready=$(kubectl get deployment jenkins -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
         local desired=$(kubectl get deployment jenkins -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
-        
+
         if [ "$ready" = "$desired" ] && [ "$ready" -gt 0 ]; then
             record_test "Jenkins Deployment" "PASS" "Jenkins deployment ready ($ready/$desired replicas)"
         else
@@ -209,24 +209,24 @@ validate_jenkins_deployment() {
 
 validate_jenkins_pods() {
     log_info "Checking Jenkins pods..."
-    
+
     local pod_count=$(kubectl get pods -n "$NAMESPACE" -l app.kubernetes.io/name=jenkins -o json 2>/dev/null | jq '.items | length' || echo "0")
-    
+
     if [ -z "$pod_count" ] || [ "$pod_count" = "null" ]; then
         pod_count=0
     fi
-    
+
     if [ "$pod_count" -eq 0 ]; then
         record_test "Jenkins Pods" "FAIL" "No Jenkins pods found"
         return 1
     fi
-    
+
     local running_count=$(kubectl get pods -n "$NAMESPACE" -l app.kubernetes.io/name=jenkins -o json 2>/dev/null | jq '[.items[] | select(.status.phase=="Running")] | length' || echo "0")
-    
+
     if [ -z "$running_count" ] || [ "$running_count" = "null" ]; then
         running_count=0
     fi
-    
+
     if [ "$running_count" -eq "$pod_count" ]; then
         record_test "Jenkins Pods" "PASS" "All Jenkins pods running ($running_count/$pod_count)"
     else
@@ -237,7 +237,7 @@ validate_jenkins_pods() {
 
 validate_jenkins_service() {
     log_info "Checking Jenkins service..."
-    
+
     if kubectl get service jenkins -n "$NAMESPACE" &> /dev/null; then
         record_test "Jenkins Service" "PASS" "Jenkins service exists"
     else
@@ -248,7 +248,7 @@ validate_jenkins_service() {
 
 validate_jcasc_configuration() {
     log_info "Checking Jenkins Configuration as Code (JCasC)..."
-    
+
     # Check if JCasC ConfigMap exists
     if kubectl get configmap jenkins-casc-config -n "$NAMESPACE" &> /dev/null; then
         record_test "JCasC ConfigMap" "PASS" "JCasC ConfigMap exists"
@@ -256,7 +256,7 @@ validate_jcasc_configuration() {
         record_test "JCasC ConfigMap" "FAIL" "JCasC ConfigMap not found"
         return 1
     fi
-    
+
     # Check if jcasc.yaml exists in platform/apps/jenkins
     if [ -f "platform/apps/jenkins/jcasc.yaml" ]; then
         record_test "JCasC File" "PASS" "jcasc.yaml file exists in platform/apps/jenkins"
@@ -268,11 +268,11 @@ validate_jcasc_configuration() {
 
 validate_golden_path_jenkinsfiles() {
     log_info "Checking Golden Path Jenkinsfiles in shared library..."
-    
+
     local library_path="jenkins-shared-library"
     local golden_paths=("java" "python" "node")
     local found_count=0
-    
+
     for lang in "${golden_paths[@]}"; do
         # Check for Groovy files in vars/ directory
         if ls ${library_path}/vars/*${lang}* &> /dev/null 2>&1; then
@@ -288,7 +288,7 @@ validate_golden_path_jenkinsfiles() {
             log_warning "Golden path for $lang not found"
         fi
     done
-    
+
     if [ "$found_count" -eq 3 ]; then
         record_test "Golden Path Jenkinsfiles" "PASS" "All 3 golden path Jenkinsfiles found (Java, Python, Node.js)"
     elif [ "$found_count" -gt 0 ]; then
@@ -301,7 +301,7 @@ validate_golden_path_jenkinsfiles() {
 
 validate_kubernetes_plugin() {
     log_info "Checking Kubernetes plugin configuration..."
-    
+
     # Check if Kubernetes cloud is configured in JCasC
     if [ -f "platform/apps/jenkins/jcasc.yaml" ]; then
         if grep -q "kubernetes:" platform/apps/jenkins/jcasc.yaml; then
@@ -318,17 +318,17 @@ validate_kubernetes_plugin() {
 
 validate_agent_templates() {
     log_info "Checking agent templates configuration..."
-    
+
     if [ -f "platform/apps/jenkins/jcasc.yaml" ]; then
         local required_agents=("jnlp-agent" "maven-agent" "python-agent" "node-agent")
         local found_count=0
-        
+
         for agent in "${required_agents[@]}"; do
             if grep -q "$agent" platform/apps/jenkins/jcasc.yaml; then
                 found_count=$((found_count + 1))
             fi
         done
-        
+
         if [ "$found_count" -ge 3 ]; then
             record_test "Agent Templates" "PASS" "Found $found_count agent templates configured"
         else
@@ -343,7 +343,7 @@ validate_agent_templates() {
 
 validate_sonarqube_integration() {
     log_info "Checking SonarQube integration..."
-    
+
     if [ -f "platform/apps/jenkins/jcasc.yaml" ]; then
         if grep -q -i "sonarqube\|sonar" platform/apps/jenkins/jcasc.yaml; then
             record_test "SonarQube Integration" "PASS" "SonarQube configuration found in JCasC"
@@ -359,7 +359,7 @@ validate_sonarqube_integration() {
 
 validate_trivy_integration() {
     log_info "Checking Trivy integration..."
-    
+
     # Check if Trivy is available in the cluster or referenced in shared library
     if grep -r -q "trivy" jenkins-shared-library/ 2>/dev/null; then
         record_test "Trivy Integration" "PASS" "Trivy integration found in shared library"
@@ -372,11 +372,11 @@ validate_trivy_integration() {
 
 validate_jenkins_api() {
     log_info "Checking Jenkins API accessibility..."
-    
+
     # Try to access Jenkins API
     if command -v curl &> /dev/null; then
         local response_code=$(curl -s -o /dev/null -w "%{http_code}" "$JENKINS_URL/api/json" 2>/dev/null || echo "000")
-        
+
         # Accept both 200 (success) and 403 (forbidden, but API is responding)
         if [ "$response_code" = "200" ] || [ "$response_code" = "403" ]; then
             record_test "Jenkins API" "PASS" "Jenkins API responding (HTTP $response_code)"
@@ -390,7 +390,7 @@ validate_jenkins_api() {
 
 validate_ingress() {
     log_info "Checking Jenkins ingress..."
-    
+
     if kubectl get ingress -n "$NAMESPACE" -o json | jq -e '.items[] | select(.metadata.name | contains("jenkins"))' &> /dev/null; then
         local host=$(kubectl get ingress -n "$NAMESPACE" -o json | jq -r '.items[] | select(.metadata.name | contains("jenkins")) | .spec.rules[0].host' | head -1)
         record_test "Jenkins Ingress" "PASS" "Jenkins ingress configured (host: $host)"
@@ -401,7 +401,7 @@ validate_ingress() {
 
 validate_credentials() {
     log_info "Checking Jenkins credentials secrets..."
-    
+
     if kubectl get secret jenkins-admin -n "$NAMESPACE" &> /dev/null; then
         record_test "Admin Credentials" "PASS" "Jenkins admin secret exists"
     else
@@ -448,7 +448,7 @@ parse_args() {
 
 main() {
     parse_args "$@"
-    
+
     echo ""
     log_info "=============================================="
     log_info "AT-E1-004: Jenkins CI/CD Validation"
@@ -456,7 +456,7 @@ main() {
     log_info "Namespace: $NAMESPACE"
     log_info "Jenkins URL: $JENKINS_URL"
     echo ""
-    
+
     # Run all validations
     validate_prerequisites || true
     validate_namespace || true
@@ -472,7 +472,7 @@ main() {
     validate_jenkins_api || true
     validate_ingress || true
     validate_credentials || true
-    
+
     echo ""
     log_info "=============================================="
     log_info "Validation Summary"
@@ -481,10 +481,10 @@ main() {
     log_success "Passed: $PASSED_TESTS"
     log_error "Failed: $FAILED_TESTS"
     echo ""
-    
+
     # Generate report
     generate_report
-    
+
     # Exit with appropriate code
     if [ "$FAILED_TESTS" -eq 0 ]; then
         log_success "AT-E1-004 validation PASSED!"

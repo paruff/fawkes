@@ -8,8 +8,8 @@ This directory contains Grafana dashboard JSON definitions for the Fawkes platfo
 
 ### 1. Developer Experience (DevEx) Dashboard
 
-**File**: `devex-dashboard.json`  
-**ConfigMap**: `platform/apps/prometheus/devex-dashboard.yaml`  
+**File**: `devex-dashboard.json`
+**ConfigMap**: `platform/apps/prometheus/devex-dashboard.yaml`
 **Namespace**: monitoring
 
 Comprehensive Developer Experience dashboard showing all 5 SPACE framework dimensions with team-level filtering, historical trending, and alerting.
@@ -174,8 +174,8 @@ Configure alerts in Grafana UI or via AlertManager rules.
 
 ### 2. Research Insights Dashboard
 
-**File**: `research-insights-dashboard.json`  
-**ConfigMap**: `platform/apps/prometheus/research-insights-dashboard.yaml`  
+**File**: `research-insights-dashboard.json`
+**ConfigMap**: `platform/apps/prometheus/research-insights-dashboard.yaml`
 **Namespace**: monitoring
 
 Comprehensive research insights visualization dashboard showing insight trends, categories, validation rates, and time-to-action metrics.
@@ -277,8 +277,8 @@ See [Insights Service README](../../../../services/insights/README.md) for setup
 
 ### 3. Kubernetes Cluster Health
 
-**File**: `kubernetes-cluster-health-dashboard.json`  
-**ConfigMap**: `platform/apps/prometheus/kubernetes-cluster-health-dashboard.yaml`  
+**File**: `kubernetes-cluster-health-dashboard.json`
+**ConfigMap**: `platform/apps/prometheus/kubernetes-cluster-health-dashboard.yaml`
 **Namespace**: monitoring
 
 Comprehensive monitoring of Kubernetes cluster infrastructure.
@@ -311,8 +311,8 @@ kube_pod_status_phase{phase="Running"}
 
 ### 4. Platform Components Health
 
-**File**: `platform-components-health-dashboard.json`  
-**ConfigMap**: `platform/apps/prometheus/platform-components-health-dashboard.yaml`  
+**File**: `platform-components-health-dashboard.json`
+**ConfigMap**: `platform/apps/prometheus/platform-components-health-dashboard.yaml`
 **Namespace**: monitoring
 
 Monitor health and performance of Fawkes platform components.
@@ -348,8 +348,8 @@ harbor_system_volumes_bytes
 
 ### 5. DORA Metrics (Placeholder)
 
-**File**: `dora-metrics-dashboard.json`  
-**ConfigMap**: `platform/apps/prometheus/dora-metrics-dashboard.yaml`  
+**File**: `dora-metrics-dashboard.json`
+**ConfigMap**: `platform/apps/prometheus/dora-metrics-dashboard.yaml`
 **Namespace**: monitoring
 
 Track DORA (DevOps Research and Assessment) four key metrics.
@@ -392,8 +392,8 @@ dora_mttr_seconds
 
 ### 6. Application Metrics Template
 
-**File**: `application-metrics-template-dashboard.json`  
-**ConfigMap**: `platform/apps/prometheus/application-metrics-template-dashboard.yaml`  
+**File**: `application-metrics-template-dashboard.json`
+**ConfigMap**: `platform/apps/prometheus/application-metrics-template-dashboard.yaml`
 **Namespace**: monitoring
 
 Template dashboard based on the Golden Signals approach for monitoring applications.
@@ -440,7 +440,7 @@ container_memory_working_set_bytes{namespace="$namespace"}
 
 ### 7. Trivy Security Dashboard
 
-**File**: `trivy-security-dashboard.json`  
+**File**: `trivy-security-dashboard.json`
 **Purpose**: Container security scanning visibility
 
 See [Trivy Dashboard README](README.md) in this directory for details.
@@ -449,8 +449,8 @@ See [Trivy Dashboard README](README.md) in this directory for details.
 
 ### 8. VSM Flow Metrics Dashboard
 
-**File**: `vsm-flow-metrics.json`  
-**ConfigMap**: Loaded via Grafana provisioning  
+**File**: `vsm-flow-metrics.json`
+**ConfigMap**: Loaded via Grafana provisioning
 **Namespace**: monitoring
 
 Comprehensive Value Stream Mapping flow metrics dashboard showing WIP, throughput, cycle time, lead time, and bottleneck detection.
@@ -541,8 +541,8 @@ See [VSM Service README](../../../../services/vsm/README.md) for setup details.
 
 ### 9. Data Quality Dashboard
 
-**File**: `data-quality.json`  
-**ConfigMap**: Loaded via Grafana provisioning  
+**File**: `data-quality.json`
+**ConfigMap**: Loaded via Grafana provisioning
 **Namespace**: monitoring
 
 Comprehensive monitoring of data quality metrics from Great Expectations validations.
@@ -627,8 +627,8 @@ See [Data Quality Service README](../../../../services/data-quality/README.md) f
 
 ### 10. AI Observability Dashboard
 
-**File**: `ai-observability.json`  
-**ConfigMap**: Loaded via Grafana provisioning  
+**File**: `ai-observability.json`
+**ConfigMap**: Loaded via Grafana provisioning
 **Namespace**: monitoring
 
 Comprehensive AI-powered observability dashboard showing anomaly detection, smart alerting, and system intelligence.

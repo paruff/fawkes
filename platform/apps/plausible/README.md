@@ -103,7 +103,7 @@ kubectl create secret generic plausible-secret \
 ## Access
 
 - **Dashboard**: https://plausible.fawkes.idp
-- **Default Credentials**: 
+- **Default Credentials**:
   - Email: `admin@fawkes.local`
   - Password: `changeme-admin-password` (Change immediately!)
 

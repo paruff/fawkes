@@ -13,26 +13,26 @@ metadata:
 data:
   redis.conf: |
     # Redis configuration for Hasura caching
-    
+
     # Memory settings
     maxmemory 256mb
     maxmemory-policy allkeys-lru
-    
+
     # Persistence disabled for cache
     save ""
     appendonly no
-    
+
     # Network
     tcp-backlog 511
     timeout 300
     tcp-keepalive 60
-    
+
     # Logging
     loglevel notice
-    
+
     # Performance
     databases 16
-    
+
     # Security
     protected-mode yes
 ---
@@ -60,25 +60,25 @@ spec:
         runAsNonRoot: true
         runAsUser: 999
         fsGroup: 999
-      
+
       containers:
         - name: redis
           image: redis:7-alpine
           imagePullPolicy: IfNotPresent
-          
+
           ports:
             - name: redis
               containerPort: 6379
               protocol: TCP
-          
+
           command:
             - redis-server
             - /etc/redis/redis.conf
-          
+
           volumeMounts:
             - name: config
               mountPath: /etc/redis
-          
+
           resources:
             requests:
               cpu: 100m
@@ -86,7 +86,7 @@ spec:
             limits:
               cpu: 200m
               memory: 256Mi
-          
+
           livenessProbe:
             tcpSocket:
               port: 6379
@@ -94,7 +94,7 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 3
-          
+
           readinessProbe:
             exec:
               command:
@@ -104,13 +104,13 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 3
             failureThreshold: 3
-          
+
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
-      
+
       volumes:
         - name: config
           configMap:

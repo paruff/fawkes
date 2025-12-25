@@ -60,7 +60,7 @@ def test_delete_tag(client, sample_tag):
     """Test deleting a tag."""
     response = client.delete(f"/tags/{sample_tag.id}")
     assert response.status_code == status.HTTP_204_NO_CONTENT
-    
+
     # Verify tag is deleted
     response = client.get(f"/tags/{sample_tag.id}")
     assert response.status_code == status.HTTP_404_NOT_FOUND
@@ -174,7 +174,7 @@ def test_delete_insight(client, sample_insight):
     """Test deleting an insight."""
     response = client.delete(f"/insights/{sample_insight.id}")
     assert response.status_code == status.HTTP_204_NO_CONTENT
-    
+
     # Verify insight is deleted
     response = client.get(f"/insights/{sample_insight.id}")
     assert response.status_code == status.HTTP_404_NOT_FOUND
@@ -229,7 +229,7 @@ def test_tag_usage_count_increment(client, sample_category, sample_tag):
     # Get initial usage count
     response = client.get(f"/tags/{sample_tag.id}")
     initial_count = response.json()["usage_count"]
-    
+
     # Create insight with tag
     insight_data = {
         "title": "Test Insight",
@@ -241,7 +241,7 @@ def test_tag_usage_count_increment(client, sample_category, sample_tag):
         "tag_ids": [sample_tag.id]
     }
     client.post("/insights", json=insight_data)
-    
+
     # Check usage count increased
     response = client.get(f"/tags/{sample_tag.id}")
     new_count = response.json()["usage_count"]
@@ -253,10 +253,10 @@ def test_tag_usage_count_decrement(client, sample_insight, sample_tag):
     # Get initial usage count
     response = client.get(f"/tags/{sample_tag.id}")
     initial_count = response.json()["usage_count"]
-    
+
     # Delete insight
     client.delete(f"/insights/{sample_insight.id}")
-    
+
     # Check usage count decreased (but not below 0)
     response = client.get(f"/tags/{sample_tag.id}")
     new_count = response.json()["usage_count"]
@@ -286,7 +286,7 @@ def test_pagination(client, sample_category):
             "status": "draft"
         }
         client.post("/insights", json=insight_data)
-    
+
     # Test pagination
     response = client.get("/insights", params={"page": 1, "page_size": 2})
     data = response.json()

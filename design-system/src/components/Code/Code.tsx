@@ -10,7 +10,7 @@ export interface CodeProps extends BaseComponentProps {
 
 /**
  * Inline or block code display
- * 
+ *
  * @component
  * @example
  * ```tsx

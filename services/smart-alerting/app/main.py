@@ -177,9 +177,9 @@ PROCESSING_DURATION = Histogram(
 async def lifespan(app: FastAPI):
     """Manage application lifespan."""
     global redis_client, http_client, correlator, suppression_engine, router
-    
+
     logger.info("Starting Smart Alerting Service")
-    
+
     # Initialize Redis
     try:
         redis_client = redis.Redis(
@@ -193,10 +193,10 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"❌ Failed to connect to Redis: {e}")
         raise
-    
+
     # Initialize HTTP client
     http_client = httpx.AsyncClient(timeout=30.0)
-    
+
     # Initialize components
     correlator = AlertCorrelator(redis_client)
     suppression_engine = SuppressionEngine(redis_client)
@@ -207,13 +207,13 @@ async def lifespan(app: FastAPI):
         slack_webhook=SLACK_WEBHOOK_URL,
         pagerduty_api_key=PAGERDUTY_API_KEY
     )
-    
+
     # Load suppression rules
     await suppression_engine.load_rules_from_directory("rules/")
     logger.info(f"✅ Loaded {len(suppression_engine.rules)} suppression rules")
-    
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down Smart Alerting Service")
     if redis_client:
@@ -250,17 +250,17 @@ async def health() -> HealthResponse:
     """Health check endpoint."""
     redis_connected = False
     rules_loaded = 0
-    
+
     try:
         if redis_client:
             await redis_client.ping()
             redis_connected = True
     except Exception:
         pass
-    
+
     if suppression_engine:
         rules_loaded = len(suppression_engine.rules)
-    
+
     return HealthResponse(
         status="UP",
         service="smart-alerting",
@@ -280,13 +280,13 @@ async def ready():
             raise HTTPException(status_code=503, detail="Redis client not initialized")
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"Redis not ready: {str(e)}")
-    
+
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
-    
+
     if not correlator:
         raise HTTPException(status_code=503, detail="Correlator not initialized")
-    
+
     return {
         "status": "READY",
         "service": "smart-alerting"
@@ -297,9 +297,9 @@ async def ready():
 async def ingest_prometheus_alerts(payload: PrometheusAlertPayload, background_tasks: BackgroundTasks):
     """Ingest alerts from Prometheus."""
     ALERTS_RECEIVED.labels(source="prometheus").inc(len(payload.alerts))
-    
+
     background_tasks.add_task(process_alerts, payload.alerts, "prometheus")
-    
+
     return {
         "message": f"Received {len(payload.alerts)} alerts",
         "status": "processing"
@@ -310,9 +310,9 @@ async def ingest_prometheus_alerts(payload: PrometheusAlertPayload, background_t
 async def ingest_grafana_alerts(alerts: List[Alert], background_tasks: BackgroundTasks):
     """Ingest alerts from Grafana."""
     ALERTS_RECEIVED.labels(source="grafana").inc(len(alerts))
-    
+
     background_tasks.add_task(process_alerts, alerts, "grafana")
-    
+
     return {
         "message": f"Received {len(alerts)} alerts",
         "status": "processing"
@@ -323,9 +323,9 @@ async def ingest_grafana_alerts(alerts: List[Alert], background_tasks: Backgroun
 async def ingest_datahub_alerts(alerts: List[Alert], background_tasks: BackgroundTasks):
     """Ingest alerts from DataHub."""
     ALERTS_RECEIVED.labels(source="datahub").inc(len(alerts))
-    
+
     background_tasks.add_task(process_alerts, alerts, "datahub")
-    
+
     return {
         "message": f"Received {len(alerts)} alerts",
         "status": "processing"
@@ -336,9 +336,9 @@ async def ingest_datahub_alerts(alerts: List[Alert], background_tasks: Backgroun
 async def ingest_generic_alerts(alerts: List[Alert], background_tasks: BackgroundTasks):
     """Ingest generic alerts."""
     ALERTS_RECEIVED.labels(source="generic").inc(len(alerts))
-    
+
     background_tasks.add_task(process_alerts, alerts, "generic")
-    
+
     return {
         "message": f"Received {len(alerts)} alerts",
         "status": "processing"
@@ -350,7 +350,7 @@ async def get_alert_groups(limit: int = 50) -> List[AlertGroup]:
     """Get recent alert groups."""
     if not correlator:
         raise HTTPException(status_code=503, detail="Correlator not initialized")
-    
+
     groups = await correlator.get_recent_groups(limit)
     return groups
 
@@ -360,11 +360,11 @@ async def get_alert_group(group_id: str) -> AlertGroup:
     """Get specific alert group."""
     if not correlator:
         raise HTTPException(status_code=503, detail="Correlator not initialized")
-    
+
     group = await correlator.get_group(group_id)
     if not group:
         raise HTTPException(status_code=404, detail="Alert group not found")
-    
+
     return group
 
 
@@ -373,11 +373,11 @@ async def get_alert(alert_id: str) -> Alert:
     """Get specific alert."""
     if not redis_client:
         raise HTTPException(status_code=503, detail="Redis not initialized")
-    
+
     alert_data = await redis_client.get(f"alert:{alert_id}")
     if not alert_data:
         raise HTTPException(status_code=404, detail="Alert not found")
-    
+
     import json
     return Alert(**json.loads(alert_data))
 
@@ -387,10 +387,10 @@ async def acknowledge_alert(alert_id: str):
     """Acknowledge an alert."""
     if not redis_client:
         raise HTTPException(status_code=503, detail="Redis not initialized")
-    
+
     await redis_client.hset(f"alert:{alert_id}", "acknowledged", "true")
     await redis_client.hset(f"alert:{alert_id}", "acknowledged_at", datetime.now().isoformat())
-    
+
     return {"message": "Alert acknowledged", "alert_id": alert_id}
 
 
@@ -399,10 +399,10 @@ async def resolve_alert(alert_id: str):
     """Resolve an alert."""
     if not redis_client:
         raise HTTPException(status_code=503, detail="Redis not initialized")
-    
+
     await redis_client.hset(f"alert:{alert_id}", "status", "resolved")
     await redis_client.hset(f"alert:{alert_id}", "resolved_at", datetime.now().isoformat())
-    
+
     return {"message": "Alert resolved", "alert_id": alert_id}
 
 
@@ -411,7 +411,7 @@ async def get_suppression_rules() -> List[SuppressionRule]:
     """Get all suppression rules."""
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
-    
+
     # Convert rules to Pydantic models
     result = []
     for rule in suppression_engine.rules:
@@ -422,7 +422,7 @@ async def get_suppression_rules() -> List[SuppressionRule]:
             result.append(SuppressionRule(**rule))
         else:
             result.append(rule)
-    
+
     return result
 
 
@@ -431,7 +431,7 @@ async def create_suppression_rule(rule: SuppressionRule) -> SuppressionRule:
     """Create a new suppression rule."""
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
-    
+
     # Convert to dict for suppression engine
     await suppression_engine.add_rule(rule.dict())
     return rule
@@ -442,7 +442,7 @@ async def get_suppression_rule(rule_id: str) -> SuppressionRule:
     """Get specific suppression rule."""
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
-    
+
     for rule in suppression_engine.rules:
         # Handle both dict and Pydantic models
         rid = rule.get('id') if isinstance(rule, dict) else getattr(rule, 'id', None)
@@ -451,7 +451,7 @@ async def get_suppression_rule(rule_id: str) -> SuppressionRule:
             if isinstance(rule, dict):
                 return SuppressionRule(**rule)
             return rule
-    
+
     raise HTTPException(status_code=404, detail="Rule not found")
 
 
@@ -460,7 +460,7 @@ async def update_suppression_rule(rule_id: str, rule: SuppressionRule) -> Suppre
     """Update suppression rule."""
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
-    
+
     rule.id = rule_id
     # Convert to dict for suppression engine
     await suppression_engine.update_rule(rule.dict())
@@ -472,7 +472,7 @@ async def delete_suppression_rule(rule_id: str):
     """Delete suppression rule."""
     if not suppression_engine:
         raise HTTPException(status_code=503, detail="Suppression engine not initialized")
-    
+
     await suppression_engine.delete_rule(rule_id)
     return {"message": "Rule deleted", "rule_id": rule_id}
 
@@ -482,21 +482,21 @@ async def get_stats():
     """Get alerting statistics."""
     if not redis_client:
         raise HTTPException(status_code=503, detail="Redis not initialized")
-    
+
     total_received = await redis_client.get("stats:total_received") or "0"
     total_suppressed = await redis_client.get("stats:total_suppressed") or "0"
     total_grouped = await redis_client.get("stats:total_grouped") or "0"
     total_routed = await redis_client.get("stats:total_routed") or "0"
-    
+
     total_received_int = int(total_received)
     total_suppressed_int = int(total_suppressed)
-    
+
     reduction = 0.0
     if total_received_int > 0:
         reduction = (total_suppressed_int / total_received_int) * 100
-    
+
     ALERT_FATIGUE_REDUCTION.set(reduction)
-    
+
     return {
         "total_received": total_received_int,
         "total_suppressed": total_suppressed_int,
@@ -520,18 +520,18 @@ async def get_reduction_stats():
 async def process_alerts(alerts: List[Alert], source: str):
     """Process incoming alerts through correlation, suppression, and routing."""
     start_time = datetime.now()
-    
+
     try:
         # Correlate alerts
         groups = await correlator.correlate_alerts(alerts)
         ALERT_GROUPS_CREATED.inc(len(groups))
-        
+
         # Apply suppression rules
         for group in groups:
             suppressed, reason = await suppression_engine.should_suppress(group)
             group.suppressed = suppressed
             group.suppression_reason = reason
-            
+
             if suppressed:
                 ALERTS_SUPPRESSED.labels(reason=reason).inc(len(group.alerts))
                 await redis_client.incr("stats:total_suppressed", len(group.alerts))
@@ -539,20 +539,20 @@ async def process_alerts(alerts: List[Alert], source: str):
                 # Route non-suppressed alerts
                 channels = await router.route_alert_group(group)
                 group.routed_to = channels
-                
+
                 for channel in channels:
                     ALERTS_ROUTED.labels(channel=channel).inc()
-                
+
                 await redis_client.incr("stats:total_routed", len(group.alerts))
-        
+
         await redis_client.incr("stats:total_received", len(alerts))
         await redis_client.incr("stats:total_grouped", len(groups))
-        
+
         duration = (datetime.now() - start_time).total_seconds()
         PROCESSING_DURATION.observe(duration)
-        
+
         logger.info(f"Processed {len(alerts)} alerts from {source} in {duration:.2f}s")
-        
+
     except Exception as e:
         logger.error(f"Error processing alerts: {e}", exc_info=True)
 

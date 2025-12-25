@@ -48,7 +48,7 @@ for deployment in "${REQUIRED_DEPLOYMENTS[@]}"; do
     if kubectl get deployment "$deployment" -n cert-manager &> /dev/null; then
         READY=$(kubectl get deployment "$deployment" -n cert-manager -o jsonpath='{.status.readyReplicas}')
         DESIRED=$(kubectl get deployment "$deployment" -n cert-manager -o jsonpath='{.spec.replicas}')
-        
+
         if [ "$READY" == "$DESIRED" ] && [ "$READY" != "" ]; then
             success "Deployment $deployment is ready ($READY/$DESIRED)"
         else
@@ -65,7 +65,7 @@ echo "3. Checking cert-manager pods..."
 PODS=$(kubectl get pods -n cert-manager --no-headers | wc -l)
 if [ "$PODS" -gt 0 ]; then
     success "Found $PODS pods in cert-manager namespace"
-    
+
     # Check if any pods are not running
     NOT_RUNNING=$(kubectl get pods -n cert-manager --field-selector=status.phase!=Running --no-headers 2>/dev/null | wc -l)
     if [ "$NOT_RUNNING" -gt 0 ]; then
@@ -83,7 +83,7 @@ ISSUERS=$(kubectl get clusterissuer --no-headers 2>/dev/null | wc -l)
 if [ "$ISSUERS" -gt 0 ]; then
     success "Found $ISSUERS ClusterIssuers"
     kubectl get clusterissuer
-    
+
     echo ""
     echo "   Checking ClusterIssuer readiness..."
     while IFS= read -r issuer; do
@@ -105,13 +105,13 @@ CERTS=$(kubectl get certificate -A --no-headers 2>/dev/null | wc -l)
 if [ "$CERTS" -gt 0 ]; then
     success "Found $CERTS Certificates"
     kubectl get certificate -A
-    
+
     echo ""
     echo "   Checking Certificate readiness..."
     kubectl get certificate -A -o json | jq -r '.items[] | "\(.metadata.namespace)/\(.metadata.name) \(.status.conditions[] | select(.type=="Ready") | .status)"' | while read -r line; do
         CERT_NAME=$(echo "$line" | awk '{print $1}')
         CERT_READY=$(echo "$line" | awk '{print $2}')
-        
+
         if [ "$CERT_READY" == "True" ]; then
             success "   Certificate $CERT_NAME is ready"
         else

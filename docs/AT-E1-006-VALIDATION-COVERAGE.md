@@ -242,24 +242,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      
+
       - name: Install dependencies
         run: pip install -r requirements-dev.txt
-      
+
       - name: Run AT-E1-006 validation
         run: make validate-at-e1-006
         env:
           NAMESPACE: monitoring
           ARGO_NAMESPACE: fawkes
-      
+
       - name: Run integration tests
         run: pytest tests/integration/test_at_e1_006_validation.py -v
-      
+
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v3

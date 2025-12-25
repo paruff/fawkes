@@ -5,7 +5,7 @@ description: Instrument your service with OpenTelemetry and view traces in Grafa
 
 # Add Distributed Tracing with Tempo
 
-**Time to Complete**: 25 minutes  
+**Time to Complete**: 25 minutes
 **Goal**: Add OpenTelemetry instrumentation to your service and view distributed traces in Grafana Tempo.
 
 ## What You'll Learn
@@ -132,7 +132,7 @@ We'll add OpenTelemetry instrumentation to the Node.js application we created in
    app.get('/api/data', async (req, res) => {
      // Simulate some work
      await new Promise(resolve => setTimeout(resolve, 100));
-     
+
      res.json({
        data: [
          { id: 1, name: 'Item 1' },

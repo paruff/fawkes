@@ -2,11 +2,11 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: December 2025  
-**Status**: Active  
-**Owner**: Product Team  
-**Based on**: User interviews and onboarding observations (Nov-Dec 2025)  
+**Version**: 1.0
+**Last Updated**: December 2025
+**Status**: Active
+**Owner**: Product Team
+**Based on**: User interviews and onboarding observations (Nov-Dec 2025)
 **Related Personas**: [Application Developer](../personas/application-developer.md)
 
 ---
@@ -263,40 +263,40 @@
 ```mermaid
 graph TB
     Start([Day 1: Join Company]) --> Stage1[Stage 1: Initial Access & Discovery]
-    
+
     Stage1 --> Stage2[Stage 2: Environment Setup]
     Stage2 --> SetupSuccess{Setup Works?}
-    
+
     SetupSuccess -->|No| Debug1[Debug Environment Issues]
     Debug1 --> AskHelp1[Ask Team for Help]
     AskHelp1 --> Stage2
-    
+
     SetupSuccess -->|Yes| Stage3[Stage 3: Learning Platform Concepts]
     Stage3 --> Training[Attend Platform Training]
     Training --> Shadow[Shadow Senior Dev]
     Shadow --> Stage4[Stage 4: First Hands-On Task]
-    
+
     Stage4 --> FirstDeploy{First Deployment Success?}
     FirstDeploy -->|No| Debug2[Debug with Guidance]
     Debug2 --> Stage4
-    
+
     FirstDeploy -->|Yes| Celebrate[Celebrate First Win! 🎉]
     Celebrate --> Stage5[Stage 5: Building Confidence]
     Stage5 --> Independent[Independent & Productive]
     Independent --> End([Fully Onboarded])
-    
+
     Stage1 -.->|Pain| Pain1["Information overload<br/>No clear path"]
     Stage2 -.->|Pain| Pain2["Outdated docs<br/>Environment issues"]
     Stage3 -.->|Pain| Pain3["Too much theory<br/>Not enough practice"]
     Stage4 -.->|Pain| Pain4["Scattered config<br/>Fear of breaking things"]
     Stage5 -.->|Pain| Pain5["Late feature discovery<br/>Documentation gaps"]
-    
+
     Pain1 -.->|Fix| Opp1["Guided onboarding<br/>Personalized checklist"]
     Pain2 -.->|Fix| Opp2["Automated setup<br/>Docs as code"]
     Pain3 -.->|Fix| Opp3["Hands-on labs<br/>Dojo modules"]
     Pain4 -.->|Fix| Opp4["Config schemas<br/>Safe deployment"]
     Pain5 -.->|Fix| Opp5["Feature discovery<br/>Mentorship program"]
-    
+
     style Start fill:#e1f5e1
     style End fill:#90EE90
     style Celebrate fill:#FFD700
@@ -325,7 +325,7 @@ graph LR
         S3 --> S4["Week 2<br/>First Task<br/>😟→😊 4/5→1/5"]
         S4 --> S5["Week 2-4<br/>Confidence<br/>😊 1/5"]
     end
-    
+
     style S1 fill:#FFA500
     style S2 fill:#FF6B6B
     style S3 fill:#98D8C8

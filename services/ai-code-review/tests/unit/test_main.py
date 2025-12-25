@@ -29,7 +29,7 @@ def test_root_endpoint(mock_env):
     """Test root endpoint returns service info."""
     from app.main import app
     client = TestClient(app)
-    
+
     response = client.get("/")
     assert response.status_code == 200
     data = response.json()
@@ -42,7 +42,7 @@ def test_health_endpoint(mock_env):
     """Test health check endpoint."""
     from app.main import app
     client = TestClient(app)
-    
+
     response = client.get("/health")
     assert response.status_code == 200
     data = response.json()
@@ -57,7 +57,7 @@ def test_ready_endpoint_success(mock_env):
     """Test readiness endpoint when configured."""
     from app.main import app
     client = TestClient(app)
-    
+
     response = client.get("/ready")
     assert response.status_code == 200
     data = response.json()
@@ -67,16 +67,16 @@ def test_ready_endpoint_success(mock_env):
 def test_ready_endpoint_missing_config():
     """Test readiness endpoint fails when not configured."""
     from app import main
-    
+
     # Save original values
     original_github_token = main.GITHUB_TOKEN
     original_llm_key = main.LLM_API_KEY
-    
+
     try:
         # Set to empty
         main.GITHUB_TOKEN = ""
         main.LLM_API_KEY = ""
-        
+
         client = TestClient(main.app)
         response = client.get("/ready")
         assert response.status_code == 503
@@ -91,26 +91,26 @@ def test_verify_github_signature_valid(mock_env):
     from app.main import verify_github_signature
     import hmac
     import hashlib
-    
+
     payload = b'{"test": "data"}'
     secret = "test-secret"
-    
+
     signature = hmac.new(
         secret.encode(),
         msg=payload,
         digestmod=hashlib.sha256
     ).hexdigest()
-    
+
     assert verify_github_signature(payload, f"sha256={signature}") is True
 
 
 def test_verify_github_signature_invalid(mock_env):
     """Test GitHub signature verification with invalid signature."""
     from app.main import verify_github_signature
-    
+
     payload = b'{"test": "data"}'
     signature = "sha256=invalid"
-    
+
     assert verify_github_signature(payload, signature) is False
 
 
@@ -118,7 +118,7 @@ def test_webhook_invalid_signature(mock_env):
     """Test webhook rejects invalid signature."""
     from app.main import app
     client = TestClient(app)
-    
+
     response = client.post(
         "/webhook/github",
         json={"action": "opened"},
@@ -136,9 +136,9 @@ def test_webhook_pull_request_opened(mock_env):
     import hmac
     import hashlib
     import json
-    
+
     client = TestClient(app)
-    
+
     payload = {
         "action": "opened",
         "pull_request": {
@@ -149,14 +149,14 @@ def test_webhook_pull_request_opened(mock_env):
             "full_name": "test/repo"
         }
     }
-    
+
     payload_bytes = json.dumps(payload).encode()
     signature = hmac.new(
         "test-secret".encode(),
         msg=payload_bytes,
         digestmod=hashlib.sha256
     ).hexdigest()
-    
+
     with patch('app.main.process_pull_request_review'):
         response = client.post(
             "/webhook/github",
@@ -167,7 +167,7 @@ def test_webhook_pull_request_opened(mock_env):
                 "Content-Type": "application/json"
             }
         )
-    
+
     assert response.status_code == 202
     data = response.json()
     assert "scheduled" in data["message"].lower()
@@ -179,9 +179,9 @@ def test_webhook_ignores_other_events(mock_env):
     import hmac
     import hashlib
     import json
-    
+
     client = TestClient(app)
-    
+
     payload = {"action": "created"}
     payload_bytes = json.dumps(payload).encode()
     signature = hmac.new(
@@ -189,7 +189,7 @@ def test_webhook_ignores_other_events(mock_env):
         msg=payload_bytes,
         digestmod=hashlib.sha256
     ).hexdigest()
-    
+
     response = client.post(
         "/webhook/github",
         json=payload,
@@ -198,7 +198,7 @@ def test_webhook_ignores_other_events(mock_env):
             "X-GitHub-Event": "issue_comment"
         }
     )
-    
+
     assert response.status_code == 200
     data = response.json()
     assert "ignored" in data["message"].lower()
@@ -208,7 +208,7 @@ def test_stats_endpoint(mock_env):
     """Test stats endpoint."""
     from app.main import app
     client = TestClient(app)
-    
+
     response = client.get("/stats")
     assert response.status_code == 200
     data = response.json()

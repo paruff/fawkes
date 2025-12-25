@@ -33,12 +33,12 @@ def sample_screenshot():
 
 class TestEnhancedFeedbackSubmission:
     """Tests for enhanced feedback submission with new fields."""
-    
+
     def test_submit_feedback_with_type(self, client):
         """Test submitting feedback with feedback_type."""
         with patch('app.main.db_pool') as mock_pool, \
              patch('app.main.analyze_feedback_sentiment') as mock_sentiment:
-            
+
             mock_sentiment.return_value = ('positive', 0.8, 0.8, 0.1, 0.1)
             mock_conn = AsyncMock()
             mock_conn.fetchrow.return_value = {
@@ -60,7 +60,7 @@ class TestEnhancedFeedbackSubmission:
                 'updated_at': datetime.now()
             }
             mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
-            
+
             response = client.post(
                 "/api/v1/feedback",
                 json={
@@ -72,16 +72,16 @@ class TestEnhancedFeedbackSubmission:
                     "feedback_type": "feature_request"
                 }
             )
-            
+
             assert response.status_code == 201
             data = response.json()
             assert data["feedback_type"] == "feature_request"
-    
+
     def test_submit_feedback_with_screenshot(self, client, sample_screenshot):
         """Test submitting feedback with screenshot."""
         with patch('app.main.db_pool') as mock_pool, \
              patch('app.main.analyze_feedback_sentiment') as mock_sentiment:
-            
+
             mock_sentiment.return_value = ('neutral', 0.0, 0.5, 0.5, 0.0)
             mock_conn = AsyncMock()
             mock_conn.fetchrow.return_value = {
@@ -103,7 +103,7 @@ class TestEnhancedFeedbackSubmission:
                 'updated_at': datetime.now()
             }
             mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
-            
+
             response = client.post(
                 "/api/v1/feedback",
                 json={
@@ -116,17 +116,17 @@ class TestEnhancedFeedbackSubmission:
                     "user_agent": "Mozilla/5.0 Firefox"
                 }
             )
-            
+
             assert response.status_code == 201
             data = response.json()
             assert data["has_screenshot"] is True
             assert data["browser_info"] == "Firefox 121"
-    
+
     def test_submit_feedback_with_contextual_data(self, client):
         """Test submitting feedback with browser and user agent info."""
         with patch('app.main.db_pool') as mock_pool, \
              patch('app.main.analyze_feedback_sentiment') as mock_sentiment:
-            
+
             mock_sentiment.return_value = ('positive', 0.5, 0.6, 0.3, 0.1)
             mock_conn = AsyncMock()
             mock_conn.fetchrow.return_value = {
@@ -148,7 +148,7 @@ class TestEnhancedFeedbackSubmission:
                 'updated_at': datetime.now()
             }
             mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
-            
+
             response = client.post(
                 "/api/v1/feedback",
                 json={
@@ -161,12 +161,12 @@ class TestEnhancedFeedbackSubmission:
                     "page_url": "https://example.com"
                 }
             )
-            
+
             assert response.status_code == 201
             data = response.json()
             assert data["browser_info"] == "Safari 17.1"
             assert data["user_agent"] == "Mozilla/5.0 Safari/17.1"
-    
+
     def test_submit_feedback_invalid_type(self, client):
         """Test submitting feedback with invalid feedback_type."""
         with patch('app.main.db_pool', MagicMock()):
@@ -179,21 +179,21 @@ class TestEnhancedFeedbackSubmission:
                     "feedback_type": "invalid_type"
                 }
             )
-            
+
             assert response.status_code == 400
             assert "Invalid feedback_type" in response.json()["detail"]
-    
+
     def test_submit_feedback_screenshot_too_large(self, client):
         """Test submitting feedback with too large screenshot."""
         # Generate a large base64 string (> 5MB)
         large_data = base64.b64encode(b'x' * (6 * 1024 * 1024)).decode('utf-8')
-        
+
         with patch('app.main.db_pool') as mock_pool, \
              patch('app.main.analyze_feedback_sentiment') as mock_sentiment:
-            
+
             mock_sentiment.return_value = ('neutral', 0.0, 0.5, 0.5, 0.0)
             mock_pool.acquire.return_value.__aenter__.return_value = AsyncMock()
-            
+
             response = client.post(
                 "/api/v1/feedback",
                 json={
@@ -204,20 +204,20 @@ class TestEnhancedFeedbackSubmission:
                     "screenshot": large_data
                 }
             )
-            
+
             assert response.status_code == 400
             detail = response.json()["detail"]
             # Error could be wrapped in another error message
             assert "large" in detail.lower() or "Invalid screenshot" in detail
-    
+
     def test_submit_feedback_invalid_screenshot(self, client):
         """Test submitting feedback with invalid screenshot data."""
         with patch('app.main.db_pool') as mock_pool, \
              patch('app.main.analyze_feedback_sentiment') as mock_sentiment:
-            
+
             mock_sentiment.return_value = ('neutral', 0.0, 0.5, 0.5, 0.0)
             mock_pool.acquire.return_value.__aenter__.return_value = AsyncMock()
-            
+
             response = client.post(
                 "/api/v1/feedback",
                 json={
@@ -228,21 +228,21 @@ class TestEnhancedFeedbackSubmission:
                     "screenshot": "not-valid-base64!@#"
                 }
             )
-            
+
             assert response.status_code == 400
             assert "Invalid screenshot data" in response.json()["detail"]
 
 
 class TestGitHubIntegration:
     """Tests for GitHub integration in feedback submission."""
-    
+
     def test_submit_feedback_with_github_issue_creation(self, client):
         """Test submitting feedback with GitHub issue creation."""
         with patch('app.main.db_pool') as mock_pool, \
              patch('app.main.analyze_feedback_sentiment') as mock_sentiment, \
              patch('app.main.is_github_enabled') as mock_gh_enabled, \
              patch('app.main.create_github_issue') as mock_create_issue:
-            
+
             mock_sentiment.return_value = ('negative', -0.5, 0.2, 0.3, 0.5)
             mock_gh_enabled.return_value = True
             mock_create_issue.return_value = (
@@ -250,7 +250,7 @@ class TestGitHubIntegration:
                 "https://github.com/test/repo/issues/123",
                 None
             )
-            
+
             mock_conn = AsyncMock()
             mock_conn.fetchrow.return_value = {
                 'id': 4,
@@ -272,7 +272,7 @@ class TestGitHubIntegration:
             }
             mock_conn.execute = AsyncMock()
             mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
-            
+
             response = client.post(
                 "/api/v1/feedback",
                 json={
@@ -284,19 +284,19 @@ class TestGitHubIntegration:
                     "create_github_issue": True
                 }
             )
-            
+
             assert response.status_code == 201
             # GitHub issue creation happens in background task
-    
+
     def test_submit_feedback_github_disabled(self, client):
         """Test submitting feedback when GitHub integration is disabled."""
         with patch('app.main.db_pool') as mock_pool, \
              patch('app.main.analyze_feedback_sentiment') as mock_sentiment, \
              patch('app.main.is_github_enabled') as mock_gh_enabled:
-            
+
             mock_sentiment.return_value = ('neutral', 0.0, 0.5, 0.5, 0.0)
             mock_gh_enabled.return_value = False
-            
+
             mock_conn = AsyncMock()
             mock_conn.fetchrow.return_value = {
                 'id': 5,
@@ -317,7 +317,7 @@ class TestGitHubIntegration:
                 'updated_at': datetime.now()
             }
             mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
-            
+
             response = client.post(
                 "/api/v1/feedback",
                 json={
@@ -328,75 +328,75 @@ class TestGitHubIntegration:
                     "create_github_issue": True
                 }
             )
-            
+
             assert response.status_code == 201
             # No error even though GitHub is disabled
 
 
 class TestScreenshotRetrieval:
     """Tests for screenshot retrieval endpoint."""
-    
+
     def test_get_screenshot_success(self, client, sample_screenshot):
         """Test successful screenshot retrieval."""
         screenshot_bytes = base64.b64decode(sample_screenshot)
-        
+
         with patch('app.main.db_pool') as mock_pool, \
              patch('app.main.ADMIN_TOKEN', 'test-token'):
-            
+
             mock_conn = AsyncMock()
             mock_conn.fetchrow.return_value = {
                 'screenshot': screenshot_bytes
             }
             mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
-            
+
             response = client.get(
                 "/api/v1/feedback/1/screenshot",
                 headers={"Authorization": "Bearer test-token"}
             )
-            
+
             assert response.status_code == 200
             data = response.json()
             assert "screenshot" in data
             assert "feedback_id" in data
             assert data["feedback_id"] == 1
             assert "size_bytes" in data
-    
+
     def test_get_screenshot_not_found(self, client):
         """Test retrieving screenshot for non-existent feedback."""
         with patch('app.main.db_pool') as mock_pool, \
              patch('app.main.ADMIN_TOKEN', 'test-token'):
-            
+
             mock_conn = AsyncMock()
             mock_conn.fetchrow.return_value = None
             mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
-            
+
             response = client.get(
                 "/api/v1/feedback/999/screenshot",
                 headers={"Authorization": "Bearer test-token"}
             )
-            
+
             assert response.status_code == 404
             assert "not found" in response.json()["detail"]
-    
+
     def test_get_screenshot_no_screenshot_available(self, client):
         """Test retrieving screenshot when none exists."""
         with patch('app.main.db_pool') as mock_pool, \
              patch('app.main.ADMIN_TOKEN', 'test-token'):
-            
+
             mock_conn = AsyncMock()
             mock_conn.fetchrow.return_value = {
                 'screenshot': None
             }
             mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
-            
+
             response = client.get(
                 "/api/v1/feedback/1/screenshot",
                 headers={"Authorization": "Bearer test-token"}
             )
-            
+
             assert response.status_code == 404
             assert "No screenshot available" in response.json()["detail"]
-    
+
     def test_get_screenshot_unauthorized(self, client):
         """Test retrieving screenshot without authorization."""
         response = client.get("/api/v1/feedback/1/screenshot")
@@ -405,7 +405,7 @@ class TestScreenshotRetrieval:
 
 class TestRootEndpoint:
     """Tests for enhanced root endpoint."""
-    
+
     def test_root_endpoint_with_github_enabled(self, client):
         """Test root endpoint shows GitHub integration status."""
         with patch('app.main.is_github_enabled', return_value=True):
@@ -417,7 +417,7 @@ class TestRootEndpoint:
             assert data["features"]["github_integration"] is True
             assert data["features"]["screenshot_capture"] is True
             assert "feedback_types" in data["features"]
-    
+
     def test_root_endpoint_with_github_disabled(self, client):
         """Test root endpoint when GitHub integration is disabled."""
         with patch('app.main.is_github_enabled', return_value=False):

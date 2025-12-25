@@ -71,14 +71,14 @@ spec:
   acme:
     # Let's Encrypt production server
     server: https://acme-v02.api.letsencrypt.org/directory
-    
+
     # Email for certificate expiration notifications
     email: platform-team@example.com
-    
+
     # Secret to store ACME account private key
     privateKeySecretRef:
       name: letsencrypt-prod-account-key
-    
+
     # HTTP-01 challenge solver using NGINX Ingress
     solvers:
     - http01:
@@ -175,20 +175,20 @@ metadata:
   annotations:
     # Use NGINX Ingress Controller
     kubernetes.io/ingress.class: nginx
-    
+
     # Enable cert-manager for automatic TLS
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    
+
     # NGINX-specific annotations
     nginx.ingress.kubernetes.io/ssl-redirect: "true"  # Force HTTPS
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    
+
     # Optional: Client body size limit (for file uploads)
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
-    
+
     # Optional: Request timeout
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-    
+
     # Optional: CORS headers
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-origin: "https://example.com"
@@ -199,7 +199,7 @@ spec:
   - hosts:
     - my-app.example.com
     secretName: my-app-tls-cert  # cert-manager creates this secret
-  
+
   # Routing rules
   rules:
   - host: my-app.example.com
@@ -374,7 +374,7 @@ spec:
     - app.example.com
     - www.app.example.com
     secretName: app-tls-cert
-  
+
   rules:
   - host: app.example.com
     http:
@@ -386,7 +386,7 @@ spec:
             name: my-app
             port:
               number: 80
-  
+
   - host: www.app.example.com
     http:
       paths:
@@ -414,7 +414,7 @@ spec:
             name: api-service
             port:
               number: 8080
-      
+
       - path: /web
         pathType: Prefix
         backend:

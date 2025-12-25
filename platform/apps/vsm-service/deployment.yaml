@@ -30,24 +30,24 @@ spec:
         prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: vsm-service
-      
+
       # Security context
       securityContext:
         runAsNonRoot: true
         runAsUser: 10001
         runAsGroup: 10001
         fsGroup: 10001
-      
+
       containers:
       - name: vsm-service
         image: vsm-service:latest
         imagePullPolicy: IfNotPresent
-        
+
         ports:
         - name: http
           containerPort: 8000
           protocol: TCP
-        
+
         env:
         - name: DATABASE_HOST
           valueFrom:
@@ -79,7 +79,7 @@ spec:
             configMapKeyRef:
               name: vsm-service-config
               key: sql_echo
-        
+
         # Resource limits
         resources:
           requests:
@@ -88,7 +88,7 @@ spec:
           limits:
             cpu: 500m
             memory: 512Mi
-        
+
         # Liveness probe
         livenessProbe:
           httpGet:
@@ -98,7 +98,7 @@ spec:
           periodSeconds: 30
           timeoutSeconds: 5
           failureThreshold: 3
-        
+
         # Readiness probe
         readinessProbe:
           httpGet:
@@ -108,7 +108,7 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 3
           failureThreshold: 3
-        
+
         # Security context
         securityContext:
           allowPrivilegeEscalation: false
@@ -120,7 +120,7 @@ spec:
               - ALL
           seccompProfile:
             type: RuntimeDefault
-      
+
       # Pod affinity to spread across nodes
       affinity:
         podAntiAffinity:

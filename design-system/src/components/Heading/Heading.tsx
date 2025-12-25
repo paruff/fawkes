@@ -10,7 +10,7 @@ export interface HeadingProps extends BaseComponentProps {
 
 /**
  * Semantic heading component (h1-h6)
- * 
+ *
  * @component
  * @example
  * ```tsx

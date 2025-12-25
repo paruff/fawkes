@@ -10,7 +10,7 @@ export interface CardProps extends BaseComponentProps {
 
 /**
  * Card container component
- * 
+ *
  * @component
  * @example
  * ```tsx

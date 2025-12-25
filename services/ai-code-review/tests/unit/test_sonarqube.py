@@ -15,7 +15,7 @@ def mock_http_client():
 def sonarqube_integration(mock_http_client):
     """Create SonarQube integration instance."""
     from integrations.sonarqube import SonarQubeIntegration
-    
+
     return SonarQubeIntegration(
         sonarqube_url="http://sonarqube.test:9000",
         sonarqube_token="test-token",
@@ -51,11 +51,11 @@ async def test_get_pr_findings_success(sonarqube_integration, mock_http_client):
             }
         ]
     }
-    
+
     mock_http_client.get = AsyncMock(return_value=mock_response)
-    
+
     findings = await sonarqube_integration.get_pr_findings("test/repo", 123)
-    
+
     assert len(findings) == 2
     assert findings[0]["severity"] == "critical"  # CRITICAL mapped
     assert findings[0]["category"] == "security"  # VULNERABILITY mapped
@@ -68,11 +68,11 @@ async def test_get_pr_findings_not_found(sonarqube_integration, mock_http_client
     """Test handling of project not found."""
     mock_response = Mock()
     mock_response.status_code = 404
-    
+
     mock_http_client.get = AsyncMock(return_value=mock_response)
-    
+
     findings = await sonarqube_integration.get_pr_findings("test/repo", 123)
-    
+
     assert findings == []
 
 
@@ -80,15 +80,15 @@ async def test_get_pr_findings_not_found(sonarqube_integration, mock_http_client
 async def test_get_pr_findings_no_token(mock_http_client):
     """Test handling when token not configured."""
     from integrations.sonarqube import SonarQubeIntegration
-    
+
     integration = SonarQubeIntegration(
         sonarqube_url="http://sonarqube.test:9000",
         sonarqube_token="",
         http_client=mock_http_client
     )
-    
+
     findings = await integration.get_pr_findings("test/repo", 123)
-    
+
     assert findings == []
 
 
@@ -115,18 +115,18 @@ def test_standardize_findings(sonarqube_integration):
             "rule": "squid:S1234"
         }
     ]
-    
+
     standardized = sonarqube_integration._standardize_findings(raw_issues)
-    
+
     assert len(standardized) == 2
-    
+
     # Check first issue
     assert standardized[0]["file"] == "src/main.py"
     assert standardized[0]["line"] == 42
     assert standardized[0]["severity"] == "critical"
     assert standardized[0]["category"] == "security"
     assert standardized[0]["message"] == "SQL injection vulnerability"
-    
+
     # Check second issue
     assert standardized[1]["file"] == "src/util.py"
     assert standardized[1]["line"] == 10
@@ -142,17 +142,17 @@ def test_prioritize_findings(sonarqube_integration):
         {"severity": "medium", "category": "quality", "message": "Issue 3"},
         {"severity": "high", "category": "security", "message": "Issue 4"},
     ]
-    
+
     prioritized = sonarqube_integration._prioritize_findings(findings)
-    
+
     # Critical security should be first
     assert prioritized[0]["message"] == "Issue 2"
     assert prioritized[0]["severity"] == "critical"
-    
+
     # High security should be second
     assert prioritized[1]["message"] == "Issue 4"
     assert prioritized[1]["severity"] == "high"
-    
+
     # Low priority should be last
     assert prioritized[-1]["message"] == "Issue 1"
     assert prioritized[-1]["severity"] == "low"
@@ -174,7 +174,7 @@ def test_deduplicate_with_ai_findings(sonarqube_integration):
             "message": "Inefficient loop"
         }
     ]
-    
+
     sq_findings = [
         {
             "file": "src/main.py",
@@ -189,16 +189,16 @@ def test_deduplicate_with_ai_findings(sonarqube_integration):
             "message": "Unused variable"
         }
     ]
-    
+
     deduplicated = sonarqube_integration.deduplicate_with_ai_findings(
         ai_findings, sq_findings
     )
-    
+
     # Should have 2 AI findings + 1 unique SQ finding = 3 total
     assert len(deduplicated) == 3
-    
+
     # Check that duplicate SQ finding was removed
-    # AI findings have 'path', SQ findings have 'file' 
+    # AI findings have 'path', SQ findings have 'file'
     main_py_count = sum(1 for f in deduplicated if f.get("path") == "src/main.py" or f.get("file") == "src/main.py")
     assert main_py_count == 1  # Only AI finding, SQ duplicate removed
 
@@ -218,11 +218,11 @@ async def test_get_project_metrics_success(sonarqube_integration, mock_http_clie
             ]
         }
     }
-    
+
     mock_http_client.get = AsyncMock(return_value=mock_response)
-    
+
     metrics = await sonarqube_integration.get_project_metrics("test:project")
-    
+
     assert metrics is not None
     assert metrics["bugs"] == "5"
     assert metrics["vulnerabilities"] == "2"
@@ -233,13 +233,13 @@ async def test_get_project_metrics_success(sonarqube_integration, mock_http_clie
 async def test_get_project_metrics_no_token(mock_http_client):
     """Test metrics fetch when token not configured."""
     from integrations.sonarqube import SonarQubeIntegration
-    
+
     integration = SonarQubeIntegration(
         sonarqube_url="http://sonarqube.test:9000",
         sonarqube_token="",
         http_client=mock_http_client
     )
-    
+
     metrics = await integration.get_project_metrics("test:project")
-    
+
     assert metrics is None

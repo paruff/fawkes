@@ -1,6 +1,6 @@
 /**
  * Design Tokens - Colors
- * 
+ *
  * Color palette for the Fawkes design system
  * Based on platform branding and accessibility standards
  */
@@ -19,7 +19,7 @@ export const colors = {
     800: '#3730a3',
     900: '#312e81',
   },
-  
+
   // Secondary/accent colors
   secondary: {
     50: '#f0fdfa',
@@ -33,7 +33,7 @@ export const colors = {
     800: '#115e59',
     900: '#134e4a',
   },
-  
+
   // Semantic colors
   success: {
     50: '#f0fdf4',
@@ -47,7 +47,7 @@ export const colors = {
     800: '#166534',
     900: '#14532d',
   },
-  
+
   warning: {
     50: '#fffbeb',
     100: '#fef3c7',
@@ -60,7 +60,7 @@ export const colors = {
     800: '#92400e',
     900: '#78350f',
   },
-  
+
   error: {
     50: '#fef2f2',
     100: '#fee2e2',
@@ -73,7 +73,7 @@ export const colors = {
     800: '#991b1b',
     900: '#7f1d1d',
   },
-  
+
   info: {
     50: '#eff6ff',
     100: '#dbeafe',
@@ -86,7 +86,7 @@ export const colors = {
     800: '#1e40af',
     900: '#1e3a8a',
   },
-  
+
   // Neutral/grayscale
   gray: {
     50: '#f9fafb',
@@ -100,7 +100,7 @@ export const colors = {
     800: '#1f2937',
     900: '#111827',
   },
-  
+
   // Special colors
   white: '#ffffff',
   black: '#000000',

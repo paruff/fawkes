@@ -82,7 +82,7 @@ EOF
 
 run_at_e1_001() {
     log_info "Running AT-E1-001: Infrastructure validation"
-    
+
     if [ -f "$ROOT_DIR/scripts/validate-at-e1-001.sh" ]; then
         "$ROOT_DIR/scripts/validate-at-e1-001.sh"
     else
@@ -94,7 +94,7 @@ run_at_e1_001() {
 run_at_e1_002() {
     log_info "Running AT-E1-002: GitOps/ArgoCD validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e1-002.sh" ]; then
@@ -106,7 +106,7 @@ run_at_e1_002() {
         log_error "AT-E1-002 validation script not found at $ROOT_DIR/scripts/validate-at-e1-002.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running E2E sync tests..."
     if [ -f "$ROOT_DIR/tests/e2e/argocd-sync-test.sh" ]; then
@@ -117,11 +117,11 @@ run_at_e1_002() {
     else
         log_warning "E2E sync test script not found, skipping..."
     fi
-    
+
     echo ""
     log_info "Step 3: Running BDD tests..."
     cd "$ROOT_DIR"
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run ArgoCD bootstrap tests
@@ -136,7 +136,7 @@ run_at_e1_002() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E1-002 validation completed!"
     return 0
@@ -145,7 +145,7 @@ run_at_e1_002() {
 run_at_e1_003() {
     log_info "Running AT-E1-003: Backstage Developer Portal validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e1-003.sh" ]; then
@@ -157,11 +157,11 @@ run_at_e1_003() {
         log_error "AT-E1-003 validation script not found at $ROOT_DIR/scripts/validate-at-e1-003.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running BDD tests..."
     cd "$ROOT_DIR"
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run Backstage deployment tests
@@ -177,7 +177,7 @@ run_at_e1_003() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E1-003 validation completed!"
     return 0
@@ -186,7 +186,7 @@ run_at_e1_003() {
 run_at_e1_004() {
     log_info "Running AT-E1-004: Jenkins CI/CD validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e1-004.sh" ]; then
@@ -198,11 +198,11 @@ run_at_e1_004() {
         log_error "AT-E1-004 validation script not found at $ROOT_DIR/scripts/validate-at-e1-004.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running BDD tests..."
     cd "$ROOT_DIR"
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run Jenkins BDD tests
@@ -218,7 +218,7 @@ run_at_e1_004() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E1-004 validation completed!"
     return 0
@@ -227,7 +227,7 @@ run_at_e1_004() {
 run_at_e1_005() {
     log_info "Running AT-E1-005: DevSecOps Security Scanning validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e1-005.sh" ]; then
@@ -239,10 +239,10 @@ run_at_e1_005() {
         log_error "AT-E1-005 validation script not found at $ROOT_DIR/scripts/validate-at-e1-005.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running integration tests..."
-    
+
     # Run SonarQube integration test
     if [ -f "$ROOT_DIR/tests/integration/sonarqube-check.sh" ]; then
         log_info "Running SonarQube integration test..."
@@ -252,11 +252,11 @@ run_at_e1_005() {
             log_warning "SonarQube integration test failed (may require port-forward or cluster access)"
         fi
     fi
-    
+
     echo ""
     log_info "Step 3: Running BDD tests..."
     cd "$ROOT_DIR"
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run security-related BDD tests
@@ -269,7 +269,7 @@ run_at_e1_005() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E1-005 validation completed!"
     return 0
@@ -278,7 +278,7 @@ run_at_e1_005() {
 run_at_e1_007() {
     log_info "Running AT-E1-007: DORA Metrics validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e1-007.sh" ]; then
@@ -290,7 +290,7 @@ run_at_e1_007() {
         log_error "AT-E1-007 validation script not found at $ROOT_DIR/scripts/validate-at-e1-007.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running DORA dashboard validation..."
     if [ -f "$ROOT_DIR/tests/integration/validate-dora-dashboard.sh" ]; then
@@ -303,7 +303,7 @@ run_at_e1_007() {
     else
         log_warning "DORA dashboard validation script not found, skipping..."
     fi
-    
+
     echo ""
     log_info "Step 3: Running webhook verification..."
     if [ -f "$ROOT_DIR/scripts/test-dora-webhooks.sh" ]; then
@@ -316,11 +316,11 @@ run_at_e1_007() {
     else
         log_warning "DORA webhook test script not found, skipping..."
     fi
-    
+
     echo ""
     log_info "Step 4: Running BDD tests..."
     cd "$ROOT_DIR"
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run DORA-related BDD tests
@@ -336,7 +336,7 @@ run_at_e1_007() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E1-007 validation completed!"
     return 0
@@ -345,7 +345,7 @@ run_at_e1_007() {
 run_at_e1_009() {
     log_info "Running AT-E1-009: Harbor Container Registry validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e1-009.sh" ]; then
@@ -357,11 +357,11 @@ run_at_e1_009() {
         log_error "AT-E1-009 validation script not found at $ROOT_DIR/scripts/validate-at-e1-009.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running BDD tests..."
     cd "$ROOT_DIR"
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run Harbor BDD tests
@@ -377,7 +377,7 @@ run_at_e1_009() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E1-009 validation completed!"
     return 0
@@ -386,7 +386,7 @@ run_at_e1_009() {
 run_at_e1_012() {
     log_info "Running AT-E1-012: Full Platform Workflow validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Running comprehensive Epic 1 final validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e1-012.sh" ]; then
@@ -398,7 +398,7 @@ run_at_e1_012() {
         log_error "AT-E1-012 validation script not found at $ROOT_DIR/scripts/validate-at-e1-012.sh"
         return 1
     fi
-    
+
     echo ""
     log_success "AT-E1-012 validation completed!"
     log_success "Epic 1 is fully validated and ready for Epic 2!"
@@ -408,7 +408,7 @@ run_at_e1_012() {
 run_at_e2_001() {
     log_info "Running AT-E2-001: AI Coding Assistant (GitHub Copilot) validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e2-001.sh" ]; then
@@ -420,7 +420,7 @@ run_at_e2_001() {
         log_error "AT-E2-001 validation script not found at $ROOT_DIR/scripts/validate-at-e2-001.sh"
         return 1
     fi
-    
+
     echo ""
     log_success "AT-E2-001 validation completed!"
     log_success "GitHub Copilot and AI coding assistant are configured and working!"
@@ -430,7 +430,7 @@ run_at_e2_001() {
 run_at_e2_002() {
     log_info "Running AT-E2-002: RAG Architecture validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e2-002.sh" ]; then
@@ -442,14 +442,14 @@ run_at_e2_002() {
         log_error "AT-E2-002 validation script not found at $ROOT_DIR/scripts/validate-at-e2-002.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running BDD tests..."
     if ! cd "$ROOT_DIR"; then
         log_error "Failed to change to root directory: $ROOT_DIR"
         return 1
     fi
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run RAG service BDD tests
@@ -465,7 +465,7 @@ run_at_e2_002() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E2-002 validation completed!"
     log_success "RAG service is deployed and functional!"
@@ -475,7 +475,7 @@ run_at_e2_002() {
 run_at_e2_003() {
     log_info "Running AT-E2-003: DataHub Data Catalog validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e2-003.sh" ]; then
@@ -487,14 +487,14 @@ run_at_e2_003() {
         log_error "AT-E2-003 validation script not found at $ROOT_DIR/scripts/validate-at-e2-003.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running BDD tests..."
     if ! cd "$ROOT_DIR"; then
         log_error "Failed to change to root directory: $ROOT_DIR"
         return 1
     fi
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run DataHub BDD tests
@@ -510,7 +510,7 @@ run_at_e2_003() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E2-003 validation completed!"
     log_success "DataHub data catalog is deployed and operational!"
@@ -520,7 +520,7 @@ run_at_e2_003() {
 run_at_e2_004() {
     log_info "Running AT-E2-004: Great Expectations Data Quality validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e2-004.sh" ]; then
@@ -532,14 +532,14 @@ run_at_e2_004() {
         log_error "AT-E2-004 validation script not found at $ROOT_DIR/scripts/validate-at-e2-004.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running BDD tests..."
     if ! cd "$ROOT_DIR"; then
         log_error "Failed to change to root directory: $ROOT_DIR"
         return 1
     fi
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run data quality BDD tests
@@ -555,7 +555,7 @@ run_at_e2_004() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E2-004 validation completed!"
     log_success "Great Expectations data quality monitoring is operational!"
@@ -565,7 +565,7 @@ run_at_e2_004() {
 run_at_e2_005() {
     log_info "Running AT-E2-005: VSM (Value Stream Mapping) validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e2-005.sh" ]; then
@@ -577,14 +577,14 @@ run_at_e2_005() {
         log_error "AT-E2-005 validation script not found at $ROOT_DIR/scripts/validate-at-e2-005.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running BDD tests..."
     if ! cd "$ROOT_DIR"; then
         log_error "Failed to change to root directory: $ROOT_DIR"
         return 1
     fi
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run VSM BDD tests
@@ -601,7 +601,7 @@ run_at_e2_005() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E2-005 validation completed!"
     log_success "VSM tracking service is deployed and functional!"
@@ -611,7 +611,7 @@ run_at_e2_005() {
 run_at_e2_007() {
     log_info "Running AT-E2-007: AI Code Review Bot validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e2-007.sh" ]; then
@@ -623,14 +623,14 @@ run_at_e2_007() {
         log_error "AT-E2-007 validation script not found at $ROOT_DIR/scripts/validate-at-e2-007.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running BDD tests..."
     if ! cd "$ROOT_DIR"; then
         log_error "Failed to change to root directory: $ROOT_DIR"
         return 1
     fi
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run AI code review BDD tests
@@ -646,7 +646,7 @@ run_at_e2_007() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E2-007 validation completed!"
     log_success "AI code review bot is deployed and functional!"
@@ -656,7 +656,7 @@ run_at_e2_007() {
 run_at_e2_008() {
     log_info "Running AT-E2-008: Unified GraphQL Data API validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e2-008.sh" ]; then
@@ -668,7 +668,7 @@ run_at_e2_008() {
         log_error "AT-E2-008 validation script not found at $ROOT_DIR/scripts/validate-at-e2-008.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running performance tests..."
     if command -v k6 &> /dev/null; then
@@ -683,7 +683,7 @@ run_at_e2_008() {
     else
         log_warning "k6 not available, skipping performance tests"
     fi
-    
+
     echo ""
     log_success "AT-E2-008 validation completed!"
     log_success "Unified GraphQL Data API is deployed and functional!"
@@ -693,7 +693,7 @@ run_at_e2_008() {
 run_at_e2_009() {
     log_info "Running AT-E2-009: AI Observability Dashboard validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e2-009.sh" ]; then
@@ -705,14 +705,14 @@ run_at_e2_009() {
         log_error "AT-E2-009 validation script not found at $ROOT_DIR/scripts/validate-at-e2-009.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running BDD tests..."
     if ! cd "$ROOT_DIR"; then
         log_error "Failed to change to root directory: $ROOT_DIR"
         return 1
     fi
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run AI observability BDD tests
@@ -728,7 +728,7 @@ run_at_e2_009() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E2-009 validation completed!"
     log_success "AI observability dashboard is deployed and functional!"
@@ -738,7 +738,7 @@ run_at_e2_009() {
 run_at_e2_010() {
     log_info "Running AT-E2-010: Feedback Analytics Dashboard validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e2-010.sh" ]; then
@@ -750,14 +750,14 @@ run_at_e2_010() {
         log_error "AT-E2-010 validation script not found at $ROOT_DIR/scripts/validate-at-e2-010.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running BDD tests..."
     if ! cd "$ROOT_DIR"; then
         log_error "Failed to change to root directory: $ROOT_DIR"
         return 1
     fi
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run feedback BDD tests
@@ -773,7 +773,7 @@ run_at_e2_010() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E2-010 validation completed!"
     log_success "Feedback analytics dashboard is deployed and functional!"
@@ -783,7 +783,7 @@ run_at_e2_010() {
 run_at_e3_006() {
     log_info "Running AT-E3-006: Feature Flags (Unleash) validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e3-006.sh" ]; then
@@ -795,14 +795,14 @@ run_at_e3_006() {
         log_error "AT-E3-006 validation script not found at $ROOT_DIR/scripts/validate-at-e3-006.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running BDD tests..."
     if ! cd "$ROOT_DIR"; then
         log_error "Failed to change to root directory: $ROOT_DIR"
         return 1
     fi
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run feature flags BDD tests
@@ -817,7 +817,7 @@ run_at_e3_006() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E3-006 validation completed!"
     log_success "Feature flags platform (Unleash) is deployed and functional!"
@@ -827,7 +827,7 @@ run_at_e3_006() {
 run_at_e3_007() {
     log_info "Running AT-E3-007: Event Tracking Infrastructure validation"
     echo ""
-    
+
     # Run the comprehensive validation script
     log_info "Step 1: Running comprehensive validation..."
     if [ -f "$ROOT_DIR/scripts/validate-at-e3-007.sh" ]; then
@@ -839,14 +839,14 @@ run_at_e3_007() {
         log_error "AT-E3-007 validation script not found at $ROOT_DIR/scripts/validate-at-e3-007.sh"
         return 1
     fi
-    
+
     echo ""
     log_info "Step 2: Running BDD tests..."
     if ! cd "$ROOT_DIR"; then
         log_error "Failed to change to root directory: $ROOT_DIR"
         return 1
     fi
-    
+
     # Check if pytest is available
     if command -v pytest &> /dev/null; then
         # Run event tracking BDD tests
@@ -861,7 +861,7 @@ run_at_e3_007() {
     else
         log_warning "pytest not available, skipping BDD tests"
     fi
-    
+
     echo ""
     log_success "AT-E3-007 validation completed!"
     log_success "Event tracking infrastructure is deployed and functional!"
@@ -874,9 +874,9 @@ main() {
         usage
         exit 1
     fi
-    
+
     local test_id="$1"
-    
+
     case "$test_id" in
         AT-E1-001)
             run_at_e1_001

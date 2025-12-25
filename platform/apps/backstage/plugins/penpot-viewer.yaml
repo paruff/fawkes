@@ -19,19 +19,19 @@ data:
     # Penpot Design Viewer Plugin Configuration
     # This plugin allows users to view Penpot designs directly in Backstage
     # component pages by adding annotations to catalog-info.yaml files
-    
+
     penpot:
       enabled: true
       baseUrl: https://penpot.fawkes.local
       apiUrl: https://penpot.fawkes.local/api
-      
+
       # Feature flags
       features:
         viewerEnabled: true
         commentsEnabled: true
         exportEnabled: true
         prototypeMode: true
-      
+
       # Design file annotations
       # Components can specify their design files via annotations:
       # annotations:
@@ -41,7 +41,7 @@ data:
         designId: "penpot.io/design-id"
         designPage: "penpot.io/design-page"
         designVersion: "penpot.io/design-version"
-      
+
       # Viewer settings
       viewer:
         # Default zoom level
@@ -54,7 +54,7 @@ data:
         enableFullscreen: true
         # Show design metadata
         showMetadata: true
-      
+
       # Export settings
       export:
         # Supported export formats
@@ -66,7 +66,7 @@ data:
         defaultFormat: svg
         # Max export size (MB)
         maxSizeMB: 50
-      
+
       # Integration settings
       integration:
         # Auto-sync with component library
@@ -78,7 +78,7 @@ data:
           enabled: true
           # Map Penpot components to design system components
           mappingFile: "/config/penpot-component-mapping.yaml"
-      
+
       # Access control
       access:
         # Require authentication to view designs
@@ -87,7 +87,7 @@ data:
         allowPublicDesigns: false
         # Viewer role for read-only access
         viewerRole: "viewer"
-      
+
       # Cache settings
       cache:
         # Enable caching of design previews
@@ -96,7 +96,7 @@ data:
         ttl: 3600
         # Max cache size (MB)
         maxSizeMB: 500
-      
+
       # Performance
       performance:
         # Lazy load design frames
@@ -119,106 +119,106 @@ data:
   penpot-component-mapping.yaml: |
     # Mapping between Penpot design components and Design System components
     # This enables automatic syncing and validation
-    
+
     mappings:
       # Button components
       - penpotComponent: "Button/Primary"
         designSystemComponent: "Button"
         props:
           variant: "primary"
-      
+
       - penpotComponent: "Button/Secondary"
         designSystemComponent: "Button"
         props:
           variant: "secondary"
-      
+
       - penpotComponent: "Button/Danger"
         designSystemComponent: "Button"
         props:
           variant: "danger"
-      
+
       # Input components
       - penpotComponent: "Input/Text"
         designSystemComponent: "Input"
         props:
           type: "text"
-      
+
       - penpotComponent: "Input/Email"
         designSystemComponent: "Input"
         props:
           type: "email"
-      
+
       # Card components
       - penpotComponent: "Card/Default"
         designSystemComponent: "Card"
         props:
           variant: "default"
-      
+
       - penpotComponent: "Card/Elevated"
         designSystemComponent: "Card"
         props:
           variant: "elevated"
-      
+
       # Alert components
       - penpotComponent: "Alert/Success"
         designSystemComponent: "Alert"
         props:
           variant: "success"
-      
+
       - penpotComponent: "Alert/Error"
         designSystemComponent: "Alert"
         props:
           variant: "error"
-      
+
       - penpotComponent: "Alert/Warning"
         designSystemComponent: "Alert"
         props:
           variant: "warning"
-      
+
       - penpotComponent: "Alert/Info"
         designSystemComponent: "Alert"
         props:
           variant: "info"
-      
+
       # Typography components
       - penpotComponent: "Heading/H1"
         designSystemComponent: "Heading"
         props:
           level: 1
-      
+
       - penpotComponent: "Heading/H2"
         designSystemComponent: "Heading"
         props:
           level: 2
-      
+
       - penpotComponent: "Heading/H3"
         designSystemComponent: "Heading"
         props:
           level: 3
-      
+
       # Form components
       - penpotComponent: "Form/Field"
         designSystemComponent: "FormField"
-      
+
       - penpotComponent: "Checkbox"
         designSystemComponent: "Checkbox"
-      
+
       - penpotComponent: "Radio"
         designSystemComponent: "Radio"
-      
+
       - penpotComponent: "Switch"
         designSystemComponent: "Switch"
-      
+
       # Navigation components
       - penpotComponent: "Navigation/Tabs"
         designSystemComponent: "Tabs"
-      
+
       - penpotComponent: "Navigation/Breadcrumbs"
         designSystemComponent: "Breadcrumbs"
-      
+
       - penpotComponent: "Navigation/Menu"
         designSystemComponent: "Menu"
-      
+
     # Validation rules
     validation:
       # Warn if Penpot component has no mapping

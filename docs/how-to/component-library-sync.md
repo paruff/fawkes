@@ -97,11 +97,11 @@ pipeline {
 # Example mapping logic
 def map_components(penpot_components, design_system_components):
     mappings = []
-    
+
     for penpot_comp in penpot_components:
         # Try exact name match
         ds_comp = find_by_name(design_system_components, penpot_comp['name'])
-        
+
         if ds_comp:
             mappings.append({
                 'penpot': penpot_comp,
@@ -124,7 +124,7 @@ def map_components(penpot_components, design_system_components):
                     'designSystem': None,
                     'status': 'unmapped'
                 })
-    
+
     return mappings
 ```
 
@@ -161,34 +161,34 @@ from typing import Dict, List
 def validate_design_tokens(penpot_component: Dict, design_system_component: Dict) -> List[str]:
     """Validate that design tokens are used consistently."""
     issues = []
-    
+
     # Check colors
     penpot_colors = extract_colors(penpot_component)
     for color in penpot_colors:
         if not is_design_token(color):
             issues.append(f"Color {color} is not a design token")
-    
+
     # Check spacing
     penpot_spacing = extract_spacing(penpot_component)
     for spacing in penpot_spacing:
         if not is_spacing_token(spacing):
             issues.append(f"Spacing {spacing} is not a design token")
-    
+
     return issues
 
 def validate_accessibility(penpot_component: Dict) -> List[str]:
     """Validate accessibility requirements."""
     issues = []
-    
+
     # Check color contrast
     if not meets_contrast_ratio(penpot_component, min_ratio=4.5):
         issues.append("Color contrast ratio below 4.5:1")
-    
+
     # Check touch targets
     size = get_component_size(penpot_component)
     if size['width'] < 44 or size['height'] < 44:
         issues.append(f"Touch target too small: {size['width']}x{size['height']}px (min 44x44px)")
-    
+
     return issues
 
 def validate_component(penpot_component: Dict, design_system_component: Dict) -> Dict:
@@ -262,30 +262,30 @@ sync_report:
   timestamp: "2024-12-24T10:00:00Z"
   penpot_components: 45
   design_system_components: 42
-  
+
   mapping_summary:
     mapped: 38
     fuzzy_mapped: 4
     unmapped: 3
-  
+
   validation_summary:
     passed: 35
     warnings: 7
     errors: 0
-  
+
   issues:
     - component: "Alert/Info"
       type: "warning"
       message: "Color #1E90FF is not a design token"
-      
+
     - component: "Button/Large"
       type: "warning"
       message: "Height 48px doesn't match design token scale"
-      
+
     - component: "IconButton"
       type: "unmapped"
       message: "No matching Design System component found"
-  
+
   recommendations:
     - "Add IconButton to Design System"
     - "Update Alert/Info to use tokens.colors.info[500]"
@@ -332,7 +332,7 @@ Configure sync frequency in Jenkins:
 triggers {
     // Run every hour
     cron('0 * * * *')
-    
+
     // Or run on Penpot webhook (future)
     // genericTrigger(...)
 }
@@ -349,17 +349,17 @@ mapping:
     # Exact match
     - type: exact
       priority: 1
-      
+
     # Prefix match (Button/* → Button)
     - type: prefix
       priority: 2
       pattern: "^([^/]+)/.*"
-      
+
     # Fuzzy match with similarity threshold
     - type: fuzzy
       priority: 3
       threshold: 0.8
-      
+
   exclusions:
     # Ignore these Penpot components
     - "Template/*"
@@ -376,13 +376,13 @@ validation:
   design_tokens:
     enabled: true
     level: warning  # warning | error
-    
+
   accessibility:
     enabled: true
     level: error
     min_contrast_ratio: 4.5
     min_touch_target: 44
-    
+
   component_api:
     enabled: true
     level: warning

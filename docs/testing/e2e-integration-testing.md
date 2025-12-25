@@ -302,16 +302,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup kubeconfig
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
-      
+
       - name: Run E2E Integration Tests
         run: |
           make test-e2e-integration
-      
+
       - name: Upload Test Reports
         if: always()
         uses: actions/upload-artifact@v3
@@ -634,6 +634,6 @@ Feature: My New Platform Feature
 
 ---
 
-**Last Updated**: December 15, 2024  
-**Version**: 1.0  
+**Last Updated**: December 15, 2024
+**Version**: 1.0
 **Maintainer**: Fawkes Platform Team

@@ -201,11 +201,11 @@ def step_given_backstage_deployed(context):
     """Verify Backstage deployment exists and is running."""
     if not getattr(context, 'core_api', None):
         context.core_api, context.apps_api = load_kube_clients()
-    
+
     # Set default namespace if not set
     if not getattr(context, 'namespace', None):
         context.namespace = 'fawkes'
-    
+
     try:
         deployment = context.apps_api.read_namespaced_deployment(
             name='backstage',
@@ -223,20 +223,20 @@ def step_given_ingress_configured(context, url):
     """Verify ingress exists for Backstage."""
     if not getattr(context, 'core_api', None):
         context.core_api, context.apps_api = load_kube_clients()
-    
+
     context.backstage_url = url
-    
+
     try:
         networking_api = client.NetworkingV1Api()
         ingresses = networking_api.list_namespaced_ingress(namespace=context.namespace)
-        
+
         # Find ingress for Backstage
         backstage_ingress = None
         for ingress in ingresses.items:
             if 'backstage' in ingress.metadata.name:
                 backstage_ingress = ingress
                 break
-        
+
         assert backstage_ingress is not None, "No ingress found for Backstage"
         logger.info(f"Ingress found: {backstage_ingress.metadata.name}")
     except client.exceptions.ApiException as e:
@@ -247,7 +247,7 @@ def step_given_ingress_configured(context, url):
 def step_when_navigate_to_backstage(context):
     """Navigate to Backstage URL (simulated by checking if it responds)."""
     url = getattr(context, 'backstage_url', 'http://localhost:7007')
-    
+
     # Try to reach the URL
     try:
         response = requests.get(url, timeout=10, verify=False, allow_redirects=True)
@@ -262,7 +262,7 @@ def step_when_navigate_to_backstage(context):
 def step_then_backstage_login_page_loads(context):
     """Verify Backstage login page loads successfully."""
     response = getattr(context, 'backstage_response', None)
-    
+
     if response:
         assert response.status_code in [200, 302], \
             f"Expected 200 or 302 status code, got {response.status_code}"
@@ -276,9 +276,9 @@ def step_then_healthcheck_returns_200(context):
     """Verify Backstage health check endpoint returns 200."""
     if not getattr(context, 'core_api', None):
         context.core_api, context.apps_api = load_kube_clients()
-    
+
     namespace = getattr(context, 'namespace', 'fawkes')
-    
+
     # Find a Backstage pod
     try:
         pod_name = find_pod_for_label(
@@ -287,11 +287,11 @@ def step_then_healthcheck_returns_200(context):
             'app.kubernetes.io/name=backstage',
             timeout=30
         )
-        
+
         # Execute health check
         curl_cmd = ['curl', '-s', '-o', '/dev/null', '-w', '%{http_code}', 'http://127.0.0.1:7007/healthcheck']
         response = exec_in_pod(context.core_api, namespace, pod_name, curl_cmd)
-        
+
         assert response.strip() == '200', f"Expected 200 status code, got {response.strip()}"
         logger.info("Health check endpoint returned 200")
     except Exception as e:
@@ -304,22 +304,22 @@ def step_given_oauth_configured(context):
     """Verify OAuth configuration exists in Backstage secrets."""
     if not getattr(context, 'core_api', None):
         context.core_api, context.apps_api = load_kube_clients()
-    
+
     namespace = getattr(context, 'namespace', 'fawkes')
-    
+
     try:
         # Check if OAuth secret exists
         secret = context.core_api.read_namespaced_secret(
             name='backstage-oauth-credentials',
             namespace=namespace
         )
-        
+
         # Verify it has the required keys
         assert 'github-client-id' in secret.data, "OAuth secret missing github-client-id"
         assert 'github-client-secret' in secret.data, "OAuth secret missing github-client-secret"
-        
+
         logger.info("OAuth credentials secret found and configured")
-        
+
         # Store for later validation
         context.oauth_configured = True
     except client.exceptions.ApiException as e:
@@ -333,12 +333,12 @@ def step_when_user_completes_sso_login(context):
     """Simulate successful OAuth login (manual test step)."""
     # This is a manual test step - we can't fully automate OAuth flow
     # But we can verify the OAuth endpoints are reachable
-    
+
     if not getattr(context, 'core_api', None):
         context.core_api, context.apps_api = load_kube_clients()
-    
+
     namespace = getattr(context, 'namespace', 'fawkes')
-    
+
     # Find Backstage pod and check OAuth configuration
     try:
         pod_name = find_pod_for_label(
@@ -347,7 +347,7 @@ def step_when_user_completes_sso_login(context):
             'app.kubernetes.io/name=backstage',
             timeout=30
         )
-        
+
         # Check if OAuth environment variables are set
         env_cmd = ['printenv', 'AUTH_GITHUB_CLIENT_ID']
         try:
@@ -355,14 +355,14 @@ def step_when_user_completes_sso_login(context):
             has_client_id = bool(response and response.strip() and PLACEHOLDER_SECRET_VALUE not in response)
         except:
             has_client_id = False
-        
+
         if has_client_id:
             logger.info("OAuth environment variables are configured")
             context.oauth_env_configured = True
         else:
             logger.warning("OAuth credentials appear to be placeholder values")
             context.oauth_env_configured = False
-            
+
     except Exception as e:
         logger.error(f"Could not verify OAuth configuration: {e}")
         context.oauth_env_configured = False
@@ -375,9 +375,9 @@ def step_then_redirected_to_homepage(context):
     # We verify that the OAuth endpoint exists
     if not getattr(context, 'core_api', None):
         context.core_api, context.apps_api = load_kube_clients()
-    
+
     namespace = getattr(context, 'namespace', 'fawkes')
-    
+
     try:
         pod_name = find_pod_for_label(
             context.core_api,
@@ -385,17 +385,17 @@ def step_then_redirected_to_homepage(context):
             'app.kubernetes.io/name=backstage',
             timeout=30
         )
-        
+
         # Verify OAuth callback endpoint exists (should return 404 without auth code, not 500)
-        curl_cmd = ['curl', '-s', '-o', '/dev/null', '-w', '%{http_code}', 
+        curl_cmd = ['curl', '-s', '-o', '/dev/null', '-w', '%{http_code}',
                    'http://127.0.0.1:7007/api/auth/github/handler/frame']
         response = exec_in_pod(context.core_api, namespace, pod_name, curl_cmd)
-        
+
         # 404 is expected when accessing callback without auth code
         # 500 would indicate configuration error
         assert response.strip() in EXPECTED_OAUTH_REDIRECT_CODES, \
             f"OAuth callback endpoint returned unexpected status: {response.strip()}"
-        
+
         logger.info(f"OAuth callback endpoint is configured (returned {response.strip()})")
     except Exception as e:
         logger.warning(f"Could not verify OAuth callback endpoint: {e}")
@@ -406,24 +406,24 @@ def step_then_identity_displayed(context):
     """Verify identity would be displayed (manual verification step)."""
     # This is a manual verification step
     logger.info("Identity display requires manual verification after OAuth login")
-    
+
     # We can verify that the app-config has the correct auth configuration
     if not getattr(context, 'core_api', None):
         context.core_api, context.apps_api = load_kube_clients()
-    
+
     namespace = getattr(context, 'namespace', 'fawkes')
-    
+
     try:
         # Check ConfigMap for auth configuration
         configmap = context.core_api.read_namespaced_config_map(
             name='backstage-app-config',
             namespace=namespace
         )
-        
+
         app_config = configmap.data.get('app-config.yaml', '')
         assert 'auth:' in app_config, "Auth section missing from app-config"
         assert 'github:' in app_config, "GitHub auth provider missing from app-config"
-        
+
         logger.info("Auth configuration found in app-config.yaml")
     except Exception as e:
         logger.warning(f"Could not verify auth configuration: {e}")
@@ -441,7 +441,7 @@ def step_when_bypass_login(context):
     """Attempt to access protected route without authentication."""
     # This verifies auth is enforced
     url = getattr(context, 'backstage_url', 'http://localhost:7007')
-    
+
     try:
         # Try to access a protected route
         response = requests.get(
@@ -461,7 +461,7 @@ def step_when_bypass_login(context):
 def step_then_request_intercepted(context):
     """Verify request was intercepted by auth."""
     response = getattr(context, 'bypass_response', None)
-    
+
     if response:
         # Should get redirect or 401/403
         assert response.status_code in EXPECTED_AUTH_REQUIRED_CODES, \
@@ -475,7 +475,7 @@ def step_then_request_intercepted(context):
 def step_then_redirected_to_sso(context):
     """Verify redirect to SSO login."""
     response = getattr(context, 'bypass_response', None)
-    
+
     if response and response.status_code == 302:
         location = response.headers.get('Location', '')
         logger.info(f"Redirect location: {location}")

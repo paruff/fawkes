@@ -2,11 +2,11 @@
 
 ## Test Information
 
-**Test ID**: AT-E3-003  
-**Category**: DevEx / Product Discovery  
-**Priority**: P0  
-**Related Issue**: #90  
-**Epic**: Epic 3 - Product Discovery & UX  
+**Test ID**: AT-E3-003
+**Category**: DevEx / Product Discovery
+**Priority**: P0
+**Related Issue**: #90
+**Epic**: Epic 3 - Product Discovery & UX
 **Milestone**: M3.2
 
 ## Description

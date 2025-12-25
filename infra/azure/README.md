@@ -330,12 +330,12 @@ inspec exec . -t azure:// \
 
 ### Security Best Practices
 
-✅ Private cluster enabled (no public API endpoint)  
-✅ Network policies enabled for pod-to-pod segmentation  
-✅ Managed identity (no service principal credentials)  
-✅ Azure RBAC for Kubernetes authorization  
-✅ Log Analytics for audit logging and monitoring  
-✅ Regular VM images with automatic security patches  
+✅ Private cluster enabled (no public API endpoint)
+✅ Network policies enabled for pod-to-pod segmentation
+✅ Managed identity (no service principal credentials)
+✅ Azure RBAC for Kubernetes authorization
+✅ Log Analytics for audit logging and monitoring
+✅ Regular VM images with automatic security patches
 
 ## References
 

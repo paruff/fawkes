@@ -93,7 +93,7 @@ fi
 log_info "Test 4: Checking quality gates configuration..."
 if curl -f -s --connect-timeout $TIMEOUT "$SONARQUBE_URL/api/qualitygates/list" &> /dev/null; then
     check_test "SonarQube quality gates endpoint accessible"
-    
+
     if command -v jq &> /dev/null; then
         QG_COUNT=$(curl -f -s --connect-timeout $TIMEOUT "$SONARQUBE_URL/api/qualitygates/list" 2>/dev/null | jq '.qualitygates | length' || echo "0")
         if [ "$QG_COUNT" -gt 0 ]; then
@@ -120,7 +120,7 @@ fi
 log_info "Test 6: Checking SonarQube plugins..."
 if curl -f -s --connect-timeout $TIMEOUT "$SONARQUBE_URL/api/plugins/installed" &> /dev/null; then
     check_test "SonarQube plugins endpoint accessible"
-    
+
     if command -v jq &> /dev/null; then
         PLUGIN_COUNT=$(curl -f -s --connect-timeout $TIMEOUT "$SONARQUBE_URL/api/plugins/installed" 2>/dev/null | jq '.plugins | length' || echo "0")
         if [ "$PLUGIN_COUNT" -gt 0 ]; then

@@ -40,9 +40,9 @@ def call(Map config = [:]) {
 
     stage('Update GitOps') {
         echo "Updating GitOps manifest for ${config.appName} in ${config.environment}"
-        
+
         updateGitOpsManifest(config)
-        
+
         if (config.waitForSync) {
             waitForArgoSync(config)
         }
@@ -63,13 +63,13 @@ def updateGitOpsManifest(Map config) {
             rm -rf gitops-repo
             git clone https://\${GIT_USER}:\${GIT_TOKEN}@${config.gitopsRepo} gitops-repo
             cd gitops-repo
-            
+
             # Update image tag in deployment manifest
             MANIFEST_PATH="${config.manifestPath}/deployment.yaml"
-            
+
             if [ -f "\${MANIFEST_PATH}" ]; then
                 echo "Updating image tag to ${config.imageTag} in \${MANIFEST_PATH}"
-                
+
                 # Use kustomize if available, otherwise sed
                 if command -v kustomize &> /dev/null && [ -f "${config.manifestPath}/kustomization.yaml" ]; then
                     cd ${config.manifestPath}
@@ -79,21 +79,21 @@ def updateGitOpsManifest(Map config) {
                     # Update image tag in deployment manifest
                     sed -i 's|:.*\\$|:${config.imageTag}|g' \${MANIFEST_PATH}
                 fi
-                
+
                 # Commit and push
                 git config user.name "Jenkins CI"
                 git config user.email "jenkins@fawkes.local"
                 git add -A
                 git diff --cached --quiet || git commit -m "Deploy ${config.appName} ${config.imageTag} to ${config.environment}"
                 git push origin main
-                
+
                 echo "GitOps manifest updated successfully"
             else
                 echo "Warning: Manifest not found at \${MANIFEST_PATH}"
                 echo "Available files in ${config.manifestPath}:"
                 ls -la ${config.manifestPath} || echo "Directory not found"
             fi
-            
+
             cd ..
             rm -rf gitops-repo
         """
@@ -106,9 +106,9 @@ def updateGitOpsManifest(Map config) {
 def waitForArgoSync(Map config) {
     def argocdServer = env.ARGOCD_SERVER ?: 'argocd-server.argocd.svc'
     def appName = "${config.appName}-${config.environment}"
-    
+
     echo "Waiting for ArgoCD to sync ${appName}..."
-    
+
     try {
         withCredentials([string(credentialsId: 'argocd-token', variable: 'ARGOCD_TOKEN')]) {
             timeout(time: config.syncTimeoutSeconds, unit: 'SECONDS') {
@@ -118,13 +118,13 @@ def waitForArgoSync(Map config) {
                         curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
                         chmod +x /usr/local/bin/argocd
                     fi
-                    
+
                     # Login to ArgoCD
                     argocd login ${argocdServer} --grpc-web --insecure --username admin --password \${ARGOCD_TOKEN}
-                    
+
                     # Sync the application
                     argocd app sync ${appName} --grpc-web
-                    
+
                     # Wait for sync to complete
                     argocd app wait ${appName} --grpc-web --health --timeout ${config.syncTimeoutSeconds}
                 """

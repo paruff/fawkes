@@ -24,7 +24,7 @@ def db_session():
     """Create a fresh database session for each test."""
     # Create tables
     Base.metadata.create_all(bind=engine)
-    
+
     # Create session
     db = TestingSessionLocal()
     try:
@@ -43,12 +43,12 @@ def client(db_session):
             yield db_session
         finally:
             pass
-    
+
     app.dependency_overrides[get_db] = override_get_db
-    
+
     with TestClient(app) as test_client:
         yield test_client
-    
+
     app.dependency_overrides.clear()
 
 
@@ -57,7 +57,7 @@ def sample_category(db_session):
     """Create a sample category for testing."""
     from app.models import Category
     from datetime import datetime, timezone
-    
+
     category = Category(
         name="Test Category",
         slug="test-category",
@@ -78,7 +78,7 @@ def sample_tag(db_session):
     """Create a sample tag for testing."""
     from app.models import Tag
     from datetime import datetime, timezone
-    
+
     tag = Tag(
         name="Test Tag",
         slug="test-tag",
@@ -97,7 +97,7 @@ def sample_insight(db_session, sample_category, sample_tag):
     """Create a sample insight for testing."""
     from app.models import Insight
     from datetime import datetime, timezone
-    
+
     insight = Insight(
         title="Test Insight",
         description="Test insight description",

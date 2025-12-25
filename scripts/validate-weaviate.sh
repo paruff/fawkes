@@ -41,11 +41,11 @@ echo ""
 echo "2. Checking ArgoCD Application..."
 if kubectl get application weaviate -n "${NAMESPACE}" &>/dev/null; then
     echo "   ✅ ArgoCD Application 'weaviate' exists"
-    
+
     # Check sync status
     SYNC_STATUS=$(kubectl get application weaviate -n "${NAMESPACE}" -o jsonpath='{.status.sync.status}')
     HEALTH_STATUS=$(kubectl get application weaviate -n "${NAMESPACE}" -o jsonpath='{.status.health.status}')
-    
+
     echo "   Sync Status: ${SYNC_STATUS}"
     echo "   Health Status: ${HEALTH_STATUS}"
 else
@@ -58,16 +58,16 @@ echo "3. Checking Weaviate pods..."
 if kubectl get pods -n "${NAMESPACE}" -l app.kubernetes.io/name=weaviate &>/dev/null; then
     POD_COUNT=$(kubectl get pods -n "${NAMESPACE}" -l app.kubernetes.io/name=weaviate --no-headers | wc -l)
     RUNNING_COUNT=$(kubectl get pods -n "${NAMESPACE}" -l app.kubernetes.io/name=weaviate --field-selector=status.phase=Running --no-headers | wc -l)
-    
+
     echo "   Total pods: ${POD_COUNT}"
     echo "   Running pods: ${RUNNING_COUNT}"
-    
+
     if [ "${RUNNING_COUNT}" -gt 0 ]; then
         echo "   ✅ Weaviate pod(s) are running"
     else
         echo "   ⚠️  No running Weaviate pods"
     fi
-    
+
     # Show pod details
     echo ""
     kubectl get pods -n "${NAMESPACE}" -l app.kubernetes.io/name=weaviate
@@ -80,11 +80,11 @@ echo ""
 echo "4. Checking Weaviate service..."
 if kubectl get service weaviate -n "${NAMESPACE}" &>/dev/null; then
     echo "   ✅ Weaviate service exists"
-    
+
     # Show service details
     CLUSTER_IP=$(kubectl get service weaviate -n "${NAMESPACE}" -o jsonpath='{.spec.clusterIP}')
     PORT=$(kubectl get service weaviate -n "${NAMESPACE}" -o jsonpath='{.spec.ports[0].port}')
-    
+
     echo "   Cluster IP: ${CLUSTER_IP}"
     echo "   Port: ${PORT}"
 else
@@ -106,17 +106,17 @@ echo ""
 echo "6. Testing Weaviate accessibility..."
 if kubectl get pods -n "${NAMESPACE}" -l app.kubernetes.io/name=weaviate --field-selector=status.phase=Running &>/dev/null; then
     POD_NAME=$(kubectl get pods -n "${NAMESPACE}" -l app.kubernetes.io/name=weaviate --field-selector=status.phase=Running -o jsonpath='{.items[0].metadata.name}')
-    
+
     if [ -n "${POD_NAME}" ]; then
         echo "   Testing via pod ${POD_NAME}..."
-        
+
         # Test health endpoint
         if kubectl exec -n "${NAMESPACE}" "${POD_NAME}" -- curl -s -f http://localhost:8080/v1/.well-known/ready &>/dev/null; then
             echo "   ✅ Weaviate is ready"
         else
             echo "   ⚠️  Weaviate health check failed"
         fi
-        
+
         # Test meta endpoint
         if kubectl exec -n "${NAMESPACE}" "${POD_NAME}" -- curl -s -f http://localhost:8080/v1/meta &>/dev/null; then
             echo "   ✅ Weaviate meta endpoint accessible"

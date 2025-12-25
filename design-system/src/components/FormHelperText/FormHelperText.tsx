@@ -10,7 +10,7 @@ export interface FormHelperTextProps extends BaseComponentProps {
 
 /**
  * Helper text for form fields
- * 
+ *
  * @component
  * @example
  * ```tsx

@@ -10,7 +10,7 @@ export interface LinkProps extends BaseComponentProps {
 
 /**
  * Styled link component
- * 
+ *
  * @component
  * @example
  * ```tsx

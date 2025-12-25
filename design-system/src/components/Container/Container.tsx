@@ -10,7 +10,7 @@ export interface ContainerProps extends BaseComponentProps {
 
 /**
  * A responsive container component
- * 
+ *
  * @component
  * @example
  * ```tsx
