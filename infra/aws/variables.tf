@@ -95,31 +95,31 @@ variable "worker_group_2_capacity" {
 }
 
 variable "worker_group_1_min_size" {
-  description = "Minimum node count for worker group 1 autoscaling." 
+  description = "Minimum node count for worker group 1 autoscaling."
   type        = number
   default     = 2
 }
 
 variable "worker_group_1_max_size" {
-  description = "Maximum node count for worker group 1 autoscaling." 
+  description = "Maximum node count for worker group 1 autoscaling."
   type        = number
   default     = 5
 }
 
 variable "worker_group_2_min_size" {
-  description = "Minimum node count for worker group 2 autoscaling." 
+  description = "Minimum node count for worker group 2 autoscaling."
   type        = number
   default     = 1
 }
 
 variable "worker_group_2_max_size" {
-  description = "Maximum node count for worker group 2 autoscaling." 
+  description = "Maximum node count for worker group 2 autoscaling."
   type        = number
   default     = 3
 }
 
 variable "map_accounts" {
-  description = "Additional AWS account numbers to add to the aws-auth configmap."
+  description = "DEPRECATED: Additional AWS account numbers to add to the aws-auth configmap. This variable is no longer used with EKS module v21+ which uses access entries instead. Account-level access must now be granted through specific IAM roles or users."
   type        = list(string)
 
   default = [
