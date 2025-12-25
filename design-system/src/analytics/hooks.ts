@@ -142,7 +142,7 @@ export function useNavigationTracking() {
 
   const trackNavigation = useCallback(
     (destination: string, properties?: EventProperties) => {
-      tracker.current.trackPredefined(PredefinedEvents.VIEW_HOMEPAGE, {
+      tracker.current.trackCustom('navigation.navigate', {
         destination,
         ...properties,
       });

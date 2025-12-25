@@ -183,7 +183,7 @@ run_test "Feedback events defined (found: $FEEDBACK_COUNT)" \
   "test $FEEDBACK_COUNT -ge 8"
 
 # Test 15: Error events defined (at least 5)
-ERROR_COUNT=$(grep -c "ERROR:" "${DESIGN_SYSTEM_DIR}/src/analytics/eventSchema.ts" || echo "0")
+ERROR_COUNT=$(grep -c "PAGE_ERROR\\|API_ERROR\\|VALIDATION_ERROR\\|AUTHENTICATION_ERROR\\|AUTHORIZATION_ERROR" "${DESIGN_SYSTEM_DIR}/src/analytics/eventSchema.ts" || echo "0")
 run_test "Error events defined (found: $ERROR_COUNT)" \
   "test $ERROR_COUNT -ge 5"
 
