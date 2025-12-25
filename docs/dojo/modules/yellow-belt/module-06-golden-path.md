@@ -1740,7 +1740,7 @@ def parseJson(String json) {
 
 ---
 
-## 🎉 Congratulations!
+## 🎉 Congratulations
 
 You've completed **Module 6: Building Golden Path Pipelines**!
 

@@ -124,7 +124,7 @@ Fawkes is designed to help teams measure and improve the [Four Key DORA Metrics]
 - **Change Failure Rate**
 - **Mean Time to Restore (MTTR)**
 
-### How Fawkes Helps:
+### How Fawkes Helps
 
 - **Automated CI/CD Pipelines:** Jenkins and other integrated tools provide metrics on deployment frequency and lead time.
 - **Quality Gates:** SonarQube and automated tests help reduce change failure rate.

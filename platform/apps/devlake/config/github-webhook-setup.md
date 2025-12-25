@@ -10,7 +10,7 @@
 
 #
 
-# Events captured:
+# Events captured
 
 # - Push events → Commit tracking for lead time
 

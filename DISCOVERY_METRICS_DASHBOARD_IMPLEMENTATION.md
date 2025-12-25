@@ -358,7 +358,7 @@ Added `validate-discovery-metrics` target to Makefile:
 
 ```makefile
 validate-discovery-metrics: ## Run validation for Discovery Metrics Dashboard (Issue #105)
-	@./scripts/validate-discovery-metrics.sh $(NAMESPACE)
+ @./scripts/validate-discovery-metrics.sh $(NAMESPACE)
 ```
 
 Updated `.PHONY` declaration to include new target.

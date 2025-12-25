@@ -30,4 +30,3 @@ add_helm_repo() {
 test_chart apache-devlake
 
 echo "Helm tests completed for all platform components in the '$NAMESPACE' namespace."
-

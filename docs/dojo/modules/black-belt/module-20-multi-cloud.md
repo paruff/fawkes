@@ -34,7 +34,7 @@ By the end of this module, you will be able to:
 
 ### Why Multi-Cloud?
 
-#### ✅ Valid Reasons:
+#### ✅ Valid Reasons
 
 1. **Avoid vendor lock-in**: Reduce dependency on single provider
 2. **Disaster recovery**: Survive cloud provider outage
@@ -43,7 +43,7 @@ By the end of this module, you will be able to:
 5. **Acquisitions**: Inherited cloud environments from acquired companies
 6. **Best-of-breed services**: Leverage unique capabilities (e.g., BigQuery on GCP, SageMaker on AWS)
 
-#### ❌ Poor Reasons:
+#### ❌ Poor Reasons
 
 1. **"Just in case" vendor lock-in fear**: Adds massive complexity without clear benefit
 2. **Negotiation leverage**: Threat of moving is often sufficient
@@ -1694,7 +1694,7 @@ Platform engineering evolves rapidly. To maintain your certification:
 
 ---
 
-## 🎉 Congratulations!
+## 🎉 Congratulations
 
 You've completed the most comprehensive platform engineering curriculum available. You're now equipped to:
 

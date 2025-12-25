@@ -191,7 +191,7 @@ kubectl get pods -n dora-metrics -l app=dora-collector
 ```
 
 ??? example "Expected Output"
-`     NAME                              READY   STATUS    RESTARTS   AGE
+`NAME                              READY   STATUS    RESTARTS   AGEE
     dora-collector-7d9f8b6c4f-x2k9j   1/1     Running   0          30s
     `
 

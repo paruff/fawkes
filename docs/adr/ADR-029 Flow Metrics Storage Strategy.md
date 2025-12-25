@@ -1728,7 +1728,7 @@ def get_db():
 
 This ADR documents the decision to use a **hybrid storage architecture** combining **PostgreSQL for relational data** and **Prometheus for time-series metrics**, with **S3 for archival storage**.
 
-### Key Decisions:
+### Key Decisions
 
 1. **PostgreSQL** as primary storage for flow items and detailed event data
 1. **Prometheus** for real-time time-series metrics and alerting
@@ -1737,20 +1737,20 @@ This ADR documents the decision to use a **hybrid storage architecture** combini
 1. **Partitioning** for webhook_events table
 1. **90-day retention** in hot storage, 1-year in warm, 3+ years in cold
 
-### Trade-offs Accepted:
+### Trade-offs Accepted
 
 - Operational complexity of managing two storage systems (PostgreSQL + Prometheus)
 - Manual coordination needed between systems (no automatic sync)
 - Prometheus retention limited (15 days) - acceptable for MVP
 
-### Future Considerations:
+### Future Considerations
 
 - **TimescaleDB** if consolidation desired
 - **ClickHouse** if scale reaches 100M+ flow items
 - **Thanos** if Prometheus retention becomes issue
 - **Aurora PostgreSQL** if RDS scaling limits reached
 
-### Success Metrics:
+### Success Metrics
 
 - Query latency P95 < 500ms ✅
 - Write throughput > 100 events/sec ✅

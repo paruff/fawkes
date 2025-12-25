@@ -495,51 +495,51 @@ groups:
   interval: 30s
   rules:
 
-  # SLI: Availability
+# SLI: Availability
 
-  - record: sli:availability:ratio_rate5m
-    expr: |
-    (
-    sum(rate(http_requests_total{status!~"5.."}[5m]))
-    /
-    sum(rate(http_requests_total[5m]))
-    )
+- record: sli:availability:ratio_rate5m
+  expr: |
+  (
+  sum(rate(http_requests_total{status!~"5.."}[5m]))
+  /
+  sum(rate(http_requests_total[5m]))
+  )
 
-  # Error budget remaining (30 day window)
+# Error budget remaining (30 day window)
 
-  - record: slo:availability:error_budget_remaining
-    expr: |
-    1 - (
-    (1 - sli:availability:ratio_rate5m)
-    /
-    (1 - 0.999)
-    )
+- record: slo:availability:error_budget_remaining
+  expr: |
+  1 - (
+  (1 - sli:availability:ratio_rate5m)
+  /
+  (1 - 0.999)
+  )
 
-  # Burn rate (how fast we're consuming error budget)
+# Burn rate (how fast we're consuming error budget)
 
-  - record: slo:availability:burn_rate
-    expr: |
-    (1 - sli:availability:ratio_rate5m)
-    /
-    (1 - 0.999)
+- record: slo:availability:burn_rate
+  expr: |
+  (1 - sli:availability:ratio_rate5m)
+  /
+  (1 - 0.999)
 
 - name: slo-latency
   interval: 30s
   rules:
 
-  # SLI: Latency P95
+# SLI: Latency P95
 
-  - record: sli:latency:p95
-    expr: |
-    histogram_quantile(0.95,
-    rate(http_request_duration_seconds_bucket[5m])
-    )
+- record: sli:latency:p95
+  expr: |
+  histogram_quantile(0.95,
+  rate(http_request_duration_seconds_bucket[5m])
+  )
 
-  # Latency SLO compliance
+# Latency SLO compliance
 
-  - record: slo:latency:compliance
-    expr: |
-    (sli:latency:p95 <= 0.5)
+- record: slo:latency:compliance
+  expr: |
+  (sli:latency:p95 <= 0.5)
 
 ---
 
@@ -556,41 +556,41 @@ groups:
 - name: error-budget-alerts
   rules:
 
-  # Fast burn (2% budget in 1 hour)
+# Fast burn (2% budget in 1 hour)
 
-  - alert: ErrorBudgetFastBurn
-    expr: |
-    slo:availability:burn_rate > 14.4
-    for: 2m
-    labels:
-    severity: critical
-    annotations:
-    summary: "Error budget burning too fast"
-    description: "At current rate, error budget will be exhausted in {{ $value | humanizeDuration }}"
+- alert: ErrorBudgetFastBurn
+  expr: |
+  slo:availability:burn_rate > 14.4
+  for: 2m
+  labels:
+  severity: critical
+  annotations:
+  summary: "Error budget burning too fast"
+  description: "At current rate, error budget will be exhausted in {{ $value | humanizeDuration }}"
 
-  # Slow burn (10% budget in 3 days)
+# Slow burn (10% budget in 3 days)
 
-  - alert: ErrorBudgetSlowBurn
-    expr: |
-    slo:availability:burn_rate > 6
-    for: 1h
-    labels:
-    severity: warning
-    annotations:
-    summary: "Error budget burning steadily"
-    description: "Error budget consumption rate is elevated"
+- alert: ErrorBudgetSlowBurn
+  expr: |
+  slo:availability:burn_rate > 6
+  for: 1h
+  labels:
+  severity: warning
+  annotations:
+  summary: "Error budget burning steadily"
+  description: "Error budget consumption rate is elevated"
 
-  # Budget exhausted
+# Budget exhausted
 
-  - alert: ErrorBudgetExhausted
-    expr: |
-    slo:availability:error_budget_remaining <= 0
-    for: 5m
-    labels:
-    severity: critical
-    annotations:
-    summary: "Error budget exhausted"
-    description: "No error budget remaining. Freeze deployments!"
+- alert: ErrorBudgetExhausted
+  expr: |
+  slo:availability:error_budget_remaining <= 0
+  for: 5m
+  labels:
+  severity: critical
+  annotations:
+  summary: "Error budget exhausted"
+  description: "No error budget remaining. Freeze deployments!"
 
 ---
 
@@ -1195,7 +1195,9 @@ name: lab-deployment-scripts
 namespace: fawkes-system
 data:
 deploy-labs.sh: |
-#!/bin/bash # Deploy all lab infrastructure
+
+# !/bin/bash # Deploy all lab infrastructure
+
 set -e
 
     echo "Deploying Fawkes Dojo Lab Infrastructure..."

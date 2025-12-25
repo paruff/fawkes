@@ -488,7 +488,7 @@ What did you learn from your DORA metrics? What surprised you? Share your insigh
 
 ---
 
-## 🎉 You've Completed All Six Tutorials!
+## 🎉 You've Completed All Six Tutorials
 
 Congratulations on completing the entire Fawkes tutorial series! You now have:
 

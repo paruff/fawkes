@@ -802,7 +802,7 @@ In Module 3, you'll learn:
 
 ## Module Completion
 
-### ✅ You've Completed Module 2!
+### ✅ You've Completed Module 2
 
 **Next Steps**:
 

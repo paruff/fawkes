@@ -677,7 +677,7 @@ In Module 2, you'll learn:
 
 ## Module Completion
 
-### ✅ You've Completed Module 1!
+### ✅ You've Completed Module 1
 
 **Next Steps**:
 

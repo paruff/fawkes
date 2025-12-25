@@ -1608,9 +1608,9 @@ We transformed from reactive firefighting to proactive reliability engineering."
 
 ---
 
-## 🎉 Brown Belt Complete!
+## 🎉 Brown Belt Complete
 
-### 🏆 Congratulations!
+### 🏆 Congratulations
 
 You've completed all four Brown Belt modules:
 

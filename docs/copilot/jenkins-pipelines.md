@@ -2178,7 +2178,7 @@ When creating or updating documentation:
 ### Code Examples
 
 - Always include file path: `# File: path/to/file.yaml`
-- Use proper syntax highlighting: `yaml, `bash, ```python
+- Use proper syntax highlighting: `yaml,`bash, ```python
 - Add comments explaining non-obvious parts
 - Include DORA capability annotations
 - Show complete, runnable examples

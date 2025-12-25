@@ -87,13 +87,13 @@ Added the following targets:
 
 ```makefile
 validate-at-e3-008: ## Run AT-E3-008 acceptance test validation for Continuous Discovery Process
-	@./scripts/validate-at-e3-008.sh --namespace $(NAMESPACE)
+ @./scripts/validate-at-e3-008.sh --namespace $(NAMESPACE)
 
 validate-at-e3-012: ## Run AT-E3-012 acceptance test validation for Complete Epic 3 Documentation
-	@./scripts/validate-at-e3-012.sh --namespace $(NAMESPACE)
+ @./scripts/validate-at-e3-012.sh --namespace $(NAMESPACE)
 
 validate-epic-3-final: ## Run comprehensive Epic 3 final validation (AT-E3-008, 010, 011, 012)
-	@./scripts/validate-epic-3-final.sh --namespace $(NAMESPACE)
+ @./scripts/validate-epic-3-final.sh --namespace $(NAMESPACE)
 ```
 
 **Note:** Fixed AT-E3-012 comment which previously said "Experimentation Framework" but should be "Complete Epic 3 Documentation".

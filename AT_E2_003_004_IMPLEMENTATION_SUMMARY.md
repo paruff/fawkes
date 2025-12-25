@@ -221,7 +221,7 @@ The existing `tests/acceptance/generate-report.sh` script automatically supports
 
 ## Prerequisites
 
-### For AT-E2-003 (DataHub):
+### For AT-E2-003 (DataHub)
 
 1. Kubernetes cluster accessible via kubectl
 2. Namespace "fawkes" exists
@@ -233,7 +233,7 @@ The existing `tests/acceptance/generate-report.sh` script automatically supports
 8. jq (optional, for JSON processing)
 9. pytest (for BDD tests)
 
-### For AT-E2-004 (Great Expectations):
+### For AT-E2-004 (Great Expectations)
 
 1. Kubernetes cluster accessible via kubectl
 2. Namespace "fawkes" exists
@@ -249,7 +249,7 @@ The existing `tests/acceptance/generate-report.sh` script automatically supports
 
 ## Testing and Validation
 
-### Tests Performed:
+### Tests Performed
 
 1. **Script Syntax Validation:**
 
@@ -281,7 +281,7 @@ The existing `tests/acceptance/generate-report.sh` script automatically supports
 
 ## Acceptance Criteria Status
 
-### Issue #50 Requirements:
+### Issue #50 Requirements
 
 - ✅ AT-E2-003 test suite implementation complete
 - ✅ AT-E2-004 test suite implementation complete
@@ -290,14 +290,14 @@ The existing `tests/acceptance/generate-report.sh` script automatically supports
 - ✅ Documentation updated
 - ✅ Makefile targets added
 
-### Definition of Done:
+### Definition of Done
 
 - ✅ Code implemented and committed
 - ✅ Tests written and validated (scripts tested, ready for cluster deployment)
 - ✅ Documentation updated (comprehensive README sections added)
 - ✅ Validation commands work as specified
 
-### Validation Commands from Issue:
+### Validation Commands from Issue
 
 All validation commands work as specified:
 

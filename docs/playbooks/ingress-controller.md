@@ -119,7 +119,7 @@ kubectl get application -n fawkes ingress-nginx
 ```
 
 ??? example "Expected Output"
-`     NAME            SYNC STATUS   HEALTH STATUS
+`NAME            SYNC STATUS   HEALTH STATUSS
     ingress-nginx   Synced        Healthy
     `
 
@@ -149,7 +149,7 @@ kubectl get application -n fawkes ingress-nginx
 **Verification**: All pods should be in `Running` state and LoadBalancer service should have an external IP
 
 ??? example "Expected Output"
-`     NAME                                       READY   STATUS    RESTARTS   AGE
+`NAME                                       READY   STATUS    RESTARTS   AGEE
     ingress-nginx-controller-<hash>            1/1     Running   0          2m
     ingress-nginx-controller-<hash>            1/1     Running   0          2m
     ingress-nginx-defaultbackend-<hash>        1/1     Running   0          2m
@@ -180,7 +180,7 @@ kubectl get ingress -n ingress-test
 ```
 
 ??? example "Expected Output"
-`     NAME              CLASS   HOSTS                       ADDRESS         PORTS   AGE
+`NAME              CLASS   HOSTS                       ADDRESS         PORTS   AGEE
     echo-server       nginx   test.127.0.0.1.nip.io      192.168.1.100   80      1m
     echo-server-tls   nginx   test-tls.127.0.0.1.nip.io  192.168.1.100   80,443  1m
     `
@@ -248,7 +248,7 @@ The `generate-test-cert.sh` script creates a self-signed certificate valid for `
         "PORT": "80"
       }
     }
-    `
+`
 
 ### Step 5: Test HTTPS Access (Optional)
 

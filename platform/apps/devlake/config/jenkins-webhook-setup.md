@@ -10,7 +10,7 @@
 
 #
 
-# Events captured:
+# Events captured
 
 # - Build completion → Build success rate
 
