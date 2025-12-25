@@ -130,6 +130,41 @@ kubectl get secret unleash-secret -n fawkes -o jsonpath='{.data.ADMIN_PASSWORD}'
 - **Admin User**: admin@fawkes.local
 - **Admin Password**: Retrieved from secret (see above)
 
+### ⚠️ Security Warning - Production Deployment
+
+**IMPORTANT**: The deployment manifests contain default development credentials that **MUST** be changed before production use:
+
+1. **Generate secure passwords** and API tokens:
+```bash
+# Generate admin password
+openssl rand -base64 32
+
+# Generate API tokens
+openssl rand -hex 32
+```
+
+2. **Update secrets** before deploying:
+```bash
+kubectl create secret generic unleash-secret \
+  --from-literal=ADMIN_PASSWORD="$(openssl rand -base64 32)" \
+  --from-literal=INIT_ADMIN_API_TOKENS="*:*.$(openssl rand -hex 32)" \
+  --from-literal=INIT_CLIENT_API_TOKENS="*:development.$(openssl rand -hex 32)" \
+  --namespace fawkes \
+  --dry-run=client -o yaml | kubectl apply -f -
+
+kubectl create secret generic db-unleash-credentials \
+  --from-literal=username="unleash_user" \
+  --from-literal=password="$(openssl rand -base64 32)" \
+  --from-literal=database="unleash" \
+  --namespace fawkes \
+  --dry-run=client -o yaml | kubectl apply -f -
+```
+
+3. **For production**, use External Secrets Operator to sync from Vault:
+   - See `platform/apps/postgresql/externalsecret-db-*` for examples
+   - Configure Vault paths for Unleash secrets
+   - Enable ExternalSecret resources in kustomization
+
 ## Feature Flag Strategies
 
 Unleash supports multiple rollout strategies:

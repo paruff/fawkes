@@ -267,7 +267,7 @@ check_database_connection() {
   fi
   
   # Check if pod can resolve database hostname
-  if kubectl exec -n "$NAMESPACE" "$pod_name" -- sh -c "nc -zv db-unleash-dev-rw.fawkes.svc.cluster.local 5432" 2>&1 | grep -q "open"; then
+  if kubectl exec -n "$NAMESPACE" "$pod_name" -- sh -c "nc -zv db-unleash-dev-rw.$NAMESPACE.svc.cluster.local 5432" 2>&1 | grep -q "open"; then
     log_success "Unleash can connect to PostgreSQL database"
     return 0
   else
