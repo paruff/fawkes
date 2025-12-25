@@ -41,6 +41,8 @@ This directory contains acceptance test runners for Fawkes platform validation.
 | AT-E3-001 | Research Infrastructure | User research repository and tools | 🚧 Pending |
 | AT-E3-002 | SPACE Framework | SPACE metrics collection operational | ✅ Implemented |
 | AT-E3-003 | Feedback System | Multi-channel feedback system | ✅ Implemented |
+| AT-E3-006 | Feature Flags | Unleash with OpenFeature support | ✅ Implemented |
+| AT-E3-007 | Event Tracking | 60+ events with Plausible analytics | ✅ Implemented |
 
 ## Usage
 
@@ -1945,4 +1947,392 @@ The test passes when:
 - [CLI Tool README](../../services/feedback-cli/README.md)
 - [Bot README](../../services/feedback-bot/README.md)
 - [Multi-Channel Feedback BDD Tests](../bdd/features/multi-channel-feedback.feature)
+
+## AT-E3-006: Feature Flags Platform (Unleash)
+
+### Acceptance Criteria
+
+- [x] Unleash deployed with OpenFeature support
+- [x] PostgreSQL database operational
+- [x] Feature flag CRUD operations functional
+- [x] Gradual rollout strategies working
+- [x] OpenFeature SDK integration tested
+- [x] Prometheus metrics exposed
+- [x] Resource usage within limits (<70%)
+
+### Architecture
+
+The feature flags platform uses:
+
+1. **Unleash Server** - Feature flag management UI and API
+2. **PostgreSQL Database** - Feature flag and strategy persistence
+3. **OpenFeature SDK** - Standard API for feature flag evaluation
+4. **Ingress** - HTTPS access to Unleash UI and API
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e3-006.sh`)
+   - Prerequisites validation (kubectl, namespace)
+   - PostgreSQL cluster health check
+   - Unleash deployment and replica validation
+   - Service and ingress configuration
+   - Database connectivity and schema validation
+   - API health endpoint testing
+   - Feature flag CRUD operations
+   - Gradual rollout strategy testing
+   - OpenFeature SDK integration
+   - Prometheus metrics validation
+   - Resource utilization checks
+
+2. **BDD Tests** (`tests/bdd/features/feature-flags-unleash.feature`)
+   - Unleash deployment health
+   - Database connectivity
+   - API accessibility
+   - UI accessibility via ingress
+   - Feature flag creation and retrieval
+   - Gradual rollout strategy configuration
+   - OpenFeature SDK integration
+   - Prometheus metrics exposure
+   - API authentication
+   - Pod restart resilience
+   - Resource utilization validation
+   - Complete acceptance test (AT-E3-006)
+
+### Running the Tests
+
+```bash
+# Run via test runner
+./tests/acceptance/run-test.sh AT-E3-006
+
+# Run via Makefile
+make validate-at-e3-006
+
+# Run validation script directly
+./scripts/validate-at-e3-006.sh --namespace fawkes
+
+# Run BDD tests
+pytest tests/bdd -k "unleash or feature.flags" -v
+```
+
+### Key Features Validated
+
+**Feature Flag Management:**
+- Create, read, update, delete feature flags
+- Enable/disable flags per environment
+- Configure activation strategies
+
+**Rollout Strategies:**
+- Gradual rollout (percentage-based)
+- User targeting
+- Constraint-based activation
+
+**Integration:**
+- OpenFeature SDK compatibility
+- Consistent evaluation results
+- API and SDK parity
+
+**Observability:**
+- Prometheus metrics at `/internal-backstage/prometheus`
+- `unleash_feature_toggles_total` metric
+- `unleash_client_requests_total` metric
+- ServiceMonitor for automatic scraping
+
+### Manual Validation
+
+```bash
+# Check Unleash deployment
+kubectl get deployment unleash -n fawkes
+kubectl get pods -n fawkes -l app=unleash
+
+# Access Unleash UI (with port-forward or ingress)
+kubectl port-forward -n fawkes svc/unleash 4242:4242
+# Open http://localhost:4242
+
+# Test API
+curl -H "Authorization: *:*.some-token" \
+  http://unleash.fawkes.idp/api/admin/features
+
+# Check metrics
+curl http://unleash.fawkes.idp/internal-backstage/prometheus
+```
+
+### Prerequisites
+
+- kubectl with cluster access
+- Unleash deployed in namespace `fawkes`
+- PostgreSQL cluster `db-unleash-dev`
+- curl (for API testing)
+- jq (optional, for JSON processing)
+- pytest (for BDD tests)
+
+### Troubleshooting
+
+**Unleash pods not starting:**
+```bash
+# Check deployment status
+kubectl get deployment unleash -n fawkes
+kubectl describe deployment unleash -n fawkes
+
+# Check pod logs
+kubectl logs -n fawkes -l app=unleash --tail=50
+
+# Check database connectivity
+kubectl get cluster db-unleash-dev -n fawkes
+```
+
+**API not accessible:**
+```bash
+# Check service
+kubectl get svc unleash -n fawkes
+
+# Check ingress
+kubectl get ingress unleash -n fawkes
+
+# Port-forward for local testing
+kubectl port-forward -n fawkes svc/unleash 4242:4242
+curl http://localhost:4242/health
+```
+
+**Feature flags not persisting:**
+```bash
+# Check PostgreSQL cluster health
+kubectl get cluster db-unleash-dev -n fawkes
+kubectl get pods -n fawkes -l cnpg.io/cluster=db-unleash-dev
+
+# Check database connection from Unleash
+kubectl exec -n fawkes deployment/unleash -- \
+  psql -h db-unleash-dev-rw -U unleash -d unleash -c "\dt"
+```
+
+## AT-E3-007: Event Tracking Infrastructure
+
+### Acceptance Criteria
+
+- [x] Event schema defined with 60+ events
+- [x] Tracking library deployed and functional
+- [x] Real-time streaming to Plausible analytics
+- [x] Event validation middleware working
+- [x] Privacy controls in place
+- [x] React hooks available
+- [x] Documentation complete
+
+### Architecture
+
+The event tracking infrastructure consists of:
+
+1. **Event Schema** (`eventSchema.ts`)
+   - 9 event categories (navigation, scaffolding, documentation, CI/CD, feedback, feature usage, errors, performance, user)
+   - 26 event actions (view, click, submit, create, deploy, etc.)
+   - 60+ predefined events covering all platform interactions
+   - Extensible property system for custom dimensions
+
+2. **Event Tracker** (`eventTracker.ts`)
+   - Singleton pattern for global instance
+   - Plausible Analytics integration
+   - Event validation before sending
+   - Middleware chain (validation, privacy, enrichment, sampling)
+   - Queue for offline scenarios
+
+3. **React Hooks** (multiple hook files)
+   - `useEventTracking` - General event tracking
+   - `usePageViewTracking` - Automatic page view tracking
+   - `useButtonClick` - Button click tracking
+   - `useFormTracking` - Form interaction tracking
+   - `useErrorTracking` - Error and exception tracking
+
+4. **Plausible Analytics** - Privacy-friendly analytics platform
+   - No cookies required
+   - GDPR compliant by default
+   - Real-time event ingestion
+   - Custom event properties support
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e3-007.sh`)
+   - Event schema validation (60+ events, categories, actions)
+   - Tracking library code verification
+   - React hooks implementation check
+   - Event validation middleware
+   - Privacy controls validation
+   - Plausible integration configuration
+   - Documentation completeness
+
+2. **BDD Tests** (`tests/bdd/features/event-tracking.feature`)
+   - Event schema defined and accessible
+   - Tracking library deployed and functional
+   - 60+ predefined events available
+   - Navigation events tracked
+   - Scaffolding events tracked
+   - Documentation events tracked
+   - CI/CD events tracked
+   - Feedback events tracked
+   - Feature usage events tracked
+   - Error events tracked
+   - Performance events tracked
+   - User events tracked
+   - Event validation working
+   - Real-time streaming to Plausible
+   - Middleware chain functioning
+   - Privacy middleware protecting sensitive data
+   - React hooks providing easy interface
+   - Event naming conventions followed
+   - Complete acceptance test (AT-E3-007)
+
+### Running the Tests
+
+```bash
+# Run via test runner
+./tests/acceptance/run-test.sh AT-E3-007
+
+# Run via Makefile
+make validate-at-e3-007
+
+# Run validation script directly
+./scripts/validate-at-e3-007.sh --namespace fawkes
+
+# Run BDD tests
+pytest tests/bdd -k "event.tracking or AT-E3-007" -v
+```
+
+### Event Categories
+
+The event tracking system covers these categories:
+
+1. **Navigation** (5 events)
+   - Homepage views, catalog views, searches, service details
+
+2. **Scaffolding** (10 events)
+   - Workflow start/complete/cancel, template selection, validation errors
+
+3. **Documentation** (6 events)
+   - Docs views, searches, TechDocs, downloads
+
+4. **CI/CD** (12 events)
+   - Pipeline views, builds, deployments, ArgoCD syncs
+
+5. **Feedback** (8 events)
+   - Widget interactions, feedback submission, bug reports, feature requests
+
+6. **Feature Usage** (6 events)
+   - Plugin interactions (Kubernetes, ArgoCD, Grafana), data exports
+
+7. **Errors** (5 events)
+   - Page errors, API errors, validation errors, authentication errors
+
+8. **Performance** (4 events)
+   - Page load times, API response times, slow operations, timeouts
+
+9. **User** (4 events)
+   - Login, logout, profile updates, profile views
+
+### Key Features Validated
+
+**Event Schema:**
+- Clear taxonomy with categories and actions
+- 60+ predefined events for common interactions
+- Extensible property system
+- Type-safe TypeScript definitions
+
+**Tracking Library:**
+- Singleton pattern for consistency
+- Automatic Plausible script injection
+- Event validation before sending
+- Serializable properties only
+
+**Middleware Chain:**
+- Validation middleware (rejects invalid events)
+- Privacy middleware (removes sensitive data)
+- Enrichment middleware (adds default properties)
+- Sampling middleware (reduces volume)
+- Rate limiting middleware (prevents abuse)
+- Deduplication middleware (prevents duplicates)
+
+**Privacy & Compliance:**
+- No cookies used
+- No PII collected by default
+- Sensitive fields automatically removed (email, password, API keys)
+- GDPR compliant
+- No consent banners required
+
+**React Integration:**
+- Multiple hooks for different use cases
+- Automatic event tracking
+- Easy integration with components
+- Type-safe event properties
+
+### Manual Validation
+
+```bash
+# Check event schema file
+cat design-system/backstage-plugin/src/lib/eventSchema.ts | grep "export const PredefinedEvents"
+
+# Count predefined events
+grep -o "export const PredefinedEvents" design-system/backstage-plugin/src/lib/eventSchema.ts -A 200 | grep -c "category:"
+
+# Check tracking library
+cat design-system/backstage-plugin/src/lib/eventTracker.ts | grep "class EventTracker"
+
+# Test Plausible integration (if deployed)
+kubectl port-forward -n fawkes svc/plausible 8000:8000
+curl http://localhost:8000/api/health
+
+# View tracked events in Plausible dashboard
+# Open http://localhost:8000 and check real-time dashboard
+```
+
+### Prerequisites
+
+- Event schema files exist in `design-system/backstage-plugin/src/lib/`
+- React hooks exist in `design-system/backstage-plugin/src/hooks/`
+- Plausible analytics platform deployed (optional for code validation)
+- grep, jq for script validation
+- pytest for BDD tests
+
+### Troubleshooting
+
+**Event schema not found:**
+```bash
+# Check file exists
+ls -la design-system/backstage-plugin/src/lib/eventSchema.ts
+
+# Verify structure
+cat design-system/backstage-plugin/src/lib/eventSchema.ts | head -50
+```
+
+**Tracking library not working:**
+```bash
+# Check implementation
+cat design-system/backstage-plugin/src/lib/eventTracker.ts
+
+# Check Plausible script injection
+grep "plausible.io/js/script" design-system/backstage-plugin/src/lib/eventTracker.ts
+```
+
+**Events not appearing in Plausible:**
+```bash
+# Check Plausible deployment
+kubectl get deployment plausible -n fawkes
+kubectl get pods -n fawkes -l app=plausible
+
+# Check Plausible API
+kubectl port-forward -n fawkes svc/plausible 8000:8000
+curl http://localhost:8000/api/health
+
+# Check configuration in Backstage
+# Ensure Plausible domain is correctly configured
+```
+
+**Privacy middleware removing too much data:**
+- Review privacy middleware configuration
+- Check sensitive field list
+- Adjust truncation length if needed
+- Test with specific event properties
+
+### Related Documentation
+
+- [Event Tracking Implementation Summary](../../EVENT_TRACKING_IMPLEMENTATION.md)
+- [Event Schema Source](../../design-system/backstage-plugin/src/lib/eventSchema.ts)
+- [Event Tracker Source](../../design-system/backstage-plugin/src/lib/eventTracker.ts)
+- [BDD Feature File](../bdd/features/event-tracking.feature)
+
 
