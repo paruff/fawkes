@@ -71,11 +71,44 @@ graph LR
 
 ## Current Journey Maps
 
-<!-- List your journey maps here as you create them -->
-<!-- Example:
-- [Platform Engineer - Incident Response](platform-engineer-incident-response.md)
-- [App Developer - First Deployment](app-developer-first-deployment.md)
--->
+### Core Developer Workflows
+
+1. **[Developer Onboarding to Fawkes Platform](01-developer-onboarding.md)**
+   - **Persona**: Application Developer (New Team Member)
+   - **Scenario**: First week learning the platform
+   - **Key Pain Points**: Environment setup complexity, information overload, scattered documentation
+   - **Time**: 2-4 weeks
+   - **Status**: ✅ Validated with 8 developer interviews
+
+2. **[Deploying First App to Production](02-deploying-first-app.md)**
+   - **Persona**: Application Developer
+   - **Scenario**: First complete new service deployment
+   - **Key Pain Points**: Manual YAML creation, cryptic errors, unclear success criteria
+   - **Time**: 8-10 hours
+   - **Status**: ✅ Validated with 8 developer interviews
+
+3. **[Debugging Production Issue](03-debugging-production-issue.md)**
+   - **Persona**: Application Developer
+   - **Scenario**: Investigating and resolving production alert
+   - **Key Pain Points**: Difficult log search, disconnected tools, lack of root cause suggestions
+   - **Time**: 60-90 minutes
+   - **Status**: ✅ Validated with 8 developer interviews and incident observations
+
+### Platform Engagement Workflows
+
+4. **[Requesting Platform Feature](04-requesting-platform-feature.md)**
+   - **Persona**: Application Developer
+   - **Scenario**: Requesting canary deployment capability
+   - **Key Pain Points**: Black box waiting, no roadmap visibility, sparse communication
+   - **Time**: 2-3 months
+   - **Status**: ✅ Validated with 10 user interviews
+
+5. **[Contributing to Platform](05-contributing-to-platform.md)**
+   - **Persona**: Application Developer (Experienced)
+   - **Scenario**: Contributing reusable service template
+   - **Key Pain Points**: Unclear guidelines, imposter syndrome, no usage visibility
+   - **Time**: 2-3 weeks
+   - **Status**: ✅ Validated with 6 contributor interviews
 
 ## Best Practices
 
