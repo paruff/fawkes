@@ -193,6 +193,10 @@ module "eks" {
   # v21 API changes: cluster_enabled_log_types -> enabled_log_types
   enabled_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
+  # CloudWatch log group configuration (maintained from v19)
+  create_cloudwatch_log_group            = true
+  cloudwatch_log_group_retention_in_days = 7
+
   # v21 API changes: cluster_encryption_config -> encryption_config (new object structure)
   encryption_config = var.kms_key_arn == null ? null : {
     provider_key_arn = var.kms_key_arn
