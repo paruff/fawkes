@@ -1341,6 +1341,8 @@
       
         
       
+        
+      
     
     
     
@@ -1416,6 +1418,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/security/quality-gates-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Gates Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1432,6 +1462,8 @@
   
     
     
+      
+        
       
         
       
@@ -1499,6 +1531,34 @@
     
   
     Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/development/code-quality-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Quality Standards
   
 
     
@@ -4518,6 +4578,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#3-code-quality-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Code Quality Standards
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4668,6 +4739,17 @@
     <span class="md-ellipsis">
       
         2. Development Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-code-quality-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Code Quality Standards
       
     </span>
   </a>
@@ -4826,6 +4908,22 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 </tr>
 </tbody>
 </table>
+<h3 id="3-code-quality-standards">3. Code Quality Standards</h3>
+<p>All contributions must meet our code quality standards:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># One-time setup: Install pre-commit hooks</span>
+make<span class="w"> </span>pre-commit-setup
+
+<span class="c1"># Before committing: Run linters</span>
+make<span class="w"> </span>lint
+
+<span class="c1"># Pre-commit will automatically run on git commit</span>
+</code></pre></div>
+<p><strong>All code must</strong>:
+- Pass automated linting (Bash, Python, Go, YAML, JSON, Markdown, Terraform)
+- Pass security scanning (secrets detection, SAST, container scanning)
+- Follow language-specific style guides
+- Include appropriate tests</p>
+<p>📖 <strong>See</strong>: <a href="../how-to/development/code-quality-standards/">Code Quality Standards</a> for detailed requirements</p>
 <h2 id="adding-new-content">Adding New Content</h2>
 <h3 id="documentation">Documentation</h3>
 <div class="highlight"><pre><span></span><code>---

@@ -1343,6 +1343,8 @@
       
         
       
+        
+      
     
     
     
@@ -1418,6 +1420,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/security/quality-gates-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Gates Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1434,6 +1464,8 @@
   
     
     
+      
+        
       
         
       
@@ -1501,6 +1533,34 @@
     
   
     Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/development/code-quality-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Quality Standards
   
 
     
@@ -5345,8 +5405,8 @@
 3. Re-test every application
 4. Re-deploy every application
 5. Hope you found all the Dockerfiles (did you check that archived repo?)</p>
-<p><strong>Time to Patch</strong>: Days to weeks<br />
-<strong>MTTR Impact</strong>: ⬆️ (High)<br />
+<p><strong>Time to Patch</strong>: Days to weeks
+<strong>MTTR Impact</strong>: ⬆️ (High)
 <strong>Deployment Frequency</strong>: ⬇️ (Slowed by rebuild toil)</p>
 <h3 id="the-works-on-my-machine-syndrome">The "Works on My Machine" Syndrome</h3>
 <p>Developers optimize for local development:
@@ -5386,8 +5446,8 @@ pack<span class="w"> </span>build<span class="w"> </span>my-app<span class="w"> 
 3. New image layers swapped in <strong>without rebuilding</strong>
 4. Push updated image to registry
 5. Deploy with confidence (app layers untouched)</p>
-<p><strong>Time to Patch</strong>: Minutes<br />
-<strong>MTTR Impact</strong>: ⬇️ (Low)<br />
+<p><strong>Time to Patch</strong>: Minutes
+<strong>MTTR Impact</strong>: ⬇️ (Low)
 <strong>Deployment Frequency</strong>: Maintains high (no rebuild bottleneck)</p>
 <pre class="mermaid"><code>graph TB
     A[App Layers] --&gt;|Unchanged| B[New Image]
@@ -5586,7 +5646,7 @@ Developers:
 <li><strong>Re-deploy</strong> - 300 deployments over 2 weeks</li>
 <li><strong>Miss stragglers</strong> - That archived repo? Still vulnerable</li>
 </ol>
-<p><strong>Time to Remediate</strong>: 2-3 weeks<br />
+<p><strong>Time to Remediate</strong>: 2-3 weeks
 <strong>Human Effort</strong>: Hundreds of developer-hours</p>
 <h3 id="buildpack-world-response">Buildpack World Response</h3>
 <ol>
@@ -5597,18 +5657,18 @@ Developers:
 <li><strong>Automated deployment</strong> - GitOps syncs new images</li>
 <li><strong>Complete coverage</strong> - Every Java app patched automatically</li>
 </ol>
-<p><strong>Time to Remediate</strong>: 2-3 days<br />
+<p><strong>Time to Remediate</strong>: 2-3 days
 <strong>Human Effort</strong>: One platform engineer</p>
 <p><strong>This is the promise of Buildpacks</strong>: When a platform team of 3 can patch 300 applications faster than 300 developers, you've achieved leverage.</p>
 <h2 id="philosophical-underpinnings">Philosophical Underpinnings</h2>
 <h3 id="principle-1-convention-over-configuration">Principle 1: Convention Over Configuration</h3>
-<p><strong>Dockerfile Philosophy</strong>: "Give developers full control; they'll make good choices."<br />
+<p><strong>Dockerfile Philosophy</strong>: "Give developers full control; they'll make good choices."
 <strong>Reality</strong>: Developers copy-paste, cargo-cult, and move fast (breaking things).</p>
-<p><strong>Buildpack Philosophy</strong>: "Encode best practices; let developers override when necessary."<br />
+<p><strong>Buildpack Philosophy</strong>: "Encode best practices; let developers override when necessary."
 <strong>Reality</strong>: 90% follow convention happily. 10% understand enough to safely override.</p>
 <h3 id="principle-2-separation-of-concerns">Principle 2: Separation of Concerns</h3>
 <p><strong>Dockerfile</strong>: Developer is responsible for OS, runtime, dependencies, app code, optimization, security.</p>
-<p><strong>Buildpack</strong>: 
+<p><strong>Buildpack</strong>:
 - <strong>Platform Team</strong>: Maintains OS, runtime, build tools (centralized expertise)
 - <strong>Developer</strong>: Focuses on application code and business logic
 - <strong>Clear Boundary</strong>: <code>package.json</code> is the interface; everything below is abstracted</p>
@@ -5616,7 +5676,7 @@ Developers:
 <p><strong>The Formula:</strong>
 <div class="highlight"><pre><span></span><code>Operational Efficiency = (Standard Patterns) / (Custom Snowflakes)
 </code></pre></div></p>
-<p>100 unique Dockerfiles = 100 maintenance burdens<br />
+<p>100 unique Dockerfiles = 100 maintenance burdens
 100 apps using 1 buildpack = 1 maintenance point</p>
 <p><strong>This is why platforms exist</strong>: To amortize expertise across many teams.</p>
 <h2 id="addressing-common-objections">Addressing Common Objections</h2>
@@ -5629,7 +5689,7 @@ Developers:
 </ol>
 <p><strong>Buildpacks are for scale</strong>, not because we doubt your skills.</p>
 <h3 id="buildpacks-are-a-black-box-i-dont-trust-what-i-dont-understand">"Buildpacks are a black box; I don't trust what I don't understand."</h3>
-<p><strong>Response</strong>: 
+<p><strong>Response</strong>:
 1. <strong>Buildpacks are open source</strong> - <a href="https://github.com/paketo-buildpacks">Paketo Buildpacks on GitHub</a>
 2. <strong>Full transparency</strong> - Run <code>pack build --verbose</code> to see every command
 3. <strong>SBOM generated</strong> - Bill of Materials shows exactly what's in your image
@@ -5671,7 +5731,7 @@ Developers:
 <li><strong>Security is a platform concern</strong> - Not every team's homework</li>
 <li><strong>Convention liberates</strong> - By removing low-level decisions, we free developers to focus on business value</li>
 </ol>
-<p>The question isn't "Can I write a better Dockerfile than a buildpack?" (you might).<br />
+<p>The question isn't "Can I write a better Dockerfile than a buildpack?" (you might).
 The question is "Can I maintain 50 better Dockerfiles, patch them in hours during a CVE, and train my whole team to do the same?" (you can't).</p>
 <p><strong>Buildpacks are the Golden Path because they scale.</strong></p>
 <p>And when you need to step off the Golden Path? Dockerfiles still exist. The door is always open—we've just made it so most people don't need to walk through it.</p>

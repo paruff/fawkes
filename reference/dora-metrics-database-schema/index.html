@@ -1337,6 +1337,8 @@
       
         
       
+        
+      
     
     
     
@@ -1412,6 +1414,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/security/quality-gates-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Gates Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1428,6 +1458,8 @@
   
     
     
+      
+        
       
         
       
@@ -1495,6 +1527,34 @@
     
   
     Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/development/code-quality-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Quality Standards
   
 
     
@@ -4803,9 +4863,9 @@
 <h1 id="dora-metrics-database-schema">DORA Metrics Database Schema</h1>
 <h2 id="overview">Overview</h2>
 <p>The DORA Metrics Service uses MySQL 8.0 as its primary data store. DevLake creates and manages multiple tables to store raw data from various sources and calculated DORA metrics.</p>
-<p><strong>Database Name</strong>: <code>lake</code><br />
-<strong>Character Set</strong>: UTF-8 (utf8mb4)<br />
-<strong>Engine</strong>: InnoDB<br />
+<p><strong>Database Name</strong>: <code>lake</code>
+<strong>Character Set</strong>: UTF-8 (utf8mb4)
+<strong>Engine</strong>: InnoDB
 <strong>Managed By</strong>: DevLake automatic migrations</p>
 <hr />
 <h2 id="schema-diagram">Schema Diagram</h2>
@@ -5066,22 +5126,22 @@
 <p>DevLake creates views for pre-calculated DORA metrics.</p>
 <h3 id="v_dora_deployment_frequency"><code>v_dora_deployment_frequency</code></h3>
 <div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">v_dora_deployment_frequency</span><span class="w"> </span><span class="k">AS</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">cicd_scope_id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">project_id</span><span class="p">,</span>
 <span class="w">    </span><span class="n">environment</span><span class="p">,</span>
 <span class="w">    </span><span class="nb">DATE</span><span class="p">(</span><span class="n">finished_date</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">deployment_date</span><span class="p">,</span>
 <span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">deployment_count</span><span class="p">,</span>
 <span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">deployments_per_day</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">deployments</span>
-<span class="k">WHERE</span><span class="w"> </span>
-<span class="w">    </span><span class="k">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;SUCCESS&#39;</span><span class="w"> </span>
+<span class="k">WHERE</span>
+<span class="w">    </span><span class="k">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;SUCCESS&#39;</span>
 <span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;production&#39;</span>
 <span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">finished_date</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
 <span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">cicd_scope_id</span><span class="p">,</span><span class="w"> </span><span class="n">environment</span><span class="p">,</span><span class="w"> </span><span class="nb">DATE</span><span class="p">(</span><span class="n">finished_date</span><span class="p">);</span>
 </code></pre></div>
 <h3 id="v_dora_lead_time"><code>v_dora_lead_time</code></h3>
 <div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">v_dora_lead_time</span><span class="w"> </span><span class="k">AS</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">d</span><span class="p">.</span><span class="n">cicd_scope_id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">project_id</span><span class="p">,</span>
 <span class="w">    </span><span class="n">d</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">deployment_id</span><span class="p">,</span>
 <span class="w">    </span><span class="n">d</span><span class="p">.</span><span class="n">commit_sha</span><span class="p">,</span>
@@ -5095,7 +5155,7 @@
 </code></pre></div>
 <h3 id="v_dora_cfr"><code>v_dora_cfr</code></h3>
 <div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">v_dora_cfr</span><span class="w"> </span><span class="k">AS</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">cicd_scope_id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">project_id</span><span class="p">,</span>
 <span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">total_deployments</span><span class="p">,</span>
 <span class="w">    </span><span class="k">SUM</span><span class="p">(</span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="k">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;FAILURE&#39;</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">END</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">failed_deployments</span><span class="p">,</span>
@@ -5106,7 +5166,7 @@
 </code></pre></div>
 <h3 id="v_dora_mttr"><code>v_dora_mttr</code></h3>
 <div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">v_dora_mttr</span><span class="w"> </span><span class="k">AS</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">i</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">incident_id</span><span class="p">,</span>
 <span class="w">    </span><span class="n">i</span><span class="p">.</span><span class="n">severity</span><span class="p">,</span>
 <span class="w">    </span><span class="n">i</span><span class="p">.</span><span class="n">created_date</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">incident_created</span><span class="p">,</span>
@@ -5120,19 +5180,19 @@
 <h2 id="indexes">Indexes</h2>
 <p>Performance indexes for common DORA metric queries:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Deployment frequency queries</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_deployments_frequency</span><span class="w"> </span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_deployments_frequency</span>
 <span class="k">ON</span><span class="w"> </span><span class="n">deployments</span><span class="p">(</span><span class="n">cicd_scope_id</span><span class="p">,</span><span class="w"> </span><span class="n">environment</span><span class="p">,</span><span class="w"> </span><span class="k">result</span><span class="p">,</span><span class="w"> </span><span class="n">finished_date</span><span class="p">);</span>
 
 <span class="c1">-- Lead time queries</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_deployments_leadtime</span><span class="w"> </span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_deployments_leadtime</span>
 <span class="k">ON</span><span class="w"> </span><span class="n">deployments</span><span class="p">(</span><span class="n">commit_sha</span><span class="p">,</span><span class="w"> </span><span class="n">finished_date</span><span class="p">);</span>
 
 <span class="c1">-- CFR queries</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_deployments_cfr</span><span class="w"> </span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_deployments_cfr</span>
 <span class="k">ON</span><span class="w"> </span><span class="n">deployments</span><span class="p">(</span><span class="n">cicd_scope_id</span><span class="p">,</span><span class="w"> </span><span class="n">environment</span><span class="p">,</span><span class="w"> </span><span class="k">result</span><span class="p">);</span>
 
 <span class="c1">-- MTTR queries</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_incidents_mttr</span><span class="w"> </span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_incidents_mttr</span>
 <span class="k">ON</span><span class="w"> </span><span class="n">incidents</span><span class="p">(</span><span class="n">severity</span><span class="p">,</span><span class="w"> </span><span class="n">created_date</span><span class="p">,</span><span class="w"> </span><span class="n">resolution_date</span><span class="p">);</span>
 </code></pre></div>
 <hr />
@@ -5221,7 +5281,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <hr />
 <h2 id="monitoring-database-health">Monitoring Database Health</h2>
 <h3 id="check-table-sizes">Check Table Sizes</h3>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span>
 <span class="w">    </span><span class="k">table_name</span><span class="p">,</span>
 <span class="w">    </span><span class="n">ROUND</span><span class="p">(((</span><span class="n">data_length</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">index_length</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">size_mb</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">TABLES</span>
@@ -5229,7 +5289,7 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">size_mb</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="check-index-usage">Check Index Usage</h3>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span>
 <span class="w">    </span><span class="n">table_schema</span><span class="p">,</span>
 <span class="w">    </span><span class="k">table_name</span><span class="p">,</span>
 <span class="w">    </span><span class="n">index_name</span><span class="p">,</span>
@@ -5244,8 +5304,8 @@ kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </sp
 <span class="k">SET</span><span class="w"> </span><span class="k">GLOBAL</span><span class="w"> </span><span class="n">long_query_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
 
 <span class="c1">-- View slow queries</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">mysql</span><span class="p">.</span><span class="n">slow_log</span><span class="w"> </span>
-<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">query_time</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">mysql</span><span class="p">.</span><span class="n">slow_log</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">query_time</span><span class="w"> </span><span class="k">DESC</span>
 <span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
 </code></pre></div>
 <hr />

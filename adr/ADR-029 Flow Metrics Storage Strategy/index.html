@@ -1337,6 +1337,8 @@
       
         
       
+        
+      
     
     
     
@@ -1412,6 +1414,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/security/quality-gates-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Gates Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1428,6 +1458,8 @@
   
     
     
+      
+        
       
         
       
@@ -1495,6 +1527,34 @@
     
   
     Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/development/code-quality-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Quality Standards
   
 
     
@@ -5290,7 +5350,7 @@
 
 <span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_webhook_events_source</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">webhook_events</span><span class="p">(</span><span class="k">source</span><span class="p">,</span><span class="w"> </span><span class="n">event_type</span><span class="p">);</span>
 <span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_webhook_events_received_at</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">webhook_events</span><span class="p">(</span><span class="n">received_at</span><span class="p">);</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_webhook_events_processing_status</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">webhook_events</span><span class="p">(</span><span class="n">processing_status</span><span class="p">)</span><span class="w"> </span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_webhook_events_processing_status</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">webhook_events</span><span class="p">(</span><span class="n">processing_status</span><span class="p">)</span>
 <span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">processing_status</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s1">&#39;processed&#39;</span><span class="p">;</span>
 
 <span class="c1">-- Partition webhook_events by month for performance</span>
@@ -5331,18 +5391,18 @@
 
 <span class="c1">-- Materialized view for current flow metrics (refreshed every 5 minutes)</span>
 <span class="k">CREATE</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">current_flow_metrics</span><span class="w"> </span><span class="k">AS</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">fi</span><span class="p">.</span><span class="n">team_id</span><span class="p">,</span>
 <span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;in_progress&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">current_wip</span><span class="p">,</span>
 <span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">completed_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;7 days&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">completed_last_7d</span><span class="p">,</span>
 <span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">completed_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;30 days&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">completed_last_30d</span><span class="p">,</span>
 
 <span class="w">    </span><span class="c1">-- Flow time percentiles (last 30 days)</span>
-<span class="w">    </span><span class="n">PERCENTILE_CONT</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="n">WITHIN</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span>
+<span class="w">    </span><span class="n">PERCENTILE_CONT</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="n">WITHIN</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span>
 <span class="w">        </span><span class="k">EXTRACT</span><span class="p">(</span><span class="n">EPOCH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="n">fi</span><span class="p">.</span><span class="n">completed_at</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">created_at</span><span class="p">))</span><span class="o">/</span><span class="mi">3600</span>
 <span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">completed_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;30 days&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">flow_time_p50_hours</span><span class="p">,</span>
 
-<span class="w">    </span><span class="n">PERCENTILE_CONT</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">95</span><span class="p">)</span><span class="w"> </span><span class="n">WITHIN</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span>
+<span class="w">    </span><span class="n">PERCENTILE_CONT</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">95</span><span class="p">)</span><span class="w"> </span><span class="n">WITHIN</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span>
 <span class="w">        </span><span class="k">EXTRACT</span><span class="p">(</span><span class="n">EPOCH</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="n">fi</span><span class="p">.</span><span class="n">completed_at</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">created_at</span><span class="p">))</span><span class="o">/</span><span class="mi">3600</span>
 <span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="n">FILTER</span><span class="w"> </span><span class="p">(</span><span class="k">WHERE</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">completed_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;30 days&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">flow_time_p95_hours</span><span class="p">,</span>
 
@@ -5591,7 +5651,7 @@ PostgreSQL (90+ days old)
 <span class="n">VALUES</span> <span class="p">(</span><span class="s1">&#39;github&#39;</span><span class="p">,</span> <span class="s1">&#39;pull_request.opened&#39;</span><span class="p">,</span> <span class="s1">&#39;{&quot;pr_number&quot;: 456, ...}&#39;</span><span class="p">);</span>
 
 <span class="c1"># Step 2: Identify or create flow item</span>
-<span class="n">SELECT</span> <span class="nb">id</span> <span class="n">FROM</span> <span class="n">flow_items</span> 
+<span class="n">SELECT</span> <span class="nb">id</span> <span class="n">FROM</span> <span class="n">flow_items</span>
 <span class="n">WHERE</span> <span class="n">external_id</span> <span class="o">=</span> <span class="s1">&#39;sample-app#456&#39;</span> <span class="n">AND</span> <span class="n">team_id</span> <span class="o">=</span> <span class="s1">&#39;alpha&#39;</span><span class="p">;</span>
 
 <span class="c1"># Step 3: Create stage transition</span>
@@ -5599,7 +5659,7 @@ PostgreSQL (90+ days old)
 <span class="n">VALUES</span> <span class="p">(</span><span class="s1">&#39;uuid-123&#39;</span><span class="p">,</span> <span class="s1">&#39;development&#39;</span><span class="p">,</span> <span class="s1">&#39;code_review&#39;</span><span class="p">,</span> <span class="s1">&#39;2025-01-15T10:30:00Z&#39;</span><span class="p">);</span>
 
 <span class="c1"># Step 4: Update flow item current stage</span>
-<span class="n">UPDATE</span> <span class="n">flow_items</span> 
+<span class="n">UPDATE</span> <span class="n">flow_items</span>
 <span class="n">SET</span> <span class="n">current_stage</span> <span class="o">=</span> <span class="s1">&#39;code_review&#39;</span><span class="p">,</span> <span class="n">updated_at</span> <span class="o">=</span> <span class="n">NOW</span><span class="p">()</span>
 <span class="n">WHERE</span> <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;uuid-123&#39;</span><span class="p">;</span>
 
@@ -5633,7 +5693,7 @@ PostgreSQL (90+ days old)
 <span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">flow_items</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">external_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;USER-123&#39;</span><span class="p">;</span>
 
 <span class="c1">-- All stage transitions</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">st</span><span class="p">.</span><span class="n">from_stage</span><span class="p">,</span>
 <span class="w">    </span><span class="n">st</span><span class="p">.</span><span class="n">to_stage</span><span class="p">,</span>
 <span class="w">    </span><span class="n">st</span><span class="p">.</span><span class="n">transitioned_at</span><span class="p">,</span>
@@ -5644,7 +5704,7 @@ PostgreSQL (90+ days old)
 <span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">transitioned_at</span><span class="p">;</span>
 
 <span class="c1">-- Stage-level metrics</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">sm</span><span class="p">.</span><span class="n">stage</span><span class="p">,</span>
 <span class="w">    </span><span class="n">sm</span><span class="p">.</span><span class="n">started_at</span><span class="p">,</span>
 <span class="w">    </span><span class="n">sm</span><span class="p">.</span><span class="n">ended_at</span><span class="p">,</span>
@@ -5657,10 +5717,10 @@ PostgreSQL (90+ days old)
 <span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">sm</span><span class="p">.</span><span class="n">started_at</span><span class="p">;</span>
 
 <span class="c1">-- Calculate total flow efficiency</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="k">SUM</span><span class="p">(</span><span class="n">sm</span><span class="p">.</span><span class="n">active_time_seconds</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">total_active</span><span class="p">,</span>
 <span class="w">    </span><span class="k">SUM</span><span class="p">(</span><span class="n">sm</span><span class="p">.</span><span class="n">active_time_seconds</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">sm</span><span class="p">.</span><span class="n">wait_time_seconds</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">total_time</span><span class="p">,</span>
-<span class="w">    </span><span class="p">(</span><span class="k">SUM</span><span class="p">(</span><span class="n">sm</span><span class="p">.</span><span class="n">active_time_seconds</span><span class="p">)::</span><span class="nb">float</span><span class="w"> </span><span class="o">/</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="k">SUM</span><span class="p">(</span><span class="n">sm</span><span class="p">.</span><span class="n">active_time_seconds</span><span class="p">)::</span><span class="nb">float</span><span class="w"> </span><span class="o">/</span>
 <span class="w">     </span><span class="k">NULLIF</span><span class="p">(</span><span class="k">SUM</span><span class="p">(</span><span class="n">sm</span><span class="p">.</span><span class="n">active_time_seconds</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">sm</span><span class="p">.</span><span class="n">wait_time_seconds</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">flow_efficiency</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">stage_metrics</span><span class="w"> </span><span class="n">sm</span>
 <span class="k">JOIN</span><span class="w"> </span><span class="n">flow_items</span><span class="w"> </span><span class="n">fi</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">sm</span><span class="p">.</span><span class="n">flow_item_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fi</span><span class="p">.</span><span class="n">id</span>
@@ -5790,26 +5850,26 @@ Deletion Policy:
 <div class="highlight"><pre><span></span><code><span class="c1">-- Indexes for common query patterns</span>
 
 <span class="c1">-- Dashboard: Team metrics</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_flow_items_team_completed</span><span class="w"> </span>
-<span class="k">ON</span><span class="w"> </span><span class="n">flow_items</span><span class="p">(</span><span class="n">team_id</span><span class="p">,</span><span class="w"> </span><span class="n">completed_at</span><span class="p">)</span><span class="w"> </span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_flow_items_team_completed</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">flow_items</span><span class="p">(</span><span class="n">team_id</span><span class="p">,</span><span class="w"> </span><span class="n">completed_at</span><span class="p">)</span>
 <span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;completed&#39;</span><span class="p">;</span>
 
 <span class="c1">-- Dashboard: WIP count</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_flow_items_team_in_progress</span><span class="w"> </span>
-<span class="k">ON</span><span class="w"> </span><span class="n">flow_items</span><span class="p">(</span><span class="n">team_id</span><span class="p">)</span><span class="w"> </span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_flow_items_team_in_progress</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">flow_items</span><span class="p">(</span><span class="n">team_id</span><span class="p">)</span>
 <span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;in_progress&#39;</span><span class="p">;</span>
 
 <span class="c1">-- Drill-down: Flow item lookup</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_flow_items_external_id_hash</span><span class="w"> </span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_flow_items_external_id_hash</span>
 <span class="k">ON</span><span class="w"> </span><span class="n">flow_items</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">hash</span><span class="p">(</span><span class="n">external_id</span><span class="p">);</span>
 
 <span class="c1">-- Analytics: Stage efficiency</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_stage_metrics_stage_efficiency</span><span class="w"> </span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_stage_metrics_stage_efficiency</span>
 <span class="k">ON</span><span class="w"> </span><span class="n">stage_metrics</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span><span class="w"> </span><span class="n">flow_efficiency_percent</span><span class="p">);</span>
 
 <span class="c1">-- Webhook processing: Unprocessed events</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_webhook_events_pending</span><span class="w"> </span>
-<span class="k">ON</span><span class="w"> </span><span class="n">webhook_events</span><span class="p">(</span><span class="k">source</span><span class="p">,</span><span class="w"> </span><span class="n">received_at</span><span class="p">)</span><span class="w"> </span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_webhook_events_pending</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">webhook_events</span><span class="p">(</span><span class="k">source</span><span class="p">,</span><span class="w"> </span><span class="n">received_at</span><span class="p">)</span>
 <span class="k">WHERE</span><span class="w"> </span><span class="n">processing_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pending&#39;</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="2-materialized-views">2. Materialized Views</h3>
@@ -5822,7 +5882,7 @@ Deletion Policy:
 <span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
 
 <span class="c1">-- Schedule via pg_cron (every 5 minutes)</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">cron</span><span class="p">.</span><span class="n">schedule</span><span class="p">(</span><span class="s1">&#39;refresh-flow-metrics&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;*/5 * * * *&#39;</span><span class="p">,</span><span class="w"> </span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">cron</span><span class="p">.</span><span class="n">schedule</span><span class="p">(</span><span class="s1">&#39;refresh-flow-metrics&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;*/5 * * * *&#39;</span><span class="p">,</span>
 <span class="w">    </span><span class="s1">&#39;SELECT refresh_flow_metrics_view()&#39;</span><span class="p">);</span>
 </code></pre></div>
 <h3 id="3-partitioning">3. Partitioning</h3>
@@ -5881,9 +5941,9 @@ Deletion Policy:
 <span class="c1"># Good: Parameterized, prepared statement</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_team_metrics_good</span><span class="p">(</span><span class="n">team_id</span><span class="p">):</span>
     <span class="n">query</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">        SELECT * FROM daily_team_metrics </span>
-<span class="s2">        WHERE team_id = :team_id </span>
-<span class="s2">        ORDER BY metric_date DESC </span>
+<span class="s2">        SELECT * FROM daily_team_metrics</span>
+<span class="s2">        WHERE team_id = :team_id</span>
+<span class="s2">        ORDER BY metric_date DESC</span>
 <span class="s2">        LIMIT 30</span>
 <span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;team_id&quot;</span><span class="p">:</span> <span class="n">team_id</span><span class="p">})</span>
@@ -6039,7 +6099,7 @@ Deletion Policy:
 </ul>
 <p><strong>Diagnosis:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Check current connections</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">datname</span><span class="p">,</span>
 <span class="w">    </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">connections</span><span class="p">,</span>
 <span class="w">    </span><span class="n">usename</span>
@@ -6049,7 +6109,7 @@ Deletion Policy:
 <span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">connections</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 
 <span class="c1">-- Check long-running queries</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">pid</span><span class="p">,</span>
 <span class="w">    </span><span class="n">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">pg_stat_activity</span><span class="p">.</span><span class="n">query_start</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">duration</span><span class="p">,</span>
 <span class="w">    </span><span class="n">query</span><span class="p">,</span>
@@ -6063,8 +6123,8 @@ Deletion Policy:
 <ol>
 <li><strong>Immediate</strong>: Kill long-running queries if safe</li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_terminate_backend</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span><span class="w"> </span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_activity</span><span class="w"> </span>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_terminate_backend</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_activity</span>
 <span class="k">WHERE</span><span class="w"> </span><span class="n">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="n">problematic_pid</span><span class="o">&gt;</span><span class="p">;</span>
 </code></pre></div>
 <ol>
@@ -6096,7 +6156,7 @@ Deletion Policy:
 </ul>
 <p><strong>Diagnosis:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Find slow queries</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">query</span><span class="p">,</span>
 <span class="w">    </span><span class="n">calls</span><span class="p">,</span>
 <span class="w">    </span><span class="n">mean_exec_time</span><span class="p">,</span>
@@ -6108,7 +6168,7 @@ Deletion Policy:
 <span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
 
 <span class="c1">-- Check for missing indexes</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">schemaname</span><span class="p">,</span>
 <span class="w">    </span><span class="n">tablename</span><span class="p">,</span>
 <span class="w">    </span><span class="n">seq_scan</span><span class="p">,</span>
@@ -6122,7 +6182,7 @@ Deletion Policy:
 <span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">seq_tup_read</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 
 <span class="c1">-- Check table bloat</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">schemaname</span><span class="p">,</span>
 <span class="w">    </span><span class="n">tablename</span><span class="p">,</span>
 <span class="w">    </span><span class="n">pg_size_pretty</span><span class="p">(</span><span class="n">pg_total_relation_size</span><span class="p">(</span><span class="n">schemaname</span><span class="o">||</span><span class="s1">&#39;.&#39;</span><span class="o">||</span><span class="n">tablename</span><span class="p">))</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">size</span><span class="p">,</span>
@@ -6158,7 +6218,7 @@ Deletion Policy:
 </ol>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Create aggregated table for better performance</span>
 <span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">team_metrics_summary</span><span class="w"> </span><span class="k">AS</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">team_id</span><span class="p">,</span>
 <span class="w">    </span><span class="n">date_trunc</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">completed_at</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nb">date</span><span class="p">,</span>
 <span class="w">    </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">items_completed</span><span class="p">,</span>
@@ -6186,7 +6246,7 @@ Deletion Policy:
 </ul>
 <p><strong>Diagnosis:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Check backlog size</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="k">source</span><span class="p">,</span>
 <span class="w">    </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">pending_count</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">webhook_events</span>
@@ -6194,7 +6254,7 @@ Deletion Policy:
 <span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">source</span><span class="p">;</span>
 
 <span class="c1">-- Check for failures</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="k">source</span><span class="p">,</span>
 <span class="w">    </span><span class="n">event_type</span><span class="p">,</span>
 <span class="w">    </span><span class="n">error_message</span><span class="p">,</span>
@@ -6206,7 +6266,7 @@ Deletion Policy:
 <span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">failure_count</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 
 <span class="c1">-- Check processing rate</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">date_trunc</span><span class="p">(</span><span class="s1">&#39;minute&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">processed_at</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">minute</span><span class="p">,</span>
 <span class="w">    </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">processed_count</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">webhook_events</span>
@@ -6268,14 +6328,14 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 </ul>
 <p><strong>Diagnosis:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Check database sizes</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">datname</span><span class="p">,</span>
 <span class="w">    </span><span class="n">pg_size_pretty</span><span class="p">(</span><span class="n">pg_database_size</span><span class="p">(</span><span class="n">datname</span><span class="p">))</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">size</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">pg_database</span>
 <span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pg_database_size</span><span class="p">(</span><span class="n">datname</span><span class="p">)</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 
 <span class="c1">-- Check table sizes</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">schemaname</span><span class="p">,</span>
 <span class="w">    </span><span class="n">tablename</span><span class="p">,</span>
 <span class="w">    </span><span class="n">pg_size_pretty</span><span class="p">(</span><span class="n">pg_total_relation_size</span><span class="p">(</span><span class="n">schemaname</span><span class="o">||</span><span class="s1">&#39;.&#39;</span><span class="o">||</span><span class="n">tablename</span><span class="p">))</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">total_size</span><span class="p">,</span>
@@ -6286,11 +6346,11 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 <span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pg_total_relation_size</span><span class="p">(</span><span class="n">schemaname</span><span class="o">||</span><span class="s1">&#39;.&#39;</span><span class="o">||</span><span class="n">tablename</span><span class="p">)</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 
 <span class="c1">-- Check WAL size</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">pg_size_pretty</span><span class="p">(</span><span class="n">pg_wal_lsn_diff</span><span class="p">(</span><span class="n">pg_current_wal_lsn</span><span class="p">(),</span><span class="w"> </span><span class="s1">&#39;0/0&#39;</span><span class="p">))</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">wal_size</span><span class="p">;</span>
 
 <span class="c1">-- Check bloat</span>
-<span class="k">SELECT</span><span class="w"> </span>
+<span class="k">SELECT</span>
 <span class="w">    </span><span class="n">schemaname</span><span class="p">,</span>
 <span class="w">    </span><span class="n">tablename</span><span class="p">,</span>
 <span class="w">    </span><span class="n">pg_size_pretty</span><span class="p">(</span><span class="n">pg_total_relation_size</span><span class="p">(</span><span class="n">schemaname</span><span class="o">||</span><span class="s1">&#39;.&#39;</span><span class="o">||</span><span class="n">tablename</span><span class="p">))</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">size</span><span class="p">,</span>
@@ -6602,7 +6662,7 @@ python<span class="w"> </span>scripts/validate_runbooks.py
 <span class="w">      </span><span class="c1"># Flow Time P50 - Pre-calculate percentile</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flow_time_p50_hours:team</span>
 <span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">histogram_quantile(0.5, </span>
+<span class="w">          </span><span class="no">histogram_quantile(0.5,</span>
 <span class="w">            </span><span class="no">sum by (team, le) (</span>
 <span class="w">              </span><span class="no">rate(flow_time_seconds_bucket[30d])</span>
 <span class="w">            </span><span class="no">)</span>
@@ -6611,7 +6671,7 @@ python<span class="w"> </span>scripts/validate_runbooks.py
 <span class="w">      </span><span class="c1"># Flow Time P95</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flow_time_p95_hours:team</span>
 <span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">histogram_quantile(0.95, </span>
+<span class="w">          </span><span class="no">histogram_quantile(0.95,</span>
 <span class="w">            </span><span class="no">sum by (team, le) (</span>
 <span class="w">              </span><span class="no">rate(flow_time_seconds_bucket[30d])</span>
 <span class="w">            </span><span class="no">)</span>
