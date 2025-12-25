@@ -19,22 +19,16 @@ import asyncpg
 # NOTE: sys.path modification is a temporary solution for script execution
 # In production, install as package: pip install -e .
 # Add parent directory to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from integrations.mattermost import send_surveys_to_users, send_reminders
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Configuration
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://nps:nps@db-nps-dev-rw.fawkes.svc.cluster.local:5432/nps_db"
-)
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://nps:nps@db-nps-dev-rw.fawkes.svc.cluster.local:5432/nps_db")
 BASE_SURVEY_URL = os.getenv("BASE_SURVEY_URL", "http://nps.local/survey")
 MATTERMOST_BOT_USER_ID = os.getenv("MATTERMOST_BOT_USER_ID", "")
 
@@ -67,13 +61,17 @@ async def get_all_users_from_backstage() -> list:
 async def create_campaign(conn: asyncpg.Connection, quarter: str, year: int) -> int:
     """Create a new survey campaign."""
     try:
-        campaign_id = await conn.fetchval("""
+        campaign_id = await conn.fetchval(
+            """
             INSERT INTO survey_campaigns (quarter, year)
             VALUES ($1, $2)
             ON CONFLICT (quarter, year) DO UPDATE
             SET started_at = CURRENT_TIMESTAMP
             RETURNING id
-        """, quarter, year)
+        """,
+            quarter,
+            year,
+        )
 
         logger.info(f"Created/updated campaign: Q{quarter} {year} (ID: {campaign_id})")
         return campaign_id
@@ -82,18 +80,18 @@ async def create_campaign(conn: asyncpg.Connection, quarter: str, year: int) -> 
         raise
 
 
-async def update_campaign_stats(
-    conn: asyncpg.Connection,
-    campaign_id: int,
-    sent_count: int
-):
+async def update_campaign_stats(conn: asyncpg.Connection, campaign_id: int, sent_count: int):
     """Update campaign statistics."""
     try:
-        await conn.execute("""
+        await conn.execute(
+            """
             UPDATE survey_campaigns
             SET total_sent = total_sent + $2
             WHERE id = $1
-        """, campaign_id, sent_count)
+        """,
+            campaign_id,
+            sent_count,
+        )
 
         logger.info(f"Updated campaign {campaign_id}: +{sent_count} sent")
     except Exception as e:
@@ -108,12 +106,7 @@ async def send_test_surveys(db_pool: asyncpg.Pool):
         logger.error("MATTERMOST_BOT_USER_ID not set. Cannot send surveys.")
         return
 
-    results = await send_surveys_to_users(
-        db_pool,
-        TEST_USERS,
-        BASE_SURVEY_URL,
-        MATTERMOST_BOT_USER_ID
-    )
+    results = await send_surveys_to_users(db_pool, TEST_USERS, BASE_SURVEY_URL, MATTERMOST_BOT_USER_ID)
 
     logger.info(f"Test survey distribution complete: {results}")
 
@@ -140,17 +133,11 @@ async def send_all_surveys(db_pool: asyncpg.Pool):
         campaign_id = await create_campaign(conn, f"Q{quarter}", year)
 
     # Send surveys
-    results = await send_surveys_to_users(
-        db_pool,
-        users,
-        BASE_SURVEY_URL,
-        MATTERMOST_BOT_USER_ID,
-        campaign_id
-    )
+    results = await send_surveys_to_users(db_pool, users, BASE_SURVEY_URL, MATTERMOST_BOT_USER_ID, campaign_id)
 
     # Update campaign stats
     async with db_pool.acquire() as conn:
-        await update_campaign_stats(conn, campaign_id, results['sent'])
+        await update_campaign_stats(conn, campaign_id, results["sent"])
 
     logger.info(f"Survey distribution complete: {results}")
 
@@ -163,11 +150,7 @@ async def send_reminder_surveys(db_pool: asyncpg.Pool):
         logger.error("MATTERMOST_BOT_USER_ID not set. Cannot send reminders.")
         return
 
-    results = await send_reminders(
-        db_pool,
-        BASE_SURVEY_URL,
-        MATTERMOST_BOT_USER_ID
-    )
+    results = await send_reminders(db_pool, BASE_SURVEY_URL, MATTERMOST_BOT_USER_ID)
 
     logger.info(f"Reminder distribution complete: {results}")
 
@@ -175,21 +158,9 @@ async def send_reminder_surveys(db_pool: asyncpg.Pool):
 async def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(description="Send NPS surveys")
-    parser.add_argument(
-        "--test-users",
-        action="store_true",
-        help="Send surveys to test users only"
-    )
-    parser.add_argument(
-        "--all-users",
-        action="store_true",
-        help="Send surveys to all platform users"
-    )
-    parser.add_argument(
-        "--send-reminders",
-        action="store_true",
-        help="Send reminder surveys to non-respondents"
-    )
+    parser.add_argument("--test-users", action="store_true", help="Send surveys to test users only")
+    parser.add_argument("--all-users", action="store_true", help="Send surveys to all platform users")
+    parser.add_argument("--send-reminders", action="store_true", help="Send reminder surveys to non-respondents")
 
     args = parser.parse_args()
 

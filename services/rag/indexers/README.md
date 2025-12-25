@@ -9,6 +9,7 @@ This directory contains specialized indexers for different documentation sources
 Indexes documentation from GitHub repositories.
 
 **Features:**
+
 - Fetches repositories from organizations or specific repos
 - Extracts README and markdown files from `docs/` directories
 - Handles rate limiting automatically
@@ -45,6 +46,7 @@ python -m indexers.github \
 ```
 
 **Configuration:**
+
 - `--github-token` (required): GitHub personal access token
 - `--weaviate-url`: Weaviate instance URL (default: http://localhost:8080)
 - `--org`: GitHub organization name
@@ -60,6 +62,7 @@ The indexer automatically handles GitHub API rate limits and will wait when appr
 Indexes TechDocs from Backstage catalog.
 
 **Features:**
+
 - Fetches all catalog entities from Backstage API
 - Identifies entities with TechDocs
 - Parses markdown and HTML content
@@ -93,6 +96,7 @@ python -m indexers.techdocs \
 ```
 
 **Configuration:**
+
 - `--backstage-url` (required): Backstage instance URL
 - `--weaviate-url`: Weaviate instance URL (default: http://localhost:8080)
 - `--token`: Optional Backstage authentication token
@@ -100,6 +104,7 @@ python -m indexers.techdocs \
 - `--force-reindex`: Re-index even if unchanged
 
 **How it works:**
+
 1. Fetches all entities from Backstage catalog API
 2. Filters for entities with TechDocs annotations
 3. Retrieves TechDocs metadata and content
@@ -180,6 +185,7 @@ pytest tests/unit/indexers/ -v
 ### 1. GitHub Token Permissions
 
 Your GitHub token needs:
+
 - `repo` scope for private repositories
 - `public_repo` scope for public repositories only
 - `read:org` scope for organization repositories
@@ -190,7 +196,7 @@ Run indexers on a schedule using the CronJob:
 
 ```yaml
 # See platform/apps/rag-service/cronjob-indexing.yaml
-schedule: "0 2 * * *"  # Daily at 2 AM UTC
+schedule: "0 2 * * *" # Daily at 2 AM UTC
 ```
 
 ### 3. Rate Limiting
@@ -213,22 +219,26 @@ Indexers automatically detect changes using file hashes. Only changed documents 
 ### GitHub Indexer Issues
 
 **Rate limit exceeded:**
+
 - Wait for rate limit reset (indexer will do this automatically)
 - Use `--dry-run` to preview before indexing
 - Index specific repos instead of entire organization
 
 **Missing files:**
+
 - Check excluded patterns in `EXCLUDE_PATTERNS`
 - Verify file extensions in `MD_EXTENSIONS`
 
 ### TechDocs Indexer Issues
 
 **No TechDocs found:**
+
 - Verify entities have `backstage.io/techdocs-ref` annotation
 - Check TechDocs are built and published
 - Try accessing TechDocs in Backstage UI first
 
 **Authentication errors:**
+
 - Verify `--token` is valid
 - Check token has correct permissions
 - Some Backstage instances allow unauthenticated access
@@ -236,11 +246,13 @@ Indexers automatically detect changes using file hashes. Only changed documents 
 ### General Issues
 
 **Connection errors:**
+
 - Verify Weaviate is running: `curl http://localhost:8080/v1/.well-known/ready`
 - Check network connectivity
 - Verify URLs are correct
 
 **Out of memory:**
+
 - Reduce batch size in indexer code
 - Process fewer documents at once
 - Increase system resources

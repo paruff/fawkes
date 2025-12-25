@@ -16,15 +16,15 @@ from pathlib import Path
 
 # Configuration constants
 # Placeholder patterns for detecting template/example values (case-insensitive)
-PLACEHOLDER_PATTERNS = ['change_me', 'changeme', 'example.com', 'template_value', 'replace_with']
-REQUIRED_JCASC_SECTIONS = ['jenkins', 'securityRealm', 'authorizationStrategy']
-REQUIRED_K8S_CLOUD_FIELDS = ['name', 'namespace', 'jenkinsUrl', 'jenkinsTunnel']
+PLACEHOLDER_PATTERNS = ["change_me", "changeme", "example.com", "template_value", "replace_with"]
+REQUIRED_JCASC_SECTIONS = ["jenkins", "securityRealm", "authorizationStrategy"]
+REQUIRED_K8S_CLOUD_FIELDS = ["name", "namespace", "jenkinsUrl", "jenkinsTunnel"]
 
 
 def validate_yaml_syntax(file_path):
     """Validate YAML syntax."""
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             yaml.safe_load(f)
         print(f"✅ YAML syntax valid: {file_path}")
         return True
@@ -51,22 +51,22 @@ def check_required_sections(config, file_path):
 
 def check_kubernetes_cloud(config, file_path):
     """Check Kubernetes cloud configuration."""
-    if 'jenkins' not in config:
+    if "jenkins" not in config:
         return False
 
-    jenkins_config = config['jenkins']
-    if 'clouds' not in jenkins_config:
+    jenkins_config = config["jenkins"]
+    if "clouds" not in jenkins_config:
         print(f"⚠️  No clouds configured in {file_path}")
         return True  # Not a hard requirement
 
-    clouds = jenkins_config.get('clouds', [])
-    k8s_clouds = [c for c in clouds if 'kubernetes' in c]
+    clouds = jenkins_config.get("clouds", [])
+    k8s_clouds = [c for c in clouds if "kubernetes" in c]
 
     if not k8s_clouds:
         print(f"⚠️  No Kubernetes cloud configured in {file_path}")
         return True
 
-    k8s = k8s_clouds[0]['kubernetes']
+    k8s = k8s_clouds[0]["kubernetes"]
     missing = [f for f in REQUIRED_K8S_CLOUD_FIELDS if f not in k8s]
 
     if missing:
@@ -80,7 +80,7 @@ def check_kubernetes_cloud(config, file_path):
 def check_environment_variables(content, file_path):
     """Check that environment variables are used for sensitive data."""
     # Pattern for environment variable substitution in JCasC
-    env_var_pattern = r'\$\{[A-Z_]+\}'
+    env_var_pattern = r"\$\{[A-Z_]+\}"
 
     # Find all environment variable references
     env_vars = re.findall(env_var_pattern, content)
@@ -99,12 +99,12 @@ def check_no_hardcoded_credentials(content, file_path):
     """Check that no credentials are hardcoded."""
     # Patterns that might indicate hardcoded credentials
     suspicious_patterns = [
-        (r'password:\s*["\'](?!.*\$\{)[^"\']{8,}["\']', 'hardcoded password'),
-        (r'token:\s*["\'](?!.*\$\{)[a-zA-Z0-9]{20,}["\']', 'hardcoded token'),
-        (r'secret:\s*["\'](?!.*\$\{)[a-zA-Z0-9]{20,}["\']', 'hardcoded secret'),
-        (r'apiKey:\s*["\'](?!.*\$\{)[a-zA-Z0-9]{20,}["\']', 'hardcoded API key'),
-        (r'accessToken:\s*["\'](?!.*\$\{)[a-zA-Z0-9]{20,}["\']', 'hardcoded access token'),
-        (r'privateKey:\s*["\'](?!.*\$\{)[a-zA-Z0-9\+/=]{40,}["\']', 'hardcoded private key'),
+        (r'password:\s*["\'](?!.*\$\{)[^"\']{8,}["\']', "hardcoded password"),
+        (r'token:\s*["\'](?!.*\$\{)[a-zA-Z0-9]{20,}["\']', "hardcoded token"),
+        (r'secret:\s*["\'](?!.*\$\{)[a-zA-Z0-9]{20,}["\']', "hardcoded secret"),
+        (r'apiKey:\s*["\'](?!.*\$\{)[a-zA-Z0-9]{20,}["\']', "hardcoded API key"),
+        (r'accessToken:\s*["\'](?!.*\$\{)[a-zA-Z0-9]{20,}["\']', "hardcoded access token"),
+        (r'privateKey:\s*["\'](?!.*\$\{)[a-zA-Z0-9\+/=]{40,}["\']', "hardcoded private key"),
     ]
 
     issues = []
@@ -112,9 +112,9 @@ def check_no_hardcoded_credentials(content, file_path):
         matches = re.findall(pattern, content, re.IGNORECASE)
         if matches:
             # Filter out known placeholder patterns (case-insensitive)
-            real_matches = [m for m in matches
-                          if not any(placeholder.lower() in m.lower()
-                                   for placeholder in PLACEHOLDER_PATTERNS)]
+            real_matches = [
+                m for m in matches if not any(placeholder.lower() in m.lower() for placeholder in PLACEHOLDER_PATTERNS)
+            ]
             if real_matches:
                 issues.append(description)
 
@@ -136,7 +136,7 @@ def validate_jcasc_file(file_path):
 
     # Read file content
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             content = f.read()
     except Exception as e:
         print(f"❌ Error reading file {file_path}: {e}")
@@ -148,19 +148,19 @@ def validate_jcasc_file(file_path):
 
     # Load YAML for structure validation
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             config = yaml.safe_load(f)
     except Exception as e:
         print(f"❌ Error loading YAML from {file_path}: {e}")
         return False
 
     # Skip if it's a ConfigMap (check structure)
-    if isinstance(config, dict) and config.get('kind') == 'ConfigMap':
+    if isinstance(config, dict) and config.get("kind") == "ConfigMap":
         print(f"ℹ️  File is a ConfigMap, extracting JCasC data...")
-        if 'data' in config and 'jcasc.yaml' in config['data']:
+        if "data" in config and "jcasc.yaml" in config["data"]:
             # Parse the embedded YAML
             try:
-                config = yaml.safe_load(config['data']['jcasc.yaml'])
+                config = yaml.safe_load(config["data"]["jcasc.yaml"])
             except Exception as e:
                 print(f"❌ Error parsing embedded JCasC: {e}")
                 return False
@@ -183,8 +183,8 @@ def main():
     # Find all JCasC-related files
     base_path = Path(__file__).parent.parent
     jcasc_files = [
-        base_path / 'platform/apps/jenkins/jcasc.yaml',
-        base_path / 'platform/apps/jenkins/jenkins-casc-configmap.yaml',
+        base_path / "platform/apps/jenkins/jcasc.yaml",
+        base_path / "platform/apps/jenkins/jenkins-casc-configmap.yaml",
     ]
 
     print(f"\n{'='*70}")
@@ -210,5 +210,5 @@ def main():
         return 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

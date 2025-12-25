@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 class VariantConfig(BaseModel):
     """Configuration for an experiment variant"""
+
     name: str = Field(..., description="Variant name (e.g., 'control', 'variant-a')")
     allocation: float = Field(..., ge=0, le=1, description="Traffic allocation (0-1)")
     config: Dict[str, Any] = Field(default_factory=dict, description="Variant-specific configuration")
@@ -13,6 +14,7 @@ class VariantConfig(BaseModel):
 
 class ExperimentCreate(BaseModel):
     """Request model for creating an experiment"""
+
     name: str = Field(..., description="Experiment name")
     description: str = Field(..., description="Experiment description")
     hypothesis: str = Field(..., description="Hypothesis being tested")
@@ -25,6 +27,7 @@ class ExperimentCreate(BaseModel):
 
 class ExperimentUpdate(BaseModel):
     """Request model for updating an experiment"""
+
     description: Optional[str] = None
     traffic_allocation: Optional[float] = Field(None, ge=0, le=1)
     target_sample_size: Optional[int] = Field(None, ge=10)
@@ -32,6 +35,7 @@ class ExperimentUpdate(BaseModel):
 
 class ExperimentResponse(BaseModel):
     """Response model for experiment details"""
+
     id: str
     name: str
     description: str
@@ -52,6 +56,7 @@ class ExperimentResponse(BaseModel):
 
 class ExperimentList(BaseModel):
     """Response model for listing experiments"""
+
     experiments: List[ExperimentResponse]
     total: int
     skip: int
@@ -60,6 +65,7 @@ class ExperimentList(BaseModel):
 
 class VariantAssignment(BaseModel):
     """Response model for variant assignment"""
+
     experiment_id: str
     user_id: str
     variant: str
@@ -71,6 +77,7 @@ class VariantAssignment(BaseModel):
 
 class VariantStats(BaseModel):
     """Statistics for a single variant"""
+
     variant: str
     sample_size: int
     conversions: int
@@ -82,6 +89,7 @@ class VariantStats(BaseModel):
 
 class ExperimentStats(BaseModel):
     """Statistical analysis results for an experiment"""
+
     experiment_id: str
     experiment_name: str
     status: str

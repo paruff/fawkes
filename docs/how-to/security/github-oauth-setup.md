@@ -49,6 +49,7 @@ This guide walks through configuring GitHub OAuth authentication for Backstage, 
 ### Option A: Organization OAuth App (Recommended for Teams)
 
 1. Navigate to your GitHub organization settings:
+
    ```
    https://github.com/organizations/YOUR_ORG/settings/applications
    ```
@@ -56,6 +57,7 @@ This guide walks through configuring GitHub OAuth authentication for Backstage, 
 2. Click **"New OAuth App"** under OAuth Apps
 
 3. Fill in the application details:
+
    - **Application name**: `Fawkes Backstage - [Environment]`
      - Example: `Fawkes Backstage - Development` or `Fawkes Backstage - Production`
    - **Homepage URL**: Your Backstage URL
@@ -76,6 +78,7 @@ This guide walks through configuring GitHub OAuth authentication for Backstage, 
 ### Option B: Personal OAuth App (For Testing/Development)
 
 1. Navigate to your personal settings:
+
    ```
    https://github.com/settings/developers
    ```
@@ -192,6 +195,7 @@ kubectl get pods -n fawkes -l app.kubernetes.io/name=backstage
 ### Test Authentication Flow
 
 1. Access Backstage UI:
+
    - Local: http://backstage.127.0.0.1.nip.io or http://localhost:7007
    - Production: https://backstage.fawkes.idp
 
@@ -255,6 +259,7 @@ auth:
 **Cause**: The callback URL in GitHub OAuth app doesn't match the one Backstage is using.
 
 **Solution**:
+
 1. Check the URL in your GitHub OAuth app settings
 2. Ensure it matches exactly: `https://backstage.fawkes.idp/api/auth/github/handler/frame`
 3. Check for trailing slashes or http vs https mismatch
@@ -264,6 +269,7 @@ auth:
 **Cause**: Client ID or Client Secret is incorrect.
 
 **Solution**:
+
 1. Verify the secret values in Kubernetes:
    ```bash
    kubectl get secret backstage-oauth-credentials -n fawkes -o jsonpath='{.data.github-client-id}' | base64 -d
@@ -320,6 +326,7 @@ auth:
 ### 1. Separate OAuth Apps per Environment
 
 Create separate OAuth apps for each environment:
+
 - `Fawkes Backstage - Development` (http://localhost:7007)
 - `Fawkes Backstage - Staging` (https://backstage-staging.fawkes.idp)
 - `Fawkes Backstage - Production` (https://backstage.fawkes.idp)
@@ -327,6 +334,7 @@ Create separate OAuth apps for each environment:
 ### 2. Restrict Organization Access
 
 For organization OAuth apps, configure organization access:
+
 1. Go to OAuth app settings
 2. Under "Organization access", configure which organizations can use the app
 3. For internal platforms, restrict to your organization only
@@ -334,12 +342,14 @@ For organization OAuth apps, configure organization access:
 ### 3. Review Authorized Users
 
 Periodically review which users have authorized the application:
+
 1. Users can revoke access at: https://github.com/settings/applications
 2. Admins can view all authorized users in the OAuth app settings
 
 ### 4. Use Vault for Production Secrets
 
 Never commit OAuth client secrets to Git. Use one of:
+
 - External Secrets Operator with Vault (recommended)
 - Sealed Secrets
 - Cloud provider secret managers (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager)
@@ -347,6 +357,7 @@ Never commit OAuth client secrets to Git. Use one of:
 ### 5. Rotate Secrets Regularly
 
 Establish a rotation schedule:
+
 1. Generate new client secret in GitHub
 2. Update Kubernetes secret
 3. Restart Backstage

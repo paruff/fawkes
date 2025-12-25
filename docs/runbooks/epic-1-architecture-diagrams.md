@@ -625,6 +625,7 @@ Total Pipeline Time: ~10-15 minutes (for typical service)
 See the comprehensive security scanning pipeline diagram in [Architecture Documentation](../architecture.md#security-scanning-pipeline) section.
 
 Key security gates enforced in Epic 1:
+
 1. **Gitleaks**: Zero tolerance for hardcoded secrets
 2. **SonarQube**: Zero new vulnerabilities on main branch
 3. **OWASP Dependency Check**: CVSS ≥7 blocks build
@@ -1006,6 +1007,6 @@ Example Mermaid conversion available in `/docs/assets/diagrams/`.
 
 ## Change Log
 
-| Date | Version | Changes | Author |
-|------|---------|---------|--------|
-| 2024-12 | 1.0 | Initial Epic 1 architecture diagrams | Platform Team |
+| Date    | Version | Changes                              | Author        |
+| ------- | ------- | ------------------------------------ | ------------- |
+| 2024-12 | 1.0     | Initial Epic 1 architecture diagrams | Platform Team |

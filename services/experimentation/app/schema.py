@@ -8,6 +8,7 @@ from .database import Base
 
 class Experiment(Base):
     """Experiment database model"""
+
     __tablename__ = "experiments"
 
     id = Column(String, primary_key=True, index=True)
@@ -31,6 +32,7 @@ class Experiment(Base):
 
 class Assignment(Base):
     """Variant assignment database model"""
+
     __tablename__ = "assignments"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -47,6 +49,7 @@ class Assignment(Base):
 
 class Event(Base):
     """Event tracking database model"""
+
     __tablename__ = "events"
 
     id = Column(Integer, primary_key=True, index=True)

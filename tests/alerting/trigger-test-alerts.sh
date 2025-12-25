@@ -7,10 +7,10 @@ SMART_ALERTING_URL="${SMART_ALERTING_URL:-http://smart-alerting.fawkes.local}"
 
 # Check for jq
 if ! command -v jq &> /dev/null; then
-    echo "Warning: jq is not installed. Output will not be formatted."
-    JQ_AVAILABLE=false
+  echo "Warning: jq is not installed. Output will not be formatted."
+  JQ_AVAILABLE=false
 else
-    JQ_AVAILABLE=true
+  JQ_AVAILABLE=true
 fi
 
 echo "🔔 Triggering test alerts to Smart Alerting Service"
@@ -19,16 +19,16 @@ echo ""
 
 # Function to send alert
 send_alert() {
-    local alertname="$1"
-    local service="$2"
-    local severity="$3"
-    local summary="$4"
+  local alertname="$1"
+  local service="$2"
+  local severity="$3"
+  local summary="$4"
 
-    echo "Sending alert: $alertname (severity: $severity, service: $service)"
+  echo "Sending alert: $alertname (severity: $severity, service: $service)"
 
-    response=$(curl -X POST "$SMART_ALERTING_URL/api/v1/alerts/generic" \
-        -H "Content-Type: application/json" \
-        -d "{
+  response=$(curl -X POST "$SMART_ALERTING_URL/api/v1/alerts/generic" \
+    -H "Content-Type: application/json" \
+    -d "{
             \"alerts\": [{
                 \"labels\": {
                     \"alertname\": \"$alertname\",
@@ -44,15 +44,15 @@ send_alert() {
                 \"status\": \"firing\"
             }]
         }" \
-        --silent --show-error)
+    --silent --show-error)
 
-    if [ "$JQ_AVAILABLE" = true ]; then
-        echo "$response" | jq .
-    else
-        echo "$response"
-    fi
+  if [ "$JQ_AVAILABLE" = true ]; then
+    echo "$response" | jq .
+  else
+    echo "$response"
+  fi
 
-    echo ""
+  echo ""
 }
 
 # Test 1: Send related alerts that should be grouped
@@ -101,11 +101,11 @@ echo "✅ Test alerts sent successfully!"
 echo ""
 echo "Verify results:"
 if [ "$JQ_AVAILABLE" = true ]; then
-    echo "  - View alert groups: curl $SMART_ALERTING_URL/api/v1/alert-groups | jq ."
-    echo "  - View statistics: curl $SMART_ALERTING_URL/api/v1/stats | jq ."
-    echo "  - View reduction: curl $SMART_ALERTING_URL/api/v1/stats/reduction | jq ."
+  echo "  - View alert groups: curl $SMART_ALERTING_URL/api/v1/alert-groups | jq ."
+  echo "  - View statistics: curl $SMART_ALERTING_URL/api/v1/stats | jq ."
+  echo "  - View reduction: curl $SMART_ALERTING_URL/api/v1/stats/reduction | jq ."
 else
-    echo "  - View alert groups: curl $SMART_ALERTING_URL/api/v1/alert-groups"
-    echo "  - View statistics: curl $SMART_ALERTING_URL/api/v1/stats"
-    echo "  - View reduction: curl $SMART_ALERTING_URL/api/v1/stats/reduction"
+  echo "  - View alert groups: curl $SMART_ALERTING_URL/api/v1/alert-groups"
+  echo "  - View statistics: curl $SMART_ALERTING_URL/api/v1/stats"
+  echo "  - View reduction: curl $SMART_ALERTING_URL/api/v1/stats/reduction"
 fi

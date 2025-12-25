@@ -9,7 +9,8 @@ from fastapi.testclient import TestClient
 # For now, just test the score calculation logic
 import sys
 import os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../.."))
 
 from app.main import calculate_score_type
 

@@ -110,6 +110,7 @@ https://surveys.fawkes.idp/nasa-tlx?task_type=deployment&user_id=your_user_id
 ```
 
 Query parameters:
+
 - `task_type`: Type of platform task (deployment, pr_review, incident_response, build, etc.)
 - `task_id` (optional): Specific identifier for the task
 - `user_id`: Your user identifier (for privacy-preserving analytics)
@@ -171,6 +172,7 @@ https://grafana.fawkes.idp/d/nasa-tlx-cognitive-load
 ```
 
 Visualizations include:
+
 - Overall workload gauge (0-100 scale)
 - Workload by task type (bar chart)
 - Six NASA-TLX dimensions (stat panels)
@@ -204,6 +206,7 @@ Overall Workload = (Mental + Physical + Temporal + (100 - Performance) + Effort 
 Note: Performance is inverted because higher performance is better, while higher scores on other dimensions indicate more demand.
 
 **Interpretation:**
+
 - 0-40: **Healthy** - Task has reasonable cognitive load
 - 40-60: **Warning** - Task is moderately demanding, consider improvements
 - 60-80: **Critical** - Task is very demanding, prioritize UX improvements
@@ -212,22 +215,27 @@ Note: Performance is inverted because higher performance is better, while higher
 ### Dimension-Specific Insights
 
 - **High Mental Demand**: Task requires complex thinking, many decisions, or unfamiliar concepts
-  - *Improvements*: Better documentation, simplified workflows, guided wizards
+
+  - _Improvements_: Better documentation, simplified workflows, guided wizards
 
 - **High Physical Demand**: Task requires excessive typing, clicking, or repetitive actions
-  - *Improvements*: Keyboard shortcuts, automation, CLI tools, batch operations
+
+  - _Improvements_: Keyboard shortcuts, automation, CLI tools, batch operations
 
 - **High Temporal Demand**: Task is time-pressured or has tight deadlines
-  - *Improvements*: Faster build times, parallel execution, progress indicators
+
+  - _Improvements_: Faster build times, parallel execution, progress indicators
 
 - **Low Performance**: Users struggle to complete the task successfully
-  - *Improvements*: Better error messages, validation, rollback capabilities
+
+  - _Improvements_: Better error messages, validation, rollback capabilities
 
 - **High Effort**: Task requires more work than it should
-  - *Improvements*: Automation, intelligent defaults, templates, code generation
+
+  - _Improvements_: Automation, intelligent defaults, templates, code generation
 
 - **High Frustration**: Task causes annoyance, stress, or discouragement
-  - *Improvements*: Fix bugs, improve error handling, reduce complexity, provide alternatives
+  - _Improvements_: Fix bugs, improve error handling, reduce complexity, provide alternatives
 
 ## Privacy & Ethics
 
@@ -242,12 +250,14 @@ Note: Performance is inverted because higher performance is better, while higher
 ### Ethical Use
 
 **Never use NASA-TLX data for:**
+
 - ❌ Individual performance reviews
 - ❌ Ranking or comparing developers
 - ❌ Hiring/firing decisions
 - ❌ Bonus or compensation
 
 **Always use NASA-TLX data for:**
+
 - ✅ Identifying platform improvement opportunities
 - ✅ Measuring impact of UX changes
 - ✅ Prioritizing platform roadmap

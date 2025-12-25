@@ -20,7 +20,7 @@ import requests
 from pytest_bdd import given, when, then, parsers, scenarios
 
 # Load all scenarios from the feature file
-scenarios('../features/prometheus-stack-deployment.feature')
+scenarios("../features/prometheus-stack-deployment.feature")
 
 
 def _kubectl_json(args: list[str]) -> Dict[str, Any]:
@@ -46,6 +46,7 @@ def _kubectl_text(args: list[str]) -> str:
 
 # Background steps
 
+
 @given("I have kubectl configured for the cluster")
 def kubectl_configured():
     """Verify kubectl is configured and can reach the cluster."""
@@ -55,14 +56,14 @@ def kubectl_configured():
 @given("the ingress-nginx controller is deployed and running")
 def ingress_nginx_running():
     """Verify ingress-nginx is running."""
-    data = _kubectl_json(["-n", "ingress-nginx", "get", "deployment",
-                          "ingress-nginx-controller", "-o", "json"])
+    data = _kubectl_json(["-n", "ingress-nginx", "get", "deployment", "ingress-nginx-controller", "-o", "json"])
     status = data.get("status", {})
     ready_replicas = status.get("readyReplicas", 0)
     assert ready_replicas > 0, "ingress-nginx controller not ready"
 
 
 # Namespace scenario steps
+
 
 @when("I check for the monitoring namespace")
 def check_monitoring_namespace(context: Dict):
@@ -95,11 +96,11 @@ def namespace_active(namespace: str, context: Dict):
 
 # ArgoCD Application scenario steps
 
+
 @given(parsers.cfparse('ArgoCD is deployed in namespace "{namespace}"'))
 def argocd_deployed(namespace: str):
     """Verify ArgoCD is deployed."""
-    data = _kubectl_json(["-n", namespace, "get", "deployment",
-                         "argocd-server", "-o", "json"])
+    data = _kubectl_json(["-n", namespace, "get", "deployment", "argocd-server", "-o", "json"])
     status = data.get("status", {})
     ready_replicas = status.get("readyReplicas", 0)
     assert ready_replicas > 0, "ArgoCD server not ready"
@@ -144,12 +145,12 @@ def application_synced(context: Dict):
 
 # Pods scenario steps
 
+
 @given(parsers.cfparse('kube-prometheus-stack is deployed in namespace "{namespace}"'))
 def prometheus_stack_deployed(namespace: str):
     """Verify kube-prometheus-stack is deployed."""
     try:
-        _kubectl_json(["-n", namespace, "get", "deployment",
-                      "prometheus-operator", "-o", "json"])
+        _kubectl_json(["-n", namespace, "get", "deployment", "prometheus-operator", "-o", "json"])
     except RuntimeError:
         pytest.skip("kube-prometheus-stack not deployed")
 
@@ -187,7 +188,7 @@ def pods_running(namespace: str, datatable, context: Dict):
         assert running_count > 0, f"No running pods found for component: {component}"
 
 
-@then(parsers.cfparse('all Prometheus pods should be in Ready state within {timeout:d} seconds'))
+@then(parsers.cfparse("all Prometheus pods should be in Ready state within {timeout:d} seconds"))
 def all_pods_ready(timeout: int, context: Dict):
     """Verify all Prometheus pods are ready within timeout."""
     start_time = time.time()
@@ -221,11 +222,11 @@ def all_pods_ready(timeout: int, context: Dict):
 
 # Prometheus scraping scenario steps
 
+
 @given("Prometheus is deployed and running")
 def prometheus_running():
     """Verify Prometheus is running."""
-    data = _kubectl_json(["-n", "monitoring", "get", "statefulset",
-                         "prometheus-prometheus", "-o", "json"])
+    data = _kubectl_json(["-n", "monitoring", "get", "statefulset", "prometheus-prometheus", "-o", "json"])
     status = data.get("status", {})
     ready_replicas = status.get("readyReplicas", 0)
     assert ready_replicas > 0, "Prometheus not ready"
@@ -259,12 +260,12 @@ def targets_include(datatable, context: Dict):
 
 # Storage scenario steps
 
+
 @given(parsers.cfparse('Prometheus is deployed in namespace "{namespace}"'))
 def prometheus_deployed_in_namespace(namespace: str):
     """Verify Prometheus is deployed in the namespace."""
     try:
-        _kubectl_json(["-n", namespace, "get", "statefulset",
-                      "prometheus-prometheus", "-o", "json"])
+        _kubectl_json(["-n", namespace, "get", "statefulset", "prometheus-prometheus", "-o", "json"])
     except RuntimeError:
         pytest.skip(f"Prometheus not deployed in namespace {namespace}")
 
@@ -283,8 +284,7 @@ def check_pvcs(namespace: str, context: Dict):
 def pvc_for_prometheus_exists(context: Dict):
     """Verify a PVC for Prometheus exists."""
     pvcs = context.get("pvcs", [])
-    prometheus_pvcs = [pvc for pvc in pvcs
-                      if "prometheus" in pvc.get("metadata", {}).get("name", "").lower()]
+    prometheus_pvcs = [pvc for pvc in pvcs if "prometheus" in pvc.get("metadata", {}).get("name", "").lower()]
     assert len(prometheus_pvcs) > 0, "No PVC found for Prometheus"
 
 
@@ -292,8 +292,7 @@ def pvc_for_prometheus_exists(context: Dict):
 def pvc_bound(context: Dict):
     """Verify PVC is bound."""
     pvcs = context.get("pvcs", [])
-    prometheus_pvcs = [pvc for pvc in pvcs
-                      if "prometheus" in pvc.get("metadata", {}).get("name", "").lower()]
+    prometheus_pvcs = [pvc for pvc in pvcs if "prometheus" in pvc.get("metadata", {}).get("name", "").lower()]
     assert len(prometheus_pvcs) > 0, "No PVC found for Prometheus"
 
     for pvc in prometheus_pvcs:
@@ -305,8 +304,7 @@ def pvc_bound(context: Dict):
 def pvc_size(size: str, context: Dict):
     """Verify PVC size is at least the specified size."""
     pvcs = context.get("pvcs", [])
-    prometheus_pvcs = [pvc for pvc in pvcs
-                      if "prometheus" in pvc.get("metadata", {}).get("name", "").lower()]
+    prometheus_pvcs = [pvc for pvc in pvcs if "prometheus" in pvc.get("metadata", {}).get("name", "").lower()]
     assert len(prometheus_pvcs) > 0, "No PVC found for Prometheus"
 
     # Parse size (e.g., "20Gi")
@@ -319,12 +317,12 @@ def pvc_size(size: str, context: Dict):
 
 # Grafana ingress scenario steps
 
+
 @given("Grafana is deployed with ingress enabled")
 def grafana_ingress_enabled():
     """Verify Grafana is deployed."""
     try:
-        _kubectl_json(["-n", "monitoring", "get", "deployment",
-                      "prometheus-grafana", "-o", "json"])
+        _kubectl_json(["-n", "monitoring", "get", "deployment", "prometheus-grafana", "-o", "json"])
     except RuntimeError:
         pytest.skip("Grafana not deployed")
 
@@ -343,8 +341,9 @@ def check_ingress(namespace: str, context: Dict):
 def ingress_exists(service: str, context: Dict):
     """Verify ingress exists for the service."""
     ingresses = context.get("ingresses", [])
-    matching_ingresses = [ing for ing in ingresses
-                         if service.lower() in ing.get("metadata", {}).get("name", "").lower()]
+    matching_ingresses = [
+        ing for ing in ingresses if service.lower() in ing.get("metadata", {}).get("name", "").lower()
+    ]
     assert len(matching_ingresses) > 0, f"No ingress found for service: {service}"
     context["current_ingress"] = matching_ingresses[0]
 
@@ -380,12 +379,12 @@ def grafana_ui_accessible(url: str):
 
 # Grafana authentication scenario steps
 
+
 @given("Grafana UI is accessible")
 def grafana_ui_accessible_given():
     """Verify Grafana UI is accessible."""
     try:
-        _kubectl_json(["-n", "monitoring", "get", "deployment",
-                      "prometheus-grafana", "-o", "json"])
+        _kubectl_json(["-n", "monitoring", "get", "deployment", "prometheus-grafana", "-o", "json"])
     except RuntimeError:
         pytest.skip("Grafana not deployed")
 
@@ -412,11 +411,11 @@ def see_grafana_dashboard(context: Dict):
 
 # Grafana datasource scenario steps
 
+
 @given("Grafana is deployed and accessible")
 def grafana_deployed_and_accessible():
     """Verify Grafana is deployed and accessible."""
-    data = _kubectl_json(["-n", "monitoring", "get", "deployment",
-                         "prometheus-grafana", "-o", "json"])
+    data = _kubectl_json(["-n", "monitoring", "get", "deployment", "prometheus-grafana", "-o", "json"])
     status = data.get("status", {})
     ready_replicas = status.get("readyReplicas", 0)
     assert ready_replicas > 0, "Grafana not ready"
@@ -451,6 +450,7 @@ def datasource_is_healthy(context: Dict):
 
 # Grafana dashboards scenario steps
 
+
 @given("Grafana is deployed with default dashboards enabled")
 def grafana_with_dashboards():
     """Verify Grafana is deployed with default dashboards."""
@@ -477,12 +477,12 @@ def dashboards_exist(datatable, context: Dict):
 
 # Alertmanager scenario steps
 
+
 @given("Alertmanager is deployed with ingress enabled")
 def alertmanager_ingress_enabled():
     """Verify Alertmanager is deployed."""
     try:
-        _kubectl_json(["-n", "monitoring", "get", "statefulset",
-                      "alertmanager-prometheus-alertmanager", "-o", "json"])
+        _kubectl_json(["-n", "monitoring", "get", "statefulset", "alertmanager-prometheus-alertmanager", "-o", "json"])
     except RuntimeError:
         pytest.skip("Alertmanager not deployed")
 
@@ -498,8 +498,7 @@ def alertmanager_ui_accessible(url: str):
 def alertmanager_deployed(namespace: str):
     """Verify Alertmanager is deployed."""
     try:
-        _kubectl_json(["-n", namespace, "get", "statefulset",
-                      "alertmanager-prometheus-alertmanager", "-o", "json"])
+        _kubectl_json(["-n", namespace, "get", "statefulset", "alertmanager-prometheus-alertmanager", "-o", "json"])
     except RuntimeError:
         pytest.skip(f"Alertmanager not deployed in namespace {namespace}")
 
@@ -508,8 +507,9 @@ def alertmanager_deployed(namespace: str):
 def check_alertmanager_config(context: Dict):
     """Check Alertmanager configuration."""
     try:
-        config = _kubectl_json(["-n", "monitoring", "get", "secret",
-                              "alertmanager-prometheus-alertmanager", "-o", "json"])
+        config = _kubectl_json(
+            ["-n", "monitoring", "get", "secret", "alertmanager-prometheus-alertmanager", "-o", "json"]
+        )
         context["alertmanager_config"] = config
     except RuntimeError:
         context["alertmanager_config"] = None
@@ -532,14 +532,16 @@ def config_has_receivers(context: Dict):
 @then("Alertmanager should be ready to accept alerts")
 def alertmanager_ready():
     """Verify Alertmanager is ready."""
-    data = _kubectl_json(["-n", "monitoring", "get", "statefulset",
-                         "alertmanager-prometheus-alertmanager", "-o", "json"])
+    data = _kubectl_json(
+        ["-n", "monitoring", "get", "statefulset", "alertmanager-prometheus-alertmanager", "-o", "json"]
+    )
     status = data.get("status", {})
     ready_replicas = status.get("readyReplicas", 0)
     assert ready_replicas > 0, "Alertmanager not ready"
 
 
 # ServiceMonitor scenario steps
+
 
 @given(parsers.cfparse('ServiceMonitors are configured in namespace "{namespace}"'))
 def servicemonitors_configured(namespace: str):
@@ -589,12 +591,12 @@ def prometheus_scraping_metrics(component: str):
 
 # Node exporter scenario steps
 
+
 @given("kube-prometheus-stack is deployed")
 def kube_prometheus_stack_deployed():
     """Verify kube-prometheus-stack is deployed."""
     try:
-        _kubectl_json(["-n", "monitoring", "get", "deployment",
-                      "prometheus-operator", "-o", "json"])
+        _kubectl_json(["-n", "monitoring", "get", "deployment", "prometheus-operator", "-o", "json"])
     except RuntimeError:
         pytest.skip("kube-prometheus-stack not deployed")
 
@@ -603,9 +605,9 @@ def kube_prometheus_stack_deployed():
 def check_node_exporter(context: Dict):
     """Check for node-exporter pods."""
     try:
-        pods = _kubectl_json(["-n", "monitoring", "get", "pods",
-                            "-l", "app.kubernetes.io/name=prometheus-node-exporter",
-                            "-o", "json"])
+        pods = _kubectl_json(
+            ["-n", "monitoring", "get", "pods", "-l", "app.kubernetes.io/name=prometheus-node-exporter", "-o", "json"]
+        )
         context["node_exporter_pods"] = pods.get("items", [])
 
         nodes = _kubectl_json(["get", "nodes", "-o", "json"])
@@ -634,6 +636,7 @@ def one_exporter_per_node(context: Dict):
 
 # Kube-state-metrics scenario steps
 
+
 @when("I query Prometheus for kube_state_metrics")
 def query_kube_state_metrics(context: Dict):
     """Query Prometheus for kube-state-metrics."""
@@ -654,11 +657,11 @@ def metrics_available(datatable, context: Dict):
 
 # Prometheus API scenario steps
 
+
 @given("Prometheus is deployed and accessible")
 def prometheus_deployed_and_accessible():
     """Verify Prometheus is deployed and accessible."""
-    data = _kubectl_json(["-n", "monitoring", "get", "statefulset",
-                         "prometheus-prometheus", "-o", "json"])
+    data = _kubectl_json(["-n", "monitoring", "get", "statefulset", "prometheus-prometheus", "-o", "json"])
     status = data.get("status", {})
     ready_replicas = status.get("readyReplicas", 0)
     assert ready_replicas > 0, "Prometheus not ready"
@@ -685,6 +688,7 @@ def prometheus_operational(context: Dict):
 
 
 # Alert rules scenario steps
+
 
 @when("I query Prometheus for loaded alert rules")
 def query_alert_rules(context: Dict):
@@ -715,6 +719,7 @@ def rules_include_node_alerts(context: Dict):
 
 # Platform monitoring scenario steps
 
+
 @given("kube-prometheus-stack is deployed and scraping metrics")
 def prometheus_stack_scraping():
     """Verify kube-prometheus-stack is deployed and scraping."""
@@ -729,6 +734,7 @@ def query_platform_metrics(context: Dict):
 
 
 # Resources scenario steps
+
 
 @when("I check the resource specifications for Prometheus deployments")
 def check_resource_specs(context: Dict):
@@ -810,16 +816,17 @@ def memory_limits_defined(context: Dict):
 
 # Alertmanager PVC scenario steps
 
+
 @then("a PVC for Alertmanager should exist")
 def pvc_for_alertmanager_exists(context: Dict):
     """Verify a PVC for Alertmanager exists."""
     pvcs = context.get("pvcs", [])
-    alertmanager_pvcs = [pvc for pvc in pvcs
-                        if "alertmanager" in pvc.get("metadata", {}).get("name", "").lower()]
+    alertmanager_pvcs = [pvc for pvc in pvcs if "alertmanager" in pvc.get("metadata", {}).get("name", "").lower()]
     assert len(alertmanager_pvcs) > 0, "No PVC found for Alertmanager"
 
 
 # Remote write scenario steps
+
 
 @given("Prometheus is deployed with remote write receiver enabled")
 def prometheus_remote_write_enabled():

@@ -89,13 +89,20 @@ def test_log_quick_mode(mock_config_manager, mock_client_class, runner, mock_con
     mock_config_manager.return_value.config = mock_config
     mock_client_class.return_value = mock_client
 
-    result = runner.invoke(main, [
-        "log",
-        "-t", "Test friction",
-        "-d", "Test description",
-        "-c", "CI/CD",
-        "-p", "high",
-    ])
+    result = runner.invoke(
+        main,
+        [
+            "log",
+            "-t",
+            "Test friction",
+            "-d",
+            "Test description",
+            "-c",
+            "CI/CD",
+            "-p",
+            "high",
+        ],
+    )
 
     assert result.exit_code == 0
     assert "logged successfully" in result.output
@@ -109,13 +116,20 @@ def test_log_with_tags(mock_config_manager, mock_client_class, runner, mock_conf
     mock_config_manager.return_value.config = mock_config
     mock_client_class.return_value = mock_client
 
-    result = runner.invoke(main, [
-        "log",
-        "-t", "Test friction",
-        "-d", "Test description",
-        "-T", "tag1",
-        "-T", "tag2",
-    ])
+    result = runner.invoke(
+        main,
+        [
+            "log",
+            "-t",
+            "Test friction",
+            "-d",
+            "Test description",
+            "-T",
+            "tag1",
+            "-T",
+            "tag2",
+        ],
+    )
 
     assert result.exit_code == 0
     mock_client.create_insight.assert_called_once()
@@ -133,11 +147,16 @@ def test_log_api_unreachable(mock_config_manager, mock_client_class, runner, moc
     mock_client.health_check.return_value = False
     mock_client_class.return_value = mock_client
 
-    result = runner.invoke(main, [
-        "log",
-        "-t", "Test friction",
-        "-d", "Test description",
-    ])
+    result = runner.invoke(
+        main,
+        [
+            "log",
+            "-t",
+            "Test friction",
+            "-d",
+            "Test description",
+        ],
+    )
 
     assert result.exit_code == 1
     assert "Cannot connect" in result.output
@@ -165,12 +184,18 @@ def test_list_with_filters(mock_config_manager, mock_client_class, runner, mock_
     mock_config_manager.return_value.config = mock_config
     mock_client_class.return_value = mock_client
 
-    result = runner.invoke(main, [
-        "list",
-        "-c", "CI/CD",
-        "-p", "high",
-        "-l", "20",
-    ])
+    result = runner.invoke(
+        main,
+        [
+            "list",
+            "-c",
+            "CI/CD",
+            "-p",
+            "high",
+            "-l",
+            "20",
+        ],
+    )
 
     assert result.exit_code == 0
     mock_client.list_insights.assert_called_once_with(
@@ -248,11 +273,17 @@ def test_config_init(mock_config_manager, mock_client_class, runner):
     mock_manager = Mock()
     mock_config_manager.return_value = mock_manager
 
-    result = runner.invoke(main, [
-        "config", "init",
-        "--api-url", "http://test-api:8000",
-        "--author", "Test User",
-    ])
+    result = runner.invoke(
+        main,
+        [
+            "config",
+            "init",
+            "--api-url",
+            "http://test-api:8000",
+            "--author",
+            "Test User",
+        ],
+    )
 
     assert result.exit_code == 0
     assert "Configuration saved" in result.output

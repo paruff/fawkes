@@ -8,7 +8,7 @@ from sqlalchemy import pool
 from alembic import context
 
 # Add app directory to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 # Import models
 from app.models import Base
@@ -19,7 +19,7 @@ from app.database import DATABASE_URL
 config = context.config
 
 # Override sqlalchemy.url with DATABASE_URL from environment
-config.set_main_option('sqlalchemy.url', DATABASE_URL)
+config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -69,9 +69,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

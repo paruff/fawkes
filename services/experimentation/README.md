@@ -191,14 +191,14 @@ Use Unleash to control experiment traffic:
 
 ```typescript
 // In your application
-const isInExperiment = await client.getBooleanValue('experiment-new-feature', false);
+const isInExperiment = await client.getBooleanValue("experiment-new-feature", false);
 
 if (isInExperiment) {
   // Call experimentation service to assign variant
   const assignment = await assignVariant(experimentId, userId);
 
   // Use variant configuration
-  if (assignment.variant === 'new-feature') {
+  if (assignment.variant === "new-feature") {
     enableNewFeature();
   }
 }
@@ -210,8 +210,8 @@ Track events in Plausible for additional analytics:
 
 ```javascript
 // Track event in both systems
-plausible('conversion', { props: { experiment: experimentId, variant: variantName } });
-await trackEvent(experimentId, userId, 'conversion');
+plausible("conversion", { props: { experiment: experimentId, variant: variantName } });
+await trackEvent(experimentId, userId, "conversion");
 ```
 
 ### Backstage Integration
@@ -222,7 +222,7 @@ Add experiment status to Backstage entity pages:
 # catalog-info.yaml
 metadata:
   annotations:
-    fawkes.io/experiments: 'abc-123,def-456'
+    fawkes.io/experiments: "abc-123,def-456"
 ```
 
 ## Prometheus Metrics
@@ -230,14 +230,17 @@ metadata:
 The service exposes comprehensive metrics:
 
 ### Experiment Metrics
+
 - `experimentation_experiments_total{status}` - Total experiments by status
 - `experimentation_experiments_active` - Currently active experiments
 
 ### Assignment Metrics
+
 - `experimentation_variant_assignments_total{experiment_id,variant}` - Variant assignments
 - `experimentation_events_total{experiment_id,variant,event_name}` - Events tracked
 
 ### Analysis Metrics
+
 - `experimentation_significant_results_total{experiment_id}` - Significant results
 - `experimentation_analysis_duration_seconds{experiment_id}` - Analysis duration
 
@@ -246,6 +249,7 @@ The service exposes comprehensive metrics:
 A pre-built dashboard is available at `/grafana/d/experimentation`:
 
 **Panels:**
+
 - Active experiments count
 - Variant assignment distribution
 - Conversion rates by variant
@@ -265,6 +269,7 @@ A pre-built dashboard is available at `/grafana/d/experimentation`:
 ### Database Schema
 
 Tables:
+
 - `experiments` - Experiment metadata
 - `assignments` - Variant assignments
 - `events` - Event tracking data

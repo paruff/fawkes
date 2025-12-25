@@ -6,7 +6,7 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 NIX_FLAKE_PATH="${REPO_ROOT}/infra/nix"
 
 function usage() {
-  cat <<EOF
+  cat << EOF
 Usage: $0 <command>
 
 Commands:
@@ -29,7 +29,7 @@ fi
 CMD="$1"
 
 function ensure_nix() {
-  if ! command -v nix >/dev/null 2>&1; then
+  if ! command -v nix > /dev/null 2>&1; then
     echo "Nix is not installed. Please install Nix: https://nixos.org/download.html"
     return 2
   fi
@@ -39,7 +39,10 @@ function ensure_nix() {
 case "$CMD" in
   check)
     # If Nix flake exists and nix is installed, run checks inside the devShell; otherwise check host
-    if [[ -f "${NIX_FLAKE_PATH}/flake.nix" && $(command -v nix >/dev/null 2>&1; echo $?) -eq 0 ]]; then
+    if [[ -f "${NIX_FLAKE_PATH}/flake.nix" && $(
+      command -v nix > /dev/null 2>&1
+      echo $?
+    ) -eq 0 ]]; then
       echo "Running checks inside Nix devShell from ${NIX_FLAKE_PATH}..."
       nix shell "${NIX_FLAKE_PATH}#default" -c bash -lc '
         set -euo pipefail
@@ -61,9 +64,9 @@ case "$CMD" in
       else
         echo "No Nix flake at ${NIX_FLAKE_PATH}; checking host for required tools..."
       fi
-        MISSING=0
-        for tool in kubectl helm terraform tflint terraform-docs tfsec kubeconform kustomize gitleaks trivy argocd jq yq git docker pre-commit; do
-        if ! command -v "$tool" >/dev/null 2>&1; then
+      MISSING=0
+      for tool in kubectl helm terraform tflint terraform-docs tfsec kubeconform kustomize gitleaks trivy argocd jq yq git docker pre-commit; do
+        if ! command -v "$tool" > /dev/null 2>&1; then
           echo "MISSING: $tool"
           MISSING=1
         else
@@ -99,7 +102,7 @@ case "$CMD" in
     fi
     ;;
 
-  help|--help|-h)
+  help | --help | -h)
     usage
     ;;
 

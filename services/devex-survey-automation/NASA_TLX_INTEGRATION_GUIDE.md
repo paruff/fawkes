@@ -79,6 +79,7 @@ curl -X POST http://localhost:8000/api/v1/nasa-tlx/submit?user_id=test_developer
 ```
 
 Expected response:
+
 ```json
 {
   "success": true,
@@ -98,6 +99,7 @@ https://grafana.fawkes.idp/d/nasa-tlx-cognitive-load
 ```
 
 You should see:
+
 - Overall workload gauge
 - Test assessment counted
 - Metrics by task type
@@ -180,6 +182,7 @@ async def nasa_tlx_command(ctx, task_type: str = "general"):
 ```
 
 Usage:
+
 ```
 /nasa-tlx deployment
 /nasa-tlx pr_review
@@ -203,7 +206,7 @@ groups:
           component: devex
         annotations:
           summary: "High cognitive load detected"
-          description: "Average cognitive workload ({{ $value | printf \"%.1f\" }}) exceeds 70/100. Developers are experiencing high cognitive load on platform tasks."
+          description: 'Average cognitive workload ({{ $value | printf "%.1f" }}) exceeds 70/100. Developers are experiencing high cognitive load on platform tasks.'
           dashboard: "https://grafana.fawkes.idp/d/nasa-tlx-cognitive-load"
 
       - alert: HighFrustrationLevels
@@ -214,7 +217,7 @@ groups:
           component: devex
         annotations:
           summary: "High frustration levels for {{ $labels.task_type }}"
-          description: "Developers report high frustration ({{ $value | printf \"%.1f\" }}/100) with {{ $labels.task_type }} tasks. Urgent UX improvements needed."
+          description: 'Developers report high frustration ({{ $value | printf "%.1f" }}/100) with {{ $labels.task_type }} tasks. Urgent UX improvements needed.'
           dashboard: "https://grafana.fawkes.idp/d/nasa-tlx-cognitive-load"
 
       - alert: LowPerformanceScore
@@ -225,7 +228,7 @@ groups:
           component: devex
         annotations:
           summary: "Low success rate for {{ $labels.task_type }}"
-          description: "Developers struggle to complete {{ $labels.task_type }} tasks ({{ $value | printf \"%.1f\" }}/100 success rate)."
+          description: 'Developers struggle to complete {{ $labels.task_type }} tasks ({{ $value | printf "%.1f" }}/100 success rate).'
           dashboard: "https://grafana.fawkes.idp/d/nasa-tlx-cognitive-load"
 ```
 
@@ -261,6 +264,7 @@ env:
 ### End-to-End Test
 
 1. **Submit an assessment**:
+
    ```bash
    curl -X POST https://surveys.fawkes.idp/api/v1/nasa-tlx/submit?user_id=e2e_test \
      -H "Content-Type: application/json" \
@@ -268,17 +272,20 @@ env:
    ```
 
 2. **Verify in database**:
+
    ```sql
    SELECT * FROM nasa_tlx_assessments WHERE user_id = 'e2e_test' ORDER BY submitted_at DESC LIMIT 1;
    ```
 
 3. **Check Prometheus metrics**:
+
    ```bash
    curl -G http://prometheus.fawkes.svc:9090/api/v1/query \
      --data-urlencode 'query=devex_nasa_tlx_overall_workload{task_type="deployment"}'
    ```
 
 4. **View in Grafana**:
+
    - Navigate to NASA-TLX dashboard
    - Filter by task_type = "deployment"
    - Verify gauge shows workload value
@@ -300,18 +307,21 @@ behave tests/bdd/features/nasa_tlx_cognitive_load.feature --tags=@nasa-tlx
 ## Rollout Plan
 
 ### Phase 1: Soft Launch (Week 1)
+
 - Deploy to dev environment
 - Platform team submits assessments
 - Validate metrics, dashboard, and analytics
 - Collect feedback on UX
 
 ### Phase 2: Pilot (Week 2-3)
+
 - Deploy to production
 - Announce to 2-3 pilot teams
 - Add Backstage link
 - Monitor response rate and feedback
 
 ### Phase 3: General Availability (Week 4+)
+
 - Announce to all developers
 - Add Mattermost bot command
 - Enable post-deployment triggers (opt-in)
@@ -344,6 +354,7 @@ spec:
 **Cause**: No assessments submitted yet or metrics not scraped.
 
 **Solution**:
+
 1. Submit a test assessment
 2. Wait 30 seconds for Prometheus to scrape
 3. Refresh Grafana dashboard

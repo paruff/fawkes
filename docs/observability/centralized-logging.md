@@ -57,15 +57,15 @@ The OpenTelemetry Collector Agent runs as a DaemonSet on every node and collects
 
 Every log record is enriched with Kubernetes metadata via the `k8sattributes` processor:
 
-| Attribute | Description |
-|-----------|-------------|
-| `k8s.pod.name` | Pod name |
-| `k8s.namespace.name` | Namespace name |
-| `k8s.container.name` | Container name |
-| `k8s.deployment.name` | Deployment name (if applicable) |
-| `k8s.node.name` | Node where pod is running |
-| `cluster` | Cluster identifier |
-| `environment` | Environment (development, staging, production) |
+| Attribute             | Description                                    |
+| --------------------- | ---------------------------------------------- |
+| `k8s.pod.name`        | Pod name                                       |
+| `k8s.namespace.name`  | Namespace name                                 |
+| `k8s.container.name`  | Container name                                 |
+| `k8s.deployment.name` | Deployment name (if applicable)                |
+| `k8s.node.name`       | Node where pod is running                      |
+| `cluster`             | Cluster identifier                             |
+| `environment`         | Environment (development, staging, production) |
 
 ### 3. Trace Correlation
 
@@ -146,6 +146,7 @@ platform/apps/opensearch/index-template.yaml
 ```
 
 Templates ensure proper mapping for:
+
 - OTLP log format (`otel-logs-*`)
 - Application logs (`application-logs-*`)
 - Kubernetes logs (`kubernetes-logs-*`)
@@ -191,21 +192,21 @@ For optimal trace correlation, applications should emit structured JSON logs:
 
 ### Required Fields
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `level` | keyword | Log level (ERROR, WARN, INFO, DEBUG) |
-| `message` | text | Human-readable message |
-| `traceId` | keyword | OpenTelemetry trace ID (optional) |
-| `spanId` | keyword | OpenTelemetry span ID (optional) |
+| Field     | Type    | Description                          |
+| --------- | ------- | ------------------------------------ |
+| `level`   | keyword | Log level (ERROR, WARN, INFO, DEBUG) |
+| `message` | text    | Human-readable message               |
+| `traceId` | keyword | OpenTelemetry trace ID (optional)    |
+| `spanId`  | keyword | OpenTelemetry span ID (optional)     |
 
 ## Environment Variables
 
 The following environment variables are used by the collector:
 
-| Variable | Description |
-|----------|-------------|
+| Variable        | Description                        |
+| --------------- | ---------------------------------- |
 | `K8S_NODE_NAME` | Current node name (auto-populated) |
-| `NODE_IP` | Node IP address (auto-populated) |
+| `NODE_IP`       | Node IP address (auto-populated)   |
 
 ## Monitoring
 
@@ -230,6 +231,7 @@ kubectl port-forward -n monitoring daemonset/otel-collector 55679:55679
 ### Metrics
 
 The collector exposes Prometheus metrics at port 8888:
+
 - `otelcol_receiver_accepted_log_records`: Logs received
 - `otelcol_exporter_sent_log_records`: Logs exported
 - `otelcol_exporter_queue_size`: Current queue size

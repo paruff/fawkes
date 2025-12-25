@@ -156,8 +156,8 @@ docker run -d \
 
 ## Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
+| Variable       | Description                  | Default                                                             |
+| -------------- | ---------------------------- | ------------------------------------------------------------------- |
 | `DATABASE_URL` | PostgreSQL connection string | `postgresql://discovery:discovery@localhost:5432/discovery_metrics` |
 
 ## Testing

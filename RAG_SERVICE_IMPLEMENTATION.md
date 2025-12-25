@@ -17,6 +17,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 **Location**: `services/rag/app/`
 
 **Components Delivered**:
+
 - FastAPI-based REST API service (`main.py`)
 - Weaviate client integration with connection pooling
 - Embedding generation via Weaviate's text2vec-transformers
@@ -26,12 +27,15 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 - Multi-stage Docker build for production deployment
 
 **API Endpoints**:
+
 1. `POST /api/v1/query` - Context retrieval endpoint
+
    - Parameters: query (required), top_k (default: 5), threshold (default: 0.7)
    - Returns: Ranked results with relevance scores, sources, and metadata
    - Performance: <500ms response time
 
 2. `GET /api/v1/health` - Health check endpoint
+
    - Returns: Service status and Weaviate connection status
 
 3. `GET /ready` - Kubernetes readiness probe
@@ -39,6 +43,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 5. `GET /docs` - OpenAPI documentation UI
 
 **Key Features**:
+
 - Relevance threshold filtering (>0.7)
 - Response time tracking
 - Error handling and validation
@@ -50,6 +55,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 **Location**: `services/rag/scripts/index-docs.py`
 
 **Features Implemented**:
+
 - Scans `docs/`, `platform/`, `infra/` directories
 - Supports multiple file types: `.md`, `.yaml`, `.yml`, `.py`, `.sh`, `.go`, `.java`, `.js`, `.ts`, `.json`, `.tf`, `.hcl`
 - Intelligent chunking (512 tokens max, ~2048 characters)
@@ -61,6 +67,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 - Force re-index option
 
 **Indexing Strategy**:
+
 1. File discovery with exclusion patterns
 2. Content extraction with encoding fallback
 3. Title extraction from markdown headers
@@ -70,6 +77,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 7. Storage with metadata
 
 **Incremental Update Logic**:
+
 - Calculates MD5 hash of file content
 - Queries Weaviate for existing documents
 - Compares hashes to detect changes
@@ -81,7 +89,9 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 **Location**: `platform/apps/rag-service/`
 
 **Manifests Created**:
+
 1. `deployment.yaml` - Main service deployment
+
    - 2 replicas for high availability
    - Health and readiness probes
    - Resource requests/limits
@@ -90,15 +100,18 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
    - Pod anti-affinity rules
 
 2. `service.yaml` - ClusterIP service
+
    - Port 80 → 8000 mapping
    - Prometheus scraping annotations
 
 3. `ingress.yaml` - External access
+
    - Host: `rag-service.127.0.0.1.nip.io`
    - nginx ingress controller
    - Proxy timeout settings
 
 4. `configmap.yaml` - Configuration
+
    - Weaviate URL
    - Schema name
    - Query defaults (top_k, threshold)
@@ -112,6 +125,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
    - Auto-cleanup after 24 hours
 
 **ArgoCD Application**: `platform/apps/rag-service-application.yaml`
+
 - Automated sync and self-healing
 - Sync wave: 20 (after Weaviate)
 - Prune and retry policies
@@ -120,6 +134,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 ### Testing Infrastructure ✅
 
 **Unit Tests**: `services/rag/tests/unit/test_main.py`
+
 - 13 comprehensive tests
 - All passing ✅
 - Coverage includes:
@@ -134,6 +149,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
   - OpenAPI documentation
 
 **BDD Tests**: `tests/bdd/features/rag-service.feature`
+
 - 12 scenarios covering AT-E2-002
 - Step definitions: `tests/bdd/step_definitions/rag_service_steps.py`
 - Scenarios:
@@ -150,6 +166,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
   - Metrics exposure
 
 **Validation Script**: `scripts/validate-at-e2-002.sh`
+
 - Automated acceptance test validation
 - 6 phases:
   1. Prerequisites (kubectl, cluster access)
@@ -165,6 +182,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 ### Documentation ✅
 
 **Service README**: `services/rag/README.md`
+
 - Complete API reference
 - Quick start guide
 - Development workflow
@@ -174,6 +192,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 - Building Docker images
 
 **Build Script**: `services/rag/build.sh`
+
 - Automated Docker image building
 - Tagging support
 - Image verification
@@ -267,16 +286,19 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 ## Monitoring & Observability
 
 **Prometheus Metrics**:
+
 - `rag_requests_total` - Total request count by endpoint and status
 - `rag_query_duration_seconds` - Query latency histogram
 - `rag_relevance_score` - Relevance score distribution
 
 **Health Checks**:
+
 - Liveness probe: `/api/v1/health` (30s interval)
 - Readiness probe: `/ready` (10s interval)
 - Startup grace period: 40s
 
 **Logging**:
+
 - Structured logging with timestamps
 - Request/response logging
 - Error tracking
@@ -285,6 +307,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 ## Files Created/Modified
 
 ### New Files (25)
+
 1. `services/rag/app/__init__.py`
 2. `services/rag/app/main.py`
 3. `services/rag/Dockerfile`
@@ -309,39 +332,46 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 22. `scripts/validate-at-e2-002.sh`
 
 ### Modified Files (2)
+
 1. `services/rag/README.md` - Complete rewrite with comprehensive documentation
 2. `Makefile` - Added `validate-at-e2-002` target
 
 ## Acceptance Criteria Verification
 
 ✅ **AC1**: RAG service API deployed
+
 - FastAPI service implemented and containerized
 - Kubernetes manifests created
 - ArgoCD Application configured
 
 ✅ **AC2**: Context retrieval working (<500ms)
+
 - Query endpoint returns results in <500ms
 - Performance tracked in `retrieval_time_ms` field
 - Optimized with Weaviate's HNSW algorithm
 
 ✅ **AC3**: Relevance scoring >0.7
+
 - Threshold filtering implemented (default 0.7)
 - Weaviate certainty scores used
 - Top results consistently >0.7
 
 ✅ **AC4**: Integration with vector database
+
 - Weaviate client properly integrated
 - Schema creation and management
 - Batch processing for efficiency
 - Error handling for connection issues
 
 ✅ **AC5**: API documented (OpenAPI spec)
+
 - FastAPI auto-generates OpenAPI spec
 - Interactive docs at `/docs`
 - JSON schema at `/openapi.json`
 - Request/response models documented
 
 ✅ **AC6**: Passes AT-E2-002
+
 - BDD feature file created
 - 12 test scenarios defined
 - Step definitions implemented
@@ -351,6 +381,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 ## Deployment Instructions
 
 ### Prerequisites
+
 1. Kubernetes cluster with fawkes namespace
 2. Weaviate deployed and running
 3. ArgoCD installed
@@ -359,6 +390,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 ### Step-by-Step Deployment
 
 1. **Build Docker Image**:
+
    ```bash
    cd services/rag
    ./build.sh
@@ -366,12 +398,14 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
    ```
 
 2. **Deploy with ArgoCD**:
+
    ```bash
    kubectl apply -f platform/apps/rag-service-application.yaml
    argocd app sync rag-service
    ```
 
 3. **Verify Deployment**:
+
    ```bash
    kubectl get pods -n fawkes -l app=rag-service
    kubectl get svc -n fawkes rag-service
@@ -379,6 +413,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
    ```
 
 4. **Index Documentation**:
+
    ```bash
    # Port forward to Weaviate
    kubectl port-forward -n fawkes svc/weaviate 8080:80
@@ -389,6 +424,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
    ```
 
 5. **Test the API**:
+
    ```bash
    # Health check
    curl http://rag-service.127.0.0.1.nip.io/api/v1/health
@@ -400,6 +436,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
    ```
 
 6. **Run Validation**:
+
    ```bash
    make validate-at-e2-002
    ```
@@ -412,6 +449,7 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 ## Testing Results
 
 ### Unit Tests
+
 - **Total**: 13 tests
 - **Passed**: 13 ✅
 - **Failed**: 0
@@ -419,12 +457,14 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 - **Execution Time**: ~1.3 seconds
 
 ### BDD Tests
+
 - **Feature File**: `rag-service.feature`
 - **Scenarios**: 12
 - **Step Definitions**: 45+ steps
 - **Status**: Ready for execution (requires deployment)
 
 ### Validation Script
+
 - **Phases**: 6
 - **Checks**: 20+
 - **Status**: Ready for execution
@@ -440,16 +480,19 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 ## Future Enhancements
 
 1. **Authentication & Authorization**
+
    - JWT token validation
    - API key support
    - Role-based access control
 
 2. **Performance Optimization**
+
    - Query result caching (Redis)
    - Connection pooling improvements
    - Batch query support
 
 3. **Advanced Features**
+
    - Feedback loop for relevance tuning
    - Query expansion/rewriting
    - Multi-language support
@@ -464,9 +507,11 @@ Successfully implemented a complete RAG (Retrieval Augmented Generation) service
 ## Dependencies
 
 **Depends On**:
+
 - Issue #39: Weaviate vector database (✅ Complete)
 
 **Blocks**:
+
 - Issue #42: AI assistant configuration
 
 ## Conclusion
@@ -481,6 +526,7 @@ The RAG service has been successfully implemented with all acceptance criteria m
 - ✅ Operational tooling
 
 The implementation follows Fawkes platform best practices:
+
 - GitOps-first with ArgoCD
 - Declarative Kubernetes manifests
 - Security-hardened containers

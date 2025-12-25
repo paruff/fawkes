@@ -5,6 +5,7 @@
 ### ✅ All Acceptance Criteria Met
 
 #### 1. Backstage deployed via ArgoCD ✅
+
 - **Location:** `platform/apps/backstage-application.yaml`
 - **Configuration:**
   - Helm chart: backstage/backstage v1.10.0
@@ -14,6 +15,7 @@
 - **Resources:** 500m-2 CPU, 512Mi-2Gi memory
 
 #### 2. PostgreSQL backend configured ✅
+
 - **Operator:** `platform/apps/postgresql/cloudnativepg-operator-application.yaml`
 - **Cluster:** `platform/apps/postgresql/db-backstage-cluster.yaml`
   - 3 instances (1 primary + 2 standby)
@@ -25,6 +27,7 @@
 - **Connection:** Backstage configured with external PostgreSQL
 
 #### 3. Backstage UI accessible ✅
+
 - **Ingress:** https://backstage.fawkes.idp
 - **TLS:** Enabled with cert-manager
 - **Health Checks:** /healthcheck endpoint
@@ -35,6 +38,7 @@
   - Seccomp profile
 
 #### 4. Initial catalog populated ✅
+
 - **Root Catalog:** `catalog-info.yaml`
 - **Components:**
   - System: fawkes-platform
@@ -50,12 +54,14 @@
 Three golden path templates for creating new services:
 
 1. **Python Service** (`templates/python-service/template.yaml`)
+
    - FastAPI framework
    - Docker + Kubernetes manifests
    - CI/CD pipeline configuration
    - Automatic catalog registration
 
 2. **Java Service** (`templates/java-service/template.yaml`)
+
    - Spring Boot framework
    - Maven build configuration
    - Standard project structure
@@ -68,12 +74,14 @@ Three golden path templates for creating new services:
 ### 📚 Documentation Created
 
 1. **Deployment Guide** (`docs/deployment/backstage-postgresql.md`)
+
    - Complete step-by-step deployment instructions
    - Architecture diagrams
    - Troubleshooting guide
    - Validation steps
 
 2. **Deployment README** (`docs/deployment/README.md`)
+
    - Overview of deployment guides
    - Quick start instructions
    - Security notes
@@ -87,17 +95,20 @@ Three golden path templates for creating new services:
 ### 🔒 Security Configuration
 
 **Pod Security:**
+
 - Non-root user (UID 1000)
 - Read-only root filesystem
 - Dropped capabilities (ALL)
 - Seccomp profile: RuntimeDefault
 
 **Network Security:**
+
 - TLS termination at ingress
 - HTTPS redirect enforced
 - Internal service communication
 
 **Secrets Management:**
+
 - Database credentials in Kubernetes secrets
 - OAuth credentials for GitHub
 - Integration credentials for Jenkins, ArgoCD
@@ -106,6 +117,7 @@ Three golden path templates for creating new services:
 ### 🔗 Integration Points
 
 **Configured:**
+
 - ✅ GitHub OAuth (authentication)
 - ✅ GitHub API (repository discovery)
 - ✅ Jenkins API (CI/CD status)
@@ -116,15 +128,18 @@ Three golden path templates for creating new services:
 ### 📊 Observability
 
 **Metrics:**
+
 - ServiceMonitor enabled for Prometheus
 - Metrics endpoint: /metrics
 - CloudNativePG PodMonitor for PostgreSQL
 
 **Health Checks:**
+
 - Liveness probe: /healthcheck (60s initial delay)
 - Readiness probe: /healthcheck (30s initial delay)
 
 **Logging:**
+
 - Backstage logs to stdout/stderr
 - PostgreSQL logs via CloudNativePG
 - Ready for Fluent Bit collection
@@ -134,6 +149,7 @@ Three golden path templates for creating new services:
 **BDD Tests:** `tests/bdd/features/backstage-deployment.feature`
 
 9 test scenarios covering:
+
 1. Service Accessibility
 2. Authentication Success
 3. Authentication Failure Redirect
@@ -145,6 +161,7 @@ Three golden path templates for creating new services:
 9. Resource Allocation and Stability
 
 **Run Tests:**
+
 ```bash
 behave tests/bdd/features/backstage-deployment.feature
 ```
@@ -152,11 +169,13 @@ behave tests/bdd/features/backstage-deployment.feature
 ### 🚀 Deployment Instructions
 
 **Prerequisites:**
+
 1. Kubernetes cluster (1.28+) running
 2. ArgoCD installed and configured
 3. kubectl configured with cluster access
 
 **Step 1: Update Secrets (CRITICAL)**
+
 ```bash
 # Update PostgreSQL password
 vim platform/apps/postgresql/db-backstage-credentials.yaml
@@ -166,6 +185,7 @@ vim platform/apps/backstage/secrets.yaml
 ```
 
 **Step 2: Deploy via ArgoCD**
+
 ```bash
 # Apply bootstrap application (App-of-Apps pattern)
 kubectl apply -f platform/bootstrap/app-of-apps.yaml
@@ -175,6 +195,7 @@ argocd app wait platform-bootstrap --sync
 ```
 
 **Step 3: Monitor Deployment**
+
 ```bash
 # Watch pods come up
 watch kubectl get pods -n fawkes
@@ -187,6 +208,7 @@ kubectl get cluster -n fawkes db-backstage-dev
 ```
 
 **Step 4: Access Backstage**
+
 ```bash
 # Local development (port-forward)
 kubectl port-forward -n fawkes svc/backstage 7007:7007
@@ -197,6 +219,7 @@ kubectl port-forward -n fawkes svc/backstage 7007:7007
 ```
 
 **Step 5: Verify Catalog**
+
 1. Login with GitHub OAuth
 2. Navigate to "Catalog"
 3. Verify all platform components are listed
@@ -205,6 +228,7 @@ kubectl port-forward -n fawkes svc/backstage 7007:7007
 ### 📁 Files Changed
 
 **New Files (15):**
+
 - `catalog-info.yaml` - Root platform catalog
 - `docs/deployment/README.md` - Deployment guides index
 - `docs/deployment/backstage-postgresql.md` - Comprehensive deployment guide
@@ -222,6 +246,7 @@ kubectl port-forward -n fawkes svc/backstage 7007:7007
 - `templates/nodejs-service/skeleton/README.md`
 
 **Existing Files (Verified):**
+
 - `platform/apps/backstage-application.yaml` - ArgoCD Application
 - `platform/apps/backstage/app-config.yaml` - Backstage configuration
 - `platform/apps/backstage/secrets.yaml` - Integration secrets
@@ -248,15 +273,18 @@ ArgoCD (GitOps)
 ### 🎯 Next Steps
 
 1. **Deploy to Cluster:**
+
    - Update all secrets (replace CHANGE_ME values)
    - Apply ArgoCD bootstrap
    - Monitor deployment
 
 2. **Configure OAuth:**
+
    - Create GitHub OAuth App
    - Update backstage-oauth-credentials secret
 
 3. **Add Services:**
+
    - Use software templates to create new services
    - Register existing services in catalog
 

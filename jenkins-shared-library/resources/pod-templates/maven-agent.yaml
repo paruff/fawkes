@@ -7,37 +7,37 @@ metadata:
 spec:
   serviceAccountName: jenkins-agent
   containers:
-  - name: maven
-    image: maven:3.9-eclipse-temurin-17
-    command: ['cat']
-    tty: true
-    resources:
-      requests:
-        cpu: '1'
-        memory: '2Gi'
-      limits:
-        cpu: '2'
-        memory: '4Gi'
-    volumeMounts:
-    - name: maven-cache
-      mountPath: /root/.m2
-  - name: docker
-    image: docker:24-dind
-    command: ['cat']
-    tty: true
-    securityContext:
-      privileged: true
-    volumeMounts:
-    - name: docker-sock
-      mountPath: /var/run/docker.sock
-  - name: trivy
-    image: aquasec/trivy:latest
-    command: ['cat']
-    tty: true
+    - name: maven
+      image: maven:3.9-eclipse-temurin-17
+      command: ["cat"]
+      tty: true
+      resources:
+        requests:
+          cpu: "1"
+          memory: "2Gi"
+        limits:
+          cpu: "2"
+          memory: "4Gi"
+      volumeMounts:
+        - name: maven-cache
+          mountPath: /root/.m2
+    - name: docker
+      image: docker:24-dind
+      command: ["cat"]
+      tty: true
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+    - name: trivy
+      image: aquasec/trivy:latest
+      command: ["cat"]
+      tty: true
   volumes:
-  - name: docker-sock
-    hostPath:
-      path: /var/run/docker.sock
-  - name: maven-cache
-    persistentVolumeClaim:
-      claimName: jenkins-maven-cache
+    - name: docker-sock
+      hostPath:
+        path: /var/run/docker.sock
+    - name: maven-cache
+      persistentVolumeClaim:
+        claimName: jenkins-maven-cache

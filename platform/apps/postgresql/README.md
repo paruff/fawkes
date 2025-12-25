@@ -41,11 +41,13 @@ The Fawkes platform uses [CloudNativePG](https://cloudnative-pg.io/) as the Post
 ## Naming Convention
 
 Database instances follow the naming pattern:
+
 ```
 db-{service}-{environment}
 ```
 
 Examples:
+
 - `db-focalboard-dev`
 - `db-focalboard-prod`
 - `db-sonarqube-staging`
@@ -55,27 +57,28 @@ Examples:
 
 ### Focalboard Database
 
-| Property | Value |
-|----------|-------|
-| Host (Primary/RW) | `db-focalboard-dev-rw.fawkes.svc.cluster.local` |
+| Property           | Value                                           |
+| ------------------ | ----------------------------------------------- |
+| Host (Primary/RW)  | `db-focalboard-dev-rw.fawkes.svc.cluster.local` |
 | Host (Replicas/RO) | `db-focalboard-dev-ro.fawkes.svc.cluster.local` |
-| Port | `5432` |
-| Database | `focalboard` |
-| Username | Stored in Secret `db-focalboard-credentials` |
-| Password | Stored in Secret `db-focalboard-credentials` |
+| Port               | `5432`                                          |
+| Database           | `focalboard`                                    |
+| Username           | Stored in Secret `db-focalboard-credentials`    |
+| Password           | Stored in Secret `db-focalboard-credentials`    |
 
 ### SonarQube Database
 
-| Property | Value |
-|----------|-------|
-| Host (Primary/RW) | `db-sonarqube-dev-rw.fawkes.svc.cluster.local` |
+| Property           | Value                                          |
+| ------------------ | ---------------------------------------------- |
+| Host (Primary/RW)  | `db-sonarqube-dev-rw.fawkes.svc.cluster.local` |
 | Host (Replicas/RO) | `db-sonarqube-dev-ro.fawkes.svc.cluster.local` |
-| Port | `5432` |
-| Database | `sonarqube` |
-| Username | Stored in Secret `db-sonarqube-credentials` |
-| Password | Stored in Secret `db-sonarqube-credentials` |
+| Port               | `5432`                                         |
+| Database           | `sonarqube`                                    |
+| Username           | Stored in Secret `db-sonarqube-credentials`    |
+| Password           | Stored in Secret `db-sonarqube-credentials`    |
 
 **JDBC Connection String** (for SonarQube configuration):
+
 ```
 jdbc:postgresql://db-sonarqube-dev-rw.fawkes.svc.cluster.local:5432/sonarqube
 ```
@@ -87,6 +90,7 @@ postgresql://<username>:<password>@<host>:5432/<database>?sslmode=require
 ```
 
 Example for Focalboard:
+
 ```
 postgresql://focalboard_user:$(password)@db-focalboard-dev-rw.fawkes.svc.cluster.local:5432/focalboard?sslmode=require
 ```
@@ -239,9 +243,9 @@ spec:
 
 ### Recovery Objectives
 
-| Metric | Target |
-|--------|--------|
-| RTO (Recovery Time Objective) | < 90 seconds |
+| Metric                         | Target                               |
+| ------------------------------ | ------------------------------------ |
+| RTO (Recovery Time Objective)  | < 90 seconds                         |
 | RPO (Recovery Point Objective) | 0 (synchronous) or near-zero (async) |
 
 ### Testing Failover
@@ -324,6 +328,7 @@ CloudNativePG exposes metrics at `/metrics` endpoint on each pod. Key metrics:
 ### Grafana Dashboards
 
 Import the official CloudNativePG Grafana dashboard:
+
 - Dashboard ID: `20417`
 
 ## Troubleshooting

@@ -2,7 +2,7 @@
 
 ## Session Information
 
-**Participant ID**: P__
+**Participant ID**: P\_\_
 **Test Date**: [YYYY-MM-DD]
 **Facilitator**: [Name]
 **Feature/Workflow Tested**: [Name]
@@ -41,41 +41,49 @@
 
 **Goal**: [What the user needed to accomplish]
 
-**Status**: ☐ Success  ☐ Partial Success  ☐ Failure
+**Status**: ☐ Success ☐ Partial Success ☐ Failure
 
 **Metrics**:
+
 - **Time to Complete**: [X] minutes (Target: [Y] minutes)
 - **Confidence Rating**: [X]/5
 - **Assistance Required**: [None / Minor Hint / Significant Help]
 - **Errors/Wrong Turns**: [Number]
 
 **Task Flow**:
+
 1. [First action taken]
 2. [Second action taken]
 3. [Third action taken]
 4. [Continue...]
 
 **Expected vs. Actual Path**:
+
 - **Expected**: [Describe ideal path]
 - **Actual**: [Describe what user did]
-- **Deviation**: ☐ Followed expected  ☐ Minor deviation  ☐ Completely different
+- **Deviation**: ☐ Followed expected ☐ Minor deviation ☐ Completely different
 
 **Observations**:
+
 - ✅ **What Worked Well**:
+
   - [Observation 1]
   - [Observation 2]
 
 - ❌ **What Didn't Work**:
+
   - [Observation 1]
   - [Observation 2]
 
 - 🤔 **Confusion Points**:
+
   - [Where and why user was confused]
 
 - 😤 **Frustration Moments**:
   - [What caused frustration]
 
 **Direct Quotes**:
+
 > "[Capture exact words - especially expressions of confusion, frustration, or delight]"
 
 > "[Another quote]"
@@ -83,7 +91,8 @@
 **Issues Identified**:
 
 #### Issue 1.1: [Brief Issue Title]
-- **Severity**: ☐ Critical  ☐ Major  ☐ Minor  ☐ Enhancement
+
+- **Severity**: ☐ Critical ☐ Major ☐ Minor ☐ Enhancement
 - **Description**: [Detailed description of the problem]
 - **User Impact**: [How this affected the user's ability to complete the task]
 - **Frequency**: [First time seen / Seen in X previous sessions]
@@ -91,9 +100,11 @@
 - **Recommendation**: [Suggested fix]
 
 #### Issue 1.2: [Brief Issue Title]
+
 [Repeat structure]
 
 **Post-Task Feedback**:
+
 - "How did that feel?" - "[User's response]"
 - Most confusing aspect: "[User's response]"
 - What would make it easier: "[User's response]"
@@ -106,9 +117,10 @@
 
 **Goal**: [Task objective]
 
-**Status**: ☐ Success  ☐ Partial Success  ☐ Failure
+**Status**: ☐ Success ☐ Partial Success ☐ Failure
 
 **Metrics**:
+
 - **Time to Complete**: [X] minutes
 - **Confidence Rating**: [X]/5
 - **Assistance Required**: [None / Minor / Significant]
@@ -128,13 +140,13 @@
 
 ### Usability Metrics Summary
 
-| Metric | Result | Target | Met Target? |
-|--------|--------|--------|-------------|
-| Overall Task Success Rate | __% (__/__) | >80% | ☐ Yes ☐ No |
-| Average Task Completion Time | __ min | <__ min | ☐ Yes ☐ No |
-| Average Confidence Rating | __/5 | >4/5 | ☐ Yes ☐ No |
-| Ease of Use Rating | __/5 | >4/5 | ☐ Yes ☐ No |
-| Likelihood to Recommend | __/5 | >4/5 | ☐ Yes ☐ No |
+| Metric                       | Result        | Target    | Met Target? |
+| ---------------------------- | ------------- | --------- | ----------- |
+| Overall Task Success Rate    | **% (**/\_\_) | >80%      | ☐ Yes ☐ No  |
+| Average Task Completion Time | \_\_ min      | <\_\_ min | ☐ Yes ☐ No  |
+| Average Confidence Rating    | \_\_/5        | >4/5      | ☐ Yes ☐ No  |
+| Ease of Use Rating           | \_\_/5        | >4/5      | ☐ Yes ☐ No  |
+| Likelihood to Recommend      | \_\_/5        | >4/5      | ☐ Yes ☐ No  |
 
 ### Post-Task Interview Summary
 
@@ -151,6 +163,7 @@
 **One Thing to Change**: [User's top priority improvement]
 
 **Additional Feedback**:
+
 - [Other insights from post-task questions]
 - [Suggestions or comments]
 
@@ -161,6 +174,7 @@
 ### Critical Issues (P0)
 
 #### C1: [Issue Title]
+
 - **Tasks Affected**: [Task numbers]
 - **Description**: [Full description]
 - **User Impact**: Completely blocks [workflow/task completion]
@@ -177,6 +191,7 @@
 ### Major Issues (P1)
 
 #### M1: [Issue Title]
+
 - **Tasks Affected**: [Task numbers]
 - **Description**: [Full description]
 - **User Impact**: Causes significant delay or frustration
@@ -189,6 +204,7 @@
 ### Minor Issues (P2)
 
 #### m1: [Issue Title]
+
 - **Description**: [Brief description]
 - **Impact**: Minor confusion or inefficiency
 - **Recommendation**: [Suggested improvement]
@@ -200,22 +216,26 @@
 ## Behavioral Insights
 
 ### Navigation Patterns
+
 - **Primary navigation used**: [Which menus/paths user relied on]
 - **Search usage**: [Did they use search? Was it successful?]
 - **Visual scanning**: [What caught attention? What was overlooked?]
 - **Mental model**: [How did user conceptualize the workflow?]
 
 ### Emotional Journey
+
 - **Confidence at start**: [High/Medium/Low]
 - **Moments of frustration**: [When and why]
 - **Moments of delight**: [When and why]
 - **Overall sentiment**: [Positive/Neutral/Negative]
 
 ### Think-Aloud Quality
-- **Quality**: ☐ Excellent  ☐ Good  ☐ Fair  ☐ Poor
+
+- **Quality**: ☐ Excellent ☐ Good ☐ Fair ☐ Poor
 - **Insights from narration**: [Key thoughts revealed through thinking aloud]
 
 ### Workarounds Observed
+
 - [Describe any creative workarounds user attempted]
 - [Note if workarounds were successful]
 
@@ -224,6 +244,7 @@
 ## Key Quotes
 
 ### Frustration/Confusion
+
 > "[Quote 1 - with context]"
 > — During [Task X], when [context]
 
@@ -231,6 +252,7 @@
 > — [Context]
 
 ### Delight/Satisfaction
+
 > "[Quote 1]"
 > — [Context]
 
@@ -238,6 +260,7 @@
 > — [Context]
 
 ### Mental Models/Expectations
+
 > "[Quote revealing what user expected]"
 > — [Context]
 
@@ -245,6 +268,7 @@
 > — [Context]
 
 ### Suggestions
+
 > "[Quote with user suggestion]"
 > — [Context]
 
@@ -253,15 +277,19 @@
 ## Positive Findings
 
 **What Worked Well**:
+
 1. [Specific feature or interaction that was successful]
+
    - Why it worked: [User feedback or observation]
 
 2. [Another positive finding]
+
    - Why it worked: [Explanation]
 
 3. [Another positive finding]
 
 **Features Users Appreciated**:
+
 - [Feature 1]: "[User quote or description]"
 - [Feature 2]: "[User quote or description]"
 
@@ -270,18 +298,22 @@
 ## Patterns and Themes
 
 **Emerging Patterns** (compare with other sessions):
+
 - [Pattern 1]: Seen in [X] of [Y] sessions
 - [Pattern 2]: Seen in [X] of [Y] sessions
 
 **Persona-Specific Observations**:
+
 - [Observations unique to this persona/experience level]
 - [Different from other personas how?]
 
 **Technical Context Impact**:
+
 - [Did user's tech stack affect their experience?]
 - [Did team context matter?]
 
 **Cross-Session Synthesis Notes**:
+
 - Compare findings with other participants
 - Look for patterns across multiple users
 - Identify issues by frequency (1/8, 2/8, etc.)
@@ -293,6 +325,7 @@
 ## Recommendations
 
 ### Immediate Actions (P0)
+
 1. **[Fix for Critical Issue C1]**
    - Rationale: [Why this must be fixed immediately]
    - Estimated Effort: [Low/Medium/High]
@@ -302,6 +335,7 @@
 [Repeat for each P0 item]
 
 ### Short-Term Improvements (P1)
+
 1. **[Fix for Major Issue M1]**
    - Rationale: [Why this should be fixed soon]
    - Estimated Effort: [Low/Medium/High]
@@ -310,9 +344,11 @@
 [Repeat for each P1 item]
 
 ### Long-Term Enhancements (P2)
+
 - [List of minor improvements and enhancements]
 
 ### Quick Wins
+
 - [Issues that are high impact but low effort]
 - [Can be addressed immediately]
 
@@ -334,6 +370,7 @@
 ## Session Metadata
 
 **Recording Details**:
+
 - **Video file**: [Filename or link]
 - **Duration**: [XX:XX]
 - **Key timestamps**:
@@ -341,13 +378,14 @@
   - [XX:XX] - [Description]
 
 **Data Storage**:
+
 - Anonymized notes: [This file location]
 - Raw recording: [Secure location - not in Git]
 - Observation checklist: [File location]
 
 **Analysis Date**: [YYYY-MM-DD]
 **Analyst**: [Name]
-**Review Status**: ☐ Draft  ☐ Reviewed  ☐ Final
+**Review Status**: ☐ Draft ☐ Reviewed ☐ Final
 
 ---
 
@@ -356,11 +394,13 @@
 ### Task Success Criteria Reference
 
 **Task 1: [Name]**
+
 - [ ] [Success criterion 1]
 - [ ] [Success criterion 2]
 - [ ] [Success criterion 3]
 
 **Task 2: [Name]**
+
 - [ ] [Success criterion 1]
 - [ ] [Success criterion 2]
 

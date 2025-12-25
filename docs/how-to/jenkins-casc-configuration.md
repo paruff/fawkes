@@ -66,23 +66,23 @@ The JCasC configuration is organized into sections:
 jenkins:
   systemMessage: "Fawkes CI/CD Platform - Golden Path Enabled"
   mode: NORMAL
-  numExecutors: 0  # No builds on controller
+  numExecutors: 0 # No builds on controller
 ```
 
 ### 2. Kubernetes Cloud Configuration
 
 ```yaml
-  clouds:
-    - kubernetes:
-        name: "kubernetes"
-        namespace: "fawkes"
-        jenkinsUrl: "http://jenkins:8080"
-        jenkinsTunnel: "jenkins-agent:50000"
-        containerCapStr: "20"
-        templates:
-          - name: "maven-agent"
-            label: "maven java"
-            # ... agent configuration
+clouds:
+  - kubernetes:
+      name: "kubernetes"
+      namespace: "fawkes"
+      jenkinsUrl: "http://jenkins:8080"
+      jenkinsTunnel: "jenkins-agent:50000"
+      containerCapStr: "20"
+      templates:
+        - name: "maven-agent"
+          label: "maven java"
+          # ... agent configuration
 ```
 
 ### 3. Security Realm & Authorization
@@ -216,6 +216,7 @@ kubectl create secret generic jenkins-credentials -n fawkes \
 ```
 
 **Security Note**: Never use `--from-literal` with plaintext values as shown in simple examples, as this exposes credentials in:
+
 - Shell history (`.bash_history`, `.zsh_history`)
 - Process listings (`ps aux`)
 - Kubernetes audit logs
@@ -251,6 +252,7 @@ credentials:
 ### Production Setup with External Secrets Operator
 
 For production environments, use External Secrets Operator to sync from:
+
 - AWS Secrets Manager
 - Azure Key Vault
 - HashiCorp Vault
@@ -393,7 +395,7 @@ kubectl exec -n fawkes jenkins-0 -- jenkins-plugin-cli --list
 ```yaml
 controller:
   installPlugins:
-    - kubernetes:4029.v5712230ccb_f8  # Pin specific version
+    - kubernetes:4029.v5712230ccb_f8 # Pin specific version
 ```
 
 ### Credentials Not Working in Pipelines
@@ -426,12 +428,14 @@ pipeline {
 ### 1. Version Control Everything
 
 ✅ **DO:**
+
 - Store all configuration in Git
 - Use meaningful commit messages
 - Create pull requests for changes
 - Review changes before merging
 
 ❌ **DON'T:**
+
 - Make manual changes via UI (they will be overwritten)
 - Commit secrets to Git
 - Skip code review for configuration changes
@@ -439,12 +443,14 @@ pipeline {
 ### 2. Secret Management
 
 ✅ **DO:**
+
 - Use External Secrets Operator in production
 - Rotate credentials regularly
 - Use minimal required permissions
 - Audit secret access
 
 ❌ **DON'T:**
+
 - Commit real credentials to Git
 - Use default/weak passwords
 - Share credentials between environments
@@ -452,12 +458,14 @@ pipeline {
 ### 3. Plugin Management
 
 ✅ **DO:**
+
 - Pin plugin versions in production
 - Test plugin updates in dev first
 - Document required plugins
 - Keep plugins up to date
 
 ❌ **DON'T:**
+
 - Use `:latest` tag in production
 - Install unnecessary plugins
 - Skip security updates
@@ -465,12 +473,14 @@ pipeline {
 ### 4. Testing
 
 ✅ **DO:**
+
 - Test configuration in dev environment
 - Validate YAML syntax before commit
 - Check Jenkins logs after changes
 - Have rollback plan
 
 ❌ **DON'T:**
+
 - Test directly in production
 - Skip validation
 - Deploy without monitoring

@@ -27,6 +27,7 @@ This service provides:
 ### Database Schema
 
 #### survey_links
+
 - `id`: Primary key
 - `token`: Unique survey token (64 chars)
 - `user_id`: User identifier
@@ -37,6 +38,7 @@ This service provides:
 - `created_at`, `updated_at`: Timestamps
 
 #### survey_responses
+
 - `id`: Primary key
 - `user_id`: User identifier
 - `token`: Survey token (foreign key)
@@ -46,6 +48,7 @@ This service provides:
 - `created_at`: Timestamp
 
 #### survey_campaigns
+
 - `id`: Primary key
 - `quarter`: Quarter identifier (Q1-Q4)
 - `year`: Campaign year
@@ -74,11 +77,13 @@ This service provides:
 NPS is calculated as: **(% Promoters - % Detractors) × 100**
 
 Score classification:
+
 - **Promoters** (9-10): Enthusiastic users
 - **Passives** (7-8): Satisfied but unenthusiastic
 - **Detractors** (0-6): Unhappy users
 
 NPS Score ranges from -100 to +100:
+
 - **-100 to 0**: Needs improvement
 - **0 to 30**: Good
 - **30 to 70**: Great
@@ -194,30 +199,35 @@ curl http://nps.local/health
 ## Survey Flow
 
 ### 1. Survey Distribution
+
 - Quarterly CronJob triggers survey distribution
 - Generate unique survey link per user
 - Send DM via Mattermost with survey link
 - Track distribution in database
 
 ### 2. User Response
+
 - User clicks survey link
 - Validates link (not expired, not already responded)
 - Displays survey form (0-10 score + optional comment)
 - Submits response
 
 ### 3. Response Processing
+
 - Store response in database
 - Calculate score type (promoter/passive/detractor)
 - Update metrics
 - Mark link as responded
 
 ### 4. Reminders
+
 - Weekly CronJob checks for non-respondents
 - Send reminder after 7 days
 - Track reminder status
 - Don't spam users who already responded
 
 ### 5. NPS Calculation
+
 - Calculate NPS score periodically
 - Expose via API and Prometheus
 - Display in dashboard
@@ -227,6 +237,7 @@ curl http://nps.local/health
 **Goal**: >30% response rate
 
 Strategies to achieve:
+
 - Clear, concise survey (2 minutes)
 - Personalized DM messages
 - Timely reminders (7 days)

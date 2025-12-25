@@ -46,10 +46,12 @@ Before deploying SonarQube, ensure the following components are running:
 The PostgreSQL database cluster for SonarQube is already defined in the repository.
 
 **Files**:
+
 - `platform/apps/postgresql/db-sonarqube-cluster.yaml` - PostgreSQL cluster definition
 - `platform/apps/postgresql/db-sonarqube-credentials.yaml` - Database credentials
 
 **Verify PostgreSQL Deployment**:
+
 ```bash
 # Check if PostgreSQL operator is running
 kubectl get pods -n cloudnativepg-system
@@ -63,6 +65,7 @@ kubectl get cluster -n fawkes db-sonarqube-dev -o jsonpath='{.status.phase}'
 ```
 
 **Database Details**:
+
 - **Cluster Name**: `db-sonarqube-dev`
 - **Namespace**: `fawkes`
 - **Database**: `sonarqube`
@@ -80,6 +83,7 @@ The SonarQube application is defined as an ArgoCD Application manifest.
 **File**: `platform/apps/sonarqube-application.yaml`
 
 **Apply the ArgoCD Application**:
+
 ```bash
 # Apply the SonarQube application
 kubectl apply -f platform/apps/sonarqube-application.yaml
@@ -92,6 +96,7 @@ kubectl get application -n fawkes sonarqube -w
 ```
 
 **Alternative: Deploy via ArgoCD UI**:
+
 1. Open ArgoCD UI
 2. Click **+ New App**
 3. Application Name: `sonarqube`
@@ -107,6 +112,7 @@ kubectl get application -n fawkes sonarqube -w
 ### Step 3: Verify Deployment
 
 **Check Pod Status**:
+
 ```bash
 # Wait for SonarQube pod to be ready (can take 2-3 minutes)
 kubectl get pods -n fawkes -l app=sonarqube
@@ -120,6 +126,7 @@ kubectl logs -n fawkes -l app=sonarqube --tail=50 -f
 ```
 
 **Check Service**:
+
 ```bash
 # Verify service is created
 kubectl get svc -n fawkes -l app=sonarqube
@@ -130,6 +137,7 @@ kubectl get svc -n fawkes -l app=sonarqube
 ```
 
 **Check Ingress**:
+
 ```bash
 # Verify ingress is created
 kubectl get ingress -n fawkes -l app=sonarqube
@@ -141,6 +149,7 @@ kubectl describe ingress -n fawkes sonarqube
 ### Step 4: Access SonarQube UI
 
 **Local Development**:
+
 ```bash
 # Access via ingress
 http://sonarqube.127.0.0.1.nip.io
@@ -152,11 +161,13 @@ kubectl port-forward -n fawkes svc/sonarqube 9000:9000
 ```
 
 **Production**:
+
 ```
 https://sonarqube.fawkes.idp
 ```
 
 **Default Credentials**:
+
 - Username: `admin`
 - Password: `admin`
 
@@ -194,6 +205,7 @@ curl -u admin:${SONAR_PASSWORD} \
 #### 5.3 Configure Jenkins Integration
 
 **Add Token to Jenkins**:
+
 ```bash
 # Via Jenkins UI:
 # 1. Jenkins → Manage Jenkins → Manage Credentials
@@ -208,6 +220,7 @@ curl -u admin:${SONAR_PASSWORD} \
 ```
 
 **Configure SonarQube Server in Jenkins**:
+
 ```groovy
 // Already configured in Jenkins Shared Library
 withSonarQubeEnv('SonarQube') {
@@ -221,6 +234,7 @@ withSonarQubeEnv('SonarQube') {
 See [quality-profiles.md](../../platform/apps/sonarqube/quality-profiles.md) for detailed instructions.
 
 **Quick Setup**:
+
 1. Navigate to **Quality Profiles** in SonarQube UI
 2. Create custom profiles for each language:
    - `Fawkes Java` (parent: Sonar way)
@@ -251,6 +265,7 @@ curl -u admin:${SONAR_PASSWORD} \
 ```
 
 Or configure via UI:
+
 1. Navigate to **Quality Gates**
 2. Click **Create**
 3. Name: `Fawkes Gate`
@@ -260,6 +275,7 @@ Or configure via UI:
 ### Step 6: Test Integration with Jenkins
 
 **Create Test Project**:
+
 ```bash
 # Use a golden path template to create a test service
 # From Backstage UI:
@@ -271,6 +287,7 @@ Or configure via UI:
 ```
 
 **Trigger Jenkins Build**:
+
 ```bash
 # Push code to trigger Jenkins pipeline
 git commit -m "Test SonarQube integration"
@@ -282,6 +299,7 @@ git push
 ```
 
 **Verify in SonarQube**:
+
 ```bash
 # Check project appears in SonarQube UI
 # Navigate to Projects
@@ -293,10 +311,12 @@ git push
 ### Resource Limits
 
 **SonarQube Pod**:
+
 - Requests: 500m CPU, 2Gi memory
 - Limits: 2 CPU, 4Gi memory
 
 **PostgreSQL Cluster**:
+
 - Requests: 500m CPU, 512Mi memory per instance
 - Limits: 2 CPU, 2Gi memory per instance
 - Storage: 20Gi per instance (total 60Gi for 3 instances)
@@ -304,12 +324,14 @@ git push
 ### Persistence
 
 **SonarQube Data**:
+
 - Volume: PersistentVolumeClaim
 - Storage Class: `standard`
 - Size: 10Gi
 - Access Mode: ReadWriteOnce
 
 **PostgreSQL Data**:
+
 - Managed by CloudNativePG operator
 - Automated backups (configure in production)
 - Point-in-time recovery capability
@@ -317,6 +339,7 @@ git push
 ### Security
 
 **Pod Security Context**:
+
 - Non-root user: UID/GID 1000
 - fsGroup: 1000
 - Read-only root filesystem: false (SonarQube writes to temp dirs)
@@ -324,11 +347,13 @@ git push
 - Seccomp profile: RuntimeDefault
 
 **Network**:
+
 - Internal service: ClusterIP
 - External access: Via Ingress with TLS
 - Database connection: Internal service, TLS optional
 
 **Secrets Management**:
+
 - Database credentials: Kubernetes secrets (dev/local)
 - Admin credentials: Manual change required
 - Scanner tokens: Jenkins credentials store
@@ -337,6 +362,7 @@ git push
 ### Plugins
 
 The following plugins are pre-installed:
+
 - sonar-scm-git-plugin (Git integration)
 - sonar-jacoco-plugin (Java code coverage)
 - sonar-findbugs-plugin (SpotBugs integration)
@@ -350,6 +376,7 @@ See `sonarqube-application.yaml` for plugin URLs and versions.
 ### Prometheus Integration
 
 **ServiceMonitor**:
+
 ```yaml
 # Already configured in sonarqube-application.yaml
 prometheusMonitoring:
@@ -360,11 +387,13 @@ prometheusMonitoring:
 ```
 
 **Key Metrics**:
+
 - `sonarqube_health_status` - Overall health
 - `sonarqube_compute_engine_tasks` - Background task queue
 - `sonarqube_database_pool_active_connections` - DB connections
 
 **View Metrics**:
+
 ```bash
 # Port-forward to SonarQube
 kubectl port-forward -n fawkes svc/sonarqube 9000:9000
@@ -376,16 +405,19 @@ curl http://localhost:9000/api/monitoring/metrics
 ### Health Checks
 
 **Liveness Probe**:
+
 - Path: `/api/system/liveness`
 - Initial Delay: 90 seconds
 - Period: 30 seconds
 
 **Readiness Probe**:
+
 - Path: `/api/system/health`
 - Initial Delay: 90 seconds
 - Period: 30 seconds
 
 **Check Health**:
+
 ```bash
 # Via API
 curl http://sonarqube.fawkes.svc:9000/api/system/health
@@ -400,6 +432,7 @@ curl http://sonarqube.fawkes.svc:9000/api/system/health
 **Symptoms**: Pod stuck in `CrashLoopBackOff` or `Pending`
 
 **Solutions**:
+
 ```bash
 # Check pod events
 kubectl describe pod -n fawkes -l app=sonarqube
@@ -418,6 +451,7 @@ kubectl logs -n fawkes -l app=sonarqube --previous
 **Symptoms**: Logs show "Can't connect to database"
 
 **Solutions**:
+
 ```bash
 # Verify PostgreSQL cluster is healthy
 kubectl get cluster -n fawkes db-sonarqube-dev
@@ -437,6 +471,7 @@ kubectl get secret -n fawkes db-sonarqube-credentials -o yaml
 **Symptoms**: Can't access SonarQube UI via ingress
 
 **Solutions**:
+
 ```bash
 # Check ingress status
 kubectl get ingress -n fawkes sonarqube
@@ -457,6 +492,7 @@ kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller
 **Symptoms**: Jenkins pipeline times out waiting for Quality Gate
 
 **Solutions**:
+
 ```bash
 # Increase timeout in Jenkinsfile
 timeout(time: 10, unit: 'MINUTES') {
@@ -476,6 +512,7 @@ kubectl rollout restart deployment -n fawkes sonarqube
 **Symptoms**: Pod using more memory than allocated
 
 **Solutions**:
+
 ```bash
 # Check current usage
 kubectl top pod -n fawkes -l app=sonarqube
@@ -496,6 +533,7 @@ resources:
 ### Database Backup
 
 **Automated Backups** (configure in production):
+
 ```yaml
 # Edit db-sonarqube-cluster.yaml
 backup:
@@ -514,6 +552,7 @@ backup:
 ```
 
 **Manual Backup**:
+
 ```bash
 # Export database
 kubectl exec -it -n fawkes db-sonarqube-dev-1 -- \
@@ -564,6 +603,7 @@ curl http://sonarqube.fawkes.svc:9000/api/system/status
 SonarQube automatically migrates the database schema on startup if needed.
 
 **Monitor Migration**:
+
 ```bash
 # Check logs for migration
 kubectl logs -n fawkes -l app=sonarqube --tail=100 -f
@@ -578,6 +618,7 @@ kubectl logs -n fawkes -l app=sonarqube --tail=100 -f
 ### Housekeeping
 
 **Clean Old Analysis**:
+
 ```bash
 # Via UI: Administration → Projects → Management → Bulk Deletion
 
@@ -590,6 +631,7 @@ curl -u admin:${SONAR_PASSWORD} \
 ### Reindexing
 
 If search is slow or not working:
+
 ```bash
 # Trigger reindex
 curl -u admin:${SONAR_PASSWORD} \

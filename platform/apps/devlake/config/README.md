@@ -6,12 +6,12 @@ This directory contains webhook configurations and documentation for integrating
 
 Webhooks enable real-time event ingestion for DORA metrics calculation:
 
-| Source | Events Captured | Metrics Impact |
-|--------|----------------|----------------|
-| **GitHub** | Commits, PR merges | Lead Time for Changes |
-| **Jenkins** | Build results, tests, quality gates | Build success rate, rework, quality |
-| **ArgoCD** | Deployment syncs, health status | Deployment Frequency, Change Failure Rate |
-| **Observability** | Incidents | Mean Time to Restore |
+| Source            | Events Captured                     | Metrics Impact                            |
+| ----------------- | ----------------------------------- | ----------------------------------------- |
+| **GitHub**        | Commits, PR merges                  | Lead Time for Changes                     |
+| **Jenkins**       | Build results, tests, quality gates | Build success rate, rework, quality       |
+| **ArgoCD**        | Deployment syncs, health status     | Deployment Frequency, Change Failure Rate |
+| **Observability** | Incidents                           | Mean Time to Restore                      |
 
 ## Quick Start
 
@@ -30,6 +30,7 @@ kubectl apply -f platform/apps/devlake/config/argocd-notifications.yaml
 Follow the detailed guide: [github-webhook-setup.md](github-webhook-setup.md)
 
 **Quick steps:**
+
 1. Get webhook secret from Kubernetes
 2. Add webhook in GitHub repository settings
 3. Point to: `https://devlake.fawkes.idp/api/plugins/webhook/1/commits`
@@ -42,6 +43,7 @@ Jenkins integration uses the `doraMetrics.groovy` shared library.
 Follow the guide: [jenkins-webhook-setup.md](jenkins-webhook-setup.md)
 
 **Quick integration:**
+
 ```groovy
 @Library('fawkes-pipeline-library') _
 
@@ -75,6 +77,7 @@ pipeline {
 ArgoCD notifications are configured via the ConfigMap in `argocd-notifications.yaml`.
 
 **Verification:**
+
 ```bash
 # Check ArgoCD notifications ConfigMap
 kubectl get configmap argocd-notifications-cm -n argocd
@@ -87,12 +90,12 @@ argocd app sync my-app
 
 All webhooks point to DevLake:
 
-| Webhook | Endpoint | Source |
-|---------|----------|--------|
-| Commits | `/api/plugins/webhook/1/commits` | GitHub |
-| CI/CD Events | `/api/plugins/webhook/1/cicd` | Jenkins |
-| Deployments | `/api/plugins/webhook/1/deployments` | ArgoCD |
-| Incidents | `/api/plugins/webhook/1/incidents` | Observability |
+| Webhook      | Endpoint                             | Source        |
+| ------------ | ------------------------------------ | ------------- |
+| Commits      | `/api/plugins/webhook/1/commits`     | GitHub        |
+| CI/CD Events | `/api/plugins/webhook/1/cicd`        | Jenkins       |
+| Deployments  | `/api/plugins/webhook/1/deployments` | ArgoCD        |
+| Incidents    | `/api/plugins/webhook/1/incidents`   | Observability |
 
 **Base URL (Production)**: `https://devlake.fawkes.idp`
 **Base URL (Local Dev)**: `http://devlake.127.0.0.1.nip.io`
@@ -107,6 +110,7 @@ All webhooks point to DevLake:
 ```
 
 This tests:
+
 - ✅ DevLake service is running
 - ✅ Webhook endpoints are accessible
 - ✅ GitHub webhook endpoint responds
@@ -127,6 +131,7 @@ pytest features/dora-webhooks.feature -v
 ### Manual Testing
 
 #### Test GitHub Webhook
+
 ```bash
 # Get webhook secret
 WEBHOOK_SECRET=$(kubectl get secret devlake-webhook-secrets -n fawkes-devlake \
@@ -147,6 +152,7 @@ curl -X POST https://devlake.fawkes.idp/api/plugins/webhook/1/commits \
 ```
 
 #### Test Jenkins Webhook
+
 ```bash
 curl -X POST http://devlake.fawkes-devlake.svc:8080/api/plugins/webhook/1/cicd \
   -H "Content-Type: application/json" \
@@ -160,6 +166,7 @@ curl -X POST http://devlake.fawkes-devlake.svc:8080/api/plugins/webhook/1/cicd \
 ```
 
 #### Test ArgoCD Webhook
+
 ```bash
 curl -X POST http://devlake.fawkes-devlake.svc:8080/api/plugins/webhook/1/deployments \
   -H "Content-Type: application/json" \
@@ -180,11 +187,13 @@ curl -X POST http://devlake.fawkes-devlake.svc:8080/api/plugins/webhook/1/deploy
 **GitHub**: Repository → Settings → Webhooks → Recent Deliveries
 
 **Jenkins**: Check console output for DORA messages:
+
 ```
 ✅ DORA: Build event recorded for payment-service (build)
 ```
 
 **ArgoCD**: Check ArgoCD notifications logs:
+
 ```bash
 kubectl logs -n argocd -l app.kubernetes.io/name=argocd-notifications-controller
 ```
@@ -209,6 +218,7 @@ histogram_quantile(0.95, devlake_webhook_duration_seconds_bucket)
 ### Grafana Dashboard
 
 View webhook health:
+
 1. Open Grafana: `http://devlake-grafana.127.0.0.1.nip.io`
 2. Navigate to **DevLake Webhooks** dashboard
 3. View request rates, error rates, and latency
@@ -232,11 +242,13 @@ View webhook health:
 ### ArgoCD Notifications Not Sending
 
 1. **Check notifications ConfigMap**:
+
    ```bash
    kubectl get configmap argocd-notifications-cm -n argocd -o yaml
    ```
 
 2. **Check notifications controller logs**:
+
    ```bash
    kubectl logs -n argocd -l app.kubernetes.io/name=argocd-notifications-controller
    ```
@@ -250,14 +262,17 @@ View webhook health:
 ### Webhook Events Not in DevLake
 
 1. **Check DevLake logs**:
+
    ```bash
    kubectl logs -n fawkes-devlake -l app.kubernetes.io/component=lake | grep webhook
    ```
 
 2. **Check database**:
+
    ```bash
    kubectl exec -it -n fawkes-devlake devlake-mysql-0 -- mysql -u root -p lake
    ```
+
    ```sql
    SELECT * FROM commits ORDER BY authored_date DESC LIMIT 5;
    SELECT * FROM deployments ORDER BY created_at DESC LIMIT 5;
@@ -283,6 +298,7 @@ kubectl get secret devlake-webhook-secrets -n fawkes-devlake -o yaml
 ### Network Policies
 
 Network policies control webhook ingress:
+
 - GitHub webhooks: via ingress controller
 - Jenkins webhooks: from `fawkes` namespace
 - ArgoCD webhooks: from `argocd` namespace
@@ -293,13 +309,13 @@ GitHub webhooks use HMAC-SHA256 signatures for validation. DevLake automatically
 
 ## Files
 
-| File | Purpose |
-|------|---------|
-| `webhooks.yaml` | Central webhook configuration, secrets, network policies |
-| `argocd-notifications.yaml` | ArgoCD notifications to send deployment events |
-| `github-webhook-setup.md` | Step-by-step GitHub webhook configuration guide |
-| `jenkins-webhook-setup.md` | Jenkins integration guide using doraMetrics library |
-| `README.md` | This file - overview and quick start |
+| File                        | Purpose                                                  |
+| --------------------------- | -------------------------------------------------------- |
+| `webhooks.yaml`             | Central webhook configuration, secrets, network policies |
+| `argocd-notifications.yaml` | ArgoCD notifications to send deployment events           |
+| `github-webhook-setup.md`   | Step-by-step GitHub webhook configuration guide          |
+| `jenkins-webhook-setup.md`  | Jenkins integration guide using doraMetrics library      |
+| `README.md`                 | This file - overview and quick start                     |
 
 ## Next Steps
 

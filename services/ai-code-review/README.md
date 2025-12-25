@@ -129,6 +129,7 @@ gh pr create --title "Test PR" --body "Testing AI review"
 ## API Endpoints
 
 ### Health Check
+
 ```
 GET /health
 ```
@@ -136,6 +137,7 @@ GET /health
 Returns service health status and configuration.
 
 ### Ready Check
+
 ```
 GET /ready
 ```
@@ -143,6 +145,7 @@ GET /ready
 Returns readiness status (checks if required config is present).
 
 ### GitHub Webhook
+
 ```
 POST /webhook/github
 ```
@@ -150,6 +153,7 @@ POST /webhook/github
 Receives GitHub webhook events for pull requests.
 
 ### Metrics
+
 ```
 GET /metrics
 ```
@@ -201,6 +205,7 @@ services/ai-code-review/
 ## Review Categories
 
 ### Security
+
 - SQL injection, XSS, CSRF vulnerabilities
 - Authentication and authorization issues
 - Secrets in code
@@ -208,6 +213,7 @@ services/ai-code-review/
 - Insecure cryptography
 
 ### Performance
+
 - N+1 query problems
 - Inefficient algorithms
 - Memory leaks
@@ -215,6 +221,7 @@ services/ai-code-review/
 - Missing caching
 
 ### Best Practices
+
 - SOLID principles
 - DRY violations
 - Code organization
@@ -222,12 +229,14 @@ services/ai-code-review/
 - Error handling
 
 ### Test Coverage
+
 - Missing unit tests
 - Missing edge case tests
 - Missing error condition tests
 - Test quality issues
 
 ### Documentation
+
 - Missing docstrings
 - Missing API documentation
 - Unclear code without comments

@@ -1,6 +1,7 @@
 # ADR-010: Ingress Controller for Service Access
 
 ## Status
+
 Accepted
 
 ## Context
@@ -8,6 +9,7 @@ Accepted
 The Fawkes platform integrates multiple services that require external access:
 
 **Core Services**:
+
 - Backstage (Developer Portal & Dojo Hub) - Primary user interface
 - Mattermost (Team Collaboration) - Chat and collaboration
 - Focalboard (Project Management) - Kanban boards and planning
@@ -18,6 +20,7 @@ The Fawkes platform integrates multiple services that require external access:
 - SonarQube (Code Quality) - Security and quality reports
 
 **Access Requirements**:
+
 - Single entry point with consistent domain structure
 - TLS/SSL encryption for all services
 - Path-based or subdomain-based routing
@@ -30,6 +33,7 @@ The Fawkes platform integrates multiple services that require external access:
 - Request/response logging for security auditing
 
 **Technical Constraints**:
+
 - Must work across AWS, Azure, GCP, and on-premises environments
 - Should integrate with cert-manager for automated certificate provisioning
 - Must support both path-based (/backstage) and subdomain-based (backstage.fawkes.example.com) routing
@@ -38,6 +42,7 @@ The Fawkes platform integrates multiple services that require external access:
 - Should provide observability (request metrics, tracing)
 
 **Security Requirements**:
+
 - Force HTTPS/TLS for all traffic
 - Support for custom certificates and Let's Encrypt
 - Web Application Firewall (WAF) capabilities
@@ -47,6 +52,7 @@ The Fawkes platform integrates multiple services that require external access:
 - IP whitelisting capabilities for sensitive services
 
 **Operational Requirements**:
+
 - Easy configuration via annotations or CRDs
 - Automatic service discovery
 - Rolling updates without downtime
@@ -90,6 +96,7 @@ Internet
 ### Routing Strategy
 
 **Primary: Subdomain-Based Routing** (Production)
+
 ```
 https://backstage.fawkes.example.com  → Backstage
 https://chat.fawkes.example.com       → Mattermost
@@ -102,6 +109,7 @@ https://quality.fawkes.example.com    → SonarQube
 ```
 
 **Alternative: Path-Based Routing** (Development/Learning)
+
 ```
 https://fawkes.example.com/           → Backstage
 https://fawkes.example.com/chat       → Mattermost
@@ -129,14 +137,15 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-prod-key
     solvers:
-    - http01:
-        ingress:
-          class: nginx
+      - http01:
+          ingress:
+            class: nginx
 ```
 
 ### Example Ingress Configuration
 
 **Backstage (Primary Portal)**:
+
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -152,23 +161,24 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-  - hosts:
-    - backstage.fawkes.example.com
-    secretName: backstage-tls
+    - hosts:
+        - backstage.fawkes.example.com
+      secretName: backstage-tls
   rules:
-  - host: backstage.fawkes.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: backstage
-            port:
-              number: 7007
+    - host: backstage.fawkes.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: backstage
+                port:
+                  number: 7007
 ```
 
 **Mattermost (WebSocket Support)**:
+
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -184,25 +194,26 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-  - hosts:
-    - chat.fawkes.example.com
-    secretName: mattermost-tls
+    - hosts:
+        - chat.fawkes.example.com
+      secretName: mattermost-tls
   rules:
-  - host: chat.fawkes.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: mattermost
-            port:
-              number: 8065
+    - host: chat.fawkes.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mattermost
+                port:
+                  number: 8065
 ```
 
 ### Security Configuration
 
 **Rate Limiting**:
+
 ```yaml
 annotations:
   nginx.ingress.kubernetes.io/limit-rps: "10"
@@ -210,12 +221,14 @@ annotations:
 ```
 
 **IP Whitelisting** (for admin services):
+
 ```yaml
 annotations:
   nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12"
 ```
 
 **Security Headers**:
+
 ```yaml
 annotations:
   nginx.ingress.kubernetes.io/configuration-snippet: |
@@ -242,6 +255,7 @@ metadata:
 ### Monitoring Integration
 
 NGINX Ingress Controller exposes Prometheus metrics:
+
 - Request rate per service
 - Request duration percentiles
 - Error rates (4xx, 5xx)
@@ -253,6 +267,7 @@ Grafana dashboards: **NGINX Ingress Controller** (official dashboard ID: 9614)
 ### Deployment Configuration
 
 **NGINX Ingress Controller Helm Values**:
+
 ```yaml
 controller:
   replicaCount: 3
@@ -326,6 +341,7 @@ controller:
 ### Alternative 1: Traefik
 
 **Pros**:
+
 - Native Let's Encrypt integration (no cert-manager needed)
 - Dynamic configuration via labels
 - Built-in dashboard for traffic visualization
@@ -334,6 +350,7 @@ controller:
 - Modern, actively developed
 
 **Cons**:
+
 - Smaller community compared to NGINX
 - Less enterprise adoption
 - More limited advanced features (rate limiting, WAF)
@@ -345,6 +362,7 @@ controller:
 ### Alternative 2: Istio/Envoy Service Mesh
 
 **Pros**:
+
 - Full service mesh capabilities (mTLS, traffic management, observability)
 - Advanced traffic routing (A/B testing, canary, circuit breaking)
 - Superior observability (distributed tracing, detailed metrics)
@@ -352,6 +370,7 @@ controller:
 - Envoy is modern, high-performance proxy
 
 **Cons**:
+
 - Significant complexity overhead (steep learning curve)
 - High resource consumption (sidecar for every pod)
 - Operational burden (control plane management, upgrades)
@@ -364,6 +383,7 @@ controller:
 ### Alternative 3: Kong Ingress Controller
 
 **Pros**:
+
 - API gateway features (rate limiting, authentication, transformation)
 - Plugin ecosystem for extensibility
 - Enterprise version available with support
@@ -372,6 +392,7 @@ controller:
 - Built-in developer portal
 
 **Cons**:
+
 - More complex than pure ingress controller
 - Requires PostgreSQL for production (additional dependency)
 - Licensing considerations (enterprise features)
@@ -383,6 +404,7 @@ controller:
 ### Alternative 4: HAProxy Ingress
 
 **Pros**:
+
 - Extremely high performance and efficiency
 - Very low resource consumption
 - Battle-tested load balancing capabilities
@@ -390,6 +412,7 @@ controller:
 - Used by major internet properties
 
 **Cons**:
+
 - Smaller Kubernetes community compared to NGINX
 - Less flexible annotation-based configuration
 - Fewer examples and tutorials for Kubernetes
@@ -401,6 +424,7 @@ controller:
 ### Alternative 5: Cloud Provider Ingress (AWS ALB, GCP GCLB, Azure App Gateway)
 
 **Pros**:
+
 - Native cloud integration
 - Managed service (no controller to maintain)
 - Tight security integration (IAM, security groups)
@@ -408,6 +432,7 @@ controller:
 - Lower operational overhead
 
 **Cons**:
+
 - **Cloud vendor lock-in** (violates Fawkes portability principle)
 - Inconsistent behavior across clouds
 - Limited customization compared to NGINX
@@ -420,6 +445,7 @@ controller:
 ### Alternative 6: Contour (Envoy-based)
 
 **Pros**:
+
 - Uses Envoy proxy (modern, high-performance)
 - Simpler than full Istio deployment
 - Good HTTPProxy CRD for advanced routing
@@ -427,6 +453,7 @@ controller:
 - Excellent for multi-tenancy
 
 **Cons**:
+
 - Smaller community and ecosystem than NGINX
 - Less mature documentation
 - Fewer examples and tutorials
@@ -440,18 +467,21 @@ controller:
 ### Phase 1: MVP (Week 3 of Sprint 01)
 
 1. **Deploy NGINX Ingress Controller** [4 hours]
+
    - Install via Helm chart
    - Configure for AWS NLB (or equivalent)
    - Verify controller pods running
    - Test basic HTTP routing
 
 2. **Deploy cert-manager** [2 hours]
+
    - Install cert-manager via Helm
    - Create ClusterIssuer for Let's Encrypt staging
    - Test certificate provisioning
    - Create production ClusterIssuer
 
 3. **Create Ingress for Backstage** [2 hours]
+
    - Subdomain-based routing (backstage.fawkes.dev)
    - TLS certificate from Let's Encrypt
    - Force HTTPS redirect
@@ -466,11 +496,13 @@ controller:
 ### Phase 2: Core Services (Weeks 4-5)
 
 5. **Deploy Ingress for Collaboration Services** [4 hours]
+
    - Mattermost with WebSocket support
    - Focalboard (integrated with Mattermost)
    - Test real-time features
 
 6. **Deploy Ingress for CI/CD Services** [4 hours]
+
    - Jenkins with authentication
    - ArgoCD with SSO
    - Harbor with rate limiting
@@ -483,12 +515,14 @@ controller:
 ### Phase 3: Security & Monitoring (Week 6)
 
 8. **Implement Security Hardening** [4 hours]
+
    - Configure rate limiting
    - Add security headers
    - IP whitelisting for admin services
    - Test DDoS protection
 
 9. **Configure Monitoring** [3 hours]
+
    - Prometheus ServiceMonitor for NGINX metrics
    - Grafana dashboard for ingress monitoring
    - Alerting rules for high error rates
@@ -503,6 +537,7 @@ controller:
 ### Phase 4: Documentation & Training (Week 7)
 
 11. **Write Comprehensive Documentation** [6 hours]
+
     - Architecture overview with diagrams
     - Configuration patterns and best practices
     - Troubleshooting guide (common issues)
@@ -519,6 +554,7 @@ controller:
 ### Yellow Belt - Module 4: "Exposing Services with Ingress"
 
 **Learning Objectives**:
+
 - Understand Kubernetes Ingress concepts
 - Configure NGINX Ingress Controller
 - Implement TLS/SSL with cert-manager
@@ -526,6 +562,7 @@ controller:
 - Troubleshoot common ingress issues
 
 **Hands-On Lab**:
+
 1. Deploy a sample application to learner namespace
 2. Create Ingress resource with subdomain routing
 3. Configure TLS certificate via cert-manager
@@ -534,6 +571,7 @@ controller:
 6. Monitor ingress metrics in Grafana
 
 **Assessment**:
+
 - Quiz on Ingress concepts (5 questions)
 - Practical: Deploy and expose a new service
 - Troubleshoot broken ingress configuration
@@ -545,6 +583,7 @@ controller:
 ### Key Metrics
 
 **NGINX Ingress Controller Metrics**:
+
 - `nginx_ingress_controller_requests` - Total requests per service
 - `nginx_ingress_controller_request_duration_seconds` - Request latency percentiles
 - `nginx_ingress_controller_response_size` - Response sizes
@@ -552,6 +591,7 @@ controller:
 - `nginx_ingress_controller_nginx_process_connections` - Active connections
 
 **Grafana Dashboard Panels**:
+
 1. Request Rate (per service, per ingress)
 2. Request Duration (P50, P95, P99)
 3. HTTP Status Codes (2xx, 4xx, 5xx rates)
@@ -560,26 +600,27 @@ controller:
 6. Error Rate by Service
 
 **Alerting Rules**:
+
 ```yaml
 groups:
-- name: ingress_alerts
-  rules:
-  - alert: HighErrorRate
-    expr: sum(rate(nginx_ingress_controller_requests{status=~"5.."}[5m])) / sum(rate(nginx_ingress_controller_requests[5m])) > 0.05
-    for: 5m
-    annotations:
-      summary: "High 5xx error rate detected"
+  - name: ingress_alerts
+    rules:
+      - alert: HighErrorRate
+        expr: sum(rate(nginx_ingress_controller_requests{status=~"5.."}[5m])) / sum(rate(nginx_ingress_controller_requests[5m])) > 0.05
+        for: 5m
+        annotations:
+          summary: "High 5xx error rate detected"
 
-  - alert: CertificateExpiring
-    expr: (nginx_ingress_controller_ssl_expire_time_seconds - time()) / 86400 < 7
-    annotations:
-      summary: "TLS certificate expiring in less than 7 days"
+      - alert: CertificateExpiring
+        expr: (nginx_ingress_controller_ssl_expire_time_seconds - time()) / 86400 < 7
+        annotations:
+          summary: "TLS certificate expiring in less than 7 days"
 
-  - alert: HighLatency
-    expr: histogram_quantile(0.95, nginx_ingress_controller_request_duration_seconds_bucket) > 5
-    for: 10m
-    annotations:
-      summary: "P95 latency above 5 seconds"
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, nginx_ingress_controller_request_duration_seconds_bucket) > 5
+        for: 10m
+        annotations:
+          summary: "P95 latency above 5 seconds"
 ```
 
 ## Security Considerations
@@ -594,6 +635,7 @@ groups:
 ### Rate Limiting
 
 Per-Service Defaults:
+
 - Public services (Backstage): 100 requests/second per IP
 - Internal services (Jenkins, ArgoCD): 50 requests/second per IP
 - Admin services (Prometheus): 10 requests/second per IP
@@ -601,6 +643,7 @@ Per-Service Defaults:
 ### IP Whitelisting
 
 Sensitive services restricted to:
+
 - Corporate VPN CIDR blocks
 - Platform team IP ranges
 - CI/CD pipeline source IPs
@@ -608,6 +651,7 @@ Sensitive services restricted to:
 ### Web Application Firewall (WAF)
 
 ModSecurity integration (post-MVP):
+
 - OWASP Core Rule Set (CRS)
 - SQL injection prevention
 - XSS attack blocking
@@ -618,41 +662,46 @@ ModSecurity integration (post-MVP):
 ### AWS Deployment (Production)
 
 **Infrastructure**:
+
 - Network Load Balancer: $16/month + $0.006/GB data transfer
 - EBS volumes (NGINX controller state): $8/month for 80GB
 - Data transfer (estimated 1TB/month): $90/month
 
 **NGINX Controller Resources**:
+
 - 3 replicas × 0.5 CPU × $0.04/hour = $43/month
 - 3 replicas × 512MB RAM × $0.005/hour = $5/month
 
 **Total Monthly Cost**: ~$162/month
 
 **Cost Optimization**:
+
 - Use AWS ALB for learner/dev environments (cheaper)
 - Reduce replica count in non-production
 - Implement caching to reduce data transfer
 
 ### Multi-Environment Cost Breakdown
 
-| Environment | Load Balancer | Replicas | Monthly Cost |
-|------------|---------------|----------|--------------|
-| Production | NLB | 3 | $162 |
-| Staging | ALB | 2 | $40 |
-| Development | NodePort | 1 | $0 |
-| Learner Labs | ALB (shared) | 2 | $40 |
+| Environment  | Load Balancer | Replicas | Monthly Cost |
+| ------------ | ------------- | -------- | ------------ |
+| Production   | NLB           | 3        | $162         |
+| Staging      | ALB           | 2        | $40          |
+| Development  | NodePort      | 1        | $0           |
+| Learner Labs | ALB (shared)  | 2        | $40          |
 
 ## Documentation Structure
 
 ### For Platform Teams
 
 1. **Architecture Overview**
+
    - Request flow diagrams
    - TLS termination architecture
    - Certificate management workflow
    - Multi-environment routing strategy
 
 2. **Deployment Guide**
+
    - Helm chart installation
    - Configuration recommendations
    - Cloud-specific considerations
@@ -667,12 +716,14 @@ ModSecurity integration (post-MVP):
 ### For Dojo Learners
 
 1. **Concepts Tutorial**
+
    - What is an Ingress Controller?
    - How TLS/SSL works
    - Routing strategies comparison
    - Security best practices
 
 2. **Hands-On Lab Guide**
+
    - Step-by-step ingress creation
    - TLS configuration walkthrough
    - Troubleshooting exercises
@@ -725,6 +776,7 @@ If organizations start with cloud-native ingress:
 ## Notes
 
 **Production Readiness Checklist**:
+
 - [ ] 3+ replicas for high availability
 - [ ] Cloud load balancer provisioned
 - [ ] TLS certificates from trusted CA (Let's Encrypt or corporate)
@@ -736,6 +788,7 @@ If organizations start with cloud-native ingress:
 - [ ] Team trained on ingress operations
 
 **Learner Environment Considerations**:
+
 - Use path-based routing to minimize DNS complexity
 - Provide pre-configured ingress templates
 - Automate certificate provisioning

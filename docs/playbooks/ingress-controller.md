@@ -14,7 +14,7 @@ description: "Deploy and configure NGINX Ingress Controller for HTTP/HTTPS routi
 ## I. Business Objective
 
 !!! info "Diátaxis: Explanation / Conceptual"
-    This section defines the "why"—the risk mitigated, compliance goal achieved, and value delivered.
+This section defines the "why"—the risk mitigated, compliance goal achieved, and value delivered.
 
 ### What We're Solving
 
@@ -22,12 +22,12 @@ Organizations need secure, reliable HTTP/HTTPS access to internal platform servi
 
 ### Risk Mitigation
 
-| Risk | Impact Without Action | How This Playbook Helps |
-|------|----------------------|------------------------|
-| Insecure service exposure | Services exposed via insecure protocols (HTTP), potential data breaches | TLS termination at ingress layer, automatic HTTPS redirect |
-| Lack of centralized routing | Manual port management, service discovery issues | Single entry point for all platform services |
-| No load balancing | Single points of failure, poor resource utilization | High availability with 2+ replicas and pod anti-affinity |
-| Missing observability | Cannot track request patterns or diagnose issues | Prometheus metrics for monitoring and alerting |
+| Risk                        | Impact Without Action                                                   | How This Playbook Helps                                    |
+| --------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Insecure service exposure   | Services exposed via insecure protocols (HTTP), potential data breaches | TLS termination at ingress layer, automatic HTTPS redirect |
+| Lack of centralized routing | Manual port management, service discovery issues                        | Single entry point for all platform services               |
+| No load balancing           | Single points of failure, poor resource utilization                     | High availability with 2+ replicas and pod anti-affinity   |
+| Missing observability       | Cannot track request patterns or diagnose issues                        | Prometheus metrics for monitoring and alerting             |
 
 ### Expected Outcomes
 
@@ -39,28 +39,28 @@ Organizations need secure, reliable HTTP/HTTPS access to internal platform servi
 
 ### Business Value
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Service Accessibility | Manual port forwarding | HTTP/HTTPS endpoints | 100% improvement |
-| Security Posture | Insecure NodePort | TLS-encrypted ingress | High security |
-| Service Discovery | Manual configuration | DNS-based routing | Automated |
-| Observability | None | Prometheus metrics | Full visibility |
+| Metric                | Before                 | After                 | Improvement      |
+| --------------------- | ---------------------- | --------------------- | ---------------- |
+| Service Accessibility | Manual port forwarding | HTTP/HTTPS endpoints  | 100% improvement |
+| Security Posture      | Insecure NodePort      | TLS-encrypted ingress | High security    |
+| Service Discovery     | Manual configuration   | DNS-based routing     | Automated        |
+| Observability         | None                   | Prometheus metrics    | Full visibility  |
 
 ---
 
 ## II. Technical Prerequisites
 
 !!! abstract "Diátaxis: Reference"
-    This section lists required Fawkes components, versions, and environment specifications.
+This section lists required Fawkes components, versions, and environment specifications.
 
 ### Required Fawkes Components
 
-| Component | Minimum Version | Required | Documentation |
-|-----------|-----------------|----------|---------------|
-| Kubernetes | 1.28+ | ✅ | [Kubernetes Docs](https://kubernetes.io) |
-| ArgoCD | 2.8+ | ✅ | [ArgoCD Docs](https://argo-cd.readthedocs.io) |
-| Helm | 3.0+ | ✅ | [Helm Docs](https://helm.sh/docs) |
-| kubectl | 1.28+ | ✅ | [kubectl Docs](https://kubernetes.io/docs/reference/kubectl) |
+| Component  | Minimum Version | Required | Documentation                                                |
+| ---------- | --------------- | -------- | ------------------------------------------------------------ |
+| Kubernetes | 1.28+           | ✅       | [Kubernetes Docs](https://kubernetes.io)                     |
+| ArgoCD     | 2.8+            | ✅       | [ArgoCD Docs](https://argo-cd.readthedocs.io)                |
+| Helm       | 3.0+            | ✅       | [Helm Docs](https://helm.sh/docs)                            |
+| kubectl    | 1.28+           | ✅       | [kubectl Docs](https://kubernetes.io/docs/reference/kubectl) |
 
 ### Environment Requirements
 
@@ -96,7 +96,7 @@ certificates: Self-signed (local) or cert-manager with Let's Encrypt (production
 ## III. Implementation Steps
 
 !!! tip "Diátaxis: How-to Guide (Core)"
-    This is the core of the playbook—step-by-step procedures using Fawkes components.
+This is the core of the playbook—step-by-step procedures using Fawkes components.
 
 ### Step 1: Deploy NGINX Ingress Controller via ArgoCD
 
@@ -119,10 +119,9 @@ kubectl get application -n fawkes ingress-nginx
 ```
 
 ??? example "Expected Output"
-    ```
-    NAME            SYNC STATUS   HEALTH STATUS
+`     NAME            SYNC STATUS   HEALTH STATUS
     ingress-nginx   Synced        Healthy
-    ```
+    `
 
 ### Step 2: Verify Ingress Controller Deployment
 
@@ -131,11 +130,13 @@ kubectl get application -n fawkes ingress-nginx
 **Estimated Time**: 5 minutes
 
 1. Check pod status:
+
    ```bash
    kubectl get pods -n ingress-nginx
    ```
 
 2. Check service status:
+
    ```bash
    kubectl get svc -n ingress-nginx
    ```
@@ -148,15 +149,14 @@ kubectl get application -n fawkes ingress-nginx
 **Verification**: All pods should be in `Running` state and LoadBalancer service should have an external IP
 
 ??? example "Expected Output"
-    ```
-    NAME                                       READY   STATUS    RESTARTS   AGE
+`     NAME                                       READY   STATUS    RESTARTS   AGE
     ingress-nginx-controller-<hash>            1/1     Running   0          2m
     ingress-nginx-controller-<hash>            1/1     Running   0          2m
     ingress-nginx-defaultbackend-<hash>        1/1     Running   0          2m
-    ```
+    `
 
 !!! warning "Common Pitfall"
-    If LoadBalancer is stuck in `<Pending>` state, verify that your cluster has LoadBalancer support (MetalLB for local, cloud provider LB for cloud environments).
+If LoadBalancer is stuck in `<Pending>` state, verify that your cluster has LoadBalancer support (MetalLB for local, cloud provider LB for cloud environments).
 
 ### Step 3: Deploy Test Ingress
 
@@ -180,14 +180,13 @@ kubectl get ingress -n ingress-test
 ```
 
 ??? example "Expected Output"
-    ```
-    NAME              CLASS   HOSTS                       ADDRESS         PORTS   AGE
+`     NAME              CLASS   HOSTS                       ADDRESS         PORTS   AGE
     echo-server       nginx   test.127.0.0.1.nip.io      192.168.1.100   80      1m
     echo-server-tls   nginx   test-tls.127.0.0.1.nip.io  192.168.1.100   80,443  1m
-    ```
+    `
 
 !!! info "TLS Certificate"
-    The `generate-test-cert.sh` script creates a self-signed certificate valid for `*.127.0.0.1.nip.io`. This certificate is only for testing and should not be used in production. For production, use cert-manager with Let's Encrypt.
+The `generate-test-cert.sh` script creates a self-signed certificate valid for `*.127.0.0.1.nip.io`. This certificate is only for testing and should not be used in production. For production, use cert-manager with Let's Encrypt.
 
 ### Step 4: Test HTTP Access
 
@@ -196,17 +195,20 @@ kubectl get ingress -n ingress-test
 **Estimated Time**: 5 minutes
 
 1. Get the LoadBalancer IP:
+
    ```bash
    LB_IP=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
    echo "LoadBalancer IP: $LB_IP"
    ```
 
 2. Test HTTP endpoint:
+
    ```bash
    curl -H "Host: test.127.0.0.1.nip.io" http://$LB_IP
    ```
 
    Or if using nip.io DNS:
+
    ```bash
    curl http://test.127.0.0.1.nip.io
    ```
@@ -214,7 +216,7 @@ kubectl get ingress -n ingress-test
 **Verification**: You should receive a JSON response from the echo server with request details
 
 ??? example "Expected Output"
-    ```json
+`json
     {
       "host": {
         "hostname": "test.127.0.0.1.nip.io",
@@ -246,7 +248,7 @@ kubectl get ingress -n ingress-test
         "PORT": "80"
       }
     }
-    ```
+    `
 
 ### Step 5: Test HTTPS Access (Optional)
 
@@ -282,7 +284,7 @@ curl http://localhost:10254/metrics | grep nginx_ingress_controller_requests
 ## IV. Validation & Success Metrics
 
 !!! check "Diátaxis: How-to Guide / Reference"
-    Instructions for verifying the implementation and measuring success.
+Instructions for verifying the implementation and measuring success.
 
 ### Functional Validation
 
@@ -322,12 +324,12 @@ curl http://localhost:10254/metrics
 
 ### Success Metrics
 
-| Metric | How to Measure | Target Value | Dashboard Link |
-|--------|----------------|--------------|----------------|
-| Pod Availability | `kubectl get pods -n ingress-nginx` | 100% Running | N/A |
-| Request Success Rate | Prometheus metric `nginx_ingress_controller_requests` | >99% 2xx responses | Grafana |
-| Response Time | Prometheus metric `nginx_ingress_controller_request_duration_seconds` | <100ms p95 | Grafana |
-| Controller Uptime | Pod uptime | >99.9% | Kubernetes Dashboard |
+| Metric               | How to Measure                                                        | Target Value       | Dashboard Link       |
+| -------------------- | --------------------------------------------------------------------- | ------------------ | -------------------- |
+| Pod Availability     | `kubectl get pods -n ingress-nginx`                                   | 100% Running       | N/A                  |
+| Request Success Rate | Prometheus metric `nginx_ingress_controller_requests`                 | >99% 2xx responses | Grafana              |
+| Response Time        | Prometheus metric `nginx_ingress_controller_request_duration_seconds` | <100ms p95         | Grafana              |
+| Controller Uptime    | Pod uptime                                                            | >99.9%             | Kubernetes Dashboard |
 
 ### Verification Checklist
 
@@ -343,19 +345,19 @@ curl http://localhost:10254/metrics
 
 After implementation, expect to see improvement in these DORA metrics:
 
-| DORA Metric | Expected Impact | Measurement Timeline |
-|-------------|-----------------|---------------------|
-| Deployment Frequency | 20% improvement - easier service deployment | 2-4 weeks |
-| Lead Time for Changes | 15% reduction - faster service exposure | 2-4 weeks |
-| Change Failure Rate | 10% reduction - standardized ingress patterns | 4-8 weeks |
-| Time to Restore | 25% reduction - centralized routing for debugging | 4-8 weeks |
+| DORA Metric           | Expected Impact                                   | Measurement Timeline |
+| --------------------- | ------------------------------------------------- | -------------------- |
+| Deployment Frequency  | 20% improvement - easier service deployment       | 2-4 weeks            |
+| Lead Time for Changes | 15% reduction - faster service exposure           | 2-4 weeks            |
+| Change Failure Rate   | 10% reduction - standardized ingress patterns     | 4-8 weeks            |
+| Time to Restore       | 25% reduction - centralized routing for debugging | 4-8 weeks            |
 
 ---
 
 ## V. Client Presentation Talking Points
 
 !!! quote "Diátaxis: Explanation / Conceptual"
-    Ready-to-use business language for communicating success to client executives.
+Ready-to-use business language for communicating success to client executives.
 
 ### Executive Summary
 
@@ -385,22 +387,22 @@ After implementation, expect to see improvement in these DORA metrics:
 ### Common Executive Questions & Answers
 
 ??? question "How does this compare to industry benchmarks?"
-    According to CNCF research, organizations with automated ingress controllers achieve 30-40% faster service deployment times and 50% fewer security incidents related to service exposure. Your implementation follows cloud-native best practices with high availability and security by default.
+According to CNCF research, organizations with automated ingress controllers achieve 30-40% faster service deployment times and 50% fewer security incidents related to service exposure. Your implementation follows cloud-native best practices with high availability and security by default.
 
 ??? question "What's the ROI on this implementation?"
-    Based on current metrics, this implementation delivers approximately 2 hours saved per service deployment through automation. With 10+ services, this translates to 20+ hours saved monthly. The security improvements reduce risk of data breaches which can cost millions.
+Based on current metrics, this implementation delivers approximately 2 hours saved per service deployment through automation. With 10+ services, this translates to 20+ hours saved monthly. The security improvements reduce risk of data breaches which can cost millions.
 
 ??? question "What's the risk if we don't maintain this?"
-    Without continued attention, the ingress controller could become a single point of failure. We recommend monthly reviews of ingress configurations, quarterly security updates, and integration with cert-manager for automated certificate renewal to sustain these improvements.
+Without continued attention, the ingress controller could become a single point of failure. We recommend monthly reviews of ingress configurations, quarterly security updates, and integration with cert-manager for automated certificate renewal to sustain these improvements.
 
 ### Follow-Up Actions
 
-| Action | Owner | Timeline |
-|--------|-------|----------|
-| Schedule ingress review meeting | Platform Team | +1 week |
-| Integrate cert-manager for Let's Encrypt | Platform Team | +2 weeks |
-| Deploy ExternalDNS for automated DNS | Platform Team | +2 weeks |
-| Conduct team training on ingress patterns | Consultant | +1-2 weeks |
+| Action                                    | Owner         | Timeline   |
+| ----------------------------------------- | ------------- | ---------- |
+| Schedule ingress review meeting           | Platform Team | +1 week    |
+| Integrate cert-manager for Let's Encrypt  | Platform Team | +2 weeks   |
+| Deploy ExternalDNS for automated DNS      | Platform Team | +2 weeks   |
+| Conduct team training on ingress patterns | Consultant    | +1-2 weeks |
 
 ---
 
@@ -415,17 +417,17 @@ After implementation, expect to see improvement in these DORA metrics:
 
 ### Troubleshooting
 
-| Issue | Possible Cause | Resolution |
-|-------|---------------|------------|
-| LoadBalancer stuck in Pending | No LoadBalancer provider | Install MetalLB for local or verify cloud provider LB support |
-| Ingress not accessible | DNS not resolving | Use direct IP access or configure /etc/hosts |
-| 503 Service Unavailable | Backend service not running | Verify backend pods: `kubectl get pods -n <namespace>` |
-| Certificate errors | Self-signed certificate | Use `-k` flag with curl or install cert-manager for valid certs |
-| High latency | Resource constraints | Increase controller resources in values.yaml |
-| Pods not starting | Resource quota exceeded | Check resource quotas: `kubectl describe quota -n ingress-nginx` |
+| Issue                         | Possible Cause              | Resolution                                                       |
+| ----------------------------- | --------------------------- | ---------------------------------------------------------------- |
+| LoadBalancer stuck in Pending | No LoadBalancer provider    | Install MetalLB for local or verify cloud provider LB support    |
+| Ingress not accessible        | DNS not resolving           | Use direct IP access or configure /etc/hosts                     |
+| 503 Service Unavailable       | Backend service not running | Verify backend pods: `kubectl get pods -n <namespace>`           |
+| Certificate errors            | Self-signed certificate     | Use `-k` flag with curl or install cert-manager for valid certs  |
+| High latency                  | Resource constraints        | Increase controller resources in values.yaml                     |
+| Pods not starting             | Resource quota exceeded     | Check resource quotas: `kubectl describe quota -n ingress-nginx` |
 
 ### Change Log
 
-| Date | Version | Changes |
-|------|---------|---------|
-| 2024-12-10 | 1.0 | Initial release - NGINX Ingress Controller deployment |
+| Date       | Version | Changes                                               |
+| ---------- | ------- | ----------------------------------------------------- |
+| 2024-12-10 | 1.0     | Initial release - NGINX Ingress Controller deployment |

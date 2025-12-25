@@ -23,31 +23,31 @@ ADMIN_SECRET="${HASURA_ADMIN_SECRET:-fawkes-hasura-admin-secret-dev-changeme}"
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 log_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
+  echo -e "${BLUE}[INFO]${NC} $1"
 }
 
 log_success() {
-    echo -e "${GREEN}[✓]${NC} $1"
+  echo -e "${GREEN}[✓]${NC} $1"
 }
 
 log_error() {
-    echo -e "${RED}[✗]${NC} $1"
+  echo -e "${RED}[✗]${NC} $1"
 }
 
 log_warning() {
-    echo -e "${YELLOW}[!]${NC} $1"
+  echo -e "${YELLOW}[!]${NC} $1"
 }
 
 # Check if jq is installed
 if ! command -v jq &> /dev/null; then
-    log_error "jq is required but not installed. Please install jq."
-    exit 1
+  log_error "jq is required but not installed. Please install jq."
+  exit 1
 fi
 
 # Check if curl is installed
 if ! command -v curl &> /dev/null; then
-    log_error "curl is required but not installed. Please install curl."
-    exit 1
+  log_error "curl is required but not installed. Please install curl."
+  exit 1
 fi
 
 echo "=========================================="
@@ -64,21 +64,21 @@ echo ""
 # =============================================================================
 log_info "Test 1: Checking Hasura deployment..."
 
-if ! kubectl get deployment hasura -n "$NAMESPACE" &>/dev/null; then
-    log_error "Hasura deployment not found in namespace $NAMESPACE"
-    exit 1
+if ! kubectl get deployment hasura -n "$NAMESPACE" &> /dev/null; then
+  log_error "Hasura deployment not found in namespace $NAMESPACE"
+  exit 1
 fi
 
 # Check deployment status
-READY_REPLICAS=$(kubectl get deployment hasura -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo "0")
-DESIRED_REPLICAS=$(kubectl get deployment hasura -n "$NAMESPACE" -o jsonpath='{.spec.replicas}' 2>/dev/null || echo "0")
+READY_REPLICAS=$(kubectl get deployment hasura -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}' 2> /dev/null || echo "0")
+DESIRED_REPLICAS=$(kubectl get deployment hasura -n "$NAMESPACE" -o jsonpath='{.spec.replicas}' 2> /dev/null || echo "0")
 
 if [ "$READY_REPLICAS" -eq "$DESIRED_REPLICAS" ] && [ "$READY_REPLICAS" -gt 0 ]; then
-    log_success "Hasura deployment is ready ($READY_REPLICAS/$DESIRED_REPLICAS replicas)"
+  log_success "Hasura deployment is ready ($READY_REPLICAS/$DESIRED_REPLICAS replicas)"
 else
-    log_error "Hasura deployment not ready ($READY_REPLICAS/$DESIRED_REPLICAS replicas)"
-    kubectl get pods -n "$NAMESPACE" -l app=hasura
-    exit 1
+  log_error "Hasura deployment not ready ($READY_REPLICAS/$DESIRED_REPLICAS replicas)"
+  kubectl get pods -n "$NAMESPACE" -l app=hasura
+  exit 1
 fi
 
 # =============================================================================
@@ -86,9 +86,9 @@ fi
 # =============================================================================
 log_info "Test 2: Checking Hasura service..."
 
-if ! kubectl get service hasura -n "$NAMESPACE" &>/dev/null; then
-    log_error "Hasura service not found"
-    exit 1
+if ! kubectl get service hasura -n "$NAMESPACE" &> /dev/null; then
+  log_error "Hasura service not found"
+  exit 1
 fi
 
 SERVICE_PORT=$(kubectl get service hasura -n "$NAMESPACE" -o jsonpath='{.spec.ports[0].port}')
@@ -99,11 +99,11 @@ log_success "Hasura service exists on port $SERVICE_PORT"
 # =============================================================================
 log_info "Test 3: Checking Hasura ingress..."
 
-if ! kubectl get ingress hasura -n "$NAMESPACE" &>/dev/null; then
-    log_warning "Hasura ingress not found (may use port-forward instead)"
+if ! kubectl get ingress hasura -n "$NAMESPACE" &> /dev/null; then
+  log_warning "Hasura ingress not found (may use port-forward instead)"
 else
-    INGRESS_HOST=$(kubectl get ingress hasura -n "$NAMESPACE" -o jsonpath='{.spec.rules[0].host}')
-    log_success "Hasura ingress configured for host: $INGRESS_HOST"
+  INGRESS_HOST=$(kubectl get ingress hasura -n "$NAMESPACE" -o jsonpath='{.spec.rules[0].host}')
+  log_success "Hasura ingress configured for host: $INGRESS_HOST"
 fi
 
 # =============================================================================
@@ -111,15 +111,15 @@ fi
 # =============================================================================
 log_info "Test 4: Checking Redis cache deployment..."
 
-if ! kubectl get deployment hasura-redis -n "$NAMESPACE" &>/dev/null; then
-    log_warning "Redis cache deployment not found (caching disabled)"
+if ! kubectl get deployment hasura-redis -n "$NAMESPACE" &> /dev/null; then
+  log_warning "Redis cache deployment not found (caching disabled)"
 else
-    REDIS_READY=$(kubectl get deployment hasura-redis -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo "0")
-    if [ "$REDIS_READY" -gt 0 ]; then
-        log_success "Redis cache is running"
-    else
-        log_warning "Redis cache not ready"
-    fi
+  REDIS_READY=$(kubectl get deployment hasura-redis -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}' 2> /dev/null || echo "0")
+  if [ "$REDIS_READY" -gt 0 ]; then
+    log_success "Redis cache is running"
+  else
+    log_warning "Redis cache not ready"
+  fi
 fi
 
 # =============================================================================
@@ -128,32 +128,32 @@ fi
 log_info "Test 5: Checking GraphQL endpoint health..."
 
 # Try to access via port-forward if ingress not accessible
-if ! curl -s -f "http://${HASURA_HOST}/healthz" &>/dev/null; then
-    log_warning "Cannot access Hasura via $HASURA_HOST, trying port-forward..."
+if ! curl -s -f "http://${HASURA_HOST}/healthz" &> /dev/null; then
+  log_warning "Cannot access Hasura via $HASURA_HOST, trying port-forward..."
 
-    # Setup port-forward in background
-    kubectl port-forward -n "$NAMESPACE" svc/hasura 8080:8080 &>/dev/null &
-    PORT_FORWARD_PID=$!
-    sleep 3
+  # Setup port-forward in background
+  kubectl port-forward -n "$NAMESPACE" svc/hasura 8080:8080 &> /dev/null &
+  PORT_FORWARD_PID=$!
+  sleep 3
 
-    HASURA_HOST="localhost:8080"
+  HASURA_HOST="localhost:8080"
 
-    # Cleanup function
-    cleanup() {
-        if [ -n "${PORT_FORWARD_PID:-}" ]; then
-            kill $PORT_FORWARD_PID 2>/dev/null || true
-        fi
-    }
-    trap cleanup EXIT
+  # Cleanup function
+  cleanup() {
+    if [ -n "${PORT_FORWARD_PID:-}" ]; then
+      kill $PORT_FORWARD_PID 2> /dev/null || true
+    fi
+  }
+  trap cleanup EXIT
 fi
 
 # Test health endpoint
-HEALTH_RESPONSE=$(curl -s "http://${HASURA_HOST}/healthz" 2>/dev/null || echo "error")
+HEALTH_RESPONSE=$(curl -s "http://${HASURA_HOST}/healthz" 2> /dev/null || echo "error")
 if [ "$HEALTH_RESPONSE" = "OK" ] || echo "$HEALTH_RESPONSE" | grep -q "ok"; then
-    log_success "Hasura health check passed"
+  log_success "Hasura health check passed"
 else
-    log_error "Hasura health check failed: $HEALTH_RESPONSE"
-    exit 1
+  log_error "Hasura health check failed: $HEALTH_RESPONSE"
+  exit 1
 fi
 
 # =============================================================================
@@ -163,18 +163,18 @@ log_info "Test 6: Testing GraphQL schema introspection..."
 
 SCHEMA_QUERY='{"query":"{ __schema { types { name } } }"}'
 SCHEMA_RESPONSE=$(curl -s -X POST \
-    -H "Content-Type: application/json" \
-    -H "x-hasura-admin-secret: $ADMIN_SECRET" \
-    -d "$SCHEMA_QUERY" \
-    "http://${HASURA_HOST}/v1/graphql" 2>/dev/null || echo "{}")
+  -H "Content-Type: application/json" \
+  -H "x-hasura-admin-secret: $ADMIN_SECRET" \
+  -d "$SCHEMA_QUERY" \
+  "http://${HASURA_HOST}/v1/graphql" 2> /dev/null || echo "{}")
 
-if echo "$SCHEMA_RESPONSE" | jq -e '.data.__schema.types' &>/dev/null; then
-    TYPE_COUNT=$(echo "$SCHEMA_RESPONSE" | jq '.data.__schema.types | length')
-    log_success "GraphQL schema introspection successful ($TYPE_COUNT types found)"
+if echo "$SCHEMA_RESPONSE" | jq -e '.data.__schema.types' &> /dev/null; then
+  TYPE_COUNT=$(echo "$SCHEMA_RESPONSE" | jq '.data.__schema.types | length')
+  log_success "GraphQL schema introspection successful ($TYPE_COUNT types found)"
 else
-    log_error "GraphQL schema introspection failed"
-    echo "Response: $SCHEMA_RESPONSE"
-    exit 1
+  log_error "GraphQL schema introspection failed"
+  echo "Response: $SCHEMA_RESPONSE"
+  exit 1
 fi
 
 # =============================================================================
@@ -187,24 +187,24 @@ TOTAL_TIME=0
 ITERATIONS=20
 
 for i in $(seq 1 $ITERATIONS); do
-    START=$(date +%s%N)
-    curl -s -X POST \
-        -H "Content-Type: application/json" \
-        -H "x-hasura-admin-secret: $ADMIN_SECRET" \
-        -d "$SIMPLE_QUERY" \
-        "http://${HASURA_HOST}/v1/graphql" &>/dev/null
-    END=$(date +%s%N)
+  START=$(date +%s%N)
+  curl -s -X POST \
+    -H "Content-Type: application/json" \
+    -H "x-hasura-admin-secret: $ADMIN_SECRET" \
+    -d "$SIMPLE_QUERY" \
+    "http://${HASURA_HOST}/v1/graphql" &> /dev/null
+  END=$(date +%s%N)
 
-    ELAPSED=$(( (END - START) / 1000000 ))  # Convert to milliseconds
-    TOTAL_TIME=$(( TOTAL_TIME + ELAPSED ))
+  ELAPSED=$(((END - START) / 1000000)) # Convert to milliseconds
+  TOTAL_TIME=$((TOTAL_TIME + ELAPSED))
 done
 
-AVG_TIME=$(( TOTAL_TIME / ITERATIONS ))
+AVG_TIME=$((TOTAL_TIME / ITERATIONS))
 
 if [ $AVG_TIME -lt 1000 ]; then
-    log_success "Query performance test passed (avg: ${AVG_TIME}ms)"
+  log_success "Query performance test passed (avg: ${AVG_TIME}ms)"
 else
-    log_warning "Query performance slower than target (avg: ${AVG_TIME}ms > 1000ms)"
+  log_warning "Query performance slower than target (avg: ${AVG_TIME}ms > 1000ms)"
 fi
 
 # =============================================================================
@@ -212,12 +212,12 @@ fi
 # =============================================================================
 log_info "Test 8: Checking GraphQL Playground/Console access..."
 
-CONSOLE_RESPONSE=$(curl -s -w "%{http_code}" -o /dev/null "http://${HASURA_HOST}/console" 2>/dev/null || echo "000")
+CONSOLE_RESPONSE=$(curl -s -w "%{http_code}" -o /dev/null "http://${HASURA_HOST}/console" 2> /dev/null || echo "000")
 
 if [ "$CONSOLE_RESPONSE" = "200" ] || [ "$CONSOLE_RESPONSE" = "302" ]; then
-    log_success "GraphQL Console is accessible"
+  log_success "GraphQL Console is accessible"
 else
-    log_warning "GraphQL Console not accessible (HTTP $CONSOLE_RESPONSE)"
+  log_warning "GraphQL Console not accessible (HTTP $CONSOLE_RESPONSE)"
 fi
 
 # =============================================================================
@@ -227,23 +227,23 @@ log_info "Test 9: Checking RBAC configuration..."
 
 # Check if permission files exist
 if [ -f "$ROOT_DIR/services/data-api/rbac/permissions.yaml" ]; then
-    log_success "RBAC permission configuration found"
+  log_success "RBAC permission configuration found"
 else
-    log_warning "RBAC permission configuration not found"
+  log_warning "RBAC permission configuration not found"
 fi
 
 # Test anonymous access (should be limited)
 ANON_QUERY='{"query":"{ __typename }"}'
 ANON_RESPONSE=$(curl -s -X POST \
-    -H "Content-Type: application/json" \
-    -H "x-hasura-role: anonymous" \
-    -d "$ANON_QUERY" \
-    "http://${HASURA_HOST}/v1/graphql" 2>/dev/null || echo "{}")
+  -H "Content-Type: application/json" \
+  -H "x-hasura-role: anonymous" \
+  -d "$ANON_QUERY" \
+  "http://${HASURA_HOST}/v1/graphql" 2> /dev/null || echo "{}")
 
-if echo "$ANON_RESPONSE" | jq -e '.data' &>/dev/null; then
-    log_success "Anonymous role access working"
+if echo "$ANON_RESPONSE" | jq -e '.data' &> /dev/null; then
+  log_success "Anonymous role access working"
 else
-    log_warning "Anonymous role access may not be configured"
+  log_warning "Anonymous role access may not be configured"
 fi
 
 # =============================================================================
@@ -251,19 +251,19 @@ fi
 # =============================================================================
 log_info "Test 10: Checking monitoring integration..."
 
-if kubectl get servicemonitor hasura -n "$NAMESPACE" &>/dev/null; then
-    log_success "ServiceMonitor for Prometheus exists"
+if kubectl get servicemonitor hasura -n "$NAMESPACE" &> /dev/null; then
+  log_success "ServiceMonitor for Prometheus exists"
 else
-    log_warning "ServiceMonitor not found (monitoring may not be configured)"
+  log_warning "ServiceMonitor not found (monitoring may not be configured)"
 fi
 
 # Check if metrics endpoint is accessible
-METRICS_RESPONSE=$(curl -s -w "%{http_code}" -o /dev/null "http://${HASURA_HOST}/v1/metrics" 2>/dev/null || echo "000")
+METRICS_RESPONSE=$(curl -s -w "%{http_code}" -o /dev/null "http://${HASURA_HOST}/v1/metrics" 2> /dev/null || echo "000")
 
 if [ "$METRICS_RESPONSE" = "200" ]; then
-    log_success "Metrics endpoint is accessible"
+  log_success "Metrics endpoint is accessible"
 else
-    log_warning "Metrics endpoint not accessible (HTTP $METRICS_RESPONSE)"
+  log_warning "Metrics endpoint not accessible (HTTP $METRICS_RESPONSE)"
 fi
 
 # =============================================================================

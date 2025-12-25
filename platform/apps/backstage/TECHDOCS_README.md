@@ -15,6 +15,7 @@ TechDocs is Backstage's built-in documentation solution that enables documentati
 **File**: `platform/apps/backstage/app-config.yaml`
 
 Updated TechDocs configuration:
+
 - Builder: Changed from `external` to `local` for on-demand documentation generation
 - Generator: Configured to run `local` within Backstage
 - Publisher: Set to `local` with publish directory `/app/techdocs`
@@ -24,6 +25,7 @@ Updated TechDocs configuration:
 **File**: `platform/apps/backstage/values.yaml`
 
 Added volume configuration for TechDocs:
+
 - Created `techdocs` emptyDir volume
 - Mounted volume at `/app/techdocs` (read-write)
 - This allows Backstage to generate and store documentation
@@ -33,11 +35,13 @@ Added volume configuration for TechDocs:
 Added TechDocs support to all service templates:
 
 **Templates Updated**:
+
 - `templates/python-service/skeleton/`
 - `templates/java-service/skeleton/`
 - `templates/nodejs-service/skeleton/`
 
 **Files Added to Each Template**:
+
 - `mkdocs.yml` - MkDocs configuration with Material theme
 - `docs/index.md` - Service overview
 - `docs/getting-started.md` - Installation and setup guide
@@ -51,6 +55,7 @@ Added TechDocs support to all service templates:
 **File**: `tests/bdd/features/backstage-techdocs.feature`
 
 Added comprehensive BDD acceptance tests covering:
+
 - TechDocs plugin configuration
 - Volume mount verification
 - Catalog annotation validation
@@ -66,6 +71,7 @@ Implemented step definitions for all TechDocs test scenarios.
 **File**: `docs/how-to/techdocs-usage.md`
 
 Added comprehensive documentation covering:
+
 - Quick start guide
 - Writing documentation
 - Best practices
@@ -159,6 +165,7 @@ See [TechDocs Usage Guide](../docs/how-to/techdocs-usage.md) for detailed instru
 ## Dependencies
 
 This feature depends on:
+
 - Issue #9: Backstage deployment (prerequisite)
 - MkDocs with Material theme (included in Backstage)
 - Proper volume mounts in Backstage deployment
@@ -193,6 +200,7 @@ kubectl exec -n fawkes deployment/backstage -- ls -la /app/techdocs
 ## Future Enhancements
 
 Potential improvements:
+
 - Add more Markdown extensions (mermaid diagrams, etc.)
 - Configure external publisher (S3, GCS) for production
 - Add documentation templates for different service types

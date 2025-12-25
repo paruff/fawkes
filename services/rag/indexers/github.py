@@ -120,12 +120,7 @@ class RateLimiter:
 class GitHubIndexer:
     """GitHub repository indexer."""
 
-    def __init__(
-        self,
-        github_token: str,
-        weaviate_url: str = DEFAULT_WEAVIATE_URL,
-        dry_run: bool = False
-    ):
+    def __init__(self, github_token: str, weaviate_url: str = DEFAULT_WEAVIATE_URL, dry_run: bool = False):
         """
         Initialize GitHub indexer.
 
@@ -141,17 +136,12 @@ class GitHubIndexer:
 
         # Setup requests session with retry
         self.session = requests.Session()
-        retry = Retry(
-            total=3,
-            backoff_factor=1,
-            status_forcelist=[429, 500, 502, 503, 504]
-        )
+        retry = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
         adapter = HTTPAdapter(max_retries=retry)
         self.session.mount("https://", adapter)
-        self.session.headers.update({
-            "Authorization": f"token {github_token}",
-            "Accept": "application/vnd.github.v3+json"
-        })
+        self.session.headers.update(
+            {"Authorization": f"token {github_token}", "Accept": "application/vnd.github.v3+json"}
+        )
 
         # Weaviate client
         self.weaviate_client = None
@@ -257,11 +247,7 @@ class GitHubIndexer:
         url = f"{GITHUB_API_BASE}/repos/{repo_full_name}"
         return self._github_request(url)
 
-    def fetch_repo_contents(
-        self,
-        repo_full_name: str,
-        path: str = ""
-    ) -> List[Dict[str, Any]]:
+    def fetch_repo_contents(self, repo_full_name: str, path: str = "") -> List[Dict[str, Any]]:
         """
         Fetch contents of a repository path.
 
@@ -320,11 +306,7 @@ class GitHubIndexer:
 
         return None
 
-    def scan_repo_for_docs(
-        self,
-        repo_full_name: str,
-        paths: List[str] = None
-    ) -> List[Dict[str, Any]]:
+    def scan_repo_for_docs(self, repo_full_name: str, paths: List[str] = None) -> List[Dict[str, Any]]:
         """
         Scan repository for documentation files.
 
@@ -346,12 +328,7 @@ class GitHubIndexer:
         return files_to_index
 
     def _scan_path_recursive(
-        self,
-        repo_full_name: str,
-        path: str,
-        files_to_index: List[Dict[str, Any]],
-        depth: int = 0,
-        max_depth: int = 5
+        self, repo_full_name: str, path: str, files_to_index: List[Dict[str, Any]], depth: int = 0, max_depth: int = 5
     ):
         """Recursively scan a path for documentation files."""
         if depth > max_depth:
@@ -379,9 +356,7 @@ class GitHubIndexer:
                     files_to_index.append(item)
             elif item_type == "dir":
                 # Recursively scan directories
-                self._scan_path_recursive(
-                    repo_full_name, item_path, files_to_index, depth + 1, max_depth
-                )
+                self._scan_path_recursive(repo_full_name, item_path, files_to_index, depth + 1, max_depth)
 
     def chunk_content(self, content: str) -> List[str]:
         """Chunk content into smaller pieces."""
@@ -421,12 +396,7 @@ class GitHubIndexer:
         """Calculate MD5 hash of content."""
         return hashlib.md5(content.encode("utf-8")).hexdigest()
 
-    def index_file(
-        self,
-        repo_full_name: str,
-        file_info: Dict[str, Any],
-        force: bool = False
-    ) -> Tuple[bool, int]:
+    def index_file(self, repo_full_name: str, file_info: Dict[str, Any], force: bool = False) -> Tuple[bool, int]:
         """
         Index a single file from GitHub.
 
@@ -516,13 +486,14 @@ class GitHubIndexer:
         """Check if file needs re-indexing."""
         try:
             result = (
-                self.weaviate_client.query
-                .get(SCHEMA_NAME, ["fileHash"])
-                .with_where({
-                    "path": ["filepath"],
-                    "operator": "Equal",
-                    "valueString": filepath,
-                })
+                self.weaviate_client.query.get(SCHEMA_NAME, ["fileHash"])
+                .with_where(
+                    {
+                        "path": ["filepath"],
+                        "operator": "Equal",
+                        "valueString": filepath,
+                    }
+                )
                 .with_limit(1)
                 .do()
             )
@@ -541,13 +512,14 @@ class GitHubIndexer:
         """Delete existing chunks for a filepath."""
         try:
             result = (
-                self.weaviate_client.query
-                .get(SCHEMA_NAME, ["filepath"])
-                .with_where({
-                    "path": ["filepath"],
-                    "operator": "Equal",
-                    "valueString": filepath,
-                })
+                self.weaviate_client.query.get(SCHEMA_NAME, ["filepath"])
+                .with_where(
+                    {
+                        "path": ["filepath"],
+                        "operator": "Equal",
+                        "valueString": filepath,
+                    }
+                )
                 .with_additional(["id"])
                 .with_limit(100)
                 .do()
@@ -624,9 +596,7 @@ class GitHubIndexer:
 
 def main():
     """Main execution function."""
-    parser = argparse.ArgumentParser(
-        description="Index GitHub repositories into Weaviate RAG system"
-    )
+    parser = argparse.ArgumentParser(description="Index GitHub repositories into Weaviate RAG system")
     parser.add_argument(
         "--github-token",
         required=True,
@@ -669,11 +639,7 @@ def main():
         print("🔍 DRY RUN MODE - No changes will be made\n")
 
     # Create indexer
-    indexer = GitHubIndexer(
-        github_token=args.github_token,
-        weaviate_url=args.weaviate_url,
-        dry_run=args.dry_run
-    )
+    indexer = GitHubIndexer(github_token=args.github_token, weaviate_url=args.weaviate_url, dry_run=args.dry_run)
 
     start_time = time.time()
 

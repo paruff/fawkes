@@ -138,92 +138,92 @@ spec:
           serviceAccountName: datahub-ingestion
 
           containers:
-          - name: datahub-ingestion
-            # Use official DataHub ingestion image
-            image: acryldata/datahub-ingestion:latest
-            imagePullPolicy: IfNotPresent
+            - name: datahub-ingestion
+              # Use official DataHub ingestion image
+              image: acryldata/datahub-ingestion:latest
+              imagePullPolicy: IfNotPresent
 
-            command:
-            - /bin/bash
-            - -c
-            - |
-                set -e
-                echo "Starting PostgreSQL metadata ingestion..."
-                echo "Target: DataHub GMS at http://datahub-datahub-gms.fawkes.svc:8080"
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  set -e
+                  echo "Starting PostgreSQL metadata ingestion..."
+                  echo "Target: DataHub GMS at http://datahub-datahub-gms.fawkes.svc:8080"
 
-                # Verify DataHub is accessible
-                if ! curl -f -s http://datahub-datahub-gms.fawkes.svc:8080/health > /dev/null; then
-                  echo "ERROR: DataHub GMS is not accessible"
-                  exit 1
-                fi
+                  # Verify DataHub is accessible
+                  if ! curl -f -s http://datahub-datahub-gms.fawkes.svc:8080/health > /dev/null; then
+                    echo "ERROR: DataHub GMS is not accessible"
+                    exit 1
+                  fi
 
-                echo "DataHub GMS is healthy"
+                  echo "DataHub GMS is healthy"
 
-                # Run ingestion for Backstage database
-                echo "Ingesting Backstage database..."
-                datahub ingest -c /config/postgres.yaml
+                  # Run ingestion for Backstage database
+                  echo "Ingesting Backstage database..."
+                  datahub ingest -c /config/postgres.yaml
 
-                # TODO: Add ingestion for Harbor and SonarQube databases
-                # For multi-database ingestion, create separate recipes or
-                # run multiple datahub ingest commands with different configs
+                  # TODO: Add ingestion for Harbor and SonarQube databases
+                  # For multi-database ingestion, create separate recipes or
+                  # run multiple datahub ingest commands with different configs
 
-                echo "PostgreSQL metadata ingestion completed successfully"
+                  echo "PostgreSQL metadata ingestion completed successfully"
 
-            env:
-            # Database credentials from Secret
-            - name: POSTGRES_BACKSTAGE_USER
-              valueFrom:
-                secretKeyRef:
-                  name: datahub-postgres-ingestion-credentials
-                  key: POSTGRES_BACKSTAGE_USER
+              env:
+                # Database credentials from Secret
+                - name: POSTGRES_BACKSTAGE_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: datahub-postgres-ingestion-credentials
+                      key: POSTGRES_BACKSTAGE_USER
 
-            - name: POSTGRES_BACKSTAGE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: datahub-postgres-ingestion-credentials
-                  key: POSTGRES_BACKSTAGE_PASSWORD
+                - name: POSTGRES_BACKSTAGE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: datahub-postgres-ingestion-credentials
+                      key: POSTGRES_BACKSTAGE_PASSWORD
 
-            - name: POSTGRES_HARBOR_USER
-              valueFrom:
-                secretKeyRef:
-                  name: datahub-postgres-ingestion-credentials
-                  key: POSTGRES_HARBOR_USER
+                - name: POSTGRES_HARBOR_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: datahub-postgres-ingestion-credentials
+                      key: POSTGRES_HARBOR_USER
 
-            - name: POSTGRES_HARBOR_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: datahub-postgres-ingestion-credentials
-                  key: POSTGRES_HARBOR_PASSWORD
+                - name: POSTGRES_HARBOR_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: datahub-postgres-ingestion-credentials
+                      key: POSTGRES_HARBOR_PASSWORD
 
-            - name: POSTGRES_SONARQUBE_USER
-              valueFrom:
-                secretKeyRef:
-                  name: datahub-postgres-ingestion-credentials
-                  key: POSTGRES_SONARQUBE_USER
+                - name: POSTGRES_SONARQUBE_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: datahub-postgres-ingestion-credentials
+                      key: POSTGRES_SONARQUBE_USER
 
-            - name: POSTGRES_SONARQUBE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: datahub-postgres-ingestion-credentials
-                  key: POSTGRES_SONARQUBE_PASSWORD
+                - name: POSTGRES_SONARQUBE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: datahub-postgres-ingestion-credentials
+                      key: POSTGRES_SONARQUBE_PASSWORD
 
-            volumeMounts:
-            - name: config
-              mountPath: /config
-              readOnly: true
+              volumeMounts:
+                - name: config
+                  mountPath: /config
+                  readOnly: true
 
-            resources:
-              requests:
-                cpu: 200m
-                memory: 512Mi
-              limits:
-                cpu: 500m
-                memory: 1Gi
+              resources:
+                requests:
+                  cpu: 200m
+                  memory: 512Mi
+                limits:
+                  cpu: 500m
+                  memory: 1Gi
 
           volumes:
-          - name: config
-            configMap:
-              name: datahub-postgres-ingestion-config
+            - name: config
+              configMap:
+                name: datahub-postgres-ingestion-config
 
 ---
 # ServiceAccount for ingestion jobs
@@ -247,9 +247,9 @@ metadata:
     app: datahub
     component: ingestion
 rules:
-- apiGroups: [""]
-  resources: ["configmaps", "secrets"]
-  verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list"]
 
 ---
 # RoleBinding for ingestion ServiceAccount
@@ -266,6 +266,6 @@ roleRef:
   kind: Role
   name: datahub-ingestion
 subjects:
-- kind: ServiceAccount
-  name: datahub-ingestion
-  namespace: fawkes
+  - kind: ServiceAccount
+    name: datahub-ingestion
+    namespace: fawkes

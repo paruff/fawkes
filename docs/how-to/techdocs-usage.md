@@ -42,8 +42,8 @@ To add TechDocs to an existing service:
 1. **Create mkdocs.yml** in your repository root:
 
 ```yaml
-site_name: 'your-service-name'
-site_description: 'Description of your service'
+site_name: "your-service-name"
+site_description: "Description of your service"
 
 nav:
   - Home: index.md
@@ -94,7 +94,7 @@ metadata:
   name: your-service
   description: Your service description
   annotations:
-    backstage.io/techdocs-ref: dir:.  # This points to the current directory
+    backstage.io/techdocs-ref: dir:. # This points to the current directory
 spec:
   type: service
   lifecycle: production
@@ -143,13 +143,13 @@ The following Markdown extensions are enabled:
 
 ```markdown
 !!! note
-    This is a note
+This is a note
 
 !!! warning
-    This is a warning
+This is a warning
 
 !!! danger
-    This is a danger alert
+This is a danger alert
 ```
 
 #### Code Blocks with Syntax Highlighting
@@ -165,21 +165,21 @@ def hello_world():
 
 ```markdown
 === "Python"
-    ```python
+`python
     print("Hello")
-    ```
+    `
 
 === "JavaScript"
-    ```javascript
+`javascript
     console.log("Hello");
-    ```
+    `
 ```
 
 #### Collapsible Sections
 
 ```markdown
 ??? "Click to expand"
-    Hidden content here
+Hidden content here
 ```
 
 ### Navigation
@@ -190,8 +190,8 @@ Configure navigation in `mkdocs.yml`:
 nav:
   - Home: index.md
   - Getting Started:
-    - Installation: getting-started/installation.md
-    - Configuration: getting-started/configuration.md
+      - Installation: getting-started/installation.md
+      - Configuration: getting-started/configuration.md
   - API Reference: api.md
   - Development: development.md
 ```
@@ -209,17 +209,20 @@ Store images in `docs/images/` and reference them:
 ### Documentation Structure
 
 1. **index.md** - Overview and introduction
+
    - What is this service?
    - Key features
    - Quick links
 
 2. **getting-started.md** - Installation and setup
+
    - Prerequisites
    - Installation steps
    - First-time configuration
    - Verification
 
 3. **api.md** - API reference
+
    - Endpoints
    - Request/response formats
    - Authentication
@@ -259,17 +262,17 @@ for user in users:
 
 Use consistent format for API endpoints:
 
-```markdown
+````markdown
 ### GET /api/users
 
 Retrieve a list of users.
 
 **Parameters**
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| page | integer | No | Page number (default: 1) |
-| limit | integer | No | Items per page (default: 10) |
+| Name  | Type    | Required | Description                  |
+| ----- | ------- | -------- | ---------------------------- |
+| page  | integer | No       | Page number (default: 1)     |
+| limit | integer | No       | Items per page (default: 10) |
 
 **Response**
 
@@ -286,13 +289,15 @@ Retrieve a list of users.
   "page": 1
 }
 ```
+````
 
 **Status Codes**
 
 - `200 OK`: Success
 - `400 Bad Request`: Invalid parameters
 - `401 Unauthorized`: Authentication required
-```
+
+````
 
 ## Testing Locally
 
@@ -300,7 +305,7 @@ Retrieve a list of users.
 
 ```bash
 pip install mkdocs mkdocs-material
-```
+````
 
 ### Build Documentation
 
@@ -358,7 +363,7 @@ theme:
     - scheme: default
       primary: blue
       accent: indigo
-    - scheme: slate  # Dark mode
+    - scheme: slate # Dark mode
       primary: blue
       accent: indigo
 ```
@@ -400,18 +405,20 @@ extra_css:
 
 ### Include Code from External Files
 
-```markdown
+````markdown
 ```python title="example.py"
 --8<-- "examples/example.py"
 ```
-```
+````
+
+````
 
 Requires:
 
 ```yaml
 markdown_extensions:
   - pymdownx.snippets
-```
+````
 
 ## Migration from Other Systems
 

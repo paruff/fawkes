@@ -80,12 +80,14 @@ A breach at any point could cascade across your entire platform. Zero trust mini
 ### Zero Trust in CI/CD Pipelines
 
 Traditional CI/CD often uses:
+
 - ❌ Long-lived credentials stored in CI system
 - ❌ Broad permissions for deployment service accounts
 - ❌ No verification of artifact provenance
 - ❌ Implicit trust between pipeline stages
 
 **Zero trust CI/CD**:
+
 - ✅ Workload identity for pipeline authentication (OIDC)
 - ✅ Least-privilege, ephemeral credentials
 - ✅ Cryptographic verification of artifacts (Sigstore/Cosign)
@@ -102,11 +104,12 @@ Traditional CI/CD often uses:
 **Zero Trust Solution**: Workload identity allows pods/pipelines to authenticate using short-lived tokens.
 
 **Example: GitHub Actions → AWS**
+
 ```yaml
 # Traditional approach (NEVER DO THIS)
 - name: Configure AWS Credentials
   env:
-    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}     # ❌ Long-lived
+    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }} # ❌ Long-lived
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }} # ❌ Rotated manually
 
 # Zero trust approach with OIDC
@@ -121,6 +124,7 @@ Traditional CI/CD often uses:
 ```
 
 **Example: Kubernetes Workload Identity**
+
 ```yaml
 apiVersion: v1
 kind: ServiceAccount
@@ -140,11 +144,11 @@ metadata:
 spec:
   template:
     spec:
-      serviceAccountName: payment-service  # ✅ Pod gets temporary credentials
+      serviceAccountName: payment-service # ✅ Pod gets temporary credentials
       containers:
-      - name: app
-        image: payment-service:v1.2.3
-        # No AWS_ACCESS_KEY_ID needed! SDK auto-discovers credentials
+        - name: app
+          image: payment-service:v1.2.3
+          # No AWS_ACCESS_KEY_ID needed! SDK auto-discovers credentials
 ```
 
 ### 2. Mutual TLS (mTLS) and Service Mesh
@@ -152,11 +156,13 @@ spec:
 **mTLS**: Both client and server authenticate using certificates, encrypting all traffic.
 
 **Service Mesh** (Istio, Linkerd, Consul) provides:
+
 - Automatic mTLS between all services
 - Fine-grained authorization policies
 - Traffic encryption without code changes
 
 **Example: Istio Authorization Policy**
+
 ```yaml
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -169,22 +175,22 @@ spec:
       app: payment-api
   action: ALLOW
   rules:
-  - from:
-    - source:
-        principals:
-        - "cluster.local/ns/checkout/sa/checkout-service"  # Only checkout can call
-    to:
-    - operation:
-        methods: ["POST"]
-        paths: ["/api/v1/charge"]
-  - from:
-    - source:
-        principals:
-        - "cluster.local/ns/admin/sa/admin-dashboard"
-    to:
-    - operation:
-        methods: ["GET"]
-        paths: ["/api/v1/transactions/*"]
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/checkout/sa/checkout-service" # Only checkout can call
+      to:
+        - operation:
+            methods: ["POST"]
+            paths: ["/api/v1/charge"]
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/admin/sa/admin-dashboard"
+      to:
+        - operation:
+            methods: ["GET"]
+            paths: ["/api/v1/transactions/*"]
 ```
 
 **Result**: Even if an attacker compromises the `frontend` service, they cannot call the payment API.
@@ -196,6 +202,7 @@ spec:
 **Gatekeeper**: OPA integration for Kubernetes admission control.
 
 **Example: Require Image Signatures**
+
 ```rego
 package kubernetes.admission
 
@@ -220,6 +227,7 @@ image_is_signed(image) if {
 ```
 
 **Example: Enforce Resource Limits**
+
 ```rego
 package kubernetes.admission
 
@@ -252,6 +260,7 @@ deny[msg] {
 4. **Verification**: Verify signatures before deployment
 
 **Example: Generate SBOM with Syft**
+
 ```bash
 # Generate SBOM for container image
 syft packages registry:ghcr.io/myorg/payment-service:v1.2.3 \
@@ -262,6 +271,7 @@ syft packages dir:. -o cyclonedx-json=sbom.json
 ```
 
 **Example: Sign Image with Cosign**
+
 ```bash
 # Sign image (uses keyless signing with Sigstore)
 cosign sign ghcr.io/myorg/payment-service:v1.2.3
@@ -277,6 +287,7 @@ cosign verify ghcr.io/myorg/payment-service:v1.2.3 \
 ```
 
 **Example: Policy to Require Signatures**
+
 ```yaml
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -285,27 +296,28 @@ metadata:
 spec:
   validationFailureAction: enforce
   rules:
-  - name: verify-signature
-    match:
-      any:
-      - resources:
-          kinds:
-          - Pod
-    verifyImages:
-    - imageReferences:
-      - "ghcr.io/myorg/*"
-      attestors:
-      - entries:
-        - keyless:
-            subject: "https://github.com/myorg/*"
-            issuer: "https://token.actions.githubusercontent.com"
-            rekor:
-              url: https://rekor.sigstore.dev
+    - name: verify-signature
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      verifyImages:
+        - imageReferences:
+            - "ghcr.io/myorg/*"
+          attestors:
+            - entries:
+                - keyless:
+                    subject: "https://github.com/myorg/*"
+                    issuer: "https://token.actions.githubusercontent.com"
+                    rekor:
+                      url: https://rekor.sigstore.dev
 ```
 
 ### 5. Secret Management
 
 **Never store secrets in**:
+
 - ❌ Git repositories
 - ❌ Environment variables in Dockerfiles
 - ❌ ConfigMaps
@@ -328,15 +340,16 @@ spec:
     name: payment-api-secrets
     creationPolicy: Owner
   data:
-  - secretKey: stripe-api-key
-    remoteRef:
-      key: prod/payment/stripe-api-key
-  - secretKey: database-password
-    remoteRef:
-      key: prod/payment/db-password
+    - secretKey: stripe-api-key
+      remoteRef:
+        key: prod/payment/stripe-api-key
+    - secretKey: database-password
+      remoteRef:
+        key: prod/payment/db-password
 ```
 
 **Vault Integration**:
+
 ```yaml
 apiVersion: v1
 kind: ServiceAccount
@@ -357,9 +370,9 @@ spec:
     spec:
       serviceAccountName: payment-service
       containers:
-      - name: app
-        image: payment-service:v1.2.3
-        # Vault agent sidecar injects secrets at /vault/secrets/stripe
+        - name: app
+          image: payment-service:v1.2.3
+          # Vault agent sidecar injects secrets at /vault/secrets/stripe
 ```
 
 ---
@@ -482,6 +495,7 @@ spec:
 ### Lab Overview
 
 You will implement key zero trust components:
+
 1. Configure workload identity for CI/CD
 2. Deploy a service mesh with mTLS
 3. Implement policy-as-code with OPA Gatekeeper
@@ -1099,12 +1113,14 @@ OIDC-based workload identity (like GitHub Actions OIDC to AWS) provides short-li
 **Challenge**: Netflix runs on AWS with thousands of microservices. Traditional perimeter security was insufficient.
 
 **Solution**:
+
 - **No VPN**: All services authenticate individually, no network-based trust
 - **mTLS everywhere**: Every service-to-service call uses mutual TLS
 - **Dynamic authorization**: Zuul gateway enforces fine-grained policies based on user/service identity
 - **Credential rotation**: All credentials rotate automatically every few hours
 
 **Result**:
+
 - Eliminated network perimeter as security boundary
 - Reduced blast radius of security incidents
 - Enabled faster deployment (no VPN bottlenecks)
@@ -1118,6 +1134,7 @@ OIDC-based workload identity (like GitHub Actions OIDC to AWS) provides short-li
 **Challenge**: Employees working remotely needed access to internal applications without VPN.
 
 **Solution** (BeyondCorp):
+
 - **Device trust**: Verify device posture before granting access
 - **User identity**: Strong authentication (2FA/U2F keys)
 - **Context-aware access**: Consider user, device, location, and resource sensitivity
@@ -1126,6 +1143,7 @@ OIDC-based workload identity (like GitHub Actions OIDC to AWS) provides short-li
 **Key insight**: "Location is not a proxy for trust"
 
 **Result**:
+
 - Employees work securely from anywhere without VPN
 - Reduced attack surface (no broad network access)
 - Better visibility into access patterns
@@ -1139,11 +1157,13 @@ OIDC-based workload identity (like GitHub Actions OIDC to AWS) provides short-li
 **Incident** (2019): Attacker compromised a web application firewall (WAF), accessed IAM credentials, and exfiltrated data on 100 million customers.
 
 **Root Causes**:
+
 - ❌ **Overly permissive IAM role**: WAF had broad access to S3
 - ❌ **No network segmentation**: Compromised WAF could reach production data
 - ❌ **Missing detection**: Exfiltration not detected in real-time
 
 **Zero Trust Would Have Prevented This**:
+
 - ✅ **Least privilege**: WAF should not have S3 access
 - ✅ **Workload identity**: Short-lived credentials, not long-lived IAM keys
 - ✅ **Micro-segmentation**: WAF isolated from data storage layer
@@ -1158,17 +1178,20 @@ OIDC-based workload identity (like GitHub Actions OIDC to AWS) provides short-li
 **Challenge**: Thousands of microservices needed secure access to secrets (API keys, database passwords).
 
 **Old approach**:
+
 - Secrets stored in environment variables
 - Rotated manually (infrequently)
 - Broad access (many services could read all secrets)
 
 **Zero trust approach**:
+
 - **HashiCorp Vault**: Central secret management
 - **Dynamic secrets**: Database credentials generated on-demand, expire after use
 - **Fine-grained ACLs**: Each service can only access its required secrets
 - **Audit logging**: Every secret access logged
 
 **Result**:
+
 - Secrets rotated automatically
 - Reduced blast radius (leaked credential only works for one service)
 - Complete audit trail for compliance
@@ -1179,12 +1202,12 @@ OIDC-based workload identity (like GitHub Actions OIDC to AWS) provides short-li
 
 This module directly supports these **DORA capabilities**:
 
-| Capability | How This Module Helps | Impact on Metrics |
-|------------|----------------------|-------------------|
-| **Shift Left on Security** | Integrate security scanning and policy enforcement early in CI/CD | Reduces change failure rate by catching vulnerabilities before production |
-| **Continuous Delivery** | Zero trust enables secure automation without manual approval gates | Improves deployment frequency and lead time |
-| **Loosely Coupled Architecture** | Service mesh and mTLS allow secure communication without tight coupling | Enables independent deployment of services |
-| **Monitoring & Observability** | Audit all authentication/authorization decisions for compliance | Faster MTTR with clear audit trails |
+| Capability                       | How This Module Helps                                                   | Impact on Metrics                                                         |
+| -------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| **Shift Left on Security**       | Integrate security scanning and policy enforcement early in CI/CD       | Reduces change failure rate by catching vulnerabilities before production |
+| **Continuous Delivery**          | Zero trust enables secure automation without manual approval gates      | Improves deployment frequency and lead time                               |
+| **Loosely Coupled Architecture** | Service mesh and mTLS allow secure communication without tight coupling | Enables independent deployment of services                                |
+| **Monitoring & Observability**   | Audit all authentication/authorization decisions for compliance         | Faster MTTR with clear audit trails                                       |
 
 ---
 
@@ -1193,6 +1216,7 @@ This module directly supports these **DORA capabilities**:
 ### Issue 1: Pods Fail to Start After Enabling Strict mTLS
 
 **Symptom**:
+
 ```
 Error from server: error when creating "deployment.yaml":
 admission webhook "validation.gatekeeper.sh" denied the request
@@ -1201,6 +1225,7 @@ admission webhook "validation.gatekeeper.sh" denied the request
 **Cause**: Pods without Istio sidecar injection cannot communicate when strict mTLS is enabled.
 
 **Solution**:
+
 ```bash
 # Ensure namespace has Istio injection enabled
 kubectl label namespace payments istio-injection=enabled
@@ -1214,6 +1239,7 @@ kubectl rollout restart deployment -n payments
 ### Issue 2: Image Signature Verification Fails
 
 **Symptom**:
+
 ```
 Error: image signature verification failed: no matching signatures
 ```
@@ -1221,6 +1247,7 @@ Error: image signature verification failed: no matching signatures
 **Cause**: Image was not signed, or signature verification policy references wrong public key.
 
 **Solution**:
+
 ```bash
 # Verify the image is signed
 cosign verify --key cosign.pub ghcr.io/myorg/app:v1.0.0
@@ -1237,6 +1264,7 @@ kubectl edit clusterpolicy verify-image-signature
 ### Issue 3: External Secrets Not Syncing
 
 **Symptom**:
+
 ```bash
 kubectl get externalsecret
 NAME            STORE    REFRESH INTERVAL   STATUS         READY
@@ -1246,6 +1274,7 @@ my-ext-secret   vault    1m                 SecretSyncedError   False
 **Cause**: External Secrets Operator cannot authenticate to secret backend (Vault/AWS).
 
 **Solution**:
+
 ```bash
 # Check ExternalSecret status
 kubectl describe externalsecret my-ext-secret -n payments
@@ -1270,6 +1299,7 @@ vault read auth/kubernetes/config
 **Cause**: Constraint may not be applied, or validation failure action is "dryrun".
 
 **Solution**:
+
 ```bash
 # Check if constraint is created
 kubectl get constraints
@@ -1292,6 +1322,7 @@ kubectl get k8srequiredresources must-have-resource-limits -o yaml | grep valida
 **Cause**: Service account not properly annotated, or OIDC provider not configured.
 
 **Solution for AWS (EKS)**:
+
 ```bash
 # Verify OIDC provider exists
 aws eks describe-cluster --name my-cluster --query "cluster.identity.oidc.issuer"
@@ -1310,12 +1341,14 @@ aws iam get-role --role-name payment-service --query 'Role.AssumeRolePolicyDocum
 ## 📚 Additional Resources
 
 ### Official Documentation
+
 - [NIST Zero Trust Architecture](https://www.nist.gov/publications/zero-trust-architecture) - Comprehensive guide to zero trust principles
 - [CISA Zero Trust Maturity Model](https://www.cisa.gov/zero-trust-maturity-model) - Framework for assessing zero trust adoption
 - [Sigstore Documentation](https://docs.sigstore.dev/) - Software signing and verification
 - [SLSA Framework](https://slsa.dev/) - Supply chain security levels
 
 ### Tools & Projects
+
 - [Istio Security](https://istio.io/latest/docs/concepts/security/) - Service mesh security
 - [OPA Gatekeeper](https://open-policy-agent.github.io/gatekeeper/) - Kubernetes policy enforcement
 - [Kyverno](https://kyverno.io/) - Kubernetes-native policy management
@@ -1324,11 +1357,13 @@ aws iam get-role --role-name payment-service --query 'Role.AssumeRolePolicyDocum
 - [Cosign](https://github.com/sigstore/cosign) - Container image signing
 
 ### Books & Papers
+
 - **"Zero Trust Networks"** by Evan Gilman & Doug Barth (O'Reilly)
 - **"Kubernetes Security and Observability"** by Brendan Creane & Amit Gupta (O'Reilly)
 - **Google's BeyondCorp Papers** - Research on zero trust implementation
 
 ### Video Tutorials
+
 - [Securing the Software Supply Chain](https://www.youtube.com/watch?v=VYgN5kGo02w) - KubeCon talk on Sigstore
 - [Zero Trust Security in Kubernetes](https://www.youtube.com/watch?v=OP_JBQ1E5qg) - Practical implementation guide
 
@@ -1346,6 +1381,7 @@ By completing this module, you've learned:
 6. ✅ **Secret management** - External Secrets Operator for centralized secret handling
 
 **Zero trust is not a product, it's an architecture philosophy.** Every component in your platform should:
+
 - Authenticate explicitly (no implicit trust)
 - Authorize with least privilege (only what's needed)
 - Encrypt all traffic (TLS everywhere)
@@ -1358,6 +1394,7 @@ By completing this module, you've learned:
 ### In Module 20: Multi-Cloud Strategies
 
 You'll learn how to:
+
 - Design platform architectures that span multiple cloud providers
 - Abstract cloud-specific APIs with unified interfaces
 - Implement disaster recovery and failover across clouds
@@ -1365,6 +1402,7 @@ You'll learn how to:
 - Navigate the tradeoffs of multi-cloud vs. cloud-agnostic approaches
 
 **Prepare by**:
+
 - Reviewing your organization's cloud provider usage
 - Identifying which services are cloud-specific vs. portable
 - Considering disaster recovery requirements (RTO/RPO)
@@ -1394,6 +1432,7 @@ Next: Complete Module 20 to finish Black Belt curriculum!
 After completing all Black Belt modules (17-20), you will:
 
 1. **Complete the Black Belt Assessment** (4 hours):
+
    - Design a complete platform architecture
    - Present to peer review panel
    - Implement multi-tenant design with zero trust
@@ -1410,4 +1449,4 @@ After completing all Black Belt modules (17-20), you will:
 ---
 
 **Module 19: Security & Zero Trust** | Fawkes Dojo | Black Belt
-*"Never trust, always verify"* | Version 1.0
+_"Never trust, always verify"_ | Version 1.0

@@ -25,64 +25,64 @@ spec:
         runAsUser: 10001
         fsGroup: 10001
       containers:
-      - name: feedback-bot
-        image: feedback-bot:v1.0.0
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 8000
-          name: http
-          protocol: TCP
-        env:
-        - name: FEEDBACK_API_URL
-          value: "http://feedback-service.fawkes.svc.cluster.local:8000"
-        - name: FEEDBACK_API_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: feedback-bot-secret
-              key: api-token
-              optional: true
-        - name: BOT_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: feedback-bot-secret
-              key: bot-token
-              optional: true
-        - name: MATTERMOST_URL
-          value: "http://mattermost.fawkes.svc.cluster.local:8065"
-        - name: EMAIL_DOMAIN
-          value: "fawkes.local"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-        volumeMounts:
-        - name: tmp
-          mountPath: /tmp
+        - name: feedback-bot
+          image: feedback-bot:v1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+              name: http
+              protocol: TCP
+          env:
+            - name: FEEDBACK_API_URL
+              value: "http://feedback-service.fawkes.svc.cluster.local:8000"
+            - name: FEEDBACK_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: feedback-bot-secret
+                  key: api-token
+                  optional: true
+            - name: BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: feedback-bot-secret
+                  key: bot-token
+                  optional: true
+            - name: MATTERMOST_URL
+              value: "http://mattermost.fawkes.svc.cluster.local:8065"
+            - name: EMAIL_DOMAIN
+              value: "fawkes.local"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
       volumes:
-      - name: tmp
-        emptyDir: {}
+        - name: tmp
+          emptyDir: {}

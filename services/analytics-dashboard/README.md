@@ -7,6 +7,7 @@ The Analytics Dashboard Service provides comprehensive analytics dashboards that
 ## Features
 
 ### 1. Usage Trends
+
 - Total and active user counts
 - Page view analytics
 - Session duration tracking
@@ -15,6 +16,7 @@ The Analytics Dashboard Service provides comprehensive analytics dashboards that
 - Top pages and traffic sources
 
 ### 2. Feature Adoption
+
 - Feature usage tracking
 - Adoption rate calculations
 - Unique user counts per feature
@@ -22,6 +24,7 @@ The Analytics Dashboard Service provides comprehensive analytics dashboards that
 - Historical adoption trends
 
 ### 3. Experiment Results
+
 - A/B test results with statistical analysis
 - Variant performance metrics
 - Confidence intervals
@@ -30,6 +33,7 @@ The Analytics Dashboard Service provides comprehensive analytics dashboards that
 - Automated recommendations
 
 ### 4. User Segments
+
 - Behavioral segmentation
 - Segment-specific metrics
 - Engagement scoring
@@ -37,6 +41,7 @@ The Analytics Dashboard Service provides comprehensive analytics dashboards that
 - Power user analysis
 
 ### 5. Funnel Visualization
+
 - Multi-step conversion funnels
 - Step-by-step completion rates
 - Drop-off analysis
@@ -47,6 +52,7 @@ The Analytics Dashboard Service provides comprehensive analytics dashboards that
   - Service creation
 
 ### 6. Export Capabilities
+
 - JSON export
 - CSV export (planned)
 - Real-time data access via API
@@ -81,51 +87,63 @@ The Analytics Dashboard Service provides comprehensive analytics dashboards that
 ## API Endpoints
 
 ### Health Check
+
 ```
 GET /health
 ```
 
 ### Complete Dashboard
+
 ```
 GET /api/v1/dashboard?time_range=7d
 ```
+
 Returns all analytics data in a single response.
 
 ### Usage Trends
+
 ```
 GET /api/v1/usage-trends?time_range=7d
 ```
 
 ### Feature Adoption
+
 ```
 GET /api/v1/feature-adoption?time_range=30d
 ```
 
 ### Experiment Results
+
 ```
 GET /api/v1/experiment-results?status=running
 ```
 
 ### User Segments
+
 ```
 GET /api/v1/user-segments?time_range=30d
 ```
 
 ### Funnel Data
+
 ```
 GET /api/v1/funnel/{funnel_name}?time_range=30d
 ```
+
 Available funnels: `onboarding`, `deployment`, `service_creation`
 
 ### Refresh Metrics
+
 ```
 POST /api/v1/metrics/refresh
 ```
 
 ### Export Data
+
 ```
 GET /api/v1/export/{format}?time_range=30d
 ```
+
 Formats: `json`, `csv`
 
 ## Prometheus Metrics
@@ -133,6 +151,7 @@ Formats: `json`, `csv`
 The service exposes the following metrics on `/metrics`:
 
 ### Usage Metrics
+
 - `analytics_total_users` - Total unique users
 - `analytics_active_users` - Active users in time range
 - `analytics_page_views_total` - Total page views
@@ -141,21 +160,25 @@ The service exposes the following metrics on `/metrics`:
 - `analytics_bounce_rate_percentage` - Bounce rate
 
 ### Feature Metrics
+
 - `analytics_feature_adoption_rate{feature_name}` - Adoption rate per feature
 - `analytics_feature_usage_total{feature_name}` - Total usage count per feature
 - `analytics_feature_unique_users{feature_name}` - Unique users per feature
 
 ### Experiment Metrics
+
 - `analytics_active_experiments` - Number of active experiments
 - `analytics_experiment_conversions{experiment_id,variant}` - Conversions per variant
 - `analytics_experiment_conversion_rate{experiment_id,variant}` - Conversion rate per variant
 - `analytics_significant_results_total` - Number of significant results
 
 ### Segment Metrics
+
 - `analytics_segment_size{segment_name}` - Users per segment
 - `analytics_segment_engagement{segment_name}` - Engagement score per segment
 
 ### Funnel Metrics
+
 - `analytics_funnel_conversion_rate{funnel_name}` - Overall conversion rate
 - `analytics_funnel_step_completion_rate{funnel_name,step}` - Step completion rate
 - `analytics_funnel_drop_off_rate{funnel_name,step}` - Step drop-off rate
@@ -230,16 +253,19 @@ analytics_funnel_conversion_rate{funnel_name="onboarding"}
 ## Monitoring
 
 ### Health Check
+
 ```bash
 curl http://localhost:8000/health
 ```
 
 ### Metrics
+
 ```bash
 curl http://localhost:8000/metrics
 ```
 
 ### Logs
+
 ```bash
 kubectl logs -n fawkes deployment/analytics-dashboard
 ```
@@ -247,6 +273,7 @@ kubectl logs -n fawkes deployment/analytics-dashboard
 ## Troubleshooting
 
 ### Service not starting
+
 ```bash
 # Check logs
 kubectl logs -n fawkes deployment/analytics-dashboard
@@ -256,6 +283,7 @@ kubectl get svc -n fawkes | grep -E "plausible|experimentation|feedback"
 ```
 
 ### No data in dashboard
+
 ```bash
 # Manually refresh metrics
 curl -X POST http://analytics-dashboard.fawkes.svc:8000/api/v1/metrics/refresh
@@ -267,6 +295,7 @@ curl http://feedback-service.fawkes.svc:8000/health
 ```
 
 ### Slow responses
+
 ```bash
 # Check cache status
 # Review Prometheus metrics for data_refresh_duration

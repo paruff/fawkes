@@ -1,6 +1,7 @@
 # ADR-006: PostgreSQL for Data Persistence
 
 ## Status
+
 **Accepted** - October 8, 2025
 
 ## Context
@@ -10,6 +11,7 @@ Fawkes platform components require a relational database for persistent data sto
 ### Database Requirements Across Components
 
 **Backstage**:
+
 - Service catalog entities and relationships
 - User preferences and settings
 - Plugin data storage
@@ -17,6 +19,7 @@ Fawkes platform components require a relational database for persistent data sto
 - Moderate write load, high read load
 
 **Mattermost + Focalboard**:
+
 - Messages, channels, users
 - Project boards, cards, properties
 - File metadata
@@ -24,6 +27,7 @@ Fawkes platform components require a relational database for persistent data sto
 - Real-time updates
 
 **DORA Metrics Service**:
+
 - Build events, deployment events
 - Historical metrics data
 - Team aggregations
@@ -31,18 +35,21 @@ Fawkes platform components require a relational database for persistent data sto
 - Write-heavy, analytical reads
 
 **Dojo Progress Tracking**:
+
 - Learner progress, assessment scores
 - Lab completion status
 - Certification records
 - Moderate write, frequent reads
 
 **SonarQube**:
+
 - Code analysis results
 - Quality metrics history
 - Security findings
 - High write during scans, read for dashboards
 
 **Jenkins** (optional, can use file system):
+
 - Build metadata and history
 - Job configurations
 - Plugin data
@@ -50,6 +57,7 @@ Fawkes platform components require a relational database for persistent data sto
 ### Requirements for Database
 
 **Technical Requirements**:
+
 - **ACID Compliance**: Data consistency and reliability
 - **SQL Support**: Complex queries, joins, transactions
 - **JSON Support**: Flexible schema for plugin data
@@ -60,6 +68,7 @@ Fawkes platform components require a relational database for persistent data sto
 - **Scalability**: Vertical and horizontal scaling options
 
 **Operational Requirements**:
+
 - **Open Source**: Transparent, no licensing costs
 - **Mature**: Production-proven, stable
 - **Well-Documented**: Extensive documentation and community
@@ -68,6 +77,7 @@ Fawkes platform components require a relational database for persistent data sto
 - **Security**: Encryption at rest and in transit, RBAC
 
 **Integration Requirements**:
+
 - Supported by Backstage, Mattermost, SonarQube, Jenkins
 - Kubernetes Operator available
 - Terraform provider for provisioning
@@ -77,24 +87,28 @@ Fawkes platform components require a relational database for persistent data sto
 ### Forces at Play
 
 **Technical Forces**:
+
 - Multiple components need databases
 - Could use single shared database or separate instances
 - Need balance between operational simplicity and isolation
 - Performance critical for developer experience
 
 **Operational Forces**:
+
 - Platform team capacity limited
 - Need reliable backups and disaster recovery
 - Monitoring and troubleshooting must be straightforward
 - Upgrades should be low-risk
 
 **Cost Forces**:
+
 - Open source preferred (no licensing)
 - Cloud-managed services convenient but expensive
 - Self-hosted requires operational overhead
 - Need cost-effective solution that scales
 
 **Ecosystem Forces**:
+
 - PostgreSQL has massive adoption in cloud-native space
 - Most tools support PostgreSQL natively
 - Large knowledge base and community
@@ -105,6 +119,7 @@ Fawkes platform components require a relational database for persistent data sto
 **We will use PostgreSQL as the standard relational database for Fawkes platform components.**
 
 Specifically:
+
 - **PostgreSQL 15+** (latest stable version)
 - **CloudNativePG Operator** for Kubernetes-native management
 - **Separate databases per component** (single cluster, multiple databases)
@@ -119,6 +134,7 @@ Specifically:
 1. **Industry Standard**: PostgreSQL is the most popular open source relational database, with massive adoption across cloud-native applications and platform tools
 
 2. **Universal Compatibility**: All Fawkes components support PostgreSQL:
+
    - Backstage: Officially supported, recommended database
    - Mattermost: Full support, production-ready
    - Focalboard: Built-in support (uses Mattermost database)
@@ -127,6 +143,7 @@ Specifically:
    - Custom services: Excellent language support (Go, Python, TypeScript)
 
 3. **Advanced Features**:
+
    - **JSONB**: Flexible schema for plugin data, semi-structured content
    - **Full-Text Search**: Built-in search without external tools
    - **CTEs and Window Functions**: Complex analytical queries
@@ -135,12 +152,14 @@ Specifically:
    - **Extensions**: PostGIS, pg_stat_statements, timescaledb
 
 4. **ACID Compliance**:
+
    - Strong consistency guarantees
    - Transaction support
    - Data integrity and reliability
    - Critical for catalog, messaging, metrics
 
 5. **Performance**:
+
    - Excellent query optimizer
    - Efficient indexing (B-tree, GiST, GIN, BRIN)
    - Parallel queries
@@ -148,24 +167,28 @@ Specifically:
    - Connection pooling support
 
 6. **High Availability**:
+
    - Streaming replication (synchronous and asynchronous)
    - Automatic failover
    - Point-in-time recovery
    - WAL archiving for backups
 
 7. **Cloud-Native**:
+
    - CloudNativePG operator for Kubernetes
    - Runs well in containers
    - Horizontal scaling via read replicas
    - Kubernetes-native backup solutions
 
 8. **Mature and Stable**:
+
    - 35+ years of development
    - Production-proven at massive scale
    - Backward compatibility commitment
    - Predictable release cycle
 
 9. **Excellent Tooling**:
+
    - pgAdmin (GUI administration)
    - psql (powerful CLI)
    - pg_dump/pg_restore (backup/restore)
@@ -173,12 +196,14 @@ Specifically:
    - Migration tools (Flyway, Liquibase)
 
 10. **Large Community**:
+
     - Extensive documentation
     - Active mailing lists and forums
     - Thousands of tutorials and examples
     - Commercial support available (EnterpriseDB, Crunchy Data)
 
 11. **Open Source**:
+
     - PostgreSQL License (permissive, like MIT)
     - Community-driven development
     - No vendor lock-in
@@ -248,6 +273,7 @@ Specifically:
 ### Mitigation Strategies
 
 1. **Write Scalability**:
+
    - Use connection pooling (PgBouncer)
    - Optimize queries and indexes
    - Consider read replicas for reporting
@@ -255,6 +281,7 @@ Specifically:
    - Plan for vertical scaling
 
 2. **Operational Overhead**:
+
    - Use CloudNativePG operator (automates backups, failover)
    - Implement automated monitoring and alerting
    - Document runbooks for common operations
@@ -262,6 +289,7 @@ Specifically:
    - Regular automated backups
 
 3. **Maintenance**:
+
    - Configure autovacuum appropriately
    - Monitor bloat with pg_stat_user_tables
    - Regular ANALYZE for query planning
@@ -269,12 +297,14 @@ Specifically:
    - Schedule maintenance windows
 
 4. **Connection Pooling**:
+
    - Deploy PgBouncer for connection pooling
    - Configure appropriate pool sizes
    - Use transaction pooling for most apps
    - Monitor connection usage
 
 5. **Monitoring**:
+
    - Deploy postgres_exporter for Prometheus
    - Create Grafana dashboards
    - Alert on key metrics (connections, replication lag, disk usage)
@@ -292,6 +322,7 @@ Specifically:
 ### Alternative 1: MySQL/MariaDB
 
 **Pros**:
+
 - Very popular, large community
 - Good performance for read-heavy workloads
 - MariaDB fully open source
@@ -299,6 +330,7 @@ Specifically:
 - Familiar to many developers
 
 **Cons**:
+
 - **Weaker JSON Support**: JSON type less powerful than PostgreSQL JSONB
 - **Limited Full-Text Search**: Not as robust as PostgreSQL
 - **Fewer Advanced Features**: Less support for CTEs, window functions
@@ -310,6 +342,7 @@ Specifically:
 ### Alternative 2: MongoDB
 
 **Pros**:
+
 - Document-oriented (flexible schema)
 - Excellent for JSON data
 - Horizontal scaling built-in
@@ -317,6 +350,7 @@ Specifically:
 - Popular for modern applications
 
 **Cons**:
+
 - **NoSQL**: Not all components support MongoDB
 - **No ACID Across Collections**: Weak consistency by default
 - **Limited Joins**: Embedding vs. referencing trade-offs
@@ -329,6 +363,7 @@ Specifically:
 ### Alternative 3: SQLite
 
 **Pros**:
+
 - Zero configuration
 - No separate server process
 - Very lightweight
@@ -336,6 +371,7 @@ Specifically:
 - Embedded database
 
 **Cons**:
+
 - **No Concurrency**: Limited concurrent writes
 - **No Network Access**: File-based only
 - **No Replication**: No built-in HA
@@ -347,6 +383,7 @@ Specifically:
 ### Alternative 4: CockroachDB
 
 **Pros**:
+
 - PostgreSQL-compatible
 - Distributed SQL (horizontal scaling)
 - Built-in replication
@@ -355,6 +392,7 @@ Specifically:
 - Cloud-native architecture
 
 **Cons**:
+
 - **Operational Complexity**: More complex than PostgreSQL
 - **Resource Intensive**: Higher overhead than PostgreSQL
 - **Less Mature**: Newer (2015 vs. PostgreSQL 1986)
@@ -367,6 +405,7 @@ Specifically:
 ### Alternative 5: TimescaleDB
 
 **Pros**:
+
 - PostgreSQL extension (full compatibility)
 - Optimized for time-series data
 - Excellent for metrics and logs
@@ -374,6 +413,7 @@ Specifically:
 - Continuous aggregates
 
 **Cons**:
+
 - **Not Needed for All Data**: Only beneficial for time-series
 - **Additional Complexity**: Extension to install and manage
 - **License**: Some features require license (Cloud only)
@@ -383,6 +423,7 @@ Specifically:
 ### Alternative 6: Cloud-Managed Services Only (AWS RDS, Azure Database, Cloud SQL)
 
 **Pros**:
+
 - Fully managed (no operational overhead)
 - Automated backups and failover
 - Easy scaling
@@ -391,6 +432,7 @@ Specifically:
 - Support included
 
 **Cons**:
+
 - **Cost**: Much more expensive than self-hosted ($100-500+/month per database)
 - **Vendor Lock-In**: Specific to cloud provider
 - **Less Control**: Can't customize everything
@@ -401,11 +443,13 @@ Specifically:
 ### Alternative 7: Multiple Database Types (polyglot persistence)
 
 **Pros**:
+
 - Best tool for each job
 - PostgreSQL for relational, MongoDB for documents, Redis for cache
 - Optimized for specific use cases
 
 **Cons**:
+
 - **Operational Complexity**: Multiple databases to manage, monitor, backup
 - **Increased Overhead**: More expertise required
 - **Cost**: More resources needed
@@ -434,7 +478,7 @@ metadata:
   name: fawkes-postgres
   namespace: fawkes-data
 spec:
-  instances: 3  # 1 primary + 2 replicas
+  instances: 3 # 1 primary + 2 replicas
 
   postgresql:
     parameters:
@@ -494,6 +538,7 @@ fawkes-postgres cluster
 ```
 
 **Rationale**:
+
 - Logical isolation between components
 - Easier to backup/restore individual databases
 - Resource sharing (connection pooling benefits)
@@ -512,31 +557,32 @@ spec:
   template:
     spec:
       containers:
-      - name: pgbouncer
-        image: edoburu/pgbouncer:latest
-        env:
-        - name: DB_HOST
-          value: fawkes-postgres-rw
-        - name: DB_PORT
-          value: "5432"
-        - name: POOL_MODE
-          value: transaction
-        - name: MAX_CLIENT_CONN
-          value: "1000"
-        - name: DEFAULT_POOL_SIZE
-          value: "25"
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "100m"
-          limits:
-            memory: "128Mi"
-            cpu: "200m"
+        - name: pgbouncer
+          image: edoburu/pgbouncer:latest
+          env:
+            - name: DB_HOST
+              value: fawkes-postgres-rw
+            - name: DB_PORT
+              value: "5432"
+            - name: POOL_MODE
+              value: transaction
+            - name: MAX_CLIENT_CONN
+              value: "1000"
+            - name: DEFAULT_POOL_SIZE
+              value: "25"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
 ```
 
 ### Backup Configuration
 
 **Automated Backups**:
+
 - Full backup: Daily at 2 AM UTC
 - WAL archiving: Continuous
 - Retention: 30 days
@@ -544,6 +590,7 @@ spec:
 - Encryption: At rest (S3 SSE)
 
 **Backup Verification**:
+
 ```bash
 # Weekly automated restore test
 kubectl cnpg backup fawkes-postgres-$(date +%Y%m%d)
@@ -557,6 +604,7 @@ kubectl cnpg restore fawkes-postgres-test \
 ### Monitoring & Alerting
 
 **Prometheus Metrics** (via postgres_exporter):
+
 - `pg_up` - Database reachable
 - `pg_stat_database_*` - Database statistics
 - `pg_stat_replication_*` - Replication lag
@@ -564,36 +612,38 @@ kubectl cnpg restore fawkes-postgres-test \
 - `pg_stat_user_tables_*` - Table statistics
 
 **Key Alerts**:
+
 ```yaml
 groups:
-- name: postgres
-  rules:
-  - alert: PostgreSQLDown
-    expr: pg_up == 0
-    for: 1m
-    annotations:
-      summary: "PostgreSQL is down"
+  - name: postgres
+    rules:
+      - alert: PostgreSQLDown
+        expr: pg_up == 0
+        for: 1m
+        annotations:
+          summary: "PostgreSQL is down"
 
-  - alert: PostgreSQLReplicationLag
-    expr: pg_replication_lag > 30
-    for: 5m
-    annotations:
-      summary: "Replication lag {{ $value }}s"
+      - alert: PostgreSQLReplicationLag
+        expr: pg_replication_lag > 30
+        for: 5m
+        annotations:
+          summary: "Replication lag {{ $value }}s"
 
-  - alert: PostgreSQLConnectionsHigh
-    expr: pg_stat_database_numbackends > 180
-    for: 5m
-    annotations:
-      summary: "High connection count: {{ $value }}"
+      - alert: PostgreSQLConnectionsHigh
+        expr: pg_stat_database_numbackends > 180
+        for: 5m
+        annotations:
+          summary: "High connection count: {{ $value }}"
 
-  - alert: PostgreSQLDiskUsageHigh
-    expr: pg_database_size_bytes / pg_settings_max_wal_size > 0.8
-    for: 5m
-    annotations:
-      summary: "Database disk usage high"
+      - alert: PostgreSQLDiskUsageHigh
+        expr: pg_database_size_bytes / pg_settings_max_wal_size > 0.8
+        for: 5m
+        annotations:
+          summary: "Database disk usage high"
 ```
 
 **Grafana Dashboard**:
+
 - Connection count and usage
 - Query performance (slow queries)
 - Replication lag
@@ -605,6 +655,7 @@ groups:
 ### Maintenance Tasks
 
 **Automated** (via CronJobs):
+
 ```yaml
 # Daily vacuum analyze
 apiVersion: batch/v1
@@ -612,22 +663,23 @@ kind: CronJob
 metadata:
   name: postgres-vacuum
 spec:
-  schedule: "0 3 * * *"  # 3 AM daily
+  schedule: "0 3 * * *" # 3 AM daily
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: vacuum
-            image: postgres:15
-            command:
-            - /bin/sh
-            - -c
-            - |
-              psql -h fawkes-postgres-rw -U postgres -c "VACUUM ANALYZE"
+            - name: vacuum
+              image: postgres:15
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  psql -h fawkes-postgres-rw -U postgres -c "VACUUM ANALYZE"
 ```
 
 **Manual** (quarterly):
+
 - Reindex large tables
 - Analyze table bloat
 - Review and optimize slow queries
@@ -636,6 +688,7 @@ spec:
 ### Security Configuration
 
 **Authentication**:
+
 ```yaml
 # PostgreSQL pg_hba.conf
 host    all             all             10.0.0.0/8            scram-sha-256
@@ -644,11 +697,13 @@ hostssl all             all             0.0.0.0/0             scram-sha-256
 ```
 
 **Encryption**:
+
 - TLS/SSL for connections (enforced)
 - Encryption at rest (storage level)
 - Backup encryption (S3 SSE)
 
 **Access Control**:
+
 ```sql
 -- Create role per application
 CREATE ROLE backstage WITH LOGIN PASSWORD 'secure_password';
@@ -664,6 +719,7 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO monitoring;
 ### Performance Tuning
 
 **Connection Settings**:
+
 ```
 max_connections = 200
 shared_buffers = 256MB          # 25% of RAM
@@ -673,6 +729,7 @@ maintenance_work_mem = 128MB    # RAM / 16
 ```
 
 **Query Optimization**:
+
 ```
 # Enable query logging for slow queries
 log_min_duration_statement = 1000  # Log queries > 1s
@@ -684,6 +741,7 @@ effective_io_concurrency = 200    # SSD capability
 ```
 
 **Autovacuum**:
+
 ```
 autovacuum = on
 autovacuum_max_workers = 3
@@ -694,12 +752,14 @@ autovacuum_vacuum_cost_delay = 20ms
 ### Migration Strategy
 
 **Schema Migrations**:
+
 - Use Flyway or Liquibase for versioned migrations
 - Store migrations in Git
 - Apply migrations in CI/CD pipeline
 - Never modify schema manually
 
 **Example Flyway Migration**:
+
 ```sql
 -- V1__create_users_table.sql
 CREATE TABLE users (
@@ -718,6 +778,7 @@ CREATE INDEX idx_users_email ON users(email);
 **Recovery Point Objective (RPO)**: 1 hour (WAL archiving)
 
 **Recovery Procedure**:
+
 1. Create new PostgreSQL cluster
 2. Restore from latest backup
 3. Apply WAL files for point-in-time recovery
@@ -726,6 +787,7 @@ CREATE INDEX idx_users_email ON users(email);
 6. Resume operations
 
 **Automated DR Testing**:
+
 - Monthly restore test to separate cluster
 - Verify data integrity checks pass
 - Document any issues and resolution
@@ -735,6 +797,7 @@ CREATE INDEX idx_users_email ON users(email);
 **For Production Deployments**:
 
 **AWS RDS PostgreSQL**:
+
 - Multi-AZ for high availability
 - Automated backups with point-in-time recovery
 - Read replicas for scaling
@@ -742,6 +805,7 @@ CREATE INDEX idx_users_email ON users(email);
 - Estimated cost: $200-400/month (db.t3.large)
 
 **Azure Database for PostgreSQL**:
+
 - Flexible Server with HA
 - Automated backups and patching
 - Read replicas
@@ -749,6 +813,7 @@ CREATE INDEX idx_users_email ON users(email);
 - Estimated cost: $180-350/month (similar specs)
 
 **Google Cloud SQL for PostgreSQL**:
+
 - High availability configuration
 - Automated backups
 - Read replicas
@@ -760,6 +825,7 @@ CREATE INDEX idx_users_email ON users(email);
 ## Monitoring This Decision
 
 We will revisit this ADR if:
+
 - PostgreSQL performance becomes bottleneck that can't be resolved
 - Write scalability becomes critical requirement
 - Operational burden exceeds team capacity
@@ -783,6 +849,7 @@ We will revisit this ADR if:
 ### Why PostgreSQL Over MySQL?
 
 **PostgreSQL advantages**:
+
 - Better JSON support (JSONB with indexing)
 - Full-text search built-in
 - More advanced SQL features (CTEs, window functions)
@@ -790,6 +857,7 @@ We will revisit this ADR if:
 - Stronger in cloud-native ecosystem
 
 **MySQL advantages**:
+
 - Slightly simpler for basic use cases
 - Some argue faster for simple reads
 - More familiar to some developers
@@ -799,12 +867,14 @@ We will revisit this ADR if:
 ### Single Cluster vs. Multiple Clusters
 
 **Single Cluster Approach** (chosen):
+
 - Operational simplicity (one cluster to manage)
 - Resource efficiency (shared resources)
 - Easier monitoring and backup
 - Lower infrastructure costs
 
 **Multiple Clusters Approach**:
+
 - Complete isolation between components
 - Independent scaling
 - Failure isolation
@@ -815,16 +885,19 @@ We will revisit this ADR if:
 ### When to Consider Alternative Databases
 
 **Consider MySQL/MariaDB**:
+
 - Team has strong MySQL expertise
 - Simple transactional workloads only
 - No need for advanced PostgreSQL features
 
 **Consider MongoDB**:
+
 - Truly schemaless data needed
 - Horizontal write scaling critical
 - All components support NoSQL (not our case)
 
 **Consider CockroachDB**:
+
 - Multi-region requirements
 - Massive horizontal scaling needed
 - Can absorb operational complexity

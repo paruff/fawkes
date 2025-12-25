@@ -5,6 +5,7 @@ This directory contains user personas for the Fawkes platform. Each persona repr
 ## About Personas
 
 Personas are fictional but data-driven representations of our users. They help us:
+
 - Build empathy with our users
 - Make user-centered design decisions
 - Prioritize features based on user needs
@@ -13,6 +14,7 @@ Personas are fictional but data-driven representations of our users. They help u
 ## Creating a New Persona
 
 1. **Copy the template**:
+
    ```bash
    cp ../templates/persona.md your-persona-name.md
    ```
@@ -20,6 +22,7 @@ Personas are fictional but data-driven representations of our users. They help u
 2. **Base it on research**: Conduct at least 5-7 interviews with similar users before creating a persona
 
 3. **Include key elements**:
+
    - Role and responsibilities
    - Goals and motivations
    - Pain points and frustrations
@@ -35,11 +38,13 @@ Personas are fictional but data-driven representations of our users. They help u
 ### Active Personas
 
 - **[Platform Developer](platform-developer.md)** - Alex Chen, "The Infrastructure Guardian"
+
   - Senior Platform Engineer focused on reliability, automation, and developer experience
   - Expert in Kubernetes, Terraform, observability tools
   - Key pain points: Alert fatigue, developer self-service limitations, observability gaps
 
 - **[Application Developer](application-developer.md)** - Maria Rodriguez, "The Feature Shipper"
+
   - Application Developer focused on feature velocity and code quality
   - Intermediate technical proficiency, strong in Java/Spring Boot
   - Key pain points: Deployment complexity, difficult troubleshooting, unclear platform capabilities
@@ -59,6 +64,7 @@ Personas are fictional but data-driven representations of our users. They help u
 ## Best Practices
 
 ✅ **Do:**
+
 - Base personas on real user data
 - Include direct quotes from interviews
 - Focus on behaviors and goals, not just demographics
@@ -66,6 +72,7 @@ Personas are fictional but data-driven representations of our users. They help u
 - Cross-reference related journey maps
 
 ❌ **Don't:**
+
 - Create personas based on assumptions
 - Make personas too generic
 - Create too many personas (3-5 is ideal)

@@ -16,6 +16,7 @@ In modern data platforms, data is scattered across multiple systems - databases,
 6. **Impact Analysis**: Understand downstream impacts before making changes
 
 DataHub integrates seamlessly with our existing platform components:
+
 - **PostgreSQL databases** for application data
 - **Kafka/event streams** for real-time data (future)
 - **S3/object storage** for data lakes (future)
@@ -77,6 +78,7 @@ DataHub follows a microservices architecture with the following key components:
 ### Component Details
 
 #### 1. GMS (Graph Metadata Service)
+
 - **Purpose**: Core backend service that stores and serves metadata
 - **Port**: 8080
 - **APIs**: GraphQL and REST
@@ -88,6 +90,7 @@ DataHub follows a microservices architecture with the following key components:
   - Access control (future)
 
 #### 2. DataHub Frontend
+
 - **Purpose**: Web-based UI for interacting with metadata
 - **Port**: 9002
 - **Technology**: React.js
@@ -98,12 +101,14 @@ DataHub follows a microservices architecture with the following key components:
   - User management
 
 #### 3. PostgreSQL
+
 - **Purpose**: Primary metadata storage
 - **Implementation**: CloudNativePG cluster (db-datahub-dev)
 - **Configuration**: HA with 3 replicas
 - **Location**: `db-datahub-dev-rw.fawkes.svc.cluster.local:5432`
 
 #### 4. OpenSearch
+
 - **Purpose**: Search indexing for fast metadata discovery
 - **Implementation**: Shared OpenSearch cluster in logging namespace
 - **Location**: `opensearch-cluster-master.logging.svc.cluster.local:9200`
@@ -115,6 +120,7 @@ DataHub follows a microservices architecture with the following key components:
 ### Local Development
 
 DataHub UI is accessible at:
+
 ```
 http://datahub.127.0.0.1.nip.io
 ```
@@ -122,6 +128,7 @@ http://datahub.127.0.0.1.nip.io
 ### Default Credentials (MVP)
 
 For the initial MVP deployment, authentication is simplified:
+
 - **Username**: `datahub`
 - **Password**: `datahub`
 
@@ -130,6 +137,7 @@ For the initial MVP deployment, authentication is simplified:
 ### API Access
 
 #### GraphQL API
+
 ```bash
 # GraphQL endpoint
 curl -X POST http://datahub.127.0.0.1.nip.io/api/graphql \
@@ -138,6 +146,7 @@ curl -X POST http://datahub.127.0.0.1.nip.io/api/graphql \
 ```
 
 #### REST API (via GMS)
+
 ```bash
 # Internal GMS REST API
 curl http://datahub-datahub-gms.fawkes.svc:8080/entities
@@ -152,12 +161,14 @@ DataHub provides multiple ways to discover data assets:
 ### 1. Search by Keywords
 
 Navigate to the search bar and enter keywords:
+
 - Dataset names (e.g., "backstage_users")
 - Column names (e.g., "email")
 - Descriptions
 - Tags
 
 **Example Searches:**
+
 - `backstage` - Find all assets related to Backstage
 - `user email` - Find datasets containing user email data
 - `tag:PII` - Find all assets tagged as PII
@@ -165,6 +176,7 @@ Navigate to the search bar and enter keywords:
 ### 2. Browse by Platform
 
 Click on "Browse" and navigate through:
+
 - **Platforms**: PostgreSQL, Kafka, S3, etc.
 - **Domains**: Analytics, Operations, Product, etc.
 - **Ownership**: Filter by team or owner
@@ -172,6 +184,7 @@ Click on "Browse" and navigate through:
 ### 3. Advanced Filters
 
 Use the filter panel to refine searches:
+
 - **Entity Type**: Dataset, Dashboard, Pipeline, etc.
 - **Platform**: PostgreSQL, MySQL, BigQuery, etc.
 - **Domain**: Engineering, Marketing, Finance, etc.
@@ -181,11 +194,13 @@ Use the filter panel to refine searches:
 ### 4. Using the CLI
 
 Install DataHub CLI:
+
 ```bash
 pip install 'acryl-datahub[all]'
 ```
 
 Search from command line:
+
 ```bash
 # Search for datasets
 datahub get --urn "urn:li:dataset:(urn:li:dataPlatform:postgres,backstage.users,PROD)"
@@ -200,6 +215,7 @@ datahub get --urn "urn:li:dataset:(urn:li:dataPlatform:postgres,backstage.users,
 1. **Navigate to an Asset**: Search or browse to find the dataset
 2. **Click "Edit"**: Located in the top-right corner
 3. **Add Information**:
+
    - **Description**: Explain what this dataset contains
    - **Tags**: Add relevant tags (e.g., PII, Critical, Deprecated)
    - **Domain**: Assign to a business domain
@@ -234,6 +250,7 @@ sink:
 ```
 
 Run ingestion:
+
 ```bash
 # Set credentials
 export POSTGRES_USER="backstage_user"
@@ -284,6 +301,7 @@ emitter.emit_mcp(
 ## Understanding Lineage Graphs
 
 Data lineage shows how data flows through your systems, helping you understand:
+
 - **Upstream dependencies**: What data sources feed into this dataset?
 - **Downstream consumers**: What processes or dashboards depend on this dataset?
 - **Transformation logic**: How data changes as it moves through pipelines
@@ -379,6 +397,7 @@ datahub ingest -c dbt-recipe.yml
 **Scenario**: You need to identify all tables containing personally identifiable information for GDPR compliance.
 
 **Steps**:
+
 1. Search for `tag:PII` in the search bar
 2. Review all results
 3. Verify ownership and access controls
@@ -389,6 +408,7 @@ datahub ingest -c dbt-recipe.yml
 **Scenario**: You want to change a column in the `users` table but need to know what will break.
 
 **Steps**:
+
 1. Navigate to the `users` dataset
 2. Click the "Lineage" tab
 3. Set depth to 3-4 hops
@@ -400,6 +420,7 @@ datahub ingest -c dbt-recipe.yml
 **Scenario**: Track data quality metrics for critical datasets.
 
 **Steps**:
+
 1. Integrate Great Expectations with DataHub
 2. Run validation checks
 3. View results in DataHub UI under "Validation" tab
@@ -410,6 +431,7 @@ datahub ingest -c dbt-recipe.yml
 **Scenario**: A new data engineer joins and needs to understand data assets.
 
 **Steps**:
+
 1. Browse by domain (e.g., "User Analytics")
 2. Review dataset descriptions and schemas
 3. Check lineage to understand data flows
@@ -424,6 +446,7 @@ datahub ingest -c dbt-recipe.yml
 **Symptoms**: Browser shows connection error or blank page
 
 **Checks**:
+
 ```bash
 # Check if pods are running
 kubectl get pods -n fawkes | grep datahub
@@ -439,6 +462,7 @@ kubectl get ingress -n fawkes datahub-datahub-frontend
 ```
 
 **Solutions**:
+
 1. Verify PostgreSQL is running: `kubectl get pods -n fawkes | grep db-datahub`
 2. Verify OpenSearch is accessible: `kubectl get pods -n logging | grep opensearch`
 3. Check resource limits aren't exceeded
@@ -449,6 +473,7 @@ kubectl get ingress -n fawkes datahub-datahub-frontend
 **Symptoms**: Metadata exists but search returns empty results
 
 **Checks**:
+
 ```bash
 # Check OpenSearch is healthy
 kubectl exec -it -n logging opensearch-cluster-master-0 -- \
@@ -460,6 +485,7 @@ kubectl exec -it -n logging opensearch-cluster-master-0 -- \
 ```
 
 **Solutions**:
+
 1. Rebuild search index:
    ```bash
    # Access DataHub pod and trigger reindex
@@ -474,6 +500,7 @@ kubectl exec -it -n logging opensearch-cluster-master-0 -- \
 **Symptoms**: DataHub CLI ingestion fails or doesn't show metadata
 
 **Checks**:
+
 ```bash
 # Run with debug mode
 datahub ingest -c recipe.yml --debug
@@ -483,6 +510,7 @@ kubectl logs -n fawkes deployment/datahub-datahub-gms -f
 ```
 
 **Solutions**:
+
 1. Verify database credentials are correct
 2. Check network connectivity from ingestion source
 3. Ensure ingestion recipe format is correct
@@ -493,6 +521,7 @@ kubectl logs -n fawkes deployment/datahub-datahub-gms -f
 **Symptoms**: UI is slow, searches take long time
 
 **Checks**:
+
 ```bash
 # Check resource usage
 kubectl top pods -n fawkes | grep datahub
@@ -504,6 +533,7 @@ kubectl exec -it -n fawkes db-datahub-dev-1 -- \
 ```
 
 **Solutions**:
+
 1. Increase resource limits for DataHub components
 2. Scale OpenSearch replicas if needed
 3. Optimize PostgreSQL queries
@@ -514,6 +544,7 @@ kubectl exec -it -n fawkes db-datahub-dev-1 -- \
 **Symptoms**: Cannot log in or access is denied
 
 **Checks**:
+
 ```bash
 # Check frontend environment variables
 kubectl get deployment -n fawkes datahub-datahub-frontend -o yaml | grep -A 10 env
@@ -523,6 +554,7 @@ kubectl get deployment -n fawkes datahub-datahub-gms -o yaml | grep AUTH
 ```
 
 **Solutions**:
+
 1. For MVP: Verify basic auth is enabled (`AUTH_JAAS_ENABLED: false`)
 2. For production: Configure OIDC with GitHub OAuth
 3. Check user exists in DataHub user management

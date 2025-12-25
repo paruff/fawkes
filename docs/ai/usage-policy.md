@@ -74,10 +74,12 @@ This policy aims to:
 **Purpose**: AI-powered code completion and generation
 
 **Access**: Organization-wide subscription
+
 - Individual license: Contact Platform Team
 - IDE extensions available for VS Code, IntelliJ, Vim/Neovim
 
 **Use Cases**:
+
 - Code completion and suggestions
 - Function and class generation
 - Test case generation
@@ -85,11 +87,13 @@ This policy aims to:
 - Code refactoring suggestions
 
 **Limitations**:
+
 - Must review all suggestions before accepting
 - Not suitable for security-critical code without review
 - May suggest deprecated or vulnerable patterns
 
 **Configuration**:
+
 ```json
 {
   "github.copilot.enable": true,
@@ -110,6 +114,7 @@ This policy aims to:
 **Access**: Individual accounts (Team or Plus plan recommended)
 
 **Approved Use Cases**:
+
 - General programming questions and learning
 - Algorithm design discussions
 - Architecture brainstorming
@@ -117,6 +122,7 @@ This policy aims to:
 - Documentation writing assistance
 
 **Restricted Use Cases**:
+
 - ❌ Do NOT paste proprietary code
 - ❌ Do NOT share API keys, credentials, or secrets
 - ❌ Do NOT share customer data or PII
@@ -124,6 +130,7 @@ This policy aims to:
 - ❌ Do NOT share business logic or proprietary algorithms
 
 **Best Practices**:
+
 - Anonymize code snippets before sharing
 - Use pseudocode instead of actual implementation
 - Focus on concepts rather than specifics
@@ -136,12 +143,14 @@ This policy aims to:
 **Access**: Available to all developers through internal platform
 
 **Use Cases**:
+
 - Query internal documentation
 - Search codebase patterns
 - Find similar implementations
 - Retrieve policy and compliance information
 
 **Advantages**:
+
 - Uses only internal, approved data sources
 - No data leaves our infrastructure
 - Integrated with Backstage developer portal
@@ -168,11 +177,13 @@ To request approval for a new AI tool:
 ### ✅ DO: Recommended Practices
 
 1. **Use AI as an Assistant, Not a Replacement**
+
    - Review and understand all AI-generated code
    - Verify logic, security, and performance implications
    - Consider AI suggestions as starting points, not final solutions
 
 2. **Leverage AI for Productivity**
+
    - Boilerplate code generation
    - Test case scaffolding
    - Documentation writing
@@ -180,12 +191,14 @@ To request approval for a new AI tool:
    - Learning new technologies
 
 3. **Follow Security Best Practices**
+
    - Never include secrets or credentials in prompts
    - Sanitize code before sharing externally
    - Use internal RAG system for sensitive queries
    - Enable public code blocking in Copilot
 
 4. **Maintain Code Quality**
+
    - Follow existing code style and conventions
    - Add appropriate comments and documentation
    - Write tests for AI-generated code
@@ -199,18 +212,21 @@ To request approval for a new AI tool:
 ### ❌ DO NOT: Prohibited Activities
 
 1. **Security Violations**
+
    - ❌ Share API keys, tokens, passwords, or credentials
    - ❌ Paste production configuration files
    - ❌ Share database connection strings
    - ❌ Upload private keys or certificates
 
 2. **Data Privacy Violations**
+
    - ❌ Share customer PII (names, emails, addresses, etc.)
    - ❌ Share financial or payment information
    - ❌ Share healthcare or sensitive personal data
    - ❌ Share internal employee information
 
 3. **Intellectual Property Violations**
+
    - ❌ Share proprietary algorithms or business logic
    - ❌ Share trade secrets or confidential information
    - ❌ Copy AI-generated code without attribution
@@ -230,26 +246,29 @@ To request approval for a new AI tool:
 
 Before using AI tools, classify your data:
 
-| Classification | Description | AI Tool Usage |
-|----------------|-------------|---------------|
-| **Public** | Open source, public documentation | ✅ All approved tools |
-| **Internal** | Internal docs, non-sensitive code | ✅ Copilot, Internal RAG only |
-| **Confidential** | Business logic, customer data | ⚠️ Internal RAG only, with care |
-| **Restricted** | Secrets, PII, financial data | ❌ No AI tools |
+| Classification   | Description                       | AI Tool Usage                   |
+| ---------------- | --------------------------------- | ------------------------------- |
+| **Public**       | Open source, public documentation | ✅ All approved tools           |
+| **Internal**     | Internal docs, non-sensitive code | ✅ Copilot, Internal RAG only   |
+| **Confidential** | Business logic, customer data     | ⚠️ Internal RAG only, with care |
+| **Restricted**   | Secrets, PII, financial data      | ❌ No AI tools                  |
 
 ### Security Requirements
 
 1. **Data Minimization**
+
    - Share only necessary context with AI tools
    - Remove sensitive information before prompts
    - Use code snippets instead of full files when possible
 
 2. **Access Controls**
+
    - Use organization-managed AI accounts
    - Enable SSO/SAML where available
    - Follow least-privilege principles
 
 3. **Network Security**
+
    - Use approved networks for AI tool access
    - VPN required for external AI services
    - Internal RAG system preferred for sensitive queries
@@ -262,12 +281,14 @@ Before using AI tools, classify your data:
 ### Privacy Considerations
 
 1. **Third-Party AI Services**: Assume data sent to external AI services may be:
+
    - Stored for training purposes (unless explicitly opted out)
    - Visible to service provider employees
    - Subject to data breach risks
    - Covered by third-party privacy policies
 
 2. **Opt-Out Options**: When available, opt out of:
+
    - Data collection for model training
    - Telemetry and analytics
    - Public code matching (Copilot)
@@ -289,6 +310,7 @@ All code with significant AI assistance must undergo enhanced review:
 #### 1. Developer Responsibilities
 
 **Before Committing:**
+
 - [ ] Review all AI-generated code line by line
 - [ ] Verify logic correctness and edge case handling
 - [ ] Check for security vulnerabilities
@@ -297,6 +319,7 @@ All code with significant AI assistance must undergo enhanced review:
 - [ ] Document AI usage in commit message
 
 **Commit Message Format:**
+
 ```
 [AI-assisted] Add user authentication service
 
@@ -311,6 +334,7 @@ Closes #123
 #### 2. Reviewer Responsibilities
 
 **Code Review Checklist:**
+
 - [ ] Verify code quality and readability
 - [ ] Check for security vulnerabilities (SQLi, XSS, etc.)
 - [ ] Validate error handling and edge cases
@@ -319,6 +343,7 @@ Closes #123
 - [ ] Review for license compatibility
 
 **Enhanced Scrutiny Areas:**
+
 1. **Authentication/Authorization** - Extra security review required
 2. **Data Validation** - Ensure proper input sanitization
 3. **External API Calls** - Verify error handling
@@ -328,6 +353,7 @@ Closes #123
 #### 3. Security Review Triggers
 
 Automatic security review required for:
+
 - Authentication/authorization changes
 - Cryptographic operations
 - Database schema changes
@@ -338,6 +364,7 @@ Automatic security review required for:
 #### 4. Documentation Requirements
 
 Document in PR description:
+
 - AI tool(s) used (Copilot, ChatGPT, etc.)
 - Extent of AI assistance (%, estimated)
 - Manual modifications made
@@ -345,24 +372,29 @@ Document in PR description:
 - Test coverage added
 
 **Example PR Description:**
+
 ```markdown
 ## Changes
+
 - Implemented user session management
 - Added Redis-based session store
 - Created session cleanup job
 
 ## AI Assistance
+
 - Tool: GitHub Copilot
 - Extent: ~60% initial scaffolding
 - Manual work: Security hardening, custom business logic, tests
 
 ## Security Review
+
 - Input validation added for all endpoints
 - Session tokens use cryptographically secure random
 - CSRF protection implemented
 - Rate limiting configured
 
 ## Testing
+
 - Unit test coverage: 95%
 - Integration tests: Session lifecycle
 - Security tests: Token validation, injection attempts
@@ -377,6 +409,7 @@ Document in PR description:
 1. **Organization Ownership**: All code created using company resources (including AI tools) belongs to the organization
 
 2. **AI-Generated Content**:
+
    - Treat AI-generated code as any other code
    - Organization owns the final work product
    - Attribution to AI tool optional but recommended
@@ -389,6 +422,7 @@ Document in PR description:
 ### License Compliance
 
 #### Acceptable Licenses
+
 ✅ Permissive licenses (MIT, Apache 2.0, BSD)
 ✅ Weak copyleft (LGPL, MPL)
 ⚠️ Strong copyleft (GPL) - Legal review required
@@ -425,6 +459,7 @@ def example_function():
 #### 1. Development Workflow Tracking
 
 **Required Metadata:**
+
 - AI tool used (Copilot, ChatGPT, RAG)
 - Date and time of usage
 - Developer identity
@@ -432,6 +467,7 @@ def example_function():
 - Commit hash
 
 **Implementation:**
+
 - Git commit tags: `[AI-assisted]`
 - PR labels: `ai-generated`
 - Code comments: `# Generated with [Tool]`
@@ -439,6 +475,7 @@ def example_function():
 #### 2. Access Logging
 
 The Platform Team maintains logs of:
+
 - AI tool access requests and approvals
 - Organization-level tool usage statistics
 - Security incidents related to AI tools
@@ -447,12 +484,14 @@ The Platform Team maintains logs of:
 #### 3. Regular Audits
 
 **Quarterly Reviews:**
+
 - Sample code reviews for AI usage compliance
 - Security scan results analysis
 - License compliance verification
 - Policy effectiveness assessment
 
 **Annual Reviews:**
+
 - Comprehensive AI tool usage audit
 - Policy updates based on new tools/risks
 - Training program effectiveness
@@ -477,6 +516,7 @@ The Platform Team maintains logs of:
 ### Incident Reporting
 
 **Report immediately if:**
+
 - Secrets or credentials exposed to AI tool
 - Customer data shared inappropriately
 - AI tool generates malicious or vulnerable code
@@ -484,6 +524,7 @@ The Platform Team maintains logs of:
 - Unauthorized AI tool usage detected
 
 **Reporting Process:**
+
 1. Stop using the affected AI tool immediately
 2. Document the incident details
 3. Report to security@fawkes.idp or Platform Team
@@ -499,18 +540,21 @@ The Platform Team maintains logs of:
 All developers using AI tools must complete:
 
 #### 1. AI Usage Policy Training (1 hour)
+
 - Policy overview and key requirements
 - Approved tools and use cases
 - Security and privacy guidelines
 - Code review requirements
 
 #### 2. Hands-On AI Tool Training (2 hours)
+
 - GitHub Copilot setup and configuration
 - Effective prompt engineering
 - Code review best practices
 - Internal RAG system usage
 
 #### 3. Security Awareness (30 minutes)
+
 - Data classification review
 - Common security pitfalls
 - Incident reporting procedures
@@ -519,12 +563,14 @@ All developers using AI tools must complete:
 ### Certification Requirements
 
 **AI Tool User Certification:**
+
 - Complete all required training modules
 - Pass training quiz with 90% score (see [training-quiz.md](./training-quiz.md))
 - Renew annually
 - Maintain compliance with policy
 
 **Certification Process:**
+
 1. Complete training modules in learning management system
 2. Take and pass the [AI Usage Policy Quiz](./training-quiz.md)
 3. Receive certification via email
@@ -544,6 +590,7 @@ All developers using AI tools must complete:
 ### Violation Categories
 
 #### Minor Violations (Warning)
+
 - Forgot to tag AI-assisted commits
 - Used approved tool outside recommended use case
 - Missed code review checklist item
@@ -551,6 +598,7 @@ All developers using AI tools must complete:
 **Response**: Verbal/written warning, remedial training
 
 #### Moderate Violations (Probation)
+
 - Shared internal (non-sensitive) code externally
 - Skipped security review for AI-generated code
 - Repeated minor violations
@@ -558,6 +606,7 @@ All developers using AI tools must complete:
 **Response**: Temporary suspension of AI tool access, mandatory retraining
 
 #### Severe Violations (Disciplinary Action)
+
 - Shared secrets, credentials, or restricted data
 - Intentionally bypassed security controls
 - Used unauthorized AI tools
@@ -583,7 +632,7 @@ Encouraged! If you accidentally violate this policy:
 3. Cooperate with remediation efforts
 4. Learn from the incident
 
-*Self-reporting of unintentional violations will not result in disciplinary action, only corrective measures.*
+_Self-reporting of unintentional violations will not result in disciplinary action, only corrective measures._
 
 ---
 
@@ -592,11 +641,13 @@ Encouraged! If you accidentally violate this policy:
 ### Questions and Guidance
 
 **Platform Team**
+
 - Email: platform-team@fawkes.idp
 - Slack: #platform-support
 - Office Hours: Every Tuesday 2-3 PM
 
 **AI Tools Specialists**
+
 - GitHub Copilot: copilot-admin@fawkes.idp
 - RAG System: rag-support@fawkes.idp
 - General AI questions: #ai-tools (Slack)
@@ -612,10 +663,12 @@ Encouraged! If you accidentally violate this policy:
 ### Report Security Incidents
 
 **Urgent (24/7)**:
+
 - Security Hotline: security@fawkes.idp
 - Incident Response: +1-555-SECURE
 
 **Non-Urgent**:
+
 - Platform Team: platform-team@fawkes.idp
 - Submit ticket: [Security Incident Form](https://backstage.fawkes.idp/security-incident)
 
@@ -631,9 +684,9 @@ This policy is a living document. Your feedback helps improve it:
 
 ## Document History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | 2025-12 | Platform Team | Initial policy release |
+| Version | Date    | Author        | Changes                |
+| ------- | ------- | ------------- | ---------------------- |
+| 1.0     | 2025-12 | Platform Team | Initial policy release |
 
 ---
 
@@ -650,6 +703,7 @@ This policy is a living document. Your feedback helps improve it:
 ## Acknowledgments
 
 This policy was developed with input from:
+
 - Platform Engineering Team
 - Security Team
 - Legal & Compliance

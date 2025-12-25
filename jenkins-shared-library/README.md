@@ -45,6 +45,7 @@ goldenPathPipeline {
 ```
 
 That's it! The pipeline automatically handles:
+
 - Building your application
 - Running unit tests
 - Executing BDD/Gherkin tests
@@ -56,16 +57,17 @@ That's it! The pipeline automatically handles:
 
 Ready-to-use example Jenkinsfiles are available in the `examples/` directory:
 
-| File | Language | Description |
-|------|----------|-------------|
-| [Jenkinsfile.java](examples/Jenkinsfile.java) | Java | Maven-based Java application with Cucumber BDD |
-| [Jenkinsfile.python](examples/Jenkinsfile.python) | Python | Python application with pytest and Behave |
-| [Jenkinsfile.node](examples/Jenkinsfile.node) | Node.js | Node.js application with Jest and BDD tests |
-| [Jenkinsfile.go](examples/Jenkinsfile.go) | Go | Go application with Go test framework |
-| [Jenkinsfile.minimal](examples/Jenkinsfile.minimal) | Any | Minimal configuration using all defaults |
-| [Jenkinsfile.sample](examples/Jenkinsfile.sample) | Any | Comprehensive example with all configuration options |
+| File                                                | Language | Description                                          |
+| --------------------------------------------------- | -------- | ---------------------------------------------------- |
+| [Jenkinsfile.java](examples/Jenkinsfile.java)       | Java     | Maven-based Java application with Cucumber BDD       |
+| [Jenkinsfile.python](examples/Jenkinsfile.python)   | Python   | Python application with pytest and Behave            |
+| [Jenkinsfile.node](examples/Jenkinsfile.node)       | Node.js  | Node.js application with Jest and BDD tests          |
+| [Jenkinsfile.go](examples/Jenkinsfile.go)           | Go       | Go application with Go test framework                |
+| [Jenkinsfile.minimal](examples/Jenkinsfile.minimal) | Any      | Minimal configuration using all defaults             |
+| [Jenkinsfile.sample](examples/Jenkinsfile.sample)   | Any      | Comprehensive example with all configuration options |
 
 **To use an example:**
+
 1. Copy the appropriate `Jenkinsfile.*` from the examples directory
 2. Rename it to `Jenkinsfile` in your repository root
 3. Update the `appName` to match your application
@@ -75,27 +77,27 @@ Ready-to-use example Jenkinsfiles are available in the `examples/` directory:
 
 ### For Main Branch (Artifact Production)
 
-| Stage | Description |
-|-------|-------------|
-| Checkout | Clone repository |
-| Build | Compile/build application |
-| Unit Test | Run unit tests |
-| BDD/Gherkin Test | Run behavior-driven tests |
-| Security Scan | **Secrets scan (Gitleaks)**, SonarQube analysis, dependency check |
-| Quality Gate | Wait for SonarQube quality gate |
-| Build Docker Image | Create container image |
-| Container Security Scan | Trivy vulnerability scan |
-| Push Artifact | Push to container registry |
-| Update GitOps | Update manifests for ArgoCD |
-| Record DORA Metrics | Send metrics to DORA service |
+| Stage                   | Description                                                       |
+| ----------------------- | ----------------------------------------------------------------- |
+| Checkout                | Clone repository                                                  |
+| Build                   | Compile/build application                                         |
+| Unit Test               | Run unit tests                                                    |
+| BDD/Gherkin Test        | Run behavior-driven tests                                         |
+| Security Scan           | **Secrets scan (Gitleaks)**, SonarQube analysis, dependency check |
+| Quality Gate            | Wait for SonarQube quality gate                                   |
+| Build Docker Image      | Create container image                                            |
+| Container Security Scan | Trivy vulnerability scan                                          |
+| Push Artifact           | Push to container registry                                        |
+| Update GitOps           | Update manifests for ArgoCD                                       |
+| Record DORA Metrics     | Send metrics to DORA service                                      |
 
 ### For Pull Requests (Fast Feedback)
 
-| Stage | Description |
-|-------|-------------|
-| Checkout | Clone repository |
-| Unit Test | Run unit tests |
-| BDD/Gherkin Test | Run BDD tests |
+| Stage            | Description             |
+| ---------------- | ----------------------- |
+| Checkout         | Clone repository        |
+| Unit Test        | Run unit tests          |
+| BDD/Gherkin Test | Run BDD tests           |
 | Code Style Check | Lint and style checking |
 
 ## Available Pipelines
@@ -134,28 +136,29 @@ prValidationPipeline {
 
 ### goldenPathPipeline Options
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `appName` | Job name | Application name |
-| `language` | `java` | Language: java, python, node, go |
-| `dockerImage` | Auto-generated | Full Docker image path |
-| `dockerRegistry` | `harbor.fawkes.local` | Container registry |
-| `notifyChannel` | `ci-builds` | Mattermost channel |
-| `testCommand` | Language-specific | Unit test command |
-| `bddTestCommand` | Language-specific | BDD test command |
-| `buildCommand` | Language-specific | Build command |
-| `sonarProject` | `appName` | SonarQube project key |
-| `trivySeverity` | `HIGH,CRITICAL` | Trivy severity filter |
-| `trivyExitCode` | `1` | Exit code on vulnerabilities |
-| `deployToArgoCD` | `true` | Update GitOps manifests |
-| `argocdApp` | `{appName}-dev` | ArgoCD application name |
-| `runBddTests` | `true` | Enable BDD testing |
-| `runSecurityScan` | `true` | Enable security scanning |
-| `timeoutMinutes` | `30` | Pipeline timeout |
+| Option            | Default               | Description                      |
+| ----------------- | --------------------- | -------------------------------- |
+| `appName`         | Job name              | Application name                 |
+| `language`        | `java`                | Language: java, python, node, go |
+| `dockerImage`     | Auto-generated        | Full Docker image path           |
+| `dockerRegistry`  | `harbor.fawkes.local` | Container registry               |
+| `notifyChannel`   | `ci-builds`           | Mattermost channel               |
+| `testCommand`     | Language-specific     | Unit test command                |
+| `bddTestCommand`  | Language-specific     | BDD test command                 |
+| `buildCommand`    | Language-specific     | Build command                    |
+| `sonarProject`    | `appName`             | SonarQube project key            |
+| `trivySeverity`   | `HIGH,CRITICAL`       | Trivy severity filter            |
+| `trivyExitCode`   | `1`                   | Exit code on vulnerabilities     |
+| `deployToArgoCD`  | `true`                | Update GitOps manifests          |
+| `argocdApp`       | `{appName}-dev`       | ArgoCD application name          |
+| `runBddTests`     | `true`                | Enable BDD testing               |
+| `runSecurityScan` | `true`                | Enable security scanning         |
+| `timeoutMinutes`  | `30`                  | Pipeline timeout                 |
 
 ### Language-Specific Defaults
 
 #### Java
+
 ```groovy
 buildCommand = 'mvn clean package -DskipTests'
 testCommand = 'mvn test'
@@ -163,6 +166,7 @@ bddTestCommand = 'mvn verify -Pcucumber'
 ```
 
 #### Python
+
 ```groovy
 buildCommand = 'pip install -r requirements.txt && pip install -e .'
 testCommand = 'pytest tests/unit --junitxml=test-results.xml --cov=src --cov-report=xml'
@@ -170,6 +174,7 @@ bddTestCommand = 'behave --junit --junit-directory=bdd-results'
 ```
 
 #### Node.js
+
 ```groovy
 buildCommand = 'npm ci && npm run build'
 testCommand = 'npm test -- --ci --reporters=jest-junit'
@@ -177,6 +182,7 @@ bddTestCommand = 'npm run test:bdd'
 ```
 
 #### Go
+
 ```groovy
 buildCommand = 'go build -v ./...'
 testCommand = 'go test -v -coverprofile=coverage.out ./...'
@@ -216,6 +222,7 @@ Feature: User Registration
 ```
 
 Configure Maven profile:
+
 ```xml
 <profile>
     <id>cucumber</id>
@@ -253,10 +260,10 @@ Add `@cucumber/cucumber` and create step definitions:
 
 ```javascript
 // features/step_definitions/api.steps.js
-const { Given, When, Then } = require('@cucumber/cucumber');
+const { Given, When, Then } = require("@cucumber/cucumber");
 
-Given('the API is running', function() {
-    // setup
+Given("the API is running", function () {
+  // setup
 });
 ```
 
@@ -304,6 +311,7 @@ paths = [
 #### When Secrets Are Detected
 
 The pipeline:
+
 - ❌ Fails immediately
 - 📄 Archives a detailed JSON report
 - 📋 Shows remediation steps
@@ -319,6 +327,7 @@ The Golden Path pipeline includes mandatory SonarQube Quality Gate enforcement. 
 
 1. Install the SonarQube Scanner plugin
 2. Configure SonarQube server in Jenkins (Manage Jenkins > Configure System > SonarQube servers):
+
    - Name: `SonarQube`
    - Server URL: `http://sonarqube.fawkes.svc:9000`
    - Server authentication token: (create in SonarQube and add as Jenkins credential)
@@ -339,20 +348,21 @@ sonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 **PR Branches**: Quality Gate status is reported but does not block.
 
 When Quality Gate fails, developers see:
+
 - ❌ Failure reason in console output
 - 📊 Direct link to SonarQube analysis report
 - List of common failure causes
 
 #### Quality Gate Thresholds
 
-| Metric | Threshold |
-|--------|-----------|
-| New Bugs | 0 |
-| New Vulnerabilities | 0 |
-| New Security Hotspots Reviewed | 100% |
-| New Code Coverage | ≥80% |
-| New Duplicated Lines | ≤3% |
-| Maintainability Rating | A |
+| Metric                         | Threshold |
+| ------------------------------ | --------- |
+| New Bugs                       | 0         |
+| New Vulnerabilities            | 0         |
+| New Security Hotspots Reviewed | 100%      |
+| New Code Coverage              | ≥80%      |
+| New Duplicated Lines           | ≤3%       |
+| Maintainability Rating         | A         |
 
 #### Custom Configuration
 
@@ -378,6 +388,7 @@ goldenPathPipeline {
 ### OWASP Dependency Check
 
 Automatically runs for Java projects. For other languages:
+
 - Python: `safety` and `pip-audit`
 - Node.js: `npm audit`
 - Go: `govulncheck`
@@ -392,6 +403,7 @@ The pipeline automatically records metrics to the DORA metrics service:
 - Branch information
 
 Configure the metrics endpoint:
+
 ```groovy
 environment {
     DORA_METRICS_URL = 'http://dora-metrics.fawkes.svc:8080'
@@ -409,6 +421,7 @@ goldenPathPipeline {
 ```
 
 Notification includes:
+
 - Build status (✅ success / ❌ failure)
 - Build number and duration
 - Commit SHA and branch

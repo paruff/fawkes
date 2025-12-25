@@ -15,7 +15,7 @@
         "id": 1,
         "title": "Overall Accessibility Score",
         "type": "stat",
-        "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0},
+        "gridPos": { "h": 8, "w": 6, "x": 0, "y": 0 },
         "targets": [
           {
             "expr": "avg(lighthouse_accessibility_score)",
@@ -38,9 +38,9 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"value": 0, "color": "red"},
-                {"value": 70, "color": "yellow"},
-                {"value": 90, "color": "green"}
+                { "value": 0, "color": "red" },
+                { "value": 70, "color": "yellow" },
+                { "value": 90, "color": "green" }
               ]
             },
             "max": 100
@@ -51,7 +51,7 @@
         "id": 2,
         "title": "Test Pass Rate (Last 7 Days)",
         "type": "stat",
-        "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0},
+        "gridPos": { "h": 8, "w": 6, "x": 6, "y": 0 },
         "targets": [
           {
             "expr": "sum(accessibility_tests_passed) / sum(accessibility_tests_total) * 100",
@@ -74,9 +74,9 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"value": 0, "color": "red"},
-                {"value": 80, "color": "yellow"},
-                {"value": 95, "color": "green"}
+                { "value": 0, "color": "red" },
+                { "value": 80, "color": "yellow" },
+                { "value": 95, "color": "green" }
               ]
             },
             "max": 100
@@ -87,7 +87,7 @@
         "id": 3,
         "title": "Critical Violations",
         "type": "stat",
-        "gridPos": {"h": 8, "w": 6, "x": 12, "y": 0},
+        "gridPos": { "h": 8, "w": 6, "x": 12, "y": 0 },
         "targets": [
           {
             "expr": "sum(axe_critical_violations)",
@@ -108,9 +108,9 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"value": 0, "color": "green"},
-                {"value": 1, "color": "yellow"},
-                {"value": 5, "color": "red"}
+                { "value": 0, "color": "green" },
+                { "value": 1, "color": "yellow" },
+                { "value": 5, "color": "red" }
               ]
             }
           }
@@ -120,7 +120,7 @@
         "id": 4,
         "title": "WCAG 2.1 AA Compliance",
         "type": "stat",
-        "gridPos": {"h": 8, "w": 6, "x": 18, "y": 0},
+        "gridPos": { "h": 8, "w": 6, "x": 18, "y": 0 },
         "targets": [
           {
             "expr": "wcag_aa_compliance_status",
@@ -139,14 +139,14 @@
         "fieldConfig": {
           "defaults": {
             "mappings": [
-              {"type": "value", "value": "0", "text": "❌ Non-Compliant"},
-              {"type": "value", "value": "1", "text": "✅ Compliant"}
+              { "type": "value", "value": "0", "text": "❌ Non-Compliant" },
+              { "type": "value", "value": "1", "text": "✅ Compliant" }
             ],
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"value": 0, "color": "red"},
-                {"value": 1, "color": "green"}
+                { "value": 0, "color": "red" },
+                { "value": 1, "color": "green" }
               ]
             }
           }
@@ -156,7 +156,7 @@
         "id": 5,
         "title": "Accessibility Score Trend",
         "type": "timeseries",
-        "gridPos": {"h": 10, "w": 12, "x": 0, "y": 8},
+        "gridPos": { "h": 10, "w": 12, "x": 0, "y": 8 },
         "targets": [
           {
             "expr": "lighthouse_accessibility_score",
@@ -180,9 +180,9 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"value": 0, "color": "red"},
-                {"value": 70, "color": "yellow"},
-                {"value": 90, "color": "green"}
+                { "value": 0, "color": "red" },
+                { "value": 70, "color": "yellow" },
+                { "value": 90, "color": "green" }
               ]
             }
           }
@@ -198,7 +198,7 @@
         "id": 6,
         "title": "Violations by Severity",
         "type": "piechart",
-        "gridPos": {"h": 10, "w": 12, "x": 12, "y": 8},
+        "gridPos": { "h": 10, "w": 12, "x": 12, "y": 8 },
         "targets": [
           {
             "expr": "sum by (severity) (axe_violations)",
@@ -221,20 +221,20 @@
           },
           "overrides": [
             {
-              "matcher": {"id": "byName", "options": "critical"},
-              "properties": [{"id": "color", "value": {"fixedColor": "red", "mode": "fixed"}}]
+              "matcher": { "id": "byName", "options": "critical" },
+              "properties": [{ "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } }]
             },
             {
-              "matcher": {"id": "byName", "options": "serious"},
-              "properties": [{"id": "color", "value": {"fixedColor": "orange", "mode": "fixed"}}]
+              "matcher": { "id": "byName", "options": "serious" },
+              "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }]
             },
             {
-              "matcher": {"id": "byName", "options": "moderate"},
-              "properties": [{"id": "color", "value": {"fixedColor": "yellow", "mode": "fixed"}}]
+              "matcher": { "id": "byName", "options": "moderate" },
+              "properties": [{ "id": "color", "value": { "fixedColor": "yellow", "mode": "fixed" } }]
             },
             {
-              "matcher": {"id": "byName", "options": "minor"},
-              "properties": [{"id": "color", "value": {"fixedColor": "blue", "mode": "fixed"}}]
+              "matcher": { "id": "byName", "options": "minor" },
+              "properties": [{ "id": "color", "value": { "fixedColor": "blue", "mode": "fixed" } }]
             }
           ]
         }
@@ -243,7 +243,7 @@
         "id": 7,
         "title": "Test Execution History",
         "type": "table",
-        "gridPos": {"h": 10, "w": 24, "x": 0, "y": 18},
+        "gridPos": { "h": 10, "w": 24, "x": 0, "y": 18 },
         "targets": [
           {
             "expr": "accessibility_test_results",
@@ -253,13 +253,13 @@
         ],
         "options": {
           "showHeader": true,
-          "sortBy": [{"displayName": "Time", "desc": true}]
+          "sortBy": [{ "displayName": "Time", "desc": true }]
         },
         "fieldConfig": {
           "defaults": {},
           "overrides": [
             {
-              "matcher": {"id": "byName", "options": "status"},
+              "matcher": { "id": "byName", "options": "status" },
               "properties": [
                 {
                   "id": "custom.cellOptions",
@@ -270,8 +270,8 @@
                 {
                   "id": "mappings",
                   "value": [
-                    {"type": "value", "value": "passed", "text": "✅ Passed", "color": "green"},
-                    {"type": "value", "value": "failed", "text": "❌ Failed", "color": "red"}
+                    { "type": "value", "value": "passed", "text": "✅ Passed", "color": "green" },
+                    { "type": "value", "value": "failed", "text": "❌ Failed", "color": "red" }
                   ]
                 }
               ]
@@ -283,7 +283,7 @@
         "id": 8,
         "title": "Component-Level Violations",
         "type": "bargauge",
-        "gridPos": {"h": 10, "w": 12, "x": 0, "y": 28},
+        "gridPos": { "h": 10, "w": 12, "x": 0, "y": 28 },
         "targets": [
           {
             "expr": "sum by (component) (axe_component_violations)",
@@ -301,9 +301,9 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"value": 0, "color": "green"},
-                {"value": 1, "color": "yellow"},
-                {"value": 5, "color": "red"}
+                { "value": 0, "color": "green" },
+                { "value": 1, "color": "yellow" },
+                { "value": 5, "color": "red" }
               ]
             }
           }
@@ -313,7 +313,7 @@
         "id": 9,
         "title": "WCAG Rule Violations",
         "type": "bargauge",
-        "gridPos": {"h": 10, "w": 12, "x": 12, "y": 28},
+        "gridPos": { "h": 10, "w": 12, "x": 12, "y": 28 },
         "targets": [
           {
             "expr": "sum by (rule) (axe_rule_violations)",
@@ -331,9 +331,9 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"value": 0, "color": "green"},
-                {"value": 1, "color": "yellow"},
-                {"value": 3, "color": "red"}
+                { "value": 0, "color": "green" },
+                { "value": 1, "color": "yellow" },
+                { "value": 3, "color": "red" }
               ]
             }
           }
@@ -370,11 +370,11 @@
           "name": "severity",
           "type": "custom",
           "options": [
-            {"text": "All", "value": "$__all"},
-            {"text": "Critical", "value": "critical"},
-            {"text": "Serious", "value": "serious"},
-            {"text": "Moderate", "value": "moderate"},
-            {"text": "Minor", "value": "minor"}
+            { "text": "All", "value": "$__all" },
+            { "text": "Critical", "value": "critical" },
+            { "text": "Serious", "value": "serious" },
+            { "text": "Moderate", "value": "moderate" },
+            { "text": "Minor", "value": "minor" }
           ],
           "multi": true,
           "includeAll": true

@@ -11,9 +11,11 @@ The recording script and checklist have been prepared. The video is ready to be 
 ## 📚 Documentation Files
 
 ### 1. [Epic 1 Demo Video Script](epic-1-demo-video-script.md)
+
 **Purpose**: Complete 30-minute recording script
 **Use When**: Recording the actual video
 **Contents**:
+
 - Detailed segment-by-segment script with timestamps
 - Technical setup requirements
 - Platform access URLs and credentials
@@ -23,6 +25,7 @@ The recording script and checklist have been prepared. The video is ready to be 
 - Presenter tips and best practices
 
 **Key Sections**:
+
 - Introduction & Platform Overview (3 min)
 - Developer Portal - Backstage (5 min)
 - GitOps with ArgoCD (4 min)
@@ -34,9 +37,11 @@ The recording script and checklist have been prepared. The video is ready to be 
 - Closing & Next Steps (1 min)
 
 ### 2. [Epic 1 Demo Video Checklist](epic-1-demo-video-checklist.md)
+
 **Purpose**: Quick reference for recording
 **Use When**: During setup and recording
 **Contents**:
+
 - Pre-recording setup checklist (15 minutes)
 - Segment-by-segment tracking
 - Key commands reference
@@ -47,9 +52,11 @@ The recording script and checklist have been prepared. The video is ready to be 
 - Troubleshooting tips
 
 ### 3. [Epic 1 Demo Video](epic-1-demo-video.md)
+
 **Purpose**: Video access and information
 **Use When**: Sharing the completed video
 **Contents**:
+
 - Links to uploaded video (YouTube, GitHub, etc.)
 - Video overview and timestamps
 - Technical specifications
@@ -61,6 +68,7 @@ The recording script and checklist have been prepared. The video is ready to be 
 ### For Recording the Video
 
 1. **Prepare Your Environment** (15 minutes)
+
    ```bash
    # Ensure all pods are running
    kubectl get pods -A | grep -E 'argocd|backstage|jenkins|prometheus|grafana'
@@ -73,16 +81,19 @@ The recording script and checklist have been prepared. The video is ready to be 
    ```
 
 2. **Open the Script**
+
    - Open [epic-1-demo-video-script.md](epic-1-demo-video-script.md)
    - Review all segments and talking points
    - Prepare browser tabs for all services
 
 3. **Use the Checklist**
+
    - Open [epic-1-demo-video-checklist.md](epic-1-demo-video-checklist.md)
    - Follow pre-recording setup
    - Check off items as you complete them
 
 4. **Record the Video**
+
    - Follow the script segment by segment
    - Use the checklist to track progress
    - Aim for 30 minutes total duration
@@ -95,6 +106,7 @@ The recording script and checklist have been prepared. The video is ready to be 
 ### For Viewing the Video
 
 Once recorded, access the video at:
+
 - [Epic 1 Demo Video](epic-1-demo-video.md) - Contains all access links
 
 ## 🎬 What the Demo Covers
@@ -102,6 +114,7 @@ Once recorded, access the video at:
 The Epic 1 demo video provides a comprehensive walkthrough of:
 
 ### ✅ Complete Platform Functionality
+
 - **Infrastructure**: 4-node Kubernetes cluster
 - **Developer Portal**: Backstage with service catalog
 - **GitOps**: ArgoCD for declarative deployments
@@ -112,7 +125,9 @@ The Epic 1 demo video provides a comprehensive walkthrough of:
 - **Metrics**: Apache DevLake for DORA automation
 
 ### ✅ Golden Path Workflow
+
 Complete developer journey from code to production:
+
 1. Create service from Backstage template
 2. Write code and open Pull Request
 3. PR pipeline validates changes
@@ -125,7 +140,9 @@ Complete developer journey from code to production:
 10. Service monitored and observable
 
 ### ✅ DORA Metrics Dashboard
+
 Real-time visibility into four key metrics:
+
 - **Deployment Frequency**: How often we deploy
 - **Lead Time for Changes**: Commit to production time
 - **Change Failure Rate**: % of deployments causing issues
@@ -148,32 +165,38 @@ From Issue #37: Create Epic 1 demo video walkthrough
 ## 🔗 Related Documentation
 
 ### Epic 1 Resources
+
 - [Epic 1 Platform Operations Runbook](../runbooks/epic-1-platform-operations.md)
 - [Epic 1 Architecture Diagrams](../runbooks/epic-1-architecture-diagrams.md)
 - [Epic 1 Platform APIs](../reference/api/epic-1-platform-apis.md)
 
 ### User Guides
+
 - [Getting Started Guide](../getting-started.md)
 - [Golden Path Usage Guide](../golden-path-usage.md)
 - [DORA Metrics Guide](../observability/dora-metrics-guide.md)
 
 ### Tutorials
+
 - [Tutorial 1: Deploy Your First Service](1-deploy-first-service.md)
 - [Tutorial 6: Measure DORA Metrics](6-measure-dora-metrics.md)
 
 ### Architecture
+
 - [Architecture Overview](../architecture.md)
 - [Implementation Handoff](../implementation-plan/fawkes-handoff-doc.md)
 
 ## 🛠️ Technical Requirements
 
 ### Recording Software
+
 - **Screen Recording**: OBS Studio, Loom, QuickTime, or similar
 - **Audio**: Good quality microphone
 - **Video Format**: MP4 (H.264), 1920x1080, 30fps
 - **Audio Format**: 44.1 kHz, stereo
 
 ### Platform Prerequisites
+
 - All Epic 1 components deployed and healthy
 - Sample applications deployed (for metrics data)
 - Recent pipeline runs (for Jenkins history)
@@ -181,6 +204,7 @@ From Issue #37: Create Epic 1 demo video walkthrough
 - All services accessible via ingress
 
 ### Environment Setup
+
 - Browser with tabs pre-opened to all services
 - Terminal with appropriate font size (16-18pt)
 - Clean desktop/background
@@ -197,6 +221,7 @@ From Issue #37: Create Epic 1 demo video walkthrough
 ### Need Help Recording?
 
 Check these resources:
+
 - [Platform Operations Runbook](../runbooks/epic-1-platform-operations.md) - Troubleshooting
 - [Getting Started Guide](../getting-started.md) - Platform setup
 - [Troubleshooting Guide](../troubleshooting.md) - Common issues
@@ -204,6 +229,7 @@ Check these resources:
 ## 📝 Notes
 
 ### Recording Tips
+
 - **Practice First**: Do a dry run before recording
 - **Check Audio**: Test microphone and eliminate background noise
 - **Steady Pace**: Speak clearly, not too fast
@@ -212,6 +238,7 @@ Check these resources:
 - **Time Management**: Use chapter markers to stay on track
 
 ### What to Emphasize
+
 - **Automation**: Everything is automated, not manual
 - **Security**: Built-in security gates, not optional
 - **Observability**: Full visibility into everything
@@ -220,7 +247,9 @@ Check these resources:
 - **GitOps**: Single source of truth in Git
 
 ### Common Questions
+
 Be prepared to address:
+
 - How long to onboard a new service? → Minutes
 - What if a deployment fails? → Auto-rollback
 - How do we track improvement? → DORA trends

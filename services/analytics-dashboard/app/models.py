@@ -6,6 +6,7 @@ from datetime import datetime
 
 class TimeSeriesDataPoint(BaseModel):
     """Single data point in a time series"""
+
     timestamp: datetime
     value: float
     label: Optional[str] = None
@@ -13,6 +14,7 @@ class TimeSeriesDataPoint(BaseModel):
 
 class UsageTrends(BaseModel):
     """Usage trends over time"""
+
     total_users: int = Field(description="Total unique users")
     active_users: int = Field(description="Active users in time range")
     page_views: int = Field(description="Total page views")
@@ -29,6 +31,7 @@ class UsageTrends(BaseModel):
 
 class FeatureUsage(BaseModel):
     """Individual feature usage metrics"""
+
     feature_name: str
     total_uses: int
     unique_users: int
@@ -40,6 +43,7 @@ class FeatureUsage(BaseModel):
 
 class FeatureAdoption(BaseModel):
     """Feature adoption metrics"""
+
     total_features: int
     features: List[FeatureUsage]
     most_adopted: str = Field(description="Most adopted feature name")
@@ -49,6 +53,7 @@ class FeatureAdoption(BaseModel):
 
 class VariantMetrics(BaseModel):
     """Metrics for a single experiment variant"""
+
     variant_id: str
     name: str
     assignments: int
@@ -60,6 +65,7 @@ class VariantMetrics(BaseModel):
 
 class ExperimentResults(BaseModel):
     """Results from A/B test experiments"""
+
     experiment_id: str
     experiment_name: str
     status: str = Field(description="draft, running, stopped")
@@ -77,6 +83,7 @@ class ExperimentResults(BaseModel):
 
 class UserSegment(BaseModel):
     """Single user segment with metrics"""
+
     segment_name: str
     user_count: int
     percentage: float
@@ -86,6 +93,7 @@ class UserSegment(BaseModel):
 
 class UserSegments(BaseModel):
     """User segmentation analysis"""
+
     total_users: int
     segments: List[UserSegment]
     segmentation_method: str = Field(description="Method used for segmentation")
@@ -94,6 +102,7 @@ class UserSegments(BaseModel):
 
 class FunnelStep(BaseModel):
     """Single step in a conversion funnel"""
+
     step_name: str
     step_number: int
     users_entered: int
@@ -105,6 +114,7 @@ class FunnelStep(BaseModel):
 
 class FunnelData(BaseModel):
     """Funnel visualization data"""
+
     funnel_name: str
     description: str
     steps: List[FunnelStep]
@@ -116,6 +126,7 @@ class FunnelData(BaseModel):
 
 class DashboardData(BaseModel):
     """Complete dashboard data"""
+
     timestamp: datetime = Field(default_factory=datetime.utcnow)
     time_range: str
     usage_trends: UsageTrends

@@ -27,6 +27,7 @@ DataHub is deployed with the following components:
 ### Files Created
 
 #### Core Deployment
+
 - `platform/apps/datahub-application.yaml` - ArgoCD Application manifest with Helm values
 - `platform/apps/postgresql/db-datahub-cluster.yaml` - PostgreSQL cluster (3 replicas, HA)
 - `platform/apps/postgresql/db-datahub-credentials.yaml` - Database credentials (dev/MVP)
@@ -34,6 +35,7 @@ DataHub is deployed with the following components:
 - `platform/apps/datahub/kustomization.yaml` - Kustomize for supporting resources
 
 #### Documentation
+
 - `docs/data-platform/datahub-overview.md` - Comprehensive user guide (18KB)
   - Architecture overview
   - How to search for data
@@ -43,11 +45,13 @@ DataHub is deployed with the following components:
   - Best practices
 
 #### Testing & Validation
+
 - `tests/bdd/features/datahub-deployment.feature` - BDD acceptance tests for AT-E2-003
 - `platform/apps/datahub/validate-datahub.sh` - Deployment validation script
 - `platform/apps/datahub/postgres-ingestion-recipe.yml` - Sample ingestion recipe
 
 #### Updates
+
 - `platform/apps/postgresql/kustomization.yaml` - Added DataHub database resources
 - `platform/apps/datahub/README.md` - Updated with quick start
 - `platform/apps/README.md` - Corrected namespace references
@@ -57,31 +61,37 @@ DataHub is deployed with the following components:
 All components configured to target 70% resource utilization:
 
 ### DataHub GMS
+
 - Requests: 500m CPU, 1Gi memory
 - Limits: 1 CPU, 2Gi memory
 
 ### DataHub Frontend
+
 - Requests: 300m CPU, 512Mi memory
 - Limits: 1 CPU, 1Gi memory
 
 ### PostgreSQL Cluster (3 replicas)
+
 - Requests: 300m CPU, 384Mi memory per pod
 - Limits: 1 CPU, 1Gi memory per pod
 - Storage: 20Gi per instance
 
 ### System Update Job
+
 - Requests: 200m CPU, 256Mi memory
 - Limits: 500m CPU, 512Mi memory
 
 ## Access Information
 
 ### Local Development
+
 - **URL**: http://datahub.127.0.0.1.nip.io
 - **Default Credentials**:
   - Username: `datahub`
   - Password: `datahub`
 
 ### API Endpoints
+
 - **GraphQL**: http://datahub-datahub-gms.fawkes.svc:8080/api/graphql
 - **REST**: http://datahub-datahub-gms.fawkes.svc:8080/entities
 - **Health**: http://datahub-datahub-gms.fawkes.svc:8080/health
@@ -89,6 +99,7 @@ All components configured to target 70% resource utilization:
 ## Deployment Steps
 
 ### Prerequisites
+
 1. PostgreSQL Operator (CloudNativePG) installed
 2. OpenSearch deployed in logging namespace
 3. Ingress NGINX controller configured
@@ -145,22 +156,27 @@ datahub ingest -c postgres-ingestion-recipe.yml
 ## Security Considerations
 
 ### Dev/MVP
+
 - Basic authentication enabled
 - Default credentials (must change for production)
 - Plain-text secrets in Kubernetes (annotated for production use)
 
 ### Production Recommendations
+
 1. **Secrets Management**:
+
    - Use External Secrets Operator with Vault/AWS Secrets Manager
    - Remove plain-text credentials from Git
    - Generate random frontend secret: `openssl rand -base64 32`
 
 2. **Authentication**:
+
    - Enable OIDC with GitHub OAuth
    - Configure proper RBAC roles
    - Set up user/group mappings
 
 3. **TLS**:
+
    - Enable TLS for DataHub UI (cert-manager)
    - Enable SSL for PostgreSQL connections
    - Enable SSL for OpenSearch connections
@@ -172,7 +188,9 @@ datahub ingest -c postgres-ingestion-recipe.yml
 ## Testing
 
 ### BDD Acceptance Tests
+
 13 scenarios covering:
+
 - Service deployment and access
 - GraphQL API health
 - PostgreSQL metadata storage
@@ -187,7 +205,9 @@ datahub ingest -c postgres-ingestion-recipe.yml
 - UI navigation
 
 ### Validation Script
+
 Automated checks for:
+
 - PostgreSQL cluster health
 - OpenSearch availability
 - DataHub pod status
@@ -199,16 +219,19 @@ Automated checks for:
 ## Integration with Fawkes Platform
 
 ### Backstage
+
 - Future: Link to DataHub from service catalog
 - Display data lineage for services
 - Show data quality metrics
 
 ### DORA Metrics
+
 - Track data pipeline deployment frequency
 - Measure data incident recovery time
 - Monitor data pipeline change failure rate
 
 ### Observability
+
 - DataHub metrics exposed to Prometheus
 - Create Grafana dashboards for metadata health
 - Alert on ingestion failures
@@ -216,15 +239,18 @@ Automated checks for:
 ## Known Limitations (MVP)
 
 1. **No Kafka**: Using PostgreSQL-only mode
+
    - Real-time metadata updates limited
    - No Kafka-based consumers
    - Add Kafka later for real-time capabilities
 
 2. **Basic Authentication**: Not suitable for production
+
    - Enable OIDC/SSO for production
    - Implement proper RBAC
 
 3. **Single Region**: No multi-region support
+
    - Add later if needed
 
 4. **No Backup**: PostgreSQL backup commented out
@@ -234,6 +260,7 @@ Automated checks for:
 ## Future Enhancements
 
 ### Phase 2 (Post-MVP)
+
 1. **Kafka Integration**: Enable real-time metadata updates
 2. **Advanced Authentication**: OIDC with GitHub OAuth
 3. **Great Expectations**: Data quality monitoring
@@ -241,6 +268,7 @@ Automated checks for:
 5. **Airflow Integration**: Pipeline metadata ingestion
 
 ### Phase 3 (Advanced)
+
 1. **Data Quality Dashboard**: Real-time quality metrics
 2. **Access Control**: Fine-grained data governance
 3. **Data Classification**: Automated PII detection
@@ -252,11 +280,13 @@ Automated checks for:
 ### Common Issues
 
 1. **DataHub UI not loading**
+
    - Check PostgreSQL is running
    - Verify OpenSearch is accessible
    - Check pod logs for errors
 
 2. **Search not working**
+
    - Verify OpenSearch connectivity
    - Rebuild search indices
    - Check OpenSearch resource limits
@@ -279,6 +309,7 @@ See `docs/data-platform/datahub-overview.md` for detailed troubleshooting.
 ## Conclusion
 
 DataHub is now ready for deployment via ArgoCD. The implementation provides:
+
 - Centralized data catalog for all platform data
 - Search and discovery capabilities
 - Data lineage tracking

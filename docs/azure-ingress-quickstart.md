@@ -23,6 +23,7 @@ kubectl get svc ingress-nginx-controller -n ingress-nginx -w
 ```
 
 **Validation:**
+
 ```bash
 ./platform/apps/ingress-nginx/validate-azure.sh
 ```
@@ -64,6 +65,7 @@ kubectl apply -f platform/apps/cert-manager/cluster-issuer-letsencrypt-prod.yaml
 ```
 
 **Validation:**
+
 ```bash
 ./platform/apps/cert-manager/validate.sh
 ```
@@ -113,11 +115,13 @@ spec:
 ```
 
 **Watch certificate creation:**
+
 ```bash
 kubectl get certificate -A -w
 ```
 
 **Once verified, switch to production:**
+
 ```bash
 kubectl annotate ingress myapp \
   cert-manager.io/cluster-issuer=letsencrypt-prod --overwrite
@@ -126,14 +130,17 @@ kubectl annotate ingress myapp \
 ## Common Issues
 
 ### External IP Pending
+
 Wait 2-3 minutes. Azure Load Balancer creation takes time.
 
 ### Certificate Not Issuing
+
 1. Check DNS points to ingress IP: `dig myapp.fawkes.yourdomain.com`
 2. Check challenge: `kubectl get challenge -A`
 3. Check logs: `kubectl logs -n cert-manager deployment/cert-manager`
 
 ### 404 Not Found
+
 1. Check ingress: `kubectl get ingress -A`
 2. Check backend service: `kubectl get svc myapp`
 3. Check controller logs: `kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller`

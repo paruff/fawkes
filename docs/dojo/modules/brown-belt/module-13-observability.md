@@ -24,16 +24,19 @@ By the end of this module, you will be able to:
 ### The Three Pillars of Observability
 
 **Metrics**: Numerical measurements over time
+
 - Infrastructure metrics (CPU, memory, disk, network)
 - Application metrics (request rate, error rate, latency)
 - Business metrics (deployments, lead time, failure rate)
 
 **Logs**: Event records from systems and applications
+
 - Structured vs. unstructured logs
 - Log aggregation and centralization
 - Log levels and filtering
 
 **Traces**: Request flows through distributed systems
+
 - Distributed tracing concepts
 - Span and trace relationships
 - Performance bottleneck identification
@@ -143,6 +146,7 @@ kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
 Visit `http://localhost:3000` and log in with admin credentials.
 
 **Add Loki Data Source:**
+
 1. Go to Configuration → Data Sources
 2. Add data source → Loki
 3. URL: `http://loki:3100`
@@ -159,6 +163,7 @@ kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 909
 ```
 
 **Expected targets:**
+
 - kubernetes-apiservers
 - kubernetes-nodes
 - kubernetes-pods
@@ -287,6 +292,7 @@ Create a Grafana dashboard (`dora-metrics-dashboard.json`):
 ```
 
 Import into Grafana:
+
 ```bash
 # Import dashboard
 curl -X POST http://admin:admin123@localhost:3000/api/dashboards/db \
@@ -306,40 +312,41 @@ Edit AlertManager configuration:
 # alertmanager-config.yaml
 global:
   resolve_timeout: 5m
-  slack_api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+  slack_api_url: "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
 
 route:
-  group_by: ['alertname', 'cluster', 'service']
+  group_by: ["alertname", "cluster", "service"]
   group_wait: 10s
   group_interval: 10s
   repeat_interval: 12h
-  receiver: 'default'
+  receiver: "default"
   routes:
-  - match:
-      severity: critical
-    receiver: 'pagerduty-critical'
-  - match:
-      severity: warning
-    receiver: 'slack-warnings'
+    - match:
+        severity: critical
+      receiver: "pagerduty-critical"
+    - match:
+        severity: warning
+      receiver: "slack-warnings"
 
 receivers:
-- name: 'default'
-  slack_configs:
-  - channel: '#alerts'
-    title: 'Alert: {{ .GroupLabels.alertname }}'
-    text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+  - name: "default"
+    slack_configs:
+      - channel: "#alerts"
+        title: "Alert: {{ .GroupLabels.alertname }}"
+        text: "{{ range .Alerts }}{{ .Annotations.description }}{{ end }}"
 
-- name: 'pagerduty-critical'
-  pagerduty_configs:
-  - service_key: 'YOUR_PAGERDUTY_KEY'
+  - name: "pagerduty-critical"
+    pagerduty_configs:
+      - service_key: "YOUR_PAGERDUTY_KEY"
 
-- name: 'slack-warnings'
-  slack_configs:
-  - channel: '#warnings'
-    title: 'Warning: {{ .GroupLabels.alertname }}'
+  - name: "slack-warnings"
+    slack_configs:
+      - channel: "#warnings"
+        title: "Warning: {{ .GroupLabels.alertname }}"
 ```
 
 Apply configuration:
+
 ```bash
 kubectl create secret generic alertmanager-config \
   --from-file=alertmanager.yaml=alertmanager-config.yaml \
@@ -359,58 +366,59 @@ metadata:
   namespace: monitoring
 spec:
   groups:
-  - name: platform_health
-    interval: 30s
-    rules:
-    - alert: HighPodCrashRate
-      expr: rate(kube_pod_container_status_restarts_total[15m]) > 0.1
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        summary: "High pod crash rate detected"
-        description: "Pod {{ $labels.pod }} is crash-looping"
+    - name: platform_health
+      interval: 30s
+      rules:
+        - alert: HighPodCrashRate
+          expr: rate(kube_pod_container_status_restarts_total[15m]) > 0.1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High pod crash rate detected"
+            description: "Pod {{ $labels.pod }} is crash-looping"
 
-    - alert: DeploymentFailed
-      expr: increase(deployment_result{status="failure"}[5m]) > 0
-      for: 1m
-      labels:
-        severity: critical
-      annotations:
-        summary: "Deployment failure detected"
-        description: "Deployment for {{ $labels.application }} failed"
+        - alert: DeploymentFailed
+          expr: increase(deployment_result{status="failure"}[5m]) > 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Deployment failure detected"
+            description: "Deployment for {{ $labels.application }} failed"
 
-    - alert: HighChangeFailureRate
-      expr: |
-        sum(rate(deployment_result{status="failure"}[7d]))
-        / sum(rate(deployment_result[7d])) * 100 > 15
-      for: 10m
-      labels:
-        severity: warning
-      annotations:
-        summary: "Change failure rate exceeds 15%"
-        description: "Current CFR: {{ $value }}%"
+        - alert: HighChangeFailureRate
+          expr: |
+            sum(rate(deployment_result{status="failure"}[7d]))
+            / sum(rate(deployment_result[7d])) * 100 > 15
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Change failure rate exceeds 15%"
+            description: "Current CFR: {{ $value }}%"
 
-    - alert: LowDeploymentFrequency
-      expr: sum(rate(deployment_total[1d])) < 0.1
-      for: 1h
-      labels:
-        severity: warning
-      annotations:
-        summary: "Deployment frequency is low"
-        description: "Less than 1 deployment per 10 days"
+        - alert: LowDeploymentFrequency
+          expr: sum(rate(deployment_total[1d])) < 0.1
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: "Deployment frequency is low"
+            description: "Less than 1 deployment per 10 days"
 
-    - alert: HighLeadTime
-      expr: avg(lead_time_seconds) > 86400
-      for: 1h
-      labels:
-        severity: warning
-      annotations:
-        summary: "Lead time exceeds 24 hours"
-        description: "Average lead time: {{ $value }}s"
+        - alert: HighLeadTime
+          expr: avg(lead_time_seconds) > 86400
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: "Lead time exceeds 24 hours"
+            description: "Average lead time: {{ $value }}s"
 ```
 
 Apply rules:
+
 ```bash
 kubectl apply -f prometheus-rules.yaml
 ```
@@ -480,16 +488,19 @@ public class TracingConfig {
 ### Effective Log Queries with LogQL
 
 **Find errors in the last hour:**
+
 ```logql
 {namespace="fawkes-platform"} |= "ERROR" | json | line_format "{{.timestamp}} {{.level}} {{.message}}"
 ```
 
 **Track deployment events:**
+
 ```logql
 {job="deployment-controller"} |= "deployment" | json | status="success"
 ```
 
 **Analyze slow requests:**
+
 ```logql
 {app="api-gateway"} | json | duration > 1000 | line_format "Slow request: {{.path}} took {{.duration}}ms"
 ```
@@ -561,31 +572,37 @@ public class TracingConfig {
 **Steps:**
 
 1. **Deploy Sample Application**
+
    ```bash
    kubectl apply -f exercises/sample-app/
    ```
 
 2. **Configure Application Metrics**
+
    - Expose Prometheus metrics endpoint
    - Add custom business metrics
    - Verify scraping in Prometheus
 
 3. **Set Up Logging**
+
    - Ensure structured JSON logs
    - Verify logs appear in Loki
    - Create useful log queries
 
 4. **Create Dashboard**
+
    - Import base dashboard template
    - Add custom panels for your app
    - Configure variables for filtering
 
 5. **Configure Alerts**
+
    - Create alert for high error rate
    - Create alert for deployment failures
    - Test alert firing and resolution
 
 6. **Implement Tracing**
+
    - Add OpenTelemetry instrumentation
    - Generate sample traces
    - Correlate traces with logs
@@ -597,6 +614,7 @@ public class TracingConfig {
    - Identify improvement opportunities
 
 **Validation Checklist:**
+
 - [ ] Application metrics visible in Prometheus
 - [ ] Logs searchable in Grafana/Loki
 - [ ] Dashboard shows real-time data
@@ -611,15 +629,17 @@ public class TracingConfig {
 ### Cost Optimization
 
 **Reduce metric cardinality:**
+
 ```yaml
 # Drop unnecessary labels
 metric_relabel_configs:
   - source_labels: [__name__]
-    regex: 'go_.*'
+    regex: "go_.*"
     action: drop
 ```
 
 **Adjust retention:**
+
 ```yaml
 # Shorter retention for high-volume metrics
 - record: aggregated:deployment_total:sum
@@ -657,6 +677,7 @@ helm install thanos bitnami/thanos \
 **Symptom**: Targets show as "DOWN" in Prometheus
 
 **Solution:**
+
 ```bash
 # Check ServiceMonitor configuration
 kubectl get servicemonitors -n monitoring
@@ -673,6 +694,7 @@ kubectl get networkpolicies -n monitoring
 **Symptom**: Prometheus using excessive memory
 
 **Solution:**
+
 ```bash
 # Identify high-cardinality metrics
 curl http://localhost:9090/api/v1/status/tsdb | jq .
@@ -686,6 +708,7 @@ curl http://localhost:9090/api/v1/status/tsdb | jq .
 **Symptom**: No logs appearing in Grafana
 
 **Solution:**
+
 ```bash
 # Check Promtail is running
 kubectl get pods -n monitoring -l app=promtail
@@ -713,6 +736,7 @@ kubectl logs -n monitoring -l app=loki -c ingester
 ### Measuring Success
 
 After completing this module, you should have:
+
 - ✅ Working Prometheus + Grafana + Loki stack
 - ✅ Custom dashboards for DORA metrics
 - ✅ Configured alerts for platform health
@@ -723,12 +747,14 @@ After completing this module, you should have:
 ### Continuous Improvement
 
 **Weekly Activities:**
+
 - Review DORA metrics trends
 - Analyze alert patterns
 - Optimize slow queries
 - Update dashboards based on team feedback
 
 **Monthly Activities:**
+
 - Review and adjust alert thresholds
 - Archive old metrics data
 - Update documentation
@@ -761,6 +787,7 @@ After completing this module, you should have:
 ### Practical Assessment
 
 Complete the following tasks:
+
 1. Deploy a complete monitoring stack
 2. Create a custom dashboard with DORA metrics
 3. Configure three meaningful alerts
@@ -771,6 +798,7 @@ Complete the following tasks:
 ### Bonus Challenge
 
 Implement a complete observability solution for a multi-service application that:
+
 - Tracks deployments across three environments
 - Correlates traces across microservices
 - Provides SLO/SLA dashboards
@@ -782,6 +810,7 @@ Implement a complete observability solution for a multi-service application that
 ## Appendix A: Metric Examples Reference
 
 ### Infrastructure Metrics
+
 ```promql
 # Node CPU usage
 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
@@ -794,6 +823,7 @@ Implement a complete observability solution for a multi-service application that
 ```
 
 ### Kubernetes Metrics
+
 ```promql
 # Pod restart rate
 rate(kube_pod_container_status_restarts_total[1h])
@@ -806,6 +836,7 @@ kube_node_status_condition{condition="Ready",status="true"}
 ```
 
 ### Application Metrics
+
 ```promql
 # Request rate (RED method)
 sum(rate(http_requests_total[5m])) by (service)
@@ -822,6 +853,7 @@ histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by 
 ## Appendix B: Dashboard JSON Templates
 
 See the Fawkes repository for complete dashboard templates:
+
 - `dashboards/platform-overview.json`
 - `dashboards/dora-metrics.json`
 - `dashboards/application-health.json`

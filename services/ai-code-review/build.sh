@@ -13,9 +13,9 @@ REGISTRY="${REGISTRY:-}"
 
 # Add registry prefix if specified
 if [ -n "$REGISTRY" ]; then
-    FULL_IMAGE_NAME="${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
+  FULL_IMAGE_NAME="${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
 else
-    FULL_IMAGE_NAME="${IMAGE_NAME}:${IMAGE_TAG}"
+  FULL_IMAGE_NAME="${IMAGE_NAME}:${IMAGE_TAG}"
 fi
 
 echo "Building AI Code Review Service Docker image..."
@@ -28,9 +28,9 @@ echo "✅ Docker image built successfully: ${FULL_IMAGE_NAME}"
 
 # Optionally push to registry
 if [ "$PUSH_IMAGE" = "true" ]; then
-    echo "Pushing image to registry..."
-    docker push "${FULL_IMAGE_NAME}"
-    echo "✅ Image pushed successfully"
+  echo "Pushing image to registry..."
+  docker push "${FULL_IMAGE_NAME}"
+  echo "✅ Image pushed successfully"
 fi
 
 echo "Build complete!"

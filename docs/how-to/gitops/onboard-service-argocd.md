@@ -89,11 +89,11 @@ spec:
   # Sync policy: Automatic synchronization
   syncPolicy:
     automated:
-      prune: true        # Delete resources that are no longer in Git
-      selfHeal: true     # Force sync when cluster state deviates
+      prune: true # Delete resources that are no longer in Git
+      selfHeal: true # Force sync when cluster state deviates
       allowEmpty: false
     syncOptions:
-      - CreateNamespace=true  # Auto-create namespace if it doesn't exist
+      - CreateNamespace=true # Auto-create namespace if it doesn't exist
     retry:
       limit: 5
       backoff:
@@ -106,7 +106,7 @@ spec:
     - group: apps
       kind: Deployment
       jsonPointers:
-        - /spec/replicas  # Ignore replica count changes (for HPA)
+        - /spec/replicas # Ignore replica count changes (for HPA)
 ```
 
 ### 3. Add Application to Kustomization
@@ -122,7 +122,7 @@ kind: Kustomization
 resources:
   - existing-app-1.yaml
   - existing-app-2.yaml
-  - my-service-dev.yaml  # Add this line
+  - my-service-dev.yaml # Add this line
 ```
 
 ### 4. Commit and Push to Git

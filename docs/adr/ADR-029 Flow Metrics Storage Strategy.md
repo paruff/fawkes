@@ -8,7 +8,7 @@
 
 **Deciders**: Platform Architects, SRE Team, Data Engineering
 
------
+---
 
 ## Context
 
@@ -59,7 +59,7 @@ The Flow Metrics Service needs to store and query multiple types of data to supp
 - Historical trend analysis (monthly/quarterly reports)
 - Executive reporting (weekly/monthly aggregations)
 
------
+---
 
 ## Decision
 
@@ -408,7 +408,7 @@ bottleneck_severity = Gauge(
 
 **Format**: Parquet files partitioned by `year/month/team_id/`
 
------
+---
 
 ## Architecture Diagram
 
@@ -484,7 +484,7 @@ PostgreSQL (90+ days old)
 └──────────────────┘
 ```
 
------
+---
 
 ## Data Flow Examples
 
@@ -588,7 +588,7 @@ JOIN flow_items fi ON sm.flow_item_id = fi.id
 WHERE fi.external_id = 'USER-123';
 ```
 
------
+---
 
 ## Rationale
 
@@ -679,7 +679,7 @@ WHERE fi.external_id = 'USER-123';
 - ❌ High latency (seconds to retrieve)
 - ❌ Not queryable without external tools
 
------
+---
 
 ## Data Retention Strategy
 
@@ -717,7 +717,7 @@ Deletion Policy:
 └─ Prometheus: Automatic deletion after 15 days
 ```
 
------
+---
 
 ## Performance Optimization Strategies
 
@@ -892,7 +892,7 @@ def update_flow_item(flow_item_id: str, updates: dict):
     redis_client.delete(f"flow_metrics:team:{flow_item.team_id}")
 ```
 
------
+---
 
 ## Disaster Recovery
 
@@ -916,7 +916,7 @@ backup:
     rpo:​​​​​​​​​​​​​​​​
 ```
 
---------
+---
 
 ### Week 3: Optimization (continued)
 
@@ -984,7 +984,7 @@ backup:
 - [ ] Prepare rollback plan
 - [ ] Conduct final readiness review
 
------
+---
 
 ## Operational Runbooks
 
@@ -1052,7 +1052,7 @@ SELECT pg_reload_conf();
 - Implement query timeout limits
 - Monitor connection patterns
 
------
+---
 
 ### Runbook 2: Slow Query Performance
 
@@ -1152,7 +1152,7 @@ CREATE INDEX ON team_metrics_summary(team_id, date DESC);
 - Set query timeout: `SET statement_timeout = '5s'`
 - Use EXPLAIN ANALYZE for new queries
 
------
+---
 
 ### Runbook 3: Webhook Processing Backlog
 
@@ -1244,7 +1244,7 @@ def process_webhooks_batch(events: List[WebhookEvent]):
 - Monitor webhook sources for unusual volume
 - Implement rate limiting on webhook endpoints
 
------
+---
 
 ### Runbook 4: Disk Space Critical
 
@@ -1347,7 +1347,7 @@ def cleanup_old_data():
 - Alert at 70% (warning) and 80% (critical)
 - Enable auto-scaling storage (AWS RDS)
 
------
+---
 
 ### Runbook 5: Backup Failure
 
@@ -1429,7 +1429,7 @@ python scripts/test_backup_restore.py --backup-date=2025-01-15
 - Document recovery procedures
 - Maintain backup retention policy
 
------
+---
 
 ## Maintenance Tasks
 
@@ -1530,7 +1530,7 @@ python scripts/tune_alerts.py --analyze=90days
 python scripts/validate_runbooks.py
 ```
 
------
+---
 
 ## Appendices
 
@@ -1722,7 +1722,7 @@ def get_db():
         db.close()
 ```
 
------
+---
 
 ## Conclusion
 
@@ -1759,7 +1759,7 @@ This ADR documents the decision to use a **hybrid storage architecture** combini
 
 This architecture provides a solid foundation for Value Stream Management in Fawkes while maintaining operational simplicity and cost-effectiveness for the MVP phase.
 
------
+---
 
 **Status**: Proposed → **Accepted** (pending implementation)
 

@@ -47,7 +47,7 @@ error_exit() {
 }
 
 usage() {
-  cat <<EOF
+  cat << EOF
 Bootstrap Fawkes platform using app-of-apps pattern
 
 Usage: $0 [OPTIONS]
@@ -85,27 +85,27 @@ check_prerequisites() {
   log_info "Checking prerequisites..."
 
   # Check kubectl
-  if ! command -v kubectl >/dev/null 2>&1; then
+  if ! command -v kubectl > /dev/null 2>&1; then
     error_exit "kubectl is not installed. Please install kubectl."
   fi
 
   # Check cluster connectivity
-  if ! kubectl cluster-info >/dev/null 2>&1; then
+  if ! kubectl cluster-info > /dev/null 2>&1; then
     error_exit "Cannot connect to Kubernetes cluster. Check your kubeconfig."
   fi
 
   # Check if ArgoCD namespace exists
-  if ! kubectl get namespace "${ARGO_NS}" >/dev/null 2>&1; then
+  if ! kubectl get namespace "${ARGO_NS}" > /dev/null 2>&1; then
     error_exit "ArgoCD namespace '${ARGO_NS}' does not exist. Please install ArgoCD first."
   fi
 
   # Check if ArgoCD is running
-  if ! kubectl get deployment argocd-server -n "${ARGO_NS}" >/dev/null 2>&1; then
+  if ! kubectl get deployment argocd-server -n "${ARGO_NS}" > /dev/null 2>&1; then
     error_exit "ArgoCD is not installed in namespace '${ARGO_NS}'. Please install ArgoCD first."
   fi
 
   # Check argocd CLI (optional)
-  if command -v argocd >/dev/null 2>&1; then
+  if command -v argocd > /dev/null 2>&1; then
     log_success "argocd CLI found (optional features enabled)"
   else
     log_warning "argocd CLI not found (optional features disabled)"
@@ -134,7 +134,7 @@ validate_manifests() {
   done
 
   # Validate kustomization
-  if ! kubectl kustomize "${bootstrap_dir}" >/dev/null 2>&1; then
+  if ! kubectl kustomize "${bootstrap_dir}" > /dev/null 2>&1; then
     error_exit "Invalid kustomization in ${bootstrap_dir}"
   fi
 
@@ -175,7 +175,7 @@ wait_for_sync() {
   while [[ ${SECONDS} -lt ${end} ]]; do
     local status
     status=$(kubectl get application platform-bootstrap -n "${ARGO_NS}" \
-      -o jsonpath='{.status.sync.status}' 2>/dev/null || echo "Unknown")
+      -o jsonpath='{.status.sync.status}' 2> /dev/null || echo "Unknown")
 
     if [[ "$status" == "Synced" ]]; then
       log_success "platform-bootstrap synced successfully"
@@ -207,14 +207,14 @@ show_status() {
 
   # ArgoCD Applications
   echo "=== ArgoCD Applications ==="
-  kubectl get applications -n "${ARGO_NS}" -o wide 2>/dev/null || \
-    log_warning "No applications found yet"
+  kubectl get applications -n "${ARGO_NS}" -o wide 2> /dev/null \
+    || log_warning "No applications found yet"
   echo ""
 
   # ApplicationSets
   echo "=== ApplicationSets ==="
-  kubectl get applicationsets -n "${ARGO_NS}" 2>/dev/null || \
-    log_warning "No applicationsets found yet"
+  kubectl get applicationsets -n "${ARGO_NS}" 2> /dev/null \
+    || log_warning "No applicationsets found yet"
   echo ""
 
   # ArgoCD access
@@ -224,7 +224,7 @@ show_status() {
   echo "  Open: http://localhost:8080"
   echo ""
 
-  if command -v argocd >/dev/null 2>&1; then
+  if command -v argocd > /dev/null 2>&1; then
     echo "To use ArgoCD CLI:"
     echo "  argocd login localhost:8080 --username admin"
     echo "  argocd app list"
@@ -242,18 +242,18 @@ main() {
   # Parse arguments
   while [[ $# -gt 0 ]]; do
     case $1 in
-      -h|--help)
+      -h | --help)
         usage
         ;;
-      -n|--namespace)
+      -n | --namespace)
         ARGO_NS="$2"
         shift 2
         ;;
-      -d|--dry-run)
+      -d | --dry-run)
         DRY_RUN=1
         shift
         ;;
-      -v|--verbose)
+      -v | --verbose)
         VERBOSE=1
         set -x
         shift

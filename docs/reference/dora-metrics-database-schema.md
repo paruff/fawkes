@@ -103,6 +103,7 @@ CREATE TABLE `deployments` (
 ```
 
 **Key Fields**:
+
 - `id`: Unique deployment identifier (ArgoCD sync ID or Jenkins build ID)
 - `cicd_scope_id`: Links to the project/service scope
 - `result`: Deployment result (`SUCCESS`, `FAILURE`, `ABORTED`)
@@ -112,6 +113,7 @@ CREATE TABLE `deployments` (
 - `duration_sec`: Deployment duration in seconds
 
 **Usage**:
+
 - **Deployment Frequency**: Count of successful deployments per time window
 - **Lead Time**: Join with `commits` table to calculate commit → deploy time
 - **Change Failure Rate**: Ratio of failed to total deployments
@@ -145,6 +147,7 @@ CREATE TABLE `commits` (
 ```
 
 **Key Fields**:
+
 - `sha`: Commit SHA (primary key)
 - `authored_date`: When the commit was created
 - `message`: Commit message
@@ -152,6 +155,7 @@ CREATE TABLE `commits` (
 - `additions`/`deletions`: Lines of code changed
 
 **Usage**:
+
 - **Lead Time**: Start time for lead time calculation
 - **Code churn**: Track code changes over time
 
@@ -189,6 +193,7 @@ CREATE TABLE `incidents` (
 ```
 
 **Key Fields**:
+
 - `id`: Incident unique identifier
 - `severity`: Incident severity (`high`, `medium`, `low`)
 - `created_date`: Incident detection time
@@ -196,6 +201,7 @@ CREATE TABLE `incidents` (
 - `lead_time_minutes`: Time to restore (calculated)
 
 **Usage**:
+
 - **Change Failure Rate**: Count of incidents caused by deployments
 - **Mean Time to Restore**: Average time from incident creation to resolution
 
@@ -233,12 +239,14 @@ CREATE TABLE `cicd_deployments` (
 ```
 
 **Key Fields**:
+
 - `cicd_scope_id`: Project/service scope identifier
 - `commit_sha`: Links deployment to commit
 - `environment`: Deployment target environment
 - `finished_date`: Deployment completion time
 
 **Usage**:
+
 - Links ArgoCD syncs to commits for lead time calculation
 
 ---
@@ -261,6 +269,7 @@ CREATE TABLE `project_metric_settings` (
 ```
 
 **Key Fields**:
+
 - `project_name`: Project identifier
 - `plugin_name`: Metric type (e.g., `dora`)
 - `plugin_option`: JSON configuration for the metric
@@ -418,13 +427,13 @@ ON incidents(severity, created_date, resolution_date);
 
 Data retention policies for DORA metrics:
 
-| Table | Retention Period | Cleanup Policy |
-|-------|------------------|----------------|
-| `deployments` | 2 years | Archive after 1 year |
-| `commits` | Indefinite | Never deleted |
-| `incidents` | 2 years | Archive after 1 year |
-| `_raw_*` tables | 90 days | Purged after processing |
-| Aggregated metrics | Indefinite | Rolled up to daily/monthly |
+| Table              | Retention Period | Cleanup Policy             |
+| ------------------ | ---------------- | -------------------------- |
+| `deployments`      | 2 years          | Archive after 1 year       |
+| `commits`          | Indefinite       | Never deleted              |
+| `incidents`        | 2 years          | Archive after 1 year       |
+| `_raw_*` tables    | 90 days          | Purged after processing    |
+| Aggregated metrics | Indefinite       | Rolled up to daily/monthly |
 
 ---
 

@@ -30,9 +30,7 @@ AGGREGATION_THRESHOLD = int(os.getenv("AGGREGATION_THRESHOLD", "5"))
 
 
 async def collect_satisfaction_metrics(
-    session: AsyncSession,
-    start_time: datetime,
-    end_time: datetime
+    session: AsyncSession, start_time: datetime, end_time: datetime
 ) -> SatisfactionMetrics:
     """
     Collect satisfaction dimension metrics
@@ -68,9 +66,7 @@ async def collect_satisfaction_metrics(
 
 
 async def collect_performance_metrics(
-    session: AsyncSession,
-    start_time: datetime,
-    end_time: datetime
+    session: AsyncSession, start_time: datetime, end_time: datetime
 ) -> PerformanceMetrics:
     """
     Collect performance dimension metrics
@@ -107,11 +103,7 @@ async def collect_performance_metrics(
         return PerformanceMetrics()
 
 
-async def collect_activity_metrics(
-    session: AsyncSession,
-    start_time: datetime,
-    end_time: datetime
-) -> ActivityMetrics:
+async def collect_activity_metrics(session: AsyncSession, start_time: datetime, end_time: datetime) -> ActivityMetrics:
     """
     Collect activity dimension metrics
 
@@ -153,9 +145,7 @@ async def collect_activity_metrics(
 
 
 async def collect_communication_metrics(
-    session: AsyncSession,
-    start_time: datetime,
-    end_time: datetime
+    session: AsyncSession, start_time: datetime, end_time: datetime
 ) -> CommunicationMetrics:
     """
     Collect communication dimension metrics
@@ -183,7 +173,9 @@ async def collect_communication_metrics(
             pr_comments_avg=round(row.pr_comments_avg, 1) if row.pr_comments_avg else None,
             cross_team_prs=int(row.cross_team_prs) if row.cross_team_prs else 0,
             mattermost_messages=int(row.mattermost_messages) if row.mattermost_messages else 0,
-            constructive_feedback_rate=round(row.constructive_feedback_rate, 1) if row.constructive_feedback_rate else None,
+            constructive_feedback_rate=round(row.constructive_feedback_rate, 1)
+            if row.constructive_feedback_rate
+            else None,
         )
     except Exception as e:
         logger.error(f"Error collecting communication metrics: {e}")
@@ -191,9 +183,7 @@ async def collect_communication_metrics(
 
 
 async def collect_efficiency_metrics(
-    session: AsyncSession,
-    start_time: datetime,
-    end_time: datetime
+    session: AsyncSession, start_time: datetime, end_time: datetime
 ) -> EfficiencyMetrics:
     """
     Collect efficiency dimension metrics

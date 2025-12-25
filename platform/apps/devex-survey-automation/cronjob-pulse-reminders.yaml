@@ -13,8 +13,8 @@ metadata:
     component: cronjob
     survey-type: reminder
 spec:
-  schedule: "0 9 * * 3"  # Every Wednesday at 9:00 AM
-  timeZone: "America/New_York"  # Adjust to your timezone
+  schedule: "0 9 * * 3" # Every Wednesday at 9:00 AM
+  timeZone: "America/New_York" # Adjust to your timezone
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
@@ -30,30 +30,30 @@ spec:
           serviceAccountName: devex-survey-automation
           restartPolicy: OnFailure
           containers:
-          - name: send-reminders
-            image: python:3.11-slim
-            command:
-            - /bin/sh
-            - -c
-            - |
-              pip install httpx asyncpg sqlalchemy asyncio-compat --quiet
-              python3 <<'EOF'
-              import asyncio
-              import httpx
-              from datetime import datetime, timedelta
+            - name: send-reminders
+              image: python:3.11-slim
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  pip install httpx asyncpg sqlalchemy asyncio-compat --quiet
+                  python3 <<'EOF'
+                  import asyncio
+                  import httpx
+                  from datetime import datetime, timedelta
 
-              async def send_reminders():
-                  # This would connect to database and send reminders
-                  # For now, placeholder implementation
-                  print("Reminder job would run here")
-                  print("In production, this would:")
-                  print("1. Query database for unresponded recipients")
-                  print("2. Filter those sent > 2 days ago")
-                  print("3. Send reminders via Mattermost")
-                  return True
+                  async def send_reminders():
+                      # This would connect to database and send reminders
+                      # For now, placeholder implementation
+                      print("Reminder job would run here")
+                      print("In production, this would:")
+                      print("1. Query database for unresponded recipients")
+                      print("2. Filter those sent > 2 days ago")
+                      print("3. Send reminders via Mattermost")
+                      return True
 
-              asyncio.run(send_reminders())
-              EOF
+                  asyncio.run(send_reminders())
+                  EOF
           securityContext:
             runAsNonRoot: true
             runAsUser: 65534

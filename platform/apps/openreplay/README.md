@@ -5,6 +5,7 @@ This directory contains the deployment configuration for OpenReplay, an open-sou
 ## Overview
 
 OpenReplay provides:
+
 - Session replay with DOM recording
 - Console logs and network traffic capture
 - Performance monitoring
@@ -48,12 +49,14 @@ kubectl apply -k .
 ### Access
 
 Once deployed:
+
 - **URL**: https://openreplay.fawkes.local
 - **Default credentials**: Set during initial setup
 
 ### Environment Variables
 
 Key configuration options in `values.yaml`:
+
 - `DOMAIN_NAME`: openreplay.fawkes.local
 - `ENABLE_SSL`: true
 - `STORAGE_SIZE`: 50Gi (adjust based on needs)
@@ -62,6 +65,7 @@ Key configuration options in `values.yaml`:
 ### Integration
 
 See [Session Recording Setup Guide](../../docs/how-to/session-recording-setup.md) for:
+
 - Installing tracker in applications
 - Configuring privacy and sanitization
 - Using metadata and tagging

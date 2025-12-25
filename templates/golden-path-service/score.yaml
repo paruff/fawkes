@@ -11,13 +11,13 @@ apiVersion: score.dev/v1b1
 
 # Metadata about the workload
 metadata:
-  name: "my-service"  # Replace with your service name
+  name: "my-service" # Replace with your service name
 
 # Container definitions
 containers:
   # Main application container
   web:
-    image: "harbor.fawkes.local/my-team/my-service:latest"  # Replace with your image
+    image: "harbor.fawkes.local/my-team/my-service:latest" # Replace with your image
 
     # Command to run (optional, uses image default if not specified)
     # command: ["/app/server"]
@@ -36,7 +36,7 @@ containers:
     variables:
       # Static environment variables
       LOG_LEVEL: "info"
-      ENVIRONMENT: "${ENVIRONMENT}"  # Injected by platform based on deployment environment
+      ENVIRONMENT: "${ENVIRONMENT}" # Injected by platform based on deployment environment
 
       # Variables from resources (databases, caches, etc.)
       # These are automatically populated when resources are provisioned
@@ -76,14 +76,13 @@ containers:
 service:
   ports:
     web:
-      port: 80        # External port (e.g., on the Service)
-      targetPort: 8080  # Container port
+      port: 80 # External port (e.g., on the Service)
+      targetPort: 8080 # Container port
       protocol: tcp
 
 # Resources required by the application
 # The platform translates these into actual infrastructure
 resources:
-
   # PostgreSQL database
   # Platform provisions this via CloudNativePG operator
   db:
@@ -179,7 +178,7 @@ extensions:
       # Distributed tracing
       tracing:
         enabled: true
-        samplingRate: 0.1  # 10% of requests
+        samplingRate: 0.1 # 10% of requests
 
       # Logging
       logging:
@@ -208,7 +207,6 @@ extensions:
       enabled: true
       # Deployment frequency tracked automatically
       # Change failure rate tracked via rollback detection
-
 # ============================================================================
 # USAGE EXAMPLES
 # ============================================================================

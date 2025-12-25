@@ -1,6 +1,7 @@
 # ADR-012: Metrics Monitoring and Management
 
 ## Status
+
 Accepted
 
 ## Context
@@ -8,6 +9,7 @@ Accepted
 The Fawkes platform requires comprehensive metrics monitoring to support multiple critical use cases:
 
 **Platform Monitoring Needs**:
+
 - Kubernetes cluster health (nodes, pods, deployments, resource utilization)
 - Core service availability (Backstage, ArgoCD, Jenkins, Mattermost, Focalboard, Harbor)
 - Infrastructure performance (CPU, memory, disk, network across all nodes)
@@ -16,12 +18,14 @@ The Fawkes platform requires comprehensive metrics monitoring to support multipl
 - Cost allocation and optimization metrics
 
 **DORA Metrics Requirements** (Core Platform Value Proposition):
+
 - **Deployment Frequency**: Deployments per day/week/month by team
 - **Lead Time for Changes**: Time from commit to production deployment
 - **Change Failure Rate**: Percentage of deployments causing incidents
 - **Time to Restore Service**: Mean time to recovery (MTTR) from incidents
 
 **Application Monitoring Needs**:
+
 - Application-specific metrics (request rates, latency, error rates)
 - Custom business metrics defined by teams
 - Service dependency mapping
@@ -30,6 +34,7 @@ The Fawkes platform requires comprehensive metrics monitoring to support multipl
 - Message queue depths and processing rates
 
 **Developer Experience Metrics**:
+
 - Build duration (P50, P95, P99 percentiles)
 - Pipeline success/failure rates
 - Time spent in code review
@@ -37,6 +42,7 @@ The Fawkes platform requires comprehensive metrics monitoring to support multipl
 - Developer onboarding time
 
 **Security & Compliance Metrics**:
+
 - Failed authentication attempts
 - Privileged access usage
 - Security scan results over time
@@ -44,6 +50,7 @@ The Fawkes platform requires comprehensive metrics monitoring to support multipl
 - Certificate expiration tracking
 
 **Learner/Dojo Metrics**:
+
 - Lab environment resource usage
 - Module completion times
 - Assessment success rates
@@ -51,6 +58,7 @@ The Fawkes platform requires comprehensive metrics monitoring to support multipl
 - Infrastructure costs per learner
 
 **Technical Requirements**:
+
 - Multi-dimensional metrics (labels/tags for filtering)
 - Long-term retention (13+ months for year-over-year analysis)
 - High cardinality support (per-team, per-service, per-environment)
@@ -62,6 +70,7 @@ The Fawkes platform requires comprehensive metrics monitoring to support multipl
 - Support for push and pull metric collection models
 
 **Operational Requirements**:
+
 - Self-service dashboarding for teams
 - Alerting without constant platform team intervention
 - Backup and disaster recovery
@@ -71,6 +80,7 @@ The Fawkes platform requires comprehensive metrics monitoring to support multipl
 - Cost-effective at scale
 
 **Integration Requirements**:
+
 - Native Kubernetes integration (kube-state-metrics, node-exporter)
 - OpenTelemetry compatibility
 - Grafana for visualization
@@ -169,6 +179,7 @@ We will use **Prometheus** as the core metrics collection and storage engine, de
 ### Component Breakdown
 
 **1. Prometheus Core (kube-prometheus-stack)**
+
 - **Prometheus Server**: Metrics collection and short-term storage (15-30 days)
 - **Prometheus Operator**: Manages Prometheus instances via CRDs
 - **kube-state-metrics**: Kubernetes object state metrics
@@ -177,6 +188,7 @@ We will use **Prometheus** as the core metrics collection and storage engine, de
 - **Grafana**: Pre-configured dashboards and visualization
 
 **2. Thanos (Long-term Storage & Global Query)**
+
 - **Thanos Sidecar**: Uploads Prometheus data to object storage
 - **Thanos Store Gateway**: Queries historical data from object storage
 - **Thanos Query**: Provides global query interface across all Prometheus instances
@@ -185,12 +197,14 @@ We will use **Prometheus** as the core metrics collection and storage engine, de
 
 **3. Service Monitors (Automated Discovery)**
 Kubernetes-native ServiceMonitor CRDs for automatic metric collection:
+
 - Platform services (ArgoCD, Jenkins, Backstage, Harbor, etc.)
 - Application services (auto-discovered via labels)
 - Custom exporters (database, message queue, etc.)
 
 **4. DORA Metrics Service**
 Custom microservice for DORA metrics calculation:
+
 - Receives webhooks from Git, CI/CD, incident management
 - Calculates and exposes the 4 key metrics as Prometheus metrics
 - Stores raw event data for audit and recalculation
@@ -201,12 +215,14 @@ Custom microservice for DORA metrics calculation:
 **Multi-Prometheus Architecture**:
 
 1. **Prometheus-Core** (fawkes-monitoring namespace)
+
    - Platform infrastructure metrics
    - Kubernetes cluster metrics
    - Core service metrics (ArgoCD, Jenkins, Backstage)
    - Retention: 30 days local, unlimited in Thanos
 
 2. **Prometheus-Apps** (fawkes-monitoring namespace)
+
    - Application team metrics
    - Custom business metrics
    - Tenant-scoped via namespace labels
@@ -223,6 +239,7 @@ Custom microservice for DORA metrics calculation:
 ### Example Configurations
 
 **ServiceMonitor for ArgoCD**:
+
 ```yaml
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -236,12 +253,13 @@ spec:
     matchLabels:
       app.kubernetes.io/name: argocd-server
   endpoints:
-  - port: metrics
-    interval: 30s
-    path: /metrics
+    - port: metrics
+      interval: 30s
+      path: /metrics
 ```
 
 **PrometheusRule for Platform Alerts**:
+
 ```yaml
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
@@ -250,40 +268,41 @@ metadata:
   namespace: fawkes-monitoring
 spec:
   groups:
-  - name: platform
-    interval: 30s
-    rules:
-    - alert: PlatformServiceDown
-      expr: up{job=~"argocd|jenkins|backstage"} == 0
-      for: 5m
-      labels:
-        severity: critical
-        team: platform
-      annotations:
-        summary: "Platform service {{ $labels.job }} is down"
-        description: "{{ $labels.job }} has been unavailable for 5 minutes"
-        runbook_url: "https://docs.fawkes.io/runbooks/service-down"
+    - name: platform
+      interval: 30s
+      rules:
+        - alert: PlatformServiceDown
+          expr: up{job=~"argocd|jenkins|backstage"} == 0
+          for: 5m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "Platform service {{ $labels.job }} is down"
+            description: "{{ $labels.job }} has been unavailable for 5 minutes"
+            runbook_url: "https://docs.fawkes.io/runbooks/service-down"
 
-    - alert: HighMemoryUsage
-      expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes > 0.85
-      for: 10m
-      labels:
-        severity: warning
-        team: platform
-      annotations:
-        summary: "High memory usage on {{ $labels.instance }}"
-        description: "Memory usage is above 85% for 10 minutes"
+        - alert: HighMemoryUsage
+          expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes > 0.85
+          for: 10m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "High memory usage on {{ $labels.instance }}"
+            description: "Memory usage is above 85% for 10 minutes"
 
-    - alert: PodCrashLooping
-      expr: rate(kube_pod_container_status_restarts_total[15m]) > 0
-      for: 15m
-      labels:
-        severity: warning
-      annotations:
-        summary: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is crash looping"
+        - alert: PodCrashLooping
+          expr: rate(kube_pod_container_status_restarts_total[15m]) > 0
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is crash looping"
 ```
 
 **DORA Metrics Recording Rules**:
+
 ```yaml
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
@@ -292,45 +311,46 @@ metadata:
   namespace: fawkes-monitoring
 spec:
   groups:
-  - name: dora_deployment_frequency
-    interval: 1m
-    rules:
-    - record: fawkes:dora:deployment_frequency:per_day
-      expr: |
-        sum(rate(fawkes_deployment_total[24h])) by (team, environment)
+    - name: dora_deployment_frequency
+      interval: 1m
+      rules:
+        - record: fawkes:dora:deployment_frequency:per_day
+          expr: |
+            sum(rate(fawkes_deployment_total[24h])) by (team, environment)
 
-  - name: dora_lead_time
-    interval: 1m
-    rules:
-    - record: fawkes:dora:lead_time_seconds:p50
-      expr: |
-        histogram_quantile(0.50,
-          sum(rate(fawkes_lead_time_seconds_bucket[1h])) by (team, le))
+    - name: dora_lead_time
+      interval: 1m
+      rules:
+        - record: fawkes:dora:lead_time_seconds:p50
+          expr: |
+            histogram_quantile(0.50,
+              sum(rate(fawkes_lead_time_seconds_bucket[1h])) by (team, le))
 
-    - record: fawkes:dora:lead_time_seconds:p95
-      expr: |
-        histogram_quantile(0.95,
-          sum(rate(fawkes_lead_time_seconds_bucket[1h])) by (team, le))
+        - record: fawkes:dora:lead_time_seconds:p95
+          expr: |
+            histogram_quantile(0.95,
+              sum(rate(fawkes_lead_time_seconds_bucket[1h])) by (team, le))
 
-  - name: dora_change_failure_rate
-    interval: 5m
-    rules:
-    - record: fawkes:dora:change_failure_rate
-      expr: |
-        sum(rate(fawkes_deployment_failed_total[7d])) by (team)
-        /
-        sum(rate(fawkes_deployment_total[7d])) by (team)
+    - name: dora_change_failure_rate
+      interval: 5m
+      rules:
+        - record: fawkes:dora:change_failure_rate
+          expr: |
+            sum(rate(fawkes_deployment_failed_total[7d])) by (team)
+            /
+            sum(rate(fawkes_deployment_total[7d])) by (team)
 
-  - name: dora_mttr
-    interval: 5m
-    rules:
-    - record: fawkes:dora:mttr_seconds:median
-      expr: |
-        histogram_quantile(0.50,
-          sum(rate(fawkes_incident_resolution_seconds_bucket[7d])) by (team, le))
+    - name: dora_mttr
+      interval: 5m
+      rules:
+        - record: fawkes:dora:mttr_seconds:median
+          expr: |
+            histogram_quantile(0.50,
+              sum(rate(fawkes_incident_resolution_seconds_bucket[7d])) by (team, le))
 ```
 
 **Thanos Configuration**:
+
 ```yaml
 # thanos-storage-secret.yaml
 apiVersion: v1
@@ -401,6 +421,7 @@ spec:
 **Pre-configured Dashboards** (Included in MVP):
 
 1. **Platform Overview Dashboard**
+
    - Cluster resource utilization (CPU, memory, disk)
    - Node health status
    - Pod count by namespace
@@ -408,6 +429,7 @@ spec:
    - Alert summary
 
 2. **DORA Metrics Dashboard**
+
    - 4 key metrics with benchmark comparison
    - Team-level breakdown
    - Trend analysis (7d, 30d, 90d)
@@ -415,6 +437,7 @@ spec:
    - Deployment calendar heatmap
 
 3. **Service Health Dashboard**
+
    - Service availability (uptime %)
    - Request rate, latency (P50, P95, P99)
    - Error rate (4xx, 5xx)
@@ -422,6 +445,7 @@ spec:
    - Dependency map
 
 4. **Kubernetes Cluster Dashboard**
+
    - Node resource usage
    - Pod status distribution
    - Persistent volume usage
@@ -429,6 +453,7 @@ spec:
    - API server performance
 
 5. **CI/CD Pipeline Dashboard**
+
    - Build duration trends
    - Success/failure rates
    - Queue depth and wait time
@@ -442,6 +467,7 @@ spec:
    - Cost trends and forecasting
 
 **Self-Service Dashboarding**:
+
 - Teams can create custom dashboards using Grafana UI
 - Dashboard-as-code via ConfigMaps for GitOps
 - Dashboard templates for common patterns
@@ -452,6 +478,7 @@ spec:
 Custom Go microservice for DORA metrics calculation:
 
 **Components**:
+
 1. **Webhook Receiver**: Accepts events from Git, CI/CD, incident management
 2. **Event Store**: PostgreSQL database for raw event storage
 3. **Metrics Calculator**: Aggregates events into DORA metrics
@@ -459,6 +486,7 @@ Custom Go microservice for DORA metrics calculation:
 5. **REST API**: Provides historical data and drill-down capabilities
 
 **Event Types**:
+
 - `commit` - Git commit with author, timestamp, repository
 - `build_started` - CI pipeline initiated
 - `build_completed` - CI pipeline finished (success/failure)
@@ -468,6 +496,7 @@ Custom Go microservice for DORA metrics calculation:
 - `incident_resolved` - Incident closed
 
 **Metrics Exposed**:
+
 ```
 # Deployment Frequency
 fawkes_deployment_total{team="teamA",environment="production"} 45
@@ -489,6 +518,7 @@ fawkes_incident_resolution_seconds_count{team="teamA"} 20
 ```
 
 **API Endpoints**:
+
 - `POST /webhook/commit` - Receive Git commit events
 - `POST /webhook/build` - Receive CI build events
 - `POST /webhook/deployment` - Receive deployment events
@@ -500,6 +530,7 @@ fawkes_incident_resolution_seconds_count{team="teamA"} 20
 ### Application Instrumentation
 
 **Supported Languages** (Client Libraries):
+
 - **Go**: `prometheus/client_golang`
 - **Java**: `micrometer` with Prometheus registry
 - **Python**: `prometheus_client`
@@ -507,4 +538,5 @@ fawkes_incident_resolution_seconds_count{team="teamA"} 20
 - **.NET**: `prometheus-net`
 
 **Standard Metrics** (RED Method):
-- **Rate
+
+- \*\*Rate

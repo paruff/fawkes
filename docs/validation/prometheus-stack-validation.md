@@ -9,6 +9,7 @@
 **Status:** Complete
 
 **Evidence:**
+
 - ArgoCD Application manifest exists: `platform/apps/prometheus/prometheus-application.yaml`
 - Configured with:
   - Helm chart: `kube-prometheus-stack` version 66.3.1 from prometheus-community
@@ -18,6 +19,7 @@
   - Sync wave: -3 (deployed early in the bootstrap process)
 
 **Validation Steps:**
+
 ```bash
 # Check ArgoCD application exists and is healthy
 kubectl get application prometheus-stack -n fawkes
@@ -35,6 +37,7 @@ kubectl get application prometheus-stack -n fawkes -o jsonpath='{.status.sync.st
 ```
 
 **Configuration Highlights:**
+
 - Prometheus retention: 15 days
 - Prometheus storage: 20Gi
 - Alertmanager storage: 2Gi
@@ -47,6 +50,7 @@ kubectl get application prometheus-stack -n fawkes -o jsonpath='{.status.sync.st
 **Status:** Complete
 
 **Evidence:**
+
 - Prometheus configured with automatic ServiceMonitor discovery
 - ServiceMonitor selectors set to discover all ServiceMonitors (not restricted to Helm values)
 - Scrape interval: 30s
@@ -56,6 +60,7 @@ kubectl get application prometheus-stack -n fawkes -o jsonpath='{.status.sync.st
   - environment: `development`
 
 **Validation Steps:**
+
 ```bash
 # Port-forward to Prometheus UI
 kubectl port-forward -n monitoring svc/prometheus-prometheus 9090:9090
@@ -72,6 +77,7 @@ curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets | length'
 ```
 
 **Metrics Collection:**
+
 - Infrastructure metrics: CPU, Memory, Disk, Network from node-exporter
 - Kubernetes metrics: Pod, Node, Deployment status from kube-state-metrics
 - Application metrics: Via ServiceMonitors for platform components
@@ -82,6 +88,7 @@ curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets | length'
 **Status:** Complete
 
 **Evidence:**
+
 - Grafana deployment configured in prometheus-application.yaml
 - Ingress configured:
   - Host: `grafana.127.0.0.1.nip.io`
@@ -95,6 +102,7 @@ curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets | length'
 - Prometheus datasource automatically configured
 
 **Validation Steps:**
+
 ```bash
 # Check Grafana deployment
 kubectl get deployment prometheus-grafana -n monitoring
@@ -114,6 +122,7 @@ curl -s -u admin:fawkesidp http://localhost:3000/api/datasources | jq '.[].name'
 ```
 
 **Grafana Features:**
+
 - Default Kubernetes dashboards imported
 - Sidecar for dashboard auto-discovery enabled
 - Plugins: grafana-piechart-panel, grafana-clock-panel
@@ -125,6 +134,7 @@ curl -s -u admin:fawkesidp http://localhost:3000/api/datasources | jq '.[].name'
 **Status:** Complete
 
 **Evidence:**
+
 - ServiceMonitor configurations exist: `platform/apps/prometheus/servicemonitors.yaml`
 - Configured ServiceMonitors:
   - **ArgoCD Server**: Scrapes `/metrics` on port `metrics` every 30s
@@ -136,6 +146,7 @@ curl -s -u admin:fawkesidp http://localhost:3000/api/datasources | jq '.[].name'
 - PodMonitor for application pods with `app` label
 
 **Validation Steps:**
+
 ```bash
 # List all ServiceMonitors
 kubectl get servicemonitor -n monitoring
@@ -157,6 +168,7 @@ curl -s http://localhost:9090/api/v1/query?query=up | jq '.data.result[] | selec
 
 **Label Enrichment:**
 All ServiceMonitors include relabeling to add Kubernetes metadata:
+
 - `namespace`: Kubernetes namespace
 - `pod_name`: Pod name
 - `service_name`: Service name
@@ -169,6 +181,7 @@ All ServiceMonitors include relabeling to add Kubernetes metadata:
 **Status:** Complete
 
 **Configuration:**
+
 - Deployment: StatefulSet with 1 replica
 - Storage: 2Gi PVC
 - Ingress: `alertmanager.127.0.0.1.nip.io`
@@ -179,6 +192,7 @@ All ServiceMonitors include relabeling to add Kubernetes metadata:
 - Inhibit rules: Critical alerts suppress warnings
 
 **Validation:**
+
 ```bash
 # Check Alertmanager
 kubectl get statefulset alertmanager-prometheus-alertmanager -n monitoring
@@ -196,11 +210,13 @@ kubectl get ingress -n monitoring | grep alertmanager
 **Status:** Complete
 
 **Configuration:**
+
 - Deployed as DaemonSet (runs on every node)
 - Collects node-level metrics: CPU, memory, disk, network
 - Resource limits: 50m CPU request, 64Mi memory request
 
 **Validation:**
+
 ```bash
 # Check node-exporter DaemonSet
 kubectl get daemonset prometheus-prometheus-node-exporter -n monitoring
@@ -218,11 +234,13 @@ kubectl get pods -n monitoring -l app.kubernetes.io/name=prometheus-node-exporte
 **Status:** Complete
 
 **Configuration:**
+
 - Deployment with 1 replica
 - Exposes Kubernetes object metrics (pods, nodes, deployments, etc.)
 - Resource limits: 50m CPU request, 64Mi memory request
 
 **Validation:**
+
 ```bash
 # Check kube-state-metrics deployment
 kubectl get deployment prometheus-kube-state-metrics -n monitoring
@@ -239,11 +257,13 @@ curl -s http://localhost:9090/api/v1/query?query=kube_pod_info | jq '.data.resul
 **Status:** Complete
 
 **Configuration:**
+
 - Prometheus: 20Gi PVC with `standard` storage class
 - Alertmanager: 2Gi PVC with `standard` storage class
 - Grafana: 5Gi PVC with `standard` storage class
 
 **Validation:**
+
 ```bash
 # Check all PVCs in monitoring namespace
 kubectl get pvc -n monitoring
@@ -262,6 +282,7 @@ kubectl get pvc -n monitoring -o jsonpath='{range .items[*]}{.metadata.name}{"\t
 
 **Configuration:**
 All components have CPU and memory requests/limits defined:
+
 - Prometheus Operator: 100m/128Mi requests, 200m/256Mi limits
 - Prometheus Server: 500m/1Gi requests, 1000m/2Gi limits
 - Grafana: 100m/256Mi requests, 200m/512Mi limits
@@ -270,6 +291,7 @@ All components have CPU and memory requests/limits defined:
 - Kube State Metrics: 50m/64Mi requests, 100m/128Mi limits
 
 **Validation:**
+
 ```bash
 # Check resource specifications for all deployments
 kubectl get deployments -n monitoring -o json | jq '.items[] | {name: .metadata.name, containers: [.spec.template.spec.containers[] | {name: .name, resources: .resources}]}'
@@ -297,6 +319,7 @@ make validate-at-e1-006
 ```
 
 The validation script checks:
+
 1. ✅ Monitoring namespace exists and is Active
 2. ✅ ArgoCD Application prometheus-stack is Healthy and Synced
 3. ✅ Prometheus Operator deployment is running
@@ -313,6 +336,7 @@ The validation script checks:
 14. ✅ Most pods are healthy (>=80%)
 
 **Expected Output:**
+
 ```
 ========================================================================
   AT-E1-006 Validation Summary
@@ -341,6 +365,7 @@ behave tests/bdd/features/prometheus-stack-deployment.feature
 ```
 
 The BDD tests include 28 scenarios covering:
+
 - Namespace and ArgoCD Application validation
 - Pod health checks for all components
 - Prometheus scraping and storage
@@ -368,6 +393,7 @@ The BDD tests include 28 scenarios covering:
 ✅ **RESOLVED**
 
 All acceptance criteria have been met:
+
 - [x] kube-prometheus-stack deployed via ArgoCD
 - [x] Prometheus scraping metrics from platform components
 - [x] Grafana accessible with default dashboards and datasources

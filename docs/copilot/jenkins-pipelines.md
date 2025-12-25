@@ -5,6 +5,7 @@
 When using Copilot in agent mode, you will get:
 
 ### Planning Phase
+
 - **Architecture analysis** - Review existing code and suggest optimal implementation patterns
 - **Dependency mapping** - Identify required components and integration points
 - **Task breakdown** - Decompose complex features into implementable steps
@@ -12,6 +13,7 @@ When using Copilot in agent mode, you will get:
 - **Alternative evaluation** - Compare multiple approaches with trade-offs
 
 ### Implementation Phase
+
 - **Multi-file generation** - Create complete feature implementations across files
 - **Test generation** - Automatic unit, integration, and E2E test creation
 - **Documentation updates** - Keep docs in sync with code changes
@@ -23,7 +25,9 @@ When using Copilot in agent mode, you will get:
 ## 🏗️ Fawkes Platform Context
 
 ### What is Fawkes?
+
 Fawkes is an **open-source Internal Product Delivery Platform** that combines:
+
 - **Infrastructure automation** (Kubernetes, Terraform/Crossplane)
 - **Developer portal** (Backstage with software templates)
 - **CI/CD pipelines** (Jenkins, ArgoCD for GitOps)
@@ -31,6 +35,7 @@ Fawkes is an **open-source Internal Product Delivery Platform** that combines:
 - **Immersive learning** (Dojo system with 5-belt progression)
 
 ### Key Differentiators
+
 1. **DORA metrics automated** - All 4 key metrics tracked from day one
 2. **Integrated learning curriculum** - Learn while building
 3. **Complete product delivery stack** - Not just infrastructure
@@ -38,7 +43,9 @@ Fawkes is an **open-source Internal Product Delivery Platform** that combines:
 5. **Platform as a product** - Developer experience first
 
 ### Current MVP Scope
+
 **IN SCOPE:**
+
 - Kubernetes orchestration (AWS EKS primary, multi-cloud planned)
 - Backstage developer portal + Dojo learning hub
 - Jenkins CI/CD with golden path templates
@@ -52,12 +59,14 @@ Fawkes is an **open-source Internal Product Delivery Platform** that combines:
 - DORA metrics automation
 
 **OUT OF SCOPE (Post-MVP):**
+
 - Spinnaker (dropped from MVP - using ArgoCD + Argo Rollouts instead)
 - Eclipse Che (using local workspace automation for MVP)
 - Multi-cloud abstractions with Crossplane (AWS first, then expand)
 - Advanced service mesh features
 
 ### Architecture Overview
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    Fawkes Platform                           │
@@ -181,6 +190,7 @@ fawkes/
 ```
 
 ### File Naming Conventions
+
 - **Kubernetes manifests:** `<resource>-<name>.yaml` (e.g., `deployment-backstage.yaml`)
 - **Terraform modules:** `main.tf`, `variables.tf`, `outputs.tf`
 - **Python tests:** `test_<feature>.py`
@@ -189,16 +199,17 @@ fawkes/
 - **Scripts:** Place in `scripts/` (e.g., `ignite.sh`, `setup-OS-space.sh`)
 
 ### Key Paths Reference
-| Component | Path |
-|-----------|------|
-| Infrastructure scripts | `/scripts/ignite.sh` |
-| Terraform (AWS) | `/infra/terraform/aws/` or `/modules/` |
-| Kubernetes manifests | `/infra/kubernetes/<service>/` |
-| Dojo curriculum | `/docs/dojo/<belt-level>/` |
-| ADRs | `/docs/adr/ADR-###-<topic>.md` |
-| Application templates | `/templates/<language>-<framework>/` |
-| Tests | `/tests/<type>/` |
-| Scripts | `/scripts/` or `/infra/` |
+
+| Component              | Path                                   |
+| ---------------------- | -------------------------------------- |
+| Infrastructure scripts | `/scripts/ignite.sh`                   |
+| Terraform (AWS)        | `/infra/terraform/aws/` or `/modules/` |
+| Kubernetes manifests   | `/infra/kubernetes/<service>/`         |
+| Dojo curriculum        | `/docs/dojo/<belt-level>/`             |
+| ADRs                   | `/docs/adr/ADR-###-<topic>.md`         |
+| Application templates  | `/templates/<language>-<framework>/`   |
+| Tests                  | `/tests/<type>/`                       |
+| Scripts                | `/scripts/` or `/infra/`               |
 
 ---
 
@@ -213,6 +224,7 @@ fawkes/
 5. **Respect established conventions** - Follow existing naming and organization
 
 ### Example Placement Decision
+
 ```python
 # File: infra/kubernetes/prometheus/servicemonitor-jenkins.yaml
 # Rationale: Follows existing infra/kubernetes/<service>/ pattern
@@ -220,6 +232,7 @@ fawkes/
 ```
 
 ### When in Doubt
+
 - **For infrastructure:** Check `/infra/` first
 - **For docs:** Check `/docs/` structure
 - **For templates:** Use `/templates/`
@@ -231,9 +244,11 @@ fawkes/
 ## 🎓 DORA Capabilities Integration
 
 ### The 24 Key Capabilities
+
 Every code change should map to one or more DORA capabilities:
 
 #### Technical Practices (14 capabilities)
+
 1. **Version control** - All code in Git, trunk-based development
 2. **Continuous integration** - Automated build/test on every commit
 3. **Deployment automation** - Push-button or automated deployment
@@ -250,6 +265,7 @@ Every code change should map to one or more DORA capabilities:
 14. **Code maintainability** - Clean, documented, testable code
 
 #### Process Practices (6 capabilities)
+
 15. **Streamlined change approval** - Peer review, not CAB
 16. **Customer feedback** - Short feedback loops
 17. **Team experimentation** - Safe to try new approaches
@@ -258,12 +274,14 @@ Every code change should map to one or more DORA capabilities:
 20. **Work in process limits** - Focus, avoid multitasking
 
 #### Cultural Practices (4 capabilities)
+
 21. **Generative organizational culture** - Westrum model
 22. **Learning culture** - Blameless postmortems, knowledge sharing
 23. **Job satisfaction** - Autonomy, mastery, purpose
 24. **Transformational leadership** - Servant leadership
 
 ### Tagging System
+
 Use these tags in code comments and tests:
 
 ```python
@@ -306,6 +324,7 @@ git checkout -b feature/refactor-entire-system
 ```
 
 **Branch Rules:**
+
 - Maximum **3 active branches** in repository
 - Merge within **1 day** of creation
 - Use **feature flags** for incomplete features
@@ -340,36 +359,36 @@ spec:
         version: v1.20.0
     spec:
       containers:
-      - name: backstage
-        image: backstage/backstage:v1.20.0
-        ports:
-        - containerPort: 7007
-          name: http
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1Gi"
-            cpu: "500m"
-        env:
-        - name: POSTGRES_HOST
-          valueFrom:
-            secretKeyRef:
-              name: backstage-postgres
-              key: host
-        livenessProbe:
-          httpGet:
-            path: /healthcheck
-            port: 7007
-          initialDelaySeconds: 60
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /healthcheck
-            port: 7007
-          initialDelaySeconds: 30
-          periodSeconds: 5
+        - name: backstage
+          image: backstage/backstage:v1.20.0
+          ports:
+            - containerPort: 7007
+              name: http
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: backstage-postgres
+                  key: host
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 7007
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 7007
+            initialDelaySeconds: 30
+            periodSeconds: 5
 ```
 
 ```python
@@ -410,11 +429,11 @@ spec:
     namespace: fawkes-platform
   syncPolicy:
     automated:
-      prune: true      # Delete resources not in Git
-      selfHeal: true   # Revert manual changes
+      prune: true # Delete resources not in Git
+      selfHeal: true # Revert manual changes
       allowEmpty: false
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
     retry:
       limit: 5
       backoff:
@@ -443,21 +462,21 @@ spec:
   strategy:
     canary:
       steps:
-      - setWeight: 20
-      - pause: {duration: 5m}
-      - setWeight: 40
-      - pause: {duration: 5m}
-      - setWeight: 60
-      - pause: {duration: 5m}
-      - setWeight: 80
-      - pause: {duration: 5m}
+        - setWeight: 20
+        - pause: { duration: 5m }
+        - setWeight: 40
+        - pause: { duration: 5m }
+        - setWeight: 60
+        - pause: { duration: 5m }
+        - setWeight: 80
+        - pause: { duration: 5m }
       analysis:
         templates:
-        - templateName: backstage-success-rate
+          - templateName: backstage-success-rate
         startingStep: 2
         args:
-        - name: service-name
-          value: backstage
+          - name: service-name
+            value: backstage
   selector:
     matchLabels:
       app: backstage
@@ -467,9 +486,9 @@ spec:
         app: backstage
     spec:
       containers:
-      - name: backstage
-        image: backstage/backstage:v1.21.0  # New version
-        # ... rest of container spec
+        - name: backstage
+          image: backstage/backstage:v1.21.0 # New version
+          # ... rest of container spec
 ```
 
 ---
@@ -908,41 +927,41 @@ spec:
   validationFailureAction: enforce
   background: true
   rules:
-  - name: validate-resources
-    match:
-      any:
-      - resources:
-          kinds:
-          - Deployment
-          - StatefulSet
-          - DaemonSet
-          namespaces:
-          - fawkes-*
-    validate:
-      message: >-
-        All containers must have CPU and memory limits defined.
-        This ensures predictable resource usage and prevents noisy neighbor issues.
+    - name: validate-resources
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+                - StatefulSet
+                - DaemonSet
+              namespaces:
+                - fawkes-*
+      validate:
+        message: >-
+          All containers must have CPU and memory limits defined.
+          This ensures predictable resource usage and prevents noisy neighbor issues.
 
-        Example:
-          resources:
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
-            requests:
-              memory: "256Mi"
-              cpu: "100m"
-      pattern:
-        spec:
-          template:
-            spec:
-              containers:
-              - resources:
-                  limits:
-                    memory: "?*"
-                    cpu: "?*"
-                  requests:
-                    memory: "?*"
-                    cpu: "?*"
+          Example:
+            resources:
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
+              requests:
+                memory: "256Mi"
+                cpu: "100m"
+        pattern:
+          spec:
+            template:
+              spec:
+                containers:
+                  - resources:
+                      limits:
+                        memory: "?*"
+                        cpu: "?*"
+                      requests:
+                        memory: "?*"
+                        cpu: "?*"
 ```
 
 ```yaml
@@ -964,24 +983,24 @@ spec:
   validationFailureAction: enforce
   background: true
   rules:
-  - name: require-image-tag
-    match:
-      any:
-      - resources:
-          kinds:
-          - Deployment
-          - StatefulSet
-          - DaemonSet
-    validate:
-      message: >-
-        Container images must not use 'latest' tag.
-        Use a specific version tag like 'v1.2.3' or git commit SHA.
-      pattern:
-        spec:
-          template:
-            spec:
-              containers:
-              - image: "!*:latest"
+    - name: require-image-tag
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+                - StatefulSet
+                - DaemonSet
+      validate:
+        message: >-
+          Container images must not use 'latest' tag.
+          Use a specific version tag like 'v1.2.3' or git commit SHA.
+        pattern:
+          spec:
+            template:
+              spec:
+                containers:
+                  - image: "!*:latest"
 ```
 
 ### 3. Secrets Management with External Secrets Operator
@@ -1036,18 +1055,18 @@ spec:
         POSTGRES_PASSWORD: "{{ .password }}"
         POSTGRES_HOST: "{{ .host }}"
   data:
-  - secretKey: username
-    remoteRef:
-      key: fawkes/backstage/postgres
-      property: username
-  - secretKey: password
-    remoteRef:
-      key: fawkes/backstage/postgres
-      property: password
-  - secretKey: host
-    remoteRef:
-      key: fawkes/backstage/postgres
-      property: host
+    - secretKey: username
+      remoteRef:
+        key: fawkes/backstage/postgres
+        property: username
+    - secretKey: password
+      remoteRef:
+        key: fawkes/backstage/postgres
+        property: password
+    - secretKey: host
+      remoteRef:
+        key: fawkes/backstage/postgres
+        property: host
 ```
 
 ---
@@ -1359,41 +1378,41 @@ spec:
         app: dora-metrics
     spec:
       containers:
-      - name: dora-metrics
-        image: python:3.11-slim
-        workingDir: /app
-        command:
-        - python
-        - main.py
-        ports:
-        - containerPort: 8080
-          name: http
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
-        volumeMounts:
-        - name: app-code
-          mountPath: /app
+        - name: dora-metrics
+          image: python:3.11-slim
+          workingDir: /app
+          command:
+            - python
+            - main.py
+          ports:
+            - containerPort: 8080
+              name: http
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          volumeMounts:
+            - name: app-code
+              mountPath: /app
       volumes:
-      - name: app-code
-        configMap:
-          name: dora-metrics-code
+        - name: app-code
+          configMap:
+            name: dora-metrics-code
 ---
 apiVersion: v1
 kind: Service
@@ -1406,9 +1425,9 @@ spec:
   selector:
     app: dora-metrics
   ports:
-  - name: http
-    port: 8080
-    targetPort: 8080
+    - name: http
+      port: 8080
+      targetPort: 8080
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -1422,9 +1441,9 @@ spec:
     matchLabels:
       app: dora-metrics
   endpoints:
-  - port: http
-    path: /metrics
-    interval: 30s
+    - port: http
+      path: /metrics
+      interval: 30s
 ```
 
 ### Grafana Dashboard for DORA Metrics
@@ -1440,7 +1459,7 @@ spec:
         "id": 1,
         "title": "Deployment Frequency",
         "type": "graph",
-        "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8},
+        "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
         "datasource": "Prometheus",
         "targets": [
           {
@@ -1455,9 +1474,9 @@ spec:
           }
         },
         "thresholds": [
-          {"value": 1, "color": "green"},
-          {"value": 0.14, "color": "yellow"},
-          {"value": 0.03, "color": "red"}
+          { "value": 1, "color": "green" },
+          { "value": 0.14, "color": "yellow" },
+          { "value": 0.03, "color": "red" }
         ],
         "description": "Deployments per day. Elite: >1/day, High: weekly, Medium: monthly, Low: <monthly"
       },
@@ -1465,7 +1484,7 @@ spec:
         "id": 2,
         "title": "Lead Time for Changes",
         "type": "graph",
-        "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8},
+        "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
         "datasource": "Prometheus",
         "targets": [
           {
@@ -1485,9 +1504,9 @@ spec:
           }
         },
         "thresholds": [
-          {"value": 3600, "color": "green"},
-          {"value": 86400, "color": "yellow"},
-          {"value": 604800, "color": "red"}
+          { "value": 3600, "color": "green" },
+          { "value": 86400, "color": "yellow" },
+          { "value": 604800, "color": "red" }
         ],
         "description": "Time from commit to production. Elite: <1 hour, High: <1 day, Medium: <1 week, Low: >1 month"
       },
@@ -1495,7 +1514,7 @@ spec:
         "id": 3,
         "title": "Change Failure Rate",
         "type": "gauge",
-        "gridPos": {"x": 0, "y": 8, "w": 12, "h": 8},
+        "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
         "datasource": "Prometheus",
         "targets": [
           {
@@ -1511,9 +1530,9 @@ spec:
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"value": 0, "color": "green"},
-                {"value": 15, "color": "yellow"},
-                {"value": 30, "color": "red"}
+                { "value": 0, "color": "green" },
+                { "value": 15, "color": "yellow" },
+                { "value": 30, "color": "red" }
               ]
             }
           }
@@ -1524,7 +1543,7 @@ spec:
         "id": 4,
         "title": "Mean Time to Restore (MTTR)",
         "type": "graph",
-        "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8},
+        "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
         "datasource": "Prometheus",
         "targets": [
           {
@@ -1544,9 +1563,9 @@ spec:
           }
         },
         "thresholds": [
-          {"value": 3600, "color": "green"},
-          {"value": 86400, "color": "yellow"},
-          {"value": 604800, "color": "red"}
+          { "value": 3600, "color": "green" },
+          { "value": 86400, "color": "yellow" },
+          { "value": 604800, "color": "red" }
         ],
         "description": "Time to restore service after incident. Elite: <1 hour, High: <1 day, Medium: <1 week, Low: >1 week"
       },
@@ -1554,7 +1573,7 @@ spec:
         "id": 5,
         "title": "Active Incidents",
         "type": "stat",
-        "gridPos": {"x": 0, "y": 16, "w": 6, "h": 4},
+        "gridPos": { "x": 0, "y": 16, "w": 6, "h": 4 },
         "datasource": "Prometheus",
         "targets": [
           {
@@ -1568,9 +1587,9 @@ spec:
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"value": 0, "color": "green"},
-                {"value": 1, "color": "yellow"},
-                {"value": 3, "color": "red"}
+                { "value": 0, "color": "green" },
+                { "value": 1, "color": "yellow" },
+                { "value": 3, "color": "red" }
               ]
             }
           }
@@ -1580,7 +1599,7 @@ spec:
         "id": 6,
         "title": "Deployments Today",
         "type": "stat",
-        "gridPos": {"x": 6, "y": 16, "w": 6, "h": 4},
+        "gridPos": { "x": 6, "y": 16, "w": 6, "h": 4 },
         "datasource": "Prometheus",
         "targets": [
           {
@@ -1637,6 +1656,7 @@ By completing this module, you will be able to:
 
 Platform engineering is one of the fastest-growing disciplines in technology.
 Organizations with mature platforms:
+
 - Deploy **10x more frequently**
 - Have **50% lower change failure rates**
 - Recover from incidents **2x faster**
@@ -1645,6 +1665,7 @@ Organizations with mature platforms:
 ### DORA Capabilities Covered
 
 This module teaches:
+
 - ✅ **Version control** - Understanding Git-based workflows
 - ✅ **Deployment automation** - Self-service deployment
 - ✅ **Loosely coupled architecture** - Microservices patterns
@@ -1673,6 +1694,7 @@ Imagine a developer starting a new microservice. Without a platform, they must:
 **Platform Engineering** treats infrastructure and tooling as a product for internal customers (developers).
 
 **Fawkes Platform** provides:
+
 - **Self-service capabilities** - Deploy via Backstage portal
 - **Golden paths** - Pre-configured, opinionated workflows
 - **Automation** - CI/CD, deployment, monitoring automated
@@ -1757,6 +1779,7 @@ Imagine a developer starting a new microservice. Without a platform, they must:
 ### Lab Complete! 🎉
 
 Congratulations! You've:
+
 - ✅ Created a service using a golden path template
 - ✅ Triggered an automated CI/CD pipeline
 - ✅ Deployed to Kubernetes via GitOps
@@ -1782,15 +1805,18 @@ Test your knowledge:
 ## 🎯 Next Steps
 
 **Continue Learning:**
+
 - [Module 2: CI/CD Fundamentals](/docs/dojo/white-belt/module-02-cicd-fundamentals.md)
 - [Module 3: GitOps with ArgoCD](/docs/dojo/white-belt/module-03-gitops.md)
 
 **Practice More:**
+
 - Create a Python service using the FastAPI template
 - Explore the Backstage service catalog
 - Review the generated Jenkins pipeline code
 
 **Get Help:**
+
 - Join `#dojo-white-belt` channel in Mattermost
 - Ask questions in office hours (Wednesdays 2pm ET)
 - Review the troubleshooting guide
@@ -1812,6 +1838,7 @@ Test your knowledge:
 When reviewing generated code or suggesting improvements, check for:
 
 ### Platform Engineering Principles
+
 - [ ] **Self-service enabled** - Can developers use without platform team help?
 - [ ] **Opinionated defaults** - Does it follow the golden path?
 - [ ] **Fail-fast validation** - Are errors caught early with clear messages?
@@ -1819,6 +1846,7 @@ When reviewing generated code or suggesting improvements, check for:
 - [ ] **Secure by default** - Are security best practices enforced?
 
 ### DORA Capabilities Checklist
+
 - [ ] **Continuous Integration** - Automated build/test on every commit?
 - [ ] **Deployment Automation** - One-click or automated deployment?
 - [ ] **Trunk-Based Development** - Short-lived branches (<1 day)?
@@ -1826,6 +1854,7 @@ When reviewing generated code or suggesting improvements, check for:
 - [ ] **Monitoring & Observability** - Metrics/logs/traces exported?
 
 ### Code Quality Standards
+
 - [ ] **DRY (Don't Repeat Yourself)** - Use templates/modules
 - [ ] **SOLID Principles** - Single responsibility, open/closed, etc.
 - [ ] **12-Factor App** - Configuration via environment, stateless, etc.
@@ -1833,6 +1862,7 @@ When reviewing generated code or suggesting improvements, check for:
 - [ ] **Documentation** - Inline comments for complex logic, README updates
 
 ### Fawkes-Specific Checks
+
 - [ ] **Correct file location** - Follows repository structure?
 - [ ] **Naming conventions** - Matches existing patterns?
 - [ ] **No Spinnaker references** - Uses ArgoCD/Argo Rollouts instead
@@ -1845,6 +1875,7 @@ When reviewing generated code or suggesting improvements, check for:
 ## 🚫 Things to AVOID
 
 ### Removed from MVP (Do NOT Generate)
+
 - ❌ **Spinnaker** - Use ArgoCD + Argo Rollouts for progressive delivery
 - ❌ **Eclipse Che** - Use local workspace automation (infra/workspace/)
 - ❌ **fawkes.io domain** - No commercial domain, use fawkes-platform.local
@@ -1853,6 +1884,7 @@ When reviewing generated code or suggesting improvements, check for:
 - ❌ **Multi-cloud** (yet) - AWS first, Azure/GCP later
 
 ### Anti-Patterns to Avoid
+
 - ❌ Hardcoded secrets in manifests
 - ❌ Using `:latest` image tags
 - ❌ No resource limits on containers
@@ -1867,18 +1899,21 @@ When reviewing generated code or suggesting improvements, check for:
 ## 💡 Pro Tips for Using Copilot
 
 ### When Planning
+
 1. **Start with the why** - "I need X because of DORA capability Y"
 2. **Reference ADRs** - "As decided in ADR-003, we use ArgoCD"
 3. **Check existing code** - "Look at templates/java-spring-boot for patterns"
 4. **Ask for alternatives** - "What are 3 ways to implement this?"
 
 ### When Implementing
+
 1. **Be specific about location** - "Create in infra/kubernetes/jenkins/"
 2. **Request complete solutions** - "Include manifest, service, and ingress"
 3. **Ask for tests** - "Also create BDD test in tests/e2e/features/"
 4. **Think about docs** - "Update docs/components/jenkins.md too"
 
 ### When Debugging
+
 1. **Provide context** - "Jenkins build fails at security scan stage"
 2. **Share error messages** - Paste the actual error
 3. **Describe expected vs actual** - "Should create Harbor repository but gets 404"
@@ -1887,6 +1922,7 @@ When reviewing generated code or suggesting improvements, check for:
 ### Example Prompts
 
 **Good Prompt:**
+
 ```
 Create a Kubernetes Deployment for the Jenkins service in infra/kubernetes/jenkins/.
 Requirements:
@@ -1906,6 +1942,7 @@ Include all in separate YAML files following naming convention.
 ```
 
 **Bad Prompt:**
+
 ```
 make jenkins work in kubernetes
 ```
@@ -1916,51 +1953,51 @@ make jenkins work in kubernetes
 
 ### Technology Stack Summary
 
-| Component | Technology | Version | Purpose |
-|-----------|-----------|---------|---------|
-| **Container Orchestration** | Kubernetes | 1.28+ | Run all platform services |
-| **Developer Portal** | Backstage | 1.20+ | Self-service + dojo hub |
-| **CI/CD** | Jenkins | LTS | Build and test automation |
-| **GitOps** | ArgoCD | 2.9+ | Continuous delivery |
-| **Progressive Delivery** | Argo Rollouts | 1.6+ | Canary/blue-green deployments |
-| **Container Registry** | Harbor | 2.10+ | Image storage + scanning |
-| **Collaboration** | Mattermost | 9.0+ | Team chat + ChatOps |
-| **Project Management** | Focalboard | 7.0+ | Sprint planning (in Mattermost) |
-| **Metrics** | Prometheus | 2.48+ | Time-series metrics |
-| **Dashboards** | Grafana | 10.0+ | Visualization |
-| **Logging** | OpenSearch | 2.11+ | Log aggregation |
-| **Log Collection** | Fluent Bit | 2.2+ | Log forwarding |
-| **Code Quality** | SonarQube | 10.0+ | SAST scanning |
-| **Container Scanning** | Trivy | 0.48+ | Vulnerability scanning |
-| **Policy Enforcement** | Kyverno | 1.11+ | Kubernetes policies |
-| **Secrets** | External Secrets | 0.9+ | AWS Secrets Manager integration |
-| **Infrastructure** | Terraform | 1.6+ | AWS provisioning |
-| **Database** | PostgreSQL | 15+ | Platform data persistence |
+| Component                   | Technology       | Version | Purpose                         |
+| --------------------------- | ---------------- | ------- | ------------------------------- |
+| **Container Orchestration** | Kubernetes       | 1.28+   | Run all platform services       |
+| **Developer Portal**        | Backstage        | 1.20+   | Self-service + dojo hub         |
+| **CI/CD**                   | Jenkins          | LTS     | Build and test automation       |
+| **GitOps**                  | ArgoCD           | 2.9+    | Continuous delivery             |
+| **Progressive Delivery**    | Argo Rollouts    | 1.6+    | Canary/blue-green deployments   |
+| **Container Registry**      | Harbor           | 2.10+   | Image storage + scanning        |
+| **Collaboration**           | Mattermost       | 9.0+    | Team chat + ChatOps             |
+| **Project Management**      | Focalboard       | 7.0+    | Sprint planning (in Mattermost) |
+| **Metrics**                 | Prometheus       | 2.48+   | Time-series metrics             |
+| **Dashboards**              | Grafana          | 10.0+   | Visualization                   |
+| **Logging**                 | OpenSearch       | 2.11+   | Log aggregation                 |
+| **Log Collection**          | Fluent Bit       | 2.2+    | Log forwarding                  |
+| **Code Quality**            | SonarQube        | 10.0+   | SAST scanning                   |
+| **Container Scanning**      | Trivy            | 0.48+   | Vulnerability scanning          |
+| **Policy Enforcement**      | Kyverno          | 1.11+   | Kubernetes policies             |
+| **Secrets**                 | External Secrets | 0.9+    | AWS Secrets Manager integration |
+| **Infrastructure**          | Terraform        | 1.6+    | AWS provisioning                |
+| **Database**                | PostgreSQL       | 15+     | Platform data persistence       |
 
 ### Important Endpoints
 
-| Service | URL | Purpose |
-|---------|-----|---------|
-| Backstage | `https://backstage.fawkes-platform.local` | Developer portal |
-| Jenkins | `https://jenkins.fawkes-platform.local` | CI/CD pipelines |
-| ArgoCD | `https://argocd.fawkes-platform.local` | GitOps deployments |
-| Harbor | `https://harbor.fawkes-platform.local` | Container registry |
-| Grafana | `https://grafana.fawkes-platform.local` | Dashboards |
-| Prometheus | `https://prometheus.fawkes-platform.local` | Metrics |
+| Service    | URL                                        | Purpose            |
+| ---------- | ------------------------------------------ | ------------------ |
+| Backstage  | `https://backstage.fawkes-platform.local`  | Developer portal   |
+| Jenkins    | `https://jenkins.fawkes-platform.local`    | CI/CD pipelines    |
+| ArgoCD     | `https://argocd.fawkes-platform.local`     | GitOps deployments |
+| Harbor     | `https://harbor.fawkes-platform.local`     | Container registry |
+| Grafana    | `https://grafana.fawkes-platform.local`    | Dashboards         |
+| Prometheus | `https://prometheus.fawkes-platform.local` | Metrics            |
 | Mattermost | `https://mattermost.fawkes-platform.local` | Team collaboration |
-| SonarQube | `https://sonarqube.fawkes-platform.local` | Code quality |
+| SonarQube  | `https://sonarqube.fawkes-platform.local`  | Code quality       |
 
 ### Default Namespaces
 
-| Namespace | Purpose |
-|-----------|---------|
-| `fawkes-platform` | Core platform services |
-| `fawkes-dojo` | Dojo learning labs |
-| `argocd` | ArgoCD controller |
-| `monitoring` | Prometheus, Grafana |
-| `logging` | OpenSearch, Fluent Bit |
+| Namespace                 | Purpose                   |
+| ------------------------- | ------------------------- |
+| `fawkes-platform`         | Core platform services    |
+| `fawkes-dojo`             | Dojo learning labs        |
+| `argocd`                  | ArgoCD controller         |
+| `monitoring`              | Prometheus, Grafana       |
+| `logging`                 | OpenSearch, Fluent Bit    |
 | `external-secrets-system` | External Secrets Operator |
-| `kyverno` | Policy enforcement |
+| `kyverno`                 | Policy enforcement        |
 
 ---
 
@@ -2034,6 +2071,7 @@ kubectl logs -n fawkes-platform <pod-name> --tail=100 -f
 ### Common Issues and Solutions
 
 #### Issue: Jenkins build fails at security scan stage
+
 ```bash
 # Check Trivy is installed in agent
 kubectl exec -it <jenkins-agent-pod> -n fawkes-platform -- trivy --version
@@ -2048,6 +2086,7 @@ curl -u robot-account:password \
 ```
 
 #### Issue: ArgoCD not syncing application
+
 ```bash
 # Check ArgoCD application status
 kubectl get application -n argocd backstage -o yaml
@@ -2063,6 +2102,7 @@ argocd repo list
 ```
 
 #### Issue: DORA metrics not appearing in Grafana
+
 ```bash
 # Verify metrics service is running
 kubectl get pods -n fawkes-platform -l app=dora-metrics
@@ -2080,6 +2120,7 @@ kubectl get configmap -n monitoring grafana-datasources -o yaml
 ```
 
 #### Issue: Cannot access Backstage portal
+
 ```bash
 # Check ingress configuration
 kubectl get ingress -n fawkes-platform
@@ -2101,12 +2142,14 @@ kubectl logs -n fawkes-platform -l app=backstage --tail=50
 When creating or updating documentation:
 
 ### Structure
+
 ```markdown
 # Title (H1 - One per document)
 
 **Metadata**: Version, Last Updated, Status, Audience
 
 ## Overview (H2)
+
 - Brief description
 - Purpose and scope
 - Prerequisites
@@ -2114,29 +2157,34 @@ When creating or updating documentation:
 ## Table of Contents (if >3 sections)
 
 ## Main Content (H2 sections)
+
 - Clear headings
 - Code examples with language tags
 - Screenshots where helpful
 - Links to related docs
 
 ## Troubleshooting (H2)
+
 - Common issues
 - Error messages and solutions
 
 ## Additional Resources (H2)
+
 - External links
 - Related documentation
 - Contact information
 ```
 
 ### Code Examples
+
 - Always include file path: `# File: path/to/file.yaml`
-- Use proper syntax highlighting: ```yaml, ```bash, ```python
+- Use proper syntax highlighting: `yaml, `bash, ```python
 - Add comments explaining non-obvious parts
 - Include DORA capability annotations
 - Show complete, runnable examples
 
 ### Linking
+
 - Use relative links for internal docs: `[Architecture](../architecture.md)`
 - Use absolute URLs for external resources
 - Check links don't break when docs move
@@ -2146,6 +2194,7 @@ When creating or updating documentation:
 ## 🎓 Belt-Specific Guidelines
 
 ### White Belt (Beginner)
+
 - Focus on concepts, not complexity
 - Provide step-by-step instructions
 - Include lots of screenshots
@@ -2153,6 +2202,7 @@ When creating or updating documentation:
 - Use simple, working examples
 
 ### Yellow Belt (Intermediate)
+
 - Introduce complexity gradually
 - Explain trade-offs and alternatives
 - Encourage exploration
@@ -2160,6 +2210,7 @@ When creating or updating documentation:
 - Include performance considerations
 
 ### Green Belt (Advanced)
+
 - Assume foundational knowledge
 - Focus on advanced patterns
 - Discuss architectural decisions
@@ -2167,6 +2218,7 @@ When creating or updating documentation:
 - Reference ADRs and best practices
 
 ### Brown Belt (Expert)
+
 - Multi-component integration
 - Production considerations
 - Disaster recovery scenarios
@@ -2174,6 +2226,7 @@ When creating or updating documentation:
 - Custom implementations
 
 ### Black Belt (Master)
+
 - Platform architecture design
 - Multi-tenancy patterns
 - Cost optimization strategies
@@ -2209,12 +2262,14 @@ git push origin improve-copilot-instructions
 ### Feedback Loop
 
 After using these instructions:
+
 1. **What worked well?** - Share successful patterns
 2. **What was confusing?** - Help clarify ambiguous sections
 3. **What's missing?** - Suggest new sections or examples
 4. **What's outdated?** - Update deprecated practices
 
 Post feedback in:
+
 - GitHub Discussion: https://github.com/paruff/fawkes/discussions
 - Mattermost: `#platform-engineering` channel
 - Weekly office hours: Wednesdays 2pm ET
@@ -2236,6 +2291,7 @@ Track how well Copilot is helping:
 ## 🏁 Summary
 
 **Key Takeaways:**
+
 1. ✅ Fawkes uses an established structure - respect it
 2. ✅ AWS first, multi-cloud later - don't over-abstract
 3. ✅ ArgoCD replaces Spinnaker - use Argo Rollouts for progressive delivery
@@ -2246,6 +2302,7 @@ Track how well Copilot is helping:
 8. ✅ GitOps workflow - all changes through Git
 
 **Remember:**
+
 - Check existing patterns before creating new ones
 - Follow the repository structure exactly
 - Tag code with DORA capabilities and belt levels

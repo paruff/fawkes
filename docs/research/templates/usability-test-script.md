@@ -13,11 +13,13 @@
 ## Test Overview
 
 **Objectives:**
+
 1. [Primary objective - what do we want to learn?]
 2. [Secondary objective]
 3. [Additional objective]
 
 **Participants:**
+
 - **Target Persona**: [e.g., Application Developer, Platform Engineer]
 - **Number of Participants**: [5-8 recommended]
 - **Experience Level**: [Mix of junior, mid, senior]
@@ -34,16 +36,19 @@
 
 **Test Environment**: [URL or environment name]
 **Test Account Credentials**:
+
 - Username: `[test-username]`
 - Password: `[test-password]` (or provide secure access method)
 
 **Pre-Configured State:**
+
 - [ ] Test environment is clean and reset
 - [ ] Test account has appropriate permissions
 - [ ] Sample data is loaded (if needed)
 - [ ] All services are running and accessible
 
 **Required Access:**
+
 - [ ] Backstage: [URL]
 - [ ] Jenkins: [URL]
 - [ ] Grafana: [URL]
@@ -161,6 +166,7 @@ Do you have any questions before we dive in?"
 ### Task 1: [Task Name]
 
 **Scenario:**
+
 ```
 "[Provide context and motivation for the task]
 
@@ -171,6 +177,7 @@ a Node.js application ready to go."
 ```
 
 **Goal:**
+
 ```
 "Your goal is to: [Clear, specific objective]
 
@@ -180,6 +187,7 @@ Node.js template and deploy it to the development environment."
 ```
 
 **Starting Point:**
+
 ```
 "Let's start here: [URL or specific location]
 
@@ -192,6 +200,7 @@ Go ahead and share your screen now, and please start thinking aloud as you work.
 ```
 
 **Success Criteria (For Your Notes - Don't Share with Participant):**
+
 - [ ] User navigates to correct location
 - [ ] User finds the feature/button/menu
 - [ ] User completes configuration correctly
@@ -200,30 +209,35 @@ Go ahead and share your screen now, and please start thinking aloud as you work.
 
 **Observation Notes:**
 
-Time Started: ________
-Time Completed: ________
-Task Status: ☐ Success  ☐ Partial Success  ☐ Failure
+Time Started: **\_\_\_\_**
+Time Completed: **\_\_\_\_**
+Task Status: ☐ Success ☐ Partial Success ☐ Failure
 
 **Actions Taken:**
+
 - [Note each major action]
 - [Note where they looked first]
 - [Note wrong turns or backtracking]
 
 **Quotes:**
+
 - "[Capture exact words when confused]"
 - "[Capture expressions of frustration or delight]"
 
 **Issues Encountered:**
+
 - **[Severity]**: [Description]
 - **[Severity]**: [Description]
 
 **Probing Questions (Use Sparingly):**
+
 - "What are you thinking right now?"
 - "What are you looking for?"
 - "Is this what you expected?"
 - "Why did you click there?"
 
 **If Stuck (After 2-3 Minutes):**
+
 ```
 "I can see you're working through this. Can you tell me what you're trying
 to find or do right now?"
@@ -238,6 +252,7 @@ then we'll move on to the next task."
 ```
 
 **Post-Task Questions:**
+
 ```
 "Okay, let's pause there.
 
@@ -258,30 +273,34 @@ then we'll move on to the next task."
 [Repeat the same structure as Task 1]
 
 **Scenario:**
+
 ```
 [Context and motivation]
 ```
 
 **Goal:**
+
 ```
 [Clear objective]
 ```
 
 **Starting Point:**
+
 ```
 [Where to begin]
 ```
 
 **Success Criteria:**
+
 - [ ] [Criterion 1]
 - [ ] [Criterion 2]
 - [ ] [Criterion 3]
 
 **Observation Notes:**
 
-Time Started: ________
-Time Completed: ________
-Task Status: ☐ Success  ☐ Partial Success  ☐ Failure
+Time Started: **\_\_\_\_**
+Time Completed: **\_\_\_\_**
+Task Status: ☐ Success ☐ Partial Success ☐ Failure
 
 [Continue with observation sections as in Task 1]
 
@@ -330,6 +349,7 @@ your overall experience.
 ```
 
 **Notes:**
+
 - [Capture responses]
 - [Note tone and confidence]
 - [Record any additional insights]
@@ -370,32 +390,37 @@ Thanks again, [Name]. Have a great rest of your day!"
 **Complete This Immediately After Session While Memory is Fresh:**
 
 **Overall Impressions:**
+
 - Top 3 insights from this session:
   1. [Insight 1]
   2. [Insight 2]
   3. [Insight 3]
 
 **Critical Issues:**
+
 - [Any issues that completely block the workflow]
 - [Issues that caused significant frustration]
 
 **Positive Findings:**
+
 - [What worked well]
 - [What the user appreciated]
 
 **Task Success Summary:**
 
-| Task | Status | Time | Confidence | Issues |
-|------|--------|------|------------|--------|
-| Task 1: [Name] | [S/P/F] | [min] | [1-5] | [Count] |
-| Task 2: [Name] | [S/P/F] | [min] | [1-5] | [Count] |
-| Task 3: [Name] | [S/P/F] | [min] | [1-5] | [Count] |
+| Task           | Status  | Time  | Confidence | Issues  |
+| -------------- | ------- | ----- | ---------- | ------- |
+| Task 1: [Name] | [S/P/F] | [min] | [1-5]      | [Count] |
+| Task 2: [Name] | [S/P/F] | [min] | [1-5]      | [Count] |
+| Task 3: [Name] | [S/P/F] | [min] | [1-5]      | [Count] |
 
 **Usability Ratings:**
+
 - Ease of Use: [1-5]
 - Likelihood to Recommend: [1-5]
 
 **Follow-Up Actions:**
+
 - [ ] File detailed session notes within 24 hours
 - [ ] Create GitHub issues for critical problems
 - [ ] Add quotes to quotes library
@@ -409,12 +434,14 @@ Thanks again, [Name]. Have a great rest of your day!"
 ### Within 24 Hours
 
 1. **Review Recording**
+
    - Watch at 1.5-2x speed
    - Note timestamps of key moments
    - Transcribe important quotes
    - Confirm your live observations
 
 2. **Detailed Session Notes**
+
    - Create file: `docs/research/data/processed/usability-tests/YYYY-MM-DD-{persona}-{feature}.md`
    - Use the analysis template
    - Include all task results, quotes, and observations
@@ -428,12 +455,14 @@ Thanks again, [Name]. Have a great rest of your day!"
 ### After All Sessions Complete
 
 1. **Cross-Session Synthesis**
+
    - Look for patterns across participants
    - Calculate aggregate metrics (success rates, avg times)
    - Identify issues by frequency
    - Separate persona-specific vs. universal issues
 
 2. **Findings Document**
+
    - Create: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
    - Include methodology, findings, recommendations
    - Prioritize issues (P0, P1, P2)
@@ -452,24 +481,28 @@ Thanks again, [Name]. Have a great rest of your day!"
 ### Severity Ratings
 
 **Critical (P0):**
+
 - Completely blocks task completion
 - Causes data loss or system errors
 - Affects majority of users
 - No workaround exists
 
 **Major (P1):**
+
 - Causes significant delay or frustration
 - Task completable but difficult
 - Affects many users
 - Workaround exists but not obvious
 
 **Minor (P2):**
+
 - Causes mild confusion or inefficiency
 - Task easily completable
 - Affects some users
 - Minimal impact on workflow
 
 **Enhancement (P3):**
+
 - Not a problem, but could be better
 - Suggestion for improvement
 - Low impact, high polish
@@ -477,21 +510,25 @@ Thanks again, [Name]. Have a great rest of your day!"
 ### Sample Probing Questions
 
 **Understanding Expectations:**
+
 - "What do you expect to see when you click that?"
 - "Where do you expect to find [feature]?"
 - "What do you think that button will do?"
 
 **Exploring Thought Process:**
+
 - "Talk me through what you're thinking"
 - "Why did you choose that option?"
 - "What made you go back?"
 
 **Uncovering Issues:**
+
 - "Is this what you were looking for?"
 - "How are you feeling about this right now?"
 - "What would you do if you were stuck like this in your actual work?"
 
 **Gathering Feedback:**
+
 - "How could this be more clear?"
 - "What would you call this feature?"
 - "Where would you expect to find this?"

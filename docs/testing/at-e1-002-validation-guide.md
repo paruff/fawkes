@@ -33,6 +33,7 @@ make validate-at-e1-002
 ```
 
 This will run:
+
 1. Comprehensive validation checks
 2. E2E sync tests
 3. BDD tests (if pytest available)
@@ -46,6 +47,7 @@ This will run:
 ```
 
 Options:
+
 ```bash
 # Custom namespace
 ./scripts/validate-at-e1-002.sh --namespace argocd
@@ -64,6 +66,7 @@ Options:
 ```
 
 Options:
+
 ```bash
 # Test specific application
 ./tests/e2e/argocd-sync-test.sh --app platform-bootstrap
@@ -96,38 +99,46 @@ pytest tests/bdd -v -m local
 The AT-E1-002 validation performs the following checks:
 
 ### 1. Prerequisites
+
 - ✅ kubectl is installed and accessible
 - ✅ argocd CLI is installed (optional)
 
 ### 2. Cluster Access
+
 - ✅ Kubernetes cluster is accessible via kubectl
 - ✅ Cluster info can be retrieved
 
 ### 3. ArgoCD Namespace
+
 - ✅ ArgoCD namespace exists (default: `fawkes`)
 - ✅ Namespace is in Active phase
 
 ### 4. ArgoCD Deployment
+
 - ✅ argocd-server is deployed
 - ✅ argocd-application-controller is deployed
 - ✅ argocd-repo-server is deployed
 - ✅ argocd-redis is deployed
 
 ### 5. ArgoCD Pods
+
 - ✅ All ArgoCD pods are Running
 - ✅ All ArgoCD pods are Ready
 - ✅ No pods in Failed or Pending state
 
 ### 6. ArgoCD CRDs
+
 - ✅ applications.argoproj.io CRD exists
 - ✅ applicationsets.argoproj.io CRD exists
 - ✅ appprojects.argoproj.io CRD exists
 
 ### 7. Git Repository Structure
+
 - ✅ platform/apps/ directory exists
 - ✅ platform/bootstrap/ directory exists
 
 ### 8. App-of-Apps Pattern
+
 - ✅ Root Application(s) exist
   - platform-bootstrap
   - fawkes-app
@@ -135,15 +146,18 @@ The AT-E1-002 validation performs the following checks:
 - ✅ At least one Application exists
 
 ### 9. Application Sync Status
+
 - ✅ All applications are Synced
 - ✅ All applications are Healthy
 - ✅ No out-of-sync applications
 
 ### 10. Auto-Sync Configuration
+
 - ✅ Auto-sync is enabled on applications
 - ✅ Self-heal is enabled on applications
 
 ### 11. ArgoCD Ingress
+
 - ✅ Ingress resource exists for ArgoCD
 - ✅ Ingress has valid host configuration
 
@@ -152,11 +166,13 @@ The AT-E1-002 validation performs the following checks:
 ### JSON Report Format
 
 Test reports are generated in JSON format at:
+
 ```
 reports/at-e1-002-validation-YYYYMMDD-HHMMSS.json
 ```
 
 Example report structure:
+
 ```json
 {
   "test_id": "AT-E1-002",
@@ -247,6 +263,7 @@ Error: Cannot access Kubernetes cluster
 ```
 
 **Solution**: Ensure kubectl is configured and pointing to the correct cluster:
+
 ```bash
 kubectl cluster-info
 kubectl config current-context
@@ -259,6 +276,7 @@ Error: Namespace 'fawkes' does not exist
 ```
 
 **Solution**: Either:
+
 1. Deploy ArgoCD to the fawkes namespace
 2. Use `--namespace argocd` if ArgoCD is in a different namespace
 
@@ -269,6 +287,7 @@ Error: No applications found
 ```
 
 **Solution**: Deploy the app-of-apps pattern:
+
 ```bash
 kubectl apply -f platform/bootstrap/app-of-apps.yaml
 ```
@@ -280,6 +299,7 @@ Error: X/Y applications are Synced
 ```
 
 **Solution**: Check application status and sync:
+
 ```bash
 argocd app list
 argocd app sync <app-name>

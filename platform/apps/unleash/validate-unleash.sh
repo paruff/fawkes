@@ -45,17 +45,17 @@ kubectl get secret db-unleash-credentials -n $NAMESPACE
 # Port forward and health check
 echo ""
 echo "✓ Testing Unleash health endpoint..."
-kubectl port-forward -n $NAMESPACE service/unleash 4242:4242 >/dev/null 2>&1 &
+kubectl port-forward -n $NAMESPACE service/unleash 4242:4242 > /dev/null 2>&1 &
 PID=$!
 sleep 3
 
-if curl -sf http://localhost:4242/health >/dev/null 2>&1; then
+if curl -sf http://localhost:4242/health > /dev/null 2>&1; then
   echo "✅ Unleash health check passed"
 else
   echo "❌ Unleash health check failed"
 fi
 
-kill $PID 2>/dev/null || true
+kill $PID 2> /dev/null || true
 
 echo ""
 echo "✅ Validation complete!"

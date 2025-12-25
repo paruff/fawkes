@@ -56,29 +56,29 @@ kubectl get application kyverno -n fawkes
 
 Located in `platform/policies/mandatory-security.yaml`:
 
-| Policy | Description | Action |
-|--------|-------------|--------|
-| `require-run-as-non-root` | Pods must run as non-root user | Deny |
-| `disallow-privileged-containers` | Privileged containers not allowed | Deny |
-| `require-resource-limits` | Pods must have CPU/memory limits | Deny |
-| `restrict-host-namespaces` | Disallow hostNetwork, hostPID, hostIPC | Deny |
+| Policy                           | Description                            | Action |
+| -------------------------------- | -------------------------------------- | ------ |
+| `require-run-as-non-root`        | Pods must run as non-root user         | Deny   |
+| `disallow-privileged-containers` | Privileged containers not allowed      | Deny   |
+| `require-resource-limits`        | Pods must have CPU/memory limits       | Deny   |
+| `restrict-host-namespaces`       | Disallow hostNetwork, hostPID, hostIPC | Deny   |
 
 ### Mutation Policies (Mutate Mode)
 
 Located in `platform/policies/mutation-policies.yaml`:
 
-| Policy | Description | Mutation |
-|--------|-------------|----------|
-| `add-platform-labels` | Add Fawkes platform labels | Add labels |
-| `add-vault-annotations` | Add Vault Agent sidecar config | Add annotations |
-| `set-default-security-context` | Set secure defaults | Modify securityContext |
+| Policy                         | Description                    | Mutation               |
+| ------------------------------ | ------------------------------ | ---------------------- |
+| `add-platform-labels`          | Add Fawkes platform labels     | Add labels             |
+| `add-vault-annotations`        | Add Vault Agent sidecar config | Add annotations        |
+| `set-default-security-context` | Set secure defaults            | Modify securityContext |
 
 ### Generation Policies (Generate Mode)
 
 Located in `platform/policies/generation-policies.yaml`:
 
-| Policy | Description | Generated Resources |
-|--------|-------------|---------------------|
+| Policy                        | Description                           | Generated Resources          |
+| ----------------------------- | ------------------------------------- | ---------------------------- |
 | `generate-namespace-defaults` | Standard resources for new namespaces | NetworkPolicy, ResourceQuota |
 
 ## Usage

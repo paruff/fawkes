@@ -7,6 +7,7 @@
 **Duration**: 60 minutes
 **Difficulty**: Intermediate
 **Prerequisites**:
+
 - White Belt certification complete
 - Basic understanding of Git workflows
 - Familiarity with build tools (Maven, npm, etc.)
@@ -27,6 +28,7 @@ By the end of this module, you will:
 7. ✅ Troubleshoot common CI pipeline failures
 
 **DORA Capabilities Addressed**:
+
 - ✓ CD3: Implement continuous integration
 - ✓ CD1: Use version control for all production artifacts
 - ✓ CD5: Trunk-based development methods
@@ -38,6 +40,7 @@ By the end of this module, you will:
 ### The Problem: Integration Hell
 
 **Traditional development workflow**:
+
 ```
 Developer A writes code for 2 weeks → Commits
 Developer B writes code for 2 weeks → Commits
@@ -52,6 +55,7 @@ Developer C writes code for 2 weeks → Commits
 ```
 
 **Result**:
+
 - Integration becomes painful and risky
 - Feedback delayed by weeks
 - Bugs found late, expensive to fix
@@ -76,46 +80,55 @@ Developer A: Commits multiple times per day
 ### Core CI Principles
 
 1. **Maintain a Single Source Repository**
+
    - All code in version control
    - One repo truth source
    - Branches short-lived (<1 day)
 
 2. **Automate the Build**
+
    - One command builds everything
    - No manual steps
    - Repeatable and reliable
 
 3. **Make Your Build Self-Testing**
+
    - Automated unit tests
    - Integration tests
    - Build fails if tests fail
 
 4. **Everyone Commits to Mainline Every Day**
+
    - Small, frequent commits
    - Merge conflicts minimized
    - Continuous integration (the name!)
 
 5. **Every Commit Should Build on Integration Machine**
+
    - Not "works on my machine"
    - Clean environment every time
    - Same as production
 
 6. **Keep the Build Fast**
+
    - Target: <10 minutes
    - Developers wait for feedback
    - Slow builds = ignored builds
 
 7. **Test in Clone of Production Environment**
+
    - Same OS, same dependencies
    - Containers/VMs for consistency
    - "Shift left" on environment issues
 
 8. **Make it Easy to Get Latest Deliverables**
+
    - Artifacts automatically published
    - Always available for testing
    - Clear versioning
 
 9. **Everyone Can See What's Happening**
+
    - Build status visible to all
    - Radiator dashboards
    - Notifications on failures
@@ -127,12 +140,12 @@ Developer A: Commits multiple times per day
 
 ### CI Impact on DORA Metrics
 
-| DORA Metric | CI Impact | Data |
-|-------------|-----------|------|
-| **Deployment Frequency** | Enables multiple deploys/day with confidence | Elite: Multiple per day |
-| **Lead Time for Changes** | Reduces commit-to-deploy from days to minutes | Elite: <1 hour |
-| **Change Failure Rate** | Catches bugs before production | Elite: 0-15% |
-| **MTTR** | Small changes = easier rollback | Elite: <1 hour |
+| DORA Metric               | CI Impact                                     | Data                    |
+| ------------------------- | --------------------------------------------- | ----------------------- |
+| **Deployment Frequency**  | Enables multiple deploys/day with confidence  | Elite: Multiple per day |
+| **Lead Time for Changes** | Reduces commit-to-deploy from days to minutes | Elite: <1 hour          |
+| **Change Failure Rate**   | Catches bugs before production                | Elite: 0-15%            |
+| **MTTR**                  | Small changes = easier rollback               | Elite: <1 hour          |
 
 **Research shows**: Teams with CI are 2x more likely to be high performers on DORA metrics.
 
@@ -145,6 +158,7 @@ Developer A: Commits multiple times per day
 Jenkins is an open-source automation server that enables CI/CD pipelines.
 
 **Key Features**:
+
 - Pipeline as Code (Jenkinsfile)
 - 1,800+ plugins for integration
 - Distributed builds (controller + agents)
@@ -194,12 +208,14 @@ Jenkins is an open-source automation server that enables CI/CD pipelines.
 ### Jenkins Controller vs. Agents
 
 **Controller (Master)**:
+
 - Orchestrates builds
 - Manages plugins and configuration
 - Serves Web UI
 - Should NOT run builds (security + resource management)
 
 **Agents (Slaves/Pods)**:
+
 - Execute actual build work
 - Ephemeral in Kubernetes
 - Isolated from each other
@@ -212,6 +228,7 @@ Jenkins is an open-source automation server that enables CI/CD pipelines.
 Modern Jenkins uses **declarative pipelines** defined in `Jenkinsfile`:
 
 **Benefits**:
+
 - ✅ Version controlled with code
 - ✅ Code review for pipeline changes
 - ✅ Consistent across projects
@@ -225,6 +242,7 @@ Modern Jenkins uses **declarative pipelines** defined in `Jenkinsfile`:
 ### Lab Scenario
 
 You'll create a CI pipeline for a sample Java Spring Boot application that:
+
 1. Checks out code from Git
 2. Compiles the application
 3. Runs unit tests
@@ -256,6 +274,7 @@ kubectl get secret -n jenkins jenkins-admin -o jsonpath="{.data.password}" | bas
 4. Click "OK"
 
 **Pipeline Configuration**:
+
 - Scroll to "Pipeline" section
 - Definition: "Pipeline script"
 - Paste the following script:
@@ -343,11 +362,13 @@ spec:
 ### Step 3: Watch Your Pipeline Execute
 
 **In the Jenkins UI**:
+
 - Click on the build number (e.g., #1)
 - Click "Console Output" to see logs in real-time
 - Watch as stages progress: Checkout → Build → Test → Package
 
 **Expected Output**:
+
 ```
 Started by user admin
 Running in Durability level: MAX_SURVIVABILITY
@@ -385,6 +406,7 @@ Building application...
 Let's break down each section:
 
 #### Agent Definition
+
 ```groovy
 agent {
     kubernetes {
@@ -394,11 +416,13 @@ agent {
     }
 }
 ```
+
 - Tells Jenkins to run this pipeline on a Kubernetes pod
 - Defines container images needed (Maven, Docker)
 - Containers are ephemeral - created for this build, deleted after
 
 #### Stages
+
 ```groovy
 stages {
     stage('Checkout') { ... }
@@ -407,11 +431,13 @@ stages {
     stage('Package') { ... }
 }
 ```
+
 - Sequential steps in your pipeline
 - Each stage appears as a column in Jenkins UI
 - Stages fail fast - if one fails, subsequent stages don't run
 
 #### Steps
+
 ```groovy
 steps {
     container('maven') {
@@ -419,12 +445,14 @@ steps {
     }
 }
 ```
+
 - Actual commands executed
 - `container('maven')` - runs inside Maven container
 - `sh` - executes shell command
 - Can use `echo`, `git`, custom plugins
 
 #### Post Actions
+
 ```groovy
 post {
     success { ... }
@@ -432,6 +460,7 @@ post {
     always { ... }
 }
 ```
+
 - Runs after all stages complete
 - `success` - only if pipeline succeeded
 - `failure` - only if pipeline failed
@@ -466,6 +495,7 @@ stage('Checkout') {
 ```
 
 **Best Practices**:
+
 - Always specify branch explicitly
 - Use shallow clone for speed: `git clone --depth 1`
 - Store credentials in Jenkins Credentials Store (never in Jenkinsfile!)
@@ -490,11 +520,13 @@ stage('Build') {
 ```
 
 **Key Flags**:
+
 - `-DskipTests` - Skip tests during compile (run separately)
 - `-B` / `--batch-mode` - Non-interactive, better for CI logs
 - `clean` - Remove previous build artifacts
 
 **Build Duration Targets**:
+
 - Small projects: <2 minutes
 - Medium projects: 2-5 minutes
 - Large projects: 5-10 minutes
@@ -520,11 +552,13 @@ stage('Test') {
 ```
 
 **Test Types in CI**:
+
 - **Unit Tests**: Fast (<1s each), no external dependencies
 - **Integration Tests**: Slower (1-10s), may use database/APIs
 - **Contract Tests**: Verify API contracts between services
 
 **Best Practices**:
+
 - Run unit tests in every build (fast feedback)
 - Run integration tests in parallel or on schedule
 - Fail build if tests fail (quality gate)
@@ -551,6 +585,7 @@ stage('Package') {
 ```
 
 **Artifact Versioning**:
+
 - Use `${BUILD_NUMBER}` - Jenkins build number (e.g., `myapp:142`)
 - Use `${GIT_COMMIT}` - Git commit SHA (e.g., `myapp:abc1234`)
 - Use semantic versioning for releases (e.g., `myapp:1.2.3`)
@@ -572,7 +607,7 @@ stage('Publish') {
 }
 ```
 
-*We'll cover this in detail in Module 8: Artifact Management*
+_We'll cover this in detail in Module 8: Artifact Management_
 
 ---
 
@@ -583,17 +618,20 @@ stage('Publish') {
 #### Issue 1: Checkout Fails
 
 **Error**:
+
 ```
 ERROR: Error cloning remote repo 'origin'
 hudson.plugins.git.GitException: Command "git fetch" returned status code 128
 ```
 
 **Causes**:
+
 - Repository URL incorrect
 - No access credentials configured
 - Network issues
 
 **Solutions**:
+
 ```groovy
 // Option 1: Use credentials
 git branch: 'main',
@@ -612,6 +650,7 @@ sh 'git ls-remote https://github.com/org/repo.git HEAD'
 #### Issue 2: Build Fails
 
 **Error**:
+
 ```
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.8.1:compile
 [ERROR] Compilation failure: Compilation failure:
@@ -619,11 +658,13 @@ sh 'git ls-remote https://github.com/org/repo.git HEAD'
 ```
 
 **Causes**:
+
 - Compilation errors in code
 - Missing dependencies
 - Wrong Java version
 
 **Solutions**:
+
 ```groovy
 // Specify Java version
 stage('Build') {
@@ -653,17 +694,20 @@ agent {
 #### Issue 3: Tests Fail
 
 **Error**:
+
 ```
 [ERROR] Tests run: 10, Failures: 2, Errors: 0, Skipped: 0
 [INFO] BUILD FAILURE
 ```
 
 **Causes**:
+
 - Actual bugs in code (good thing CI caught it!)
 - Test environment not set up correctly
 - Flaky tests (tests that randomly fail)
 
 **Solutions**:
+
 ```groovy
 stage('Test') {
     steps {
@@ -691,15 +735,18 @@ stage('Test') {
 #### Issue 4: Resource Limits
 
 **Error**:
+
 ```
 java.lang.OutOfMemoryError: Java heap space
 ```
 
 **Causes**:
+
 - Build requires more memory than allocated
 - Memory leak in build process
 
 **Solutions**:
+
 ```groovy
 agent {
     kubernetes {
@@ -725,6 +772,7 @@ agent {
 ### Debugging Techniques
 
 **1. Add Verbose Logging**
+
 ```groovy
 stage('Debug') {
     steps {
@@ -744,6 +792,7 @@ stage('Debug') {
 ```
 
 **2. Use Try-Catch**
+
 ```groovy
 stage('Build with Error Handling') {
     steps {
@@ -761,6 +810,7 @@ stage('Build with Error Handling') {
 ```
 
 **3. Access Agent Shell**
+
 ```groovy
 // Add this stage temporarily for debugging
 stage('Debug Shell') {
@@ -784,6 +834,7 @@ stage('Debug Shell') {
 **Target**: <10 minutes total
 
 **Techniques**:
+
 - Run only essential tests in CI (unit tests)
 - Parallelize independent stages
 - Cache dependencies
@@ -919,7 +970,7 @@ fawkesJavaPipeline {
 }
 ```
 
-*We'll cover this in Module 6: Golden Path Pipelines*
+_We'll cover this in Module 6: Golden Path Pipelines_
 
 ---
 
@@ -928,6 +979,7 @@ fawkesJavaPipeline {
 ### How CI Improves Each Metric
 
 **1. Deployment Frequency**
+
 ```
 Without CI:
 - Manual testing before each deploy
@@ -941,6 +993,7 @@ With CI:
 ```
 
 **2. Lead Time for Changes**
+
 ```
 Without CI:
 Commit → Manual build (30 min) → Manual test (2 hours) → Package (30 min)
@@ -952,6 +1005,7 @@ Commit → Auto build (3 min) → Auto test (2 min) → Auto package (1 min)
 ```
 
 **3. Change Failure Rate**
+
 ```
 Without CI:
 - No automated testing
@@ -965,6 +1019,7 @@ With CI:
 ```
 
 **4. MTTR (Mean Time to Restore)**
+
 ```
 Without CI:
 - Large commits, hard to isolate issue
@@ -1016,6 +1071,7 @@ EOF
 **Scenario**: You have a Java Spring Boot REST API that needs CI.
 
 **Requirements**:
+
 1. Checkout code from Git
 2. Compile with Maven
 3. Run unit tests
@@ -1064,6 +1120,7 @@ spec:
 ```
 
 **Validation Criteria**:
+
 - [ ] Pipeline runs successfully
 - [ ] All stages complete in <8 minutes
 - [ ] Test results published to Jenkins
@@ -1071,6 +1128,7 @@ spec:
 - [ ] Notification sent (Slack or email)
 
 **Submission**:
+
 1. Save your Jenkinsfile to Git repository
 2. Run pipeline successfully (screenshot)
 3. Show console output
@@ -1083,42 +1141,49 @@ spec:
 ### Quiz Questions
 
 1. **What is the primary goal of Continuous Integration?**
+
    - [ ] Deploy to production automatically
    - [x] Integrate code changes frequently and catch issues early
    - [ ] Write better documentation
    - [ ] Reduce server costs
 
 2. **How often should developers commit to mainline in CI?**
+
    - [ ] Once per week
    - [ ] Once per sprint
    - [x] At least once per day
    - [ ] Only when feature is complete
 
 3. **What is the recommended maximum build time?**
+
    - [ ] 30 minutes
    - [x] 10 minutes
    - [ ] 1 hour
    - [ ] As long as it takes
 
 4. **In Jenkins Kubernetes Plugin, what happens to build agents after build?**
+
    - [ ] They remain running for next build
    - [x] They are automatically deleted
    - [ ] They are paused
    - [ ] They are archived
 
 5. **Which stage should run first in a CI pipeline?**
+
    - [ ] Test
    - [ ] Package
    - [x] Checkout
    - [ ] Deploy
 
 6. **What does "fail fast" mean in CI?**
+
    - [ ] Make builds run faster
    - [x] Stop pipeline immediately when critical issue found
    - [ ] Skip tests to save time
    - [ ] Deploy even if tests fail
 
 7. **What file defines Jenkins Pipeline as Code?**
+
    - [ ] pipeline.yaml
    - [x] Jenkinsfile
    - [ ] build.xml
@@ -1163,29 +1228,34 @@ spec:
 ### Real-World Impact
 
 "Before CI, our integration process took 2-3 days and often failed. After implementing CI with Jenkins:
+
 - **Build time**: 3 hours → 8 minutes
 - **Integration time**: 3 days → Continuous
 - **Bug detection**: Post-production → Pre-commit
 - **Deploy confidence**: Low → High
 
 We went from monthly releases to daily deploys."
-- *Engineering Team, SaaS Company*
+
+- _Engineering Team, SaaS Company_
 
 ---
 
 ## 📚 Additional Resources
 
 ### Official Documentation
+
 - [Jenkins Documentation](https://www.jenkins.io/doc/)
 - [Pipeline Syntax](https://www.jenkins.io/doc/book/pipeline/syntax/)
 - [Kubernetes Plugin](https://plugins.jenkins.io/kubernetes/)
 
 ### Learning Resources
+
 - [Martin Fowler: Continuous Integration](https://martinfowler.com/articles/continuousIntegration.html)
 - [Continuous Delivery Book](https://continuousdelivery.com/) by Jez Humble
 - [Jenkins Pipeline Tutorial](https://www.jenkins.io/doc/pipeline/tour/hello-world/)
 
 ### Community
+
 - [Jenkins Community](https://www.jenkins.io/participate/)
 - [Jenkins Slack](https://www.jenkins.io/chat/)
 - [Fawkes Mattermost](https://mattermost.fawkes.internal) - #yellow-belt channel
@@ -1199,11 +1269,13 @@ We went from monthly releases to daily deploys."
 To complete this module, you must:
 
 - [ ] **Conceptual Understanding**
+
   - [ ] Explain the 10 principles of CI
   - [ ] Describe Jenkins controller vs. agent architecture
   - [ ] Explain how CI improves DORA metrics
 
 - [ ] **Practical Skills**
+
   - [ ] Create a Jenkinsfile from scratch
   - [ ] Configure Kubernetes agent pod template
   - [ ] Implement checkout, build, test, package stages
@@ -1211,6 +1283,7 @@ To complete this module, you must:
   - [ ] Debug a failed pipeline
 
 - [ ] **Hands-On Lab**
+
   - [ ] Complete the first pipeline lab
   - [ ] Pipeline runs successfully (<10 min)
   - [ ] All tests pass
@@ -1222,6 +1295,7 @@ To complete this module, you must:
 ### Certification Credit
 
 Upon completion, you earn:
+
 - **5 points** toward Yellow Belt certification (25% complete)
 - **Badge**: "CI Practitioner"
 - **Skill Unlocked**: Jenkins Pipeline Creation
@@ -1250,6 +1324,6 @@ You're now ready to build production-ready CI pipelines. Continue to Module 6 to
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*
-*Version 1.0 | Last Updated: October 2025*
-*License: MIT | https://github.com/paruff/fawkes*
+_Fawkes Dojo - Where Platform Engineers Are Forged_
+_Version 1.0 | Last Updated: October 2025_
+_License: MIT | https://github.com/paruff/fawkes_

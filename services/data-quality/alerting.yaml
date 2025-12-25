@@ -37,7 +37,7 @@ rules:
     description: "Data has not been validated recently"
     condition:
       metric: data_quality_last_validation_timestamp
-      threshold: 28800  # 8 hours in seconds
+      threshold: 28800 # 8 hours in seconds
       duration: 1h
     action:
       type: mattermost
@@ -59,7 +59,7 @@ rules:
     description: "Data quality failure rate is too high"
     condition:
       metric: data_quality_failure_rate
-      threshold: 0.2  # 20% failure rate
+      threshold: 0.2 # 20% failure rate
       duration: 1h
     action:
       type: mattermost
@@ -78,7 +78,7 @@ rules:
 # Daily Summary Configuration
 daily_summary:
   enabled: true
-  schedule: "0 9 * * *"  # 9 AM daily
+  schedule: "0 9 * * *" # 9 AM daily
   webhook_url: ${MATTERMOST_WEBHOOK_URL}
   message_template: |
     ## 📊 Daily Data Quality Summary
@@ -129,25 +129,25 @@ channels:
 # Alert Thresholds
 thresholds:
   critical:
-    failure_rate: 0.5  # 50% or more failures
+    failure_rate: 0.5 # 50% or more failures
     stale_data_hours: 24
 
   high:
-    failure_rate: 0.2  # 20% or more failures
+    failure_rate: 0.2 # 20% or more failures
     stale_data_hours: 12
 
   medium:
-    failure_rate: 0.1  # 10% or more failures
+    failure_rate: 0.1 # 10% or more failures
     stale_data_hours: 8
 
   low:
-    failure_rate: 0.05  # 5% or more failures
+    failure_rate: 0.05 # 5% or more failures
     stale_data_hours: 6
 
 # Alert Deduplication
 deduplication:
   enabled: true
-  window: 1h  # Don't send duplicate alerts within 1 hour
+  window: 1h # Don't send duplicate alerts within 1 hour
   group_by:
     - database
     - expectation_suite

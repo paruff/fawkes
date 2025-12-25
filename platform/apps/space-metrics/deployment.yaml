@@ -24,49 +24,49 @@ spec:
     spec:
       serviceAccountName: space-metrics
       containers:
-      - name: space-metrics
-        image: fawkes-space-metrics:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 8000
-          name: http
-          protocol: TCP
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: space-metrics-db-credentials
-              key: connection-string
-        - name: AGGREGATION_THRESHOLD
-          value: "5"
-        - name: COLLECTION_INTERVAL
-          value: "3600"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 10
-          periodSeconds: 30
-          timeoutSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          timeoutSeconds: 3
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 1000
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-            - ALL
+        - name: space-metrics
+          image: fawkes-space-metrics:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+              name: http
+              protocol: TCP
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: space-metrics-db-credentials
+                  key: connection-string
+            - name: AGGREGATION_THRESHOLD
+              value: "5"
+            - name: COLLECTION_INTERVAL
+              value: "3600"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL

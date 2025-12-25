@@ -12,14 +12,14 @@ SonarQube performs Static Application Security Testing (SAST) on source code and
 
 #### Default Quality Gate Thresholds
 
-| Metric | Operator | Threshold | Impact |
-|--------|----------|-----------|--------|
-| New Bugs | Is Greater Than | 0 | Pipeline fails |
-| New Vulnerabilities | Is Greater Than | 0 | Pipeline fails |
-| New Security Hotspots Reviewed | Is Less Than | 100% | Pipeline fails |
-| New Code Coverage | Is Less Than | 80% | Pipeline fails |
-| New Duplicated Lines (%) | Is Greater Than | 3% | Pipeline fails |
-| New Maintainability Rating | Is Worse Than | A | Pipeline fails |
+| Metric                         | Operator        | Threshold | Impact         |
+| ------------------------------ | --------------- | --------- | -------------- |
+| New Bugs                       | Is Greater Than | 0         | Pipeline fails |
+| New Vulnerabilities            | Is Greater Than | 0         | Pipeline fails |
+| New Security Hotspots Reviewed | Is Less Than    | 100%      | Pipeline fails |
+| New Code Coverage              | Is Less Than    | 80%       | Pipeline fails |
+| New Duplicated Lines (%)       | Is Greater Than | 3%        | Pipeline fails |
+| New Maintainability Rating     | Is Worse Than   | A         | Pipeline fails |
 
 #### Configuration in Pipeline
 
@@ -42,6 +42,7 @@ goldenPathPipeline {
 To customize the quality gate for a specific project:
 
 1. **Access SonarQube UI**:
+
    ```bash
    # Local development
    open http://sonarqube.127.0.0.1.nip.io
@@ -51,10 +52,12 @@ To customize the quality gate for a specific project:
    ```
 
 2. **Navigate to Quality Gates**:
+
    - Click **Quality Gates** in the top menu
    - Click **Create** to create a custom gate
 
 3. **Define Conditions**:
+
    - Add conditions based on your requirements
    - Set thresholds for each metric
    - Save the quality gate
@@ -67,6 +70,7 @@ To customize the quality gate for a specific project:
 #### Override Process for SonarQube
 
 **When to Override**: Use overrides sparingly and only for:
+
 - False positives confirmed by security team
 - Known issues with documented mitigation
 - Technical debt with approved remediation plan
@@ -74,6 +78,7 @@ To customize the quality gate for a specific project:
 **How to Override**:
 
 1. **Inline Suppression** (Code-level):
+
    ```java
    // Java example
    @SuppressWarnings("java:S1234")  // Document reason!
@@ -89,6 +94,7 @@ To customize the quality gate for a specific project:
    ```
 
 2. **Project-level Exclusions** (sonar-project.properties):
+
    ```properties
    # Exclude third-party code
    sonar.exclusions=**/vendor/**,**/node_modules/**
@@ -113,6 +119,7 @@ To customize the quality gate for a specific project:
 **Note**: The `runSecurityScan = false` option disables the entire Security Scan stage, including SonarQube, Trivy, and secrets scanning. There is no way to disable only the SonarQube quality gate check. This is intentional - if you need to bypass quality gates, you must do so consciously for all security scanning.
 
 **Exception Documentation Template**:
+
 ```groovy
 // EXCEPTION: Security scanning disabled for hotfix deployment
 // Reason: Critical production issue requires immediate fix
@@ -134,12 +141,12 @@ Trivy scans container images for vulnerabilities in OS packages and application 
 
 #### Default Severity Thresholds
 
-| Severity | Action | Rationale |
-|----------|--------|-----------|
-| CRITICAL | Pipeline fails | Immediate security risk |
-| HIGH | Pipeline fails | Significant security risk |
-| MEDIUM | Warning only | Monitor but allow |
-| LOW | Warning only | Acceptable risk |
+| Severity | Action         | Rationale                 |
+| -------- | -------------- | ------------------------- |
+| CRITICAL | Pipeline fails | Immediate security risk   |
+| HIGH     | Pipeline fails | Significant security risk |
+| MEDIUM   | Warning only   | Monitor but allow         |
+| LOW      | Warning only   | Acceptable risk           |
 
 #### Configuration in Pipeline
 
@@ -184,6 +191,7 @@ goldenPathPipeline {
 #### Override Process for Trivy
 
 **When to Override**: Use overrides only for:
+
 - False positives (vulnerability doesn't apply to your use case)
 - Vulnerabilities with no available fix yet
 - Accepted risk with documented mitigation
@@ -218,6 +226,7 @@ goldenPathPipeline {
    ## Trivy Scan Overrides
 
    ### CVE-2023-12345 (PostgreSQL SQL Injection)
+
    - **Severity**: HIGH
    - **Affected Package**: postgresql@13.2
    - **Status**: False Positive
@@ -267,6 +276,7 @@ Gitleaks scans for hardcoded secrets, API keys, and credentials in the codebase.
 #### Override Process for Secrets Scanning
 
 **When to Override**: Very rare, only for:
+
 - False positives (pattern matches but not actual secret)
 - Test data with no sensitive value
 - Public keys or non-sensitive tokens
@@ -306,6 +316,7 @@ Gitleaks scans for hardcoded secrets, API keys, and credentials in the codebase.
    ## Gitleaks Allowlist Exceptions
 
    ### tests/fixtures/test-data.json
+
    - **Pattern**: JWT token pattern
    - **Reason**: Test fixture with non-functional token
    - **Approved By**: security-team@example.com
@@ -416,6 +427,7 @@ goldenPathPipeline {
 ```
 
 **SonarQube configuration** (pom.xml):
+
 ```xml
 <properties>
     <sonar.host.url>http://sonarqube.fawkes.svc:9000</sonar.host.url>
@@ -440,6 +452,7 @@ goldenPathPipeline {
 ```
 
 **SonarQube configuration** (sonar-project.properties):
+
 ```properties
 sonar.projectKey=analytics-api
 sonar.sources=src
@@ -463,18 +476,19 @@ goldenPathPipeline {
 ```
 
 **SonarQube configuration** (sonar-project.js):
+
 ```javascript
 module.exports = {
   sonar: {
-    projectKey: 'web-frontend',
-    sources: 'src',
-    tests: 'tests',
+    projectKey: "web-frontend",
+    sources: "src",
+    tests: "tests",
     javascript: {
       lcov: {
-        reportPaths: 'coverage/lcov.info'
-      }
-    }
-  }
+        reportPaths: "coverage/lcov.info",
+      },
+    },
+  },
 };
 ```
 
@@ -493,6 +507,7 @@ goldenPathPipeline {
 ```
 
 **SonarQube configuration** (sonar-project.properties):
+
 ```properties
 sonar.projectKey=event-processor
 sonar.sources=.
@@ -506,6 +521,7 @@ sonar.go.coverage.reportPaths=coverage.out
 ### Scenario 1: SonarQube Detects New Vulnerability
 
 **Error Message**:
+
 ```
 ❌ QUALITY GATE FAILED: FAILED
 The code changes did not meet the quality criteria.
@@ -518,6 +534,7 @@ Common failure reasons:
 ```
 
 **Remediation**:
+
 1. Click the SonarQube link in the build log
 2. Review **New Code** tab for introduced issues
 3. Fix the identified security vulnerability
@@ -527,6 +544,7 @@ Common failure reasons:
 ### Scenario 2: Trivy Finds Critical CVE
 
 **Error Message**:
+
 ```
 Total: 3 (HIGH: 2, CRITICAL: 1)
 ┌───────────────┬────────────────┬──────────┬───────────────────┐
@@ -540,6 +558,7 @@ Total: 3 (HIGH: 2, CRITICAL: 1)
 **Remediation**:
 
 **Option A: Update Base Image**:
+
 ```dockerfile
 # Before
 FROM python:3.11-alpine
@@ -549,6 +568,7 @@ FROM python:3.11-alpine3.19
 ```
 
 **Option B: Update Dependencies**:
+
 ```dockerfile
 # Add explicit update in Dockerfile
 RUN apk add --no-cache --upgrade openssl libxml2
@@ -556,6 +576,7 @@ RUN apk add --no-cache --upgrade openssl libxml2
 
 **Option C: Override (if no fix available)**:
 Create `.trivyignore`:
+
 ```text
 CVE-2023-12345 exp:2024-12-31  # Vendor fix expected Q1 2024, WAF mitigation in place
 ```
@@ -563,6 +584,7 @@ CVE-2023-12345 exp:2024-12-31  # Vendor fix expected Q1 2024, WAF mitigation in 
 ### Scenario 3: Secrets Detected
 
 **Error Message**:
+
 ```
 ❌ SECRETS DETECTED IN CODE
 Gitleaks has detected potential secrets in your code.
@@ -573,6 +595,7 @@ Common secrets detected:
 ```
 
 **Remediation**:
+
 1. **Remove the secret** from code
 2. **Use environment variables** or Vault
 3. **Rotate the secret** if it was committed

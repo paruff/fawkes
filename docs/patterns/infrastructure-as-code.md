@@ -11,12 +11,12 @@ Infrastructure as Code (IaC) is a key capability identified in DORA research tha
 
 ## Core Principles
 
-| Principle | Description | Implementation |
-|-----------|-------------|----------------|
-| ![](../assets/images/icons/declarative.png){ width="24" } **Declarative** | Define desired state, not steps | Terraform, ARM templates |
-| ![](../assets/images/icons/version.png){ width="24" } **Version Control** | Track all infrastructure changes | Git |
-| ![](../assets/images/icons/immutable.png){ width="24" } **Immutable** | Replace rather than modify | Containers, VM images |
-| ![](../assets/images/icons/idempotent.png){ width="24" } **Idempotent** | Same input yields same result | Terraform state |
+| Principle                                                                 | Description                      | Implementation           |
+| ------------------------------------------------------------------------- | -------------------------------- | ------------------------ |
+| ![](../assets/images/icons/declarative.png){ width="24" } **Declarative** | Define desired state, not steps  | Terraform, ARM templates |
+| ![](../assets/images/icons/version.png){ width="24" } **Version Control** | Track all infrastructure changes | Git                      |
+| ![](../assets/images/icons/immutable.png){ width="24" } **Immutable**     | Replace rather than modify       | Containers, VM images    |
+| ![](../assets/images/icons/idempotent.png){ width="24" } **Idempotent**   | Same input yields same result    | Terraform state          |
 
 ## Implementation Guide
 
@@ -112,11 +112,11 @@ resource "azurerm_key_vault" "main" {
 
 Based on DORA research, track these infrastructure metrics:
 
-| Metric | Elite Performance | Implementation |
-|--------|------------------|----------------|
-| Infrastructure Change Success Rate | > 95% | `success_rate = successful_changes / total_changes` |
-| Infrastructure Recovery Time | < 1 hour | `recovery_time = restore_time - failure_time` |
-| Infrastructure Deployment Time | < 30 minutes | `deployment_time = end_time - start_time` |
+| Metric                             | Elite Performance | Implementation                                      |
+| ---------------------------------- | ----------------- | --------------------------------------------------- |
+| Infrastructure Change Success Rate | > 95%             | `success_rate = successful_changes / total_changes` |
+| Infrastructure Recovery Time       | < 1 hour          | `recovery_time = restore_time - failure_time`       |
+| Infrastructure Deployment Time     | < 30 minutes      | `deployment_time = end_time - start_time`           |
 
 ## Testing Strategy
 
@@ -153,12 +153,14 @@ az aks show --name fawkes-aks --resource-group fawkes-rg
 ## Common Anti-Patterns
 
 ❌ **Avoid These Practices:**
+
 - Manual infrastructure changes
 - Untested infrastructure code
 - Sharing state files
 - Hard-coded credentials
 
 ✅ **Instead Do This:**
+
 - Automate all changes
 - Implement comprehensive testing
 - Use remote state storage
@@ -166,13 +168,13 @@ az aks show --name fawkes-aks --resource-group fawkes-rg
 
 ## Tools Integration
 
-| Category | Tools | Purpose |
-|----------|-------|---------|
-| IaC | Terraform, Pulumi | Infrastructure definition |
-| Version Control | Git | Configuration management |
-| CI/CD | Azure DevOps, GitHub Actions | Automation |
-| Testing | Terratest, Inspec | Validation |
-| Security | Checkov, tfsec | Security scanning |
+| Category        | Tools                        | Purpose                   |
+| --------------- | ---------------------------- | ------------------------- |
+| IaC             | Terraform, Pulumi            | Infrastructure definition |
+| Version Control | Git                          | Configuration management  |
+| CI/CD           | Azure DevOps, GitHub Actions | Automation                |
+| Testing         | Terratest, Inspec            | Validation                |
+| Security        | Checkov, tfsec               | Security scanning         |
 
 ## References
 

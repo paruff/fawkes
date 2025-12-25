@@ -5,12 +5,15 @@ This directory contains integration tests for various Fawkes platform components
 ## Available Tests
 
 ### AT-E1-001: AKS Cluster Validation
+
 Tests AKS cluster infrastructure and configuration.
 
 ### AT-E1-006: Observability Stack Validation
+
 Tests Prometheus/Grafana observability stack deployment and configuration.
 
 ### Azure Storage Integration Tests
+
 Tests Azure persistent storage in the Fawkes platform.
 
 ---
@@ -116,17 +119,17 @@ The test generates a JSON report in the `reports/` directory:
 
 The test suite validates all AT-E1-006 acceptance criteria:
 
-| Criterion | Test |
-|-----------|------|
-| Prometheus Operator deployed | `test_prometheus_operator_running` |
-| Grafana deployed with datasources | `test_grafana_deployed` |
-| ServiceMonitors configured | `test_servicemonitors_configured` |
-| OpenTelemetry Collector as DaemonSet | Validated via ServiceMonitor |
-| Grafana dashboards imported | Validated via ingress and deployment |
-| Alerting rules configured | Validated via Alertmanager |
-| Log retention: 30 days | Validated via persistent storage |
-| Metrics retention: 90 days | Validated via Prometheus storage |
-| Dashboard load time <2 seconds | Validated via ingress configuration |
+| Criterion                            | Test                                 |
+| ------------------------------------ | ------------------------------------ |
+| Prometheus Operator deployed         | `test_prometheus_operator_running`   |
+| Grafana deployed with datasources    | `test_grafana_deployed`              |
+| ServiceMonitors configured           | `test_servicemonitors_configured`    |
+| OpenTelemetry Collector as DaemonSet | Validated via ServiceMonitor         |
+| Grafana dashboards imported          | Validated via ingress and deployment |
+| Alerting rules configured            | Validated via Alertmanager           |
+| Log retention: 30 days               | Validated via persistent storage     |
+| Metrics retention: 90 days           | Validated via Prometheus storage     |
+| Dashboard load time <2 seconds       | Validated via ingress configuration  |
 
 ### Troubleshooting
 
@@ -204,6 +207,7 @@ Example GitHub Actions workflow:
 ### Overview
 
 These tests verify that:
+
 - Azure Disk and Azure Files storage classes are properly configured
 - PVCs can be created and bound successfully
 - Volumes can be mounted and accessed by pods
@@ -216,6 +220,7 @@ These tests verify that:
 ### azure-storage-test.yaml
 
 Complete integration test suite including:
+
 - **Test PVCs**: Premium disk, standard disk, and Azure Files
 - **Test Pods**: Writers and readers for each storage type
 - **Snapshot Tests**: Volume snapshot and restore validation
@@ -284,37 +289,49 @@ pytest tests/bdd/features/azure_storage.feature -v
 ## Test Scenarios
 
 ### 1. PVC Creation and Binding
+
 Tests that PVCs can be created and bound for:
+
 - Azure Disk Premium (default)
 - Azure Disk Standard
 - Azure Files
 
 ### 2. Data Persistence
+
 Tests writing and reading data:
+
 - Write test files to volumes
 - Verify data persists across pod restarts
 - Check data integrity
 
 ### 3. ReadWriteMany (Azure Files)
+
 Tests multiple pods accessing the same volume:
+
 - Two writers simultaneously write to Azure Files
 - Each writer can see the other's files
 - No data corruption
 
 ### 4. Volume Expansion
+
 Tests volume expansion capability:
+
 - Expand Premium Disk from 5Gi to 10Gi
 - Expand Azure Files from 10Gi to 20Gi
 - Verify pods can use expanded storage
 
 ### 5. Snapshot and Restore
+
 Tests backup and recovery:
+
 - Create snapshot from Premium Disk
 - Restore PVC from snapshot
 - Verify data integrity after restore
 
 ### 6. Performance Testing
+
 Tests storage performance:
+
 - Sequential write throughput (Premium vs Standard)
 - Random write throughput
 - Compare against expected values
@@ -462,11 +479,12 @@ kubectl exec test-disk-premium-writer -n storage-test -- \
 
 When tests run, the following Azure resources are created:
 
-1. **Managed Disks**: One for each PVC using azure-disk-* storage classes
+1. **Managed Disks**: One for each PVC using azure-disk-\* storage classes
 2. **Azure Files Shares**: One for each PVC using azure-file storage class
 3. **Disk Snapshots**: When snapshot tests are executed
 
 All resources are tagged with:
+
 - `kubernetes.io/created-for/pvc/name`: PVC name
 - `kubernetes.io/created-for/pvc/namespace`: PVC namespace
 - `backup`: enabled

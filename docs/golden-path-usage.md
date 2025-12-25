@@ -50,27 +50,27 @@ PR builds run a lightweight pipeline with only tests (no artifacts).
 
 ### Required Options
 
-| Option | Description | Example |
-|--------|-------------|---------|
-| `appName` | Application name | `'my-service'` |
+| Option     | Description          | Example                                |
+| ---------- | -------------------- | -------------------------------------- |
+| `appName`  | Application name     | `'my-service'`                         |
 | `language` | Programming language | `'java'`, `'python'`, `'node'`, `'go'` |
 
 ### Optional Options
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `dockerRegistry` | `harbor.fawkes.local` | Container registry URL |
-| `dockerImage` | Auto-generated | Full Docker image path |
-| `notifyChannel` | `ci-builds` | Mattermost channel for notifications |
-| `testCommand` | Language-specific | Custom unit test command |
-| `bddTestCommand` | Language-specific | Custom BDD test command |
-| `buildCommand` | Language-specific | Custom build command |
-| `sonarProject` | `appName` | SonarQube project key |
-| `trivySeverity` | `HIGH,CRITICAL` | Trivy severity threshold |
-| `runBddTests` | `true` | Enable/disable BDD testing |
-| `runSecurityScan` | `true` | Enable/disable security scanning |
-| `deployToArgoCD` | `true` | Update GitOps manifests |
-| `timeoutMinutes` | `30` | Pipeline timeout |
+| Option            | Default               | Description                          |
+| ----------------- | --------------------- | ------------------------------------ |
+| `dockerRegistry`  | `harbor.fawkes.local` | Container registry URL               |
+| `dockerImage`     | Auto-generated        | Full Docker image path               |
+| `notifyChannel`   | `ci-builds`           | Mattermost channel for notifications |
+| `testCommand`     | Language-specific     | Custom unit test command             |
+| `bddTestCommand`  | Language-specific     | Custom BDD test command              |
+| `buildCommand`    | Language-specific     | Custom build command                 |
+| `sonarProject`    | `appName`             | SonarQube project key                |
+| `trivySeverity`   | `HIGH,CRITICAL`       | Trivy severity threshold             |
+| `runBddTests`     | `true`                | Enable/disable BDD testing           |
+| `runSecurityScan` | `true`                | Enable/disable security scanning     |
+| `deployToArgoCD`  | `true`                | Update GitOps manifests              |
+| `timeoutMinutes`  | `30`                  | Pipeline timeout                     |
 
 ## Language-Specific Configuration
 
@@ -88,6 +88,7 @@ goldenPathPipeline {
 ```
 
 **Required Files:**
+
 - `pom.xml` - Maven project file
 - `Dockerfile` - Container build instructions
 - `src/test/java/` - Unit tests
@@ -132,6 +133,7 @@ goldenPathPipeline {
 ```
 
 **Required Files:**
+
 - `requirements.txt` - Dependencies
 - `Dockerfile` - Container build instructions
 - `tests/unit/` - Unit tests
@@ -161,6 +163,7 @@ goldenPathPipeline {
 ```
 
 **Required Files:**
+
 - `package.json` - Node.js project file
 - `Dockerfile` - Container build instructions
 - `__tests__/` or `tests/` - Unit tests
@@ -195,6 +198,7 @@ goldenPathPipeline {
 ```
 
 **Required Files:**
+
 - `go.mod` - Go module file
 - `Dockerfile` - Container build instructions
 - `*_test.go` - Unit tests
@@ -325,6 +329,7 @@ goldenPathPipeline {
 ### Dependency Checks
 
 Language-specific dependency scanning:
+
 - **Java**: OWASP Dependency-Check Maven plugin
 - **Python**: `safety` and `pip-audit`
 - **Node.js**: `npm audit`
@@ -341,6 +346,7 @@ goldenPathPipeline {
 ```
 
 Notifications include:
+
 - ✅/❌ Build status
 - Build number and duration
 - Commit SHA and branch
@@ -363,19 +369,20 @@ Access DORA dashboard at: `http://grafana.fawkes.local/d/dora`
 
 PRs trigger a lightweight pipeline:
 
-| Stage | Executed? |
-|-------|-----------|
-| Checkout | ✅ |
-| Build | ❌ |
-| Unit Test | ✅ |
-| BDD Test | ✅ |
-| Security Scan | ❌ |
-| Docker Build | ❌ |
-| Push Artifact | ❌ |
+| Stage         | Executed? |
+| ------------- | --------- |
+| Checkout      | ✅        |
+| Build         | ❌        |
+| Unit Test     | ✅        |
+| BDD Test      | ✅        |
+| Security Scan | ❌        |
+| Docker Build  | ❌        |
+| Push Artifact | ❌        |
 
 ### Merge Requirements
 
 Before merging:
+
 1. All tests pass
 2. Code review approved
 3. PR status checks green
@@ -385,22 +392,27 @@ Before merging:
 ### Common Issues
 
 #### Build Timeout
+
 Increase timeout in Jenkinsfile:
+
 ```groovy
 timeoutMinutes = 60
 ```
 
 #### SonarQube Fails
+
 1. Check SonarQube project exists
 2. Verify credentials in Jenkins
 3. Check `sonar-project.properties`
 
 #### Docker Push Fails
+
 1. Verify registry credentials
 2. Check network connectivity
 3. Ensure image name is valid
 
 #### BDD Tests Not Running
+
 1. Ensure `runBddTests = true`
 2. Check step definitions exist
 3. Verify feature files are in correct location
@@ -408,6 +420,7 @@ timeoutMinutes = 60
 ### Debug Mode
 
 View detailed logs in Jenkins console output:
+
 1. Go to Jenkins build
 2. Click "Console Output"
 3. Search for stage name
@@ -451,15 +464,15 @@ containers:
   web:
     image: "harbor.fawkes.local/my-team/my-service:latest"
     resources:
-      limits: {memory: "512Mi", cpu: "500m"}
-      requests: {memory: "256Mi", cpu: "250m"}
+      limits: { memory: "512Mi", cpu: "500m" }
+      requests: { memory: "256Mi", cpu: "250m" }
     variables:
       LOG_LEVEL: "info"
       DATABASE_URL: "${resources.db.connection_string}"
 
 service:
   ports:
-    web: {port: 80, targetPort: 8080}
+    web: { port: 80, targetPort: 8080 }
 
 resources:
   db:
@@ -469,10 +482,11 @@ resources:
 
 route:
   host: "my-service.${ENVIRONMENT}.fawkes.idp"
-  tls: {enabled: true}
+  tls: { enabled: true }
 ```
 
 The platform automatically translates this into:
+
 - Kubernetes Deployment
 - Service
 - Ingress
@@ -492,23 +506,25 @@ my-service/
 
 ### Supported Resources
 
-| Resource Type | Description | Fawkes Implementation |
-|--------------|-------------|----------------------|
-| `postgres` | PostgreSQL database | CloudNativePG Cluster |
-| `redis` | Redis cache | Redis Helm Chart |
-| `secret` | Secrets from Vault | External Secrets Operator |
-| `volume` | Persistent storage | PersistentVolumeClaim |
+| Resource Type | Description         | Fawkes Implementation     |
+| ------------- | ------------------- | ------------------------- |
+| `postgres`    | PostgreSQL database | CloudNativePG Cluster     |
+| `redis`       | Redis cache         | Redis Helm Chart          |
+| `secret`      | Secrets from Vault  | External Secrets Operator |
+| `volume`      | Persistent storage  | PersistentVolumeClaim     |
 
 ### Environment-Specific Deployment
 
 The same `score.yaml` works across environments. Environment differences (replicas, resource limits, hostnames) are handled by the platform:
 
 **Dev Environment:**
+
 - 1 replica
 - Smaller resource limits
 - `my-service.dev.fawkes.idp`
 
 **Prod Environment:**
+
 - 3 replicas with autoscaling
 - Higher resource limits
 - `my-service.prod.fawkes.idp`

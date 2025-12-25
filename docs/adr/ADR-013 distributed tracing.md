@@ -1,6 +1,7 @@
 # ADR-013: Distributed Tracing for Platform and Applications
 
 ## Status
+
 Accepted
 
 ## Context
@@ -8,6 +9,7 @@ Accepted
 The Fawkes platform consists of multiple interconnected services where a single user request may traverse numerous components:
 
 **Platform Request Flows**:
+
 - **Developer Portal Access**: User → NGINX Ingress → Backstage → PostgreSQL → GitHub API → ArgoCD API
 - **CI/CD Pipeline**: Git Push → Jenkins Webhook → Jenkins Build → Harbor Push → ArgoCD Sync → Kubernetes Deployment
 - **Dojo Learning**: User → Backstage → Lab Provisioning Service → Terraform → AWS API → Kubernetes API
@@ -15,6 +17,7 @@ The Fawkes platform consists of multiple interconnected services where a single 
 - **Deployment**: Developer → ArgoCD UI → Kubernetes API → Application Pods → Database
 
 **Application Request Flows**:
+
 - Microservice architectures with service-to-service calls
 - Database queries across multiple services
 - External API integrations
@@ -22,6 +25,7 @@ The Fawkes platform consists of multiple interconnected services where a single 
 - Asynchronous job execution
 
 **Troubleshooting Challenges Without Tracing**:
+
 - **Latency Attribution**: "Why is this request slow?" - Which service is the bottleneck?
 - **Error Root Cause**: "Where did this error originate?" - Which service in the chain failed?
 - **Dependency Mapping**: "What services does this request touch?" - Understanding call paths
@@ -30,12 +34,14 @@ The Fawkes platform consists of multiple interconnected services where a single 
 - **Cross-Team Debugging**: Multiple teams own services in a request path
 
 **DORA Metrics Requirements**:
+
 - **Lead Time for Changes**: Trace deployment pipeline from commit to production
 - **Change Failure Rate**: Correlate failed deployments with application errors
 - **Mean Time to Recovery**: Quickly identify root cause of incidents
 - **Deployment Frequency**: Understand deployment pipeline performance
 
 **Technical Requirements**:
+
 - Support for multiple programming languages (Java, Python, Node.js, Go)
 - Low overhead (<5% CPU, <100MB memory per service)
 - Sampling strategies to control data volume
@@ -47,6 +53,7 @@ The Fawkes platform consists of multiple interconnected services where a single 
 - Real-time trace querying for active troubleshooting
 
 **Operational Requirements**:
+
 - Automatic instrumentation where possible (minimal code changes)
 - Manual instrumentation for custom spans
 - Scalable backend (handle 100K+ spans/second)
@@ -56,12 +63,14 @@ The Fawkes platform consists of multiple interconnected services where a single 
 - Alert on trace-based SLIs (P95 latency, error rates)
 
 **Security Requirements**:
+
 - Sensitive data scrubbing (PII, credentials)
 - Access control for trace data
 - Encryption in transit and at rest
 - Compliance with data retention policies
 
 **Learning & Dojo Requirements**:
+
 - Learners should understand distributed tracing concepts
 - Hands-on labs demonstrating tracing implementation
 - Troubleshooting exercises using traces
@@ -132,12 +141,14 @@ We will use **Grafana Tempo** as the distributed tracing backend, integrated wit
 ### Technology Stack
 
 **Instrumentation**: OpenTelemetry SDKs
+
 - **Java**: `opentelemetry-java-instrumentation` (auto-instrumentation agent)
 - **Python**: `opentelemetry-distro` with `opentelemetry-instrumentation`
 - **Node.js**: `@opentelemetry/sdk-node` with auto-instrumentation
 - **Go**: `go.opentelemetry.io/otel` with manual instrumentation
 
 **Collection**: OpenTelemetry Collector
+
 - Deployed as DaemonSet (node-level collection)
 - Deployed as Deployment (centralized processing)
 - OTLP receivers (gRPC and HTTP)
@@ -145,12 +156,14 @@ We will use **Grafana Tempo** as the distributed tracing backend, integrated wit
 - Batch processor for efficiency
 
 **Storage**: Grafana Tempo
+
 - Backend: S3-compatible object storage (AWS S3, MinIO)
 - Retention: 7 days full detail, 30 days sampled
 - Compression: Snappy/LZ4 for cost efficiency
 - Ingestion rate: 100K+ spans/second
 
 **Visualization**: Grafana
+
 - Tempo data source integration
 - TraceQL query builder
 - Node graph visualization
@@ -161,6 +174,7 @@ We will use **Grafana Tempo** as the distributed tracing backend, integrated wit
 **Automatic Instrumentation** (Preferred for rapid adoption):
 
 **Java Applications (Jenkins plugins, Spring Boot apps)**:
+
 ```bash
 # Download OpenTelemetry Java agent
 wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar
@@ -173,6 +187,7 @@ java -javaagent:opentelemetry-javaagent.jar \
 ```
 
 **Python Applications (FastAPI, Django)**:
+
 ```bash
 # Install OpenTelemetry distro
 pip install opentelemetry-distro opentelemetry-exporter-otlp
@@ -186,16 +201,17 @@ opentelemetry-instrument \
 ```
 
 **Node.js Applications (Backstage, Express)**:
+
 ```javascript
 // app.js - Add at the very top
-const { NodeSDK } = require('@opentelemetry/sdk-node');
-const { OTLPTraceExporter } = require('@opentelemetry/exporter-trace-otlp-http');
-const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
+const { NodeSDK } = require("@opentelemetry/sdk-node");
+const { OTLPTraceExporter } = require("@opentelemetry/exporter-trace-otlp-http");
+const { getNodeAutoInstrumentations } = require("@opentelemetry/auto-instrumentations-node");
 
 const sdk = new NodeSDK({
-  serviceName: 'backstage',
+  serviceName: "backstage",
   traceExporter: new OTLPTraceExporter({
-    url: 'http://otel-collector:4318/v1/traces',
+    url: "http://otel-collector:4318/v1/traces",
   }),
   instrumentations: [getNodeAutoInstrumentations()],
 });
@@ -206,6 +222,7 @@ sdk.start();
 **Manual Instrumentation** (For custom spans):
 
 **Go Example (ArgoCD, custom controllers)**:
+
 ```go
 import (
     "go.opentelemetry.io/otel"
@@ -236,6 +253,7 @@ func processDeployment(ctx context.Context, app string) error {
 ### OpenTelemetry Collector Configuration
 
 **DaemonSet Deployment** (for application traces):
+
 ```yaml
 apiVersion: v1
 kind: ConfigMap
@@ -321,6 +339,7 @@ data:
 ### Grafana Tempo Configuration
 
 **Deployment Manifest**:
+
 ```yaml
 apiVersion: v1
 kind: ConfigMap
@@ -390,46 +409,47 @@ spec:
         app: tempo
     spec:
       containers:
-      - name: tempo
-        image: grafana/tempo:latest
-        args:
-          - -config.file=/etc/tempo/tempo.yaml
-        ports:
-        - containerPort: 3200
-          name: http
-        - containerPort: 4317
-          name: otlp-grpc
-        - containerPort: 4318
-          name: otlp-http
-        volumeMounts:
+        - name: tempo
+          image: grafana/tempo:latest
+          args:
+            - -config.file=/etc/tempo/tempo.yaml
+          ports:
+            - containerPort: 3200
+              name: http
+            - containerPort: 4317
+              name: otlp-grpc
+            - containerPort: 4318
+              name: otlp-http
+          volumeMounts:
+            - name: config
+              mountPath: /etc/tempo
+            - name: storage
+              mountPath: /var/tempo
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: 2000m
+              memory: 4Gi
+      volumes:
         - name: config
-          mountPath: /etc/tempo
-        - name: storage
-          mountPath: /var/tempo
+          configMap:
+            name: tempo-config
+  volumeClaimTemplates:
+    - metadata:
+        name: storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            cpu: 500m
-            memory: 1Gi
-          limits:
-            cpu: 2000m
-            memory: 4Gi
-      volumes:
-      - name: config
-        configMap:
-          name: tempo-config
-  volumeClaimTemplates:
-  - metadata:
-      name: storage
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 100Gi
+            storage: 100Gi
 ```
 
 ### Trace Correlation with Logs
 
 **Log Entry with Trace Context**:
+
 ```json
 {
   "timestamp": "2024-12-07T10:30:45Z",
@@ -445,6 +465,7 @@ spec:
 ```
 
 **Loki Configuration for Trace Correlation**:
+
 ```yaml
 # Grafana data source configuration
 apiVersion: 1
@@ -464,6 +485,7 @@ datasources:
 ### Grafana Dashboard Configuration
 
 **Service Dependency Graph**:
+
 - Automatically generated from trace data
 - Shows request flow between services
 - Color-coded by error rate
@@ -472,21 +494,25 @@ datasources:
 **TraceQL Queries**:
 
 **Find slow database queries**:
+
 ```traceql
 {span.db.system="postgresql" && duration > 1s}
 ```
 
 **Find all traces with errors in production**:
+
 ```traceql
 {status=error && resource.namespace="production"}
 ```
 
 **Find traces for specific user**:
+
 ```traceql
 {resource.service.name="backstage" && span.http.route="/api/catalog/*" && trace.user.id="alice@example.com"}
 ```
 
 **Deployment trace (commit to production)**:
+
 ```traceql
 {resource.service.name="jenkins" || resource.service.name="argocd"}
   | {span.git.commit.sha="abc123def"}
@@ -495,17 +521,20 @@ datasources:
 ### Sampling Strategies
 
 **Head-Based Sampling** (at application):
+
 - 100% of errors
 - 100% of requests > 1 second
 - 10% of successful requests < 1 second
 
 **Tail-Based Sampling** (at collector):
+
 - Keep all traces with errors
 - Keep all traces with latency > P95
 - Keep traces matching specific criteria (user ID, request path)
 - Sample remaining traces at 10%
 
 **Cost Optimization**:
+
 - Production: 10% sampling → ~50GB/day traces
 - Staging: 50% sampling → ~20GB/day traces
 - Development: 100% sampling → ~5GB/day traces
@@ -513,6 +542,7 @@ datasources:
 ### DORA Metrics Integration
 
 **Lead Time for Changes Tracing**:
+
 1. Git commit event → creates trace context
 2. Jenkins build → child span with commit SHA
 3. Docker build → child span with image tag
@@ -521,17 +551,20 @@ datasources:
 6. Application start → final span with health check
 
 **Query to calculate lead time**:
+
 ```traceql
 {span.git.commit.sha="abc123"}
   | {span.name="deploy-to-production"}
 ```
 
 **Change Failure Rate**:
+
 - Trace deployments with `deployment.status=failed`
 - Correlate with application error traces
 - Generate failure rate dashboard
 
 **Mean Time to Recovery**:
+
 - Incident start → trace ID in alert
 - Trace investigation → linked troubleshooting actions
 - Incident resolution → final span
@@ -540,6 +573,7 @@ datasources:
 ### Security & Privacy
 
 **Sensitive Data Scrubbing**:
+
 ```yaml
 # OpenTelemetry Collector processor
 processors:
@@ -563,10 +597,11 @@ processors:
         action: update
         from_attribute: http.url
         pattern: '\d{4}-\d{4}-\d{4}-\d{4}'
-        value: 'XXXX-XXXX-XXXX-XXXX'
+        value: "XXXX-XXXX-XXXX-XXXX"
 ```
 
 **Access Control**:
+
 - Grafana RBAC for trace viewing
 - Namespace-based trace isolation
 - Tempo multi-tenancy (tenant ID from namespace)
@@ -574,12 +609,14 @@ processors:
 ### Performance Impact
 
 **Benchmarks** (per-service overhead):
+
 - **CPU**: 2-5% increase
 - **Memory**: 50-100MB increase
 - **Network**: ~1KB per span (compressed)
 - **Latency**: <1ms per instrumented operation
 
 **Production Optimizations**:
+
 - Use tail-based sampling
 - Batch span exports (10s intervals)
 - Compress spans before export
@@ -620,6 +657,7 @@ processors:
 ### Alternative 1: Jaeger
 
 **Pros**:
+
 - CNCF graduated project, very mature
 - Excellent UI with service dependency graphs
 - Strong community and documentation
@@ -628,6 +666,7 @@ processors:
 - Supports multiple storage backends (Cassandra, Elasticsearch, Badger)
 
 **Cons**:
+
 - Higher operational complexity (requires Elasticsearch or Cassandra for scale)
 - Higher storage costs (~5x more than Tempo for equivalent data)
 - Less integration with Grafana (requires separate UI)
@@ -639,6 +678,7 @@ processors:
 ### Alternative 2: Zipkin
 
 **Pros**:
+
 - Original distributed tracing system, very mature
 - Simple architecture, easy to deploy
 - Low resource requirements
@@ -646,6 +686,7 @@ processors:
 - Compatible with OpenTelemetry
 
 **Cons**:
+
 - Less feature-rich than modern alternatives
 - No native Grafana integration
 - Limited query capabilities
@@ -658,6 +699,7 @@ processors:
 ### Alternative 3: AWS X-Ray
 
 **Pros**:
+
 - Fully managed service (no infrastructure to maintain)
 - Native AWS integration (Lambda, ECS, EC2)
 - Automatic instrumentation for AWS services
@@ -665,6 +707,7 @@ processors:
 - Pay-per-use pricing
 
 **Cons**:
+
 - **Cloud vendor lock-in** (AWS only)
 - No multi-cloud support
 - Limited customization
@@ -677,6 +720,7 @@ processors:
 ### Alternative 4: Elastic APM
 
 **Pros**:
+
 - Integrated with Elastic Stack (logs, metrics, traces in one UI)
 - Excellent UI and visualization
 - Strong Java and Node.js support
@@ -684,6 +728,7 @@ processors:
 - Good documentation
 
 **Cons**:
+
 - Requires Elasticsearch cluster (high resource usage)
 - Complex scaling and tuning
 - Higher costs (compute + storage)
@@ -695,6 +740,7 @@ processors:
 ### Alternative 5: Lightstep / Honeycomb / Datadog APM (Commercial SaaS)
 
 **Pros**:
+
 - Best-in-class UX and query capabilities
 - Advanced sampling and trace analysis
 - Fully managed (zero operational burden)
@@ -702,6 +748,7 @@ processors:
 - Advanced features (BubbleUp, trace comparison, service catalog)
 
 **Cons**:
+
 - **Very high costs** ($100-500/month per host)
 - SaaS-only (not self-hosted)
 - Data sent to third-party
@@ -713,12 +760,14 @@ processors:
 ### Alternative 6: No Distributed Tracing (Logs + Metrics Only)
 
 **Pros**:
+
 - Lower complexity
 - Smaller operational footprint
 - Existing tools (Loki, Prometheus) sufficient
 - No additional instrumentation required
 
 **Cons**:
+
 - **Cannot trace requests across services** (critical gap)
 - Debugging distributed systems is extremely difficult
 - No service dependency visualization
@@ -732,6 +781,7 @@ processors:
 ### Phase 1: Foundation (Week 6, Days 1-2)
 
 **Day 1: OpenTelemetry Collector Deployment** [4 hours]
+
 1. Deploy OpenTelemetry Collector as DaemonSet
 2. Configure OTLP receivers (gRPC + HTTP)
 3. Set up batch and tail-sampling processors
@@ -739,6 +789,7 @@ processors:
 5. Verify Prometheus metrics export
 
 **Day 2: Grafana Tempo Deployment** [4 hours]
+
 1. Deploy Tempo StatefulSet (3 replicas)
 2. Configure S3/MinIO backend storage
 3. Set up retention policies
@@ -748,6 +799,7 @@ processors:
 ### Phase 2: Platform Service Instrumentation (Week 6, Days 3-5)
 
 **Day 3: Backstage Tracing** [3 hours]
+
 1. Add OpenTelemetry Node.js SDK to Backstage
 2. Configure auto-instrumentation
 3. Test trace collection for catalog API calls
@@ -755,6 +807,7 @@ processors:
 5. Verify Grafana visualization
 
 **Day 4: Jenkins & ArgoCD Tracing** [4 hours]
+
 1. Jenkins: Add OpenTelemetry Java agent to JVM
 2. Configure trace export for pipeline execution
 3. ArgoCD: Manual Go instrumentation for sync operations
@@ -762,6 +815,7 @@ processors:
 5. Create Grafana dashboard for CI/CD traces
 
 **Day 5: Ingress & Database Tracing** [3 hours]
+
 1. NGINX Ingress: Configure trace propagation headers
 2. PostgreSQL: Add pg_stat_statements for query tracing
 3. Test end-to-end trace (User → NGINX → Backstage → PostgreSQL)
@@ -770,6 +824,7 @@ processors:
 ### Phase 3: Application Instrumentation Templates (Week 7, Days 1-2)
 
 **Day 1: Create Language-Specific Templates** [4 hours]
+
 1. Java Spring Boot template with OTel auto-instrumentation
 2. Python FastAPI template with OTel SDK
 3. Node.js Express template with OTel SDK
@@ -777,6 +832,7 @@ processors:
 5. Document instrumentation patterns
 
 **Day 2: Golden Path Integration** [4 hours]
+
 1. Update Backstage templates with OTel dependencies
 2. Add Dockerfile entries for OTel agents
 3. Update Helm charts with OTel environment variables
@@ -786,18 +842,21 @@ processors:
 ### Phase 4: Observability Integration (Week 7, Days 3-5)
 
 **Day 3: Trace-to-Metrics Integration** [3 hours]
+
 1. Configure Tempo metrics generator
 2. Send exemplars to Prometheus
 3. Create Grafana dashboard linking metrics to traces
 4. Add "View Trace" links from Prometheus alerts
 
 **Day 4: Trace-to-Logs Integration** [3 hours]
+
 1. Configure Loki derived fields for trace IDs
 2. Update application logging to include trace context
 3. Test correlation (click trace ID in logs → opens trace in Tempo)
 4. Create unified dashboard with logs + traces
 
 **Day 5: DORA Metrics Tracing** [4 hours]
+
 1. Instrument deployment pipeline with trace context
 2. Track commit SHA through build → deploy → release
 3. Calculate lead time from traces
@@ -806,6 +865,7 @@ processors:
 ### Phase 5: Performance & Optimization (Week 8, Days 1-2)
 
 **Day 1: Sampling Optimization** [3 hours]
+
 1. Analyze trace volumes and costs
 2. Tune tail-based sampling policies
 3. Implement adaptive sampling based on load
@@ -813,6 +873,7 @@ processors:
 5. Document sampling strategies
 
 **Day 2: Performance Testing** [3 hours]
+
 1. Load test with tracing enabled (measure overhead)
 2. Benchmark trace ingestion rates
 3. Test Tempo query performance
@@ -822,6 +883,7 @@ processors:
 ### Phase 6: Documentation & Training (Week 8, Days 3-5)
 
 **Day 3: Platform Documentation** [4 hours]
+
 1. Architecture overview with data flow diagrams
 2. Instrumentation guide for each language
 3. TraceQL query examples and cookbook
@@ -829,6 +891,7 @@ processors:
 5. Runbook for Tempo operations
 
 **Day 4: Dojo Module - Brown Belt** [4 hours]
+
 1. Module: "Distributed Tracing for Microservices"
 2. Theory: Trace context, spans, sampling
 3. Hands-on lab: Instrument sample app, query traces
@@ -836,6 +899,7 @@ processors:
 5. Assessment quiz on tracing concepts
 
 **Day 5: Dashboard & Playbooks** [4 hours]
+
 1. Create standard Grafana dashboards:
    - Service dependency graph
    - Request latency heatmap
@@ -850,6 +914,7 @@ processors:
 ### Brown Belt - Module 6: "Distributed Tracing & Request Flow Analysis"
 
 **Learning Objectives**:
+
 - Understand distributed tracing concepts (spans, traces, context propagation)
 - Implement OpenTelemetry instrumentation in applications
 - Query traces using TraceQL
@@ -860,6 +925,7 @@ processors:
 **Hands-On Lab** (90 minutes):
 
 **Part 1: Instrument a Microservice** (30 min)
+
 1. Deploy sample 3-tier app (frontend → API → database)
 2. Add OpenTelemetry SDK to each service
 3. Configure trace export to Tempo
@@ -867,6 +933,7 @@ processors:
 5. Observe request flow across services
 
 **Part 2: Advanced Querying** (30 min)
+
 1. Write TraceQL queries to find:
    - Slow database queries
    - Requests with errors
@@ -876,6 +943,7 @@ processors:
 3. Set up trace-based alerts
 
 **Part 3: Troubleshooting Exercise** (30 min)
+
 - **Scenario**: Application experiencing intermittent slowness
 - **Task**: Use traces to identify:
   - Which service is the bottleneck
@@ -885,6 +953,7 @@ processors:
 - **Deliverable**: Root cause analysis report with trace evidence
 
 **Assessment**:
+
 - Quiz: 10 questions on tracing concepts
 - Practical: Instrument new service and create dashboard
 - Troubleshooting: Debug broken trace (missing context propagation)
@@ -896,6 +965,7 @@ processors:
 ### Tempo Health Metrics
 
 **Key Metrics to Monitor**:
+
 - `tempo_ingester_bytes_received_total` - Trace ingestion rate
 - `tempo_ingester_blocks_flushed_total` - Block flush rate
 - `tempo_query_frontend_result_metrics_inspected_bytes` - Query performance
@@ -903,6 +973,7 @@ processors:
 - `tempo_compactor_blocks_compacted_total` - Compaction health
 
 **Grafana Dashboard**: "Tempo Operations"
+
 - Ingestion rate by tenant
 - Query latency (P50, P95, P99)
 - Storage usage and growth
@@ -910,31 +981,33 @@ processors:
 - Error rates
 
 **Alerting Rules**:
+
 ```yaml
 groups:
-- name: tempo_alerts
-  rules:
-  - alert: TempoHighIngestionErrors
-    expr: rate(tempo_distributor_spans_received_total{status="error"}[5m]) > 100
-    for: 10m
-    annotations:
-      summary: "High trace ingestion error rate"
+  - name: tempo_alerts
+    rules:
+      - alert: TempoHighIngestionErrors
+        expr: rate(tempo_distributor_spans_received_total{status="error"}[5m]) > 100
+        for: 10m
+        annotations:
+          summary: "High trace ingestion error rate"
 
-  - alert: TempoHighQueryLatency
-    expr: histogram_quantile(0.95, tempo_query_frontend_duration_seconds_bucket) > 10
-    for: 5m
-    annotations:
-      summary: "Tempo query latency P95 > 10s"
+      - alert: TempoHighQueryLatency
+        expr: histogram_quantile(0.95, tempo_query_frontend_duration_seconds_bucket) > 10
+        for: 5m
+        annotations:
+          summary: "Tempo query latency P95 > 10s"
 
-  - alert: TempoStorageUsageHigh
-    expr: tempo_ingester_bytes_metric_total > 100e9  # 100GB
-    annotations:
-      summary: "Tempo ingester storage usage high"
+      - alert: TempoStorageUsageHigh
+        expr: tempo_ingester_bytes_metric_total > 100e9 # 100GB
+        annotations:
+          summary: "Tempo ingester storage usage high"
 ```
 
 ### OpenTelemetry Collector Health
 
 **Key Metrics**:
+
 - `otelcol_receiver_accepted_spans` - Spans received
 - `otelcol_receiver_refused_spans` - Spans refused (backpressure)
 - `otelcol_processor_batch_batch_send_size` - Batch sizes
@@ -942,6 +1015,7 @@ groups:
 - `otelcol_exporter_send_failed_spans` - Export failures
 
 **Dashboard**: "OpenTelemetry Collector Health"
+
 - Span throughput (in/out)
 - Processor queue depth
 - Export success/failure rates
@@ -952,12 +1026,14 @@ groups:
 ### Data Privacy
 
 **Sensitive Data Scrubbing**:
+
 - Remove authorization headers
 - Hash SQL statements
 - Redact PII from URLs and headers
 - Obfuscate API keys in trace attributes
 
 **Access Control**:
+
 - Grafana RBAC for trace viewing
 - Namespace-based trace isolation (teams only see their traces)
 - Audit logging for trace access
@@ -965,11 +1041,13 @@ groups:
 ### Compliance
 
 **Data Retention**:
+
 - 7 days detailed traces (compliance with GDPR "right to be forgotten")
 - 30 days sampled traces
 - Automated deletion after retention period
 
 **Encryption**:
+
 - TLS for all trace transmission (OTLP over gRPC/HTTPS)
 - S3 server-side encryption for stored traces
 - No plaintext credentials in trace attributes
@@ -979,6 +1057,7 @@ groups:
 ### Storage Costs (Production)
 
 **Assumptions**:
+
 - 100 services generating traces
 - 1,000 requests/second average
 - 10 spans per trace average
@@ -986,12 +1065,14 @@ groups:
 - ~1KB per span (compressed)
 
 **Daily Trace Volume**:
+
 - Raw spans: 100 services × 1,000 req/s × 10 spans × 86,400 s = 86.4 billion spans/day
 - After sampling: 8.64 billion spans/day
 - Storage: 8.64B spans × 1KB = 8.64 TB/day (before compression)
 - After compression (10:1): ~864 GB/day
 
 **Monthly Storage (7-day retention)**:
+
 - 864 GB/day × 7 days = 6 TB active storage
 - S3 Standard: $0.023/GB = $138/month
 - S3 Intelligent-Tiering (after 7 days): $0.0125/GB = $75/month
@@ -999,6 +1080,7 @@ groups:
 **Total Monthly Cost**: ~$213/month (vs. $5,000+/month for commercial APM at 100 services)
 
 **Cost Optimization**:
+
 - Increase sampling rate in non-production (less cost-sensitive)
 - Use S3 Lifecycle policies to move old traces to Glacier
 - Tune tail-based sampling to focus on valuable traces
@@ -1007,10 +1089,12 @@ groups:
 ### Infrastructure Costs
 
 **Tempo Pods**:
+
 - 3 replicas × 2 CPU × $0.04/CPU/hour = $5.76/day = $173/month
 - 3 replicas × 4GB RAM × $0.005/GB/hour = $1.44/day = $43/month
 
 **OpenTelemetry Collector**:
+
 - DaemonSet (1 per node, 10 nodes): 10 × 0.1 CPU × $0.04 = $0.96/day = $29/month
 - DaemonSet memory: 10 × 128MB × $0.005/GB/hour = negligible
 
@@ -1023,12 +1107,14 @@ groups:
 ### For Platform Teams
 
 1. **Architecture & Design**
+
    - Trace collection flow
    - Sampling strategies explained
    - Storage architecture (S3 layout)
    - Query performance optimization
 
 2. **Deployment Guide**
+
    - Helm chart installation (Tempo, OTel Collector)
    - Cloud-specific configurations (AWS, Azure, GCP)
    - Scaling guidelines
@@ -1043,12 +1129,14 @@ groups:
 ### For Application Teams
 
 1. **Instrumentation Guide**
+
    - Language-specific SDKs (Java, Python, Node.js, Go)
    - Auto vs. manual instrumentation
    - Custom span creation
    - Best practices (span naming, attributes)
 
 2. **Querying & Troubleshooting**
+
    - TraceQL query cookbook
    - Common debugging patterns
    - Grafana dashboard usage
@@ -1062,12 +1150,14 @@ groups:
 ### For Dojo Learners
 
 1. **Concepts Tutorial**
+
    - What is distributed tracing?
    - Spans, traces, and context propagation
    - When to use tracing vs. logs/metrics
    - Real-world use cases
 
 2. **Hands-On Labs**
+
    - Lab 1: Instrument a simple app
    - Lab 2: Query traces with TraceQL
    - Lab 3: Debug performance issue
@@ -1100,6 +1190,7 @@ groups:
 ## Notes
 
 **Production Readiness Checklist**:
+
 - [ ] Tempo deployed with 3+ replicas for HA
 - [ ] S3/MinIO backend configured with proper retention
 - [ ] OpenTelemetry Collector deployed (DaemonSet + Deployment)
@@ -1115,6 +1206,7 @@ groups:
 - [ ] Team trained on querying and troubleshooting
 
 **Learner Environment Considerations**:
+
 - Use in-memory Tempo backend for short-lived labs
 - Pre-instrument sample applications
 - Provide TraceQL query examples
@@ -1123,6 +1215,7 @@ groups:
 - Integrate with DORA metrics curriculum
 
 **Future Enhancements** (Post-MVP):
+
 - Service mesh integration (Istio sidecar auto-instrumentation)
 - Trace-based SLO monitoring
 - Anomaly detection from trace patterns

@@ -12,13 +12,16 @@ Quality Profiles define the set of rules applied during code analysis. Fawkes us
 **Parent**: Sonar way (built-in)
 
 #### Additional Rules Enabled
+
 - **Security**:
+
   - `java:S2068` - Credentials should not be hard-coded
   - `java:S5852` - Regex should not be vulnerable to DoS
   - `java:S4426` - Cryptographic keys should be robust
   - `java:S2245` - Random values should not be predictable
 
 - **Reliability**:
+
   - `java:S1181` - Catching Throwable is not recommended
   - `java:S1155` - Collection.isEmpty() should be used instead of size()
   - `java:S3776` - Cognitive complexity should not be too high (threshold: 15)
@@ -29,7 +32,9 @@ Quality Profiles define the set of rules applied during code analysis. Fawkes us
   - `java:S1118` - Utility classes should not have public constructors
 
 #### Configuration for Spring Boot
+
 For Spring Boot applications, the following rules are adjusted:
+
 - `java:S3749` - Spring components should use constructor injection (Enabled)
 - `java:S1948` - Fields in Serializable classes should be serializable (Info level)
 - Actuator endpoints exposed for observability (Suppressed - see ADR-014)
@@ -40,13 +45,16 @@ For Spring Boot applications, the following rules are adjusted:
 **Parent**: Sonar way (built-in)
 
 #### Additional Rules Enabled
+
 - **Security**:
+
   - `python:S1313` - IP addresses should not be hardcoded
   - `python:S2245` - Pseudorandom number generators should not be used for security purposes
   - `python:S5247` - Server hostname should be verified during SSL/TLS connection
   - `python:S4507` - CORS should be properly configured
 
 - **Reliability**:
+
   - `python:S5754` - boto3 and botocore should be initialized with credentials
   - `python:S1117` - Local variables should not have the same name as global variables
   - `python:S3776` - Cognitive complexity should not be too high (threshold: 15)
@@ -57,7 +65,9 @@ For Spring Boot applications, the following rules are adjusted:
   - `python:S5797` - Variables should be defined before use
 
 #### Configuration for FastAPI
+
 For FastAPI applications:
+
 - `python:S5753` - Route handlers should use type hints (Enabled)
 - `python:S1192` - String literals should not be duplicated (threshold: 5)
 
@@ -67,13 +77,16 @@ For FastAPI applications:
 **Parent**: Sonar way (built-in)
 
 #### Additional Rules Enabled
+
 - **Security**:
+
   - `javascript:S1523` - Code should not be dynamically executed
   - `javascript:S4829` - Server hostnames should be verified during SSL/TLS connections
   - `javascript:S5122` - CORS should be properly configured
   - `javascript:S2068` - Credentials should not be hard-coded
 
 - **Reliability**:
+
   - `javascript:S3776` - Cognitive complexity should not be too high (threshold: 15)
   - `javascript:S1264` - A while loop should be used instead of a for loop
   - `javascript:S1874` - Deprecated APIs should not be used
@@ -84,7 +97,9 @@ For FastAPI applications:
   - `javascript:S1541` - Cyclomatic complexity should not be too high (threshold: 10)
 
 #### Configuration for Express
+
 For Express applications:
+
 - `javascript:S5122` - CORS configuration validated
 - `javascript:S5689` - Helmet middleware recommended (Info level)
 
@@ -93,6 +108,7 @@ For Express applications:
 ### Initial Setup (First Time)
 
 1. **Access SonarQube**:
+
    ```bash
    # Local development
    http://sonarqube.127.0.0.1.nip.io
@@ -102,20 +118,24 @@ For Express applications:
    ```
 
 2. **Login as Admin**:
+
    - Username: `admin`
    - Password: `admin` (change immediately!)
 
 3. **Navigate to Quality Profiles**:
+
    - Click **Quality Profiles** in the top menu
    - Select the language (Java, Python, or JavaScript)
 
 4. **Create Custom Profile**:
+
    - Click **Create** button
    - Name: `Fawkes <Language>` (e.g., `Fawkes Java`)
    - Parent: Select `Sonar way`
    - Click **Create**
 
 5. **Activate Additional Rules**:
+
    - Click on the newly created profile
    - Click **Activate More** button
    - Search for rules by key (e.g., `java:S2068`)
@@ -224,14 +244,14 @@ sonar.profile=Fawkes JavaScript
 
 Quality Profiles work with Quality Gates. The default Fawkes Quality Gate requires:
 
-| Metric | Operator | Threshold |
-|--------|----------|-----------|
-| New Bugs | Is Greater Than | 0 |
-| New Vulnerabilities | Is Greater Than | 0 |
-| New Security Hotspots Reviewed | Is Less Than | 100% |
-| New Code Coverage | Is Less Than | 80% |
-| New Duplicated Lines (%) | Is Greater Than | 3% |
-| New Maintainability Rating | Is Worse Than | A |
+| Metric                         | Operator        | Threshold |
+| ------------------------------ | --------------- | --------- |
+| New Bugs                       | Is Greater Than | 0         |
+| New Vulnerabilities            | Is Greater Than | 0         |
+| New Security Hotspots Reviewed | Is Less Than    | 100%      |
+| New Code Coverage              | Is Less Than    | 80%       |
+| New Duplicated Lines (%)       | Is Greater Than | 3%        |
+| New Maintainability Rating     | Is Worse Than   | A         |
 
 See [ADR-014](../../../docs/adr/ADR-014 sonarqube quality gates.md) for details.
 
@@ -268,6 +288,7 @@ curl -u admin:${SONAR_PASSWORD} \
 **Issue**: Project analysis doesn't use the expected profile
 
 **Solution**:
+
 1. Verify profile is set as default for the language
 2. Check project-specific profile assignment
 3. Ensure project key matches configuration
@@ -277,6 +298,7 @@ curl -u admin:${SONAR_PASSWORD} \
 **Issue**: Rules in profile don't fail Quality Gate
 
 **Solution**:
+
 1. Verify rule is activated (not just added to profile)
 2. Check rule severity matches Quality Gate conditions
 3. Ensure Quality Gate is properly configured
@@ -287,6 +309,7 @@ curl -u admin:${SONAR_PASSWORD} \
 **Issue**: Rules flagging valid code patterns
 
 **Solution**:
+
 1. Use `@SuppressWarnings` or language-specific suppression
 2. Add comment explaining why suppression is valid
 3. Consider adjusting rule parameters in profile

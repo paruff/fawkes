@@ -20,6 +20,7 @@ This document provides an overview of the configuration options for the Fawkes I
 Environment variables are used to configure various aspects of the platform. These variables can be set in a `.env` file or directly in your CI/CD pipeline.
 
 ### Example `.env` File:
+
 ```env
 # General settings
 ENVIRONMENT=dev
@@ -34,6 +35,7 @@ KUBECONFIG=/path/to/kubeconfig
 ```
 
 ### How to Use:
+
 - Copy the provided `.env.example` file to `.env` and update the values as needed.
 - Load the environment variables using a script or your CI/CD pipeline.
 
@@ -44,12 +46,14 @@ KUBECONFIG=/path/to/kubeconfig
 Secrets should **never** be committed to version control. Use a secrets management tool to securely store and inject secrets at runtime.
 
 ### Recommended Tools:
+
 - **AWS Secrets Manager** (for AWS deployments)
 - **Azure Key Vault** (for Azure deployments)
 - **GCP Secret Manager** (for GCP deployments)
 - **Kubernetes Secrets** (for cluster-specific secrets)
 
 ### Example Kubernetes Secret:
+
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -58,8 +62,8 @@ metadata:
   namespace: default
 type: Opaque
 data:
-  username: bXktdXNlcm5hbWU=  # Base64 encoded
-  password: cGFzc3dvcmQ=      # Base64 encoded
+  username: bXktdXNlcm5hbWU= # Base64 encoded
+  password: cGFzc3dvcmQ= # Base64 encoded
 ```
 
 ---
@@ -69,11 +73,13 @@ data:
 Configuration files are used to define infrastructure, platform services, and application settings. These files are located in the `infra/` and `platform/` directories.
 
 ### Key Configuration Files:
+
 - **Terraform Variables:** Located in `infra/terraform/variables.tf`.
 - **Helm Values:** Located in `platform/helm/values.yaml`.
 - **Kubernetes Manifests:** Located in `platform/k8s/`.
 
 ### Example Helm Values:
+
 ```yaml
 replicaCount: 2
 image:
@@ -89,10 +95,12 @@ image:
 Each cloud provider requires specific configuration for authentication and resource provisioning.
 
 ### AWS:
+
 - Set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in your environment.
 - Configure the region using `AWS_DEFAULT_REGION`.
 
 ### Azure:
+
 - Use the Azure CLI to authenticate:
   ```sh
   az login
@@ -103,6 +111,7 @@ Each cloud provider requires specific configuration for authentication and resou
   ```
 
 ### GCP:
+
 - Authenticate using a service account key:
   ```sh
   gcloud auth activate-service-account --key-file=/path/to/key.json
@@ -119,7 +128,9 @@ Each cloud provider requires specific configuration for authentication and resou
 Kubernetes clusters require a valid `kubeconfig` file for authentication and management.
 
 ### Setting Up `kubeconfig`:
+
 - Use your cloud provider CLI to generate the `kubeconfig` file:
+
   - **AWS:** `aws eks update-kubeconfig --name <cluster-name>`
   - **Azure:** `az aks get-credentials --resource-group <resource-group> --name <cluster-name>`
   - **GCP:** `gcloud container clusters get-credentials <cluster-name>`

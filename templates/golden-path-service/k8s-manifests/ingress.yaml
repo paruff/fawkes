@@ -23,13 +23,13 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - my-service.dev.fawkes.idp  # From score.yaml route.host
+        - my-service.dev.fawkes.idp # From score.yaml route.host
       secretName: my-service-tls
   rules:
     - host: my-service.dev.fawkes.idp
       http:
         paths:
-          - path: /  # From score.yaml route.path
+          - path: / # From score.yaml route.path
             pathType: Prefix
             backend:
               service:

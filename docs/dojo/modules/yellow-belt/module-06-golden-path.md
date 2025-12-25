@@ -7,6 +7,7 @@
 **Duration**: 60 minutes
 **Difficulty**: Intermediate
 **Prerequisites**:
+
 - Module 5: CI Fundamentals complete
 - Basic Groovy syntax understanding
 - Experience with at least one programming language
@@ -27,6 +28,7 @@ By the end of this module, you will:
 7. ✅ Measure and improve pipeline performance
 
 **DORA Capabilities Addressed**:
+
 - ✓ CD1: Version control for all production artifacts
 - ✓ CD4: Trunk-based development
 - ✓ Continuous Integration (advanced)
@@ -39,6 +41,7 @@ By the end of this module, you will:
 ### The Problem: Pipeline Proliferation
 
 **Without Golden Paths**:
+
 ```
 Team A: Creates Java pipeline (500 lines)
 Team B: Creates Java pipeline (480 lines, slightly different)
@@ -71,6 +74,7 @@ Golden Path Template (Java)
 ```
 
 **Golden Path Characteristics**:
+
 1. **Opinionated**: Embeds best practices by default
 2. **Easy to Use**: 5-10 lines to get started
 3. **Batteries Included**: Security, testing, quality gates built-in
@@ -81,6 +85,7 @@ Golden Path Template (Java)
 ### Golden Path in Practice
 
 **Instead of this** (200-line Jenkinsfile):
+
 ```groovy
 pipeline {
     agent { kubernetes { yaml '''...''' } }
@@ -98,6 +103,7 @@ pipeline {
 ```
 
 **Teams write this** (10-line Jenkinsfile):
+
 ```groovy
 @Library('fawkes-pipelines') _
 
@@ -119,6 +125,7 @@ goldenPathJava {
 Jenkins Shared Libraries are reusable Groovy code that can be imported into any Jenkinsfile.
 
 **Benefits**:
+
 - 🎯 **DRY Principle**: Don't Repeat Yourself
 - 🔒 **Security**: Centralized credential management
 - 📦 **Versioning**: Tag releases, rollback if needed
@@ -964,6 +971,7 @@ rate(jenkins_build_duration_seconds[1d])
 **Objective**: Build a shared library that supports Java, Python, and Node.js
 
 **Requirements**:
+
 1. Create `vars/goldenPath.groovy` that auto-detects language
 2. Support configuration for each language
 3. Include parallel testing and linting
@@ -1003,6 +1011,7 @@ def detectLanguage() {
 ```
 
 **Validation Criteria**:
+
 - [ ] Auto-detects language correctly
 - [ ] All three language templates work
 - [ ] Build time <8 minutes for sample apps
@@ -1017,42 +1026,49 @@ def detectLanguage() {
 ### Quiz Questions
 
 1. **What is a "Golden Path" in platform engineering?**
+
    - [ ] The fastest build configuration
    - [x] An opinionated, easy-to-use template with best practices built-in
    - [ ] A deployment strategy
    - [ ] A security scanning tool
 
 2. **Where do you put reusable pipeline steps in a Shared Library?**
+
    - [ ] src/ directory
    - [x] vars/ directory
    - [ ] resources/ directory
    - [ ] lib/ directory
 
 3. **What is the benefit of parallel execution in pipelines?**
+
    - [ ] Uses less resources
    - [ ] More reliable
    - [x] Reduces total build time
    - [ ] Easier to debug
 
 4. **How can you cache Maven dependencies between builds?**
+
    - [ ] Use a faster Maven mirror
    - [x] Mount a persistent volume to /root/.m2
    - [ ] Download dependencies manually
    - [ ] Skip dependency resolution
 
 5. **What should you do with build performance metrics?**
+
    - [ ] Ignore them
    - [ ] Only check when builds are slow
    - [x] Send to Prometheus and visualize in Grafana
    - [ ] Store in Jenkins only
 
 6. **What's the recommended maximum build time?**
+
    - [ ] 30 minutes
    - [x] 10 minutes
    - [ ] 1 hour
    - [ ] 5 minutes
 
 7. **Which stage can typically be parallelized?**
+
    - [ ] Checkout
    - [ ] Build
    - [x] Tests and linting
@@ -1096,28 +1112,33 @@ def detectLanguage() {
 ### Real-World Impact
 
 "After implementing Golden Path pipelines:
+
 - **Pipeline creation time**: 2 days → 10 minutes
 - **Average build time**: 25 minutes → 7 minutes
 - **Pipelines maintained**: 50 → 3 templates
 - **Security update rollout**: 2 weeks → 1 day
 
 Our developers now spend time building features, not maintaining pipelines."
-- *Platform Engineering Team, Tech Company*
+
+- _Platform Engineering Team, Tech Company_
 
 ---
 
 ## 📚 Additional Resources
 
 ### Documentation
+
 - [Jenkins Shared Libraries](https://www.jenkins.io/doc/book/pipeline/shared-libraries/)
 - [Pipeline Best Practices](https://www.jenkins.io/doc/book/pipeline/pipeline-best-practices/)
 - [Kubernetes Plugin Guide](https://plugins.jenkins.io/kubernetes/)
 
 ### Examples
+
 - [Fabric8 Pipeline Library](https://github.com/fabric8io/fabric8-pipeline-library)
 - [CloudBees Pipeline Template Catalog](https://github.com/cloudbees/pipeline-model-definition-plugin/wiki/Defining-Declarative-Pipelines)
 
 ### Community
+
 - [Jenkins Community Forums](https://community.jenkins.io/)
 - [Fawkes #yellow-belt Mattermost](https://mattermost.fawkes.internal)
 
@@ -1128,11 +1149,13 @@ Our developers now spend time building features, not maintaining pipelines."
 ### Assessment Checklist
 
 - [ ] **Conceptual Understanding**
+
   - [ ] Explain Golden Path philosophy
   - [ ] Describe Shared Library structure
   - [ ] Understand pipeline optimization techniques
 
 - [ ] **Practical Skills**
+
   - [ ] Create a Shared Library repository
   - [ ] Build Golden Path template for at least one language
   - [ ] Implement parallel execution
@@ -1140,6 +1163,7 @@ Our developers now spend time building features, not maintaining pipelines."
   - [ ] Add performance metrics collection
 
 - [ ] **Hands-On Lab**
+
   - [ ] Create reusable pipeline template
   - [ ] Reduce build time by 50%+ through optimization
   - [ ] Successfully use template in 3 different projects
@@ -1150,6 +1174,7 @@ Our developers now spend time building features, not maintaining pipelines."
 ### Certification Credit
 
 Upon completion, you earn:
+
 - **5 points** toward Yellow Belt certification (50% complete)
 - **Badge**: "Golden Path Architect"
 - **Skill Unlocked**: Shared Library Development
@@ -1611,11 +1636,13 @@ stage('Promote to Production') {
 ### Issue: Shared Library Not Found
 
 **Error**:
+
 ```
 ERROR: Library fawkes-pipelines not found
 ```
 
 **Solutions**:
+
 1. Check library name matches in Jenkins global config
 2. Verify repository URL is correct
 3. Check branch/tag specified exists
@@ -1635,11 +1662,13 @@ ERROR: Library fawkes-pipelines not found
 ### Issue: Class Not Found in src/
 
 **Error**:
+
 ```
 unable to resolve class com.fawkes.pipeline.Docker
 ```
 
 **Solutions**:
+
 1. Check package path matches directory structure
 2. Ensure class is Serializable
 3. Import correctly in calling code
@@ -1655,11 +1684,13 @@ import com.fawkes.pipeline.Docker
 ### Issue: Variable Not Found in vars/
 
 **Error**:
+
 ```
 No such DSL method 'goldenPathJava' found
 ```
 
 **Solutions**:
+
 1. Check file is in vars/ directory
 2. Filename must match function name
 3. Library must be imported
@@ -1675,11 +1706,13 @@ goldenPathJava { ... }
 **Problem**: Pipeline takes 2+ minutes to start
 
 **Solutions**:
+
 1. Enable library caching
 2. Use specific version (not HEAD)
 3. Reduce library size
 
 In Jenkins global config:
+
 ```
 ☑ Cache fetched versions on controller for quick retrieval
 ```
@@ -1687,11 +1720,13 @@ In Jenkins global config:
 ### Issue: Cannot Modify Immutable Objects
 
 **Error**:
+
 ```
 Scripts not permitted to use method groovy.lang.GroovyObject
 ```
 
 **Solutions**:
+
 1. Approve script in Jenkins → Manage Jenkins → In-process Script Approval
 2. Use `@NonCPS` annotation for methods that manipulate complex objects
 
@@ -1752,11 +1787,13 @@ After Module 6:
 4. 🚀 Advance to Green Belt (GitOps & Deployment)
 
 **Practice:**
+
 - Implement Golden Paths for your team
 - Measure build time improvements
 - Share templates with community
 
 **Community:**
+
 - Share your Shared Library in #show-and-tell
 - Help others in #yellow-belt channel
 - Write a blog post about your experience
@@ -1769,6 +1806,6 @@ Next up: **Security Scanning & Quality Gates** - where you'll learn SonarQube, T
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*
-*Version 1.0 | Last Updated: October 2025*
-*License: MIT | https://github.com/paruff/fawkes*
+_Fawkes Dojo - Where Platform Engineers Are Forged_
+_Version 1.0 | Last Updated: October 2025_
+_License: MIT | https://github.com/paruff/fawkes_

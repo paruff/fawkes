@@ -9,13 +9,13 @@ This guide shows how to integrate the Fawkes event tracking library into Backsta
 Add initialization to your Backstage app's entry point (e.g., `packages/app/src/App.tsx` or `packages/app/src/index.tsx`):
 
 ```typescript
-import { initializeTracker } from '@fawkes/design-system/analytics';
+import { initializeTracker } from "@fawkes/design-system/analytics";
 
 // Initialize tracker early in app lifecycle
 initializeTracker({
-  baseUrl: 'https://plausible.fawkes.idp',
-  domain: 'backstage.fawkes.idp',
-  debug: process.env.NODE_ENV === 'development',
+  baseUrl: "https://plausible.fawkes.idp",
+  domain: "backstage.fawkes.idp",
+  debug: process.env.NODE_ENV === "development",
   trackLocalhost: true, // Enable for development
 });
 ```
@@ -33,7 +33,7 @@ app:
 
 proxy:
   endpoints:
-    '/plausible/api':
+    "/plausible/api":
       target: http://plausible.fawkes.svc:8000/api/
       changeOrigin: true
       secure: false
@@ -445,7 +445,7 @@ import {
   privacyMiddleware,
   enrichmentMiddleware,
   userContextMiddleware,
-} from '@fawkes/design-system/analytics';
+} from "@fawkes/design-system/analytics";
 
 // Create custom middleware
 const customMiddleware = (event) => {
@@ -454,7 +454,7 @@ const customMiddleware = (event) => {
     ...event,
     properties: {
       ...event.properties,
-      appVersion: '1.0.0',
+      appVersion: "1.0.0",
     },
   };
 };
@@ -463,17 +463,19 @@ const customMiddleware = (event) => {
 const chain = new MiddlewareChain();
 chain.use(validationMiddleware);
 chain.use(privacyMiddleware);
-chain.use(enrichmentMiddleware({ platform: 'fawkes' }));
-chain.use(userContextMiddleware(() => ({
-  userId: getCurrentUser()?.id,
-  team: getCurrentUser()?.team,
-})));
+chain.use(enrichmentMiddleware({ platform: "fawkes" }));
+chain.use(
+  userContextMiddleware(() => ({
+    userId: getCurrentUser()?.id,
+    team: getCurrentUser()?.team,
+  }))
+);
 chain.use(customMiddleware);
 
 // Initialize tracker
 const tracker = initializeTracker({
-  baseUrl: 'https://plausible.fawkes.idp',
-  domain: 'backstage.fawkes.idp',
+  baseUrl: "https://plausible.fawkes.idp",
+  domain: "backstage.fawkes.idp",
 });
 
 // Track with middleware
@@ -486,16 +488,16 @@ if (processedEvent) {
 ### Custom Events
 
 ```typescript
-import { trackEvent, EventCategory, EventAction } from '@fawkes/design-system/analytics';
+import { trackEvent, EventCategory, EventAction } from "@fawkes/design-system/analytics";
 
 // Track custom event
 trackEvent({
   category: EventCategory.FEATURE_USAGE,
   action: EventAction.CLICK,
-  label: 'Custom Feature',
+  label: "Custom Feature",
   properties: {
-    featureName: 'my-custom-feature',
-    version: '2.0',
+    featureName: "my-custom-feature",
+    version: "2.0",
   },
   value: 1,
 });

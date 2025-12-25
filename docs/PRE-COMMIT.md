@@ -11,6 +11,7 @@ make pre-commit-setup
 ```
 
 This will:
+
 1. Install the `pre-commit` package
 2. Install all configured hooks
 3. Set up Git hooks to run automatically on commit
@@ -29,6 +30,7 @@ pre-commit install
 Our pre-commit hooks validate the following areas:
 
 ### 🔧 General Code Quality
+
 - ✅ Trailing whitespace removal
 - ✅ End-of-file fixing
 - ✅ YAML/JSON syntax validation
@@ -38,11 +40,13 @@ Our pre-commit hooks validate the following areas:
 - ✅ Private key detection
 
 ### 📝 Documentation
+
 - ✅ Markdown linting (`.markdownlint.json`)
 - ✅ MkDocs build validation
 - ✅ Documentation link checking
 
 ### 🏗️ Terraform (IaC)
+
 - ✅ `terraform fmt` (auto-formatting)
 - ✅ `terraform validate` (syntax validation)
 - ✅ TFLint (static analysis)
@@ -50,22 +54,26 @@ Our pre-commit hooks validate the following areas:
 - ✅ tfsec (security scanning)
 
 ### ☸️ Kubernetes Manifests
+
 - ✅ kubeval (manifest validation)
 - ✅ kustomize build validation
 - ✅ Hardcoded secret detection
 - ✅ Helm chart linting
 
 ### 🚀 GitOps
+
 - ✅ ArgoCD application validation
 - ✅ Kustomization file validation
 - ✅ GitOps best practices
 
 ### 🎯 IDP Components
+
 - ✅ Backstage catalog validation
 - ✅ Helm values validation
 - ✅ Platform component configuration
 
 ### 🔒 Security
+
 - ✅ **Gitleaks** (comprehensive secret detection)
   - Detects 100+ types of secrets (API keys, passwords, tokens)
   - Configurable via `.gitleaks.toml`
@@ -83,16 +91,19 @@ Our pre-commit hooks validate the following areas:
 **📖 Learn More**: See [Secrets Management Guide](how-to/security/secrets-management.md) for detailed information on handling secrets securely.
 
 ### 🐍 Python
+
 - ✅ Black formatting
 - ✅ Flake8 linting
 - ✅ Type checking readiness
 
 ### 🐚 Shell Scripts
+
 - ✅ ShellCheck validation
 
 ## Running Pre-commit Hooks
 
 ### Automatic (on commit)
+
 Once installed, hooks run automatically when you commit:
 
 ```bash
@@ -102,6 +113,7 @@ git commit -m "Your commit message"
 ```
 
 ### Manual (all files)
+
 Run hooks on all files in the repository:
 
 ```bash
@@ -109,6 +121,7 @@ pre-commit run --all-files
 ```
 
 ### Manual (specific files)
+
 Run hooks on specific files:
 
 ```bash
@@ -116,6 +129,7 @@ pre-commit run --files infra/aws/main.tf
 ```
 
 ### Manual (specific hook)
+
 Run a specific hook:
 
 ```bash
@@ -124,6 +138,7 @@ pre-commit run kubeval --all-files
 ```
 
 ### Skip Hooks (emergency only)
+
 If you need to skip hooks temporarily (not recommended):
 
 ```bash
@@ -186,20 +201,21 @@ pip install -r requirements.txt
 ```
 
 ### Notes
+
 - ⚠️ Hooks that require unavailable tools will show warnings but won't fail
 - ✅ GitHub Actions runs all hooks with all tools installed
 - 💡 For the best experience, install all tools locally
 
 ## Configuration Files
 
-| File | Purpose |
-|------|---------|
-| `.pre-commit-config.yaml` | Main pre-commit configuration |
-| `.tflint.hcl` | TFLint rules and plugin configuration |
-| `.terraform-docs.yml` | Terraform documentation generation |
-| `.secrets.baseline` | detect-secrets baseline (known false positives) |
-| `.yamllint` | YAML linting rules |
-| `.markdownlint.json` | Markdown linting rules |
+| File                      | Purpose                                         |
+| ------------------------- | ----------------------------------------------- |
+| `.pre-commit-config.yaml` | Main pre-commit configuration                   |
+| `.tflint.hcl`             | TFLint rules and plugin configuration           |
+| `.terraform-docs.yml`     | Terraform documentation generation              |
+| `.secrets.baseline`       | detect-secrets baseline (known false positives) |
+| `.yamllint`               | YAML linting rules                              |
+| `.markdownlint.json`      | Markdown linting rules                          |
 
 ## Updating Hooks
 
@@ -214,23 +230,28 @@ This updates `.pre-commit-config.yaml` with the latest hook versions.
 ## Troubleshooting
 
 ### Hook fails with "command not found"
+
 Install the required tool (see Tool Installation section).
 
 ### Hook fails on valid file
+
 - Check if the file should be excluded in `.pre-commit-config.yaml`
 - Add to baseline if it's a false positive (e.g., `.secrets.baseline`)
 
 ### Hooks are too slow
+
 - Use `--hook-stage manual` for expensive hooks
 - Run specific hooks instead of all: `pre-commit run hook-name`
 
 ### Reset hooks
+
 ```bash
 pre-commit clean
 pre-commit install --install-hooks
 ```
 
 ### Disable a specific hook
+
 Edit `.pre-commit-config.yaml` and add `stages: [manual]` to the hook.
 
 ## GitHub Actions Integration

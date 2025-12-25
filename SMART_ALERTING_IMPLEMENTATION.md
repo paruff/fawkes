@@ -15,6 +15,7 @@ Successfully implemented an intelligent alerting system that reduces noise and g
 **Location**: `services/smart-alerting/`
 
 **Components**:
+
 - FastAPI application with async/await support
 - Redis for state management and alert tracking
 - Alert ingestion endpoints for multiple sources:
@@ -24,6 +25,7 @@ Successfully implemented an intelligent alerting system that reduces noise and g
   - Generic alert format
 
 **Features**:
+
 - **Alert Grouping**: Groups alerts by service, alertname, and severity within a 5-minute correlation window
 - **Deduplication**: Removes duplicate alerts based on fingerprints
 - **Priority Scoring**: Calculates priority using formula: `severity_score(0.5) + impact_score(0.3) + frequency_score(0.2)`
@@ -39,24 +41,28 @@ Successfully implemented an intelligent alerting system that reduces noise and g
 **Suppression Types Implemented**:
 
 1. **Maintenance Window Suppression**
-   - Cron-based scheduling (e.g., "0 2 * * 0" for Sundays at 2 AM)
+
+   - Cron-based scheduling (e.g., "0 2 \* \* 0" for Sundays at 2 AM)
    - Configurable duration in seconds
    - Service-specific suppression
    - Severity filtering (suppress only medium/low during maintenance)
 
 2. **Known Issue Suppression**
+
    - Regex pattern matching for alert names
    - Service filtering
    - Ticket URL references for tracking
    - Expiration date support
 
 3. **Flapping Alert Suppression**
+
    - Detects alerts firing >3 times in 10 minutes (configurable)
    - Uses Redis sorted sets for time-windowed tracking
    - Pattern matching support
    - Automatic suppression after threshold
 
 4. **Cascade Suppression**
+
    - Identifies root cause alerts
    - Suppresses dependent alerts when root cause is active
    - Configurable suppression duration (default 30 minutes)
@@ -77,23 +83,27 @@ Successfully implemented an intelligent alerting system that reduces noise and g
 **Features**:
 
 1. **Service Owner Lookup**
+
    - Queries Backstage catalog API
    - Extracts owner from component metadata
    - Groups alerts by ownership
 
 2. **Severity-Based Routing**
+
    - **P0 (Critical, score ≥8.0)**: PagerDuty + Slack
    - **P1 (High, score ≥6.0)**: Slack + Mattermost
    - **P2 (Medium, score ≥4.0)**: Mattermost only
    - **P3 (Low, score <4.0)**: Mattermost only
 
 3. **Context Enrichment**
+
    - Recent changes (deployment history)
    - Runbook links from alert annotations
    - Log samples
    - Similar past incidents
 
 4. **Channel Integrations**
+
    - **Mattermost**: Markdown-formatted messages with emoji indicators
    - **Slack**: Rich attachments with color-coded severity
    - **PagerDuty**: Event API v2 integration with custom details
@@ -148,6 +158,7 @@ Successfully implemented an intelligent alerting system that reduces noise and g
 ## Testing
 
 ### Unit Tests ✅
+
 - 7 comprehensive unit tests for correlation engine
 - Tests cover:
   - Alert grouping by service
@@ -160,6 +171,7 @@ Successfully implemented an intelligent alerting system that reduces noise and g
 - **Status**: 7/7 passing
 
 ### BDD Feature Tests ✅
+
 - Comprehensive feature file created: `tests/bdd/features/smart-alerting.feature`
 - Scenarios covered:
   - Alert grouping by service and symptom
@@ -172,6 +184,7 @@ Successfully implemented an intelligent alerting system that reduces noise and g
   - Alert group statistics
 
 ### Test Script ✅
+
 - Automated test script: `tests/alerting/trigger-test-alerts.sh`
 - Tests 4 scenarios:
   1. Related alerts grouping
@@ -184,6 +197,7 @@ Successfully implemented an intelligent alerting system that reduces noise and g
 ## Deployment
 
 ### Kubernetes Manifests ✅
+
 - **Deployment**: 2 replicas with pod anti-affinity
 - **Service**: ClusterIP for internal access
 - **ServiceAccount**: Dedicated service account
@@ -193,6 +207,7 @@ Successfully implemented an intelligent alerting system that reduces noise and g
 - **Ingress**: External access with TLS
 
 ### Security Features ✅
+
 - Non-root container (UID 1000)
 - Read-only root filesystem with tmpfs for /tmp
 - Dropped all capabilities
@@ -201,11 +216,13 @@ Successfully implemented an intelligent alerting system that reduces noise and g
 - Secrets via Kubernetes secrets (not in Git)
 
 ### Resource Allocation
+
 - **Requests**: 200m CPU, 256Mi memory
 - **Limits**: 500m CPU, 512Mi memory
 - **Target**: <70% utilization
 
 ### ArgoCD Application ✅
+
 - GitOps deployment ready
 - Automated sync and self-heal
 - Namespace creation
@@ -214,17 +231,20 @@ Successfully implemented an intelligent alerting system that reduces noise and g
 ## API Endpoints
 
 ### Health and Monitoring
+
 - `GET /health` - Health check with component status
 - `GET /ready` - Readiness probe
 - `GET /metrics` - Prometheus metrics
 
 ### Alert Ingestion
+
 - `POST /api/v1/alerts/prometheus` - Prometheus alerts
 - `POST /api/v1/alerts/grafana` - Grafana alerts
 - `POST /api/v1/alerts/datahub` - DataHub alerts
 - `POST /api/v1/alerts/generic` - Generic alerts
 
 ### Alert Management
+
 - `GET /api/v1/alert-groups` - List grouped alerts
 - `GET /api/v1/alert-groups/{id}` - Get alert group
 - `GET /api/v1/alerts/{id}` - Get specific alert
@@ -232,6 +252,7 @@ Successfully implemented an intelligent alerting system that reduces noise and g
 - `PUT /api/v1/alerts/{id}/resolve` - Resolve alert
 
 ### Suppression Rules
+
 - `GET /api/v1/rules` - List rules
 - `POST /api/v1/rules` - Create rule
 - `GET /api/v1/rules/{id}` - Get rule
@@ -239,6 +260,7 @@ Successfully implemented an intelligent alerting system that reduces noise and g
 - `DELETE /api/v1/rules/{id}` - Delete rule
 
 ### Statistics
+
 - `GET /api/v1/stats` - Overall statistics
 - `GET /api/v1/stats/reduction` - Fatigue reduction metrics
 
@@ -279,11 +301,13 @@ The service exposes the following metrics:
 ## Security
 
 ### Security Scanning ✅
+
 - **Bandit scan**: All high-severity issues fixed
   - MD5 usage marked as `usedforsecurity=False` (non-cryptographic)
   - Remaining low/medium issues are acceptable
 
 ### Best Practices
+
 - No hardcoded credentials
 - Secrets via environment variables
 - Input validation via Pydantic
@@ -294,6 +318,7 @@ The service exposes the following metrics:
 ## Local Development
 
 ### Quick Start
+
 ```bash
 # Using docker-compose
 cd services/smart-alerting
@@ -313,6 +338,7 @@ pytest tests/unit/ -v
 ## Code Quality
 
 ### Code Review ✅
+
 - All code review issues addressed:
   - Fixed dict/Pydantic model compatibility
   - Fixed timezone-aware datetime comparisons
@@ -321,6 +347,7 @@ pytest tests/unit/ -v
   - Proper error handling
 
 ### Test Coverage
+
 - Unit tests: 7/7 passing
 - BDD scenarios: 8 scenarios defined
 - Integration test script: Ready for execution
@@ -334,6 +361,7 @@ pytest tests/unit/ -v
 ## Files Created
 
 ### Core Service (9 files)
+
 - `services/smart-alerting/app/main.py` - FastAPI application (565 lines)
 - `services/smart-alerting/app/correlation.py` - Correlation engine (232 lines)
 - `services/smart-alerting/app/suppression.py` - Suppression engine (367 lines)
@@ -345,6 +373,7 @@ pytest tests/unit/ -v
 - `services/smart-alerting/docker-compose.yaml` - Local development
 
 ### Configuration (5 files)
+
 - `services/smart-alerting/rules/example-maintenance-window.yaml`
 - `services/smart-alerting/rules/example-known-issue.yaml`
 - `services/smart-alerting/rules/example-flapping.yaml`
@@ -352,6 +381,7 @@ pytest tests/unit/ -v
 - `services/smart-alerting/rules/example-time-based.yaml`
 
 ### Kubernetes (6 files)
+
 - `services/smart-alerting/k8s/deployment.yaml` - Deployment and Service
 - `services/smart-alerting/k8s/configmap.yaml` - Rules ConfigMap
 - `services/smart-alerting/k8s/secret.yaml` - Secrets template
@@ -360,12 +390,14 @@ pytest tests/unit/ -v
 - `platform/apps/smart-alerting-application.yaml` - ArgoCD app
 
 ### Testing (3 files)
+
 - `services/smart-alerting/tests/unit/test_correlation.py` - Unit tests
 - `services/smart-alerting/pytest.ini` - Pytest configuration
 - `tests/bdd/features/smart-alerting.feature` - BDD scenarios
 - `tests/alerting/trigger-test-alerts.sh` - Test script
 
 ### Documentation (2 files)
+
 - `services/smart-alerting/README.md` - Comprehensive documentation (296 lines)
 - `services/smart-alerting/.gitignore` - Git ignore rules
 
@@ -385,17 +417,20 @@ pytest tests/unit/ -v
 While the current implementation is complete and production-ready, potential enhancements include:
 
 1. **Advanced Analytics**
+
    - Machine learning for anomaly detection in alert patterns
    - Predictive alerting based on historical patterns
    - Alert correlation across multiple time windows
 
 2. **Enhanced Integrations**
+
    - Microsoft Teams support
    - Opsgenie integration
    - ServiceNow incident creation
    - Jira ticket automation
 
 3. **UI Dashboard**
+
    - Web interface for rule management
    - Real-time alert visualization
    - Historical trend analysis
@@ -410,17 +445,20 @@ While the current implementation is complete and production-ready, potential enh
 To validate the implementation:
 
 1. **Deploy to local Kubernetes**:
+
    ```bash
    kubectl apply -f services/smart-alerting/k8s/
    ```
 
 2. **Run test script**:
+
    ```bash
    export SMART_ALERTING_URL=http://smart-alerting.fawkes.local
    ./tests/alerting/trigger-test-alerts.sh
    ```
 
 3. **Check statistics**:
+
    ```bash
    curl http://smart-alerting.fawkes.local/api/v1/stats
    curl http://smart-alerting.fawkes.local/api/v1/alert-groups
@@ -436,6 +474,7 @@ To validate the implementation:
 The smart alerting system has been successfully implemented with all core features operational. The system is production-ready with comprehensive documentation, tests, and deployment manifests. All acceptance criteria are either met or have monitoring in place for validation in production.
 
 The implementation follows Fawkes platform best practices:
+
 - ✅ GitOps-ready with ArgoCD
 - ✅ Observable by default (Prometheus metrics)
 - ✅ Secure by design (security scanning passed)
@@ -443,6 +482,7 @@ The implementation follows Fawkes platform best practices:
 - ✅ Developer experience first (comprehensive documentation)
 
 **Next Steps**:
+
 1. Deploy to development environment
 2. Configure webhook URLs for Mattermost/Slack
 3. Validate alert fatigue reduction metrics

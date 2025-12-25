@@ -18,31 +18,34 @@ Value Stream Mapping service for tracking work items through stages from idea to
 
 The VSM service uses an 8-stage value stream:
 
-| Stage | Type | WIP Limit | Description |
-|-------|------|-----------|-------------|
-| Backlog | wait | - | Work items waiting to be analyzed |
-| Design | active | 5 | Active design and analysis phase |
-| Development | active | 10 | Active implementation phase |
-| Code Review | wait | 8 | Waiting for peer review |
-| Testing | active | 8 | Active testing and QA phase |
-| Deployment Approval | wait | 5 | Waiting for deployment approval |
-| Deploy | active | 3 | Active deployment to production |
-| Production | done | - | Successfully deployed and running |
+| Stage               | Type   | WIP Limit | Description                       |
+| ------------------- | ------ | --------- | --------------------------------- |
+| Backlog             | wait   | -         | Work items waiting to be analyzed |
+| Design              | active | 5         | Active design and analysis phase  |
+| Development         | active | 10        | Active implementation phase       |
+| Code Review         | wait   | 8         | Waiting for peer review           |
+| Testing             | active | 8         | Active testing and QA phase       |
+| Deployment Approval | wait   | 5         | Waiting for deployment approval   |
+| Deploy              | active | 3         | Active deployment to production   |
+| Production          | done   | -         | Successfully deployed and running |
 
 See [config/stages.yaml](config/stages.yaml) for detailed stage definitions and [docs/vsm/value-stream-mapping.md](../../docs/vsm/value-stream-mapping.md) for complete VSM documentation.
 
 ## API Endpoints
 
 ### Work Items
+
 - `POST /api/v1/work-items` - Create a new work item
 - `PUT /api/v1/work-items/{id}/transition` - Move work item between stages
 - `GET /api/v1/work-items/{id}/history` - Get stage history for work item
 
 ### Metrics
+
 - `GET /api/v1/metrics` - Get flow metrics (throughput, WIP, cycle time)
 - `GET /api/v1/stages` - List all available stages
 
 ### Health
+
 - `GET /api/v1/health` - Health check
 - `GET /ready` - Readiness check
 - `GET /metrics` - Prometheus metrics
@@ -52,11 +55,13 @@ See [config/stages.yaml](config/stages.yaml) for detailed stage definitions and 
 ### Local Setup
 
 1. Install dependencies:
+
 ```bash
 pip install -r requirements.txt -r requirements-dev.txt
 ```
 
 2. Set environment variables:
+
 ```bash
 export DATABASE_HOST=localhost
 export DATABASE_PORT=5432
@@ -66,27 +71,32 @@ export DATABASE_PASSWORD=changeme
 ```
 
 3. Run database migrations:
+
 ```bash
 alembic upgrade head
 ```
 
 4. Load stage configurations:
+
 ```bash
 python scripts/load-stages.py --config config/stages.yaml
 ```
 
 5. Start the service:
+
 ```bash
 uvicorn app.main:app --reload
 ```
 
 6. Access the API:
+
 - API docs: http://localhost:8000/docs
 - Health check: http://localhost:8000/api/v1/health
 
 ### Testing
 
 Run unit tests:
+
 ```bash
 pytest tests/unit -v
 ```
@@ -96,12 +106,15 @@ pytest tests/unit -v
 ### Tables
 
 1. **work_items** - Work items being tracked
+
    - id, title, type, created_at, updated_at
 
 2. **stages** - Value stream stages
+
    - id, name, order, type, created_at
 
 3. **stage_transitions** - Work item transitions between stages
+
    - id, work_item_id, from_stage_id, to_stage_id, timestamp
 
 4. **flow_metrics** - Aggregated flow metrics
@@ -112,6 +125,7 @@ pytest tests/unit -v
 The VSM service exposes the following Prometheus metrics at the `/metrics` endpoint:
 
 ### Flow Metrics
+
 - `vsm_work_in_progress{stage}` (Gauge) - Current work in progress by stage
 - `vsm_throughput_per_day{date}` (Counter) - Number of items completed per day
 - `vsm_cycle_time_hours` (Histogram) - Overall cycle time in hours from start to production
@@ -119,6 +133,7 @@ The VSM service exposes the following Prometheus metrics at the `/metrics` endpo
 - `vsm_lead_time_seconds` (Histogram) - Lead time from backlog to production in seconds
 
 ### Activity Metrics
+
 - `vsm_requests_total{method, endpoint, status}` (Counter) - Total API requests
 - `vsm_work_items_created_total{type}` (Counter) - Work items created by type
 - `vsm_stage_transitions_total{from_stage, to_stage}` (Counter) - Stage transitions
@@ -126,9 +141,11 @@ The VSM service exposes the following Prometheus metrics at the `/metrics` endpo
 ### Grafana Dashboard
 
 A comprehensive flow metrics dashboard is available at:
+
 - `platform/apps/grafana/dashboards/vsm-flow-metrics.json`
 
 The dashboard includes:
+
 - **Cumulative Flow Diagram**: WIP by stage over time
 - **Throughput Charts**: Daily and weekly completion trends
 - **Cycle Time Analysis**: Per-stage cycle times and distributions
@@ -150,12 +167,14 @@ The VSM service can receive webhooks from Focalboard to automatically sync work 
 **Webhook Endpoint**: `POST /api/v1/focalboard/webhook`
 
 Supported webhook actions:
+
 - `card.created` - Creates a new VSM work item when a Focalboard card is created
 - `card.moved` - Updates work item stage when a card is moved between columns
 - `card.updated` - Updates work item metadata
 - `card.deleted` - Logs deletion (preserves VSM history)
 
 **Column to Stage Mapping**:
+
 - Focalboard columns are automatically mapped to VSM stages
 - See `GET /api/v1/focalboard/stages/mapping` for current mappings
 - Default mappings:
@@ -180,6 +199,7 @@ curl -X POST http://vsm-service.fawkes.svc:8000/api/v1/focalboard/sync \
 A custom Focalboard widget displays real-time flow metrics directly in your boards.
 
 **Features**:
+
 - Throughput, WIP, and cycle time display
 - Per-stage WIP counts
 - Bottleneck detection and warnings
@@ -191,6 +211,7 @@ A custom Focalboard widget displays real-time flow metrics directly in your boar
 ### API Endpoints
 
 **Focalboard Integration Endpoints**:
+
 - `POST /api/v1/focalboard/webhook` - Receive Focalboard webhooks
 - `POST /api/v1/focalboard/sync` - Manually sync a board
 - `GET /api/v1/focalboard/work-items/{id}/sync-to-focalboard` - Push work item to Focalboard

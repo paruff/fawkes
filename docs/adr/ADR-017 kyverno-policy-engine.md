@@ -44,14 +44,14 @@ Kubernetes admission control.
 
 ### Why Kyverno over OPA/Gatekeeper
 
-| Criteria | Kyverno | OPA/Gatekeeper |
-|----------|---------|----------------|
-| Learning Curve | YAML-based, familiar | Rego language, steep |
-| Mutation Support | Native | Limited |
-| Generation Support | Native | Not supported |
-| Kubernetes Native | Yes, CRDs | Abstraction layer |
-| Policy Testing | kyverno CLI | opa test |
-| Community | Growing rapidly | Established |
+| Criteria           | Kyverno              | OPA/Gatekeeper       |
+| ------------------ | -------------------- | -------------------- |
+| Learning Curve     | YAML-based, familiar | Rego language, steep |
+| Mutation Support   | Native               | Limited              |
+| Generation Support | Native               | Not supported        |
+| Kubernetes Native  | Yes, CRDs            | Abstraction layer    |
+| Policy Testing     | kyverno CLI          | opa test             |
+| Community          | Growing rapidly      | Established          |
 
 We chose Kyverno because:
 
@@ -95,37 +95,37 @@ We chose Kyverno because:
 
 These policies DENY non-compliant resources:
 
-| Policy | Description | Enforcement |
-|--------|-------------|-------------|
-| `require-run-as-non-root` | Containers must run as non-root | Enforce |
-| `disallow-privileged-containers` | No privileged containers | Enforce |
-| `restrict-host-namespaces` | No hostNetwork/hostPID/hostIPC | Enforce |
-| `disallow-host-ports` | No host port bindings | Enforce |
-| `disallow-capabilities` | Must drop ALL capabilities | Enforce |
-| `require-resource-limits` | CPU/memory limits required | Enforce |
+| Policy                           | Description                     | Enforcement |
+| -------------------------------- | ------------------------------- | ----------- |
+| `require-run-as-non-root`        | Containers must run as non-root | Enforce     |
+| `disallow-privileged-containers` | No privileged containers        | Enforce     |
+| `restrict-host-namespaces`       | No hostNetwork/hostPID/hostIPC  | Enforce     |
+| `disallow-host-ports`            | No host port bindings           | Enforce     |
+| `disallow-capabilities`          | Must drop ALL capabilities      | Enforce     |
+| `require-resource-limits`        | CPU/memory limits required      | Enforce     |
 
 #### 2. Standardization Policies (Mutate Mode)
 
 These policies automatically modify resources:
 
-| Policy | Mutation | Purpose |
-|--------|----------|---------|
-| `add-platform-labels` | Add `app.fawkes.idp/*` labels | Consistent labeling |
-| `add-vault-annotations` | Add Vault Agent annotations | Secret injection |
-| `set-ingress-class` | Set `ingressClassName: nginx` | Traffic routing |
-| `set-default-security-context` | Add secure defaults | Security baseline |
-| `add-default-resources` | Add default requests | Scheduling |
+| Policy                         | Mutation                      | Purpose             |
+| ------------------------------ | ----------------------------- | ------------------- |
+| `add-platform-labels`          | Add `app.fawkes.idp/*` labels | Consistent labeling |
+| `add-vault-annotations`        | Add Vault Agent annotations   | Secret injection    |
+| `set-ingress-class`            | Set `ingressClassName: nginx` | Traffic routing     |
+| `set-default-security-context` | Add secure defaults           | Security baseline   |
+| `add-default-resources`        | Add default requests          | Scheduling          |
 
 #### 3. Generation Policies (Generate Mode)
 
 These policies create resources automatically:
 
-| Policy | Generated Resources | Trigger |
-|--------|---------------------|---------|
-| `generate-namespace-network-policy` | NetworkPolicy | New Namespace |
-| `generate-namespace-resource-quota` | ResourceQuota | New Namespace |
-| `generate-namespace-limit-range` | LimitRange | New Namespace |
-| `generate-namespace-service-account` | ServiceAccount | New Namespace |
+| Policy                               | Generated Resources | Trigger       |
+| ------------------------------------ | ------------------- | ------------- |
+| `generate-namespace-network-policy`  | NetworkPolicy       | New Namespace |
+| `generate-namespace-resource-quota`  | ResourceQuota       | New Namespace |
+| `generate-namespace-limit-range`     | LimitRange          | New Namespace |
+| `generate-namespace-service-account` | ServiceAccount      | New Namespace |
 
 ### Deployment Configuration
 
@@ -149,12 +149,12 @@ System namespaces are excluded from policy enforcement:
 
 Kyverno complements rather than duplicates CI security scanning:
 
-| Layer | Tool | Purpose |
-|-------|------|---------|
-| Source Code | SonarQube | SAST, code quality, security hotspots |
-| Dependencies | OWASP Check | Known vulnerabilities in libraries |
-| Container Image | Trivy | Image vulnerabilities, SBOM |
-| **Admission** | **Kyverno** | Runtime policy enforcement |
+| Layer           | Tool        | Purpose                               |
+| --------------- | ----------- | ------------------------------------- |
+| Source Code     | SonarQube   | SAST, code quality, security hotspots |
+| Dependencies    | OWASP Check | Known vulnerabilities in libraries    |
+| Container Image | Trivy       | Image vulnerabilities, SBOM           |
+| **Admission**   | **Kyverno** | Runtime policy enforcement            |
 
 SonarQube detects code-level issues; Kyverno enforces deployment configuration.
 There is no overlap.
@@ -180,12 +180,12 @@ There is no overlap.
 
 ### Risks and Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Webhook unavailable blocks deployments | `failurePolicy: Ignore` for non-critical |
-| Policy blocks legitimate workload | Start with Audit mode, transition to Enforce |
-| Complex policies hard to maintain | Policy testing in CI, clear documentation |
-| Performance impact | Adequate resources, caching, excluded namespaces |
+| Risk                                   | Mitigation                                       |
+| -------------------------------------- | ------------------------------------------------ |
+| Webhook unavailable blocks deployments | `failurePolicy: Ignore` for non-critical         |
+| Policy blocks legitimate workload      | Start with Audit mode, transition to Enforce     |
+| Complex policies hard to maintain      | Policy testing in CI, clear documentation        |
+| Performance impact                     | Adequate resources, caching, excluded namespaces |
 
 ## Alternatives Considered
 

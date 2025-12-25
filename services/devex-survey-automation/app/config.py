@@ -16,25 +16,15 @@ class Settings(BaseSettings):
 
     # Database
     database_url: str = os.getenv(
-        "DATABASE_URL",
-        "postgresql://devex:devex@db-devex-dev-rw.fawkes.svc.cluster.local:5432/devex_surveys"
+        "DATABASE_URL", "postgresql://devex:devex@db-devex-dev-rw.fawkes.svc.cluster.local:5432/devex_surveys"
     )
 
     # Integrations
-    space_metrics_url: str = os.getenv(
-        "SPACE_METRICS_URL",
-        "http://space-metrics.fawkes.svc:8000"
-    )
-    nps_service_url: str = os.getenv(
-        "NPS_SERVICE_URL",
-        "http://nps-service.fawkes.svc:8000"
-    )
+    space_metrics_url: str = os.getenv("SPACE_METRICS_URL", "http://space-metrics.fawkes.svc:8000")
+    nps_service_url: str = os.getenv("NPS_SERVICE_URL", "http://nps-service.fawkes.svc:8000")
 
     # Mattermost
-    mattermost_url: str = os.getenv(
-        "MATTERMOST_URL",
-        "http://mattermost.fawkes.svc:8065"
-    )
+    mattermost_url: str = os.getenv("MATTERMOST_URL", "http://mattermost.fawkes.svc:8065")
     mattermost_token: Optional[str] = os.getenv("MATTERMOST_TOKEN")
     mattermost_bot_user_id: Optional[str] = os.getenv("MATTERMOST_BOT_USER_ID")
 
@@ -59,11 +49,7 @@ class Settings(BaseSettings):
     # CORS
     allowed_origins: str = os.getenv("ALLOWED_ORIGINS", "*")
 
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=False
-    )
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", case_sensitive=False)
 
 
 settings = Settings()

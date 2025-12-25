@@ -5,6 +5,7 @@ AI-powered anomaly detection for metrics, logs, and system behavior in the Fawke
 ## Overview
 
 This service provides real-time anomaly detection for:
+
 - Deployment failures (error rate spikes)
 - Build time anomalies (unusually long builds)
 - Resource usage spikes (CPU/memory)
@@ -74,21 +75,21 @@ This service provides real-time anomaly detection for:
 
 Environment variables:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PROMETHEUS_URL` | `http://prometheus-kube-prometheus-prometheus.fawkes.svc:9090` | Prometheus server URL |
-| `ALERTMANAGER_URL` | `http://prometheus-kube-prometheus-alertmanager.fawkes.svc:9093` | Alertmanager URL |
-| `LLM_API_KEY` | - | OpenAI API key for RCA |
-| `LLM_API_URL` | `https://api.openai.com/v1/chat/completions` | LLM API endpoint |
-| `LLM_MODEL` | `gpt-4` | LLM model to use |
-| `FALSE_POSITIVE_THRESHOLD` | `0.05` | Target false positive rate (5%) |
-| `DETECTION_INTERVAL_SECONDS` | `60` | Detection interval in seconds |
-| `ANOMALY_THRESHOLD` | `0.7` | Anomaly score threshold (0-1) |
-| `LOOKBACK_MINUTES` | `60` | Historical data lookback window |
-| `MIN_SAMPLES` | `10` | Minimum samples required for detection |
-| `ZSCORE_THRESHOLD` | `3.0` | Z-score threshold for statistical detection |
-| `IQR_MULTIPLIER` | `1.5` | IQR multiplier for outlier detection |
-| `CONFIDENCE_LOW_THRESHOLD` | `0.7` | Threshold below which anomalies are considered low confidence |
+| Variable                     | Default                                                          | Description                                                   |
+| ---------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------- |
+| `PROMETHEUS_URL`             | `http://prometheus-kube-prometheus-prometheus.fawkes.svc:9090`   | Prometheus server URL                                         |
+| `ALERTMANAGER_URL`           | `http://prometheus-kube-prometheus-alertmanager.fawkes.svc:9093` | Alertmanager URL                                              |
+| `LLM_API_KEY`                | -                                                                | OpenAI API key for RCA                                        |
+| `LLM_API_URL`                | `https://api.openai.com/v1/chat/completions`                     | LLM API endpoint                                              |
+| `LLM_MODEL`                  | `gpt-4`                                                          | LLM model to use                                              |
+| `FALSE_POSITIVE_THRESHOLD`   | `0.05`                                                           | Target false positive rate (5%)                               |
+| `DETECTION_INTERVAL_SECONDS` | `60`                                                             | Detection interval in seconds                                 |
+| `ANOMALY_THRESHOLD`          | `0.7`                                                            | Anomaly score threshold (0-1)                                 |
+| `LOOKBACK_MINUTES`           | `60`                                                             | Historical data lookback window                               |
+| `MIN_SAMPLES`                | `10`                                                             | Minimum samples required for detection                        |
+| `ZSCORE_THRESHOLD`           | `3.0`                                                            | Z-score threshold for statistical detection                   |
+| `IQR_MULTIPLIER`             | `1.5`                                                            | IQR multiplier for outlier detection                          |
+| `CONFIDENCE_LOW_THRESHOLD`   | `0.7`                                                            | Threshold below which anomalies are considered low confidence |
 
 ## Deployment
 
@@ -202,25 +203,33 @@ The service exposes Prometheus metrics:
 ## Detection Algorithms
 
 ### 1. Isolation Forest
+
 General-purpose anomaly detection using ensemble of isolation trees.
+
 - Works well for multivariate data
 - Low training time
 - Good for detecting outliers
 
 ### 2. Statistical Z-Score
+
 Detects points that deviate significantly from the mean.
+
 - Fast and simple
 - Works well for normally distributed data
 - Threshold: |z-score| > 3
 
 ### 3. Interquartile Range (IQR)
+
 Detects outliers using quartiles.
+
 - Robust to outliers
 - Works well for skewed distributions
 - Threshold: Q1 - 1.5*IQR or Q3 + 1.5*IQR
 
 ### 4. Rate of Change
+
 Detects sudden spikes or drops.
+
 - Good for detecting rapid changes
 - Works well for time series data
 - Threshold: Rate of change z-score > 3
@@ -240,6 +249,7 @@ When anomalies are detected, the system performs automatic RCA:
 Target: <5% false positive rate
 
 Strategies:
+
 - Multiple detection algorithms (consensus voting)
 - Confidence scoring based on algorithm agreement
 - Historical pattern learning
@@ -251,11 +261,13 @@ Strategies:
 ### Service not starting
 
 Check logs:
+
 ```bash
 kubectl logs -n fawkes -l app=anomaly-detection
 ```
 
 Common issues:
+
 - Prometheus connection failed: Check PROMETHEUS_URL
 - Models not loading: Check resource limits
 - LLM API errors: Check LLM_API_KEY

@@ -100,17 +100,17 @@ def submit(ctx, rating, category, comment, email, page_url, feedback_type, inter
 
     # Interactive mode
     if interactive or not (rating and category and comment):
-        console.print(Panel.fit(
-            "[bold cyan]Fawkes Feedback - Interactive Mode[/bold cyan]\n"
-            "Share your feedback about the Fawkes platform!",
-            box=box.DOUBLE
-        ))
+        console.print(
+            Panel.fit(
+                "[bold cyan]Fawkes Feedback - Interactive Mode[/bold cyan]\n"
+                "Share your feedback about the Fawkes platform!",
+                box=box.DOUBLE,
+            )
+        )
 
         if not rating:
             rating = IntPrompt.ask(
-                "[yellow]Rate your experience (1-5)[/yellow]",
-                default=3,
-                choices=["1", "2", "3", "4", "5"]
+                "[yellow]Rate your experience (1-5)[/yellow]", default=3, choices=["1", "2", "3", "4", "5"]
             )
 
         if not category:
@@ -119,15 +119,10 @@ def submit(ctx, rating, category, comment, email, page_url, feedback_type, inter
             for i, cat in enumerate(categories, 1):
                 console.print(f"  {i}. {cat}")
             console.print()
-            category = Prompt.ask(
-                "[yellow]Category[/yellow]",
-                default=config.default_category
-            )
+            category = Prompt.ask("[yellow]Category[/yellow]", default=config.default_category)
 
         if not comment:
-            comment = Prompt.ask(
-                "[yellow]Your feedback[/yellow] (what went well or what could be improved)"
-            )
+            comment = Prompt.ask("[yellow]Your feedback[/yellow] (what went well or what could be improved)")
 
         if not email:
             if Confirm.ask("[yellow]Would you like to provide an email for follow-up?[/yellow]", default=False):
@@ -141,7 +136,7 @@ def submit(ctx, rating, category, comment, email, page_url, feedback_type, inter
             feedback_type = Prompt.ask(
                 "[yellow]Feedback type[/yellow]",
                 choices=["feedback", "bug_report", "feature_request"],
-                default="feedback"
+                default="feedback",
             )
 
     # Validate required fields
@@ -165,29 +160,33 @@ def submit(ctx, rating, category, comment, email, page_url, feedback_type, inter
             result = client.submit_feedback(feedback)
 
             console.print()
-            console.print(Panel.fit(
-                f"[bold green]✓ Feedback submitted successfully![/bold green]\n\n"
-                f"ID: {result.get('id')}\n"
-                f"Rating: {'⭐' * rating}\n"
-                f"Category: {category}\n"
-                f"Type: {feedback_type or 'feedback'}\n"
-                f"Status: {result.get('status', 'open')}",
-                box=box.DOUBLE,
-                border_style="green"
-            ))
+            console.print(
+                Panel.fit(
+                    f"[bold green]✓ Feedback submitted successfully![/bold green]\n\n"
+                    f"ID: {result.get('id')}\n"
+                    f"Rating: {'⭐' * rating}\n"
+                    f"Category: {category}\n"
+                    f"Type: {feedback_type or 'feedback'}\n"
+                    f"Status: {result.get('status', 'open')}",
+                    box=box.DOUBLE,
+                    border_style="green",
+                )
+            )
         else:
             # Queue for later
             queue.add(feedback.model_dump())
             console.print()
-            console.print(Panel.fit(
-                f"[bold yellow]⏳ Feedback queued for later submission[/bold yellow]\n\n"
-                f"Rating: {'⭐' * rating}\n"
-                f"Category: {category}\n"
-                f"Queue size: {queue.size()} items\n\n"
-                f"[dim]Run 'fawkes-feedback sync' to retry submission when online[/dim]",
-                box=box.DOUBLE,
-                border_style="yellow"
-            ))
+            console.print(
+                Panel.fit(
+                    f"[bold yellow]⏳ Feedback queued for later submission[/bold yellow]\n\n"
+                    f"Rating: {'⭐' * rating}\n"
+                    f"Category: {category}\n"
+                    f"Queue size: {queue.size()} items\n\n"
+                    f"[dim]Run 'fawkes-feedback sync' to retry submission when online[/dim]",
+                    box=box.DOUBLE,
+                    border_style="yellow",
+                )
+            )
 
     except Exception as e:
         console.print(f"[red]✗ Failed to submit feedback:[/red] {e}")
@@ -233,10 +232,7 @@ def list(ctx, category, status, limit):
             console.print("[yellow]No feedback found.[/yellow]")
             return
 
-        table = Table(
-            title=f"Recent Feedback ({len(items)} of {response.get('total', 0)} total)",
-            box=box.ROUNDED
-        )
+        table = Table(title=f"Recent Feedback ({len(items)} of {response.get('total', 0)} total)", box=box.ROUNDED)
         table.add_column("ID", style="cyan", width=6)
         table.add_column("Rating", style="yellow", width=8)
         table.add_column("Category", style="magenta", width=15)
@@ -292,21 +288,23 @@ def show(ctx, feedback_id):
         }.get(sentiment, "[white]")
 
         console.print()
-        console.print(Panel.fit(
-            f"[bold cyan]Feedback #{item.get('id')}[/bold cyan]\n\n"
-            f"[dim]Rating:[/dim] {rating_stars}\n"
-            f"[dim]Category:[/dim] {item.get('category', 'N/A')}\n"
-            f"[dim]Type:[/dim] {item.get('feedback_type', 'feedback')}\n"
-            f"[dim]Status:[/dim] {item.get('status', 'open')}\n"
-            f"[dim]Sentiment:[/dim] {sentiment_style}{sentiment}[/]\n"
-            f"[dim]Created:[/dim] {item.get('created_at', 'N/A')}\n"
-            f"[dim]Updated:[/dim] {item.get('updated_at', 'N/A')}\n\n"
-            f"[bold]Comment:[/bold]\n{item.get('comment', 'N/A')}\n\n"
-            f"[dim]Email:[/dim] {item.get('email') or 'Not provided'}\n"
-            f"[dim]Page URL:[/dim] {item.get('page_url') or 'Not provided'}\n"
-            f"[dim]GitHub Issue:[/dim] {item.get('github_issue_url') or 'None'}",
-            box=box.DOUBLE
-        ))
+        console.print(
+            Panel.fit(
+                f"[bold cyan]Feedback #{item.get('id')}[/bold cyan]\n\n"
+                f"[dim]Rating:[/dim] {rating_stars}\n"
+                f"[dim]Category:[/dim] {item.get('category', 'N/A')}\n"
+                f"[dim]Type:[/dim] {item.get('feedback_type', 'feedback')}\n"
+                f"[dim]Status:[/dim] {item.get('status', 'open')}\n"
+                f"[dim]Sentiment:[/dim] {sentiment_style}{sentiment}[/]\n"
+                f"[dim]Created:[/dim] {item.get('created_at', 'N/A')}\n"
+                f"[dim]Updated:[/dim] {item.get('updated_at', 'N/A')}\n\n"
+                f"[bold]Comment:[/bold]\n{item.get('comment', 'N/A')}\n\n"
+                f"[dim]Email:[/dim] {item.get('email') or 'Not provided'}\n"
+                f"[dim]Page URL:[/dim] {item.get('page_url') or 'Not provided'}\n"
+                f"[dim]GitHub Issue:[/dim] {item.get('github_issue_url') or 'None'}",
+                box=box.DOUBLE,
+            )
+        )
 
     except Exception as e:
         console.print(f"[red]✗ Failed to show feedback:[/red] {e}")
@@ -343,7 +341,9 @@ def sync(ctx):
         try:
             feedback = FeedbackSubmission(**item)
             result = client.submit_feedback(feedback)
-            console.print(f"[green]✓[/green] Submitted feedback #{result.get('id')} (queued: {item.get('queued_at', 'N/A')[:10]})")
+            console.print(
+                f"[green]✓[/green] Submitted feedback #{result.get('id')} (queued: {item.get('queued_at', 'N/A')[:10]})"
+            )
             success_count += 1
             # Mark for removal by setting to None
             queued_items[i] = None
@@ -358,13 +358,15 @@ def sync(ctx):
             queue.remove(i)
 
     console.print()
-    console.print(Panel.fit(
-        f"[bold cyan]Sync Complete[/bold cyan]\n\n"
-        f"✓ Successfully submitted: {success_count}\n"
-        f"✗ Failed: {len(failed_indices)}\n"
-        f"Remaining in queue: {queue.size()}",
-        box=box.DOUBLE
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold cyan]Sync Complete[/bold cyan]\n\n"
+            f"✓ Successfully submitted: {success_count}\n"
+            f"✗ Failed: {len(failed_indices)}\n"
+            f"Remaining in queue: {queue.size()}",
+            box=box.DOUBLE,
+        )
+    )
 
 
 @main.command(name="queue")
@@ -381,10 +383,7 @@ def queue_status(ctx):
         console.print("[green]✓[/green] Queue is empty")
         return
 
-    table = Table(
-        title=f"Offline Queue ({len(queued_items)} items)",
-        box=box.ROUNDED
-    )
+    table = Table(title=f"Offline Queue ({len(queued_items)} items)", box=box.ROUNDED)
     table.add_column("#", style="cyan", width=4)
     table.add_column("Rating", style="yellow", width=8)
     table.add_column("Category", style="magenta", width=15)
@@ -421,17 +420,19 @@ def config_show(ctx):
     config_obj = config_manager.config
 
     console.print()
-    console.print(Panel.fit(
-        f"[bold cyan]Fawkes Feedback CLI Configuration[/bold cyan]\n\n"
-        f"[dim]Config file:[/dim] {config_manager.config_path}\n"
-        f"[dim]API URL:[/dim] {config_obj.api_url}\n"
-        f"[dim]API Key:[/dim] {'*' * 10 if config_obj.api_key else 'Not set'}\n"
-        f"[dim]Default Category:[/dim] {config_obj.default_category}\n"
-        f"[dim]Author:[/dim] {config_obj.author or 'Not set (using git config)'}\n"
-        f"[dim]Offline Mode:[/dim] {config_obj.offline_mode}\n"
-        f"[dim]Queue Path:[/dim] {config_obj.queue_path}",
-        box=box.DOUBLE
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold cyan]Fawkes Feedback CLI Configuration[/bold cyan]\n\n"
+            f"[dim]Config file:[/dim] {config_manager.config_path}\n"
+            f"[dim]API URL:[/dim] {config_obj.api_url}\n"
+            f"[dim]API Key:[/dim] {'*' * 10 if config_obj.api_key else 'Not set'}\n"
+            f"[dim]Default Category:[/dim] {config_obj.default_category}\n"
+            f"[dim]Author:[/dim] {config_obj.author or 'Not set (using git config)'}\n"
+            f"[dim]Offline Mode:[/dim] {config_obj.offline_mode}\n"
+            f"[dim]Queue Path:[/dim] {config_obj.queue_path}",
+            box=box.DOUBLE,
+        )
+    )
 
 
 @config.command(name="init")
@@ -443,16 +444,17 @@ def config_init(ctx, api_url, api_key, author):
     """Initialize configuration interactively."""
     config_manager = ctx.obj["config_manager"]
 
-    console.print(Panel.fit(
-        "[bold cyan]Fawkes Feedback CLI Configuration Setup[/bold cyan]\n"
-        "Let's configure the CLI for your environment",
-        box=box.DOUBLE
-    ))
+    console.print(
+        Panel.fit(
+            "[bold cyan]Fawkes Feedback CLI Configuration Setup[/bold cyan]\n"
+            "Let's configure the CLI for your environment",
+            box=box.DOUBLE,
+        )
+    )
 
     if not api_url:
         api_url = Prompt.ask(
-            "[yellow]Feedback API URL[/yellow]",
-            default="http://feedback-service.fawkes.svc.cluster.local:8000"
+            "[yellow]Feedback API URL[/yellow]", default="http://feedback-service.fawkes.svc.cluster.local:8000"
         )
 
     if not author:

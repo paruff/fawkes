@@ -51,43 +51,43 @@ spec:
             fsGroup: 65534
 
           containers:
-          - name: indexer
-            image: rag-service:latest
-            imagePullPolicy: IfNotPresent
+            - name: indexer
+              image: rag-service:latest
+              imagePullPolicy: IfNotPresent
 
-            # Override command to run indexing script
-            command: ["python"]
-            args: ["scripts/index-docs.py"]
+              # Override command to run indexing script
+              command: ["python"]
+              args: ["scripts/index-docs.py"]
 
-            env:
-            - name: WEAVIATE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: rag-service-config
-                  key: weaviate_url
-            - name: SCHEMA_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: rag-service-config
-                  key: schema_name
+              env:
+                - name: WEAVIATE_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rag-service-config
+                      key: weaviate_url
+                - name: SCHEMA_NAME
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rag-service-config
+                      key: schema_name
 
-            # Resource limits for indexing job
-            resources:
-              requests:
-                cpu: 250m
-                memory: 512Mi
-              limits:
-                cpu: 500m
-                memory: 1Gi
+              # Resource limits for indexing job
+              resources:
+                requests:
+                  cpu: 250m
+                  memory: 512Mi
+                limits:
+                  cpu: 500m
+                  memory: 1Gi
 
-            # Security context
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              runAsNonRoot: true
-              runAsUser: 65534
-              capabilities:
-                drop:
-                  - ALL
-              seccompProfile:
-                type: RuntimeDefault
+              # Security context
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: false
+                runAsNonRoot: true
+                runAsUser: 65534
+                capabilities:
+                  drop:
+                    - ALL
+                seccompProfile:
+                  type: RuntimeDefault

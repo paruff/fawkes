@@ -67,7 +67,7 @@ info() {
 
 # Test 1: Check PostgreSQL cluster
 echo "Test 1: PostgreSQL Cluster"
-if kubectl get cluster db-plausible-dev -n "$NAMESPACE" &>/dev/null; then
+if kubectl get cluster db-plausible-dev -n "$NAMESPACE" &> /dev/null; then
   STATUS=$(kubectl get cluster db-plausible-dev -n "$NAMESPACE" -o jsonpath='{.status.phase}')
   if [[ "$STATUS" == "Cluster in healthy state" ]]; then
     pass "PostgreSQL cluster is healthy"
@@ -80,7 +80,7 @@ fi
 
 # Test 2: Check ClickHouse StatefulSet
 echo "Test 2: ClickHouse StatefulSet"
-if kubectl get statefulset plausible-clickhouse -n "$NAMESPACE" &>/dev/null; then
+if kubectl get statefulset plausible-clickhouse -n "$NAMESPACE" &> /dev/null; then
   READY=$(kubectl get statefulset plausible-clickhouse -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
   DESIRED=$(kubectl get statefulset plausible-clickhouse -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
   if [[ "$READY" == "$DESIRED" ]]; then
@@ -94,7 +94,7 @@ fi
 
 # Test 3: Check Plausible Deployment
 echo "Test 3: Plausible Deployment"
-if kubectl get deployment plausible -n "$NAMESPACE" &>/dev/null; then
+if kubectl get deployment plausible -n "$NAMESPACE" &> /dev/null; then
   READY=$(kubectl get deployment plausible -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
   DESIRED=$(kubectl get deployment plausible -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
   if [[ "$READY" == "$DESIRED" ]]; then
@@ -110,7 +110,7 @@ fi
 echo "Test 4: Services"
 SERVICES=("plausible" "plausible-clickhouse")
 for svc in "${SERVICES[@]}"; do
-  if kubectl get service "$svc" -n "$NAMESPACE" &>/dev/null; then
+  if kubectl get service "$svc" -n "$NAMESPACE" &> /dev/null; then
     CLUSTER_IP=$(kubectl get service "$svc" -n "$NAMESPACE" -o jsonpath='{.spec.clusterIP}')
     pass "Service $svc exists (ClusterIP: $CLUSTER_IP)"
   else
@@ -120,7 +120,7 @@ done
 
 # Test 5: Check Ingress
 echo "Test 5: Ingress"
-if kubectl get ingress plausible -n "$NAMESPACE" &>/dev/null; then
+if kubectl get ingress plausible -n "$NAMESPACE" &> /dev/null; then
   HOSTS=$(kubectl get ingress plausible -n "$NAMESPACE" -o jsonpath='{.spec.rules[*].host}')
   pass "Ingress configured for host(s): $HOSTS"
 else
@@ -131,7 +131,7 @@ fi
 echo "Test 6: ConfigMaps"
 CONFIGMAPS=("plausible-config" "clickhouse-config")
 for cm in "${CONFIGMAPS[@]}"; do
-  if kubectl get configmap "$cm" -n "$NAMESPACE" &>/dev/null; then
+  if kubectl get configmap "$cm" -n "$NAMESPACE" &> /dev/null; then
     pass "ConfigMap $cm exists"
   else
     fail "ConfigMap $cm not found"
@@ -142,7 +142,7 @@ done
 echo "Test 7: Secrets"
 SECRETS=("plausible-secret" "db-plausible-credentials")
 for secret in "${SECRETS[@]}"; do
-  if kubectl get secret "$secret" -n "$NAMESPACE" &>/dev/null; then
+  if kubectl get secret "$secret" -n "$NAMESPACE" &> /dev/null; then
     pass "Secret $secret exists"
   else
     fail "Secret $secret not found"
@@ -151,7 +151,7 @@ done
 
 # Test 8: Check Pod Health
 echo "Test 8: Pod Health"
-if kubectl get pods -n "$NAMESPACE" -l app=plausible --no-headers 2>/dev/null | grep -q .; then
+if kubectl get pods -n "$NAMESPACE" -l app=plausible --no-headers 2> /dev/null | grep -q .; then
   UNHEALTHY=$(kubectl get pods -n "$NAMESPACE" -l app=plausible --no-headers | grep -v Running | grep -v Completed || true)
   if [[ -z "$UNHEALTHY" ]]; then
     pass "All Plausible pods are healthy"
@@ -167,7 +167,7 @@ fi
 echo "Test 9: Plausible Health Endpoint"
 POD=$(kubectl get pods -n "$NAMESPACE" -l app=plausible,component=analytics --no-headers -o custom-columns=":metadata.name" | head -1)
 if [[ -n "$POD" ]]; then
-  if kubectl exec -n "$NAMESPACE" "$POD" -- wget -q -O- http://localhost:8000/api/health &>/dev/null; then
+  if kubectl exec -n "$NAMESPACE" "$POD" -- wget -q -O- http://localhost:8000/api/health &> /dev/null; then
     pass "Plausible health endpoint responding"
   else
     fail "Plausible health endpoint not responding"
@@ -180,7 +180,7 @@ fi
 echo "Test 10: ClickHouse Health"
 CH_POD=$(kubectl get pods -n "$NAMESPACE" -l component=clickhouse --no-headers -o custom-columns=":metadata.name" | head -1)
 if [[ -n "$CH_POD" ]]; then
-  if kubectl exec -n "$NAMESPACE" "$CH_POD" -- wget -q -O- http://localhost:8123/ping &>/dev/null; then
+  if kubectl exec -n "$NAMESPACE" "$CH_POD" -- wget -q -O- http://localhost:8123/ping &> /dev/null; then
     pass "ClickHouse health endpoint responding"
   else
     fail "ClickHouse health endpoint not responding"
@@ -191,11 +191,11 @@ fi
 
 # Test 11: Resource Usage
 echo "Test 11: Resource Usage"
-if command -v kubectl-top &> /dev/null || kubectl top pods -h &>/dev/null; then
+if command -v kubectl-top &> /dev/null || kubectl top pods -h &> /dev/null; then
   PLAUSIBLE_PODS=$(kubectl get pods -n "$NAMESPACE" -l app=plausible --no-headers -o custom-columns=":metadata.name")
   for pod in $PLAUSIBLE_PODS; do
-    CPU=$(kubectl top pod "$pod" -n "$NAMESPACE" --no-headers 2>/dev/null | awk '{print $2}' || echo "N/A")
-    MEM=$(kubectl top pod "$pod" -n "$NAMESPACE" --no-headers 2>/dev/null | awk '{print $3}' || echo "N/A")
+    CPU=$(kubectl top pod "$pod" -n "$NAMESPACE" --no-headers 2> /dev/null | awk '{print $2}' || echo "N/A")
+    MEM=$(kubectl top pod "$pod" -n "$NAMESPACE" --no-headers 2> /dev/null | awk '{print $3}' || echo "N/A")
     info "Pod $pod - CPU: $CPU, Memory: $MEM"
   done
   pass "Resource metrics collected"
@@ -205,7 +205,7 @@ fi
 
 # Test 12: Backstage Integration
 echo "Test 12: Backstage Integration"
-if kubectl get configmap backstage-app-config -n "$NAMESPACE" &>/dev/null; then
+if kubectl get configmap backstage-app-config -n "$NAMESPACE" &> /dev/null; then
   if kubectl get configmap backstage-app-config -n "$NAMESPACE" -o yaml | grep -q "plausible"; then
     pass "Backstage configured with Plausible analytics"
   else

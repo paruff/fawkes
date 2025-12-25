@@ -7,6 +7,7 @@
 **Duration**: 60 minutes
 **Difficulty**: Advanced
 **Prerequisites**:
+
 - Module 13: Observability complete
 - Module 14: DORA Metrics Deep Dive complete
 - Understanding of Prometheus and monitoring
@@ -27,6 +28,7 @@ By the end of this module, you will:
 7. ✅ Communicate service health to stakeholders
 
 **DORA Capabilities Addressed**:
+
 - ✓ Monitoring and Observability
 - ✓ Service Reliability
 - ✓ Data-Driven Decision Making
@@ -39,6 +41,7 @@ By the end of this module, you will:
 ### Why SLIs/SLOs Matter
 
 **Without SLIs/SLOs**:
+
 ```
 Team: "Our service is pretty reliable"
 Customer: "It's been down twice this week!"
@@ -53,6 +56,7 @@ Result:
 ```
 
 **With SLIs/SLOs**:
+
 ```
 Team: "We have 99.9% availability (SLO) and we're at 99.95%"
 Customer: "Within SLO, acceptable"
@@ -98,6 +102,7 @@ Result:
 **SLI**: A carefully selected metric that represents user happiness
 
 **Good SLI characteristics**:
+
 - ✅ User-centric (measures what users care about)
 - ✅ Measurable (can be quantified)
 - ✅ Actionable (team can improve it)
@@ -192,17 +197,18 @@ User Journey: Purchase Product
 
 **Step 2: Map to SLIs**
 
-| Journey Step | SLI | Target | Why It Matters |
-|--------------|-----|--------|----------------|
-| Browse catalog | Latency | p95 < 300ms | Slow browsing = abandoned |
-| Add to cart | Availability | 99.9% | Can't shop if cart broken |
-| Enter payment | Error rate | < 0.1% | Payment errors = lost sales |
-| Complete purchase | Latency | p99 < 1s | Checkout must be fast |
-| Receive confirmation | Availability | 99.99% | Legal requirement |
+| Journey Step         | SLI          | Target      | Why It Matters              |
+| -------------------- | ------------ | ----------- | --------------------------- |
+| Browse catalog       | Latency      | p95 < 300ms | Slow browsing = abandoned   |
+| Add to cart          | Availability | 99.9%       | Can't shop if cart broken   |
+| Enter payment        | Error rate   | < 0.1%      | Payment errors = lost sales |
+| Complete purchase    | Latency      | p99 < 1s    | Checkout must be fast       |
+| Receive confirmation | Availability | 99.99%      | Legal requirement           |
 
 **Step 3: Prioritize**
 
 Focus on 3-5 most critical SLIs:
+
 1. **Checkout error rate** (revenue impact)
 2. **Checkout latency** (abandonment risk)
 3. **Catalog availability** (engagement)
@@ -218,6 +224,7 @@ Focus on 3-5 most critical SLIs:
 **Format**: `SLI ≥ Target over Time Window`
 
 **Examples**:
+
 - Availability ≥ 99.9% over 30 days
 - p95 latency ≤ 200ms over 7 days
 - Error rate < 0.5% over 30 days
@@ -230,6 +237,7 @@ Focus on 3-5 most critical SLIs:
 **Good**: "99.9% because user research shows this meets needs"
 
 **User tolerance** varies by context:
+
 - Search engine: p95 < 100ms (users expect instant)
 - Banking transfer: p95 < 2s (users tolerate some delay)
 - Batch report: p95 < 30s (users expect processing time)
@@ -237,6 +245,7 @@ Focus on 3-5 most critical SLIs:
 #### Rule 2: Start Conservative, Tighten Over Time
 
 **Initial SLO**: 99.5% availability
+
 - Monitor for 3 months
 - Actual: 99.7%
 - **Tighten**: 99.6% (between actual and previous)
@@ -249,6 +258,7 @@ Focus on 3-5 most critical SLIs:
 **Good**: 3-5 SLOs that matter most
 
 **Example**:
+
 ```
 Service: Payment API
 SLOs:
@@ -308,6 +318,7 @@ Windows:
 ```
 
 **Benefit**: Early warning system
+
 - Hour/day violations = potential trend
 - 30-day still met = no customer impact yet
 
@@ -322,6 +333,7 @@ Windows:
 **Formula**: `Error Budget = 100% - SLO`
 
 **Example**:
+
 ```
 SLO: 99.9% availability
 Error Budget: 0.1% (100% - 99.9%)
@@ -356,6 +368,7 @@ Remaining: 5 minutes (healthy) ✅
 **Formula**: `Burn Rate = (Error Rate / Error Budget) × Time Window`
 
 **Example**:
+
 ```
 Current error rate: 0.5%
 Error budget: 0.1%
@@ -459,12 +472,12 @@ slos:
     objective: 99.9
     window: 30d
     description: "Service available 99.9% of the time over 30 days"
-    alert_threshold: 99.8  # Alert when approaching SLO breach
+    alert_threshold: 99.8 # Alert when approaching SLO breach
 
   # Latency SLO (p95)
   - name: latency_p95_slo
     sli: latency_p95
-    objective: 500  # milliseconds
+    objective: 500 # milliseconds
     window: 7d
     description: "95% of requests complete within 500ms over 7 days"
     alert_threshold: 600
@@ -472,7 +485,7 @@ slos:
   # Error Rate SLO
   - name: error_rate_slo
     sli: error_rate
-    objective: 0.1  # 0.1% error rate
+    objective: 0.1 # 0.1% error rate
     window: 30d
     description: "Error rate below 0.1% over 30 days"
     alert_threshold: 0.15
@@ -642,16 +655,18 @@ groups:
       {
         "title": "Availability SLO Status",
         "type": "gauge",
-        "targets": [{
-          "expr": "sli:availability:30d"
-        }],
+        "targets": [
+          {
+            "expr": "sli:availability:30d"
+          }
+        ],
         "fieldConfig": {
           "defaults": {
             "thresholds": {
               "steps": [
-                {"value": 0, "color": "red"},
-                {"value": 99.8, "color": "yellow"},
-                {"value": 99.9, "color": "green"}
+                { "value": 0, "color": "red" },
+                { "value": 99.8, "color": "yellow" },
+                { "value": 99.9, "color": "green" }
               ]
             },
             "min": 99,
@@ -663,27 +678,32 @@ groups:
       {
         "title": "Error Budget Remaining",
         "type": "graph",
-        "targets": [{
-          "expr": "error_budget:availability:remaining_percent",
-          "legendFormat": "Remaining"
-        }, {
-          "expr": "error_budget:availability:consumed_percent",
-          "legendFormat": "Consumed"
-        }]
+        "targets": [
+          {
+            "expr": "error_budget:availability:remaining_percent",
+            "legendFormat": "Remaining"
+          },
+          {
+            "expr": "error_budget:availability:consumed_percent",
+            "legendFormat": "Consumed"
+          }
+        ]
       },
       {
         "title": "Burn Rate (Last Hour)",
         "type": "stat",
-        "targets": [{
-          "expr": "error_budget:availability:burn_rate_1h"
-        }],
+        "targets": [
+          {
+            "expr": "error_budget:availability:burn_rate_1h"
+          }
+        ],
         "fieldConfig": {
           "defaults": {
             "thresholds": {
               "steps": [
-                {"value": 0, "color": "green"},
-                {"value": 5, "color": "yellow"},
-                {"value": 10, "color": "red"}
+                { "value": 0, "color": "green" },
+                { "value": 5, "color": "yellow" },
+                { "value": 10, "color": "red" }
               ]
             }
           }
@@ -692,13 +712,16 @@ groups:
       {
         "title": "SLI vs SLO (30 days)",
         "type": "timeseries",
-        "targets": [{
-          "expr": "sli:availability:30d",
-          "legendFormat": "Actual"
-        }, {
-          "expr": "99.9",
-          "legendFormat": "SLO (99.9%)"
-        }]
+        "targets": [
+          {
+            "expr": "sli:availability:30d",
+            "legendFormat": "Actual"
+          },
+          {
+            "expr": "99.9",
+            "legendFormat": "SLO (99.9%)"
+          }
+        ]
       }
     ]
   }
@@ -864,21 +887,25 @@ Actions:
 **Requirements**:
 
 1. **Define 3 SLIs**
+
    - Availability
    - Latency (p95 and p99)
    - Error rate
 
 2. **Set SLOs**
+
    - Based on user requirements
    - Document reasoning
    - Include alert thresholds
 
 3. **Calculate Error Budgets**
+
    - Convert SLOs to error budgets
    - Define burn rate alerts
    - Create exhaustion policies
 
 4. **Implement Monitoring**
+
    - Prometheus recording rules
    - AlertManager rules
    - Grafana dashboard
@@ -908,9 +935,9 @@ slis:
 slos:
   - name: availability_slo
     sli: availability
-    objective: ???  # TODO: Set target
+    objective: ??? # TODO: Set target
     window: 30d
-    reasoning: "???"  # TODO: Document why
+    reasoning: "???" # TODO: Document why
 
   # TODO: Add latency and error rate SLOs
 
@@ -919,6 +946,7 @@ error_budget_policy:
 ```
 
 **Validation Criteria**:
+
 - [ ] 3 SLIs defined with Prometheus queries
 - [ ] 3 SLOs set with clear reasoning
 - [ ] Error budgets calculated correctly
@@ -935,42 +963,49 @@ error_budget_policy:
 ### Quiz Questions
 
 1. **What is an SLI?**
+
    - [ ] A promise to users about reliability
    - [x] A metric that indicates user happiness
    - [ ] The allowed unreliability
    - [ ] A dashboard panel
 
 2. **What is an SLO?**
+
    - [x] A target value for an SLI over a time window
    - [ ] A metric collection system
    - [ ] An error budget calculation
    - [ ] A monitoring tool
 
 3. **How is error budget calculated?**
+
    - [ ] 100% - SLI
    - [x] 100% - SLO
    - [ ] SLO - SLI
    - [ ] SLI - SLO
 
 4. **What does a burn rate of 5x mean?**
+
    - [ ] Service is 5x faster
    - [ ] 5 errors per minute
    - [x] Consuming error budget 5x faster than normal
    - [ ] 5% error rate
 
 5. **When should you freeze feature deploys?**
+
    - [ ] Never, always ship features
    - [ ] Only during incidents
    - [x] When error budget is critically low (<10%)
    - [ ] Every Friday
 
 6. **What's a good starting point for SLOs?**
+
    - [ ] 100% (perfection)
    - [ ] 50% (average)
    - [x] Slightly below current performance
    - [ ] Industry average
 
 7. **How many SLOs should a service have?**
+
    - [ ] Exactly 1
    - [ ] At least 10
    - [x] 3-5 most critical metrics
@@ -1010,6 +1045,7 @@ error_budget_policy:
 ### Real-World Impact
 
 "After implementing SLIs/SLOs/Error Budgets:
+
 - **Deployment confidence**: 70% → 95% (data-driven decisions)
 - **Reliability**: 99.5% → 99.9% (clear targets)
 - **Innovation velocity**: 30% increase (error budget enables risk)
@@ -1018,23 +1054,27 @@ error_budget_policy:
 - **Incident response**: Faster (clear SLO breach alerts)
 
 We transformed from arguing about reliability to managing it scientifically."
-- *Engineering Director, SaaS Platform*
+
+- _Engineering Director, SaaS Platform_
 
 ---
 
 ## 📚 Additional Resources
 
 ### Books
-- *Site Reliability Engineering* - Google (free online)
-- *The Site Reliability Workbook* - Google
-- *Implementing Service Level Objectives* - Alex Hidalgo
+
+- _Site Reliability Engineering_ - Google (free online)
+- _The Site Reliability Workbook_ - Google
+- _Implementing Service Level Objectives_ - Alex Hidalgo
 
 ### Tools
+
 - [Sloth](https://sloth.dev/) - SLO generator for Prometheus
 - [Pyrra](https://github.com/pyrra-dev/pyrra) - SLO tracking
 - [OpenSLO](https://openslo.com/) - SLO specification standard
 
 ### Learning Resources
+
 - [Google SRE - SLO Chapter](https://sre.google/sre-book/service-level-objectives/)
 - [Embracing Risk](https://sre.google/sre-book/embracing-risk/)
 - [SLO Workshop](https://slo-workshop.stevesnet.com/)
@@ -1046,11 +1086,13 @@ We transformed from arguing about reliability to managing it scientifically."
 ### Assessment Checklist
 
 - [ ] **Conceptual Understanding**
+
   - [ ] Explain SLIs, SLOs, error budgets
   - [ ] Calculate burn rates
   - [ ] Understand SLO-driven decisions
 
 - [ ] **Practical Skills**
+
   - [ ] Define SLIs for services
   - [ ] Set appropriate SLOs
   - [ ] Implement monitoring
@@ -1058,6 +1100,7 @@ We transformed from arguing about reliability to managing it scientifically."
   - [ ] Configure alerts
 
 - [ ] **Hands-On Lab**
+
   - [ ] Complete SLO implementation
   - [ ] Recording rules working
   - [ ] Alerts configured
@@ -1069,6 +1112,7 @@ We transformed from arguing about reliability to managing it scientifically."
 ### Certification Credit
 
 Upon completion, you earn:
+
 - **10 points** toward Brown Belt certification (75% complete)
 - **Badge**: "SLO Architect"
 - **Skill Unlocked**: Service Reliability Engineering
@@ -1091,6 +1135,6 @@ Module 16: Incident Management    ░░░░░░░░░░░░  0%
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*
-*Version 1.0 | Last Updated: October 2025*
-*License: MIT | https://github.com/paruff/fawkes*
+_Fawkes Dojo - Where Platform Engineers Are Forged_
+_Version 1.0 | Last Updated: October 2025_
+_License: MIT | https://github.com/paruff/fawkes_

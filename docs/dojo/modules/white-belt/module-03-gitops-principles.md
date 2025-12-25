@@ -25,6 +25,7 @@ By completing this module, you will be able to:
 ### Why This Matters
 
 GitOps is a fundamental practice in modern platform engineering:
+
 - **Netflix** deploys 1000+ times per day using GitOps
 - **Weaveworks** reported 2x faster deployments with GitOps
 - **DORA research** shows GitOps directly improves all four key metrics
@@ -50,6 +51,7 @@ terraform apply
 ```
 
 **Problems**:
+
 - ❌ **No audit trail** - Who made what change, when, and why?
 - ❌ **Configuration drift** - Production differs from documented state
 - ❌ **No rollback** - Can't easily revert to previous working state
@@ -72,17 +74,19 @@ spec:
   template:
     spec:
       containers:
-      - name: myapp
-        image: myapp:v2.0
+        - name: myapp
+          image: myapp:v2.0
 ```
 
 **GitOps operator** (like ArgoCD) continuously:
+
 1. **Watches Git** for changes
 2. **Compares** Git state with cluster state
 3. **Applies** differences automatically
 4. **Heals** any manual changes (self-healing)
 
 **Benefits**:
+
 - ✅ **Complete audit trail** - Every change is a Git commit
 - ✅ **No drift** - System automatically returns to Git state
 - ✅ **Easy rollback** - `git revert` restores previous state
@@ -99,6 +103,7 @@ The **OpenGitOps** working group defines four core principles:
 **Definition**: System's desired state is expressed declaratively (what, not how).
 
 **Example**:
+
 ```yaml
 # Declarative (GitOps) - Describe WHAT you want
 replicas: 5
@@ -116,12 +121,14 @@ kubectl set image deployment/myapp myapp=v2.0
 **Definition**: Desired state is stored in Git, providing version history and immutability.
 
 **Benefits**:
+
 - Every change has a commit SHA (immutable reference)
 - Full history of who changed what, when, and why
 - Easy to see what production looked like at any point in time
 - Rollback is just a `git revert`
 
 **Example**:
+
 ```bash
 # View deployment history
 git log apps/prod/myapp/deployment.yaml
@@ -138,6 +145,7 @@ git revert HEAD
 **Definition**: Software agents automatically pull desired state from Git (not pushed).
 
 **Pull Model** (GitOps):
+
 ```
 Git Repository (source of truth)
         ↑
@@ -152,6 +160,7 @@ Git Repository (source of truth)
 ```
 
 **Push Model** (Traditional CI/CD):
+
 ```
 CI/CD System (Jenkins)
         │
@@ -162,6 +171,7 @@ CI/CD System (Jenkins)
 ```
 
 **Why Pull is Better**:
+
 - ✅ **More secure** - Cluster credentials not in CI/CD system
 - ✅ **Self-healing** - Detects and corrects drift automatically
 - ✅ **Better failure handling** - Retries automatically
@@ -172,6 +182,7 @@ CI/CD System (Jenkins)
 **Definition**: Software agents continuously ensure actual state matches desired state.
 
 **Reconciliation Loop**:
+
 ```
 1. Fetch desired state from Git
 2. Compare with actual state in cluster
@@ -181,6 +192,7 @@ CI/CD System (Jenkins)
 ```
 
 **Self-Healing Example**:
+
 ```bash
 # Someone manually changes replicas
 kubectl scale deployment/myapp --replicas=10
@@ -190,6 +202,7 @@ kubectl scale deployment/myapp --replicas=10
 ```
 
 **Benefits**:
+
 - Prevents configuration drift
 - Recovers from manual mistakes automatically
 - Ensures production always matches Git
@@ -204,18 +217,21 @@ kubectl scale deployment/myapp --replicas=10
 **Deployment Frequency**: How often you deploy to production
 
 **Without GitOps**:
+
 - Manual deployments require coordination
 - Fear of breaking production slows deploys
 - Need specific people with kubectl access
 - Result: Weekly or monthly deployments
 
 **With GitOps**:
+
 - Merge to main branch → automatic deployment
 - Git PR process provides confidence
 - Any developer can merge (with approval)
 - Result: Multiple deployments per day
 
 **Example Flow**:
+
 ```bash
 # Developer workflow
 git checkout -b feature/new-endpoint
@@ -236,6 +252,7 @@ git push origin feature/new-endpoint
 **Lead Time for Changes**: Time from commit to production
 
 **Without GitOps**:
+
 ```
 Commit → Wait for CI → Manual deployment steps → Production
         (10 min)      (30-60 min manual work)
@@ -243,6 +260,7 @@ Total: 40-70 minutes
 ```
 
 **With GitOps**:
+
 ```
 Commit → CI builds → Update GitOps repo → ArgoCD syncs → Production
         (10 min)    (1 min)              (3 min)
@@ -258,6 +276,7 @@ Total: 14 minutes
 **Change Failure Rate**: % of deployments causing failures
 
 **Without GitOps**:
+
 - Manual kubectl commands prone to errors
 - No code review of infrastructure changes
 - Difficult to test changes before production
@@ -265,6 +284,7 @@ Total: 14 minutes
 - Result: 15-20% failure rate typical
 
 **With GitOps**:
+
 - Declarative configs easier to review
 - Pull requests catch errors before merge
 - Can test in staging (identical GitOps workflow)
@@ -272,6 +292,7 @@ Total: 14 minutes
 - Result: 3-5% failure rate achievable
 
 **Safety Mechanisms**:
+
 1. **Git History**: Every change reviewed and auditable
 2. **Dry Run**: ArgoCD shows what will change before applying
 3. **Progressive Sync**: Gradual rollout with health checks
@@ -282,6 +303,7 @@ Total: 14 minutes
 **Time to Restore Service**: Time to recover from failure
 
 **Without GitOps**:
+
 ```
 Incident detected → Find person with access → Figure out what changed →
 Run commands to fix → Hope it works
@@ -289,12 +311,14 @@ Total: 30-60 minutes (or more)
 ```
 
 **With GitOps**:
+
 ```
 Incident detected → git revert HEAD → ArgoCD syncs → Service restored
 Total: 3-5 minutes
 ```
 
 **Example**:
+
 ```bash
 # Quick rollback
 git log --oneline  # Find commit to revert to
@@ -313,12 +337,14 @@ git push           # ArgoCD automatically applies rollback
 Fawkes uses a **mono-repo approach** where all environments and applications live in one repository.
 
 **Benefits**:
+
 - Single source of truth
 - Easy to see all environments
 - Shared modules and configurations
 - Consistent tooling
 
 **Structure**:
+
 ```
 fawkes-gitops/
 ├── apps/                       # Application deployments
@@ -359,21 +385,25 @@ fawkes-gitops/
 ### Directory Responsibilities
 
 **`apps/`** - Application Deployments
+
 - One directory per environment (dev, staging, prod)
 - Team-based organization
 - Contains Kubernetes manifests or Kustomize/Helm references
 
 **`platform/`** - Platform Components
+
 - Fawkes platform services (Backstage, Jenkins, ArgoCD, etc.)
 - Usually deployed once (not per environment)
 - Managed by platform team
 
 **`infrastructure/`** - Infrastructure Resources
+
 - Namespaces, RBAC, network policies
 - Resource quotas and limits
 - Applied before applications
 
 **`argocd-apps/`** - ArgoCD Applications
+
 - Defines what ArgoCD should deploy
 - ApplicationSets for deploying multiple apps
 - Points to directories in `apps/`, `platform/`, `infrastructure/`
@@ -411,6 +441,7 @@ git push
 #### 1. Separate Application Code from Deployment Config
 
 **Anti-pattern**: Kubernetes manifests in application repository
+
 ```
 myapp/
 ├── src/           # Application code
@@ -419,6 +450,7 @@ myapp/
 ```
 
 **Best Practice**: Separate repositories
+
 ```
 myapp/             # Application code repository
 └── src/
@@ -434,12 +466,14 @@ fawkes-gitops/     # Deployment config repository
 #### 2. Use Meaningful Commit Messages
 
 **Bad**:
+
 ```bash
 git commit -m "update"
 git commit -m "fix"
 ```
 
 **Good**:
+
 ```bash
 git commit -m "Scale myapp from 3 to 5 replicas to handle increased load"
 git commit -m "Update myapp to v2.1.3 (fixes memory leak)"
@@ -450,6 +484,7 @@ git commit -m "Update myapp to v2.1.3 (fixes memory leak)"
 #### 3. Keep Files Small and Focused
 
 **Anti-pattern**: One giant `all-resources.yaml`
+
 ```yaml
 # ❌ 500 lines containing everything
 apiVersion: apps/v1
@@ -466,6 +501,7 @@ kind: Ingress
 ```
 
 **Best Practice**: One file per resource type
+
 ```
 myapp/
 ├── kustomization.yaml  # ✅ Small, focused files
@@ -500,6 +536,7 @@ overlays/
 #### 5. Never Commit Secrets to Git
 
 **Wrong (example with placeholder)**:
+
 ```yaml
 # ❌ NEVER commit real secrets
 apiVersion: v1
@@ -507,10 +544,11 @@ kind: Secret
 metadata:
   name: database-password
 data:
-  password: PLACEHOLDER_BASE64_VALUE  # base64 is NOT encryption
+  password: PLACEHOLDER_BASE64_VALUE # base64 is NOT encryption
 ```
 
 **Right**: Use Sealed Secrets or External Secrets Operator
+
 ```yaml
 # ✅ Encrypted secret safe for Git
 apiVersion: bitnami.com/v1alpha1
@@ -519,7 +557,7 @@ metadata:
   name: database-password
 spec:
   encryptedData:
-    password: AgAAAA...REDACTED_EXAMPLE  # Encrypted; only decryptable by controller
+    password: AgAAAA...REDACTED_EXAMPLE # Encrypted; only decryptable by controller
 ```
 
 **Why**: Git history is forever. Committed secrets are compromised secrets.
@@ -531,6 +569,7 @@ spec:
 ### ArgoCD: The GitOps Operator
 
 **ArgoCD** is Fawkes' GitOps continuous delivery tool. It:
+
 - Watches Git repositories for changes
 - Compares desired state (Git) with actual state (Kubernetes)
 - Applies differences automatically
@@ -541,21 +580,25 @@ spec:
 ArgoCD tracks application health:
 
 **🟢 Healthy** - All resources running as expected
+
 - Deployments have desired replicas ready
 - Services have endpoints
 - Ingresses configured correctly
 
 **🟡 Progressing** - Deployment in progress
+
 - New pods starting up
 - Rolling update ongoing
 - Health checks not yet passing
 
 **🟠 Degraded** - Partially working
+
 - Some replicas not ready
 - Some pods crashing
 - Service partially available
 
 **🔴 Missing** - Resource doesn't exist
+
 - Deleted manually
 - Never created
 - Configuration error
@@ -565,20 +608,24 @@ ArgoCD tracks application health:
 ArgoCD compares Git vs. Kubernetes:
 
 **✅ Synced** - Git matches cluster
+
 - No differences detected
 - Latest commit deployed
 
 **❌ OutOfSync** - Git differs from cluster
+
 - Someone made manual changes, OR
 - New commit not yet deployed
 
 **🔄 Syncing** - Applying changes
+
 - ArgoCD deploying Git changes
 - Resources being created/updated
 
 ### Hands-On: Viewing Your Application in ArgoCD
 
 **Access ArgoCD UI**:
+
 ```bash
 # Get ArgoCD URL
 echo "https://argocd.fawkes.local"
@@ -589,11 +636,13 @@ Password: [provided in lab environment]
 ```
 
 **Navigate to Your Application**:
+
 1. Click on `Applications` in left sidebar
 2. Find application: `dojo-learner-[yourname]-myapp`
 3. Observe the application topology (visual graph)
 
 **Understanding the Topology**:
+
 ```
 Application
     ↓
@@ -605,6 +654,7 @@ Pod → Service → Ingress
 ```
 
 **Key Information**:
+
 - **Sync Status**: Is Git in sync with cluster?
 - **Health Status**: Are resources healthy?
 - **Last Sync**: When was last deployment?
@@ -615,12 +665,14 @@ Pod → Service → Ingress
 **Scenario**: Scale your application from 1 to 3 replicas
 
 **Step 1: Clone GitOps Repository**
+
 ```bash
 git clone https://github.com/fawkes-dojo/gitops-lab
 cd gitops-lab
 ```
 
 **Step 2: Make Change**
+
 ```bash
 # Edit deployment file
 vim apps/dojo/learner-[yourname]/myapp/deployment.yaml
@@ -631,6 +683,7 @@ spec:
 ```
 
 **Step 3: Commit and Push**
+
 ```bash
 git add apps/dojo/learner-[yourname]/myapp/deployment.yaml
 git commit -m "Scale myapp to 3 replicas for load testing"
@@ -638,6 +691,7 @@ git push origin main
 ```
 
 **Step 4: Watch ArgoCD Sync**
+
 ```bash
 # ArgoCD detects change within 3 minutes (or immediately with webhooks)
 # Watch in ArgoCD UI:
@@ -648,6 +702,7 @@ git push origin main
 ```
 
 **Step 5: Verify**
+
 ```bash
 # Check pods
 kubectl get pods -n dojo-learner-[yourname]
@@ -668,6 +723,7 @@ myapp-7d8f5c9b8d-ghi56   1/1     Running   2m
 ### Lab Objectives
 
 In this lab, you will:
+
 1. Make a GitOps change (update image version)
 2. Create a pull request for code review
 3. Observe ArgoCD sync the change
@@ -676,6 +732,7 @@ In this lab, you will:
 ### Lab Setup
 
 Your lab environment includes:
+
 - Personal namespace: `dojo-learner-[yourname]`
 - Sample application: `myapp`
 - GitOps repository access
@@ -711,11 +768,13 @@ git push origin update-myapp-v2
 ### Task 2: Create Pull Request
 
 **In GitHub**:
+
 1. Navigate to `https://github.com/fawkes-dojo/gitops-lab`
 2. Click "Pull Requests" → "New Pull Request"
 3. Base: `main`, Compare: `update-myapp-v2`
 4. Title: "Update myapp to v2.0"
 5. Description:
+
    ```
    ## Changes
    - Updates myapp from v1.0 to v2.0
@@ -731,9 +790,11 @@ git push origin update-myapp-v2
    - If issues, revert this commit
    - Previous version: v1.0 (commit abc123)
    ```
+
 6. Click "Create Pull Request"
 
 **Code Review**:
+
 - Wait for peer review (or auto-approve in lab)
 - Address any feedback
 - Once approved, click "Merge Pull Request"
@@ -806,6 +867,7 @@ curl https://myapp-learner-[yourname].fawkes.local/health
 ```
 
 **Lab Complete!** You've experienced the full GitOps workflow:
+
 - Made a change via Git
 - Code review via pull request
 - Automated deployment via ArgoCD
@@ -839,12 +901,14 @@ Test your understanding with these questions:
 <summary>Click to reveal answer</summary>
 
 **Pull (GitOps)**:
+
 - GitOps operator runs inside cluster
 - Pulls desired state from Git
 - No cluster credentials in CI/CD
 - Self-healing and drift detection
 
 **Push (Traditional)**:
+
 - CI/CD system pushes changes to cluster
 - Requires cluster credentials in CI/CD
 - No automatic drift detection
@@ -860,6 +924,7 @@ Test your understanding with these questions:
 <summary>Click to reveal answer</summary>
 
 GitOps reduces lead time by:
+
 1. **Eliminating manual steps** - No manual kubectl commands
 2. **Automation** - Merge to Git → automatic deployment
 3. **Faster feedback** - See changes in cluster within minutes
@@ -877,6 +942,7 @@ GitOps reduces lead time by:
 <summary>Click to reveal answer</summary>
 
 **Benefits of separation**:
+
 1. **Deploy same app to multiple environments** with different configs
 2. **Different access controls** - More people can deploy than modify code
 3. **Independent versioning** - App version ≠ deployment config version
@@ -893,12 +959,14 @@ GitOps reduces lead time by:
 <summary>Click to reveal answer</summary>
 
 **Reasons**:
+
 1. **Base64 is encoding, not encryption** - Easily decoded
 2. **Git history is forever** - Can't truly delete from history
 3. **Access control** - Anyone with Git access gets secrets
 4. **Rotation complexity** - Hard to rotate secrets in Git history
 
 **Instead use**:
+
 - Sealed Secrets (encrypted in Git)
 - External Secrets Operator (fetches from Vault/AWS Secrets Manager)
 - Never commit raw secrets
@@ -913,6 +981,7 @@ GitOps reduces lead time by:
 <summary>Click to reveal answer</summary>
 
 **GitOps approach**:
+
 ```bash
 # 1. Edit deployment in Git
 vim apps/prod/myapp/deployment.yaml
@@ -927,6 +996,7 @@ git push
 ```
 
 **NOT GitOps** (anti-pattern):
+
 ```bash
 # ❌ Don't do this:
 kubectl scale deployment/myapp --replicas=10
@@ -942,23 +1012,27 @@ kubectl scale deployment/myapp --replicas=10
 ### Key Takeaways
 
 1. **GitOps = Git as Source of Truth**
+
    - All configuration in Git
    - Automated deployment from Git
    - Self-healing and drift detection
 
 2. **Four Core Principles**
+
    - Declarative
    - Versioned and Immutable
    - Pulled Automatically
    - Continuously Reconciled
 
 3. **DORA Benefits**
+
    - Increased deployment frequency
    - Reduced lead time
    - Lower change failure rate
    - Faster time to restore service
 
 4. **Best Practices**
+
    - Separate app code from deployment config
    - Meaningful commit messages
    - Never commit secrets
@@ -991,6 +1065,7 @@ kubectl scale deployment/myapp --replicas=10
 ### Next Steps
 
 **Module 4: Your First Deployment** awaits! You'll:
+
 - Use Backstage to create a new service from template
 - Deploy your application using GitOps
 - Configure CI/CD pipeline
@@ -1003,25 +1078,30 @@ kubectl scale deployment/myapp --replicas=10
 ## 📚 Additional Resources
 
 ### Official Documentation
+
 - [OpenGitOps Principles](https://opengitops.dev/)
 - [ArgoCD Documentation](https://argo-cd.readthedocs.io/)
 - [GitOps Working Group](https://github.com/gitops-working-group/gitops-working-group)
 
 ### Articles & Videos
+
 - [What is GitOps?](https://www.weave.works/technologies/gitops/) - Weaveworks
 - [GitOps Tech Talk](https://www.youtube.com/watch?v=f5EpcWp0THw) - CNCF (30 min)
 - [ArgoCD Tutorial](https://www.youtube.com/watch?v=MeU5_k9ssrs) - TechWorld with Nana (20 min)
 
 ### Books
-- *GitOps and Kubernetes* by Billy Yuen, et al.
-- *Continuous Delivery* by Jez Humble - Foundation for GitOps
+
+- _GitOps and Kubernetes_ by Billy Yuen, et al.
+- _Continuous Delivery_ by Jez Humble - Foundation for GitOps
 
 ### Practice
+
 - [ArgoCD Katacoda Tutorial](https://killercoda.com/argoproj/scenario/argocd) - Interactive lab
 - [GitOps Playground](https://github.com/cloudogu/gitops-playground) - Local GitOps environment
 - [Fawkes Dojo Lab Environment](https://dojo.fawkes.io) - Continue practicing!
 
 ### Community
+
 - [ArgoCD Slack](https://argoproj.github.io/community/join-slack) - Ask questions
 - [GitOps Days](https://www.gitopsdays.com/) - Annual conference
 - [#gitops on Kubernetes Slack](https://kubernetes.slack.com/) - General discussion
@@ -1043,6 +1123,7 @@ Your lab work has been automatically graded:
 ### Module 3 Score: [AUTO-CALCULATED] / 50 points
 
 **Breakdown**:
+
 - Theory Understanding (Knowledge Check): 20 points
 - Hands-On Lab Completion: 20 points
 - Code Quality (commit messages, PR description): 10 points
@@ -1052,11 +1133,13 @@ Your lab work has been automatically graded:
 **White Belt Progress**: 3 of 4 modules complete (75%)
 
 Modules completed:
+
 - ✅ Module 1: Internal Delivery Platforms - What and Why
 - ✅ Module 2: DORA Metrics - The North Star
 - ✅ Module 3: GitOps Principles
 
 Next module:
+
 - ⏳ Module 4: Your First Deployment
 
 **Continue to Module 4** to complete White Belt requirements!
@@ -1068,6 +1151,7 @@ Next module:
 ### How was this module?
 
 **Rate this module** (helps us improve):
+
 - ⭐⭐⭐⭐⭐ Excellent
 - ⭐⭐⭐⭐ Good
 - ⭐⭐⭐ Average
@@ -1088,16 +1172,19 @@ Next module:
 ### Common Issues
 
 **Issue**: ArgoCD not syncing changes
+
 - Check if auto-sync is enabled
 - Verify Git repository connection
 - Check ArgoCD logs: `kubectl logs -n argocd deploy/argocd-application-controller`
 
 **Issue**: Can't access ArgoCD UI
+
 - Verify ingress configuration
 - Check ArgoCD service: `kubectl get svc -n argocd`
 - Try port-forward: `kubectl port-forward -n argocd svc/argocd-server 8080:443`
 
 **Issue**: Git push rejected
+
 - Verify you have write access to repository
 - Check if branch is protected
 - Ensure you're pushing to correct remote
@@ -1109,12 +1196,14 @@ Next module:
 **🎓 GitOps Practitioner**
 
 You've completed Module 3 and demonstrated:
+
 - Understanding of GitOps core principles
 - Ability to make GitOps-driven changes
 - Knowledge of ArgoCD workflow
 - Proficiency in Git-based rollbacks
 
 **Share your achievement**:
+
 - LinkedIn: "Just completed GitOps Principles module in @Fawkes Dojo! #GitOps #PlatformEngineering"
 - Twitter: "Learned GitOps with hands-on ArgoCD practice at @FawkesIDP dojo 🚀 #DevOps #GitOps"
 
@@ -1149,6 +1238,7 @@ Keep going! You're 75% of the way to your first certification! 💪
 **Module 4: Your First Deployment** brings together everything you've learned:
 
 **You'll learn to**:
+
 - Create a service using Backstage templates
 - Configure CI/CD pipeline (Jenkins)
 - Deploy using GitOps (ArgoCD)
@@ -1172,6 +1262,7 @@ Keep going! You're 75% of the way to your first certification! 💪
 **Contributors**: [View Contributors](https://github.com/paruff/fawkes/graphs/contributors)
 
 **Module Changelog**:
+
 - v1.0 (2025-10-08): Initial release
 
 **Feedback & Improvements**:

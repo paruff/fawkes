@@ -1,6 +1,7 @@
 # ADR-009: Secrets Management for Platform Services
 
 ## Status
+
 Accepted
 
 ## Context
@@ -8,6 +9,7 @@ Accepted
 The Fawkes platform integrates numerous services that require secure storage and management of sensitive credentials:
 
 **Service Credentials Required**:
+
 - **ArgoCD**: Admin password, GitHub/GitLab tokens, webhook secrets, cluster credentials
 - **Jenkins**: Admin password, GitHub tokens, Docker registry credentials, cloud provider credentials, SSH keys
 - **PostgreSQL**: Root password, application user passwords (Backstage, Mattermost, SonarQube, Harbor)
@@ -20,6 +22,7 @@ The Fawkes platform integrates numerous services that require secure storage and
 - **External Secrets Operator**: Cloud provider credentials (AWS, Azure, GCP service accounts)
 
 **Security Requirements**:
+
 - Secrets must never be stored in Git repositories (even encrypted)
 - Secrets must be encrypted at rest in the Kubernetes cluster
 - Secrets must be encrypted in transit
@@ -30,6 +33,7 @@ The Fawkes platform integrates numerous services that require secure storage and
 - Secrets must integrate with external secret stores (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager, HashiCorp Vault)
 
 **Operational Requirements**:
+
 - Automatic secret injection into pods (no manual mounting)
 - Secret synchronization from external stores
 - Automatic rotation support
@@ -40,6 +44,7 @@ The Fawkes platform integrates numerous services that require secure storage and
 - Clear separation between secret metadata (who/what/where) and secret values
 
 **Developer Experience Requirements**:
+
 - Simple secret consumption (environment variables or file mounts)
 - No custom code required in applications
 - Clear documentation and examples
@@ -47,6 +52,7 @@ The Fawkes platform integrates numerous services that require secure storage and
 - Self-service secret creation (with RBAC controls)
 
 **Dojo Learning Requirements**:
+
 - Students need isolated secret environments per learner
 - Must support rapid provisioning/teardown
 - Should demonstrate enterprise-grade practices
@@ -111,6 +117,7 @@ We will use **External Secrets Operator (ESO)** as the primary secrets managemen
 5. **Kubernetes Secrets** (Development, learning environments)
 
 **Default Recommendation by Environment**:
+
 - **Production**: Cloud provider secret store (AWS/Azure/GCP)
 - **Staging**: Cloud provider secret store
 - **Development**: Kubernetes secrets (ESO optional)
@@ -119,6 +126,7 @@ We will use **External Secrets Operator (ESO)** as the primary secrets managemen
 ### Core Components
 
 **1. External Secrets Operator**
+
 - Deployed in `fawkes-system` namespace
 - Monitors `ExternalSecret` and `SecretStore` resources
 - Synchronizes secrets from external stores to Kubernetes
@@ -182,19 +190,20 @@ spec:
     name: argocd-secret
     creationPolicy: Owner
   data:
-  - secretKey: admin.password
-    remoteRef:
-      key: fawkes/argocd/admin
-      property: password
-  - secretKey: github.token
-    remoteRef:
-      key: fawkes/github/integration
-      property: token
+    - secretKey: admin.password
+      remoteRef:
+        key: fawkes/argocd/admin
+        property: password
+    - secretKey: github.token
+      remoteRef:
+        key: fawkes/github/integration
+        property: token
 ```
 
 ### Secret Naming Convention
 
 **Path Structure in External Stores**:
+
 ```
 fawkes/
   ├── core/
@@ -237,6 +246,7 @@ fawkes/
 ### Example Configurations
 
 **ArgoCD Admin Password**:
+
 ```yaml
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
@@ -257,11 +267,12 @@ spec:
         admin.password: "{{ .adminPassword | bcrypt }}"
         server.secretkey: "{{ .serverSecretKey }}"
   dataFrom:
-  - extract:
-      key: fawkes/core/argocd/credentials
+    - extract:
+        key: fawkes/core/argocd/credentials
 ```
 
 **Jenkins Credentials (Multiple Secrets)**:
+
 ```yaml
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
@@ -277,25 +288,26 @@ spec:
     name: jenkins-credentials
     creationPolicy: Owner
   data:
-  - secretKey: admin-user
-    remoteRef:
-      key: fawkes/cicd/jenkins/admin
-      property: username
-  - secretKey: admin-password
-    remoteRef:
-      key: fawkes/cicd/jenkins/admin
-      property: password
-  - secretKey: github-token
-    remoteRef:
-      key: fawkes/github/integration
-      property: token
-  - secretKey: docker-config.json
-    remoteRef:
-      key: fawkes/cicd/docker-registry
-      property: config
+    - secretKey: admin-user
+      remoteRef:
+        key: fawkes/cicd/jenkins/admin
+        property: username
+    - secretKey: admin-password
+      remoteRef:
+        key: fawkes/cicd/jenkins/admin
+        property: password
+    - secretKey: github-token
+      remoteRef:
+        key: fawkes/github/integration
+        property: token
+    - secretKey: docker-config.json
+      remoteRef:
+        key: fawkes/cicd/docker-registry
+        property: config
 ```
 
 **PostgreSQL Passwords (Templated)**:
+
 ```yaml
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
@@ -318,13 +330,14 @@ spec:
         argocd-password: "{{ .argocdPassword }}"
         connection-string: "postgresql://postgres:{{ .rootPassword }}@postgres.fawkes-core.svc.cluster.local:5432/postgres"
   dataFrom:
-  - extract:
-      key: fawkes/core/postgres/passwords
+    - extract:
+        key: fawkes/core/postgres/passwords
 ```
 
 ### Secret Rotation Strategy
 
 **Automatic Rotation**:
+
 1. Update secret in external store (AWS Secrets Manager, Vault, etc.)
 2. ESO detects change on next refresh interval (default 1 hour)
 3. ESO updates Kubernetes secret
@@ -354,13 +367,13 @@ spec:
   template:
     spec:
       containers:
-      - name: jenkins
-        env:
-        - name: ADMIN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: jenkins-credentials
-              key: admin-password
+        - name: jenkins
+          env:
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jenkins-credentials
+                  key: admin-password
 ```
 
 ### Security Hardening
@@ -392,10 +405,10 @@ metadata:
   name: secret-reader
   namespace: fawkes-core
 rules:
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["get", "list"]
-  resourceNames: ["argocd-secret", "postgres-credentials"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list"]
+    resourceNames: ["argocd-secret", "postgres-credentials"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -403,9 +416,9 @@ metadata:
   name: argocd-secret-access
   namespace: fawkes-core
 subjects:
-- kind: ServiceAccount
-  name: argocd-server
-  namespace: fawkes-core
+  - kind: ServiceAccount
+    name: argocd-server
+    namespace: fawkes-core
 roleRef:
   kind: Role
   name: secret-reader
@@ -428,13 +441,13 @@ spec:
     runAsUser: 1000
     fsGroup: 1000
   containers:
-  - name: jenkins
-    securityContext:
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
-      capabilities:
-        drop:
-        - ALL
+    - name: jenkins
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
 ```
 
 **4. Audit Logging**:
@@ -444,17 +457,18 @@ Enable Kubernetes audit logs for secret access:
 apiVersion: audit.k8s.io/v1
 kind: Policy
 rules:
-- level: Metadata
-  resources:
-  - group: ""
-    resources: ["secrets"]
-  omitStages:
-  - RequestReceived
+  - level: Metadata
+    resources:
+      - group: ""
+        resources: ["secrets"]
+    omitStages:
+      - RequestReceived
 ```
 
 ### AWS Secrets Manager Integration
 
 **IAM Role for ESO (IRSA)**:
+
 ```json
 {
   "Version": "2012-10-17",
@@ -473,6 +487,7 @@ rules:
 ```
 
 **Service Account Annotation**:
+
 ```yaml
 apiVersion: v1
 kind: ServiceAccount
@@ -484,6 +499,7 @@ metadata:
 ```
 
 **SecretStore for AWS**:
+
 ```yaml
 apiVersion: external-secrets.io/v1beta1
 kind: ClusterSecretStore
@@ -504,6 +520,7 @@ spec:
 ### HashiCorp Vault Integration (Alternative)
 
 **Vault Setup**:
+
 ```bash
 # Enable Kubernetes auth
 vault auth enable kubernetes
@@ -529,6 +546,7 @@ vault write auth/kubernetes/role/fawkes-platform \
 ```
 
 **ClusterSecretStore for Vault**:
+
 ```yaml
 apiVersion: external-secrets.io/v1beta1
 kind: ClusterSecretStore
@@ -552,12 +570,14 @@ spec:
 ### Disaster Recovery
 
 **Backup Strategy**:
+
 1. **External Store**: Secrets in AWS/Azure/GCP have built-in backup/versioning
 2. **ExternalSecret Manifests**: Version controlled in Git (no secret values)
 3. **Emergency Access**: Break-glass procedures documented
 4. **Key Rotation Records**: Maintain audit log of all rotations
 
 **Recovery Procedure**:
+
 ```bash
 # 1. Restore External Secrets Operator
 kubectl apply -f manifests/external-secrets-operator/
@@ -612,6 +632,7 @@ kubectl rollout restart deployment -n fawkes-core
 ### Alternative 1: Sealed Secrets
 
 **Pros**:
+
 - Secrets encrypted and stored directly in Git
 - No external dependency (secret store)
 - Simple mental model (encrypt secret, commit, controller decrypts)
@@ -619,6 +640,7 @@ kubectl rollout restart deployment -n fawkes-core
 - No cost for external secret store
 
 **Cons**:
+
 - Secrets still in Git (even if encrypted) - compliance/security concerns
 - Key management burden (must protect unsealing key)
 - No integration with external secret stores (AWS Secrets Manager, Vault)
@@ -631,6 +653,7 @@ kubectl rollout restart deployment -n fawkes-core
 ### Alternative 2: HashiCorp Vault (Direct Integration)
 
 **Pros**:
+
 - Industry-leading secret management solution
 - Advanced features (dynamic secrets, leasing, PKI)
 - Superior audit logging and access controls
@@ -639,6 +662,7 @@ kubectl rollout restart deployment -n fawkes-core
 - Secret rotation and expiration built-in
 
 **Cons**:
+
 - High operational overhead (Vault cluster management, upgrades, HA)
 - Requires Vault expertise on platform team
 - Steep learning curve for developers
@@ -651,6 +675,7 @@ kubectl rollout restart deployment -n fawkes-core
 ### Alternative 3: Kubernetes Secrets (Native, Encrypted at Rest)
 
 **Pros**:
+
 - No additional components (native Kubernetes)
 - Zero operational overhead
 - Simple API (kubectl create secret)
@@ -658,6 +683,7 @@ kubectl rollout restart deployment -n fawkes-core
 - No cost
 
 **Cons**:
+
 - No integration with external secret stores
 - Manual rotation (no automation)
 - No audit logging (beyond Kubernetes audit logs)
@@ -666,11 +692,12 @@ kubectl rollout restart deployment -n fawkes-core
 - Difficult to share secrets across clusters
 - Limited access controls (namespace-level only)
 
-**Reason for Rejection**: Native Kubernetes secrets are suitable for development but inadequate for production. Lack of integration with external stores means organizations cannot leverage existing secret infrastructure. No rotation support creates operational burden. However, Kubernetes secrets remain the *consumption* mechanism (ESO creates them), so developers still use the familiar API.
+**Reason for Rejection**: Native Kubernetes secrets are suitable for development but inadequate for production. Lack of integration with external stores means organizations cannot leverage existing secret infrastructure. No rotation support creates operational burden. However, Kubernetes secrets remain the _consumption_ mechanism (ESO creates them), so developers still use the familiar API.
 
 ### Alternative 4: Cloud-Specific Solutions (AWS Secrets CSI Driver, Azure Key Vault CSI)
 
 **Pros**:
+
 - Deep cloud integration (native IAM, audit logging)
 - No intermediate controller (CSI driver directly mounts secrets)
 - Lower latency (secrets mounted on-demand)
@@ -678,6 +705,7 @@ kubectl rollout restart deployment -n fawkes-core
 - Minimal resource overhead
 
 **Cons**:
+
 - **Cloud vendor lock-in** (different implementation per cloud)
 - Cannot work on-premises or in multi-cloud
 - Different configuration per cloud (AWS ≠ Azure ≠ GCP)
@@ -690,6 +718,7 @@ kubectl rollout restart deployment -n fawkes-core
 ### Alternative 5: SOPS (Secrets OPerationS)
 
 **Pros**:
+
 - Encrypt secrets in Git with AWS KMS, GCP KMS, Azure Key Vault, PGP
 - GitOps-friendly (encrypted secrets committed)
 - Supports multiple formats (YAML, JSON, ENV, INI)
@@ -697,6 +726,7 @@ kubectl rollout restart deployment -n fawkes-core
 - Partial encryption (encrypt values, leave keys plaintext)
 
 **Cons**:
+
 - Secrets still in Git (compliance concerns)
 - Requires KMS key management
 - Manual rotation (re-encrypt and commit)
@@ -709,11 +739,13 @@ kubectl rollout restart deployment -n fawkes-core
 ### Alternative 6: Kubernetes External Secrets (Older Project)
 
 **Pros**:
+
 - Original external secrets project (inspired ESO)
 - Similar concept to ESO
 - Works with AWS, GCP, Azure
 
 **Cons**:
+
 - **Deprecated in favor of External Secrets Operator**
 - Smaller community and less active development
 - Fewer backend integrations
@@ -727,50 +759,45 @@ kubectl rollout restart deployment -n fawkes-core
 ### Phase 1: MVP (Week 4 of Sprint 01)
 
 **Day 1-2: External Secrets Operator Deployment** [8 hours]
+
 1. Deploy ESO via Helm chart to `fawkes-system` namespace
 2. Configure RBAC for ESO service account
 3. Set up AWS IRSA role for ESO (or cloud-specific workload identity)
 4. Create ClusterSecretStore for AWS Secrets Manager
 5. Verify ESO controller is running and can authenticate
 
-**Day 3: Core Service Secrets** [6 hours]
-6. Create secrets in AWS Secrets Manager for:
-   - PostgreSQL (root password, database passwords)
-   - ArgoCD (admin password, GitHub token)
-   - Backstage (database password, GitHub token, OAuth2 secrets)
+**Day 3: Core Service Secrets** [6 hours] 6. Create secrets in AWS Secrets Manager for:
+
+- PostgreSQL (root password, database passwords)
+- ArgoCD (admin password, GitHub token)
+- Backstage (database password, GitHub token, OAuth2 secrets)
+
 7. Create ExternalSecret manifests for each
 8. Verify Kubernetes secrets created successfully
 9. Test secret consumption by deploying test pod
 
-**Day 4: CI/CD Service Secrets** [6 hours]
-10. Create secrets in AWS Secrets Manager for:
-    - Jenkins (admin password, GitHub token, Docker credentials)
-    - Harbor (admin password, database password, S3 credentials)
-11. Create ExternalSecret manifests
-12. Deploy Jenkins and Harbor with external secrets
-13. Verify services start successfully with secrets
+**Day 4: CI/CD Service Secrets** [6 hours] 10. Create secrets in AWS Secrets Manager for: - Jenkins (admin password, GitHub token, Docker credentials) - Harbor (admin password, database password, S3 credentials) 11. Create ExternalSecret manifests 12. Deploy Jenkins and Harbor with external secrets 13. Verify services start successfully with secrets
 
-**Day 5: Documentation & Validation** [4 hours]
-14. Document secret naming conventions
-15. Create runbook for secret rotation
-16. Write troubleshooting guide
-17. Create Dojo module outline for secrets management
+**Day 5: Documentation & Validation** [4 hours] 14. Document secret naming conventions 15. Create runbook for secret rotation 16. Write troubleshooting guide 17. Create Dojo module outline for secrets management
 
 ### Phase 2: Advanced Features (Week 5)
 
 **Secret Rotation** [4 hours]
+
 - Deploy Reloader for automatic pod restarts
 - Document rotation procedures for each service
 - Test rotation end-to-end for PostgreSQL
 - Create Grafana alerts for secret sync failures
 
 **Multi-Environment Setup** [4 hours]
+
 - Create separate secret paths for dev/staging/prod
 - Configure namespace-scoped SecretStores
 - Implement RBAC for namespace isolation
 - Test learner namespace provisioning with secrets
 
 **Backup & Disaster Recovery** [3 hours]
+
 - Document break-glass procedures
 - Create backup scripts for ExternalSecret manifests
 - Test secret recovery procedures
@@ -781,6 +808,7 @@ kubectl rollout restart deployment -n fawkes-core
 **Yellow Belt - Module 3: "Securing Secrets"** [8 hours]
 
 **Learning Objectives**:
+
 - Understand secrets management anti-patterns (secrets in Git, plain text)
 - Learn External Secrets Operator concepts
 - Create ExternalSecret manifests
@@ -788,6 +816,7 @@ kubectl rollout restart deployment -n fawkes-core
 - Troubleshoot secret sync issues
 
 **Hands-On Lab**:
+
 1. Create secret in AWS Secrets Manager (or learner-specific backend)
 2. Deploy ExternalSecret manifest to learner namespace
 3. Consume secret in test application (environment variables and volume mounts)
@@ -795,6 +824,7 @@ kubectl rollout restart deployment -n fawkes-core
 5. Troubleshoot intentionally broken ExternalSecret
 
 **Assessment**:
+
 - Quiz on secrets best practices (10 questions)
 - Practical: Deploy application with database password from external store
 - Troubleshoot secret sync failure scenario
@@ -804,6 +834,7 @@ kubectl rollout restart deployment -n fawkes-core
 ### Phase 4: Production Hardening (Week 7)
 
 **Security Hardening** [6 hours]
+
 - Enable Kubernetes secret encryption at rest
 - Implement least-privilege RBAC policies
 - Configure audit logging for secret access
@@ -811,6 +842,7 @@ kubectl rollout restart deployment -n fawkes-core
 - Penetration testing for secret access paths
 
 **Monitoring & Alerting** [4 hours]
+
 - Create Prometheus metrics for ESO
 - Build Grafana dashboard for secret sync status
 - Configure alerts for sync failures
@@ -818,6 +850,7 @@ kubectl rollout restart deployment -n fawkes-core
 - Integrate with PagerDuty/OpsGenie
 
 **Documentation** [4 hours]
+
 - Complete architecture documentation with diagrams
 - Write comprehensive troubleshooting guide
 - Create secret rotation playbook
@@ -829,5 +862,7 @@ kubectl rollout restart deployment -n fawkes-core
 ### Key Metrics
 
 **External Secrets Operator Metrics**:
+
 ```
 # Sync success rate
+```

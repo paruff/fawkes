@@ -75,23 +75,27 @@ You have **four easy ways** to give feedback about the platform:
 #### 2. CLI Tool (For Terminal Users)
 
 **Installation**:
+
 ```bash
 cd services/feedback-cli
 pip install -e .
 ```
 
 **Quick Submit**:
+
 ```bash
 fawkes-feedback submit -r 5 -c "CI/CD" -m "Pipeline is much faster now!"
 ```
 
 **Interactive Mode**:
+
 ```bash
 fawkes-feedback submit -i
 # Follow the prompts
 ```
 
 **View Your Feedback**:
+
 ```bash
 fawkes-feedback list
 fawkes-feedback stats
@@ -104,6 +108,7 @@ fawkes-feedback stats
 #### 3. Mattermost Bot (Most Conversational)
 
 **In any channel**:
+
 ```
 @feedback The new dashboard is really helpful for tracking deployments
 ```
@@ -112,6 +117,7 @@ fawkes-feedback stats
 Just DM `@feedback` with your feedback
 
 **Check Status**:
+
 ```
 @feedback status
 ```
@@ -133,6 +139,7 @@ Please take 60 seconds to respond - this helps us track satisfaction over time.
 Encountered something frustrating? Log it so we can improve:
 
 **Via API** (if you have access):
+
 ```bash
 curl -X POST http://space-metrics:8000/api/v1/friction-log/submit \
   -H "Content-Type: application/json" \
@@ -149,6 +156,7 @@ curl -X POST http://space-metrics:8000/api/v1/friction-log/submit \
 ### Cognitive Load Assessment
 
 Occasionally, you may be invited to take a cognitive load assessment (NASA-TLX) after completing a task like:
+
 - Deploying to production
 - Debugging a critical issue
 - Onboarding as a new team member
@@ -161,14 +169,16 @@ This takes 2-3 minutes and helps us understand and reduce mental workload.
 If you're building UIs for the platform:
 
 **Installation**:
+
 ```bash
 npm install @fawkes/design-system
 ```
 
 **Import Components**:
+
 ```javascript
-import { Button, Card, Modal, Alert } from '@fawkes/design-system';
-import '@fawkes/design-system/dist/styles.css';
+import { Button, Card, Modal, Alert } from "@fawkes/design-system";
+import "@fawkes/design-system/dist/styles.css";
 
 function MyComponent() {
   return (
@@ -190,11 +200,12 @@ function MyComponent() {
 If you're building features that need gradual rollout or A/B testing:
 
 **Check if Feature is Enabled**:
+
 ```javascript
-import { OpenFeature } from '@openfeature/sdk';
+import { OpenFeature } from "@openfeature/sdk";
 
 const client = OpenFeature.getClient();
-const isEnabled = await client.getBooleanValue('my-new-feature', false);
+const isEnabled = await client.getBooleanValue("my-new-feature", false);
 
 if (isEnabled) {
   // New feature code
@@ -214,6 +225,7 @@ if (isEnabled) {
 ### Understanding Developer Experience (SPACE Metrics)
 
 **Access the Dashboard**:
+
 1. Go to Grafana: https://grafana.127.0.0.1.nip.io
 2. Navigate to Dashboards → SPACE Metrics Dashboard
 3. Select your team from the dropdown
@@ -221,21 +233,25 @@ if (isEnabled) {
 **The Five Dimensions**:
 
 1. **Satisfaction** - How developers feel
+
    - eNPS score (goal: >20)
    - Average feedback rating (goal: >4.0)
    - Based on surveys and feedback
 
 2. **Performance** - System and delivery metrics
+
    - Deployment frequency (higher is better)
    - Lead time (lower is better)
    - Build success rate (goal: >90%)
 
 3. **Activity** - Development activity levels
+
    - Commits per week
    - PRs merged
    - Active development days
 
 4. **Communication** - Collaboration effectiveness
+
    - Mattermost messages
    - PR comments and discussions
    - Documentation contributions
@@ -246,6 +262,7 @@ if (isEnabled) {
    - Cognitive load index (goal: <5.0)
 
 **Interpreting Trends**:
+
 - Look for week-over-week changes
 - Compare against baseline (first measurement)
 - Correlate with platform changes or team events
@@ -256,6 +273,7 @@ if (isEnabled) {
 ### Analyzing Feedback
 
 **Access Feedback Analytics**:
+
 1. Go to Grafana: https://grafana.127.0.0.1.nip.io
 2. Navigate to Dashboards → Feedback Analytics
 3. Review metrics:
@@ -266,6 +284,7 @@ if (isEnabled) {
    - Top pain points and feature requests
 
 **Using Feedback API** (for deeper analysis):
+
 ```bash
 # Port forward to feedback service
 kubectl port-forward -n fawkes svc/feedback-service 8080:8080
@@ -278,6 +297,7 @@ curl http://localhost:8080/api/v1/feedback?status=validated | jq .
 ```
 
 **Acting on Feedback**:
+
 1. Review validated feedback weekly
 2. Look for patterns across multiple submissions
 3. Prioritize based on severity and frequency
@@ -287,6 +307,7 @@ curl http://localhost:8080/api/v1/feedback?status=validated | jq .
 ### Product Analytics
 
 **Access Analytics Dashboard** (if deployed):
+
 1. Go to https://analytics.fawkes.local
 2. Navigate to relevant dashboards:
    - Usage Trends
@@ -296,6 +317,7 @@ curl http://localhost:8080/api/v1/feedback?status=validated | jq .
    - Retention
 
 **Key Metrics to Track**:
+
 - **Activation**: Time to first value for new users
 - **Adoption**: % of users using new features
 - **Engagement**: Session duration, feature usage frequency
@@ -308,10 +330,12 @@ curl http://localhost:8080/api/v1/feedback?status=validated | jq .
 ### Feature Flags & Experimentation
 
 **Access Unleash**:
+
 1. Go to https://unleash.fawkes.local
 2. Log in with your credentials
 
 **Creating a Feature Flag**:
+
 1. Click "New feature toggle"
 2. Name: `feature-name` (use kebab-case)
 3. Description: What does this flag control?
@@ -322,11 +346,13 @@ curl http://localhost:8080/api/v1/feedback?status=validated | jq .
 **Rollout Strategies**:
 
 1. **Gradual Rollout**:
+
    - Start at 10%
    - Monitor metrics for 1-2 days
    - Increase to 25%, 50%, 100% gradually
 
 2. **User Targeting**:
+
    - Enable for specific users or teams first
    - Beta testers, friendly users
    - Gather feedback before wider rollout
@@ -337,6 +363,7 @@ curl http://localhost:8080/api/v1/feedback?status=validated | jq .
    - Production: Gradual or gated
 
 **A/B Testing**:
+
 1. Create feature flag with variants (e.g., "control", "variant-a", "variant-b")
 2. Set equal distribution (33% each)
 3. Track outcomes in product analytics
@@ -350,6 +377,7 @@ curl http://localhost:8080/api/v1/feedback?status=validated | jq .
 **Meeting Cadence**: Quarterly (4 times per year)
 
 **Agenda Template**:
+
 1. Platform updates (15 min)
 2. Roadmap preview (20 min)
 3. Discussion topics (20 min)
@@ -379,25 +407,29 @@ docs/research/
 ### Conducting User Interviews
 
 **1. Prepare**:
-   - Use template: `docs/research/templates/interview-guide.md`
-   - Schedule 45-60 minute sessions
-   - Get consent for recording (if applicable)
+
+- Use template: `docs/research/templates/interview-guide.md`
+- Schedule 45-60 minute sessions
+- Get consent for recording (if applicable)
 
 **2. Conduct**:
-   - Build rapport (5 min)
-   - Ask open-ended questions
-   - Listen actively, probe deeper
-   - Observe behaviors, not just words
+
+- Build rapport (5 min)
+- Ask open-ended questions
+- Listen actively, probe deeper
+- Observe behaviors, not just words
 
 **3. Document**:
-   - Take detailed notes during interview
-   - Create summary document: `interviews/YYYY-MM-DD-participant-role.md`
-   - Include quotes, observations, and insights
-   - Tag with relevant themes
+
+- Take detailed notes during interview
+- Create summary document: `interviews/YYYY-MM-DD-participant-role.md`
+- Include quotes, observations, and insights
+- Tag with relevant themes
 
 **4. Share**:
-   - Post summary in #ux-research Mattermost channel
-   - Add insights to weekly synthesis
+
+- Post summary in #ux-research Mattermost channel
+- Add insights to weekly synthesis
 
 ### Creating and Updating Personas
 
@@ -406,6 +438,7 @@ docs/research/
 **Template**: `docs/research/templates/persona-template.md`
 
 **Structure**:
+
 - Name and photo (use generic/stock)
 - Role and demographics
 - Goals and motivations
@@ -417,6 +450,7 @@ docs/research/
 **Example**: See `personas/persona-new-developer.md`
 
 **When to Update**:
+
 - Quarterly review
 - After major feature launches
 - When user base changes significantly
@@ -428,6 +462,7 @@ docs/research/
 **Template**: `docs/research/templates/journey-map.md`
 
 **The 5 Key Journeys**:
+
 1. Developer Onboarding
 2. Deploying First App
 3. Debugging Production Issue
@@ -435,6 +470,7 @@ docs/research/
 5. Contributing to Platform
 
 **Journey Map Components**:
+
 - **Stages**: Key phases in the journey
 - **Actions**: What user does at each stage
 - **Touchpoints**: Where they interact with platform
@@ -444,6 +480,7 @@ docs/research/
 - **Metrics**: How we measure success
 
 **Creating a Journey Map**:
+
 1. Identify the journey to map
 2. Interview 5-10 users who've completed this journey
 3. List out stages, actions, touchpoints
@@ -463,18 +500,22 @@ docs/research/
 **Location**: `docs/research/insights/YYYY-week-WW-insights.md`
 
 **Process**:
+
 1. **Collect** (Monday):
+
    - Review feedback from all channels
    - Read interview notes
    - Check analytics data
    - Review SPACE metrics
 
 2. **Synthesize** (Monday-Tuesday):
+
    - Identify patterns and themes
    - Cluster related feedback
    - Prioritize by impact and frequency
 
 3. **Document** (Tuesday):
+
    - Create insights document
    - Include quotes and data
    - Suggest next steps
@@ -485,10 +526,12 @@ docs/research/
    - Create GitHub issues for actions
 
 **Insight Format**:
+
 ```markdown
 ## Insight: [Theme/Pattern Name]
 
 **Evidence**:
+
 - Feedback submissions: 5 users mentioned X
 - Interview quotes: "quote from user"
 - Metrics: Y decreased by Z%
@@ -503,12 +546,14 @@ docs/research/
 ### Usability Testing
 
 **When to Test**:
+
 - Before major feature launches
 - When redesigning existing features
 - After receiving repeated negative feedback
 - Quarterly platform health checks
 
 **How to Test**:
+
 1. Define goals and tasks
 2. Recruit 5-8 participants
 3. Prepare test script
@@ -524,6 +569,7 @@ docs/research/
 All designs and implementations must meet WCAG 2.1 AA standards.
 
 **Tools**:
+
 - **Automated**: axe-core, Lighthouse CI
 - **Manual**: Keyboard navigation, screen reader testing
 - **Integrated**: Storybook a11y addon
@@ -540,17 +586,18 @@ All Epic 3 components are managed via GitOps (ArgoCD).
 
 **Component Overview**:
 
-| Component | Namespace | Deployment Type | Database |
-|-----------|-----------|-----------------|----------|
-| SPACE Metrics | fawkes-local | Deployment | PostgreSQL (CNPG) |
-| Feedback Service | fawkes | Deployment | PostgreSQL (CNPG) |
-| Feedback Bot | fawkes | Deployment | N/A |
-| Feedback Automation | fawkes | CronJob | N/A |
-| Unleash | fawkes | Deployment | PostgreSQL (CNPG) |
-| Storybook | fawkes | Deployment | N/A (static) |
-| Product Analytics | fawkes | StatefulSet | ClickHouse |
+| Component           | Namespace    | Deployment Type | Database          |
+| ------------------- | ------------ | --------------- | ----------------- |
+| SPACE Metrics       | fawkes-local | Deployment      | PostgreSQL (CNPG) |
+| Feedback Service    | fawkes       | Deployment      | PostgreSQL (CNPG) |
+| Feedback Bot        | fawkes       | Deployment      | N/A               |
+| Feedback Automation | fawkes       | CronJob         | N/A               |
+| Unleash             | fawkes       | Deployment      | PostgreSQL (CNPG) |
+| Storybook           | fawkes       | Deployment      | N/A (static)      |
+| Product Analytics   | fawkes       | StatefulSet     | ClickHouse        |
 
 **Health Check**:
+
 ```bash
 ./scripts/health-check-epic3.sh
 ```
@@ -560,6 +607,7 @@ All Epic 3 components are managed via GitOps (ArgoCD).
 ### Monitoring and Observability
 
 **Prometheus Metrics**:
+
 ```bash
 # SPACE metrics
 curl http://space-metrics:8000/metrics
@@ -569,12 +617,14 @@ curl http://feedback-service:8080/metrics
 ```
 
 **Grafana Dashboards**:
+
 - Epic 3 Resource Usage
 - SPACE Metrics Dashboard
 - Feedback Analytics Dashboard
 - Discovery Metrics Dashboard
 
 **Logs**:
+
 ```bash
 # SPACE metrics logs
 kubectl logs -n fawkes-local -l app=space-metrics --tail=100
@@ -591,6 +641,7 @@ kubectl logs -n fawkes -l app=feedback-bot --tail=100
 ### Backup and Recovery
 
 **Databases**:
+
 ```bash
 # Backup SPACE metrics DB
 kubectl cnpg backup space-metrics-pg -n fawkes-local
@@ -607,18 +658,21 @@ kubectl cnpg backup db-unleash -n fawkes
 ### API Access and Integration
 
 **SPACE Metrics API**:
+
 ```bash
 kubectl port-forward -n fawkes-local svc/space-metrics 8000:8000
 curl http://localhost:8000/api/v1/metrics/space
 ```
 
 **Feedback API**:
+
 ```bash
 kubectl port-forward -n fawkes svc/feedback-service 8080:8080
 curl http://localhost:8080/api/v1/feedback
 ```
 
 **Unleash API**:
+
 ```bash
 kubectl port-forward -n fawkes svc/unleash 4242:4242
 curl http://localhost:4242/api/admin/features
@@ -632,46 +686,46 @@ curl http://localhost:4242/api/admin/features
 
 ### Feedback Channels Summary
 
-| Channel | When to Use | How to Access |
-|---------|-------------|---------------|
+| Channel          | When to Use                         | How to Access                    |
+| ---------------- | ----------------------------------- | -------------------------------- |
 | Backstage Widget | Quick feedback while using platform | Bottom-right corner of Backstage |
-| CLI Tool | Terminal users, offline support | `fawkes-feedback submit -i` |
-| Mattermost Bot | Conversational, already in chat | `@feedback` or DM |
-| NPS Survey | Quarterly satisfaction tracking | Mattermost DM (automated) |
+| CLI Tool         | Terminal users, offline support     | `fawkes-feedback submit -i`      |
+| Mattermost Bot   | Conversational, already in chat     | `@feedback` or DM                |
+| NPS Survey       | Quarterly satisfaction tracking     | Mattermost DM (automated)        |
 
 ### Key URLs
 
-| Service | URL | Purpose |
-|---------|-----|---------|
-| Backstage | https://backstage.127.0.0.1.nip.io | Developer portal |
-| SPACE Dashboard | Grafana → SPACE Metrics | DevEx measurement |
-| Feedback Dashboard | Grafana → Feedback Analytics | Feedback insights |
-| Storybook | https://storybook.fawkes.local | Design system |
-| Unleash | https://unleash.fawkes.local | Feature flags |
-| Analytics | https://analytics.fawkes.local | Product analytics |
+| Service            | URL                                | Purpose           |
+| ------------------ | ---------------------------------- | ----------------- |
+| Backstage          | https://backstage.127.0.0.1.nip.io | Developer portal  |
+| SPACE Dashboard    | Grafana → SPACE Metrics            | DevEx measurement |
+| Feedback Dashboard | Grafana → Feedback Analytics       | Feedback insights |
+| Storybook          | https://storybook.fawkes.local     | Design system     |
+| Unleash            | https://unleash.fawkes.local       | Feature flags     |
+| Analytics          | https://analytics.fawkes.local     | Product analytics |
 
 ### Important Directories
 
-| Path | Contains |
-|------|----------|
-| `docs/research/personas/` | User personas |
-| `docs/research/journey-maps/` | User journeys |
-| `docs/research/interviews/` | Interview notes |
-| `docs/research/insights/` | Weekly synthesis |
-| `docs/research/templates/` | Research templates |
-| `docs/runbooks/` | Operations runbooks |
-| `docs/reference/api/` | API documentation |
-| `docs/how-to/` | Step-by-step guides |
+| Path                          | Contains            |
+| ----------------------------- | ------------------- |
+| `docs/research/personas/`     | User personas       |
+| `docs/research/journey-maps/` | User journeys       |
+| `docs/research/interviews/`   | Interview notes     |
+| `docs/research/insights/`     | Weekly synthesis    |
+| `docs/research/templates/`    | Research templates  |
+| `docs/runbooks/`              | Operations runbooks |
+| `docs/reference/api/`         | API documentation   |
+| `docs/how-to/`                | Step-by-step guides |
 
 ### Support Channels
 
-| Need Help With | Where to Ask |
-|----------------|--------------|
-| General questions | #product-discovery |
-| Feedback system issues | #platform-team |
-| Research collaboration | #ux-research |
-| Design system | #design-system |
-| Technical issues | #platform-support |
+| Need Help With         | Where to Ask       |
+| ---------------------- | ------------------ |
+| General questions      | #product-discovery |
+| Feedback system issues | #platform-team     |
+| Research collaboration | #ux-research       |
+| Design system          | #design-system     |
+| Technical issues       | #platform-support  |
 
 ### Common Commands
 
@@ -701,13 +755,16 @@ kubectl logs -n fawkes-local -l app=space-metrics --tail=100
 ## Related Documentation
 
 **Runbooks & Operations**:
+
 - [Epic 3 Operations Runbook](../runbooks/epic-3-product-discovery-operations.md)
 - [Epic 3 Architecture Diagrams](../runbooks/epic-3-architecture-diagrams.md)
 
 **API References**:
+
 - [Epic 3 API Reference](../reference/api/epic-3-product-discovery-apis.md)
 
 **How-To Guides**:
+
 - [SPACE Metrics Guide](space-metrics-guide.md)
 - [Product Analytics Quickstart](product-analytics-quickstart.md)
 - [Deploy Design System Storybook](deploy-design-system-storybook.md)
@@ -717,11 +774,13 @@ kubectl logs -n fawkes-local -l app=space-metrics --tail=100
 - [Event Tracking Integration](event-tracking-integration.md)
 
 **Validation Documents**:
+
 - [AT-E3-002: SPACE Framework](../validation/AT-E3-002-IMPLEMENTATION.md)
 - [AT-E3-003: Feedback System](../validation/AT-E3-003-IMPLEMENTATION.md)
 - [AT-E3-004/005/009: Design System](../validation/AT-E3-004-005-009-IMPLEMENTATION.md)
 
 **Video Resources**:
+
 - [Epic 3 Demo Video](../tutorials/epic-3-demo-video.md)
 - [Epic 3 Demo Script](../tutorials/epic-3-demo-video-script.md)
 

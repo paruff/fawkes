@@ -5,6 +5,7 @@
 This is **Fawkes**, an Internal Product Delivery Platform with integrated dojo learning.
 
 ### Architecture Principles
+
 - **GitOps-first**: All configuration in Git, ArgoCD reconciles
 - **Declarative**: Describe desired state, not procedures
 - **Multi-cloud**: Abstract cloud differences with Terraform/Crossplane
@@ -12,6 +13,7 @@ This is **Fawkes**, an Internal Product Delivery Platform with integrated dojo l
 - **Observable**: Every component emits metrics, logs, traces
 
 ### Technology Stack
+
 - **Orchestration**: Kubernetes
 - **IaC**: Terraform (migrating to Crossplane)
 - **GitOps**: ArgoCD
@@ -24,6 +26,7 @@ This is **Fawkes**, an Internal Product Delivery Platform with integrated dojo l
 ### Code Generation Guidelines
 
 #### For Terraform
+
 - Use Terraform 1.6+ syntax
 - Always include `required_providers` block
 - Use variables for all configurable values
@@ -32,6 +35,7 @@ This is **Fawkes**, an Internal Product Delivery Platform with integrated dojo l
 - Comment complex logic
 
 #### For Kubernetes Manifests
+
 - Use apiVersion appropriate for K8s 1.28+
 - Always include namespace
 - Use Kustomize overlays for environment differences
@@ -40,12 +44,14 @@ This is **Fawkes**, an Internal Product Delivery Platform with integrated dojo l
 - Prefer Deployments over ReplicaSets
 
 #### For Helm Values
+
 - Document all values with comments
 - Provide sensible defaults
 - Group related settings
 - Include examples for common use cases
 
 #### For Python Scripts
+
 - Type hints for all functions
 - Docstrings in Google style
 - Use Click for CLI
@@ -53,6 +59,7 @@ This is **Fawkes**, an Internal Product Delivery Platform with integrated dojo l
 - Log meaningful messages
 
 #### For Gherkin Features
+
 - Use business language, not technical jargon
 - One feature per file
 - Background for common setup
@@ -62,6 +69,7 @@ This is **Fawkes**, an Internal Product Delivery Platform with integrated dojo l
 ### Common Patterns
 
 #### Deploying a new component
+
 1. Create Helm chart or raw manifests in component directory under `platform/apps/`
 2. Create Kustomization for environment overlays if needed
 3. Create ArgoCD Application manifest in `platform/apps/<component>-application.yaml`
@@ -69,18 +77,21 @@ This is **Fawkes**, an Internal Product Delivery Platform with integrated dojo l
 5. Deploy locally first, then sync to GitOps
 
 #### Adding DORA metrics
+
 - Emit events to Prometheus Pushgateway
 - Use standard metric names: `dora_deployment_frequency`, etc.
 - Include labels: team, service, environment
 - Create Grafana dashboard JSON
 
 #### Security scanning
+
 - SonarQube for SAST (Java, Python, Go)
 - Trivy for container images
 - Fail builds on HIGH/CRITICAL vulnerabilities
 - Store reports as artifacts
 
 ### Avoid
+
 - ❌ Imperative `kubectl` commands in production
 - ❌ Secrets in Git (use External Secrets Operator)
 - ❌ Hardcoded values (use ConfigMaps/variables)
@@ -89,6 +100,7 @@ This is **Fawkes**, an Internal Product Delivery Platform with integrated dojo l
 - ❌ Privileged containers (unless absolutely necessary)
 
 ### When Suggesting Code
+
 - Prefer existing patterns in codebase
 - Reference similar existing implementations
 - Include validation/testing approach
@@ -137,6 +149,7 @@ fawkes/
 ## Development Workflow
 
 ### Initial Setup
+
 ```bash
 # Install pre-commit hooks
 make pre-commit-setup
@@ -146,6 +159,7 @@ make k8s-status
 ```
 
 ### Development Loop
+
 ```bash
 # 1. Write BDD feature first
 vim tests/bdd/features/my-feature.feature
@@ -167,6 +181,7 @@ make sync ENVIRONMENT=dev
 ```
 
 ### Quick Commands
+
 - `make help` - Show all available commands
 - `make deploy-local` - Deploy to local K8s
 - `make test-bdd` - Run BDD tests
@@ -178,24 +193,28 @@ make sync ENVIRONMENT=dev
 ### Test Types and Commands
 
 #### Unit Tests (Fast)
+
 ```bash
 make test-unit
 # Or directly: pytest tests/unit -v
 ```
 
 #### BDD/Acceptance Tests
+
 ```bash
 make test-bdd COMPONENT=backstage
 # Or with behave: behave tests/bdd/features --tags=@local
 ```
 
 #### Integration Tests
+
 ```bash
 make test-integration
 # Or: pytest tests/integration -v
 ```
 
 #### E2E Tests
+
 ```bash
 # All E2E tests
 make test-e2e-all
@@ -206,6 +225,7 @@ make test-e2e-integration
 ```
 
 #### Acceptance Test Validations
+
 ```bash
 # Validate specific AT-E1-* tests
 make validate-at-e1-001  # AKS cluster
@@ -218,6 +238,7 @@ make validate-at-e1-007  # DORA metrics
 ```
 
 ### Test Markers
+
 - `@local` - Tests that run on local K8s
 - `@dev` - Tests for dev environment
 - `@prod` - Tests for production environment
@@ -226,6 +247,7 @@ make validate-at-e1-007  # DORA metrics
 ## Building and Deployment
 
 ### Local Development
+
 ```bash
 # Deploy all components locally
 make deploy-local COMPONENT=all
@@ -241,6 +263,7 @@ make k8s-logs COMPONENT=backstage
 ```
 
 ### Validation
+
 ```bash
 # Validate all manifests
 make validate
@@ -259,6 +282,7 @@ make validate-jenkins
 ```
 
 ### GitOps Sync
+
 ```bash
 # Sync to dev
 make sync ENVIRONMENT=dev
@@ -276,12 +300,14 @@ make argocd-diff
 ## Documentation
 
 ### Serving Docs Locally
+
 ```bash
 make docs-serve
 # Opens at http://localhost:8000
 ```
 
 ### Building Docs
+
 ```bash
 make docs-build
 ```
@@ -291,6 +317,7 @@ make docs-build
 ### Common Issues
 
 #### Pods not starting
+
 ```bash
 # Check pod status
 kubectl get pods -n fawkes-local
@@ -303,6 +330,7 @@ kubectl logs <pod-name> -n fawkes-local
 ```
 
 #### ArgoCD sync issues
+
 ```bash
 # Check ArgoCD status (using make target)
 make argocd-status ENVIRONMENT=dev
@@ -319,6 +347,7 @@ make argocd-sync ENVIRONMENT=dev
 ```
 
 #### Resource constraints
+
 ```bash
 # Check resource usage
 kubectl top pods -n fawkes-local
@@ -328,6 +357,7 @@ make validate-resources
 ```
 
 ### Debug Mode
+
 - Set `VERBOSE=true` for detailed output
 - Use `--verbose` flag with E2E tests
 - Check `kubectl describe` for events
@@ -345,12 +375,14 @@ make validate-resources
 ## Best Practices
 
 ### Before Committing
+
 1. Run linters: `make lint`
 2. Run tests: `make test-all`
 3. Validate manifests: `make validate`
 4. Check pre-commit hooks pass
 
 ### For New Features
+
 1. Write BDD feature first
 2. Add acceptance criteria
 3. Implement with TDD approach

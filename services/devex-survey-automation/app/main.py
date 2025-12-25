@@ -22,7 +22,7 @@ from .models import (
     PulseSurveyAggregate,
     SurveyOptOut,
     NASATLXAssessment,
-    NASATLXAggregate
+    NASATLXAggregate,
 )
 from .schemas import (
     PulseSurveyResponse,
@@ -38,80 +38,36 @@ from .schemas import (
     NASATLXSubmissionResponse,
     NASATLXAnalytics,
     NASATLXTrendData,
-    TaskTypeStats
+    TaskTypeStats,
 )
 from integrations.mattermost import mattermost_client
 from integrations.space_metrics import space_metrics_client
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Prometheus metrics
-surveys_distributed = Counter(
-    'devex_survey_distributed_total',
-    'Total surveys distributed',
-    ['type']
-)
-survey_responses = Counter(
-    'devex_survey_responses_total',
-    'Total survey responses',
-    ['type']
-)
-response_rate_gauge = Gauge(
-    'devex_survey_response_rate',
-    'Survey response rate',
-    ['type']
-)
-request_duration = Histogram(
-    'devex_survey_request_duration_seconds',
-    'Request processing duration',
-    ['endpoint']
-)
+surveys_distributed = Counter("devex_survey_distributed_total", "Total surveys distributed", ["type"])
+survey_responses = Counter("devex_survey_responses_total", "Total survey responses", ["type"])
+response_rate_gauge = Gauge("devex_survey_response_rate", "Survey response rate", ["type"])
+request_duration = Histogram("devex_survey_request_duration_seconds", "Request processing duration", ["endpoint"])
 # NASA-TLX Metrics
 nasa_tlx_submissions = Counter(
-    'devex_nasa_tlx_submissions_total',
-    'Total NASA-TLX assessments submitted',
-    ['task_type']
+    "devex_nasa_tlx_submissions_total", "Total NASA-TLX assessments submitted", ["task_type"]
 )
 nasa_tlx_overall_workload = Gauge(
-    'devex_nasa_tlx_overall_workload',
-    'Average overall NASA-TLX workload score',
-    ['task_type']
+    "devex_nasa_tlx_overall_workload", "Average overall NASA-TLX workload score", ["task_type"]
 )
-nasa_tlx_mental_demand = Gauge(
-    'devex_nasa_tlx_mental_demand',
-    'Average mental demand score',
-    ['task_type']
-)
-nasa_tlx_physical_demand = Gauge(
-    'devex_nasa_tlx_physical_demand',
-    'Average physical demand score',
-    ['task_type']
-)
-nasa_tlx_temporal_demand = Gauge(
-    'devex_nasa_tlx_temporal_demand',
-    'Average temporal demand score',
-    ['task_type']
-)
-nasa_tlx_effort = Gauge(
-    'devex_nasa_tlx_effort',
-    'Average effort score',
-    ['task_type']
-)
-nasa_tlx_frustration = Gauge(
-    'devex_nasa_tlx_frustration',
-    'Average frustration score',
-    ['task_type']
-)
+nasa_tlx_mental_demand = Gauge("devex_nasa_tlx_mental_demand", "Average mental demand score", ["task_type"])
+nasa_tlx_physical_demand = Gauge("devex_nasa_tlx_physical_demand", "Average physical demand score", ["task_type"])
+nasa_tlx_temporal_demand = Gauge("devex_nasa_tlx_temporal_demand", "Average temporal demand score", ["task_type"])
+nasa_tlx_effort = Gauge("devex_nasa_tlx_effort", "Average effort score", ["task_type"])
+nasa_tlx_frustration = Gauge("devex_nasa_tlx_frustration", "Average frustration score", ["task_type"])
 nasa_tlx_performance = Gauge(
-    'devex_nasa_tlx_performance',
-    'Average performance score (higher is better)',
-    ['task_type']
+    "devex_nasa_tlx_performance", "Average performance score (higher is better)", ["task_type"]
 )
+
 
 # Lifespan context manager
 @asynccontextmanager
@@ -134,7 +90,7 @@ app = FastAPI(
     title="DevEx Survey Automation Service",
     description="Automated DevEx surveys with multi-channel distribution and analysis",
     version=settings.version,
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Add CORS middleware
@@ -159,7 +115,7 @@ async def health_check():
     integrations = {
         "database": db_healthy,
         "space_metrics": await space_metrics_client.check_health(),
-        "mattermost": mattermost_client is not None
+        "mattermost": mattermost_client is not None,
     }
 
     status = "healthy" if all(integrations.values()) else "degraded"
@@ -169,7 +125,7 @@ async def health_check():
         service=settings.service_name,
         version=settings.version,
         database_connected=db_healthy,
-        integrations=integrations
+        integrations=integrations,
     )
 
 
@@ -188,8 +144,8 @@ async def root():
             "submit_response": "POST /api/v1/survey/{token}/submit",
             "pulse_analytics": "GET /api/v1/analytics/pulse/weekly",
             "response_rate": "GET /api/v1/analytics/response-rate",
-            "metrics": "/metrics"
-        }
+            "metrics": "/metrics",
+        },
     }
 
 
@@ -213,43 +169,34 @@ async def distribute_survey(request: SurveyDistributionRequest):
                         and_(
                             SurveyCampaign.type == request.type,
                             SurveyCampaign.period == period,
-                            SurveyCampaign.year == now.year
+                            SurveyCampaign.year == now.year,
                         )
                     )
                 )
                 if existing.scalar_one_or_none():
                     raise HTTPException(
-                        status_code=400,
-                        detail=f"Campaign for {request.type} {period} {now.year} already exists"
+                        status_code=400, detail=f"Campaign for {request.type} {period} {now.year} already exists"
                     )
 
                 # Create campaign
-                campaign = SurveyCampaign(
-                    type=request.type,
-                    period=period,
-                    year=now.year,
-                    started_at=now
-                )
+                campaign = SurveyCampaign(type=request.type, period=period, year=now.year, started_at=now)
                 session.add(campaign)
                 await session.flush()
 
                 # Get recipients
                 recipients_list = []
                 if request.test_mode and request.test_users:
-                    recipients_list = [{"email": email, "user_id": email.split("@")[0]}
-                                      for email in request.test_users]
+                    recipients_list = [{"email": email, "user_id": email.split("@")[0]} for email in request.test_users]
                 else:
                     # In production, integrate with Backstage or user directory
                     # For now, use test users
                     recipients_list = [
                         {"email": "dev1@fawkes.idp", "user_id": "dev1"},
-                        {"email": "dev2@fawkes.idp", "user_id": "dev2"}
+                        {"email": "dev2@fawkes.idp", "user_id": "dev2"},
                     ]
 
                 # Check opt-outs
-                opt_out_users = await session.execute(
-                    select(SurveyOptOut.user_id)
-                )
+                opt_out_users = await session.execute(select(SurveyOptOut.user_id))
                 opted_out = {row[0] for row in opt_out_users.fetchall()}
 
                 # Create recipients and send surveys
@@ -269,16 +216,14 @@ async def distribute_survey(request: SurveyDistributionRequest):
                         user_id=recipient_info["user_id"],
                         email=recipient_info["email"],
                         token=token,
-                        sent_at=now
+                        sent_at=now,
                     )
                     session.add(recipient)
 
                     # Send via Mattermost
                     if mattermost_client and request.type == "pulse":
                         success = await mattermost_client.send_pulse_survey(
-                            recipient_info["email"],
-                            recipient_info["user_id"],
-                            survey_url
+                            recipient_info["email"], recipient_info["user_id"], survey_url
                         )
                         if success:
                             sent_count += 1
@@ -302,7 +247,7 @@ async def distribute_survey(request: SurveyDistributionRequest):
                     "type": request.type,
                     "period": period,
                     "year": now.year,
-                    "total_sent": sent_count
+                    "total_sent": sent_count,
                 }
 
         except HTTPException:
@@ -314,8 +259,7 @@ async def distribute_survey(request: SurveyDistributionRequest):
 
 @app.get("/api/v1/survey/campaigns", response_model=List[CampaignResponse], tags=["Survey Management"])
 async def list_campaigns(
-    type: Optional[str] = Query(None, description="Filter by survey type"),
-    limit: int = Query(10, ge=1, le=100)
+    type: Optional[str] = Query(None, description="Filter by survey type"), limit: int = Query(10, ge=1, le=100)
 ):
     """List survey campaigns"""
     try:
@@ -339,9 +283,7 @@ async def get_campaign(campaign_id: int = Path(..., description="Campaign ID")):
     """Get campaign details"""
     try:
         async with get_db_session() as session:
-            result = await session.execute(
-                select(SurveyCampaign).where(SurveyCampaign.id == campaign_id)
-            )
+            result = await session.execute(select(SurveyCampaign).where(SurveyCampaign.id == campaign_id))
             campaign = result.scalar_one_or_none()
 
             if not campaign:
@@ -361,13 +303,12 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
     """Render survey page"""
     try:
         async with get_db_session() as session:
-            result = await session.execute(
-                select(SurveyRecipient).where(SurveyRecipient.token == token)
-            )
+            result = await session.execute(select(SurveyRecipient).where(SurveyRecipient.token == token))
             recipient = result.scalar_one_or_none()
 
             if not recipient:
-                return HTMLResponse(content="""
+                return HTMLResponse(
+                    content="""
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -384,10 +325,12 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                         <p>This survey link is not valid.</p>
                     </body>
                     </html>
-                """)
+                """
+                )
 
             if recipient.responded_at:
-                return HTMLResponse(content="""
+                return HTMLResponse(
+                    content="""
                     <!DOCTYPE html>
                     <html>
                     <head>
@@ -404,12 +347,11 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                         <p>You have already completed this survey.</p>
                     </body>
                     </html>
-                """)
+                """
+                )
 
             # Get campaign type
-            result = await session.execute(
-                select(SurveyCampaign).where(SurveyCampaign.id == recipient.campaign_id)
-            )
+            result = await session.execute(select(SurveyCampaign).where(SurveyCampaign.id == recipient.campaign_id))
             campaign = result.scalar_one()
 
             if campaign.type == "pulse":
@@ -424,7 +366,8 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
 
 def _render_pulse_survey(token: str) -> HTMLResponse:
     """Render pulse survey HTML"""
-    return HTMLResponse(content=f"""
+    return HTMLResponse(
+        content=f"""
         <!DOCTYPE html>
         <html>
         <head>
@@ -651,12 +594,14 @@ def _render_pulse_survey(token: str) -> HTMLResponse:
             </script>
         </body>
         </html>
-    """)
+    """
+    )
 
 
 def _render_deep_dive_survey(token: str) -> HTMLResponse:
     """Render deep-dive survey HTML (placeholder)"""
-    return HTMLResponse(content=f"""
+    return HTMLResponse(
+        content=f"""
         <!DOCTYPE html>
         <html>
         <head>
@@ -672,22 +617,18 @@ def _render_deep_dive_survey(token: str) -> HTMLResponse:
             <p>Token: {token}</p>
         </body>
         </html>
-    """)
+    """
+    )
 
 
 @app.post("/api/v1/survey/{token}/submit", response_model=SurveySubmissionResponse, tags=["Survey"])
-async def submit_survey(
-    token: str = Path(..., description="Survey token"),
-    response: PulseSurveyResponse = None
-):
+async def submit_survey(token: str = Path(..., description="Survey token"), response: PulseSurveyResponse = None):
     """Submit survey response"""
     with request_duration.labels(endpoint="submit_survey").time():
         try:
             async with get_db_session() as session:
                 # Get recipient
-                result = await session.execute(
-                    select(SurveyRecipient).where(SurveyRecipient.token == token)
-                )
+                result = await session.execute(select(SurveyRecipient).where(SurveyRecipient.token == token))
                 recipient = result.scalar_one_or_none()
 
                 if not recipient:
@@ -702,9 +643,7 @@ async def submit_survey(
                 recipient.responded_at = datetime.now()
 
                 # Update campaign stats
-                result = await session.execute(
-                    select(SurveyCampaign).where(SurveyCampaign.id == recipient.campaign_id)
-                )
+                result = await session.execute(select(SurveyCampaign).where(SurveyCampaign.id == recipient.campaign_id))
                 campaign = result.scalar_one()
                 campaign.total_responses += 1
                 if campaign.total_sent > 0:
@@ -725,7 +664,7 @@ async def submit_survey(
                     success=True,
                     message="Survey submitted successfully",
                     recipient_id=recipient.id,
-                    submitted_at=recipient.responded_at
+                    submitted_at=recipient.responded_at,
                 )
 
         except HTTPException:
@@ -738,7 +677,8 @@ async def submit_survey(
 @app.get("/survey/{token}/thanks", response_class=HTMLResponse, tags=["Survey"])
 async def thank_you_page(token: str = Path(..., description="Survey token")):
     """Thank you page after survey submission"""
-    return HTMLResponse(content="""
+    return HTMLResponse(
+        content="""
         <!DOCTYPE html>
         <html>
         <head>
@@ -784,17 +724,19 @@ async def thank_you_page(token: str = Path(..., description="Survey token")):
             </div>
         </body>
         </html>
-    """)
+    """
+    )
 
 
 @app.get("/nasa-tlx", response_class=HTMLResponse, tags=["NASA-TLX"])
 async def get_nasa_tlx_page(
     task_type: str = Query("general", description="Type of task being assessed"),
     task_id: Optional[str] = Query(None, description="Optional task identifier"),
-    user_id: str = Query("anonymous", description="User identifier")
+    user_id: str = Query("anonymous", description="User identifier"),
 ):
     """Render NASA-TLX cognitive load assessment page"""
-    return HTMLResponse(content=f"""
+    return HTMLResponse(
+        content=f"""
         <!DOCTYPE html>
         <html>
         <head>
@@ -1164,13 +1106,12 @@ async def get_nasa_tlx_page(
             </script>
         </body>
         </html>
-    """)
+    """
+    )
 
 
 @app.get("/api/v1/analytics/pulse/weekly", response_model=List[PulseAnalytics], tags=["Analytics"])
-async def get_pulse_weekly_analytics(
-    weeks: int = Query(12, ge=1, le=52, description="Number of weeks to retrieve")
-):
+async def get_pulse_weekly_analytics(weeks: int = Query(12, ge=1, le=52, description="Number of weeks to retrieve")):
     """Get weekly pulse survey analytics"""
     try:
         async with get_db_session() as session:
@@ -1195,8 +1136,7 @@ async def get_response_rate_metrics():
         async with get_db_session() as session:
             # Get latest campaigns by type
             result = await session.execute(
-                select(SurveyCampaign)
-                .order_by(SurveyCampaign.type, SurveyCampaign.started_at.desc())
+                select(SurveyCampaign).order_by(SurveyCampaign.type, SurveyCampaign.started_at.desc())
             )
             campaigns = result.scalars().all()
 
@@ -1211,15 +1151,17 @@ async def get_response_rate_metrics():
                 target_rate = 60.0 if campaign.type == "pulse" else 40.0
                 status = "above_target" if campaign.response_rate >= target_rate else "below_target"
 
-                metrics.append(ResponseRateMetrics(
-                    survey_type=campaign.type,
-                    period=f"{campaign.period} {campaign.year}",
-                    total_sent=campaign.total_sent,
-                    total_responses=campaign.total_responses,
-                    response_rate=campaign.response_rate,
-                    target_rate=target_rate,
-                    status=status
-                ))
+                metrics.append(
+                    ResponseRateMetrics(
+                        survey_type=campaign.type,
+                        period=f"{campaign.period} {campaign.year}",
+                        total_sent=campaign.total_sent,
+                        total_responses=campaign.total_responses,
+                        response_rate=campaign.response_rate,
+                        target_rate=target_rate,
+                        status=status,
+                    )
+                )
 
             return metrics
 
@@ -1232,23 +1174,21 @@ async def get_response_rate_metrics():
 # NASA-TLX Cognitive Load Assessment Endpoints
 # ============================================================================
 
+
 @app.post("/api/v1/nasa-tlx/submit", response_model=NASATLXSubmissionResponse, tags=["NASA-TLX"])
-async def submit_nasa_tlx(
-    assessment: NASATLXRequest,
-    user_id: str = Query(..., description="User identifier")
-):
+async def submit_nasa_tlx(assessment: NASATLXRequest, user_id: str = Query(..., description="User identifier")):
     """Submit a NASA-TLX cognitive load assessment after completing a platform task"""
     with request_duration.labels(endpoint="submit_nasa_tlx").time():
         try:
             async with get_db_session() as session:
                 # Calculate overall workload (average of all dimensions)
                 overall_workload = (
-                    assessment.mental_demand +
-                    assessment.physical_demand +
-                    assessment.temporal_demand +
-                    (100 - assessment.performance) +  # Invert performance (higher is better)
-                    assessment.effort +
-                    assessment.frustration
+                    assessment.mental_demand
+                    + assessment.physical_demand
+                    + assessment.temporal_demand
+                    + (100 - assessment.performance)
+                    + assessment.effort  # Invert performance (higher is better)
+                    + assessment.frustration
                 ) / 6.0
 
                 # Create assessment record
@@ -1265,7 +1205,7 @@ async def submit_nasa_tlx(
                     overall_workload=overall_workload,
                     duration_minutes=assessment.duration_minutes,
                     comment=assessment.comment,
-                    platform_version=settings.version
+                    platform_version=settings.version,
                 )
 
                 session.add(tlx_assessment)
@@ -1283,15 +1223,16 @@ async def submit_nasa_tlx(
                 nasa_tlx_frustration.labels(task_type=assessment.task_type).set(assessment.frustration)
                 nasa_tlx_performance.labels(task_type=assessment.task_type).set(assessment.performance)
 
-                logger.info(f"✅ NASA-TLX assessment submitted by {user_id} for task {assessment.task_type} (workload: {overall_workload:.1f})")
-
+                logger.info(
+                    f"✅ NASA-TLX assessment submitted by {user_id} for task {assessment.task_type} (workload: {overall_workload:.1f})"
+                )
 
                 return NASATLXSubmissionResponse(
                     success=True,
                     message="NASA-TLX assessment submitted successfully",
                     assessment_id=tlx_assessment.id,
                     overall_workload=overall_workload,
-                    submitted_at=tlx_assessment.submitted_at
+                    submitted_at=tlx_assessment.submitted_at,
                 )
 
         except Exception as e:
@@ -1302,7 +1243,7 @@ async def submit_nasa_tlx(
 @app.get("/api/v1/nasa-tlx/assessments", response_model=List[NASATLXResponse], tags=["NASA-TLX"])
 async def get_nasa_tlx_assessments(
     task_type: Optional[str] = Query(None, description="Filter by task type"),
-    limit: int = Query(50, ge=1, le=500, description="Number of assessments to return")
+    limit: int = Query(50, ge=1, le=500, description="Number of assessments to return"),
 ):
     """Get NASA-TLX assessments with optional filtering"""
     try:
@@ -1325,7 +1266,7 @@ async def get_nasa_tlx_assessments(
 @app.get("/api/v1/nasa-tlx/analytics", response_model=List[NASATLXAnalytics], tags=["NASA-TLX"])
 async def get_nasa_tlx_analytics(
     task_type: Optional[str] = Query(None, description="Filter by task type"),
-    weeks: int = Query(4, ge=1, le=52, description="Number of weeks to analyze")
+    weeks: int = Query(4, ge=1, le=52, description="Number of weeks to analyze"),
 ):
     """Get aggregated NASA-TLX analytics"""
     try:
@@ -1339,12 +1280,11 @@ async def get_nasa_tlx_analytics(
             start_week = max(1, current_week - weeks)
 
             # Query aggregates
-            query = select(NASATLXAggregate).where(
-                and_(
-                    NASATLXAggregate.year == current_year,
-                    NASATLXAggregate.week >= start_week
-                )
-            ).order_by(NASATLXAggregate.week)
+            query = (
+                select(NASATLXAggregate)
+                .where(and_(NASATLXAggregate.year == current_year, NASATLXAggregate.week >= start_week))
+                .order_by(NASATLXAggregate.week)
+            )
 
             if task_type:
                 query = query.where(NASATLXAggregate.task_type == task_type)
@@ -1355,7 +1295,9 @@ async def get_nasa_tlx_analytics(
             # If no aggregates exist, generate them from raw assessments
             if not aggregates:
                 logger.info(f"No aggregates found, generating from raw assessments")
-                aggregates = await _generate_nasa_tlx_aggregates(session, task_type, start_week, current_week, current_year)
+                aggregates = await _generate_nasa_tlx_aggregates(
+                    session, task_type, start_week, current_week, current_year
+                )
 
             return [NASATLXAnalytics.model_validate(a) for a in aggregates]
 
@@ -1365,9 +1307,7 @@ async def get_nasa_tlx_analytics(
 
 
 @app.get("/api/v1/nasa-tlx/trends", response_model=List[NASATLXTrendData], tags=["NASA-TLX"])
-async def get_nasa_tlx_trends(
-    weeks: int = Query(12, ge=1, le=52, description="Number of weeks to analyze")
-):
+async def get_nasa_tlx_trends(weeks: int = Query(12, ge=1, le=52, description="Number of weeks to analyze")):
     """Get NASA-TLX trends by task type over time"""
     try:
         async with get_db_session() as session:
@@ -1379,12 +1319,7 @@ async def get_nasa_tlx_trends(
             # Get unique task types
             task_types_result = await session.execute(
                 select(NASATLXAggregate.task_type)
-                .where(
-                    and_(
-                        NASATLXAggregate.year == current_year,
-                        NASATLXAggregate.week >= start_week
-                    )
-                )
+                .where(and_(NASATLXAggregate.year == current_year, NASATLXAggregate.week >= start_week))
                 .distinct()
             )
             task_types = [row[0] for row in task_types_result.fetchall()]
@@ -1398,7 +1333,7 @@ async def get_nasa_tlx_trends(
                         and_(
                             NASATLXAggregate.task_type == task_type,
                             NASATLXAggregate.year == current_year,
-                            NASATLXAggregate.week >= start_week
+                            NASATLXAggregate.week >= start_week,
                         )
                     )
                     .order_by(NASATLXAggregate.week)
@@ -1406,18 +1341,20 @@ async def get_nasa_tlx_trends(
                 aggregates = result.scalars().all()
 
                 if aggregates:
-                    trends.append(NASATLXTrendData(
-                        task_type=task_type,
-                        weeks=[a.week for a in aggregates],
-                        mental_demand_trend=[a.avg_mental_demand for a in aggregates],
-                        physical_demand_trend=[a.avg_physical_demand for a in aggregates],
-                        temporal_demand_trend=[a.avg_temporal_demand for a in aggregates],
-                        performance_trend=[a.avg_performance for a in aggregates],
-                        effort_trend=[a.avg_effort for a in aggregates],
-                        frustration_trend=[a.avg_frustration for a in aggregates],
-                        overall_workload_trend=[a.avg_overall_workload for a in aggregates],
-                        response_counts=[a.response_count for a in aggregates]
-                    ))
+                    trends.append(
+                        NASATLXTrendData(
+                            task_type=task_type,
+                            weeks=[a.week for a in aggregates],
+                            mental_demand_trend=[a.avg_mental_demand for a in aggregates],
+                            physical_demand_trend=[a.avg_physical_demand for a in aggregates],
+                            temporal_demand_trend=[a.avg_temporal_demand for a in aggregates],
+                            performance_trend=[a.avg_performance for a in aggregates],
+                            effort_trend=[a.avg_effort for a in aggregates],
+                            frustration_trend=[a.avg_frustration for a in aggregates],
+                            overall_workload_trend=[a.avg_overall_workload for a in aggregates],
+                            response_counts=[a.response_count for a in aggregates],
+                        )
+                    )
 
             return trends
 
@@ -1437,9 +1374,8 @@ async def get_task_type_stats():
                     NASATLXAssessment.task_type,
                     func.count(NASATLXAssessment.id).label("total"),
                     func.avg(NASATLXAssessment.overall_workload).label("avg_workload"),
-                    func.avg(NASATLXAssessment.duration_minutes).label("avg_duration")
-                )
-                .group_by(NASATLXAssessment.task_type)
+                    func.avg(NASATLXAssessment.duration_minutes).label("avg_duration"),
+                ).group_by(NASATLXAssessment.task_type)
             )
 
             stats = []
@@ -1456,9 +1392,8 @@ async def get_task_type_stats():
                         func.avg(NASATLXAssessment.physical_demand).label("physical"),
                         func.avg(NASATLXAssessment.temporal_demand).label("temporal"),
                         func.avg(NASATLXAssessment.effort).label("effort"),
-                        func.avg(NASATLXAssessment.frustration).label("frustration")
-                    )
-                    .where(NASATLXAssessment.task_type == task_type)
+                        func.avg(NASATLXAssessment.frustration).label("frustration"),
+                    ).where(NASATLXAssessment.task_type == task_type)
                 )
                 dims = dimension_result.one()
                 dimensions = {
@@ -1466,7 +1401,7 @@ async def get_task_type_stats():
                     "physical_demand": float(dims[1]) if dims[1] else 0,
                     "temporal_demand": float(dims[2]) if dims[2] else 0,
                     "effort": float(dims[3]) if dims[3] else 0,
-                    "frustration": float(dims[4]) if dims[4] else 0
+                    "frustration": float(dims[4]) if dims[4] else 0,
                 }
                 most_demanding = max(dimensions, key=dimensions.get)
 
@@ -1478,14 +1413,16 @@ async def get_task_type_stats():
                 else:
                     health_status = "critical"
 
-                stats.append(TaskTypeStats(
-                    task_type=task_type,
-                    total_assessments=total,
-                    avg_workload=avg_workload,
-                    avg_duration_minutes=avg_duration,
-                    most_demanding_dimension=most_demanding,
-                    health_status=health_status
-                ))
+                stats.append(
+                    TaskTypeStats(
+                        task_type=task_type,
+                        total_assessments=total,
+                        avg_workload=avg_workload,
+                        avg_duration_minutes=avg_duration,
+                        most_demanding_dimension=most_demanding,
+                        health_status=health_status,
+                    )
+                )
 
             return stats
 
@@ -1502,8 +1439,8 @@ async def _generate_nasa_tlx_aggregates(session, task_type_filter, start_week, e
         # Get assessments for this week
         query = select(NASATLXAssessment).where(
             and_(
-                func.extract('year', NASATLXAssessment.submitted_at) == year,
-                func.extract('week', NASATLXAssessment.submitted_at) == week
+                func.extract("year", NASATLXAssessment.submitted_at) == year,
+                func.extract("week", NASATLXAssessment.submitted_at) == week,
             )
         )
 
@@ -1531,7 +1468,7 @@ async def _generate_nasa_tlx_aggregates(session, task_type_filter, start_week, e
                     avg_effort=sum(a.effort for a in task_assessments) / len(task_assessments),
                     avg_frustration=sum(a.frustration for a in task_assessments) / len(task_assessments),
                     avg_overall_workload=sum(a.overall_workload for a in task_assessments) / len(task_assessments),
-                    response_count=len(task_assessments)
+                    response_count=len(task_assessments),
                 )
 
                 session.add(aggregate)

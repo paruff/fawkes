@@ -43,14 +43,14 @@ spec:
 
   syncPolicy:
     automated:
-      prune: true      # Delete resources not in Git
-      selfHeal: true   # Force sync when drift detected
+      prune: true # Delete resources not in Git
+      selfHeal: true # Force sync when drift detected
       allowEmpty: false
 
     syncOptions:
-      - CreateNamespace=true  # Auto-create namespace
-      - PruneLast=true        # Prune resources at the end
-      - ServerSideApply=true  # Use server-side apply
+      - CreateNamespace=true # Auto-create namespace
+      - PruneLast=true # Prune resources at the end
+      - ServerSideApply=true # Use server-side apply
 
     retry:
       limit: 5
@@ -64,7 +64,7 @@ spec:
     - group: apps
       kind: Deployment
       jsonPointers:
-        - /spec/replicas  # Ignore HPA-controlled replicas
+        - /spec/replicas # Ignore HPA-controlled replicas
 
   # Health assessment
   health:

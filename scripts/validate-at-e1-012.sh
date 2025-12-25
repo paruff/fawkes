@@ -19,23 +19,23 @@ NC='\033[0m' # No Color
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 log_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
+  echo -e "${BLUE}[INFO]${NC} $1"
 }
 
 log_success() {
-    echo -e "${GREEN}[✓]${NC} $1"
+  echo -e "${GREEN}[✓]${NC} $1"
 }
 
 log_error() {
-    echo -e "${RED}[✗]${NC} $1"
+  echo -e "${RED}[✗]${NC} $1"
 }
 
 log_warning() {
-    echo -e "${YELLOW}[!]${NC} $1"
+  echo -e "${YELLOW}[!]${NC} $1"
 }
 
 usage() {
-    cat << EOF
+  cat << EOF
 Usage: $0 [OPTIONS]
 
 AT-E1-012: Full platform workflow validation wrapper script.
@@ -68,61 +68,61 @@ EOF
 }
 
 check_prerequisites() {
-    log_info "Checking prerequisites..."
+  log_info "Checking prerequisites..."
 
-    # Check required tools
-    local required_tools=("kubectl" "jq")
-    for tool in "${required_tools[@]}"; do
-        if ! command -v "$tool" &> /dev/null; then
-            log_error "Required tool not found: $tool"
-            return 1
-        fi
-    done
-
-    # Check cluster access
-    if ! kubectl cluster-info &> /dev/null; then
-        log_error "Cannot access Kubernetes cluster"
-        return 1
+  # Check required tools
+  local required_tools=("kubectl" "jq")
+  for tool in "${required_tools[@]}"; do
+    if ! command -v "$tool" &> /dev/null; then
+      log_error "Required tool not found: $tool"
+      return 1
     fi
+  done
 
-    log_success "Prerequisites check passed"
-    return 0
+  # Check cluster access
+  if ! kubectl cluster-info &> /dev/null; then
+    log_error "Cannot access Kubernetes cluster"
+    return 1
+  fi
+
+  log_success "Prerequisites check passed"
+  return 0
 }
 
 main() {
-    echo ""
-    echo "=========================================="
-    echo "  AT-E1-012: Full Platform Validation"
-    echo "=========================================="
-    echo ""
+  echo ""
+  echo "=========================================="
+  echo "  AT-E1-012: Full Platform Validation"
+  echo "=========================================="
+  echo ""
 
-    # Check for help flag first
-    for arg in "$@"; do
-        if [ "$arg" = "-h" ] || [ "$arg" = "--help" ]; then
-            usage
-            exit 0
-        fi
-    done
-
-    # Check prerequisites
-    if ! check_prerequisites; then
-        log_error "Prerequisites check failed"
-        exit 1
+  # Check for help flag first
+  for arg in "$@"; do
+    if [ "$arg" = "-h" ] || [ "$arg" = "--help" ]; then
+      usage
+      exit 0
     fi
+  done
 
-    # Run the full platform test
-    log_info "Running full platform test..."
+  # Check prerequisites
+  if ! check_prerequisites; then
+    log_error "Prerequisites check failed"
+    exit 1
+  fi
+
+  # Run the full platform test
+  log_info "Running full platform test..."
+  echo ""
+
+  if "${ROOT_DIR}/tests/e2e/full-platform-test.sh" "$@"; then
     echo ""
-
-    if "${ROOT_DIR}/tests/e2e/full-platform-test.sh" "$@"; then
-        echo ""
-        log_success "AT-E1-012 validation PASSED"
-        exit 0
-    else
-        echo ""
-        log_error "AT-E1-012 validation FAILED"
-        exit 1
-    fi
+    log_success "AT-E1-012 validation PASSED"
+    exit 0
+  else
+    echo ""
+    log_error "AT-E1-012 validation FAILED"
+    exit 1
+  fi
 }
 
 main "$@"

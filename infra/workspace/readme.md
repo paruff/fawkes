@@ -27,7 +27,7 @@ This directory provides scripts and configuration for **automated developer work
 ### 1. Local Workspace Setup
 
 - **Windows:**
-  Run `setup-win-space.ps1` (PowerShell)  as Administrator.
+  Run `setup-win-space.ps1` (PowerShell) as Administrator.
 
 - **macOS:**
   Run `setup-macos-space.sh`.

@@ -39,7 +39,7 @@ Interested in joining? We'd love to hear from you!
 
 ## Member Profiles
 
-*Profiles will be added as members join the board*
+_Profiles will be added as members join the board_
 
 <!-- Template for member profile:
 
@@ -70,13 +70,14 @@ Interested in joining? We'd love to hear from you!
 
 ## Emeritus Members
 
-*Former CAB members who have completed their term will be recognized here*
+_Former CAB members who have completed their term will be recognized here_
 
 ---
 
 ## Contact
 
 **Questions about the CAB?**
+
 - Email: cab@fawkes.local
 - Mattermost: `#general` channel
 - GitHub: [Open a Discussion](https://github.com/paruff/fawkes/discussions)

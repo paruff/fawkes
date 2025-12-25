@@ -20,6 +20,7 @@ A journey map visualizes a user's experience as they interact with the platform 
 - Prioritize improvements based on impact
 
 **Creating Your Journey Map:**
+
 1. Choose a specific persona and scenario
 2. Map the actual journey (based on research), not the ideal one
 3. Include both actions and emotions
@@ -48,6 +49,7 @@ A journey map visualizes a user's experience as they interact with the platform 
 ### 2. Journey Stages
 
 Break the journey into logical phases. Common stages:
+
 - **Awareness/Discovery**: User becomes aware of need or capability
 - **Learning**: User researches and learns how to accomplish goal
 - **Setup/Configuration**: User prepares tools and environment
@@ -60,6 +62,7 @@ Break the journey into logical phases. Common stages:
 ### 3. Actions Per Stage
 
 For each stage, document:
+
 - What the user does (specific steps)
 - What tools/systems they use
 - Who they interact with
@@ -70,6 +73,7 @@ For each stage, document:
 ### 4. Thoughts and Emotions
 
 For each stage, capture:
+
 - **Thoughts**: What's going through the user's mind?
 - **Emotions**: How do they feel? (frustrated, confident, confused, delighted)
 - **Emotional Intensity**: Rate from 1-5 or show as a line graph
@@ -80,6 +84,7 @@ For each stage, capture:
 ### 5. Pain Points
 
 For each stage, identify:
+
 - Specific problems or friction
 - Root causes
 - Severity (critical, major, minor)
@@ -90,6 +95,7 @@ For each stage, identify:
 ### 6. Opportunities for Improvement
 
 For each pain point:
+
 - Proposed solution or improvement
 - Expected impact (effort vs. value)
 - Priority (high, medium, low)
@@ -100,6 +106,7 @@ For each pain point:
 ### 7. Touchpoints with Platform
 
 For each stage, note:
+
 - Platform features used
 - Documentation consulted
 - Support channels utilized
@@ -109,8 +116,8 @@ For each stage, note:
 
 ## Journey Map Template (Table Format)
 
-| Stage | Actions | Thoughts | Emotions | Pain Points | Opportunities | Touchpoints |
-|-------|---------|----------|----------|-------------|---------------|-------------|
+| Stage         | Actions        | Thoughts        | Emotions             | Pain Points            | Opportunities       | Touchpoints              |
+| ------------- | -------------- | --------------- | -------------------- | ---------------------- | ------------------- | ------------------------ |
 | **[Stage 1]** | [User actions] | [User thoughts] | [Emotions: 😊 😐 😟] | [Problems encountered] | [Improvement ideas] | [Platform features used] |
 | **[Stage 2]** | [User actions] | [User thoughts] | [Emotions: 😊 😐 😟] | [Problems encountered] | [Improvement ideas] | [Platform features used] |
 | **[Stage 3]** | [User actions] | [User thoughts] | [Emotions: 😊 😐 😟] | [Problems encountered] | [Improvement ideas] | [Platform features used] |
@@ -250,6 +257,7 @@ graph TB
 #### Stage 1: Pre-Deployment Preparation (30 minutes)
 
 **Actions**:
+
 1. Reviews deployment checklist from Confluence
 2. Ensures all tests are passing in CI pipeline
 3. Gets code review approval from tech lead
@@ -258,6 +266,7 @@ graph TB
 6. Notifies team in Mattermost about upcoming deployment
 
 **Thoughts**:
+
 - "Did I configure everything correctly?"
 - "What if I forget something important?"
 - "Is there a complete checklist somewhere?"
@@ -265,18 +274,21 @@ graph TB
 **Emotions**: Anxious 😟 (Intensity: 3/5)
 
 **Pain Points**:
+
 - Deployment checklist is outdated (last updated 6 months ago)
 - Unclear which environment variables are required
 - No automated validation of configuration before deployment
 - Rollback procedure is manual and poorly documented
 
 **Opportunities**:
+
 - Automated pre-flight checks that validate configuration
 - Interactive deployment wizard that guides through requirements
 - Up-to-date checklist generated from actual deployment requirements
 - One-click rollback capability
 
 **Touchpoints**:
+
 - Confluence (documentation)
 - Jenkins (CI pipeline status)
 - GitHub (code review)
@@ -287,6 +299,7 @@ graph TB
 #### Stage 2: Service Configuration (45 minutes)
 
 **Actions**:
+
 1. Creates Kubernetes deployment manifest
 2. Configures service discovery and load balancing
 3. Sets up environment-specific configuration
@@ -295,6 +308,7 @@ graph TB
 6. Asks platform team for clarification on ingress configuration
 
 **Thoughts**:
+
 - "There must be an easier way to do this"
 - "Am I doing this the same way as the rest of the team?"
 - "Why do I need to know so much about Kubernetes?"
@@ -302,6 +316,7 @@ graph TB
 **Emotions**: Frustrated 😟 (Intensity: 4/5)
 
 **Pain Points**:
+
 - Copying and modifying YAML from another service (brittle, error-prone)
 - Kubernetes concepts are complex for application developers
 - No template or wizard for common service types
@@ -309,6 +324,7 @@ graph TB
 - Trial and error to get resource limits right
 
 **Opportunities**:
+
 - Golden path template for common service types (REST API, worker, etc.)
 - Service scaffolding tool that generates configuration
 - Built-in validation that catches common configuration errors
@@ -316,6 +332,7 @@ graph TB
 - Resource recommendations based on similar services
 
 **Touchpoints**:
+
 - kubectl (Kubernetes CLI)
 - Text editor (writing YAML)
 - Kubernetes documentation
@@ -327,6 +344,7 @@ graph TB
 #### Stage 3: Initial Deployment to Staging (1 hour)
 
 **Actions**:
+
 1. Applies Kubernetes manifests to staging environment
 2. Waits for pods to start (unclear if they're actually starting)
 3. Deployment fails - pods in CrashLoopBackOff
@@ -337,6 +355,7 @@ graph TB
 8. Verifies service in Grafana dashboard
 
 **Thoughts**:
+
 - "Why is this taking so long?"
 - "What does CrashLoopBackOff even mean?"
 - "Where are the logs?"
@@ -345,6 +364,7 @@ graph TB
 **Emotions**: Stressed 😟 (Intensity: 5/5)
 
 **Pain Points**:
+
 - No visibility into deployment progress or why pods aren't starting
 - Error messages from Kubernetes are cryptic
 - Finding relevant logs requires knowing multiple systems
@@ -352,6 +372,7 @@ graph TB
 - Manual verification steps are time-consuming and error-prone
 
 **Opportunities**:
+
 - Real-time deployment status with clear progress indicators
 - Plain-English explanations of common deployment errors
 - Integrated log viewer that automatically shows relevant logs
@@ -359,6 +380,7 @@ graph TB
 - Deployment success/failure notifications in Mattermost
 
 **Touchpoints**:
+
 - kubectl (status checking)
 - Kibana (log searching)
 - Grafana (service metrics)
@@ -370,6 +392,7 @@ graph TB
 #### Stage 4: Production Deployment (2 hours, including waiting)
 
 **Actions**:
+
 1. Updates production manifests (careful copy-paste from staging)
 2. Posts in team channel: "Deploying to production, standby"
 3. Triggers production deployment manually via Jenkins job
@@ -382,6 +405,7 @@ graph TB
 10. Documents deployment in Confluence runbook
 
 **Thoughts**:
+
 - "Please don't let this break anything"
 - "Am I doing this at the right time?"
 - "How will I know if something goes wrong?"
@@ -390,6 +414,7 @@ graph TB
 **Emotions**: Anxious → Relieved 😟 → 😊 (Intensity: 4/5 → 2/5)
 
 **Pain Points**:
+
 - Manual Jenkins job triggering (why not automatic from merge to main?)
 - No gradual rollout or traffic shifting (all-or-nothing deployment)
 - Unclear when it's safe to stop monitoring
@@ -397,6 +422,7 @@ graph TB
 - Have to stay online to monitor even though it's end of day
 
 **Opportunities**:
+
 - GitOps automatic deployment on merge to main branch
 - Canary deployments with automatic traffic shifting
 - Automated rollback if error rates or latency exceed thresholds
@@ -404,6 +430,7 @@ graph TB
 - Scheduled deployments during business hours only
 
 **Touchpoints**:
+
 - Jenkins (deployment trigger)
 - Kubernetes (deployment status)
 - Grafana (monitoring metrics)
@@ -415,6 +442,7 @@ graph TB
 #### Stage 5: Post-Deployment Monitoring (Next day, 30 minutes)
 
 **Actions**:
+
 1. Checks service metrics first thing in the morning
 2. Reviews overnight logs for any errors
 3. Validates business metrics (payment validations are processing)
@@ -422,6 +450,7 @@ graph TB
 5. Closes Jira ticket
 
 **Thoughts**:
+
 - "Did everything stay healthy overnight?"
 - "I hope I didn't miss any errors"
 - "What should I be looking for?"
@@ -429,12 +458,14 @@ graph TB
 **Emotions**: Cautiously optimistic 😐 (Intensity: 2/5)
 
 **Pain Points**:
+
 - Uncertain what "healthy" looks like for a new service
 - No proactive alerts, has to manually check
 - Business metrics are in a separate system from technical metrics
 - Unclear how long to keep watching
 
 **Opportunities**:
+
 - Automated deployment validation and notification
 - Baseline metrics automatically generated for new services
 - Unified dashboard showing both technical and business metrics
@@ -442,6 +473,7 @@ graph TB
 - "Deployment health report" summarizing first 24 hours
 
 **Touchpoints**:
+
 - Grafana (metrics)
 - Kibana (logs)
 - Business intelligence dashboard
@@ -528,6 +560,7 @@ graph LR
 ### 5. Summary: Key Insights
 
 **Biggest Pain Points** (Prioritized):
+
 1. **Service configuration complexity** - Requires deep Kubernetes knowledge, no templates
 2. **Difficult troubleshooting** - Cryptic errors, hard to find relevant logs
 3. **Manual deployment process** - Time-consuming, stressful, error-prone
@@ -535,6 +568,7 @@ graph LR
 5. **No safety net** - All-or-nothing deployment, manual rollback
 
 **Quick Wins** (High Impact, Low Effort):
+
 1. Create golden path service templates for common patterns
 2. Add automated pre-flight configuration validation
 3. Improve error messages with troubleshooting links
@@ -542,6 +576,7 @@ graph LR
 5. Create deployment health dashboard
 
 **Strategic Improvements** (High Impact, Higher Effort):
+
 1. Implement GitOps with ArgoCD for automatic deployments
 2. Add canary deployment capability with automatic rollback
 3. Build service scaffolding tool ("create-service" wizard)
@@ -549,6 +584,7 @@ graph LR
 5. Develop automated smoke tests for deployments
 
 **Success Metrics**:
+
 - Time to deploy new service: Target < 30 minutes (currently 4+ hours)
 - Developer confidence rating: Target > 8/10 (currently ~4/10)
 - Failed deployments: Target < 5% (currently ~20%)
@@ -633,30 +669,35 @@ graph LR
 ## Tips for Creating Effective Journey Maps
 
 ### Research-Based
+
 - Base on actual user research, not assumptions
 - Include direct quotes from users
 - Validate with multiple users
 - Update as you learn more
 
 ### Specific and Concrete
+
 - Focus on one persona and one scenario
 - Use real examples and actual steps
 - Include specific pain points, not generalizations
 - Note actual time durations
 
 ### Visual and Engaging
+
 - Use color to indicate emotion (green = positive, red = negative)
 - Include emojis for quick emotional scanning
 - Make it scannable (people should grasp it in 30 seconds)
 - Display prominently where team can see it
 
 ### Actionable
+
 - Clearly identify opportunities for improvement
 - Prioritize based on impact and effort
 - Assign owners to improvements
 - Track which improvements have been addressed
 
 ### Collaborative
+
 - Create journey maps as a team activity
 - Include people from different functions (product, engineering, design)
 - Workshop format: sticky notes on wall, then digitize
@@ -667,11 +708,13 @@ graph LR
 ## Journey Map Workshop Format
 
 **Preparation** (30 minutes before):
+
 - Select persona and scenario
 - Gather research materials (interview notes, analytics)
 - Prepare materials (sticky notes, markers, large paper/whiteboard)
 
 **Workshop** (2 hours):
+
 1. **Introduce persona and scenario** (10 min)
 2. **Brainstorm journey stages** (15 min)
 3. **Detail actions for each stage** (20 min)
@@ -681,6 +724,7 @@ graph LR
 7. **Prioritize improvements** (15 min)
 
 **Follow-up** (After workshop):
+
 - Digitize journey map (Mermaid diagram)
 - Add to documentation
 - Share with stakeholders

@@ -33,57 +33,57 @@ spec:
         runAsUser: 10001
         fsGroup: 10001
       containers:
-      - name: app
-        image: otel-sample-app:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 8080
-          name: http
-          protocol: TCP
-        env:
-        - name: SERVICE_NAME
-          value: "otel-sample-app"
-        - name: SERVICE_VERSION
-          value: "1.0.0"
-        - name: DEPLOYMENT_ENVIRONMENT
-          value: "development"
-        - name: OTEL_EXPORTER_OTLP_ENDPOINT
-          value: "otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 256Mi
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-            - ALL
-        volumeMounts:
-        - name: tmp
-          mountPath: /tmp
+        - name: app
+          image: otel-sample-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          env:
+            - name: SERVICE_NAME
+              value: "otel-sample-app"
+            - name: SERVICE_VERSION
+              value: "1.0.0"
+            - name: DEPLOYMENT_ENVIRONMENT
+              value: "development"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
       volumes:
-      - name: tmp
-        emptyDir: {}
+        - name: tmp
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -95,10 +95,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 80
-    targetPort: 8080
-    protocol: TCP
-    name: http
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
   selector:
     app: otel-sample-app
 ---

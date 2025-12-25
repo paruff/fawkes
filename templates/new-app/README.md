@@ -41,18 +41,21 @@ Replace placeholders in all files:
 Edit each file to match your component's needs:
 
 1. **README.md**:
+
    - Fill in purpose, features, architecture
    - Add component-specific configuration
    - Document integration points
    - Add troubleshooting steps
 
 2. **ArgoCD Application**:
+
    - Update source path
    - Set correct namespace
    - Configure sync policy
    - Choose source type (Helm/Kustomize/Plain)
 
 3. **Kubernetes Manifests**:
+
    - Update image reference
    - Configure resource limits
    - Add component-specific volumes
@@ -231,7 +234,7 @@ annotations:
 initContainers:
   - name: init-db
     image: busybox:1.28
-    command: ['sh', '-c', 'until nc -z database 5432; do sleep 1; done']
+    command: ["sh", "-c", "until nc -z database 5432; do sleep 1; done"]
 ```
 
 ## Validation
@@ -260,7 +263,7 @@ See existing components for reference:
 ## Best Practices
 
 1. **Naming**: Use lowercase with hyphens (my-component)
-2. **Labels**: Include app.kubernetes.io/* labels
+2. **Labels**: Include app.kubernetes.io/\* labels
 3. **Resources**: Always set requests and limits
 4. **Health Checks**: Define liveness and readiness probes
 5. **Security**: Follow Pod Security Standards

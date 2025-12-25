@@ -31,6 +31,7 @@ This service provides:
 #### 1. Weekly Pulse Survey (5 questions, ~2 minutes)
 
 Measures developer experience weekly:
+
 - Flow state days (0-7)
 - Valuable work percentage (0-100%)
 - Cognitive load (1-5)
@@ -44,6 +45,7 @@ Measures developer experience weekly:
 #### 2. Quarterly Deep-Dive Survey
 
 Comprehensive NPS and SPACE framework survey:
+
 - NPS score (0-10)
 - Platform satisfaction (1-5)
 - Feature-specific ratings
@@ -57,6 +59,7 @@ Comprehensive NPS and SPACE framework survey:
 ## Database Schema
 
 ### survey_campaigns
+
 - `id`: Primary key
 - `type`: pulse or deep_dive
 - `period`: week number or quarter
@@ -67,6 +70,7 @@ Comprehensive NPS and SPACE framework survey:
 - `response_rate`: Calculated response rate
 
 ### survey_recipients
+
 - `id`: Primary key
 - `campaign_id`: Foreign key to campaign
 - `user_id`: Developer identifier
@@ -80,6 +84,7 @@ Comprehensive NPS and SPACE framework survey:
 - `response_data`: JSONB with survey responses
 
 ### pulse_survey_aggregates
+
 - `id`: Primary key
 - `week`: Week number
 - `year`: Year
@@ -209,23 +214,27 @@ kubectl logs -n fawkes -l app=devex-survey-automation -f
 ## CronJob Schedules
 
 ### Weekly Pulse Survey
+
 ```yaml
-schedule: "0 9 * * 1"  # Every Monday at 9:00 AM
+schedule: "0 9 * * 1" # Every Monday at 9:00 AM
 ```
 
 ### Pulse Survey Reminders
+
 ```yaml
-schedule: "0 9 * * 3"  # Every Wednesday at 9:00 AM
+schedule: "0 9 * * 3" # Every Wednesday at 9:00 AM
 ```
 
 ### Quarterly Deep-Dive
+
 ```yaml
-schedule: "0 9 1 1,4,7,10 *"  # First day of Q1,Q2,Q3,Q4 at 9:00 AM
+schedule: "0 9 1 1,4,7,10 *" # First day of Q1,Q2,Q3,Q4 at 9:00 AM
 ```
 
 ### Weekly Analysis
+
 ```yaml
-schedule: "0 0 * * 0"  # Every Sunday at midnight (analyze previous week)
+schedule: "0 0 * * 0" # Every Sunday at midnight (analyze previous week)
 ```
 
 ## Monitoring
@@ -256,12 +265,14 @@ curl http://localhost:8000/health
 ### Ethical Use Guidelines
 
 **Never use survey data for:**
+
 - ❌ Individual performance reviews
 - ❌ Ranking or comparing developers
 - ❌ Hiring/firing decisions
 - ❌ Bonus or compensation decisions
 
 **Always use survey data for:**
+
 - ✅ Improving platform experience
 - ✅ Identifying friction points
 - ✅ Measuring impact of changes
@@ -287,6 +298,7 @@ response = await submit_to_space_metrics({
 ### With NPS Service
 
 Quarterly deep-dive surveys are coordinated with NPS service:
+
 - Share recipient lists
 - Combine survey distribution
 - Unified analytics dashboard
@@ -298,7 +310,7 @@ Add to Backstage `app-config.yaml`:
 ```yaml
 proxy:
   endpoints:
-    '/devex-surveys/api':
+    "/devex-surveys/api":
       target: http://devex-survey-automation.fawkes.svc:8000/
       changeOrigin: true
 ```
@@ -308,10 +320,12 @@ Create Backstage plugin to display survey results.
 ## Response Rate Targets
 
 **Goals**:
+
 - Weekly Pulse: >60% response rate
 - Quarterly Deep-Dive: >40% response rate
 
 **Strategies**:
+
 - Keep surveys short (2-5 minutes)
 - Send at optimal times (Monday morning)
 - Personalized messages

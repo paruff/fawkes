@@ -28,7 +28,7 @@ npm install @fawkes/design-system
 ## Usage
 
 ```tsx
-import { Button, Card, Alert } from '@fawkes/design-system';
+import { Button, Card, Alert } from "@fawkes/design-system";
 
 function MyApp() {
   return (
@@ -45,6 +45,7 @@ function MyApp() {
 ## Component Categories
 
 ### Layout (5 components)
+
 - **Container** - Responsive container
 - **Grid** - Grid layout system
 - **Stack** - Vertical/horizontal stacking
@@ -52,11 +53,13 @@ function MyApp() {
 - **Box** - Generic box component
 
 ### Typography (3 components)
+
 - **Heading** - Semantic headings (h1-h6)
 - **Text** - Text with variants
 - **Code** - Code display
 
 ### Forms (13 components)
+
 - **Button** - Primary action button
 - **IconButton** - Icon-only button
 - **ButtonGroup** - Grouped buttons
@@ -72,6 +75,7 @@ function MyApp() {
 - **FormErrorMessage** - Error messages
 
 ### Feedback (6 components)
+
 - **Alert** - Alert messages
 - **Toast** - Toast notifications
 - **Spinner** - Loading spinner
@@ -80,6 +84,7 @@ function MyApp() {
 - **Skeleton** - Loading skeleton
 
 ### Navigation (5 components)
+
 - **Tabs** - Tab navigation
 - **Breadcrumbs** - Breadcrumb trail
 - **Pagination** - Pagination controls
@@ -87,6 +92,7 @@ function MyApp() {
 - **Link** - Styled links
 
 ### Display (8 components)
+
 - **Card** - Card container
 - **Avatar** - User avatar
 - **Chip** - Chip/tag component
@@ -97,6 +103,7 @@ function MyApp() {
 - **Image** - Optimized image
 
 ### Data (2 components)
+
 - **Table** - Data table
 - **List** - List component
 
@@ -105,13 +112,13 @@ function MyApp() {
 The design system uses centralized design tokens:
 
 ```typescript
-import { tokens } from '@fawkes/design-system';
+import { tokens } from "@fawkes/design-system";
 
 // Colors
 const primary = tokens.colors.primary[500];
 
 // Typography
-const headingSize = tokens.typography.fontSize['2xl'];
+const headingSize = tokens.typography.fontSize["2xl"];
 
 // Spacing
 const margin = tokens.spacing[4];

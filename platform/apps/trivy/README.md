@@ -121,6 +121,7 @@ The Golden Path pipeline includes a dedicated **Container Security Scan** stage 
 ### Quality Gates
 
 Default security quality gates:
+
 - **CRITICAL** vulnerabilities: Immediate pipeline failure
 - **HIGH** vulnerabilities: Immediate pipeline failure
 - **MEDIUM/LOW** vulnerabilities: Warning only (pipeline continues)
@@ -224,6 +225,7 @@ trivy version --format json | jq .VulnerabilityDB
 ### Automatic Updates
 
 The Trivy database is automatically updated:
+
 - **Jenkins**: Database updated at the start of each pipeline run
 - **Harbor**: Database updated every 12 hours via cronjob
 - **Update Time**: < 1 minute for typical updates
@@ -232,6 +234,7 @@ The Trivy database is automatically updated:
 ### Database Sources
 
 Trivy aggregates vulnerability data from:
+
 - [National Vulnerability Database (NVD)](https://nvd.nist.gov/)
 - [Red Hat Security Data](https://www.redhat.com/security/data/)
 - [Debian Security Tracker](https://security-tracker.debian.org/)
@@ -267,7 +270,7 @@ kind: CronJob
 metadata:
   name: trivy-scan
 spec:
-  schedule: "0 2 * * *"  # Daily at 2 AM
+  schedule: "0 2 * * *" # Daily at 2 AM
   jobTemplate:
     spec:
       template:
@@ -381,6 +384,7 @@ A comprehensive Trivy security dashboard is available:
 **Location**: Grafana → Dashboards → Security → Trivy Container Security Scanning
 
 **Panels**:
+
 - Critical & High Vulnerabilities count
 - Images scanned today
 - Scan success rate
@@ -391,6 +395,7 @@ A comprehensive Trivy security dashboard is available:
 - Failed scans (24h)
 
 **Access**:
+
 ```bash
 # Port forward to Grafana
 kubectl port-forward -n fawkes svc/grafana 3000:80
@@ -444,20 +449,24 @@ graph TD
 ### Stage-by-Stage Flow
 
 1. **Code Commit** (Developer)
+
    - Developer pushes code to main branch
    - GitHub webhook triggers Jenkins
 
 2. **Build Stage** (Jenkins)
+
    - Application code compiled
    - Unit tests executed
    - Build artifacts created
 
 3. **Image Build** (Jenkins)
+
    - Dockerfile used to build container
    - Image tagged with Git SHA
    - Image available in Jenkins workspace
 
 4. **Container Scan** (Jenkins + Trivy)
+
    - Trivy sidecar container scans image
    - Checks for OS package vulnerabilities
    - Checks for application dependency vulnerabilities
@@ -465,23 +474,27 @@ graph TD
    - Exit code 1 on vulnerabilities found
 
 5. **Quality Gate** (Jenkins)
+
    - If CRITICAL/HIGH found → Pipeline fails
    - If MEDIUM/LOW only → Pipeline continues
    - Scan reports archived as artifacts
    - SonarQube link added to build description
 
 6. **Push to Registry** (Jenkins → Harbor)
+
    - Clean images pushed to Harbor
    - Tagged with both SHA and 'latest'
    - Credentials from Vault secrets
 
 7. **Harbor Scan** (Harbor + Trivy)
+
    - Automatic scan on push (scan-on-push enabled)
    - Secondary verification of vulnerabilities
    - Results stored in Harbor database
    - Accessible via Harbor UI and API
 
 8. **Visibility** (Metrics & Dashboards)
+
    - Jenkins publishes scan metrics
    - Harbor exports scan results
    - Prometheus collects metrics
@@ -511,6 +524,7 @@ Developer commits → Jenkins builds → Docker image created
 Comprehensive BDD tests are available: `tests/bdd/features/trivy-integration.feature`
 
 **Test Scenarios**:
+
 - ✅ Trivy integrated in Jenkins Golden Path pipeline
 - ✅ Trivy scan generates reports in Jenkins
 - ✅ Trivy scan enforces security quality gate
@@ -521,6 +535,7 @@ Comprehensive BDD tests are available: `tests/bdd/features/trivy-integration.fea
 - ✅ Complete end-to-end workflow validation
 
 **Run Tests**:
+
 ```bash
 # Run all Trivy integration tests
 cd tests/bdd
@@ -538,6 +553,7 @@ behave --tags=harbor features/trivy-integration.feature
 ### Manual Testing
 
 **Test Jenkins Integration**:
+
 ```bash
 # Trigger a test build
 curl -X POST http://jenkins.fawkes.local/job/test-pipeline/build \
@@ -548,6 +564,7 @@ curl http://jenkins.fawkes.local/job/test-pipeline/lastBuild/artifact/trivy-repo
 ```
 
 **Test Harbor Integration**:
+
 ```bash
 # Push test image
 docker pull alpine:latest
@@ -565,6 +582,7 @@ curl -u admin:Harbor12345 \
 ## Related Documentation
 
 ### Fawkes Platform
+
 - [Jenkins Golden Path Pipeline](../jenkins/README.md)
 - [Harbor Container Registry](../harbor/README.md)
 - [Security Scanning (SonarQube)](../sonarqube/README.md)
@@ -572,18 +590,21 @@ curl -u admin:Harbor12345 \
 - [Architecture - Security Layer](../../../docs/architecture.md#security-layer)
 
 ### Trivy Official Documentation
+
 - [Trivy Documentation](https://aquasecurity.github.io/trivy/)
 - [Trivy GitHub Repository](https://github.com/aquasecurity/trivy)
 - [Trivy Vulnerability Database](https://github.com/aquasecurity/trivy-db)
 - [Trivy Operator for Kubernetes](https://github.com/aquasecurity/trivy-operator)
 
 ### CI/CD Integration
+
 - [Jenkins Shared Library - securityScan.groovy](../../../jenkins-shared-library/vars/securityScan.groovy)
 - [Jenkins Shared Library - goldenPathPipeline.groovy](../../../jenkins-shared-library/vars/goldenPathPipeline.groovy)
 - [BDD Tests - Trivy Integration](../../../tests/bdd/features/trivy-integration.feature)
 - [BDD Tests - Golden Path](../../../tests/bdd/features/jenkins/golden-path.feature)
 
 ### Container Security Best Practices
+
 - [CNCF Cloud Native Security](https://www.cncf.io/blog/2020/11/18/introduction-to-cloud-native-security/)
 - [CIS Docker Benchmark](https://www.cisecurity.org/benchmark/docker)
 - [NIST Container Security Guide](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-190.pdf)
@@ -596,6 +617,7 @@ curl -u admin:Harbor12345 \
 **Symptom**: `failed to download vulnerability DB`
 
 **Solution**:
+
 ```bash
 # Clear cache and re-download
 rm -rf ~/.cache/trivy
@@ -611,6 +633,7 @@ kubectl delete pod -n fawkes -l component=trivy
 
 **Solution**:
 Check exit code configuration in Golden Path:
+
 ```groovy
 goldenPathPipeline {
     trivyExitCode = '1'           // Must be '1' to fail on vulns
@@ -623,6 +646,7 @@ goldenPathPipeline {
 **Symptom**: Trivy scans timeout or take > 5 minutes
 
 **Solution**:
+
 ```bash
 # Increase timeout in pipeline
 trivyTimeout = '10m'
@@ -639,6 +663,7 @@ sh "trivy image --scanners vuln ${image}"  # Skip misconfigs
 **Symptom**: Harbor UI shows "Not Scanned" for pushed images
 
 **Solution**:
+
 ```bash
 # Check Trivy pod is running
 kubectl get pods -n fawkes -l component=trivy
@@ -657,6 +682,7 @@ curl -X POST -u admin:Harbor12345 \
 
 **Solution**:
 Create `.trivyignore` file in repository root:
+
 ```text
 # Ignore specific CVE (with reason)
 CVE-2021-12345  # Fixed in next release, vendor confirmed
@@ -670,12 +696,14 @@ CVE-2021-67890 exp:2024-12-31
 For issues with Trivy integration:
 
 1. **Check Logs**:
+
    ```bash
    kubectl logs -n fawkes -l component=trivy
    kubectl logs -n fawkes -l app=jenkins
    ```
 
 2. **Check Status**:
+
    ```bash
    kubectl get pods -n fawkes
    kubectl describe pod -n fawkes <trivy-pod-name>

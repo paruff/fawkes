@@ -18,10 +18,10 @@ Focalboard is deployed as part of the Fawkes platform to provide:
 
 ## Access
 
-| Environment | URL |
-|-------------|-----|
-| Local Dev | [http://pm.127.0.0.1.nip.io](http://pm.127.0.0.1.nip.io) |
-| Production | `https://pm.fawkes.io` |
+| Environment | URL                                                      |
+| ----------- | -------------------------------------------------------- |
+| Local Dev   | [http://pm.127.0.0.1.nip.io](http://pm.127.0.0.1.nip.io) |
+| Production  | `https://pm.fawkes.io`                                   |
 
 ## Quick Start
 
@@ -36,13 +36,13 @@ Focalboard is deployed as part of the Fawkes platform to provide:
 
 The platform provides a default template with the following columns:
 
-| Column | Purpose |
-|--------|---------|
-| **Backlog** | Items waiting to be prioritized |
-| **To Do** | Ready to be worked on |
-| **In Progress** | Currently being worked on |
-| **Review** | Pending review or approval |
-| **Done** | Completed items |
+| Column          | Purpose                         |
+| --------------- | ------------------------------- |
+| **Backlog**     | Items waiting to be prioritized |
+| **To Do**       | Ready to be worked on           |
+| **In Progress** | Currently being worked on       |
+| **Review**      | Pending review or approval      |
+| **Done**        | Completed items                 |
 
 ### Working with Cards
 
@@ -91,27 +91,27 @@ The platform provides a default template with the following columns:
 
 The following environment variables are available in `env.example`:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `FOCALBOARD_URL` | Internal service URL | `http://focalboard.fawkes.svc:8000` |
-| `FOCALBOARD_EXTERNAL_URL` | External URL via ingress | `http://pm.127.0.0.1.nip.io` |
-| `POSTGRESQL_HOST` | PostgreSQL primary host | `db-focalboard-dev-rw.fawkes.svc.cluster.local` |
-| `POSTGRESQL_DATABASE` | Database name | `focalboard` |
-| `POSTGRESQL_USER` | Database user | `focalboard_user` |
+| Variable                  | Description              | Default                                         |
+| ------------------------- | ------------------------ | ----------------------------------------------- |
+| `FOCALBOARD_URL`          | Internal service URL     | `http://focalboard.fawkes.svc:8000`             |
+| `FOCALBOARD_EXTERNAL_URL` | External URL via ingress | `http://pm.127.0.0.1.nip.io`                    |
+| `POSTGRESQL_HOST`         | PostgreSQL primary host  | `db-focalboard-dev-rw.fawkes.svc.cluster.local` |
+| `POSTGRESQL_DATABASE`     | Database name            | `focalboard`                                    |
+| `POSTGRESQL_USER`         | Database user            | `focalboard_user`                               |
 
 ### Resource Limits
 
 | Resource | Request | Limit |
-|----------|---------|-------|
-| CPU | 100m | 500m |
-| Memory | 128Mi | 512Mi |
+| -------- | ------- | ----- |
+| CPU      | 100m    | 500m  |
+| Memory   | 128Mi   | 512Mi |
 
 ### Storage
 
-| Volume | Size | Purpose |
-|--------|------|---------|
+| Volume     | Size | Purpose                        |
+| ---------- | ---- | ------------------------------ |
 | PostgreSQL | 10Gi | Database storage (per replica) |
-| Files PVC | 5Gi | File attachments and uploads |
+| Files PVC  | 5Gi  | File attachments and uploads   |
 
 ## Database
 
@@ -151,12 +151,12 @@ Focalboard exposes Prometheus metrics at port 9092:
 
 ### Key Metrics
 
-| Metric | Description |
-|--------|-------------|
-| `focalboard_api_request_duration_seconds` | API request latency |
-| `focalboard_active_users` | Number of active users |
-| `focalboard_boards_total` | Total number of boards |
-| `focalboard_cards_total` | Total number of cards |
+| Metric                                    | Description            |
+| ----------------------------------------- | ---------------------- |
+| `focalboard_api_request_duration_seconds` | API request latency    |
+| `focalboard_active_users`                 | Number of active users |
+| `focalboard_boards_total`                 | Total number of boards |
+| `focalboard_cards_total`                  | Total number of cards  |
 
 ## Troubleshooting
 
@@ -165,11 +165,13 @@ Focalboard exposes Prometheus metrics at port 9092:
 #### Service Not Accessible
 
 1. Check if the pod is running:
+
    ```bash
    kubectl get pods -n fawkes -l app=focalboard
    ```
 
 2. Check pod logs:
+
    ```bash
    kubectl logs -n fawkes -l app=focalboard
    ```
@@ -182,11 +184,13 @@ Focalboard exposes Prometheus metrics at port 9092:
 #### Database Connection Failed
 
 1. Verify PostgreSQL cluster is healthy:
+
    ```bash
    kubectl get cluster -n fawkes db-focalboard-dev
    ```
 
 2. Check database credentials:
+
    ```bash
    kubectl get secret -n fawkes db-focalboard-credentials
    ```
@@ -200,6 +204,7 @@ Focalboard exposes Prometheus metrics at port 9092:
 ### Pod Restart Loop
 
 Check for resource constraints:
+
 ```bash
 kubectl describe pod -n fawkes -l app=focalboard
 ```

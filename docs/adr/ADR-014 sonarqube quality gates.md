@@ -1,6 +1,7 @@
 # ADR-014: SonarQube for Code Quality and Security Gates
 
 ## Status
+
 **Accepted** - November 30, 2025
 
 ## Context
@@ -10,6 +11,7 @@ Fawkes platform requires a centralized code quality and security analysis soluti
 ### Requirements
 
 **Functional Requirements**:
+
 - Static Application Security Testing (SAST)
 - Code quality metrics and technical debt tracking
 - Security vulnerability detection
@@ -20,6 +22,7 @@ Fawkes platform requires a centralized code quality and security analysis soluti
 - Branch-based analysis for PR reviews
 
 **Non-Functional Requirements**:
+
 - Fast feedback (< 5 minutes for analysis)
 - Scalable to 50+ repositories
 - SSO/OAuth integration for developer access
@@ -28,6 +31,7 @@ Fawkes platform requires a centralized code quality and security analysis soluti
 - High availability for production use
 
 **Integration Requirements**:
+
 - Jenkins pipeline integration via scanner token
 - GitHub repository linking
 - ArgoCD deployment management
@@ -37,16 +41,19 @@ Fawkes platform requires a centralized code quality and security analysis soluti
 ### Forces at Play
 
 **Technical Forces**:
+
 - Need comprehensive language support
 - Must integrate seamlessly with Jenkins pipelines
 - Require fast, accurate analysis without blocking development
 
 **Operational Forces**:
+
 - Platform team capacity for maintenance
 - Need for simple deployment and upgrades
 - Backup and disaster recovery requirements
 
 **Developer Experience Forces**:
+
 - Clear, actionable feedback in CI/CD
 - Easy access to detailed analysis reports
 - Minimal friction in development workflow
@@ -56,6 +63,7 @@ Fawkes platform requires a centralized code quality and security analysis soluti
 **We will deploy SonarQube as the centralized code quality and security analysis platform for Fawkes.**
 
 Specifically:
+
 - **SonarQube 10.7+ (Community Edition)** as the analysis engine
 - **CloudNativePG PostgreSQL** for persistent data storage
 - **Jenkins Shared Library** integration for scanner execution and Quality Gate enforcement
@@ -100,6 +108,7 @@ Specifically:
 | New Maintainability Rating | Is Worse Than | A | Quality standards |
 
 **Quality Gate Enforcement**:
+
 1. Main branch commits MUST pass Quality Gate before image push
 2. PR builds report Quality Gate status but don't block (informational)
 3. Pipeline fails immediately on Quality Gate failure with detailed logs
@@ -110,22 +119,26 @@ Specifically:
 1. **Industry Standard**: SonarQube is the most widely adopted code quality platform with over 400K organizations using it
 
 2. **Comprehensive Analysis**:
+
    - 27+ programming languages supported
    - 5000+ rules for bug, vulnerability, and code smell detection
    - Security hotspot identification
    - Coverage integration
 
 3. **Quality Gate Enforcement**:
+
    - Automated pass/fail criteria
    - Configurable thresholds
    - Webhook integration for CI/CD
 
 4. **Developer Experience**:
+
    - Clear, actionable feedback
    - IDE plugins (SonarLint) for local feedback
    - Detailed remediation guidance
 
 5. **Open Source**:
+
    - Community Edition is free
    - Large community and ecosystem
    - Regular updates and security patches
@@ -176,16 +189,19 @@ Specifically:
 ### Mitigation Strategies
 
 1. **Resource Management**:
+
    - Right-size Kubernetes resources
    - Configure housekeeping to clean old analysis data
    - Use separate PostgreSQL cluster for isolation
 
 2. **Analysis Performance**:
+
    - Enable incremental analysis where supported
    - Configure appropriate exclusions
    - Run analysis in parallel with other pipeline stages
 
 3. **False Positives**:
+
    - Create custom quality profiles
    - Use inline comments for legitimate suppressions
    - Regular review of flagged issues
@@ -200,11 +216,13 @@ Specifically:
 ### Alternative 1: Snyk
 
 **Pros**:
+
 - Strong security focus
 - SaaS offering (less maintenance)
 - Good dependency scanning
 
 **Cons**:
+
 - Limited code quality analysis
 - No quality gate enforcement
 - Primarily security-focused
@@ -214,11 +232,13 @@ Specifically:
 ### Alternative 2: CodeClimate
 
 **Pros**:
+
 - Clean UI
 - Quality focus
 - Good maintainability scores
 
 **Cons**:
+
 - Limited security features
 - Fewer language support
 - SaaS-only (no self-hosted)
@@ -228,11 +248,13 @@ Specifically:
 ### Alternative 3: Codacy
 
 **Pros**:
+
 - Multi-language support
 - Security patterns
 - SaaS and self-hosted options
 
 **Cons**:
+
 - Less mature than SonarQube
 - Smaller community
 - Limited enterprise features
@@ -242,11 +264,13 @@ Specifically:
 ### Alternative 4: GitHub Advanced Security
 
 **Pros**:
+
 - Native GitHub integration
 - Code scanning and secret scanning
 - Dependency review
 
 **Cons**:
+
 - Expensive ($49/user/month)
 - Limited to GitHub repositories
 - Less comprehensive quality analysis
@@ -264,6 +288,7 @@ Specifically:
 ### Deployment Configuration
 
 **SonarQube ArgoCD Application**:
+
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -283,6 +308,7 @@ spec:
 ```
 
 **Jenkins Credentials Configuration**:
+
 ```yaml
 credentials:
   - id: sonarqube-token
@@ -321,11 +347,13 @@ stage('Quality Gate') {
 ### Monitoring
 
 **Prometheus Metrics**:
+
 - `sonarqube_health_status`
 - `sonarqube_compute_engine_tasks`
 - `sonarqube_database_connections`
 
 **Key Alerts**:
+
 - SonarQube unhealthy
 - Analysis queue growing
 - Database connection issues
@@ -333,6 +361,7 @@ stage('Quality Gate') {
 ## Monitoring This Decision
 
 We will revisit this ADR if:
+
 - Analysis time consistently exceeds 5 minutes
 - False positive rate becomes problematic
 - Community Edition features are insufficient

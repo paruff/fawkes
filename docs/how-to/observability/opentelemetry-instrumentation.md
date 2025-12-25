@@ -5,6 +5,7 @@ This guide shows how to instrument your applications to send traces to the Fawke
 ## Overview
 
 The OpenTelemetry Collector is deployed as a DaemonSet and accepts traces via OTLP (OpenTelemetry Protocol) on:
+
 - **gRPC**: `otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317`
 - **HTTP**: `otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4318`
 
@@ -13,6 +14,7 @@ The OpenTelemetry Collector is deployed as a DaemonSet and accepts traces via OT
 ### Python
 
 #### Install Dependencies
+
 ```bash
 pip install opentelemetry-api \
             opentelemetry-sdk \
@@ -21,6 +23,7 @@ pip install opentelemetry-api \
 ```
 
 #### Basic Setup
+
 ```python
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
@@ -56,6 +59,7 @@ tracer = trace.get_tracer(__name__)
 ```
 
 #### Flask Auto-Instrumentation
+
 ```python
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from flask import Flask
@@ -67,6 +71,7 @@ FlaskInstrumentor().instrument_app(app)
 ### Go
 
 #### Install Dependencies
+
 ```bash
 go get go.opentelemetry.io/otel
 go get go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc
@@ -74,6 +79,7 @@ go get go.opentelemetry.io/otel/sdk/trace
 ```
 
 #### Basic Setup
+
 ```go
 package main
 
@@ -128,6 +134,7 @@ func initTracer() (*sdktrace.TracerProvider, error) {
 ### Node.js
 
 #### Install Dependencies
+
 ```bash
 npm install @opentelemetry/api \
             @opentelemetry/sdk-node \
@@ -136,21 +143,22 @@ npm install @opentelemetry/api \
 ```
 
 #### Basic Setup
+
 ```javascript
-const { NodeSDK } = require('@opentelemetry/sdk-node');
-const { OTLPTraceExporter } = require('@opentelemetry/exporter-trace-otlp-grpc');
-const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
-const { Resource } = require('@opentelemetry/resources');
-const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
+const { NodeSDK } = require("@opentelemetry/sdk-node");
+const { OTLPTraceExporter } = require("@opentelemetry/exporter-trace-otlp-grpc");
+const { getNodeAutoInstrumentations } = require("@opentelemetry/auto-instrumentations-node");
+const { Resource } = require("@opentelemetry/resources");
+const { SemanticResourceAttributes } = require("@opentelemetry/semantic-conventions");
 
 const sdk = new NodeSDK({
   resource: new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: 'my-service',
-    [SemanticResourceAttributes.SERVICE_VERSION]: '1.0.0',
-    [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: 'production',
+    [SemanticResourceAttributes.SERVICE_NAME]: "my-service",
+    [SemanticResourceAttributes.SERVICE_VERSION]: "1.0.0",
+    [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: "production",
   }),
   traceExporter: new OTLPTraceExporter({
-    url: 'grpc://otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317',
+    url: "grpc://otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317",
   }),
   instrumentations: [getNodeAutoInstrumentations()],
 });
@@ -158,10 +166,11 @@ const sdk = new NodeSDK({
 sdk.start();
 
 // Graceful shutdown
-process.on('SIGTERM', () => {
-  sdk.shutdown()
-    .then(() => console.log('Tracing terminated'))
-    .catch((error) => console.log('Error terminating tracing', error))
+process.on("SIGTERM", () => {
+  sdk
+    .shutdown()
+    .then(() => console.log("Tracing terminated"))
+    .catch((error) => console.log("Error terminating tracing", error))
     .finally(() => process.exit(0));
 });
 ```
@@ -169,6 +178,7 @@ process.on('SIGTERM', () => {
 ### Java
 
 #### Add Dependencies (Maven)
+
 ```xml
 <dependencies>
     <dependency>
@@ -190,6 +200,7 @@ process.on('SIGTERM', () => {
 ```
 
 #### Basic Setup
+
 ```java
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.common.Attributes;
@@ -234,12 +245,12 @@ Instead of hardcoding the endpoint, use environment variables:
 
 ```yaml
 env:
-- name: OTEL_EXPORTER_OTLP_ENDPOINT
-  value: "otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"
-- name: OTEL_SERVICE_NAME
-  value: "my-service"
-- name: OTEL_RESOURCE_ATTRIBUTES
-  value: "service.version=1.0.0,deployment.environment=production"
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: "otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"
+  - name: OTEL_SERVICE_NAME
+    value: "my-service"
+  - name: OTEL_RESOURCE_ATTRIBUTES
+    value: "service.version=1.0.0,deployment.environment=production"
 ```
 
 Most SDKs automatically read these environment variables.
@@ -261,18 +272,19 @@ spec:
         version: "1.0.0"
     spec:
       containers:
-      - name: app
-        image: my-service:latest
-        env:
-        - name: OTEL_EXPORTER_OTLP_ENDPOINT
-          value: "otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"
-        - name: OTEL_SERVICE_NAME
-          value: "my-service"
-        - name: OTEL_RESOURCE_ATTRIBUTES
-          value: "service.version=1.0.0,deployment.environment=production"
+        - name: app
+          image: my-service:latest
+          env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"
+            - name: OTEL_SERVICE_NAME
+              value: "my-service"
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: "service.version=1.0.0,deployment.environment=production"
 ```
 
 The OpenTelemetry Collector will automatically add:
+
 - `k8s.namespace.name`
 - `k8s.pod.name`
 - `k8s.deployment.name`
@@ -282,6 +294,7 @@ The OpenTelemetry Collector will automatically add:
 ## Structured Logging with Trace Correlation
 
 ### Python
+
 ```python
 import logging
 from opentelemetry import trace
@@ -306,6 +319,7 @@ logger.info(
 ## Custom Spans
 
 ### Creating Manual Spans
+
 ```python
 from opentelemetry import trace
 
@@ -322,6 +336,7 @@ with tracer.start_as_current_span("database_query") as span:
 ```
 
 ### Adding Events and Exceptions
+
 ```python
 try:
     result = risky_operation()
@@ -335,6 +350,7 @@ except Exception as e:
 ## Viewing Traces
 
 ### In Grafana
+
 1. Navigate to Grafana: `http://grafana.127.0.0.1.nip.io`
 2. Go to **Explore** → Select **Tempo** datasource
 3. Search by:
@@ -344,6 +360,7 @@ except Exception as e:
    - Time range and filters
 
 ### Common Queries
+
 ```
 # All traces from a service
 {service.name="my-service"}
@@ -373,6 +390,7 @@ except Exception as e:
 ### Traces Not Appearing
 
 1. Check collector is running:
+
    ```bash
    kubectl get pods -n monitoring -l app.kubernetes.io/name=opentelemetry-collector
    ```
@@ -380,6 +398,7 @@ except Exception as e:
 2. Check application logs for OTLP errors
 
 3. Verify endpoint connectivity:
+
    ```bash
    kubectl exec -it <your-pod> -- nc -zv otel-collector-opentelemetry-collector.monitoring.svc.cluster.local 4317
    ```
@@ -392,6 +411,7 @@ except Exception as e:
 ### High Latency
 
 If adding tracing increases latency:
+
 - Use batch exporters (default in most SDKs)
 - Adjust sampling rate
 - Check network connectivity to collector
@@ -402,6 +422,7 @@ See the complete sample application at:
 `platform/apps/opentelemetry/sample-app/`
 
 This includes:
+
 - Full Flask application with tracing
 - Nested span examples
 - Error handling

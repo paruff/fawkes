@@ -78,42 +78,42 @@ spec:
         component: backend
     spec:
       containers:
-      - name: penpot-backend
-        image: penpotapp/backend:2.0.3
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 6060
-          name: http
-          protocol: TCP
-        envFrom:
-          - configMapRef:
-              name: penpot-config
-          - secretRef:
-              name: penpot-secrets
-        volumeMounts:
-          - name: penpot-data
-            mountPath: /opt/data
-        resources:
-          requests:
-            cpu: 200m
-            memory: 512Mi
-          limits:
-            cpu: 1000m
-            memory: 2Gi
-        livenessProbe:
-          httpGet:
-            path: /api/_health
-            port: http
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          timeoutSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /api/_health
-            port: http
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
+        - name: penpot-backend
+          image: penpotapp/backend:2.0.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6060
+              name: http
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: penpot-config
+            - secretRef:
+                name: penpot-secrets
+          volumeMounts:
+            - name: penpot-data
+              mountPath: /opt/data
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+          livenessProbe:
+            httpGet:
+              path: /api/_health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /api/_health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
       volumes:
         - name: penpot-data
           persistentVolumeClaim:

@@ -68,13 +68,13 @@ Common failure patterns:
 
 #### Understand the Failure Type
 
-| Error Pattern | Cause | Section to Check |
-|--------------|-------|-----------------|
-| `No buildpack groups passed detection` | Wrong project structure or missing files | [3. Detection Failures](#3-detection-failures) |
-| `Unable to satisfy dependency` | Version constraints or unavailable dependency | [4. Dependency Issues](#4-dependency-issues) |
-| `Error: npm install failed` | Node.js build error | [5. Build Command Failures](#5-build-command-failures) |
-| `Permission denied` | File permission issues | [6. Permission Issues](#6-permission-issues) |
-| `Layer restoration failed` | Cache corruption | [7. Cache Issues](#7-cache-issues) |
+| Error Pattern                          | Cause                                         | Section to Check                                       |
+| -------------------------------------- | --------------------------------------------- | ------------------------------------------------------ |
+| `No buildpack groups passed detection` | Wrong project structure or missing files      | [3. Detection Failures](#3-detection-failures)         |
+| `Unable to satisfy dependency`         | Version constraints or unavailable dependency | [4. Dependency Issues](#4-dependency-issues)           |
+| `Error: npm install failed`            | Node.js build error                           | [5. Build Command Failures](#5-build-command-failures) |
+| `Permission denied`                    | File permission issues                        | [6. Permission Issues](#6-permission-issues)           |
+| `Layer restoration failed`             | Cache corruption                              | [7. Cache Issues](#7-cache-issues)                     |
 
 ### 3. Detection Failures
 

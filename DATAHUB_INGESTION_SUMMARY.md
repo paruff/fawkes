@@ -11,6 +11,7 @@ This implementation configures comprehensive metadata ingestion for DataHub, add
 Three comprehensive ingestion recipes were created:
 
 #### `platform/apps/datahub/ingestion/postgres.yaml`
+
 - **Purpose**: Ingest metadata from all PostgreSQL databases
 - **Databases covered**:
   - Backstage (developer portal)
@@ -25,6 +26,7 @@ Three comprehensive ingestion recipes were created:
 - **Schedule**: Daily at 2 AM UTC
 
 #### `platform/apps/datahub/ingestion/kubernetes.yaml`
+
 - **Purpose**: Ingest Kubernetes resources metadata
 - **Resources covered**:
   - Deployments, StatefulSets, Services
@@ -38,6 +40,7 @@ Three comprehensive ingestion recipes were created:
 - **Schedule**: Hourly
 
 #### `platform/apps/datahub/ingestion/github-jenkins.yaml`
+
 - **Purpose**: Ingest Git and CI/CD metadata
 - **Sources covered**:
   - GitHub repositories, branches, commits, PRs
@@ -54,18 +57,21 @@ Three comprehensive ingestion recipes were created:
 Three CronJob manifests were created for automated ingestion:
 
 #### `cronjob-postgres-ingestion.yaml`
+
 - Kubernetes CronJob running daily
 - Includes ConfigMap with embedded recipe
 - Secret for database credentials
 - ServiceAccount with minimal RBAC permissions
 
 #### `cronjob-kubernetes-ingestion.yaml`
+
 - Kubernetes CronJob running hourly
 - ClusterRole for cross-namespace resource access
 - ServiceAccount with cluster-wide read permissions
 - ConfigMap with Kubernetes ingestion config
 
 #### `cronjob-git-ci-ingestion.yaml`
+
 - Kubernetes CronJob running every 6 hours
 - Secret for GitHub and Jenkins tokens
 - Handles both GitHub and Jenkins ingestion
@@ -74,7 +80,9 @@ Three CronJob manifests were created for automated ingestion:
 ### 3. Documentation
 
 #### `ingestion/README.md`
+
 Comprehensive documentation covering:
+
 - Overview of automated ingestion
 - Manual ingestion instructions
 - CronJob management
@@ -85,7 +93,9 @@ Comprehensive documentation covering:
 ### 4. Validation Script
 
 #### `ingestion/validate-ingestion.sh`
+
 Automated validation script that checks:
+
 - DataHub GMS health
 - CronJob deployment status
 - Secrets and ConfigMaps configuration
@@ -97,7 +107,9 @@ Automated validation script that checks:
 ### 5. Testing
 
 #### Updated `tests/bdd/features/datahub-deployment.feature`
+
 Added 6 new BDD scenarios:
+
 1. Automated Metadata Ingestion (AT-E2-003)
 2. PostgreSQL Metadata Ingestion
 3. Kubernetes Resources Ingestion
@@ -107,10 +119,12 @@ Added 6 new BDD scenarios:
 ### 6. Configuration Updates
 
 #### Updated `platform/apps/datahub/kustomization.yaml`
+
 - Added ingestion CronJob resources
 - Ensures automated deployment via ArgoCD
 
 #### Updated `platform/apps/datahub/README.md`
+
 - Added automated ingestion section
 - Updated manual ingestion instructions
 - Referenced new ingestion documentation
@@ -175,6 +189,7 @@ Added 6 new BDD scenarios:
 ## Files Created/Modified
 
 ### Created Files (11 files)
+
 1. `platform/apps/datahub/ingestion/postgres.yaml` (8.4 KB)
 2. `platform/apps/datahub/ingestion/kubernetes.yaml` (5.2 KB)
 3. `platform/apps/datahub/ingestion/github-jenkins.yaml` (8.2 KB)
@@ -185,6 +200,7 @@ Added 6 new BDD scenarios:
 8. `platform/apps/datahub/ingestion/validate-ingestion.sh` (10.3 KB)
 
 ### Modified Files (3 files)
+
 1. `platform/apps/datahub/kustomization.yaml` - Added ingestion resources
 2. `platform/apps/datahub/README.md` - Updated with ingestion instructions
 3. `tests/bdd/features/datahub-deployment.feature` - Added ingestion test scenarios
@@ -194,6 +210,7 @@ Added 6 new BDD scenarios:
 ## Validation Commands
 
 ### Validate Configuration
+
 ```bash
 # Check YAML syntax
 yamllint platform/apps/datahub/ingestion/*.yaml
@@ -206,6 +223,7 @@ kubectl apply --dry-run=client -k platform/apps/datahub/
 ```
 
 ### Deploy to Cluster
+
 ```bash
 # Apply ingestion resources
 kubectl apply -k platform/apps/datahub/
@@ -218,6 +236,7 @@ kubectl get jobs -n fawkes -l component=ingestion --sort-by=.metadata.creationTi
 ```
 
 ### Manual Testing
+
 ```bash
 # Manually trigger PostgreSQL ingestion
 kubectl create job --from=cronjob/datahub-postgres-ingestion -n fawkes manual-test-$(date +%s)
@@ -232,17 +251,20 @@ curl http://datahub.127.0.0.1.nip.io/api/v2/graphql -d '{"query": "{ search(inpu
 ## Security Considerations
 
 ### Credentials Management
+
 - Database credentials stored in Kubernetes Secrets
 - GitHub token requires `repo` scope
 - Jenkins token should be API token, not password
 - **Production**: Use External Secrets Operator with Vault
 
 ### RBAC Permissions
+
 - **PostgreSQL ingestion**: Namespace-scoped read access to ConfigMaps/Secrets
 - **Kubernetes ingestion**: Cluster-wide read access to resources
 - **Git/CI ingestion**: Namespace-scoped (uses external API tokens)
 
 ### Best Practices
+
 1. Rotate credentials regularly
 2. Use read-only database users for ingestion
 3. Limit Kubernetes RBAC to minimum required resources
@@ -252,12 +274,15 @@ curl http://datahub.127.0.0.1.nip.io/api/v2/graphql -d '{"query": "{ search(inpu
 ## Performance Considerations
 
 ### Resource Allocation
+
 Each ingestion job is configured with:
+
 - **Requests**: 200m CPU, 512Mi memory
 - **Limits**: 500m CPU, 1Gi memory
 - Targets 70% resource utilization
 
 ### Optimization
+
 - Stateful ingestion removes stale metadata
 - Profiling limited to essential statistics
 - Sampling used for large datasets (max 1000 rows)
@@ -268,16 +293,19 @@ Each ingestion job is configured with:
 ### Common Issues
 
 1. **CronJob not running**
+
    - Check schedule syntax
    - Verify ServiceAccount exists
    - Check RBAC permissions
 
 2. **Database connection failed**
+
    - Verify database credentials in Secret
    - Check database is running
    - Test connectivity from pod
 
 3. **GitHub/Jenkins authentication failed**
+
    - Verify tokens are valid and not expired
    - Check token permissions (repo scope for GitHub)
    - Update credentials in Secret
@@ -290,18 +318,21 @@ Each ingestion job is configured with:
 ## Next Steps
 
 ### Immediate (Post-Merge)
+
 1. Deploy ingestion CronJobs to development environment
 2. Monitor first ingestion runs
 3. Verify metadata appears in DataHub UI
 4. Validate lineage graphs are accurate
 
 ### Short-term (Next Sprint)
+
 1. Add ingestion for additional data sources (e.g., S3, Kafka)
 2. Create Grafana dashboards for ingestion metrics
 3. Set up alerts for failed ingestion jobs
 4. Document data governance policies
 
 ### Long-term (Future Enhancements)
+
 1. Implement real-time metadata updates (requires Kafka)
 2. Add Great Expectations for data quality monitoring
 3. Integrate with dbt for transformation lineage
@@ -322,6 +353,7 @@ Each ingestion job is configured with:
 This implementation provides a comprehensive, automated metadata ingestion solution for DataHub, covering all major data sources in the Fawkes platform. The configuration is production-ready with proper RBAC, error handling, and documentation.
 
 All acceptance criteria for issue #46 have been met:
+
 - ✅ PostgreSQL databases ingested
 - ✅ Kubernetes resources ingested
 - ✅ Git repositories ingested

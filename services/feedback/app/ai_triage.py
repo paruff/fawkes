@@ -41,16 +41,12 @@ PRIORITY_THRESHOLDS = {
         "min_severity": 0.0,
         "keywords": ["minor", "nice to have", "suggestion", "polish"],
         "sentiment_max": 1.0,
-    }
+    },
 }
 
 
 def calculate_priority_score(
-    feedback_type: str,
-    category: str,
-    comment: str,
-    rating: int,
-    sentiment_compound: Optional[float] = None
+    feedback_type: str, category: str, comment: str, rating: int, sentiment_compound: Optional[float] = None
 ) -> Tuple[str, float, Dict[str, any]]:
     """
     Calculate priority for feedback using AI-based scoring.
@@ -72,15 +68,11 @@ def calculate_priority_score(
         "sentiment_score": 0.0,
         "keyword_score": 0.0,
         "category_score": 0.0,
-        "matched_keywords": []
+        "matched_keywords": [],
     }
 
     # Type scoring (40% weight)
-    type_weights = {
-        "bug_report": 0.8,
-        "feature_request": 0.4,
-        "feedback": 0.2
-    }
+    type_weights = {"bug_report": 0.8, "feature_request": 0.4, "feedback": 0.2}
     details["type_score"] = type_weights.get(feedback_type, 0.2) * 0.4
     score += details["type_score"]
 
@@ -119,9 +111,7 @@ def calculate_priority_score(
     score += details["keyword_score"]
 
     # Category scoring (5% weight)
-    high_priority_categories = [
-        "Security", "Performance", "Bug Report", "CI/CD", "Deployment"
-    ]
+    high_priority_categories = ["Security", "Performance", "Bug Report", "CI/CD", "Deployment"]
     if category in high_priority_categories:
         details["category_score"] = 0.05
         score += details["category_score"]
@@ -144,12 +134,7 @@ def calculate_priority_score(
     return priority, score, details
 
 
-def suggest_labels(
-    feedback_type: str,
-    category: str,
-    priority: str,
-    comment: str
-) -> List[str]:
+def suggest_labels(feedback_type: str, category: str, priority: str, comment: str) -> List[str]:
     """
     Suggest GitHub labels for the issue based on feedback characteristics.
 
@@ -200,10 +185,7 @@ def suggest_labels(
 
 
 async def detect_duplicates(
-    comment: str,
-    category: str,
-    feedback_type: str,
-    similarity_threshold: float = 0.7
+    comment: str, category: str, feedback_type: str, similarity_threshold: float = 0.7
 ) -> List[Dict[str, any]]:
     """
     Detect potential duplicate issues in GitHub repository.
@@ -225,7 +207,7 @@ async def detect_duplicates(
         headers = {
             "Authorization": f"Bearer {GITHUB_TOKEN}",
             "Accept": "application/vnd.github.v3+json",
-            "X-GitHub-Api-Version": "2022-11-28"
+            "X-GitHub-Api-Version": "2022-11-28",
         }
 
         # Search for open issues with feedback label and similar category
@@ -240,7 +222,7 @@ async def detect_duplicates(
                 f"{GITHUB_API_URL}/search/issues",
                 params={"q": search_query, "per_page": 20},
                 headers=headers,
-                timeout=30.0
+                timeout=30.0,
             )
 
             if response.status_code != 200:
@@ -265,17 +247,16 @@ async def detect_duplicates(
                 similarity = max(title_similarity, body_similarity)
 
                 if similarity >= similarity_threshold:
-                    duplicates.append({
-                        "issue_number": issue.get("number"),
-                        "issue_url": issue.get("html_url"),
-                        "title": issue_title,
-                        "similarity": similarity,
-                        "state": issue.get("state")
-                    })
-                    logger.info(
-                        f"Potential duplicate found: #{issue.get('number')} "
-                        f"(similarity: {similarity:.2f})"
+                    duplicates.append(
+                        {
+                            "issue_number": issue.get("number"),
+                            "issue_url": issue.get("html_url"),
+                            "title": issue_title,
+                            "similarity": similarity,
+                            "state": issue.get("state"),
+                        }
                     )
+                    logger.info(f"Potential duplicate found: #{issue.get('number')} " f"(similarity: {similarity:.2f})")
 
             # Sort by similarity (highest first)
             duplicates.sort(key=lambda x: x["similarity"], reverse=True)
@@ -320,12 +301,7 @@ def determine_milestone(priority: str, feedback_type: str) -> Optional[str]:
     """
     # Map priorities to milestones
     # These should match your GitHub repository milestones
-    milestone_map = {
-        "P0": "Hotfix",
-        "P1": "Next Sprint",
-        "P2": "Backlog",
-        "P3": "Future"
-    }
+    milestone_map = {"P0": "Hotfix", "P1": "Next Sprint", "P2": "Backlog", "P3": "Future"}
 
     milestone = milestone_map.get(priority)
 
@@ -339,7 +315,7 @@ async def triage_feedback(
     category: str,
     comment: str,
     rating: int,
-    sentiment_compound: Optional[float] = None
+    sentiment_compound: Optional[float] = None,
 ) -> Dict[str, any]:
     """
     Perform complete AI triage on feedback submission.
@@ -361,9 +337,7 @@ async def triage_feedback(
     logger.info(f"Starting AI triage for feedback ID {feedback_id}")
 
     # Calculate priority
-    priority, score, details = calculate_priority_score(
-        feedback_type, category, comment, rating, sentiment_compound
-    )
+    priority, score, details = calculate_priority_score(feedback_type, category, comment, rating, sentiment_compound)
 
     # Suggest labels
     labels = suggest_labels(feedback_type, category, priority, comment)
@@ -384,9 +358,8 @@ async def triage_feedback(
         "suggested_milestone": milestone,
         "should_create_issue": len(duplicates) == 0,  # Don't create if duplicates found
         "triage_reason": (
-            "Duplicate issues found" if duplicates
-            else f"Priority {priority} based on score {score:.2f}"
-        )
+            "Duplicate issues found" if duplicates else f"Priority {priority} based on score {score:.2f}"
+        ),
     }
 
     logger.info(

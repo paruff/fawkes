@@ -3,6 +3,7 @@
 ## Overview
 
 Unleash is an open-source feature flag management platform deployed on Fawkes to enable:
+
 - **Gradual Rollouts**: Progressive deployment with percentage-based rollouts
 - **A/B Testing**: Experiment with different feature variants
 - **Kill Switches**: Quickly disable features without redeployment
@@ -50,25 +51,27 @@ Unleash serves as the backend provider for **OpenFeature**, a CNCF standard for 
 ### Using OpenFeature with Unleash
 
 #### TypeScript/JavaScript (Backstage)
+
 ```typescript
-import { OpenFeature } from '@openfeature/server-sdk';
-import { UnleashProvider } from '@openfeature/unleash-provider';
+import { OpenFeature } from "@openfeature/server-sdk";
+import { UnleashProvider } from "@openfeature/unleash-provider";
 
 // Configure OpenFeature with Unleash provider
 await OpenFeature.setProviderAndWait(
   new UnleashProvider({
-    url: 'https://unleash.fawkes.idp/api',
-    appName: 'backstage',
-    apiToken: process.env.UNLEASH_API_TOKEN
+    url: "https://unleash.fawkes.idp/api",
+    appName: "backstage",
+    apiToken: process.env.UNLEASH_API_TOKEN,
   })
 );
 
 // Use feature flags
 const client = OpenFeature.getClient();
-const showNewUI = await client.getBooleanValue('new-ui-enabled', false);
+const showNewUI = await client.getBooleanValue("new-ui-enabled", false);
 ```
 
 #### Python
+
 ```python
 from openfeature import api
 from openfeature.contrib.provider.unleash import UnleashProvider
@@ -86,6 +89,7 @@ show_new_ui = client.get_boolean_value("new-ui-enabled", False)
 ```
 
 #### Go
+
 ```go
 import (
     "github.com/open-feature/go-sdk/openfeature"
@@ -107,12 +111,14 @@ showNewUI, _ := client.BooleanValue(context.Background(), "new-ui-enabled", fals
 ## Deployment
 
 ### Prerequisites
+
 - Kubernetes cluster with ArgoCD installed
 - PostgreSQL operator (CloudNativePG) deployed
 - Ingress controller (nginx-ingress) configured
 - cert-manager for TLS certificates
 
 ### Deploy
+
 ```bash
 # Deploy Unleash via ArgoCD
 kubectl apply -f platform/apps/unleash-application.yaml
@@ -125,6 +131,7 @@ kubectl get secret unleash-secret -n fawkes -o jsonpath='{.data.ADMIN_PASSWORD}'
 ```
 
 ### Access
+
 - **UI**: https://unleash.fawkes.idp
 - **API**: https://unleash.fawkes.idp/api
 - **Admin User**: admin@fawkes.local
@@ -135,6 +142,7 @@ kubectl get secret unleash-secret -n fawkes -o jsonpath='{.data.ADMIN_PASSWORD}'
 **IMPORTANT**: The deployment manifests contain default development credentials that **MUST** be changed before production use:
 
 1. **Generate secure passwords** and API tokens:
+
 ```bash
 # Generate admin password
 openssl rand -base64 32
@@ -144,6 +152,7 @@ openssl rand -hex 32
 ```
 
 2. **Update secrets** before deploying:
+
 ```bash
 kubectl create secret generic unleash-secret \
   --from-literal=ADMIN_PASSWORD="$(openssl rand -base64 32)" \
@@ -170,18 +179,23 @@ kubectl create secret generic db-unleash-credentials \
 Unleash supports multiple rollout strategies:
 
 ### 1. Standard Strategy
+
 Default on/off toggle for all users.
 
 ### 2. Gradual Rollout
+
 Progressive rollout based on percentage (0-100%).
 
 ### 3. User IDs
+
 Target specific users by ID or email.
 
 ### 4. Flexible Rollout
+
 Combine multiple constraints (user ID, environment, team).
 
 ### 5. Custom Strategy
+
 Define custom targeting logic via API.
 
 ## Backstage Plugin
@@ -189,12 +203,14 @@ Define custom targeting logic via API.
 To integrate Unleash UI into Backstage:
 
 1. Install the Backstage plugin:
+
 ```bash
 cd platform/apps/backstage
 yarn add @unleash/backstage-plugin
 ```
 
 2. Add to `packages/app/src/App.tsx`:
+
 ```typescript
 import { UnleashPage } from '@unleash/backstage-plugin';
 
@@ -203,6 +219,7 @@ import { UnleashPage } from '@unleash/backstage-plugin';
 ```
 
 3. Configure in `app-config.yaml`:
+
 ```yaml
 unleash:
   url: https://unleash.fawkes.idp
@@ -212,6 +229,7 @@ unleash:
 ## SDK Integration Examples
 
 See [examples/](./examples/) directory for complete integration examples:
+
 - `examples/backstage-integration.ts` - Backstage frontend plugin
 - `examples/python-service.py` - Python microservice
 - `examples/go-service.go` - Go microservice
@@ -220,6 +238,7 @@ See [examples/](./examples/) directory for complete integration examples:
 ## Monitoring
 
 Unleash exposes Prometheus metrics at `/internal-backstage/prometheus`:
+
 - `unleash_feature_toggles_total` - Total feature flags
 - `unleash_client_requests_total` - API request count
 - `unleash_db_pool_*` - Database connection pool metrics
@@ -229,15 +248,18 @@ View metrics in Grafana: https://grafana.fawkes.idp/d/unleash
 ## Security
 
 ### Authentication
+
 - **Admin UI**: Username/password (stored in Kubernetes secret)
 - **API**: API tokens (scoped per environment/team)
 - **SSO**: OIDC/SAML support (roadmap)
 
 ### Secrets Management
+
 - Default: Kubernetes secrets (dev/local only)
 - Production: External Secrets Operator syncing from Vault
 
 ### Network Security
+
 - TLS termination at ingress
 - Internal communication: ClusterIP services
 - Network policies: Restrict egress to PostgreSQL only
@@ -246,15 +268,16 @@ View metrics in Grafana: https://grafana.fawkes.idp/d/unleash
 
 Target: <70% CPU/Memory utilization
 
-| Component | Requests | Limits | Replicas |
-|-----------|----------|--------|----------|
-| Unleash Server | 200m CPU, 256Mi RAM | 1 CPU, 1Gi RAM | 2 |
-| PostgreSQL | 200m CPU, 256Mi RAM | 500m CPU, 512Mi RAM | 3 |
-| **Total** | **~1 CPU, ~1.5Gi RAM** | **~3.5 CPU, ~3.5Gi RAM** | - |
+| Component      | Requests               | Limits                   | Replicas |
+| -------------- | ---------------------- | ------------------------ | -------- |
+| Unleash Server | 200m CPU, 256Mi RAM    | 1 CPU, 1Gi RAM           | 2        |
+| PostgreSQL     | 200m CPU, 256Mi RAM    | 500m CPU, 512Mi RAM      | 3        |
+| **Total**      | **~1 CPU, ~1.5Gi RAM** | **~3.5 CPU, ~3.5Gi RAM** | -        |
 
 ## Troubleshooting
 
 ### Unleash pods not starting
+
 ```bash
 # Check pod logs
 kubectl logs -l app=unleash -n fawkes
@@ -264,6 +287,7 @@ kubectl exec -it deployment/unleash -n fawkes -- wget -O- http://db-unleash-dev-
 ```
 
 ### Database connection issues
+
 ```bash
 # Verify PostgreSQL cluster is healthy
 kubectl get cluster db-unleash-dev -n fawkes
@@ -273,6 +297,7 @@ kubectl get secret db-unleash-credentials -n fawkes -o yaml
 ```
 
 ### Feature flags not syncing
+
 ```bash
 # Check Unleash logs
 kubectl logs -l app=unleash -n fawkes --tail=100
@@ -284,6 +309,7 @@ curl -H "Authorization: ${UNLEASH_API_TOKEN}" https://unleash.fawkes.idp/api/adm
 ## Backup & Recovery
 
 CloudNativePG automatically manages backups:
+
 ```bash
 # Trigger manual backup
 kubectl create -f backup-unleash.yaml

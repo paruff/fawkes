@@ -14,12 +14,12 @@ SCORE (Specification for Container Orchestration and Runtime Execution) is an op
 
 ```yaml
 apiVersion: score.dev/v1b1
-metadata: {...}
-containers: {...}
-service: {...}
-resources: {...}
-route: {...}
-extensions: {...}
+metadata: { ... }
+containers: { ... }
+service: { ... }
+resources: { ... }
+route: { ... }
+extensions: { ... }
 ```
 
 ---
@@ -35,6 +35,7 @@ extensions: {...}
 Specifies the SCORE API version.
 
 **Example**:
+
 ```yaml
 apiVersion: score.dev/v1b1
 ```
@@ -53,6 +54,7 @@ Metadata about the workload.
 **Type**: `string`
 **Required**: Yes
 **Constraints**:
+
 - Must be a valid Kubernetes resource name
 - Lowercase alphanumeric characters, `-` only
 - Max 63 characters
@@ -60,6 +62,7 @@ Metadata about the workload.
 The name of the workload. This becomes the base name for all generated Kubernetes resources.
 
 **Example**:
+
 ```yaml
 metadata:
   name: my-service
@@ -82,6 +85,7 @@ Map of container definitions. Each key is the container name.
 Container image reference.
 
 **Example**:
+
 ```yaml
 containers:
   web:
@@ -96,6 +100,7 @@ containers:
 Override the container's entrypoint.
 
 **Example**:
+
 ```yaml
 containers:
   web:
@@ -110,6 +115,7 @@ containers:
 Override the container's arguments.
 
 **Example**:
+
 ```yaml
 containers:
   web:
@@ -124,12 +130,14 @@ containers:
 Resource requests and limits.
 
 **Sub-fields**:
+
 - `requests.cpu`: CPU request (e.g., `"100m"`, `"0.5"`)
 - `requests.memory`: Memory request (e.g., `"128Mi"`, `"1Gi"`)
 - `limits.cpu`: CPU limit
 - `limits.memory`: Memory limit
 
 **Example**:
+
 ```yaml
 containers:
   web:
@@ -143,6 +151,7 @@ containers:
 ```
 
 **Best Practices**:
+
 - Always set both requests and limits
 - Memory limits should be 1.5-2x requests
 - CPU limits can be higher for burstable workloads
@@ -155,6 +164,7 @@ containers:
 Environment variables for the container. Values can reference resources using `${resources.<name>.<field>}`.
 
 **Example**:
+
 ```yaml
 containers:
   web:
@@ -166,6 +176,7 @@ containers:
 ```
 
 **Variable Interpolation**:
+
 - `${ENVIRONMENT}`: Replaced with target environment (dev, staging, prod)
 - `${resources.<resource-name>.<field>}`: Replaced with resource field values
 
@@ -179,6 +190,7 @@ Liveness probe configuration.
 **Supported Types**: `httpGet` only (in current implementation)
 
 **Example**:
+
 ```yaml
 containers:
   web:
@@ -200,6 +212,7 @@ containers:
 Readiness probe configuration.
 
 **Example**:
+
 ```yaml
 containers:
   web:
@@ -228,11 +241,13 @@ Service configuration for the workload.
 Map of port definitions. Each key is the port name.
 
 **Sub-fields**:
+
 - `port`: External port (on the Service)
 - `targetPort`: Container port
 - `protocol`: Protocol (`tcp`, `udp`)
 
 **Example**:
+
 ```yaml
 service:
   ports:
@@ -260,6 +275,7 @@ Map of infrastructure resources required by the workload.
 PostgreSQL database provisioned via CloudNativePG.
 
 **Example**:
+
 ```yaml
 resources:
   db:
@@ -273,11 +289,13 @@ resources:
 ```
 
 **Generated Resources**:
+
 - CloudNativePG Cluster (managed externally)
 - ExternalSecret with connection credentials
 - Environment variable: `${resources.db.connection_string}`
 
 **Fawkes Annotations**:
+
 - `fawkes.dev/storage-size`: Persistent volume size (default: `10Gi`)
 - `fawkes.dev/version`: PostgreSQL version (default: `15`)
 
@@ -286,6 +304,7 @@ resources:
 Redis cache provisioned via Redis Helm Chart.
 
 **Example**:
+
 ```yaml
 resources:
   cache:
@@ -298,6 +317,7 @@ resources:
 ```
 
 **Generated Resources**:
+
 - Redis StatefulSet (managed externally)
 - ExternalSecret with connection credentials
 - Environment variable: `${resources.cache.connection_string}`
@@ -307,6 +327,7 @@ resources:
 Secrets from HashiCorp Vault provisioned via External Secrets Operator.
 
 **Example**:
+
 ```yaml
 resources:
   api-keys:
@@ -321,11 +342,13 @@ resources:
 ```
 
 **Generated Resources**:
+
 - ExternalSecret referencing Vault
 - Kubernetes Secret with specified keys
 - Environment variables: `${resources.api-keys.API_KEY}`, etc.
 
 **Fawkes Annotations**:
+
 - `fawkes.dev/vault-path`: Path in Vault (required)
 
 #### Resource Type: volume
@@ -333,6 +356,7 @@ resources:
 Persistent volume provisioned via PersistentVolumeClaim.
 
 **Example**:
+
 ```yaml
 resources:
   uploads:
@@ -347,14 +371,17 @@ resources:
 ```
 
 **Generated Resources**:
+
 - PersistentVolumeClaim
 - Volume mount in container
 
 **Fawkes Annotations**:
+
 - `fawkes.dev/storage-class`: StorageClass (default: `standard`)
 - `fawkes.dev/access-mode`: Access mode (default: `ReadWriteOnce`)
 
 **Properties**:
+
 - `size`: Storage size (required)
 - `mountPath`: Path in container (required)
 
@@ -375,6 +402,7 @@ Ingress/route configuration for external access.
 Hostname for the Ingress. Use `${ENVIRONMENT}` for environment interpolation.
 
 **Example**:
+
 ```yaml
 route:
   host: "my-service.${ENVIRONMENT}.fawkes.idp"
@@ -392,6 +420,7 @@ route:
 Path prefix for routing.
 
 **Example**:
+
 ```yaml
 route:
   path: "/api"
@@ -405,9 +434,11 @@ route:
 TLS/HTTPS configuration.
 
 **Sub-fields**:
+
 - `enabled`: Boolean (default: `true`)
 
 **Example**:
+
 ```yaml
 route:
   tls:
@@ -415,6 +446,7 @@ route:
 ```
 
 **Generated Resources**:
+
 - Ingress with TLS configuration
 - Certificate automatically provisioned via cert-manager
 
@@ -432,6 +464,7 @@ The `extensions.fawkes` section provides Fawkes-specific features beyond the SCO
 Team name for RBAC and billing.
 
 **Example**:
+
 ```yaml
 extensions:
   fawkes:
@@ -470,6 +503,7 @@ Number of replicas.
 Horizontal Pod Autoscaler configuration.
 
 **Sub-fields**:
+
 - `enabled`: Boolean (default: `false`)
 - `minReplicas`: Minimum replicas (default: `2`)
 - `maxReplicas`: Maximum replicas (default: `10`)
@@ -477,6 +511,7 @@ Horizontal Pod Autoscaler configuration.
 - `targetMemoryUtilizationPercentage`: Memory target (default: `80`)
 
 **Example**:
+
 ```yaml
 extensions:
   fawkes:
@@ -505,11 +540,13 @@ Observability configuration.
 Prometheus metrics scraping configuration.
 
 **Sub-fields**:
+
 - `enabled`: Boolean (default: `false`)
 - `port`: Metrics port (default: `9090`)
 - `path`: Metrics path (default: `"/metrics"`)
 
 **Example**:
+
 ```yaml
 extensions:
   fawkes:
@@ -521,6 +558,7 @@ extensions:
 ```
 
 **Generated Annotations**:
+
 ```yaml
 annotations:
   prometheus.io/scrape: "true"
@@ -535,10 +573,12 @@ annotations:
 OpenTelemetry distributed tracing configuration.
 
 **Sub-fields**:
+
 - `enabled`: Boolean (default: `false`)
 - `samplingRate`: Sampling rate (0.0-1.0, default: `0.1`)
 
 **Example**:
+
 ```yaml
 extensions:
   fawkes:
@@ -555,6 +595,7 @@ extensions:
 Logging configuration.
 
 **Sub-fields**:
+
 - `enabled`: Boolean (default: `true`)
 - `format`: Log format (`json`, `text`, default: `json`)
 - `level`: Log level (`debug`, `info`, `warn`, `error`, default: `info`)
@@ -597,10 +638,12 @@ User ID to run containers as.
 NetworkPolicy configuration.
 
 **Sub-fields**:
+
 - `enabled`: Boolean (default: `false`)
 - `allowedNamespaces`: Array of allowed namespaces
 
 **Example**:
+
 ```yaml
 extensions:
   fawkes:
@@ -624,9 +667,11 @@ extensions:
 DORA metrics tracking configuration.
 
 **Sub-fields**:
+
 - `enabled`: Boolean (default: `true`)
 
 **Example**:
+
 ```yaml
 extensions:
   fawkes:
@@ -648,28 +693,28 @@ containers:
   web:
     image: "harbor.fawkes.local/team-a/app:v2.1.0"
     resources:
-      requests: {cpu: "500m", memory: "512Mi"}
-      limits: {cpu: "1000m", memory: "1Gi"}
+      requests: { cpu: "500m", memory: "512Mi" }
+      limits: { cpu: "1000m", memory: "1Gi" }
     variables:
       LOG_LEVEL: "info"
       DATABASE_URL: "${resources.db.connection_string}"
       REDIS_URL: "${resources.cache.connection_string}"
       API_KEY: "${resources.secrets.API_KEY}"
     livenessProbe:
-      httpGet: {path: /health, port: 8080}
+      httpGet: { path: /health, port: 8080 }
       initialDelaySeconds: 30
     readinessProbe:
-      httpGet: {path: /ready, port: 8080}
+      httpGet: { path: /ready, port: 8080 }
       initialDelaySeconds: 10
 
 service:
   ports:
-    http: {port: 80, targetPort: 8080, protocol: tcp}
+    http: { port: 80, targetPort: 8080, protocol: tcp }
 
 resources:
   db:
     type: postgres
-    properties: {database: "appdb"}
+    properties: { database: "appdb" }
   cache:
     type: redis
   secrets:
@@ -681,12 +726,12 @@ resources:
       keys: [API_KEY, JWT_SECRET]
   uploads:
     type: volume
-    properties: {size: "10Gi", mountPath: "/app/uploads"}
+    properties: { size: "10Gi", mountPath: "/app/uploads" }
 
 route:
   host: "app.${ENVIRONMENT}.fawkes.idp"
   path: "/"
-  tls: {enabled: true}
+  tls: { enabled: true }
 
 extensions:
   fawkes:
@@ -697,8 +742,8 @@ extensions:
         minReplicas: 3
         maxReplicas: 20
     observability:
-      metrics: {enabled: true, port: 9090}
-      tracing: {enabled: true, samplingRate: 0.1}
+      metrics: { enabled: true, port: 9090 }
+      tracing: { enabled: true, samplingRate: 0.1 }
     security:
       runAsNonRoot: true
       networkPolicy:
@@ -714,14 +759,14 @@ extensions:
 
 Map your existing K8s resources to SCORE fields:
 
-| Kubernetes Resource | SCORE Field |
-|-------------------|-------------|
-| Deployment.spec.template.spec.containers | `containers` |
-| Deployment.spec.replicas | `extensions.fawkes.deployment.replicas` |
-| Service.spec.ports | `service.ports` |
-| Ingress.spec.rules | `route` |
-| ConfigMap/Secret | `resources` (type: secret) |
-| PersistentVolumeClaim | `resources` (type: volume) |
+| Kubernetes Resource                      | SCORE Field                             |
+| ---------------------------------------- | --------------------------------------- |
+| Deployment.spec.template.spec.containers | `containers`                            |
+| Deployment.spec.replicas                 | `extensions.fawkes.deployment.replicas` |
+| Service.spec.ports                       | `service.ports`                         |
+| Ingress.spec.rules                       | `route`                                 |
+| ConfigMap/Secret                         | `resources` (type: secret)              |
+| PersistentVolumeClaim                    | `resources` (type: volume)              |
 
 ### Step 2: Create score.yaml
 
@@ -773,6 +818,7 @@ diff /tmp/generated/deployment.yaml old-deployment.yaml
 **Error**: `ValueError: score.yaml must have 'apiVersion' field`
 
 **Solution**: Ensure your file starts with:
+
 ```yaml
 apiVersion: score.dev/v1b1
 ```
@@ -782,6 +828,7 @@ apiVersion: score.dev/v1b1
 **Problem**: `${ENVIRONMENT}` appears literally in generated manifests
 
 **Solution**: The transformer replaces this automatically. Check you're using the correct syntax:
+
 ```yaml
 route:
   host: "app.${ENVIRONMENT}.fawkes.idp"
@@ -792,6 +839,7 @@ route:
 **Problem**: Database/cache not created
 
 **Solution**: Resource provisioning happens externally to the SCORE transformer. The transformer only generates ExternalSecret references. Ensure:
+
 1. CloudNativePG operator is installed (for postgres)
 2. Redis is deployed (for redis)
 3. External Secrets Operator is configured (for secrets)

@@ -39,88 +39,88 @@ spec:
         fsGroup: 65534
 
       containers:
-      - name: rag-service
-        image: rag-service:latest
-        imagePullPolicy: IfNotPresent
+        - name: rag-service
+          image: rag-service:latest
+          imagePullPolicy: IfNotPresent
 
-        ports:
-        - name: http
-          containerPort: 8000
-          protocol: TCP
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
 
-        env:
-        - name: WEAVIATE_URL
-          valueFrom:
-            configMapKeyRef:
-              name: rag-service-config
-              key: weaviate_url
-        - name: SCHEMA_NAME
-          valueFrom:
-            configMapKeyRef:
-              name: rag-service-config
-              key: schema_name
-        - name: DEFAULT_TOP_K
-          valueFrom:
-            configMapKeyRef:
-              name: rag-service-config
-              key: default_top_k
-        - name: DEFAULT_THRESHOLD
-          valueFrom:
-            configMapKeyRef:
-              name: rag-service-config
-              key: default_threshold
+          env:
+            - name: WEAVIATE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: rag-service-config
+                  key: weaviate_url
+            - name: SCHEMA_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: rag-service-config
+                  key: schema_name
+            - name: DEFAULT_TOP_K
+              valueFrom:
+                configMapKeyRef:
+                  name: rag-service-config
+                  key: default_top_k
+            - name: DEFAULT_THRESHOLD
+              valueFrom:
+                configMapKeyRef:
+                  name: rag-service-config
+                  key: default_threshold
 
-        # Resource limits
-        resources:
-          requests:
-            cpu: 500m
-            memory: 1Gi
-          limits:
-            cpu: 1
-            memory: 1Gi
+          # Resource limits
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: 1
+              memory: 1Gi
 
-        # Liveness probe
-        livenessProbe:
-          httpGet:
-            path: /api/v1/health
-            port: http
-          initialDelaySeconds: 30
-          periodSeconds: 30
-          timeoutSeconds: 5
-          failureThreshold: 3
+          # Liveness probe
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
 
-        # Readiness probe
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: http
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
+          # Readiness probe
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
 
-        # Security context
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: false
-          runAsNonRoot: true
-          runAsUser: 65534
-          capabilities:
-            drop:
-              - ALL
-          seccompProfile:
-            type: RuntimeDefault
+          # Security context
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: 65534
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
 
       # Pod affinity to spread across nodes
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - rag-service
-              topologyKey: kubernetes.io/hostname
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - rag-service
+                topologyKey: kubernetes.io/hostname

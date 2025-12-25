@@ -12,22 +12,24 @@ Jenkins is an open-source automation server that enables continuous integration 
 ## Overview
 
 Jenkins provides robust automation capabilities:
+
 - **Build Automation** - Compile and test code automatically
 - **Deployment Pipeline** - Create sophisticated deployment workflows
 - **Plugin Ecosystem** - Extend functionality through thousands of plugins
 
 ## Key Features
 
-| Feature | Description |
-|---------|-------------|
-| ![](../assets/images/icons/pipeline.png){ width="24" } Pipeline as Code | Define pipelines using Jenkinsfile |
-| ![](../assets/images/icons/plugins.png){ width="24" } Plugin System | Extensive plugin ecosystem |
+| Feature                                                                      | Description                          |
+| ---------------------------------------------------------------------------- | ------------------------------------ |
+| ![](../assets/images/icons/pipeline.png){ width="24" } Pipeline as Code      | Define pipelines using Jenkinsfile   |
+| ![](../assets/images/icons/plugins.png){ width="24" } Plugin System          | Extensive plugin ecosystem           |
 | ![](../assets/images/icons/distributed.png){ width="24" } Distributed Builds | Scale with master/agent architecture |
-| ![](../assets/images/icons/security.png){ width="24" } Security Features | Built-in security and authentication |
+| ![](../assets/images/icons/security.png){ width="24" } Security Features     | Built-in security and authentication |
 
 ## Integration with Fawkes
 
 ### Prerequisites
+
 - Docker or Kubernetes cluster
 - Helm (for Kubernetes deployment)
 - kubectl configured with cluster access
@@ -47,6 +49,7 @@ helm install jenkins jenkins/jenkins \
 ```
 
 Example `jenkins-values.yaml`:
+
 ```yaml
 controller:
   ingress:
@@ -151,11 +154,13 @@ pipeline {
 ## Best Practices
 
 1. **Pipeline as Code**
+
    - Store Jenkinsfile in version control
    - Use declarative pipeline syntax
    - Keep pipelines simple and modular
 
 2. **Security**
+
    - Use credentials management
    - Implement role-based access control
    - Regular security updates
@@ -169,20 +174,20 @@ pipeline {
 
 Common issues and solutions:
 
-| Issue | Solution |
-|-------|----------|
+| Issue                   | Solution                         |
+| ----------------------- | -------------------------------- |
 | Pipeline fails to start | Check Jenkins agent connectivity |
-| Build fails | Verify build tool configuration |
-| Deployment fails | Check Kubernetes credentials |
+| Build fails             | Verify build tool configuration  |
+| Deployment fails        | Check Kubernetes credentials     |
 
 ## Monitoring Jenkins
 
 ```yaml
 # Prometheus configuration
-- job_name: 'jenkins'
+- job_name: "jenkins"
   metrics_path: /prometheus
   static_configs:
-    - targets: ['jenkins.fawkes.local:8080']
+    - targets: ["jenkins.fawkes.local:8080"]
 ```
 
 ## Additional Resources

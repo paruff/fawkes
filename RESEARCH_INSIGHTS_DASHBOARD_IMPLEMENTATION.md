@@ -13,6 +13,7 @@ Implemented a comprehensive Grafana dashboard for visualizing research insights 
 A dedicated Python module that exports insights database metrics to Prometheus format:
 
 **Metrics Exposed**:
+
 - `research_insights_total` - Total number of insights
 - `research_insights_validated` - Published/validated insights count
 - `research_insights_by_status` - Insights grouped by status (draft, published, archived)
@@ -37,6 +38,7 @@ A comprehensive 23-panel dashboard organized into 6 sections:
 #### Dashboard Sections
 
 1. **Research Insights Overview** (6 panels)
+
    - Total insights stat
    - Validated insights stat
    - 7-day publication rate
@@ -45,19 +47,23 @@ A comprehensive 23-panel dashboard organized into 6 sections:
    - Total tags
 
 2. **Insights by Status** (3 panels)
+
    - Status distribution pie chart
    - Priority distribution pie chart
    - Status trends time series
 
 3. **Insights by Category** (2 panels)
+
    - Category bar gauge
    - Category distribution donut chart
 
 4. **Validation Metrics** (2 panels)
+
    - Validation rate by category
    - Time to action by category
 
 5. **Tag Analytics** (2 panels)
+
    - Top 10 tags by usage
    - Tag distribution donut chart
 
@@ -66,6 +72,7 @@ A comprehensive 23-panel dashboard organized into 6 sections:
    - 30-day publication trend
 
 **Features**:
+
 - Auto-refresh every 30 seconds
 - Category filter (multi-select with "All" option)
 - Color-coded thresholds for metrics
@@ -77,6 +84,7 @@ A comprehensive 23-panel dashboard organized into 6 sections:
 **File**: `platform/apps/insights/servicemonitor.yaml`
 
 ConfigMap with two resources:
+
 - **Service**: Exposes insights metrics endpoint
 - **ServiceMonitor**: Configures Prometheus to scrape metrics every 30 seconds
 
@@ -87,12 +95,14 @@ ConfigMap for automatic dashboard provisioning with label `grafana_dashboard: "1
 ### 4. Documentation
 
 **File**: `platform/apps/insights/README.md`
+
 - Deployment instructions
 - Troubleshooting guide
 - Metrics reference
 - Integration with Backstage
 
 **File**: `platform/apps/grafana/dashboards/README.md` (updated)
+
 - Added Research Insights Dashboard as entry #1
 - Comprehensive panel descriptions
 - Key metrics examples
@@ -104,6 +114,7 @@ ConfigMap for automatic dashboard provisioning with label `grafana_dashboard: "1
 **File**: `catalog-info.yaml` (updated)
 
 Added direct link to Research Insights Dashboard in the Grafana component:
+
 ```yaml
 links:
   - url: https://grafana.fawkes.idp/d/research-insights
@@ -116,6 +127,7 @@ links:
 **File**: `tests/bdd/features/research-insights-dashboard.feature`
 
 14 comprehensive test scenarios covering:
+
 - Dashboard visibility and sections
 - Overview metrics accuracy
 - Status and priority distributions
@@ -198,17 +210,20 @@ Grafana queries Prometheus and displays in dashboard
 ### Color Thresholds
 
 **Validation Rate**:
+
 - 🔴 Red: < 50% (needs improvement)
 - 🟡 Yellow: 50-75% (acceptable)
 - 🟢 Green: ≥ 75% (excellent)
 
 **Time to Action**:
+
 - 🟢 Green: < 48 hours (fast)
 - 🟡 Yellow: 48-168 hours (normal)
 - 🟠 Orange: 168-336 hours (slow)
 - 🔴 Red: > 336 hours (very slow)
 
 **7-Day Publications**:
+
 - 🔴 Red: 0 (no activity)
 - 🟡 Yellow: 1-4 (low activity)
 - 🟢 Green: ≥ 5 (healthy activity)
@@ -238,6 +253,7 @@ Grafana queries Prometheus and displays in dashboard
 ## Dependencies
 
 The implementation depends on existing components:
+
 - ✅ Insights service (already exists at `services/insights/`)
 - ✅ PostgreSQL database with insights schema
 - ✅ Prometheus with ServiceMonitor CRD support
@@ -302,6 +318,7 @@ tests/bdd/features/research-insights-dashboard.feature  (NEW)
 ## Support
 
 For issues or questions:
+
 1. Check the troubleshooting section in `platform/apps/insights/README.md`
 2. Review Grafana and Prometheus logs
 3. Verify ServiceMonitor is active: `kubectl get servicemonitor -n monitoring`

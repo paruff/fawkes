@@ -5,6 +5,7 @@ This directory contains DataHub metadata ingestion recipes and automated ingesti
 ## Overview
 
 Automated metadata ingestion is configured for:
+
 - **PostgreSQL databases** (Backstage, Harbor, SonarQube) - Daily at 2 AM UTC
 - **Kubernetes resources** (Deployments, Services, ConfigMaps, etc.) - Hourly
 - **GitHub repositories** and **Jenkins jobs** - Every 6 hours
@@ -14,11 +15,13 @@ Automated metadata ingestion is configured for:
 ### Ingestion Recipes
 
 - `postgres.yaml` - PostgreSQL database ingestion recipe
+
   - Backstage developer portal database
   - Harbor container registry database
   - SonarQube code quality database
 
 - `kubernetes.yaml` - Kubernetes resources ingestion recipe
+
   - Deployments, StatefulSets, Services
   - ConfigMaps, Secrets, Ingresses
   - Links to Backstage components via annotations
@@ -37,11 +40,13 @@ Automated metadata ingestion is configured for:
 ## Prerequisites
 
 1. **DataHub deployed and running**
+
    ```bash
    kubectl get pods -n fawkes -l app.kubernetes.io/name=datahub
    ```
 
 2. **DataHub CLI installed** (for manual ingestion)
+
    ```bash
    pip install 'acryl-datahub[all]'
    ```
@@ -92,11 +97,11 @@ datahub ingest -c platform/apps/datahub/ingestion/github-jenkins.yaml
 
 CronJobs are automatically deployed via ArgoCD and run on the following schedules:
 
-| Source | Schedule | Description |
-|--------|----------|-------------|
-| PostgreSQL | Daily at 2 AM UTC | Ingest database schemas and metadata |
-| Kubernetes | Every hour at :15 | Ingest cluster resources |
-| Git/CI | Every 6 hours at :30 | Ingest repos and pipelines |
+| Source     | Schedule             | Description                          |
+| ---------- | -------------------- | ------------------------------------ |
+| PostgreSQL | Daily at 2 AM UTC    | Ingest database schemas and metadata |
+| Kubernetes | Every hour at :15    | Ingest cluster resources             |
+| Git/CI     | Every 6 hours at :30 | Ingest repos and pipelines           |
 
 ### Check CronJob Status
 
@@ -149,10 +154,11 @@ Edit the `schedule` field in the respective CronJob manifest:
 
 ```yaml
 spec:
-  schedule: "0 2 * * *"  # Cron format: minute hour day month weekday
+  schedule: "0 2 * * *" # Cron format: minute hour day month weekday
 ```
 
 Common schedules:
+
 - Daily at 2 AM: `0 2 * * *`
 - Every hour: `0 * * * *`
 - Every 6 hours: `0 */6 * * *`
@@ -246,6 +252,7 @@ View lineage in DataHub UI by navigating to any entity and clicking the "Lineage
 ## DORA Metrics Integration
 
 Jenkins ingestion extracts DORA metrics:
+
 - **Deployment Frequency**: From deployment jobs
 - **Lead Time for Changes**: From commit to deployment
 - **Change Failure Rate**: From rollback/hotfix jobs

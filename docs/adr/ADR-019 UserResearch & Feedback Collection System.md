@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-ADR-018 established the SPACE framework for *quantitative* measurement of developer experience. However, numbers alone cannot tell the complete story. Metrics show *what* is happening but rarely explain *why*. To build a truly user-centric platform, we need deep qualitative insights to complement our quantitative metrics.
+ADR-018 established the SPACE framework for _quantitative_ measurement of developer experience. However, numbers alone cannot tell the complete story. Metrics show _what_ is happening but rarely explain _why_. To build a truly user-centric platform, we need deep qualitative insights to complement our quantitative metrics.
 
 **The 2025 DORA Report Finding**:
 
@@ -117,8 +117,8 @@ We will implement a comprehensive **User Research & Feedback Collection System**
 // Appears in every Backstage page header
 
 interface FeedbackSubmission {
-  type: 'bug' | 'friction' | 'feature-request' | 'praise';
-  category: 'ci-cd' | 'gitops' | 'docs' | 'dojo' | 'other';
+  type: "bug" | "friction" | "feature-request" | "praise";
+  category: "ci-cd" | "gitops" | "docs" | "dojo" | "other";
   description: string;
   context: {
     page: string;
@@ -126,7 +126,7 @@ interface FeedbackSubmission {
     userRole: string;
     anonymized: boolean;
   };
-  sentiment: 'positive' | 'neutral' | 'negative';
+  sentiment: "positive" | "neutral" | "negative";
 }
 ```
 
@@ -310,37 +310,44 @@ Screenshots, examples, related issues?
 Fawkes User Interview Guide (60 minutes)
 
 Introduction (5 min):
+
 - Thank participant, explain purpose
 - Emphasize: No right/wrong answers, all feedback valuable
 - Confirm recording consent
 
 Warm-Up (5 min):
+
 - What's your role and team?
 - How long have you been using Fawkes?
 - On a scale of 1-5, how would you rate your overall experience?
 
 Current Workflow (15 min):
+
 - Walk me through your typical day using Fawkes
 - What's the first thing you do in the morning?
 - How do you deploy code from idea to production?
 - [Screen share: Show me how you do X]
 
 Pain Points (15 min):
+
 - What's the most frustrating part of using Fawkes?
 - When was the last time Fawkes slowed you down?
 - If you could fix one thing tomorrow, what would it be?
 - What workarounds have you developed?
 
 AI Tools (10 min):
+
 - Are you using AI coding assistants (Copilot, etc.)?
 - How has AI changed your workflow?
 - What would make AI tools more useful in Fawkes?
 
 Aspirations (5 min):
+
 - What does an ideal platform look like to you?
 - What would make you recommend Fawkes to others?
 
 Wrap-Up (5 min):
+
 - Anything we haven't covered?
 - Can we follow up if we have clarifying questions?
 - Thank you + next steps
@@ -577,11 +584,13 @@ def calculate_impact_score(feedback):
 Hey team! Here's what we heard from you last month and what we're doing about it.
 
 ### 📊 Feedback by the Numbers
+
 - 52 feedback submissions (↑ from 41 last month)
 - 5 user interviews conducted
 - Overall sentiment: 68% positive, 24% neutral, 8% negative
 
 ### 🔥 Top 3 Themes We Heard
+
 1. **Jenkins builds are slow** (18 mentions)
    👉 WE DID: Optimized build parallelism, reduced avg build time 45min → 18min
 
@@ -592,21 +601,25 @@ Hey team! Here's what we heard from you last month and what we're doing about it
    👉 WORKING ON IT: Updating modules 6-10, target completion Dec 15
 
 ### 🎉 Wins to Celebrate
+
 - @developer_eve completed Black Belt! 🥋
 - Deployment frequency hit 2.4/day (↑ from 1.9/day)
 - NPS score: 62 (↑ from 58)
 
 ### 💡 What We're Focusing on Next Month
+
 - AI-powered code review suggestions (pilot with 3 teams)
 - Improved error messages in ArgoCD
 - Self-service secrets rotation
 
 ### 📣 We Want to Hear From You
+
 - Use the feedback button in Backstage
 - Join office hours (next one: Nov 20, 2pm)
 - DM us anytime in #platform-feedback
 
 Thanks for making Fawkes better! 🚀
+
 - The Platform Team
 ```
 

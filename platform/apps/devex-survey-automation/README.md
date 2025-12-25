@@ -57,10 +57,11 @@ argocd app sync devex-survey-automation
 Before deployment, update secrets in `secrets.yaml`:
 
 1. **Database Credentials**
+
    ```yaml
    name: db-devex-credentials
    username: devex
-   password: <strong-password>  # Change this!
+   password: <strong-password> # Change this!
    ```
 
 2. **Mattermost Bot Token** (optional but recommended)
@@ -136,6 +137,7 @@ kubectl exec -it -n fawkes db-devex-dev-1 -- psql -U devex -d devex_surveys
 ### Database Schema
 
 Tables created automatically on first startup:
+
 - `survey_campaigns` - Campaign tracking
 - `survey_recipients` - Individual recipients and responses
 - `pulse_survey_aggregates` - Weekly aggregated metrics
@@ -259,7 +261,7 @@ Add to Backstage `app-config.yaml`:
 ```yaml
 proxy:
   endpoints:
-    '/devex-surveys':
+    "/devex-surveys":
       target: http://devex-survey-automation.fawkes.svc:8000
       changeOrigin: true
 ```
@@ -271,6 +273,7 @@ Import metrics to Grafana dashboard for DevEx monitoring.
 ## Support
 
 For issues:
+
 1. Check logs: `kubectl logs -n fawkes -l app=devex-survey-automation`
 2. Check health: `curl http://<service>/health`
 3. Review events: `kubectl get events -n fawkes --sort-by='.lastTimestamp'`

@@ -56,6 +56,7 @@ Backstage is the central developer portal for the Fawkes platform, providing a u
 Before deploying Backstage, you need to set up GitHub OAuth for authentication:
 
 1. **Create GitHub OAuth App**:
+
    - Go to https://github.com/settings/developers (personal) or
    - Go to https://github.com/organizations/YOUR_ORG/settings/applications (organization)
    - Click "New OAuth App"
@@ -66,6 +67,7 @@ Before deploying Backstage, you need to set up GitHub OAuth for authentication:
    - Note the Client ID and generate a Client Secret
 
 2. **Update Kubernetes Secrets**:
+
    ```bash
    # Edit secrets file
    vim platform/apps/backstage/secrets.yaml
@@ -76,6 +78,7 @@ Before deploying Backstage, you need to set up GitHub OAuth for authentication:
    ```
 
 3. **Deploy Backstage**:
+
    ```bash
    # Apply via ArgoCD
    kubectl apply -f platform/apps/backstage-application.yaml
@@ -91,6 +94,7 @@ Before deploying Backstage, you need to set up GitHub OAuth for authentication:
 ### Accessing Backstage
 
 Local development:
+
 ```bash
 # Access UI
 http://backstage.127.0.0.1.nip.io
@@ -128,6 +132,7 @@ spec:
 ```
 
 Register in Backstage:
+
 1. Go to "Create" → "Register Existing Component"
 2. Enter repository URL
 3. Click "Analyze" and "Import"
@@ -227,6 +232,7 @@ metadata:
 ```
 
 Build and publish:
+
 ```bash
 # Build locally
 npx @techdocs/cli generate --source-dir . --output-dir ./site
@@ -271,15 +277,15 @@ const serviceEntityPage = (
 
 ```typescript
 // packages/app/src/theme/fawkesTheme.ts
-import { createTheme } from '@backstage/theme';
+import { createTheme } from "@backstage/theme";
 
 export const fawkesTheme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: "#1976d2",
     },
     secondary: {
-      main: '#dc004e',
+      main: "#dc004e",
     },
   },
 });
@@ -302,6 +308,7 @@ spec:
 ```
 
 Key metrics:
+
 - `backstage_catalog_entities_count` - Total catalog entities
 - `backstage_http_request_duration_seconds` - Request latency
 - `backstage_catalog_processing_duration` - Catalog processing time

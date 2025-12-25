@@ -121,48 +121,48 @@ spec:
           serviceAccountName: datahub-k8s-ingestion
 
           containers:
-          - name: datahub-ingestion
-            image: acryldata/datahub-ingestion:latest
-            imagePullPolicy: IfNotPresent
+            - name: datahub-ingestion
+              image: acryldata/datahub-ingestion:latest
+              imagePullPolicy: IfNotPresent
 
-            command:
-            - /bin/bash
-            - -c
-            - |
-              set -e
-              echo "Starting Kubernetes resources metadata ingestion..."
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  set -e
+                  echo "Starting Kubernetes resources metadata ingestion..."
 
-              # Verify DataHub is accessible
-              if ! curl -f -s http://datahub-datahub-gms.fawkes.svc:8080/health > /dev/null; then
-                echo "ERROR: DataHub GMS is not accessible"
-                exit 1
-              fi
+                  # Verify DataHub is accessible
+                  if ! curl -f -s http://datahub-datahub-gms.fawkes.svc:8080/health > /dev/null; then
+                    echo "ERROR: DataHub GMS is not accessible"
+                    exit 1
+                  fi
 
-              echo "DataHub GMS is healthy"
-              echo "Ingesting Kubernetes resources from namespaces: fawkes, argocd, monitoring..."
+                  echo "DataHub GMS is healthy"
+                  echo "Ingesting Kubernetes resources from namespaces: fawkes, argocd, monitoring..."
 
-              # Run ingestion
-              datahub ingest -c /config/kubernetes.yaml
+                  # Run ingestion
+                  datahub ingest -c /config/kubernetes.yaml
 
-              echo "Kubernetes metadata ingestion completed successfully"
+                  echo "Kubernetes metadata ingestion completed successfully"
 
-            volumeMounts:
-            - name: config
-              mountPath: /config
-              readOnly: true
+              volumeMounts:
+                - name: config
+                  mountPath: /config
+                  readOnly: true
 
-            resources:
-              requests:
-                cpu: 200m
-                memory: 512Mi
-              limits:
-                cpu: 500m
-                memory: 1Gi
+              resources:
+                requests:
+                  cpu: 200m
+                  memory: 512Mi
+                limits:
+                  cpu: 500m
+                  memory: 1Gi
 
           volumes:
-          - name: config
-            configMap:
-              name: datahub-kubernetes-ingestion-config
+            - name: config
+              configMap:
+                name: datahub-kubernetes-ingestion-config
 
 ---
 # ServiceAccount for Kubernetes ingestion (needs cluster-wide read access)
@@ -185,35 +185,35 @@ metadata:
     app: datahub
     component: ingestion
 rules:
-# Read access to Kubernetes resources
-- apiGroups: [""]
-  resources:
-  - "pods"
-  - "services"
-  - "configmaps"
-  - "secrets"
-  - "persistentvolumeclaims"
-  - "namespaces"
-  verbs: ["get", "list"]
+  # Read access to Kubernetes resources
+  - apiGroups: [""]
+    resources:
+      - "pods"
+      - "services"
+      - "configmaps"
+      - "secrets"
+      - "persistentvolumeclaims"
+      - "namespaces"
+    verbs: ["get", "list"]
 
-- apiGroups: ["apps"]
-  resources:
-  - "deployments"
-  - "statefulsets"
-  - "daemonsets"
-  - "replicasets"
-  verbs: ["get", "list"]
+  - apiGroups: ["apps"]
+    resources:
+      - "deployments"
+      - "statefulsets"
+      - "daemonsets"
+      - "replicasets"
+    verbs: ["get", "list"]
 
-- apiGroups: ["batch"]
-  resources:
-  - "jobs"
-  - "cronjobs"
-  verbs: ["get", "list"]
+  - apiGroups: ["batch"]
+    resources:
+      - "jobs"
+      - "cronjobs"
+    verbs: ["get", "list"]
 
-- apiGroups: ["networking.k8s.io"]
-  resources:
-  - "ingresses"
-  verbs: ["get", "list"]
+  - apiGroups: ["networking.k8s.io"]
+    resources:
+      - "ingresses"
+    verbs: ["get", "list"]
 
 ---
 # ClusterRoleBinding for Kubernetes ingestion ServiceAccount
@@ -229,6 +229,6 @@ roleRef:
   kind: ClusterRole
   name: datahub-k8s-ingestion
 subjects:
-- kind: ServiceAccount
-  name: datahub-k8s-ingestion
-  namespace: fawkes
+  - kind: ServiceAccount
+    name: datahub-k8s-ingestion
+    namespace: fawkes

@@ -22,10 +22,7 @@ def is_notification_enabled() -> bool:
 
 
 async def send_mattermost_notification(
-    message: str,
-    username: str = "Feedback Bot",
-    icon_emoji: str = ":speech_balloon:",
-    channel: Optional[str] = None
+    message: str, username: str = "Feedback Bot", icon_emoji: str = ":speech_balloon:", channel: Optional[str] = None
 ) -> bool:
     """
     Send notification to Mattermost via webhook.
@@ -44,29 +41,19 @@ async def send_mattermost_notification(
         return False
 
     try:
-        payload = {
-            "text": message,
-            "username": username,
-            "icon_emoji": icon_emoji
-        }
+        payload = {"text": message, "username": username, "icon_emoji": icon_emoji}
 
         if channel:
             payload["channel"] = channel
 
         async with httpx.AsyncClient() as client:
-            response = await client.post(
-                MATTERMOST_WEBHOOK_URL,
-                json=payload,
-                timeout=10.0
-            )
+            response = await client.post(MATTERMOST_WEBHOOK_URL, json=payload, timeout=10.0)
 
             if response.status_code == 200:
                 logger.info("✅ Mattermost notification sent successfully")
                 return True
             else:
-                logger.warning(
-                    f"Failed to send Mattermost notification: {response.status_code}"
-                )
+                logger.warning(f"Failed to send Mattermost notification: {response.status_code}")
                 return False
 
     except Exception as e:
@@ -75,12 +62,7 @@ async def send_mattermost_notification(
 
 
 async def notify_issue_created(
-    feedback_id: int,
-    issue_url: str,
-    priority: str,
-    category: str,
-    feedback_type: str,
-    comment_preview: str
+    feedback_id: int, issue_url: str, priority: str, category: str, feedback_type: str, comment_preview: str
 ) -> bool:
     """
     Send notification when a new issue is created from feedback.
@@ -97,20 +79,11 @@ async def notify_issue_created(
         True if notification sent successfully
     """
     # Determine emoji based on priority
-    priority_emoji = {
-        "P0": "🚨",
-        "P1": "⚠️",
-        "P2": "📋",
-        "P3": "💡"
-    }
+    priority_emoji = {"P0": "🚨", "P1": "⚠️", "P2": "📋", "P3": "💡"}
     emoji = priority_emoji.get(priority, "📝")
 
     # Determine type label
-    type_label = {
-        "bug_report": "🐛 Bug",
-        "feature_request": "✨ Feature Request",
-        "feedback": "💬 Feedback"
-    }
+    type_label = {"bug_report": "🐛 Bug", "feature_request": "✨ Feature Request", "feedback": "💬 Feedback"}
     type_str = type_label.get(feedback_type, "📝 Feedback")
 
     # Truncate comment if too long
@@ -135,10 +108,7 @@ async def notify_issue_created(
 
 
 async def notify_duplicate_detected(
-    feedback_id: int,
-    duplicates: List[Dict[str, any]],
-    category: str,
-    comment_preview: str
+    feedback_id: int, duplicates: List[Dict[str, any]], category: str, comment_preview: str
 ) -> bool:
     """
     Send notification when duplicate issues are detected.
@@ -183,12 +153,7 @@ Issue creation skipped. Consider commenting on existing issue instead.
 
 
 async def notify_high_priority_feedback(
-    feedback_id: int,
-    priority: str,
-    category: str,
-    rating: int,
-    comment_preview: str,
-    sentiment: Optional[str] = None
+    feedback_id: int, priority: str, category: str, rating: int, comment_preview: str, sentiment: Optional[str] = None
 ) -> bool:
     """
     Send immediate notification for high-priority feedback (P0/P1).
@@ -236,10 +201,7 @@ async def notify_high_priority_feedback(
 
 
 async def notify_automation_summary(
-    processed: int,
-    issues_created: int,
-    skipped_duplicates: int,
-    errors: Optional[List[str]] = None
+    processed: int, issues_created: int, skipped_duplicates: int, errors: Optional[List[str]] = None
 ) -> bool:
     """
     Send summary notification after automated processing.

@@ -13,8 +13,8 @@ metadata:
     component: cronjob
     survey-type: deep_dive
 spec:
-  schedule: "0 9 1 1,4,7,10 *"  # Jan 1, Apr 1, Jul 1, Oct 1 at 9:00 AM
-  timeZone: "America/New_York"  # Adjust to your timezone
+  schedule: "0 9 1 1,4,7,10 *" # Jan 1, Apr 1, Jul 1, Oct 1 at 9:00 AM
+  timeZone: "America/New_York" # Adjust to your timezone
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
@@ -30,16 +30,16 @@ spec:
           serviceAccountName: devex-survey-automation
           restartPolicy: OnFailure
           containers:
-          - name: distribute-deepdive-survey
-            image: curlimages/curl:latest
-            command:
-            - /bin/sh
-            - -c
-            - |
-              curl -X POST http://devex-survey-automation.fawkes.svc:8000/api/v1/survey/distribute \
-                -H "Content-Type: application/json" \
-                -d '{"type": "deep_dive", "test_mode": false}' \
-                -f || exit 1
+            - name: distribute-deepdive-survey
+              image: curlimages/curl:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  curl -X POST http://devex-survey-automation.fawkes.svc:8000/api/v1/survey/distribute \
+                    -H "Content-Type: application/json" \
+                    -d '{"type": "deep_dive", "test_mode": false}' \
+                    -f || exit 1
           securityContext:
             runAsNonRoot: true
             runAsUser: 65534

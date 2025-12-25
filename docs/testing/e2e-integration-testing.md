@@ -353,11 +353,13 @@ Run E2E tests on a schedule:
 **Symptom**: Tests fail before reaching component health checks
 
 **Causes**:
+
 - Cluster not accessible
 - Required tools not installed
 - Incorrect namespace configuration
 
 **Solutions**:
+
 ```bash
 # Verify cluster access
 kubectl cluster-info
@@ -375,11 +377,13 @@ apt-get install kubectl jq    # Ubuntu/Debian
 **Symptom**: One or more components reported as unhealthy
 
 **Causes**:
+
 - Component not deployed
 - Component pods not running
 - Resource constraints
 
 **Solutions**:
+
 ```bash
 # Check component status
 kubectl get pods -n fawkes
@@ -398,11 +402,13 @@ kubectl top pods -n fawkes
 **Symptom**: ArgoCD sync validation fails
 
 **Causes**:
+
 - ArgoCD not deployed
 - No applications configured
 - Auto-sync not enabled
 
 **Solutions**:
+
 ```bash
 # Check ArgoCD
 kubectl get deployment argocd-server -n fawkes
@@ -420,11 +426,13 @@ argocd app get <app-name>
 **Symptom**: DORA metrics validation fails
 
 **Causes**:
+
 - DevLake not deployed
 - Webhook configuration missing
 - Network policies blocking traffic
 
 **Solutions**:
+
 ```bash
 # Check DevLake
 kubectl get pods -n fawkes-devlake
@@ -445,6 +453,7 @@ Run tests with maximum verbosity:
 ```
 
 This will:
+
 - Show detailed progress for each test
 - Preserve test resources for inspection
 - Display all kubectl/API calls
@@ -567,20 +576,20 @@ E2E tests are compatible with:
 
 ### Expected Test Duration
 
-| Test Phase | Duration | Notes |
-|------------|----------|-------|
-| Pre-flight checks | 10s | Tool and cluster verification |
-| Component health | 20s | Pod status checks |
-| Scaffold validation | 15s | Template structure checks |
-| Build pipeline | 30s | Pipeline configuration check |
-| Security scanning | 30s | Tool integration verification |
-| GitOps deployment | 45s | ArgoCD sync validation |
-| DORA metrics | 20s | DevLake connectivity check |
-| Observability | 30s | Monitoring stack validation |
-| Integration points | 40s | All integrations verified |
-| Performance checks | 20s | Resource utilization |
-| Automation validation | 15s | Auto-sync verification |
-| **Total** | **~5 minutes** | Complete test suite |
+| Test Phase            | Duration       | Notes                         |
+| --------------------- | -------------- | ----------------------------- |
+| Pre-flight checks     | 10s            | Tool and cluster verification |
+| Component health      | 20s            | Pod status checks             |
+| Scaffold validation   | 15s            | Template structure checks     |
+| Build pipeline        | 30s            | Pipeline configuration check  |
+| Security scanning     | 30s            | Tool integration verification |
+| GitOps deployment     | 45s            | ArgoCD sync validation        |
+| DORA metrics          | 20s            | DevLake connectivity check    |
+| Observability         | 30s            | Monitoring stack validation   |
+| Integration points    | 40s            | All integrations verified     |
+| Performance checks    | 20s            | Resource utilization          |
+| Automation validation | 15s            | Auto-sync verification        |
+| **Total**             | **~5 minutes** | Complete test suite           |
 
 ### Resource Requirements
 

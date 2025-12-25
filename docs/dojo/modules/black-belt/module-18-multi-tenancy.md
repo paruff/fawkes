@@ -7,6 +7,7 @@
 **Duration**: 90 minutes
 **Difficulty**: Expert
 **Prerequisites**:
+
 - Module 17: Platform Architecture complete
 - Deep Kubernetes knowledge
 - Security fundamentals
@@ -27,6 +28,7 @@ By the end of this module, you will:
 7. ✅ Handle tenant lifecycle management
 
 **DORA Capabilities Addressed**:
+
 - ✓ Security & Compliance
 - ✓ Access Control
 - ✓ Team Autonomy (with guardrails)
@@ -70,11 +72,13 @@ Cluster: production
 ```
 
 **Pros**:
+
 - ✅ Simple to implement
 - ✅ Low overhead
 - ✅ Easy cross-team communication
 
 **Cons**:
+
 - ❌ Shared control plane (noisy neighbor)
 - ❌ Limited isolation
 - ❌ Version lock (same K8s version)
@@ -96,12 +100,14 @@ Host Cluster
 ```
 
 **Pros**:
+
 - ✅ Full Kubernetes API per tenant
 - ✅ Different versions possible
 - ✅ Better isolation
 - ✅ Admin-level access per tenant
 
 **Cons**:
+
 - ❌ More complex
 - ❌ Higher resource overhead
 - ❌ Cross-vCluster networking tricky
@@ -120,11 +126,13 @@ Host Cluster
 ```
 
 **Pros**:
+
 - ✅ Complete isolation
 - ✅ Full autonomy
 - ✅ Blast radius contained
 
 **Cons**:
+
 - ❌ High cost
 - ❌ Management overhead
 - ❌ Shared services duplication
@@ -187,25 +195,25 @@ metadata:
   name: developer
   namespace: team-alpha-prod
 rules:
-# Read access to most resources
-- apiGroups: [""]
-  resources: ["pods", "services", "configmaps", "secrets"]
-  verbs: ["get", "list", "watch"]
+  # Read access to most resources
+  - apiGroups: [""]
+    resources: ["pods", "services", "configmaps", "secrets"]
+    verbs: ["get", "list", "watch"]
 
-# Write access to deployments
-- apiGroups: ["apps"]
-  resources: ["deployments", "replicasets"]
-  verbs: ["get", "list", "watch", "create", "update", "patch"]
+  # Write access to deployments
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
 
-# Execute into pods for debugging
-- apiGroups: [""]
-  resources: ["pods/exec"]
-  verbs: ["create"]
+  # Execute into pods for debugging
+  - apiGroups: [""]
+    resources: ["pods/exec"]
+    verbs: ["create"]
 
-# View logs
-- apiGroups: [""]
-  resources: ["pods/log"]
-  verbs: ["get"]
+  # View logs
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get"]
 ```
 
 #### 2. Admin Role (Namespace-scoped)
@@ -217,10 +225,10 @@ metadata:
   name: team-admin
   namespace: team-alpha-prod
 rules:
-# Full access to namespace resources
-- apiGroups: ["*"]
-  resources: ["*"]
-  verbs: ["*"]
+  # Full access to namespace resources
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
 ```
 
 #### 3. Platform Admin Role (Cluster-scoped)
@@ -231,14 +239,14 @@ kind: ClusterRole
 metadata:
   name: platform-admin
 rules:
-# Full cluster access
-- apiGroups: ["*"]
-  resources: ["*"]
-  verbs: ["*"]
+  # Full cluster access
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
 
-# Access to cluster-scoped resources
-- nonResourceURLs: ["*"]
-  verbs: ["*"]
+  # Access to cluster-scoped resources
+  - nonResourceURLs: ["*"]
+    verbs: ["*"]
 ```
 
 #### 4. Read-Only Role (Cluster-scoped)
@@ -249,9 +257,9 @@ kind: ClusterRole
 metadata:
   name: read-only
 rules:
-- apiGroups: ["*"]
-  resources: ["*"]
-  verbs: ["get", "list", "watch"]
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
 ```
 
 ### RoleBinding Examples
@@ -264,9 +272,9 @@ metadata:
   name: alice-developer
   namespace: team-alpha-prod
 subjects:
-- kind: User
-  name: alice@company.com
-  apiGroup: rbac.authorization.k8s.io
+  - kind: User
+    name: alice@company.com
+    apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: Role
   name: developer
@@ -280,9 +288,9 @@ metadata:
   name: team-alpha-admins
   namespace: team-alpha-prod
 subjects:
-- kind: Group
-  name: team-alpha-leads
-  apiGroup: rbac.authorization.k8s.io
+  - kind: Group
+    name: team-alpha-leads
+    apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: Role
   name: team-admin
@@ -295,9 +303,9 @@ kind: ClusterRoleBinding
 metadata:
   name: platform-admins
 subjects:
-- kind: Group
-  name: platform-team
-  apiGroup: rbac.authorization.k8s.io
+  - kind: Group
+    name: platform-team
+    apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
   name: platform-admin
@@ -322,12 +330,12 @@ metadata:
   name: deployer
   namespace: team-alpha-prod
 rules:
-- apiGroups: ["apps"]
-  resources: ["deployments"]
-  verbs: ["get", "list", "update", "patch"]
-- apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["get", "list"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
 
 ---
 # Bind role to service account
@@ -337,9 +345,9 @@ metadata:
   name: ci-deployer-binding
   namespace: team-alpha-prod
 subjects:
-- kind: ServiceAccount
-  name: ci-deployer
-  namespace: team-alpha-prod
+  - kind: ServiceAccount
+    name: ci-deployer
+    namespace: team-alpha-prod
 roleRef:
   kind: Role
   name: deployer
@@ -404,19 +412,19 @@ metadata:
   namespace: team-alpha-prod
 spec:
   limits:
-  - max:
-      cpu: "4"
-      memory: "8Gi"
-    min:
-      cpu: "10m"
-      memory: "10Mi"
-    default:
-      cpu: "500m"
-      memory: "512Mi"
-    defaultRequest:
-      cpu: "100m"
-      memory: "128Mi"
-    type: Container
+    - max:
+        cpu: "4"
+        memory: "8Gi"
+      min:
+        cpu: "10m"
+        memory: "10Mi"
+      default:
+        cpu: "500m"
+        memory: "512Mi"
+      defaultRequest:
+        cpu: "100m"
+        memory: "128Mi"
+      type: Container
 
 ---
 # Network Policy (deny all by default)
@@ -428,8 +436,8 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
 ```
 
 ### Automated Namespace Provisioning
@@ -834,8 +842,8 @@ metadata:
 spec:
   priorityClassName: critical
   containers:
-  - name: app
-    image: myapp:v1.0
+    - name: app
+      image: myapp:v1.0
 ```
 
 ---
@@ -855,8 +863,8 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
 ```
 
 **Allow Within Namespace**
@@ -870,10 +878,10 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
+    - Ingress
   ingress:
-  - from:
-    - podSelector: {}
+    - from:
+        - podSelector: {}
 ```
 
 **Allow from Ingress**
@@ -889,15 +897,15 @@ spec:
     matchLabels:
       role: frontend
   policyTypes:
-  - Ingress
+    - Ingress
   ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: ingress-nginx
-    ports:
-    - protocol: TCP
-      port: 8080
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8080
 ```
 
 **Allow Egress to DNS and External**
@@ -911,22 +919,22 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
-  - Egress
+    - Egress
   egress:
-  # Allow DNS
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          name: kube-system
-    ports:
-    - protocol: UDP
-      port: 53
-  # Allow external HTTPS
-  - to:
-    - podSelector: {}
-    ports:
-    - protocol: TCP
-      port: 443
+    # Allow DNS
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+    # Allow external HTTPS
+    - to:
+        - podSelector: {}
+      ports:
+        - protocol: TCP
+          port: 443
 ```
 
 ---
@@ -938,6 +946,7 @@ spec:
 Design multi-tenancy for 10 engineering teams.
 
 **Requirements**:
+
 - Namespace isolation
 - RBAC for developers and admins
 - Resource quotas per team
@@ -948,39 +957,46 @@ Design multi-tenancy for 10 engineering teams.
 ### Tasks
 
 **Task 1: Design Tenancy Model**
+
 - [ ] Choose model (namespace/vcluster/cluster)
 - [ ] Define namespace naming convention
 - [ ] Create namespace template
 
 **Task 2: Implement RBAC**
+
 - [ ] Create developer role
 - [ ] Create admin role
 - [ ] Create read-only role
 - [ ] Set up RoleBindings
 
 **Task 3: Configure Resource Management**
+
 - [ ] Define quota tiers (small/medium/large)
 - [ ] Create LimitRanges
 - [ ] Set up PriorityClasses
 
 **Task 4: Implement Network Isolation**
+
 - [ ] Default deny all traffic
 - [ ] Allow intra-namespace
 - [ ] Allow from ingress
 - [ ] Allow DNS and external
 
 **Task 5: Policy Enforcement**
+
 - [ ] Require labels policy
 - [ ] Block privileged containers
 - [ ] Enforce resource limits
 - [ ] Restrict image registries
 
 **Task 6: Automation**
+
 - [ ] Namespace provisioning script
 - [ ] RBAC automation
 - [ ] Onboarding documentation
 
 **Validation**:
+
 - [ ] Namespace isolation working
 - [ ] RBAC permissions correct
 - [ ] Resource quotas enforced
@@ -993,48 +1009,55 @@ Design multi-tenancy for 10 engineering teams.
 ## 🎓 Part 8: Knowledge Check
 
 1. **What's the lightest multi-tenancy model?**
+
    - [x] Namespace-per-team
    - [ ] vCluster
    - [ ] Cluster-per-team
    - [ ] Virtual machines
 
 2. **What does RBAC stand for?**
+
    - [ ] Resource-Based Access Control
    - [x] Role-Based Access Control
    - [ ] Rule-Based Access Control
    - [ ] Rights-Based Access Control
 
 3. **Which is cluster-scoped?**
+
    - [ ] Role
    - [x] ClusterRole
    - [ ] RoleBinding
    - [ ] ResourceQuota
 
 4. **What does OPA stand for?**
+
    - [ ] Optimal Policy Agent
    - [x] Open Policy Agent
    - [ ] Orchestrated Policy Administration
    - [ ] Operational Policy Automation
 
 5. **What enforces resource limits per namespace?**
+
    - [ ] NetworkPolicy
    - [ ] PodSecurityPolicy
    - [x] ResourceQuota
    - [ ] RBAC
 
    6. **Default network policy should be:**
+
    - [x] Deny all, whitelist specific traffic
    - [ ] Allow all, blacklist bad traffic
    - [ ] No policy needed
    - [ ] Allow within cluster only
 
-7. **What does vCluster provide?**
+6. **What does vCluster provide?**
+
    - [ ] Virtual machines
    - [ ] Virtual networks
    - [x] Virtual Kubernetes control planes
    - [ ] Virtual storage
 
-8. **Priority Classes are used for:**
+7. **Priority Classes are used for:**
    - [ ] Security levels
    - [ ] Network priority
    - [x] Pod scheduling priority during resource contention
@@ -1068,6 +1091,7 @@ Design multi-tenancy for 10 engineering teams.
 ### Real-World Impact
 
 "After implementing proper multi-tenancy:
+
 - **Onboarding time**: 2 weeks → 1 hour (automation)
 - **Security incidents**: 12/year → 1/year (isolation)
 - **Resource waste**: 40% → 10% (quotas)
@@ -1076,13 +1100,15 @@ Design multi-tenancy for 10 engineering teams.
 - **Compliance**: Manual → Automated (OPA)
 
 We scaled from 5 teams to 50 teams without increasing platform team size."
-- *Platform Director, Tech Unicorn*
+
+- _Platform Director, Tech Unicorn_
 
 ---
 
 ## 📚 Additional Resources
 
 ### Tools
+
 - [vCluster](https://www.vcluster.com/) - Virtual Kubernetes clusters
 - [OPA Gatekeeper](https://open-policy-agent.github.io/gatekeeper/)
 - [Hierarchical Namespaces](https://github.com/kubernetes-sigs/hierarchical-namespaces)
@@ -1090,12 +1116,14 @@ We scaled from 5 teams to 50 teams without increasing platform team size."
 - [Capsule](https://capsule.clastix.io/) - Multi-tenancy operator
 
 ### Documentation
+
 - [Kubernetes Multi-Tenancy](https://kubernetes.io/docs/concepts/security/multi-tenancy/)
 - [RBAC Best Practices](https://kubernetes.io/docs/concepts/security/rbac-good-practices/)
 - [Network Policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 ### Books & Articles
-- *Kubernetes Security* - Liz Rice & Michael Hausenblas
+
+- _Kubernetes Security_ - Liz Rice & Michael Hausenblas
 - [Multi-Tenancy in Kubernetes](https://www.cncf.io/blog/2020/08/31/kubernetes-multi-tenancy/)
 
 ---
@@ -1105,11 +1133,13 @@ We scaled from 5 teams to 50 teams without increasing platform team size."
 ### Assessment Checklist
 
 - [ ] **Conceptual Understanding**
+
   - [ ] Explain tenancy models
   - [ ] Understand RBAC components
   - [ ] Know isolation strategies
 
 - [ ] **Practical Skills**
+
   - [ ] Design namespace strategy
   - [ ] Implement RBAC
   - [ ] Create OPA policies
@@ -1117,6 +1147,7 @@ We scaled from 5 teams to 50 teams without increasing platform team size."
   - [ ] Automate provisioning
 
 - [ ] **Hands-On Lab**
+
   - [ ] Multi-tenant platform designed
   - [ ] RBAC implemented correctly
   - [ ] Policies enforcing rules
@@ -1128,6 +1159,7 @@ We scaled from 5 teams to 50 teams without increasing platform team size."
 ### Certification Credit
 
 Upon completion, you earn:
+
 - **10 points** toward Black Belt certification (50% complete)
 - **Badge**: "Multi-Tenancy Architect"
 - **Skill Unlocked**: Enterprise Platform Design
@@ -1152,8 +1184,8 @@ Module 20: Platform Leadership     ░░░░░░░░░░░░  0%
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*
-*Version 1.0 | Last Updated: October 2025*
-*License: MIT | https://github.com/paruff/fawkes*
+_Fawkes Dojo - Where Platform Engineers Are Forged_
+_Version 1.0 | Last Updated: October 2025_
+_License: MIT | https://github.com/paruff/fawkes_
 
 **🎉 Module 18 Complete - Multi-Tenancy Mastery Achieved! 🎉**

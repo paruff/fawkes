@@ -19,9 +19,11 @@
 ## 🎯 Three Epic Overview
 
 ### Epic 1: DORA 2023 Foundation (Month 1)
+
 **Goal**: Deploy core IDP with automated DORA metrics
 
 **Key Deliverables**:
+
 - Local 4-node Kubernetes cluster
 - GitOps with ArgoCD
 - Developer portal (Backstage)
@@ -38,9 +40,11 @@
 ---
 
 ### Epic 2: AI & Data Platform (Month 2)
+
 **Goal**: Integrate AI capabilities and establish data platform
 
 **Key Deliverables**:
+
 - AI coding assistant (GitHub Copilot)
 - RAG architecture with vector database
 - Data catalog (DataHub)
@@ -57,9 +61,11 @@
 ---
 
 ### Epic 3: Product Discovery & UX (Month 3)
+
 **Goal**: Implement comprehensive product discovery capabilities
 
 **Key Deliverables**:
+
 - User research infrastructure
 - DevEx measurement (SPACE framework)
 - Multi-channel feedback system
@@ -79,54 +85,54 @@
 
 ### Epic 1: DORA 2023 Foundation
 
-| Test ID | Category | Description | Priority |
-|---------|----------|-------------|----------|
-| AT-E1-001 | Infrastructure | Local 4-node K8s cluster deployed | P0 |
-| AT-E1-002 | GitOps | ArgoCD manages all platform components | P0 |
-| AT-E1-003 | Developer Portal | Backstage with 3 templates functional | P0 |
-| AT-E1-004 | CI/CD | Jenkins pipelines build/test/deploy | P0 |
-| AT-E1-005 | Security | DevSecOps scanning integrated | P0 |
-| AT-E1-006 | Observability | Prometheus/Grafana stack deployed | P0 |
-| AT-E1-007 | Metrics | DORA metrics automated (4 key metrics) | P0 |
-| AT-E1-008 | Templates | 3 golden paths work end-to-end | P0 |
-| AT-E1-009 | Registry | Harbor with security scanning | P0 |
-| AT-E1-010 | Performance | Resource usage <70% on cluster | P0 |
-| AT-E1-011 | Documentation | Complete docs and runbooks | P0 |
-| AT-E1-012 | Integration | Full platform workflow validated | P0 |
+| Test ID   | Category         | Description                            | Priority |
+| --------- | ---------------- | -------------------------------------- | -------- |
+| AT-E1-001 | Infrastructure   | Local 4-node K8s cluster deployed      | P0       |
+| AT-E1-002 | GitOps           | ArgoCD manages all platform components | P0       |
+| AT-E1-003 | Developer Portal | Backstage with 3 templates functional  | P0       |
+| AT-E1-004 | CI/CD            | Jenkins pipelines build/test/deploy    | P0       |
+| AT-E1-005 | Security         | DevSecOps scanning integrated          | P0       |
+| AT-E1-006 | Observability    | Prometheus/Grafana stack deployed      | P0       |
+| AT-E1-007 | Metrics          | DORA metrics automated (4 key metrics) | P0       |
+| AT-E1-008 | Templates        | 3 golden paths work end-to-end         | P0       |
+| AT-E1-009 | Registry         | Harbor with security scanning          | P0       |
+| AT-E1-010 | Performance      | Resource usage <70% on cluster         | P0       |
+| AT-E1-011 | Documentation    | Complete docs and runbooks             | P0       |
+| AT-E1-012 | Integration      | Full platform workflow validated       | P0       |
 
 ### Epic 2: AI & Data Platform
 
-| Test ID | Category | Description | Priority |
-|---------|----------|-------------|----------|
-| AT-E2-001 | AI Integration | AI coding assistant functional | P0 |
-| AT-E2-002 | AI Architecture | RAG system with internal context | P0 |
-| AT-E2-003 | Data Platform | DataHub catalog operational | P0 |
-| AT-E2-004 | Data Quality | Great Expectations monitoring | P0 |
-| AT-E2-005 | VSM | Value stream visibility end-to-end | P0 |
-| AT-E2-006 | AI Governance | Clear AI policy and compliance | P0 |
-| AT-E2-007 | AI Automation | AI code review working | P1 |
-| AT-E2-008 | Data API | Unified GraphQL API deployed | P1 |
-| AT-E2-009 | AI Observability | AI-powered anomaly detection | P1 |
-| AT-E2-010 | Discovery Foundation | Basic feedback/NPS tools | P1 |
-| AT-E2-011 | Performance | Resource usage <75% on cluster | P0 |
-| AT-E2-012 | Documentation | Complete Epic 2 docs | P0 |
+| Test ID   | Category             | Description                        | Priority |
+| --------- | -------------------- | ---------------------------------- | -------- |
+| AT-E2-001 | AI Integration       | AI coding assistant functional     | P0       |
+| AT-E2-002 | AI Architecture      | RAG system with internal context   | P0       |
+| AT-E2-003 | Data Platform        | DataHub catalog operational        | P0       |
+| AT-E2-004 | Data Quality         | Great Expectations monitoring      | P0       |
+| AT-E2-005 | VSM                  | Value stream visibility end-to-end | P0       |
+| AT-E2-006 | AI Governance        | Clear AI policy and compliance     | P0       |
+| AT-E2-007 | AI Automation        | AI code review working             | P1       |
+| AT-E2-008 | Data API             | Unified GraphQL API deployed       | P1       |
+| AT-E2-009 | AI Observability     | AI-powered anomaly detection       | P1       |
+| AT-E2-010 | Discovery Foundation | Basic feedback/NPS tools           | P1       |
+| AT-E2-011 | Performance          | Resource usage <75% on cluster     | P0       |
+| AT-E2-012 | Documentation        | Complete Epic 2 docs               | P0       |
 
 ### Epic 3: Product Discovery & UX
 
-| Test ID | Category | Description | Priority |
-|---------|----------|-------------|----------|
-| AT-E3-001 | User Research | Research tooling operational | P0 |
-| AT-E3-002 | DevEx | SPACE framework implemented | P0 |
-| AT-E3-003 | Feedback | Multi-channel feedback system | P0 |
-| AT-E3-004 | Design System | Component library with Storybook | P1 |
-| AT-E3-005 | Journey Mapping | 5 key user journeys documented | P1 |
-| AT-E3-006 | Experimentation | Feature flags and A/B testing | P1 |
-| AT-E3-007 | Analytics | Product usage analytics platform | P1 |
-| AT-E3-008 | Process | Continuous discovery established | P0 |
-| AT-E3-009 | Accessibility | WCAG 2.1 AA compliance >90% | P1 |
-| AT-E3-010 | Usability | Usability testing infrastructure | P1 |
-| AT-E3-011 | Advisory Board | Customer advisory board setup | P2 |
-| AT-E3-012 | Documentation | Complete Epic 3 docs | P0 |
+| Test ID   | Category        | Description                      | Priority |
+| --------- | --------------- | -------------------------------- | -------- |
+| AT-E3-001 | User Research   | Research tooling operational     | P0       |
+| AT-E3-002 | DevEx           | SPACE framework implemented      | P0       |
+| AT-E3-003 | Feedback        | Multi-channel feedback system    | P0       |
+| AT-E3-004 | Design System   | Component library with Storybook | P1       |
+| AT-E3-005 | Journey Mapping | 5 key user journeys documented   | P1       |
+| AT-E3-006 | Experimentation | Feature flags and A/B testing    | P1       |
+| AT-E3-007 | Analytics       | Product usage analytics platform | P1       |
+| AT-E3-008 | Process         | Continuous discovery established | P0       |
+| AT-E3-009 | Accessibility   | WCAG 2.1 AA compliance >90%      | P1       |
+| AT-E3-010 | Usability       | Usability testing infrastructure | P1       |
+| AT-E3-011 | Advisory Board  | Customer advisory board setup    | P2       |
+| AT-E3-012 | Documentation   | Complete Epic 3 docs             | P0       |
 
 ---
 
@@ -154,43 +160,53 @@ Every issue follows this format:
 **Labels**: {epic-X, type-X, comp-X, priority}
 
 ## Description
+
 {Clear description of what needs to be built}
 
 ## Acceptance Criteria
+
 - [ ] {Criterion 1}
 - [ ] {Criterion 2}
 - [ ] {Criterion 3}
 - [ ] Acceptance test {AT-ID} passes
 
 ## Tasks
+
 ### Task {ID}: {Task Name}
+
 **Location**: `{file/directory}`
 **Type**: {terraform/kubernetes/go/python/markdown}
 
 **Copilot Prompt**:
 ```
+
 {Detailed prompt optimized for AI agent}
-```
+
+````
 
 **Validation**:
 ```bash
 {Commands to verify completion}
-```
+````
 
 ## Dependencies
+
 - **Depends on**: #{issue numbers}
 - **Blocks**: #{issue numbers}
 
 ## Definition of Done
+
 - [ ] Code implemented and committed
 - [ ] Tests written and passing
 - [ ] Documentation updated
 - [ ] Acceptance test passes
 
 ## Resources
+
 - [Architecture Doc](link)
 - [ADR-00X](link)
-```
+
+````
 
 ---
 
@@ -391,14 +407,16 @@ per_node_allocation:
   cpu: 4 cores
   memory: 8 GB
   disk: 100 GB
-```
+````
 
 ### Resource Utilization Targets
+
 - **Epic 1 Complete**: <70% CPU/Memory
 - **Epic 2 Complete**: <75% CPU/Memory
 - **Epic 3 Complete**: <75% CPU/Memory (optimized)
 
 ### Cloud Alternative (If Local Insufficient)
+
 ```yaml
 aws_option:
   service: EKS
@@ -418,6 +436,7 @@ azure_option:
 ## ✅ Success Criteria
 
 ### Epic 1 Gate Criteria
+
 - ✅ All 12 acceptance tests passing
 - ✅ 3 sample apps deployed via platform
 - ✅ DORA metrics showing real data
@@ -426,6 +445,7 @@ azure_option:
 - ✅ Can scaffold new app and deploy in <15 minutes
 
 ### Epic 2 Gate Criteria
+
 - ✅ All 12 acceptance tests passing
 - ✅ AI assistant functional with internal context
 - ✅ Data catalog showing all data sources
@@ -434,6 +454,7 @@ azure_option:
 - ✅ Documentation complete
 
 ### Epic 3 Gate Criteria
+
 - ✅ All 12 acceptance tests passing
 - ✅ Complete discovery workflow operational
 - ✅ DevEx measurement showing trends
@@ -487,18 +508,21 @@ For full context, see the Implementation Handoff document in the repo.
 ## 📞 Support & Resources
 
 ### Documentation Locations
+
 - **Architecture**: `docs/architecture.md`
 - **ADRs**: `docs/adr/ADR-001.md` through `ADR-008.md`
 - **Runbooks**: `docs/runbooks/*.md`
 - **Dojo**: `docs/dojo/DOJO_ARCHITECTURE.md`
 
 ### Key Files to Reference
+
 - `GOVERNANCE.md` - Project governance
 - `CODE_OF_CONDUCT.md` - Community standards
 - `PROJECT_CHARTER.md` - Vision and mission
 - `PROJECT_STATUS.md` - Current status tracking
 
 ### Getting Unstuck
+
 1. Check acceptance test validation commands
 2. Review related ADRs for architectural decisions
 3. Search GitHub issues for similar problems
@@ -518,29 +542,36 @@ For full context, see the Implementation Handoff document in the repo.
 **Acceptance Tests**: AT-EX-00Y through AT-EX-00Z
 
 ### Completed This Week
+
 - [ ] Issue #{N}: {Title}
 - [ ] Issue #{N+1}: {Title}
 - [ ] ...
 
 ### In Progress
+
 - [ ] Issue #{N}: {Title} (Status: {%})
 
 ### Blocked
+
 - [ ] Issue #{N}: {Title} (Blocker: {reason})
 
 ### Acceptance Tests Status
+
 - [ ] AT-EX-00Y: {Status}
 - [ ] AT-EX-00Z: {Status}
 
 ### Resource Utilization
+
 - CPU: {%}
 - Memory: {%}
 - Disk: {%}
 
 ### Notes / Learnings
+
 {Any insights, challenges, or discoveries}
 
 ### Next Week Plan
+
 - [ ] Issue #{N}: {Title}
 - [ ] ...
 ```
@@ -550,12 +581,14 @@ For full context, see the Implementation Handoff document in the repo.
 ## 🎯 Critical Paths
 
 ### Must Complete Sequential (No Parallelization)
+
 1. Issue #1 (K8s cluster) → Everything else
 2. Issue #5 (ArgoCD) → All platform components
 3. Issue #9 (Backstage) → Templates and catalog
 4. Issue #29 (DORA service) → Metrics collection
 
 ### Can Parallelize
+
 - Security scanning (Issues #19-22) + Observability (Issues #24-28)
 - AI foundation (Issues #39-43) + Data platform (Issues #45-50)
 - Feedback systems (Issues #85-89) + Design system (Issues #91-95)
@@ -565,6 +598,7 @@ For full context, see the Implementation Handoff document in the repo.
 ## 🔄 Iteration & Feedback
 
 ### After Each Epic
+
 1. Run full acceptance test suite
 2. Document lessons learned
 3. Update resource estimates
@@ -572,6 +606,7 @@ For full context, see the Implementation Handoff document in the repo.
 5. Create epic retrospective issue
 
 ### Monthly Review Questions
+
 - Are we on track with timeline?
 - Do resource limits need adjustment?
 - Should any features be descoped?
@@ -583,6 +618,7 @@ For full context, see the Implementation Handoff document in the repo.
 ## 📦 Deliverable Artifacts
 
 ### Epic 1 Final Deliverables
+
 ```
 deliverables/epic-1/
 ├── architecture-diagrams/
@@ -600,6 +636,7 @@ deliverables/epic-1/
 ```
 
 ### Epic 2 Final Deliverables
+
 ```
 deliverables/epic-2/
 ├── ai-architecture/
@@ -616,6 +653,7 @@ deliverables/epic-2/
 ```
 
 ### Epic 3 Final Deliverables
+
 ```
 deliverables/epic-3/
 ├── research-artifacts/
@@ -635,6 +673,7 @@ deliverables/epic-3/
 ## 🎓 Learning Resources
 
 ### Recommended Reading During Implementation
+
 - **Week 1-2**: Kubernetes documentation, ArgoCD guides
 - **Week 3-4**: DORA State of DevOps reports
 - **Week 5-6**: RAG architecture patterns
@@ -643,6 +682,7 @@ deliverables/epic-3/
 - **Week 11-12**: Continuous Discovery research
 
 ### Communities to Engage
+
 - Platform Engineering community (platformengineering.org)
 - CNCF Slack channels
 - ArgoCD/Backstage GitHub discussions
@@ -652,9 +692,9 @@ deliverables/epic-3/
 
 ## 📝 Version History
 
-| Version | Date | Changes | Author |
-|---------|------|---------|--------|
-| 1.0 | Dec 2024 | Initial comprehensive plan | AI Assistant |
+| Version | Date     | Changes                    | Author       |
+| ------- | -------- | -------------------------- | ------------ |
+| 1.0     | Dec 2024 | Initial comprehensive plan | AI Assistant |
 
 ---
 

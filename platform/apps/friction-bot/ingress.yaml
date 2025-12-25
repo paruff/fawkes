@@ -12,17 +12,17 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-  - hosts:
-    - friction-bot.fawkes.local
-    secretName: friction-bot-tls
+    - hosts:
+        - friction-bot.fawkes.local
+      secretName: friction-bot-tls
   rules:
-  - host: friction-bot.fawkes.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: friction-bot
-            port:
-              number: 8000
+    - host: friction-bot.fawkes.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: friction-bot
+                port:
+                  number: 8000

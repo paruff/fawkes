@@ -15,7 +15,9 @@
 **Status**: ✅ CONFIGURED
 
 **Evidence**:
+
 1. **ArgoCD Application Manifest**: `platform/apps/sonarqube-application.yaml`
+
    - Application name: `sonarqube`
    - Namespace: `fawkes`
    - Source: Helm chart from https://charts.sonarsource.com
@@ -25,6 +27,7 @@
    - Self-heal: ✅ Enabled
 
 2. **Sync Policy Configuration**:
+
    ```yaml
    syncPolicy:
      automated:
@@ -49,11 +52,13 @@
    - SonarQube application file present: ✅
 
 **Deployment Command**:
+
 ```bash
 kubectl apply -f platform/apps/sonarqube-application.yaml
 ```
 
 **Validation Steps** (post-deployment):
+
 ```bash
 # Verify ArgoCD application exists
 kubectl get application -n fawkes sonarqube
@@ -74,7 +79,9 @@ kubectl get application -n fawkes sonarqube -o jsonpath='{.status.health.status}
 **Status**: ✅ CONFIGURED
 
 **Evidence**:
+
 1. **PostgreSQL Cluster Definition**: `platform/apps/postgresql/db-sonarqube-cluster.yaml`
+
    - Cluster name: `db-sonarqube-dev`
    - Instances: 3 (1 primary + 2 replicas)
    - Database: `sonarqube`
@@ -86,12 +93,14 @@ kubectl get application -n fawkes sonarqube -o jsonpath='{.status.health.status}
    - Monitoring: ✅ PodMonitor enabled
 
 2. **Credentials Configuration**: `platform/apps/postgresql/db-sonarqube-credentials.yaml`
+
    - Secret name: `db-sonarqube-credentials`
    - Type: `kubernetes.io/basic-auth`
    - Username: `sonarqube_user`
    - Password: Configured (CHANGE_ME placeholder)
 
 3. **SonarQube Connection Configuration**:
+
    ```yaml
    jdbcOverwrite:
      enable: true
@@ -101,10 +110,11 @@ kubectl get application -n fawkes sonarqube -o jsonpath='{.status.health.status}
      jdbcSecretPasswordKey: "password"
 
    postgresql:
-     enabled: false  # Disable embedded PostgreSQL
+     enabled: false # Disable embedded PostgreSQL
    ```
 
 **Validation Steps** (post-deployment):
+
 ```bash
 # Check PostgreSQL cluster status
 kubectl get cluster -n fawkes db-sonarqube-dev
@@ -128,7 +138,9 @@ kubectl exec -it -n fawkes deployment/sonarqube -- \
 **Status**: ✅ DOCUMENTED
 
 **Evidence**:
+
 1. **Quality Profiles Guide**: `platform/apps/sonarqube/quality-profiles.md` (9,602 characters)
+
    - Comprehensive documentation for creating quality profiles
    - Language-specific profiles defined:
      - **Fawkes Java**: Spring Boot optimized with security rules
@@ -138,17 +150,20 @@ kubectl exec -it -n fawkes deployment/sonarqube -- \
 2. **Profile Definitions**:
 
    **Java Profile Rules**:
+
    - Security: S2068 (hardcoded credentials), S5852 (regex DoS), S4426 (crypto keys)
    - Reliability: S1181 (catching Throwable), S3776 (cognitive complexity)
    - Maintainability: S1192 (string duplication), S1172 (unused parameters)
    - Spring Boot specific: S3749 (constructor injection)
 
    **Python Profile Rules**:
+
    - Security: S1313 (hardcoded IPs), S2245 (random generators), S5247 (SSL/TLS)
    - Reliability: S5754 (boto3 credentials), S3776 (cognitive complexity)
    - Maintainability: S1871 (duplicate branches), S5797 (undefined variables)
 
    **JavaScript Profile Rules**:
+
    - Security: S1523 (dynamic execution), S4829 (SSL/TLS), S5122 (CORS)
    - Reliability: S3776 (cognitive complexity), S1874 (deprecated APIs)
    - Maintainability: S1192 (string duplication), S138 (function length)
@@ -160,6 +175,7 @@ kubectl exec -it -n fawkes deployment/sonarqube -- \
    - Troubleshooting guide included
 
 **Profile Creation Steps** (post-deployment):
+
 ```bash
 # 1. Access SonarQube UI
 open http://sonarqube.127.0.0.1.nip.io
@@ -177,6 +193,7 @@ curl -u admin:${SONAR_PASSWORD} \
 ```
 
 **Validation Steps** (post-deployment):
+
 ```bash
 # List all quality profiles
 curl -u admin:${SONAR_PASSWORD} \
@@ -193,7 +210,9 @@ curl -u admin:${SONAR_PASSWORD} \
 **Status**: ✅ CONFIGURED
 
 **Evidence**:
+
 1. **Ingress Configuration** (in `sonarqube-application.yaml`):
+
    ```yaml
    ingress:
      enabled: true
@@ -210,6 +229,7 @@ curl -u admin:${SONAR_PASSWORD} \
    ```
 
 2. **Service Configuration**:
+
    ```yaml
    service:
      type: ClusterIP
@@ -220,6 +240,7 @@ curl -u admin:${SONAR_PASSWORD} \
    ```
 
 3. **Health Check Endpoints**:
+
    - Liveness: `/api/system/liveness`
    - Readiness: `/api/system/health`
    - Metrics: `/api/monitoring/metrics`
@@ -231,15 +252,18 @@ curl -u admin:${SONAR_PASSWORD} \
    - No privilege escalation
 
 **Access URLs**:
+
 - **Local Development**: http://sonarqube.127.0.0.1.nip.io
 - **Production**: https://sonarqube.fawkes.idp
 - **Port-forward**: `kubectl port-forward -n fawkes svc/sonarqube 9000:9000`
 
 **Default Credentials**:
+
 - Username: `admin`
 - Password: `admin` (⚠️ MUST CHANGE on first login)
 
 **Validation Steps** (post-deployment):
+
 ```bash
 # Check ingress exists
 kubectl get ingress -n fawkes -l app=sonarqube
@@ -266,6 +290,7 @@ open http://sonarqube.127.0.0.1.nip.io
 **File**: `templates/java-service/skeleton/Jenkinsfile`
 
 **Evidence**:
+
 ```groovy
 goldenPathPipeline {
     appName = '${{ values.name }}'
@@ -275,6 +300,7 @@ goldenPathPipeline {
 ```
 
 **Integration Points**:
+
 - Jenkins Shared Library: `goldenPathPipeline`
 - SonarQube Analysis: Maven `sonar:sonar` execution
 - Quality Gate: Enforced via `waitForQualityGate()`
@@ -286,6 +312,7 @@ goldenPathPipeline {
 **File**: `templates/python-service/skeleton/Jenkinsfile`
 
 **Evidence**:
+
 ```groovy
 goldenPathPipeline {
     appName = '${{ values.name }}'
@@ -295,6 +322,7 @@ goldenPathPipeline {
 ```
 
 **Integration Points**:
+
 - Jenkins Shared Library: `goldenPathPipeline`
 - SonarQube Analysis: `sonar-scanner` CLI execution
 - Coverage: `coverage.xml` integration
@@ -307,6 +335,7 @@ goldenPathPipeline {
 **File**: `templates/nodejs-service/skeleton/Jenkinsfile`
 
 **Evidence**:
+
 ```groovy
 goldenPathPipeline {
     appName = '${{ values.name }}'
@@ -316,6 +345,7 @@ goldenPathPipeline {
 ```
 
 **Integration Points**:
+
 - Jenkins Shared Library: `goldenPathPipeline`
 - SonarQube Analysis: `npx sonar-scanner` execution
 - Coverage: `lcov.info` integration
@@ -330,6 +360,7 @@ goldenPathPipeline {
 **File**: `jenkins-shared-library/vars/goldenPathPipeline.groovy`
 
 **SonarQube Analysis Stage** (lines 150-167):
+
 ```groovy
 stage('SonarQube Analysis') {
     steps {
@@ -345,6 +376,7 @@ stage('SonarQube Analysis') {
 ```
 
 **Quality Gate Stage** (lines 168-202):
+
 ```groovy
 stage('Quality Gate') {
     steps {
@@ -370,6 +402,7 @@ ${reportUrl}"""
 ```
 
 **Scanner Functions** (lines 509-565):
+
 - Java: `mvn sonar:sonar` with branch tracking
 - Python: `sonar-scanner` with coverage integration
 - Node.js: `npx sonar-scanner` with lcov integration
@@ -384,6 +417,7 @@ ${reportUrl}"""
 **Feature File**: `tests/bdd/features/sonarqube-integration.feature`
 
 **Scenarios**:
+
 1. ✅ Service Deployment & Persistence
 2. ✅ Jenkins Integration (Golden Path)
 3. ✅ Quality Gate Enforcement (Success)
@@ -391,11 +425,13 @@ ${reportUrl}"""
 5. ✅ Developer Feedback & Access
 
 **Step Definitions**: `tests/bdd/step_definitions/test_sonarqube.py`
+
 - All step definitions implemented
 - 38 steps with context-based fixtures
 - Assertion-based validations
 
 **Test Execution**:
+
 ```bash
 # Install dependencies
 pip install pytest pytest-bdd kubernetes
@@ -419,16 +455,19 @@ pytest tests/bdd/features/sonarqube-integration.feature -k "Service Deployment"
 ### ✅ Created Documentation
 
 1. **Quality Profiles Guide**
+
    - **File**: `platform/apps/sonarqube/quality-profiles.md`
    - **Size**: 9,602 characters
    - **Content**: Profile definitions, setup instructions, troubleshooting
 
 2. **Deployment Guide**
+
    - **File**: `docs/deployment/sonarqube-deployment.md`
    - **Size**: 16,625 characters
    - **Content**: Step-by-step deployment, configuration, monitoring, backup
 
 3. **Deployment Summary**
+
    - **File**: `docs/deployment/sonarqube-deployment-summary.md`
    - **Size**: 14,683 characters
    - **Content**: Complete summary of issue #19 implementation
@@ -479,6 +518,7 @@ spec:
 ```
 
 **Validation**:
+
 - Component properly defined ✅
 - Links to SonarQube UI ✅
 - Kubernetes and ArgoCD annotations ✅
@@ -489,16 +529,19 @@ spec:
 ## Definition of Done
 
 - [x] **Code implemented and committed**
+
   - All configuration files created/verified
   - Documentation written and committed
   - Templates verified to have SonarQube integration
 
 - [x] **Tests written and passing**
+
   - BDD feature file with 5 scenarios
   - Step definitions implemented
   - Tests ready for post-deployment execution
 
 - [x] **Documentation updated**
+
   - Quality profiles guide created
   - Deployment guide created
   - Deployment summary created
@@ -516,11 +559,13 @@ spec:
 Before deploying SonarQube to the cluster:
 
 ### Security
+
 - [ ] Change PostgreSQL passwords in `db-sonarqube-credentials.yaml`
 - [ ] Review security contexts and pod security policies
 - [ ] Plan for External Secrets Operator integration (production)
 
 ### Infrastructure
+
 - [x] PostgreSQL operator installed
 - [x] PostgreSQL cluster definition ready
 - [x] Storage provisioner available
@@ -528,12 +573,14 @@ Before deploying SonarQube to the cluster:
 - [x] ArgoCD operational
 
 ### Configuration
+
 - [x] ArgoCD Application manifest complete
 - [x] PostgreSQL connection configured
 - [x] Ingress hostname configured
 - [x] Resource limits set appropriately
 
 ### Documentation
+
 - [x] Deployment guide complete
 - [x] Quality profiles documented
 - [x] Troubleshooting guide available
@@ -546,11 +593,13 @@ Before deploying SonarQube to the cluster:
 After deploying SonarQube:
 
 1. **Initial Login**
+
    - [ ] Access SonarQube UI
    - [ ] Login with admin/admin
    - [ ] Change admin password immediately
 
 2. **Quality Profiles**
+
    - [ ] Create Fawkes Java profile
    - [ ] Create Fawkes Python profile
    - [ ] Create Fawkes JavaScript profile
@@ -558,12 +607,14 @@ After deploying SonarQube:
    - [ ] Export profiles for backup
 
 3. **Jenkins Integration**
+
    - [ ] Generate scanner token
    - [ ] Add token to Jenkins credentials
    - [ ] Verify Jenkins SonarQube server configuration
    - [ ] Test with sample project
 
 4. **Monitoring**
+
    - [ ] Verify Prometheus metrics scraping
    - [ ] Check health endpoints
    - [ ] Review resource utilization
@@ -580,6 +631,7 @@ After deploying SonarQube:
 ## Success Criteria
 
 ### Technical Success
+
 - ✅ SonarQube pod running and healthy
 - ✅ PostgreSQL connection established
 - ✅ UI accessible via ingress
@@ -587,6 +639,7 @@ After deploying SonarQube:
 - ✅ Metrics exposed for Prometheus
 
 ### Integration Success
+
 - ✅ Jenkins pipeline can trigger analysis
 - ✅ Quality Gate results returned to Jenkins
 - ✅ Analysis results visible in SonarQube UI
@@ -594,6 +647,7 @@ After deploying SonarQube:
 - ✅ Links from Jenkins to SonarQube work
 
 ### Developer Experience
+
 - ✅ Developers can access SonarQube UI
 - ✅ Quality Gate feedback in build logs
 - ✅ Clear error messages on failures
@@ -621,6 +675,7 @@ All acceptance criteria have been met through comprehensive configuration and do
 The SonarQube deployment is fully prepared and can be deployed to the cluster by applying the ArgoCD application manifest. All supporting infrastructure (PostgreSQL, Jenkins integration, quality profiles) is configured and documented.
 
 **Deployment Command**:
+
 ```bash
 kubectl apply -f platform/apps/sonarqube-application.yaml
 ```

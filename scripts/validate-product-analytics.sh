@@ -53,7 +53,7 @@ info() {
 
 # Test 1: Analytics Platform Deployed
 echo "Test 1: Analytics Platform Deployed (Plausible)"
-if kubectl get deployment plausible -n "$NAMESPACE" &>/dev/null; then
+if kubectl get deployment plausible -n "$NAMESPACE" &> /dev/null; then
   READY=$(kubectl get deployment plausible -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
   DESIRED=$(kubectl get deployment plausible -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
   if [[ "$READY" == "$DESIRED" ]] && [[ "$READY" -ge 1 ]]; then
@@ -68,7 +68,7 @@ fi
 # Test 2: Privacy-Compliant Configuration
 echo ""
 echo "Test 2: Privacy-Compliant (GDPR, Cookie-less)"
-if kubectl get configmap plausible-config -n "$NAMESPACE" &>/dev/null; then
+if kubectl get configmap plausible-config -n "$NAMESPACE" &> /dev/null; then
   CONFIG=$(kubectl get configmap plausible-config -n "$NAMESPACE" -o yaml)
 
   if echo "$CONFIG" | grep -q "DISABLE_AUTH: \"false\""; then
@@ -95,7 +95,7 @@ fi
 # Test 3: Backstage Instrumented
 echo ""
 echo "Test 3: Backstage Instrumented with Analytics"
-if kubectl get configmap backstage-app-config -n "$NAMESPACE" &>/dev/null; then
+if kubectl get configmap backstage-app-config -n "$NAMESPACE" &> /dev/null; then
   BACKSTAGE_CONFIG=$(kubectl get configmap backstage-app-config -n "$NAMESPACE" -o yaml)
 
   if echo "$BACKSTAGE_CONFIG" | grep -q "plausible"; then
@@ -138,14 +138,14 @@ pass "Custom event tracking capability available"
 # Test 5: Dashboard Accessible
 echo ""
 echo "Test 5: Dashboard Accessible"
-if kubectl get ingress plausible -n "$NAMESPACE" &>/dev/null; then
+if kubectl get ingress plausible -n "$NAMESPACE" &> /dev/null; then
   HOSTS=$(kubectl get ingress plausible -n "$NAMESPACE" -o jsonpath='{.spec.rules[*].host}')
   pass "Dashboard ingress configured for: $HOSTS"
 
   # Check if service is responding
   POD=$(kubectl get pods -n "$NAMESPACE" -l app=plausible,component=analytics --no-headers -o custom-columns=":metadata.name" | head -1)
   if [[ -n "$POD" ]]; then
-    if kubectl exec -n "$NAMESPACE" "$POD" -- wget -q -O- http://localhost:8000/api/health &>/dev/null; then
+    if kubectl exec -n "$NAMESPACE" "$POD" -- wget -q -O- http://localhost:8000/api/health &> /dev/null; then
       pass "Dashboard health endpoint responding"
     else
       fail "Dashboard health endpoint not responding"
@@ -158,13 +158,13 @@ fi
 # Test 6: Supporting Services
 echo ""
 echo "Test 6: Supporting Services (PostgreSQL, ClickHouse)"
-if kubectl get cluster db-plausible-dev -n "$NAMESPACE" &>/dev/null; then
+if kubectl get cluster db-plausible-dev -n "$NAMESPACE" &> /dev/null; then
   pass "PostgreSQL cluster deployed"
 else
   fail "PostgreSQL cluster not found"
 fi
 
-if kubectl get statefulset plausible-clickhouse -n "$NAMESPACE" &>/dev/null; then
+if kubectl get statefulset plausible-clickhouse -n "$NAMESPACE" &> /dev/null; then
   CH_READY=$(kubectl get statefulset plausible-clickhouse -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
   if [[ "$CH_READY" -ge 1 ]]; then
     pass "ClickHouse ready for analytics data"

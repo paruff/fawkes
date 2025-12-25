@@ -90,9 +90,7 @@ async def prometheus_metrics():
 
 
 @app.get("/api/v1/metrics/space", response_model=SpaceMetricsResponse)
-async def get_space_metrics(
-    time_range: Optional[str] = "30d"
-) -> SpaceMetricsResponse:
+async def get_space_metrics(time_range: Optional[str] = "30d") -> SpaceMetricsResponse:
     """
     Get all SPACE dimension metrics (aggregated)
 
@@ -121,9 +119,7 @@ async def get_space_metrics(
             efficiency = await collect_efficiency_metrics(session, start_time, now)
 
             # Calculate overall health score
-            health_score = calculate_devex_health_score(
-                satisfaction, performance, activity, communication, efficiency
-            )
+            health_score = calculate_devex_health_score(satisfaction, performance, activity, communication, efficiency)
 
             return SpaceMetricsResponse(
                 satisfaction=satisfaction,
@@ -277,9 +273,7 @@ async def get_devex_health():
             communication = await collect_communication_metrics(session, start_time, now)
             efficiency = await collect_efficiency_metrics(session, start_time, now)
 
-            health_score = calculate_devex_health_score(
-                satisfaction, performance, activity, communication, efficiency
-            )
+            health_score = calculate_devex_health_score(satisfaction, performance, activity, communication, efficiency)
 
             return {
                 "health_score": health_score,
@@ -293,4 +287,5 @@ async def get_devex_health():
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

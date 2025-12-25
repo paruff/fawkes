@@ -141,12 +141,7 @@ All components MUST meet WCAG 2.1 AA standards:
 ### Example
 
 ```tsx
-<button
-  type="button"
-  disabled={isDisabled}
-  aria-label="Close dialog"
-  aria-pressed={isPressed}
->
+<button type="button" disabled={isDisabled} aria-label="Close dialog" aria-pressed={isPressed}>
   {children}
 </button>
 ```
@@ -222,6 +217,7 @@ export const Primary: Story = {
 ### Component Documentation
 
 Include:
+
 - Description of the component's purpose
 - Usage examples
 - Props API documentation
@@ -245,15 +241,18 @@ Include:
 
 ```markdown
 ## Description
+
 Brief description of changes
 
 ## Type of Change
+
 - [ ] New component
 - [ ] Bug fix
 - [ ] Enhancement
 - [ ] Documentation
 
 ## Checklist
+
 - [ ] Tests added/updated
 - [ ] Storybook stories added/updated
 - [ ] Accessibility verified

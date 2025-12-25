@@ -7,6 +7,7 @@
 **Duration**: 60 minutes
 **Difficulty**: Advanced
 **Prerequisites**:
+
 - Modules 9, 10, 11 complete
 - Understanding of deployment strategies
 - Familiarity with incident management
@@ -27,6 +28,7 @@ By the end of this module, you will:
 7. ✅ Improve MTTR (Mean Time to Restore) systematically
 
 **DORA Capabilities Addressed**:
+
 - ✓ Mean Time to Restore (MTTR) - Elite target: <1 hour
 - ✓ Change Approval Process (lightweight)
 - ✓ Incident Management
@@ -39,10 +41,10 @@ By the end of this module, you will:
 
 **Downtime cost example** (e-commerce site, $1M/day revenue):
 
-| Duration | Revenue Loss | Customer Impact | Reputation Damage |
-|----------|--------------|-----------------|-------------------|
-| **5 minutes** | $3,472 | Minimal | None |
-| **30 minutes** | $20,833 | Moderate | Minor |
-| **2 hours** | $83,333 | Significant | Moderate |
-| **8 hours** | $333,333 | Severe | Major |
-| **24 hours** | $1,000,000
+| Duration       | Revenue Loss | Customer Impact | Reputation Damage |
+| -------------- | ------------ | --------------- | ----------------- |
+| **5 minutes**  | $3,472       | Minimal         | None              |
+| **30 minutes** | $20,833      | Moderate        | Minor             |
+| **2 hours**    | $83,333      | Significant     | Moderate          |
+| **8 hours**    | $333,333     | Severe          | Major             |
+| **24 hours**   | $1,000,000   |

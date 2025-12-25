@@ -45,23 +45,27 @@ This document provides a summary of the 5 critical user journey maps created to 
 These pain points appear across multiple journeys, indicating systemic issues:
 
 1. **Scattered Information & Documentation** (Journeys 1, 2, 4)
+
    - Documentation across Confluence, Backstage, GitHub
    - Unclear what's current vs. outdated
    - No single source of truth
 
 2. **Manual Processes & Lack of Automation** (Journeys 1, 2, 3, 4)
+
    - Manual YAML creation for services
    - Manual log searching and correlation
    - Manual status updates and notifications
    - Manual environment setup
 
 3. **Limited Visibility & Black Box Experiences** (Journeys 2, 3, 4)
+
    - Unclear deployment status
    - No visibility into request processing
    - Cryptic error messages
    - Unknown when issues are resolved
 
 4. **Insufficient Communication & Feedback** (Journeys 4, 5)
+
    - Sparse updates unless user asks
    - No proactive notifications
    - Unclear timelines and expectations
@@ -75,14 +79,17 @@ These pain points appear across multiple journeys, indicating systemic issues:
 ### Impact by Developer Experience Level
 
 **New Developers (0-3 months)**:
+
 - Most impacted by: Information overload, environment setup, documentation gaps
 - Key journeys: Onboarding, First Deployment
 
 **Intermediate Developers (3-12 months)**:
+
 - Most impacted by: Manual processes, difficult troubleshooting, unclear capabilities
 - Key journeys: Debugging, Feature Requests
 
 **Experienced Developers (12+ months)**:
+
 - Most impacted by: Contribution barriers, visibility into impact
 - Key journeys: Contributing, Feature Requests
 
@@ -93,24 +100,28 @@ These pain points appear across multiple journeys, indicating systemic issues:
 ### Tier 1: Critical & High Impact (Do First)
 
 **1. Unified Observability Dashboard** (Journeys 2, 3)
+
 - Combines metrics, logs, and traces in single view
 - Automatic correlation across services
 - Smart filtering and root cause suggestions
 - **Impact**: Reduces MTTR by 50%, improves developer confidence
 
 **2. Service Creation Wizard** (Journey 2)
+
 - Backstage plugin for generating service manifests
 - Golden path templates for common patterns
 - Resource recommendations based on similar services
 - **Impact**: Reduces deployment time from 8-10 hours to < 4 hours
 
 **3. Automated Environment Setup** (Journey 1)
+
 - One-command setup script
 - Pre-flight validation checks
 - Dev containers for consistency
 - **Impact**: Reduces onboarding time from 3-4 weeks to < 2 weeks
 
 **4. Rich Alert Context** (Journey 3)
+
 - Alerts include affected endpoints, error examples, recent changes
 - Direct links to relevant logs and traces
 - Suggested runbooks
@@ -119,24 +130,28 @@ These pain points appear across multiple journeys, indicating systemic issues:
 ### Tier 2: High Value & Medium Effort
 
 **5. Request Status Dashboard** (Journey 4)
+
 - Transparent view of feature requests
 - Automatic status updates
 - Public roadmap integration
 - **Impact**: Improves requester satisfaction from 5/10 to > 8/10
 
 **6. Hands-On Dojo Learning Labs** (Journey 1)
+
 - Interactive platform training
 - Sandbox environment
 - Progressive learning path
 - **Impact**: Improves new hire satisfaction from 6/10 to > 8/10
 
 **7. Canary Deployments with Auto-Rollback** (Journeys 2, 3)
+
 - Gradual traffic shifting
 - Automatic rollback on errors
 - Clear health indicators
 - **Impact**: Reduces failed deployments from 20% to < 5%
 
 **8. Contribution Impact Dashboard** (Journey 5)
+
 - Shows usage of contributions
 - Tracks adoption and feedback
 - Gamification and recognition
@@ -145,12 +160,14 @@ These pain points appear across multiple journeys, indicating systemic issues:
 ### Tier 3: Nice to Have & Longer Term
 
 **9. AIOps Root Cause Analysis** (Journey 3)
+
 - Automatic pattern detection
 - Predictive alerting
 - Suggested fixes based on history
 - **Impact**: Reduces platform team involvement from 60% to < 20%
 
 **10. Platform Champion Program** (Journeys 4, 5)
+
 - Formal recognition system
 - Community engagement
 - Path to platform team
@@ -162,28 +179,28 @@ These pain points appear across multiple journeys, indicating systemic issues:
 
 ### Current State vs. Target State
 
-| Metric | Current | Target | Journey |
-|--------|---------|--------|---------|
-| **Onboarding** |
-| Time to first deployment | 7-10 days | < 3 days | #1 |
-| Time to independence | 3-4 weeks | < 2 weeks | #1 |
-| New hire satisfaction | 6/10 | > 8/10 | #1 |
-| **Deployment** |
-| Time to deploy new service | 8-10 hours | < 4 hours | #2 |
-| First-time success rate | 40% | > 80% | #2 |
-| Developer confidence | 5/10 | > 8/10 | #2 |
-| **Incidents** |
-| Mean Time to Investigate | 35 min | < 10 min | #3 |
-| Mean Time to Resolve | 80 min | < 30 min | #3 |
-| Incidents requiring platform team | 60% | < 20% | #3 |
-| **Feature Requests** |
-| Time to initial response | 1 week | < 2 days | #4 |
-| Time to prioritization | 4 weeks | < 2 weeks | #4 |
-| Requester satisfaction | 5/10 | > 8/10 | #4 |
-| **Contributions** |
-| Time to first contribution | 4 weeks | < 2 weeks | #5 |
-| Contribution acceptance rate | 60% | > 80% | #5 |
-| Repeat contributors | 30% | > 50% | #5 |
+| Metric                            | Current    | Target    | Journey |
+| --------------------------------- | ---------- | --------- | ------- |
+| **Onboarding**                    |
+| Time to first deployment          | 7-10 days  | < 3 days  | #1      |
+| Time to independence              | 3-4 weeks  | < 2 weeks | #1      |
+| New hire satisfaction             | 6/10       | > 8/10    | #1      |
+| **Deployment**                    |
+| Time to deploy new service        | 8-10 hours | < 4 hours | #2      |
+| First-time success rate           | 40%        | > 80%     | #2      |
+| Developer confidence              | 5/10       | > 8/10    | #2      |
+| **Incidents**                     |
+| Mean Time to Investigate          | 35 min     | < 10 min  | #3      |
+| Mean Time to Resolve              | 80 min     | < 30 min  | #3      |
+| Incidents requiring platform team | 60%        | < 20%     | #3      |
+| **Feature Requests**              |
+| Time to initial response          | 1 week     | < 2 days  | #4      |
+| Time to prioritization            | 4 weeks    | < 2 weeks | #4      |
+| Requester satisfaction            | 5/10       | > 8/10    | #4      |
+| **Contributions**                 |
+| Time to first contribution        | 4 weeks    | < 2 weeks | #5      |
+| Contribution acceptance rate      | 60%        | > 80%     | #5      |
+| Repeat contributors               | 30%        | > 50%     | #5      |
 
 ---
 
@@ -206,6 +223,7 @@ These pain points appear across multiple journeys, indicating systemic issues:
 ### Validation Confidence
 
 All journey maps validated with:
+
 - ✅ Direct quotes from user interviews
 - ✅ Cross-referenced with documented personas
 - ✅ Supported by quantitative metrics
@@ -244,6 +262,7 @@ All journey maps validated with:
 ## Related Documentation
 
 ### Journey Maps
+
 - [Developer Onboarding](01-developer-onboarding.md)
 - [Deploying First App](02-deploying-first-app.md)
 - [Debugging Production Issue](03-debugging-production-issue.md)
@@ -251,11 +270,13 @@ All journey maps validated with:
 - [Contributing to Platform](05-contributing-to-platform.md)
 
 ### Supporting Research
+
 - [Persona Directory](../personas/)
 - [Interview Notes](../interviews/)
 - [Journey Map Template](../templates/journey-map.md)
 
 ### Platform Documentation
+
 - [Architecture Overview](../../architecture.md)
 - [Implementation Plan](../../implementation-plan/IMPLEMENTATION_HANDOFF.md)
 - [Platform Roadmap](../../reference/roadmap.md)

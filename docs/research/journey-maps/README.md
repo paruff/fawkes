@@ -5,6 +5,7 @@ This directory contains user journey maps that visualize how users interact with
 ## About Journey Maps
 
 Journey maps help us:
+
 - Understand the end-to-end user experience
 - Identify pain points and moments of delight
 - Discover improvement opportunities
@@ -14,16 +15,19 @@ Journey maps help us:
 ## Creating a Journey Map
 
 1. **Copy the template**:
+
    ```bash
    cp ../templates/journey-map.md your-journey-name.md
    ```
 
 2. **Choose a specific scenario**:
+
    - Pick one persona and one goal
    - Example: "Platform Engineer deploying new microservice"
    - Focus on a journey users undertake regularly
 
 3. **Map the actual journey** (not the ideal):
+
    - Base on real user research
    - Include both successful and failed paths
    - Document actions, thoughts, emotions at each stage
@@ -38,6 +42,7 @@ Journey maps help us:
 Use: `{persona}-{scenario}.md`
 
 Examples:
+
 - `platform-engineer-incident-response.md`
 - `app-developer-first-deployment.md`
 - `product-manager-metrics-review.md`
@@ -74,6 +79,7 @@ graph LR
 ### Core Developer Workflows
 
 1. **[Developer Onboarding to Fawkes Platform](01-developer-onboarding.md)**
+
    - **Persona**: Application Developer (New Team Member)
    - **Scenario**: First week learning the platform
    - **Key Pain Points**: Environment setup complexity, information overload, scattered documentation
@@ -81,6 +87,7 @@ graph LR
    - **Status**: ✅ Validated with 8 developer interviews
 
 2. **[Deploying First App to Production](02-deploying-first-app.md)**
+
    - **Persona**: Application Developer
    - **Scenario**: First complete new service deployment
    - **Key Pain Points**: Manual YAML creation, cryptic errors, unclear success criteria
@@ -97,6 +104,7 @@ graph LR
 ### Platform Engagement Workflows
 
 4. **[Requesting Platform Feature](04-requesting-platform-feature.md)**
+
    - **Persona**: Application Developer
    - **Scenario**: Requesting canary deployment capability
    - **Key Pain Points**: Black box waiting, no roadmap visibility, sparse communication
@@ -113,6 +121,7 @@ graph LR
 ## Best Practices
 
 ✅ **Do:**
+
 - Base on actual user research (interviews, observations)
 - Include specific examples and quotes
 - Map the current state, not the ideal
@@ -122,6 +131,7 @@ graph LR
 - Update as you learn more
 
 ❌ **Don't:**
+
 - Rely on assumptions without data
 - Create overly complex maps
 - Make it generic (be specific to one persona/scenario)
@@ -134,6 +144,7 @@ graph LR
 **Format**: 2-hour collaborative session
 
 **Steps**:
+
 1. Introduce persona and scenario (10 min)
 2. Brainstorm journey stages (15 min)
 3. Detail actions for each stage (20 min)
@@ -143,6 +154,7 @@ graph LR
 7. Prioritize improvements (15 min)
 
 **Materials**:
+
 - Sticky notes and markers
 - Large whiteboard or paper
 - Research artifacts (interview notes, personas)

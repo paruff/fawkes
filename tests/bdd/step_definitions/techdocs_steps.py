@@ -12,7 +12,7 @@ if not logger.handlers:
     logging.basicConfig(level=logging.INFO)
 
 # Get repository root directory (works in different environments)
-REPO_ROOT = Path(os.getenv('GITHUB_WORKSPACE', Path(__file__).resolve().parent.parent.parent.parent))
+REPO_ROOT = Path(os.getenv("GITHUB_WORKSPACE", Path(__file__).resolve().parent.parent.parent.parent))
 
 
 def load_kube_clients():
@@ -29,52 +29,46 @@ def load_kube_clients():
     return core, apps
 
 
-@given('Backstage is deployed with TechDocs plugin enabled')
+@given("Backstage is deployed with TechDocs plugin enabled")
 def step_given_backstage_techdocs_enabled(context):
     """Verify Backstage deployment exists."""
-    if not getattr(context, 'core_api', None):
+    if not getattr(context, "core_api", None):
         context.core_api, context.apps_api = load_kube_clients()
 
-    context.namespace = getattr(context, 'namespace', 'fawkes')
+    context.namespace = getattr(context, "namespace", "fawkes")
 
     try:
-        deployment = context.apps_api.read_namespaced_deployment(
-            name='backstage',
-            namespace=context.namespace
-        )
+        deployment = context.apps_api.read_namespaced_deployment(name="backstage", namespace=context.namespace)
         logger.info(f"Backstage deployment found")
         context.backstage_deployment = deployment
     except client.exceptions.ApiException as e:
         raise AssertionError(f"Backstage deployment not found: {e}")
 
 
-@given('the catalog contains entities with techdocs-ref annotations')
+@given("the catalog contains entities with techdocs-ref annotations")
 def step_given_catalog_has_techdocs_refs(context):
     """Verify catalog entities have TechDocs annotations."""
     # This is verified in subsequent steps
     context.check_techdocs_refs = True
 
 
-@given('I have access to the Backstage app-config.yaml')
+@given("I have access to the Backstage app-config.yaml")
 def step_given_access_to_app_config(context):
     """Load app-config from ConfigMap."""
-    if not getattr(context, 'core_api', None):
+    if not getattr(context, "core_api", None):
         context.core_api, context.apps_api = load_kube_clients()
 
-    namespace = getattr(context, 'namespace', 'fawkes')
+    namespace = getattr(context, "namespace", "fawkes")
 
     try:
-        configmap = context.core_api.read_namespaced_config_map(
-            name='backstage-app-config',
-            namespace=namespace
-        )
-        context.app_config_yaml = configmap.data.get('app-config.yaml', '')
+        configmap = context.core_api.read_namespaced_config_map(name="backstage-app-config", namespace=namespace)
+        context.app_config_yaml = configmap.data.get("app-config.yaml", "")
         logger.info("Loaded app-config.yaml from ConfigMap")
     except client.exceptions.ApiException as e:
         raise AssertionError(f"Could not load app-config.yaml: {e}")
 
 
-@when('I check the TechDocs configuration')
+@when("I check the TechDocs configuration")
 def step_when_check_techdocs_config(context):
     """Parse TechDocs configuration from app-config."""
     app_config = context.app_config_yaml
@@ -82,7 +76,7 @@ def step_when_check_techdocs_config(context):
     # Parse YAML
     try:
         config_dict = yaml.safe_load(app_config)
-        context.techdocs_config = config_dict.get('techdocs', {})
+        context.techdocs_config = config_dict.get("techdocs", {})
         logger.info(f"TechDocs config: {context.techdocs_config}")
     except yaml.YAMLError as e:
         raise AssertionError(f"Could not parse app-config.yaml: {e}")
@@ -92,10 +86,9 @@ def step_when_check_techdocs_config(context):
 def step_then_techdocs_builder(context, expected_value):
     """Verify TechDocs builder configuration."""
     techdocs_config = context.techdocs_config
-    builder = techdocs_config.get('builder')
+    builder = techdocs_config.get("builder")
 
-    assert builder == expected_value, \
-        f"Expected TechDocs builder '{expected_value}', got '{builder}'"
+    assert builder == expected_value, f"Expected TechDocs builder '{expected_value}', got '{builder}'"
     logger.info(f"TechDocs builder is set to '{builder}'")
 
 
@@ -103,11 +96,10 @@ def step_then_techdocs_builder(context, expected_value):
 def step_then_techdocs_generator(context, expected_value):
     """Verify TechDocs generator configuration."""
     techdocs_config = context.techdocs_config
-    generator = techdocs_config.get('generator', {})
-    run_in = generator.get('runIn')
+    generator = techdocs_config.get("generator", {})
+    run_in = generator.get("runIn")
 
-    assert run_in == expected_value, \
-        f"Expected TechDocs generator runIn '{expected_value}', got '{run_in}'"
+    assert run_in == expected_value, f"Expected TechDocs generator runIn '{expected_value}', got '{run_in}'"
     logger.info(f"TechDocs generator runIn is set to '{run_in}'")
 
 
@@ -115,11 +107,10 @@ def step_then_techdocs_generator(context, expected_value):
 def step_then_techdocs_publisher(context, expected_value):
     """Verify TechDocs publisher configuration."""
     techdocs_config = context.techdocs_config
-    publisher = techdocs_config.get('publisher', {})
-    pub_type = publisher.get('type')
+    publisher = techdocs_config.get("publisher", {})
+    pub_type = publisher.get("type")
 
-    assert pub_type == expected_value, \
-        f"Expected TechDocs publisher type '{expected_value}', got '{pub_type}'"
+    assert pub_type == expected_value, f"Expected TechDocs publisher type '{expected_value}', got '{pub_type}'"
     logger.info(f"TechDocs publisher type is set to '{pub_type}'")
 
 
@@ -127,48 +118,41 @@ def step_then_techdocs_publisher(context, expected_value):
 def step_then_publish_directory(context, expected_path):
     """Verify TechDocs publish directory configuration."""
     techdocs_config = context.techdocs_config
-    publisher = techdocs_config.get('publisher', {})
-    local_config = publisher.get('local', {})
-    publish_dir = local_config.get('publishDirectory')
+    publisher = techdocs_config.get("publisher", {})
+    local_config = publisher.get("local", {})
+    publish_dir = local_config.get("publishDirectory")
 
-    assert publish_dir == expected_path, \
-        f"Expected publish directory '{expected_path}', got '{publish_dir}'"
+    assert publish_dir == expected_path, f"Expected publish directory '{expected_path}', got '{publish_dir}'"
     logger.info(f"TechDocs publish directory is set to '{publish_dir}'")
 
 
-@given('Backstage pods are running in the cluster')
+@given("Backstage pods are running in the cluster")
 def step_given_backstage_pods_running(context):
     """Verify Backstage pods are running."""
-    if not getattr(context, 'core_api', None):
+    if not getattr(context, "core_api", None):
         context.core_api, context.apps_api = load_kube_clients()
 
-    namespace = getattr(context, 'namespace', 'fawkes')
+    namespace = getattr(context, "namespace", "fawkes")
 
-    pods = context.core_api.list_namespaced_pod(
-        namespace=namespace,
-        label_selector='app.kubernetes.io/name=backstage'
-    )
+    pods = context.core_api.list_namespaced_pod(namespace=namespace, label_selector="app.kubernetes.io/name=backstage")
 
-    running_pods = [p for p in pods.items if p.status.phase == 'Running']
+    running_pods = [p for p in pods.items if p.status.phase == "Running"]
     assert len(running_pods) > 0, "No running Backstage pods found"
 
     context.backstage_pods = running_pods
     logger.info(f"Found {len(running_pods)} running Backstage pods")
 
 
-@when('I check the Backstage deployment configuration')
+@when("I check the Backstage deployment configuration")
 def step_when_check_deployment_config(context):
     """Load deployment configuration."""
-    if not getattr(context, 'core_api', None):
+    if not getattr(context, "core_api", None):
         context.core_api, context.apps_api = load_kube_clients()
 
-    namespace = getattr(context, 'namespace', 'fawkes')
+    namespace = getattr(context, "namespace", "fawkes")
 
     try:
-        deployment = context.apps_api.read_namespaced_deployment(
-            name='backstage',
-            namespace=namespace
-        )
+        deployment = context.apps_api.read_namespaced_deployment(name="backstage", namespace=namespace)
         context.backstage_deployment = deployment
         logger.info("Loaded Backstage deployment configuration")
     except client.exceptions.ApiException as e:
@@ -182,8 +166,9 @@ def step_then_deployment_has_volume(context, volume_name):
     volumes = deployment.spec.template.spec.volumes or []
 
     volume_names = [v.name for v in volumes]
-    assert volume_name in volume_names, \
-        f"Volume '{volume_name}' not found in deployment. Available volumes: {volume_names}"
+    assert (
+        volume_name in volume_names
+    ), f"Volume '{volume_name}' not found in deployment. Available volumes: {volume_names}"
 
     # Store the volume for further checks
     context.checked_volume = next(v for v in volumes if v.name == volume_name)
@@ -212,41 +197,41 @@ def step_then_volume_mounted_at(context, mount_path):
     assert found_mount, f"No volume mounted at '{mount_path}'"
 
 
-@then('the volume should be writable')
+@then("the volume should be writable")
 def step_then_volume_writable(context):
     """Verify volume mount is writable (not read-only)."""
     volume_mount = context.checked_volume_mount
 
     # Check if read_only is False or None (defaults to writable)
-    is_readonly = volume_mount.read_only if hasattr(volume_mount, 'read_only') else False
+    is_readonly = volume_mount.read_only if hasattr(volume_mount, "read_only") else False
 
     assert not is_readonly, f"Volume mount is read-only but should be writable"
     logger.info("Volume mount is writable")
 
 
-@given('the Fawkes platform catalog is loaded')
+@given("the Fawkes platform catalog is loaded")
 def step_given_catalog_loaded(context):
     """Verify catalog is accessible."""
     # Load catalog-info.yaml from repository
-    catalog_path = REPO_ROOT / 'catalog-info.yaml'
+    catalog_path = REPO_ROOT / "catalog-info.yaml"
 
     if not catalog_path.exists():
         raise AssertionError(f"Catalog file not found at {catalog_path}")
 
-    with open(catalog_path, 'r') as f:
+    with open(catalog_path, "r") as f:
         context.catalog_data = yaml.safe_load_all(f)
         context.catalog_entities = list(context.catalog_data)
 
     logger.info(f"Loaded {len(context.catalog_entities)} entities from catalog")
 
 
-@when('I check the Backstage component in the catalog')
+@when("I check the Backstage component in the catalog")
 def step_when_check_backstage_component(context):
     """Find Backstage component in catalog."""
     backstage_component = None
 
     for entity in context.catalog_entities:
-        if entity.get('kind') == 'Component' and entity.get('metadata', {}).get('name') == 'backstage':
+        if entity.get("kind") == "Component" and entity.get("metadata", {}).get("name") == "backstage":
             backstage_component = entity
             break
 
@@ -259,10 +244,11 @@ def step_when_check_backstage_component(context):
 def step_then_has_annotation(context, annotation_key):
     """Verify entity has specified annotation."""
     entity = context.backstage_component
-    annotations = entity.get('metadata', {}).get('annotations', {})
+    annotations = entity.get("metadata", {}).get("annotations", {})
 
-    assert annotation_key in annotations, \
-        f"Annotation '{annotation_key}' not found. Available annotations: {list(annotations.keys())}"
+    assert (
+        annotation_key in annotations
+    ), f"Annotation '{annotation_key}' not found. Available annotations: {list(annotations.keys())}"
 
     context.checked_annotation_value = annotations[annotation_key]
     logger.info(f"Found annotation '{annotation_key}' with value '{context.checked_annotation_value}'")
@@ -273,25 +259,24 @@ def step_then_annotation_value(context, expected_value):
     """Verify annotation value."""
     actual_value = context.checked_annotation_value
 
-    assert actual_value == expected_value, \
-        f"Expected annotation value '{expected_value}', got '{actual_value}'"
+    assert actual_value == expected_value, f"Expected annotation value '{expected_value}', got '{actual_value}'"
     logger.info(f"Annotation value matches expected: '{actual_value}'")
 
 
-@given('I have the Python service template')
+@given("I have the Python service template")
 def step_given_python_template(context):
     """Load Python service template."""
-    template_path = REPO_ROOT / 'templates' / 'python-service' / 'skeleton'
+    template_path = REPO_ROOT / "templates" / "python-service" / "skeleton"
 
     assert template_path.exists(), f"Python template not found at {template_path}"
     context.template_path = template_path
     logger.info(f"Found Python service template at {template_path}")
 
 
-@when('I check the template skeleton')
+@when("I check the template skeleton")
 def step_when_check_template_skeleton(context):
     """Check template skeleton contents."""
-    context.template_files = list(context.template_path.rglob('*'))
+    context.template_files = list(context.template_path.rglob("*"))
     logger.info(f"Template contains {len(context.template_files)} files")
 
 
@@ -309,8 +294,7 @@ def step_then_contains_directory(context, dirname):
     """Verify template contains specified directory."""
     dir_path = context.template_path / dirname
 
-    assert dir_path.exists() and dir_path.is_dir(), \
-        f"Directory '{dirname}' not found in template at {dir_path}"
+    assert dir_path.exists() and dir_path.is_dir(), f"Directory '{dirname}' not found in template at {dir_path}"
 
     context.checked_directory = dir_path
     logger.info(f"Found directory '{dirname}' in template")
@@ -319,30 +303,30 @@ def step_then_contains_directory(context, dirname):
 @then('the docs directory should contain "{filename}"')
 def step_then_docs_contains(context, filename):
     """Verify docs directory contains specified file."""
-    docs_path = context.template_path / 'docs'
+    docs_path = context.template_path / "docs"
     file_path = docs_path / filename
 
     assert file_path.exists(), f"File '{filename}' not found in docs directory at {file_path}"
     logger.info(f"Found '{filename}' in docs directory")
 
 
-@given('I have a service template skeleton')
+@given("I have a service template skeleton")
 def step_given_service_template(context):
     """Load a service template skeleton."""
     # Use Python template as example
-    template_path = REPO_ROOT / 'templates' / 'python-service' / 'skeleton'
+    template_path = REPO_ROOT / "templates" / "python-service" / "skeleton"
     assert template_path.exists(), f"Template not found at {template_path}"
     context.template_path = template_path
 
 
-@when('I check the catalog-info.yaml in the skeleton')
+@when("I check the catalog-info.yaml in the skeleton")
 def step_when_check_catalog_info(context):
     """Load catalog-info.yaml from template."""
-    catalog_path = context.template_path / 'catalog-info.yaml'
+    catalog_path = context.template_path / "catalog-info.yaml"
 
     assert catalog_path.exists(), f"catalog-info.yaml not found at {catalog_path}"
 
-    with open(catalog_path, 'r') as f:
+    with open(catalog_path, "r") as f:
         context.template_catalog = yaml.safe_load(f)
 
     logger.info("Loaded catalog-info.yaml from template")
@@ -355,13 +339,13 @@ def step_then_annotation_points_to(context, expected_value):
     step_then_annotation_value(context, expected_value)
 
 
-@given('a service repository with mkdocs.yml and docs directory')
+@given("a service repository with mkdocs.yml and docs directory")
 def step_given_service_with_docs(context):
     """Verify service has documentation structure."""
     # Use the main repository as an example
     repo_path = REPO_ROOT
-    mkdocs_path = repo_path / 'mkdocs.yml'
-    docs_path = repo_path / 'docs'
+    mkdocs_path = repo_path / "mkdocs.yml"
+    docs_path = repo_path / "docs"
 
     assert mkdocs_path.exists(), "mkdocs.yml not found"
     assert docs_path.exists() and docs_path.is_dir(), "docs directory not found"
@@ -370,14 +354,14 @@ def step_given_service_with_docs(context):
     logger.info("Service has mkdocs.yml and docs directory")
 
 
-@given('the repository is registered in the Backstage catalog')
+@given("the repository is registered in the Backstage catalog")
 def step_given_repo_in_catalog(context):
     """Assume repository is registered."""
     # This would be verified by checking the catalog
     logger.info("Repository is registered in catalog")
 
 
-@when('TechDocs processes the documentation')
+@when("TechDocs processes the documentation")
 def step_when_techdocs_processes(context):
     """Simulate TechDocs processing."""
     # This would require actually running mkdocs or checking logs
@@ -386,31 +370,31 @@ def step_when_techdocs_processes(context):
     context.techdocs_processed = True
 
 
-@then('the documentation should be generated successfully')
+@then("the documentation should be generated successfully")
 def step_then_docs_generated(context):
     """Verify documentation can be generated."""
     # Verify mkdocs.yml is valid by attempting to parse it
-    repo_path = getattr(context, 'docs_repo_path', REPO_ROOT)
-    mkdocs_path = repo_path / 'mkdocs.yml'
+    repo_path = getattr(context, "docs_repo_path", REPO_ROOT)
+    mkdocs_path = repo_path / "mkdocs.yml"
 
     try:
-        with open(mkdocs_path, 'r') as f:
+        with open(mkdocs_path, "r") as f:
             mkdocs_config = yaml.safe_load(f)
 
-        assert 'site_name' in mkdocs_config, "mkdocs.yml missing site_name"
+        assert "site_name" in mkdocs_config, "mkdocs.yml missing site_name"
         logger.info("mkdocs.yml is valid and can be processed")
     except Exception as e:
         raise AssertionError(f"Could not parse mkdocs.yml: {e}")
 
 
-@then('the generated docs should be stored in /app/techdocs')
+@then("the generated docs should be stored in /app/techdocs")
 def step_then_docs_stored(context):
     """Verify docs storage location."""
     # This is validated by the configuration check
     logger.info("Docs would be stored in /app/techdocs")
 
 
-@then('the docs should be accessible via the Backstage UI')
+@then("the docs should be accessible via the Backstage UI")
 def step_then_docs_accessible(context):
     """Verify docs are accessible."""
     # This would require UI testing
@@ -420,99 +404,100 @@ def step_then_docs_accessible(context):
 # Additional step definitions for UI and integration tests can be added
 # These would require a running Backstage instance or UI testing framework
 
-@given('I am logged into Backstage')
+
+@given("I am logged into Backstage")
 def step_given_logged_in(context):
     """Assume user is logged in."""
     logger.info("User is logged into Backstage")
 
 
-@given('the Fawkes platform component exists in the catalog')
+@given("the Fawkes platform component exists in the catalog")
 def step_given_component_exists(context):
     """Verify component exists in catalog."""
     # Already verified in earlier steps
     logger.info("Fawkes platform component exists in catalog")
 
 
-@when('I navigate to the component\'s documentation tab')
+@when("I navigate to the component's documentation tab")
 def step_when_navigate_to_docs(context):
     """Navigate to documentation tab."""
     logger.info("Would navigate to documentation tab")
 
 
-@then('I should see the rendered documentation')
+@then("I should see the rendered documentation")
 def step_then_see_rendered_docs(context):
     """Verify rendered documentation is visible."""
     logger.info("Rendered documentation would be visible")
 
 
-@then('the documentation should have proper navigation')
+@then("the documentation should have proper navigation")
 def step_then_proper_navigation(context):
     """Verify navigation structure."""
     logger.info("Documentation would have proper navigation")
 
 
-@then('images and links should work correctly')
+@then("images and links should work correctly")
 def step_then_links_work(context):
     """Verify links and images work."""
     logger.info("Links and images would work correctly")
 
 
-@given('I use the Python service template to create a new service')
+@given("I use the Python service template to create a new service")
 def step_given_use_template(context):
     """Simulate using template."""
     logger.info("Would use Python service template")
 
 
-@when('the service is scaffolded and registered in the catalog')
+@when("the service is scaffolded and registered in the catalog")
 def step_when_service_scaffolded(context):
     """Simulate scaffolding."""
     logger.info("Service would be scaffolded")
 
 
-@then('the service should have documentation files')
+@then("the service should have documentation files")
 def step_then_service_has_docs(context):
     """Verify scaffolded service has docs."""
     # Verified by template structure tests
     logger.info("Scaffolded service would have documentation files")
 
 
-@then('the documentation should be viewable in Backstage')
+@then("the documentation should be viewable in Backstage")
 def step_then_docs_viewable(context):
     """Verify documentation is viewable."""
     logger.info("Documentation would be viewable in Backstage")
 
 
-@then('the documentation should render without errors')
+@then("the documentation should render without errors")
 def step_then_renders_without_errors(context):
     """Verify documentation renders correctly."""
     logger.info("Documentation would render without errors")
 
 
-@given('I am deploying Backstage with TechDocs enabled')
+@given("I am deploying Backstage with TechDocs enabled")
 def step_given_deploying_backstage(context):
     """Simulate deployment."""
     logger.info("Deploying Backstage with TechDocs")
 
 
-@when('the Backstage pods start')
+@when("the Backstage pods start")
 def step_when_pods_start(context):
     """Check pod status."""
     step_given_backstage_pods_running(context)
 
 
-@then('the TechDocs backend plugin should load successfully')
+@then("the TechDocs backend plugin should load successfully")
 def step_then_plugin_loads(context):
     """Verify plugin loads."""
     logger.info("TechDocs plugin would load successfully")
 
 
-@then('the logs should not contain TechDocs errors')
+@then("the logs should not contain TechDocs errors")
 def step_then_no_errors_in_logs(context):
     """Check logs for errors."""
     logger.info("Would check logs for TechDocs errors")
 
 
-@then('the health check should pass')
+@then("the health check should pass")
 def step_then_health_check_passes(context):
     """Verify health check."""
     logger.info("Health check would pass")

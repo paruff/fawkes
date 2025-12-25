@@ -5,10 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Database configuration from environment variables
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://discovery:discovery@localhost:5432/discovery_metrics"
-)
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://discovery:discovery@localhost:5432/discovery_metrics")
 
 # Create SQLAlchemy engine
 engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_size=5, max_overflow=10)

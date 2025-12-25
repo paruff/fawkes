@@ -18,6 +18,7 @@ Fawkes adopted GitOps as a **core architectural principle** because it directly 
 ### Security: The Credential Problem
 
 **The Traditional Model:**
+
 ```mermaid
 graph LR
     A[Jenkins] -->|Has K8s credentials| B[Production Cluster]
@@ -26,6 +27,7 @@ graph LR
 ```
 
 In push-based CI/CD:
+
 - **Jenkins holds production credentials** - If Jenkins is compromised, so is production
 - **Credentials must be distributed** - Every build agent needs cluster access
 - **Blast radius is massive** - A CI security breach means production breach
@@ -42,6 +44,7 @@ kubectl set env deployment/api LOG_LEVEL=debug
 ```
 
 **The Result:**
+
 - Production state diverges from Git
 - Git is no longer the source of truth
 - Disaster recovery becomes guesswork: "What was the actual config?"
@@ -50,6 +53,7 @@ kubectl set env deployment/api LOG_LEVEL=debug
 ### Auditability: The Black Box Deployment
 
 Push-based deployments create an audit gap:
+
 - Git shows code changes
 - Jenkins shows build execution
 - But the actual deployment? Often just a line in Jenkins logs
@@ -87,16 +91,19 @@ graph TB
 **Key Principles:**
 
 1. **Git as Single Source of Truth**
+
    - Entire desired state lives in Git (applications, configs, infrastructure)
    - Want to know production state? Read Git
    - Want to change production? Open a PR
 
 2. **Declarative Configuration**
+
    - Describe what you want, not how to get there
    - ArgoCD figures out the `kubectl apply` dance
    - Idempotent: Apply the same config 100 times = same result
 
 3. **Automated Sync**
+
    - ArgoCD polls Git every 3 minutes (or use webhooks for instant sync)
    - Detects drift and auto-corrects
    - No manual intervention needed
@@ -128,12 +135,14 @@ spec:
 ```
 
 **What This Enables:**
+
 - Deploy the entire platform with one Application
 - Add a new service? Just add a directory in `platform/apps/`
 - ArgoCD discovers and deploys it automatically
 - Remove a service? Delete its directory and it's undeployed
 
 **The Bootstrap Process:**
+
 1. Install ArgoCD itself (one-time manual step)
 2. Create the root App-of-Apps
 3. Everything else (Jenkins, Backstage, Prometheus) deploys automatically
@@ -142,16 +151,19 @@ spec:
 ### Security Model Shift
 
 **Before (Push Model):**
+
 ```
 CI System → Stores credentials → Deploys to cluster
 ```
 
 **After (Pull Model):**
+
 ```
 CI System → Updates Git → ArgoCD (running IN cluster) syncs
 ```
 
 **Benefits:**
+
 - ✅ **No credentials in CI** - Jenkins doesn't need cluster access
 - ✅ **Credentials never leave cluster** - ArgoCD uses in-cluster service account
 - ✅ **Reduced attack surface** - Compromise CI ≠ Compromise Production
@@ -161,35 +173,35 @@ CI System → Updates Git → ArgoCD (running IN cluster) syncs
 
 ### What GitOps Gives You
 
-| Benefit | Impact | DORA Metric |
-|---------|--------|-------------|
-| **Audit Trail** | Complete Git history of who changed what, when, why | All metrics (compliance reduces incidents) |
-| **Fast Rollback** | `git revert` + auto-sync = 30-second rollback | ⬇️ Time to Restore Service |
-| **Configuration as Code** | No more "snowflake servers" or tribal knowledge | ⬇️ Change Failure Rate |
-| **Self-Healing** | Drift auto-corrected, no manual fixes | ⬇️ Time to Restore Service |
-| **Preview Deployments** | Every PR can have ephemeral environment | ⬆️ Deployment Frequency |
-| **Disaster Recovery** | Cluster dies? Rebuild and re-sync from Git | ⬇️ Time to Restore Service |
+| Benefit                   | Impact                                              | DORA Metric                                |
+| ------------------------- | --------------------------------------------------- | ------------------------------------------ |
+| **Audit Trail**           | Complete Git history of who changed what, when, why | All metrics (compliance reduces incidents) |
+| **Fast Rollback**         | `git revert` + auto-sync = 30-second rollback       | ⬇️ Time to Restore Service                 |
+| **Configuration as Code** | No more "snowflake servers" or tribal knowledge     | ⬇️ Change Failure Rate                     |
+| **Self-Healing**          | Drift auto-corrected, no manual fixes               | ⬇️ Time to Restore Service                 |
+| **Preview Deployments**   | Every PR can have ephemeral environment             | ⬆️ Deployment Frequency                    |
+| **Disaster Recovery**     | Cluster dies? Rebuild and re-sync from Git          | ⬇️ Time to Restore Service                 |
 
 ### What GitOps Costs You
 
-| Challenge | Mitigation |
-|-----------|------------|
-| **Learning Curve** | ArgoCD concepts (Applications, Sync Policies) require training. **Mitigation**: Fawkes Dojo has [GitOps module](../../dojo/modules/green-belt/module-09-gitops-argocd.md) |
-| **Git as Bottleneck** | Emergency fixes must go through Git/PR process. **Mitigation**: "Break-glass" procedure for true emergencies, webhooks for instant sync |
-| **Secret Management** | Can't commit secrets to Git. **Mitigation**: External Secrets Operator fetches from Vault (see [ADR-015](../../adr/ADR-015%20vault%20deployment.md)) |
-| **Sync Delays** | Default 3-minute poll interval. **Mitigation**: Use webhooks for instant notification, or manual refresh for urgent changes |
+| Challenge              | Mitigation                                                                                                                                                                 |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Learning Curve**     | ArgoCD concepts (Applications, Sync Policies) require training. **Mitigation**: Fawkes Dojo has [GitOps module](../../dojo/modules/green-belt/module-09-gitops-argocd.md)  |
+| **Git as Bottleneck**  | Emergency fixes must go through Git/PR process. **Mitigation**: "Break-glass" procedure for true emergencies, webhooks for instant sync                                    |
+| **Secret Management**  | Can't commit secrets to Git. **Mitigation**: External Secrets Operator fetches from Vault (see [ADR-015](../../adr/ADR-015%20vault%20deployment.md))                       |
+| **Sync Delays**        | Default 3-minute poll interval. **Mitigation**: Use webhooks for instant notification, or manual refresh for urgent changes                                                |
 | **Initial Complexity** | Setting up multi-cluster, RBAC, ApplicationSets. **Mitigation**: Fawkes provides bootstrap templates and [onboarding guide](../../how-to/gitops/onboard-service-argocd.md) |
 
 ### The Cultural Shift
 
 GitOps requires a mindset change:
 
-| Old Habit | New Behavior |
-|-----------|--------------|
-| "I'll just `kubectl edit` this quickly" | "I'll open a PR with the change" |
-| "Let me SSH and debug in prod" | "I'll check Git to see the config" |
+| Old Habit                                        | New Behavior                                           |
+| ------------------------------------------------ | ------------------------------------------------------ |
+| "I'll just `kubectl edit` this quickly"          | "I'll open a PR with the change"                       |
+| "Let me SSH and debug in prod"                   | "I'll check Git to see the config"                     |
 | "The deployment failed, let me retry in Jenkins" | "The sync failed, let me check ArgoCD UI for the diff" |
-| "What's running in production?" | "What's in the `main` branch?" |
+| "What's running in production?"                  | "What's in the `main` branch?"                         |
 
 **This is a feature, not a bug.** Forcing changes through Git creates the paper trail that auditors love and future-you will thank.
 
@@ -198,6 +210,7 @@ GitOps requires a mindset change:
 ### The Landscape
 
 When Fawkes was designed, we evaluated:
+
 - **Flux CD** - CNCF Graduated, excellent tool, more modular
 - **Spinnaker** - Formerly used by Fawkes, powerful but heavyweight
 - **Jenkins X** - Opinionated, too tightly coupled to Jenkins
@@ -206,21 +219,25 @@ When Fawkes was designed, we evaluated:
 ### Why ArgoCD Won
 
 1. **The UI Advantage**
+
    - Visual application topology (see dependencies at a glance)
    - Diff view (Git vs. cluster side-by-side)
    - Real-time sync status
    - **Developer Experience**: Devs troubleshoot faster with visuals
 
 2. **Proven at Scale**
+
    - Used by Intuit, Red Hat, IBM, Adobe
    - 15,000+ GitHub stars
    - CNCF Graduated (highest maturity)
 
 3. **App-of-Apps Pattern**
+
    - Elegant solution for managing platform
    - Mirrors Fawkes' "platform of platforms" architecture
 
 4. **Argo Ecosystem**
+
    - Argo Rollouts (canary deployments)
    - Argo Events (event-driven automation)
    - Argo Workflows (complex pipelines)
@@ -245,6 +262,7 @@ Fawkes prioritized **Developer Experience**, and ArgoCD's UI is a significant UX
 **Fawkes 1.0 (2022-2023):** Used Spinnaker for deployment orchestration
 
 **Why We Left Spinnaker:**
+
 - **Operational Burden**: 10+ microservices just to run Spinnaker itself
 - **Resource Hungry**: 4GB+ RAM for control plane
 - **Configuration Complexity**: Pipelines defined in UI or JSON, hard to version
@@ -289,9 +307,10 @@ When a client asks **"Why can't we just use Jenkins for deployments?"**:
 5. **DORA Alignment**: GitOps directly improves all four key metrics
 
 **Objection Handling:**
-- "But we have Jenkins already!" → *Jenkins still does CI (build/test), ArgoCD does CD (deploy). Separation of concerns.*
-- "GitOps is too slow!" → *Webhooks give instant sync. Plus, slow and safe beats fast and fragile.*
-- "We need manual approval for production!" → *ArgoCD supports manual sync policies. Automation doesn't mean no governance.*
+
+- "But we have Jenkins already!" → _Jenkins still does CI (build/test), ArgoCD does CD (deploy). Separation of concerns._
+- "GitOps is too slow!" → _Webhooks give instant sync. Plus, slow and safe beats fast and fragile._
+- "We need manual approval for production!" → _ArgoCD supports manual sync policies. Automation doesn't mean no governance._
 
 ## Related Reading
 

@@ -21,11 +21,13 @@ Successfully implemented comprehensive automated accessibility testing for the F
 ### 1. Axe-Core Integration ✅
 
 **Files Created/Modified:**
+
 - `design-system/src/a11y.test.tsx` - Comprehensive accessibility test suite
 - `design-system/package.json` - Updated with test scripts and Lighthouse CI
 - `design-system/src/setupTests.ts` - Already configured with jest-axe
 
 **Features:**
+
 - Tests for all major components (Button, Alert, Card, Checkbox, etc.)
 - WCAG 2.1 AA compliance validation
 - Color contrast testing (4.5:1 ratio)
@@ -34,6 +36,7 @@ Successfully implemented comprehensive automated accessibility testing for the F
 - ARIA attribute validation
 
 **Usage:**
+
 ```bash
 cd design-system
 npm run test:a11y              # Run locally
@@ -44,9 +47,11 @@ npm run accessibility:full     # Complete test suite
 ### 2. Lighthouse CI Configuration ✅
 
 **Files Created:**
+
 - `design-system/lighthouserc.json` - Complete Lighthouse CI configuration
 
 **Configuration:**
+
 - Minimum accessibility score: 90/100 (WCAG 2.1 AA)
 - 3 runs for consistency
 - Desktop preset
@@ -54,6 +59,7 @@ npm run accessibility:full     # Complete test suite
 - Automatic report generation
 
 **Quality Gates:**
+
 - Color contrast: ERROR
 - ARIA attributes: ERROR
 - Form labels: ERROR
@@ -65,6 +71,7 @@ npm run accessibility:full     # Complete test suite
 ### 3. CI/CD Pipeline Integration ✅
 
 **GitHub Actions Workflow:**
+
 - File: `.github/workflows/accessibility-testing.yml`
 - Triggers: PR, push to main, daily at 9 AM UTC, manual
 - Jobs:
@@ -74,6 +81,7 @@ npm run accessibility:full     # Complete test suite
   4. `accessibility-report` - Generate summary report
 
 **Jenkins Shared Library:**
+
 - File: `jenkins-shared-library/vars/accessibilityTest.groovy`
 - Integrates with Golden Path pipeline
 - Configurable WCAG level (A, AA, AAA)
@@ -81,6 +89,7 @@ npm run accessibility:full     # Complete test suite
 - Publish HTML reports
 
 **Usage in Jenkinsfile:**
+
 ```groovy
 stage('Accessibility Tests') {
     steps {
@@ -100,6 +109,7 @@ stage('Accessibility Tests') {
 **File:** `platform/apps/grafana/dashboards/accessibility-dashboard.json`
 
 **Dashboard Panels:**
+
 1. Overall Accessibility Score (stat)
 2. Test Pass Rate (stat, 7-day trend)
 3. Critical Violations (stat with thresholds)
@@ -111,6 +121,7 @@ stage('Accessibility Tests') {
 9. WCAG Rule Violations (bar gauge)
 
 **Metrics Tracked:**
+
 - `lighthouse_accessibility_score` - Lighthouse score (0-100)
 - `accessibility_tests_passed` / `accessibility_tests_total` - Pass rate
 - `axe_critical_violations` - Critical violation count
@@ -121,6 +132,7 @@ stage('Accessibility Tests') {
 ### 5. Auto-Issue Creation ✅
 
 **Implementation:**
+
 - Job: `create-accessibility-issues` in GitHub Actions workflow
 - Triggers: Only on main branch or scheduled runs
 - Features:
@@ -132,6 +144,7 @@ stage('Accessibility Tests') {
   - Includes remediation guidance
 
 **Issue Template:**
+
 - Detection date and workflow run link
 - Summary of violations (axe-core, Lighthouse)
 - Action required steps
@@ -143,6 +156,7 @@ stage('Accessibility Tests') {
 **File:** `docs/how-to/accessibility-testing-guide.md`
 
 **Sections:**
+
 - Quick Start
 - Testing Tools Overview
 - Running Tests Locally
@@ -154,6 +168,7 @@ stage('Accessibility Tests') {
 - Resources and Links
 
 **Examples Provided:**
+
 - Missing alt text
 - Poor color contrast
 - Missing form labels
@@ -163,10 +178,12 @@ stage('Accessibility Tests') {
 ### 7. BDD Acceptance Tests ✅
 
 **Files:**
+
 - `tests/bdd/features/accessibility-testing.feature` - 16 test scenarios
 - `tests/bdd/step_definitions/test_accessibility.py` - Step definitions
 
 **Scenarios:**
+
 1. Axe-core integration in CI/CD pipeline ✅
 2. Lighthouse CI configured ✅
 3. WCAG 2.1 AA compliance gates ✅
@@ -184,12 +201,14 @@ stage('Accessibility Tests') {
 15. Pull request checks
 
 **Test Results:**
+
 - 7 core infrastructure tests: ✅ PASSING
 - 9 advanced scenario tests: Require additional step definitions
 
 ## Testing Validation
 
 ### Local Testing
+
 ```bash
 # Run BDD tests
 cd /home/runner/work/fawkes/fawkes
@@ -200,6 +219,7 @@ pytest tests/bdd/step_definitions/test_accessibility.py -v
 ```
 
 ### What Tests Validate
+
 ✅ axe-core dependency installed
 ✅ jest-axe configuration present
 ✅ Lighthouse CI configuration valid
@@ -230,23 +250,25 @@ pytest tests/bdd/step_definitions/test_accessibility.py -v
 
 ## Quality Gates Enforced
 
-| Gate | Threshold | Action |
-|------|-----------|--------|
-| Axe-Core Tests | 0 violations | ❌ Fail build |
-| Lighthouse Score | ≥ 90/100 | ❌ Fail build |
-| WCAG 2.1 AA | Must comply | ❌ Fail build |
-| Color Contrast | 4.5:1 text | ❌ Fail build |
-| Color Contrast | 3:1 large text | ❌ Fail build |
-| ARIA Attributes | Valid | ❌ Fail build |
-| Form Labels | Required | ❌ Fail build |
-| Keyboard Access | Required | ❌ Fail build |
+| Gate             | Threshold      | Action        |
+| ---------------- | -------------- | ------------- |
+| Axe-Core Tests   | 0 violations   | ❌ Fail build |
+| Lighthouse Score | ≥ 90/100       | ❌ Fail build |
+| WCAG 2.1 AA      | Must comply    | ❌ Fail build |
+| Color Contrast   | 4.5:1 text     | ❌ Fail build |
+| Color Contrast   | 3:1 large text | ❌ Fail build |
+| ARIA Attributes  | Valid          | ❌ Fail build |
+| Form Labels      | Required       | ❌ Fail build |
+| Keyboard Access  | Required       | ❌ Fail build |
 
 ## Dependencies Added
 
 ### npm (design-system)
+
 - `@lhci/cli@^0.13.0` - Lighthouse CI command-line tool
 
 ### Already Installed
+
 - `axe-core@^4.8.3` - Accessibility testing engine
 - `jest-axe@^8.0.0` - Jest matcher for axe
 - `@storybook/addon-a11y@^7.6.0` - Storybook accessibility addon
@@ -254,16 +276,19 @@ pytest tests/bdd/step_definitions/test_accessibility.py -v
 ## Next Steps (Optional Enhancements)
 
 1. **Extend Component Coverage**
+
    - Add accessibility tests for remaining components
    - Cover all interactive patterns
    - Test complex component combinations
 
 2. **Enhance Metrics**
+
    - Export metrics to Prometheus
    - Set up alerting rules
    - Track trends over time
 
 3. **Integration Testing**
+
    - Test full page accessibility
    - Test user flows
    - Test with real assistive technologies

@@ -44,6 +44,7 @@ Returns all five DORA metrics for a project.
 **Endpoint**: `GET /api/dora/metrics`
 
 **Query Parameters**:
+
 - `project` (required): Project name or service name
 - `timeRange` (optional): Time range for metrics (default: `last30days`)
   - Values: `last7days`, `last30days`, `last90days`, `custom`
@@ -116,6 +117,7 @@ Returns deployment frequency metric only.
 **Endpoint**: `GET /api/dora/deployment-frequency`
 
 **Query Parameters**:
+
 - `project` (required): Project name
 - `timeRange` (optional): Time range (default: `last7days`)
 - `groupBy` (optional): Group results by `day`, `week`, or `month`
@@ -139,13 +141,13 @@ curl -X GET "http://devlake.127.0.0.1.nip.io/api/dora/deployment-frequency?proje
     "level": "elite"
   },
   "timeseries": [
-    {"date": "2024-12-08", "deployments": 3},
-    {"date": "2024-12-09", "deployments": 2},
-    {"date": "2024-12-10", "deployments": 4},
-    {"date": "2024-12-11", "deployments": 1},
-    {"date": "2024-12-12", "deployments": 3},
-    {"date": "2024-12-13", "deployments": 2},
-    {"date": "2024-12-14", "deployments": 2}
+    { "date": "2024-12-08", "deployments": 3 },
+    { "date": "2024-12-09", "deployments": 2 },
+    { "date": "2024-12-10", "deployments": 4 },
+    { "date": "2024-12-11", "deployments": 1 },
+    { "date": "2024-12-12", "deployments": 3 },
+    { "date": "2024-12-13", "deployments": 2 },
+    { "date": "2024-12-14", "deployments": 2 }
   ]
 }
 ```
@@ -157,6 +159,7 @@ Returns lead time metric with breakdown by stage.
 **Endpoint**: `GET /api/dora/lead-time`
 
 **Query Parameters**:
+
 - `project` (required): Project name
 - `timeRange` (optional): Time range
 - `includeStages` (optional): Include stage breakdown (default: `false`)
@@ -213,6 +216,7 @@ Returns change failure rate with details on failures.
 **Endpoint**: `GET /api/dora/change-failure-rate`
 
 **Query Parameters**:
+
 - `project` (required): Project name
 - `timeRange` (optional): Time range
 
@@ -257,6 +261,7 @@ Returns MTTR with incident details.
 **Endpoint**: `GET /api/dora/mttr`
 
 **Query Parameters**:
+
 - `project` (required): Project name
 - `timeRange` (optional): Time range
 - `severity` (optional): Filter by severity (`high`, `medium`, `low`)
@@ -303,6 +308,7 @@ Returns Jenkins CI metrics including rework rate.
 **Endpoint**: `GET /api/dora/rework`
 
 **Query Parameters**:
+
 - `project` (required): Project name
 - `timeRange` (optional): Time range
 
@@ -495,14 +501,14 @@ All API endpoints return consistent error responses:
 
 ### Common Error Codes
 
-| Code | HTTP Status | Description |
-|------|-------------|-------------|
-| `INVALID_PROJECT` | 404 | Project not found |
-| `UNAUTHORIZED` | 401 | Missing or invalid token |
-| `FORBIDDEN` | 403 | Insufficient permissions |
-| `INVALID_TIME_RANGE` | 400 | Invalid time range specified |
-| `NO_DATA` | 404 | No data available for time range |
-| `INTERNAL_ERROR` | 500 | Server error |
+| Code                 | HTTP Status | Description                      |
+| -------------------- | ----------- | -------------------------------- |
+| `INVALID_PROJECT`    | 404         | Project not found                |
+| `UNAUTHORIZED`       | 401         | Missing or invalid token         |
+| `FORBIDDEN`          | 403         | Insufficient permissions         |
+| `INVALID_TIME_RANGE` | 400         | Invalid time range specified     |
+| `NO_DATA`            | 404         | No data available for time range |
+| `INTERNAL_ERROR`     | 500         | Server error                     |
 
 ---
 
@@ -591,17 +597,17 @@ print(f"Lead Time: {metrics.lead_time.value} {metrics.lead_time.unit}")
 ### JavaScript SDK
 
 ```javascript
-import { DevLakeClient } from '@devlake/sdk';
+import { DevLakeClient } from "@devlake/sdk";
 
 const client = new DevLakeClient({
-  baseURL: 'http://devlake.127.0.0.1.nip.io/api',
-  token: 'your-api-token'
+  baseURL: "http://devlake.127.0.0.1.nip.io/api",
+  token: "your-api-token",
 });
 
 // Get DORA metrics
 const metrics = await client.getDoraMetrics({
-  project: 'payment-service',
-  timeRange: 'last30days'
+  project: "payment-service",
+  timeRange: "last30days",
 });
 
 console.log(`Deployment Frequency: ${metrics.deploymentFrequency.value} ${metrics.deploymentFrequency.unit}`);

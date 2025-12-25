@@ -22,7 +22,7 @@ For Fawkes to succeed as an Internal Delivery Platform, we must treat developers
 - ❌ No baseline metrics to measure improvement over time
 
 **The Problem**:
-Organizations often measure *outputs* (deployments, lines of code, tickets closed) but fail to measure the *experience* of the people doing the work. This leads to:
+Organizations often measure _outputs_ (deployments, lines of code, tickets closed) but fail to measure the _experience_ of the people doing the work. This leads to:
 
 - Productivity theater (looking busy without delivering value)
 - Burnout from measuring activity instead of outcomes
@@ -221,7 +221,7 @@ Follow-up: What's the primary reason for your score?
 - Setting quotas or minimums
 - Punitive actions
 
-These metrics show *patterns*, not individual worth. High activity ≠ high value.
+These metrics show _patterns_, not individual worth. High activity ≠ high value.
 
 #### 4. COMMUNICATION & COLLABORATION (How Well Do Teams Work Together?)
 
@@ -388,14 +388,14 @@ GitHub API → ETL → Data Warehouse
 
 ### Measurement Cadence
 
-|Metric Type       |Frequency |Duration|Purpose                           |
-|------------------|----------|--------|----------------------------------|
-|NPS Survey        |Quarterly |5 min   |Track overall satisfaction trend  |
-|DevEx Survey      |Annual    |15 min  |Comprehensive assessment          |
-|Weekly Pulse      |Weekly    |2 min   |Quick check-in, catch issues early|
-|Friction Reports  |Continuous|1 min   |Log blockers in real-time         |
-|DORA Metrics      |Continuous|N/A     |Automated system metrics          |
-|Platform Analytics|Continuous|N/A     |Usage patterns, adoption          |
+| Metric Type        | Frequency  | Duration | Purpose                            |
+| ------------------ | ---------- | -------- | ---------------------------------- |
+| NPS Survey         | Quarterly  | 5 min    | Track overall satisfaction trend   |
+| DevEx Survey       | Annual     | 15 min   | Comprehensive assessment           |
+| Weekly Pulse       | Weekly     | 2 min    | Quick check-in, catch issues early |
+| Friction Reports   | Continuous | 1 min    | Log blockers in real-time          |
+| DORA Metrics       | Continuous | N/A      | Automated system metrics           |
+| Platform Analytics | Continuous | N/A      | Usage patterns, adoption           |
 
 ### Acting on Insights: The Feedback Loop
 

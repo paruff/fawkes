@@ -39,11 +39,7 @@ def initialize_models():
 
     try:
         # Initialize Isolation Forest
-        isolation_forest = IsolationForest(
-            contamination=0.05,  # Expect 5% anomalies
-            random_state=42,
-            n_estimators=100
-        )
+        isolation_forest = IsolationForest(contamination=0.05, random_state=42, n_estimators=100)  # Expect 5% anomalies
 
         # Initialize scaler
         scaler = StandardScaler()
@@ -53,6 +49,7 @@ def initialize_models():
 
         try:
             from app.main import MODELS_LOADED
+
             MODELS_LOADED.set(5)  # 5 detection models available
         except ImportError:
             # During testing, app.main may not be available
@@ -69,28 +66,24 @@ def get_model_info() -> List[Dict]:
         {
             "name": "Isolation Forest",
             "type": "general_anomaly",
-            "description": "Detects anomalies in general metrics using isolation forest algorithm"
+            "description": "Detects anomalies in general metrics using isolation forest algorithm",
         },
         {
             "name": "Statistical Z-Score",
             "type": "statistical",
-            "description": "Detects anomalies using statistical Z-score method"
+            "description": "Detects anomalies using statistical Z-score method",
         },
         {
             "name": "IQR Method",
             "type": "statistical",
-            "description": "Detects anomalies using Interquartile Range method"
+            "description": "Detects anomalies using Interquartile Range method",
         },
-        {
-            "name": "Rate of Change",
-            "type": "derivative",
-            "description": "Detects sudden spikes or drops in metrics"
-        },
+        {"name": "Rate of Change", "type": "derivative", "description": "Detects sudden spikes or drops in metrics"},
         {
             "name": "Pattern Deviation",
             "type": "time_series",
-            "description": "Detects deviations from historical patterns"
-        }
+            "description": "Detects deviations from historical patterns",
+        },
     ]
 
 
@@ -121,17 +114,13 @@ async def detect_anomalies(metric_query: str, http_client) -> List:
         start_time = end_time - timedelta(minutes=LOOKBACK_MINUTES)
 
         params = {
-            'query': metric_query,
-            'start': start_time.timestamp(),
-            'end': end_time.timestamp(),
-            'step': '60s'  # 1 minute resolution
+            "query": metric_query,
+            "start": start_time.timestamp(),
+            "end": end_time.timestamp(),
+            "step": "60s",  # 1 minute resolution
         }
 
-        response = await http_client.get(
-            f"{PROMETHEUS_URL}/api/v1/query_range",
-            params=params,
-            timeout=30.0
-        )
+        response = await http_client.get(f"{PROMETHEUS_URL}/api/v1/query_range", params=params, timeout=30.0)
 
         if response.status_code != 200:
             logger.warning(f"Prometheus query failed with status {response.status_code}")
@@ -139,11 +128,11 @@ async def detect_anomalies(metric_query: str, http_client) -> List:
 
         data = response.json()
 
-        if data.get('status') != 'success':
+        if data.get("status") != "success":
             logger.warning(f"Prometheus query unsuccessful: {data}")
             return []
 
-        results = data.get('data', {}).get('result', [])
+        results = data.get("data", {}).get("result", [])
 
         if not results:
             logger.debug(f"No data returned for query: {metric_query}")
@@ -153,9 +142,9 @@ async def detect_anomalies(metric_query: str, http_client) -> List:
         detected_anomalies = []
 
         for series in results:
-            metric_name = series.get('metric', {})
+            metric_name = series.get("metric", {})
             metric_label = _format_metric_name(metric_name, metric_query)
-            values = series.get('values', [])
+            values = series.get("values", [])
 
             if len(values) < MIN_SAMPLES:
                 logger.debug(f"Not enough samples for {metric_label}: {len(values)}")
@@ -215,7 +204,7 @@ async def detect_anomalies(metric_query: str, http_client) -> List:
                     confidence=confidence,
                     value=value,
                     expected_value=expected,
-                    severity=severity
+                    severity=severity,
                 )
 
                 detected_anomalies.append(anomaly_score)
@@ -233,11 +222,11 @@ def _format_metric_name(metric_dict: Dict, query: str) -> str:
         return query
 
     # Try to construct a readable name
-    name = metric_dict.get('__name__', query)
+    name = metric_dict.get("__name__", query)
 
     # Add important labels
     labels = []
-    for key in ['job', 'namespace', 'pod', 'container', 'instance']:
+    for key in ["job", "namespace", "pod", "container", "instance"]:
         if key in metric_dict:
             labels.append(f"{key}={metric_dict[key]}")
 
@@ -269,7 +258,7 @@ def _detect_zscore(timestamps: List[datetime], values: List[float]) -> List[Tupl
     for i, z in enumerate(z_scores):
         if z > ZSCORE_THRESHOLD:
             score = min(1.0, z / 5.0)  # Normalize to 0-1
-            anomalies.append((timestamps[i], values[i], score, mean, 'zscore'))
+            anomalies.append((timestamps[i], values[i], score, mean, "zscore"))
 
     return anomalies
 
@@ -305,7 +294,7 @@ def _detect_iqr(timestamps: List[datetime], values: List[float]) -> List[Tuple]:
                 deviation = (val - upper_bound) / iqr
 
             score = min(1.0, deviation / 2.0)
-            anomalies.append((timestamps[i], val, score, median, 'iqr'))
+            anomalies.append((timestamps[i], val, score, median, "iqr"))
 
     return anomalies
 
@@ -322,7 +311,7 @@ def _detect_rate_of_change(timestamps: List[datetime], values: List[float]) -> L
     # Calculate rate of change
     rates = []
     for i in range(1, len(values)):
-        rate = abs(values[i] - values[i-1])
+        rate = abs(values[i] - values[i - 1])
         rates.append(rate)
 
     if not rates or np.std(rates) == 0:
@@ -340,7 +329,7 @@ def _detect_rate_of_change(timestamps: List[datetime], values: List[float]) -> L
             score = min(1.0, z / 5.0)
             # i+1 because rates are offset by 1
             expected = values[i]  # Previous value
-            anomalies.append((timestamps[i+1], values[i+1], score, expected, 'rate_of_change'))
+            anomalies.append((timestamps[i + 1], values[i + 1], score, expected, "rate_of_change"))
 
     return anomalies
 
@@ -363,8 +352,8 @@ def _detect_isolation_forest(timestamps: List[datetime], values: List[float]) ->
 
         for i, val in enumerate(values):
             # Simple features: value, position in time series, local mean
-            window_start = max(0, i-5)
-            window_end = min(len(values), i+6)
+            window_start = max(0, i - 5)
+            window_end = min(len(values), i + 6)
             local_mean = np.mean(arr[window_start:window_end])
 
             features.append([val, i / len(values), local_mean])
@@ -391,7 +380,7 @@ def _detect_isolation_forest(timestamps: List[datetime], values: List[float]) ->
                 # Invert score (lower isolation forest score = more anomalous)
                 anomaly_score = 1.0 - score
                 if anomaly_score >= ANOMALY_THRESHOLD:
-                    anomalies.append((timestamps[i], values[i], anomaly_score, mean_val, 'isolation_forest'))
+                    anomalies.append((timestamps[i], values[i], anomaly_score, mean_val, "isolation_forest"))
 
         return anomalies
 

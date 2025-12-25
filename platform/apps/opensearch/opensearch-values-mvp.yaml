@@ -14,7 +14,7 @@ nodeGroup: "master"
 # ===== Replication - MVP: Single node =====
 # Production: 3+ nodes across availability zones
 replicas: 1
-minimumMasterNodes: 1  # Must be 1 for single-node cluster
+minimumMasterNodes: 1 # Must be 1 for single-node cluster
 
 # ===== Roles - MVP: Master + Data + Ingest in one node =====
 # Production: Separate dedicated master, data, and ingest nodes
@@ -154,14 +154,14 @@ serviceAccount:
 # Production: Full ServiceMonitor with custom metrics
 extraEnvs:
   - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
-    value: "Admin123!"  # CHANGE THIS!
+    value: "Admin123!" # CHANGE THIS!
   - name: DISABLE_INSTALL_DEMO_CONFIG
     value: "true"
 
 # ===== Anti-Affinity - MVP: None =====
 # Production: Spread across nodes and AZs
 antiAffinityTopologyKey: "kubernetes.io/hostname"
-antiAffinity: "soft"  # MVP: Soft anti-affinity
+antiAffinity: "soft" # MVP: Soft anti-affinity
 
 # ===== Pod Disruption Budget - MVP: Disabled =====
 # Production: Prevent all pods from being disrupted

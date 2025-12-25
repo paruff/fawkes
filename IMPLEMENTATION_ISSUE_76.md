@@ -7,6 +7,7 @@ Successfully implemented a comprehensive Insights Database and Tracking System (
 ## What Was Implemented
 
 ### 1. Database Schema ✅
+
 - **insights** table: Main storage for insights with full metadata
 - **categories** table: Hierarchical categorization system
 - **tags** table: Flexible tagging with usage tracking
@@ -15,6 +16,7 @@ Successfully implemented a comprehensive Insights Database and Tracking System (
 - Default data seeded (6 categories, 8 tags)
 
 ### 2. FastAPI Service ✅
+
 - Complete REST API with 20+ endpoints
 - CRUD operations for insights, tags, and categories
 - Advanced search with multi-filter support
@@ -23,18 +25,21 @@ Successfully implemented a comprehensive Insights Database and Tracking System (
 - OpenAPI/Swagger documentation at `/docs`
 
 ### 3. Tagging System ✅
+
 - Create, read, update, delete tags
 - Automatic usage count tracking
 - Color-coded tags for visual organization
 - Tag-based filtering with AND logic
 
 ### 4. Categorization System ✅
+
 - Hierarchical categories (parent-child relationships)
 - Unlimited nesting depth
 - Visual indicators (colors and icons)
 - Cannot delete categories with insights (protection)
 
 ### 5. Search Functionality ✅
+
 - Full-text search across title, description, and content
 - Multi-filter support:
   - Category filter
@@ -46,6 +51,7 @@ Successfully implemented a comprehensive Insights Database and Tracking System (
 - Two search endpoints: simple list + advanced search
 
 ### 6. Aggregation Process ✅
+
 - Real-time statistics endpoint
 - Insights by status, priority, and category
 - Tag usage statistics
@@ -53,6 +59,7 @@ Successfully implemented a comprehensive Insights Database and Tracking System (
 - Time-based filtering capabilities
 
 ### 7. Dashboard Integration ✅
+
 - GraphQL schema integration via data-api
 - REST API for dashboard queries
 - Prometheus metrics for monitoring:
@@ -63,6 +70,7 @@ Successfully implemented a comprehensive Insights Database and Tracking System (
   - `request_duration_seconds`
 
 ### 8. Documentation ✅
+
 - Comprehensive service README
 - Complete API reference documentation
 - Database schema documentation
@@ -73,6 +81,7 @@ Successfully implemented a comprehensive Insights Database and Tracking System (
 - GraphQL integration examples
 
 ### 9. Testing ✅
+
 - Unit tests for models
 - Integration tests for API endpoints
 - Test fixtures and configuration
@@ -122,6 +131,7 @@ services/data-api/schema/
 ## API Endpoints
 
 ### Insights
+
 - `POST /insights` - Create insight
 - `GET /insights` - List with filters
 - `POST /insights/search` - Advanced search
@@ -130,6 +140,7 @@ services/data-api/schema/
 - `DELETE /insights/{id}` - Delete insight
 
 ### Tags
+
 - `POST /tags` - Create tag
 - `GET /tags` - List all tags
 - `GET /tags/{id}` - Get single tag
@@ -137,6 +148,7 @@ services/data-api/schema/
 - `DELETE /tags/{id}` - Delete tag
 
 ### Categories
+
 - `POST /categories` - Create category
 - `GET /categories` - List all categories
 - `GET /categories/{id}` - Get single category
@@ -144,6 +156,7 @@ services/data-api/schema/
 - `DELETE /categories/{id}` - Delete category
 
 ### Statistics & Health
+
 - `GET /statistics` - Get aggregated statistics
 - `GET /health` - Health check
 - `GET /metrics` - Prometheus metrics
@@ -162,6 +175,7 @@ services/data-api/schema/
 ## Default Data Seeded
 
 ### Categories (6)
+
 - Technical (#3B82F6, code icon)
 - Process (#10B981, cog icon)
 - People (#F59E0B, users icon)
@@ -170,6 +184,7 @@ services/data-api/schema/
 - Performance (#06B6D4, zap icon)
 
 ### Tags (8)
+
 - Lesson Learned (#10B981)
 - Best Practice (#3B82F6)
 - Incident (#EF4444)
@@ -182,25 +197,32 @@ services/data-api/schema/
 ## Integration Points
 
 ### GraphQL (via data-api)
+
 ```graphql
 query {
-  insights(where: {status: {_eq: "published"}}) {
+  insights(where: { status: { _eq: "published" } }) {
     id
     title
     description
-    category { name }
-    tags { name }
+    category {
+      name
+    }
+    tags {
+      name
+    }
   }
 }
 ```
 
 ### Prometheus Metrics
+
 ```promql
 rate(insights_created_total[5m])
 histogram_quantile(0.95, rate(request_duration_seconds_bucket[5m]))
 ```
 
 ### Dashboard Components
+
 1. Insights Overview - statistics and counts
 2. Insights List - filterable table/grid
 3. Insight Detail - full content view
@@ -220,12 +242,14 @@ histogram_quantile(0.95, rate(request_duration_seconds_bucket[5m]))
 ## Deployment
 
 ### Database Setup
+
 ```bash
 # Run migrations
 alembic upgrade head
 ```
 
 ### Local Development
+
 ```bash
 # Install dependencies
 pip install -r requirements.txt
@@ -238,6 +262,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 ### Docker
+
 ```bash
 # Build
 docker build -t fawkes-insights:latest .
@@ -247,6 +272,7 @@ docker run -p 8000:8000 -e DATABASE_URL="..." fawkes-insights:latest
 ```
 
 ### Testing
+
 ```bash
 # Run tests
 pytest
@@ -281,10 +307,12 @@ pytest --cov=app --cov-report=html
 ## Dependencies
 
 ### Completed (from Issue #76)
+
 - ✅ Issue #523: Database schema design
 - ✅ Issue #524: API endpoint design
 
 ### Enables (from Issue #76)
+
 - ✅ Issue #526: Dashboard implementation (all APIs ready)
 
 ## Metrics
