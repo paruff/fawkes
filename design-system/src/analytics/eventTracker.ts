@@ -92,8 +92,10 @@ export class EventTracker {
       return;
     }
 
-    // Check if script already exists
-    const existingScript = document.querySelector('script[data-domain]');
+    // Check if Plausible script for this domain already exists
+    const existingScript = document.querySelector(
+      `script[data-domain="${this.config.domain}"]`
+    );
     if (existingScript) {
       this.log('Plausible script already loaded');
       return;

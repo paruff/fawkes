@@ -135,6 +135,8 @@ export function rateLimitMiddleware(
  */
 export function deduplicationMiddleware(windowMs: number): EventMiddleware {
   const recentEvents = new Map<string, number>();
+  let lastCleanup = Date.now();
+  const cleanupInterval = Math.max(windowMs, 60000); // Clean up at least every minute
 
   return (event: Event) => {
     const now = Date.now();
@@ -150,14 +152,15 @@ export function deduplicationMiddleware(windowMs: number): EventMiddleware {
     // Store timestamp
     recentEvents.set(key, now);
 
-    // Clean up old entries
-    if (recentEvents.size > 1000) {
+    // Periodic cleanup to prevent memory growth
+    if (now - lastCleanup > cleanupInterval) {
       const cutoff = now - windowMs;
       for (const [k, timestamp] of recentEvents.entries()) {
         if (timestamp < cutoff) {
           recentEvents.delete(k);
         }
       }
+      lastCleanup = now;
     }
 
     return event;
@@ -174,12 +177,29 @@ export const privacyMiddleware: EventMiddleware = (event: Event) => {
 
   const sanitized = { ...event.properties };
 
-  // Remove sensitive fields
-  const sensitiveFields = ['email', 'password', 'token', 'apiKey', 'secret', 'ssn'];
+  // List of sensitive field patterns (case-insensitive)
+  const sensitivePatterns = [
+    /^email$/i,
+    /^password$/i,
+    /^passwd$/i,
+    /^pwd$/i,
+    /^token$/i,
+    /^api[_-]?key$/i,
+    /^apikey$/i,
+    /^secret$/i,
+    /^ssn$/i,
+    /^credit[_-]?card$/i,
+    /^cc[_-]?number$/i,
+    /^cvv$/i,
+    /^private[_-]?key$/i,
+    /^auth/i,
+    /^bearer/i,
+  ];
 
-  for (const field of sensitiveFields) {
-    if (field in sanitized) {
-      delete sanitized[field];
+  // Remove sensitive fields
+  for (const key of Object.keys(sanitized)) {
+    if (sensitivePatterns.some(pattern => pattern.test(key))) {
+      delete sanitized[key];
     }
   }
 
