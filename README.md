@@ -28,19 +28,22 @@
 Fawkes isn't just another Internal Developer Platform—it's a **complete Internal Product Delivery Platform** that uniquely combines:
 
 ### 🎓 Immersive Dojo Learning
+
 Learn platform engineering by doing, not just reading. Progress through belt levels while building real skills on production-grade infrastructure.
 
 ### 🚀 Complete Product Delivery
+
 Everything teams need: infrastructure, CI/CD, collaboration, project management, observability, and security—all integrated, all open source.
 
 ### 📊 DORA-Driven by Design
+
 Four key metrics automated from day one. Measure what matters, improve continuously, achieve elite performance.
 
 ### 🤝 Unified Experience
+
 One platform, one login, one interface. No more context switching between a dozen tools.
 
 ---
-
 
 ## 🚀 AWS Activate Project
 
@@ -62,7 +65,6 @@ Fawkes is applying for the AWS Activate program to accelerate development and pr
    📈 [Business Case & Value Proposition](docs/BUSINESS_CASE.md)
 
 ---
-
 
 ## 🥋 The Fawkes Dojo: Learn by Doing
 
@@ -111,6 +113,7 @@ Total: 40 hours from novice to platform architect
 Unlike infrastructure-only solutions, Fawkes provides everything product teams need:
 
 ### Infrastructure & Delivery
+
 - **Kubernetes Orchestration** - Multi-cloud ready (AWS, Azure, GCP)
 - **Infrastructure as Code** - Terraform and Crossplane
 - **CI/CD Pipelines** - Jenkins with golden path templates
@@ -118,12 +121,14 @@ Unlike infrastructure-only solutions, Fawkes provides everything product teams n
 - **Progressive Delivery** - Blue-green, canary, automated rollback
 
 ### Collaboration & Planning
+
 - **Team Chat** - Mattermost for real-time collaboration
 - **Project Management** - Focalboard (Notion-like) for sprints and roadmaps
 - **ChatOps** - Deploy and manage from chat
 - **Platform Notifications** - CI/CD, deployments, alerts in chat
 
 ### Observability & Insights
+
 - **DORA Metrics** - Automated collection of all 4 key metrics
 - **Metrics & Dashboards** - Prometheus and Grafana
 - **Distributed Tracing** - Jaeger with OpenTelemetry
@@ -131,6 +136,7 @@ Unlike infrastructure-only solutions, Fawkes provides everything product teams n
 - **Custom Dashboards** - Team-level visibility
 
 ### Security & Compliance
+
 - **Security Scanning** - SonarQube (SAST), Trivy (containers), Gitleaks (secrets)
 - **Automated Secrets Detection** - Pre-commit hooks and CI/CD pipeline scanning
 - **Policy Enforcement** - Kyverno for Kubernetes policies
@@ -138,6 +144,7 @@ Unlike infrastructure-only solutions, Fawkes provides everything product teams n
 - **Zero Trust Roadmap** - Security-first architecture
 
 ### Learning & Growth
+
 - **Dojo Learning Environment** - Hands-on labs with auto-validation
 - **Progress Tracking** - Visual dashboards of learning journey
 - **Community Support** - Dedicated channels per belt level
@@ -165,18 +172,23 @@ Fawkes automates collection and visualization of the **Four Key Metrics** that s
 ## 🎯 Who Is Fawkes For?
 
 ### Platform Engineering Teams
+
 Build and operate internal platforms with best practices baked in. Spend less time on toil, more on innovation.
 
 ### DevOps Teams Evolving to Platform Engineering
+
 Make the transition with a comprehensive platform that embodies modern practices.
 
 ### Engineering Leaders
+
 Improve delivery performance with data-driven insights. Achieve elite DORA metrics.
 
 ### Platform Engineering Students
+
 Learn by doing with hands-on labs on production-grade infrastructure. Earn recognized certifications.
 
 ### Organizations Building IDPs
+
 Don't start from scratch. Deploy a production-ready platform and customize to your needs.
 
 ---
@@ -184,6 +196,7 @@ Don't start from scratch. Deploy a production-ready platform and customize to yo
 ## ⚡ Quick Start
 
 ### Prerequisites
+
 - Kubernetes 1.28+ cluster
 - kubectl configured
 - Terraform 1.6+
@@ -323,6 +336,7 @@ Fawkes is built on a modern, cloud-native architecture:
 Comprehensive documentation for all aspects of Fawkes:
 
 ### Getting Started
+
 - [Installation Guide](docs/getting-started.md)
 - [Quick Start Tutorial](docs/tutorials/quick-start.md)
 - [Architecture Overview](docs/architecture.md)
@@ -331,6 +345,7 @@ Comprehensive documentation for all aspects of Fawkes:
 - 📋 [Epic 1 Demo Checklist](docs/tutorials/epic-1-demo-video-checklist.md) - Quick reference for recording
 
 ### Dojo Learning
+
 - [Dojo Architecture](docs/dojo/DOJO_ARCHITECTURE.md)
 - [White Belt Curriculum](docs/dojo/white-belt/)
 - [Yellow Belt Curriculum](docs/dojo/yellow-belt/)
@@ -339,6 +354,7 @@ Comprehensive documentation for all aspects of Fawkes:
 - [Black Belt Curriculum](docs/dojo/black-belt/)
 
 ### Platform Components
+
 - [Backstage Setup](docs/components/backstage.md)
 - [Mattermost Deployment](docs/components/mattermost.md)
 - [Focalboard Usage](docs/components/focalboard.md)
@@ -347,6 +363,7 @@ Comprehensive documentation for all aspects of Fawkes:
 - [Observability Stack](docs/components/observability.md)
 
 ### Operations
+
 - [Day 2 Operations](docs/operations/day2.md)
 - [Backup & Disaster Recovery](docs/operations/backup.md)
 - [Monitoring & Alerting](docs/operations/monitoring.md)
@@ -356,6 +373,7 @@ Comprehensive documentation for all aspects of Fawkes:
 - [Azure AKS Validation Checklist](docs/runbooks/azure-aks-validation-checklist.md)
 
 ### Contributing
+
 - [Contributing Guide](CONTRIBUTING.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
 - [Development Setup](docs/development.md)
@@ -400,21 +418,25 @@ Comprehensive documentation for all aspects of Fawkes:
 Join our vibrant platform engineering community:
 
 ### Chat & Collaboration
+
 - **Mattermost** - [Join our community workspace](https://fawkes-community.mattermost.com)
 - **GitHub Discussions** - [Ask questions, share ideas](https://github.com/paruff/fawkes/discussions)
 
 ### Learning & Support
+
 - **Dojo Channels** - Get help with learning modules
 - **Office Hours** - Bi-weekly Q&A with maintainers (Wednesdays 2pm ET)
 - **Mentorship** - Black Belt graduates mentor new learners
 
 ### Stay Updated
+
 - **Blog** - [Platform engineering insights](https://blog.fawkes.io)
 - **Newsletter** - Bi-weekly updates (sign up below)
 - **Twitter** - [@FawkesIDP](https://twitter.com/FawkesIDP)
 - **LinkedIn** - [Fawkes Platform](https://linkedin.com/company/fawkes-platform)
 
 ### Events
+
 - **Monthly Webinars** - Deep dives on platform topics
 - **Quarterly Conferences** - Virtual platform engineering conference
 - **Local Meetups** - Find or start a meetup in your city
@@ -453,6 +475,7 @@ Join our vibrant platform engineering community:
 - 🔄 White Belt curriculum
 
 ### Q1 2026: Platform Expansion
+
 - Multi-cloud support (Azure, GCP)
 - Complete belt curricula (all 5 belts)
 - Advanced security features
@@ -460,6 +483,7 @@ Join our vibrant platform engineering community:
 - 50+ production deployments target
 
 ### Q2 2026: Ecosystem & Scale
+
 - Backstage plugin marketplace
 - Community-contributed dojo modules
 - Advanced DORA analytics
@@ -467,6 +491,7 @@ Join our vibrant platform engineering community:
 - 100+ certified platform engineers
 
 ### Q3 2026: Enterprise & Certification
+
 - CNCF Sandbox application
 - Platform Engineering University partnership launch
 - Enterprise support offerings
@@ -474,6 +499,7 @@ Join our vibrant platform engineering community:
 - Chaos engineering integration
 
 ### Q4 2026: Innovation
+
 - AI-powered platform insights
 - Predictive failure detection
 - Automated performance optimization
@@ -512,9 +538,27 @@ Fawkes is open source and community-driven. We welcome contributions of all kind
 2. **Join** our [Mattermost community](https://fawkes-community.mattermost.com)
 3. **Browse** [good first issues](https://github.com/paruff/fawkes/labels/good%20first%20issue)
 4. **Fork** the repository and create a branch
-5. **Make** your changes with tests and documentation
-6. **Submit** a pull request
-7. **Celebrate** your contribution! 🎉
+5. **Set up code quality tools** - Essential for all contributors:
+   ```bash
+   # Install pre-commit hooks (one-time setup)
+   make pre-commit-setup
+
+   # Run linters before committing
+   make lint
+   ```
+6. **Make** your changes with tests and documentation
+7. **Submit** a pull request
+8. **Celebrate** your contribution! 🎉
+
+### Code Quality Standards
+
+All contributions must pass:
+- ✅ **Automated linting** - Bash, Python, Go, YAML, JSON, Markdown, Terraform
+- ✅ **Security scanning** - Secrets detection, SAST, container scanning
+- ✅ **Pre-commit hooks** - Run automatically on `git commit`
+- ✅ **CI/CD checks** - GitHub Actions validate on every PR
+
+📖 **See**: [Code Quality Standards](docs/how-to/development/code-quality-standards.md) for detailed requirements
 
 ### Recognition
 
@@ -567,12 +611,14 @@ Fawkes is built on the shoulders of giants and inspired by:
 ## 📞 Support & Contact
 
 ### Community Support (Free)
+
 - **Mattermost** - Real-time chat support
 - **GitHub Issues** - Bug reports and feature requests
 - **GitHub Discussions** - Questions and discussions
 - **Documentation** - Comprehensive guides and tutorials
 
 ### Professional Support (Coming Q2 2026)
+
 - Implementation assistance
 - Custom development
 - Training and workshops
@@ -588,21 +634,25 @@ Fawkes is built on the shoulders of giants and inspired by:
 Choose your path:
 
 ### 🎓 Learn Platform Engineering
+
 **[Enroll in Dojo White Belt →](docs/dojo/white-belt/)**
 
 Start your journey from novice to platform architect. 8 hours to your first certification.
 
 ### 🏗️ Deploy Fawkes Platform
+
 **[Follow Quick Start Guide →](docs/getting-started.md)**
 
 Get your platform running in 30 minutes. Production-ready in hours, not months.
 
 ### 🤝 Join the Community
+
 **[Join Mattermost →](https://fawkes-community.mattermost.com)**
 
 Connect with platform engineers, get help, share your experiences.
 
 ### 💻 Contribute to Fawkes
+
 **[View Good First Issues →](https://github.com/paruff/fawkes/labels/good%20first%20issue)**
 
 Make your first contribution and become part of the community.
