@@ -58,6 +58,24 @@ spec:
             secretKeyRef:
               name: feedback-admin-token
               key: token
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: feedback-github-token
+              key: token
+              optional: true
+        - name: GITHUB_OWNER
+          value: "paruff"
+        - name: GITHUB_REPO
+          value: "fawkes"
+        - name: MATTERMOST_WEBHOOK_URL
+          valueFrom:
+            secretKeyRef:
+              name: feedback-mattermost-webhook
+              key: url
+              optional: true
+        - name: NOTIFICATION_ENABLED
+          value: "true"
         livenessProbe:
           httpGet:
             path: /health

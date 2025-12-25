@@ -1,0 +1,45 @@
+# ============================================================================
+# FILE: platform/apps/devex-survey-automation/cronjob-pulse-weekly.yaml
+# PURPOSE: CronJob for weekly pulse survey distribution
+#          Runs every Monday at 9:00 AM
+# ============================================================================
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: devex-pulse-survey-weekly
+  namespace: fawkes
+  labels:
+    app: devex-survey-automation
+    component: cronjob
+    survey-type: pulse
+spec:
+  schedule: "0 9 * * 1"  # Every Monday at 9:00 AM
+  timeZone: "America/New_York"  # Adjust to your timezone
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: devex-survey-automation
+            component: cronjob
+            survey-type: pulse
+        spec:
+          serviceAccountName: devex-survey-automation
+          restartPolicy: OnFailure
+          containers:
+          - name: distribute-pulse-survey
+            image: curlimages/curl:latest
+            command:
+            - /bin/sh
+            - -c
+            - |
+              curl -X POST http://devex-survey-automation.fawkes.svc:8000/api/v1/survey/distribute \
+                -H "Content-Type: application/json" \
+                -d '{"type": "pulse", "test_mode": false}' \
+                -f || exit 1
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534

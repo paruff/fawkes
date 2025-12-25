@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: friction-bot
+  namespace: fawkes
+  labels:
+    app.kubernetes.io/name: friction-bot
+    app.kubernetes.io/component: friction-logging
+    app.kubernetes.io/part-of: fawkes-platform
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/paruff/fawkes
+    targetRevision: HEAD
+    path: platform/apps/friction-bot
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

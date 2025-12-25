@@ -1,0 +1,35 @@
+# ============================================================================
+# FILE: platform/apps/devex-survey-automation/database.yaml
+# PURPOSE: CloudNativePG Database for DevEx Survey Automation
+# ============================================================================
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: db-devex-dev
+  namespace: fawkes
+spec:
+  instances: 3
+  primaryUpdateStrategy: unsupervised
+  
+  storage:
+    size: 5Gi
+    storageClass: local-path
+  
+  bootstrap:
+    initdb:
+      database: devex_surveys
+      owner: devex
+      secret:
+        name: db-devex-credentials
+  
+  monitoring:
+    enabled: true
+    podMonitorEnabled: true
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi

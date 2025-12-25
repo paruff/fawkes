@@ -7,6 +7,7 @@ FastAPI-based feedback collection and management service for Backstage with NPS 
 - Submit feedback with ratings (1-5), categories, and comments
 - **AI-powered sentiment analysis** using VADER for all feedback comments
 - **NPS (Net Promoter Score) calculation** with promoters/passives/detractors tracking
+- **Time-to-action tracking** measuring response time from submission to first action
 - Optional email for follow-up
 - Admin endpoints to view and manage feedback
 - Aggregated statistics
@@ -47,6 +48,11 @@ The service exports the following metrics for monitoring and analytics:
 - `feedback_submissions_total{category,rating}` - Total submissions by category and rating
 - `feedback_by_category_total{category}` - Total feedback count by category
 - `feedback_response_rate{status}` - Response rate by status (overall, open, resolved, etc.)
+
+### Time-to-Action Metrics
+- `feedback_time_to_action_seconds{category}` - Histogram of time from submission to first action (status change from 'open')
+  - Buckets: 1min, 5min, 15min, 30min, 1h, 2h, 4h, 8h, 24h, 48h, 7d
+- `feedback_avg_time_to_action_hours{status,category}` - Average time to action in hours by status and category
 
 ### Sentiment Metrics
 - `feedback_sentiment_score{category,sentiment}` - Average sentiment scores by category
@@ -97,6 +103,14 @@ A comprehensive analytics dashboard is available at `/grafana/d/feedback-analyti
 - Sentiment analysis visualizations
 - Response rate tracking
 - Top issues and low-rated feedback highlights
+- **Time-to-action metrics** showing average response times by status and category
+- Time-to-action distribution histogram
+
+**Dashboard Features**:
+- Auto-refresh every 5 minutes for real-time updates
+- 7-day default time range
+- Color-coded thresholds for quick insights
+- 30 panels providing comprehensive feedback analytics
 
 ## Environment Variables
 
@@ -240,3 +254,249 @@ This validates:
 - ✓ Top issues highlighted
 - ✓ Metrics exported to Prometheus
 
+
+## AI Triage and Automation
+
+### Overview
+
+The feedback service includes an AI-powered triage system that automatically analyzes, prioritizes, and routes feedback to appropriate GitHub issues.
+
+### AI Triage Features
+
+#### Priority Scoring
+- **P0 (Critical)**: Security issues, data loss, outages, severe bugs
+- **P1 (High)**: Major bugs, blocking issues, important features
+- **P2 (Medium)**: Enhancements, non-blocking issues
+- **P3 (Low)**: Minor improvements, nice-to-have features
+
+Priority is calculated based on:
+- Feedback type (bug_report, feature_request, feedback)
+- User rating (1-5)
+- Sentiment analysis (negative sentiment increases priority)
+- Keyword detection (critical, urgent, blocker, etc.)
+- Category (Security, Performance categories get higher priority)
+
+#### Auto-Labeling
+Automatically suggests GitHub labels based on:
+- Feedback type (bug, enhancement)
+- Priority level (P0-P3)
+- Category (category:ui-ux, category:performance, etc.)
+- Content keywords (security, performance, documentation, accessibility)
+
+#### Duplicate Detection
+- Searches existing open GitHub issues
+- Uses text similarity matching (fuzzy matching)
+- Configurable similarity threshold (default: 70%)
+- Prevents creation of duplicate issues
+
+### API Endpoints
+
+#### Triage Specific Feedback
+```bash
+POST /api/v1/feedback/{id}/triage
+Authorization: Bearer {admin-token}
+
+Response:
+{
+  "status": "success",
+  "triage": {
+    "feedback_id": 123,
+    "priority": "P1",
+    "priority_score": 0.65,
+    "suggested_labels": ["bug", "P1", "category:performance"],
+    "potential_duplicates": [],
+    "suggested_milestone": "Next Sprint",
+    "should_create_issue": true,
+    "triage_reason": "Priority P1 based on score 0.65"
+  }
+}
+```
+
+#### Automated Processing
+```bash
+POST /api/v1/automation/process-validated?limit=20&min_rating=3
+Authorization: Bearer {admin-token}
+
+Response:
+{
+  "status": "success",
+  "message": "Processed 5 feedback items",
+  "processed": 5,
+  "issues_created": 4,
+  "skipped_duplicates": 1,
+  "errors": null
+}
+```
+
+### Automation Pipeline
+
+#### CronJob Configuration
+A Kubernetes CronJob runs every 15 minutes to:
+1. Fetch validated feedback (status='open', no GitHub issue)
+2. Run AI triage on each item
+3. Skip duplicates with notifications
+4. Create GitHub issues for non-duplicate, validated feedback
+5. Send notifications for each action
+6. Provide summary report
+
+#### Manual Trigger
+```bash
+kubectl create job --from=cronjob/feedback-automation feedback-automation-manual -n fawkes
+```
+
+#### Environment Variables
+```yaml
+GITHUB_TOKEN: GitHub personal access token (required for automation)
+GITHUB_OWNER: Repository owner (default: paruff)
+GITHUB_REPO: Repository name (default: fawkes)
+MATTERMOST_WEBHOOK_URL: Webhook URL for notifications (optional)
+NOTIFICATION_ENABLED: Enable/disable notifications (default: true)
+```
+
+### Notification System
+
+#### Supported Channels
+- **Mattermost**: Via incoming webhooks
+- **Future**: Slack, email, custom webhooks
+
+#### Notification Types
+1. **Issue Created**: Sent when new issue is created from feedback
+2. **Duplicate Detected**: Sent when duplicate issues are found
+3. **High Priority**: Immediate alert for P0/P1 feedback
+4. **Automation Summary**: Report after scheduled processing
+
+#### Configuration
+```yaml
+# In deployment.yaml
+- name: MATTERMOST_WEBHOOK_URL
+  valueFrom:
+    secretKeyRef:
+      name: feedback-mattermost-webhook
+      key: url
+- name: NOTIFICATION_ENABLED
+  value: "true"
+```
+
+### Testing
+
+#### Unit Tests
+```bash
+cd services/feedback
+pytest tests/unit/test_ai_triage.py -v
+```
+
+#### BDD Tests
+```bash
+behave tests/bdd/features/feedback-automation.feature
+```
+
+### Monitoring
+
+#### Key Metrics to Watch
+- `feedback_submissions_total`: Track incoming feedback volume
+- `nps_score`: Monitor user satisfaction trends
+- `feedback_sentiment_score`: Identify negative sentiment patterns
+
+#### Recommended Alerts
+- P0 feedback submitted (immediate action)
+- NPS score drops below threshold
+- High volume of negative sentiment feedback
+- Automation pipeline failures
+
+### Architecture
+
+```
+┌─────────────────────────────────────────────────────┐
+│            Feedback Submission                       │
+│    (User/Bot/CLI → Feedback Service)                │
+└─────────────────┬───────────────────────────────────┘
+                  │
+                  ▼
+┌─────────────────────────────────────────────────────┐
+│          Sentiment Analysis (VADER)                  │
+│       Store in PostgreSQL with metadata              │
+└─────────────────┬───────────────────────────────────┘
+                  │
+                  ▼
+┌─────────────────────────────────────────────────────┐
+│              AI Triage (Manual/Auto)                 │
+│  - Calculate Priority (P0-P3)                       │
+│  - Suggest Labels                                    │
+│  - Detect Duplicates                                │
+│  - Determine Milestone                               │
+└─────────────────┬───────────────────────────────────┘
+                  │
+         ┌────────┴─────────┐
+         │                  │
+         ▼                  ▼
+┌─────────────┐    ┌─────────────────┐
+│  Duplicate? │    │ Create GitHub   │
+│  → Skip     │    │ Issue           │
+│  → Notify   │    │ → Auto-label    │
+└─────────────┘    │ → Link to FB    │
+                   │ → Notify        │
+                   └─────────────────┘
+```
+
+### Best Practices
+
+1. **Configure GitHub Token**: Required for automation and duplicate detection
+2. **Set Up Notifications**: Configure Mattermost webhooks for team awareness
+3. **Monitor Automation**: Check CronJob logs regularly
+4. **Tune Thresholds**: Adjust priority scoring based on your team's needs
+5. **Review Duplicates**: Verify duplicate detection accuracy periodically
+6. **Regular Cleanup**: Archive or close resolved feedback items
+
+### Troubleshooting
+
+#### Automation Not Running
+```bash
+# Check CronJob status
+kubectl get cronjob feedback-automation -n fawkes
+
+# View job history
+kubectl get jobs -n fawkes -l app=feedback-automation
+
+# Check logs
+kubectl logs -n fawkes -l app=feedback-automation --tail=100
+```
+
+#### GitHub Integration Issues
+```bash
+# Verify token is set
+kubectl get secret feedback-github-token -n fawkes -o yaml
+
+# Test GitHub API access
+curl -H "Authorization: Bearer ${GITHUB_TOKEN}" https://api.github.com/user
+```
+
+#### No Notifications Sent
+```bash
+# Check if notifications are enabled
+curl http://feedback-service:8000/ | jq '.features.notifications'
+
+# Verify webhook URL
+kubectl get secret feedback-mattermost-webhook -n fawkes -o yaml
+
+# Test webhook manually
+curl -X POST ${MATTERMOST_WEBHOOK_URL} -d '{"text":"Test message"}'
+```
+
+### Security Considerations
+
+- **GitHub Token**: Store in Kubernetes secret, limit to repository scope
+- **Admin Token**: Rotate regularly, use strong random values
+- **Webhook URLs**: Keep confidential, use HTTPS only
+- **Rate Limiting**: Consider implementing for public endpoints
+- **Input Validation**: All feedback content is validated and sanitized
+
+### Future Enhancements
+
+- [ ] ML-based priority prediction using historical data
+- [ ] Advanced duplicate detection with embeddings
+- [ ] Auto-assignment to team members based on category
+- [ ] SLA tracking and escalation
+- [ ] Feedback clustering and trend analysis
+- [ ] Multi-language sentiment analysis
+- [ ] Integration with more notification channels (Slack, email)
+- [ ] Custom workflow automation rules

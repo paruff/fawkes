@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: friction-bot
+  namespace: fawkes
+  labels:
+    app: friction-bot
+    component: friction-logging
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - friction-bot.fawkes.local
+    secretName: friction-bot-tls
+  rules:
+  - host: friction-bot.fawkes.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: friction-bot
+            port:
+              number: 8000

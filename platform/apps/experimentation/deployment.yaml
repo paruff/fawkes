@@ -1,0 +1,213 @@
+# ============================================================================
+# FILE: platform/apps/experimentation/deployment.yaml
+# PURPOSE: Experimentation Service deployment for A/B testing framework
+# DESCRIPTION: FastAPI-based service with PostgreSQL for experiment management
+# ============================================================================
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: experimentation-config
+  namespace: fawkes
+  labels:
+    app: experimentation
+    component: service
+data:
+  DATABASE_HOST: "db-experiment-dev-rw.fawkes.svc.cluster.local"
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: "experiment"
+  UNLEASH_URL: "http://unleash.fawkes.svc:4242/api"
+  PLAUSIBLE_URL: "http://plausible.fawkes.svc:8000/api"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: experimentation-secret
+  namespace: fawkes
+  labels:
+    app: experimentation
+    component: service
+  annotations:
+    # ⚠️ CRITICAL SECURITY WARNING: This secret contains default development values
+    # NEVER use this token in production environments!
+    # For production, MUST use External Secrets Operator to sync from Vault
+    # Generate secure token: openssl rand -hex 32
+type: Opaque
+stringData:
+  # ⚠️ SECURITY WARNING: Replace before production!
+  ADMIN_TOKEN: "dev-admin-token"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: experimentation
+  namespace: fawkes
+  labels:
+    app: experimentation
+    component: service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: experimentation
+      component: service
+  template:
+    metadata:
+      labels:
+        app: experimentation
+        component: service
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: experimentation
+          image: ghcr.io/paruff/fawkes/experimentation:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+              name: http
+              protocol: TCP
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-experiment-credentials
+                  key: uri
+            - name: ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: experimentation-secret
+                  key: ADMIN_TOKEN
+            - name: UNLEASH_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: experimentation-config
+                  key: UNLEASH_URL
+            - name: PLAUSIBLE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: experimentation-config
+                  key: PLAUSIBLE_URL
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: experimentation
+  namespace: fawkes
+  labels:
+    app: experimentation
+    component: service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: http
+  selector:
+    app: experimentation
+    component: service
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: experimentation
+  namespace: fawkes
+  labels:
+    app: experimentation
+    component: service
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - experimentation.fawkes.idp
+      secretName: experimentation-tls
+  rules:
+    - host: experimentation.fawkes.idp
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: experimentation
+                port:
+                  number: 8000
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: experimentation
+  namespace: fawkes
+  labels:
+    app: experimentation
+    component: service
+spec:
+  selector:
+    matchLabels:
+      app: experimentation
+      component: service
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: experimentation
+  namespace: fawkes
+  labels:
+    app: experimentation
+    component: service
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: experimentation
+      component: service

@@ -6,7 +6,276 @@ This directory contains Grafana dashboard JSON definitions for the Fawkes platfo
 
 ## Available Dashboards
 
-### 1. Kubernetes Cluster Health
+### 1. Developer Experience (DevEx) Dashboard
+
+**File**: `devex-dashboard.json`  
+**ConfigMap**: `platform/apps/prometheus/devex-dashboard.yaml`  
+**Namespace**: monitoring
+
+Comprehensive Developer Experience dashboard showing all 5 SPACE framework dimensions with team-level filtering, historical trending, and alerting.
+
+#### Panels
+
+- **DevEx Overview**:
+  - Overall DevEx Health Score: Composite score (0-100) based on all SPACE dimensions
+  - SPACE Dimensions Status: Bar gauge showing health of all 5 dimensions (0-5 scale)
+
+- **SATISFACTION**:
+  - Net Promoter Score (NPS): How likely developers are to recommend platform (gauge, -100 to 100)
+  - Platform Satisfaction Rating: Average satisfaction rating (1-5 scale)
+  - Survey Response Rate: Percentage of developers responding to surveys
+  - Burnout Percentage: Percentage reporting burnout symptoms
+  - NPS Trend (30 days): Historical NPS trend
+
+- **PERFORMANCE**:
+  - Deployment Frequency: Deploys per day (stat with trend)
+  - Lead Time for Changes: Commit to production time in hours (gauge)
+  - Change Failure Rate: Percentage of failed deployments (gauge)
+  - Build Success Rate: Percentage of successful builds
+
+- **ACTIVITY**:
+  - Active Developers: Count of developers active in last 7 days
+  - Commits (7d): Total commits in last 7 days
+  - Pull Requests (7d): Total PRs created in last 7 days
+  - Code Reviews (7d): Total reviews completed in last 7 days
+  - AI Tool Adoption: Percentage of developers using AI tools
+  - Platform Engagement: Percentage of developers actively using platform weekly
+
+- **COMMUNICATION & COLLABORATION**:
+  - Avg Review Time: Average time to first code review in hours (gauge)
+  - Comments per PR: Average comments per pull request
+  - Cross-Team PRs: Percentage of PRs involving cross-team collaboration
+  - Knowledge Sharing: Documentation contributions (wiki edits, TechDocs)
+
+- **EFFICIENCY & FLOW**:
+  - Flow State Achievement: Percentage achieving flow 3+ days per week
+  - Valuable Work Time: Average % of time spent on valuable work (gauge)
+  - Friction Incidents (30d): Total friction incidents reported in last 30 days
+  - Cognitive Load: Average cognitive load (1-5 scale, 5=overwhelmed, gauge)
+
+- **HISTORICAL TRENDS**:
+  - DevEx Health Score Trend (30 days): Overall health score over time
+  - SPACE Dimensions Trend (30 days): Individual dimension scores over time
+  - Deployment Frequency Trend: Daily deployment frequency
+  - Lead Time Trend: Lead time changes over time
+  - Friction Incidents Trend: Daily friction incidents
+
+#### Key Metrics
+
+```promql
+# Overall health
+space_devex_health_score{team="platform"}
+
+# Satisfaction metrics
+space_nps_score{team="platform"}
+space_satisfaction_rating_avg{team="platform"}
+space_burnout_percentage{team="platform"}
+
+# Performance metrics (DORA)
+space_deployments_total{team="platform"}
+space_lead_time_hours_avg{team="platform"}
+space_change_failure_rate{team="platform"}
+space_build_success_rate{team="platform"}
+
+# Activity metrics
+space_active_developers_count{team="platform"}
+space_commits_total{team="platform"}
+space_pull_requests_total{team="platform"}
+space_ai_adoption_percentage{team="platform"}
+
+# Communication metrics
+space_avg_review_time_hours{team="platform"}
+space_comments_per_pr_avg{team="platform"}
+space_cross_team_pr_percentage{team="platform"}
+
+# Efficiency metrics
+space_flow_state_achievement_percentage{team="platform"}
+space_valuable_work_percentage_avg{team="platform"}
+space_friction_incidents_total{team="platform"}
+space_cognitive_load_avg{team="platform"}
+```
+
+#### Variables
+
+- **team**: Filter by team (multi-select, with "All" option)
+
+#### Thresholds
+
+- **DevEx Health Score**:
+  - 🔴 Red: < 50
+  - 🟠 Orange: 50-59
+  - 🟡 Yellow: 60-79
+  - 🟢 Green: ≥ 80
+
+- **NPS**:
+  - 🔴 Red: < 0
+  - 🟠 Orange: 0-49
+  - 🟡 Yellow: 50-69
+  - 🟢 Green: ≥ 70
+
+- **Satisfaction Rating**:
+  - 🔴 Red: < 2.5
+  - 🟠 Orange: 2.5-3.4
+  - 🟡 Yellow: 3.5-3.9
+  - 🟢 Green: ≥ 4.0
+
+- **Lead Time**:
+  - 🟢 Green: < 1 hour (Elite)
+  - 🟡 Yellow: 1-24 hours
+  - 🟠 Orange: 24-168 hours (1 week)
+  - 🔴 Red: > 168 hours
+
+- **Change Failure Rate**:
+  - 🟢 Green: 0-15% (Elite)
+  - 🟡 Yellow: 15-30%
+  - 🟠 Orange: 30-45%
+  - 🔴 Red: > 45%
+
+- **Flow State Achievement**:
+  - 🔴 Red: < 50%
+  - 🟡 Yellow: 50-59%
+  - 🟢 Green: ≥ 60%
+
+- **Cognitive Load**:
+  - 🟢 Green: < 3.0
+  - 🟡 Yellow: 3.0-3.4
+  - 🟠 Orange: 3.5-3.9
+  - 🔴 Red: ≥ 4.0
+
+#### Annotations
+
+The dashboard includes automatic annotations for:
+- **Deployments**: Green markers when deployments occur
+- **Incidents**: Red markers when incidents are detected
+
+#### Implementation Notes
+
+Requires:
+1. SPACE metrics service running (`services/space-metrics/`)
+2. Prometheus scraping SPACE metrics service `/metrics` endpoint
+3. ServiceMonitor configured for metrics collection
+4. Survey responses being collected (NPS, pulse surveys)
+5. Activity data being tracked (GitHub, Backstage, AI tools)
+
+See [SPACE Metrics Service README](../../../../services/space-metrics/README.md) and [ADR-018 SPACE Framework](../../../../docs/adr/ADR-018%20Developer%20Experience%20Measurement%20Framework%20SPACE.md) for setup details.
+
+#### Alerting
+
+The dashboard supports alerting on degrading metrics:
+- DevEx health score drops below 60
+- NPS score drops below 40
+- Friction incidents exceed 50 per month per 100 developers
+- Cognitive load average exceeds 4.0
+- Build success rate drops below 90%
+
+Configure alerts in Grafana UI or via AlertManager rules.
+
+---
+
+### 2. Research Insights Dashboard
+
+**File**: `research-insights-dashboard.json`  
+**ConfigMap**: `platform/apps/prometheus/research-insights-dashboard.yaml`  
+**Namespace**: monitoring
+
+Comprehensive research insights visualization dashboard showing insight trends, categories, validation rates, and time-to-action metrics.
+
+#### Panels
+
+- **Overview Section**:
+  - Total Research Insights: Overall count of captured insights
+  - Validated Insights: Published insights count
+  - Published (Last 7 Days): Recent publication rate
+  - Published (Last 30 Days): Monthly publication rate
+  - Total Categories: Category count
+  - Total Tags: Tag count
+
+- **Status & Priority Analysis**:
+  - Insights by Status: Distribution pie chart (draft, published, archived)
+  - Insights by Priority: Distribution pie chart (low, medium, high, critical)
+  - Insights Status Over Time: Time series trend of status changes
+
+- **Category Analytics**:
+  - Insights by Category: Bar gauge showing count per category
+  - Category Distribution: Donut chart of proportional distribution
+
+- **Validation Metrics**:
+  - Validation Rate by Category: Percentage of published insights per category
+  - Time to Action (Hours): Average time from creation to publication
+
+- **Tag Analytics**:
+  - Top Tags by Usage: Bar gauge of most frequently used tags
+  - Tag Usage Distribution: Donut chart of tag popularity
+
+- **Trend Analysis**:
+  - Published Insights Trend (7 Days): Weekly publication trend
+  - Published Insights Trend (30 Days): Monthly publication trend
+
+#### Key Metrics
+
+```promql
+# Total insights
+research_insights_total
+
+# Validated insights
+research_insights_validated
+
+# Insights by status
+research_insights_by_status{status="published"}
+
+# Insights by category
+research_insights_by_category{category="User Experience"}
+
+# Validation rate
+research_insights_validation_rate{category="User Experience"}
+
+# Time to action (in hours)
+research_insights_time_to_action_seconds{category="User Experience"} / 3600
+
+# Tag usage
+research_tag_usage_count{tag="platform-adoption"}
+
+# Recent publications
+research_insights_published_last_7d
+research_insights_published_last_30d
+```
+
+#### Variables
+
+- **datasource**: Prometheus data source selector
+- **category**: Filter by category (multi-select, with "All" option)
+
+#### Thresholds
+
+- **Published (7 Days)**:
+  - 🔴 Red: 0 insights
+  - 🟡 Yellow: 1-4 insights
+  - 🟢 Green: ≥ 5 insights
+
+- **Validation Rate**:
+  - 🔴 Red: < 50%
+  - 🟡 Yellow: 50-75%
+  - 🟢 Green: ≥ 75%
+
+- **Time to Action**:
+  - 🟢 Green: < 48 hours
+  - 🟡 Yellow: 48-168 hours (2-7 days)
+  - 🟠 Orange: 168-336 hours (1-2 weeks)
+  - 🔴 Red: > 336 hours (2+ weeks)
+
+#### Implementation Notes
+
+Requires:
+1. Insights service running with Prometheus metrics enabled (`services/insights/`)
+2. Prometheus scraping insights service `/metrics` endpoint
+3. ServiceMonitor configured for metrics collection
+4. Data being captured through the insights API
+
+See [Insights Service README](../../../../services/insights/README.md) for setup details.
+
+---
+
+### 3. Kubernetes Cluster Health
 
 **File**: `kubernetes-cluster-health-dashboard.json`  
 **ConfigMap**: `platform/apps/prometheus/kubernetes-cluster-health-dashboard.yaml`  
@@ -40,7 +309,7 @@ kube_pod_status_phase{phase="Running"}
 
 ---
 
-### 2. Platform Components Health
+### 4. Platform Components Health
 
 **File**: `platform-components-health-dashboard.json`  
 **ConfigMap**: `platform/apps/prometheus/platform-components-health-dashboard.yaml`  
@@ -77,7 +346,7 @@ harbor_system_volumes_bytes
 
 ---
 
-### 3. DORA Metrics (Placeholder)
+### 5. DORA Metrics (Placeholder)
 
 **File**: `dora-metrics-dashboard.json`  
 **ConfigMap**: `platform/apps/prometheus/dora-metrics-dashboard.yaml`  
@@ -121,7 +390,7 @@ dora_mttr_seconds
 
 ---
 
-### 4. Application Metrics Template
+### 6. Application Metrics Template
 
 **File**: `application-metrics-template-dashboard.json`  
 **ConfigMap**: `platform/apps/prometheus/application-metrics-template-dashboard.yaml`  
@@ -169,7 +438,7 @@ container_memory_working_set_bytes{namespace="$namespace"}
 
 ---
 
-### 5. Trivy Security Dashboard
+### 7. Trivy Security Dashboard
 
 **File**: `trivy-security-dashboard.json`  
 **Purpose**: Container security scanning visibility
@@ -178,7 +447,7 @@ See [Trivy Dashboard README](README.md) in this directory for details.
 
 ---
 
-### 6. VSM Flow Metrics Dashboard
+### 8. VSM Flow Metrics Dashboard
 
 **File**: `vsm-flow-metrics.json`  
 **ConfigMap**: Loaded via Grafana provisioning  
@@ -270,7 +539,7 @@ See [VSM Service README](../../../../services/vsm/README.md) for setup details.
 
 ---
 
-### 7. Data Quality Dashboard
+### 9. Data Quality Dashboard
 
 **File**: `data-quality.json`  
 **ConfigMap**: Loaded via Grafana provisioning  
@@ -356,7 +625,7 @@ See [Data Quality Service README](../../../../services/data-quality/README.md) f
 
 ---
 
-### 8. AI Observability Dashboard
+### 10. AI Observability Dashboard
 
 **File**: `ai-observability.json`  
 **ConfigMap**: Loaded via Grafana provisioning  

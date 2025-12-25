@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: fawkes
+
+resources:
+  - serviceaccount.yaml
+  - deployment.yaml
+  - service.yaml
+  - secret.yaml
+  - servicemonitor.yaml
+
+commonLabels:
+  app: feedback-bot
+  component: feedback
+  platform: fawkes

@@ -68,6 +68,68 @@
             spec.system: entity_id
           insertion_order: null
 
+# Insights Database Relationships
+- database: insights
+  table: insights
+  object_relationships:
+    # Insight belongs to one category
+    - name: category
+      using:
+        foreign_key_constraint_on: category_id
+  
+  array_relationships:
+    # Insight has many tags (via insight_tags)
+    - name: tags
+      using:
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: tags
+          column_mapping:
+            id: insight_id
+          insertion_order: null
+
+- database: insights
+  table: categories
+  object_relationships:
+    # Category has one parent category
+    - name: parent
+      using:
+        foreign_key_constraint_on: parent_id
+  
+  array_relationships:
+    # Category has many insights
+    - name: insights
+      using:
+        foreign_key_constraint_on:
+          column: category_id
+          table:
+            schema: public
+            name: insights
+    
+    # Category has many subcategories
+    - name: subcategories
+      using:
+        foreign_key_constraint_on:
+          column: parent_id
+          table:
+            schema: public
+            name: categories
+
+- database: insights
+  table: tags
+  array_relationships:
+    # Tag has many insights (via insight_tags)
+    - name: insights
+      using:
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: insights
+          column_mapping:
+            id: tag_id
+          insertion_order: null
+
 # Cross-Database Relationships (if needed)
 # These require Hasura remote schemas or actions
 

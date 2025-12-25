@@ -17,7 +17,7 @@ jobs:
       packages: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Derive version tag
         id: version
@@ -42,7 +42,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build and push (multi-arch)
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./services/mcp-k8s-server
           push: true

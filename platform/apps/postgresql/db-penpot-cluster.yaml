@@ -1,0 +1,49 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: penpot-db
+  namespace: fawkes
+  labels:
+    app: penpot
+    component: database
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:15.4
+  
+  postgresql:
+    parameters:
+      max_connections: "100"
+      shared_buffers: "256MB"
+      effective_cache_size: "1GB"
+      maintenance_work_mem: "64MB"
+      checkpoint_completion_target: "0.9"
+      wal_buffers: "16MB"
+      default_statistics_target: "100"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "200"
+      work_mem: "6553kB"
+      min_wal_size: "1GB"
+      max_wal_size: "4GB"
+  
+  bootstrap:
+    initdb:
+      database: penpot
+      owner: penpot
+      secret:
+        name: penpot-db-credentials
+  
+  storage:
+    size: 10Gi
+    storageClass: standard
+  
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
+    limits:
+      memory: "2Gi"
+      cpu: "1000m"
+  
+  monitoring:
+    enablePodMonitor: true
+

@@ -1,0 +1,59 @@
+# ============================================================================
+# FILE: platform/apps/unleash-application.yaml
+# PURPOSE: ArgoCD Application for Unleash Feature Flags platform deployment
+#          Provides feature flag management with OpenFeature support for
+#          gradual rollouts, A/B testing, and kill switches.
+# PREREQ: PostgreSQL cluster (db-unleash-dev) must be deployed first.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: unleash
+  namespace: fawkes
+  labels:
+    app: unleash
+    component: feature-flags
+    environment: dev
+    team: platform
+  annotations:
+    # Link to documentation
+    argocd.argoproj.io/docs: "https://docs.getunleash.io/"
+    # Sync wave to ensure database is deployed first
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/paruff/fawkes
+    targetRevision: HEAD
+    path: platform/apps/unleash
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Keep ArgoCD from flagging differences you expect
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+
+  # Basic health and retention tuning
+  revisionHistoryLimit: 10

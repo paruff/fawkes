@@ -84,6 +84,46 @@ Feature: Feedback Widget in Backstage
     Then the proxy should include endpoint "/feedback/api"
     And the proxy target should be "http://feedback-service.fawkes.svc:8000/"
 
+  @api @enhanced @screenshot
+  Scenario: Submit feedback with screenshot
+    Given the feedback service is accessible
+    When I submit feedback with rating 4, category "Bug Report", and a screenshot
+    Then the feedback should be accepted
+    And the response should indicate screenshot was saved
+    And the response should contain "has_screenshot" field set to true
+
+  @api @enhanced @github
+  Scenario: Submit feedback with GitHub issue creation
+    Given the feedback service is accessible
+    And GitHub integration is enabled
+    When I submit feedback with type "bug_report" and create_github_issue flag
+    Then the feedback should be accepted
+    And a GitHub issue should be created in the background
+
+  @api @enhanced @contextual
+  Scenario: Submit feedback with contextual information
+    Given the feedback service is accessible
+    When I submit feedback with browser info and user agent
+    Then the feedback should be accepted
+    And the response should contain browser_info
+    And the response should contain user_agent
+
+  @api @enhanced @types
+  Scenario: Submit feedback with different types
+    Given the feedback service is accessible
+    When I submit feedback with type "feature_request"
+    Then the feedback should be accepted
+    And the feedback type should be "feature_request"
+
+  @api @admin @screenshot
+  Scenario: Admin can retrieve screenshot
+    Given the feedback service is accessible
+    And I have admin authorization
+    And there is feedback with screenshot with ID 1
+    When I request the screenshot for feedback ID 1
+    Then the request should be successful
+    And the response should contain base64 screenshot data
+
   @metrics @observability
   Scenario: Feedback service exposes Prometheus metrics
     Given the feedback service is accessible
