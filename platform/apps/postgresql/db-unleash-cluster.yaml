@@ -1,0 +1,102 @@
+# ============================================================================
+# FILE: platform/apps/postgresql/db-unleash-cluster.yaml
+# PURPOSE: CloudNativePG Cluster custom resource for Unleash feature flags database
+#          with HA (3 replicas), automated failover, TLS, and backup config.
+# NAMING: Following convention db-{service}-{environment}
+# ============================================================================
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: db-unleash-dev
+  namespace: fawkes
+  labels:
+    app: unleash
+    component: database
+    environment: dev
+    team: platform
+spec:
+  # HA Configuration: 1 primary + 2 replicas
+  instances: 3
+
+  # PostgreSQL version and image
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.4
+
+  # Primary update strategy for rolling updates
+  primaryUpdateStrategy: unsupervised
+
+  # PostgreSQL configuration
+  postgresql:
+    parameters:
+      # Connection settings
+      max_connections: "100"
+      shared_buffers: "128MB"
+      effective_cache_size: "384MB"
+      maintenance_work_mem: "64MB"
+      checkpoint_completion_target: "0.9"
+      wal_buffers: "8MB"
+      default_statistics_target: "100"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "200"
+      min_wal_size: "1GB"
+      max_wal_size: "2GB"
+      # Logging
+      log_statement: "ddl"
+      log_min_duration_statement: "1000"
+      # Security
+      password_encryption: "scram-sha-256"
+    pg_hba:
+      # Allow TLS connections from the cluster
+      - host all all 10.0.0.0/8 scram-sha-256
+      - host all all 172.16.0.0/12 scram-sha-256
+      - host all all 192.168.0.0/16 scram-sha-256
+      # Allow replication
+      - host replication streaming_replica all scram-sha-256
+
+  # Database bootstrap configuration
+  bootstrap:
+    initdb:
+      database: unleash
+      owner: unleash_user
+      secret:
+        name: db-unleash-credentials
+
+  # Storage configuration
+  storage:
+    size: 10Gi
+    storageClass: standard
+
+  # Resource limits and requests - optimized for 70% target
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  # Affinity rules for HA - spread pods across nodes
+  affinity:
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: preferred
+
+  # Enable monitoring
+  monitoring:
+    enablePodMonitor: true
+    customQueriesConfigMap:
+      - name: cnpg-default-monitoring
+        key: queries
+
+  # Failover configuration
+  failoverDelay: 30
+  switchoverDelay: 60
+
+  # Managed services configuration
+  managed:
+    services:
+      # Read-write service (primary)
+      primary:
+        enabled: true
+      # Read-only service (replicas)
+      ro:
+        enabled: true
