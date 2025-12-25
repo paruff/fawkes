@@ -1,4 +1,4 @@
-.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-research-structure validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 validate-at-e3-001 validate-at-e3-002 validate-at-e3-003 validate-at-e3-004 validate-at-e3-005 validate-at-e3-006 validate-at-e3-007 validate-at-e3-009 validate-at-e3-010 validate-at-e3-011 validate-at-e3-012 validate-discovery-metrics test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all
+.PHONY: help deploy-local test-bdd validate sync pre-commit-setup validate-research-structure validate-at-e1-001 validate-at-e1-002 validate-at-e1-003 validate-at-e1-004 validate-at-e1-005 validate-at-e1-006 validate-at-e1-007 validate-at-e1-009 validate-at-e1-012 validate-at-e2-001 validate-at-e2-002 validate-at-e2-003 validate-at-e2-004 validate-at-e2-005 validate-at-e2-006 validate-at-e2-007 validate-at-e2-008 validate-at-e2-009 validate-at-e2-010 validate-at-e3-001 validate-at-e3-002 validate-at-e3-003 validate-at-e3-004 validate-at-e3-005 validate-at-e3-006 validate-at-e3-007 validate-at-e3-008 validate-at-e3-009 validate-at-e3-010 validate-at-e3-011 validate-at-e3-012 validate-discovery-metrics test-e2e-argocd test-e2e-integration test-e2e-integration-verbose test-e2e-integration-dry-run test-e2e-all
 
 # Variables
 NAMESPACE ?= fawkes-local
@@ -149,14 +149,17 @@ validate-at-e3-006: ## Run AT-E3-006 acceptance test validation for Feature Flag
 validate-at-e3-007: ## Run AT-E3-007 acceptance test validation for Event Tracking Infrastructure
 	@./scripts/validate-at-e3-007.sh --namespace $(NAMESPACE)
 
+validate-at-e3-008: ## Run AT-E3-008 acceptance test validation for Continuous Discovery Process
+	@./scripts/validate-at-e3-008.sh --namespace $(NAMESPACE)
+
 validate-at-e3-010: ## Run AT-E3-010 acceptance test validation for Usability Testing Infrastructure
 	@./scripts/validate-at-e3-010.sh --namespace $(NAMESPACE)
 
 validate-at-e3-011: ## Run AT-E3-011 acceptance test validation for Product Analytics Platform
 	@./scripts/validate-product-analytics.sh --namespace $(NAMESPACE)
 
-validate-at-e3-012: ## Run AT-E3-012 acceptance test validation for Experimentation Framework
-	@./scripts/validate-experimentation.sh --namespace $(NAMESPACE)
+validate-at-e3-012: ## Run AT-E3-012 acceptance test validation for Complete Epic 3 Documentation
+	@./scripts/validate-at-e3-012.sh --namespace $(NAMESPACE)
 
 validate-discovery-metrics: ## Run validation for Discovery Metrics Dashboard (Issue #105)
 	@./scripts/validate-discovery-metrics.sh $(NAMESPACE)
