@@ -1,0 +1,557 @@
+{
+  "dashboard": {
+    "title": "Analytics Dashboard - Comprehensive Platform Analytics",
+    "tags": ["analytics", "usage", "experiments", "funnels", "segments"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "30s",
+    "time": {
+      "from": "now-7d",
+      "to": "now"
+    },
+    "description": "Comprehensive analytics dashboard showing usage trends, feature adoption, experiment results, and user segments with real-time updates",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Usage Trends Overview",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 0, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 2,
+        "title": "Total Users",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 1, "w": 6, "h": 4},
+        "targets": [{
+          "expr": "analytics_total_users",
+          "refId": "A"
+        }],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "textMode": "value_and_name"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 100, "color": "yellow"},
+                {"value": 500, "color": "green"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Active Users",
+        "type": "stat",
+        "gridPos": {"x": 6, "y": 1, "w": 6, "h": 4},
+        "targets": [{
+          "expr": "analytics_active_users",
+          "refId": "A"
+        }],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "textMode": "value_and_name"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 50, "color": "yellow"},
+                {"value": 200, "color": "green"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Total Page Views",
+        "type": "stat",
+        "gridPos": {"x": 12, "y": 1, "w": 6, "h": 4},
+        "targets": [{
+          "expr": "analytics_page_views_total",
+          "refId": "A"
+        }],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area"
+        }
+      },
+      {
+        "id": 5,
+        "title": "Bounce Rate",
+        "type": "gauge",
+        "gridPos": {"x": 18, "y": 1, "w": 6, "h": 4},
+        "targets": [{
+          "expr": "analytics_bounce_rate_percentage",
+          "refId": "A"
+        }],
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "green"},
+                {"value": 40, "color": "yellow"},
+                {"value": 70, "color": "red"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "Active Users Over Time",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 5, "w": 12, "h": 8},
+        "targets": [{
+          "expr": "analytics_active_users",
+          "refId": "A",
+          "legendFormat": "Active Users"
+        }],
+        "yaxes": [
+          {"label": "Users", "format": "short"},
+          {"label": "", "format": "short"}
+        ],
+        "xaxis": {"mode": "time"}
+      },
+      {
+        "id": 7,
+        "title": "Page Views Over Time",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 5, "w": 12, "h": 8},
+        "targets": [{
+          "expr": "rate(analytics_page_views_total[5m])",
+          "refId": "A",
+          "legendFormat": "Page Views/sec"
+        }],
+        "yaxes": [
+          {"label": "Views/sec", "format": "short"},
+          {"label": "", "format": "short"}
+        ],
+        "xaxis": {"mode": "time"}
+      },
+      {
+        "id": 8,
+        "title": "Feature Adoption",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 13, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 9,
+        "title": "Feature Adoption Rates",
+        "type": "bargauge",
+        "gridPos": {"x": 0, "y": 14, "w": 12, "h": 8},
+        "targets": [{
+          "expr": "analytics_feature_adoption_rate",
+          "refId": "A",
+          "legendFormat": "{{feature_name}}"
+        }],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 30, "color": "yellow"},
+                {"value": 60, "color": "green"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 10,
+        "title": "Feature Usage Count",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 14, "w": 12, "h": 8},
+        "targets": [{
+          "expr": "rate(analytics_feature_usage_total[5m])",
+          "refId": "A",
+          "legendFormat": "{{feature_name}}"
+        }],
+        "yaxes": [
+          {"label": "Uses/sec", "format": "short"},
+          {"label": "", "format": "short"}
+        ],
+        "xaxis": {"mode": "time"},
+        "stack": true
+      },
+      {
+        "id": 11,
+        "title": "Experiment Results",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 22, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 12,
+        "title": "Active Experiments",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 23, "w": 6, "h": 4},
+        "targets": [{
+          "expr": "analytics_active_experiments",
+          "refId": "A"
+        }],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "yellow"},
+                {"value": 1, "color": "green"},
+                {"value": 10, "color": "orange"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 13,
+        "title": "Significant Results",
+        "type": "stat",
+        "gridPos": {"x": 6, "y": 23, "w": 6, "h": 4},
+        "targets": [{
+          "expr": "analytics_significant_results_total",
+          "refId": "A"
+        }],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area"
+        }
+      },
+      {
+        "id": 14,
+        "title": "Experiment Conversion Rates",
+        "type": "bargauge",
+        "gridPos": {"x": 12, "y": 23, "w": 12, "h": 8},
+        "targets": [{
+          "expr": "analytics_experiment_conversion_rate",
+          "refId": "A",
+          "legendFormat": "{{experiment_id}} - {{variant}}"
+        }],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percentunit",
+            "min": 0,
+            "max": 1,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 0.2, "color": "yellow"},
+                {"value": 0.4, "color": "green"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 15,
+        "title": "Experiment Conversions Over Time",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 27, "w": 12, "h": 8},
+        "targets": [{
+          "expr": "analytics_experiment_conversions",
+          "refId": "A",
+          "legendFormat": "{{experiment_id}} - {{variant}}"
+        }],
+        "yaxes": [
+          {"label": "Conversions", "format": "short"},
+          {"label": "", "format": "short"}
+        ],
+        "xaxis": {"mode": "time"}
+      },
+      {
+        "id": 16,
+        "title": "User Segments",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 35, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 17,
+        "title": "Segment Distribution",
+        "type": "piechart",
+        "gridPos": {"x": 0, "y": 36, "w": 12, "h": 8},
+        "targets": [{
+          "expr": "analytics_segment_size",
+          "refId": "A",
+          "legendFormat": "{{segment_name}}"
+        }],
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": ["value", "percent"]
+          }
+        }
+      },
+      {
+        "id": 18,
+        "title": "Segment Engagement Scores",
+        "type": "bargauge",
+        "gridPos": {"x": 12, "y": 36, "w": 12, "h": 8},
+        "targets": [{
+          "expr": "analytics_segment_engagement",
+          "refId": "A",
+          "legendFormat": "{{segment_name}}"
+        }],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "min": 0,
+            "max": 10,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 3, "color": "yellow"},
+                {"value": 6, "color": "green"},
+                {"value": 8, "color": "blue"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 19,
+        "title": "Conversion Funnels",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 44, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 20,
+        "title": "Onboarding Funnel Conversion",
+        "type": "gauge",
+        "gridPos": {"x": 0, "y": 45, "w": 8, "h": 6},
+        "targets": [{
+          "expr": "analytics_funnel_conversion_rate{funnel_name=\"onboarding\"}",
+          "refId": "A"
+        }],
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 30, "color": "yellow"},
+                {"value": 50, "color": "green"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 21,
+        "title": "Deployment Funnel Conversion",
+        "type": "gauge",
+        "gridPos": {"x": 8, "y": 45, "w": 8, "h": 6},
+        "targets": [{
+          "expr": "analytics_funnel_conversion_rate{funnel_name=\"deployment\"}",
+          "refId": "A"
+        }],
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 70, "color": "yellow"},
+                {"value": 90, "color": "green"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 22,
+        "title": "Service Creation Funnel Conversion",
+        "type": "gauge",
+        "gridPos": {"x": 16, "y": 45, "w": 8, "h": 6},
+        "targets": [{
+          "expr": "analytics_funnel_conversion_rate{funnel_name=\"service_creation\"}",
+          "refId": "A"
+        }],
+        "options": {
+          "showThresholdLabels": true,
+          "showThresholdMarkers": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 70, "color": "yellow"},
+                {"value": 85, "color": "green"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 23,
+        "title": "Onboarding Funnel Steps",
+        "type": "bargauge",
+        "gridPos": {"x": 0, "y": 51, "w": 8, "h": 8},
+        "targets": [{
+          "expr": "analytics_funnel_step_completion_rate{funnel_name=\"onboarding\"}",
+          "refId": "A",
+          "legendFormat": "{{step}}"
+        }],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": 24,
+        "title": "Deployment Funnel Steps",
+        "type": "bargauge",
+        "gridPos": {"x": 8, "y": 51, "w": 8, "h": 8},
+        "targets": [{
+          "expr": "analytics_funnel_step_completion_rate{funnel_name=\"deployment\"}",
+          "refId": "A",
+          "legendFormat": "{{step}}"
+        }],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": 25,
+        "title": "Service Creation Funnel Steps",
+        "type": "bargauge",
+        "gridPos": {"x": 16, "y": 51, "w": 8, "h": 8},
+        "targets": [{
+          "expr": "analytics_funnel_step_completion_rate{funnel_name=\"service_creation\"}",
+          "refId": "A",
+          "legendFormat": "{{step}}"
+        }],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": 26,
+        "title": "Funnel Drop-off Analysis",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 59, "w": 24, "h": 8},
+        "targets": [
+          {
+            "expr": "analytics_funnel_drop_off_rate{funnel_name=\"onboarding\"}",
+            "refId": "A",
+            "legendFormat": "Onboarding - {{step}}"
+          },
+          {
+            "expr": "analytics_funnel_drop_off_rate{funnel_name=\"deployment\"}",
+            "refId": "B",
+            "legendFormat": "Deployment - {{step}}"
+          },
+          {
+            "expr": "analytics_funnel_drop_off_rate{funnel_name=\"service_creation\"}",
+            "refId": "C",
+            "legendFormat": "Service Creation - {{step}}"
+          }
+        ],
+        "yaxes": [
+          {"label": "Drop-off Rate %", "format": "percent"},
+          {"label": "", "format": "short"}
+        ],
+        "xaxis": {"mode": "time"}
+      },
+      {
+        "id": 27,
+        "title": "Documentation",
+        "type": "text",
+        "gridPos": {"x": 0, "y": 67, "w": 24, "h": 4},
+        "options": {
+          "mode": "markdown",
+          "content": "## Analytics Dashboard\n\nThis dashboard provides comprehensive analytics for the Fawkes platform:\n\n- **Usage Trends**: Monitor user activity, page views, and engagement\n- **Feature Adoption**: Track which features are being used and by how many users\n- **Experiment Results**: View A/B test performance with statistical significance\n- **User Segments**: Analyze user behavior patterns and engagement levels\n- **Conversion Funnels**: Identify bottlenecks in key user workflows\n\n### Real-time Updates\nDashboard refreshes every 30 seconds. Data is aggregated from Plausible Analytics, Experimentation Service, and Feedback Service.\n\n### Export\nTo export data, use the Analytics Dashboard API at `https://analytics.fawkes.idp/api/v1/export/json`\n\n### Time Range\nAdjust the time range selector (top right) to view data for different periods: 1h, 6h, 24h, 7d, 30d, 90d"
+        }
+      }
+    ]
+  }
+}
