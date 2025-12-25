@@ -29,14 +29,14 @@ echo ""
 
 # Check if openssl is installed
 if ! command -v openssl &> /dev/null; then
-    echo -e "${YELLOW}Error: openssl is not installed${NC}"
-    exit 1
+  echo -e "${YELLOW}Error: openssl is not installed${NC}"
+  exit 1
 fi
 
 # Check if kubectl is installed
 if ! command -v kubectl &> /dev/null; then
-    echo -e "${YELLOW}Error: kubectl is not installed${NC}"
-    exit 1
+  echo -e "${YELLOW}Error: kubectl is not installed${NC}"
+  exit 1
 fi
 
 # Create temporary directory
@@ -48,37 +48,37 @@ echo ""
 
 # Generate private key and certificate
 openssl req -x509 -nodes -days ${DAYS_VALID} \
-    -newkey rsa:2048 \
-    -keyout "${TEMP_DIR}/tls.key" \
-    -out "${TEMP_DIR}/tls.crt" \
-    -subj "${CERT_SUBJECT}" \
-    -addext "subjectAltName=DNS:*.127.0.0.1.nip.io,DNS:test.127.0.0.1.nip.io,DNS:test-tls.127.0.0.1.nip.io"
+  -newkey rsa:2048 \
+  -keyout "${TEMP_DIR}/tls.key" \
+  -out "${TEMP_DIR}/tls.crt" \
+  -subj "${CERT_SUBJECT}" \
+  -addext "subjectAltName=DNS:*.127.0.0.1.nip.io,DNS:test.127.0.0.1.nip.io,DNS:test-tls.127.0.0.1.nip.io"
 
 echo -e "${GREEN}✅ Certificate generated successfully${NC}"
 echo ""
 
 # Create namespace if it doesn't exist
 if ! kubectl get namespace "${NAMESPACE}" &> /dev/null; then
-    echo "Creating namespace: ${NAMESPACE}"
-    kubectl create namespace "${NAMESPACE}"
-    echo -e "${GREEN}✅ Namespace created${NC}"
+  echo "Creating namespace: ${NAMESPACE}"
+  kubectl create namespace "${NAMESPACE}"
+  echo -e "${GREEN}✅ Namespace created${NC}"
 else
-    echo -e "${GREEN}✅ Namespace ${NAMESPACE} already exists${NC}"
+  echo -e "${GREEN}✅ Namespace ${NAMESPACE} already exists${NC}"
 fi
 echo ""
 
 # Delete existing secret if it exists
 if kubectl get secret "${SECRET_NAME}" -n "${NAMESPACE}" &> /dev/null; then
-    echo "Deleting existing secret: ${SECRET_NAME}"
-    kubectl delete secret "${SECRET_NAME}" -n "${NAMESPACE}"
+  echo "Deleting existing secret: ${SECRET_NAME}"
+  kubectl delete secret "${SECRET_NAME}" -n "${NAMESPACE}"
 fi
 
 # Create TLS secret
 echo "Creating TLS secret: ${SECRET_NAME}"
 kubectl create secret tls "${SECRET_NAME}" \
-    --cert="${TEMP_DIR}/tls.crt" \
-    --key="${TEMP_DIR}/tls.key" \
-    -n "${NAMESPACE}"
+  --cert="${TEMP_DIR}/tls.crt" \
+  --key="${TEMP_DIR}/tls.key" \
+  -n "${NAMESPACE}"
 
 echo -e "${GREEN}✅ TLS secret created successfully${NC}"
 echo ""

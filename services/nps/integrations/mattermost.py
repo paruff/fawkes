@@ -29,21 +29,16 @@ class MattermostClient:
 
     def __init__(self, base_url: str = MATTERMOST_URL, token: str = MATTERMOST_TOKEN):
         """Initialize Mattermost client."""
-        self.base_url = base_url.rstrip('/')
+        self.base_url = base_url.rstrip("/")
         self.token = token
-        self.headers = {
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json"
-        }
+        self.headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
     async def get_user_by_email(self, email: str) -> Optional[Dict]:
         """Get Mattermost user by email."""
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.get(
-                    f"{self.base_url}/api/v4/users/email/{email}",
-                    headers=self.headers,
-                    timeout=10.0
+                    f"{self.base_url}/api/v4/users/email/{email}", headers=self.headers, timeout=10.0
                 )
 
                 if response.status_code == 200:
@@ -66,7 +61,7 @@ class MattermostClient:
                     f"{self.base_url}/api/v4/channels/direct",
                     headers=self.headers,
                     json=[bot_user_id, user_id],
-                    timeout=10.0
+                    timeout=10.0,
                 )
 
                 if response.status_code in [200, 201]:
@@ -86,11 +81,8 @@ class MattermostClient:
                 response = await client.post(
                     f"{self.base_url}/api/v4/posts",
                     headers=self.headers,
-                    json={
-                        "channel_id": channel_id,
-                        "message": message
-                    },
-                    timeout=10.0
+                    json={"channel_id": channel_id, "message": message},
+                    timeout=10.0,
                 )
 
                 if response.status_code in [200, 201]:
@@ -104,11 +96,7 @@ class MattermostClient:
             return False
 
     async def send_survey_dm(
-        self,
-        user_email: str,
-        survey_url: str,
-        bot_user_id: str,
-        is_reminder: bool = False
+        self, user_email: str, survey_url: str, bot_user_id: str, is_reminder: bool = False
     ) -> bool:
         """Send survey DM to a user."""
         # Get user
@@ -177,7 +165,7 @@ async def send_surveys_to_users(
     users: List[Dict[str, str]],
     base_survey_url: str,
     bot_user_id: str,
-    campaign_id: Optional[int] = None
+    campaign_id: Optional[int] = None,
 ) -> Dict[str, int]:
     """
     Send surveys to a list of users.
@@ -206,34 +194,44 @@ async def send_surveys_to_users(
                 continue
 
             # Check if user already has an active survey link
-            existing = await conn.fetchrow("""
+            existing = await conn.fetchrow(
+                """
                 SELECT * FROM survey_links
                 WHERE user_id = $1
                 AND expires_at > CURRENT_TIMESTAMP
                 AND responded = FALSE
                 ORDER BY created_at DESC
                 LIMIT 1
-            """, user_id)
+            """,
+                user_id,
+            )
 
             if existing:
                 # Check if user already responded
-                if existing['responded']:
+                if existing["responded"]:
                     logger.info(f"User {user_id} already responded, skipping")
                     continue
 
                 # Use existing token
-                token = existing['token']
+                token = existing["token"]
                 logger.info(f"Reusing existing survey link for {user_id}")
             else:
                 # Generate new survey link
                 import secrets
+
                 token = secrets.token_urlsafe(32)
                 expires_at = datetime.now() + timedelta(days=30)
 
-                await conn.execute("""
+                await conn.execute(
+                    """
                     INSERT INTO survey_links (token, user_id, email, expires_at)
                     VALUES ($1, $2, $3, $4)
-                """, token, user_id, email, expires_at)
+                """,
+                    token,
+                    user_id,
+                    email,
+                    expires_at,
+                )
 
             # Send survey via Mattermost
             survey_url = f"{base_survey_url}/{token}"
@@ -248,11 +246,7 @@ async def send_surveys_to_users(
     return results
 
 
-async def send_reminders(
-    db_pool: asyncpg.Pool,
-    base_survey_url: str,
-    bot_user_id: str
-) -> Dict[str, int]:
+async def send_reminders(db_pool: asyncpg.Pool, base_survey_url: str, bot_user_id: str) -> Dict[str, int]:
     """
     Send reminders to users who haven't responded after REMINDER_DAYS.
 
@@ -266,19 +260,22 @@ async def send_reminders(
 
     async with db_pool.acquire() as conn:
         # Find users who need reminders
-        pending_links = await conn.fetch("""
+        pending_links = await conn.fetch(
+            """
             SELECT token, user_id, email, created_at
             FROM survey_links
             WHERE responded = FALSE
             AND reminder_sent = FALSE
             AND expires_at > CURRENT_TIMESTAMP
             AND created_at <= $1
-        """, reminder_threshold)
+        """,
+            reminder_threshold,
+        )
 
         for link in pending_links:
-            token = link['token']
-            user_id = link['user_id']
-            email = link['email']
+            token = link["token"]
+            user_id = link["user_id"]
+            email = link["email"]
 
             # Send reminder
             survey_url = f"{base_survey_url}/{token}"
@@ -286,11 +283,14 @@ async def send_reminders(
 
             if success:
                 # Mark reminder as sent
-                await conn.execute("""
+                await conn.execute(
+                    """
                     UPDATE survey_links
                     SET reminder_sent = TRUE, updated_at = CURRENT_TIMESTAMP
                     WHERE token = $1
-                """, token)
+                """,
+                    token,
+                )
                 results["sent"] += 1
                 logger.info(f"Reminder sent to {user_id}")
             else:

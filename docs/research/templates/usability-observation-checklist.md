@@ -2,22 +2,22 @@
 
 ## Session Information
 
-**Test Date**: _______________
-**Participant ID**: P___ (e.g., P01, P02)
-**Facilitator**: _______________
-**Observer/Note-Taker**: _______________
-**Feature Tested**: _______________
-**Session Start Time**: _______________
-**Session End Time**: _______________
+**Test Date**: **\*\***\_\_\_**\*\***
+**Participant ID**: P**\_ (e.g., P01, P02)
+**Facilitator**: \*\*\*\***\_**\*\*\*\***
+**Observer/Note-Taker**: **\*\***\_\_\_**\*\***
+**Feature Tested**: **\*\***\_\_\_**\*\***
+**Session Start Time**: **\*\***\_\_\_**\*\***
+**Session End Time**: **\*\***\_\_\_**\*\***
 
 ---
 
 ## Participant Profile
 
-**Role**: ☐ Application Developer  ☐ Platform Engineer  ☐ DevOps  ☐ SRE  ☐ Other: __________
-**Experience Level**: ☐ Junior (0-2 years)  ☐ Mid (3-5 years)  ☐ Senior (6+ years)
-**Platform Familiarity**: ☐ New User  ☐ Occasional  ☐ Regular  ☐ Power User
-**Tech Stack**: _______________
+**Role**: ☐ Application Developer ☐ Platform Engineer ☐ DevOps ☐ SRE ☐ Other: \***\*\_\_\*\***
+**Experience Level**: ☐ Junior (0-2 years) ☐ Mid (3-5 years) ☐ Senior (6+ years)
+**Platform Familiarity**: ☐ New User ☐ Occasional ☐ Regular ☐ Power User
+**Tech Stack**: **\*\***\_\_\_**\*\***
 
 ---
 
@@ -25,7 +25,7 @@
 
 ### Task 1: [Task Name]
 
-**Time Started**: _______  **Time Completed**: _______  **Duration**: _______ min
+**Time Started**: **\_\_\_** **Time Completed**: **\_\_\_** **Duration**: **\_\_\_** min
 
 **Task Status:**
 ☐ **Success** - Completed without assistance
@@ -33,12 +33,13 @@
 ☐ **Failure** - Could not complete
 
 **Confidence Rating** (1-5): [ ]
-**Assistance Needed**: ☐ None  ☐ Minor Hint  ☐ Significant Help  ☐ Task Abandoned
+**Assistance Needed**: ☐ None ☐ Minor Hint ☐ Significant Help ☐ Task Abandoned
 
 **Path Taken:**
-- First action: _______________
-- Second action: _______________
-- Third action: _______________
+
+- First action: **\*\***\_\_\_**\*\***
+- Second action: **\*\***\_\_\_**\*\***
+- Third action: **\*\***\_\_\_**\*\***
 - [Continue as needed]
 
 **Expected Path:**
@@ -47,30 +48,32 @@
 ☐ Completely different approach
 
 **Errors/Wrong Turns:**
-- [ ] _______________
-- [ ] _______________
-- [ ] _______________
+
+- [ ] ***
+- [ ] ***
+- [ ] ***
 
 **Direct Quotes:**
-> "_______________________________________"
 
-> "_______________________________________"
+> "**\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***"
+
+> "**\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***"
 
 **Observed Behaviors:**
-☐ Hesitation (where? ______________)
-☐ Backtracking (from where? ______________)
-☐ Scanning/searching (for what? ______________)
-☐ Confusion (about what? ______________)
-☐ Frustration (when? ______________)
-☐ Delight/satisfaction (when? ______________)
-☐ Surprise (at what? ______________)
+☐ Hesitation (where? **\*\***\_\_**\*\***)
+☐ Backtracking (from where? **\*\***\_\_**\*\***)
+☐ Scanning/searching (for what? **\*\***\_\_**\*\***)
+☐ Confusion (about what? **\*\***\_\_**\*\***)
+☐ Frustration (when? **\*\***\_\_**\*\***)
+☐ Delight/satisfaction (when? **\*\***\_\_**\*\***)
+☐ Surprise (at what? **\*\***\_\_**\*\***)
 
 **Issues Encountered:**
 
-| Severity | Description | Impact |
-|----------|-------------|--------|
-| ☐ Critical<br>☐ Major<br>☐ Minor | | |
-| ☐ Critical<br>☐ Major<br>☐ Minor | | |
+| Severity                         | Description | Impact |
+| -------------------------------- | ----------- | ------ |
+| ☐ Critical<br>☐ Major<br>☐ Minor |             |        |
+| ☐ Critical<br>☐ Major<br>☐ Minor |             |        |
 
 ---
 
@@ -78,18 +81,19 @@
 
 [Repeat the same structure as Task 1]
 
-**Time Started**: _______  **Time Completed**: _______  **Duration**: _______ min
+**Time Started**: **\_\_\_** **Time Completed**: **\_\_\_** **Duration**: **\_\_\_** min
 
 **Task Status:**
-☐ Success  ☐ Partial Success  ☐ Failure
+☐ Success ☐ Partial Success ☐ Failure
 
 **Confidence Rating** (1-5): [ ]
-**Assistance Needed**: ☐ None  ☐ Minor Hint  ☐ Significant Help  ☐ Task Abandoned
+**Assistance Needed**: ☐ None ☐ Minor Hint ☐ Significant Help ☐ Task Abandoned
 
 **Path Taken:**
-- First action: _______________
-- Second action: _______________
-- Third action: _______________
+
+- First action: **\*\***\_\_\_**\*\***
+- Second action: **\*\***\_\_\_**\*\***
+- Third action: **\*\***\_\_\_**\*\***
 
 **Expected Path:**
 ☐ Followed expected path
@@ -97,23 +101,25 @@
 ☐ Completely different approach
 
 **Errors/Wrong Turns:**
-- [ ] _______________
-- [ ] _______________
+
+- [ ] ***
+- [ ] ***
 
 **Direct Quotes:**
-> "_______________________________________"
 
-> "_______________________________________"
+> "**\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***"
+
+> "**\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***"
 
 **Observed Behaviors:**
-☐ Hesitation  ☐ Backtracking  ☐ Scanning/searching
-☐ Confusion  ☐ Frustration  ☐ Delight  ☐ Surprise
+☐ Hesitation ☐ Backtracking ☐ Scanning/searching
+☐ Confusion ☐ Frustration ☐ Delight ☐ Surprise
 
 **Issues Encountered:**
 
-| Severity | Description | Impact |
-|----------|-------------|--------|
-| ☐ Critical<br>☐ Major<br>☐ Minor | | |
+| Severity                         | Description | Impact |
+| -------------------------------- | ----------- | ------ |
+| ☐ Critical<br>☐ Major<br>☐ Minor |             |        |
 
 ---
 
@@ -128,20 +134,24 @@
 ### Emotional Reactions
 
 **Frustration Moments:**
-- Timestamp: _______ - Trigger: _______________
-- Timestamp: _______ - Trigger: _______________
+
+- Timestamp: **\_\_\_** - Trigger: **\*\***\_\_\_**\*\***
+- Timestamp: **\_\_\_** - Trigger: **\*\***\_\_\_**\*\***
 
 **Confusion Points:**
-- Timestamp: _______ - About: _______________
-- Timestamp: _______ - About: _______________
+
+- Timestamp: **\_\_\_** - About: **\*\***\_\_\_**\*\***
+- Timestamp: **\_\_\_** - About: **\*\***\_\_\_**\*\***
 
 **Delight/Positive Reactions:**
-- Timestamp: _______ - When: _______________
-- Timestamp: _______ - When: _______________
+
+- Timestamp: **\_\_\_** - When: **\*\***\_\_\_**\*\***
+- Timestamp: **\_\_\_** - When: **\*\***\_\_\_**\*\***
 
 **Surprise/Unexpected:**
-- Timestamp: _______ - At: _______________
-- Timestamp: _______ - At: _______________
+
+- Timestamp: **\_\_\_** - At: **\*\***\_\_\_**\*\***
+- Timestamp: **\_\_\_** - At: **\*\***\_\_\_**\*\***
 
 ### Think-Aloud Quality
 
@@ -151,40 +161,45 @@
 ☐ Poor - Minimal verbalization despite prompting
 
 **Notes on thought process:**
-_______________
+
+---
 
 ### Navigation Patterns
 
 **Menu/Navigation Usage:**
-- Relied heavily on: _______________
-- Avoided: _______________
-- Expected to find but didn't: _______________
+
+- Relied heavily on: **\*\***\_\_\_**\*\***
+- Avoided: **\*\***\_\_\_**\*\***
+- Expected to find but didn't: **\*\***\_\_\_**\*\***
 
 **Search Behavior:**
-☐ Used search feature  ☐ Did not use search  ☐ Tried but failed to find search
-Search terms used: _______________
+☐ Used search feature ☐ Did not use search ☐ Tried but failed to find search
+Search terms used: **\*\***\_\_\_**\*\***
 
 **Visual Scanning:**
-- Where did eyes go first? _______________
-- What did they overlook? _______________
-- What caught attention immediately? _______________
+
+- Where did eyes go first? **\*\***\_\_\_**\*\***
+- What did they overlook? **\*\***\_\_\_**\*\***
+- What caught attention immediately? **\*\***\_\_\_**\*\***
 
 ---
 
 ## Usability Issues Log
 
 ### Issue 1
-**Severity**: ☐ Critical  ☐ Major  ☐ Minor  ☐ Enhancement
+
+**Severity**: ☐ Critical ☐ Major ☐ Minor ☐ Enhancement
 **Task**: [Task number and name]
-**Timestamp**: _______
-**Description**: _______________
-**User Quote**: "_______________________________________"
-**Impact**: ☐ Blocked task  ☐ Significant delay  ☐ Minor frustration  ☐ Suggestion
-**Frequency**: ☐ First time seen  ☐ Seen before  ☐ Pattern emerging
-**Workaround Found**: ☐ Yes  ☐ No
-**Recommendation**: _______________
+**Timestamp**: **\_\_\_**
+**Description**: **\*\***\_\_\_**\*\***
+**User Quote**: "**\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***"
+**Impact**: ☐ Blocked task ☐ Significant delay ☐ Minor frustration ☐ Suggestion
+**Frequency**: ☐ First time seen ☐ Seen before ☐ Pattern emerging
+**Workaround Found**: ☐ Yes ☐ No
+**Recommendation**: **\*\***\_\_\_**\*\***
 
 ### Issue 2
+
 [Repeat structure for each issue]
 
 ---
@@ -192,22 +207,22 @@ Search terms used: _______________
 ## Post-Task Questions Summary
 
 **Overall Ease of Use Rating** (1-5): [ ]
-Rationale: _______________
+Rationale: **\*\***\_\_\_**\*\***
 
-**Most Difficult Task**: _______________
-Why: _______________
+**Most Difficult Task**: **\*\***\_\_\_**\*\***
+Why: **\*\***\_\_\_**\*\***
 
-**Easiest Task**: _______________
-Why: _______________
+**Easiest Task**: **\*\***\_\_\_**\*\***
+Why: **\*\***\_\_\_**\*\***
 
-**Biggest Surprise** (positive or negative): _______________
+**Biggest Surprise** (positive or negative): **\*\***\_\_\_**\*\***
 
-**What's Missing**: _______________
+**What's Missing**: **\*\***\_\_\_**\*\***
 
-**One Thing to Change**: _______________
+**One Thing to Change**: **\*\***\_\_\_**\*\***
 
 **Likelihood to Recommend** (1-5): [ ]
-Why: _______________
+Why: **\*\***\_\_\_**\*\***
 
 ---
 
@@ -215,44 +230,49 @@ Why: _______________
 
 ### Success Metrics Summary
 
-| Metric | Result |
-|--------|--------|
-| Overall task success rate | ___% (___/___) |
-| Average task completion time | ___ minutes |
-| Average confidence rating | ___/5 |
-| Number of critical issues | ___ |
-| Number of major issues | ___ |
-| Number of minor issues | ___ |
-| Overall ease of use rating | ___/5 |
-| Likelihood to recommend | ___/5 |
+| Metric                       | Result            |
+| ---------------------------- | ----------------- |
+| Overall task success rate    | **_% (_**/\_\_\_) |
+| Average task completion time | \_\_\_ minutes    |
+| Average confidence rating    | \_\_\_/5          |
+| Number of critical issues    | \_\_\_            |
+| Number of major issues       | \_\_\_            |
+| Number of minor issues       | \_\_\_            |
+| Overall ease of use rating   | \_\_\_/5          |
+| Likelihood to recommend      | \_\_\_/5          |
 
 ### Key Takeaways
 
 **Top 3 Insights:**
-1. _______________
-2. _______________
-3. _______________
+
+1. ***
+2. ***
+3. ***
 
 **Critical Issues to Address:**
-- [ ] _______________
-- [ ] _______________
+
+- [ ] ***
+- [ ] ***
 
 **Positive Findings:**
-- [ ] _______________
-- [ ] _______________
+
+- [ ] ***
+- [ ] ***
 
 **Quotes for Report:**
-> "_______________________________________"
 
-> "_______________________________________"
+> "**\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***"
 
-> "_______________________________________"
+> "**\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***"
+
+> "**\*\*\*\***\*\***\*\*\*\***\_\_\_**\*\*\*\***\*\***\*\*\*\***"
 
 ---
 
 ## Next Steps
 
 **Immediate Actions:**
+
 - [ ] File detailed session notes within 24 hours
 - [ ] Create GitHub issues for critical problems
 - [ ] Share urgent findings with team
@@ -260,6 +280,7 @@ Why: _______________
 - [ ] Add to pattern analysis
 
 **Follow-Up:**
+
 - [ ] Schedule debrief with facilitator
 - [ ] Review recording for missed details
 - [ ] Cross-reference with other sessions
@@ -270,16 +291,20 @@ Why: _______________
 ## Additional Notes
 
 **Technical Issues:**
-_______________
+
+---
 
 **Participant Feedback on Process:**
-_______________
+
+---
 
 **Observer Insights:**
-_______________
+
+---
 
 **Ideas for Improvement:**
-_______________
+
+---
 
 ---
 

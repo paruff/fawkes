@@ -25,10 +25,7 @@ class TestRateLimiter:
     def test_rate_limiter_update(self):
         """Test updating rate limit from headers."""
         limiter = RateLimiter()
-        headers = {
-            "X-RateLimit-Remaining": "100",
-            "X-RateLimit-Reset": "1234567890"
-        }
+        headers = {"X-RateLimit-Remaining": "100", "X-RateLimit-Reset": "1234567890"}
         limiter.update(headers)
         assert limiter.remaining == 100
         assert limiter.reset_time == 1234567890
@@ -47,18 +44,14 @@ class TestRateLimiter:
 class TestGitHubIndexer:
     """Test GitHub indexer functionality."""
 
-    @patch('indexers.github.weaviate.Client')
+    @patch("indexers.github.weaviate.Client")
     def test_indexer_initialization(self, mock_weaviate):
         """Test indexer initializes correctly."""
         mock_client = Mock()
         mock_client.is_ready.return_value = True
         mock_weaviate.return_value = mock_client
 
-        indexer = GitHubIndexer(
-            github_token="test_token",
-            weaviate_url="http://test:8080",
-            dry_run=False
-        )
+        indexer = GitHubIndexer(github_token="test_token", weaviate_url="http://test:8080", dry_run=False)
 
         assert indexer.github_token == "test_token"
         assert indexer.weaviate_url == "http://test:8080"
@@ -67,10 +60,7 @@ class TestGitHubIndexer:
 
     def test_indexer_dry_run_mode(self):
         """Test indexer in dry-run mode doesn't connect to Weaviate."""
-        indexer = GitHubIndexer(
-            github_token="test_token",
-            dry_run=True
-        )
+        indexer = GitHubIndexer(github_token="test_token", dry_run=True)
 
         assert indexer.dry_run is True
         assert indexer.weaviate_client is None
@@ -106,7 +96,7 @@ class TestGitHubIndexer:
         assert hash1 == hash2  # Same content should produce same hash
         assert len(hash1) == 32  # MD5 hash is 32 hex characters
 
-    @patch('indexers.github.requests.Session')
+    @patch("indexers.github.requests.Session")
     def test_github_request_success(self, mock_session):
         """Test successful GitHub API request."""
         indexer = GitHubIndexer(github_token="test", dry_run=True)
@@ -122,7 +112,7 @@ class TestGitHubIndexer:
 
         assert result == {"data": "test"}
 
-    @patch('indexers.github.requests.Session')
+    @patch("indexers.github.requests.Session")
     def test_github_request_404(self, mock_session):
         """Test GitHub API request with 404 error."""
         indexer = GitHubIndexer(github_token="test", dry_run=True)
@@ -143,14 +133,11 @@ class TestGitHubIndexer:
 
         # Mock file info with base64 encoded content
         import base64
+
         content = "Test file content"
         encoded = base64.b64encode(content.encode()).decode()
 
-        file_info = {
-            "type": "file",
-            "size": len(content),
-            "content": encoded
-        }
+        file_info = {"type": "file", "size": len(content), "content": encoded}
 
         result = indexer.fetch_file_content(file_info)
 
@@ -160,11 +147,7 @@ class TestGitHubIndexer:
         """Test that large files are skipped."""
         indexer = GitHubIndexer(github_token="test", dry_run=True)
 
-        file_info = {
-            "type": "file",
-            "size": 2 * 1024 * 1024,  # 2MB
-            "path": "large_file.md"
-        }
+        file_info = {"type": "file", "size": 2 * 1024 * 1024, "path": "large_file.md"}  # 2MB
 
         result = indexer.fetch_file_content(file_info)
 
@@ -174,10 +157,7 @@ class TestGitHubIndexer:
         """Test that non-file types are skipped."""
         indexer = GitHubIndexer(github_token="test", dry_run=True)
 
-        file_info = {
-            "type": "dir",
-            "name": "directory"
-        }
+        file_info = {"type": "dir", "name": "directory"}
 
         result = indexer.fetch_file_content(file_info)
 

@@ -46,6 +46,7 @@ and visualization platform for Fawkes.
 ### Why Apache DevLake
 
 **Advantages**:
+
 1. **Purpose-built for DORA**: Native support for all four DORA metrics
 2. **Multi-source Integration**: Pre-built collectors for GitHub, GitLab, Jenkins,
    Jira, and more
@@ -55,6 +56,7 @@ and visualization platform for Fawkes.
 6. **Low Custom Development**: Reduces need for custom webhook handlers
 
 **Trade-offs**:
+
 1. **Additional Component**: Adds DevLake stack (API, UI, collector workers)
 2. **Database Requirement**: Requires MySQL/PostgreSQL for data storage
 3. **Learning Curve**: Teams need to understand DevLake configuration
@@ -118,13 +120,13 @@ and visualization platform for Fawkes.
 DevLake calculates DORA metrics using the appropriate data sources for a GitOps
 architecture where ArgoCD handles deployments:
 
-| Metric | Primary Data Source | Secondary Source | Calculation |
-|--------|---------------------|------------------|-------------|
-| Deployment Frequency | **ArgoCD** sync events | GitHub deployments | Successful production syncs per time period |
-| Lead Time for Changes | Git commits + **ArgoCD** | - | Time from first commit to ArgoCD sync completion |
-| Change Failure Rate | **ArgoCD** + Incidents | Observability alerts | Failed syncs / Total syncs |
-| Mean Time to Restore | Incident records + **ArgoCD** | - | Time from incident to restore sync |
-| Operational Performance | Prometheus SLO/SLI data | - | Uptime, latency, error rate adherence |
+| Metric                  | Primary Data Source           | Secondary Source     | Calculation                                      |
+| ----------------------- | ----------------------------- | -------------------- | ------------------------------------------------ |
+| Deployment Frequency    | **ArgoCD** sync events        | GitHub deployments   | Successful production syncs per time period      |
+| Lead Time for Changes   | Git commits + **ArgoCD**      | -                    | Time from first commit to ArgoCD sync completion |
+| Change Failure Rate     | **ArgoCD** + Incidents        | Observability alerts | Failed syncs / Total syncs                       |
+| Mean Time to Restore    | Incident records + **ArgoCD** | -                    | Time from incident to restore sync               |
+| Operational Performance | Prometheus SLO/SLI data       | -                    | Uptime, latency, error rate adherence            |
 
 **Note on Jenkins Role**: In a GitOps architecture, Jenkins handles CI (build,
 test, scan) but does **not** perform deployments. Jenkins updates the GitOps
@@ -138,22 +140,24 @@ repository, which ArgoCD then reconciles. Therefore:
 
 Jenkins contributes to developer productivity metrics beyond core DORA:
 
-| Metric | Description | Calculation |
-|--------|-------------|-------------|
-| Build Success Rate | Percentage of successful builds | Passed builds / Total builds |
-| Test Flakiness | Frequency of non-deterministic test failures | Flaky runs / Total runs |
-| Quality Gate Pass Rate | SonarQube gate success | Passed gates / Total scans |
-| Rework Rate | Builds triggered by same commit | Rebuilds / Unique commits |
-| Build Duration Trend | Average build time over time | Mean/P95 build duration |
+| Metric                 | Description                                  | Calculation                  |
+| ---------------------- | -------------------------------------------- | ---------------------------- |
+| Build Success Rate     | Percentage of successful builds              | Passed builds / Total builds |
+| Test Flakiness         | Frequency of non-deterministic test failures | Flaky runs / Total runs      |
+| Quality Gate Pass Rate | SonarQube gate success                       | Passed gates / Total scans   |
+| Rework Rate            | Builds triggered by same commit              | Rebuilds / Unique commits    |
+| Build Duration Trend   | Average build time over time                 | Mean/P95 build duration      |
 
 ### Deployment Configuration
 
 **Namespace Isolation**:
+
 - DevLake deployed in `fawkes-devlake` namespace
 - Secrets managed via Vault/External Secrets
 - Network policies restrict access to approved sources
 
 **Resource Requirements**:
+
 ```yaml
 devlake-api:
   requests:
@@ -183,23 +187,27 @@ mysql:
 ### Data Source Configuration
 
 **GitHub/Git Integration**:
+
 - OAuth app for repository access
 - Webhook receiver for real-time events
 - Collect: commits, PRs, branches
 
 **ArgoCD Integration** (Primary deployment source):
+
 - API access for sync event collection
 - Deployment frequency from successful syncs
 - Lead time correlation with commit timestamps
 - Failure detection from sync failures
 
 **Jenkins Integration** (CI and rework metrics):
+
 - API token for build data access
 - Build success/failure tracking
 - Quality gate results
 - **Rework metrics**: build retries, flaky tests, repeated failures
 
 **Observability Integration**:
+
 - Webhook endpoint for incident events
 - Alert-to-incident correlation
 - Resolution tracking for MTTR
@@ -207,18 +215,19 @@ mysql:
 ### Backstage Integration
 
 DevLake will integrate with Backstage via:
+
 1. **Iframe Plugin**: Embed DevLake dashboards in Backstage
 2. **API Integration**: Fetch DORA metrics for service cards
 3. **Entity Annotation**: Link catalog entities to DevLake projects
 
 ### Edge Case Handling
 
-| Scenario | Behavior |
-|----------|----------|
-| No deployments for service | Display "N/A" instead of 0 |
-| Partial data (missing incidents) | Calculate available metrics, show warnings |
-| High cardinality (many services) | Use pagination and caching |
-| Data source unavailable | Show last known values with staleness indicator |
+| Scenario                         | Behavior                                        |
+| -------------------------------- | ----------------------------------------------- |
+| No deployments for service       | Display "N/A" instead of 0                      |
+| Partial data (missing incidents) | Calculate available metrics, show warnings      |
+| High cardinality (many services) | Use pagination and caching                      |
+| Data source unavailable          | Show last known values with staleness indicator |
 
 ## Consequences
 
@@ -238,12 +247,12 @@ DevLake will integrate with Backstage via:
 
 ### Risks and Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| DevLake version incompatibility | Pin to stable versions, test upgrades |
-| Data collection failures | Alerting on collector health, retry logic |
-| Dashboard performance | Enable caching, limit historical queries |
-| Security exposure | Vault-managed credentials, network policies |
+| Risk                            | Mitigation                                  |
+| ------------------------------- | ------------------------------------------- |
+| DevLake version incompatibility | Pin to stable versions, test upgrades       |
+| Data collection failures        | Alerting on collector health, retry logic   |
+| Dashboard performance           | Enable caching, limit historical queries    |
+| Security exposure               | Vault-managed credentials, network policies |
 
 ## Alternatives Considered
 
@@ -252,6 +261,7 @@ DevLake will integrate with Backstage via:
 **Description**: Build custom Go/Python service with webhook receivers
 
 **Rejected because**:
+
 - Higher development and maintenance cost
 - Need to implement all collectors from scratch
 - No pre-built visualization
@@ -261,6 +271,7 @@ DevLake will integrate with Backstage via:
 **Description**: SaaS DORA metrics platform
 
 **Rejected because**:
+
 - Commercial licensing costs
 - External data residency concerns
 - Vendor lock-in
@@ -270,6 +281,7 @@ DevLake will integrate with Backstage via:
 **Description**: Engineering metrics platform
 
 **Rejected because**:
+
 - Commercial licensing
 - More complex than needed
 - Over-featured for core DORA requirements
@@ -279,6 +291,7 @@ DevLake will integrate with Backstage via:
 **Description**: Engineering analytics platform
 
 **Rejected because**:
+
 - Smaller community than DevLake
 - Less mature DORA implementation
 - Limited documentation

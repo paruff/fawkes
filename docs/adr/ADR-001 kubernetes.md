@@ -1,6 +1,7 @@
 # ADR-001: Kubernetes as Container Orchestration Platform
 
 ## Status
+
 **Accepted** - October 4, 2025
 
 ## Context
@@ -21,18 +22,21 @@ The platform must be production-ready, with a mature community, extensive docume
 ### Forces at Play
 
 **Technical Forces**:
+
 - Need for container orchestration is non-negotiable for modern platforms
 - Team familiarity with orchestration platforms varies
 - Learning curve vs. time to value tradeoff
 - Platform stability and maturity critical for production use
 
 **Business Forces**:
+
 - Open-source preference to avoid vendor lock-in
 - Enterprise adoption important for credibility
 - Community size affects long-term sustainability
 - Multi-cloud support required for diverse adoption
 
 **Organizational Forces**:
+
 - Platform engineering skills growing but not universal
 - Kubernetes increasingly becoming industry standard
 - CNCF ecosystem alignment provides future-proofing
@@ -42,6 +46,7 @@ The platform must be production-ready, with a mature community, extensive docume
 **We will use Kubernetes as the container orchestration platform for Fawkes.**
 
 Specifically:
+
 - **Managed Kubernetes services** for MVP: AWS EKS, with Azure AKS and GCP GKE following
 - **Kubernetes version**: 1.28+ (stay within N-2 of latest stable)
 - **Distribution agnostic**: Design for standard Kubernetes, test on managed services
@@ -116,12 +121,14 @@ For the negative consequences, we will:
 ### Alternative 1: Docker Swarm
 
 **Pros**:
+
 - Simpler learning curve than Kubernetes
 - Integrated with Docker ecosystem
 - Lower resource overhead
 - Faster initial setup
 
 **Cons**:
+
 - Smaller ecosystem (limited tooling compared to K8s)
 - Declining adoption and community activity
 - Limited multi-cloud support
@@ -133,6 +140,7 @@ For the negative consequences, we will:
 ### Alternative 2: HashiCorp Nomad
 
 **Pros**:
+
 - Simpler than Kubernetes (easier to learn and operate)
 - Good performance and resource efficiency
 - Multi-cloud support
@@ -140,6 +148,7 @@ For the negative consequences, we will:
 - Supports non-containerized workloads
 
 **Cons**:
+
 - Much smaller ecosystem than Kubernetes
 - Fewer integrations with CNCF tools
 - Smaller community and talent pool
@@ -151,6 +160,7 @@ For the negative consequences, we will:
 ### Alternative 3: AWS ECS/Fargate
 
 **Pros**:
+
 - Simpler than Kubernetes for basic use cases
 - Fully managed (no control plane management)
 - Deep AWS integration
@@ -158,6 +168,7 @@ For the negative consequences, we will:
 - Cost-effective for certain workloads
 
 **Cons**:
+
 - AWS-only (locks into single cloud vendor)
 - Limited ecosystem (no CNCF tools work natively)
 - Proprietary API (not transferable skills)
@@ -169,12 +180,14 @@ For the negative consequences, we will:
 ### Alternative 4: Platform.sh / Heroku-style PaaS
 
 **Pros**:
+
 - Extremely simple developer experience
 - Minimal configuration required
 - Fast time-to-value
 - Handles all infrastructure concerns
 
 **Cons**:
+
 - Not infrastructure we control (SaaS, not self-hosted platform)
 - Contradicts Fawkes' goal of providing an IDP
 - Limited customization and extensibility
@@ -186,12 +199,14 @@ For the negative consequences, we will:
 ### Alternative 5: "Cloud Native" with Managed Services Only
 
 **Pros**:
+
 - Use cloud provider's managed services directly (Lambda, Cloud Run, etc.)
 - No container orchestration complexity
 - Pay only for usage
 - Serverless scaling
 
 **Cons**:
+
 - Completely different approach per cloud (no portability)
 - Limited long-running workload support
 - Stateful applications challenging
@@ -210,18 +225,22 @@ For the negative consequences, we will:
 ## Implementation Notes
 
 ### Initial Implementation (MVP)
+
 - Start with AWS EKS (most mature managed Kubernetes)
 - Single cluster design (platform + applications)
 - Use EKS add-ons for AWS integrations
 - Kubernetes version 1.28 (N-1 from latest stable at time of writing)
 
 ### Future Enhancements
+
 1. **Multi-Cluster** (Month 6-12):
+
    - Separate platform cluster from application clusters
    - Multi-region deployments
    - Cluster API for lifecycle management
 
 2. **Multi-Cloud** (Month 3-6):
+
    - Azure AKS support
    - GCP GKE support
    - Unified tooling across clouds
@@ -240,6 +259,7 @@ For the negative consequences, we will:
 ## Monitoring This Decision
 
 We will revisit this ADR if:
+
 - Kubernetes adoption significantly declines (< 60% of survey respondents)
 - A new orchestration platform gains > 30% market share
 - Operational complexity consistently causes adoption issues
@@ -259,6 +279,7 @@ We will revisit this ADR if:
 ### Why Not Start Simpler?
 
 We considered starting with Docker Compose or simpler solutions and "graduating" to Kubernetes later. However:
+
 - Migration is costly and disruptive for early adopters
 - Learning Kubernetes is a core part of platform engineering
 - Starting with K8s forces us to address complexity early
@@ -267,6 +288,7 @@ We considered starting with Docker Compose or simpler solutions and "graduating"
 ### Managed vs. Self-Managed
 
 For MVP, we strongly recommend **managed Kubernetes** (EKS, AKS, GKE) because:
+
 - Reduces operational burden for platform teams
 - Allows focus on platform features, not cluster management
 - Enterprise-grade reliability and SLAs

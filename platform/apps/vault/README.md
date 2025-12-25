@@ -41,12 +41,12 @@ Platform.
 
 ## Components
 
-| File | Purpose |
-|------|---------|
+| File                     | Purpose                                    |
+| ------------------------ | ------------------------------------------ |
 | `vault-application.yaml` | ArgoCD Application for Vault HA deployment |
-| `vault-auth-config.yaml` | Kubernetes Auth method configuration |
-| `vault-policies.yaml` | Access policies and service accounts |
-| `kustomization.yaml` | Kustomize configuration |
+| `vault-auth-config.yaml` | Kubernetes Auth method configuration       |
+| `vault-policies.yaml`    | Access policies and service accounts       |
+| `kustomization.yaml`     | Kustomize configuration                    |
 
 ## Quick Start
 
@@ -197,13 +197,13 @@ secret/
 
 ## Policies
 
-| Policy | Bound Service Accounts | Access |
-|--------|----------------------|--------|
-| `platform-policy` | All in `fawkes` namespace | Own namespace secrets + shared |
-| `jenkins-policy` | `jenkins` | CI/CD + apps + shared |
-| `backstage-policy` | `backstage` | Core/backstage + shared |
-| `database-policy` | Database consumers | Database credentials |
-| `observability-policy` | `grafana`, `prometheus` | Observability + shared |
+| Policy                 | Bound Service Accounts    | Access                         |
+| ---------------------- | ------------------------- | ------------------------------ |
+| `platform-policy`      | All in `fawkes` namespace | Own namespace secrets + shared |
+| `jenkins-policy`       | `jenkins`                 | CI/CD + apps + shared          |
+| `backstage-policy`     | `backstage`               | Core/backstage + shared        |
+| `database-policy`      | Database consumers        | Database credentials           |
+| `observability-policy` | `grafana`, `prometheus`   | Observability + shared         |
 
 ## Secret Rotation
 

@@ -49,21 +49,21 @@ spec:
         test: at-e1-002
     spec:
       containers:
-      - name: nginx
-        image: nginx:1.25-alpine
-        ports:
-        - containerPort: 80
-        resources:
-          requests:
-            memory: "32Mi"
-            cpu: "50m"
-          limits:
-            memory: "64Mi"
-            cpu: "100m"
-        volumeMounts:
-        - name: config
-          mountPath: /etc/config
+        - name: nginx
+          image: nginx:1.25-alpine
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "50m"
+            limits:
+              memory: "64Mi"
+              cpu: "100m"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/config
       volumes:
-      - name: config
-        configMap:
-          name: test-config
+        - name: config
+          configMap:
+            name: test-config

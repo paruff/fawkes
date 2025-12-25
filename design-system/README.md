@@ -71,6 +71,7 @@ npm run build
 ## Components
 
 ### Layout
+
 - Container
 - Grid
 - Stack
@@ -78,11 +79,13 @@ npm run build
 - Box
 
 ### Typography
+
 - Heading
 - Text
 - Code
 
 ### Forms
+
 - Button
 - IconButton
 - ButtonGroup
@@ -98,6 +101,7 @@ npm run build
 - FormErrorMessage
 
 ### Feedback
+
 - Alert
 - Toast
 - Spinner
@@ -106,6 +110,7 @@ npm run build
 - Skeleton
 
 ### Navigation
+
 - Tabs
 - Breadcrumbs
 - Pagination
@@ -113,6 +118,7 @@ npm run build
 - Link
 
 ### Display
+
 - Card
 - Avatar
 - Chip
@@ -123,12 +129,14 @@ npm run build
 - Image
 
 ### Data
+
 - Table
 - List
 
 ## Accessibility
 
 All components follow WCAG 2.1 AA standards:
+
 - Semantic HTML
 - ARIA attributes
 - Keyboard navigation

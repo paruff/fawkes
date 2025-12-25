@@ -11,6 +11,7 @@ Base = declarative_base()
 
 class SurveyCampaign(Base):
     """Survey campaign tracking"""
+
     __tablename__ = "survey_campaigns"
 
     id = Column(Integer, primary_key=True)
@@ -29,6 +30,7 @@ class SurveyCampaign(Base):
 
 class SurveyRecipient(Base):
     """Individual survey recipient tracking"""
+
     __tablename__ = "survey_recipients"
 
     id = Column(Integer, primary_key=True)
@@ -50,6 +52,7 @@ class SurveyRecipient(Base):
 
 class PulseSurveyAggregate(Base):
     """Aggregated pulse survey metrics by week"""
+
     __tablename__ = "pulse_survey_aggregates"
 
     id = Column(Integer, primary_key=True)
@@ -63,13 +66,12 @@ class PulseSurveyAggregate(Base):
     created_at = Column(DateTime, default=func.now())
 
     # Unique constraint on week/year
-    __table_args__ = (
-        {"schema": None}  # Use default schema
-    )
+    __table_args__ = {"schema": None}  # Use default schema
 
 
 class SurveyOptOut(Base):
     """Track users who have opted out of automated surveys"""
+
     __tablename__ = "survey_opt_outs"
 
     id = Column(Integer, primary_key=True)
@@ -81,6 +83,7 @@ class SurveyOptOut(Base):
 
 class NASATLXAssessment(Base):
     """NASA-TLX cognitive load assessment responses"""
+
     __tablename__ = "nasa_tlx_assessments"
 
     id = Column(Integer, primary_key=True)
@@ -112,6 +115,7 @@ class NASATLXAssessment(Base):
 
 class NASATLXAggregate(Base):
     """Aggregated NASA-TLX metrics by task type and time period"""
+
     __tablename__ = "nasa_tlx_aggregates"
 
     id = Column(Integer, primary_key=True)

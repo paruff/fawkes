@@ -10,6 +10,7 @@ description: How Vault, Kyverno, and Istio/Ingress work together to implement de
 Traditional security models operate on the **perimeter defense** principle: hard outer shell (firewall), soft interior (trusted network). Once you're inside the network, you're trusted. This worked when datacenters had literal walls and employees sat in offices.
 
 But modern cloud-native applications break these assumptions:
+
 - **No perimeter** - Services span multiple clouds, regions, networks
 - **Ephemeral workloads** - Containers are created and destroyed constantly
 - **Lateral movement** - A compromised pod can talk to others on the same network
@@ -18,6 +19,7 @@ But modern cloud-native applications break these assumptions:
 The solution is **Zero Trust Architecture**: assume breach, verify everything, and grant least-privilege access at every layer.
 
 Fawkes implements Zero Trust through the integration of three key components:
+
 - **HashiCorp Vault** - Secrets management and identity
 - **Kyverno** - Policy-as-Code enforcement
 - **Istio/Ingress** - Network policy and mTLS
@@ -29,11 +31,13 @@ This document explains how these pieces work together to create defense in depth
 ### The Traditional "Trust the Network" Approach
 
 In legacy architectures:
+
 ```
 Internet → Firewall → Internal Network (Trusted Zone)
 ```
 
 **Inside the firewall:**
+
 - Services communicate over HTTP (no encryption)
 - Authentication is often "source IP" or "same VLAN"
 - Secrets stored in environment variables or config files
@@ -63,6 +67,7 @@ graph TB
 **Day 2**: Attacker exploits vulnerability, gains remote code execution in pod
 
 **Day 3**: Attacker pivots:
+
 ```bash
 # From inside compromised pod
 curl http://database:5432  # No network policy blocks this
@@ -125,6 +130,7 @@ spec:
 ```
 
 **What This Provides:**
+
 - ✅ **Encryption in transit** - HTTPS for all external traffic
 - ✅ **Certificate management** - Cert-manager automates TLS renewal
 - ✅ **SNI routing** - Multiple services, one load balancer
@@ -142,16 +148,18 @@ metadata:
   namespace: production
 spec:
   mtls:
-    mode: STRICT  # Require mTLS for all traffic
+    mode: STRICT # Require mTLS for all traffic
 ```
 
 **What This Provides:**
+
 - ✅ **Zero trust networking** - Pods authenticate to each other via certificates
 - ✅ **Encrypted service mesh** - Even inside the cluster, traffic is encrypted
 - ✅ **Identity-based access** - Authorization based on service identity, not IP
 - ✅ **Observability** - Istio traces every request (distributed tracing)
 
 **Example AuthorizationPolicy:**
+
 ```yaml
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -190,7 +198,7 @@ kind: ClusterPolicy
 metadata:
   name: require-non-root
 spec:
-  validationFailureAction: Enforce  # Block deployment if violated
+  validationFailureAction: Enforce # Block deployment if violated
   rules:
     - name: check-containers-non-root
       match:
@@ -269,17 +277,19 @@ spec:
 
 Kyverno supports two enforcement modes:
 
-| Mode | Behavior | Use Case |
-|------|----------|----------|
+| Mode        | Behavior                      | Use Case                                   |
+| ----------- | ----------------------------- | ------------------------------------------ |
 | **Enforce** | Block non-compliant resources | Production environments, critical policies |
-| **Audit** | Allow but log violations | Testing new policies, gradual rollout |
+| **Audit**   | Allow but log violations      | Testing new policies, gradual rollout      |
 
 **Fawkes Approach:**
+
 1. **Phase 1 (Audit)**: Deploy policy in audit mode, observe violations
 2. **Phase 2 (Remediation)**: Work with teams to fix violations
 3. **Phase 3 (Enforce)**: Switch to enforce mode, block new violations
 
 **Example Policy Report:**
+
 ```yaml
 apiVersion: wgpolicyk8s.io/v1alpha2
 kind: PolicyReport
@@ -307,6 +317,7 @@ results:
 #### The Problem with Kubernetes Secrets
 
 Native Kubernetes Secrets are **not secret**:
+
 - Stored **base64-encoded** (not encrypted) in etcd
 - Visible to anyone with `get secrets` permission
 - Static (no automatic rotation)
@@ -315,6 +326,7 @@ Native Kubernetes Secrets are **not secret**:
 #### Vault's Solution
 
 **HashiCorp Vault** is a secrets management platform that provides:
+
 - **Encryption at rest** - Secrets encrypted in storage backend
 - **Dynamic secrets** - Generated on-demand, short-lived
 - **Audit logging** - Every secret access logged
@@ -349,6 +361,7 @@ spec:
 ```
 
 **What Happens:**
+
 1. **Vault Agent sidecar injected** - Runs alongside app container
 2. **Kubernetes auth** - Vault verifies pod's service account
 3. **Secret retrieval** - Agent fetches secrets from Vault
@@ -356,6 +369,7 @@ spec:
 5. **Automatic renewal** - Agent refreshes secrets before expiration
 
 **Benefits:**
+
 - ✅ **No secrets in environment variables** - Hidden from `kubectl describe`
 - ✅ **No code changes** - App reads from file like config
 - ✅ **Automatic rotation** - Agent handles renewal
@@ -397,18 +411,19 @@ spec:
 ```yaml
 # Vault configuration
 vault write database/config/postgres \
-  plugin_name=postgresql-database-plugin \
-  allowed_roles="api-role" \
-  connection_url="postgresql://{{username}}:{{password}}@postgres:5432/production"
+plugin_name=postgresql-database-plugin \
+allowed_roles="api-role" \
+connection_url="postgresql://{{username}}:{{password}}@postgres:5432/production"
 
 vault write database/roles/api-role \
-  db_name=postgres \
-  creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
-  default_ttl="1h" \
-  max_ttl="24h"
+db_name=postgres \
+creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
+default_ttl="1h" \
+max_ttl="24h"
 ```
 
 **What This Enables:**
+
 - Vault **generates unique database credentials** per application
 - Credentials **expire after 1 hour** (auto-rotated by Vault Agent)
 - If pod compromised, credentials useless after 1 hour
@@ -472,6 +487,7 @@ spec:
 - Internal traffic encrypted via mTLS
 
 **Security Layers Active:**
+
 1. ✅ **Ingress** - TLS encryption for external traffic
 2. ✅ **Istio** - mTLS for internal service-to-service
 3. ✅ **Kyverno** - Policy validation (non-root, resource limits, etc.)
@@ -483,44 +499,57 @@ spec:
 **Attacker gains code execution in `api` pod:**
 
 **Attack 1: Lateral movement to database**
+
 ```bash
 curl http://postgres:5432
 ```
+
 **❌ Blocked**: Istio AuthorizationPolicy requires mTLS with `api` service identity. Attacker can't forge certificate.
 
 **Attack 2: Steal secrets from environment**
+
 ```bash
 env | grep PASSWORD
 ```
+
 **❌ Mitigated**: No secrets in environment variables. Secrets in `/vault/secrets/` (but still accessible if pod compromised).
 
 **Attack 3: Read secrets from Vault directly**
+
 ```bash
 export VAULT_ADDR=http://vault:8200
 vault read secret/data/database
 ```
+
 **❌ Blocked**: Vault requires service account token. Attacker's manual `vault` CLI doesn't have token (Vault Agent does, but Agent is separate container).
 
 **Attack 4: Pivot to other namespaces**
+
 ```bash
 kubectl get pods -n other-namespace
 ```
+
 **❌ Blocked**: Service account has RBAC limited to own namespace. No cross-namespace access.
 
 **Attack 5: Deploy malicious pod**
+
 ```bash
 kubectl run evil-pod --image=attacker/cryptominer
 ```
+
 **❌ Blocked**: Kyverno policy rejects images from unapproved registries. Admission denied.
 
 **Attack 6: Exfiltrate data from accessible database**
+
 ```bash
 # Assume attacker accesses DB using app's connection
 SELECT * FROM customers;
 ```
+
 **✅ Possible**: If app has database access, attacker can read data the app can read.
 
 **Mitigation**:
+
 - Least privilege DB credentials (Vault dynamic secrets give minimal permissions)
 - Audit logging (Vault logs all secret access; know which pod at what time)
 - Incident response (Revoke Vault credentials for compromised pod, rotate dynamic secrets)
@@ -531,35 +560,35 @@ SELECT * FROM customers;
 
 ### What Zero Trust Gives You
 
-| Benefit | Explanation |
-|---------|-------------|
-| **Minimized Blast Radius** | Compromised pod can't pivot to other services |
-| **Audit Trail** | Vault logs every secret access; Istio logs every request |
-| **Defense in Depth** | Multiple layers must fail for breach to succeed |
-| **Compliance** | Encryption, RBAC, audit logs satisfy SOC2, PCI-DSS, HIPAA |
-| **Time-Limited Exposure** | Dynamic secrets expire; compromised creds short-lived |
-| **Policy Enforcement** | Security policies enforced automatically, not via docs/training |
+| Benefit                    | Explanation                                                     |
+| -------------------------- | --------------------------------------------------------------- |
+| **Minimized Blast Radius** | Compromised pod can't pivot to other services                   |
+| **Audit Trail**            | Vault logs every secret access; Istio logs every request        |
+| **Defense in Depth**       | Multiple layers must fail for breach to succeed                 |
+| **Compliance**             | Encryption, RBAC, audit logs satisfy SOC2, PCI-DSS, HIPAA       |
+| **Time-Limited Exposure**  | Dynamic secrets expire; compromised creds short-lived           |
+| **Policy Enforcement**     | Security policies enforced automatically, not via docs/training |
 
 ### What Zero Trust Costs You
 
-| Challenge | Mitigation |
-|-----------|------------|
-| **Complexity** | More components (Vault, Kyverno, Istio) to learn and maintain. **Mitigation**: Fawkes Dojo has [Zero Trust module](../../dojo/modules/black-belt/module-19-security-zerotrust.md) |
-| **Operational Overhead** | Vault HA, secret rotation, policy management. **Mitigation**: Automated via GitOps; platform team handles |
+| Challenge                | Mitigation                                                                                                                                                                                                |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Complexity**           | More components (Vault, Kyverno, Istio) to learn and maintain. **Mitigation**: Fawkes Dojo has [Zero Trust module](../../dojo/modules/black-belt/module-19-security-zerotrust.md)                         |
+| **Operational Overhead** | Vault HA, secret rotation, policy management. **Mitigation**: Automated via GitOps; platform team handles                                                                                                 |
 | **Debugging Difficulty** | mTLS/network policies can block legitimate traffic during troubleshooting. **Mitigation**: [Troubleshooting guides](../../how-to/policy/troubleshoot-kyverno-violation.md) and `istioctl` debugging tools |
-| **Performance Impact** | mTLS encryption adds latency (~1-5ms per hop). **Mitigation**: Acceptable for security gain; not noticeable in most apps |
-| **Policy Authoring** | Writing Kyverno policies requires Kubernetes knowledge. **Mitigation**: Fawkes provides library of common policies |
+| **Performance Impact**   | mTLS encryption adds latency (~1-5ms per hop). **Mitigation**: Acceptable for security gain; not noticeable in most apps                                                                                  |
+| **Policy Authoring**     | Writing Kyverno policies requires Kubernetes knowledge. **Mitigation**: Fawkes provides library of common policies                                                                                        |
 
 ### When to Relax Zero Trust
 
 **Not every environment needs fortress-level security:**
 
-| Environment | Security Posture | Rationale |
-|-------------|------------------|-----------|
-| **Production** | ✅ Full Zero Trust | Customer data, compliance requirements |
-| **Staging** | ⚠️ Relaxed (audit mode) | Test policies before enforcing |
-| **Development** | ⚠️ Minimal | Developer velocity > security (no real data) |
-| **Local (Kind/Minikube)** | ❌ Disabled | Avoid complexity on laptop |
+| Environment               | Security Posture        | Rationale                                    |
+| ------------------------- | ----------------------- | -------------------------------------------- |
+| **Production**            | ✅ Full Zero Trust      | Customer data, compliance requirements       |
+| **Staging**               | ⚠️ Relaxed (audit mode) | Test policies before enforcing               |
+| **Development**           | ⚠️ Minimal              | Developer velocity > security (no real data) |
+| **Local (Kind/Minikube)** | ❌ Disabled             | Avoid complexity on laptop                   |
 
 **Fawkes Approach**: Security policies applied per environment via Kustomize overlays.
 
@@ -588,6 +617,7 @@ Policies that improve security posture but allow migration time:
 - ⚠️ **Secrets via Vault** - Not Kubernetes Secrets
 
 **Rollout**:
+
 1. **Month 1**: Audit mode (log violations, don't block)
 2. **Month 2**: Notify teams of violations, provide guidance
 3. **Month 3**: Enforce mode (block non-compliant deployments)
@@ -618,6 +648,7 @@ Policies that encourage good practices but don't block:
 Zero Trust is not a product—it's an **architectural philosophy**. No single tool provides Zero Trust; it emerges from the integration of complementary security layers.
 
 Fawkes implements Zero Trust through:
+
 - **Vault** - Identity-based secrets with audit trail
 - **Kyverno** - Policy enforcement at admission time
 - **Istio/Ingress** - Encrypted transport and identity verification

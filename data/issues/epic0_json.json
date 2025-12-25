@@ -4,10 +4,10 @@
     "name": "Technical Excellence & Refactoring",
     "description": "Systematic refactoring to establish code quality standards, modularize scripts, improve infrastructure code, implement proper configuration management, and enhance documentation. Reduces technical debt by 50%+ and accelerates future development by 30%.",
     "milestones": [
-      {"title": "M0.1: Standards & Code Quality", "due_date": "2025-01-10"},
-      {"title": "M0.2: Script Refactoring & Testing", "due_date": "2025-01-17"},
-      {"title": "M0.3: Infrastructure & Configuration", "due_date": "2025-01-24"},
-      {"title": "M0.4: Documentation & CI/CD Optimization", "due_date": "2025-01-31"}
+      { "title": "M0.1: Standards & Code Quality", "due_date": "2025-01-10" },
+      { "title": "M0.2: Script Refactoring & Testing", "due_date": "2025-01-17" },
+      { "title": "M0.3: Infrastructure & Configuration", "due_date": "2025-01-24" },
+      { "title": "M0.4: Documentation & CI/CD Optimization", "due_date": "2025-01-31" }
     ]
   },
   "issues": [
@@ -19,7 +19,13 @@
       "estimated_hours": 6,
       "labels": ["epic-0", "type-standards", "comp-quality"],
       "description": "Define and implement comprehensive code quality standards with automated linting for Bash, Python, Go, YAML, JSON, Markdown, and Terraform. Configure pre-commit hooks and CI/CD quality gates.",
-      "acceptance_criteria": ["Linting rules defined for all languages", "Pre-commit hooks configured", "CI/CD quality gates", "All code passes linting", "Developer setup guide"],
+      "acceptance_criteria": [
+        "Linting rules defined for all languages",
+        "Pre-commit hooks configured",
+        "CI/CD quality gates",
+        "All code passes linting",
+        "Developer setup guide"
+      ],
       "depends_on": [],
       "blocks": [110, 111],
       "acceptance_test": "AT-E0-001"
@@ -32,7 +38,13 @@
       "estimated_hours": 4,
       "labels": ["epic-0", "type-automation", "comp-quality"],
       "description": "Set up automated formatting with Black (Python), gofmt (Go), shfmt (Bash), prettier (JSON/YAML/Markdown), and terraform fmt.",
-      "acceptance_criteria": ["All formatters configured", "Format-on-save enabled", "CI/CD checks formatting", "All code formatted", "Developer guide updated"],
+      "acceptance_criteria": [
+        "All formatters configured",
+        "Format-on-save enabled",
+        "CI/CD checks formatting",
+        "All code formatted",
+        "Developer guide updated"
+      ],
       "depends_on": [109],
       "blocks": [112],
       "acceptance_test": "AT-E0-001"
@@ -45,7 +57,13 @@
       "estimated_hours": 5,
       "labels": ["epic-0", "type-cicd", "comp-quality"],
       "description": "Implement GitHub Actions workflow enforcing code quality gates: linting, formatting, security scanning, and test coverage thresholds.",
-      "acceptance_criteria": ["Quality workflow created", "All linters run on PR", "Security scanning integrated", "Coverage thresholds enforced", "Quality badges in README"],
+      "acceptance_criteria": [
+        "Quality workflow created",
+        "All linters run on PR",
+        "Security scanning integrated",
+        "Coverage thresholds enforced",
+        "Quality badges in README"
+      ],
       "depends_on": [109, 110],
       "blocks": [113],
       "acceptance_test": "AT-E0-001"
@@ -58,7 +76,13 @@
       "estimated_hours": 4,
       "labels": ["epic-0", "type-documentation", "comp-quality"],
       "description": "Create comprehensive documentation of code quality standards, linting rules, formatting conventions, and developer setup instructions.",
-      "acceptance_criteria": ["CODING_STANDARDS.md created", "Language-specific guides", "Developer setup complete", "Good vs bad examples", "FAQ included"],
+      "acceptance_criteria": [
+        "CODING_STANDARDS.md created",
+        "Language-specific guides",
+        "Developer setup complete",
+        "Good vs bad examples",
+        "FAQ included"
+      ],
       "depends_on": [109, 110, 111],
       "blocks": [113],
       "acceptance_test": "AT-E0-001"
@@ -71,7 +95,14 @@
       "estimated_hours": 2,
       "labels": ["epic-0", "type-testing", "comp-quality"],
       "description": "Execute acceptance test validating all code quality standards, linting, formatting, and CI/CD checks are operational.",
-      "acceptance_criteria": ["All linters passing", "Pre-commit working", "CI/CD gates enforced", "Code formatted", "Docs complete", "Setup tested"],
+      "acceptance_criteria": [
+        "All linters passing",
+        "Pre-commit working",
+        "CI/CD gates enforced",
+        "Code formatted",
+        "Docs complete",
+        "Setup tested"
+      ],
       "depends_on": [109, 110, 111, 112],
       "blocks": [114],
       "acceptance_test": "AT-E0-001"
@@ -84,7 +115,14 @@
       "estimated_hours": 12,
       "labels": ["epic-0", "type-refactoring", "comp-scripts"],
       "description": "Break monolithic ignite.sh into modular, testable components with clear separation of concerns. Create lib/ directory with reusable modules.",
-      "acceptance_criteria": ["ignite.sh <200 lines", "lib/ modules created", "Independently testable", "No duplication", "Error handling", "Backward compatible"],
+      "acceptance_criteria": [
+        "ignite.sh <200 lines",
+        "lib/ modules created",
+        "Independently testable",
+        "No duplication",
+        "Error handling",
+        "Backward compatible"
+      ],
       "depends_on": [113],
       "blocks": [115, 116],
       "acceptance_test": "AT-E0-002"
@@ -97,7 +135,14 @@
       "estimated_hours": 8,
       "labels": ["epic-0", "type-refactoring", "comp-scripts"],
       "description": "Add robust error handling to all scripts with proper exit codes, error messages, rollback mechanisms, and recovery strategies.",
-      "acceptance_criteria": ["set -euo pipefail everywhere", "Error functions", "Trap handlers", "Meaningful messages", "Exit codes documented", "Rollback mechanisms"],
+      "acceptance_criteria": [
+        "set -euo pipefail everywhere",
+        "Error functions",
+        "Trap handlers",
+        "Meaningful messages",
+        "Exit codes documented",
+        "Rollback mechanisms"
+      ],
       "depends_on": [114],
       "blocks": [116],
       "acceptance_test": "AT-E0-002"
@@ -110,7 +155,14 @@
       "estimated_hours": 10,
       "labels": ["epic-0", "type-testing", "comp-scripts"],
       "description": "Implement comprehensive BATS test suite for all Bash scripts achieving 80%+ code coverage.",
-      "acceptance_criteria": ["BATS installed", "Tests for all modules", "80%+ coverage", "Tests in CI/CD", "Test docs", "Mocking framework"],
+      "acceptance_criteria": [
+        "BATS installed",
+        "Tests for all modules",
+        "80%+ coverage",
+        "Tests in CI/CD",
+        "Test docs",
+        "Mocking framework"
+      ],
       "depends_on": [114, 115],
       "blocks": [117],
       "acceptance_test": "AT-E0-002"
@@ -123,7 +175,14 @@
       "estimated_hours": 3,
       "labels": ["epic-0", "type-testing", "comp-scripts"],
       "description": "Execute acceptance test validating script modularization, error handling, and testing framework.",
-      "acceptance_criteria": ["ignite.sh modular", "Error handling comprehensive", "BATS tests passing", "80%+ coverage", "No regressions", "Docs complete"],
+      "acceptance_criteria": [
+        "ignite.sh modular",
+        "Error handling comprehensive",
+        "BATS tests passing",
+        "80%+ coverage",
+        "No regressions",
+        "Docs complete"
+      ],
       "depends_on": [114, 115, 116],
       "blocks": [118],
       "acceptance_test": "AT-E0-002"
@@ -136,7 +195,14 @@
       "estimated_hours": 10,
       "labels": ["epic-0", "type-refactoring", "comp-terraform"],
       "description": "Restructure Terraform code into reusable modules following HashiCorp best practices with proper variable validation and outputs.",
-      "acceptance_criteria": ["Reusable modules created", "Variable validation", "Comprehensive outputs", "No hardcoded values", "Module docs", "Example usage"],
+      "acceptance_criteria": [
+        "Reusable modules created",
+        "Variable validation",
+        "Comprehensive outputs",
+        "No hardcoded values",
+        "Module docs",
+        "Example usage"
+      ],
       "depends_on": [117],
       "blocks": [119],
       "acceptance_test": "AT-E0-003"
@@ -149,7 +215,14 @@
       "estimated_hours": 6,
       "labels": ["epic-0", "type-infrastructure", "comp-terraform"],
       "description": "Configure remote state backend with locking, state file encryption, and proper workspace management.",
-      "acceptance_criteria": ["Remote state configured", "State locking enabled", "Encryption at rest", "Workspace strategy", "State backups", "Access controls"],
+      "acceptance_criteria": [
+        "Remote state configured",
+        "State locking enabled",
+        "Encryption at rest",
+        "Workspace strategy",
+        "State backups",
+        "Access controls"
+      ],
       "depends_on": [118],
       "blocks": [120],
       "acceptance_test": "AT-E0-003"
@@ -162,7 +235,14 @@
       "estimated_hours": 12,
       "labels": ["epic-0", "type-testing", "comp-terraform"],
       "description": "Implement Terratest framework for testing Terraform modules with automated validation of infrastructure.",
-      "acceptance_criteria": ["Terratest configured", "Tests for all modules", "Integration tests", "Tests in CI/CD", "Cost estimation", "Documentation"],
+      "acceptance_criteria": [
+        "Terratest configured",
+        "Tests for all modules",
+        "Integration tests",
+        "Tests in CI/CD",
+        "Cost estimation",
+        "Documentation"
+      ],
       "depends_on": [118, 119],
       "blocks": [121],
       "acceptance_test": "AT-E0-003"
@@ -175,7 +255,14 @@
       "estimated_hours": 8,
       "labels": ["epic-0", "type-refactoring", "comp-kubernetes"],
       "description": "Standardize all Kubernetes manifests with proper labels, annotations, resource limits, and security contexts.",
-      "acceptance_criteria": ["Common labels defined", "Resource limits on all pods", "Security contexts configured", "Health checks added", "Annotations standardized", "Docs updated"],
+      "acceptance_criteria": [
+        "Common labels defined",
+        "Resource limits on all pods",
+        "Security contexts configured",
+        "Health checks added",
+        "Annotations standardized",
+        "Docs updated"
+      ],
       "depends_on": [117],
       "blocks": [122],
       "acceptance_test": "AT-E0-003"
@@ -188,7 +275,14 @@
       "estimated_hours": 7,
       "labels": ["epic-0", "type-infrastructure", "comp-kubernetes"],
       "description": "Replace templating with Kustomize for managing environment-specific Kubernetes configurations with proper overlays.",
-      "acceptance_criteria": ["Kustomize base created", "Environment overlays", "No YAML duplication", "ArgoCD integration", "Documentation complete", "Migration guide"],
+      "acceptance_criteria": [
+        "Kustomize base created",
+        "Environment overlays",
+        "No YAML duplication",
+        "ArgoCD integration",
+        "Documentation complete",
+        "Migration guide"
+      ],
       "depends_on": [121],
       "blocks": [123],
       "acceptance_test": "AT-E0-003"
@@ -201,7 +295,14 @@
       "estimated_hours": 3,
       "labels": ["epic-0", "type-testing", "comp-terraform"],
       "description": "Execute acceptance test validating Terraform refactoring, state management, and Kubernetes standardization.",
-      "acceptance_criteria": ["Terraform modules working", "State management operational", "Terratest passing", "K8s manifests standardized", "Kustomize functional", "Docs complete"],
+      "acceptance_criteria": [
+        "Terraform modules working",
+        "State management operational",
+        "Terratest passing",
+        "K8s manifests standardized",
+        "Kustomize functional",
+        "Docs complete"
+      ],
       "depends_on": [118, 119, 120, 121, 122],
       "blocks": [124],
       "acceptance_test": "AT-E0-003"
@@ -214,7 +315,14 @@
       "estimated_hours": 8,
       "labels": ["epic-0", "type-infrastructure", "comp-configuration"],
       "description": "Create hierarchical configuration system with defaults, environment overrides, and local customization using ConfigMaps and Secrets.",
-      "acceptance_criteria": ["Config hierarchy defined", "Default configs", "Environment overrides", "Local customization support", "Validation rules", "Documentation"],
+      "acceptance_criteria": [
+        "Config hierarchy defined",
+        "Default configs",
+        "Environment overrides",
+        "Local customization support",
+        "Validation rules",
+        "Documentation"
+      ],
       "depends_on": [123],
       "blocks": [125],
       "acceptance_test": "AT-E0-004"
@@ -227,7 +335,14 @@
       "estimated_hours": 6,
       "labels": ["epic-0", "type-security", "comp-configuration"],
       "description": "Implement Bitnami Sealed Secrets for encrypting secrets in Git while maintaining GitOps workflow.",
-      "acceptance_criteria": ["Sealed Secrets deployed", "All secrets sealed", "Rotation documented", "No plaintext secrets in git", "Backup strategy", "Developer guide"],
+      "acceptance_criteria": [
+        "Sealed Secrets deployed",
+        "All secrets sealed",
+        "Rotation documented",
+        "No plaintext secrets in git",
+        "Backup strategy",
+        "Developer guide"
+      ],
       "depends_on": [124],
       "blocks": [126],
       "acceptance_test": "AT-E0-004"
@@ -240,7 +355,14 @@
       "estimated_hours": 5,
       "labels": ["epic-0", "type-security", "comp-configuration"],
       "description": "Scan entire git history for secrets, purge them using BFG Repo-Cleaner, and rotate any exposed credentials.",
-      "acceptance_criteria": ["Git history scanned", "All secrets removed", "Credentials rotated", "Clean history verified", "Prevention measures in place", "Incident documented"],
+      "acceptance_criteria": [
+        "Git history scanned",
+        "All secrets removed",
+        "Credentials rotated",
+        "Clean history verified",
+        "Prevention measures in place",
+        "Incident documented"
+      ],
       "depends_on": [125],
       "blocks": [127],
       "acceptance_test": "AT-E0-004"
@@ -253,7 +375,14 @@
       "estimated_hours": 7,
       "labels": ["epic-0", "type-infrastructure", "comp-configuration"],
       "description": "Build system for managing dev/staging/production configurations with proper isolation and validation.",
-      "acceptance_criteria": ["3 environments configured", "Config isolation", "Validation rules", "Promotion workflow", "Drift detection", "Documentation"],
+      "acceptance_criteria": [
+        "3 environments configured",
+        "Config isolation",
+        "Validation rules",
+        "Promotion workflow",
+        "Drift detection",
+        "Documentation"
+      ],
       "depends_on": [124, 125],
       "blocks": [128],
       "acceptance_test": "AT-E0-004"
@@ -266,7 +395,14 @@
       "estimated_hours": 2,
       "labels": ["epic-0", "type-testing", "comp-configuration"],
       "description": "Execute acceptance test validating configuration hierarchy, sealed secrets, and environment management.",
-      "acceptance_criteria": ["Config hierarchy working", "Sealed secrets operational", "No secrets in git", "Environment configs validated", "All tests passing", "Docs complete"],
+      "acceptance_criteria": [
+        "Config hierarchy working",
+        "Sealed secrets operational",
+        "No secrets in git",
+        "Environment configs validated",
+        "All tests passing",
+        "Docs complete"
+      ],
       "depends_on": [124, 125, 126, 127],
       "blocks": [129],
       "acceptance_test": "AT-E0-004"
@@ -279,7 +415,14 @@
       "estimated_hours": 10,
       "labels": ["epic-0", "type-documentation", "comp-docs"],
       "description": "Reorganize documentation with improved navigation, clear user journeys, and proper categorization (tutorials, how-tos, references, explanations).",
-      "acceptance_criteria": ["New structure implemented", "Diataxis framework applied", "Navigation improved", "All docs migrated", "Broken links fixed", "Search optimized"],
+      "acceptance_criteria": [
+        "New structure implemented",
+        "Diataxis framework applied",
+        "Navigation improved",
+        "All docs migrated",
+        "Broken links fixed",
+        "Search optimized"
+      ],
       "depends_on": [128],
       "blocks": [130],
       "acceptance_test": "AT-E0-005"
@@ -292,7 +435,14 @@
       "estimated_hours": 7,
       "labels": ["epic-0", "type-automation", "comp-docs"],
       "description": "Set up automated doc generation from code comments, Terraform docs, API specs, and inline documentation.",
-      "acceptance_criteria": ["Terraform docs auto-generated", "API docs from OpenAPI", "Code doc extraction", "CI/CD integration", "Versioned docs", "Update workflow"],
+      "acceptance_criteria": [
+        "Terraform docs auto-generated",
+        "API docs from OpenAPI",
+        "Code doc extraction",
+        "CI/CD integration",
+        "Versioned docs",
+        "Update workflow"
+      ],
       "depends_on": [129],
       "blocks": [131],
       "acceptance_test": "AT-E0-005"
@@ -305,7 +455,14 @@
       "estimated_hours": 12,
       "labels": ["epic-0", "type-documentation", "comp-docs"],
       "description": "Develop operational runbooks for common tasks: deployments, rollbacks, scaling, troubleshooting, disaster recovery.",
-      "acceptance_criteria": ["10+ runbooks created", "Step-by-step procedures", "Decision trees included", "Troubleshooting guides", "Incident response", "Tested procedures"],
+      "acceptance_criteria": [
+        "10+ runbooks created",
+        "Step-by-step procedures",
+        "Decision trees included",
+        "Troubleshooting guides",
+        "Incident response",
+        "Tested procedures"
+      ],
       "depends_on": [129],
       "blocks": [132],
       "acceptance_test": "AT-E0-005"
@@ -318,7 +475,14 @@
       "estimated_hours": 8,
       "labels": ["epic-0", "type-documentation", "comp-docs"],
       "description": "Create searchable knowledge base of common issues, error messages, and solutions with tags and search optimization.",
-      "acceptance_criteria": ["50+ issues documented", "Searchable structure", "Error code index", "Solution templates", "Community contributions enabled", "Analytics tracked"],
+      "acceptance_criteria": [
+        "50+ issues documented",
+        "Searchable structure",
+        "Error code index",
+        "Solution templates",
+        "Community contributions enabled",
+        "Analytics tracked"
+      ],
       "depends_on": [129],
       "blocks": [133],
       "acceptance_test": "AT-E0-005"
@@ -331,7 +495,14 @@
       "estimated_hours": 10,
       "labels": ["epic-0", "type-documentation", "comp-docs"],
       "description": "Audit all code, features, and configurations for documentation gaps and fill to achieve 90%+ coverage.",
-      "acceptance_criteria": ["Coverage audit complete", "All gaps identified", "Missing docs written", "90%+ coverage achieved", "Coverage tracking automated", "Maintenance plan"],
+      "acceptance_criteria": [
+        "Coverage audit complete",
+        "All gaps identified",
+        "Missing docs written",
+        "90%+ coverage achieved",
+        "Coverage tracking automated",
+        "Maintenance plan"
+      ],
       "depends_on": [129, 130, 131, 132],
       "blocks": [134],
       "acceptance_test": "AT-E0-005"
@@ -344,7 +515,14 @@
       "estimated_hours": 3,
       "labels": ["epic-0", "type-testing", "comp-docs"],
       "description": "Execute acceptance test validating documentation restructuring, automation, runbooks, and coverage targets.",
-      "acceptance_criteria": ["New structure working", "Auto-generation functional", "Runbooks complete", "KB searchable", "90%+ coverage", "User tested"],
+      "acceptance_criteria": [
+        "New structure working",
+        "Auto-generation functional",
+        "Runbooks complete",
+        "KB searchable",
+        "90%+ coverage",
+        "User tested"
+      ],
       "depends_on": [129, 130, 131, 132, 133],
       "blocks": [135],
       "acceptance_test": "AT-E0-005"
@@ -357,7 +535,14 @@
       "estimated_hours": 8,
       "labels": ["epic-0", "type-optimization", "comp-cicd"],
       "description": "Reduce pipeline execution time by 30%+ through caching, parallelization, and smart job triggering.",
-      "acceptance_criteria": ["30%+ faster pipelines", "Caching implemented", "Parallel jobs configured", "Conditional triggers", "Resource optimization", "Metrics tracked"],
+      "acceptance_criteria": [
+        "30%+ faster pipelines",
+        "Caching implemented",
+        "Parallel jobs configured",
+        "Conditional triggers",
+        "Resource optimization",
+        "Metrics tracked"
+      ],
       "depends_on": [134],
       "blocks": [136],
       "acceptance_test": "AT-E0-006"
@@ -370,7 +555,14 @@
       "estimated_hours": 6,
       "labels": ["epic-0", "type-observability", "comp-cicd"],
       "description": "Add automated failure analysis, intelligent alerting, and dashboards for CI/CD pipeline health.",
-      "acceptance_criteria": ["Failure categorization", "Smart alerting rules", "Dashboard deployed", "Trend analysis", "Auto-issue creation", "Notification routing"],
+      "acceptance_criteria": [
+        "Failure categorization",
+        "Smart alerting rules",
+        "Dashboard deployed",
+        "Trend analysis",
+        "Auto-issue creation",
+        "Notification routing"
+      ],
       "depends_on": [135],
       "blocks": [137],
       "acceptance_test": "AT-E0-006"
@@ -383,7 +575,14 @@
       "estimated_hours": 7,
       "labels": ["epic-0", "type-templates", "comp-cicd"],
       "description": "Build reusable pipeline templates for common patterns: build/test/deploy, security scanning, release management.",
-      "acceptance_criteria": ["5+ templates created", "Parameterized configs", "Example usage", "Documentation", "Version controlled", "Easy customization"],
+      "acceptance_criteria": [
+        "5+ templates created",
+        "Parameterized configs",
+        "Example usage",
+        "Documentation",
+        "Version controlled",
+        "Easy customization"
+      ],
       "depends_on": [135],
       "blocks": [138],
       "acceptance_test": "AT-E0-006"
@@ -396,7 +595,14 @@
       "estimated_hours": 2,
       "labels": ["epic-0", "type-testing", "comp-cicd"],
       "description": "Execute acceptance test validating pipeline performance improvements, monitoring, and templates.",
-      "acceptance_criteria": ["30%+ faster confirmed", "Monitoring operational", "Templates working", "Failure analysis active", "Docs complete", "Metrics tracked"],
+      "acceptance_criteria": [
+        "30%+ faster confirmed",
+        "Monitoring operational",
+        "Templates working",
+        "Failure analysis active",
+        "Docs complete",
+        "Metrics tracked"
+      ],
       "depends_on": [135, 136, 137],
       "blocks": [139],
       "acceptance_test": "AT-E0-006"
@@ -409,7 +615,14 @@
       "estimated_hours": 8,
       "labels": ["epic-0", "type-observability", "comp-logging"],
       "description": "Establish structured logging standards with log levels, correlation IDs, and centralized aggregation.",
-      "acceptance_criteria": ["Structured logging implemented", "Log levels standardized", "Correlation IDs", "Centralized aggregation", "Retention policies", "Query examples"],
+      "acceptance_criteria": [
+        "Structured logging implemented",
+        "Log levels standardized",
+        "Correlation IDs",
+        "Centralized aggregation",
+        "Retention policies",
+        "Query examples"
+      ],
       "depends_on": [138],
       "blocks": [140],
       "acceptance_test": "AT-E0-007"
@@ -422,7 +635,14 @@
       "estimated_hours": 10,
       "labels": ["epic-0", "type-observability", "comp-monitoring"],
       "description": "Enhance monitoring with SLIs/SLOs, intelligent alerting, anomaly detection, and comprehensive dashboards.",
-      "acceptance_criteria": ["SLIs/SLOs defined", "Smart alerting rules", "Anomaly detection", "10+ dashboards", "Alert routing", "Runbook integration"],
+      "acceptance_criteria": [
+        "SLIs/SLOs defined",
+        "Smart alerting rules",
+        "Anomaly detection",
+        "10+ dashboards",
+        "Alert routing",
+        "Runbook integration"
+      ],
       "depends_on": [139],
       "blocks": [141],
       "acceptance_test": "AT-E0-007"
@@ -435,7 +655,14 @@
       "estimated_hours": 6,
       "labels": ["epic-0", "type-documentation", "comp-observability"],
       "description": "Document troubleshooting procedures for each alert with decision trees, diagnostic queries, and remediation steps.",
-      "acceptance_criteria": ["Runbook for each alert", "Decision trees", "Diagnostic queries", "Remediation steps", "Escalation paths", "Tested procedures"],
+      "acceptance_criteria": [
+        "Runbook for each alert",
+        "Decision trees",
+        "Diagnostic queries",
+        "Remediation steps",
+        "Escalation paths",
+        "Tested procedures"
+      ],
       "depends_on": [140],
       "blocks": [142],
       "acceptance_test": "AT-E0-007"
@@ -448,7 +675,14 @@
       "estimated_hours": 2,
       "labels": ["epic-0", "type-testing", "comp-observability"],
       "description": "Execute acceptance test validating logging strategy, monitoring improvements, and runbooks.",
-      "acceptance_criteria": ["Structured logging working", "SLIs/SLOs tracked", "Alerting functional", "Dashboards deployed", "Runbooks complete", "All tests passing"],
+      "acceptance_criteria": [
+        "Structured logging working",
+        "SLIs/SLOs tracked",
+        "Alerting functional",
+        "Dashboards deployed",
+        "Runbooks complete",
+        "All tests passing"
+      ],
       "depends_on": [139, 140, 141],
       "blocks": [143],
       "acceptance_test": "AT-E0-007"
@@ -461,7 +695,14 @@
       "estimated_hours": 8,
       "labels": ["epic-0", "type-review", "comp-quality"],
       "description": "Comprehensive code review of all refactoring work ensuring quality standards met and no regressions introduced.",
-      "acceptance_criteria": ["All PRs reviewed", "No quality issues", "Performance validated", "Security verified", "Documentation checked", "Feedback addressed"],
+      "acceptance_criteria": [
+        "All PRs reviewed",
+        "No quality issues",
+        "Performance validated",
+        "Security verified",
+        "Documentation checked",
+        "Feedback addressed"
+      ],
       "depends_on": [142],
       "blocks": [144],
       "acceptance_test": "AT-E0-008"
@@ -474,7 +715,14 @@
       "estimated_hours": 6,
       "labels": ["epic-0", "type-testing", "comp-quality"],
       "description": "Execute comprehensive regression test suite ensuring all functionality preserved after refactoring.",
-      "acceptance_criteria": ["All tests passing", "No performance regressions", "No functionality lost", "Edge cases covered", "Integration tests pass", "User acceptance"],
+      "acceptance_criteria": [
+        "All tests passing",
+        "No performance regressions",
+        "No functionality lost",
+        "Edge cases covered",
+        "Integration tests pass",
+        "User acceptance"
+      ],
       "depends_on": [143],
       "blocks": [145],
       "acceptance_test": "AT-E0-008"
@@ -487,7 +735,14 @@
       "estimated_hours": 4,
       "labels": ["epic-0", "type-metrics", "comp-quality"],
       "description": "Quantify technical debt reduction using SonarQube, code metrics, and complexity analysis. Document improvements.",
-      "acceptance_criteria": ["Metrics collected", "50%+ debt reduction", "Complexity reduced", "Maintainability improved", "Report generated", "ROI calculated"],
+      "acceptance_criteria": [
+        "Metrics collected",
+        "50%+ debt reduction",
+        "Complexity reduced",
+        "Maintainability improved",
+        "Report generated",
+        "ROI calculated"
+      ],
       "depends_on": [143, 144],
       "blocks": [146],
       "acceptance_test": "AT-E0-008"
@@ -500,7 +755,14 @@
       "estimated_hours": 3,
       "labels": ["epic-0", "type-documentation", "comp-process"],
       "description": "Conduct team retrospective, document lessons learned, and identify improvement opportunities for future work.",
-      "acceptance_criteria": ["Retrospective conducted", "Lessons documented", "Action items identified", "Best practices captured", "Anti-patterns noted", "Future recommendations"],
+      "acceptance_criteria": [
+        "Retrospective conducted",
+        "Lessons documented",
+        "Action items identified",
+        "Best practices captured",
+        "Anti-patterns noted",
+        "Future recommendations"
+      ],
       "depends_on": [145],
       "blocks": [147],
       "acceptance_test": "AT-E0-008"
@@ -513,7 +775,14 @@
       "estimated_hours": 5,
       "labels": ["epic-0", "type-documentation", "comp-community"],
       "description": "Revise contributor onboarding docs reflecting new standards, tools, and workflows established in Epic 0.",
-      "acceptance_criteria": ["CONTRIBUTING.md updated", "Setup guide revised", "Code standards linked", "Tool setup documented", "Video tutorial created", "Tested with new contributor"],
+      "acceptance_criteria": [
+        "CONTRIBUTING.md updated",
+        "Setup guide revised",
+        "Code standards linked",
+        "Tool setup documented",
+        "Video tutorial created",
+        "Tested with new contributor"
+      ],
       "depends_on": [146],
       "blocks": [148],
       "acceptance_test": "AT-E0-008"
@@ -526,7 +795,14 @@
       "estimated_hours": 3,
       "labels": ["epic-0", "type-testing", "comp-quality"],
       "description": "Execute final acceptance test validating all Epic 0 work integrated successfully with no regressions.",
-      "acceptance_criteria": ["All acceptance tests passing", "No regressions found", "Performance targets met", "Docs complete", "Team trained", "Ready for Epic 1"],
+      "acceptance_criteria": [
+        "All acceptance tests passing",
+        "No regressions found",
+        "Performance targets met",
+        "Docs complete",
+        "Team trained",
+        "Ready for Epic 1"
+      ],
       "depends_on": [143, 144, 145, 146, 147],
       "blocks": [149],
       "acceptance_test": "AT-E0-008"
@@ -539,7 +815,14 @@
       "estimated_hours": 4,
       "labels": ["epic-0", "type-metrics", "comp-business"],
       "description": "Create comprehensive ROI report showing time invested vs. benefits gained from Epic 0 refactoring work.",
-      "acceptance_criteria": ["ROI calculated", "Time savings measured", "Quality improvements quantified", "Developer satisfaction surveyed", "Report published", "Presentation created"],
+      "acceptance_criteria": [
+        "ROI calculated",
+        "Time savings measured",
+        "Quality improvements quantified",
+        "Developer satisfaction surveyed",
+        "Report published",
+        "Presentation created"
+      ],
       "depends_on": [148],
       "blocks": [150],
       "acceptance_test": "AT-E0-009"
@@ -552,7 +835,14 @@
       "estimated_hours": 2,
       "labels": ["epic-0", "type-testing", "comp-quality"],
       "description": "Final validation confirming all Epic 0 objectives met, technical debt reduced, and platform ready for Epic 1.",
-      "acceptance_criteria": ["All 9 acceptance tests passing", "50%+ technical debt reduction", "30%+ faster builds", "90%+ doc coverage", "Team approval", "Epic 1 ready"],
+      "acceptance_criteria": [
+        "All 9 acceptance tests passing",
+        "50%+ technical debt reduction",
+        "30%+ faster builds",
+        "90%+ doc coverage",
+        "Team approval",
+        "Epic 1 ready"
+      ],
       "depends_on": [113, 117, 123, 128, 134, 138, 142, 148, 149],
       "blocks": [],
       "acceptance_test": "AT-E0-009"

@@ -25,6 +25,7 @@ Successfully implemented a comprehensive NPS (Net Promoter Score) survey automat
 - Prometheus metrics exposure
 
 **Key Features**:
+
 - Survey link generation with unique tokens
 - Survey response collection and storage
 - NPS score calculation: `(% promoters - % detractors) × 100`
@@ -33,6 +34,7 @@ Successfully implemented a comprehensive NPS (Net Promoter Score) survey automat
 - Campaign management
 
 **API Endpoints**:
+
 - `GET /survey/{token}` - Survey page (HTML)
 - `POST /api/v1/survey/{token}/submit` - Submit response
 - `GET /api/v1/nps/metrics` - Get NPS metrics
@@ -52,6 +54,7 @@ Successfully implemented a comprehensive NPS (Net Promoter Score) survey automat
 - Survey link expiration (30 days)
 
 **Design**:
+
 - Clean, modern interface
 - Fawkes branding colors
 - Mobile-first responsive layout
@@ -68,6 +71,7 @@ Successfully implemented a comprehensive NPS (Net Promoter Score) survey automat
 - Mattermost API client with error handling
 
 **Features**:
+
 - User lookup by email
 - Direct channel creation
 - Formatted markdown messages
@@ -85,17 +89,20 @@ Successfully implemented a comprehensive NPS (Net Promoter Score) survey automat
 - Statistics tracking
 
 **CronJobs**:
+
 - `cronjob-quarterly.yaml`: Quarterly distribution (Q1-Q4)
 - `cronjob-reminders.yaml`: Weekly reminder checks
 
 ### 5. Database Schema
 
 **Tables**:
+
 1. **survey_links**: Token, user, expiration, response status
 2. **survey_responses**: Score, type, comment, timestamp
 3. **survey_campaigns**: Quarter, year, totals, NPS score
 
 **Indexes**:
+
 - Token lookup (fast survey access)
 - User ID (user history)
 - Expiration date (cleanup queries)
@@ -104,6 +111,7 @@ Successfully implemented a comprehensive NPS (Net Promoter Score) survey automat
 ### 6. Kubernetes Deployment
 
 **Manifests Created**:
+
 - `deployment.yaml`: 2-replica HA deployment
 - `service.yaml`: ClusterIP service
 - `configmap.yaml`: Configuration settings
@@ -116,6 +124,7 @@ Successfully implemented a comprehensive NPS (Net Promoter Score) survey automat
 - `cronjob-reminders.yaml`: Weekly reminders
 
 **Features**:
+
 - High availability (2 replicas)
 - Pod anti-affinity
 - Resource limits (optimized for <70% utilization)
@@ -128,6 +137,7 @@ Successfully implemented a comprehensive NPS (Net Promoter Score) survey automat
 **Location**: `services/nps/tests/unit/test_main.py`
 
 **Test Coverage**:
+
 - 21 unit tests (all passing)
 - NPS score calculation logic
 - Score type classification
@@ -137,6 +147,7 @@ Successfully implemented a comprehensive NPS (Net Promoter Score) survey automat
 - Edge cases and validation
 
 **Test Categories**:
+
 1. Score calculation (7 tests)
 2. NPS calculation (4 tests)
 3. Survey validation (3 tests)
@@ -146,6 +157,7 @@ Successfully implemented a comprehensive NPS (Net Promoter Score) survey automat
 ### 8. Documentation
 
 **Files Created**:
+
 - `README.md`: Service overview, usage, development
 - `DEPLOYMENT.md`: Step-by-step deployment guide
 - Inline code documentation
@@ -157,22 +169,27 @@ Successfully implemented a comprehensive NPS (Net Promoter Score) survey automat
 ## Architecture Decisions
 
 ### 1. FastAPI vs Flask
+
 **Chosen**: FastAPI
 **Reason**: Async support, automatic API docs, type validation, better performance
 
 ### 2. PostgreSQL vs MongoDB
+
 **Chosen**: PostgreSQL
 **Reason**: Relational data, ACID compliance, CloudNativePG support, existing platform standard
 
 ### 3. Embedded UI vs Separate Frontend
+
 **Chosen**: Embedded HTML
 **Reason**: Simplicity, minimal dependencies, fast loading, no build process
 
 ### 4. Mattermost vs Email
+
 **Chosen**: Mattermost (with email as future enhancement)
 **Reason**: Platform already uses Mattermost, better engagement, real-time delivery
 
 ### 5. CronJob vs In-Process Scheduler
+
 **Chosen**: Kubernetes CronJob
 **Reason**: Kubernetes-native, separate concerns, easier scaling, fault tolerance
 
@@ -181,22 +198,26 @@ Successfully implemented a comprehensive NPS (Net Promoter Score) survey automat
 ## NPS Calculation Logic
 
 ### Score Classification
+
 - **Promoters** (9-10): Enthusiastic, will recommend
 - **Passives** (7-8): Satisfied but unenthusiastic
 - **Detractors** (0-6): Unhappy, may discourage others
 
 ### NPS Formula
+
 ```
 NPS = (% Promoters - % Detractors) × 100
 ```
 
 ### Example Calculation
+
 - 50 responses: 20 promoters, 15 passives, 15 detractors
 - % Promoters = 20/50 = 40%
 - % Detractors = 15/50 = 30%
 - NPS = (40% - 30%) × 100 = 10
 
 ### Score Interpretation
+
 - **-100 to 0**: Needs improvement
 - **0 to 30**: Good
 - **30 to 70**: Great
@@ -207,29 +228,35 @@ NPS = (% Promoters - % Detractors) × 100
 ## Acceptance Criteria Status
 
 ✅ **NPS survey automation configured**
+
 - CronJob runs quarterly (Q1-Q4)
 - Automated survey generation and distribution
 
 ✅ **Quarterly schedule set**
+
 - CronJob schedule: `0 9 1 */3 *` (9 AM UTC on quarter start)
 - Configurable via Kubernetes CronJob spec
 
 ✅ **Survey responses collected**
+
 - Database stores all responses
 - Tracks score, comment, user, timestamp
 - Links responses to campaigns
 
 ✅ **NPS score calculated automatically**
+
 - Real-time calculation via API
 - Stored in campaign table
 - Exposed via Prometheus metrics
 
 ✅ **Results visible in dashboard**
+
 - Prometheus metrics exposed at `/metrics`
 - ServiceMonitor configured for scraping
 - Ready for Grafana dashboards
 
 ✅ **Response rate >30%**
+
 - Response rate tracked per campaign
 - Calculated: (responses / sent) × 100
 - Reminders sent after 7 days to improve rate
@@ -242,10 +269,12 @@ NPS = (% Promoters - % Detractors) × 100
 ### Prometheus Metrics
 
 1. **nps_responses_total{score_type}**
+
    - Counter: Total responses by type
    - Labels: promoter, passive, detractor
 
 2. **nps_score{period}**
+
    - Gauge: Current NPS score
    - Labels: quarterly, overall
 
@@ -254,6 +283,7 @@ NPS = (% Promoters - % Detractors) × 100
    - Labels: submit_response, get_metrics, etc.
 
 ### Health Checks
+
 - Liveness probe: `/health` every 10s
 - Readiness probe: `/health` every 5s
 - Database connectivity check included
@@ -263,6 +293,7 @@ NPS = (% Promoters - % Detractors) × 100
 ## Security Considerations
 
 ### Implemented
+
 1. **Non-root containers** (UID 65534)
 2. **Read-only root filesystem** (where possible)
 3. **Dropped capabilities** (ALL)
@@ -275,6 +306,7 @@ NPS = (% Promoters - % Detractors) × 100
 10. **CORS configuration** (restrictable)
 
 ### Recommended for Production
+
 1. External Secrets Operator for secret management
 2. Network policies to restrict pod communication
 3. TLS for database connections
@@ -287,16 +319,19 @@ NPS = (% Promoters - % Detractors) × 100
 ## Performance & Scalability
 
 ### Resource Allocation
+
 - **Service**: 200m-500m CPU, 256Mi-512Mi memory (2 replicas)
 - **Database**: 300m-1000m CPU, 384Mi-1Gi memory (3 replicas)
 - **CronJobs**: 100m-200m CPU, 128Mi-256Mi memory
 
 ### Scaling
+
 - Horizontal: Scale replicas via `kubectl scale`
 - Database: CloudNativePG auto-scaling
 - High availability: 2 service replicas, 3 DB replicas
 
 ### Performance Targets
+
 - Survey page load: <2 seconds
 - Response submission: <500ms
 - NPS calculation: <1 second
@@ -340,11 +375,13 @@ tests/unit/test_main.py::TestReminderLogic::test_no_reminder_if_already_sent PAS
 ## Validation Commands
 
 ### Manual Trigger Survey
+
 ```bash
 python services/nps/scripts/send-survey.py --test-users
 ```
 
 ### Check Survey Link Works
+
 ```bash
 # Port forward to service
 kubectl port-forward -n fawkes svc/nps-service 8000:8000
@@ -356,6 +393,7 @@ curl http://localhost:8000/survey/test-token
 ```
 
 ### Verify Database
+
 ```bash
 # Check database status
 kubectl get cluster -n fawkes db-nps-dev
@@ -364,6 +402,7 @@ kubectl get cluster -n fawkes db-nps-dev
 ```
 
 ### Check Service Health
+
 ```bash
 kubectl port-forward -n fawkes svc/nps-service 8000:8000
 curl http://localhost:8000/health
@@ -376,17 +415,20 @@ curl http://localhost:8000/health
 ## Future Enhancements
 
 ### Priority 1
+
 - [ ] Backstage integration (user list API)
 - [ ] Grafana dashboard template
 - [ ] Email integration (in addition to Mattermost)
 
 ### Priority 2
+
 - [ ] Multi-language support
 - [ ] Custom survey questions
 - [ ] Trend analysis and reporting
 - [ ] CSV/PDF export
 
 ### Priority 3
+
 - [ ] Slack integration
 - [ ] Sentiment analysis on comments
 - [ ] Predictive analytics
@@ -397,6 +439,7 @@ curl http://localhost:8000/health
 ## Dependencies
 
 ### Python Packages
+
 - fastapi==0.115.5
 - uvicorn==0.32.1
 - pydantic==2.10.3
@@ -405,6 +448,7 @@ curl http://localhost:8000/health
 - httpx==0.27.2
 
 ### Infrastructure
+
 - Kubernetes 1.28+
 - CloudNativePG operator
 - Prometheus operator
@@ -457,6 +501,7 @@ Total: 24 files, ~2,400 lines of code
 The NPS survey automation system has been successfully implemented with all acceptance criteria met. The solution is production-ready, well-tested, documented, and follows Fawkes platform architectural patterns and security best practices.
 
 The system provides:
+
 - ✅ Automated quarterly surveys
 - ✅ Mattermost integration
 - ✅ Reminder automation
@@ -465,6 +510,7 @@ The system provides:
 - ✅ >30% response rate targeting
 
 Next steps:
+
 1. Deploy to development environment
 2. Configure Mattermost bot
 3. Test with real users

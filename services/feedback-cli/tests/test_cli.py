@@ -53,12 +53,18 @@ def test_submit_with_flags(runner):
         status=201,
     )
 
-    result = runner.invoke(main, [
-        "submit",
-        "-r", "5",
-        "-c", "Test",
-        "-m", "Great!",
-    ])
+    result = runner.invoke(
+        main,
+        [
+            "submit",
+            "-r",
+            "5",
+            "-c",
+            "Test",
+            "-m",
+            "Great!",
+        ],
+    )
 
     assert result.exit_code == 0
     assert "successfully" in result.output.lower()
@@ -68,15 +74,19 @@ def test_submit_missing_required_fields(runner):
     """Test submit command with missing required fields enters interactive mode."""
     # When missing fields, it goes into interactive mode and waits for input
     # Since we're not providing input, it should abort
-    result = runner.invoke(main, [
-        "submit",
-        "-r", "5",
-        # Missing category and comment triggers interactive mode
-    ])
+    result = runner.invoke(
+        main,
+        [
+            "submit",
+            "-r",
+            "5",
+            # Missing category and comment triggers interactive mode
+        ],
+    )
 
     # Should show interactive mode or abort
     assert result.exit_code != 0
-    assert ("Interactive Mode" in result.output or "Aborted" in result.output)
+    assert "Interactive Mode" in result.output or "Aborted" in result.output
 
 
 @responses.activate

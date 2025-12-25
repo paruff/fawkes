@@ -89,6 +89,7 @@ kubectl exec -n fawkes $POD_NAME -- curl -s http://localhost:7007/healthcheck
 Manually verify in GitHub:
 
 1. Go to your OAuth app settings:
+
    - Personal: https://github.com/settings/developers
    - Organization: https://github.com/organizations/YOUR_ORG/settings/applications
 
@@ -104,6 +105,7 @@ Manually verify in GitHub:
 ### 7. Test Login Flow (Manual)
 
 1. **Access Backstage**:
+
    ```bash
    # If using port-forward for local testing:
    kubectl port-forward -n fawkes svc/backstage 7007:7007
@@ -113,6 +115,7 @@ Manually verify in GitHub:
    ```
 
 2. **Verify Login Button**:
+
    - [ ] "Sign in with GitHub" button is visible on the page
    - [ ] No error messages are displayed on the login page
 
@@ -132,6 +135,7 @@ Manually verify in GitHub:
 After logging in:
 
 1. **Access Service Catalog**:
+
    - [ ] Navigate to "Catalog" section
    - [ ] Can view catalog entities
    - [ ] Username/identity is displayed correctly
@@ -183,12 +187,14 @@ behave tests/bdd/features/backstage-deployment.feature --tags=@authentication
 **Symptoms**: Error when clicking "Sign in with GitHub"
 
 **Diagnosis**:
+
 ```bash
 # Check callback URL in secret
 kubectl get secret backstage-oauth-credentials -n fawkes -o jsonpath='{.data.github-client-id}' | base64 -d
 ```
 
 **Solution**:
+
 - Verify callback URL in GitHub OAuth app matches: `https://backstage.fawkes.idp/api/auth/github/handler/frame`
 - Check protocol (http vs https)
 - Check for trailing slashes
@@ -199,12 +205,14 @@ kubectl get secret backstage-oauth-credentials -n fawkes -o jsonpath='{.data.git
 **Symptoms**: Error in logs about OAuth configuration
 
 **Diagnosis**:
+
 ```bash
 # Check if secrets contain placeholder values
 kubectl get secret backstage-oauth-credentials -n fawkes -o yaml | grep CHANGE_ME
 ```
 
 **Solution**:
+
 - Update secrets with real GitHub OAuth credentials
 - Apply updated secret: `kubectl apply -f platform/apps/backstage/secrets.yaml`
 - Restart Backstage: `kubectl rollout restart deployment/backstage -n fawkes`
@@ -214,12 +222,14 @@ kubectl get secret backstage-oauth-credentials -n fawkes -o yaml | grep CHANGE_M
 **Symptoms**: No "Sign in with GitHub" button on login page
 
 **Diagnosis**:
+
 ```bash
 # Check app-config has auth section
 kubectl get configmap backstage-app-config -n fawkes -o yaml | grep -A 5 "auth:"
 ```
 
 **Solution**:
+
 - Verify app-config.yaml has auth.providers.github section
 - Check environment variables are properly injected
 - Restart Backstage pods
@@ -229,12 +239,14 @@ kubectl get configmap backstage-app-config -n fawkes -o yaml | grep -A 5 "auth:"
 **Symptoms**: After GitHub authorization, get 500 error
 
 **Diagnosis**:
+
 ```bash
 # Check Backstage logs for errors
 kubectl logs -n fawkes -l app.kubernetes.io/name=backstage --tail=50
 ```
 
 **Solution**:
+
 - Verify client secret is correct (regenerate if needed)
 - Check database connectivity
 - Ensure all environment variables are set correctly
@@ -258,10 +270,10 @@ All of the following must be true:
 
 ## Sign-Off
 
-- [ ] Validated by: ________________
-- [ ] Date: ________________
+- [ ] Validated by: **\*\***\_\_\_\_**\*\***
+- [ ] Date: **\*\***\_\_\_\_**\*\***
 - [ ] Environment: [ ] Development [ ] Staging [ ] Production
-- [ ] Issues found: ________________
+- [ ] Issues found: **\*\***\_\_\_\_**\*\***
 - [ ] All issues resolved: [ ] Yes [ ] No
 
 ## References

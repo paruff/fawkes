@@ -73,7 +73,7 @@ check_warn() {
 echo "Test 1: OpenTelemetry Collector DaemonSet"
 echo "------------------------------------------"
 
-if kubectl get daemonset -n "$MONITORING_NAMESPACE" -l app.kubernetes.io/name=opentelemetry-collector &>/dev/null; then
+if kubectl get daemonset -n "$MONITORING_NAMESPACE" -l app.kubernetes.io/name=opentelemetry-collector &> /dev/null; then
   DESIRED=$(kubectl get daemonset -n "$MONITORING_NAMESPACE" -l app.kubernetes.io/name=opentelemetry-collector -o jsonpath='{.items[0].status.desiredNumberScheduled}')
   READY=$(kubectl get daemonset -n "$MONITORING_NAMESPACE" -l app.kubernetes.io/name=opentelemetry-collector -o jsonpath='{.items[0].status.numberReady}')
 
@@ -94,13 +94,13 @@ echo ""
 echo "Test 2: OpenTelemetry Collector Health Endpoints"
 echo "-------------------------------------------------"
 
-OTEL_POD=$(kubectl get pods -n "$MONITORING_NAMESPACE" -l app.kubernetes.io/name=opentelemetry-collector -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
+OTEL_POD=$(kubectl get pods -n "$MONITORING_NAMESPACE" -l app.kubernetes.io/name=opentelemetry-collector -o jsonpath='{.items[0].metadata.name}' 2> /dev/null)
 
 if [ -n "$OTEL_POD" ]; then
   # Try curl first, fallback to wget if not available
-  if kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- sh -c "command -v curl" &>/dev/null; then
+  if kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- sh -c "command -v curl" &> /dev/null; then
     HTTP_CLIENT="curl -s"
-  elif kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- sh -c "command -v wget" &>/dev/null; then
+  elif kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- sh -c "command -v wget" &> /dev/null; then
     HTTP_CLIENT="wget -qO-"
   else
     check_fail "Neither curl nor wget available in OpenTelemetry Collector pod"
@@ -108,13 +108,13 @@ if [ -n "$OTEL_POD" ]; then
   fi
 
   if [ -n "$HTTP_CLIENT" ]; then
-    if kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- sh -c "$HTTP_CLIENT http://localhost:13133" &>/dev/null; then
+    if kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- sh -c "$HTTP_CLIENT http://localhost:13133" &> /dev/null; then
       check_pass "OpenTelemetry Collector health endpoint is accessible"
     else
       check_fail "OpenTelemetry Collector health endpoint is not accessible"
     fi
 
-    if kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- sh -c "$HTTP_CLIENT http://localhost:55679/debug/servicez" &>/dev/null; then
+    if kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- sh -c "$HTTP_CLIENT http://localhost:55679/debug/servicez" &> /dev/null; then
       check_pass "OpenTelemetry Collector zpages endpoint is accessible"
     else
       check_fail "OpenTelemetry Collector zpages endpoint is not accessible"
@@ -132,7 +132,7 @@ echo ""
 echo "Test 3: OpenSearch Cluster"
 echo "--------------------------"
 
-if kubectl get application -n "$ARGOCD_NAMESPACE" opensearch &>/dev/null; then
+if kubectl get application -n "$ARGOCD_NAMESPACE" opensearch &> /dev/null; then
   APP_HEALTH=$(kubectl get application -n "$ARGOCD_NAMESPACE" opensearch -o jsonpath='{.status.health.status}')
   APP_SYNC=$(kubectl get application -n "$ARGOCD_NAMESPACE" opensearch -o jsonpath='{.status.sync.status}')
 
@@ -151,7 +151,7 @@ else
   check_warn "OpenSearch ArgoCD Application not found (deployment pending)"
 fi
 
-if kubectl get statefulset -n "$LOGGING_NAMESPACE" opensearch-cluster-master &>/dev/null; then
+if kubectl get statefulset -n "$LOGGING_NAMESPACE" opensearch-cluster-master &> /dev/null; then
   DESIRED=$(kubectl get statefulset -n "$LOGGING_NAMESPACE" opensearch-cluster-master -o jsonpath='{.status.replicas}')
   READY=$(kubectl get statefulset -n "$LOGGING_NAMESPACE" opensearch-cluster-master -o jsonpath='{.status.readyReplicas}')
 
@@ -172,15 +172,15 @@ echo ""
 echo "Test 4: OpenSearch Cluster Health"
 echo "----------------------------------"
 
-OPENSEARCH_POD=$(kubectl get pods -n "$LOGGING_NAMESPACE" -l app=opensearch-cluster-master -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
+OPENSEARCH_POD=$(kubectl get pods -n "$LOGGING_NAMESPACE" -l app=opensearch-cluster-master -o jsonpath='{.items[0].metadata.name}' 2> /dev/null)
 
 if [ -n "$OPENSEARCH_POD" ]; then
   # Check if jq is available for robust JSON parsing
   if command -v jq &> /dev/null; then
-    CLUSTER_HEALTH=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- curl -s http://localhost:9200/_cluster/health 2>/dev/null | jq -r '.status' 2>/dev/null)
+    CLUSTER_HEALTH=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- curl -s http://localhost:9200/_cluster/health 2> /dev/null | jq -r '.status' 2> /dev/null)
   else
     # Fallback to grep parsing if jq is not available
-    CLUSTER_HEALTH=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- curl -s http://localhost:9200/_cluster/health 2>/dev/null | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+    CLUSTER_HEALTH=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- curl -s http://localhost:9200/_cluster/health 2> /dev/null | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
   fi
 
   if [ "$CLUSTER_HEALTH" == "green" ]; then
@@ -192,7 +192,7 @@ if [ -n "$OPENSEARCH_POD" ]; then
   fi
 
   # Check indices
-  INDICES=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- curl -s http://localhost:9200/_cat/indices 2>/dev/null | wc -l)
+  INDICES=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- curl -s http://localhost:9200/_cat/indices 2> /dev/null | wc -l)
   if [ "$INDICES" -gt 0 ]; then
     check_pass "OpenSearch has $INDICES indices"
   else
@@ -210,7 +210,7 @@ echo ""
 echo "Test 5: OpenSearch Dashboards"
 echo "------------------------------"
 
-if kubectl get application -n "$ARGOCD_NAMESPACE" opensearch-dashboards &>/dev/null; then
+if kubectl get application -n "$ARGOCD_NAMESPACE" opensearch-dashboards &> /dev/null; then
   APP_HEALTH=$(kubectl get application -n "$ARGOCD_NAMESPACE" opensearch-dashboards -o jsonpath='{.status.health.status}')
 
   if [ "$APP_HEALTH" == "Healthy" ]; then
@@ -222,7 +222,7 @@ else
   check_warn "OpenSearch Dashboards ArgoCD Application not found"
 fi
 
-if kubectl get deployment -n "$LOGGING_NAMESPACE" opensearch-dashboards &>/dev/null; then
+if kubectl get deployment -n "$LOGGING_NAMESPACE" opensearch-dashboards &> /dev/null; then
   DESIRED=$(kubectl get deployment -n "$LOGGING_NAMESPACE" opensearch-dashboards -o jsonpath='{.status.replicas}')
   READY=$(kubectl get deployment -n "$LOGGING_NAMESPACE" opensearch-dashboards -o jsonpath='{.status.readyReplicas}')
 
@@ -245,15 +245,15 @@ echo "------------------------------------------------"
 
 if [ -n "$OTEL_POD" ]; then
   # Check if filelog receiver is configured
-  if kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- sh -c "env | grep -i filelog" &>/dev/null || \
-     kubectl logs -n "$MONITORING_NAMESPACE" "$OTEL_POD" --tail=100 2>/dev/null | grep -i "filelog" &>/dev/null; then
+  if kubectl exec -n "$MONITORING_NAMESPACE" "$OTEL_POD" -- sh -c "env | grep -i filelog" &> /dev/null \
+    || kubectl logs -n "$MONITORING_NAMESPACE" "$OTEL_POD" --tail=100 2> /dev/null | grep -i "filelog" &> /dev/null; then
     check_pass "Filelog receiver is configured"
   else
     check_warn "Filelog receiver configuration not verified"
   fi
 
   # Check if OpenSearch exporter is configured
-  if kubectl logs -n "$MONITORING_NAMESPACE" "$OTEL_POD" --tail=100 2>/dev/null | grep -i "opensearch" &>/dev/null; then
+  if kubectl logs -n "$MONITORING_NAMESPACE" "$OTEL_POD" --tail=100 2> /dev/null | grep -i "opensearch" &> /dev/null; then
     check_pass "OpenSearch exporter is configured"
   else
     check_warn "OpenSearch exporter configuration not verified"
@@ -270,7 +270,7 @@ echo "-------------------------------------------"
 
 if [ -n "$OPENSEARCH_POD" ]; then
   ISM_POLICY=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- \
-    curl -s http://localhost:9200/_plugins/_ism/policies/fawkes-log-retention-policy 2>/dev/null)
+    curl -s http://localhost:9200/_plugins/_ism/policies/fawkes-log-retention-policy 2> /dev/null)
 
   if echo "$ISM_POLICY" | grep -q "fawkes-log-retention-policy"; then
     check_pass "ISM retention policy (30 days) is configured"
@@ -289,7 +289,7 @@ echo "----------------------"
 
 if [ -n "$OPENSEARCH_POD" ]; then
   TEMPLATES=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- \
-    curl -s http://localhost:9200/_index_template 2>/dev/null | grep -o '"name":"[^"]*"' | wc -l)
+    curl -s http://localhost:9200/_index_template 2> /dev/null | grep -o '"name":"[^"]*"' | wc -l)
 
   if [ "$TEMPLATES" -gt 0 ]; then
     check_pass "Index templates are configured ($TEMPLATES templates found)"
@@ -309,14 +309,14 @@ echo "-----------------------------------"
 if [ -n "$OPENSEARCH_POD" ]; then
   # Check for otel-logs indices
   OTEL_LOGS=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- \
-    curl -s "http://localhost:9200/_cat/indices/otel-logs-*" 2>/dev/null | wc -l)
+    curl -s "http://localhost:9200/_cat/indices/otel-logs-*" 2> /dev/null | wc -l)
 
   if [ "$OTEL_LOGS" -gt 0 ]; then
     check_pass "OTLP log indices found (logs are being ingested)"
 
     # Check document count
     DOC_COUNT=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- \
-      curl -s "http://localhost:9200/otel-logs-*/_count" 2>/dev/null | grep -o '"count":[0-9]*' | cut -d':' -f2)
+      curl -s "http://localhost:9200/otel-logs-*/_count" 2> /dev/null | grep -o '"count":[0-9]*' | cut -d':' -f2)
 
     if [ -n "$DOC_COUNT" ] && [ "$DOC_COUNT" -gt 0 ]; then
       check_pass "Log documents found in OpenSearch ($DOC_COUNT documents)"
@@ -329,7 +329,7 @@ if [ -n "$OPENSEARCH_POD" ]; then
 
   # Check for fawkes-logs indices
   FAWKES_LOGS=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- \
-    curl -s "http://localhost:9200/_cat/indices/fawkes-logs-*" 2>/dev/null | wc -l)
+    curl -s "http://localhost:9200/_cat/indices/fawkes-logs-*" 2> /dev/null | wc -l)
 
   if [ "$FAWKES_LOGS" -gt 0 ]; then
     check_pass "Fawkes log indices found"
@@ -347,7 +347,7 @@ echo "---------------------------------------"
 if [ -n "$OPENSEARCH_POD" ] && [ -n "$DOC_COUNT" ] && [ "$DOC_COUNT" -gt 0 ]; then
   # Sample a log document and check for k8s attributes
   SAMPLE_LOG=$(kubectl exec -n "$LOGGING_NAMESPACE" "$OPENSEARCH_POD" -- \
-    curl -s "http://localhost:9200/otel-logs-*/_search?size=1" 2>/dev/null)
+    curl -s "http://localhost:9200/otel-logs-*/_search?size=1" 2> /dev/null)
 
   if echo "$SAMPLE_LOG" | grep -q "k8s.namespace.name"; then
     check_pass "Logs contain k8s.namespace.name metadata"

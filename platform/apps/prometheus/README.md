@@ -53,21 +53,21 @@ The observability stack provides:
 
 ### ArgoCD Applications
 
-| File | Component | Description |
-|------|-----------|-------------|
-| `prometheus-application.yaml` | kube-prometheus-stack | Prometheus, Alertmanager, Grafana, node-exporter, kube-state-metrics |
-| `../opentelemetry/otel-collector-application.yaml` | OpenTelemetry Collector | DaemonSet for metrics collection and enrichment |
+| File                                               | Component               | Description                                                          |
+| -------------------------------------------------- | ----------------------- | -------------------------------------------------------------------- |
+| `prometheus-application.yaml`                      | kube-prometheus-stack   | Prometheus, Alertmanager, Grafana, node-exporter, kube-state-metrics |
+| `../opentelemetry/otel-collector-application.yaml` | OpenTelemetry Collector | DaemonSet for metrics collection and enrichment                      |
 
 ### Configuration Files
 
-| File | Purpose |
-|------|---------|
-| `servicemonitors.yaml` | ServiceMonitor/PodMonitor resources for platform services |
-| `slo-alerting-rules.yaml` | SLO-based alerting rules (P99 latency, error rate, availability) |
-| `golden-signals-dashboard.yaml` | Grafana dashboard ConfigMap for Golden Signals |
-| `alerting-rules-mvp.yaml` | Basic infrastructure alerting rules |
-| `values-mvp.yaml` | Minimal Prometheus configuration for MVP deployments |
-| `additional-scrape-configs.yaml` | Legacy scrape configuration for Jenkins |
+| File                             | Purpose                                                          |
+| -------------------------------- | ---------------------------------------------------------------- |
+| `servicemonitors.yaml`           | ServiceMonitor/PodMonitor resources for platform services        |
+| `slo-alerting-rules.yaml`        | SLO-based alerting rules (P99 latency, error rate, availability) |
+| `golden-signals-dashboard.yaml`  | Grafana dashboard ConfigMap for Golden Signals                   |
+| `alerting-rules-mvp.yaml`        | Basic infrastructure alerting rules                              |
+| `values-mvp.yaml`                | Minimal Prometheus configuration for MVP deployments             |
+| `additional-scrape-configs.yaml` | Legacy scrape configuration for Jenkins                          |
 
 ## Deployment
 
@@ -101,11 +101,11 @@ kubectl create secret generic alertmanager-slack-webhook \
 
 ## Accessing the Services
 
-| Service | URL | Default Credentials |
-|---------|-----|---------------------|
-| Prometheus | http://prometheus.127.0.0.1.nip.io | N/A |
-| Grafana | http://grafana.127.0.0.1.nip.io | admin / fawkesidp |
-| Alertmanager | http://alertmanager.127.0.0.1.nip.io | N/A |
+| Service      | URL                                  | Default Credentials |
+| ------------ | ------------------------------------ | ------------------- |
+| Prometheus   | http://prometheus.127.0.0.1.nip.io   | N/A                 |
+| Grafana      | http://grafana.127.0.0.1.nip.io      | admin / fawkesidp   |
+| Alertmanager | http://alertmanager.127.0.0.1.nip.io | N/A                 |
 
 ## Application Instrumentation
 
@@ -175,13 +175,13 @@ metadata:
 
 The following SLO-based alerts are configured:
 
-| Alert | Condition | Severity | SLO |
-|-------|-----------|----------|-----|
-| SLOLatencyP99Critical | P99 latency > 500ms for 5m | critical | 99th percentile < 500ms |
-| SLOLatencyP95Warning | P95 latency > 300ms for 10m | warning | 95th percentile < 300ms |
-| SLOErrorRateCritical | Error rate > 5% for 5m | critical | Error rate < 5% |
-| SLOErrorRateWarning | Error rate > 1% for 10m | warning | Error rate < 1% |
-| SLOAvailabilityCritical | Availability < 99.9% for 5m | critical | 99.9% uptime |
+| Alert                   | Condition                   | Severity | SLO                     |
+| ----------------------- | --------------------------- | -------- | ----------------------- |
+| SLOLatencyP99Critical   | P99 latency > 500ms for 5m  | critical | 99th percentile < 500ms |
+| SLOLatencyP95Warning    | P95 latency > 300ms for 10m | warning  | 95th percentile < 300ms |
+| SLOErrorRateCritical    | Error rate > 5% for 5m      | critical | Error rate < 5%         |
+| SLOErrorRateWarning     | Error rate > 1% for 10m     | warning  | Error rate < 1%         |
+| SLOAvailabilityCritical | Availability < 99.9% for 5m | critical | 99.9% uptime            |
 
 ## Golden Signals Dashboard
 
@@ -202,15 +202,15 @@ The dashboard provides visibility into the four golden signals:
 
 Pre-aggregated metrics for efficient dashboard queries:
 
-| Metric | Description |
-|--------|-------------|
-| `fawkes:http_requests:rate5m` | Request rate per service |
-| `fawkes:http_errors:rate5m` | Error rate per service |
-| `fawkes:http_error_rate:ratio5m` | Error rate percentage |
-| `fawkes:http_latency:p50` | P50 latency per service |
-| `fawkes:http_latency:p95` | P95 latency per service |
-| `fawkes:http_latency:p99` | P99 latency per service |
-| `fawkes:service:availability` | Service availability |
+| Metric                           | Description              |
+| -------------------------------- | ------------------------ |
+| `fawkes:http_requests:rate5m`    | Request rate per service |
+| `fawkes:http_errors:rate5m`      | Error rate per service   |
+| `fawkes:http_error_rate:ratio5m` | Error rate percentage    |
+| `fawkes:http_latency:p50`        | P50 latency per service  |
+| `fawkes:http_latency:p95`        | P95 latency per service  |
+| `fawkes:http_latency:p99`        | P99 latency per service  |
+| `fawkes:service:availability`    | Service availability     |
 
 ## Troubleshooting
 

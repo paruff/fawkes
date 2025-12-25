@@ -38,12 +38,14 @@ Hasura automatically generates GraphQL APIs from PostgreSQL databases, providing
 ## Components
 
 ### Hasura GraphQL Engine
+
 - **Image**: hasura/graphql-engine:v2.36.0
 - **Replicas**: 2 (HA)
 - **Resources**: 200m CPU / 256Mi memory (request)
 - **Port**: 8080
 
 ### Redis Cache
+
 - **Image**: redis:7-alpine
 - **Replicas**: 1
 - **Resources**: 100m CPU / 128Mi memory (request)
@@ -54,11 +56,13 @@ Hasura automatically generates GraphQL APIs from PostgreSQL databases, providing
 Hasura connects to multiple PostgreSQL databases:
 
 1. **VSM Database** (`db-vsm-dev`)
+
    - Work items
    - Stage transitions
    - Flow metrics
 
 2. **Backstage Database** (`db-backstage-dev`)
+
    - Software catalog
    - Component metadata
    - API definitions
@@ -71,12 +75,14 @@ Hasura connects to multiple PostgreSQL databases:
 ## Access
 
 ### GraphQL API
+
 - **Endpoint**: http://hasura.local/v1/graphql
 - **Console**: http://hasura.local/console
 
 ### Authentication
 
 For API access, include the admin secret in headers:
+
 ```bash
 curl http://hasura.local/v1/graphql \
   -H "x-hasura-admin-secret: fawkes-hasura-admin-secret-dev-changeme" \
@@ -98,6 +104,7 @@ Hasura supports multiple roles with different permissions:
 ### Metadata
 
 Hasura metadata (tables, relationships, permissions) is stored in:
+
 - `services/data-api/schema/` - Schema definitions
 - `services/data-api/rbac/` - Permission configurations
 
@@ -123,6 +130,7 @@ To expose a PostgreSQL table via GraphQL:
 4. Click "Track" on desired tables
 
 Or use the CLI:
+
 ```bash
 hasura metadata apply --endpoint http://hasura.local --admin-secret <secret>
 ```
@@ -169,6 +177,7 @@ See `services/data-api/rbac/` for detailed permission configurations.
 Redis caching is configured for query results:
 
 - **TTL by query type**:
+
   - Catalog queries: 5 minutes
   - DORA metrics: 1 minute
   - VSM data: 30 seconds
@@ -182,6 +191,7 @@ Redis caching is configured for query results:
 ### Query Optimization
 
 Hasura automatically:
+
 - Uses database indexes
 - Batches related queries
 - Limits query depth
@@ -207,6 +217,7 @@ Hasura exposes Prometheus metrics at `/v1/metrics`:
 ### Grafana Dashboard
 
 A pre-configured Grafana dashboard is available showing:
+
 - Request rate and latency
 - Cache hit ratio
 - Database connection pool
@@ -268,16 +279,19 @@ k6 run tests/performance/graphql-load-test.js
 ### Common Issues
 
 1. **Connection errors to PostgreSQL**
+
    - Check database credentials in secrets
    - Verify database is running: `kubectl get clusters.postgresql.cnpg.io -n fawkes`
    - Check connection string format
 
 2. **Console not accessible**
+
    - Verify ingress: `kubectl get ingress -n fawkes hasura`
    - Check DNS/hosts file for `hasura.local`
    - Port-forward: `kubectl port-forward -n fawkes svc/hasura 8080:8080`
 
 3. **High latency**
+
    - Check Redis cache: `kubectl logs -n fawkes -l app=hasura-redis`
    - Review query complexity
    - Check database indexes
@@ -314,6 +328,7 @@ kubectl create secret generic hasura-admin-secret \
 ### Database Credentials
 
 Database credentials are stored in separate secrets:
+
 - `db-vsm-credentials`
 - `db-backstage-credentials`
 - `devlake-db-credentials`

@@ -11,55 +11,67 @@ This document summarizes the implementation of AT-E1-002 validation test infrast
 Comprehensive validation script that checks all AT-E1-002 acceptance criteria:
 
 ✅ **Prerequisites**
+
 - Checks kubectl installation
 - Checks argocd CLI installation (optional)
 
 ✅ **Cluster Access**
+
 - Validates Kubernetes cluster connectivity
 - Verifies cluster-info access
 
 ✅ **ArgoCD Namespace**
+
 - Checks namespace exists
 - Validates namespace is Active
 
 ✅ **ArgoCD Deployment**
+
 - Verifies argocd-server deployment
 - Checks argocd-application-controller
 - Validates argocd-repo-server
 - Confirms argocd-redis is running
 
 ✅ **ArgoCD Pods**
+
 - Validates all pods are Running
 - Checks all pods are Ready
 - Reports pod count and status
 
 ✅ **ArgoCD CRDs**
+
 - Validates applications.argoproj.io
 - Checks applicationsets.argoproj.io
 - Confirms appprojects.argoproj.io
 
 ✅ **Git Repository Structure**
+
 - Checks platform/apps/ directory exists
 - Validates platform/bootstrap/ directory exists
 
 ✅ **App-of-Apps Pattern**
+
 - Looks for root applications (platform-bootstrap, fawkes-app, fawkes-infra)
 - Validates at least one Application exists
 
 ✅ **Application Sync Status**
+
 - Checks all applications are Synced
 - Validates all applications are Healthy
 - Identifies out-of-sync or unhealthy applications
 
 ✅ **Auto-Sync Configuration**
+
 - Verifies auto-sync is enabled
 - Checks self-heal is configured
 
 ✅ **ArgoCD Ingress**
+
 - Validates ingress resource exists
 - Checks ingress host configuration
 
 ✅ **Test Reporting**
+
 - Generates JSON report with timestamp
 - Includes summary (total, passed, failed, pass rate)
 - Provides detailed results for each test
@@ -70,6 +82,7 @@ Comprehensive validation script that checks all AT-E1-002 acceptance criteria:
 End-to-end testing for ArgoCD sync operations:
 
 ✅ **Features**
+
 - Tests application sync operations
 - Supports testing specific application or all applications
 - Configurable timeout for sync operations
@@ -79,6 +92,7 @@ End-to-end testing for ArgoCD sync operations:
 - Comprehensive summary reporting
 
 ✅ **Options**
+
 - `--namespace`: Specify ArgoCD namespace
 - `--app`: Test specific application
 - `--timeout`: Configure timeout in seconds
@@ -89,6 +103,7 @@ End-to-end testing for ArgoCD sync operations:
 Central test runner for all acceptance tests:
 
 ✅ **Features**
+
 - Supports all AT-E1-XXX test IDs
 - Implements AT-E1-001 (calls validate-at-e1-001.sh)
 - Implements AT-E1-002 with multi-step validation:
@@ -104,11 +119,13 @@ Central test runner for all acceptance tests:
 Integration test infrastructure for ArgoCD:
 
 ✅ **Files Created**
+
 - `README.md`: Documentation for integration tests
 - `test-application.yaml`: Sample ArgoCD Application for testing
 - `manifests/test-app.yaml`: Sample Kubernetes manifests (ConfigMap, Service, Deployment)
 
 ✅ **Features**
+
 - Test Application configured with:
   - Auto-sync enabled
   - Self-heal enabled
@@ -122,12 +139,14 @@ Integration test infrastructure for ArgoCD:
 Added new targets to `Makefile`:
 
 ✅ **New Targets**
+
 ```makefile
 validate-at-e1-002       # Run AT-E1-002 acceptance test validation
 test-e2e-argocd          # Run ArgoCD E2E sync tests
 ```
 
 ✅ **New Variable**
+
 ```makefile
 ARGO_NAMESPACE ?= fawkes
 ```
@@ -137,11 +156,13 @@ ARGO_NAMESPACE ?= fawkes
 Comprehensive documentation created:
 
 ✅ **Files**
+
 - `tests/acceptance/README.md`: Overview of acceptance testing
 - `tests/integration/argocd/README.md`: Integration test documentation
 - `docs/testing/at-e1-002-validation-guide.md`: Complete validation guide
 
 ✅ **Content**
+
 - Usage instructions for all test scripts
 - Validation check descriptions
 - Test report format and viewing
@@ -248,16 +269,19 @@ Makefile                                 # Updated with new targets
 To complete AT-E1-002 validation, execute the following when a cluster is available:
 
 1. Ensure ArgoCD is deployed:
+
    ```bash
    ./scripts/ignite.sh local
    ```
 
 2. Run AT-E1-002 validation:
+
    ```bash
    ./tests/acceptance/run-test.sh AT-E1-002
    ```
 
 3. Review test report:
+
    ```bash
    cat reports/at-e1-002-validation-*.json | jq .
    ```
@@ -272,23 +296,29 @@ To complete AT-E1-002 validation, execute the following when a cluster is availa
 The following manual validation commands from the issue are implemented:
 
 ✅ **Check all apps are synced**
+
 ```bash
 argocd app list | grep -c Synced
 ```
+
 Implemented in: `check_applications_synced()`
 
 ✅ **Hard refresh platform-bootstrap**
+
 ```bash
 argocd app get platform-bootstrap --hard-refresh
 ```
+
 Implemented in: E2E sync test
 
 ✅ **Check for out-of-sync applications**
+
 ```bash
 kubectl get applications -n fawkes -o json | \
   jq '.items[] | select(.status.sync.status != "Synced")' | \
   jq -s 'length'
 ```
+
 Implemented in: `check_applications_synced()` - reports out-of-sync apps
 
 ## Quality Checks Performed

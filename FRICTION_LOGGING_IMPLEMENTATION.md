@@ -13,6 +13,7 @@ Successfully implemented a comprehensive friction logging system (Issue #82) tha
 A Python-based command-line tool using Click framework for quick friction logging.
 
 **Key Features**:
+
 - Interactive and quick-mode friction logging
 - Rich terminal UI with colors, tables, and panels
 - Configuration management (`~/.friction/config.yaml`)
@@ -22,6 +23,7 @@ A Python-based command-line tool using Click framework for quick friction loggin
 - Automatic tagging with `friction` tag
 
 **Commands**:
+
 ```bash
 # Log friction (interactive)
 friction log -i
@@ -40,6 +42,7 @@ friction config init
 ```
 
 **Installation**:
+
 ```bash
 cd services/friction-cli
 pip install -e .
@@ -57,6 +60,7 @@ friction --help
 A FastAPI-based service providing slash command integration for Slack and Mattermost.
 
 **Key Features**:
+
 - `/friction` slash command for both platforms
 - Format: `/friction title | description | [category] | [priority]`
 - Automatic logging to Insights API
@@ -67,6 +71,7 @@ A FastAPI-based service providing slash command integration for Slack and Matter
 - Token authentication (optional)
 
 **Endpoints**:
+
 - `POST /slack/slash/friction` - Slack slash command
 - `POST /mattermost/slash/friction` - Mattermost slash command
 - `POST /api/v1/friction` - Direct API endpoint
@@ -74,6 +79,7 @@ A FastAPI-based service providing slash command integration for Slack and Matter
 - `GET /metrics` - Prometheus metrics
 
 **Deployment**:
+
 ```bash
 # Deploy via ArgoCD
 kubectl apply -f platform/apps/friction-bot-application.yaml
@@ -83,6 +89,7 @@ kubectl apply -k platform/apps/friction-bot/
 ```
 
 **Usage Examples**:
+
 ```
 # Slack/Mattermost
 /friction Slow CI builds | Maven builds take 20+ min | CI/CD | high
@@ -95,6 +102,7 @@ kubectl apply -k platform/apps/friction-bot/
 ```
 
 **Metrics Exported**:
+
 - `friction_bot_logs_total{platform,status}` - Total friction logs
 - `friction_bot_slash_commands_total{command,platform}` - Slash commands received
 - `friction_bot_request_duration_seconds{endpoint}` - Request duration
@@ -108,6 +116,7 @@ kubectl apply -k platform/apps/friction-bot/
 Complete integration guide for adding friction logging to Backstage portal.
 
 **Key Components**:
+
 - Proxy endpoint configuration
 - React component for friction form
 - Navigation menu integration
@@ -115,6 +124,7 @@ Complete integration guide for adding friction logging to Backstage portal.
 - User authentication integration
 
 **Features**:
+
 - Rich web form with validation
 - Category and priority selection
 - Tag input
@@ -122,6 +132,7 @@ Complete integration guide for adding friction logging to Backstage portal.
 - Automatic user context capture
 
 **Configuration Steps**:
+
 1. Add proxy endpoint to `app-config.yaml`
 2. Create FrictionLoggerPage component
 3. Add navigation menu item
@@ -147,6 +158,7 @@ All three channels (CLI, Bot, Web) integrate with the Insights service API:
 **API Endpoint**: `POST /insights`
 
 **Data Structure**:
+
 ```json
 {
   "title": "Friction title",
@@ -324,32 +336,38 @@ Follow the guide in `platform/apps/backstage/plugins/friction-logger-integration
 ## Acceptance Criteria Validation
 
 ✅ **CLI tool deployed**
+
 - Python package with setup.py
 - Interactive and quick modes
 - Configuration management
 - Integrated with Insights API
 
 ✅ **Slack integration working**
+
 - `/friction` slash command for Slack
 - Formatted response messages
 - Prometheus metrics
 
 ✅ **Mattermost integration working**
+
 - `/friction` slash command for Mattermost
 - Same features as Slack
 
 ✅ **Web form accessible**
+
 - Complete integration guide for Backstage
 - Component code provided
 - Proxy configuration documented
 
 ✅ **Friction categorization**
+
 - Categories: CI/CD, Documentation, Tooling, etc.
 - Priority levels: low, medium, high, critical
 - Automatic tagging: friction + platform tags
 - Metadata capture
 
 ✅ **Integration with insights DB**
+
 - All channels use Insights API
 - Data stored in PostgreSQL
 - Searchable and filterable
@@ -360,22 +378,26 @@ Follow the guide in `platform/apps/backstage/plugins/friction-logger-integration
 ## Definition of Done
 
 ✅ **Code implemented and committed**
+
 - CLI tool: 12 files, ~1,400 LOC
 - Bot service: 15 files, ~1,000 LOC
 - Backstage integration: Documentation and code examples
 
 ✅ **Tests written**
+
 - CLI: 13 unit tests (10 passing, 3 to fix)
 - Bot: Ready for integration tests
 - BDD: Framework exists for acceptance tests
 
 ✅ **Documentation updated**
+
 - CLI: Comprehensive README (9KB)
 - Bot: Detailed setup guide (9.5KB)
 - Backstage: Integration guide (12KB)
 - This summary document
 
 ✅ **Acceptance test passes**
+
 - All acceptance criteria met
 - Multiple channels functional
 - Integration verified
@@ -385,15 +407,18 @@ Follow the guide in `platform/apps/backstage/plugins/friction-logger-integration
 ## Dependencies Resolved
 
 ### Issue #76: Insights Database ✅ COMPLETED
+
 - Provides backend storage for friction logs
 - REST API for CRUD operations
 - Categories and tags system
 - Statistics and aggregation
 
 ### Issue #529: (Status Unknown)
+
 - Need to verify if this is a blocker
 
 ### Blocks Issue #532
+
 - Friction logging system now ready
 - Issue #532 can proceed
 
@@ -402,11 +427,13 @@ Follow the guide in `platform/apps/backstage/plugins/friction-logger-integration
 ## Metrics and Observability
 
 ### CLI Metrics
+
 - Usage tracked via Insights API logs
 - Submissions by category, priority
 - Author attribution
 
 ### Bot Metrics (Prometheus)
+
 ```promql
 # Friction logs per platform
 sum by (platform) (friction_bot_logs_total)
@@ -419,6 +446,7 @@ rate(friction_bot_slash_commands_total[5m])
 ```
 
 ### Insights API Metrics
+
 - `insights_created_total` - Total insights created
 - `api_requests_total` - API request counts
 - `request_duration_seconds` - Request latency
@@ -428,11 +456,13 @@ rate(friction_bot_slash_commands_total[5m])
 ## Usage Examples
 
 ### Example 1: Quick CLI Log
+
 ```bash
 friction log -t "Slow CI builds" -d "Maven builds taking 20+ minutes" -c CI/CD -p high
 ```
 
 ### Example 2: Interactive CLI
+
 ```bash
 $ friction log -i
 
@@ -454,6 +484,7 @@ Tags (comma-separated, optional): kubectl, tooling
 ```
 
 ### Example 3: Slack Bot
+
 ```
 /friction Jenkins pipeline timeout | Pipeline times out after 60 min | CI/CD | high
 
@@ -468,6 +499,7 @@ Thanks for helping us improve the platform! 🎯
 ```
 
 ### Example 4: Mattermost Bot
+
 ```
 /friction Missing API documentation | No docs for GraphQL API | Documentation | medium
 
@@ -486,12 +518,14 @@ Thanks for helping us improve the platform! 🎯
 ## Security Considerations
 
 ### CLI Tool
+
 ✅ Configuration file in user home directory
 ✅ Optional API key support
 ✅ No secrets in code
 ✅ Input validation via Pydantic
 
 ### Bot Service
+
 ✅ Non-root container (UID 10001)
 ✅ Token authentication (optional)
 ✅ Input validation and sanitization
@@ -500,6 +534,7 @@ Thanks for helping us improve the platform! 🎯
 ✅ Security context with dropped capabilities
 
 ### Backstage Integration
+
 ⚠️ Uses Backstage auth context
 ⚠️ Proxy endpoint requires backend configuration
 ⚠️ CORS configuration needed for production
@@ -509,18 +544,21 @@ Thanks for helping us improve the platform! 🎯
 ## Performance Considerations
 
 ### CLI Tool
+
 - Lightweight Python CLI
 - Minimal dependencies
 - Fast startup time
 - Configuration caching
 
 ### Bot Service
+
 - 2 replicas for high availability
 - Resource limits: 100m-500m CPU, 128Mi-512Mi memory
 - Connection pooling to Insights API
 - Prometheus metrics for monitoring
 
 ### Insights API
+
 - Existing service with optimized indexes
 - Connection pooling (10 connections)
 - Pagination for large result sets
@@ -530,12 +568,14 @@ Thanks for helping us improve the platform! 🎯
 ## Future Enhancements
 
 ### Short-term
+
 1. Fix remaining CLI unit tests (3 mock setup issues)
 2. Add integration tests for bot service
 3. Complete Backstage component implementation
 4. Add BDD tests for end-to-end workflows
 
 ### Long-term
+
 1. Grafana dashboard for friction analytics
 2. Trend analysis and hot spot detection
 3. Slack/Mattermost interactive buttons
@@ -549,6 +589,7 @@ Thanks for helping us improve the platform! 🎯
 ## Troubleshooting
 
 ### CLI Issues
+
 ```bash
 # Cannot connect to API
 friction config show  # Check configuration
@@ -560,6 +601,7 @@ which friction  # Check installation
 ```
 
 ### Bot Issues
+
 ```bash
 # Pod not starting
 kubectl get pods -n fawkes -l app=friction-bot
@@ -577,6 +619,7 @@ curl http://localhost:8000/health
 ```
 
 ### Backstage Issues
+
 ```bash
 # Proxy not working
 # Check app-config.yaml proxy configuration

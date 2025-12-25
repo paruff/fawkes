@@ -1,14 +1,25 @@
 # ============================================================
+
 # Jenkins Webhook Configuration for DORA Metrics
+
 # ============================================================
+
 # This document provides instructions for using the Jenkins
+
 # shared library to send CI/CD events to DevLake
+
 #
+
 # Events captured:
+
 # - Build completion → Build success rate
+
 # - Test results → Test flakiness
+
 # - Quality gates → Code quality metrics
+
 # - Pipeline retries → Rework rate
+
 # ============================================================
 
 ## Overview
@@ -16,6 +27,7 @@
 Jenkins integration for DORA metrics is implemented via the **doraMetrics.groovy** shared library. This library sends webhook events to DevLake during pipeline execution to track CI/CD metrics.
 
 **Key Point**: In Fawkes GitOps architecture:
+
 - **ArgoCD** tracks deployment metrics (deployment frequency, lead time)
 - **Jenkins** tracks CI metrics (build success, rework, quality gates)
 
@@ -320,6 +332,7 @@ goldenPathPipeline {
 ```
 
 The Golden Path pipeline automatically calls:
+
 - `recordBuild()` after each stage
 - `recordTestResults()` after tests
 - `recordQualityGate()` after SonarQube
@@ -339,6 +352,7 @@ environment {
 ```
 
 **Default values** (used if not set):
+
 - `DEVLAKE_API_URL`: `http://devlake.fawkes-devlake.svc:8080`
 - `DEVLAKE_WEBHOOK_URL`: `http://devlake.fawkes-devlake.svc:8080`
 
@@ -431,12 +445,15 @@ spec:
 ### Webhook Events Not Being Sent
 
 1. **Check plugin is installed**:
+
    ```bash
    kubectl exec -n fawkes jenkins-0 -- jenkins-plugin-cli --list | grep http_request
    ```
+
    The `http_request` plugin is required for webhook calls.
 
 2. **Check network connectivity**:
+
    ```groovy
    // Add to pipeline for testing
    sh 'curl -v http://devlake.fawkes-devlake.svc:8080/api/ping'
@@ -454,6 +471,7 @@ spec:
 ```
 
 **Solutions**:
+
 - Verify DevLake is running: `kubectl get pods -n fawkes-devlake`
 - Check network policy allows Jenkins → DevLake
 - Verify service name: `kubectl get svc -n fawkes-devlake devlake`
@@ -467,11 +485,13 @@ If using a custom Jenkinsfile, ensure you're calling the doraMetrics functions.
 ### Metrics Not Appearing in DevLake
 
 1. **Verify webhook received**:
+
    ```bash
    kubectl logs -n fawkes-devlake -l app.kubernetes.io/component=lake | grep "cicd.*webhook"
    ```
 
 2. **Check database**:
+
    ```sql
    SELECT * FROM cicd_deployments ORDER BY created_at DESC LIMIT 10;
    ```
@@ -486,10 +506,12 @@ If using a custom Jenkinsfile, ensure you're calling the doraMetrics functions.
 ### Jenkins Webhook Metrics
 
 View in DevLake Grafana dashboard:
+
 - **Dashboard**: DevLake Webhooks
 - **Panel**: Jenkins CI Events
 
 **Metrics**:
+
 - Build events per hour
 - Quality gate pass rate
 - Test flakiness rate
@@ -518,6 +540,7 @@ httpRequest(
 ### Webhook Retry Logic
 
 The doraMetrics library includes error handling:
+
 - Catches exceptions
 - Logs warnings (doesn't fail pipeline)
 - No automatic retry (by design - metrics are best-effort)
@@ -553,12 +576,14 @@ recordWithRetry {
 ### Test Jenkins Integration
 
 1. **Trigger a pipeline build**:
+
    ```bash
    # Via Jenkins UI or CLI
    jenkins-cli -s http://jenkins.127.0.0.1.nip.io build payment-service
    ```
 
 2. **Check console output** for DORA messages:
+
    ```
    ✅ DORA: Build event recorded for payment-service (build)
    ✅ DORA: Test results recorded for payment-service (148/150 passed)
@@ -566,6 +591,7 @@ recordWithRetry {
    ```
 
 3. **Verify in DevLake**:
+
    ```bash
    curl "http://devlake.127.0.0.1.nip.io/api/dora/rework?project=payment-service"
    ```

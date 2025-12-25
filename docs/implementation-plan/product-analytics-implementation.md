@@ -20,17 +20,20 @@ This document describes the implementation of issue #97: Deploy Product Analytic
 ### Components Deployed
 
 1. **Plausible Analytics Application** (v2.0)
+
    - 2 replicas for HA
    - Health checks configured
    - Cookie-less tracking
    - Custom event support
 
 2. **ClickHouse Database** (v23.3.7.5)
+
    - Analytics data storage
    - Time-series optimized
    - StatefulSet with 10Gi storage
 
 3. **PostgreSQL Cluster** (v16.4)
+
    - Metadata storage (users, sites, settings)
    - CloudNativePG with 3 replicas
    - 10Gi storage per instance
@@ -92,7 +95,7 @@ Added proxy endpoint:
 ```yaml
 proxy:
   endpoints:
-    '/plausible/api':
+    "/plausible/api":
       target: http://plausible.fawkes.svc:8000/api/
       changeOrigin: true
       secure: false
@@ -101,6 +104,7 @@ proxy:
 ### Custom Events
 
 Configured to track:
+
 - Deploy Application
 - Create Service
 - View Documentation
@@ -111,22 +115,26 @@ Configured to track:
 Following the 70% resource utilization target:
 
 ### Plausible Application
+
 - **Requests**: 200m CPU, 256Mi memory
 - **Limits**: 1 CPU, 1Gi memory
 - **Replicas**: 2 (HA)
 
 ### ClickHouse
+
 - **Requests**: 200m CPU, 256Mi memory
 - **Limits**: 1 CPU, 1Gi memory
 - **Storage**: 10Gi
 
 ### PostgreSQL
+
 - **Requests**: 200m CPU, 256Mi memory
 - **Limits**: 500m CPU, 512Mi memory
 - **Storage**: 10Gi
 - **Instances**: 3 (1 primary + 2 replicas)
 
 **Total Resource Impact:**
+
 - CPU Requests: ~800m across all components
 - Memory Requests: ~1Gi across all components
 - Well within 70% target for most clusters
@@ -167,10 +175,12 @@ make validate-at-e3-011 NAMESPACE=fawkes
 ### Automated Tests
 
 1. **BDD Tests**: `tests/bdd/features/product-analytics.feature`
+
    - 20+ scenarios covering all acceptance criteria
    - Tests privacy compliance, Backstage integration, custom events
 
 2. **Validation Scripts**:
+
    - `platform/apps/plausible/validate-plausible.sh` - Component validation
    - `scripts/validate-product-analytics.sh` - AT-E3-011 validation
 
@@ -213,11 +223,13 @@ make validate-at-e3-011 NAMESPACE=fawkes
 ### Secrets Management
 
 Current implementation uses Kubernetes secrets for dev/local:
+
 - Database credentials
 - Plausible secret key base
 - Admin credentials
 
 **Production**: Use External Secrets Operator with Vault:
+
 ```bash
 # Replace db-plausible-credentials.yaml with:
 # externalsecret-db-plausible.yaml
@@ -234,6 +246,7 @@ Current implementation uses Kubernetes secrets for dev/local:
 ### Metrics
 
 Prometheus monitoring available:
+
 - Pod metrics via ServiceMonitor
 - Database metrics via CloudNativePG
 - ClickHouse metrics via native endpoint
@@ -243,6 +256,7 @@ Prometheus monitoring available:
 ### Common Issues
 
 1. **Plausible pods not starting**
+
    ```bash
    # Check logs
    kubectl logs -n fawkes deployment/plausible
@@ -252,6 +266,7 @@ Prometheus monitoring available:
    ```
 
 2. **Database connection issues**
+
    ```bash
    # Verify PostgreSQL is ready
    kubectl get cluster db-plausible-dev -n fawkes
@@ -261,6 +276,7 @@ Prometheus monitoring available:
    ```
 
 3. **ClickHouse not ready**
+
    ```bash
    # Check ClickHouse logs
    kubectl logs -n fawkes statefulset/plausible-clickhouse
@@ -293,16 +309,19 @@ kubectl exec -n fawkes deployment/plausible -- env | grep DATABASE
 ## Future Enhancements
 
 1. **Advanced Analytics**
+
    - Funnel analysis for multi-step workflows
    - Custom properties for detailed event tracking
    - A/B testing integration
 
 2. **Additional Integrations**
+
    - Instrument other platform components (Jenkins, Grafana, etc.)
    - API integration for programmatic access
    - Webhook notifications for goals
 
 3. **Multi-tenancy**
+
    - Separate analytics per team/project
    - Role-based access control
    - Shared vs isolated sites

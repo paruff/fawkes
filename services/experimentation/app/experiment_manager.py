@@ -13,7 +13,7 @@ from .models import (
     ExperimentResponse,
     VariantAssignment,
     ExperimentList,
-    VariantConfig
+    VariantConfig,
 )
 from .statistical_analysis import StatisticalAnalyzer
 from .metrics import MetricsCollector
@@ -47,7 +47,7 @@ class ExperimentManager:
             target_sample_size=experiment.target_sample_size,
             significance_level=experiment.significance_level,
             traffic_allocation=experiment.traffic_allocation,
-            created_at=datetime.utcnow()
+            created_at=datetime.utcnow(),
         )
 
         self.db.add(db_experiment)
@@ -70,10 +70,7 @@ class ExperimentManager:
         experiments = query.offset(skip).limit(limit).all()
 
         return ExperimentList(
-            experiments=[self._to_response(exp) for exp in experiments],
-            total=total,
-            skip=skip,
-            limit=limit
+            experiments=[self._to_response(exp) for exp in experiments], total=total, skip=skip, limit=limit
         )
 
     def get_experiment(self, experiment_id: str) -> Optional[ExperimentResponse]:
@@ -157,17 +154,15 @@ class ExperimentManager:
             return None
 
         # Check if user already has an assignment
-        existing = self.db.query(Assignment).filter(
-            Assignment.experiment_id == experiment_id,
-            Assignment.user_id == user_id
-        ).first()
+        existing = (
+            self.db.query(Assignment)
+            .filter(Assignment.experiment_id == experiment_id, Assignment.user_id == user_id)
+            .first()
+        )
 
         if existing:
             return VariantAssignment(
-                experiment_id=experiment_id,
-                user_id=user_id,
-                variant=existing.variant,
-                assigned_at=existing.assigned_at
+                experiment_id=experiment_id, user_id=user_id, variant=existing.variant, assigned_at=existing.assigned_at
             )
 
         # Apply traffic allocation
@@ -185,7 +180,7 @@ class ExperimentManager:
             user_id=user_id,
             variant=variant,
             context=context,
-            assigned_at=datetime.utcnow()
+            assigned_at=datetime.utcnow(),
         )
 
         self.db.add(assignment)
@@ -196,19 +191,17 @@ class ExperimentManager:
         self.metrics_collector.increment_variant_assignments(experiment_id, variant)
 
         return VariantAssignment(
-            experiment_id=experiment_id,
-            user_id=user_id,
-            variant=variant,
-            assigned_at=assignment.assigned_at
+            experiment_id=experiment_id, user_id=user_id, variant=variant, assigned_at=assignment.assigned_at
         )
 
     def track_event(self, experiment_id: str, user_id: str, event_name: str, value: float = 1.0) -> bool:
         """Track an event for experiment analytics"""
         # Get assignment
-        assignment = self.db.query(Assignment).filter(
-            Assignment.experiment_id == experiment_id,
-            Assignment.user_id == user_id
-        ).first()
+        assignment = (
+            self.db.query(Assignment)
+            .filter(Assignment.experiment_id == experiment_id, Assignment.user_id == user_id)
+            .first()
+        )
 
         if not assignment:
             return False
@@ -221,7 +214,7 @@ class ExperimentManager:
             variant=assignment.variant,
             event_name=event_name,
             value=value,
-            timestamp=datetime.utcnow()
+            timestamp=datetime.utcnow(),
         )
 
         self.db.add(event)
@@ -242,29 +235,25 @@ class ExperimentManager:
         # Collect data for each variant
         variant_data = {}
         for variant_config in experiment.variants:
-            variant_name = variant_config['name']
+            variant_name = variant_config["name"]
 
             # Get assignments and events for this variant
-            assignments = self.db.query(Assignment).filter(
-                Assignment.experiment_id == experiment_id,
-                Assignment.variant == variant_name
-            ).all()
+            assignments = (
+                self.db.query(Assignment)
+                .filter(Assignment.experiment_id == experiment_id, Assignment.variant == variant_name)
+                .all()
+            )
 
-            events = self.db.query(Event).filter(
-                Event.experiment_id == experiment_id,
-                Event.variant == variant_name
-            ).all()
+            events = (
+                self.db.query(Event).filter(Event.experiment_id == experiment_id, Event.variant == variant_name).all()
+            )
 
             # Calculate basic stats
             sample_size = len(assignments)
             conversions = len(set(e.user_id for e in events if e.event_name in experiment.metrics))
             values = [e.value for e in events if e.event_name in experiment.metrics]
 
-            variant_data[variant_name] = {
-                'sample_size': sample_size,
-                'conversions': conversions,
-                'values': values
-            }
+            variant_data[variant_name] = {"sample_size": sample_size, "conversions": conversions, "values": values}
 
         # Perform statistical analysis
         stats = self.analyzer.analyze_experiment(
@@ -273,7 +262,7 @@ class ExperimentManager:
             status=experiment.status,
             variants=experiment.variants,
             variant_data=variant_data,
-            significance_level=experiment.significance_level
+            significance_level=experiment.significance_level,
         )
 
         return stats
@@ -290,12 +279,12 @@ class ExperimentManager:
 
         cumulative = 0.0
         for variant in variants:
-            cumulative += variant['allocation']
+            cumulative += variant["allocation"]
             if user_hash <= cumulative:
-                return variant['name']
+                return variant["name"]
 
         # Fallback to last variant if rounding issues
-        return variants[-1]['name']
+        return variants[-1]["name"]
 
     def _to_response(self, experiment: Experiment) -> ExperimentResponse:
         """Convert database model to response model"""
@@ -312,5 +301,5 @@ class ExperimentManager:
             traffic_allocation=experiment.traffic_allocation,
             created_at=experiment.created_at,
             started_at=experiment.started_at,
-            stopped_at=experiment.stopped_at
+            stopped_at=experiment.stopped_at,
         )

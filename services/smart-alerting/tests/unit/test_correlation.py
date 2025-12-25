@@ -33,27 +33,19 @@ async def test_correlate_alerts_groups_by_service(correlator, redis_mock):
         {
             "id": "1",
             "fingerprint": "fp1",
-            "labels": {
-                "alertname": "HighErrorRate",
-                "service": "api-gateway",
-                "severity": "critical"
-            },
+            "labels": {"alertname": "HighErrorRate", "service": "api-gateway", "severity": "critical"},
             "annotations": {"summary": "Error rate high"},
             "startsAt": datetime.now().isoformat(),
-            "status": "firing"
+            "status": "firing",
         },
         {
             "id": "2",
             "fingerprint": "fp2",
-            "labels": {
-                "alertname": "HighErrorRate",
-                "service": "api-gateway",
-                "severity": "critical"
-            },
+            "labels": {"alertname": "HighErrorRate", "service": "api-gateway", "severity": "critical"},
             "annotations": {"summary": "Error rate high"},
             "startsAt": datetime.now().isoformat(),
-            "status": "firing"
-        }
+            "status": "firing",
+        },
     ]
 
     groups = await correlator.correlate_alerts(alerts)
@@ -70,26 +62,18 @@ async def test_correlate_alerts_separate_groups_different_services(correlator, r
     alerts = [
         {
             "id": "1",
-            "labels": {
-                "alertname": "HighErrorRate",
-                "service": "service-a",
-                "severity": "critical"
-            },
+            "labels": {"alertname": "HighErrorRate", "service": "service-a", "severity": "critical"},
             "annotations": {},
             "startsAt": datetime.now().isoformat(),
-            "status": "firing"
+            "status": "firing",
         },
         {
             "id": "2",
-            "labels": {
-                "alertname": "HighErrorRate",
-                "service": "service-b",
-                "severity": "critical"
-            },
+            "labels": {"alertname": "HighErrorRate", "service": "service-b", "severity": "critical"},
             "annotations": {},
             "startsAt": datetime.now().isoformat(),
-            "status": "firing"
-        }
+            "status": "firing",
+        },
     ]
 
     groups = await correlator.correlate_alerts(alerts)
@@ -100,12 +84,7 @@ async def test_correlate_alerts_separate_groups_different_services(correlator, r
 @pytest.mark.unit
 def test_calculate_priority_critical_severity(correlator):
     """Test priority calculation for critical alerts."""
-    alerts = [{
-        "labels": {
-            "severity": "critical",
-            "service": "api-gateway"
-        }
-    }]
+    alerts = [{"labels": {"severity": "critical", "service": "api-gateway"}}]
 
     priority = correlator._calculate_priority(alerts)
 
@@ -115,17 +94,12 @@ def test_calculate_priority_critical_severity(correlator):
 @pytest.mark.unit
 def test_calculate_priority_increases_with_count(correlator):
     """Test that priority increases with alert count."""
-    single_alert = [{
-        "labels": {
-            "severity": "warning",
-            "service": "api-gateway"
-        }
-    }]
+    single_alert = [{"labels": {"severity": "warning", "service": "api-gateway"}}]
 
     multiple_alerts = [
         {"labels": {"severity": "warning", "service": "api-gateway"}},
         {"labels": {"severity": "warning", "service": "api-gateway"}},
-        {"labels": {"severity": "warning", "service": "api-gateway"}}
+        {"labels": {"severity": "warning", "service": "api-gateway"}},
     ]
 
     priority_single = correlator._calculate_priority(single_alert)
@@ -140,7 +114,7 @@ def test_deduplicate_alerts(correlator):
     alerts = [
         {"fingerprint": "abc123", "labels": {"alertname": "Test"}},
         {"fingerprint": "abc123", "labels": {"alertname": "Test"}},
-        {"fingerprint": "def456", "labels": {"alertname": "Test2"}}
+        {"fingerprint": "def456", "labels": {"alertname": "Test2"}},
     ]
 
     deduplicated = correlator._deduplicate_alerts(alerts)
@@ -151,13 +125,7 @@ def test_deduplicate_alerts(correlator):
 @pytest.mark.unit
 def test_generate_grouping_key(correlator):
     """Test grouping key generation."""
-    alert = {
-        "labels": {
-            "service": "api-gateway",
-            "alertname": "HighErrorRate",
-            "severity": "critical"
-        }
-    }
+    alert = {"labels": {"service": "api-gateway", "alertname": "HighErrorRate", "severity": "critical"}}
 
     key = correlator._generate_grouping_key(alert)
 
@@ -167,11 +135,7 @@ def test_generate_grouping_key(correlator):
 @pytest.mark.unit
 def test_generate_grouping_key_handles_missing_labels(correlator):
     """Test grouping key generation with missing labels."""
-    alert = {
-        "labels": {
-            "alertname": "TestAlert"
-        }
-    }
+    alert = {"labels": {"alertname": "TestAlert"}}
 
     key = correlator._generate_grouping_key(alert)
 

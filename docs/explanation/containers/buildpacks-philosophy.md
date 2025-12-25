@@ -9,7 +9,7 @@ description: The trade-offs of Cloud Native Buildpacks versus Dockerfiles for co
 
 When you need to deploy an application to Kubernetes, you must create a container image. For decades, the answer has been simple: **write a Dockerfile**. But Fawkes takes a different approach for the Golden Path: **Cloud Native Buildpacks (CNB)**.
 
-This choice surprises developers. "Why can't I just write my own Dockerfile?" The answer isn't that you *can't*—it's that for 80% of applications, you *shouldn't need to*. Buildpacks trade manual control for automated maintenance, and in platform engineering, that's usually the right trade.
+This choice surprises developers. "Why can't I just write my own Dockerfile?" The answer isn't that you _can't_—it's that for 80% of applications, you _shouldn't need to_. Buildpacks trade manual control for automated maintenance, and in platform engineering, that's usually the right trade.
 
 This document explains the **philosophy** behind Buildpacks, not the mechanics (for that, see our [How-To guide on debugging buildpack failures](../../how-to/development/debug-buildpack-failure.md)).
 
@@ -55,6 +55,7 @@ CMD ["npm", "start"]
 A critical vulnerability is discovered in `glibc` (the C library used by most Linux distros). Your images are affected.
 
 **Dockerfile Approach:**
+
 1. Update base image tag in every Dockerfile (`FROM node:16.20.1` → `FROM node:16.20.2`)
 2. Rebuild every application image
 3. Re-test every application
@@ -68,6 +69,7 @@ A critical vulnerability is discovered in `glibc` (the C library used by most Li
 ### The "Works on My Machine" Syndrome
 
 Developers optimize for local development:
+
 ```dockerfile
 # "I need curl for debugging"
 RUN apt-get install -y curl wget netcat vim
@@ -77,6 +79,7 @@ COPY devtools.sh /usr/local/bin/
 ```
 
 **Result:**
+
 - Production images bloated with debug tools
 - Larger attack surface
 - Slower image pulls
@@ -99,6 +102,7 @@ pack build my-app --builder paketobuildpacks/builder:base
 ```
 
 **The Magic:**
+
 - **Detection**: Buildpacks analyze source code (`package.json` → Node.js, `pom.xml` → Java)
 - **Installation**: Install exactly what's needed (no `apt-get` required)
 - **Caching**: Smart layer caching (dependencies separate from app code)
@@ -111,6 +115,7 @@ This is where Buildpacks shine:
 **Scenario**: A CVE is found in Ubuntu base layer.
 
 **Buildpack Approach:**
+
 1. Paketo team publishes new base image (patched)
 2. Run `pack rebase my-app:v1.2.3` (no source code needed!)
 3. New image layers swapped in **without rebuilding**
@@ -132,6 +137,7 @@ graph TB
 ```
 
 **Why This Matters:**
+
 - **No app rebuild** - Don't re-run tests, don't involve developers
 - **No behavior change** - App code and dependencies identical
 - **Fast patching** - Security team can patch without developer involvement
@@ -141,15 +147,16 @@ graph TB
 
 With Buildpacks, Fawkes enforces **sensible defaults**:
 
-| Aspect | Dockerfile Chaos | Buildpack Consistency |
-|--------|------------------|----------------------|
-| **Base Image** | `node:16-alpine`, `node:14`, `node:latest` (😱) | Paketo Node.js buildpack (curated, patched) |
-| **User** | Often root (security risk) | Non-root user (automatic) |
-| **Dependency Caching** | Manually optimized (if at all) | Automatic layer splitting |
-| **Security Scanning** | Per-Dockerfile results | Uniform scan results |
-| **Start Command** | Hardcoded in Dockerfile | Buildpack auto-detects (`npm start`, `java -jar`) |
+| Aspect                 | Dockerfile Chaos                                | Buildpack Consistency                             |
+| ---------------------- | ----------------------------------------------- | ------------------------------------------------- |
+| **Base Image**         | `node:16-alpine`, `node:14`, `node:latest` (😱) | Paketo Node.js buildpack (curated, patched)       |
+| **User**               | Often root (security risk)                      | Non-root user (automatic)                         |
+| **Dependency Caching** | Manually optimized (if at all)                  | Automatic layer splitting                         |
+| **Security Scanning**  | Per-Dockerfile results                          | Uniform scan results                              |
+| **Start Command**      | Hardcoded in Dockerfile                         | Buildpack auto-detects (`npm start`, `java -jar`) |
 
 **Developer Experience:**
+
 - **No Dockerfile to write** - Just push code
 - **No OS knowledge required** - Don't need to know Alpine vs. Debian
 - **No "copy-paste from Stack Overflow"** - Buildpack handles it
@@ -159,35 +166,37 @@ With Buildpacks, Fawkes enforces **sensible defaults**:
 
 ### What Buildpacks Give You
 
-| Benefit | Explanation | DORA Impact |
-|---------|-------------|-------------|
-| **Automated OS Patching** | Rebase without rebuild | ⬇️ MTTR (faster security patches) |
-| **Supply Chain Security** | Curated, signed base images | ⬇️ Change Failure Rate (fewer vulnerabilities) |
-| **Dependency Scanning** | Bill of Materials (SBOM) generated automatically | Compliance (audit trail) |
-| **Zero Dockerfile Maintenance** | No more "update base image" PRs across 50 repos | ⬆️ Deployment Frequency (less toil) |
-| **Best Practice Enforcement** | Non-root users, minimal images, proper caching | ⬇️ Change Failure Rate (fewer misconfigurations) |
-| **Framework-Specific Optimization** | Node.js buildpack knows Node.js best practices | Performance (optimized startup, smaller images) |
+| Benefit                             | Explanation                                      | DORA Impact                                      |
+| ----------------------------------- | ------------------------------------------------ | ------------------------------------------------ |
+| **Automated OS Patching**           | Rebase without rebuild                           | ⬇️ MTTR (faster security patches)                |
+| **Supply Chain Security**           | Curated, signed base images                      | ⬇️ Change Failure Rate (fewer vulnerabilities)   |
+| **Dependency Scanning**             | Bill of Materials (SBOM) generated automatically | Compliance (audit trail)                         |
+| **Zero Dockerfile Maintenance**     | No more "update base image" PRs across 50 repos  | ⬆️ Deployment Frequency (less toil)              |
+| **Best Practice Enforcement**       | Non-root users, minimal images, proper caching   | ⬇️ Change Failure Rate (fewer misconfigurations) |
+| **Framework-Specific Optimization** | Node.js buildpack knows Node.js best practices   | Performance (optimized startup, smaller images)  |
 
 ### What Buildpacks Cost You
 
-| Challenge | Mitigation |
-|-----------|------------|
-| **Less Control** | Can't `RUN apt-get install custom-tool`. **Mitigation**: Use buildpack extensions or multi-stage builds with base buildpack image for edge cases |
-| **Black Box Feeling** | "What's the buildpack doing?" **Mitigation**: `pack build --verbose` shows every step. Buildpacks are open source (inspect on GitHub) |
-| **Framework Lock-In** | Only works if buildpack exists for your language. **Mitigation**: Paketo covers Java, Node.js, Python, Go, Ruby, PHP, .NET—90% of apps. Use Dockerfile for exotic stacks |
-| **Debugging Learning Curve** | Different errors than Dockerfile failures. **Mitigation**: [Debug guide](../../how-to/development/debug-buildpack-failure.md) and Fawkes Dojo training |
-| **Build Time** | First build can be slower (detecting, caching setup). **Mitigation**: Subsequent builds very fast due to smart caching |
+| Challenge                    | Mitigation                                                                                                                                                               |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Less Control**             | Can't `RUN apt-get install custom-tool`. **Mitigation**: Use buildpack extensions or multi-stage builds with base buildpack image for edge cases                         |
+| **Black Box Feeling**        | "What's the buildpack doing?" **Mitigation**: `pack build --verbose` shows every step. Buildpacks are open source (inspect on GitHub)                                    |
+| **Framework Lock-In**        | Only works if buildpack exists for your language. **Mitigation**: Paketo covers Java, Node.js, Python, Go, Ruby, PHP, .NET—90% of apps. Use Dockerfile for exotic stacks |
+| **Debugging Learning Curve** | Different errors than Dockerfile failures. **Mitigation**: [Debug guide](../../how-to/development/debug-buildpack-failure.md) and Fawkes Dojo training                   |
+| **Build Time**               | First build can be slower (detecting, caching setup). **Mitigation**: Subsequent builds very fast due to smart caching                                                   |
 
 ### When to Use Dockerfiles Anyway
 
 Buildpacks are the **Golden Path**, but not the **Only Path**:
 
 **Use Buildpacks When:**
+
 - ✅ Standard web application (Node.js, Java, Python, Go, Ruby, PHP, .NET)
 - ✅ Willing to follow framework conventions (`package.json`, `pom.xml`, etc.)
 - ✅ Value security automation over customization
 
 **Use Dockerfile When:**
+
 - ⚠️ Truly unique requirements (custom OS, exotic dependencies)
 - ⚠️ Legacy app with specific build steps not automatable
 - ⚠️ Polyglot app (Node.js + Python + Java in one container—please don't)
@@ -217,6 +226,7 @@ graph LR
 ```
 
 **The Contract:**
+
 - Platform team maintains buildpacks (updates, security patches, optimizations)
 - Developers follow conventions (standard project structure, framework best practices)
 - Everyone benefits (fast deploys, secure images, low cognitive load)
@@ -224,6 +234,7 @@ graph LR
 ### The Maintenance Burden Shift
 
 **Before Buildpacks (Dockerfile Era):**
+
 ```
 Platform Team:
 - Writes "recommended Dockerfile" guide
@@ -237,6 +248,7 @@ Developers:
 ```
 
 **After Buildpacks:**
+
 ```
 Platform Team:
 - Maintains 1 buildpack configuration
@@ -297,6 +309,7 @@ In December 2021, the **Log4Shell** vulnerability (CVE-2021-44228) was discovere
 **Dockerfile**: Developer is responsible for OS, runtime, dependencies, app code, optimization, security.
 
 **Buildpack**:
+
 - **Platform Team**: Maintains OS, runtime, build tools (centralized expertise)
 - **Developer**: Focuses on application code and business logic
 - **Clear Boundary**: `package.json` is the interface; everything below is abstracted
@@ -304,6 +317,7 @@ In December 2021, the **Log4Shell** vulnerability (CVE-2021-44228) was discovere
 ### Principle 3: Scale Through Standardization
 
 **The Formula:**
+
 ```
 Operational Efficiency = (Standard Patterns) / (Custom Snowflakes)
 ```
@@ -328,6 +342,7 @@ Operational Efficiency = (Standard Patterns) / (Custom Snowflakes)
 ### "Buildpacks are a black box; I don't trust what I don't understand."
 
 **Response**:
+
 1. **Buildpacks are open source** - [Paketo Buildpacks on GitHub](https://github.com/paketo-buildpacks)
 2. **Full transparency** - Run `pack build --verbose` to see every command
 3. **SBOM generated** - Bill of Materials shows exactly what's in your image

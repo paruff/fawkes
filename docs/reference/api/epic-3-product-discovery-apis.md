@@ -10,6 +10,7 @@ description: Comprehensive API reference for all Epic 3 components
 This document provides API references for all Epic 3 Product Discovery & UX components, including REST APIs, webhooks, and integrations.
 
 **Component Coverage:**
+
 - SPACE Metrics Service API
 - Feedback Service API
 - Feedback Bot Commands
@@ -35,13 +36,13 @@ This document provides API references for all Epic 3 Product Discovery & UX comp
 
 Different components use different authentication methods:
 
-| Component | Auth Method | How to Obtain | Header/Token Format |
-|-----------|-------------|---------------|---------------------|
-| SPACE Metrics | API Key | ConfigMap or admin | `X-API-Key: <key>` |
-| Feedback Service | Session Cookie | Backstage OAuth | Cookie-based |
-| Feedback Bot | Bot Token | Mattermost integration | N/A (internal) |
-| Unleash | API Token | Unleash UI → API Access | `Authorization: <token>` |
-| Product Analytics | Project API Key | Analytics dashboard | `X-Api-Key: <key>` |
+| Component         | Auth Method     | How to Obtain           | Header/Token Format      |
+| ----------------- | --------------- | ----------------------- | ------------------------ |
+| SPACE Metrics     | API Key         | ConfigMap or admin      | `X-API-Key: <key>`       |
+| Feedback Service  | Session Cookie  | Backstage OAuth         | Cookie-based             |
+| Feedback Bot      | Bot Token       | Mattermost integration  | N/A (internal)           |
+| Unleash           | API Token       | Unleash UI → API Access | `Authorization: <token>` |
+| Product Analytics | Project API Key | Analytics dashboard     | `X-Api-Key: <key>`       |
 
 ### Obtaining API Keys
 
@@ -71,6 +72,7 @@ GET /health
 ```
 
 **Response**:
+
 ```json
 {
   "status": "healthy",
@@ -87,12 +89,14 @@ GET /api/v1/metrics/space
 ```
 
 **Query Parameters**:
+
 - `team` (optional): Filter by team name
 - `start_date` (optional): ISO 8601 date (default: 30 days ago)
 - `end_date` (optional): ISO 8601 date (default: now)
 - `granularity` (optional): `daily`, `weekly`, `monthly` (default: `weekly`)
 
 **Response**:
+
 ```json
 {
   "period": {
@@ -138,11 +142,13 @@ GET /api/v1/metrics/space/{dimension}
 **Dimensions**: `satisfaction`, `performance`, `activity`, `communication`, `efficiency`
 
 **Example**:
+
 ```http
 GET /api/v1/metrics/space/satisfaction?team=platform
 ```
 
 **Response**:
+
 ```json
 {
   "dimension": "satisfaction",
@@ -174,6 +180,7 @@ X-API-Key: <api-key>
 ```
 
 **Request Body**:
+
 ```json
 {
   "user_id": "anonymous_12345",
@@ -188,6 +195,7 @@ X-API-Key: <api-key>
 ```
 
 **Response**:
+
 ```json
 {
   "status": "success",
@@ -205,6 +213,7 @@ X-API-Key: <api-key>
 ```
 
 **Request Body**:
+
 ```json
 {
   "user_id": "anonymous_12345",
@@ -217,6 +226,7 @@ X-API-Key: <api-key>
 ```
 
 **Response**:
+
 ```json
 {
   "status": "success",
@@ -240,6 +250,7 @@ X-API-Key: <api-key>
 ```
 
 **Request Body** (NASA-TLX scores, 0-100):
+
 ```json
 {
   "user_id": "anonymous_12345",
@@ -263,6 +274,7 @@ GET /metrics
 ```
 
 Exposes Prometheus metrics:
+
 - `space_metrics_satisfaction_enps`
 - `space_metrics_performance_deployment_frequency`
 - `space_metrics_activity_commits_total`
@@ -283,6 +295,7 @@ GET /health
 ```
 
 **Response**:
+
 ```json
 {
   "status": "ok",
@@ -298,6 +311,7 @@ Content-Type: application/json
 ```
 
 **Request Body**:
+
 ```json
 {
   "rating": 5,
@@ -319,6 +333,7 @@ Content-Type: application/json
 ```
 
 **Response**:
+
 ```json
 {
   "id": "fb_12345",
@@ -335,6 +350,7 @@ GET /api/v1/feedback
 ```
 
 **Query Parameters**:
+
 - `status`: `new`, `validated`, `in_progress`, `resolved`, `archived`
 - `category`: Filter by category
 - `rating`: Filter by rating (1-5)
@@ -344,6 +360,7 @@ GET /api/v1/feedback
 - `per_page`: Results per page (default: 20, max: 100)
 
 **Response**:
+
 ```json
 {
   "feedback": [
@@ -377,6 +394,7 @@ GET /api/v1/feedback/{id}
 ```
 
 **Response**:
+
 ```json
 {
   "id": "fb_12345",
@@ -411,6 +429,7 @@ Content-Type: application/json
 ```
 
 **Request Body**:
+
 ```json
 {
   "status": "validated",
@@ -419,6 +438,7 @@ Content-Type: application/json
 ```
 
 **Response**:
+
 ```json
 {
   "id": "fb_12345",
@@ -434,10 +454,12 @@ GET /api/v1/feedback/stats
 ```
 
 **Query Parameters**:
+
 - `start_date`: ISO 8601 date (default: 30 days ago)
 - `end_date`: ISO 8601 date (default: now)
 
 **Response**:
+
 ```json
 {
   "period": {
@@ -485,6 +507,7 @@ X-API-Key: <automation-key>
 ```
 
 **Response**:
+
 ```json
 {
   "processed": 5,
@@ -506,6 +529,7 @@ GET /metrics
 ```
 
 Exposes metrics:
+
 - `feedback_submissions_total`
 - `feedback_by_rating`
 - `feedback_by_category`
@@ -520,16 +544,19 @@ The Mattermost feedback bot responds to direct messages and mentions.
 ### Submit Feedback via Bot
 
 **In any channel**:
+
 ```
 @feedback The new CI/CD pipeline is much faster!
 ```
 
 **Via Direct Message**:
+
 ```
 The deployment experience could be improved
 ```
 
 **Bot Response**:
+
 ```
 ✅ Feedback received! I've analyzed your message:
 • Category: CI/CD
@@ -546,6 +573,7 @@ Would you like to add more details? Reply to this thread.
 ```
 
 **Bot Response**:
+
 ```
 📊 Feedback Summary (Last 30 days):
 • Total submissions: 15
@@ -561,6 +589,7 @@ Would you like to add more details? Reply to this thread.
 ```
 
 **Bot Response**:
+
 ```
 🤖 Feedback Bot Commands:
 • @feedback <message> - Submit feedback
@@ -600,6 +629,7 @@ Authorization: <CLIENT_TOKEN>
 ```
 
 **Response**:
+
 ```json
 {
   "version": 1,
@@ -630,6 +660,7 @@ Authorization: <CLIENT_TOKEN>
 ```
 
 **Request Body**:
+
 ```json
 {
   "appName": "backstage",
@@ -650,6 +681,7 @@ Authorization: <CLIENT_TOKEN>
 ```
 
 **Request Body**:
+
 ```json
 {
   "appName": "backstage",
@@ -685,6 +717,7 @@ Authorization: <ADMIN_TOKEN>
 ```
 
 **Request Body**:
+
 ```json
 {
   "name": "new-dashboard",
@@ -719,6 +752,7 @@ Authorization: <ADMIN_TOKEN>
 ```
 
 **Response**:
+
 ```json
 {
   "featureName": "new-dashboard",
@@ -745,6 +779,7 @@ Content-Type: application/json
 ```
 
 **Request Body**:
+
 ```json
 {
   "api_key": "<PROJECT_API_KEY>",
@@ -767,19 +802,20 @@ Content-Type: application/json
 ```
 
 **Request Body**:
+
 ```json
 {
   "api_key": "<PROJECT_API_KEY>",
   "batch": [
     {
       "event": "page_view",
-      "properties": {"page": "/dashboard"},
+      "properties": { "page": "/dashboard" },
       "timestamp": "2024-12-25T10:30:00Z",
       "distinct_id": "user-123"
     },
     {
       "event": "button_clicked",
-      "properties": {"button": "deploy"},
+      "properties": { "button": "deploy" },
       "timestamp": "2024-12-25T10:31:00Z",
       "distinct_id": "user-123"
     }
@@ -796,6 +832,7 @@ Authorization: Bearer <API_TOKEN>
 ```
 
 **Request Body**:
+
 ```json
 {
   "query": {
@@ -820,6 +857,7 @@ Storybook is a static site and doesn't have a REST API, but provides:
 ### Component Documentation
 
 Access via web UI:
+
 - Component list at `/`
 - Individual components at `/story/<component-name>`
 - Documentation pages at `/docs/<component-name>`
@@ -827,6 +865,7 @@ Access via web UI:
 ### Accessibility Reports
 
 Each component page includes:
+
 - A11y addon violations panel
 - WCAG 2.1 AA compliance status
 - Interactive accessibility tree
@@ -840,8 +879,8 @@ npm install @fawkes/design-system
 ```
 
 ```javascript
-import { Button, Card, Modal } from '@fawkes/design-system';
-import '@fawkes/design-system/dist/styles.css';
+import { Button, Card, Modal } from "@fawkes/design-system";
+import "@fawkes/design-system/dist/styles.css";
 ```
 
 ---
@@ -867,30 +906,31 @@ All APIs follow a consistent error response format:
 
 ### Common HTTP Status Codes
 
-| Code | Meaning | Description |
-|------|---------|-------------|
-| 200 | OK | Request successful |
-| 201 | Created | Resource created successfully |
-| 400 | Bad Request | Invalid request parameters |
-| 401 | Unauthorized | Missing or invalid authentication |
-| 403 | Forbidden | Insufficient permissions |
-| 404 | Not Found | Resource not found |
-| 429 | Too Many Requests | Rate limit exceeded |
-| 500 | Internal Server Error | Server error |
-| 503 | Service Unavailable | Service temporarily unavailable |
+| Code | Meaning               | Description                       |
+| ---- | --------------------- | --------------------------------- |
+| 200  | OK                    | Request successful                |
+| 201  | Created               | Resource created successfully     |
+| 400  | Bad Request           | Invalid request parameters        |
+| 401  | Unauthorized          | Missing or invalid authentication |
+| 403  | Forbidden             | Insufficient permissions          |
+| 404  | Not Found             | Resource not found                |
+| 429  | Too Many Requests     | Rate limit exceeded               |
+| 500  | Internal Server Error | Server error                      |
+| 503  | Service Unavailable   | Service temporarily unavailable   |
 
 ---
 
 ## Rate Limiting
 
-| Endpoint | Rate Limit | Window |
-|----------|------------|--------|
-| SPACE Metrics API | 100 req/min | Per API key |
-| Feedback API | 50 req/min | Per user |
-| Unleash Client API | 1000 req/min | Per client token |
-| Product Analytics | 1000 events/min | Per project |
+| Endpoint           | Rate Limit      | Window           |
+| ------------------ | --------------- | ---------------- |
+| SPACE Metrics API  | 100 req/min     | Per API key      |
+| Feedback API       | 50 req/min      | Per user         |
+| Unleash Client API | 1000 req/min    | Per client token |
+| Product Analytics  | 1000 events/min | Per project      |
 
 Rate limit headers are included in responses:
+
 ```http
 X-RateLimit-Limit: 100
 X-RateLimit-Remaining: 95
@@ -908,6 +948,7 @@ When validated feedback is converted to a GitHub issue, a webhook can be configu
 **Event**: `feedback.github_issue_created`
 
 **Payload**:
+
 ```json
 {
   "event": "feedback.github_issue_created",
@@ -933,6 +974,7 @@ Unleash can send webhooks when feature flags change:
 **Event**: `feature-updated`
 
 **Payload**:
+
 ```json
 {
   "event": "feature-updated",
@@ -954,6 +996,7 @@ Unleash can send webhooks when feature flags change:
 ### SPACE Metrics
 
 **Python Client**:
+
 ```python
 from space_metrics_client import SPACEMetricsClient
 
@@ -969,35 +1012,39 @@ print(metrics.satisfaction.enps_score)
 ### Feedback Service
 
 **JavaScript/TypeScript Client**:
+
 ```typescript
-import { FeedbackClient } from '@fawkes/feedback-client';
+import { FeedbackClient } from "@fawkes/feedback-client";
 
 const client = new FeedbackClient({
-  baseURL: 'http://feedback-service:8080'
+  baseURL: "http://feedback-service:8080",
 });
 
 await client.submitFeedback({
   rating: 5,
-  category: 'UI/UX',
-  message: 'Great experience!'
+  category: "UI/UX",
+  message: "Great experience!",
 });
 ```
 
 ### Unleash
 
 **OpenFeature SDK** (Recommended):
-```javascript
-import { OpenFeature } from '@openfeature/server-sdk';
-import { UnleashProvider } from '@openfeature/unleash-provider';
 
-OpenFeature.setProvider(new UnleashProvider({
-  url: 'http://unleash:4242/api',
-  clientKey: 'your-client-key',
-  appName: 'my-app'
-}));
+```javascript
+import { OpenFeature } from "@openfeature/server-sdk";
+import { UnleashProvider } from "@openfeature/unleash-provider";
+
+OpenFeature.setProvider(
+  new UnleashProvider({
+    url: "http://unleash:4242/api",
+    clientKey: "your-client-key",
+    appName: "my-app",
+  })
+);
 
 const client = OpenFeature.getClient();
-const enabled = await client.getBooleanValue('new-dashboard', false);
+const enabled = await client.getBooleanValue("new-dashboard", false);
 ```
 
 ---
@@ -1016,6 +1063,7 @@ const enabled = await client.getBooleanValue('new-dashboard', false);
 ## Support
 
 For API support:
+
 - **Platform Team**: #platform-team on Mattermost
 - **Issues**: GitHub Issues
 - **Documentation**: TechDocs in Backstage

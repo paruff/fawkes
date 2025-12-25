@@ -47,20 +47,10 @@ def analyze_sentiment(text: str) -> Dict[str, float]:
     """
     if not analyzer:
         logger.warning("VADER analyzer not available, returning neutral sentiment")
-        return {
-            'compound': 0.0,
-            'pos': 0.0,
-            'neu': 1.0,
-            'neg': 0.0
-        }
+        return {"compound": 0.0, "pos": 0.0, "neu": 1.0, "neg": 0.0}
 
     if not text or not text.strip():
-        return {
-            'compound': 0.0,
-            'pos': 0.0,
-            'neu': 1.0,
-            'neg': 0.0
-        }
+        return {"compound": 0.0, "pos": 0.0, "neu": 1.0, "neg": 0.0}
 
     try:
         scores = analyzer.polarity_scores(text)
@@ -68,12 +58,7 @@ def analyze_sentiment(text: str) -> Dict[str, float]:
         return scores
     except Exception as e:
         logger.error(f"Error analyzing sentiment: {e}")
-        return {
-            'compound': 0.0,
-            'pos': 0.0,
-            'neu': 1.0,
-            'neg': 0.0
-        }
+        return {"compound": 0.0, "pos": 0.0, "neu": 1.0, "neg": 0.0}
 
 
 def classify_sentiment(compound_score: float) -> str:
@@ -87,11 +72,11 @@ def classify_sentiment(compound_score: float) -> str:
         Sentiment classification: 'positive', 'neutral', or 'negative'
     """
     if compound_score >= 0.05:
-        return 'positive'
+        return "positive"
     elif compound_score <= -0.05:
-        return 'negative'
+        return "negative"
     else:
-        return 'neutral'
+        return "neutral"
 
 
 def analyze_feedback_sentiment(comment: str) -> Tuple[str, float, float, float, float]:
@@ -110,14 +95,14 @@ def analyze_feedback_sentiment(comment: str) -> Tuple[str, float, float, float, 
         - neg: negative percentage (0.0 to 1.0)
     """
     scores = analyze_sentiment(comment)
-    sentiment = classify_sentiment(scores['compound'])
+    sentiment = classify_sentiment(scores["compound"])
 
     return (
         sentiment,
-        round(scores['compound'], 3),
-        round(scores['pos'], 3),
-        round(scores['neu'], 3),
-        round(scores['neg'], 3)
+        round(scores["compound"], 3),
+        round(scores["pos"], 3),
+        round(scores["neu"], 3),
+        round(scores["neg"], 3),
     )
 
 
@@ -131,12 +116,8 @@ def get_sentiment_emoji(sentiment: str) -> str:
     Returns:
         Emoji string
     """
-    emoji_map = {
-        'positive': '😊',
-        'neutral': '😐',
-        'negative': '😞'
-    }
-    return emoji_map.get(sentiment, '❓')
+    emoji_map = {"positive": "😊", "neutral": "😐", "negative": "😞"}
+    return emoji_map.get(sentiment, "❓")
 
 
 def batch_analyze_sentiments(comments: list[str]) -> list[Dict[str, any]]:
@@ -153,15 +134,17 @@ def batch_analyze_sentiments(comments: list[str]) -> list[Dict[str, any]]:
 
     for comment in comments:
         sentiment, compound, pos, neu, neg = analyze_feedback_sentiment(comment)
-        results.append({
-            'comment': comment,
-            'sentiment': sentiment,
-            'compound': compound,
-            'pos': pos,
-            'neu': neu,
-            'neg': neg,
-            'emoji': get_sentiment_emoji(sentiment)
-        })
+        results.append(
+            {
+                "comment": comment,
+                "sentiment": sentiment,
+                "compound": compound,
+                "pos": pos,
+                "neu": neu,
+                "neg": neg,
+                "emoji": get_sentiment_emoji(sentiment),
+            }
+        )
 
     return results
 
@@ -189,25 +172,25 @@ def aggregate_sentiment_stats(sentiments: list[str]) -> Dict[str, any]:
 
     if total == 0:
         return {
-            'total': 0,
-            'positive': 0,
-            'neutral': 0,
-            'negative': 0,
-            'positive_pct': 0.0,
-            'neutral_pct': 0.0,
-            'negative_pct': 0.0
+            "total": 0,
+            "positive": 0,
+            "neutral": 0,
+            "negative": 0,
+            "positive_pct": 0.0,
+            "neutral_pct": 0.0,
+            "negative_pct": 0.0,
         }
 
-    positive = sum(1 for s in sentiments if s == 'positive')
-    neutral = sum(1 for s in sentiments if s == 'neutral')
-    negative = sum(1 for s in sentiments if s == 'negative')
+    positive = sum(1 for s in sentiments if s == "positive")
+    neutral = sum(1 for s in sentiments if s == "neutral")
+    negative = sum(1 for s in sentiments if s == "negative")
 
     return {
-        'total': total,
-        'positive': positive,
-        'neutral': neutral,
-        'negative': negative,
-        'positive_pct': round((positive / total) * 100, 2),
-        'neutral_pct': round((neutral / total) * 100, 2),
-        'negative_pct': round((negative / total) * 100, 2)
+        "total": total,
+        "positive": positive,
+        "neutral": neutral,
+        "negative": negative,
+        "positive_pct": round((positive / total) * 100, 2),
+        "neutral_pct": round((neutral / total) * 100, 2),
+        "negative_pct": round((negative / total) * 100, 2),
     }

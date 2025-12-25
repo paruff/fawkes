@@ -10,17 +10,17 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-  - hosts:
-    - smart-alerting.fawkes.local
-    secretName: smart-alerting-tls
+    - hosts:
+        - smart-alerting.fawkes.local
+      secretName: smart-alerting-tls
   rules:
-  - host: smart-alerting.fawkes.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: smart-alerting
-            port:
-              number: 8000
+    - host: smart-alerting.fawkes.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: smart-alerting
+                port:
+                  number: 8000

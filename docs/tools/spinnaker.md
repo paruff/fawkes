@@ -7,7 +7,7 @@ status: deprecated
 # Spinnaker (Deprecated)
 
 !!! warning "Deprecated Tool"
-    **Spinnaker is no longer used in Fawkes.** This documentation is retained for historical reference only.
+**Spinnaker is no longer used in Fawkes.** This documentation is retained for historical reference only.
 
     **Migration Path**: Use [ArgoCD](https://argo-cd.readthedocs.io/) for GitOps-based continuous delivery.
 
@@ -83,19 +83,19 @@ spec:
   strategy:
     canary:
       steps:
-      - setWeight: 20
-      - pause: {duration: 5m}
-      - setWeight: 40
-      - pause: {duration: 5m}
-      - setWeight: 60
-      - pause: {duration: 5m}
-      - setWeight: 80
-      - pause: {duration: 5m}
+        - setWeight: 20
+        - pause: { duration: 5m }
+        - setWeight: 40
+        - pause: { duration: 5m }
+        - setWeight: 60
+        - pause: { duration: 5m }
+        - setWeight: 80
+        - pause: { duration: 5m }
   template:
     spec:
       containers:
-      - name: my-app
-        image: my-app:v2.0.0
+        - name: my-app
+          image: my-app:v2.0.0
 ```
 
 ### Migration Steps
@@ -129,21 +129,23 @@ Spinnaker is an open-source continuous delivery platform that helps you release 
 ## Overview
 
 Spinnaker provides two core sets of features:
+
 - **Application Management** - Deploy and manage cloud resources
 - **Application Deployment** - Construct and manage continuous delivery workflows
 
 ## Key Features
 
-| Feature | Description |
-|---------|-------------|
-| ![](../assets/images/icons/multi-cloud.png){ width="24" } Multi-Cloud | Deploy to multiple cloud providers |
-| ![](../assets/images/icons/pipelines.png){ width="24" } Pipeline Management | Create complex deployment workflows |
-| ![](../assets/images/icons/canary.png){ width="24" } Automated Canary Analysis | Automated testing in production |
-| ![](../assets/images/icons/rollback.png){ width="24" } Easy Rollbacks | Quick recovery from failed deployments |
+| Feature                                                                        | Description                            |
+| ------------------------------------------------------------------------------ | -------------------------------------- |
+| ![](../assets/images/icons/multi-cloud.png){ width="24" } Multi-Cloud          | Deploy to multiple cloud providers     |
+| ![](../assets/images/icons/pipelines.png){ width="24" } Pipeline Management    | Create complex deployment workflows    |
+| ![](../assets/images/icons/canary.png){ width="24" } Automated Canary Analysis | Automated testing in production        |
+| ![](../assets/images/icons/rollback.png){ width="24" } Easy Rollbacks          | Quick recovery from failed deployments |
 
 ## Integration with Fawkes
 
 ### Prerequisites
+
 - Kubernetes cluster
 - Helm v3
 - kubectl configured with cluster access
@@ -163,6 +165,7 @@ helm install spinnaker spinnaker/spinnaker \
 ```
 
 Example `values.yaml`:
+
 ```yaml
 spinnakerConfig:
   profiles:
@@ -170,18 +173,18 @@ spinnakerConfig:
       kubernetes:
         enabled: true
         accounts:
-        - name: fawkes-cluster
-          requiredGroupMembership: []
-          providerVersion: V2
-          permissions: {}
-          dockerRegistries: []
-          configureImagePullSecrets: true
-          cacheThreads: 1
-          namespaces: []
-          omitNamespaces: []
-          kinds: []
-          omitKinds: []
-          customResources: []
+          - name: fawkes-cluster
+            requiredGroupMembership: []
+            providerVersion: V2
+            permissions: {}
+            dockerRegistries: []
+            configureImagePullSecrets: true
+            cacheThreads: 1
+            namespaces: []
+            omitNamespaces: []
+            kinds: []
+            omitKinds: []
+            customResources: []
 ```
 
 ## Using Spinnaker with Fawkes
@@ -190,6 +193,7 @@ spinnakerConfig:
 
 1. Navigate to Spinnaker UI
 2. Create a new application:
+
    - Name: `fawkes-app`
    - Owner Email: `team@fawkes.io`
    - Cloud Providers: `Kubernetes V2`
@@ -225,11 +229,13 @@ spinnakerConfig:
 ## Best Practices
 
 1. **Pipeline Templates**
+
    - Use pipeline templates for consistency
    - Version control your templates
    - Share common deployment patterns
 
 2. **Security**
+
    - Enable RBAC
    - Use service accounts
    - Implement least privilege access
@@ -243,11 +249,11 @@ spinnakerConfig:
 
 Common issues and solutions:
 
-| Issue | Solution |
-|-------|----------|
-| Pipeline fails to start | Check Spinnaker service account permissions |
-| Manifest deployment fails | Verify Kubernetes cluster connectivity |
-| Images not found | Confirm container registry configuration |
+| Issue                     | Solution                                    |
+| ------------------------- | ------------------------------------------- |
+| Pipeline fails to start   | Check Spinnaker service account permissions |
+| Manifest deployment fails | Verify Kubernetes cluster connectivity      |
+| Images not found          | Confirm container registry configuration    |
 
 ## Additional Resources
 

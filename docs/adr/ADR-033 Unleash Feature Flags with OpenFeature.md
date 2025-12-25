@@ -8,6 +8,7 @@
 ## Context
 
 The Fawkes platform needs feature flag management capabilities to:
+
 - Enable gradual rollouts of new features (reduce blast radius)
 - Support A/B testing and experimentation
 - Provide kill switches for emergency feature disablement
@@ -16,6 +17,7 @@ The Fawkes platform needs feature flag management capabilities to:
 - Support trunk-based development practices
 
 Key requirements:
+
 1. **Self-hosted**: Data sovereignty, no third-party dependencies
 2. **Open Source**: Community-driven, transparent, no vendor lock-in
 3. **Vendor-agnostic API**: Ability to swap providers without code changes
@@ -61,6 +63,7 @@ We will deploy **Unleash** as the feature flag management platform with **OpenFe
 ### 1. Unleash + OpenFeature ⭐ (Selected)
 
 **Pros:**
+
 - ✅ Mature open-source project with active community
 - ✅ Self-hosted, full control over data
 - ✅ Comprehensive UI for flag management
@@ -75,10 +78,12 @@ We will deploy **Unleash** as the feature flag management platform with **OpenFe
 - ✅ Prometheus metrics support
 
 **Cons:**
+
 - ⚠️ Requires PostgreSQL database (acceptable - already deployed)
 - ⚠️ Additional component to maintain
 
 **Resource Requirements:**
+
 - Unleash: 200m CPU, 256Mi RAM (2 replicas)
 - PostgreSQL: 200m CPU, 256Mi RAM (3 replicas HA)
 - **Total**: ~1 CPU, ~1.5Gi RAM
@@ -86,12 +91,14 @@ We will deploy **Unleash** as the feature flag management platform with **OpenFe
 ### 2. LaunchDarkly
 
 **Pros:**
+
 - ✅ Feature-rich commercial product
 - ✅ Excellent UI/UX
 - ✅ Strong experimentation features
 - ✅ OpenFeature provider available
 
 **Cons:**
+
 - ❌ SaaS-only, no self-hosted option
 - ❌ Expensive pricing ($8.33/seat/month minimum)
 - ❌ Data sovereignty concerns
@@ -101,11 +108,13 @@ We will deploy **Unleash** as the feature flag management platform with **OpenFe
 ### 3. Flagsmith
 
 **Pros:**
+
 - ✅ Open source with self-hosted option
 - ✅ Modern UI
 - ✅ OpenFeature compatible
 
 **Cons:**
+
 - ❌ Less mature than Unleash
 - ❌ Smaller community
 - ❌ More resource-intensive (requires Redis, Postgres, and app server)
@@ -114,11 +123,13 @@ We will deploy **Unleash** as the feature flag management platform with **OpenFe
 ### 4. GrowthBook
 
 **Pros:**
+
 - ✅ Open source
 - ✅ A/B testing focus
 - ✅ Statistical analysis built-in
 
 **Cons:**
+
 - ❌ Primarily an experimentation platform, not feature flags
 - ❌ No official OpenFeature provider
 - ❌ More complex setup
@@ -127,10 +138,12 @@ We will deploy **Unleash** as the feature flag management platform with **OpenFe
 ### 5. Feature Flags in Application Code
 
 **Pros:**
+
 - ✅ No external dependencies
 - ✅ Full control
 
 **Cons:**
+
 - ❌ No centralized management UI
 - ❌ Requires code changes to update flags
 - ❌ No audit trail
@@ -142,11 +155,13 @@ We will deploy **Unleash** as the feature flag management platform with **OpenFe
 ### 1. Unleash as the Backend
 
 **Maturity & Reliability:**
+
 - Battle-tested in production by thousands of companies
 - Active development and security updates
 - Proven track record for stability
 
 **Feature Set:**
+
 - **Standard Strategy**: Simple on/off toggles
 - **Gradual Rollout**: Percentage-based rollouts (e.g., 25% of users)
 - **User IDs**: Target specific users or teams
@@ -155,12 +170,14 @@ We will deploy **Unleash** as the feature flag management platform with **OpenFe
 - **Custom Strategies**: Extend via API
 
 **Self-Hosted Benefits:**
+
 - Data sovereignty (all data stays in Fawkes cluster)
 - No vendor fees
 - Full control over upgrades and configuration
 - Integration with existing PostgreSQL infrastructure
 
 **Resource Efficiency:**
+
 - Lightweight Node.js application (~200m CPU, 256Mi RAM per pod)
 - Fits within 70% resource utilization target
 - Scales horizontally with replicas
@@ -168,21 +185,25 @@ We will deploy **Unleash** as the feature flag management platform with **OpenFe
 ### 2. OpenFeature as the Client API
 
 **Vendor Independence:**
+
 - CNCF incubating project (vendor-neutral governance)
 - Standardized API across all providers
 - Freedom to switch providers without code changes
 
 **Multi-Language Support:**
+
 - Official SDKs: TypeScript, Python, Go, Java, .NET, PHP, Ruby
 - Community SDKs: Rust, Swift, Elixir
 - Consistent API across all languages
 
 **Future-Proof:**
+
 - CNCF backing ensures long-term standardization
 - Growing ecosystem of providers
 - Easy migration path if requirements change
 
 **Developer Experience:**
+
 - Simple, intuitive API
 - Language-idiomatic implementations
 - Well-documented with examples
@@ -190,11 +211,13 @@ We will deploy **Unleash** as the feature flag management platform with **OpenFe
 ### 3. Combined Benefits
 
 **Best of Both Worlds:**
+
 - Unleash provides powerful management capabilities
 - OpenFeature provides code-level abstraction
 - Can replace Unleash without changing application code
 
 **Alignment with Fawkes Principles:**
+
 - **Cloud-Agnostic**: OpenFeature provides abstraction layer
 - **Extensible**: Can add new providers via OpenFeature
 - **Observable**: Prometheus metrics from Unleash
@@ -206,9 +229,10 @@ We will deploy **Unleash** as the feature flag management platform with **OpenFe
 ### Deployment Components
 
 **PostgreSQL Database:**
+
 ```yaml
 # CloudNativePG Cluster: db-unleash-dev
-instances: 3  # HA configuration
+instances: 3 # HA configuration
 storage: 10Gi
 resources:
   requests: 200m CPU, 256Mi RAM
@@ -216,9 +240,10 @@ resources:
 ```
 
 **Unleash Server:**
+
 ```yaml
 # Deployment: unleash
-replicas: 2  # HA configuration
+replicas: 2 # HA configuration
 image: unleashorg/unleash-server:5.11
 resources:
   requests: 200m CPU, 256Mi RAM
@@ -226,6 +251,7 @@ resources:
 ```
 
 **Access:**
+
 - UI: `https://unleash.fawkes.idp`
 - API: `https://unleash.fawkes.idp/api`
 - Ingress: TLS via cert-manager
@@ -233,23 +259,25 @@ resources:
 ### Application Integration
 
 **Backstage (TypeScript):**
+
 ```typescript
-import { OpenFeature } from '@openfeature/server-sdk';
-import { UnleashProvider } from '@openfeature/unleash-provider';
+import { OpenFeature } from "@openfeature/server-sdk";
+import { UnleashProvider } from "@openfeature/unleash-provider";
 
 await OpenFeature.setProviderAndWait(
   new UnleashProvider({
-    url: 'https://unleash.fawkes.idp/api',
-    appName: 'backstage',
-    apiToken: process.env.UNLEASH_API_TOKEN
+    url: "https://unleash.fawkes.idp/api",
+    appName: "backstage",
+    apiToken: process.env.UNLEASH_API_TOKEN,
   })
 );
 
 const client = OpenFeature.getClient();
-const enabled = await client.getBooleanValue('new-feature', false);
+const enabled = await client.getBooleanValue("new-feature", false);
 ```
 
 **Python Services:**
+
 ```python
 from openfeature import api
 from openfeature.contrib.provider.unleash import UnleashProvider
@@ -265,6 +293,7 @@ enabled = client.get_boolean_value("new-feature", False)
 ```
 
 **Go Services:**
+
 ```go
 import (
     "github.com/open-feature/go-sdk/openfeature"
@@ -311,17 +340,20 @@ enabled, _ := client.BooleanValue(ctx, "new-feature", false, openfeature.Evaluat
 ## Mitigation Strategies
 
 ### Flag Debt Prevention
+
 - Document flag lifecycle in flag description
 - Set expiration dates for temporary flags
 - Quarterly flag cleanup reviews
 - Automated alerts for old flags (>6 months)
 
 ### Performance Optimization
+
 - SDK-side caching (OpenFeature supports this)
 - Short-lived flags evaluated at startup, not per-request
 - Use local evaluation where possible
 
 ### Testing Strategy
+
 - Unit tests for both flag states
 - Integration tests with flag variations
 - Feature flag configuration in test fixtures
@@ -329,16 +361,19 @@ enabled, _ := client.BooleanValue(ctx, "new-feature", false, openfeature.Evaluat
 ## Monitoring & Observability
 
 ### Metrics (Prometheus)
+
 - `unleash_feature_toggles_total` - Total feature flags
 - `unleash_client_requests_total` - API request count
 - `unleash_db_pool_*` - Database connection pool metrics
 
 ### Dashboards (Grafana)
+
 - Feature flag usage over time
 - API request rates and latencies
 - Flag evaluation counts per application
 
 ### Alerts
+
 - Unleash pod not ready
 - Database connection failures
 - High API error rates

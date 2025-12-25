@@ -120,21 +120,21 @@ spec:
 
   syncPolicy:
     automated:
-      prune: true        # Automatically delete resources removed from Git
-      selfHeal: true     # Automatically sync when cluster state drifts
-      allowEmpty: false  # Prevent sync if Git directory is empty
+      prune: true # Automatically delete resources removed from Git
+      selfHeal: true # Automatically sync when cluster state drifts
+      allowEmpty: false # Prevent sync if Git directory is empty
 
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
-      - PruneLast=true   # Prune after all resources are synced
+      - PruneLast=true # Prune after all resources are synced
 
     retry:
-      limit: 5           # Retry failed syncs up to 5 times
+      limit: 5 # Retry failed syncs up to 5 times
       backoff:
-        duration: 5s     # Initial retry delay
-        factor: 2        # Exponential backoff multiplier
-        maxDuration: 3m  # Maximum retry delay
+        duration: 5s # Initial retry delay
+        factor: 2 # Exponential backoff multiplier
+        maxDuration: 3m # Maximum retry delay
 ```
 
 #### 2. Apply the Updated Configuration
@@ -164,14 +164,14 @@ kind: ConfigMap
 metadata:
   name: database-config
   annotations:
-    argocd.argoproj.io/sync-wave: "0"  # Sync first
+    argocd.argoproj.io/sync-wave: "0" # Sync first
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: my-service
   annotations:
-    argocd.argoproj.io/sync-wave: "1"  # Sync after ConfigMap
+    argocd.argoproj.io/sync-wave: "1" # Sync after ConfigMap
 ```
 
 #### 2. Add Sync Hooks
@@ -184,15 +184,15 @@ kind: Job
 metadata:
   name: database-migration
   annotations:
-    argocd.argoproj.io/hook: PreSync     # Run before sync
+    argocd.argoproj.io/hook: PreSync # Run before sync
     argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
   template:
     spec:
       containers:
-      - name: migrate
-        image: my-app:latest
-        command: ["./migrate-db.sh"]
+        - name: migrate
+          image: my-app:latest
+          command: ["./migrate-db.sh"]
       restartPolicy: Never
 ```
 
@@ -261,13 +261,13 @@ argocd app get my-service-dev
 
 ### Automated Sync Options
 
-| Option | Description | Use Case |
-|--------|-------------|----------|
-| `prune: true` | Delete resources removed from Git | Keep cluster clean, enforce Git as source of truth |
-| `prune: false` | Keep resources not in Git | Safer for testing, prevents accidental deletion |
-| `selfHeal: true` | Revert manual kubectl changes | Enforce GitOps, prevent configuration drift |
-| `selfHeal: false` | Allow manual changes | Useful for debugging, manual hotfixes |
-| `allowEmpty: false` | Prevent sync if Git path is empty | Safety check against accidental deletion |
+| Option              | Description                       | Use Case                                           |
+| ------------------- | --------------------------------- | -------------------------------------------------- |
+| `prune: true`       | Delete resources removed from Git | Keep cluster clean, enforce Git as source of truth |
+| `prune: false`      | Keep resources not in Git         | Safer for testing, prevents accidental deletion    |
+| `selfHeal: true`    | Revert manual kubectl changes     | Enforce GitOps, prevent configuration drift        |
+| `selfHeal: false`   | Allow manual changes              | Useful for debugging, manual hotfixes              |
+| `allowEmpty: false` | Prevent sync if Git path is empty | Safety check against accidental deletion           |
 
 ### Sync Windows
 
@@ -277,11 +277,11 @@ Restrict when applications can sync (e.g., only during business hours):
 spec:
   syncPolicy:
     syncWindows:
-    - kind: allow
-      schedule: '0 9 * * 1-5'  # Mon-Fri, 9 AM
-      duration: 8h             # 8-hour window
-      applications:
-      - my-service-dev
+      - kind: allow
+        schedule: "0 9 * * 1-5" # Mon-Fri, 9 AM
+        duration: 8h # 8-hour window
+        applications:
+          - my-service-dev
 ```
 
 ## Troubleshooting

@@ -39,6 +39,7 @@ This document establishes the standard protocol for conducting user research int
 ### Scope
 
 This protocol applies to:
+
 - Discovery interviews
 - Usability testing sessions
 - Feedback interviews
@@ -55,6 +56,7 @@ This protocol applies to:
 **Timing**: Schedule interviews at least 3-5 business days in advance
 
 **Steps**:
+
 1. **Identify target participants** using screener questions from interview guides
 2. **Send calendar invite** with:
    - Clear agenda and objectives
@@ -66,6 +68,7 @@ This protocol applies to:
 4. **Send reminder** 2 hours before the interview
 
 **Participant Selection Criteria**:
+
 - Diverse roles and experience levels
 - Representative of target personas
 - Active platform users (unless testing new user experience)
@@ -75,6 +78,7 @@ This protocol applies to:
 ### 2. Research Materials Preparation
 
 **Required Materials**:
+
 - [ ] Interview guide for specific persona/topic
 - [ ] Consent form (printed or digital)
 - [ ] Recording equipment tested (if recording)
@@ -83,6 +87,7 @@ This protocol applies to:
 - [ ] Backup communication method (phone number, alternate video link)
 
 **Optional Materials**:
+
 - [ ] Incentive or thank-you gift (gift card, swag)
 - [ ] Visual aids or reference materials
 - [ ] Screen sharing capability tested
@@ -91,6 +96,7 @@ This protocol applies to:
 ### 3. Interviewer Preparation
 
 **Review Before Interview**:
+
 - [ ] Participant background (role, team, experience)
 - [ ] Research objectives for this interview
 - [ ] Interview guide questions
@@ -99,6 +105,7 @@ This protocol applies to:
 - [ ] Relevant context about their team or projects
 
 **Mental Preparation**:
+
 - Clear your calendar for 15 minutes before and after
 - Arrive in a quiet space with minimal distractions
 - Set intention to be curious, not defensive
@@ -112,6 +119,7 @@ This protocol applies to:
 ### Setting and Environment
 
 **Remote Interviews** (most common):
+
 - Use reliable video conferencing (Zoom, Google Meet, Microsoft Teams)
 - Ensure stable internet connection
 - Use headphones to improve audio quality
@@ -120,6 +128,7 @@ This protocol applies to:
 - Have backup connection method ready (phone, alternate app)
 
 **In-Person Interviews**:
+
 - Book quiet meeting room with minimal interruptions
 - Arrange comfortable seating (avoid across-desk positioning)
 - Have whiteboard or paper for participant to sketch
@@ -129,6 +138,7 @@ This protocol applies to:
 ### Roles and Responsibilities
 
 **Primary Interviewer**:
+
 - Leads questions and conversation flow
 - Maintains rapport with participant
 - Probes deeper on interesting topics
@@ -136,6 +146,7 @@ This protocol applies to:
 - Takes high-level notes on key points
 
 **Note-Taker** (optional but recommended):
+
 - Captures detailed notes and direct quotes
 - Tracks body language and emotional reactions
 - Notes which questions were asked
@@ -143,6 +154,7 @@ This protocol applies to:
 - Allows interviewer to focus on conversation
 
 **Observers** (optional, requires participant permission):
+
 - Stakeholders or team members interested in research
 - Must stay muted and camera off during interview
 - Can submit questions via chat for interviewer to ask
@@ -151,18 +163,21 @@ This protocol applies to:
 ### Recording Guidelines
 
 **When to Record**:
+
 - For detailed analysis and transcription
 - When note-taker is not available
 - For usability testing to capture screen interactions
 - When you want to capture exact wording and tone
 
 **When NOT to Record**:
+
 - Participant declines or seems uncomfortable
 - Discussing sensitive or confidential topics
 - Legal or compliance concerns
 - Building initial rapport or warm-up conversations
 
 **Recording Best Practices**:
+
 - Always ask permission explicitly
 - Explain how recording will be used and stored
 - Start recording after consent is given
@@ -177,12 +192,14 @@ This protocol applies to:
 ### Opening the Interview (5 minutes)
 
 **Build Rapport**:
+
 - Start with casual conversation (weather, weekend, recent events)
 - Thank them for their time
 - Express genuine interest in learning from them
 - Use their preferred name
 
 **Set Context**:
+
 ```
 "Thank you for taking the time to speak with me today. I'm [Your Name]
 from the Product Team, and I'm conducting research to understand
@@ -207,6 +224,7 @@ Do you have any questions before we start?"
 ```
 
 **Obtain Consent**:
+
 - Get explicit verbal (or written) consent to participate
 - If recording, get explicit consent to record
 - Confirm they understand confidentiality measures
@@ -215,12 +233,14 @@ Do you have any questions before we start?"
 ### Conducting the Interview (35-45 minutes)
 
 **Follow the Interview Guide**:
+
 - Use prepared questions as a framework, not a rigid script
 - Be comfortable deviating to explore interesting topics
 - Return to key questions to ensure coverage
 - Adapt language and detail level to participant
 
 **Active Listening Techniques**:
+
 - **Maintain eye contact** (if video/in-person)
 - **Use non-verbal encouragement**: nodding, "mm-hmm", leaning in
 - **Don't interrupt**: Let them finish thoughts completely
@@ -229,6 +249,7 @@ Do you have any questions before we start?"
 - **Reflect emotion**: "That sounds frustrating" to show empathy
 
 **Effective Probing**:
+
 - **Ask for specifics**: "Can you give me a recent example?"
 - **Use the 5 Whys**: Dig deeper with "Why?" or "What led to that?"
 - **Request demonstrations**: "Can you show me how you do that?"
@@ -237,6 +258,7 @@ Do you have any questions before we start?"
 - **Understand impact**: "How does this affect your work?"
 
 **Time Management**:
+
 - Track time discreetly (clock visible, not timer)
 - Allocate time per section from interview guide
 - Be flexible to spend more time on rich topics
@@ -244,6 +266,7 @@ Do you have any questions before we start?"
 - Ensure you cover critical questions even if you skip others
 
 **Note-Taking During Interview**:
+
 - Capture direct quotes (mark with quotation marks)
 - Note emotional reactions or body language
 - Star or highlight key insights
@@ -254,23 +277,27 @@ Do you have any questions before we start?"
 ### Closing the Interview (5 minutes)
 
 **Wrap-Up Questions**:
+
 - "Is there anything we haven't covered that you think is important?"
 - "What's one thing you wish we had asked about?"
 - "Can we reach out if we have follow-up questions?"
 
 **Thank Participant**:
+
 - Express genuine gratitude for their time and insights
 - Explain what will happen next with their feedback
 - Mention how their input will be used (generally)
 - If appropriate, mention when they might see changes
 
 **Next Steps**:
+
 - Confirm contact information for follow-up
 - Ask about willingness to participate in future research
 - Distribute any incentives or thank-you gifts
 - Send calendar invite for any follow-up sessions
 
 **Post-Interview Debrief** (if multiple researchers):
+
 - Spend 5-10 minutes immediately after to discuss
 - Share initial impressions and surprises
 - Identify key quotes and insights
@@ -283,12 +310,14 @@ Do you have any questions before we start?"
 ### Immediate Actions (Within 1 Hour)
 
 1. **Save Recording** (if applicable):
+
    - Download from video platform
    - Store in secure location (not Git repository)
    - Name with convention: `YYYY-MM-DD-{role}-{topic}-{participant-ID}.mp4`
    - Backup to redundant storage
 
 2. **Capture Key Insights**:
+
    - Write down most memorable quotes while fresh
    - Note strongest emotional reactions
    - Identify 3-5 key takeaways
@@ -303,18 +332,21 @@ Do you have any questions before we start?"
 ### Within 24 Hours
 
 1. **Transcribe and Clean Notes**:
+
    - Expand shorthand into full sentences
    - Organize by interview guide sections
    - Add context where memory is fresh
    - Include timestamps for video/audio (if recorded)
 
 2. **Anonymize Participant Information**:
+
    - Remove names, replace with role descriptors
    - Remove team names, replace with general descriptions
    - Remove any personally identifiable information (PII)
    - Remove company-specific data if external participant
 
 3. **Highlight and Tag**:
+
    - **Direct quotes**: Mark verbatim statements with quotation marks
    - **Pain points**: Tag specific frustrations or problems
    - **Jobs to be Done**: Identify goals and desired outcomes
@@ -331,18 +363,21 @@ Do you have any questions before we start?"
 ### Within 1 Week
 
 1. **Synthesize Insights**:
+
    - Identify patterns across multiple interviews
    - Update insights repository with new findings
    - Add data points to existing personas
    - Create or update journey maps with new information
 
 2. **Share Findings**:
+
    - Send anonymized insights to relevant stakeholders
    - Post summary in research channel (#product-research)
    - Add to research shareout presentation
    - Update confluence or notion pages
 
 3. **Update Research Artifacts**:
+
    - Add quotes to quotes library
    - Update pain points list
    - Add to feature request backlog
@@ -361,6 +396,7 @@ Do you have any questions before we start?"
 ### Building Trust and Rapport
 
 ✅ **Do**:
+
 - Be warm, authentic, and curious
 - Show empathy for their challenges
 - Use their terminology and language
@@ -369,6 +405,7 @@ Do you have any questions before we start?"
 - Keep your commitments (punctuality, follow-up)
 
 ❌ **Don't**:
+
 - Be overly formal or scripted
 - Treat them as data sources rather than people
 - Dismiss their concerns or frustrations
@@ -378,6 +415,7 @@ Do you have any questions before we start?"
 ### Asking Effective Questions
 
 ✅ **Do**:
+
 - Ask open-ended questions ("How...?", "What...?", "Tell me about...")
 - Request specific examples ("Can you walk me through the last time...?")
 - Explore context and motivation ("Why is that important to you?")
@@ -385,6 +423,7 @@ Do you have any questions before we start?"
 - Use silence to encourage elaboration
 
 ❌ **Don't**:
+
 - Ask leading questions ("Don't you think...?", "Wouldn't it be better if...?")
 - Ask yes/no questions when you want detail
 - Ask multiple questions at once (compound questions)
@@ -394,6 +433,7 @@ Do you have any questions before we start?"
 ### Staying Neutral and Objective
 
 ✅ **Do**:
+
 - Accept all feedback without judgment
 - Explore negative feedback as deeply as positive
 - Stay curious about perspectives different from yours
@@ -401,6 +441,7 @@ Do you have any questions before we start?"
 - Take notes on what they say, not what you think
 
 ❌ **Don't**:
+
 - Defend platform decisions or features
 - Explain why things are the way they are
 - Correct their "misunderstandings"
@@ -410,24 +451,28 @@ Do you have any questions before we start?"
 ### Managing Difficult Situations
 
 **Participant is off-topic**:
+
 - Listen respectfully for a moment
 - Acknowledge their point
 - Redirect: "That's interesting. I'd like to get back to..."
 - Be gentle but firm with time boundaries
 
 **Participant is negative about everything**:
+
 - Explore the root cause of frustration
 - Ask for specific examples
 - Look for what would improve their experience
 - Thank them for candid feedback
 
 **Participant is giving one-word answers**:
+
 - Ask follow-up questions
 - Request examples or demonstrations
 - Share what you're trying to understand
 - Acknowledge this might not be the right time; offer to reschedule
 
 **Participant wants to solve problems in the interview**:
+
 - Acknowledge the desire to improve things
 - Explain your role is to understand, not implement
 - Offer to connect them with appropriate team
@@ -438,37 +483,51 @@ Do you have any questions before we start?"
 ## Common Pitfalls to Avoid
 
 ### 1. Leading the Witness
+
 **Pitfall**: Asking questions that suggest the answer you want
+
 - ❌ "Don't you find deployments frustrating?"
 - ✅ "How do you feel about deployments?"
 
 ### 2. Solving Instead of Learning
+
 **Pitfall**: Jumping to solutions or explaining features
+
 - ❌ "Oh, we have a feature for that! Let me show you..."
 - ✅ "Interesting. Tell me more about what you're trying to accomplish."
 
 ### 3. Confirmation Bias
+
 **Pitfall**: Only hearing evidence that supports your beliefs
+
 - ❌ Ignoring data that contradicts your hypothesis
 - ✅ Actively seeking disconfirming evidence
 
 ### 4. Cherry-Picking Data
+
 **Pitfall**: Only sharing feedback that supports your position
+
 - ❌ Highlighting positive feedback and burying negative
 - ✅ Sharing all findings, positive and negative
 
 ### 5. Asking Hypothetical Questions
+
 **Pitfall**: "Would you use a feature that...?"
+
 - ❌ People are bad at predicting their future behavior
 - ✅ Ask about actual past behavior and current needs
 
 ### 6. Ignoring Workarounds
+
 **Pitfall**: Missing the creative solutions users have built
+
 - ❌ Dismissing workarounds as "wrong"
 - ✅ Exploring workarounds reveals unmet needs
 
 ### 7. Over-Relying on Self-Reported Behavior
+
 **Pitfall**: Trusting what people say they do, not what they actually do
+
 - ❌ "How often do you deploy?"
 - ✅ "Tell me about the last time you deployed."
 
@@ -479,12 +538,14 @@ Do you have any questions before we start?"
 ### Informed Consent
 
 **Requirements**:
+
 - Participants must understand the research purpose
 - They must know how their data will be used
 - They must consent voluntarily, without coercion
 - They must be able to withdraw at any time
 
 **Consent Process**:
+
 1. Explain research purpose and use of data
 2. Describe what will be recorded (audio, video, screen)
 3. Explain how data will be stored and who has access
@@ -497,6 +558,7 @@ Do you have any questions before we start?"
 ### Confidentiality and Anonymization
 
 **Data Protection**:
+
 - Remove all personally identifiable information (PII)
 - Use role descriptors, not names (e.g., "Senior Backend Developer")
 - Anonymize team or project names
@@ -504,6 +566,7 @@ Do you have any questions before we start?"
 - Limit access to anonymized notes only
 
 **What to Remove**:
+
 - Names (first, last, nicknames)
 - Email addresses, phone numbers
 - Specific team or project names (use generic terms)
@@ -512,6 +575,7 @@ Do you have any questions before we start?"
 - Any unique identifying characteristics
 
 **What to Keep**:
+
 - Role and level (e.g., "Senior Platform Engineer")
 - General experience (e.g., "7 years in DevOps")
 - Technology stack (e.g., "Java and Kubernetes")
@@ -520,12 +584,14 @@ Do you have any questions before we start?"
 ### Data Retention
 
 **Retention Policy**:
+
 - **Raw recordings**: Delete after 3 months (or after transcription)
 - **Anonymized transcripts**: Keep indefinitely for research
 - **Research insights**: Keep indefinitely
 - **Contact information**: Keep only with participant permission
 
 **Storage Guidelines**:
+
 - Store recordings in secure, access-controlled location (not Git)
 - Use encryption for sensitive data
 - Limit access to research team only
@@ -535,18 +601,21 @@ Do you have any questions before we start?"
 ### Ethical Considerations
 
 **Respect**:
+
 - Value participants' time and expertise
 - Honor their boundaries and comfort levels
 - Don't manipulate or deceive participants
 - Give them control over their participation
 
 **Fairness**:
+
 - Recruit diverse participants (role, experience, demographics)
 - Compensate participants fairly for their time
 - Share insights broadly, not just with certain stakeholders
 - Don't exclude voices that disagree with your hypothesis
 
 **Transparency**:
+
 - Be clear about research purpose and methods
 - Share how insights will be used
 - Acknowledge limitations of research
@@ -559,6 +628,7 @@ Do you have any questions before we start?"
 ### Interview Quality Checklist
 
 Before conducting an interview:
+
 - [ ] Research objectives are clear
 - [ ] Appropriate interview guide selected
 - [ ] Participant recruited using screener criteria
@@ -569,6 +639,7 @@ Before conducting an interview:
 - [ ] Reminder sent 24 hours before
 
 During the interview:
+
 - [ ] Obtained informed consent
 - [ ] Built rapport and trust
 - [ ] Asked open-ended questions
@@ -579,6 +650,7 @@ During the interview:
 - [ ] Allowed time for participant questions
 
 After the interview:
+
 - [ ] Sent thank-you within 24 hours
 - [ ] Transcribed notes within 24 hours
 - [ ] Anonymized participant information
@@ -590,6 +662,7 @@ After the interview:
 ### Research Validity
 
 **Ensure Valid Insights**:
+
 - Interview at least 5-7 participants per persona
 - Recruit diverse participants (experience, role, team)
 - Cross-validate findings with usage data
@@ -598,6 +671,7 @@ After the interview:
 - Triangulate with other research methods (surveys, analytics)
 
 **Red Flags**:
+
 - Only interviewing friendly or accessible participants
 - Asking only leading questions
 - Ignoring disconfirming evidence
@@ -609,22 +683,26 @@ After the interview:
 ## Resources
 
 ### Interview Guides
+
 - [Application Developer Interview Guide](./application-developer-interview-guide.md)
 - [Platform Engineer Interview Guide](./platform-engineer-interview-guide.md)
 - [Stakeholder Interview Guide](./stakeholder-interview-guide.md)
 - [General Interview Guide Template](../templates/interview-guide.md)
 
 ### Forms and Templates
+
 - [Consent Form Template](./consent-form.md)
 - [Note-Taking Template](../templates/interview-notes-template.md)
 - [Participant Screener Template](../templates/participant-screener.md)
 
 ### Additional Resources
+
 - [Research Repository README](../README.md)
 - [Persona Templates](../personas/)
 - [Journey Map Templates](../journey-maps/)
 
 ### Recommended Reading
+
 - "The Mom Test" by Rob Fitzpatrick
 - "Interviewing Users" by Steve Portigal
 - "Just Enough Research" by Erika Hall
@@ -635,6 +713,7 @@ After the interview:
 ## Changelog
 
 ### Version 1.0 - December 2025
+
 - Initial protocol documentation
 - Comprehensive guidelines for all interview stages
 - Privacy and ethics guidelines

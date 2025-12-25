@@ -81,20 +81,20 @@ Ensure you have the following permissions:
 
 Expected monthly costs for the default configuration:
 
-| Service | Configuration | Est. Monthly Cost |
-|---------|--------------|-------------------|
-| AKS Control Plane | Standard tier | $0 (Free) |
-| System Node Pool | 2x Standard_D4s_v3 | $280 |
-| User Node Pool | 2-10x Standard_D4s_v3 (avg 4) | $560 |
-| Storage (OS Disks) | 6x 128GB Premium SSD | $118 |
-| Container Registry | Standard tier | $20 |
-| Load Balancer | Standard tier | $18 |
-| Public IP | Static | $4 |
-| Log Analytics | ~5GB/month | $14 |
-| Key Vault | Standard | $1 |
-| Storage Account | ~50GB LRS | $1 |
-| Data Transfer | ~100GB | $8 |
-| **Total** | | **~$1,024/month** |
+| Service            | Configuration                 | Est. Monthly Cost |
+| ------------------ | ----------------------------- | ----------------- |
+| AKS Control Plane  | Standard tier                 | $0 (Free)         |
+| System Node Pool   | 2x Standard_D4s_v3            | $280              |
+| User Node Pool     | 2-10x Standard_D4s_v3 (avg 4) | $560              |
+| Storage (OS Disks) | 6x 128GB Premium SSD          | $118              |
+| Container Registry | Standard tier                 | $20               |
+| Load Balancer      | Standard tier                 | $18               |
+| Public IP          | Static                        | $4                |
+| Log Analytics      | ~5GB/month                    | $14               |
+| Key Vault          | Standard                      | $1                |
+| Storage Account    | ~50GB LRS                     | $1                |
+| Data Transfer      | ~100GB                        | $8                |
+| **Total**          |                               | **~$1,024/month** |
 
 ### Cost Optimization Options
 
@@ -109,6 +109,7 @@ For development/testing environments, consider:
 **Recommended budget**: $300-500/month for dev, $800-1500/month for production
 
 Run the cost estimation script:
+
 ```bash
 ./scripts/azure-cost-estimate.sh
 ```
@@ -183,12 +184,14 @@ Run the cost estimation script:
 ### Node Pool Strategy
 
 **System Node Pool**:
+
 - Purpose: Critical system components (kube-system, ArgoCD, monitoring)
 - VM Size: Standard_D4s_v3 (4 vCPU, 16 GB RAM)
 - Node Count: 2 (fixed, no auto-scaling)
 - OS Disk: 128 GB Premium SSD
 
 **User Node Pool**:
+
 - Purpose: Application workloads (Backstage, Jenkins, Focalboard, etc.)
 - VM Size: Standard_D4s_v3 (4 vCPU, 16 GB RAM)
 - Node Count: 2-10 (auto-scaling enabled)
@@ -232,11 +235,13 @@ nano terraform.tfvars
 ```
 
 **Important**: Update these values to be globally unique:
+
 - `acr_name`: Must be globally unique (lowercase alphanumeric only)
 - `key_vault_name`: Must be globally unique (alphanumeric and hyphens)
 - `storage_account_name`: Must be globally unique (lowercase alphanumeric only)
 
 Example customization:
+
 ```hcl
 acr_name             = "fawkesacr20241213"
 key_vault_name       = "fawkes-kv-20241213"
@@ -449,12 +454,12 @@ spec:
   minReplicas: 2
   maxReplicas: 10
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 ```
 
 ### Vertical Pod Autoscaling
@@ -529,6 +534,7 @@ cd fawkes
 **Symptom**: ACR, Key Vault, or Storage Account name already taken
 
 **Solution**: Update names in `terraform.tfvars` to be globally unique:
+
 ```bash
 acr_name             = "fawkesacr$(date +%s)"
 key_vault_name       = "fawkes-kv-$(date +%s)"
@@ -540,6 +546,7 @@ storage_account_name = "tfstate$(date +%s)"
 **Symptom**: `kubectl get nodes` shows NotReady or missing nodes
 
 **Solution**:
+
 ```bash
 # Check node pool status
 az aks nodepool list \
@@ -569,6 +576,7 @@ az aks nodepool start \
 **Symptom**: Pods stuck in ImagePullBackOff
 
 **Solution**:
+
 ```bash
 # Verify ACR integration
 az aks check-acr \
@@ -588,6 +596,7 @@ az aks update \
 **Symptom**: Azure bill exceeds budget
 
 **Solution**:
+
 ```bash
 # Check current costs
 az cost-management query \
@@ -611,6 +620,7 @@ az aks nodepool scale \
 **Symptom**: Pods restarting, kubelet reporting disk pressure
 
 **Solution**:
+
 ```bash
 # Check disk usage on nodes
 kubectl get nodes -o custom-columns=NAME:.metadata.name,DISK:.status.allocatable.ephemeral-storage
@@ -713,10 +723,10 @@ Schedule workloads on spot nodes:
 ```yaml
 spec:
   tolerations:
-  - key: "kubernetes.azure.com/scalesetpriority"
-    operator: "Equal"
-    value: "spot"
-    effect: "NoSchedule"
+    - key: "kubernetes.azure.com/scalesetpriority"
+      operator: "Equal"
+      value: "spot"
+      effect: "NoSchedule"
   nodeSelector:
     kubernetes.azure.com/scalesetpriority: spot
 ```

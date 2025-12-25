@@ -35,6 +35,7 @@ Ensure you have the following tools installed:
 ### Steps to Set Up
 
 1. **Clone the Repository**:
+
    ```sh
    git clone https://github.com/paruff/fawkes.git
    cd fawkes
@@ -42,12 +43,14 @@ Ensure you have the following tools installed:
 
 2. **Set Up Environment Variables**:
    Copy the `.env.example` file to `.env` and update the values:
+
    ```sh
    cp .env.example .env
    ```
 
 3. **Provision Infrastructure**:
    Use the scripts in the `infra/` directory to provision the required infrastructure:
+
    ```sh
    cd infra
    ./scripts/ignite.sh --provider aws dev
@@ -55,6 +58,7 @@ Ensure you have the following tools installed:
 
 4. **Deploy Platform Services**:
    Navigate to the `platform/` directory and deploy services:
+
    ```sh
    cd platform
    ./deploy-services.sh
@@ -101,6 +105,7 @@ pre-commit run shellcheck --all-files
 Configure your IDE for automatic linting:
 
 **VS Code**: Install recommended extensions
+
 ```bash
 make setup-vscode
 ```
@@ -114,6 +119,7 @@ For comprehensive coding standards, linting rules, and troubleshooting:
 📖 **[Code Quality Standards](how-to/development/code-quality-standards.md)**
 
 This includes:
+
 - Language-specific style guides
 - Security scanning requirements
 - IDE integration guides
@@ -124,17 +130,20 @@ This includes:
 ## Branching and Workflow
 
 1. **Create a Feature Branch**:
+
    ```sh
    git checkout -b feature/<feature-name>
    ```
 
 2. **Commit Changes**:
    Write clear and concise commit messages:
+
    ```sh
    git commit -m "Add <feature-name>: <short description>"
    ```
 
 3. **Push Changes**:
+
    ```sh
    git push origin feature/<feature-name>
    ```
@@ -155,6 +164,7 @@ Fawkes includes multiple layers of testing:
 - **Performance Tests**: Located in the `qa/performance/` directory.
 
 Run all tests before submitting a PR:
+
 ```sh
 cd qa
 ./run-all-tests.sh
@@ -167,11 +177,13 @@ cd qa
 If you are working with Azure, follow these best practices:
 
 1. **Use Azure CLI for Authentication**:
+
    ```sh
    az login
    ```
 
 2. **Set the Active Subscription**:
+
    ```sh
    az account set --subscription <subscription-id>
    ```

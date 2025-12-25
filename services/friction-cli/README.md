@@ -36,6 +36,7 @@ friction config init
 ```
 
 This will prompt you for:
+
 - Insights API URL (default: http://insights-service.fawkes.svc.cluster.local:8000)
 - Your name (optional, uses git config if not provided)
 - API key (optional, if authentication is required)
@@ -43,11 +44,13 @@ This will prompt you for:
 ### 2. Log Your First Friction Point
 
 **Quick mode:**
+
 ```bash
 friction log -t "Slow CI builds" -d "Maven builds taking 20+ minutes" -c "CI/CD" -p high
 ```
 
 **Interactive mode:**
+
 ```bash
 friction log -i
 ```
@@ -63,21 +66,25 @@ friction list
 ### Log Friction
 
 **Quick log:**
+
 ```bash
 friction log -t "Title" -d "Description"
 ```
 
 **With category and priority:**
+
 ```bash
 friction log -t "Missing documentation" -d "No setup guide for new developers" -c Documentation -p medium
 ```
 
 **With multiple tags:**
+
 ```bash
 friction log -t "Deployment failure" -d "ArgoCD sync failed" -T deployment -T urgent -T infrastructure
 ```
 
 **Interactive mode (recommended):**
+
 ```bash
 friction log -i
 ```
@@ -85,16 +92,19 @@ friction log -i
 ### List Friction Points
 
 **List recent:**
+
 ```bash
 friction list
 ```
 
 **Filter by category:**
+
 ```bash
 friction list -c "CI/CD"
 ```
 
 **Filter by priority:**
+
 ```bash
 friction list -p high -l 20
 ```
@@ -108,6 +118,7 @@ friction show 123
 ### Manage Categories
 
 **List all categories:**
+
 ```bash
 friction categories list
 ```
@@ -115,11 +126,13 @@ friction categories list
 ### Configuration
 
 **Show current configuration:**
+
 ```bash
 friction config show
 ```
 
 **Initialize/update configuration:**
+
 ```bash
 friction config init
 ```
@@ -130,7 +143,7 @@ Edit `~/.friction/config.yaml`:
 
 ```yaml
 api_url: http://insights-service.fawkes.svc.cluster.local:8000
-api_key: your-api-key  # optional
+api_key: your-api-key # optional
 default_category: Developer Experience
 default_priority: medium
 author: Your Name
@@ -269,6 +282,7 @@ pytest tests/ -v
 ### Code Style
 
 The project uses:
+
 - `black` for code formatting
 - `isort` for import sorting
 - `flake8` for linting
@@ -368,6 +382,7 @@ Apache License 2.0
 ## Version History
 
 ### 0.1.0 (2024-12-23)
+
 - Initial release
 - Basic friction logging
 - Interactive mode

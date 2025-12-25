@@ -5,6 +5,7 @@
 Resource allocations optimized for all 25+ Fawkes platform components to maintain <70% CPU/Memory utilization.
 
 **Result:**
+
 - 35% reduction in CPU requests
 - 40% reduction in CPU limits
 - 24% reduction in memory requests
@@ -48,12 +49,12 @@ kubectl describe nodes | grep -A 5 "Allocated resources"
 
 ## Performance Baselines
 
-| Metric | Target | Command to Test |
-|--------|--------|-----------------|
-| Backstage Load | <2s (P95) | Open portal in browser, measure load time |
-| API Response | <200ms (P95) | `kubectl logs -n fawkes -l app=backstage` |
-| Jenkins Queue | <30s (P95) | Check Jenkins dashboard queue time |
-| ArgoCD Sync | <30s (P95) | Trigger sync, monitor completion |
+| Metric         | Target       | Command to Test                           |
+| -------------- | ------------ | ----------------------------------------- |
+| Backstage Load | <2s (P95)    | Open portal in browser, measure load time |
+| API Response   | <200ms (P95) | `kubectl logs -n fawkes -l app=backstage` |
+| Jenkins Queue  | <30s (P95)   | Check Jenkins dashboard queue time        |
+| ArgoCD Sync    | <30s (P95)   | Trigger sync, monitor completion          |
 
 ## Acceptance Criteria
 
@@ -65,11 +66,11 @@ kubectl describe nodes | grep -A 5 "Allocated resources"
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| [RESOURCE_OPTIMIZATION_SUMMARY.md](RESOURCE_OPTIMIZATION_SUMMARY.md) | Detailed change log |
-| [docs/resource-sizing-guide.md](docs/resource-sizing-guide.md) | Complete sizing guide |
-| [scripts/validate-resource-usage.sh](scripts/validate-resource-usage.sh) | Validation script |
+| File                                                                     | Purpose               |
+| ------------------------------------------------------------------------ | --------------------- |
+| [RESOURCE_OPTIMIZATION_SUMMARY.md](RESOURCE_OPTIMIZATION_SUMMARY.md)     | Detailed change log   |
+| [docs/resource-sizing-guide.md](docs/resource-sizing-guide.md)           | Complete sizing guide |
+| [scripts/validate-resource-usage.sh](scripts/validate-resource-usage.sh) | Validation script     |
 
 ## Troubleshooting
 

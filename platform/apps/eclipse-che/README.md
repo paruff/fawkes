@@ -11,12 +11,12 @@ eliminating local environment setup friction.
 
 ## Components
 
-| Component | Description |
-|-----------|-------------|
+| Component                      | Description                                 |
+| ------------------------------ | ------------------------------------------- |
 | `eclipse-che-application.yaml` | ArgoCD Application for Eclipse Che Operator |
-| `workspace-quota.yaml` | ResourceQuota and LimitRange for workspaces |
-| `network-policies.yaml` | Network policies for workspace isolation |
-| `kustomization.yaml` | Kustomize configuration |
+| `workspace-quota.yaml`         | ResourceQuota and LimitRange for workspaces |
+| `network-policies.yaml`        | Network policies for workspace isolation    |
+| `kustomization.yaml`           | Kustomize configuration                     |
 
 ## Architecture
 
@@ -59,30 +59,30 @@ eliminating local environment setup friction.
 
 ## Access URLs
 
-| Endpoint | URL | Purpose |
-|----------|-----|---------|
-| Che Dashboard | `https://che.fawkes.idp` | Workspace management UI |
-| Devfile Registry | `https://che.fawkes.idp/devfile-registry` | Golden Path templates |
-| Workspace IDE | `https://che.fawkes.idp/<workspace-id>` | Individual workspace access |
+| Endpoint         | URL                                       | Purpose                     |
+| ---------------- | ----------------------------------------- | --------------------------- |
+| Che Dashboard    | `https://che.fawkes.idp`                  | Workspace management UI     |
+| Devfile Registry | `https://che.fawkes.idp/devfile-registry` | Golden Path templates       |
+| Workspace IDE    | `https://che.fawkes.idp/<workspace-id>`   | Individual workspace access |
 
 ## Golden Path Devfiles
 
 Available workspace templates in `/platform/devfiles/`:
 
-| Template | Description | Resources |
-|----------|-------------|-----------|
-| `goldenpath-python` | Python development environment | 2 CPU, 4Gi Memory |
-| `goldenpath-ai` | AI/ML development with GPU support | 8 CPU, 16Gi Memory, GPU |
+| Template            | Description                        | Resources               |
+| ------------------- | ---------------------------------- | ----------------------- |
+| `goldenpath-python` | Python development environment     | 2 CPU, 4Gi Memory       |
+| `goldenpath-ai`     | AI/ML development with GPU support | 8 CPU, 16Gi Memory, GPU |
 
 ## Resource Limits
 
 Default workspace limits are enforced via `workspace-quota.yaml`:
 
 | Resource | Request | Limit |
-|----------|---------|-------|
-| CPU | 500m | 2 |
-| Memory | 1Gi | 4Gi |
-| Storage | - | 20Gi |
+| -------- | ------- | ----- |
+| CPU      | 500m    | 2     |
+| Memory   | 1Gi     | 4Gi   |
+| Storage  | -       | 20Gi  |
 
 ## SSO Integration
 

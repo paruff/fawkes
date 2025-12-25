@@ -12,6 +12,7 @@ Prometheus is an open-source monitoring and alerting toolkit designed for reliab
 ## Overview
 
 Prometheus provides essential monitoring capabilities:
+
 - **Time-Series Database** - Store and query metrics data
 - **PromQL** - Powerful query language for metrics analysis
 - **Alert Manager** - Handle alerts and notifications
@@ -19,16 +20,17 @@ Prometheus provides essential monitoring capabilities:
 
 ## Key Features
 
-| Feature | Description |
-|---------|-------------|
-| ![](../assets/images/icons/metrics.png){ width="24" } Metrics Collection | Pull-based metrics gathering |
-| ![](../assets/images/icons/query.png){ width="24" } PromQL | Flexible query language |
-| ![](../assets/images/icons/alerts.png){ width="24" } Alerting | Configurable alert rules |
-| ![](../assets/images/icons/discovery.png){ width="24" } Service Discovery | Auto-discover targets |
+| Feature                                                                   | Description                  |
+| ------------------------------------------------------------------------- | ---------------------------- |
+| ![](../assets/images/icons/metrics.png){ width="24" } Metrics Collection  | Pull-based metrics gathering |
+| ![](../assets/images/icons/query.png){ width="24" } PromQL                | Flexible query language      |
+| ![](../assets/images/icons/alerts.png){ width="24" } Alerting             | Configurable alert rules     |
+| ![](../assets/images/icons/discovery.png){ width="24" } Service Discovery | Auto-discover targets        |
 
 ## Integration with Fawkes
 
 ### Prerequisites
+
 - Kubernetes cluster
 - Helm v3
 - kubectl configured with cluster access
@@ -48,6 +50,7 @@ helm install prometheus prometheus-community/kube-prometheus-stack \
 ```
 
 Example `prometheus-values.yaml`:
+
 ```yaml
 prometheus:
   prometheusSpec:
@@ -71,7 +74,7 @@ alertmanager:
     global:
       resolve_timeout: 5m
     route:
-      group_by: ['job']
+      group_by: ["job"]
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 12h
@@ -83,28 +86,28 @@ alertmanager:
 
 ```yaml
 groups:
-- name: fawkes-recording-rules
-  rules:
-  - record: job:http_requests_total:rate5m
-    expr: rate(http_requests_total[5m])
-  - record: job:http_errors_total:rate5m
-    expr: rate(http_errors_total[5m])
+  - name: fawkes-recording-rules
+    rules:
+      - record: job:http_requests_total:rate5m
+        expr: rate(http_requests_total[5m])
+      - record: job:http_errors_total:rate5m
+        expr: rate(http_errors_total[5m])
 ```
 
 ### Alert Rules
 
 ```yaml
 groups:
-- name: fawkes-alerts
-  rules:
-  - alert: HighErrorRate
-    expr: job:http_errors_total:rate5m / job:http_requests_total:rate5m > 0.1
-    for: 5m
-    labels:
-      severity: warning
-    annotations:
-      summary: High error rate detected
-      description: Error rate is above 10% for 5 minutes
+  - name: fawkes-alerts
+    rules:
+      - alert: HighErrorRate
+        expr: job:http_errors_total:rate5m / job:http_requests_total:rate5m > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High error rate detected
+          description: Error rate is above 10% for 5 minutes
 ```
 
 ## Monitoring DORA Metrics
@@ -113,22 +116,24 @@ groups:
 
 ```yaml
 groups:
-- name: dora-metrics
-  rules:
-  - record: dora:deployment_frequency:count24h
-    expr: count_over_time(deployment_success_total[24h])
-  - record: dora:lead_time_seconds:avg24h
-    expr: avg_over_time(deployment_lead_time_seconds[24h])
+  - name: dora-metrics
+    rules:
+      - record: dora:deployment_frequency:count24h
+        expr: count_over_time(deployment_success_total[24h])
+      - record: dora:lead_time_seconds:avg24h
+        expr: avg_over_time(deployment_lead_time_seconds[24h])
 ```
 
 ## Best Practices
 
 1. **Data Retention**
+
    - Set appropriate retention periods
    - Use persistent storage
    - Implement data compaction
 
 2. **Query Optimization**
+
    - Use recording rules for complex queries
    - Limit the use of high-cardinality labels
    - Cache frequently used queries
@@ -142,11 +147,11 @@ groups:
 
 Common issues and solutions:
 
-| Issue | Solution |
-|-------|----------|
-| High memory usage | Adjust retention period and storage |
-| Slow queries | Review and optimize PromQL expressions |
-| Missing metrics | Check service discovery configuration |
+| Issue             | Solution                               |
+| ----------------- | -------------------------------------- |
+| High memory usage | Adjust retention period and storage    |
+| Slow queries      | Review and optimize PromQL expressions |
+| Missing metrics   | Check service discovery configuration  |
 
 ## Grafana Dashboard Examples
 

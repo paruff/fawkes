@@ -7,10 +7,12 @@
 ### 1. Create GitHub OAuth App
 
 **Personal Account:**
+
 - Go to: https://github.com/settings/developers
 - Click "OAuth Apps" → "New OAuth App"
 
 **Organization:**
+
 - Go to: https://github.com/organizations/YOUR_ORG/settings/applications
 - Click "New OAuth App"
 
@@ -74,12 +76,12 @@ kubectl exec -n fawkes deployment/backstage -- curl -s http://localhost:7007/hea
 
 ## 🐛 Common Issues
 
-| Issue | Solution |
-|-------|----------|
+| Issue                  | Solution                                      |
+| ---------------------- | --------------------------------------------- |
 | "Invalid redirect_uri" | Verify callback URL in GitHub matches exactly |
-| "Configuration error" | Check secret values don't contain "CHANGE_ME" |
-| No login button | Verify app-config.yaml has auth section |
-| 500 on callback | Check client secret is correct |
+| "Configuration error"  | Check secret values don't contain "CHANGE_ME" |
+| No login button        | Verify app-config.yaml has auth section       |
+| 500 on callback        | Check client secret is correct                |
 
 ## 📚 More Information
 
@@ -91,10 +93,12 @@ kubectl exec -n fawkes deployment/backstage -- curl -s http://localhost:7007/hea
 ## 🔐 Production Best Practices
 
 1. **Use separate OAuth apps per environment**
+
    - Development: `Fawkes Backstage - Dev`
    - Production: `Fawkes Backstage - Prod`
 
 2. **Use Vault for secrets** (not Git)
+
    ```bash
    vault kv put secret/backstage/oauth \
      github-client-id="..." \

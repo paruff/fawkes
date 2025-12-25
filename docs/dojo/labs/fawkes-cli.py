@@ -37,7 +37,7 @@ from lab_automation import (
     AssessmentValidator,
     LabAutomation,
     setup_lab_environment,
-    cleanup_lab_environment
+    cleanup_lab_environment,
 )
 
 # Version
@@ -61,35 +61,26 @@ class FawkesConfig:
         if not self.config_file.exists():
             return self.default_config()
 
-        with open(self.config_file, 'r') as f:
+        with open(self.config_file, "r") as f:
             return yaml.safe_load(f)
 
     def save_config(self):
         """Save configuration to file"""
         FAWKES_HOME.mkdir(parents=True, exist_ok=True)
-        with open(self.config_file, 'w') as f:
+        with open(self.config_file, "w") as f:
             yaml.dump(self.config, f)
 
     def default_config(self) -> Dict:
         """Default configuration"""
         return {
-            'cluster': {
-                'context': 'default',
-                'namespace_prefix': 'lab'
-            },
-            'labs': {
-                'timeout': 3600,
-                'auto_cleanup': True
-            },
-            'user': {
-                'email': None,
-                'name': None
-            }
+            "cluster": {"context": "default", "namespace_prefix": "lab"},
+            "labs": {"timeout": 3600, "auto_cleanup": True},
+            "user": {"email": None, "name": None},
         }
 
     def get(self, key: str, default=None):
         """Get config value"""
-        keys = key.split('.')
+        keys = key.split(".")
         value = self.config
         for k in keys:
             value = value.get(k, {})
@@ -97,7 +88,7 @@ class FawkesConfig:
 
     def set(self, key: str, value):
         """Set config value"""
-        keys = key.split('.')
+        keys = key.split(".")
         config = self.config
         for k in keys[:-1]:
             if k not in config:
@@ -114,6 +105,7 @@ config = FawkesConfig()
 # =============================================================================
 # CLI GROUPS
 # =============================================================================
+
 
 @click.group()
 @click.version_option(version=__version__)
@@ -137,6 +129,7 @@ def cli(ctx):
 # LAB COMMANDS
 # =============================================================================
 
+
 @cli.group()
 def lab():
     """Manage lab environments"""
@@ -144,8 +137,8 @@ def lab():
 
 
 @lab.command()
-@click.option('--module', '-m', type=int, required=True, help='Module number (1-20)')
-@click.option('--user', '-u', help='User email for multi-user environments')
+@click.option("--module", "-m", type=int, required=True, help="Module number (1-20)")
+@click.option("--user", "-u", help="User email for multi-user environments")
 def start(module: int, user: Optional[str]):
     """Start a lab environment for a specific module"""
 
@@ -153,10 +146,10 @@ def start(module: int, user: Optional[str]):
 
     # Get user info
     if not user:
-        user = config.get('user.email')
+        user = config.get("user.email")
         if not user:
-            user = click.prompt('Enter your email')
-            config.set('user.email', user)
+            user = click.prompt("Enter your email")
+            config.set("user.email", user)
 
     # Create lab environment
     lab_cli = FawkesLabCLI()
@@ -175,8 +168,8 @@ def start(module: int, user: Optional[str]):
 
 
 @lab.command()
-@click.option('--lab', '-l', required=True, help='Lab name (e.g., white-belt-lab1)')
-@click.option('--verbose', '-v', is_flag=True, help='Show detailed validation output')
+@click.option("--lab", "-l", required=True, help="Lab name (e.g., white-belt-lab1)")
+@click.option("--verbose", "-v", is_flag=True, help="Show detailed validation output")
 def validate(lab: str, verbose: bool):
     """Validate lab completion"""
 
@@ -193,7 +186,7 @@ def validate(lab: str, verbose: bool):
 
             if verbose and result.details:
                 click.echo("\n   Checks:")
-                for check in result.details.get('checks', []):
+                for check in result.details.get("checks", []):
                     click.echo(f"      ✓ {check}")
 
             click.echo("\n🎉 Great job! You can move to the next lab.")
@@ -203,7 +196,7 @@ def validate(lab: str, verbose: bool):
 
             if result.details:
                 click.echo("\n   Failed checks:")
-                for check in result.details.get('checks', []):
+                for check in result.details.get("checks", []):
                     click.echo(f"      • {check}")
 
             click.echo("\n💡 Review the failed checks and try again.")
@@ -220,13 +213,13 @@ def validate(lab: str, verbose: bool):
 
 
 @lab.command()
-@click.option('--module', '-m', type=int, required=True, help='Module number')
-@click.option('--force', is_flag=True, help='Force cleanup without confirmation')
+@click.option("--module", "-m", type=int, required=True, help="Module number")
+@click.option("--force", is_flag=True, help="Force cleanup without confirmation")
 def stop(module: int, force: bool):
     """Stop and cleanup a lab environment"""
 
     if not force:
-        click.confirm(f'Are you sure you want to cleanup lab for Module {module}?', abort=True)
+        click.confirm(f"Are you sure you want to cleanup lab for Module {module}?", abort=True)
 
     click.echo(f"🧹 Cleaning up lab environment for Module {module}...")
 
@@ -238,7 +231,7 @@ def stop(module: int, force: bool):
         sys.exit(1)
 
 
-@lab.command(name='list')
+@lab.command(name="list")
 def list_labs():
     """List all running lab environments"""
 
@@ -246,23 +239,23 @@ def list_labs():
 
     try:
         result = subprocess.run(
-            ['kubectl', 'get', 'namespaces', '-l', 'fawkes.io/lab', '-o', 'json'],
+            ["kubectl", "get", "namespaces", "-l", "fawkes.io/lab", "-o", "json"],
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
 
         namespaces = json.loads(result.stdout)
 
-        if not namespaces.get('items'):
+        if not namespaces.get("items"):
             click.echo("   No active labs found")
             return
 
-        for ns in namespaces['items']:
-            name = ns['metadata']['name']
-            labels = ns['metadata'].get('labels', {})
-            module = labels.get('fawkes.io/module', 'unknown')
-            created = ns['metadata']['creationTimestamp']
+        for ns in namespaces["items"]:
+            name = ns["metadata"]["name"]
+            labels = ns["metadata"].get("labels", {})
+            module = labels.get("fawkes.io/module", "unknown")
+            created = ns["metadata"]["creationTimestamp"]
 
             click.echo(f"   • {name}")
             click.echo(f"     Module: {module}, Created: {created}")
@@ -273,7 +266,7 @@ def list_labs():
 
 
 @lab.command()
-@click.option('--module', '-m', type=int, required=True, help='Module number')
+@click.option("--module", "-m", type=int, required=True, help="Module number")
 def status(module: int):
     """Check status of a lab environment"""
 
@@ -284,11 +277,7 @@ def status(module: int):
 
     try:
         # Get all resources
-        result = subprocess.run(
-            ['kubectl', 'get', 'all', '-n', namespace],
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(["kubectl", "get", "all", "-n", namespace], capture_output=True, text=True)
 
         if result.returncode != 0:
             click.echo(f"❌ Lab not found. Start with: fawkes lab start --module {module}")
@@ -302,17 +291,17 @@ def status(module: int):
 
 
 @lab.command()
-@click.option('--module', '-m', type=int, required=True, help='Module number')
-@click.option('--follow', '-f', is_flag=True, help='Follow log output')
+@click.option("--module", "-m", type=int, required=True, help="Module number")
+@click.option("--follow", "-f", is_flag=True, help="Follow log output")
 def logs(module: int, follow: bool):
     """View logs from lab environment"""
 
     namespace = f"lab-module-{module}"
 
     try:
-        cmd = ['kubectl', 'logs', '-n', namespace, '-l', 'app=my-first-app']
+        cmd = ["kubectl", "logs", "-n", namespace, "-l", "app=my-first-app"]
         if follow:
-            cmd.append('-f')
+            cmd.append("-f")
 
         subprocess.run(cmd)
 
@@ -327,6 +316,7 @@ def logs(module: int, follow: bool):
 # ASSESSMENT COMMANDS
 # =============================================================================
 
+
 @cli.group()
 def assessment():
     """Manage belt assessments"""
@@ -334,9 +324,9 @@ def assessment():
 
 
 @assessment.command()
-@click.option('--belt', '-b', required=True,
-              type=click.Choice(['white', 'yellow', 'green', 'brown', 'black']),
-              help='Belt level')
+@click.option(
+    "--belt", "-b", required=True, type=click.Choice(["white", "yellow", "green", "brown", "black"]), help="Belt level"
+)
 def validate(belt: str):
     """Validate complete belt assessment"""
 
@@ -354,7 +344,7 @@ def validate(belt: str):
         click.echo(f"\n   Total Score: {result['total_points']}/{result['max_points']} ({result['percentage']:.1f}%)")
         click.echo(f"   Passing Threshold: {result['passing_threshold']}%")
 
-        if result['passed']:
+        if result["passed"]:
             click.echo(f"\n   ✅ PASSED - Congratulations!")
             click.echo(f"\n   You have earned the {result['belt'].upper()} Belt certification!")
             click.echo(f"\n   Next steps:")
@@ -367,13 +357,13 @@ def validate(belt: str):
             click.echo(f"   Review the areas where you lost points and try again.")
 
         click.echo("\n   Lab Results:")
-        for lab in result['labs']:
-            status = "✅" if lab['passed'] else "❌"
+        for lab in result["labs"]:
+            status = "✅" if lab["passed"] else "❌"
             click.echo(f"      {status} {lab['lab']}: {lab['points']}/{lab['max_points']}")
 
         click.echo("=" * 60 + "\n")
 
-        if not result['passed']:
+        if not result["passed"]:
             sys.exit(1)
 
     except Exception as e:
@@ -381,9 +371,8 @@ def validate(belt: str):
         sys.exit(1)
 
 
-@assessment.command(name='check-eligibility')
-@click.option('--belt', '-b', required=True,
-              type=click.Choice(['white', 'yellow', 'green', 'brown', 'black']))
+@assessment.command(name="check-eligibility")
+@click.option("--belt", "-b", required=True, type=click.Choice(["white", "yellow", "green", "brown", "black"]))
 def check_eligibility(belt: str):
     """Check if you're eligible to take an assessment"""
 
@@ -391,11 +380,11 @@ def check_eligibility(belt: str):
 
     # Check prerequisites
     prerequisites = {
-        'white': [],
-        'yellow': ['white'],
-        'green': ['white', 'yellow'],
-        'brown': ['white', 'yellow', 'green'],
-        'black': ['white', 'yellow', 'green', 'brown']
+        "white": [],
+        "yellow": ["white"],
+        "green": ["white", "yellow"],
+        "brown": ["white", "yellow", "green"],
+        "black": ["white", "yellow", "green", "brown"],
     }
 
     required = prerequisites[belt]
@@ -414,18 +403,17 @@ def check_eligibility(belt: str):
 
 
 @assessment.command()
-@click.option('--belt', '-b', required=True,
-              type=click.Choice(['white', 'yellow', 'green', 'brown', 'black']))
-@click.option('--date', '-d', help='Date (YYYY-MM-DD)')
-@click.option('--time', '-t', help='Time (HH:MM)')
+@click.option("--belt", "-b", required=True, type=click.Choice(["white", "yellow", "green", "brown", "black"]))
+@click.option("--date", "-d", help="Date (YYYY-MM-DD)")
+@click.option("--time", "-t", help="Time (HH:MM)")
 def schedule(belt: str, date: Optional[str], time: Optional[str]):
     """Schedule an assessment"""
 
     if not date:
-        date = click.prompt('Assessment date (YYYY-MM-DD)')
+        date = click.prompt("Assessment date (YYYY-MM-DD)")
 
     if not time:
-        time = click.prompt('Assessment time (HH:MM)')
+        time = click.prompt("Assessment time (HH:MM)")
 
     click.echo(f"\n📅 Scheduling {belt.upper()} Belt Assessment:")
     click.echo(f"   Date: {date}")
@@ -441,6 +429,7 @@ def schedule(belt: str, date: Optional[str], time: Optional[str]):
 # CONFIG COMMANDS
 # =============================================================================
 
+
 @cli.group()
 def config():
     """Manage Fawkes CLI configuration"""
@@ -448,8 +437,8 @@ def config():
 
 
 @config.command()
-@click.argument('key')
-@click.argument('value')
+@click.argument("key")
+@click.argument("value")
 def set(key: str, value: str):
     """Set a configuration value"""
 
@@ -458,7 +447,7 @@ def set(key: str, value: str):
 
 
 @config.command()
-@click.argument('key')
+@click.argument("key")
 def get(key: str):
     """Get a configuration value"""
 
@@ -469,7 +458,7 @@ def get(key: str):
         click.echo(f"❌ {key} not found")
 
 
-@config.command(name='list')
+@config.command(name="list")
 def list_config():
     """List all configuration values"""
 
@@ -481,15 +470,16 @@ def list_config():
 # SETUP COMMAND
 # =============================================================================
 
+
 @cli.command()
-@click.option('--force', is_flag=True, help='Force reinstall')
+@click.option("--force", is_flag=True, help="Force reinstall")
 def setup(force: bool):
     """Setup Fawkes Dojo infrastructure (one-time)"""
 
     click.echo("🔧 Setting up Fawkes Dojo lab infrastructure...")
 
     if not force:
-        click.confirm('This will install Prometheus, ArgoCD, Flagger, and other tools. Continue?', abort=True)
+        click.confirm("This will install Prometheus, ArgoCD, Flagger, and other tools. Continue?", abort=True)
 
     try:
         setup_lab_environment()
@@ -507,16 +497,17 @@ def setup(force: bool):
 # UTILITY COMMANDS
 # =============================================================================
 
+
 @cli.command()
 def login():
     """Authenticate with Fawkes platform"""
 
     click.echo("🔐 Fawkes Platform Login")
 
-    email = click.prompt('Email')
+    email = click.prompt("Email")
     # In real implementation, would do OAuth or API key auth
 
-    config.set('user.email', email)
+    config.set("user.email", email)
     click.echo(f"\n✅ Logged in as {email}")
 
 
@@ -528,32 +519,19 @@ def status():
 
     try:
         # Check cluster connectivity
-        result = subprocess.run(
-            ['kubectl', 'cluster-info'],
-            capture_output=True,
-            text=True,
-            check=True
-        )
+        result = subprocess.run(["kubectl", "cluster-info"], capture_output=True, text=True, check=True)
         click.echo("✅ Kubernetes cluster: Connected")
 
         # Check monitoring
-        result = subprocess.run(
-            ['kubectl', 'get', 'pods', '-n', 'monitoring'],
-            capture_output=True,
-            text=True
-        )
-        if 'prometheus' in result.stdout:
+        result = subprocess.run(["kubectl", "get", "pods", "-n", "monitoring"], capture_output=True, text=True)
+        if "prometheus" in result.stdout:
             click.echo("✅ Monitoring: Running")
         else:
             click.echo("⚠️  Monitoring: Not installed")
 
         # Check ArgoCD
-        result = subprocess.run(
-            ['kubectl', 'get', 'pods', '-n', 'argocd'],
-            capture_output=True,
-            text=True
-        )
-        if 'argocd-server' in result.stdout:
+        result = subprocess.run(["kubectl", "get", "pods", "-n", "argocd"], capture_output=True, text=True)
+        if "argocd-server" in result.stdout:
             click.echo("✅ ArgoCD: Running")
         else:
             click.echo("⚠️  ArgoCD: Not installed")
@@ -577,10 +555,11 @@ def version():
 # MAIN ENTRY POINT
 # =============================================================================
 
+
 def main():
     """Main entry point for CLI"""
     cli(obj={})
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

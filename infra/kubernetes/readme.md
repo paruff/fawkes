@@ -55,10 +55,10 @@ Fawkes uses **External Secrets Operator** to pull secrets from cloud vaults (AWS
 
 ### Migration Guide
 
-| Legacy | New | Action |
-|--------|-----|--------|
-| Inline base64 `Secret` | `ExternalSecret` + remote key | Replace file, commit |
-| SealedSecret | ExternalSecret | Optional: decrypt and move key to vault |
+| Legacy                 | New                           | Action                                  |
+| ---------------------- | ----------------------------- | --------------------------------------- |
+| Inline base64 `Secret` | `ExternalSecret` + remote key | Replace file, commit                    |
+| SealedSecret           | ExternalSecret                | Optional: decrypt and move key to vault |
 
 ### AWS Setup Notes
 

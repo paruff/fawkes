@@ -7,36 +7,36 @@ metadata:
 spec:
   serviceAccountName: jenkins-agent
   containers:
-  - name: node
-    image: node:20-slim
-    command: ['cat']
-    tty: true
-    resources:
-      requests:
-        cpu: '500m'
-        memory: '1Gi'
-      limits:
-        cpu: '1'
-        memory: '2Gi'
-    volumeMounts:
-    - name: npm-cache
-      mountPath: /root/.npm
-  - name: docker
-    image: docker:24-dind
-    command: ['cat']
-    tty: true
-    securityContext:
-      privileged: true
-    volumeMounts:
-    - name: docker-sock
-      mountPath: /var/run/docker.sock
-  - name: trivy
-    image: aquasec/trivy:latest
-    command: ['cat']
-    tty: true
+    - name: node
+      image: node:20-slim
+      command: ["cat"]
+      tty: true
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "1Gi"
+        limits:
+          cpu: "1"
+          memory: "2Gi"
+      volumeMounts:
+        - name: npm-cache
+          mountPath: /root/.npm
+    - name: docker
+      image: docker:24-dind
+      command: ["cat"]
+      tty: true
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+    - name: trivy
+      image: aquasec/trivy:latest
+      command: ["cat"]
+      tty: true
   volumes:
-  - name: docker-sock
-    hostPath:
-      path: /var/run/docker.sock
-  - name: npm-cache
-    emptyDir: {}
+    - name: docker-sock
+      hostPath:
+        path: /var/run/docker.sock
+    - name: npm-cache
+      emptyDir: {}

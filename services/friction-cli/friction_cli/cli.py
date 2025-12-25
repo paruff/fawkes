@@ -85,19 +85,18 @@ def log(ctx, title, description, category, priority, tags, interactive):
 
     # Interactive mode
     if interactive or not (title and description):
-        console.print(Panel.fit(
-            "[bold cyan]Friction Logger - Interactive Mode[/bold cyan]\n"
-            "Let's capture that friction point!",
-            box=box.DOUBLE
-        ))
+        console.print(
+            Panel.fit(
+                "[bold cyan]Friction Logger - Interactive Mode[/bold cyan]\n" "Let's capture that friction point!",
+                box=box.DOUBLE,
+            )
+        )
 
         if not title:
             title = Prompt.ask("[yellow]What's the friction about?[/yellow] (brief title)")
 
         if not description:
-            description = Prompt.ask(
-                "[yellow]Describe the friction[/yellow] (what happened, when, impact)"
-            )
+            description = Prompt.ask("[yellow]Describe the friction[/yellow] (what happened, when, impact)")
 
         if not category:
             # Show available categories
@@ -107,28 +106,19 @@ def log(ctx, title, description, category, priority, tags, interactive):
                 for i, cat in enumerate(categories, 1):
                     console.print(f"  {i}. {cat['name']}")
                 console.print()
-                category = Prompt.ask(
-                    "[yellow]Category[/yellow]",
-                    default=config.default_category
-                )
+                category = Prompt.ask("[yellow]Category[/yellow]", default=config.default_category)
             except Exception:
-                category = Prompt.ask(
-                    "[yellow]Category[/yellow]",
-                    default=config.default_category
-                )
+                category = Prompt.ask("[yellow]Category[/yellow]", default=config.default_category)
 
         if not priority:
             priority = Prompt.ask(
                 "[yellow]Priority[/yellow]",
                 choices=["low", "medium", "high", "critical"],
-                default=config.default_priority
+                default=config.default_priority,
             )
 
         if not tags:
-            tags_input = Prompt.ask(
-                "[yellow]Tags[/yellow] (comma-separated, optional)",
-                default=""
-            )
+            tags_input = Prompt.ask("[yellow]Tags[/yellow] (comma-separated, optional)", default="")
             tags = [t.strip() for t in tags_input.split(",") if t.strip()]
 
     # Create the insight
@@ -145,21 +135,23 @@ def log(ctx, title, description, category, priority, tags, interactive):
             metadata={
                 "type": "friction",
                 "cli_version": __version__,
-            }
+            },
         )
 
         result = client.create_insight(insight)
 
         console.print()
-        console.print(Panel.fit(
-            f"[bold green]✓ Friction point logged successfully![/bold green]\n\n"
-            f"ID: {result.get('id')}\n"
-            f"Title: {title}\n"
-            f"Category: {category}\n"
-            f"Priority: {priority or config.default_priority}",
-            box=box.DOUBLE,
-            border_style="green"
-        ))
+        console.print(
+            Panel.fit(
+                f"[bold green]✓ Friction point logged successfully![/bold green]\n\n"
+                f"ID: {result.get('id')}\n"
+                f"Title: {title}\n"
+                f"Category: {category}\n"
+                f"Priority: {priority or config.default_priority}",
+                box=box.DOUBLE,
+                border_style="green",
+            )
+        )
 
     except Exception as e:
         console.print(f"[red]✗ Failed to log friction:[/red] {e}")
@@ -198,10 +190,7 @@ def list(ctx, category, priority, limit):
             console.print("[yellow]No friction points found.[/yellow]")
             return
 
-        table = Table(
-            title=f"Recent Friction Points ({len(insights)} results)",
-            box=box.ROUNDED
-        )
+        table = Table(title=f"Recent Friction Points ({len(insights)} results)", box=box.ROUNDED)
         table.add_column("ID", style="cyan", width=6)
         table.add_column("Title", style="white", width=40)
         table.add_column("Category", style="magenta", width=15)
@@ -219,7 +208,9 @@ def list(ctx, category, priority, limit):
             table.add_row(
                 str(insight.get("id")),
                 insight.get("title", "")[:40],
-                insight.get("category", {}).get("name", "N/A") if isinstance(insight.get("category"), dict) else str(insight.get("category", "N/A")),
+                insight.get("category", {}).get("name", "N/A")
+                if isinstance(insight.get("category"), dict)
+                else str(insight.get("category", "N/A")),
                 f"{priority_style}{insight.get('priority', 'medium')}[/]",
                 insight.get("status", "new"),
             )
@@ -247,18 +238,20 @@ def show(ctx, friction_id):
         insight = client.get_insight(friction_id)
 
         console.print()
-        console.print(Panel.fit(
-            f"[bold cyan]{insight.get('title')}[/bold cyan]\n\n"
-            f"[dim]ID:[/dim] {insight.get('id')}\n"
-            f"[dim]Category:[/dim] {insight.get('category', {}).get('name', 'N/A')}\n"
-            f"[dim]Priority:[/dim] {insight.get('priority', 'medium')}\n"
-            f"[dim]Status:[/dim] {insight.get('status', 'new')}\n"
-            f"[dim]Author:[/dim] {insight.get('author', 'Unknown')}\n"
-            f"[dim]Created:[/dim] {insight.get('created_at', 'N/A')}\n\n"
-            f"[bold]Description:[/bold]\n{insight.get('description', 'N/A')}\n\n"
-            f"[dim]Tags:[/dim] {', '.join(t.get('name', '') if isinstance(t, dict) else str(t) for t in insight.get('tags', []))}",
-            box=box.DOUBLE
-        ))
+        console.print(
+            Panel.fit(
+                f"[bold cyan]{insight.get('title')}[/bold cyan]\n\n"
+                f"[dim]ID:[/dim] {insight.get('id')}\n"
+                f"[dim]Category:[/dim] {insight.get('category', {}).get('name', 'N/A')}\n"
+                f"[dim]Priority:[/dim] {insight.get('priority', 'medium')}\n"
+                f"[dim]Status:[/dim] {insight.get('status', 'new')}\n"
+                f"[dim]Author:[/dim] {insight.get('author', 'Unknown')}\n"
+                f"[dim]Created:[/dim] {insight.get('created_at', 'N/A')}\n\n"
+                f"[bold]Description:[/bold]\n{insight.get('description', 'N/A')}\n\n"
+                f"[dim]Tags:[/dim] {', '.join(t.get('name', '') if isinstance(t, dict) else str(t) for t in insight.get('tags', []))}",
+                box=box.DOUBLE,
+            )
+        )
 
     except Exception as e:
         console.print(f"[red]✗ Failed to show friction point:[/red] {e}")
@@ -317,16 +310,18 @@ def config_show(ctx):
     config = config_manager.config
 
     console.print()
-    console.print(Panel.fit(
-        f"[bold cyan]Friction CLI Configuration[/bold cyan]\n\n"
-        f"[dim]Config file:[/dim] {config_manager.config_path}\n"
-        f"[dim]API URL:[/dim] {config.api_url}\n"
-        f"[dim]API Key:[/dim] {'*' * 10 if config.api_key else 'Not set'}\n"
-        f"[dim]Default Category:[/dim] {config.default_category}\n"
-        f"[dim]Default Priority:[/dim] {config.default_priority}\n"
-        f"[dim]Author:[/dim] {config.author or 'Not set (using git config)'}",
-        box=box.DOUBLE
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold cyan]Friction CLI Configuration[/bold cyan]\n\n"
+            f"[dim]Config file:[/dim] {config_manager.config_path}\n"
+            f"[dim]API URL:[/dim] {config.api_url}\n"
+            f"[dim]API Key:[/dim] {'*' * 10 if config.api_key else 'Not set'}\n"
+            f"[dim]Default Category:[/dim] {config.default_category}\n"
+            f"[dim]Default Priority:[/dim] {config.default_priority}\n"
+            f"[dim]Author:[/dim] {config.author or 'Not set (using git config)'}",
+            box=box.DOUBLE,
+        )
+    )
 
 
 @config_group.command(name="init")
@@ -338,16 +333,16 @@ def config_init(ctx, api_url, api_key, author):
     """Initialize configuration interactively."""
     config_manager = ctx.obj["config_manager"]
 
-    console.print(Panel.fit(
-        "[bold cyan]Friction CLI Configuration Setup[/bold cyan]\n"
-        "Let's configure the CLI for your environment",
-        box=box.DOUBLE
-    ))
+    console.print(
+        Panel.fit(
+            "[bold cyan]Friction CLI Configuration Setup[/bold cyan]\n" "Let's configure the CLI for your environment",
+            box=box.DOUBLE,
+        )
+    )
 
     if not api_url:
         api_url = Prompt.ask(
-            "[yellow]Insights API URL[/yellow]",
-            default="http://insights-service.fawkes.svc.cluster.local:8000"
+            "[yellow]Insights API URL[/yellow]", default="http://insights-service.fawkes.svc.cluster.local:8000"
         )
 
     if not author:
@@ -358,6 +353,7 @@ def config_init(ctx, api_url, api_key, author):
             api_key = Prompt.ask("[yellow]API key[/yellow]", password=True)
 
     from friction_cli.config import FrictionConfig
+
     config = FrictionConfig(
         api_url=api_url,
         api_key=api_key if api_key else None,

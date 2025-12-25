@@ -30,7 +30,7 @@ class AlertRouter:
         backstage_url: str,
         mattermost_webhook: str = "",
         slack_webhook: str = "",
-        pagerduty_api_key: str = ""
+        pagerduty_api_key: str = "",
     ):
         """Initialize alert router."""
         self.http_client = http_client
@@ -113,8 +113,7 @@ class AlertRouter:
         for service in services:
             try:
                 response = await self.http_client.get(
-                    f"{self.backstage_url}/api/catalog/entities/by-name/component/default/{service}",
-                    timeout=5.0
+                    f"{self.backstage_url}/api/catalog/entities/by-name/component/default/{service}", timeout=5.0
                 )
 
                 if response.status_code == 200:
@@ -132,17 +131,10 @@ class AlertRouter:
 
     async def _enrich_context(self, alert_group: Dict) -> Dict:
         """Enrich alert with context."""
-        context = {
-            "recent_changes": [],
-            "log_samples": [],
-            "similar_incidents": [],
-            "runbooks": []
-        }
+        context = {"recent_changes": [], "log_samples": [], "similar_incidents": [], "runbooks": []}
 
         # Add recent changes (simplified - would query ArgoCD/Git)
-        context["recent_changes"] = [
-            "No recent deployments in last hour"
-        ]
+        context["recent_changes"] = ["No recent deployments in last hour"]
 
         # Add runbook links from annotations
         for alert in alert_group.get("alerts", []):
@@ -152,23 +144,14 @@ class AlertRouter:
                 context["runbooks"].append(runbook_url)
 
         # Add log samples (simplified - would query logging system)
-        context["log_samples"] = [
-            "Check logs for detailed error messages"
-        ]
+        context["log_samples"] = ["Check logs for detailed error messages"]
 
         # Similar incidents (simplified - would query incident database)
-        context["similar_incidents"] = [
-            "Check past incidents with similar patterns"
-        ]
+        context["similar_incidents"] = ["Check past incidents with similar patterns"]
 
         return context
 
-    async def _send_to_pagerduty(
-        self,
-        alert_group: Dict,
-        owners: List[str],
-        context: Dict
-    ) -> bool:
+    async def _send_to_pagerduty(self, alert_group: Dict, owners: List[str], context: Dict) -> bool:
         """Send alert to PagerDuty."""
         if not self.pagerduty_api_key:
             return False
@@ -186,16 +169,12 @@ class AlertRouter:
                         "alert_count": alert_group.get("count", 0),
                         "priority_score": alert_group.get("priority_score", 0),
                         "owners": owners,
-                        "context": context
-                    }
-                }
+                        "context": context,
+                    },
+                },
             }
 
-            response = await self.http_client.post(
-                "https://events.pagerduty.com/v2/enqueue",
-                json=event,
-                timeout=10.0
-            )
+            response = await self.http_client.post("https://events.pagerduty.com/v2/enqueue", json=event, timeout=10.0)
 
             if response.status_code == 202:
                 logger.info(f"Sent alert group {alert_group['id']} to PagerDuty")
@@ -208,13 +187,7 @@ class AlertRouter:
             logger.error(f"Error sending to PagerDuty: {e}")
             return False
 
-    async def _send_to_slack(
-        self,
-        alert_group: Dict,
-        owners: List[str],
-        context: Dict,
-        severity: str
-    ) -> bool:
+    async def _send_to_slack(self, alert_group: Dict, owners: List[str], context: Dict, severity: str) -> bool:
         """Send alert to Slack."""
         if not self.slack_webhook:
             return False
@@ -224,50 +197,38 @@ class AlertRouter:
             color = self._get_severity_color(severity)
 
             message = {
-                "attachments": [{
-                    "color": color,
-                    "title": f"{severity} Alert: {self._format_summary(alert_group)}",
-                    "text": self._format_details(alert_group),
-                    "fields": [
-                        {
-                            "title": "Alert Count",
-                            "value": str(alert_group.get("count", 0)),
-                            "short": True
-                        },
-                        {
-                            "title": "Priority Score",
-                            "value": str(alert_group.get("priority_score", 0)),
-                            "short": True
-                        },
-                        {
-                            "title": "Owners",
-                            "value": ", ".join(owners) if owners else "Unknown",
-                            "short": True
-                        },
-                        {
-                            "title": "First Seen",
-                            "value": alert_group.get("first_seen", "Unknown"),
-                            "short": True
-                        }
-                    ],
-                    "footer": "Fawkes Smart Alerting",
-                    "ts": int(datetime.now().timestamp())
-                }]
+                "attachments": [
+                    {
+                        "color": color,
+                        "title": f"{severity} Alert: {self._format_summary(alert_group)}",
+                        "text": self._format_details(alert_group),
+                        "fields": [
+                            {"title": "Alert Count", "value": str(alert_group.get("count", 0)), "short": True},
+                            {
+                                "title": "Priority Score",
+                                "value": str(alert_group.get("priority_score", 0)),
+                                "short": True,
+                            },
+                            {"title": "Owners", "value": ", ".join(owners) if owners else "Unknown", "short": True},
+                            {"title": "First Seen", "value": alert_group.get("first_seen", "Unknown"), "short": True},
+                        ],
+                        "footer": "Fawkes Smart Alerting",
+                        "ts": int(datetime.now().timestamp()),
+                    }
+                ]
             }
 
             # Add context
             if context.get("runbooks"):
-                message["attachments"][0]["fields"].append({
-                    "title": "Runbooks",
-                    "value": "\n".join([f"• {url}" for url in context["runbooks"]]),
-                    "short": False
-                })
+                message["attachments"][0]["fields"].append(
+                    {
+                        "title": "Runbooks",
+                        "value": "\n".join([f"• {url}" for url in context["runbooks"]]),
+                        "short": False,
+                    }
+                )
 
-            response = await self.http_client.post(
-                self.slack_webhook,
-                json=message,
-                timeout=10.0
-            )
+            response = await self.http_client.post(self.slack_webhook, json=message, timeout=10.0)
 
             if response.status_code == 200:
                 logger.info(f"Sent alert group {alert_group['id']} to Slack")
@@ -280,13 +241,7 @@ class AlertRouter:
             logger.error(f"Error sending to Slack: {e}")
             return False
 
-    async def _send_to_mattermost(
-        self,
-        alert_group: Dict,
-        owners: List[str],
-        context: Dict,
-        severity: str
-    ) -> bool:
+    async def _send_to_mattermost(self, alert_group: Dict, owners: List[str], context: Dict, severity: str) -> bool:
         """Send alert to Mattermost."""
         if not self.mattermost_webhook:
             return False
@@ -308,17 +263,9 @@ class AlertRouter:
                 for url in context["runbooks"]:
                     message_text += f"• {url}\n"
 
-            message = {
-                "text": message_text,
-                "username": "Fawkes Smart Alerting",
-                "icon_emoji": ":bell:"
-            }
+            message = {"text": message_text, "username": "Fawkes Smart Alerting", "icon_emoji": ":bell:"}
 
-            response = await self.http_client.post(
-                self.mattermost_webhook,
-                json=message,
-                timeout=10.0
-            )
+            response = await self.http_client.post(self.mattermost_webhook, json=message, timeout=10.0)
 
             if response.status_code == 200:
                 logger.info(f"Sent alert group {alert_group['id']} to Mattermost")
@@ -372,20 +319,10 @@ class AlertRouter:
 
     def _get_severity_color(self, severity: str) -> str:
         """Get color for severity level."""
-        colors = {
-            "P0": "danger",  # Red
-            "P1": "warning",  # Orange
-            "P2": "good",  # Green
-            "P3": "#808080"  # Gray
-        }
+        colors = {"P0": "danger", "P1": "warning", "P2": "good", "P3": "#808080"}  # Red  # Orange  # Green  # Gray
         return colors.get(severity, "#808080")
 
     def _get_severity_emoji(self, severity: str) -> str:
         """Get emoji for severity level."""
-        emojis = {
-            "P0": "🚨",
-            "P1": "⚠️",
-            "P2": "ℹ️",
-            "P3": "📝"
-        }
+        emojis = {"P0": "🚨", "P1": "⚠️", "P2": "ℹ️", "P3": "📝"}
         return emojis.get(severity, "📝")

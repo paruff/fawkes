@@ -62,6 +62,7 @@ Refer to the [Platform Infrastructure Guide](platform/readme.md) for more detail
 After deployment, retrieve service URLs and credentials from the deployment output or using the following commands:
 
 - **Jenkins Admin Password**:
+
   ```sh
   kubectl get secret --namespace <namespace> jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode
   ```
@@ -89,15 +90,19 @@ Replace `<svcName>` with your service name.
 ## 🌟 What Does This Infrastructure Provide?
 
 ### **1. Kubernetes Cluster Provisioning**
+
 Automated creation of a Kubernetes cluster with namespaces for `platform`, `dev`, `test`, and `prod` to support environment isolation and secure delivery workflows.
 
 ### **2. Platform Layer**
+
 Automated deployment of a Jenkins-based CI/CD pipeline, including quality and security gates, to provide visibility and control over your product code base.
 
 ### **3. DevSecOps by Design**
+
 Integrates security and quality checks into the pipeline, supporting DORA best practices for elite software delivery performance.
 
 ### **4. Rapid Onboarding**
+
 Scripts to bootstrap local developer environments and infrastructure, so teams can get started in minutes.
 
 ---
@@ -130,6 +135,7 @@ pytest tests/integration/test_at_e1_001_validation.py -v
 ```
 
 The validation checks:
+
 - ✅ Cluster is running and accessible
 - ✅ Minimum 4 nodes are healthy and schedulable
 - ✅ Cluster metrics available (kubelet, cAdvisor)
@@ -138,6 +144,7 @@ The validation checks:
 - ✅ Resource limits within acceptable thresholds
 
 For detailed documentation, see:
+
 - [AT-E1-001 Validation Guide](../docs/runbooks/at-e1-001-validation.md)
 - [Azure AKS Validation Checklist](../docs/runbooks/azure-aks-validation-checklist.md)
 

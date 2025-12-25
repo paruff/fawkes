@@ -5,6 +5,7 @@ This directory contains configuration files for the VSM (Value Stream Mapping) s
 ## Files
 
 ### stages.yaml
+
 Defines the 8 value stream stages that work items flow through:
 
 1. **Backlog** (wait) - Work items waiting to be analyzed
@@ -17,6 +18,7 @@ Defines the 8 value stream stages that work items flow through:
 8. **Production** (done) - Successfully deployed and running
 
 Each stage includes:
+
 - **name**: Stage name
 - **type**: Category (wait/active/done) for flow metrics
 - **order**: Sequence in the value stream
@@ -24,6 +26,7 @@ Each stage includes:
 - **description**: Detailed explanation of the stage
 
 ### transitions.yaml
+
 Defines the rules for moving work items between stages:
 
 - **Allowed transitions**: Valid stage-to-stage movements
@@ -80,7 +83,9 @@ Adjust these limits based on your team size and capacity.
 ## Stage Types
 
 ### Wait Stages
+
 Items are idle, waiting for action:
+
 - Backlog
 - Code Review
 - Deployment Approval
@@ -88,7 +93,9 @@ Items are idle, waiting for action:
 **Impact**: Increases lead time but not cycle time (active work time).
 
 ### Active Stages
+
 Items are being actively worked on:
+
 - Design
 - Development
 - Testing
@@ -97,7 +104,9 @@ Items are being actively worked on:
 **Impact**: Consumes team capacity, counted in cycle time.
 
 ### Done Stage
+
 Items are complete:
+
 - Production
 
 **Impact**: Marks completion for throughput metrics.
@@ -105,6 +114,7 @@ Items are complete:
 ## Documentation
 
 See [docs/vsm/value-stream-mapping.md](../../docs/vsm/value-stream-mapping.md) for complete documentation on:
+
 - How to use VSM
 - Understanding flow metrics
 - Identifying bottlenecks

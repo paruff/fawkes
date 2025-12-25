@@ -1,6 +1,7 @@
 # ADR-007: Mattermost for Team Collaboration
 
 ## Status
+
 **Accepted** - October 7, 2025
 
 ## Context
@@ -10,6 +11,7 @@ Fawkes is evolving from an infrastructure-focused Internal Delivery Platform to 
 ### The Need for Integrated Collaboration
 
 **Current Gap**: Teams using Fawkes must use external tools for:
+
 - **Real-time communication**: Slack, Microsoft Teams, Discord
 - **Bot integrations and ChatOps**: Limited integration with external tools
 - **Platform notifications**: Email or external chat platforms
@@ -17,6 +19,7 @@ Fawkes is evolving from an infrastructure-focused Internal Delivery Platform to 
 - **Dojo learning support**: No integrated space for learner discussions
 
 **Requirements for Collaboration Tool**:
+
 1. **Self-Hosted**: Data sovereignty, no vendor lock-in, customizable
 2. **Open Source**: Aligns with Fawkes' values, community-driven
 3. **Platform Integration**: Webhooks, bots, API for CI/CD notifications
@@ -31,24 +34,28 @@ Fawkes is evolving from an infrastructure-focused Internal Delivery Platform to 
 ### Forces at Play
 
 **Technical Forces**:
+
 - Need real-time communication for incident response
 - ChatOps capabilities increasingly expected in platforms
 - Notification fatigue from email-only communications
 - Integration complexity with external tools
 
 **Business Forces**:
+
 - Data sovereignty and security concerns with SaaS tools
 - Cost at scale (Slack pricing: $7.25-$12.50/user/month × 100 users = $725-$1,250/month)
 - Vendor lock-in risks with proprietary platforms
 - Open source preference for transparency and control
 
 **Community Forces**:
+
 - Community members prefer familiar platforms (Slack, Discord)
 - Learning curve for new platforms
 - Network effects (everyone uses Slack already)
 - Need for inclusive, welcoming community space
 
 **Organizational Forces**:
+
 - Platform team wants to avoid platform sprawl
 - Desire for single integrated platform experience
 - Need to model self-hosted, open-source values
@@ -58,6 +65,7 @@ Fawkes is evolving from an infrastructure-focused Internal Delivery Platform to 
 **We will use Mattermost as the integrated team collaboration platform for Fawkes.**
 
 Specifically:
+
 - **Self-hosted deployment** in Kubernetes alongside other Fawkes components
 - **Mattermost Team Edition** (open source) with optional Enterprise upgrade path
 - **Native Focalboard integration** for project management
@@ -73,6 +81,7 @@ Specifically:
 3. **Native Focalboard Integration**: Focalboard (Notion-like project management) is built into Mattermost, creating seamless collaboration + project management experience
 
 4. **Strong Integration Capabilities**:
+
    - Webhooks (incoming/outgoing)
    - Slash commands for ChatOps
    - REST API for custom integrations
@@ -84,6 +93,7 @@ Specifically:
 6. **Dojo Community Support**: Dedicated channels for each belt level, peer learning, mentor office hours
 
 7. **Cost Effectiveness**:
+
    - Team Edition: Free, unlimited users
    - Enterprise: Optional, $10/user/year (10x cheaper than Slack at scale)
    - Self-hosted: No per-user fees, only infrastructure costs (~$50-100/month)
@@ -156,23 +166,27 @@ Specifically:
 ### Mitigation Strategies
 
 1. **Operational Overhead**:
+
    - Use Mattermost Operator for Kubernetes (automated deployment, upgrades)
    - Include in platform monitoring and backup strategy
    - Document runbooks for common operations
 
 2. **Learning Curve**:
+
    - Create onboarding guide with screenshots
    - Highlight Slack-compatible shortcuts
    - Provide comparison guide (Slack vs. Mattermost)
    - Video walkthrough for new users
 
 3. **Adoption**:
+
    - Lead by example (maintainers active in Mattermost)
    - Showcase platform integration benefits
    - Make it the official channel for announcements
    - Offer Slack/Discord bridges during transition (bot that mirrors messages)
 
 4. **Integration Gaps**:
+
    - Build custom integrations where needed
    - Contribute integrations back to community
    - Document integration patterns
@@ -187,6 +201,7 @@ Specifically:
 ### Alternative 1: Slack (SaaS)
 
 **Pros**:
+
 - Most popular enterprise chat platform
 - Excellent user experience and mobile apps
 - Huge integration marketplace (2,400+ apps)
@@ -195,6 +210,7 @@ Specifically:
 - Strong voice/video calling
 
 **Cons**:
+
 - **Cost**: $7.25-$12.50/user/month (prohibitively expensive at scale)
 - **Vendor Lock-In**: Proprietary platform, terms can change
 - **Data Privacy**: All data on Slack's servers, compliance concerns
@@ -207,6 +223,7 @@ Specifically:
 ### Alternative 2: Discord
 
 **Pros**:
+
 - Free for unlimited users
 - Excellent voice/video quality
 - Popular with developer communities
@@ -215,6 +232,7 @@ Specifically:
 - Screen sharing and streaming
 
 **Cons**:
+
 - **Gaming-Centric UX**: Designed for gaming, not professional collaboration
 - **Limited Integrations**: Fewer business integrations than Slack/Mattermost
 - **No Self-Hosting**: SaaS only, data on Discord servers
@@ -228,6 +246,7 @@ Specifically:
 ### Alternative 3: Rocket.Chat
 
 **Pros**:
+
 - Open source and self-hosted
 - Feature-complete (channels, threads, video calls)
 - Strong security features
@@ -236,6 +255,7 @@ Specifically:
 - Slack-compatible (can import)
 
 **Cons**:
+
 - **Less Mature**: Smaller community than Mattermost
 - **Integration Ecosystem**: Fewer integrations available
 - **Performance**: Can be slower with large communities
@@ -249,6 +269,7 @@ Specifically:
 ### Alternative 4: Microsoft Teams
 
 **Pros**:
+
 - Deep Microsoft 365 integration
 - Excellent voice/video (backed by Skype)
 - Widely used in enterprises
@@ -257,6 +278,7 @@ Specifically:
 - Free tier available
 
 **Cons**:
+
 - **Microsoft Ecosystem Lock-In**: Strongly tied to Microsoft services
 - **Complex Self-Hosting**: Teams self-hosting extremely complex
 - **Not Truly Open Source**: Proprietary platform
@@ -270,6 +292,7 @@ Specifically:
 ### Alternative 5: Matrix/Element
 
 **Pros**:
+
 - Fully open source and decentralized
 - Strong encryption and privacy
 - Federation support (connect multiple servers)
@@ -278,6 +301,7 @@ Specifically:
 - Modern protocol (Matrix)
 
 **Cons**:
+
 - **Immature Features**: Missing some expected features (threads, polls)
 - **Complex Setup**: Federation and encryption add complexity
 - **Performance**: Can be slow with large communities
@@ -291,6 +315,7 @@ Specifically:
 ### Alternative 6: Zulip
 
 **Pros**:
+
 - Open source and self-hosted
 - Unique threading model (topic-based)
 - Excellent for asynchronous communication
@@ -299,6 +324,7 @@ Specifically:
 - Good integrations
 
 **Cons**:
+
 - **Unusual UX**: Topic-based threading very different from Slack
 - **Smaller Community**: Less widely known/adopted
 - **Learning Curve**: Unique model requires mindset shift
@@ -340,12 +366,14 @@ mattermost:
 ### Initial Channel Structure
 
 **System Channels**:
+
 - 📢 `announcements` - Official announcements (maintainers only post)
 - 💬 `general` - General discussion
 - 🆘 `help-and-support` - Q&A and troubleshooting
 - 👥 `introductions` - New member introductions
 
 **Platform Component Channels**:
+
 - `backstage`
 - `jenkins-cicd`
 - `argocd-gitops`
@@ -354,6 +382,7 @@ mattermost:
 - `infrastructure`
 
 **Dojo Learning Channels**:
+
 - 🎓 `dojo-general` - Learning discussions
 - 🥋 `dojo-white-belt`
 - 🟡 `dojo-yellow-belt`
@@ -363,18 +392,21 @@ mattermost:
 - 🏆 `dojo-achievements` - Celebrate completions
 
 **Contributor Channels**:
+
 - 👨‍💻 `contributors` - General contributor discussion
 - 🐛 `good-first-issues` - Synced from GitHub
 - 📝 `documentation`
 - 🔒 `security-private` (private channel)
 
 **Cloud Provider Channels**:
+
 - ☁️ `aws`
 - ☁️ `azure`
 - ☁️ `gcp`
 - ☁️ `multi-cloud`
 
 **Community Channels**:
+
 - 🎉 `random` - Off-topic, fun
 - 🎊 `wins` - Celebrate successes
 - 📚 `resources` - Share articles, talks, etc.
@@ -382,6 +414,7 @@ mattermost:
 ### Platform Integration Examples
 
 **1. CI/CD Notifications**:
+
 ```javascript
 // Jenkins pipeline sends to Mattermost
 POST https://mattermost.fawkes.io/hooks/jenkins
@@ -395,6 +428,7 @@ POST https://mattermost.fawkes.io/hooks/jenkins
 ```
 
 **2. ChatOps - Deploy from Chat**:
+
 ```
 User: /deploy sample-app to production
 Bot: 🚀 Deploying sample-app to production...
@@ -405,6 +439,7 @@ Bot: 🚀 Deploying sample-app to production...
 ```
 
 **3. DORA Metric Alerts**:
+
 ```
 DORA Bot: ⚠️ Change Failure Rate Alert
           Team: platform-team
@@ -414,6 +449,7 @@ DORA Bot: ⚠️ Change Failure Rate Alert
 ```
 
 **4. Dojo Lab Completion**:
+
 ```
 Dojo Bot: 🎉 @john completed Lab 3: Deploy with GitOps!
           Belt: White Belt
@@ -438,6 +474,7 @@ Dojo Bot: 🎉 @john completed Lab 3: Deploy with GitOps!
 ### Migration from External Platforms
 
 For communities using Slack/Discord:
+
 1. **Export data** from existing platform
 2. **Import into Mattermost** using Slack import tool
 3. **Run bridge bot** for transition period (messages mirrored)
@@ -446,18 +483,21 @@ For communities using Slack/Discord:
 ### Resource Requirements
 
 **Minimum** (100 users):
+
 - 2 CPU cores
 - 4GB RAM
 - 20GB storage
 - PostgreSQL database
 
 **Recommended** (500 users):
+
 - 4 CPU cores
 - 8GB RAM
 - 100GB storage
 - PostgreSQL with replication
 
 **Enterprise** (1000+ users):
+
 - 8+ CPU cores
 - 16GB+ RAM
 - 500GB+ storage
@@ -487,6 +527,7 @@ For communities using Slack/Discord:
 ## Monitoring This Decision
 
 We will revisit this ADR if:
+
 - Community adoption is below 60% after 6 months
 - Operational burden is significantly higher than alternatives
 - Critical features are missing that block workflows
@@ -508,6 +549,7 @@ We will revisit this ADR if:
 ### Why Not Start with Slack/Discord?
 
 We considered using Slack or Discord initially and migrating later, but:
+
 - **Migration Pain**: Moving established communities is difficult and disruptive
 - **Platform Fragmentation**: Running collaboration outside main platform defeats integration purpose
 - **Cost Trap**: Once on Slack, hard to justify migration due to sunk costs
@@ -516,6 +558,7 @@ We considered using Slack or Discord initially and migrating later, but:
 ### Open Source Community Expectations
 
 The open source community increasingly expects:
+
 - Self-hosted communication options (data sovereignty)
 - No reliance on proprietary platforms
 - Transparency and control

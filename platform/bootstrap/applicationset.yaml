@@ -31,21 +31,21 @@ spec:
   # Template for creating ArgoCD Applications
   template:
     metadata:
-      name: '{{path.basename}}'
+      name: "{{path.basename}}"
       namespace: fawkes
       labels:
-        app: '{{path.basename}}'
+        app: "{{path.basename}}"
         component: platform
         managed-by: applicationset
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: '{{path}}'
+        argocd.argoproj.io/manifest-generate-paths: "{{path}}"
 
     spec:
       project: default
 
       source:
         repoURL: https://github.com/paruff/fawkes.git
-        path: '{{path}}'
+        path: "{{path}}"
         targetRevision: HEAD
 
       destination:

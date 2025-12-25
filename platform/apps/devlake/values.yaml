@@ -15,13 +15,13 @@ config:
     # Measures how often code is deployed to production
     deploymentFrequency:
       enabled: true
-      window: 7  # days
+      window: 7 # days
     leadTime:
       enabled: true
       stages:
-        - development   # Time in development
-        - review        # Time in code review
-        - production    # Time to production deploy
+        - development # Time in development
+        - review # Time in code review
+        - production # Time to production deploy
       # Targets for DORA performance levels:
       # Elite: Less than one hour
       # High: Less than one day
@@ -32,13 +32,13 @@ config:
     # Percentage of deployments causing production incidents
     changeFailureRate:
       enabled: true
-      window: 30  # days
+      window: 30 # days
     timeToRestore:
       enabled: true
       severityLevels:
-        - high    # Critical incidents
-        - medium  # Major incidents
-        - low     # Minor incidents
+        - high # Critical incidents
+        - medium # Major incidents
+        - low # Minor incidents
       # Targets for DORA performance levels:
       # Elite: Less than one hour
       # High: Less than one day
@@ -49,9 +49,9 @@ config:
     # Tracks SLO/SLI adherence for service reliability
     operationalPerformance:
       enabled: true
-      sloTarget: 99.9        # Target SLO percentage
-      latencyP99Threshold: 500   # P99 latency in ms
-      errorRateThreshold: 0.1    # Error rate percentage
+      sloTarget: 99.9 # Target SLO percentage
+      latencyP99Threshold: 500 # P99 latency in ms
+      errorRateThreshold: 0.1 # Error rate percentage
 
 # ============================================================
 # Grafana Configuration for DORA Dashboards
@@ -96,7 +96,7 @@ mysql:
   persistence:
     enabled: true
     size: 20Gi
-    storageClass: ""  # Uses default storage class
+    storageClass: "" # Uses default storage class
 
   auth:
     # Database credentials from Kubernetes secret (managed by External Secrets)

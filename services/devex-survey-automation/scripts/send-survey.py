@@ -18,18 +18,12 @@ import httpx
 
 
 async def distribute_survey(
-    type: str,
-    test_mode: bool = True,
-    test_users: list = None,
-    base_url: str = "http://localhost:8000"
+    type: str, test_mode: bool = True, test_users: list = None, base_url: str = "http://localhost:8000"
 ):
     """Distribute survey via API"""
     endpoint = f"{base_url}/api/v1/survey/distribute"
 
-    payload = {
-        "type": type,
-        "test_mode": test_mode
-    }
+    payload = {"type": type, "test_mode": test_mode}
 
     if test_users:
         payload["test_users"] = test_users
@@ -41,11 +35,7 @@ async def distribute_survey(
 
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(
-                endpoint,
-                json=payload,
-                timeout=30.0
-            )
+            response = await client.post(endpoint, json=payload, timeout=30.0)
 
             if response.status_code == 200:
                 data = response.json()
@@ -109,7 +99,7 @@ async def check_health(base_url: str = "http://localhost:8000"):
                 print(f"Status: {health['status']}")
                 print(f"Database: {'✅' if health['database_connected'] else '❌'}")
                 print("Integrations:")
-                for name, status in health['integrations'].items():
+                for name, status in health["integrations"].items():
                     print(f"  {name}: {'✅' if status else '❌'}")
                 return True
             else:
@@ -122,46 +112,19 @@ async def check_health(base_url: str = "http://localhost:8000"):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Manually distribute DevEx surveys"
-    )
+    parser = argparse.ArgumentParser(description="Manually distribute DevEx surveys")
 
-    parser.add_argument(
-        "--type",
-        choices=["pulse", "deep_dive"],
-        default="pulse",
-        help="Survey type to distribute"
-    )
+    parser.add_argument("--type", choices=["pulse", "deep_dive"], default="pulse", help="Survey type to distribute")
 
-    parser.add_argument(
-        "--test-mode",
-        action="store_true",
-        help="Run in test mode (limited distribution)"
-    )
+    parser.add_argument("--test-mode", action="store_true", help="Run in test mode (limited distribution)")
 
-    parser.add_argument(
-        "--users",
-        nargs="+",
-        help="Specific users to send to (test mode)"
-    )
+    parser.add_argument("--users", nargs="+", help="Specific users to send to (test mode)")
 
-    parser.add_argument(
-        "--check-campaigns",
-        action="store_true",
-        help="Check recent campaigns instead of distributing"
-    )
+    parser.add_argument("--check-campaigns", action="store_true", help="Check recent campaigns instead of distributing")
 
-    parser.add_argument(
-        "--check-health",
-        action="store_true",
-        help="Check service health"
-    )
+    parser.add_argument("--check-health", action="store_true", help="Check service health")
 
-    parser.add_argument(
-        "--base-url",
-        default="http://localhost:8000",
-        help="Base URL of the service"
-    )
+    parser.add_argument("--base-url", default="http://localhost:8000", help="Base URL of the service")
 
     args = parser.parse_args()
 
@@ -171,12 +134,7 @@ def main():
         asyncio.run(check_campaigns(args.base_url))
     else:
         asyncio.run(
-            distribute_survey(
-                type=args.type,
-                test_mode=args.test_mode,
-                test_users=args.users,
-                base_url=args.base_url
-            )
+            distribute_survey(type=args.type, test_mode=args.test_mode, test_users=args.users, base_url=args.base_url)
         )
 
 

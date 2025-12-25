@@ -44,13 +44,13 @@ Weaviate was chosen as the vector database for Fawkes for several reasons:
 
 ### Alternatives Considered
 
-| Database | Pros | Cons | Decision |
-|----------|------|------|----------|
-| **Weaviate** | Native vector DB, GraphQL API, K8s native | Learning curve | ✅ **Selected** |
-| Pinecone | Fully managed, easy to use | Cloud-only, vendor lock-in | ❌ Not self-hosted |
-| Milvus | High performance, FAISS-based | Complex setup, heavy | ❌ Too complex |
-| PostgreSQL pgvector | Simple extension, familiar | Limited scale, slower | ❌ Not specialized |
-| ChromaDB | Simple, Python-first | Immature, limited features | ❌ Too new |
+| Database            | Pros                                      | Cons                       | Decision           |
+| ------------------- | ----------------------------------------- | -------------------------- | ------------------ |
+| **Weaviate**        | Native vector DB, GraphQL API, K8s native | Learning curve             | ✅ **Selected**    |
+| Pinecone            | Fully managed, easy to use                | Cloud-only, vendor lock-in | ❌ Not self-hosted |
+| Milvus              | High performance, FAISS-based             | Complex setup, heavy       | ❌ Too complex     |
+| PostgreSQL pgvector | Simple extension, familiar                | Limited scale, slower      | ❌ Not specialized |
+| ChromaDB            | Simple, Python-first                      | Immature, limited features | ❌ Too new         |
 
 ## Architecture
 
@@ -159,16 +159,19 @@ Key configuration parameters in `platform/apps/weaviate-application.yaml`:
 ### Accessing Weaviate
 
 **Local Development (Port Forward)**:
+
 ```bash
 kubectl port-forward -n fawkes svc/weaviate 8080:80
 ```
 
 **Within Cluster**:
+
 ```
 http://weaviate.fawkes.svc:80
 ```
 
 **Via Ingress**:
+
 ```
 http://weaviate.127.0.0.1.nip.io
 ```
@@ -232,31 +235,34 @@ with client.batch as batch:
 ### Indexing Strategies
 
 **Full Re-index**: Index all documents from scratch (for initial setup)
+
 ```bash
 python services/rag/scripts/index-all-docs.py
 ```
 
 **Incremental Indexing**: Index only changed files (for CI/CD pipeline)
+
 ```bash
 python services/rag/scripts/index-changed-docs.py --since HEAD~1
 ```
 
 **Scheduled Indexing**: Daily re-index via CronJob
+
 ```yaml
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: weaviate-indexing
 spec:
-  schedule: "0 2 * * *"  # 2 AM daily
+  schedule: "0 2 * * *" # 2 AM daily
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: indexer
-            image: fawkes-rag-indexer:latest
-            command: ["python", "index-all-docs.py"]
+            - name: indexer
+              image: fawkes-rag-indexer:latest
+              command: ["python", "index-all-docs.py"]
 ```
 
 ## How to Query and Retrieve Context
@@ -329,14 +335,8 @@ Direct GraphQL query:
 {
   Get {
     FawkesDocument(
-      nearText: {
-        concepts: ["kubernetes deployment guide"]
-      }
-      where: {
-        path: ["category"]
-        operator: Equal
-        valueString: "documentation"
-      }
+      nearText: { concepts: ["kubernetes deployment guide"] }
+      where: { path: ["category"], operator: Equal, valueString: "documentation" }
       limit: 5
     ) {
       title
@@ -449,15 +449,17 @@ git diff --name-only HEAD~1 docs/ | \
 ### Resource Optimization
 
 **Memory**: Adjust based on dataset size
+
 ```yaml
 resources:
   requests:
-    memory: 2Gi    # Minimum for small dataset
+    memory: 2Gi # Minimum for small dataset
   limits:
-    memory: 4Gi    # Scale based on # of vectors
+    memory: 4Gi # Scale based on # of vectors
 ```
 
 **CPU**: Scale for query throughput
+
 ```yaml
 resources:
   requests:
@@ -467,15 +469,17 @@ resources:
 ```
 
 **Storage**: Plan for growth
+
 ```yaml
 persistence:
-  size: 10Gi  # Start size
+  size: 10Gi # Start size
   # Monitor usage and scale as needed
 ```
 
 ### Monitoring Performance
 
 **Key Metrics**:
+
 ```bash
 # Query latency
 weaviate_query_duration_seconds
@@ -491,6 +495,7 @@ weaviate_memory_usage_bytes
 ```
 
 **Query Performance Dashboard**:
+
 ```promql
 # 95th percentile query latency
 histogram_quantile(0.95,
@@ -510,6 +515,7 @@ rate(weaviate_queries_total[1m])
 **Symptom**: Weaviate returns 503 or connection refused
 
 **Solution**:
+
 ```bash
 # Check pod status
 kubectl get pods -n fawkes -l app.kubernetes.io/name=weaviate
@@ -526,6 +532,7 @@ kubectl rollout restart statefulset/weaviate -n fawkes
 **Symptom**: Documents not appearing in search results
 
 **Solution**:
+
 ```python
 # Check if class exists
 schema = client.schema.get("FawkesDocument")
@@ -550,11 +557,13 @@ with client.batch as batch:
 **Symptom**: Search results have certainty < 0.7
 
 **Possible Causes**:
+
 1. Documents not properly indexed
 2. Query doesn't match document content
 3. Wrong vectorizer model
 
 **Solution**:
+
 ```python
 # Try hybrid search instead
 result = (
@@ -575,6 +584,7 @@ print(f"Available modules: {modules}")
 **Symptom**: Weaviate pod OOMKilled
 
 **Solution**:
+
 ```bash
 # Increase memory limits
 kubectl edit statefulset weaviate -n fawkes
@@ -591,6 +601,7 @@ kubectl top pod -n fawkes weaviate-0
 **Symptom**: Queries taking >1 second
 
 **Solution**:
+
 ```python
 # Increase ef for better performance
 client.schema.update_config(
@@ -620,12 +631,14 @@ result = (
 ### Debugging Tips
 
 **Enable Verbose Logging**:
+
 ```yaml
 env:
   LOG_LEVEL: "debug"
 ```
 
 **Check API Endpoints**:
+
 ```bash
 # Health check
 curl http://weaviate.fawkes.svc:80/v1/.well-known/ready
@@ -641,6 +654,7 @@ curl http://weaviate.fawkes.svc:80/v1/objects
 ```
 
 **Test Connection**:
+
 ```python
 import weaviate
 
@@ -680,15 +694,15 @@ spec:
     matchLabels:
       app.kubernetes.io/name: weaviate
   policyTypes:
-  - Ingress
+    - Ingress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: rag-service
-    ports:
-    - protocol: TCP
-      port: 8080
+    - from:
+        - podSelector:
+            matchLabels:
+              app: rag-service
+      ports:
+        - protocol: TCP
+          port: 8080
 ```
 
 ### Data Privacy
@@ -724,20 +738,20 @@ metadata:
   name: weaviate-backup
   namespace: fawkes
 spec:
-  schedule: "0 1 * * *"  # Daily at 1 AM
+  schedule: "0 1 * * *" # Daily at 1 AM
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: backup
-            image: bitnami/kubectl:latest
-            command:
-            - /bin/sh
-            - -c
-            - |
-              kubectl exec weaviate-0 -n fawkes -- \
-                curl -X POST http://localhost:8080/v1/backups/filesystem
+            - name: backup
+              image: bitnami/kubectl:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  kubectl exec weaviate-0 -n fawkes -- \
+                    curl -X POST http://localhost:8080/v1/backups/filesystem
           restartPolicy: OnFailure
 ```
 

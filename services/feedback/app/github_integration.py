@@ -34,7 +34,7 @@ async def create_github_issue(
     email: Optional[str] = None,
     screenshot_data: Optional[str] = None,
     browser_info: Optional[str] = None,
-    user_agent: Optional[str] = None
+    user_agent: Optional[str] = None,
 ) -> Tuple[bool, Optional[str], Optional[str]]:
     """
     Create a GitHub issue from feedback submission.
@@ -60,42 +60,22 @@ async def create_github_issue(
 
     try:
         # Determine issue title prefix based on feedback type
-        prefix_map = {
-            "bug_report": "🐛 Bug",
-            "feature_request": "✨ Feature Request",
-            "feedback": "💬 Feedback"
-        }
+        prefix_map = {"bug_report": "🐛 Bug", "feature_request": "✨ Feature Request", "feedback": "💬 Feedback"}
         prefix = prefix_map.get(feedback_type, "💬 Feedback")
 
         # Create issue title
         title = f"{prefix}: {comment[:80]}..." if len(comment) > 80 else f"{prefix}: {comment}"
 
         # Build issue body
-        body_parts = [
-            f"**Feedback ID**: {feedback_id}",
-            f"**Type**: {feedback_type}",
-            f"**Category**: {category}",
-            ""
-        ]
+        body_parts = [f"**Feedback ID**: {feedback_id}", f"**Type**: {feedback_type}", f"**Category**: {category}", ""]
 
         if rating:
-            body_parts.extend([
-                f"**Rating**: {'⭐' * rating} ({rating}/5)",
-                ""
-            ])
+            body_parts.extend([f"**Rating**: {'⭐' * rating} ({rating}/5)", ""])
 
-        body_parts.extend([
-            "## Description",
-            comment,
-            ""
-        ])
+        body_parts.extend(["## Description", comment, ""])
 
         if page_url:
-            body_parts.extend([
-                "## Context",
-                f"**Page URL**: {page_url}",
-                ""
-            ])
+            body_parts.extend(["## Context", f"**Page URL**: {page_url}", ""])
 
         if browser_info:
             body_parts.append(f"**Browser**: {browser_info}")
@@ -104,26 +84,16 @@ async def create_github_issue(
             body_parts.append(f"**User Agent**: {user_agent}")
 
         if email:
-            body_parts.extend([
-                "",
-                "## Contact",
-                f"**Email**: {email}",
-                ""
-            ])
+            body_parts.extend(["", "## Contact", f"**Email**: {email}", ""])
 
         if screenshot_data:
-            body_parts.extend([
-                "",
-                "## Screenshot",
-                "A screenshot has been captured and will be attached to this issue.",
-                ""
-            ])
+            body_parts.extend(
+                ["", "## Screenshot", "A screenshot has been captured and will be attached to this issue.", ""]
+            )
 
-        body_parts.extend([
-            "",
-            "---",
-            f"*This issue was automatically created from user feedback via the Fawkes Developer Portal.*"
-        ])
+        body_parts.extend(
+            ["", "---", f"*This issue was automatically created from user feedback via the Fawkes Developer Portal.*"]
+        )
 
         body = "\n".join(body_parts)
 
@@ -142,14 +112,10 @@ async def create_github_issue(
         headers = {
             "Authorization": f"Bearer {GITHUB_TOKEN}",
             "Accept": "application/vnd.github.v3+json",
-            "X-GitHub-Api-Version": "2022-11-28"
+            "X-GitHub-Api-Version": "2022-11-28",
         }
 
-        issue_data = {
-            "title": title,
-            "body": body,
-            "labels": labels
-        }
+        issue_data = {"title": title, "body": body, "labels": labels}
 
         async with httpx.AsyncClient() as client:
             # Create the issue
@@ -157,7 +123,7 @@ async def create_github_issue(
                 f"{GITHUB_API_URL}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/issues",
                 json=issue_data,
                 headers=headers,
-                timeout=30.0
+                timeout=30.0,
             )
 
             if response.status_code not in [200, 201]:
@@ -173,9 +139,7 @@ async def create_github_issue(
 
             # If screenshot is provided, try to attach it as a comment
             if screenshot_data and issue_number:
-                await _attach_screenshot_to_issue(
-                    client, headers, issue_number, screenshot_data, feedback_id
-                )
+                await _attach_screenshot_to_issue(client, headers, issue_number, screenshot_data, feedback_id)
 
             return True, issue_url, None
 
@@ -186,11 +150,7 @@ async def create_github_issue(
 
 
 async def _attach_screenshot_to_issue(
-    client: httpx.AsyncClient,
-    headers: dict,
-    issue_number: int,
-    screenshot_data: str,
-    feedback_id: int
+    client: httpx.AsyncClient, headers: dict, issue_number: int, screenshot_data: str, feedback_id: int
 ) -> bool:
     """
     Attach screenshot to GitHub issue as a comment with image.
@@ -222,14 +182,11 @@ async def _attach_screenshot_to_issue(
             f"{GITHUB_API_URL}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/issues/{issue_number}/comments",
             json={"body": comment_body},
             headers=headers,
-            timeout=30.0
+            timeout=30.0,
         )
 
         if response.status_code not in [200, 201]:
-            logger.warning(
-                f"Failed to add screenshot comment to issue #{issue_number}: "
-                f"{response.status_code}"
-            )
+            logger.warning(f"Failed to add screenshot comment to issue #{issue_number}: " f"{response.status_code}")
             return False
 
         logger.info(f"✅ Added screenshot note to GitHub issue #{issue_number}")
@@ -240,11 +197,7 @@ async def _attach_screenshot_to_issue(
         return False
 
 
-async def update_issue_status(
-    issue_url: str,
-    new_status: str,
-    feedback_id: int
-) -> Tuple[bool, Optional[str]]:
+async def update_issue_status(issue_url: str, new_status: str, feedback_id: int) -> Tuple[bool, Optional[str]]:
     """
     Update a GitHub issue status based on feedback status changes.
 
@@ -262,7 +215,7 @@ async def update_issue_status(
     try:
         # Extract issue number from URL
         # Format: https://github.com/{owner}/{repo}/issues/{number}
-        parts = issue_url.rstrip('/').split('/')
+        parts = issue_url.rstrip("/").split("/")
         if len(parts) < 2 or not parts[-1].isdigit():
             return False, "Invalid issue URL format"
 
@@ -273,7 +226,7 @@ async def update_issue_status(
             "resolved": ("closed", "resolution:completed"),
             "dismissed": ("closed", "resolution:wont-fix"),
             "in_progress": ("open", "status:in-progress"),
-            "open": ("open", None)
+            "open": ("open", None),
         }
 
         github_state, label = status_map.get(new_status, ("open", None))
@@ -281,7 +234,7 @@ async def update_issue_status(
         headers = {
             "Authorization": f"Bearer {GITHUB_TOKEN}",
             "Accept": "application/vnd.github.v3+json",
-            "X-GitHub-Api-Version": "2022-11-28"
+            "X-GitHub-Api-Version": "2022-11-28",
         }
 
         async with httpx.AsyncClient() as client:
@@ -292,7 +245,7 @@ async def update_issue_status(
                 f"{GITHUB_API_URL}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/issues/{issue_number}",
                 json=update_data,
                 headers=headers,
-                timeout=30.0
+                timeout=30.0,
             )
 
             if response.status_code not in [200, 201]:
@@ -306,7 +259,7 @@ async def update_issue_status(
                     f"{GITHUB_API_URL}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/issues/{issue_number}/labels",
                     json={"labels": [label]},
                     headers=headers,
-                    timeout=30.0
+                    timeout=30.0,
                 )
 
             # Add a comment about the status change
@@ -320,13 +273,10 @@ async def update_issue_status(
                 f"{GITHUB_API_URL}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/issues/{issue_number}/comments",
                 json={"body": comment_body},
                 headers=headers,
-                timeout=30.0
+                timeout=30.0,
             )
 
-            logger.info(
-                f"✅ Updated GitHub issue #{issue_number} to {github_state} "
-                f"for feedback ID {feedback_id}"
-            )
+            logger.info(f"✅ Updated GitHub issue #{issue_number} to {github_state} " f"for feedback ID {feedback_id}")
             return True, None
 
     except Exception as e:

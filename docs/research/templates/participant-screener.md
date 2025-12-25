@@ -18,7 +18,7 @@ This screener helps identify and recruit appropriate participants for usability 
 ☐ Site Reliability Engineer (SRE)
 ☐ QA/Test Engineer
 ☐ Engineering Manager
-☐ Other: __________
+☐ Other: \***\*\_\_\*\***
 
 **2. How long have you been in this role?**
 
@@ -60,7 +60,7 @@ This screener helps identify and recruit appropriate participants for usability 
 ☐ Debugging/troubleshooting
 ☐ Security scanning
 ☐ Documentation
-☐ Other: __________
+☐ Other: \***\*\_\_\*\***
 
 **6. What programming languages or frameworks do you primarily work with? (Select all that apply)**
 
@@ -71,7 +71,7 @@ This screener helps identify and recruit appropriate participants for usability 
 ☐ .NET/C#
 ☐ Ruby/Rails
 ☐ React/Vue/Angular
-☐ Other: __________
+☐ Other: \***\*\_\_\*\***
 
 **Screening**: Ensure representation of major tech stacks used in your organization.
 
@@ -85,12 +85,12 @@ This screener helps identify and recruit appropriate participants for usability 
 
 **If Yes or Maybe, please provide your availability:**
 
-Preferred days: ☐ Mon  ☐ Tue  ☐ Wed  ☐ Thu  ☐ Fri
-Preferred times: ☐ Morning (9-11am)  ☐ Midday (11am-2pm)  ☐ Afternoon (2-5pm)
+Preferred days: ☐ Mon ☐ Tue ☐ Wed ☐ Thu ☐ Fri
+Preferred times: ☐ Morning (9-11am) ☐ Midday (11am-2pm) ☐ Afternoon (2-5pm)
 
-Best way to reach you: __________
-Email: __________
-Mattermost/Slack handle: __________
+Best way to reach you: \***\*\_\_\*\***
+Email: \***\*\_\_\*\***
+Mattermost/Slack handle: \***\*\_\_\*\***
 
 **8. Do you have access to a reliable internet connection and ability to share your screen during a video call?**
 
@@ -125,27 +125,27 @@ Mattermost/Slack handle: __________
 
 **12. What are your biggest pain points or frustrations when using internal development tools or platforms? (Open-ended)**
 
-_______________________________________________
+---
 
-_______________________________________________
+---
 
 **13. What would make your daily work significantly easier? (Open-ended)**
 
-_______________________________________________
+---
 
-_______________________________________________
+---
 
 **14. Is there anything specific you'd like to test or provide feedback on? (Open-ended)**
 
-_______________________________________________
+---
 
-_______________________________________________
+---
 
 **15. Any additional comments or information you'd like to share?**
 
-_______________________________________________
+---
 
-_______________________________________________
+---
 
 ---
 
@@ -154,32 +154,36 @@ _______________________________________________
 ### Target Mix (For 6-8 Participants)
 
 **By Role:**
+
 - 3-4 Application Developers
 - 2-3 Platform/DevOps Engineers
 - 1-2 Others (SRE, QA, managers)
 
 **By Experience:**
+
 - 1-2 Junior (0-2 years)
 - 2-3 Mid-level (3-5 years)
 - 2-3 Senior+ (6+ years)
 
 **By Platform Familiarity:**
+
 - 1-2 New/Occasional users
 - 3-4 Regular users
 - 1-2 Power users
 
 **By Tech Stack:**
+
 - Ensure representation of major stacks (Java, Python, Node.js, etc.)
 - At least 2 different primary languages represented
 
 ### Screening Decision
 
-**Participant ID**: P__
-**Decision**: ☐ Selected  ☐ Waitlist  ☐ Not Selected
+**Participant ID**: P\_\_
+**Decision**: ☐ Selected ☐ Waitlist ☐ Not Selected
 
-**Rationale**: _______________
+**Rationale**: **\*\***\_\_\_**\*\***
 
-**Priority**: ☐ High (fills critical gap in diversity)  ☐ Medium  ☐ Low
+**Priority**: ☐ High (fills critical gap in diversity) ☐ Medium ☐ Low
 
 ---
 

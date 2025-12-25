@@ -10,6 +10,7 @@ import os
 import sys
 from pathlib import Path
 
+
 def check_path_exists(path, path_type="file"):
     """Check if a path exists and is of the expected type."""
     if not path.exists():
@@ -22,6 +23,7 @@ def check_path_exists(path, path_type="file"):
         return False, f"Expected directory but found file: {path}"
 
     return True, f"✓ {path_type.capitalize()} exists: {path}"
+
 
 def validate_structure():
     """Validate the user research repository structure."""
@@ -118,11 +120,11 @@ def validate_structure():
 
     if check:
         # Verify LFS tracking for media files
-        with open(gitattributes, 'r') as f:
+        with open(gitattributes, "r") as f:
             content = f.read()
-            lfs_patterns = ['*.mp4', '*.mp3', '*.mov', '*.wav']
+            lfs_patterns = ["*.mp4", "*.mp3", "*.mov", "*.wav"]
             for pattern in lfs_patterns:
-                if pattern in content and 'filter=lfs' in content:
+                if pattern in content and "filter=lfs" in content:
                     print(f"  ✓ LFS tracking configured for {pattern}")
                 else:
                     error_msg = f"  ✗ LFS tracking not found for {pattern}"
@@ -184,6 +186,7 @@ def validate_structure():
         print("  3. Ensure Git LFS is installed: git lfs install")
         print()
         return True
+
 
 if __name__ == "__main__":
     success = validate_structure()

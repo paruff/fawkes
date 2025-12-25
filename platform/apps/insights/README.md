@@ -35,11 +35,13 @@ kubectl apply -f platform/apps/insights/servicemonitor.yaml
 ### Verify Metrics Collection
 
 1. Check ServiceMonitor is created:
+
    ```bash
    kubectl get servicemonitor -n monitoring insights-metrics
    ```
 
 2. Verify Prometheus is scraping:
+
    ```bash
    kubectl port-forward -n monitoring svc/prometheus-prometheus 9090:9090
    # Navigate to http://localhost:9090/targets
@@ -92,6 +94,7 @@ The Research Insights Dashboard provides comprehensive visualization of these me
 - **ConfigMap**: `platform/apps/prometheus/research-insights-dashboard.yaml`
 
 Access the dashboard in Grafana at:
+
 ```
 http://grafana.127.0.0.1.nip.io/d/research-insights
 ```
@@ -101,18 +104,21 @@ http://grafana.127.0.0.1.nip.io/d/research-insights
 ### Metrics Not Appearing
 
 1. **Check ServiceMonitor**:
+
    ```bash
    kubectl get servicemonitor -n monitoring
    kubectl describe servicemonitor -n monitoring insights-metrics
    ```
 
 2. **Verify Service is Running**:
+
    ```bash
    kubectl get pods -n fawkes-local -l app=insights
    kubectl logs -n fawkes-local -l app=insights
    ```
 
 3. **Test Metrics Endpoint**:
+
    ```bash
    kubectl port-forward -n fawkes-local svc/insights-metrics 8000:8000
    curl http://localhost:8000/metrics
@@ -128,11 +134,13 @@ http://grafana.127.0.0.1.nip.io/d/research-insights
 ### Dashboard Shows No Data
 
 1. **Verify metrics exist in Prometheus**:
+
    - Navigate to Prometheus UI
    - Query: `research_insights_total`
    - Should return a value
 
 2. **Check dashboard time range**:
+
    - Ensure time range includes periods when insights were created
 
 3. **Verify data source**:

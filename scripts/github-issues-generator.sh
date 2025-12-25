@@ -51,16 +51,16 @@ done
 
 # Check if gh is installed
 if ! command -v gh &> /dev/null; then
-    echo -e "${RED}Error: GitHub CLI (gh) is not installed${NC}"
-    echo "Install from: https://cli.github.com/"
-    exit 1
+  echo -e "${RED}Error: GitHub CLI (gh) is not installed${NC}"
+  echo "Install from: https://cli.github.com/"
+  exit 1
 fi
 
 # Check if authenticated
 if ! gh auth status &> /dev/null; then
-    echo -e "${RED}Error: Not authenticated with GitHub CLI${NC}"
-    echo "Run: gh auth login"
-    exit 1
+  echo -e "${RED}Error: Not authenticated with GitHub CLI${NC}"
+  echo "Run: gh auth login"
+  exit 1
 fi
 
 echo -e "${GREEN}=== Fawkes GitHub Issues Generator ===${NC}"
@@ -70,35 +70,35 @@ echo ""
 
 # Function to create issue
 create_issue() {
-    local issue_number=$1
-    local title=$2
-    local body=$3
-    local labels=$4
-    local milestone=$5
+  local issue_number=$1
+  local title=$2
+  local body=$3
+  local labels=$4
+  local milestone=$5
 
-    if [ "$DRY_RUN" = true ]; then
-        echo -e "${YELLOW}[DRY RUN]${NC} Would create: #$issue_number - $title"
-        echo "  Labels: $labels"
-        echo "  Milestone: $milestone"
-        echo ""
-    else
-        echo -e "${GREEN}Creating:${NC} #$issue_number - $title"
-        gh issue create \
-            --repo "$REPO" \
-            --title "$title" \
-            --body "$body" \
-            --label "$labels" \
-            --milestone "$milestone" || echo -e "${RED}Failed to create issue $issue_number${NC}"
-    fi
+  if [ "$DRY_RUN" = true ]; then
+    echo -e "${YELLOW}[DRY RUN]${NC} Would create: #$issue_number - $title"
+    echo "  Labels: $labels"
+    echo "  Milestone: $milestone"
+    echo ""
+  else
+    echo -e "${GREEN}Creating:${NC} #$issue_number - $title"
+    gh issue create \
+      --repo "$REPO" \
+      --title "$title" \
+      --body "$body" \
+      --label "$labels" \
+      --milestone "$milestone" || echo -e "${RED}Failed to create issue $issue_number${NC}"
+  fi
 }
 
 # Function to generate Epic 1 issues
 generate_epic1() {
-    echo -e "${GREEN}=== Generating Epic 1 Issues (DORA 2023 Foundation) ===${NC}"
+  echo -e "${GREEN}=== Generating Epic 1 Issues (DORA 2023 Foundation) ===${NC}"
 
-    # Issue #1: Local K8s Cluster
-    create_issue 1 "Set up 4-node local K8s cluster" \
-"# Issue #1: Set up 4-node local K8s cluster
+  # Issue #1: Local K8s Cluster
+  create_issue 1 "Set up 4-node local K8s cluster" \
+    "# Issue #1: Set up 4-node local K8s cluster
 
 **Epic**: Epic 1 - DORA 2023 Foundation
 **Milestone**: 1.1 - Local Infrastructure
@@ -187,9 +187,9 @@ kubectl get nodes  # Should show 4 Ready nodes
     "epic-1-dora-2023,p0-critical,type-infrastructure,comp-kubernetes,type-ai-agent" \
     "1.1 - Local Infrastructure"
 
-    # Issue #2: Ingress Controller
-    create_issue 2 "Deploy ingress controller (nginx or traefik)" \
-"# Issue #2: Deploy ingress controller
+  # Issue #2: Ingress Controller
+  create_issue 2 "Deploy ingress controller (nginx or traefik)" \
+    "# Issue #2: Deploy ingress controller
 
 **Epic**: Epic 1 - DORA 2023 Foundation
 **Milestone**: 1.1 - Local Infrastructure
@@ -248,9 +248,9 @@ curl http://test.local  # Should return test page
     "epic-1-dora-2023,p0-critical,type-infrastructure,comp-kubernetes,type-ai-agent" \
     "1.1 - Local Infrastructure"
 
-    # Issue #3: Persistent Storage
-    create_issue 3 "Configure persistent storage (StorageClass)" \
-"# Issue #3: Configure persistent storage
+  # Issue #3: Persistent Storage
+  create_issue 3 "Configure persistent storage (StorageClass)" \
+    "# Issue #3: Configure persistent storage
 
 **Epic**: Epic 1 - DORA 2023 Foundation
 **Milestone**: 1.1 - Local Infrastructure
@@ -308,20 +308,20 @@ kubectl get pvc  # Should show Bound
     "epic-1-dora-2023,p0-critical,type-infrastructure,comp-kubernetes,type-ai-agent" \
     "1.1 - Local Infrastructure"
 
-    # Continue with remaining Epic 1 issues...
-    # (Issues #4-38 follow same pattern)
+  # Continue with remaining Epic 1 issues...
+  # (Issues #4-38 follow same pattern)
 
-    echo ""
-    echo -e "${GREEN}Epic 1: Generated issues #1-38${NC}"
+  echo ""
+  echo -e "${GREEN}Epic 1: Generated issues #1-38${NC}"
 }
 
 # Function to generate Epic 2 issues
 generate_epic2() {
-    echo -e "${GREEN}=== Generating Epic 2 Issues (AI & Data Platform) ===${NC}"
+  echo -e "${GREEN}=== Generating Epic 2 Issues (AI & Data Platform) ===${NC}"
 
-    # Issue #39: Vector Database
-    create_issue 39 "Deploy vector database (Weaviate)" \
-"# Issue #39: Deploy vector database
+  # Issue #39: Vector Database
+  create_issue 39 "Deploy vector database (Weaviate)" \
+    "# Issue #39: Deploy vector database
 
 **Epic**: Epic 2 - AI & Data Platform
 **Milestone**: 2.1 - AI Foundation
@@ -382,19 +382,19 @@ python services/rag/scripts/test-indexing.py
     "epic-2-ai-data,p0-critical,type-infrastructure,comp-ai,type-ai-agent" \
     "2.1 - AI Foundation"
 
-    # Continue with remaining Epic 2 issues #40-72...
+  # Continue with remaining Epic 2 issues #40-72...
 
-    echo ""
-    echo -e "${GREEN}Epic 2: Generated issues #39-72${NC}"
+  echo ""
+  echo -e "${GREEN}Epic 2: Generated issues #39-72${NC}"
 }
 
 # Function to generate Epic 3 issues
 generate_epic3() {
-    echo -e "${GREEN}=== Generating Epic 3 Issues (Product Discovery & UX) ===${NC}"
+  echo -e "${GREEN}=== Generating Epic 3 Issues (Product Discovery & UX) ===${NC}"
 
-    # Issue #73: Research Repository
-    create_issue 73 "Deploy research repository in Backstage" \
-"# Issue #73: Deploy research repository in Backstage
+  # Issue #73: Research Repository
+  create_issue 73 "Deploy research repository in Backstage" \
+    "# Issue #73: Deploy research repository in Backstage
 
 **Epic**: Epic 3 - Product Discovery & UX
 **Milestone**: 3.1 - User Research Infrastructure
@@ -453,45 +453,45 @@ curl http://backstage.local/api/catalog/entities?kind=Research
     "epic-3-discovery,p0-critical,type-feature,comp-backstage,type-ai-agent" \
     "3.1 - User Research Infrastructure"
 
-    # Continue with remaining Epic 3 issues #74-108...
+  # Continue with remaining Epic 3 issues #74-108...
 
-    echo ""
-    echo -e "${GREEN}Epic 3: Generated issues #73-108${NC}"
+  echo ""
+  echo -e "${GREEN}Epic 3: Generated issues #73-108${NC}"
 }
 
 # Main execution
 if [ -z "$EPIC" ]; then
-    echo "Generating all issues for all 3 epics..."
-    generate_epic1
-    generate_epic2
-    generate_epic3
-    echo ""
-    echo -e "${GREEN}=== Complete! ===${NC}"
-    echo "Total issues generated: 108"
+  echo "Generating all issues for all 3 epics..."
+  generate_epic1
+  generate_epic2
+  generate_epic3
+  echo ""
+  echo -e "${GREEN}=== Complete! ===${NC}"
+  echo "Total issues generated: 108"
 else
-    case $EPIC in
-        1)
-            generate_epic1
-            ;;
-        2)
-            generate_epic2
-            ;;
-        3)
-            generate_epic3
-            ;;
-        *)
-            echo -e "${RED}Invalid epic number. Use 1, 2, or 3.${NC}"
-            exit 1
-            ;;
-    esac
+  case $EPIC in
+    1)
+      generate_epic1
+      ;;
+    2)
+      generate_epic2
+      ;;
+    3)
+      generate_epic3
+      ;;
+    *)
+      echo -e "${RED}Invalid epic number. Use 1, 2, or 3.${NC}"
+      exit 1
+      ;;
+  esac
 fi
 
 if [ "$DRY_RUN" = false ]; then
-    echo ""
-    echo -e "${GREEN}Issues created successfully!${NC}"
-    echo "View them at: https://github.com/$REPO/issues"
+  echo ""
+  echo -e "${GREEN}Issues created successfully!${NC}"
+  echo "View them at: https://github.com/$REPO/issues"
 else
-    echo ""
-    echo -e "${YELLOW}Dry run complete. No issues were created.${NC}"
-    echo "Remove --dry-run flag to create issues."
+  echo ""
+  echo -e "${YELLOW}Dry run complete. No issues were created.${NC}"
+  echo "Remove --dry-run flag to create issues."
 fi

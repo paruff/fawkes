@@ -8,33 +8,33 @@ This document maps the AT-E1-006 acceptance criteria to the validation tests and
 
 This script performs comprehensive validation of the observability stack deployment.
 
-| Acceptance Criterion | Validation Function | Test Name | Status |
-|---------------------|--------------------|-----------| -------|
-| Prometheus Operator (kube-prometheus-stack) deployed | `validate_prometheus_operator()` | `prometheus_operator` | ✅ Covered |
-| Grafana deployed with pre-configured datasources | `validate_grafana()` | `grafana` | ✅ Covered |
-| ServiceMonitors for all platform components | `validate_servicemonitors()` | `servicemonitors` | ✅ Covered |
-| OpenTelemetry Collector deployed as DaemonSet | `validate_servicemonitors()` | `servicemonitors` (otel-collector-metrics) | ✅ Covered |
-| Grafana dashboards for Kubernetes cluster health | `validate_grafana_ingress()` | `grafana_ingress` | ✅ Covered |
-| Grafana dashboards for DORA metrics (4 key metrics) | BDD feature test | `prometheus-stack-deployment.feature` | ✅ Covered |
-| Grafana dashboards for Platform component health | BDD feature test | `prometheus-stack-deployment.feature` | ✅ Covered |
-| Grafana dashboards for Application metrics | BDD feature test | `prometheus-stack-deployment.feature` | ✅ Covered |
-| Alerting rules configured and firing test alerts | `validate_alertmanager()` | `alertmanager` | ✅ Covered |
-| Log retention policy: 30 days | `validate_prometheus_storage()` | `prometheus_storage` | ✅ Covered |
-| Metrics retention: 90 days | `validate_prometheus_storage()` | `prometheus_storage` | ✅ Covered |
-| Dashboard load time <2 seconds | `tests/integration/grafana-dashboards.sh` | `test_dashboard_load_time()` | ✅ Covered |
+| Acceptance Criterion                                 | Validation Function                       | Test Name                                  | Status     |
+| ---------------------------------------------------- | ----------------------------------------- | ------------------------------------------ | ---------- |
+| Prometheus Operator (kube-prometheus-stack) deployed | `validate_prometheus_operator()`          | `prometheus_operator`                      | ✅ Covered |
+| Grafana deployed with pre-configured datasources     | `validate_grafana()`                      | `grafana`                                  | ✅ Covered |
+| ServiceMonitors for all platform components          | `validate_servicemonitors()`              | `servicemonitors`                          | ✅ Covered |
+| OpenTelemetry Collector deployed as DaemonSet        | `validate_servicemonitors()`              | `servicemonitors` (otel-collector-metrics) | ✅ Covered |
+| Grafana dashboards for Kubernetes cluster health     | `validate_grafana_ingress()`              | `grafana_ingress`                          | ✅ Covered |
+| Grafana dashboards for DORA metrics (4 key metrics)  | BDD feature test                          | `prometheus-stack-deployment.feature`      | ✅ Covered |
+| Grafana dashboards for Platform component health     | BDD feature test                          | `prometheus-stack-deployment.feature`      | ✅ Covered |
+| Grafana dashboards for Application metrics           | BDD feature test                          | `prometheus-stack-deployment.feature`      | ✅ Covered |
+| Alerting rules configured and firing test alerts     | `validate_alertmanager()`                 | `alertmanager`                             | ✅ Covered |
+| Log retention policy: 30 days                        | `validate_prometheus_storage()`           | `prometheus_storage`                       | ✅ Covered |
+| Metrics retention: 90 days                           | `validate_prometheus_storage()`           | `prometheus_storage`                       | ✅ Covered |
+| Dashboard load time <2 seconds                       | `tests/integration/grafana-dashboards.sh` | `test_dashboard_load_time()`               | ✅ Covered |
 
 ### Additional Components Validated
 
-| Component | Validation Function | Test Name | Purpose |
-|-----------|--------------------|-----------| --------|
-| Monitoring namespace | `validate_namespace()` | `namespace_exists` | Ensure namespace exists and is active |
-| ArgoCD Application | `validate_argocd_application()` | `argocd_application` | Ensure GitOps deployment is healthy |
-| Prometheus Server | `validate_prometheus_server()` | `prometheus_server` | Validate StatefulSet is running |
-| Node Exporter | `validate_node_exporter()` | `node_exporter` | DaemonSet on all nodes |
-| Kube State Metrics | `validate_kube_state_metrics()` | `kube_state_metrics` | Cluster metrics collection |
-| Prometheus Ingress | `validate_prometheus_ingress()` | `prometheus_ingress` | External access configured |
-| Resource Limits | `validate_resource_limits()` | `resource_limits` | All components have resource constraints |
-| Pod Health | `validate_pods_health()` | `pods_health` | Overall monitoring namespace health |
+| Component            | Validation Function             | Test Name            | Purpose                                  |
+| -------------------- | ------------------------------- | -------------------- | ---------------------------------------- |
+| Monitoring namespace | `validate_namespace()`          | `namespace_exists`   | Ensure namespace exists and is active    |
+| ArgoCD Application   | `validate_argocd_application()` | `argocd_application` | Ensure GitOps deployment is healthy      |
+| Prometheus Server    | `validate_prometheus_server()`  | `prometheus_server`  | Validate StatefulSet is running          |
+| Node Exporter        | `validate_node_exporter()`      | `node_exporter`      | DaemonSet on all nodes                   |
+| Kube State Metrics   | `validate_kube_state_metrics()` | `kube_state_metrics` | Cluster metrics collection               |
+| Prometheus Ingress   | `validate_prometheus_ingress()` | `prometheus_ingress` | External access configured               |
+| Resource Limits      | `validate_resource_limits()`    | `resource_limits`    | All components have resource constraints |
+| Pod Health           | `validate_pods_health()`        | `pods_health`        | Overall monitoring namespace health      |
 
 ## Integration Tests
 
@@ -43,6 +43,7 @@ This script performs comprehensive validation of the observability stack deploym
 This pytest-based integration test runs the validation script and verifies all acceptance criteria are met.
 
 **Test Methods:**
+
 - `test_validation_script_runs()` - Verifies script executes without crashing
 - `test_validation_report_generated()` - Ensures JSON report is created
 - `test_all_acceptance_criteria_pass()` - Overall pass/fail validation
@@ -62,6 +63,7 @@ This pytest-based integration test runs the validation script and verifies all a
 - `test_pods_health()` - Overall pod health
 
 **Usage:**
+
 ```bash
 # Run all tests
 pytest tests/integration/test_at_e1_006_validation.py -v
@@ -80,12 +82,14 @@ pytest tests/integration/test_at_e1_006_validation.py -v --namespace monitoring
 Validates Prometheus metrics collection via API queries.
 
 **Tests:**
+
 - Prometheus health endpoint responding
 - Active scrape targets configured
 - `up` metric availability
 - DORA metrics collection (optional)
 
 **Usage:**
+
 ```bash
 ./tests/integration/prometheus-metrics.sh
 ./tests/integration/prometheus-metrics.sh http://prometheus.custom.domain
@@ -96,6 +100,7 @@ Validates Prometheus metrics collection via API queries.
 Validates Grafana dashboards via API.
 
 **Tests:**
+
 - Grafana health endpoint responding
 - Organization configured
 - Datasources configured (Prometheus)
@@ -103,6 +108,7 @@ Validates Grafana dashboards via API.
 - Dashboard load time (<2 seconds)
 
 **Usage:**
+
 ```bash
 ./tests/integration/grafana-dashboards.sh
 ./tests/integration/grafana-dashboards.sh http://grafana.custom.domain
@@ -115,6 +121,7 @@ Validates Grafana dashboards via API.
 Comprehensive BDD tests covering all observability stack scenarios.
 
 **Key Scenarios:**
+
 - Prometheus deployed in monitoring namespace
 - Prometheus ArgoCD Application exists and is healthy
 - Prometheus Operator pods are running
@@ -137,6 +144,7 @@ Comprehensive BDD tests covering all observability stack scenarios.
 - Remote write for OpenTelemetry
 
 **Usage:**
+
 ```bash
 behave tests/bdd/features/prometheus-stack-deployment.feature
 ```
@@ -146,6 +154,7 @@ behave tests/bdd/features/prometheus-stack-deployment.feature
 Tests OpenTelemetry Collector deployment as part of observability stack.
 
 **Key Scenarios:**
+
 - OpenTelemetry deployed in monitoring namespace
 - OpenTelemetry ArgoCD Application healthy
 - Collector deployed as DaemonSet
@@ -159,6 +168,7 @@ Tests OpenTelemetry Collector deployment as part of observability stack.
 - Security context configured
 
 **Usage:**
+
 ```bash
 behave tests/bdd/features/opentelemetry-deployment.feature
 ```
@@ -168,6 +178,7 @@ behave tests/bdd/features/opentelemetry-deployment.feature
 Tests centralized logging with OpenTelemetry (part of observability).
 
 **Key Scenarios:**
+
 - Log forwarding to OpenSearch
 - Kubernetes context enrichment
 - Trace correlation
@@ -177,6 +188,7 @@ Tests centralized logging with OpenTelemetry (part of observability).
 - Multi-tenancy isolation
 
 **Usage:**
+
 ```bash
 behave tests/bdd/features/centralized-logging.feature
 ```
@@ -199,6 +211,7 @@ promtool check rules platform/apps/prometheus/rules/*.yaml
 ## Running All Validations
 
 ### Quick Start
+
 ```bash
 # Run primary validation (recommended)
 make validate-at-e1-006
@@ -208,6 +221,7 @@ make validate-at-e1-006
 ```
 
 ### Comprehensive Validation
+
 ```bash
 # 1. Run primary validation script
 ./scripts/validate-at-e1-006.sh --namespace monitoring --argocd-namespace fawkes --verbose
@@ -246,7 +260,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install dependencies
         run: pip install -r requirements-dev.txt
@@ -309,6 +323,7 @@ AT-E1-006 is considered **PASSED** when:
 ## Dependencies
 
 This test depends on the following issues being completed:
+
 - **paruff/fawkes#24** - Infrastructure setup
 - **paruff/fawkes#25** - GitOps/ArgoCD deployment
 - **paruff/fawkes#26** - Prometheus Operator deployment
@@ -319,6 +334,7 @@ All dependencies must be satisfied before AT-E1-006 validation can pass.
 ## Troubleshooting
 
 See `tests/integration/README.md` for detailed troubleshooting steps for:
+
 - Validation script failures
 - Missing namespaces
 - ArgoCD Application issues

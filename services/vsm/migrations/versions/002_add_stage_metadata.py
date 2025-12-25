@@ -12,25 +12,26 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '002'
-down_revision: Union[str, None] = '001'
+revision: str = "002"
+down_revision: Union[str, None] = "001"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
     # Create StageCategory enum type
-    stage_category_enum = sa.Enum('wait', 'active', 'done', name='stagecategory')
+    stage_category_enum = sa.Enum("wait", "active", "done", name="stagecategory")
     stage_category_enum.create(op.get_bind(), checkfirst=True)
 
     # Add new columns to stages table
-    op.add_column('stages', sa.Column('category', stage_category_enum, nullable=True))
-    op.add_column('stages', sa.Column('wip_limit', sa.Integer(), nullable=True))
-    op.add_column('stages', sa.Column('description', sa.String(length=1000), nullable=True))
+    op.add_column("stages", sa.Column("category", stage_category_enum, nullable=True))
+    op.add_column("stages", sa.Column("wip_limit", sa.Integer(), nullable=True))
+    op.add_column("stages", sa.Column("description", sa.String(length=1000), nullable=True))
 
     # Update existing stages with category and descriptions based on type
     # Note: This maps the old StageType to the new StageCategory
-    op.execute("""
+    op.execute(
+        """
         UPDATE stages SET
             category = CASE
                 WHEN name = 'Backlog' THEN 'wait'
@@ -60,15 +61,16 @@ def upgrade() -> None:
                 ELSE 'Value stream stage'
             END
         WHERE name IN ('Backlog', 'Analysis', 'Development', 'Testing', 'Deployment', 'Production');
-    """)
+    """
+    )
 
 
 def downgrade() -> None:
     # Remove columns
-    op.drop_column('stages', 'description')
-    op.drop_column('stages', 'wip_limit')
-    op.drop_column('stages', 'category')
+    op.drop_column("stages", "description")
+    op.drop_column("stages", "wip_limit")
+    op.drop_column("stages", "category")
 
     # Drop enum type
-    stage_category_enum = sa.Enum('wait', 'active', 'done', name='stagecategory')
+    stage_category_enum = sa.Enum("wait", "active", "done", name="stagecategory")
     stage_category_enum.drop(op.get_bind(), checkfirst=True)

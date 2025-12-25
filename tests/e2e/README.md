@@ -11,12 +11,14 @@ The E2E tests validate the complete platform workflow from service scaffolding t
 ### Core Test Scripts
 
 - **`run-e2e-integration-test.sh`** - Main E2E test orchestration script
+
   - 12 test phases validating complete platform
   - Automated report generation
   - Multiple execution modes (standard, verbose, dry-run)
   - See `./run-e2e-integration-test.sh --help` for options
 
 - **`argocd-sync-test.sh`** - ArgoCD-specific E2E sync tests
+
   - Tests GitOps sync workflow
   - Validates application health
   - See `./argocd-sync-test.sh --help` for options
@@ -93,6 +95,7 @@ test-reports/e2e/
 ```
 
 Each report includes:
+
 - Test execution summary
 - Component health status
 - Integration validation results
@@ -299,6 +302,7 @@ Please review the failed tests above and check component health.
 **Issue**: Cannot access Kubernetes cluster
 
 **Solution**:
+
 ```bash
 # Check cluster access
 kubectl cluster-info
@@ -313,6 +317,7 @@ kubectl get nodes
 **Issue**: Component reported as unhealthy
 
 **Solution**:
+
 ```bash
 # Check pod status
 kubectl get pods -n fawkes
@@ -329,6 +334,7 @@ kubectl get events -n fawkes --sort-by='.lastTimestamp'
 **Issue**: Tests exceed timeout limit
 
 **Solution**:
+
 ```bash
 # Increase timeout
 ./run-e2e-integration-test.sh --timeout 1800

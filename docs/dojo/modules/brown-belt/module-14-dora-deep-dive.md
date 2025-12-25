@@ -7,6 +7,7 @@
 **Duration**: 60 minutes
 **Difficulty**: Advanced
 **Prerequisites**:
+
 - Module 2: DORA Metrics (White Belt) review recommended
 - Module 13: Observability complete
 - Understanding of Prometheus and Grafana
@@ -27,6 +28,7 @@ By the end of this module, you will:
 7. ✅ Present DORA metrics to leadership effectively
 
 **DORA Capabilities Addressed**:
+
 - ✓ All 4 Key Metrics (Deployment Frequency, Lead Time, MTTR, Change Failure Rate)
 - ✓ Monitoring and Observability
 - ✓ Data-Driven Decision Making
@@ -37,16 +39,17 @@ By the end of this module, you will:
 
 ### The Four Key Metrics (Refresher)
 
-| Metric | What It Measures | Elite Performance |
-|--------|------------------|-------------------|
-| **Deployment Frequency** | How often you deploy | Multiple per day |
-| **Lead Time for Changes** | Commit → Production time | < 1 hour |
-| **Change Failure Rate** | % of deployments causing failures | 0-15% |
-| **Mean Time to Restore** | Time to recover from failure | < 1 hour |
+| Metric                    | What It Measures                  | Elite Performance |
+| ------------------------- | --------------------------------- | ----------------- |
+| **Deployment Frequency**  | How often you deploy              | Multiple per day  |
+| **Lead Time for Changes** | Commit → Production time          | < 1 hour          |
+| **Change Failure Rate**   | % of deployments causing failures | 0-15%             |
+| **Mean Time to Restore**  | Time to recover from failure      | < 1 hour          |
 
 ### Why These Four?
 
 Research shows these metrics are:
+
 - **Predictive** of organizational performance
 - **Balanced** between speed (DF, LT) and stability (CFR, MTTR)
 - **Actionable** - teams can directly improve them
@@ -79,11 +82,13 @@ Better MTTR (easier to identify issues)
 **3. Metric Distributions Matter**
 
 Don't just track averages:
+
 - **P50 (Median)**: Typical case
 - **P95**: Worst 5% of cases
 - **P99**: Outliers that hurt user experience
 
 **Example**:
+
 ```
 Lead Time:
 - Average: 2 hours
@@ -100,6 +105,7 @@ Lead Time:
 **Definition**: Number of deployments per time period
 
 **Calculation**:
+
 ```
 Deployment Frequency = Total Deployments / Time Period
 
@@ -109,12 +115,14 @@ Example:
 ```
 
 **Data Sources**:
+
 - ArgoCD sync events
 - GitOps repository commits
 - CI/CD pipeline completions
 - Kubernetes deployment events
 
 **Prometheus Query**:
+
 ```promql
 # Count deployments per day
 sum(increase(argocd_app_sync_total{phase="Succeeded"}[1d]))
@@ -128,6 +136,7 @@ sum(rate(argocd_app_sync_total{phase="Succeeded"}[7d])) by (name) * 86400
 **Definition**: Time from code commit to running in production
 
 **Calculation**:
+
 ```
 Lead Time = Production Deployment Time - Commit Time
 
@@ -138,6 +147,7 @@ Example:
 ```
 
 **Components**:
+
 ```
 Total Lead Time =
     Code Review Time +
@@ -150,6 +160,7 @@ Total Lead Time =
 ```
 
 **Data Collection**:
+
 ```python
 # Webhook receiver for Git commits
 @app.route('/webhook/commit', methods=['POST'])
@@ -179,6 +190,7 @@ def record_deployment():
 ```
 
 **Prometheus Query**:
+
 ```promql
 # Average lead time (seconds)
 avg(deployment_lead_time_seconds)
@@ -195,6 +207,7 @@ avg(deployment_lead_time_seconds) by (team)
 **Definition**: Percentage of deployments that result in failure
 
 **Calculation**:
+
 ```
 CFR = (Failed Deployments / Total Deployments) × 100
 
@@ -205,12 +218,14 @@ Example:
 ```
 
 **Defining "Failure"**:
+
 - Deployment rollback within 24 hours
 - Incident created within 24 hours of deployment
 - Deployment marked as failed in ArgoCD
 - Health checks fail post-deployment
 
 **Data Collection**:
+
 ```python
 def calculate_change_failure_rate(timeframe_hours=24):
     """
@@ -243,6 +258,7 @@ def calculate_change_failure_rate(timeframe_hours=24):
 ```
 
 **Prometheus Query**:
+
 ```promql
 # Change Failure Rate (%)
 sum(deployment_result{status="failed"}) / sum(deployment_result) * 100
@@ -259,6 +275,7 @@ sum(rate(deployment_result{status="failed"}[7d])) / sum(rate(deployment_result[7
 **Definition**: Average time to recover from a production failure
 
 **Calculation**:
+
 ```
 MTTR = Total Downtime / Number of Incidents
 
@@ -269,6 +286,7 @@ Example:
 ```
 
 **Data Collection**:
+
 ```python
 # Incident lifecycle tracking
 class Incident:
@@ -297,6 +315,7 @@ class Incident:
 ```
 
 **Prometheus Query**:
+
 ```promql
 # Average MTTR (seconds)
 avg(incident_duration_seconds)
@@ -364,112 +383,124 @@ avg_over_time(incident_duration_seconds[7d])
         "id": 1,
         "title": "Deployment Frequency (per day)",
         "type": "stat",
-        "targets": [{
-          "expr": "sum(rate(argocd_app_sync_total{phase='Succeeded'}[7d])) * 86400",
-          "legendFormat": "Deployments/Day"
-        }],
+        "targets": [
+          {
+            "expr": "sum(rate(argocd_app_sync_total{phase='Succeeded'}[7d])) * 86400",
+            "legendFormat": "Deployments/Day"
+          }
+        ],
         "fieldConfig": {
           "defaults": {
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"value": 0, "color": "red"},
-                {"value": 0.1, "color": "yellow"},
-                {"value": 1, "color": "green"}
+                { "value": 0, "color": "red" },
+                { "value": 0.1, "color": "yellow" },
+                { "value": 1, "color": "green" }
               ]
             },
             "mappings": [],
             "unit": "short"
           }
         },
-        "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0}
+        "gridPos": { "h": 8, "w": 6, "x": 0, "y": 0 }
       },
       {
         "id": 2,
         "title": "Lead Time for Changes (P95)",
         "type": "stat",
-        "targets": [{
-          "expr": "histogram_quantile(0.95, sum(rate(deployment_lead_time_seconds_bucket[7d])) by (le)) / 3600",
-          "legendFormat": "P95 Hours"
-        }],
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(deployment_lead_time_seconds_bucket[7d])) by (le)) / 3600",
+            "legendFormat": "P95 Hours"
+          }
+        ],
         "fieldConfig": {
           "defaults": {
             "thresholds": {
               "steps": [
-                {"value": 0, "color": "green"},
-                {"value": 1, "color": "yellow"},
-                {"value": 24, "color": "red"}
+                { "value": 0, "color": "green" },
+                { "value": 1, "color": "yellow" },
+                { "value": 24, "color": "red" }
               ]
             },
             "unit": "h"
           }
         },
-        "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0}
+        "gridPos": { "h": 8, "w": 6, "x": 6, "y": 0 }
       },
       {
         "id": 3,
         "title": "Change Failure Rate",
         "type": "gauge",
-        "targets": [{
-          "expr": "sum(rate(deployment_result{status='failed'}[7d])) / sum(rate(deployment_result[7d])) * 100"
-        }],
+        "targets": [
+          {
+            "expr": "sum(rate(deployment_result{status='failed'}[7d])) / sum(rate(deployment_result[7d])) * 100"
+          }
+        ],
         "fieldConfig": {
           "defaults": {
             "thresholds": {
               "steps": [
-                {"value": 0, "color": "green"},
-                {"value": 15, "color": "yellow"},
-                {"value": 30, "color": "red"}
+                { "value": 0, "color": "green" },
+                { "value": 15, "color": "yellow" },
+                { "value": 30, "color": "red" }
               ]
             },
             "max": 100,
             "unit": "percent"
           }
         },
-        "gridPos": {"h": 8, "w": 6, "x": 12, "y": 0}
+        "gridPos": { "h": 8, "w": 6, "x": 12, "y": 0 }
       },
       {
         "id": 4,
         "title": "Mean Time to Restore",
         "type": "stat",
-        "targets": [{
-          "expr": "avg(incident_duration_seconds) / 60",
-          "legendFormat": "Avg Minutes"
-        }],
+        "targets": [
+          {
+            "expr": "avg(incident_duration_seconds) / 60",
+            "legendFormat": "Avg Minutes"
+          }
+        ],
         "fieldConfig": {
           "defaults": {
             "thresholds": {
               "steps": [
-                {"value": 0, "color": "green"},
-                {"value": 60, "color": "yellow"},
-                {"value": 1440, "color": "red"}
+                { "value": 0, "color": "green" },
+                { "value": 60, "color": "yellow" },
+                { "value": 1440, "color": "red" }
               ]
             },
             "unit": "m"
           }
         },
-        "gridPos": {"h": 8, "w": 6, "x": 18, "y": 0}
+        "gridPos": { "h": 8, "w": 6, "x": 18, "y": 0 }
       },
       {
         "id": 5,
         "title": "Deployment Frequency Trend",
         "type": "graph",
-        "targets": [{
-          "expr": "sum(rate(argocd_app_sync_total{phase='Succeeded'}[1d])) by (name) * 86400",
-          "legendFormat": "{{name}}"
-        }],
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+        "targets": [
+          {
+            "expr": "sum(rate(argocd_app_sync_total{phase='Succeeded'}[1d])) by (name) * 86400",
+            "legendFormat": "{{name}}"
+          }
+        ],
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 }
       },
       {
         "id": 6,
         "title": "Lead Time Distribution",
         "type": "heatmap",
-        "targets": [{
-          "expr": "sum(increase(deployment_lead_time_seconds_bucket[1h])) by (le)",
-          "format": "heatmap",
-          "legendFormat": "{{le}}"
-        }],
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+        "targets": [
+          {
+            "expr": "sum(increase(deployment_lead_time_seconds_bucket[1h])) by (le)",
+            "format": "heatmap",
+            "legendFormat": "{{le}}"
+          }
+        ],
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 }
       }
     ]
   }
@@ -505,28 +536,28 @@ spec:
         app: dora-collector
     spec:
       containers:
-      - name: collector
-        image: fawkes/dora-collector:v1.0
-        ports:
-        - containerPort: 8080
-          name: http
-        - containerPort: 9090
-          name: metrics
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: dora-db-credentials
-              key: url
-        - name: PROMETHEUS_URL
-          value: "http://prometheus:9090"
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
+        - name: collector
+          image: fawkes/dora-collector:v1.0
+          ports:
+            - containerPort: 8080
+              name: http
+            - containerPort: 9090
+              name: metrics
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: dora-db-credentials
+                  key: url
+            - name: PROMETHEUS_URL
+              value: "http://prometheus:9090"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
 ---
 apiVersion: v1
 kind: Service
@@ -537,12 +568,12 @@ spec:
   selector:
     app: dora-collector
   ports:
-  - name: http
-    port: 80
-    targetPort: 8080
-  - name: metrics
-    port: 9090
-    targetPort: 9090
+    - name: http
+      port: 80
+      targetPort: 8080
+    - name: metrics
+      port: 9090
+      targetPort: 9090
 ---
 apiVersion: monitoring.coreos.io/v1
 kind: ServiceMonitor
@@ -554,8 +585,8 @@ spec:
     matchLabels:
       app: dora-collector
   endpoints:
-  - port: metrics
-    interval: 30s
+    - port: metrics
+      interval: 30s
 ```
 
 ### Step 2: Configure Webhooks
@@ -674,6 +705,7 @@ Access Grafana dashboard and analyze:
 ### Trend Analysis
 
 **Week-over-week comparison**:
+
 ```promql
 # Current week deployment frequency
 sum(rate(argocd_app_sync_total{phase="Succeeded"}[7d])) * 86400
@@ -719,6 +751,7 @@ print(f"P-value: {p_value:.4f}")
 ### Identifying Bottlenecks
 
 **Lead time breakdown**:
+
 ```promql
 # Time in each stage
 sum(ci_stage_duration_seconds{stage="build"}) by (app)
@@ -728,6 +761,7 @@ sum(ci_stage_duration_seconds{stage="deploy"}) by (app)
 ```
 
 Create waterfall chart to visualize:
+
 ```
 Commit → Build (3m) → Test (5m) → Scan (2m) → Deploy (1m) = 11m total
          ████████    ████████████  ████        ██
@@ -743,6 +777,7 @@ Action: Parallelize tests or optimize slow tests
 ### Improvement Framework
 
 **1. Measure Current State**
+
 ```
 Current Performance (Last 30 days):
 - DF: 3 per day (High)
@@ -754,6 +789,7 @@ Overall: High Performer
 ```
 
 **2. Set Targets**
+
 ```
 3-Month Goals:
 - DF: 5 per day (Elite) - ↑67%
@@ -763,6 +799,7 @@ Overall: High Performer
 ```
 
 **3. Identify Bottlenecks**
+
 ```
 Lead Time Breakdown:
 - Code Review: 45 min (38%)
@@ -774,6 +811,7 @@ Biggest opportunity: Code Review (38% of lead time)
 ```
 
 **4. Implement Changes**
+
 ```
 Actions:
 1. Reduce PR size (enforce <300 lines)
@@ -786,6 +824,7 @@ New Lead Time: 1h 5min → Target not quite met, but significant progress
 ```
 
 **5. Measure Impact**
+
 ```
 After 30 days:
 - DF: 4.5 per day ✅ (On track)
@@ -803,42 +842,49 @@ Continue iteration...
 ### Quiz Questions
 
 1. **What does P95 lead time represent?**
+
    - [ ] Average lead time
    - [ ] Fastest lead time
    - [x] 95% of deployments complete within this time
    - [ ] Slowest lead time
 
 2. **How do you calculate Change Failure Rate?**
+
    - [ ] Failed deployments × 100
    - [x] (Failed deployments / Total deployments) × 100
    - [ ] Total deployments / Failed deployments
    - [ ] Failed deployments / Successful deployments
 
 3. **What's the Elite benchmark for Deployment Frequency?**
+
    - [ ] Once per week
    - [ ] Once per day
    - [x] Multiple times per day
    - [ ] Continuous deployment
 
 4. **What should MTTR measure?**
+
    - [ ] Time to write code
    - [ ] Time to test
    - [x] Time to restore service after incident
    - [ ] Time to deploy
 
 5. **Why track team-level DORA metrics separately?**
+
    - [ ] To rank teams
    - [x] To identify improvement opportunities specific to each team
    - [ ] To punish low performers
    - [ ] It's not necessary
 
 6. **What does high DF + low CFR indicate?**
+
    - [ ] Luck
    - [x] Mature CI/CD with good quality gates
    - [ ] Metrics are broken
    - [ ] Too much testing
 
 7. **How often should you review DORA metrics?**
+
    - [ ] Annually
    - [ ] When problems occur
    - [x] Weekly or monthly for trends
@@ -882,6 +928,7 @@ Continue iteration...
 ### Real-World Impact
 
 "After implementing comprehensive DORA tracking:
+
 - **Identified bottleneck**: Code review was 40% of lead time
 - **Action**: Reduced PR size, added auto-approval for trivial changes
 - **Result**: Lead time decreased 35% in 60 days
@@ -889,18 +936,21 @@ Continue iteration...
 - **Culture**: Teams compete (healthily) to improve metrics
 
 Metrics transformed from vanity to value."
-- *Engineering Director, Tech Company*
+
+- _Engineering Director, Tech Company_
 
 ---
 
 ## 📚 Additional Resources
 
 ### Tools
+
 - [Four Keys](https://github.com/dora-team/fourkeys) - DORA metrics collection
 - [Sleuth](https://www.sleuth.io/) - DORA tracking SaaS
 - [LinearB](https://linearb.io/) - Engineering intelligence
 
 ### Reading
+
 - [DORA State of DevOps Reports](https://dora.dev/research/)
 - [Accelerate](https://itrevolution.com/accelerate-book/) - The research behind DORA
 - [DORA Metrics Guide](https://cloud.google.com/blog/products/devops-sre/using-the-four-keys-to-measure-your-devops-performance)
@@ -912,6 +962,7 @@ Metrics transformed from vanity to value."
 ### Assessment Checklist
 
 - [ ] **Conceptual Understanding**
+
   - [ ] Calculate all 4 metrics correctly
   - [ ] Understand P50/P95/P99 distributions
   - [ ] Explain metric correlations

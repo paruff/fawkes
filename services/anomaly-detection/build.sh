@@ -12,7 +12,7 @@ REGISTRY="${REGISTRY:-}"
 
 FULL_IMAGE="${IMAGE_NAME}:${IMAGE_TAG}"
 if [ -n "$REGISTRY" ]; then
-    FULL_IMAGE="${REGISTRY}/${FULL_IMAGE}"
+  FULL_IMAGE="${REGISTRY}/${FULL_IMAGE}"
 fi
 
 echo "Image: $FULL_IMAGE"
@@ -25,9 +25,9 @@ echo "✅ Build complete: $FULL_IMAGE"
 
 # Optional: Push to registry
 if [ "$PUSH" = "true" ] && [ -n "$REGISTRY" ]; then
-    echo "📤 Pushing to registry..."
-    docker push "$FULL_IMAGE"
-    echo "✅ Push complete"
+  echo "📤 Pushing to registry..."
+  docker push "$FULL_IMAGE"
+  echo "✅ Push complete"
 fi
 
 echo ""

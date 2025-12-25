@@ -51,12 +51,12 @@ Check real-time stats in Plausible dashboard.
 
 ```javascript
 // In your application
-plausible('Deploy Application', {
+plausible("Deploy Application", {
   props: {
-    language: 'nodejs',
-    template: 'express'
-  }
-})
+    language: "nodejs",
+    template: "express",
+  },
+});
 ```
 
 ## Next Steps

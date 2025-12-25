@@ -34,23 +34,27 @@ Quick reference checklist for setup, recording, and post-production.
 This 30-minute demo walkthrough demonstrates:
 
 ### 🎯 Introduction & Overview (3 min)
+
 - Epic 3 philosophy and approach
 - Product discovery value proposition
 - Key deliverables overview
 
 ### 👥 User Research Infrastructure (4 min)
+
 - Research repository structure
 - Persona examples and creation process
 - Journey mapping methodology
 - How research informs product decisions
 
 ### 📊 SPACE Framework & DevEx (5 min)
+
 - Introduction to SPACE metrics
 - Dashboard walkthrough (all 5 dimensions)
 - SPACE metrics API demonstration
 - Friction logging and cognitive load assessment
 
 ### 💬 Multi-Channel Feedback System (5 min)
+
 - Backstage widget demonstration
 - CLI tool usage
 - Mattermost bot interaction
@@ -58,6 +62,7 @@ This 30-minute demo walkthrough demonstrates:
 - Feedback analytics dashboard
 
 ### 🎨 Design System & Storybook (4.5 min)
+
 - Component library overview
 - Storybook features and navigation
 - Design tokens and consistency
@@ -65,6 +70,7 @@ This 30-minute demo walkthrough demonstrates:
 - Using the design system in applications
 
 ### 📈 Product Analytics & Feature Flags (4 min)
+
 - Product analytics dashboard and insights
 - Event tracking implementation
 - Unleash feature flags demonstration
@@ -72,12 +78,14 @@ This 30-minute demo walkthrough demonstrates:
 - A/B testing capabilities
 
 ### 🔄 Continuous Discovery Process (3 min)
+
 - Weekly discovery cadence
 - Customer advisory board
 - Real example: insight to feature
 - Research operations workflow
 
 ### 🎬 Wrap-Up & Takeaways (1.5 min)
+
 - Summary of Epic 3 value
 - Key differentiators
 - Documentation resources
@@ -112,16 +120,16 @@ To get the most from this video, basic familiarity with:
 
 Use these timestamps to jump to specific sections (once video is published):
 
-| Timestamp | Segment | Topics |
-|-----------|---------|--------|
-| 0:00 | Introduction | Epic 3 overview, deliverables |
-| 3:00 | User Research | Personas, journey maps, research repo |
-| 7:00 | SPACE Framework | DevEx measurement, metrics dashboard, API |
-| 12:00 | Feedback System | 4 channels, bot, CLI, widget, analytics |
-| 17:00 | Design System | Storybook, components, accessibility |
-| 21:30 | Analytics & Flags | Usage tracking, Unleash, experimentation |
-| 25:30 | Discovery Process | Weekly cadence, advisory board, examples |
-| 28:30 | Wrap-Up | Summary, takeaways, resources |
+| Timestamp | Segment           | Topics                                    |
+| --------- | ----------------- | ----------------------------------------- |
+| 0:00      | Introduction      | Epic 3 overview, deliverables             |
+| 3:00      | User Research     | Personas, journey maps, research repo     |
+| 7:00      | SPACE Framework   | DevEx measurement, metrics dashboard, API |
+| 12:00     | Feedback System   | 4 channels, bot, CLI, widget, analytics   |
+| 17:00     | Design System     | Storybook, components, accessibility      |
+| 21:30     | Analytics & Flags | Usage tracking, Unleash, experimentation  |
+| 25:30     | Discovery Process | Weekly cadence, advisory board, examples  |
+| 28:30     | Wrap-Up           | Summary, takeaways, resources             |
 
 ## Transcripts
 
@@ -152,23 +160,28 @@ Once recorded, technical specifications:
 Dive deeper into Epic 3 components:
 
 **Runbooks & Operations:**
+
 - [Epic 3 Operations Runbook](../../runbooks/epic-3-product-discovery-operations.md) - Operational procedures
 - [Epic 3 Architecture Diagrams](../../runbooks/epic-3-architecture-diagrams.md) - System architecture
 
 **API References:**
+
 - [Epic 3 API Reference](../../reference/api/epic-3-product-discovery-apis.md) - Complete API documentation
 
 **Validation Documents:**
+
 - [AT-E3-002: SPACE Framework](../../validation/AT-E3-002-IMPLEMENTATION.md) - SPACE metrics validation
 - [AT-E3-003: Feedback System](../../validation/AT-E3-003-IMPLEMENTATION.md) - Feedback system validation
 - [AT-E3-004/005/009: Design System](../../validation/AT-E3-004-005-009-IMPLEMENTATION.md) - Design system validation
 
 **User Research:**
+
 - [Journey Maps](../../research/journey-maps/) - 5 key user journeys
 - [Personas](../../research/personas/) - User persona library
 - [Research Templates](../../research/templates/) - Guides and templates
 
 **How-To Guides:**
+
 - [Product Analytics Quickstart](../../how-to/product-analytics-quickstart.md)
 - [Deploy Design System Storybook](../../how-to/deploy-design-system-storybook.md)
 - [Run Advisory Board Meetings](../../how-to/run-advisory-board-meetings.md)
@@ -196,6 +209,7 @@ Feel free to share this video with:
 This documentation was last updated: **December 2024**
 
 Check back for:
+
 - Video publication announcement
 - Updated links to video platforms
 - Viewer feedback and FAQ section
@@ -208,6 +222,7 @@ Check back for:
 Want to contribute to recording or updating this video?
 
 Contact:
+
 - **Platform Team**: #platform-team on Mattermost
 - **Product Team**: #product-team on Mattermost
 - **Video Production**: For technical recording assistance

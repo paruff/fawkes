@@ -15,12 +15,7 @@ def test_health_check(client):
 
 def test_create_tag(client):
     """Test creating a tag."""
-    tag_data = {
-        "name": "Test Tag",
-        "slug": "test-tag",
-        "description": "Test description",
-        "color": "#10B981"
-    }
+    tag_data = {"name": "Test Tag", "slug": "test-tag", "description": "Test description", "color": "#10B981"}
     response = client.post("/tags", json=tag_data)
     assert response.status_code == status.HTTP_201_CREATED
     data = response.json()
@@ -73,7 +68,7 @@ def test_create_category(client):
         "slug": "test-category",
         "description": "Test description",
         "color": "#3B82F6",
-        "icon": "test"
+        "icon": "test",
     }
     response = client.post("/categories", json=category_data)
     assert response.status_code == status.HTTP_201_CREATED
@@ -111,7 +106,7 @@ def test_create_insight(client, sample_category, sample_tag):
         "category_id": sample_category.id,
         "priority": "high",
         "status": "published",
-        "tag_ids": [sample_tag.id]
+        "tag_ids": [sample_tag.id],
     }
     response = client.post("/insights", json=insight_data)
     assert response.status_code == status.HTTP_201_CREATED
@@ -133,13 +128,7 @@ def test_list_insights(client, sample_insight):
 
 def test_list_insights_with_filters(client, sample_insight):
     """Test listing insights with filters."""
-    response = client.get(
-        "/insights",
-        params={
-            "status": "draft",
-            "priority": "medium"
-        }
-    )
+    response = client.get("/insights", params={"status": "draft", "priority": "medium"})
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
     assert "insights" in data
@@ -159,10 +148,7 @@ def test_get_insight(client, sample_insight):
 
 def test_update_insight(client, sample_insight):
     """Test updating an insight."""
-    update_data = {
-        "title": "Updated Title",
-        "priority": "high"
-    }
+    update_data = {"title": "Updated Title", "priority": "high"}
     response = client.put(f"/insights/{sample_insight.id}", json=update_data)
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
@@ -182,11 +168,7 @@ def test_delete_insight(client, sample_insight):
 
 def test_search_insights(client, sample_insight):
     """Test searching insights."""
-    search_data = {
-        "query": "Test",
-        "page": 1,
-        "page_size": 20
-    }
+    search_data = {"query": "Test", "page": 1, "page_size": 20}
     response = client.post("/insights/search", json=search_data)
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
@@ -196,13 +178,7 @@ def test_search_insights(client, sample_insight):
 
 def test_search_insights_with_filters(client, sample_insight, sample_category):
     """Test searching insights with filters."""
-    search_data = {
-        "query": "Test",
-        "category_id": sample_category.id,
-        "status": "draft",
-        "page": 1,
-        "page_size": 20
-    }
+    search_data = {"query": "Test", "category_id": sample_category.id, "status": "draft", "page": 1, "page_size": 20}
     response = client.post("/insights/search", json=search_data)
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
@@ -238,7 +214,7 @@ def test_tag_usage_count_increment(client, sample_category, sample_tag):
         "category_id": sample_category.id,
         "priority": "medium",
         "status": "draft",
-        "tag_ids": [sample_tag.id]
+        "tag_ids": [sample_tag.id],
     }
     client.post("/insights", json=insight_data)
 
@@ -283,7 +259,7 @@ def test_pagination(client, sample_category):
             "author": "test-author",
             "category_id": sample_category.id,
             "priority": "medium",
-            "status": "draft"
+            "status": "draft",
         }
         client.post("/insights", json=insight_data)
 
@@ -298,20 +274,14 @@ def test_pagination(client, sample_category):
 
 def test_invalid_tag_creation(client):
     """Test creating a tag with invalid data."""
-    invalid_data = {
-        "name": "",  # Empty name
-        "slug": "test"
-    }
+    invalid_data = {"name": "", "slug": "test"}  # Empty name
     response = client.post("/tags", json=invalid_data)
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
 
 def test_duplicate_tag_creation(client, sample_tag):
     """Test creating a duplicate tag."""
-    duplicate_data = {
-        "name": sample_tag.name,
-        "slug": "different-slug"
-    }
+    duplicate_data = {"name": sample_tag.name, "slug": "different-slug"}
     response = client.post("/tags", json=duplicate_data)
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 

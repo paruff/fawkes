@@ -33,6 +33,7 @@ services/data-api/schema/
 ### 1. VSM Database (db-vsm-dev)
 
 Tables to track:
+
 - `work_items` - Work items (features, bugs, tasks)
 - `stages` - Value stream stages
 - `stage_transitions` - Work item transitions between stages
@@ -41,6 +42,7 @@ Tables to track:
 ### 2. Backstage Database (db-backstage-dev)
 
 Tables to track:
+
 - `catalog_entities` - Software catalog entities (components, systems, APIs)
 - `catalog_entity_metadata` - Entity metadata and annotations
 - `techdocs` - TechDocs documentation
@@ -48,6 +50,7 @@ Tables to track:
 ### 3. DevLake Database
 
 Tables to track:
+
 - `deployments` - Deployment events
 - `builds` - CI/CD build data
 - `pull_requests` - PR metrics
@@ -96,13 +99,10 @@ hasura metadata apply --endpoint http://hasura.local --admin-secret <secret> \
 ### Example GraphQL Queries
 
 #### DORA Metrics
+
 ```graphql
 query GetDORAMetrics {
-  doraMetrics(
-    where: { date: { _gte: "2024-01-01" } }
-    order_by: { date: desc }
-    limit: 30
-  ) {
+  doraMetrics(where: { date: { _gte: "2024-01-01" } }, order_by: { date: desc }, limit: 30) {
     date
     deploymentFrequency
     leadTimeForChanges
@@ -113,11 +113,10 @@ query GetDORAMetrics {
 ```
 
 #### Backstage Catalog
+
 ```graphql
 query GetComponents {
-  catalogEntities(
-    where: { kind: { _eq: "Component" } }
-  ) {
+  catalogEntities(where: { kind: { _eq: "Component" } }) {
     id
     name
     kind
@@ -128,12 +127,10 @@ query GetComponents {
 ```
 
 #### VSM Work Items
+
 ```graphql
 query GetWorkItems {
-  workItems(
-    where: { status: { _neq: "done" } }
-    order_by: { createdAt: desc }
-  ) {
+  workItems(where: { status: { _neq: "done" } }, order_by: { createdAt: desc }) {
     id
     title
     type
@@ -152,12 +149,10 @@ query GetWorkItems {
 ```
 
 #### Flow Metrics
+
 ```graphql
 query GetFlowMetrics {
-  flowMetrics(
-    order_by: { date: desc }
-    limit: 7
-  ) {
+  flowMetrics(order_by: { date: desc }, limit: 7) {
     date
     wipByStage
     throughput
@@ -268,6 +263,7 @@ $$ LANGUAGE SQL STABLE;
 ```
 
 Track in Hasura:
+
 ```yaml
 - function:
     schema: public

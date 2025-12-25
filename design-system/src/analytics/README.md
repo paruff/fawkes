@@ -5,6 +5,7 @@ Comprehensive event tracking system for the Fawkes Internal Delivery Platform, b
 ## Overview
 
 This module provides:
+
 - **Event Schema**: Standardized taxonomy for 60+ predefined events
 - **Event Tracker**: Unified tracking library with Plausible integration
 - **React Hooks**: Easy-to-use hooks for common tracking scenarios
@@ -148,6 +149,7 @@ interface EventProperties {
 ## Predefined Events (60+ Events)
 
 ### Navigation (5 events)
+
 - `VIEW_HOMEPAGE` - View homepage
 - `VIEW_CATALOG` - View service catalog
 - `SEARCH_CATALOG` - Search catalog
@@ -155,6 +157,7 @@ interface EventProperties {
 - `VIEW_COMPONENT` - View component detail
 
 ### Scaffolding (10 events)
+
 - `START_SCAFFOLDING` - Start service creation
 - `SELECT_TEMPLATE` - Select template
 - `COMPLETE_SCAFFOLDING` - Service created
@@ -167,6 +170,7 @@ interface EventProperties {
 - `TEMPLATE_REACT` - React app template
 
 ### Documentation (6 events)
+
 - `VIEW_DOCS` - View documentation
 - `SEARCH_DOCS` - Search documentation
 - `VIEW_TECHDOCS` - View TechDocs
@@ -175,6 +179,7 @@ interface EventProperties {
 - `DOWNLOAD_DOCS` - Download documentation
 
 ### CI/CD (12 events)
+
 - `VIEW_PIPELINE` - View pipeline
 - `TRIGGER_BUILD` - Trigger build
 - `BUILD_COMPLETE` - Build complete
@@ -189,6 +194,7 @@ interface EventProperties {
 - `CANCEL_DEPLOYMENT` - Cancel deployment
 
 ### Feedback (8 events)
+
 - `SUBMIT_FEEDBACK` - Submit feedback
 - `REPORT_BUG` - Report bug
 - `REQUEST_FEATURE` - Request feature
@@ -199,6 +205,7 @@ interface EventProperties {
 - `RESPOND_TO_FEEDBACK` - Respond to feedback
 
 ### Feature Usage (6 events)
+
 - `USE_KUBERNETES_PLUGIN` - Kubernetes plugin
 - `USE_ARGOCD_PLUGIN` - ArgoCD plugin
 - `USE_GRAFANA_PLUGIN` - Grafana plugin
@@ -207,6 +214,7 @@ interface EventProperties {
 - `SHARE_RESOURCE` - Share resource
 
 ### Error Events (5 events)
+
 - `PAGE_ERROR` - Page load error
 - `API_ERROR` - API error
 - `VALIDATION_ERROR` - Validation error
@@ -214,12 +222,14 @@ interface EventProperties {
 - `AUTHORIZATION_ERROR` - Authorization error
 
 ### Performance (4 events)
+
 - `PAGE_LOAD` - Page load
 - `API_RESPONSE` - API response
 - `SLOW_OPERATION` - Slow operation
 - `TIMEOUT` - Operation timeout
 
 ### User Events (4 events)
+
 - `LOGIN` - User login
 - `LOGOUT` - User logout
 - `UPDATE_PROFILE` - Update profile
@@ -447,12 +457,14 @@ Events follow a structured naming pattern:
 ```
 
 Examples:
+
 - `scaffolding.create.java_service`
 - `deployment.deploy.production`
 - `feedback.submit.bug_report`
 - `navigation.view.homepage`
 
 Guidelines:
+
 - Use lowercase with underscores
 - Be specific but concise
 - Include context in properties, not in label
@@ -479,6 +491,7 @@ if (validateEvent(event)) {
 ```
 
 Validation checks:
+
 - ✅ Category and action are required
 - ✅ Properties are serializable
 - ✅ No circular references
@@ -502,10 +515,7 @@ The privacy middleware automatically removes sensitive fields:
 
 ```typescript
 // These fields are automatically removed:
-const sensitiveFields = [
-  'email', 'password', 'token', 'apiKey',
-  'secret', 'ssn'
-];
+const sensitiveFields = ['email', 'password', 'token', 'apiKey', 'secret', 'ssn'];
 ```
 
 ### Custom Privacy Rules
@@ -631,10 +641,12 @@ Don't manually add common properties:
 
 ```typescript
 // ✅ Good - use enrichment middleware
-chain.use(enrichmentMiddleware({
-  platform: 'fawkes',
-  version: '1.0.0',
-}));
+chain.use(
+  enrichmentMiddleware({
+    platform: 'fawkes',
+    version: '1.0.0',
+  })
+);
 
 // ❌ Avoid - manual enrichment
 trackEvent({
@@ -691,9 +703,9 @@ For high-volume events, use sampling:
 
 ```typescript
 // Track only 10% of page views
-chain.use(filterMiddleware(event =>
-  event.category !== EventCategory.NAVIGATION || Math.random() < 0.1
-));
+chain.use(
+  filterMiddleware((event) => event.category !== EventCategory.NAVIGATION || Math.random() < 0.1)
+);
 ```
 
 ## Integration with Plausible
@@ -718,7 +730,7 @@ chain.use(filterMiddleware(event =>
 // Query Plausible API
 const response = await fetch(
   'https://plausible.fawkes.idp/api/v1/stats/aggregate?' +
-  'site_id=backstage.fawkes.idp&period=30d&metrics=visitors,pageviews'
+    'site_id=backstage.fawkes.idp&period=30d&metrics=visitors,pageviews'
 );
 ```
 
@@ -755,6 +767,7 @@ const response = await fetch(
 ## Support
 
 For questions or issues:
+
 - Open an issue on GitHub
 - Contact the Platform Team on Mattermost (#fawkes-support)
 - Review the [Troubleshooting Guide](../../../docs/troubleshooting.md)

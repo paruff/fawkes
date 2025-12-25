@@ -13,6 +13,7 @@ Fawkes uses multiple formatters to maintain consistent code style:
 - **terraform fmt**: Terraform configuration formatting
 
 All formatters are integrated into:
+
 - Pre-commit hooks (automatic)
 - CI/CD pipeline (automatic)
 - IDE/editor settings (manual setup required)
@@ -32,6 +33,7 @@ pre-commit run --all-files
 ```
 
 This will:
+
 - Install all formatter tools
 - Set up Git hooks
 - Validate configuration
@@ -49,6 +51,7 @@ Fawkes includes `.vscode/settings.json` and `.vscode/extensions.json` files that
 1. Open the Fawkes repository in VS Code
 2. VS Code will prompt you to install recommended extensions
 3. Click "Install All" to install:
+
    - Python extension with Black formatter
    - Go extension
    - Prettier extension
@@ -341,26 +344,28 @@ terraform fmt -recursive infra/terraform/
 
 Fawkes includes configuration files for all formatters:
 
-| Formatter | Configuration File | Purpose |
-|-----------|-------------------|---------|
-| Black | `pyproject.toml` | Python formatting settings |
-| gofmt | `.golangci.yml` | Go linting and formatting |
-| shfmt | `.pre-commit-config.yaml` | Shell script formatting args |
-| Prettier | `.prettierrc` | JSON/YAML/Markdown formatting |
-| Terraform | `.terraform-fmt` (implicit) | Terraform formatting |
-| All | `.editorconfig` | Cross-editor settings |
+| Formatter | Configuration File          | Purpose                       |
+| --------- | --------------------------- | ----------------------------- |
+| Black     | `pyproject.toml`            | Python formatting settings    |
+| gofmt     | `.golangci.yml`             | Go linting and formatting     |
+| shfmt     | `.pre-commit-config.yaml`   | Shell script formatting args  |
+| Prettier  | `.prettierrc`               | JSON/YAML/Markdown formatting |
+| Terraform | `.terraform-fmt` (implicit) | Terraform formatting          |
+| All       | `.editorconfig`             | Cross-editor settings         |
 
 ## Troubleshooting
 
 ### Format on Save Not Working
 
 **VS Code:**
+
 1. Check that the extension is installed: View → Extensions
 2. Check that format on save is enabled: Settings → "Format On Save"
 3. Check the default formatter: Settings → "Default Formatter"
 4. Check the Output panel: View → Output → Select extension
 
 **IntelliJ/PyCharm:**
+
 1. Check File Watchers are enabled: Settings → Tools → File Watchers
 2. Check that the formatter binary is in PATH
 3. Try manually formatting: Code → Reformat Code (Ctrl+Alt+L)
@@ -444,6 +449,7 @@ Formatting is automatically checked in CI/CD:
 ```
 
 If formatting fails in CI:
+
 1. Pull the latest code
 2. Run `pre-commit run --all-files` locally
 3. Review and commit the formatting changes

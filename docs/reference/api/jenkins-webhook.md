@@ -29,17 +29,17 @@ Triggers a Jenkins job via the Generic Webhook Trigger plugin.
 
 **Headers:**
 
-| Header | Required | Description |
-|--------|----------|-------------|
-| `Content-Type` | Yes | Must be `application/json`. |
-| `X-GitHub-Event` | No | GitHub event type (for GitHub webhooks). |
-| `X-Hub-Signature-256` | No | HMAC signature for webhook verification (GitHub). |
+| Header                | Required | Description                                       |
+| --------------------- | -------- | ------------------------------------------------- |
+| `Content-Type`        | Yes      | Must be `application/json`.                       |
+| `X-GitHub-Event`      | No       | GitHub event type (for GitHub webhooks).          |
+| `X-Hub-Signature-256` | No       | HMAC signature for webhook verification (GitHub). |
 
 **Query Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `token` | String | Yes | Webhook token configured in Jenkins job. |
+| Parameter | Type   | Required | Description                              |
+| --------- | ------ | -------- | ---------------------------------------- |
+| `token`   | String | Yes      | Webhook token configured in Jenkins job. |
 
 **Request Body (JSON):**
 
@@ -112,16 +112,16 @@ Triggers a Jenkins job directly (requires authentication).
 
 **Headers:**
 
-| Header | Required | Description |
-|--------|----------|-------------|
-| `Authorization` | Yes | Basic Auth (`username:apiToken` Base64 encoded). |
+| Header          | Required | Description                                      |
+| --------------- | -------- | ------------------------------------------------ |
+| `Authorization` | Yes      | Basic Auth (`username:apiToken` Base64 encoded). |
 
 **Query Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `token` | String | No | Build token (if configured in job). |
-| `delay` | Integer | No | Delay before starting build (seconds). Default: `0`. |
+| Parameter | Type    | Required | Description                                          |
+| --------- | ------- | -------- | ---------------------------------------------------- |
+| `token`   | String  | No       | Build token (if configured in job).                  |
+| `delay`   | Integer | No       | Delay before starting build (seconds). Default: `0`. |
 
 **Request Body:**
 
@@ -168,10 +168,10 @@ Triggers a parameterized Jenkins job.
 
 **Headers:**
 
-| Header | Required | Description |
-|--------|----------|-------------|
-| `Authorization` | Yes | Basic Auth (`username:apiToken` Base64 encoded). |
-| `Content-Type` | Yes | `application/x-www-form-urlencoded` or `application/json`. |
+| Header          | Required | Description                                                |
+| --------------- | -------- | ---------------------------------------------------------- |
+| `Authorization` | Yes      | Basic Auth (`username:apiToken` Base64 encoded).           |
+| `Content-Type`  | Yes      | `application/x-www-form-urlencoded` or `application/json`. |
 
 **Request Body (Form Data):**
 
@@ -186,9 +186,9 @@ IMAGE_TAG=v1.2.3
 ```json
 {
   "parameter": [
-    {"name": "BRANCH", "value": "main"},
-    {"name": "ENVIRONMENT", "value": "prod"},
-    {"name": "IMAGE_TAG", "value": "v1.2.3"}
+    { "name": "BRANCH", "value": "main" },
+    { "name": "ENVIRONMENT", "value": "prod" },
+    { "name": "IMAGE_TAG", "value": "v1.2.3" }
   ]
 }
 ```
@@ -221,9 +221,9 @@ Retrieves status of the last build.
 
 **Headers:**
 
-| Header | Required | Description |
-|--------|----------|-------------|
-| `Authorization` | Yes | Basic Auth. |
+| Header          | Required | Description |
+| --------------- | -------- | ----------- |
+| `Authorization` | Yes      | Basic Auth. |
 
 #### Response
 
@@ -364,15 +364,15 @@ Jenkins does not enforce API rate limits by default. However, excessive requests
 
 ## Error Codes
 
-| HTTP Code | Meaning | Common Causes |
-|-----------|---------|---------------|
-| 200 OK | Request successful | Valid request. |
-| 201 Created | Build queued | Job triggered successfully. |
-| 400 Bad Request | Invalid request | Missing parameters, malformed JSON. |
-| 401 Unauthorized | Authentication failed | Invalid credentials or API token. |
-| 403 Forbidden | Permission denied | User lacks job trigger permissions. |
-| 404 Not Found | Job not found | Invalid job name in URL. |
-| 500 Internal Server Error | Jenkins error | Check Jenkins logs. |
+| HTTP Code                 | Meaning               | Common Causes                       |
+| ------------------------- | --------------------- | ----------------------------------- |
+| 200 OK                    | Request successful    | Valid request.                      |
+| 201 Created               | Build queued          | Job triggered successfully.         |
+| 400 Bad Request           | Invalid request       | Missing parameters, malformed JSON. |
+| 401 Unauthorized          | Authentication failed | Invalid credentials or API token.   |
+| 403 Forbidden             | Permission denied     | User lacks job trigger permissions. |
+| 404 Not Found             | Job not found         | Invalid job name in URL.            |
+| 500 Internal Server Error | Jenkins error         | Check Jenkins logs.                 |
 
 ---
 

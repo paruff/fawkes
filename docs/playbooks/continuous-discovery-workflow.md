@@ -14,7 +14,7 @@ description: "Comprehensive guide to continuous discovery process including cade
 ## I. Business Objective
 
 !!! info "Diátaxis: Explanation / Conceptual"
-    This section defines the "why"—understanding developer needs to build the right platform capabilities.
+This section defines the "why"—understanding developer needs to build the right platform capabilities.
 
 ### What We're Solving
 
@@ -24,13 +24,13 @@ Platform teams often build features based on assumptions, stakeholder requests, 
 
 ### Risk Mitigation
 
-| Risk | Impact Without Action | How This Playbook Helps |
-|------|----------------------|------------------------|
-| **Building unused features** | Wasted engineering time, low adoption, developer frustration | Validates needs before building, ensures product-market fit |
-| **Missing critical pain points** | Developers work around platform, shadow IT proliferates | Systematic discovery surfaces real problems |
-| **Poor adoption** | Platform investment doesn't deliver ROI | User research drives adoption through better product fit |
-| **Feature factory syndrome** | Busy but not impactful, unmeasured outcomes | Focus on outcomes over outputs, continuous validation |
-| **Developer dissatisfaction** | Low NPS, talent retention issues | Listening culture improves trust and satisfaction |
+| Risk                             | Impact Without Action                                        | How This Playbook Helps                                     |
+| -------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------- |
+| **Building unused features**     | Wasted engineering time, low adoption, developer frustration | Validates needs before building, ensures product-market fit |
+| **Missing critical pain points** | Developers work around platform, shadow IT proliferates      | Systematic discovery surfaces real problems                 |
+| **Poor adoption**                | Platform investment doesn't deliver ROI                      | User research drives adoption through better product fit    |
+| **Feature factory syndrome**     | Busy but not impactful, unmeasured outcomes                  | Focus on outcomes over outputs, continuous validation       |
+| **Developer dissatisfaction**    | Low NPS, talent retention issues                             | Listening culture improves trust and satisfaction           |
 
 ### Expected Outcomes
 
@@ -43,32 +43,32 @@ Platform teams often build features based on assumptions, stakeholder requests, 
 
 ### Business Value
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Platform Feature Adoption | 30-40% | 75-85% | 2x increase |
-| Developer NPS | +15 | +40 | 25 point improvement |
-| Time from Idea to Value | 8-12 weeks | 3-5 weeks | 60% reduction |
-| Support Tickets per Feature | 20-30/month | 5-10/month | 70% reduction |
-| Engineering Waste (unused features) | 40-50% | <10% | 80% reduction |
+| Metric                              | Before      | After      | Improvement          |
+| ----------------------------------- | ----------- | ---------- | -------------------- |
+| Platform Feature Adoption           | 30-40%      | 75-85%     | 2x increase          |
+| Developer NPS                       | +15         | +40        | 25 point improvement |
+| Time from Idea to Value             | 8-12 weeks  | 3-5 weeks  | 60% reduction        |
+| Support Tickets per Feature         | 20-30/month | 5-10/month | 70% reduction        |
+| Engineering Waste (unused features) | 40-50%      | <10%       | 80% reduction        |
 
 ---
 
 ## II. Technical Prerequisites
 
 !!! abstract "Diátaxis: Reference"
-    This section lists required tools, access, and setup for continuous discovery.
+This section lists required tools, access, and setup for continuous discovery.
 
 ### Required Fawkes Components
 
-| Component | Minimum Version | Required | Documentation |
-|-----------|-----------------|----------|---------------|
-| Backstage Developer Portal | 1.18+ | ✅ | [Backstage Docs](../reference/api/backstage-plugins.md) |
-| Mattermost | 9.0+ | ✅ | For team communication and surveys |
-| Analytics Platform (PostHog/Mixpanel) | Latest | ✅ | [Product Analytics](../explanation/idp/product-discovery-delivery-flow.md) |
-| Survey Tool (TypeForm/Google Forms) | N/A | ✅ | For NPS and satisfaction surveys |
-| Video Conferencing (Zoom/Teams) | N/A | ✅ | For user interviews |
-| Documentation Platform (MkDocs) | 1.5+ | ✅ | For publishing insights |
-| DORA Metrics Dashboard | N/A | ✅ | [View DORA Metrics](../how-to/observability/view-dora-metrics-devlake.md) |
+| Component                             | Minimum Version | Required | Documentation                                                              |
+| ------------------------------------- | --------------- | -------- | -------------------------------------------------------------------------- |
+| Backstage Developer Portal            | 1.18+           | ✅       | [Backstage Docs](../reference/api/backstage-plugins.md)                    |
+| Mattermost                            | 9.0+            | ✅       | For team communication and surveys                                         |
+| Analytics Platform (PostHog/Mixpanel) | Latest          | ✅       | [Product Analytics](../explanation/idp/product-discovery-delivery-flow.md) |
+| Survey Tool (TypeForm/Google Forms)   | N/A             | ✅       | For NPS and satisfaction surveys                                           |
+| Video Conferencing (Zoom/Teams)       | N/A             | ✅       | For user interviews                                                        |
+| Documentation Platform (MkDocs)       | 1.5+            | ✅       | For publishing insights                                                    |
+| DORA Metrics Dashboard                | N/A             | ✅       | [View DORA Metrics](../how-to/observability/view-dora-metrics-devlake.md)  |
 
 ### Tools & Templates Setup
 
@@ -110,7 +110,7 @@ gh repo create platform-research --private --template paruff/fawkes-research-tem
 ## III. The Continuous Discovery Process
 
 !!! tip "Diátaxis: How-to Guide (Core)"
-    The continuous discovery workflow operates on multiple cadences simultaneously.
+The continuous discovery workflow operates on multiple cadences simultaneously.
 
 ### Discovery Cadence Model
 
@@ -146,7 +146,7 @@ gantt
 ## IV. Roles & Responsibilities
 
 !!! abstract "Roles in Continuous Discovery"
-    Clear ownership ensures discovery activities happen consistently.
+Clear ownership ensures discovery activities happen consistently.
 
 ### Discovery Team Structure
 
@@ -177,6 +177,7 @@ graph TB
 #### Platform Product Manager (Discovery Lead)
 
 **Responsibilities**:
+
 - Own the discovery process and cadence
 - Coordinate interviews and research activities
 - Synthesize insights into actionable roadmap items
@@ -187,12 +188,14 @@ graph TB
 **Time Commitment**: 40-50% of time on discovery
 
 **Key Skills**:
+
 - User research fundamentals
 - Product prioritization frameworks
 - Stakeholder communication
 - Roadmap planning
 
 **Success Metrics**:
+
 - 10+ interviews conducted per month
 - Research insights published bi-weekly
 - Roadmap backed by user evidence
@@ -201,6 +204,7 @@ graph TB
 #### UX Researcher (Research Specialist)
 
 **Responsibilities**:
+
 - Design research studies and interview guides
 - Conduct user interviews and usability tests
 - Analyze qualitative feedback
@@ -211,6 +215,7 @@ graph TB
 **Time Commitment**: 60-80% of time on research
 
 **Key Skills**:
+
 - Qualitative research methods
 - Interview facilitation
 - Thematic analysis
@@ -218,6 +223,7 @@ graph TB
 - Workshop facilitation
 
 **Success Metrics**:
+
 - Research quality (insights actionable?)
 - Interview completion rate
 - Participant satisfaction
@@ -226,6 +232,7 @@ graph TB
 #### Platform Engineer (Technical Validation)
 
 **Responsibilities**:
+
 - Assess technical feasibility of proposed solutions
 - Build prototypes and POCs
 - Validate solutions with early adopters
@@ -236,12 +243,14 @@ graph TB
 **Time Commitment**: 20-30% of time on discovery
 
 **Key Skills**:
+
 - Rapid prototyping
 - Technical architecture
 - Developer empathy
 - Experimentation mindset
 
 **Success Metrics**:
+
 - Prototype quality and speed
 - Feasibility assessment accuracy
 - Early adopter feedback
@@ -250,6 +259,7 @@ graph TB
 #### Data Analyst (Analytics & Metrics)
 
 **Responsibilities**:
+
 - Monitor platform usage analytics
 - Analyze DORA metrics trends
 - Create research dashboards
@@ -260,12 +270,14 @@ graph TB
 **Time Commitment**: 30-40% of time on discovery
 
 **Key Skills**:
+
 - Analytics platforms (PostHog, Mixpanel)
 - SQL and data visualization
 - Statistical analysis
 - Dashboard design
 
 **Success Metrics**:
+
 - Dashboard coverage (all features tracked)
 - Insight generation velocity
 - Data quality and accuracy
@@ -276,6 +288,7 @@ graph TB
 #### Developers (Research Participants)
 
 **Responsibilities**:
+
 - Participate in interviews and surveys
 - Provide honest feedback
 - Test prototypes and betas
@@ -285,6 +298,7 @@ graph TB
 **Time Commitment**: 1-2 hours per month
 
 **Incentives**:
+
 - Influence platform direction
 - Early access to new features
 - Recognition in changelog/docs
@@ -293,6 +307,7 @@ graph TB
 #### Engineering Managers
 
 **Responsibilities**:
+
 - Nominate team members for research
 - Share team-level pain points
 - Support discovery initiatives
@@ -304,6 +319,7 @@ graph TB
 #### Platform Leadership
 
 **Responsibilities**:
+
 - Set strategic direction for platform
 - Review discovery insights quarterly
 - Approve budget for research activities
@@ -346,6 +362,7 @@ Target: Mix of personas (frontend, backend, new hires, senior engineers)
 ```
 
 **Selection Criteria**:
+
 - Diverse roles and experience levels
 - Different teams and business units
 - Mix of power users and infrequent users
@@ -364,28 +381,33 @@ Use the template from `docs/research/templates/interview-guide.md`:
 **Duration**: 30-45 minutes
 
 ## Introduction (5 min)
+
 - Thank participant
 - Explain purpose: understand workflows, not testing them
 - Confirm recording consent
 - Emphasize no wrong answers
 
 ## Current Workflow (15 min)
+
 1. Walk me through your last deployment from local to production.
 2. What tools do you use at each stage?
 3. Where do you spend the most time?
 4. What's the most frustrating part?
 
 ## Pain Points (10 min)
+
 5. Describe a recent time the platform blocked you from being productive.
 6. What information do you wish you had easier access to?
 7. What tasks feel unnecessarily manual or repetitive?
 
 ## Ideal State (10 min)
+
 8. If you could improve one thing about the platform, what would it be?
 9. What capabilities do you wish the platform had?
 10. What does "great developer experience" mean to you?
 
 ## Wrap-up (5 min)
+
 - Anything else we should know?
 - Who else should we talk to?
 - Thank you + explain next steps
@@ -394,6 +416,7 @@ Use the template from `docs/research/templates/interview-guide.md`:
 **Step 3: Conduct Interview**
 
 **Best Practices**:
+
 - ✅ Record with consent (easier than live note-taking)
 - ✅ Ask open-ended questions ("Tell me about..." not "Do you like...")
 - ✅ Follow up with "Why?" and "Can you show me an example?"
@@ -404,6 +427,7 @@ Use the template from `docs/research/templates/interview-guide.md`:
 - ❌ Don't interview friends/teammates (bias)
 
 **Tools**:
+
 - Zoom/Teams for video call
 - Otter.ai or similar for transcription
 - Google Docs for real-time notes
@@ -415,6 +439,7 @@ Use the template from `docs/research/templates/interview-guide.md`:
 # Interview Insights: [Participant Name] - [Date]
 
 ## Key Quotes
+
 > "I spend 2 hours every week debugging Jenkins pipelines because
 > the error messages don't tell me what's actually wrong."
 
@@ -422,21 +447,25 @@ Use the template from `docs/research/templates/interview-guide.md`:
 > The search doesn't work how I expect."
 
 ## Pain Points
+
 - 🔴 **HIGH**: Jenkins error messages unhelpful (2 hours/week lost)
 - 🟡 **MEDIUM**: Backstage search UX (confusing, not intuitive)
 - 🟢 **LOW**: Git hooks slow on large repos
 
 ## Needs/Jobs-to-be-Done
+
 - Debug CI failures quickly
 - Discover services across organization
 - Onboard to new project in <1 day
 
 ## Opportunities
+
 - Improve Jenkins error messages (link to logs, suggest fixes)
 - Revamp Backstage search (fuzzy matching, filters)
 - Create onboarding templates
 
 ## Next Steps
+
 - Validate Jenkins error message pain with 3 more developers
 - Show Backstage search prototype to participant
 ```
@@ -501,14 +530,17 @@ Errors & Friction:
 # Analytics Insights: Week of Jan 15, 2024
 
 ## 🔴 Alerts
+
 - Backstage logins down 20% this week (holiday effect or problem?)
 - ArgoCD sync failures up 3x (investigate)
 
 ## 🟢 Wins
+
 - New "Service Template" feature: 40% adoption in 2 weeks (great!)
 - DORA dashboard views up 2x (people caring about metrics)
 
 ## 🟡 Questions
+
 - Why is "Search" feature usage so low? (UX issue?)
 - 30% of developers never logged into Backstage (why not?)
 ```
@@ -558,21 +590,26 @@ H3: Jenkins errors overwhelming (too much noise)
 # Support Tickets: Week of Jan 15, 2024
 
 ## By Category
+
 - **How Do I...?** (40%): Documentation/onboarding gaps
+
   - "How do I deploy to production?" (8 tickets)
   - "How do I add a new environment?" (5 tickets)
 
 - **Something Broke** (35%): Platform reliability issues
+
   - "ArgoCD not syncing" (6 tickets)
   - "Jenkins build stuck" (4 tickets)
 
 - **Feature Request** (15%): Missing capabilities
+
   - "Can we have staging environments?" (3 tickets)
 
 - **Access/Permissions** (10%): Onboarding issues
   - "Can't access Vault" (2 tickets)
 
 ## Top 5 Issues This Week
+
 1. ArgoCD sync failures (6 tickets) - **SPIKE**
 2. Production deployment process unclear (8 tickets) - **TREND**
 3. Jenkins build queue long (4 tickets)
@@ -586,11 +623,14 @@ H3: Jenkins errors overwhelming (too much noise)
 # Pattern Recognition
 
 ## Recurring Themes (Last 4 Weeks)
+
 - "How do I deploy to prod?" → **Onboarding problem**
+
   - Root cause: Docs outdated, no guided tutorial
   - Solution: Create interactive onboarding flow in Backstage
 
 - ArgoCD sync issues → **Reliability problem**
+
   - Root cause: Network timeouts to Git repo
   - Solution: Increase timeout, add retry logic
 
@@ -607,6 +647,7 @@ H3: Jenkins errors overwhelming (too much noise)
 Problem: Production deployment process unclear
 
 Evidence:
+
 - ✅ Support tickets: 8 "How do I deploy?" tickets this week
 - ✅ Interviews: 4 of 5 recent hires mentioned confusion
 - ✅ Analytics: Only 30% successfully deploy on first try
@@ -632,6 +673,7 @@ Action: Create guided deployment tutorial + update docs
 # Platform NPS Survey - [Month]
 
 ## Core Question
+
 On a scale of 0-10, how likely are you to recommend the Fawkes platform
 to a colleague?
 
@@ -640,18 +682,22 @@ to a colleague?
 ## Follow-up Questions
 
 **For Promoters (9-10):**
+
 - What do you love most about the platform?
 - What should we keep doing?
 
 **For Passives (7-8):**
+
 - What would make you rate us a 9 or 10?
 - What's the biggest frustration?
 
 **For Detractors (0-6):**
+
 - What's the main reason for your score?
 - What would need to change for you to use the platform more?
 
 ## Additional Questions
+
 - How often do you use the platform? [Daily/Weekly/Monthly/Rarely]
 - Which features do you use most? [Multi-select]
 - What's your role? [Frontend/Backend/DevOps/SRE/Other]
@@ -663,6 +709,7 @@ to a colleague?
 # NPS Analysis: January 2024
 
 ## Score Breakdown
+
 - **NPS**: +38 (up from +32 last month) ✅
 - **Promoters**: 55% (score 9-10)
 - **Passives**: 28% (score 7-8)
@@ -671,21 +718,25 @@ to a colleague?
 ## Themes from Open Responses
 
 ### Promoters Love:
+
 - "GitOps makes deployments so easy" (mentioned 12x)
 - "DORA dashboard helps me show impact" (mentioned 8x)
 - "Golden path templates save hours" (mentioned 10x)
 
 ### Passives Want:
+
 - "Better documentation" (mentioned 6x)
 - "Faster CI builds" (mentioned 4x)
 - "Easier secret management" (mentioned 5x)
 
 ### Detractors Frustrated By:
+
 - "Too complex, steep learning curve" (mentioned 5x)
 - "Jenkins pipelines confusing" (mentioned 4x)
 - "Platform feels slow" (mentioned 3x)
 
 ## Action Items
+
 1. **Documentation Sprint**: Update getting started guide (Addresses Passives)
 2. **CI Performance**: Investigate build caching (Addresses Passives & Detractors)
 3. **Onboarding Simplification**: New developer wizard in Backstage (Addresses Detractors)
@@ -711,23 +762,27 @@ to a colleague?
 ## Agenda
 
 ### Part 1: Data Review (30 min)
+
 - Interviews: 6 conducted, key themes
 - Analytics: Usage trends, adoption metrics
 - Support: Ticket patterns, recurring issues
 - NPS: Score and open responses
 
 ### Part 2: Affinity Mapping (45 min)
+
 - Write each insight on virtual sticky note
 - Group related insights into themes
 - Name each theme
 - Prioritize themes by frequency + severity
 
 ### Part 3: Insight Statements (30 min)
+
 - For each theme, write insight statement
 - Format: [Who] needs [what] because [why]
 - Link to evidence (interview quotes, analytics, tickets)
 
 ### Part 4: Roadmap Implications (15 min)
+
 - Which insights validate current roadmap items?
 - Which insights suggest new opportunities?
 - Which insights indicate we should pivot?
@@ -739,10 +794,12 @@ to a colleague?
 # Discovery Insights: Jan 26, 2024
 
 ## Theme 1: Deployment Process Friction
+
 **Insight**: New developers struggle to deploy to production because the
 process is undocumented, multi-step, and error-prone.
 
 **Evidence**:
+
 - 6 interviews mentioned deployment confusion
 - 12 support tickets: "How do I deploy to prod?"
 - Analytics: 70% of first deployments fail
@@ -756,10 +813,12 @@ so I can ship my first feature confidently within my first week."
 **Priority**: P0 (blocks new developer productivity)
 
 ## Theme 2: Observability Gaps
+
 **Insight**: Developers can't troubleshoot production issues quickly
 because logs, metrics, and traces are in separate tools.
 
 **Evidence**:
+
 - 8 interviews: "I check 3 different dashboards to debug"
 - Support: 15 tickets related to "Where do I find logs?"
 - Analytics: Grafana + Tempo + Loki used <20% of developers
@@ -772,10 +831,12 @@ so I can debug incidents in minutes, not hours."
 **Priority**: P1 (slows incident response)
 
 ## Theme 3: Jenkins Pain
+
 **Insight**: Jenkins pipeline failures are common and confusing because
 error messages don't explain root cause.
 
 **Evidence**:
+
 - 10 interviews mentioned Jenkins frustration
 - Support: 22 Jenkins-related tickets this month
 - Analytics: 22% pipeline failure rate (vs. 15% industry avg)
@@ -803,6 +864,7 @@ so I can fix my pipeline without asking for help."
 # Quarterly Research: New Developer Onboarding (Q1 2024)
 
 ## Research Questions
+
 1. How long does it take new developers to be productive?
 2. What are the biggest onboarding blockers?
 3. How does onboarding vary by role (frontend vs. backend)?
@@ -811,18 +873,21 @@ so I can fix my pipeline without asking for help."
 ## Research Activities
 
 Week 1-2: Qualitative Research
+
 - 15 interviews with developers hired in last 6 months
 - 5 interviews with hiring managers
 - Shadowing: Observe 3 new developer first weeks
 - Journey mapping workshop with recent hires
 
 Week 3-4: Quantitative Analysis
+
 - Survey all developers hired in last year (n=80)
 - Analyze time-to-first-deployment metrics
 - Review onboarding completion rates
 - Compare onboarding docs usage analytics
 
 ## Deliverables
+
 - New developer persona profiles
 - Onboarding journey map (with pain points)
 - Recommendations for onboarding improvements
@@ -844,15 +909,18 @@ Week 3-4: Quantitative Analysis
 **Researcher**: [Name, Email]
 
 ## Purpose
+
 We're conducting research to understand how developers use the Fawkes
 platform and identify opportunities for improvement.
 
 ## What You'll Do
+
 - Participate in a 30-45 minute interview
 - Share your experiences and workflows
 - Provide honest feedback (positive and negative)
 
 ## Privacy & Confidentiality
+
 - ✅ Interview will be recorded (audio/video) with your consent
 - ✅ Recordings used only for analysis, not shared publicly
 - ✅ Insights will be anonymized (no names in reports)
@@ -861,14 +929,16 @@ platform and identify opportunities for improvement.
 - ❌ Participation (or non-participation) has no impact on your job
 
 ## Incentive
+
 $50 gift card as a thank you for your time
 
 ## Consent
+
 ☐ I agree to participate in this interview
 ☐ I consent to audio/video recording
 ☐ I understand my feedback will be anonymized
 
-Signature: _________________ Date: _________
+Signature: **\*\*\*\***\_**\*\*\*\*** Date: \***\*\_\*\***
 ```
 
 ---
@@ -896,6 +966,7 @@ because manual SQL changes are error-prone and block deployments.
 ## Evidence
 
 ### Qualitative
+
 - Interview with Alex (Backend Engineer): "I spent 4 hours debugging a
   failed migration last week. The error message didn't help at all."
 - Interview with Jordan (Tech Lead): "Our team has a 'migration checklist'
@@ -903,11 +974,13 @@ because manual SQL changes are error-prone and block deployments.
 - Support ticket #1234: "My migration failed in production, how do I rollback?"
 
 ### Quantitative
+
 - Analytics: 18% of deployments with migrations fail
 - Support: 12 migration-related tickets in January
 - DORA: Teams with migrations have 2x higher change failure rate
 
 ### Triangulation
+
 ✅ Qualitative + Quantitative + Support data all point to same problem
 
 ---
@@ -915,11 +988,13 @@ because manual SQL changes are error-prone and block deployments.
 ## Impact
 
 ### User Impact
+
 - **Severity**: HIGH (blocks deployments)
 - **Frequency**: 30 migrations per month across teams
 - **Affected Users**: Backend engineers (60% of developer base)
 
 ### Business Impact
+
 - **Cost**: ~10 hours/month lost to migration debugging
 - **Risk**: Production incidents due to failed migrations
 - **DORA**: Improving migration UX could reduce CFR by 5%
@@ -929,11 +1004,13 @@ because manual SQL changes are error-prone and block deployments.
 ## Current State
 
 ### What Exists Today
+
 - Manual process documented in Confluence (outdated)
 - No pre-flight validation of migration scripts
 - Rollback is manual and risky
 
 ### Why It's Inadequate
+
 - Docs hard to find, not integrated into workflow
 - No guardrails against common mistakes
 - No testing in non-prod environments first
@@ -943,20 +1020,24 @@ because manual SQL changes are error-prone and block deployments.
 ## Proposed Solution
 
 ### User Story
+
 As a backend engineer, I want to run database migrations through a guided
 workflow in Backstage so that I can deploy changes safely without manual steps.
 
 ### Solution Hypothesis
+
 If we provide a Backstage migration wizard with pre-flight checks and
 automated rollback, then migration failure rate will drop from 18% to <5%.
 
 ### Key Features
+
 1. Migration validation before deploy (syntax check, dry-run)
 2. Automated backup before migration
 3. One-click rollback if migration fails
 4. Migration history and audit log
 
 ### Success Metrics
+
 - Migration failure rate drops from 18% to <5%
 - Support tickets related to migrations drop by 80%
 - NPS improvement among backend engineers
@@ -1003,6 +1084,7 @@ automated rollback, then migration failure rate will drop from 18% to <5%.
 [2-3 sentences summarizing key discoveries this month]
 
 **Top 3 Insights**:
+
 1. [Insight 1] - Impact: [High/Med/Low]
 2. [Insight 2] - Impact: [High/Med/Low]
 3. [Insight 3] - Impact: [High/Med/Low]
@@ -1011,24 +1093,26 @@ automated rollback, then migration failure rate will drop from 18% to <5%.
 
 ## Research Activities
 
-| Activity | Count | Status |
-|----------|-------|--------|
-| User Interviews | 12 | ✅ Complete |
-| NPS Survey | 85 responses | ✅ Complete |
-| Support Ticket Analysis | 67 tickets | ✅ Complete |
-| Analytics Reviews | 4 weekly reviews | ✅ Complete |
-| Usability Tests | 0 | ❌ Not conducted |
+| Activity                | Count            | Status           |
+| ----------------------- | ---------------- | ---------------- |
+| User Interviews         | 12               | ✅ Complete      |
+| NPS Survey              | 85 responses     | ✅ Complete      |
+| Support Ticket Analysis | 67 tickets       | ✅ Complete      |
+| Analytics Reviews       | 4 weekly reviews | ✅ Complete      |
+| Usability Tests         | 0                | ❌ Not conducted |
 
 ---
 
 ## Key Metrics
 
 ### Platform Health
+
 - **NPS Score**: +38 (↑ 6 points vs. last month)
 - **Backstage Adoption**: 88% (↑ 3% vs. last month)
 - **Support Ticket Volume**: 67 (↓ 15% vs. last month)
 
 ### DORA Metrics Trend
+
 - **Deployment Frequency**: 4.2/day/team (↑ 10%)
 - **Lead Time**: 48 minutes (↓ 12%)
 - **Change Failure Rate**: 9% (↓ 2%)
@@ -1039,6 +1123,7 @@ automated rollback, then migration failure rate will drop from 18% to <5%.
 ## Discovery Insights
 
 ### Insight 1: Deployment Process Friction
+
 - **Who**: New developers (<6 months tenure)
 - **What**: Struggle to deploy to production
 - **Why**: Process undocumented, multi-step, confusing
@@ -1047,6 +1132,7 @@ automated rollback, then migration failure rate will drop from 18% to <5%.
 - **Action**: Build deployment wizard in Backstage
 
 ### Insight 2: Jenkins Error Messages Unhelpful
+
 - **Who**: All developers
 - **What**: Can't debug CI failures quickly
 - **Why**: Error messages don't explain root cause
@@ -1055,6 +1141,7 @@ automated rollback, then migration failure rate will drop from 18% to <5%.
 - **Action**: Implement error categorization and suggested fixes
 
 ### Insight 3: Observability Tooling Fragmented
+
 - **Who**: Backend engineers
 - **What**: Takes too long to debug production issues
 - **Why**: Logs, metrics, traces in separate tools
@@ -1067,14 +1154,17 @@ automated rollback, then migration failure rate will drop from 18% to <5%.
 ## Roadmap Impact
 
 ### Validated
+
 - ✅ Deployment wizard (P0 insight confirms this)
 - ✅ Documentation improvements (passives in NPS want this)
 
 ### New Opportunities
+
 - 🆕 Jenkins error message improvements
 - 🆕 Unified observability dashboard
 
 ### De-prioritized
+
 - ⬇️ Custom Helm charts (low usage, high complexity)
 
 ---
@@ -1105,11 +1195,13 @@ automated rollback, then migration failure rate will drop from 18% to <5%.
 ## Appendix
 
 ### Participants This Month
+
 - 12 interviews (3 frontend, 6 backend, 2 DevOps, 1 SRE)
 - 85 NPS survey responses
 - 20 support ticket interactions
 
 ### Research Repository
+
 [Link to full interview notes and analysis]
 ```
 
@@ -1142,6 +1234,7 @@ automated rollback, then migration failure rate will drop from 18% to <5%.
 **Users Affected**: [Number or percentage]
 
 **Calculation**:
+
 - Total developers: 250
 - Affected developers: 150 (backend engineers)
 - **Reach Score**: 150
@@ -1153,6 +1246,7 @@ automated rollback, then migration failure rate will drop from 18% to <5%.
 **Impact Score**: [3 | 2 | 1 | 0.5 | 0.25]
 
 **Justification**:
+
 - Massive (3): Transforms workflow, saves >2 hours/week per user
 - High (2): Significant improvement, saves 1-2 hours/week
 - Medium (1): Noticeable improvement, saves 30min-1hr/week
@@ -1168,6 +1262,7 @@ automated rollback, then migration failure rate will drop from 18% to <5%.
 **Confidence Score**: [100% | 80% | 50%]
 
 **Evidence**:
+
 - High (100%): Validated with 10+ users, prototype tested, proven pattern
 - Medium (80%): Validated with 5+ users, similar solutions exist
 - Low (50%): Hypothesis, not validated, uncertain solution
@@ -1179,6 +1274,7 @@ automated rollback, then migration failure rate will drop from 18% to <5%.
 **Effort Estimate**: [Person-months]
 
 **Breakdown**:
+
 - Design: [X weeks]
 - Engineering: [X weeks]
 - Testing: [X weeks]
@@ -1188,13 +1284,14 @@ automated rollback, then migration failure rate will drop from 18% to <5%.
 ---
 
 ## RICE Calculation
-
 ```
+
 RICE Score = (Reach × Impact × Confidence) / Effort
 
 RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
-           = [Calculation]
-           = [Final Score]
+= [Calculation]
+= [Final Score]
+
 ```
 
 ---
@@ -1269,6 +1366,7 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 ### 8. Create a Listening Culture
 
 **Actions**:
+
 - Share discovery insights at team all-hands
 - Publish monthly discovery reports
 - Invite developers to roadmap reviews
@@ -1277,12 +1375,14 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 ### 9. Incentivize Participation
 
 **For Interviews**:
+
 - $25-50 gift cards
 - Early access to new features
 - Recognition in changelog
 - Swag (t-shirts, stickers)
 
 **For Surveys**:
+
 - Raffle for larger prizes ($100 gift card)
 - Aggregate results shared with all participants
 - Show how feedback influenced roadmap
@@ -1292,6 +1392,7 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 **Threats**: Urgent bugs, stakeholder requests, "just this one thing"
 
 **Protection**:
+
 - Block calendar for discovery activities
 - Make discovery visible (roadmap shows research phases)
 - Leadership support (OKR for discovery metrics)
@@ -1302,31 +1403,31 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 
 ### Input Metrics (Are we doing discovery?)
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| Interviews per month | 10-12 | [Actual] |
-| NPS survey response rate | >60% | [Actual] |
-| Analytics reviews per week | 1 | [Actual] |
-| Support ticket analysis per week | 1 | [Actual] |
-| Discovery synthesis sessions per month | 2 | [Actual] |
+| Metric                                 | Target | Actual   |
+| -------------------------------------- | ------ | -------- |
+| Interviews per month                   | 10-12  | [Actual] |
+| NPS survey response rate               | >60%   | [Actual] |
+| Analytics reviews per week             | 1      | [Actual] |
+| Support ticket analysis per week       | 1      | [Actual] |
+| Discovery synthesis sessions per month | 2      | [Actual] |
 
 ### Output Metrics (What did discovery produce?)
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| Insights generated per month | 3-5 | [Actual] |
-| Roadmap items backed by evidence | 100% | [Actual] |
-| Features validated before build | 100% | [Actual] |
+| Metric                           | Target | Actual   |
+| -------------------------------- | ------ | -------- |
+| Insights generated per month     | 3-5    | [Actual] |
+| Roadmap items backed by evidence | 100%   | [Actual] |
+| Features validated before build  | 100%   | [Actual] |
 
 ### Outcome Metrics (Did discovery work?)
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| Feature adoption rate | >75% | [Actual] |
-| Platform NPS | >40 | [Actual] |
-| Support tickets per feature | <10/month | [Actual] |
-| Time from insight to delivery | <8 weeks | [Actual] |
-| DORA metric improvements | Positive trend | [Actual] |
+| Metric                        | Target         | Actual   |
+| ----------------------------- | -------------- | -------- |
+| Feature adoption rate         | >75%           | [Actual] |
+| Platform NPS                  | >40            | [Actual] |
+| Support tickets per feature   | <10/month      | [Actual] |
+| Time from insight to delivery | <8 weeks       | [Actual] |
+| DORA metric improvements      | Positive trend | [Actual] |
 
 ---
 
@@ -1339,6 +1440,7 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 **Impact**: Build wrong features, low adoption, wasted engineering time.
 
 **Solution**:
+
 - Make discovery a first-class activity (OKRs, sprint planning)
 - Show ROI: "Discovery saved us 6 weeks by invalidating feature X"
 - Start small: 2 interviews per week, 30 minutes analytics review
@@ -1350,6 +1452,7 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 **Impact**: Miss needs of 80% of users (silent majority).
 
 **Solution**:
+
 - Recruit diverse participants (new hires, different roles, infrequent users)
 - Proactive outreach ("We want to hear from everyone, not just power users")
 - Analyze non-users ("Why haven't you adopted the platform?")
@@ -1361,6 +1464,7 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 **Impact**: Discovery theater, not real learning.
 
 **Solution**:
+
 - Publish all insights, not just convenient ones
 - Celebrate when research invalidates assumptions
 - Third-party facilitation for synthesis (less bias)
@@ -1372,6 +1476,7 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 **Impact**: Frustration, perception that discovery slows delivery.
 
 **Solution**:
+
 - Timeboxes: "2 weeks discovery, then decide"
 - "Good enough" validation: 5-10 interviews often sufficient
 - Prototypes over perfect research
@@ -1383,6 +1488,7 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 **Impact**: Participation fatigue, cynicism about discovery.
 
 **Solution**:
+
 - Thank participants, share outcomes
 - "You said X, so we built Y" communication
 - Invite participants to beta test solutions
@@ -1393,28 +1499,28 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 
 ### User Research Tools
 
-| Tool | Purpose | Cost | Alternative |
-|------|---------|------|------------|
-| **Zoom** | Video interviews | $15/mo | Google Meet (free) |
-| **Otter.ai** | Transcription | $10/mo | Manual notes |
-| **Dovetail** | Research repository | $30/user/mo | Google Drive + Sheets |
-| **UserTesting** | Remote usability tests | $50/test | DIY with Zoom |
-| **Typeform** | Surveys | $25/mo | Google Forms (free) |
+| Tool            | Purpose                | Cost        | Alternative           |
+| --------------- | ---------------------- | ----------- | --------------------- |
+| **Zoom**        | Video interviews       | $15/mo      | Google Meet (free)    |
+| **Otter.ai**    | Transcription          | $10/mo      | Manual notes          |
+| **Dovetail**    | Research repository    | $30/user/mo | Google Drive + Sheets |
+| **UserTesting** | Remote usability tests | $50/test    | DIY with Zoom         |
+| **Typeform**    | Surveys                | $25/mo      | Google Forms (free)   |
 
 ### Analytics Tools
 
-| Tool | Purpose | Cost | Alternative |
-|------|---------|------|------------|
-| **PostHog** | Product analytics | Free tier | Mixpanel, Amplitude |
-| **Grafana** | DORA metrics dashboards | Open source | Kibana |
-| **DevLake** | DORA metrics aggregation | Open source | Custom scripts |
+| Tool        | Purpose                  | Cost        | Alternative         |
+| ----------- | ------------------------ | ----------- | ------------------- |
+| **PostHog** | Product analytics        | Free tier   | Mixpanel, Amplitude |
+| **Grafana** | DORA metrics dashboards  | Open source | Kibana              |
+| **DevLake** | DORA metrics aggregation | Open source | Custom scripts      |
 
 ### Prioritization Tools
 
-| Tool | Purpose | Cost | Alternative |
-|------|---------|------|------------|
-| **Productboard** | Roadmap + prioritization | $50/user/mo | Notion, Airtable |
-| **Miro** | Affinity mapping, workshops | $10/user/mo | Mural, Figma FigJam |
+| Tool             | Purpose                     | Cost        | Alternative         |
+| ---------------- | --------------------------- | ----------- | ------------------- |
+| **Productboard** | Roadmap + prioritization    | $50/user/mo | Notion, Airtable    |
+| **Miro**         | Affinity mapping, workshops | $10/user/mo | Mural, Figma FigJam |
 
 ### Internal Fawkes Resources
 
@@ -1430,7 +1536,7 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 ## XI. Client Presentation Talking Points
 
 !!! quote "Diátaxis: Explanation / Conceptual"
-    Ready-to-use business language for communicating discovery value to stakeholders.
+Ready-to-use business language for communicating discovery value to stakeholders.
 
 ### Executive Summary
 
@@ -1513,12 +1619,12 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 
 ### Follow-Up Actions
 
-| Action | Owner | Timeline |
-|--------|-------|----------|
-| Share monthly discovery report | Platform PM | Monthly (first week) |
-| Present quarterly insights to leadership | Platform PM | Quarterly (last week) |
-| Conduct discovery training for new team members | UX Researcher | Onboarding (week 1) |
-| Review and refine discovery process | Platform PM | Quarterly retro |
+| Action                                          | Owner         | Timeline              |
+| ----------------------------------------------- | ------------- | --------------------- |
+| Share monthly discovery report                  | Platform PM   | Monthly (first week)  |
+| Present quarterly insights to leadership        | Platform PM   | Quarterly (last week) |
+| Conduct discovery training for new team members | UX Researcher | Onboarding (week 1)   |
+| Review and refine discovery process             | Platform PM   | Quarterly retro       |
 
 ---
 
@@ -1574,13 +1680,13 @@ gh issue list --label "roadmap" --json body | \
 
 ### Success Metrics
 
-| Metric | How to Measure | Target Value | Dashboard Link |
-|--------|----------------|--------------|----------------|
-| **Interviews per Month** | Count interview issues in GitHub | 10-12 | _Platform Analytics_ |
-| **NPS Score** | Quarterly survey | >40 | _NPS Tracking System_ |
-| **Feature Adoption** | Analytics (% users adopting within 3 months) | >75% | _Analytics Dashboard_ |
-| **Support Tickets per Feature** | Average tickets in first 30 days | <10 | _Support Dashboard_ |
-| **Time Insight to Delivery** | Days from insight doc to feature ship | <60 days | _Roadmap Tracker_ |
+| Metric                          | How to Measure                               | Target Value | Dashboard Link        |
+| ------------------------------- | -------------------------------------------- | ------------ | --------------------- |
+| **Interviews per Month**        | Count interview issues in GitHub             | 10-12        | _Platform Analytics_  |
+| **NPS Score**                   | Quarterly survey                             | >40          | _NPS Tracking System_ |
+| **Feature Adoption**            | Analytics (% users adopting within 3 months) | >75%         | _Analytics Dashboard_ |
+| **Support Tickets per Feature** | Average tickets in first 30 days             | <10          | _Support Dashboard_   |
+| **Time Insight to Delivery**    | Days from insight doc to feature ship        | <60 days     | _Roadmap Tracker_     |
 
 ### Verification Checklist
 
@@ -1598,12 +1704,12 @@ gh issue list --label "roadmap" --json body | \
 
 After 6 months of continuous discovery, expect to see:
 
-| DORA Metric | Expected Impact | Measurement Timeline |
-|-------------|-----------------|---------------------|
-| **Deployment Frequency** | ↑ 20-30% (better tools = more deploys) | 3-6 months |
-| **Lead Time for Changes** | ↓ 30-40% (remove friction discovered via research) | 3-6 months |
-| **Change Failure Rate** | ↓ 20-30% (better UX = fewer mistakes) | 6-12 months |
-| **Time to Restore** | ↓ 20-30% (better observability from discovery) | 6-12 months |
+| DORA Metric               | Expected Impact                                    | Measurement Timeline |
+| ------------------------- | -------------------------------------------------- | -------------------- |
+| **Deployment Frequency**  | ↑ 20-30% (better tools = more deploys)             | 3-6 months           |
+| **Lead Time for Changes** | ↓ 30-40% (remove friction discovered via research) | 3-6 months           |
+| **Change Failure Rate**   | ↓ 20-30% (better UX = fewer mistakes)              | 6-12 months          |
+| **Time to Restore**       | ↓ 20-30% (better observability from discovery)     | 6-12 months          |
 
 **Measurement**: Compare DORA metrics before/after implementing discovery-informed features.
 
@@ -1625,35 +1731,38 @@ When implementing continuous discovery, refer to:
 
 ### Troubleshooting
 
-| Issue | Possible Cause | Resolution |
-|-------|---------------|------------|
-| **Low interview participation** | Unclear value prop, timing issues | Add incentives, flexible scheduling, share past impact |
-| **Insights not actionable** | Too vague, no evidence | Use insight template, require evidence, test with engineers |
-| **Discovery findings ignored** | Poor communication, lack of buy-in | Monthly reports, leadership demos, tie to OKRs |
-| **Analysis paralysis** | Perfectionism, unclear decision criteria | Timeboxes, "good enough" thresholds, bias toward action |
-| **Survey fatigue** | Too frequent, too long | Quarterly NPS (not monthly), <5 questions, share results |
-| **No time for discovery** | Competing priorities, unclear value | Leadership support, discovery in OKRs, show ROI early |
+| Issue                           | Possible Cause                           | Resolution                                                  |
+| ------------------------------- | ---------------------------------------- | ----------------------------------------------------------- |
+| **Low interview participation** | Unclear value prop, timing issues        | Add incentives, flexible scheduling, share past impact      |
+| **Insights not actionable**     | Too vague, no evidence                   | Use insight template, require evidence, test with engineers |
+| **Discovery findings ignored**  | Poor communication, lack of buy-in       | Monthly reports, leadership demos, tie to OKRs              |
+| **Analysis paralysis**          | Perfectionism, unclear decision criteria | Timeboxes, "good enough" thresholds, bias toward action     |
+| **Survey fatigue**              | Too frequent, too long                   | Quarterly NPS (not monthly), <5 questions, share results    |
+| **No time for discovery**       | Competing priorities, unclear value      | Leadership support, discovery in OKRs, show ROI early       |
 
 ### Further Reading
 
 **Books**:
-- *Continuous Discovery Habits* by Teresa Torres
-- *The Mom Test* by Rob Fitzpatrick (how to interview users)
-- *Inspired* by Marty Cagan (product management for platforms)
-- *Team Topologies* by Skelton & Pais (platform-as-product)
+
+- _Continuous Discovery Habits_ by Teresa Torres
+- _The Mom Test_ by Rob Fitzpatrick (how to interview users)
+- _Inspired_ by Marty Cagan (product management for platforms)
+- _Team Topologies_ by Skelton & Pais (platform-as-product)
 
 **Articles**:
+
 - [SPACE Framework for Developer Productivity](https://queue.acm.org/detail.cfm?id=3454124)
 - [Measuring Developer Experience](https://martinfowler.com/articles/developer-effectiveness.html)
 - [Jobs-to-be-Done Framework](https://jobs-to-be-done.com/)
 
 **Research**:
+
 - [DORA State of DevOps Reports](https://dora.dev/)
 - [GitHub Octoverse](https://octoverse.github.com/)
 - [Stack Overflow Developer Survey](https://insights.stackoverflow.com/survey)
 
 ### Change Log
 
-| Date | Version | Changes |
-|------|---------|---------|
-| 2025-01-15 | 1.0 | Initial release |
+| Date       | Version | Changes         |
+| ---------- | ------- | --------------- |
+| 2025-01-15 | 1.0     | Initial release |

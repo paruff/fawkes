@@ -48,6 +48,7 @@ ArgoCD provides declarative GitOps-based continuous delivery for Kubernetes. It 
 ### Accessing ArgoCD
 
 Local development:
+
 ```bash
 # Get admin password
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
@@ -57,6 +58,7 @@ http://argocd.127.0.0.1.nip.io
 ```
 
 Default credentials:
+
 - Username: `admin`
 - Password: From secret above
 

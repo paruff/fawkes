@@ -100,6 +100,7 @@ Navigate to Backstage (`https://backstage.127.0.0.1.nip.io`):
 > "First, let's look at our developer portal powered by Backstage. This is the single pane of glass for developers to discover services, create new applications, and access platform resources.
 >
 > Here's the home page showing:
+>
 > - Service catalog with all deployed components
 > - Documentation hub (TechDocs)
 > - Available software templates
@@ -110,6 +111,7 @@ Navigate to Backstage (`https://backstage.127.0.0.1.nip.io`):
 Click on "Catalog" and browse services:
 
 > "The service catalog shows all services running on our platform. Each entry includes:
+>
 > - Service metadata and ownership
 > - Links to source code repositories
 > - CI/CD pipeline status
@@ -121,6 +123,7 @@ Click on "Catalog" and browse services:
 Show a service detail page:
 
 > "Here we can see the full service details including:
+>
 > - Real-time health status
 > - Recent deployments
 > - Links to logs and metrics
@@ -138,6 +141,7 @@ Navigate to "Create" section:
 > 3. **Java Spring Boot Service** - Enterprise Java application
 >
 > Each template includes:
+>
 > - Pre-configured Jenkinsfile using our shared pipeline library
 > - Security scanning configuration
 > - Kubernetes manifests
@@ -148,12 +152,14 @@ Navigate to "Create" section:
 > Let me create a new Node.js service..."
 
 Walk through creating a service (can be fast-forwarded or summarized):
+
 1. Select template
 2. Fill in service name, description, owner
 3. Review generated repository structure
 4. Show how it creates the repo and sets up CI/CD
 
 > "Within seconds, we have:
+>
 > - A new Git repository with all the code
 > - Jenkins pipeline automatically configured
 > - ArgoCD application registered
@@ -166,6 +172,7 @@ Walk through creating a service (can be fast-forwarded or summarized):
 Click on "Docs" section:
 
 > "Backstage also hosts all our platform documentation using TechDocs. Developers can find:
+>
 > - Getting started guides
 > - API documentation
 > - Architecture decisions (ADRs)
@@ -185,6 +192,7 @@ Navigate to ArgoCD (`https://argocd.127.0.0.1.nip.io`):
 > "Now let's look at ArgoCD, our GitOps engine. ArgoCD continuously monitors our Git repositories and ensures that what's running in Kubernetes matches what's defined in Git.
 >
 > Here's our applications dashboard showing all deployed components. You can see:
+>
 > - Application health status (all green and healthy)
 > - Sync status (all synchronized)
 > - Last sync time
@@ -265,6 +273,7 @@ Click on a pipeline and show recent build:
 Show the pipeline stages visualized:
 
 > "Notice how each stage provides clear feedback:
+>
 > - Green checkmarks for passing stages
 > - Test results and coverage reports
 > - Security scan results with quality gates
@@ -278,6 +287,7 @@ Show the pipeline stages visualized:
 Show a PR pipeline:
 
 > "For Pull Requests, we run a lightweight pipeline:
+>
 > - Unit tests only
 > - BDD tests only
 > - Fast feedback (< 5 minutes)
@@ -324,6 +334,7 @@ Navigate to SonarQube (`https://sonarqube.127.0.0.1.nip.io`):
 Click on a project to show details:
 
 > "For each project, developers get detailed information about:
+>
 > - Security hotspots to review
 > - Bugs and code smells
 > - Duplicated code
@@ -335,6 +346,7 @@ Click on a project to show details:
 Navigate to Harbor (`https://harbor.127.0.0.1.nip.io`):
 
 > "Harbor is our container registry with integrated security scanning. Every image is:
+>
 > - Scanned by Trivy for OS vulnerabilities
 > - Checked for CVEs in base images
 > - Signed and verified
@@ -365,6 +377,7 @@ Navigate to Prometheus (`https://prometheus.127.0.0.1.nip.io`):
 Run a sample query (e.g., `up` or `container_cpu_usage_seconds_total`):
 
 > "We collect:
+>
 > - Infrastructure metrics (CPU, memory, disk, network)
 > - Application metrics (request rates, errors, latencies)
 > - Business metrics (transactions, users, revenue)
@@ -399,6 +412,7 @@ Click through 2-3 dashboards briefly:
 Navigate to DevLake (`https://devlake.127.0.0.1.nip.io`):
 
 > "Now for the highlight - our DORA metrics automation! Apache DevLake collects data from:
+>
 > - GitHub (commits, PRs)
 > - Jenkins (builds, tests)
 > - ArgoCD (deployments)
@@ -414,24 +428,28 @@ Navigate to DORA dashboard:
 >
 > **1. Deployment Frequency**
 > Currently showing: [point to chart]
+>
 > - We're deploying multiple times per day
 > - This is 'Elite' performance according to DORA research
 > - Every ArgoCD sync is captured automatically
 >
 > **2. Lead Time for Changes**
 > Currently showing: [point to chart]
+>
 > - Time from commit to production: [X hours/minutes]
 > - This includes code review, CI, and deployment time
 > - We're tracking the full value stream
 >
 > **3. Change Failure Rate**
 > Currently showing: [point to chart]
+>
 > - X% of deployments require remediation
 > - Tracked via failed ArgoCD syncs and production incidents
 > - Our golden path and testing helps keep this low
 >
 > **4. Mean Time to Restore (MTTR)**
 > Currently showing: [point to chart]
+>
 > - Average time to recover from incidents: [X hours/minutes]
 > - GitOps rollbacks make this fast
 > - Observable platform speeds diagnosis"
@@ -454,6 +472,7 @@ Show trend charts:
 Show drill-down views:
 
 > "We can also break this down by:
+>
 > - Individual teams
 > - Specific projects
 > - Time periods
@@ -513,6 +532,7 @@ kubectl top nodes
 > All the code, documentation, and configuration is available in the Fawkes repository at github.com/paruff/fawkes.
 >
 > Key documentation:
+>
 > - Architecture: `/docs/architecture.md`
 > - Getting Started: `/docs/getting-started.md`
 > - Golden Path Usage: `/docs/golden-path-usage.md`
@@ -540,6 +560,7 @@ kubectl top nodes
 Upload the video to one or more of these platforms:
 
 #### Option 1: YouTube (Recommended)
+
 - [ ] Create/use existing YouTube channel
 - [ ] Upload video with title: "Fawkes IDP - Epic 1 Demo Walkthrough (DORA 2023 Foundation)"
 - [ ] Add detailed description with links
@@ -550,12 +571,14 @@ Upload the video to one or more of these platforms:
 - [ ] Get shareable link
 
 #### Option 2: GitHub Release
+
 - [ ] Create GitHub release (e.g., `v1.0-epic1-demo`)
 - [ ] Upload video file as release asset
 - [ ] Add release notes with video description
 - [ ] Link in README.md
 
 #### Option 3: Company Internal Platform
+
 - [ ] Upload to internal video platform
 - [ ] Set appropriate permissions
 - [ ] Add to documentation portal
@@ -642,6 +665,7 @@ A comprehensive 30-minute demonstration of the Fawkes Internal Developer Platfor
 ## Additional Resources
 
 ### Related Documentation
+
 - [Epic 1 Platform Operations Runbook](../runbooks/epic-1-platform-operations.md)
 - [Epic 1 Architecture Diagrams](../runbooks/epic-1-architecture-diagrams.md)
 - [Golden Path Usage Guide](../golden-path-usage.md)
@@ -650,11 +674,13 @@ A comprehensive 30-minute demonstration of the Fawkes Internal Developer Platfor
 - [Tutorial 6: Measure DORA Metrics](./6-measure-dora-metrics.md)
 
 ### Reference Materials
+
 - [Architecture Documentation](../architecture.md)
 - [Implementation Handoff Document](../implementation-plan/fawkes-handoff-doc.md)
 - [Epic 1 Acceptance Tests](../AT-E1-006-VALIDATION-COVERAGE.md)
 
 ### Support
+
 - **Issues**: https://github.com/paruff/fawkes/issues
 - **Discussions**: https://github.com/paruff/fawkes/discussions
 - **Documentation**: https://github.com/paruff/fawkes/tree/main/docs
@@ -664,6 +690,7 @@ A comprehensive 30-minute demonstration of the Fawkes Internal Developer Platfor
 ## Notes for Presenter
 
 ### Tips for a Great Demo
+
 1. **Practice First**: Do a dry run to ensure everything works
 2. **Check Audio**: Use a good microphone and quiet room
 3. **Screen Resolution**: Record at 1920x1080 for best quality
@@ -676,6 +703,7 @@ A comprehensive 30-minute demonstration of the Fawkes Internal Developer Platfor
 10. **Time Management**: Keep an eye on the clock to hit 30 minutes
 
 ### What to Emphasize
+
 - **Automation**: Everything is automated, nothing is manual
 - **Security**: Security gates are mandatory, not optional
 - **Observability**: Full visibility into everything
@@ -685,6 +713,7 @@ A comprehensive 30-minute demonstration of the Fawkes Internal Developer Platfor
 - **Resource Efficiency**: Running efficiently under 70% utilization
 
 ### Common Questions to Address
+
 - "How long does it take to onboard a new service?" → Minutes
 - "What happens if a deployment fails?" → Auto-rollback, clear alerts
 - "How do we know if we're improving?" → DORA metrics trends

@@ -23,12 +23,12 @@ This document provides the configuration reference for the Prometheus monitoring
 
 Resource allocation for the Prometheus server.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `server.resources.requests.cpu` | String | No | `100m` | CPU request (millicores). |
-| `server.resources.requests.memory` | String | No | `256Mi` | Memory request. |
-| `server.resources.limits.cpu` | String | No | `200m` | Maximum CPU allocation. |
-| `server.resources.limits.memory` | String | No | `512Mi` | Maximum memory allocation. |
+| Field                              | Type   | Required | Default | Description                |
+| ---------------------------------- | ------ | -------- | ------- | -------------------------- |
+| `server.resources.requests.cpu`    | String | No       | `100m`  | CPU request (millicores).  |
+| `server.resources.requests.memory` | String | No       | `256Mi` | Memory request.            |
+| `server.resources.limits.cpu`      | String | No       | `200m`  | Maximum CPU allocation.    |
+| `server.resources.limits.memory`   | String | No       | `512Mi` | Maximum memory allocation. |
 
 **Fawkes Defaults:**
 
@@ -46,10 +46,10 @@ server:
 **Scaling Guidelines:**
 
 | Environment | CPU Request | Memory Request | CPU Limit | Memory Limit |
-|-------------|-------------|----------------|-----------|--------------|
-| Development | `100m` | `256Mi` | `200m` | `512Mi` |
-| Staging | `200m` | `512Mi` | `500m` | `1Gi` |
-| Production | `500m` | `1Gi` | `2` | `4Gi` |
+| ----------- | ----------- | -------------- | --------- | ------------ |
+| Development | `100m`      | `256Mi`        | `200m`    | `512Mi`      |
+| Staging     | `200m`      | `512Mi`        | `500m`    | `1Gi`        |
+| Production  | `500m`      | `1Gi`          | `2`       | `4Gi`        |
 
 ---
 
@@ -57,11 +57,11 @@ server:
 
 Kubernetes Service configuration for the Prometheus server.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `server.service.type` | String | No | `ClusterIP` | Service type: `ClusterIP`, `NodePort`, `LoadBalancer`. |
-| `server.service.port` | Integer | No | `80` | Service port. |
-| `server.service.targetPort` | Integer | No | `9090` | Container port. |
+| Field                       | Type    | Required | Default     | Description                                            |
+| --------------------------- | ------- | -------- | ----------- | ------------------------------------------------------ |
+| `server.service.type`       | String  | No       | `ClusterIP` | Service type: `ClusterIP`, `NodePort`, `LoadBalancer`. |
+| `server.service.port`       | Integer | No       | `80`        | Service port.                                          |
+| `server.service.targetPort` | Integer | No       | `9090`      | Container port.                                        |
 
 **Fawkes Default:**
 
@@ -79,21 +79,21 @@ server:
 
 Persistent storage for metrics data.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `server.persistentVolume.enabled` | Boolean | No | `true` | Enable persistent storage. |
-| `server.persistentVolume.size` | String | No | `8Gi` | Storage size. |
-| `server.persistentVolume.storageClass` | String | No | `standard` | StorageClass name. |
-| `server.persistentVolume.accessModes` | Array[String] | No | `["ReadWriteOnce"]` | Volume access modes. |
+| Field                                  | Type          | Required | Default             | Description                |
+| -------------------------------------- | ------------- | -------- | ------------------- | -------------------------- |
+| `server.persistentVolume.enabled`      | Boolean       | No       | `true`              | Enable persistent storage. |
+| `server.persistentVolume.size`         | String        | No       | `8Gi`               | Storage size.              |
+| `server.persistentVolume.storageClass` | String        | No       | `standard`          | StorageClass name.         |
+| `server.persistentVolume.accessModes`  | Array[String] | No       | `["ReadWriteOnce"]` | Volume access modes.       |
 
 **Retention Recommendations:**
 
-| Retention Period | Recommended Size | Use Case |
-|------------------|------------------|----------|
-| 7 days | `8Gi` | Development |
-| 15 days | `20Gi` | Staging |
-| 30 days | `50Gi` | Production |
-| 90 days | `150Gi` | Long-term analysis |
+| Retention Period | Recommended Size | Use Case           |
+| ---------------- | ---------------- | ------------------ |
+| 7 days           | `8Gi`            | Development        |
+| 15 days          | `20Gi`           | Staging            |
+| 30 days          | `50Gi`           | Production         |
+| 90 days          | `150Gi`          | Long-term analysis |
 
 **Example:**
 
@@ -111,10 +111,10 @@ server:
 
 Metrics retention configuration.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `server.retention` | String | No | `15d` | Time-based retention (e.g., `7d`, `30d`). |
-| `server.retentionSize` | String | No | - | Size-based retention (e.g., `10GB`, `50GB`). Overrides time-based retention. |
+| Field                  | Type   | Required | Default | Description                                                                  |
+| ---------------------- | ------ | -------- | ------- | ---------------------------------------------------------------------------- |
+| `server.retention`     | String | No       | `15d`   | Time-based retention (e.g., `7d`, `30d`).                                    |
+| `server.retentionSize` | String | No       | -       | Size-based retention (e.g., `10GB`, `50GB`). Overrides time-based retention. |
 
 **Example:**
 
@@ -132,9 +132,9 @@ server:
 
 Enable or disable Alertmanager integration.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `alertmanager.enabled` | Boolean | No | `true` | Deploy Alertmanager for alert routing. |
+| Field                  | Type    | Required | Default | Description                            |
+| ---------------------- | ------- | -------- | ------- | -------------------------------------- |
+| `alertmanager.enabled` | Boolean | No       | `true`  | Deploy Alertmanager for alert routing. |
 
 **Fawkes Default:** `true`
 
@@ -144,9 +144,9 @@ Enable or disable Alertmanager integration.
 
 Alert routing configuration.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `alertmanagerFiles.alertmanager.yml` | Object | No | `{}` | Alertmanager configuration (receivers, routes). |
+| Field                                | Type   | Required | Default | Description                                     |
+| ------------------------------------ | ------ | -------- | ------- | ----------------------------------------------- |
+| `alertmanagerFiles.alertmanager.yml` | Object | No       | `{}`    | Alertmanager configuration (receivers, routes). |
 
 **Example:**
 
@@ -156,15 +156,15 @@ alertmanagerFiles:
     global:
       resolve_timeout: 5m
     route:
-      group_by: ['alertname', 'cluster', 'service']
+      group_by: ["alertname", "cluster", "service"]
       group_wait: 10s
       group_interval: 10s
       repeat_interval: 12h
-      receiver: 'mattermost'
+      receiver: "mattermost"
     receivers:
-      - name: 'mattermost'
+      - name: "mattermost"
         webhook_configs:
-          - url: 'https://mattermost.fawkes.example.com/hooks/alerts'
+          - url: "https://mattermost.fawkes.example.com/hooks/alerts"
 ```
 
 ---
@@ -175,19 +175,19 @@ alertmanagerFiles:
 
 Prometheus scrape configuration.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `serverFiles.prometheus.yml.scrape_configs` | Array[Object] | No | `[]` | List of scrape jobs. |
+| Field                                       | Type          | Required | Default | Description          |
+| ------------------------------------------- | ------------- | -------- | ------- | -------------------- |
+| `serverFiles.prometheus.yml.scrape_configs` | Array[Object] | No       | `[]`    | List of scrape jobs. |
 
 **Default Scrape Targets:**
 
-| Job | Target | Metrics |
-|-----|--------|---------|
-| `prometheus` | Prometheus itself | Self-monitoring metrics. |
-| `kubernetes-apiservers` | Kubernetes API server | Control plane metrics. |
-| `kubernetes-nodes` | Kubelet on each node | Node metrics (CPU, memory, disk). |
-| `kubernetes-pods` | Pods with `prometheus.io/scrape=true` annotation | Application metrics. |
-| `kubernetes-service-endpoints` | Service endpoints | Service-level metrics. |
+| Job                            | Target                                           | Metrics                           |
+| ------------------------------ | ------------------------------------------------ | --------------------------------- |
+| `prometheus`                   | Prometheus itself                                | Self-monitoring metrics.          |
+| `kubernetes-apiservers`        | Kubernetes API server                            | Control plane metrics.            |
+| `kubernetes-nodes`             | Kubelet on each node                             | Node metrics (CPU, memory, disk). |
+| `kubernetes-pods`              | Pods with `prometheus.io/scrape=true` annotation | Application metrics.              |
+| `kubernetes-service-endpoints` | Service endpoints                                | Service-level metrics.            |
 
 **Example Custom Scrape Job:**
 
@@ -195,10 +195,10 @@ Prometheus scrape configuration.
 serverFiles:
   prometheus.yml:
     scrape_configs:
-      - job_name: 'jenkins'
+      - job_name: "jenkins"
         static_configs:
-          - targets: ['jenkins.jenkins.svc.cluster.local:8080']
-        metrics_path: '/prometheus'
+          - targets: ["jenkins.jenkins.svc.cluster.local:8080"]
+        metrics_path: "/prometheus"
         scrape_interval: 30s
 ```
 
@@ -210,9 +210,9 @@ serverFiles:
 
 Enable Kube State Metrics for Kubernetes resource metrics.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `kubeStateMetrics.enabled` | Boolean | No | `true` | Deploy kube-state-metrics. |
+| Field                      | Type    | Required | Default | Description                |
+| -------------------------- | ------- | -------- | ------- | -------------------------- |
+| `kubeStateMetrics.enabled` | Boolean | No       | `true`  | Deploy kube-state-metrics. |
 
 **Metrics Collected:**
 
@@ -227,9 +227,9 @@ Enable Kube State Metrics for Kubernetes resource metrics.
 
 Enable Node Exporter for node-level metrics.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `nodeExporter.enabled` | Boolean | No | `true` | Deploy node-exporter DaemonSet. |
+| Field                  | Type    | Required | Default | Description                     |
+| ---------------------- | ------- | -------- | ------- | ------------------------------- |
+| `nodeExporter.enabled` | Boolean | No       | `true`  | Deploy node-exporter DaemonSet. |
 
 **Metrics Collected:**
 
@@ -246,12 +246,12 @@ Enable Node Exporter for node-level metrics.
 
 Ingress configuration for accessing Prometheus UI.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `server.ingress.enabled` | Boolean | No | `false` | Enable Ingress resource creation. |
-| `server.ingress.annotations` | Object | No | `{}` | Ingress annotations (e.g., `cert-manager.io/cluster-issuer`). |
-| `server.ingress.hosts` | Array[String] | No | `[]` | Hostnames for Ingress rules. |
-| `server.ingress.tls` | Array[Object] | No | `[]` | TLS configuration. |
+| Field                        | Type          | Required | Default | Description                                                   |
+| ---------------------------- | ------------- | -------- | ------- | ------------------------------------------------------------- |
+| `server.ingress.enabled`     | Boolean       | No       | `false` | Enable Ingress resource creation.                             |
+| `server.ingress.annotations` | Object        | No       | `{}`    | Ingress annotations (e.g., `cert-manager.io/cluster-issuer`). |
+| `server.ingress.hosts`       | Array[String] | No       | `[]`    | Hostnames for Ingress rules.                                  |
+| `server.ingress.tls`         | Array[Object] | No       | `[]`    | TLS configuration.                                            |
 
 **Example:**
 
@@ -279,12 +279,12 @@ server:
 
 Global Prometheus configuration for federation.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `server.global.scrape_interval` | String | No | `15s` | Default scrape interval. |
-| `server.global.scrape_timeout` | String | No | `10s` | Default scrape timeout. |
-| `server.global.evaluation_interval` | String | No | `15s` | Rule evaluation interval. |
-| `server.global.external_labels` | Object | No | `{}` | Labels added to all metrics (e.g., `cluster`, `environment`). |
+| Field                               | Type   | Required | Default | Description                                                   |
+| ----------------------------------- | ------ | -------- | ------- | ------------------------------------------------------------- |
+| `server.global.scrape_interval`     | String | No       | `15s`   | Default scrape interval.                                      |
+| `server.global.scrape_timeout`      | String | No       | `10s`   | Default scrape timeout.                                       |
+| `server.global.evaluation_interval` | String | No       | `15s`   | Rule evaluation interval.                                     |
+| `server.global.external_labels`     | Object | No       | `{}`    | Labels added to all metrics (e.g., `cluster`, `environment`). |
 
 **Example:**
 
@@ -294,8 +294,8 @@ server:
     scrape_interval: 15s
     evaluation_interval: 15s
     external_labels:
-      cluster: 'fawkes-prod'
-      environment: 'production'
+      cluster: "fawkes-prod"
+      environment: "production"
 ```
 
 ---
@@ -306,9 +306,9 @@ server:
 
 Pod Security Policy for Prometheus server.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `server.podSecurityPolicy.enabled` | Boolean | No | `false` | Enable PodSecurityPolicy (deprecated in K8s 1.25+). |
+| Field                              | Type    | Required | Default | Description                                         |
+| ---------------------------------- | ------- | -------- | ------- | --------------------------------------------------- |
+| `server.podSecurityPolicy.enabled` | Boolean | No       | `false` | Enable PodSecurityPolicy (deprecated in K8s 1.25+). |
 
 **Note:** Use Kyverno policies instead for modern Kubernetes versions.
 
@@ -335,7 +335,7 @@ server:
   global:
     scrape_interval: 15s
     external_labels:
-      cluster: 'fawkes-prod'
+      cluster: "fawkes-prod"
   ingress:
     enabled: true
     hosts:

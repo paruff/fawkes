@@ -64,10 +64,12 @@ curl http://otel-sample-app:8080/error
 ## Viewing Traces
 
 Traces can be viewed in:
+
 - Grafana Tempo (via Grafana UI)
 - Directly via Tempo API
 
 Example Grafana query:
+
 ```
 {service.name="otel-sample-app"}
 ```

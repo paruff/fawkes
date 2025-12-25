@@ -15,6 +15,7 @@ data/
 **Purpose**: Store original, unmodified data as collected.
 
 **Contents**:
+
 - Survey responses (CSV, JSON)
 - Analytics exports
 - Unprocessed interview recordings metadata
@@ -23,6 +24,7 @@ data/
 - Usage logs
 
 **Guidelines**:
+
 - **Never modify**: Keep original data intact
 - **Metadata**: Include a `README.md` or metadata file describing:
   - Collection method
@@ -48,6 +50,7 @@ data/
 **Target Audience**: Platform users who deployed in last 30 days
 
 ## Questions
+
 1. Role and experience level
 2. Deployment frequency
 3. Pain points (open-ended)
@@ -55,14 +58,17 @@ data/
 5. Feature requests (optional)
 
 ## Data Files
+
 - `2025-12-15-deployment-survey-raw.csv` - All responses
 - `2025-12-15-deployment-survey-open-responses.txt` - Open-ended answers
 
 ## Known Issues
+
 - Question 3 had a character limit, some responses truncated
 - 3 responses excluded due to test submissions
 
 ## Privacy
+
 - All emails and names removed
 - Anonymized as Respondent_001, Respondent_002, etc.
 ```
@@ -72,6 +78,7 @@ data/
 **Purpose**: Store cleaned, analyzed, or transformed data.
 
 **Contents**:
+
 - Cleaned survey data
 - Anonymized interview transcripts
 - Aggregated analytics
@@ -79,6 +86,7 @@ data/
 - Statistical analysis outputs
 
 **Guidelines**:
+
 - **Document transformation**: Include notes on how data was processed
 - **Link to source**: Reference original raw data file
 - **Version**: If data is processed multiple times, use versions
@@ -97,15 +105,18 @@ data/
 ## Transformations Applied
 
 1. **Anonymization**
+
    - Removed email addresses
    - Replaced names with Respondent_NNN
 
 2. **Data Cleaning**
+
    - Removed 3 test submissions
    - Fixed typos in role field
    - Standardized experience level values
 
 3. **Categorization**
+
    - Coded open-ended pain points into 8 themes
    - Tagged responses by user segment
 
@@ -114,17 +125,20 @@ data/
    - Counted pain point mentions by theme
 
 ## Output Files
+
 - `2025-12-deployment-survey-processed.csv` - Clean dataset
 - `2025-12-deployment-survey-themes.csv` - Coded themes
 - `2025-12-deployment-survey-summary.json` - Aggregated stats
 
 ## Data Dictionary
+
 See: `2025-12-deployment-survey-data-dictionary.md`
 ```
 
 ## Data Types
 
 ### Quantitative Data
+
 - Survey responses with rating scales
 - Analytics metrics
 - Usage statistics
@@ -134,6 +148,7 @@ See: `2025-12-deployment-survey-data-dictionary.md`
 **Tools**: Excel, Google Sheets, Python (pandas), R
 
 ### Qualitative Data
+
 - Interview transcripts
 - Open-ended survey responses
 - Observation notes
@@ -143,6 +158,7 @@ See: `2025-12-deployment-survey-data-dictionary.md`
 **Tools**: NVivo, Atlas.ti, spreadsheets for simple coding
 
 ### Mixed Methods
+
 - Surveys with both ratings and open-ended questions
 - Interviews with structured and unstructured sections
 
@@ -151,6 +167,7 @@ See: `2025-12-deployment-survey-data-dictionary.md`
 ### What NOT to Commit
 
 ❌ **Never commit**:
+
 - Personally identifiable information (PII)
   - Names, email addresses, phone numbers
   - User IDs that can be linked to individuals
@@ -164,6 +181,7 @@ See: `2025-12-deployment-survey-data-dictionary.md`
 ### What's Safe to Commit
 
 ✅ **Safe to commit**:
+
 - Anonymized survey responses
 - Aggregated analytics (no individual-level data)
 - De-identified interview transcripts
@@ -191,6 +209,7 @@ Before committing data:
 ## Best Practices
 
 ✅ **Do:**
+
 - Document collection methodology
 - Keep raw and processed data separate
 - Include data dictionaries
@@ -199,6 +218,7 @@ Before committing data:
 - Review data privacy before committing
 
 ❌ **Don't:**
+
 - Modify raw data files
 - Commit PII or sensitive information
 - Use vague filenames

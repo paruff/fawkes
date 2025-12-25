@@ -1,12 +1,15 @@
 # Great Expectations Data Quality Implementation Summary
 
 ## Overview
+
 This document summarizes the implementation of Great Expectations for data quality monitoring in the Fawkes platform (Issue #47).
 
 ## Implementation Completed
 
 ### 1. Great Expectations Project Structure ✅
+
 Created a complete GX project in `services/data-quality/`:
+
 - **Configuration**: `gx/great_expectations.yml`, `gx/datasources.yml`
 - **Expectation Suites**: 4 database-specific validation suites
 - **Checkpoints**: 4 checkpoints for automated validation
@@ -15,7 +18,9 @@ Created a complete GX project in `services/data-quality/`:
 - **Documentation**: Comprehensive README and guides
 
 ### 2. Database Datasources ✅
+
 Configured connections to:
+
 - **Backstage DB**: Developer portal catalog validation
 - **Harbor DB**: Container registry metadata validation
 - **DataHub DB**: Data catalog metadata validation
@@ -24,12 +29,14 @@ Configured connections to:
 ### 3. Expectation Suites ✅
 
 #### Backstage DB (`backstage_db_suite.json`)
+
 - Row count validation
 - Schema validation (required columns)
 - Primary key (entity_id) not null and unique
 - Entity references validation
 
 #### Harbor DB (`harbor_db_suite.json`)
+
 - Artifact row counts
 - Required columns validation
 - Primary key uniqueness
@@ -37,19 +44,23 @@ Configured connections to:
 - Referential integrity
 
 #### DataHub DB (`datahub_db_suite.json`)
+
 - Metadata row counts
 - URN format validation
 - Required columns (urn, aspect, version)
 - DataHub standard compliance
 
 #### DORA Metrics (`dora_metrics_suite.json`)
+
 - Metrics data exists
 - Timestamp validation
 - Data freshness checks
 - Time-series completeness
 
 ### 4. Checkpoints ✅
+
 Created 4 checkpoints:
+
 - `backstage_db_checkpoint.yml` - Backstage-specific
 - `harbor_db_checkpoint.yml` - Harbor-specific
 - `datahub_db_checkpoint.yml` - DataHub-specific
@@ -58,6 +69,7 @@ Created 4 checkpoints:
 ### 5. Kubernetes Deployment ✅
 
 #### Resources Created:
+
 - `data-quality-application.yaml` - ArgoCD Application
 - `configmap.yaml` - Configuration settings
 - `secret.yaml` - Database credentials (dev/local)
@@ -67,6 +79,7 @@ Created 4 checkpoints:
 - `kustomization.yaml` - Kustomize config with ConfigMap generators
 
 #### Deployment Strategy:
+
 - Uses ArgoCD for GitOps deployment
 - CronJob runs every 6 hours automatically
 - ConfigMaps generated from source files
@@ -75,11 +88,13 @@ Created 4 checkpoints:
 ### 6. Alerting and Monitoring ✅
 
 #### Mattermost Integration:
+
 - Alert on validation failures
 - Daily summary reports
 - Configurable alert thresholds
 
 #### Grafana Dashboard:
+
 - Validation success rate
 - Failed validations tracking
 - Validation results over time
@@ -88,6 +103,7 @@ Created 4 checkpoints:
 - Data freshness heatmap
 
 #### Alert Configuration (`alerting.yaml`):
+
 - Multiple alert rules (failure, stale data, high failure rate)
 - Daily summary configuration
 - Deduplication and escalation support
@@ -96,6 +112,7 @@ Created 4 checkpoints:
 ### 7. Validation and Testing ✅
 
 #### Unit Tests:
+
 - 14 tests created in `tests/test_config.py`
 - All tests passing ✅
 - Coverage:
@@ -107,6 +124,7 @@ Created 4 checkpoints:
   - Requirements validation
 
 #### Validation Script:
+
 - Created `scripts/validate-at-e2-004.sh`
 - Added Makefile target `make validate-at-e2-004`
 - Comprehensive 7-phase validation:
@@ -119,7 +137,9 @@ Created 4 checkpoints:
   7. ArgoCD application
 
 ### 8. Documentation ✅
+
 Created comprehensive documentation:
+
 - **README.md**: Full service documentation
   - Architecture overview
   - Directory structure
@@ -175,6 +195,7 @@ scripts/
 ```
 
 ## Technology Stack
+
 - **Great Expectations**: 0.18.12
 - **SQLAlchemy**: 2.0.25
 - **psycopg2-binary**: 2.9.9
@@ -184,18 +205,19 @@ scripts/
 
 ## Acceptance Criteria Status
 
-| Criteria | Status | Notes |
-|----------|--------|-------|
-| Great Expectations configured | ✅ Complete | Full project structure with all configs |
-| Data sources connected | ✅ Complete | 4 datasources configured |
-| Expectation suites created | ✅ Complete | 4 comprehensive suites |
-| Validation running automatically | ✅ Complete | CronJob every 6 hours |
-| Data docs generated | ✅ Configured | Will generate on first run |
-| Passes AT-E2-004 | ⏳ Pending | Requires cluster deployment |
+| Criteria                         | Status        | Notes                                   |
+| -------------------------------- | ------------- | --------------------------------------- |
+| Great Expectations configured    | ✅ Complete   | Full project structure with all configs |
+| Data sources connected           | ✅ Complete   | 4 datasources configured                |
+| Expectation suites created       | ✅ Complete   | 4 comprehensive suites                  |
+| Validation running automatically | ✅ Complete   | CronJob every 6 hours                   |
+| Data docs generated              | ✅ Configured | Will generate on first run              |
+| Passes AT-E2-004                 | ⏳ Pending    | Requires cluster deployment             |
 
 ## Testing Results
 
 ### Unit Tests: ✅ 14/14 Passed
+
 ```bash
 $ pytest services/data-quality/tests/test_config.py -v
 ================================================= test session starts ==================================================
@@ -222,24 +244,29 @@ tests/test_config.py::TestRequirements::test_requirements_has_gx PASSED         
 ## Next Steps
 
 ### For Deployment:
+
 1. **Deploy to Kubernetes cluster**:
+
    ```bash
    kubectl apply -f platform/apps/data-quality-application.yaml
    # Or via ArgoCD sync
    ```
 
 2. **Verify deployment**:
+
    ```bash
    make validate-at-e2-004
    ```
 
 3. **Test manual checkpoint**:
+
    ```bash
    kubectl exec -it -n fawkes deployment/data-quality -- \
      python3 scripts/run_checkpoint.py backstage_db_checkpoint --json
    ```
 
 4. **Configure Mattermost webhook**:
+
    ```bash
    kubectl edit secret data-quality-secrets -n fawkes
    # Update MATTERMOST_WEBHOOK_URL
@@ -252,6 +279,7 @@ tests/test_config.py::TestRequirements::test_requirements_has_gx PASSED         
    ```
 
 ### For Production:
+
 1. Use External Secrets Operator for credentials
 2. Configure production Mattermost webhook
 3. Import Grafana dashboard
@@ -264,15 +292,18 @@ tests/test_config.py::TestRequirements::test_requirements_has_gx PASSED         
 **Blocks**: Issue #48, #49 (dependent data quality features)
 
 ## Resources
+
 - Great Expectations docs: https://docs.greatexpectations.io/
 - Issue #47: https://github.com/paruff/fawkes/issues/47
 - AT-E2-004 test specification in `docs/implementation-plan/fawkes-handoff-doc.md`
 
 ## Contributors
+
 - Implementation: GitHub Copilot (Agent)
 - Review: paruff
 
 ---
+
 **Status**: ✅ Implementation Complete (Pending Deployment)
 **Date**: 2024-12-21
 **Estimated Effort**: 5 hours

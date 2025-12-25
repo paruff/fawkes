@@ -5,6 +5,7 @@ This plugin provides comprehensive feedback collection functionality for Backsta
 ## Features
 
 ### ✨ Core Capabilities
+
 - **Contextual Feedback**: Automatically captures page URL, browser info, and user agent
 - **Screenshot Capture**: Users can include screenshots with their feedback
 - **Multiple Feedback Types**: Support for general feedback, bug reports, and feature requests
@@ -15,10 +16,12 @@ This plugin provides comprehensive feedback collection functionality for Backsta
 ### 🎯 Feedback Types
 
 1. **General Feedback** - Share thoughts and suggestions
+
    - Does not create GitHub issues by default
    - Useful for general comments and praise
 
 2. **Bug Report** - Report problems or errors
+
    - Automatically creates GitHub issue with `bug` label
    - Includes screenshot if provided
    - Captures browser and context information
@@ -38,7 +41,7 @@ Added to `app-config.yaml`:
 ```yaml
 proxy:
   endpoints:
-    '/feedback/api':
+    "/feedback/api":
       target: http://feedback-service.fawkes.svc:8000/
       changeOrigin: true
       secure: false
@@ -64,6 +67,7 @@ GITHUB_REPO: fawkes
 ### For Users
 
 1. **Submit Feedback**:
+
    - Click the feedback button in Backstage
    - Select feedback type (feedback, bug report, or feature request)
    - Choose a category
@@ -97,15 +101,18 @@ GITHUB_REPO: fawkes
 The plugin communicates with the feedback service via these endpoints:
 
 ### Public Endpoints
+
 - `POST /api/v1/feedback` - Submit feedback (with optional screenshot and GitHub issue creation)
 
 ### Admin Endpoints (require Bearer token)
+
 - `GET /api/v1/feedback` - List feedback with filters and pagination
 - `PUT /api/v1/feedback/{id}/status` - Update status (syncs to GitHub if linked)
 - `GET /api/v1/feedback/{id}/screenshot` - Retrieve screenshot data
 - `GET /api/v1/feedback/stats` - Get statistics
 
 ### Health & Metrics
+
 - `GET /health` - Service health check
 - `GET /metrics` - Prometheus metrics
 - `POST /api/v1/metrics/refresh` - Refresh metrics (admin)
@@ -124,12 +131,14 @@ Screenshots are captured using HTML5 Canvas API and stored as base64-encoded PNG
 When feedback is submitted with `create_github_issue: true`:
 
 1. A GitHub issue is created with:
+
    - Title based on feedback type and comment
    - Body including all feedback details
    - Labels: `feedback`, `automated`, type-specific labels
    - Category label (e.g., `category:ui-ux`)
 
 2. If a screenshot is included:
+
    - A comment is added noting screenshot availability
    - Screenshot remains in feedback database for privacy
 
@@ -168,14 +177,14 @@ This configuration provides the backend infrastructure and API integration. The 
 // Example screenshot capture logic
 const captureScreenshot = async () => {
   const canvas = await html2canvas(document.body);
-  return canvas.toDataURL('image/png');
+  return canvas.toDataURL("image/png");
 };
 
 // Example feedback submission
 const submitFeedback = async (data) => {
-  const response = await fetch('/feedback/api/api/v1/feedback', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const response = await fetch("/feedback/api/api/v1/feedback", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       rating: data.rating,
       category: data.category,
@@ -185,8 +194,8 @@ const submitFeedback = async (data) => {
       page_url: window.location.href,
       browser_info: navigator.userAgent,
       screenshot: data.screenshot, // base64 string
-      create_github_issue: data.createIssue
-    })
+      create_github_issue: data.createIssue,
+    }),
   });
   return response.json();
 };

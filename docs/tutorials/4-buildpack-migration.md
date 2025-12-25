@@ -29,13 +29,14 @@ Before you begin, ensure you have:
 - [ ] Basic understanding of Docker and container images
 
 !!! info "Why Buildpacks?"
-    Dockerfiles give you control, but with control comes responsibility. Who updates base images when CVEs are discovered? Who ensures all teams follow security best practices? Buildpacks automate these concerns. [Learn the philosophy](../explanation/containers/buildpacks-philosophy.md).
+Dockerfiles give you control, but with control comes responsibility. Who updates base images when CVEs are discovered? Who ensures all teams follow security best practices? Buildpacks automate these concerns. [Learn the philosophy](../explanation/containers/buildpacks-philosophy.md).
 
 ## Step 1: Understand Your Current Dockerfile
 
 Let's review what your Dockerfile is doing and how Buildpacks will replace it.
 
 1. View your current `Dockerfile`:
+
    ```dockerfile
    FROM node:18-alpine
 
@@ -60,6 +61,7 @@ Let's review what your Dockerfile is doing and how Buildpacks will replace it.
    ```
 
 2. Identify what the Dockerfile is doing:
+
    - ✅ Choosing a base image (node:18-alpine)
    - ✅ Installing dependencies (npm ci)
    - ✅ Copying application code
@@ -73,10 +75,10 @@ Let's review what your Dockerfile is doing and how Buildpacks will replace it.
    - **No caching**: Every team implements their own layer caching
 
 !!! info "Buildpacks Automate All of This"
-    Buildpacks detect your application type, choose appropriate base images, install dependencies, and configure security - all automatically.
+Buildpacks detect your application type, choose appropriate base images, install dependencies, and configure security - all automatically.
 
 !!! success "Checkpoint"
-    You understand what your Dockerfile does and why Buildpacks are an improvement.
+You understand what your Dockerfile does and why Buildpacks are an improvement.
 
 ## Step 2: Install Pack CLI
 
@@ -85,11 +87,13 @@ Pack is the CLI for working with Cloud Native Buildpacks.
 1. Install Pack (choose your platform):
 
    **macOS (Homebrew):**
+
    ```bash
    brew install buildpacks/tap/pack
    ```
 
    **Linux:**
+
    ```bash
    sudo add-apt-repository ppa:cncf-buildpacks/pack-cli
    sudo apt-get update
@@ -97,11 +101,13 @@ Pack is the CLI for working with Cloud Native Buildpacks.
    ```
 
    **Windows (Chocolatey):**
+
    ```bash
    choco install pack
    ```
 
 2. Verify installation:
+
    ```bash
    pack --version
    ```
@@ -112,16 +118,17 @@ Pack is the CLI for working with Cloud Native Buildpacks.
    ```
 
 !!! info "What's a Builder?"
-    A builder is a container image that contains buildpacks and knows how to build your application. Paketo Buildpacks is a CNCF project that provides enterprise-grade buildpacks for multiple languages.
+A builder is a container image that contains buildpacks and knows how to build your application. Paketo Buildpacks is a CNCF project that provides enterprise-grade buildpacks for multiple languages.
 
 !!! success "Checkpoint"
-    Pack CLI is installed and configured with a default builder.
+Pack CLI is installed and configured with a default builder.
 
 ## Step 3: Prepare for Buildpacks
 
 Buildpacks work best when your application follows conventions. Let's ensure your app is ready.
 
 1. Verify your `package.json` has a start script:
+
    ```json
    {
      "name": "hello-fawkes",
@@ -141,11 +148,13 @@ Buildpacks work best when your application follows conventions. Let's ensure you
    ```
 
 2. Ensure you have a `package-lock.json`:
+
    ```bash
    npm install
    ```
 
 3. Optional: Create a `.packignore` file to exclude files from the build:
+
    ```
    .git/
    .gitignore
@@ -162,13 +171,14 @@ Buildpacks work best when your application follows conventions. Let's ensure you
    ```
 
 !!! success "Checkpoint"
-    Your application follows Buildpacks conventions and is ready to build.
+Your application follows Buildpacks conventions and is ready to build.
 
 ## Step 4: Build with Buildpacks
 
 Now for the exciting part - building your first Buildpack image!
 
 1. Build your application with Pack:
+
    ```bash
    pack build YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack \
      --builder paketobuildpacks/builder:base \
@@ -176,6 +186,7 @@ Now for the exciting part - building your first Buildpack image!
    ```
 
 2. Watch the build process:
+
    - Buildpacks will detect that you're using Node.js
    - It will install the correct Node.js version
    - It will run `npm ci` to install dependencies
@@ -183,6 +194,7 @@ Now for the exciting part - building your first Buildpack image!
    - It will create a secure, minimal container image
 
 3. Inspect the build output:
+
    ```
    ===> DETECTING
    [detector] 6 of 24 buildpacks participating
@@ -208,26 +220,29 @@ Now for the exciting part - building your first Buildpack image!
    ```
 
 !!! tip "Build Time"
-    The first build may take a few minutes as it downloads base images and buildpacks. Subsequent builds are much faster thanks to layer caching.
+The first build may take a few minutes as it downloads base images and buildpacks. Subsequent builds are much faster thanks to layer caching.
 
 !!! success "Checkpoint"
-    You've built a container image using Cloud Native Buildpacks!
+You've built a container image using Cloud Native Buildpacks!
 
 ## Step 5: Compare Image Sizes
 
 Let's see how the Buildpack image compares to your Dockerfile image.
 
 1. Check Dockerfile image size:
+
    ```bash
    docker images YOUR-USERNAME/hello-fawkes:v3.0.0
    ```
 
 2. Check Buildpack image size:
+
    ```bash
    docker images YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
    ```
 
 3. Compare the layers:
+
    ```bash
    # Dockerfile image
    docker history YOUR-USERNAME/hello-fawkes:v3.0.0
@@ -237,16 +252,17 @@ Let's see how the Buildpack image compares to your Dockerfile image.
    ```
 
 !!! info "Image Size Differences"
-    Buildpack images may be larger than Alpine-based Dockerfile images because they use Ubuntu Bionic for better compatibility. However, they're more secure and maintainable. The trade-off is worth it for most applications.
+Buildpack images may be larger than Alpine-based Dockerfile images because they use Ubuntu Bionic for better compatibility. However, they're more secure and maintainable. The trade-off is worth it for most applications.
 
 !!! success "Checkpoint"
-    You understand the characteristics of your Buildpack-built image.
+You understand the characteristics of your Buildpack-built image.
 
 ## Step 6: Test the Buildpack Image Locally
 
 Before deploying, let's verify the image works correctly.
 
 1. Run the container locally:
+
    ```bash
    docker run -d --name hello-fawkes-test \
      -p 8080:8080 \
@@ -256,11 +272,13 @@ Before deploying, let's verify the image works correctly.
    ```
 
 2. Test the endpoint:
+
    ```bash
    curl http://localhost:8080/
    ```
 
    Should return:
+
    ```json
    {
      "message": "Hello from Fawkes!",
@@ -272,6 +290,7 @@ Before deploying, let's verify the image works correctly.
    ```
 
 3. Check the running user (should be non-root):
+
    ```bash
    docker exec hello-fawkes-test whoami
    ```
@@ -285,18 +304,20 @@ Before deploying, let's verify the image works correctly.
    ```
 
 !!! success "Checkpoint"
-    The Buildpack image works correctly and follows security best practices!
+The Buildpack image works correctly and follows security best practices!
 
 ## Step 7: Deploy Buildpack Image to Fawkes
 
 Now let's deploy the Buildpack-built image to your cluster.
 
 1. Push the image to your registry:
+
    ```bash
    docker push YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
    ```
 
 2. Update `k8s/deployment.yaml` to use the new image:
+
    ```yaml
    apiVersion: apps/v1
    kind: Deployment
@@ -321,12 +342,13 @@ Now let's deploy the Buildpack-built image to your cluster.
        spec:
          serviceAccountName: hello-fawkes
          containers:
-         - name: hello-fawkes
-           image: YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
-           # Rest of spec remains the same
+           - name: hello-fawkes
+             image: YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
+             # Rest of spec remains the same
    ```
 
 3. Commit and push:
+
    ```bash
    git add k8s/deployment.yaml
    git commit -m "Deploy Buildpack-built image"
@@ -334,11 +356,13 @@ Now let's deploy the Buildpack-built image to your cluster.
    ```
 
 4. Watch the rollout:
+
    ```bash
    kubectl rollout status deployment/hello-fawkes -n my-first-app
    ```
 
 5. Verify the new pods are running:
+
    ```bash
    kubectl get pods -n my-first-app
    ```
@@ -349,13 +373,14 @@ Now let's deploy the Buildpack-built image to your cluster.
    ```
 
 !!! success "Checkpoint"
-    Your service is now running with a Buildpack-built image on Fawkes!
+Your service is now running with a Buildpack-built image on Fawkes!
 
 ## Step 8: Understand Rebasing
 
 One of the key benefits of Buildpacks is "rebasing" - updating base images without rebuilding.
 
 1. Check the current base image:
+
    ```bash
    pack inspect YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
    ```
@@ -363,15 +388,18 @@ One of the key benefits of Buildpacks is "rebasing" - updating base images witho
    Note the "Run Image" section.
 
 2. Rebase to the latest base image (simulating a security update):
+
    ```bash
    pack rebase YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
    ```
 
 3. Compare the speed:
+
    - **Rebuild**: 2-5 minutes (downloads dependencies, runs build)
    - **Rebase**: 5-10 seconds (only updates base layers)
 
 4. Push the rebased image:
+
    ```bash
    docker push YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
    ```
@@ -382,26 +410,25 @@ One of the key benefits of Buildpacks is "rebasing" - updating base images witho
    ```
 
 !!! info "Rebasing in Production"
-    In a mature platform, rebasing is automated:
-    - CI/CD pipeline runs `pack rebase` nightly
-    - Images get security updates without code changes
-    - ArgoCD deploys updated images automatically
+In a mature platform, rebasing is automated: - CI/CD pipeline runs `pack rebase` nightly - Images get security updates without code changes - ArgoCD deploys updated images automatically
 
     This is how you patch 100 microservices in minutes, not weeks.
 
 !!! success "Checkpoint"
-    You've rebased your image and understand the power of this feature!
+You've rebased your image and understand the power of this feature!
 
 ## Step 9: Remove the Dockerfile
 
 Now that you're using Buildpacks, the Dockerfile is obsolete.
 
 1. Remove the Dockerfile:
+
    ```bash
    rm Dockerfile
    ```
 
 2. Optional: Add a `project.toml` for Buildpack configuration:
+
    ```toml
    [_]
    schema-version = "0.2"
@@ -418,6 +445,7 @@ Now that you're using Buildpacks, the Dockerfile is obsolete.
 3. Update your CI/CD pipeline to use `pack build` instead of `docker build`.
 
    Example Jenkins pipeline snippet:
+
    ```groovy
    stage('Build Image') {
      steps {
@@ -438,7 +466,7 @@ Now that you're using Buildpacks, the Dockerfile is obsolete.
    ```
 
 !!! success "Checkpoint"
-    You've fully migrated from Dockerfiles to Cloud Native Buildpacks!
+You've fully migrated from Dockerfiles to Cloud Native Buildpacks!
 
 ## What You've Accomplished
 

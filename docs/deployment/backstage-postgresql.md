@@ -41,11 +41,13 @@ This guide covers deploying Backstage Developer Portal with PostgreSQL backend t
 ### 1. PostgreSQL Database (CloudNativePG)
 
 **Manifests:**
+
 - `platform/apps/postgresql/cloudnativepg-operator-application.yaml` - CloudNativePG operator
 - `platform/apps/postgresql/db-backstage-credentials.yaml` - Database credentials
 - `platform/apps/postgresql/db-backstage-cluster.yaml` - HA PostgreSQL cluster (3 replicas)
 
 **Resources:**
+
 - Database: `backstage_db`
 - User: `backstage_user`
 - Storage: 20Gi per instance
@@ -53,6 +55,7 @@ This guide covers deploying Backstage Developer Portal with PostgreSQL backend t
 - Memory: 512Mi request, 2Gi limit
 
 **High Availability:**
+
 - 3 instances (1 primary, 2 standby replicas)
 - Automated failover (30 second delay)
 - Pod anti-affinity across nodes
@@ -62,17 +65,20 @@ This guide covers deploying Backstage Developer Portal with PostgreSQL backend t
 ### 2. Backstage Application
 
 **Manifests:**
+
 - `platform/apps/backstage-application.yaml` - ArgoCD Application
 - `platform/apps/backstage/app-config.yaml` - Backstage configuration (ConfigMap)
 - `platform/apps/backstage/secrets.yaml` - OAuth and integration secrets
 
 **Resources:**
+
 - Replicas: 2 (HA configuration)
 - CPU: 500m request, 2 CPU limit
 - Memory: 512Mi request, 2Gi limit
 - Ingress: `https://backstage.fawkes.idp`
 
 **Integrations:**
+
 - GitHub OAuth for authentication
 - GitHub API for repository discovery
 - Jenkins for CI/CD status
@@ -83,9 +89,11 @@ This guide covers deploying Backstage Developer Portal with PostgreSQL backend t
 ### 3. Initial Catalog
 
 **Manifests:**
+
 - `catalog-info.yaml` - Root platform catalog
 
 **Catalog Contents:**
+
 - Platform system and domain definitions
 - Platform team group
 - Core components (Backstage, ArgoCD, Jenkins, Prometheus, Grafana, SonarQube)
@@ -95,11 +103,13 @@ This guide covers deploying Backstage Developer Portal with PostgreSQL backend t
 ### 4. Software Templates
 
 **Templates:**
+
 - `templates/python-service/template.yaml` - Python FastAPI microservice
 - `templates/java-service/template.yaml` - Java Spring Boot microservice
 - `templates/nodejs-service/template.yaml` - Node.js Express microservice
 
 Each template includes:
+
 - Service scaffolding with best practices
 - Dockerfile and Kubernetes manifests
 - CI/CD pipeline configuration
@@ -115,6 +125,7 @@ Before deploying Backstage, you must configure GitHub OAuth authentication. With
 **Quick Setup:**
 
 1. Create a GitHub OAuth App:
+
    - Go to: https://github.com/settings/developers (personal) or
    - Go to: https://github.com/organizations/YOUR_ORG/settings/applications (organization)
    - Click "New OAuth App"
@@ -126,17 +137,20 @@ Before deploying Backstage, you must configure GitHub OAuth authentication. With
    - Generate and copy the **Client Secret**
 
 2. Update the secrets file:
+
    ```bash
    vim platform/apps/backstage/secrets.yaml
    ```
 
    Replace these lines:
+
    ```yaml
    github-client-id: CHANGE_ME_github_oauth_client_id
    github-client-secret: CHANGE_ME_github_oauth_client_secret
    ```
 
    With your actual values:
+
    ```yaml
    github-client-id: "your-actual-client-id"
    github-client-secret: "your-actual-client-secret"
@@ -185,6 +199,7 @@ argocd app wait platform-bootstrap --sync
 ```
 
 This will automatically deploy in order:
+
 1. CloudNativePG operator (sync-wave: -5)
 2. PostgreSQL clusters (sync-wave: -4)
 3. Backstage application (sync-wave: 5)
@@ -217,6 +232,7 @@ kubectl port-forward -n fawkes svc/backstage 7007:7007
 ### Step 5: Verify Catalog Population
 
 Expected catalog entities:
+
 - System: fawkes-platform
 - Domain: platform-engineering
 - Group: platform-team

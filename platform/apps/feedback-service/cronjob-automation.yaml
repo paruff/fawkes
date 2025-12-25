@@ -37,61 +37,61 @@ spec:
           restartPolicy: OnFailure
 
           containers:
-          - name: automation
-            image: curlimages/curl:latest
-            imagePullPolicy: IfNotPresent
+            - name: automation
+              image: curlimages/curl:latest
+              imagePullPolicy: IfNotPresent
 
-            env:
-            - name: FEEDBACK_SERVICE_URL
-              value: "http://feedback-service.fawkes.svc.cluster.local:8000"
-            - name: ADMIN_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: feedback-admin-token
-                  key: token
+              env:
+                - name: FEEDBACK_SERVICE_URL
+                  value: "http://feedback-service.fawkes.svc.cluster.local:8000"
+                - name: ADMIN_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: feedback-admin-token
+                      key: token
 
-            command:
-            - /bin/sh
-            - -c
-            - |
-              echo "Starting feedback automation pipeline..."
-              echo "Timestamp: $(date)"
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  echo "Starting feedback automation pipeline..."
+                  echo "Timestamp: $(date)"
 
-              # Call automation endpoint
-              response=$(curl -s -w "\n%{http_code}" \
-                -X POST "${FEEDBACK_SERVICE_URL}/api/v1/automation/process-validated?limit=20" \
-                -H "Authorization: Bearer ${ADMIN_TOKEN}" \
-                -H "Content-Type: application/json")
+                  # Call automation endpoint
+                  response=$(curl -s -w "\n%{http_code}" \
+                    -X POST "${FEEDBACK_SERVICE_URL}/api/v1/automation/process-validated?limit=20" \
+                    -H "Authorization: Bearer ${ADMIN_TOKEN}" \
+                    -H "Content-Type: application/json")
 
-              http_code=$(echo "$response" | tail -n1)
-              body=$(echo "$response" | head -n-1)
+                  http_code=$(echo "$response" | tail -n1)
+                  body=$(echo "$response" | head -n-1)
 
-              echo "HTTP Status: $http_code"
-              echo "Response: $body"
+                  echo "HTTP Status: $http_code"
+                  echo "Response: $body"
 
-              if [ "$http_code" -eq 200 ]; then
-                echo "✅ Automation completed successfully"
-                exit 0
-              else
-                echo "❌ Automation failed with HTTP $http_code"
-                exit 1
-              fi
+                  if [ "$http_code" -eq 200 ]; then
+                    echo "✅ Automation completed successfully"
+                    exit 0
+                  else
+                    echo "❌ Automation failed with HTTP $http_code"
+                    exit 1
+                  fi
 
-            resources:
-              requests:
-                cpu: 10m
-                memory: 16Mi
-              limits:
-                cpu: 100m
-                memory: 64Mi
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  cpu: 100m
+                  memory: 64Mi
 
-            securityContext:
-              allowPrivilegeEscalation: false
-              capabilities:
-                drop:
-                - ALL
-              readOnlyRootFilesystem: true
-              runAsNonRoot: true
-              runAsUser: 65534
-              seccompProfile:
-                type: RuntimeDefault
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                runAsUser: 65534
+                seccompProfile:
+                  type: RuntimeDefault

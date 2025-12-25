@@ -129,14 +129,14 @@ alertmanager:
         resolve_timeout: 5m
 
       route:
-        group_by: ['alertname', 'cluster', 'service']
+        group_by: ["alertname", "cluster", "service"]
         group_wait: 10s
         group_interval: 10s
         repeat_interval: 12h
-        receiver: 'null'  # MVP: No notifications
+        receiver: "null" # MVP: No notifications
 
       receivers:
-        - name: 'null'
+        - name: "null"
         # Production: Add real receivers
         # - name: 'slack'
         #   slack_configs:
@@ -152,7 +152,7 @@ grafana:
   enabled: true
 
   # Admin credentials - MVP: Simple (Production: OAuth/LDAP)
-  adminPassword: "changeme123"  # CHANGE THIS!
+  adminPassword: "changeme123" # CHANGE THIS!
 
   # Resources - MVP: Optimized for 70% target
   resources:
@@ -243,7 +243,7 @@ defaultRules:
   create: true
   rules:
     alertmanager: true
-    etcd: false  # Not accessible in managed EKS
+    etcd: false # Not accessible in managed EKS
     configReloaders: true
     general: true
     k8s: true
@@ -257,7 +257,7 @@ defaultRules:
     kubernetesResources: true
     kubernetesStorage: true
     kubernetesSystem: true
-    kubeScheduler: false  # Not accessible in managed EKS
+    kubeScheduler: false # Not accessible in managed EKS
     kubeStateMetrics: true
     network: true
     node: true

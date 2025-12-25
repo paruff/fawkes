@@ -74,7 +74,7 @@ print_result() {
 # ==============================================================================
 echo -e "${BLUE}1. DataHub GMS Status${NC}"
 
-if kubectl get pods -n "$NAMESPACE" -l app.kubernetes.io/name=datahub,app.kubernetes.io/component=datahub-gms -o jsonpath='{.items[0].status.phase}' 2>/dev/null | grep -q "Running"; then
+if kubectl get pods -n "$NAMESPACE" -l app.kubernetes.io/name=datahub,app.kubernetes.io/component=datahub-gms -o jsonpath='{.items[0].status.phase}' 2> /dev/null | grep -q "Running"; then
   print_result "DataHub GMS pod is running" "PASS"
 
   # Check GMS health endpoint
@@ -102,7 +102,7 @@ CRONJOBS=(
 for cronjob_info in "${CRONJOBS[@]}"; do
   IFS=':' read -r cronjob_name description <<< "$cronjob_info"
 
-  if kubectl get cronjob "$cronjob_name" -n "$NAMESPACE" &>/dev/null; then
+  if kubectl get cronjob "$cronjob_name" -n "$NAMESPACE" &> /dev/null; then
     schedule=$(kubectl get cronjob "$cronjob_name" -n "$NAMESPACE" -o jsonpath='{.spec.schedule}')
     print_result "$description CronJob exists" "PASS" "Schedule: $schedule"
   else
@@ -124,7 +124,7 @@ SECRETS=(
 for secret_info in "${SECRETS[@]}"; do
   IFS=':' read -r secret_name description <<< "$secret_info"
 
-  if kubectl get secret "$secret_name" -n "$NAMESPACE" &>/dev/null; then
+  if kubectl get secret "$secret_name" -n "$NAMESPACE" &> /dev/null; then
     print_result "$description secret exists" "PASS"
   else
     print_result "$description secret exists" "FAIL"
@@ -146,7 +146,7 @@ CONFIGMAPS=(
 for cm_info in "${CONFIGMAPS[@]}"; do
   IFS=':' read -r cm_name description <<< "$cm_info"
 
-  if kubectl get configmap "$cm_name" -n "$NAMESPACE" &>/dev/null; then
+  if kubectl get configmap "$cm_name" -n "$NAMESPACE" &> /dev/null; then
     print_result "$description exists" "PASS"
   else
     print_result "$description exists" "FAIL"
@@ -159,25 +159,25 @@ echo ""
 # ==============================================================================
 echo -e "${BLUE}5. RBAC Configuration${NC}"
 
-if kubectl get serviceaccount datahub-ingestion -n "$NAMESPACE" &>/dev/null; then
+if kubectl get serviceaccount datahub-ingestion -n "$NAMESPACE" &> /dev/null; then
   print_result "Ingestion ServiceAccount exists" "PASS"
 else
   print_result "Ingestion ServiceAccount exists" "FAIL"
 fi
 
-if kubectl get serviceaccount datahub-k8s-ingestion -n "$NAMESPACE" &>/dev/null; then
+if kubectl get serviceaccount datahub-k8s-ingestion -n "$NAMESPACE" &> /dev/null; then
   print_result "Kubernetes ingestion ServiceAccount exists" "PASS"
 else
   print_result "Kubernetes ingestion ServiceAccount exists" "FAIL"
 fi
 
-if kubectl get clusterrole datahub-k8s-ingestion &>/dev/null; then
+if kubectl get clusterrole datahub-k8s-ingestion &> /dev/null; then
   print_result "Kubernetes ingestion ClusterRole exists" "PASS"
 else
   print_result "Kubernetes ingestion ClusterRole exists" "FAIL"
 fi
 
-if kubectl get clusterrolebinding datahub-k8s-ingestion &>/dev/null; then
+if kubectl get clusterrolebinding datahub-k8s-ingestion &> /dev/null; then
   print_result "Kubernetes ingestion ClusterRoleBinding exists" "PASS"
 else
   print_result "Kubernetes ingestion ClusterRoleBinding exists" "FAIL"
@@ -192,12 +192,12 @@ echo -e "${BLUE}6. Recent Ingestion Jobs${NC}"
 for cronjob_info in "${CRONJOBS[@]}"; do
   IFS=':' read -r cronjob_name description <<< "$cronjob_info"
 
-  if kubectl get cronjob "$cronjob_name" -n "$NAMESPACE" &>/dev/null; then
+  if kubectl get cronjob "$cronjob_name" -n "$NAMESPACE" &> /dev/null; then
     # Get the most recent job
-    latest_job=$(kubectl get jobs -n "$NAMESPACE" -l cronjob="$cronjob_name" --sort-by=.metadata.creationTimestamp -o jsonpath='{.items[-1].metadata.name}' 2>/dev/null)
+    latest_job=$(kubectl get jobs -n "$NAMESPACE" -l cronjob="$cronjob_name" --sort-by=.metadata.creationTimestamp -o jsonpath='{.items[-1].metadata.name}' 2> /dev/null)
 
     if [ -n "$latest_job" ]; then
-      job_status=$(kubectl get job "$latest_job" -n "$NAMESPACE" -o jsonpath='{.status.conditions[0].type}' 2>/dev/null)
+      job_status=$(kubectl get job "$latest_job" -n "$NAMESPACE" -o jsonpath='{.status.conditions[0].type}' 2> /dev/null)
 
       if [ "$job_status" = "Complete" ]; then
         print_result "$description - Latest job completed" "PASS" "Job: $latest_job"
@@ -229,7 +229,7 @@ for db_info in "${DATABASES[@]}"; do
 
   # Try to connect using a temporary pod
   if kubectl run --rm -i --restart=Never --image=postgres:16 test-db-conn-$RANDOM -n "$NAMESPACE" -- \
-    timeout 5 bash -c "pg_isready -h $db_host -p $db_port" &>/dev/null; then
+    timeout 5 bash -c "pg_isready -h $db_host -p $db_port" &> /dev/null; then
     print_result "$description is reachable" "PASS"
   else
     print_result "$description is reachable" "WARN" "Connection test failed - may be normal if DB is not deployed"

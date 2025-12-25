@@ -6,10 +6,7 @@ from sqlalchemy.pool import QueuePool
 from typing import Generator
 
 # Database configuration from environment variables
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://insights:insights@localhost:5432/insights"
-)
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://insights:insights@localhost:5432/insights")
 
 # Create engine with connection pooling
 engine = create_engine(
@@ -18,7 +15,7 @@ engine = create_engine(
     pool_size=10,
     pool_pre_ping=True,  # Verify connections before using
     pool_recycle=3600,  # Recycle connections after 1 hour
-    echo=os.getenv("SQL_ECHO", "false").lower() == "true"
+    echo=os.getenv("SQL_ECHO", "false").lower() == "true",
 )
 
 # Create session factory

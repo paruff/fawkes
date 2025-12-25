@@ -19,11 +19,11 @@
           "label": "Task Type",
           "type": "query",
           "query": "label_values(devex_nasa_tlx_overall_workload, task_type)",
-          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "multi": true,
           "includeAll": true,
           "allValue": ".*",
-          "current": {"text": "All", "value": "$__all"},
+          "current": { "text": "All", "value": "$__all" },
           "hide": 0,
           "refresh": 1
         }
@@ -34,20 +34,20 @@
         "id": 1,
         "title": "NASA-TLX Overview",
         "type": "row",
-        "gridPos": {"x": 0, "y": 0, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 2,
         "title": "Overall Cognitive Workload",
         "type": "gauge",
-        "gridPos": {"x": 0, "y": 1, "w": 8, "h": 6},
+        "gridPos": { "x": 0, "y": 1, "w": 8, "h": 6 },
         "description": "Average overall cognitive workload across all NASA-TLX dimensions (0-100 scale, lower is better). Target: <40 (healthy), <60 (warning), 60+ (critical)",
         "targets": [
           {
             "expr": "avg(devex_nasa_tlx_overall_workload{task_type=~\"$task_type\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -55,14 +55,14 @@
             "unit": "short",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 40},
-                {"color": "orange", "value": 60},
-                {"color": "red", "value": 80}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 40 },
+                { "color": "orange", "value": 60 },
+                { "color": "red", "value": 80 }
               ]
             },
             "mappings": []
@@ -77,19 +77,19 @@
         "id": 3,
         "title": "Total Assessments Submitted",
         "type": "stat",
-        "gridPos": {"x": 8, "y": 1, "w": 8, "h": 3},
+        "gridPos": { "x": 8, "y": 1, "w": 8, "h": 3 },
         "description": "Total number of NASA-TLX assessments submitted",
         "targets": [
           {
             "expr": "sum(devex_nasa_tlx_submissions_total{task_type=~\"$task_type\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "palette-classic"}
+            "color": { "mode": "palette-classic" }
           }
         }
       },
@@ -97,13 +97,13 @@
         "id": 4,
         "title": "Average Performance Score",
         "type": "stat",
-        "gridPos": {"x": 16, "y": 1, "w": 8, "h": 3},
+        "gridPos": { "x": 16, "y": 1, "w": 8, "h": 3 },
         "description": "Average performance score (0-100, higher is better). Indicates how successful users feel completing platform tasks.",
         "targets": [
           {
             "expr": "avg(devex_nasa_tlx_performance{task_type=~\"$task_type\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -111,14 +111,14 @@
             "unit": "short",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "orange", "value": 50},
-                {"color": "yellow", "value": 70},
-                {"color": "green", "value": 85}
+                { "color": "red", "value": null },
+                { "color": "orange", "value": 50 },
+                { "color": "yellow", "value": 70 },
+                { "color": "green", "value": 85 }
               ]
             }
           }
@@ -128,13 +128,13 @@
         "id": 5,
         "title": "Assessments by Task Type",
         "type": "piechart",
-        "gridPos": {"x": 8, "y": 4, "w": 8, "h": 3},
+        "gridPos": { "x": 8, "y": 4, "w": 8, "h": 3 },
         "description": "Distribution of NASA-TLX assessments by task type",
         "targets": [
           {
             "expr": "sum by (task_type) (devex_nasa_tlx_submissions_total{task_type=~\"$task_type\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "options": {
@@ -151,13 +151,13 @@
         "id": 6,
         "title": "Workload by Task Type",
         "type": "bargauge",
-        "gridPos": {"x": 16, "y": 4, "w": 8, "h": 6},
+        "gridPos": { "x": 16, "y": 4, "w": 8, "h": 6 },
         "description": "Average cognitive workload by task type - identify which platform tasks are most demanding",
         "targets": [
           {
             "expr": "avg by (task_type) (devex_nasa_tlx_overall_workload{task_type=~\"$task_type\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -165,14 +165,14 @@
             "unit": "short",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 40},
-                {"color": "orange", "value": 60},
-                {"color": "red", "value": 80}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 40 },
+                { "color": "orange", "value": 60 },
+                { "color": "red", "value": 80 }
               ]
             }
           }
@@ -187,20 +187,20 @@
         "id": 7,
         "title": "NASA-TLX Dimensions",
         "type": "row",
-        "gridPos": {"x": 0, "y": 7, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 7, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 8,
         "title": "Mental Demand",
         "type": "stat",
-        "gridPos": {"x": 0, "y": 8, "w": 4, "h": 4},
+        "gridPos": { "x": 0, "y": 8, "w": 4, "h": 4 },
         "description": "How mentally demanding was the task? (0-100)",
         "targets": [
           {
             "expr": "avg(devex_nasa_tlx_mental_demand{task_type=~\"$task_type\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -208,13 +208,13 @@
             "unit": "short",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 50},
-                {"color": "red", "value": 75}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 50 },
+                { "color": "red", "value": 75 }
               ]
             }
           }
@@ -224,13 +224,13 @@
         "id": 9,
         "title": "Physical Demand",
         "type": "stat",
-        "gridPos": {"x": 4, "y": 8, "w": 4, "h": 4},
+        "gridPos": { "x": 4, "y": 8, "w": 4, "h": 4 },
         "description": "How physically demanding was the task? (0-100)",
         "targets": [
           {
             "expr": "avg(devex_nasa_tlx_physical_demand{task_type=~\"$task_type\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -238,13 +238,13 @@
             "unit": "short",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 50},
-                {"color": "red", "value": 75}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 50 },
+                { "color": "red", "value": 75 }
               ]
             }
           }
@@ -254,13 +254,13 @@
         "id": 10,
         "title": "Temporal Demand",
         "type": "stat",
-        "gridPos": {"x": 8, "y": 8, "w": 4, "h": 4},
+        "gridPos": { "x": 8, "y": 8, "w": 4, "h": 4 },
         "description": "How hurried or rushed was the pace? (0-100)",
         "targets": [
           {
             "expr": "avg(devex_nasa_tlx_temporal_demand{task_type=~\"$task_type\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -268,13 +268,13 @@
             "unit": "short",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 50},
-                {"color": "red", "value": 75}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 50 },
+                { "color": "red", "value": 75 }
               ]
             }
           }
@@ -284,13 +284,13 @@
         "id": 11,
         "title": "Performance (Success)",
         "type": "stat",
-        "gridPos": {"x": 12, "y": 8, "w": 4, "h": 4},
+        "gridPos": { "x": 12, "y": 8, "w": 4, "h": 4 },
         "description": "How successful were you? (0-100, higher is better)",
         "targets": [
           {
             "expr": "avg(devex_nasa_tlx_performance{task_type=~\"$task_type\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -298,13 +298,13 @@
             "unit": "short",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 50},
-                {"color": "green", "value": 75}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 50 },
+                { "color": "green", "value": 75 }
               ]
             }
           }
@@ -314,13 +314,13 @@
         "id": 12,
         "title": "Effort",
         "type": "stat",
-        "gridPos": {"x": 16, "y": 8, "w": 4, "h": 4},
+        "gridPos": { "x": 16, "y": 8, "w": 4, "h": 4 },
         "description": "How hard did you have to work? (0-100)",
         "targets": [
           {
             "expr": "avg(devex_nasa_tlx_effort{task_type=~\"$task_type\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -328,13 +328,13 @@
             "unit": "short",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 50},
-                {"color": "red", "value": 75}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 50 },
+                { "color": "red", "value": 75 }
               ]
             }
           }
@@ -344,13 +344,13 @@
         "id": 13,
         "title": "Frustration",
         "type": "stat",
-        "gridPos": {"x": 20, "y": 8, "w": 4, "h": 4},
+        "gridPos": { "x": 20, "y": 8, "w": 4, "h": 4 },
         "description": "How frustrated were you? (0-100)",
         "targets": [
           {
             "expr": "avg(devex_nasa_tlx_frustration{task_type=~\"$task_type\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -358,13 +358,13 @@
             "unit": "short",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 50},
-                {"color": "red", "value": 75}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 50 },
+                { "color": "red", "value": 75 }
               ]
             }
           }
@@ -374,20 +374,20 @@
         "id": 14,
         "title": "Trends Over Time",
         "type": "row",
-        "gridPos": {"x": 0, "y": 12, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 12, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 15,
         "title": "Overall Workload Trend",
         "type": "timeseries",
-        "gridPos": {"x": 0, "y": 13, "w": 12, "h": 8},
+        "gridPos": { "x": 0, "y": 13, "w": 12, "h": 8 },
         "description": "Overall cognitive workload trend over time by task type",
         "targets": [
           {
             "expr": "avg by (task_type) (devex_nasa_tlx_overall_workload{task_type=~\"$task_type\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "legendFormat": "{{task_type}}"
           }
         ],
@@ -404,20 +404,20 @@
               "showPoints": "auto",
               "spanNulls": false
             },
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 40},
-                {"color": "orange", "value": 60},
-                {"color": "red", "value": 80}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 40 },
+                { "color": "orange", "value": 60 },
+                { "color": "red", "value": 80 }
               ]
             }
           }
         },
         "options": {
-          "tooltip": {"mode": "multi"},
+          "tooltip": { "mode": "multi" },
           "legend": {
             "displayMode": "list",
             "placement": "bottom",
@@ -429,13 +429,13 @@
         "id": 16,
         "title": "Frustration Trend",
         "type": "timeseries",
-        "gridPos": {"x": 12, "y": 13, "w": 12, "h": 8},
+        "gridPos": { "x": 12, "y": 13, "w": 12, "h": 8 },
         "description": "Frustration levels over time by task type - identify when developers are most frustrated",
         "targets": [
           {
             "expr": "avg by (task_type) (devex_nasa_tlx_frustration{task_type=~\"$task_type\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "legendFormat": "{{task_type}}"
           }
         ],
@@ -452,20 +452,20 @@
               "showPoints": "auto",
               "spanNulls": false
             },
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 40},
-                {"color": "orange", "value": 60},
-                {"color": "red", "value": 80}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 40 },
+                { "color": "orange", "value": 60 },
+                { "color": "red", "value": 80 }
               ]
             }
           }
         },
         "options": {
-          "tooltip": {"mode": "multi"},
+          "tooltip": { "mode": "multi" },
           "legend": {
             "displayMode": "list",
             "placement": "bottom",

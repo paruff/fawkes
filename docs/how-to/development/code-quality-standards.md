@@ -34,6 +34,7 @@ pre-commit run --files path/to/file
 **Linter**: ShellCheck
 
 **Standards**:
+
 - Use `#!/usr/bin/env bash` shebang
 - **Indentation**: 2 spaces
 - **Case indentation**: Indent case statements
@@ -44,11 +45,13 @@ pre-commit run --files path/to/file
 - Use `[[ ]]` instead of `[ ]` for conditionals
 - Add `set -euo pipefail` at script start for safety
 
-**Configuration**: 
+**Configuration**:
+
 - shfmt args in `.pre-commit-config.yaml`: `-i 2 -ci -bn -sr`
 - ShellCheck: `.shellcheckrc` (uses defaults)
 
 **Example**:
+
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
@@ -65,16 +68,17 @@ fi
 ```
 
 **Pre-commit hook**:
+
 ```yaml
 - repo: https://github.com/shellcheck-py/shellcheck-py
   hooks:
     - id: shellcheck
-      args: ['--severity=warning']
+      args: ["--severity=warning"]
 
 - repo: https://github.com/scop/pre-commit-shfmt
   hooks:
     - id: shfmt
-      args: ['-i', '2', '-ci', '-bn', '-sr', '-w']
+      args: ["-i", "2", "-ci", "-bn", "-sr", "-w"]
 ```
 
 ### Python
@@ -82,6 +86,7 @@ fi
 **Linters**: Black (formatter), Flake8 (linter)
 
 **Standards**:
+
 - **Line length**: 120 characters (extended from default 88)
 - **Import order**: stdlib → third-party → local
 - **Type hints**: Required for all public functions
@@ -92,6 +97,7 @@ fi
   - `UPPER_CASE` for constants
 
 **Configuration**:
+
 ```python
 # .pre-commit-config.yaml
 - repo: https://github.com/psf/black
@@ -106,6 +112,7 @@ fi
 ```
 
 **Example**:
+
 ```python
 """Module for user management."""
 
@@ -137,6 +144,7 @@ def create_user(username: str, email: str, active: bool = True) -> dict:
 ```
 
 **IDE Integration**:
+
 ```bash
 # VS Code settings.json
 {
@@ -153,6 +161,7 @@ def create_user(username: str, email: str, active: bool = True) -> dict:
 **Linter**: golangci-lint (recommended)
 
 **Standards**:
+
 - **Go version**: 1.21+
 - **Package naming**: Short, lowercase, no underscores
 - **Error handling**: Always check errors, don't ignore
@@ -160,6 +169,7 @@ def create_user(username: str, email: str, active: bool = True) -> dict:
 - **Comments**: Exported functions/types must have comments
 
 **Configuration**: `.golangci.yml`
+
 ```yaml
 linters:
   enable:
@@ -178,6 +188,7 @@ linters-settings:
 ```
 
 **Example**:
+
 ```go
 // Package user provides user management functionality.
 package user
@@ -211,6 +222,7 @@ func CreateUser(ctx context.Context, username, email string) (*User, error) {
 ```
 
 **Pre-commit hook** (add to `.pre-commit-config.yaml`):
+
 ```yaml
 - repo: https://github.com/golangci/golangci-lint
   rev: v1.55.0
@@ -224,15 +236,18 @@ func CreateUser(ctx context.Context, username, email string) (*User, error) {
 **Linter**: yamllint
 
 **Standards**:
+
 - **Indentation**: 2 spaces
 - **Line length**: 120 characters (warning only)
 - **Document start**: Not required (`---` optional)
 - **Trailing spaces**: Not allowed
 - **Empty lines**: Maximum 2 consecutive
 
-**Configuration**: 
+**Configuration**:
+
 - Formatting: `.prettierrc`
 - Linting: `.yamllint`
+
 ```yaml
 extends: default
 
@@ -248,6 +263,7 @@ rules:
 ```
 
 **Example**:
+
 ```yaml
 # Good
 apiVersion: v1
@@ -272,6 +288,7 @@ spec:
 **Linter**: check-json (built-in to pre-commit-hooks)
 
 **Standards**:
+
 - **Indentation**: 2 spaces
 - **Trailing commas**: Not allowed (JSON spec)
 - **Comments**: Not supported (use YAML if comments needed)
@@ -280,6 +297,7 @@ spec:
 **Configuration**: `.prettierrc`
 
 **Pre-commit hook**:
+
 ```yaml
 - repo: https://github.com/pre-commit/pre-commit-hooks
   hooks:
@@ -292,6 +310,7 @@ spec:
 ```
 
 **Example**:
+
 ```json
 {
   "apiVersion": "v1",
@@ -313,29 +332,33 @@ spec:
 **Linter**: markdownlint-cli
 
 **Standards**:
+
 - **Line length**: Disabled (some docs need long lines)
 - **Multiple H1s**: Allowed (for documentation)
 - **Trailing spaces**: Not allowed
-- **Lists**: Consistent markers (- or *)
+- **Lists**: Consistent markers (- or \*)
 - **Code blocks**: Language specifier required
 
-**Configuration**: 
+**Configuration**:
+
 - Formatting: `.prettierrc`
 - Linting: `.markdownlint.json`
+
 ```json
 {
-  "MD013": false,   // Disable line length
-  "MD041": false,   // Disable first line heading
-  "MD025": false,   // Allow multiple H1s
-  "MD047": false,   // Disable single trailing newline
-  "MD032": false,   // Disable blank lines around lists
-  "MD034": false,   // Disable bare URLs
-  "MD040": false    // Disable fenced code language
+  "MD013": false, // Disable line length
+  "MD041": false, // Disable first line heading
+  "MD025": false, // Allow multiple H1s
+  "MD047": false, // Disable single trailing newline
+  "MD032": false, // Disable blank lines around lists
+  "MD034": false, // Disable bare URLs
+  "MD040": false // Disable fenced code language
 }
 ```
 
 **Example**:
-```markdown
+
+````markdown
 # Component Architecture
 
 ## Overview
@@ -352,7 +375,9 @@ The component follows the microservices pattern with the following structure:
 def hello_world():
     return "Hello, World!"
 ```
-```
+````
+
+````
 
 ### Terraform
 
@@ -383,9 +408,10 @@ rule "terraform_naming_convention" {
   enabled = true
   format  = "snake_case"
 }
-```
+````
 
 **Example**:
+
 ```hcl
 # Terraform >= 1.6
 terraform {
@@ -430,6 +456,7 @@ output "resource_group_id" {
 ```
 
 **Pre-commit hooks**:
+
 ```yaml
 - repo: https://github.com/antonbabenko/pre-commit-terraform
   hooks:
@@ -447,6 +474,7 @@ output "resource_group_id" {
 **Tools**: Gitleaks, detect-secrets
 
 **Standards**:
+
 - **Zero tolerance** for committed secrets
 - **Pre-commit**: Blocks commits with secrets
 - **CI/CD**: Pipeline fails on secrets detection
@@ -454,6 +482,7 @@ output "resource_group_id" {
 - **Vault integration**: For production secrets
 
 **Configuration**: `.gitleaks.toml`
+
 ```toml
 [allowlist]
 description = "Allowlist for false positives"
@@ -466,6 +495,7 @@ paths = [
 ```
 
 **Example (BAD)**:
+
 ```python
 # ❌ NEVER do this
 api_key = "sk-1234567890abcdef"  # pragma: allowlist secret
@@ -473,6 +503,7 @@ database_url = "postgresql://user:password@localhost/db"  # pragma: allowlist se
 ```
 
 **Example (GOOD)**:
+
 ```python
 # ✅ Use environment variables
 import os
@@ -489,12 +520,14 @@ if not api_key or not database_url:
 **Tool**: Trivy
 
 **Standards**:
+
 - **Severity threshold**: CRITICAL and HIGH fail pipeline
 - **Base images**: Use official, updated images
 - **Updates**: Regular security patching
 - **Overrides**: Document in `.trivyignore` with expiration
 
 **Example Dockerfile**:
+
 ```dockerfile
 # Use specific version tag, not latest
 FROM python:3.11-slim-bookworm
@@ -522,6 +555,7 @@ CMD ["python", "app.py"]
 **Tool**: SonarQube
 
 **Standards**:
+
 - **Code coverage**: Minimum 80% for new code
 - **Bugs**: Zero new bugs
 - **Vulnerabilities**: Zero new vulnerabilities
@@ -533,6 +567,7 @@ CMD ["python", "app.py"]
 ### VS Code
 
 **Extensions**:
+
 ```json
 {
   "recommendations": [
@@ -549,6 +584,7 @@ CMD ["python", "app.py"]
 ```
 
 **Settings** (`.vscode/settings.json`):
+
 ```json
 {
   "editor.formatOnSave": true,
@@ -572,6 +608,7 @@ CMD ["python", "app.py"]
 ### IntelliJ IDEA / PyCharm
 
 **Plugins**:
+
 - Python Plugin (PyCharm has built-in)
 - Terraform and HCL
 - Kubernetes
@@ -579,6 +616,7 @@ CMD ["python", "app.py"]
 - Markdown Support
 
 **Settings**:
+
 1. File → Settings → Tools → File Watchers → Add Black
 2. File → Settings → Editor → Code Style → Python → Set line length to 120
 3. File → Settings → Editor → Inspections → Enable all Python inspections
@@ -586,6 +624,7 @@ CMD ["python", "app.py"]
 ### Vim/Neovim
 
 **Plugins** (via vim-plug):
+
 ```vim
 Plug 'dense-analysis/ale'
 Plug 'hashivim/vim-terraform'
@@ -594,6 +633,7 @@ Plug 'ambv/black'
 ```
 
 **Configuration**:
+
 ```vim
 " ALE linters
 let g:ale_linters = {
@@ -618,6 +658,7 @@ let g:ale_fix_on_save = 1
 **Location**: `.github/workflows/pre-commit.yml`
 
 **Features**:
+
 - Runs on all pull requests
 - Runs on push to main/develop
 - Caches dependencies for speed
@@ -625,6 +666,7 @@ let g:ale_fix_on_save = 1
 - Uploads artifacts for review
 
 **Workflow**:
+
 ```yaml
 name: Pre-commit Validation
 on:
@@ -640,7 +682,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - name: Install pre-commit
         run: pip install pre-commit
       - name: Run pre-commit
@@ -658,6 +700,7 @@ Code Commit → Pre-commit Hooks → PR → CI Linting → Security Scan → Bui
 ```
 
 **Gate Levels**:
+
 1. **Pre-commit** (Local): Immediate feedback on commit
 2. **PR Check** (GitHub): Blocks merge on failure
 3. **CI Linting** (GitHub Actions): Comprehensive checks
@@ -671,6 +714,7 @@ Code Commit → Pre-commit Hooks → PR → CI Linting → Security Scan → Bui
 **Issue**: Hook fails with "command not found"
 
 **Solution**: Install the required tool
+
 ```bash
 # Terraform tools
 brew install terraform tflint terraform-docs tfsec
@@ -688,6 +732,7 @@ brew install shellcheck
 **Issue**: Hook times out or is very slow
 
 **Solution**: Use specific hooks instead of all
+
 ```bash
 # Run specific hook
 pre-commit run terraform_fmt --all-files
@@ -701,6 +746,7 @@ SKIP=terraform_tflint,mkdocs-validate pre-commit run --all-files
 **Issue**: Black and Flake8 conflict on line length
 
 **Solution**: Both are configured for 120 chars, but ensure consistency:
+
 ```python
 # .flake8
 [flake8]
@@ -711,6 +757,7 @@ extend-ignore = E203, W503
 **Issue**: Terraform fmt changes files but validation fails
 
 **Solution**: Run in order:
+
 ```bash
 terraform fmt -recursive
 terraform validate
@@ -719,6 +766,7 @@ terraform validate
 **Issue**: ShellCheck reports issues in vendor scripts
 
 **Solution**: Exclude vendor directories:
+
 ```bash
 # .pre-commit-config.yaml
 - id: shellcheck
@@ -730,6 +778,7 @@ terraform validate
 **Issue**: Secrets detected in test fixtures
 
 **Solution**: Add to allowlist:
+
 ```toml
 # .gitleaks.toml
 [allowlist]
@@ -742,6 +791,7 @@ paths = [
 **Issue**: Trivy reports false positive CVE
 
 **Solution**: Document and ignore:
+
 ```text
 # .trivyignore
 # PostgreSQL CVE - not applicable, using prepared statements

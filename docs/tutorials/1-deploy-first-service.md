@@ -28,13 +28,14 @@ Before you begin, ensure you have:
 - [ ] Basic understanding of Kubernetes concepts (pods, deployments, services)
 
 !!! tip "New to Kubernetes?"
-    If you're unfamiliar with Kubernetes, don't worry! Follow along step-by-step. This tutorial is designed to work even if you don't understand every detail yet.
+If you're unfamiliar with Kubernetes, don't worry! Follow along step-by-step. This tutorial is designed to work even if you don't understand every detail yet.
 
 ## Step 1: Verify Platform Access
 
 First, let's confirm you can connect to the Fawkes cluster.
 
 1. Check your kubectl context:
+
    ```bash
    kubectl config current-context
    ```
@@ -42,6 +43,7 @@ First, let's confirm you can connect to the Fawkes cluster.
    You should see a context name containing "fawkes" or your cluster name.
 
 2. Verify you can list namespaces:
+
    ```bash
    kubectl get namespaces
    ```
@@ -49,29 +51,33 @@ First, let's confirm you can connect to the Fawkes cluster.
    You should see core Fawkes namespaces like `fawkes-platform`, `argocd`, `vault`, etc.
 
 3. Check your assigned namespace:
+
    ```bash
    kubectl get namespace my-first-app
    ```
 
    If this returns an error, create the namespace:
+
    ```bash
    kubectl create namespace my-first-app
    ```
 
 !!! success "Checkpoint"
-    You should now have access to the Fawkes cluster and a namespace for your application.
+You should now have access to the Fawkes cluster and a namespace for your application.
 
 ## Step 2: Create Your Application Repository
 
 We'll start with a simple Node.js application to demonstrate the deployment workflow.
 
 1. Create a new directory for your application:
+
    ```bash
    mkdir hello-fawkes
    cd hello-fawkes
    ```
 
 2. Initialize a git repository:
+
    ```bash
    git init
    ```
@@ -79,6 +85,7 @@ We'll start with a simple Node.js application to demonstrate the deployment work
 3. Create a simple Node.js application.
 
    Create `package.json`:
+
    ```json
    {
      "name": "hello-fawkes",
@@ -95,29 +102,31 @@ We'll start with a simple Node.js application to demonstrate the deployment work
    ```
 
 4. Create `server.js`:
+
    ```javascript
-   const express = require('express');
+   const express = require("express");
    const app = express();
    const PORT = process.env.PORT || 8080;
 
-   app.get('/', (req, res) => {
+   app.get("/", (req, res) => {
      res.json({
-       message: 'Hello from Fawkes!',
+       message: "Hello from Fawkes!",
        timestamp: new Date().toISOString(),
-       version: '1.0.0'
+       version: "1.0.0",
      });
    });
 
-   app.get('/health', (req, res) => {
-     res.json({ status: 'healthy' });
+   app.get("/health", (req, res) => {
+     res.json({ status: "healthy" });
    });
 
-   app.listen(PORT, '0.0.0.0', () => {
+   app.listen(PORT, "0.0.0.0", () => {
      console.log(`Server running on port ${PORT}`);
    });
    ```
 
 5. Commit your code:
+
    ```bash
    git add .
    git commit -m "Initial hello-fawkes service"
@@ -131,18 +140,20 @@ We'll start with a simple Node.js application to demonstrate the deployment work
    ```
 
 !!! success "Checkpoint"
-    You now have a simple web service ready to deploy, stored in a Git repository.
+You now have a simple web service ready to deploy, stored in a Git repository.
 
 ## Step 3: Create Kubernetes Manifests
 
 Fawkes uses GitOps, which means your deployment configuration lives in Git alongside your code.
 
 1. Create a `k8s/` directory in your project:
+
    ```bash
    mkdir -p k8s
    ```
 
 2. Create `k8s/deployment.yaml`:
+
    ```yaml
    apiVersion: apps/v1
    kind: Deployment
@@ -164,41 +175,42 @@ Fawkes uses GitOps, which means your deployment configuration lives in Git along
            version: v1
        spec:
          containers:
-         - name: hello-fawkes
-           image: YOUR-USERNAME/hello-fawkes:v1.0.0
-           ports:
-           - containerPort: 8080
-             name: http
-           env:
-           - name: PORT
-             value: "8080"
-           livenessProbe:
-             httpGet:
-               path: /health
-               port: 8080
-             initialDelaySeconds: 10
-             periodSeconds: 10
-           readinessProbe:
-             httpGet:
-               path: /health
-               port: 8080
-             initialDelaySeconds: 5
-             periodSeconds: 5
-           resources:
-             requests:
-               memory: "64Mi"
-               cpu: "100m"
-             limits:
-               memory: "128Mi"
-               cpu: "200m"
-           securityContext:
-             runAsNonRoot: true
-             runAsUser: 1000
-             allowPrivilegeEscalation: false
-             readOnlyRootFilesystem: true
+           - name: hello-fawkes
+             image: YOUR-USERNAME/hello-fawkes:v1.0.0
+             ports:
+               - containerPort: 8080
+                 name: http
+             env:
+               - name: PORT
+                 value: "8080"
+             livenessProbe:
+               httpGet:
+                 path: /health
+                 port: 8080
+               initialDelaySeconds: 10
+               periodSeconds: 10
+             readinessProbe:
+               httpGet:
+                 path: /health
+                 port: 8080
+               initialDelaySeconds: 5
+               periodSeconds: 5
+             resources:
+               requests:
+                 memory: "64Mi"
+                 cpu: "100m"
+               limits:
+                 memory: "128Mi"
+                 cpu: "200m"
+             securityContext:
+               runAsNonRoot: true
+               runAsUser: 1000
+               allowPrivilegeEscalation: false
+               readOnlyRootFilesystem: true
    ```
 
 3. Create `k8s/service.yaml`:
+
    ```yaml
    apiVersion: v1
    kind: Service
@@ -210,10 +222,10 @@ Fawkes uses GitOps, which means your deployment configuration lives in Git along
    spec:
      type: ClusterIP
      ports:
-     - port: 80
-       targetPort: 8080
-       protocol: TCP
-       name: http
+       - port: 80
+         targetPort: 8080
+         protocol: TCP
+         name: http
      selector:
        app: hello-fawkes
    ```
@@ -230,24 +242,24 @@ Fawkes uses GitOps, which means your deployment configuration lives in Git along
    spec:
      ingressClassName: nginx
      tls:
-     - hosts:
-       - hello-fawkes.127.0.0.1.nip.io
-       secretName: hello-fawkes-tls
+       - hosts:
+           - hello-fawkes.127.0.0.1.nip.io
+         secretName: hello-fawkes-tls
      rules:
-     - host: hello-fawkes.127.0.0.1.nip.io
-       http:
-         paths:
-         - path: /
-           pathType: Prefix
-           backend:
-             service:
-               name: hello-fawkes
-               port:
-                 number: 80
+       - host: hello-fawkes.127.0.0.1.nip.io
+         http:
+           paths:
+             - path: /
+               pathType: Prefix
+               backend:
+                 service:
+                   name: hello-fawkes
+                   port:
+                     number: 80
    ```
 
 !!! info "Why runAsNonRoot?"
-    Notice the `securityContext` settings? Fawkes enforces security best practices. Running as non-root prevents privilege escalation attacks. [Learn more about Zero Trust Security](../explanation/security/zero-trust-model.md).
+Notice the `securityContext` settings? Fawkes enforces security best practices. Running as non-root prevents privilege escalation attacks. [Learn more about Zero Trust Security](../explanation/security/zero-trust-model.md).
 
 5. Commit the manifests:
    ```bash
@@ -257,13 +269,14 @@ Fawkes uses GitOps, which means your deployment configuration lives in Git along
    ```
 
 !!! success "Checkpoint"
-    Your application now has Kubernetes deployment manifests that follow Fawkes security policies.
+Your application now has Kubernetes deployment manifests that follow Fawkes security policies.
 
 ## Step 4: Build and Push Container Image
 
 Since we're not using Cloud Native Buildpacks in this first tutorial (that's Tutorial 4!), we'll use a simple Dockerfile.
 
 1. Create a `Dockerfile`:
+
    ```dockerfile
    FROM node:18-alpine
 
@@ -290,11 +303,13 @@ Since we're not using Cloud Native Buildpacks in this first tutorial (that's Tut
    ```
 
 2. Build the container image:
+
    ```bash
    docker build -t YOUR-USERNAME/hello-fawkes:v1.0.0 .
    ```
 
 3. Push to a container registry (Docker Hub, GitHub Container Registry, etc.):
+
    ```bash
    docker login
    docker push YOUR-USERNAME/hello-fawkes:v1.0.0
@@ -303,13 +318,14 @@ Since we're not using Cloud Native Buildpacks in this first tutorial (that's Tut
 4. Update the image reference in `k8s/deployment.yaml` if needed.
 
 !!! success "Checkpoint"
-    Your container image is now available in a registry and ready to be deployed.
+Your container image is now available in a registry and ready to be deployed.
 
 ## Step 5: Deploy with ArgoCD (GitOps Way)
 
 Fawkes uses ArgoCD for GitOps-based deployments. This is the preferred method.
 
 1. Create an ArgoCD Application manifest `argocd-app.yaml`:
+
    ```yaml
    apiVersion: argoproj.io/v1alpha1
    kind: Application
@@ -330,15 +346,17 @@ Fawkes uses ArgoCD for GitOps-based deployments. This is the preferred method.
          prune: true
          selfHeal: true
        syncOptions:
-       - CreateNamespace=true
+         - CreateNamespace=true
    ```
 
 2. Apply the ArgoCD Application:
+
    ```bash
    kubectl apply -f argocd-app.yaml
    ```
 
 3. Watch ArgoCD sync your application:
+
    ```bash
    kubectl get applications -n argocd hello-fawkes -w
    ```
@@ -346,24 +364,26 @@ Fawkes uses ArgoCD for GitOps-based deployments. This is the preferred method.
    Wait until `STATUS` shows `Synced` and `HEALTH` shows `Healthy`.
 
 !!! tip "Alternative: Direct kubectl Apply"
-    If ArgoCD isn't available, you can deploy directly:
-    ```bash
+If ArgoCD isn't available, you can deploy directly:
+`bash
     kubectl apply -f k8s/
-    ```
+    `
 
 !!! success "Checkpoint"
-    ArgoCD is now managing your application deployment. Any changes you push to Git will automatically sync!
+ArgoCD is now managing your application deployment. Any changes you push to Git will automatically sync!
 
 ## Step 6: Verify Your Deployment
 
 Let's confirm everything is working.
 
 1. Check pod status:
+
    ```bash
    kubectl get pods -n my-first-app
    ```
 
    You should see 2 pods running (we specified `replicas: 2`):
+
    ```
    NAME                            READY   STATUS    RESTARTS   AGE
    hello-fawkes-xxxxxxxxx-xxxxx    1/1     Running   0          2m
@@ -371,11 +391,13 @@ Let's confirm everything is working.
    ```
 
 2. Check the service:
+
    ```bash
    kubectl get service -n my-first-app
    ```
 
 3. Check the ingress:
+
    ```bash
    kubectl get ingress -n my-first-app
    ```
@@ -383,16 +405,19 @@ Let's confirm everything is working.
    Note the `ADDRESS` field - this is your ingress IP.
 
 4. Test the endpoint locally first:
+
    ```bash
    kubectl port-forward -n my-first-app svc/hello-fawkes 8080:80
    ```
 
    In another terminal:
+
    ```bash
    curl http://localhost:8080
    ```
 
    You should see:
+
    ```json
    {
      "message": "Hello from Fawkes!",
@@ -407,13 +432,14 @@ Let's confirm everything is working.
    ```
 
 !!! success "Checkpoint"
-    Your service is running, accessible via HTTPS, and responding to requests! 🎉
+Your service is running, accessible via HTTPS, and responding to requests! 🎉
 
 ## Step 7: Register in Backstage Catalog
 
 To make your service visible in the Fawkes developer portal, register it in Backstage.
 
 1. Create a `catalog-info.yaml` file in your repository root:
+
    ```yaml
    apiVersion: backstage.io/v1alpha1
    kind: Component
@@ -431,6 +457,7 @@ To make your service visible in the Fawkes developer portal, register it in Back
    ```
 
 2. Commit and push:
+
    ```bash
    git add catalog-info.yaml
    git commit -m "Add Backstage catalog info"
@@ -438,6 +465,7 @@ To make your service visible in the Fawkes developer portal, register it in Back
    ```
 
 3. Register the component in Backstage:
+
    - Navigate to the Backstage UI (typically `https://backstage.fawkes.yourdomain.com`)
    - Click **Create** → **Register Existing Component**
    - Enter your repository URL: `https://github.com/YOUR-USERNAME/hello-fawkes`
@@ -449,7 +477,7 @@ To make your service visible in the Fawkes developer portal, register it in Back
    - Click on your component to see details
 
 !!! success "Checkpoint"
-    Your service is now registered in the Backstage service catalog, making it discoverable to your entire team!
+Your service is now registered in the Backstage service catalog, making it discoverable to your entire team!
 
 ## Step 8: Celebrate Your First Success! 🎉
 
@@ -482,6 +510,7 @@ kubectl logs -n my-first-app -l app=hello-fawkes
 ```
 
 Common issues:
+
 - **ImagePullBackOff**: Check your image name and registry credentials
 - **CrashLoopBackOff**: Check application logs for startup errors
 - **Pending**: Check resource quotas and node capacity

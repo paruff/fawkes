@@ -135,13 +135,13 @@ Track custom events using JavaScript:
 
 ```javascript
 // Track a button click
-plausible('Click', {props: {button: 'deploy-app'}})
+plausible("Click", { props: { button: "deploy-app" } });
 
 // Track a form submission
-plausible('Signup', {props: {method: 'github'}})
+plausible("Signup", { props: { method: "github" } });
 
 // Track with custom properties
-plausible('Feature Used', {props: {feature: 'scaffolding', language: 'nodejs'}})
+plausible("Feature Used", { props: { feature: "scaffolding", language: "nodejs" } });
 ```
 
 ## Dashboard Features
@@ -164,6 +164,7 @@ plausible('Feature Used', {props: {feature: 'scaffolding', language: 'nodejs'}})
 4. Create funnels for multi-step flows
 
 Example goals:
+
 - `Deploy Application`
 - `Create New Service`
 - `View Documentation`

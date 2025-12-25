@@ -44,26 +44,14 @@ async def perform_root_cause_analysis(anomaly_detection, recent_anomalies: List)
         recent_events = await _collect_recent_events(anomaly.timestamp, http_client)
 
         # 2. Query logs for errors around the anomaly time
-        log_errors = await _query_error_logs(
-            anomaly.timestamp,
-            anomaly.metric,
-            http_client
-        )
+        log_errors = await _query_error_logs(anomaly.timestamp, anomaly.metric, http_client)
 
         # 3. Check for correlated metrics
-        correlated_metrics = await _find_correlated_metrics(
-            anomaly,
-            recent_anomalies,
-            http_client
-        )
+        correlated_metrics = await _find_correlated_metrics(anomaly, recent_anomalies, http_client)
 
         # 4. Use LLM to generate root cause suggestions
         likely_causes, remediation_suggestions = await _generate_llm_suggestions(
-            anomaly,
-            recent_events,
-            log_errors,
-            correlated_metrics,
-            http_client
+            anomaly, recent_events, log_errors, correlated_metrics, http_client
         )
 
         # 5. Find relevant runbooks
@@ -76,18 +64,18 @@ async def perform_root_cause_analysis(anomaly_detection, recent_anomalies: List)
             correlated_metrics=correlated_metrics,
             recent_events=recent_events,
             remediation_suggestions=remediation_suggestions,
-            runbook_links=runbook_links
+            runbook_links=runbook_links,
         )
 
         # Attach to anomaly detection
         anomaly_detection.root_cause = root_cause
 
-        ROOT_CAUSE_ANALYSES.labels(status='success').inc()
+        ROOT_CAUSE_ANALYSES.labels(status="success").inc()
         logger.info(f"RCA completed for anomaly {anomaly_detection.id}")
 
     except Exception as e:
         logger.error(f"Failed to perform RCA for anomaly {anomaly_detection.id}: {e}", exc_info=True)
-        ROOT_CAUSE_ANALYSES.labels(status='error').inc()
+        ROOT_CAUSE_ANALYSES.labels(status="error").inc()
 
 
 async def _collect_recent_events(timestamp: datetime, http_client) -> List[str]:
@@ -109,28 +97,21 @@ async def _collect_recent_events(timestamp: datetime, http_client) -> List[str]:
 
         # Query Prometheus for deployment events
         # This is a simplified version - in production, you'd query ArgoCD or K8s events
-        query = 'changes(kube_deployment_status_replicas_updated[30m])'
+        query = "changes(kube_deployment_status_replicas_updated[30m])"
 
-        params = {
-            'query': query,
-            'time': timestamp.timestamp()
-        }
+        params = {"query": query, "time": timestamp.timestamp()}
 
-        response = await http_client.get(
-            f"{PROMETHEUS_URL}/api/v1/query",
-            params=params,
-            timeout=10.0
-        )
+        response = await http_client.get(f"{PROMETHEUS_URL}/api/v1/query", params=params, timeout=10.0)
 
         if response.status_code == 200:
             data = response.json()
-            results = data.get('data', {}).get('result', [])
+            results = data.get("data", {}).get("result", [])
 
             for result in results:
-                metric = result.get('metric', {})
-                deployment = metric.get('deployment', 'unknown')
-                namespace = metric.get('namespace', 'unknown')
-                value = result.get('value', [None, 0])[1]
+                metric = result.get("metric", {})
+                deployment = metric.get("deployment", "unknown")
+                namespace = metric.get("namespace", "unknown")
+                value = result.get("value", [None, 0])[1]
 
                 if float(value) > 0:
                     events.append(f"Deployment update: {namespace}/{deployment}")
@@ -180,11 +161,7 @@ async def _query_error_logs(timestamp: datetime, metric: str, http_client) -> Li
     return errors[:10]  # Return top 10 errors
 
 
-async def _find_correlated_metrics(
-    anomaly,
-    recent_anomalies: List,
-    http_client
-) -> List[str]:
+async def _find_correlated_metrics(anomaly, recent_anomalies: List, http_client) -> List[str]:
     """
     Find metrics that show anomalies correlated with this one.
 
@@ -224,11 +201,7 @@ async def _find_correlated_metrics(
 
 
 async def _generate_llm_suggestions(
-    anomaly,
-    recent_events: List[str],
-    log_errors: List[str],
-    correlated_metrics: List[str],
-    http_client
+    anomaly, recent_events: List[str], log_errors: List[str], correlated_metrics: List[str], http_client
 ) -> tuple[List[str], List[str]]:
     """
     Use LLM to generate root cause suggestions and remediation steps.
@@ -288,31 +261,25 @@ REMEDIATION:
         # Call LLM API
         response = await http_client.post(
             LLM_API_URL,
-            headers={
-                "Authorization": f"Bearer {LLM_API_KEY}",
-                "Content-Type": "application/json"
-            },
+            headers={"Authorization": f"Bearer {LLM_API_KEY}", "Content-Type": "application/json"},
             json={
                 "model": LLM_MODEL,
                 "messages": [
                     {
                         "role": "system",
-                        "content": "You are an expert SRE analyzing system anomalies. Provide concise, actionable insights."
+                        "content": "You are an expert SRE analyzing system anomalies. Provide concise, actionable insights.",
                     },
-                    {
-                        "role": "user",
-                        "content": context
-                    }
+                    {"role": "user", "content": context},
                 ],
                 "temperature": 0.7,
-                "max_tokens": 500
+                "max_tokens": 500,
             },
-            timeout=30.0
+            timeout=30.0,
         )
 
         if response.status_code == 200:
             data = response.json()
-            content = data.get('choices', [{}])[0].get('message', {}).get('content', '')
+            content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
 
             # Parse LLM response
             likely_causes, remediation = _parse_llm_response(content)
@@ -334,36 +301,34 @@ def _parse_llm_response(content: str) -> tuple[List[str], List[str]]:
     causes = []
     remediation = []
 
-    lines = content.strip().split('\n')
+    lines = content.strip().split("\n")
     current_section = None
 
     for line in lines:
         line = line.strip()
 
-        if 'ROOT CAUSES' in line.upper():
-            current_section = 'causes'
+        if "ROOT CAUSES" in line.upper():
+            current_section = "causes"
             continue
-        elif 'REMEDIATION' in line.upper():
-            current_section = 'remediation'
+        elif "REMEDIATION" in line.upper():
+            current_section = "remediation"
             continue
 
         # Parse numbered items
-        if line and (line[0].isdigit() or line.startswith('-')):
+        if line and (line[0].isdigit() or line.startswith("-")):
             # Remove number/bullet and clean up
-            text = line.lstrip('0123456789.-) ').strip()
+            text = line.lstrip("0123456789.-) ").strip()
             if text:
-                if current_section == 'causes':
+                if current_section == "causes":
                     causes.append(text)
-                elif current_section == 'remediation':
+                elif current_section == "remediation":
                     remediation.append(text)
 
     return causes[:3], remediation[:3]
 
 
 def _generate_rule_based_suggestions(
-    anomaly,
-    recent_events: List[str],
-    correlated_metrics: List[str]
+    anomaly, recent_events: List[str], correlated_metrics: List[str]
 ) -> tuple[List[str], List[str]]:
     """
     Generate rule-based suggestions when LLM is not available.
@@ -382,7 +347,7 @@ def _generate_rule_based_suggestions(
     metric_lower = anomaly.metric.lower()
 
     # Deployment-related
-    if 'error' in metric_lower or '5' in metric_lower:
+    if "error" in metric_lower or "5" in metric_lower:
         causes.append("Increased error rate detected - possible recent deployment issue")
         causes.append("Application bug or regression introduced")
         remediation.append("Review recent code changes and deployments")
@@ -390,7 +355,7 @@ def _generate_rule_based_suggestions(
         remediation.append("Consider rolling back recent deployment if issue persists")
 
     # Resource-related
-    if 'cpu' in metric_lower or 'memory' in metric_lower:
+    if "cpu" in metric_lower or "memory" in metric_lower:
         causes.append("Resource exhaustion or memory leak")
         causes.append("Increased load or traffic spike")
         remediation.append("Check resource quotas and limits")
@@ -398,7 +363,7 @@ def _generate_rule_based_suggestions(
         remediation.append("Scale up resources or optimize application")
 
     # Latency-related
-    if 'latency' in metric_lower or 'duration' in metric_lower:
+    if "latency" in metric_lower or "duration" in metric_lower:
         causes.append("Downstream service degradation")
         causes.append("Database or cache performance issue")
         remediation.append("Check dependent services health")
@@ -406,7 +371,7 @@ def _generate_rule_based_suggestions(
         remediation.append("Check for network issues")
 
     # Build-related
-    if 'jenkins' in metric_lower or 'build' in metric_lower:
+    if "jenkins" in metric_lower or "build" in metric_lower:
         causes.append("Build configuration change or dependency issue")
         causes.append("Test suite instability or new failing tests")
         remediation.append("Review recent build configuration changes")
@@ -414,8 +379,8 @@ def _generate_rule_based_suggestions(
         remediation.append("Analyze test failure patterns")
 
     # If we have recent events, add them as potential causes
-    if recent_events and any('Deployment' in e for e in recent_events):
-        if not any('deployment' in c.lower() for c in causes):
+    if recent_events and any("Deployment" in e for e in recent_events):
+        if not any("deployment" in c.lower() for c in causes):
             causes.insert(0, f"Recent deployment detected: {recent_events[0]}")
 
     # If we have correlated metrics, mention them
@@ -446,19 +411,19 @@ def _find_runbooks(anomaly) -> List[str]:
     metric_lower = anomaly.metric.lower()
 
     # Map metrics to runbooks
-    if 'error' in metric_lower or '5' in metric_lower:
+    if "error" in metric_lower or "5" in metric_lower:
         runbooks.append("Runbook: High Error Rate Investigation")
         runbooks.append("https://fawkes.example.com/runbooks/high-error-rate")
 
-    if 'cpu' in metric_lower or 'memory' in metric_lower:
+    if "cpu" in metric_lower or "memory" in metric_lower:
         runbooks.append("Runbook: Resource Exhaustion Response")
         runbooks.append("https://fawkes.example.com/runbooks/resource-exhaustion")
 
-    if 'latency' in metric_lower or 'duration' in metric_lower:
+    if "latency" in metric_lower or "duration" in metric_lower:
         runbooks.append("Runbook: High Latency Troubleshooting")
         runbooks.append("https://fawkes.example.com/runbooks/high-latency")
 
-    if 'jenkins' in metric_lower or 'build' in metric_lower:
+    if "jenkins" in metric_lower or "build" in metric_lower:
         runbooks.append("Runbook: Build Failure Investigation")
         runbooks.append("https://fawkes.example.com/runbooks/build-failures")
 

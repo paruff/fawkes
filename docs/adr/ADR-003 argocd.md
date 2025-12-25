@@ -1,6 +1,7 @@
 # ADR-003: ArgoCD for GitOps
 
 ## Status
+
 **Accepted** - October 8, 2025
 
 ## Context
@@ -10,6 +11,7 @@ Fawkes requires a GitOps continuous delivery solution to manage application depl
 ### The Need for GitOps
 
 **Current Challenges Without GitOps**:
+
 - **Manual Deployments**: Error-prone, not repeatable, tribal knowledge
 - **Configuration Drift**: Production state diverges from declared state
 - **Audit Trail Gaps**: Hard to track who changed what and when
@@ -18,6 +20,7 @@ Fawkes requires a GitOps continuous delivery solution to manage application depl
 - **No Self-Healing**: Systems don't automatically recover from drift
 
 **What GitOps Provides**:
+
 1. **Declarative Configuration**: Everything defined in Git (applications, infrastructure, configs)
 2. **Automated Sync**: System automatically converges to desired state
 3. **Version Control**: Complete history of all changes with Git commits
@@ -29,6 +32,7 @@ Fawkes requires a GitOps continuous delivery solution to manage application depl
 ### Requirements for GitOps Tool
 
 **Core Requirements**:
+
 - **Kubernetes-Native**: Designed specifically for Kubernetes deployments
 - **Git Integration**: Supports GitHub, GitLab, Bitbucket, etc.
 - **Automated Sync**: Watches Git, applies changes automatically
@@ -40,12 +44,14 @@ Fawkes requires a GitOps continuous delivery solution to manage application depl
 - **SSO Integration**: OIDC/SAML for authentication
 
 **DORA Alignment**:
+
 - **Deployment Frequency**: Automated deployments increase frequency
 - **Lead Time**: Git commit to deployment is fast and automated
 - **Change Failure Rate**: Declarative state reduces misconfigurations
 - **Time to Restore**: Git revert enables fast rollback
 
 **Integration Requirements**:
+
 - **Backstage**: Show deployment status in developer portal
 - **Jenkins**: Trigger deployments after successful builds
 - **Mattermost**: Send deployment notifications to team channels
@@ -55,24 +61,28 @@ Fawkes requires a GitOps continuous delivery solution to manage application depl
 ### Forces at Play
 
 **Technical Forces**:
+
 - Need declarative configuration for reliability
 - Drift detection critical for production stability
 - Multi-environment promotion needs automation
 - Self-healing reduces operational toil
 
 **Operational Forces**:
+
 - Platform team can't manually deploy everything
 - Need audit trail for compliance
 - Rollback must be fast and reliable
 - Want to reduce deployment-related incidents
 
 **Developer Experience Forces**:
+
 - Developers want to see deployment status
 - Need confidence deployments will succeed
 - Want easy rollback if issues arise
 - Prefer GitOps "merge to deploy" workflow
 
 **DORA Forces**:
+
 - Deployment frequency depends on automation
 - Lead time includes deployment time
 - GitOps reduces change failure rate
@@ -83,6 +93,7 @@ Fawkes requires a GitOps continuous delivery solution to manage application depl
 **We will use ArgoCD as the GitOps continuous delivery platform for Fawkes.**
 
 Specifically:
+
 - **ArgoCD Core** (latest stable version, currently 2.9+)
 - **Multi-cluster deployment** (manage dev, staging, prod from single ArgoCD)
 - **ApplicationSets** for managing multiple applications with templates
@@ -96,12 +107,14 @@ Specifically:
 1. **Kubernetes-Native Leader**: ArgoCD is the most popular GitOps tool for Kubernetes, with 15,000+ GitHub stars, CNCF Graduated status, and massive adoption
 
 2. **CNCF Graduated Project**: Highest maturity level in CNCF, indicating:
+
    - Production-ready and battle-tested
    - Strong governance and security
    - Long-term sustainability
    - Regular security audits
 
 3. **Best-in-Class GitOps**: Purpose-built for GitOps on Kubernetes:
+
    - Declarative Git-based deployments
    - Automated sync with configurable policies
    - Drift detection with auto-heal option
@@ -109,6 +122,7 @@ Specifically:
    - Application health assessment
 
 4. **Argo Ecosystem Integration**: Part of larger Argo ecosystem:
+
    - **Argo Rollouts**: Advanced deployment strategies (canary, blue-green)
    - **Argo Workflows**: Complex workflow orchestration
    - **Argo Events**: Event-driven workflow automation
@@ -116,6 +130,7 @@ Specifically:
    - All integrate seamlessly
 
 5. **Progressive Delivery Support**: Via Argo Rollouts:
+
    - Canary deployments with automated analysis
    - Blue-green deployments
    - Traffic splitting (with service mesh)
@@ -123,6 +138,7 @@ Specifically:
    - Critical for reducing change failure rate
 
 6. **Excellent UI**: Beautiful web interface showing:
+
    - Application topology (visual graph)
    - Real-time sync status
    - Resource health
@@ -130,29 +146,34 @@ Specifically:
    - Diff view (Git vs. cluster)
 
 7. **CLI and API**: Full control via CLI and REST API:
+
    - Automate operations
    - Integrate with CI/CD
    - Custom tooling and scripts
 
 8. **ApplicationSets**: Powerful templating for multiple applications:
+
    - Deploy multiple apps with single manifest
    - Git generator (monorepo support)
    - Cluster generator (multi-cluster)
    - Matrix generator (combinations)
 
 9. **RBAC and Security**:
+
    - Fine-grained RBAC for teams
    - SSO integration (OIDC, SAML, LDAP)
    - Git credentials management
    - Audit logging
 
 10. **Backstage Integration**: Official Backstage plugin shows:
+
     - Application sync status
     - Deployment history
     - Health status
     - Direct links to ArgoCD UI
 
 11. **Large Community**:
+
     - 300+ contributors
     - Active Slack community (10,000+ members)
     - Monthly releases
@@ -221,30 +242,35 @@ Specifically:
 ### Mitigation Strategies
 
 1. **Learning Curve**:
+
    - Allocate 1 week for ArgoCD training
    - Start with simple applications, progress to complex
    - Leverage official documentation and tutorials
    - Join ArgoCD Slack community for support
 
 2. **Git as Bottleneck**:
+
    - Use webhooks for faster sync (vs. 3-minute poll)
    - Emergency "break glass" procedure documented
    - kubectl still available for true emergencies
    - Consider sync timeout configuration
 
 3. **Secret Management**:
+
    - Use Sealed Secrets or External Secrets Operator
    - Never commit raw secrets to Git
    - Document secret rotation procedures
    - Consider Vault integration for sensitive data
 
 4. **Initial Setup**:
+
    - Use official Helm chart for deployment
    - Start with single cluster, add multi-cluster later
    - Use Infrastructure as Code for ArgoCD configuration
    - Create runbooks for common operations
 
 5. **Sync Performance**:
+
    - Use webhooks instead of polling where possible
    - Configure appropriate sync intervals per application
    - Use ApplicationSets for large-scale deployments
@@ -261,6 +287,7 @@ Specifically:
 ### Alternative 1: Flux CD
 
 **Pros**:
+
 - CNCF Graduated (alongside ArgoCD)
 - GitOps Toolkit approach (modular)
 - Native Helm support
@@ -270,6 +297,7 @@ Specifically:
 - Good for Infrastructure as Code
 
 **Cons**:
+
 - **No Built-In UI**: CLI-only, requires separate UI (Weave GitOps)
 - **Less Visual**: No application topology graph like ArgoCD
 - **Smaller Community**: Fewer contributors and users than ArgoCD
@@ -282,6 +310,7 @@ Specifically:
 ### Alternative 2: Jenkins X
 
 **Pros**:
+
 - Complete CI/CD platform (not just CD)
 - GitOps-based
 - Automated preview environments
@@ -289,6 +318,7 @@ Specifically:
 - Good for Jenkins users
 
 **Cons**:
+
 - **Opinionated**: Prescriptive workflows, less flexible
 - **Complexity**: Full platform, not just GitOps
 - **Jenkins Dependency**: Tied to Jenkins ecosystem
@@ -301,6 +331,7 @@ Specifically:
 ### Alternative 3: Spinnaker
 
 **Pros**:
+
 - Multi-cloud native (not just Kubernetes)
 - Advanced deployment strategies
 - Proven at Netflix scale
@@ -309,6 +340,7 @@ Specifically:
 - Extensive integrations
 
 **Cons**:
+
 - **Heavy and Complex**: Difficult to deploy and maintain
 - **Resource Intensive**: Requires 8+ microservices, significant resources
 - **Steep Learning Curve**: Complex concepts and UI
@@ -321,6 +353,7 @@ Specifically:
 ### Alternative 4: Helm Only (No GitOps Tool)
 
 **Pros**:
+
 - Simple, no additional tool to learn
 - Direct control with helm upgrade commands
 - Low resource overhead
@@ -328,6 +361,7 @@ Specifically:
 - Fast deployments
 
 **Cons**:
+
 - **No GitOps**: No automatic sync, drift detection, or self-healing
 - **Manual Process**: Engineers must run helm commands
 - **No Audit Trail**: History only in Helm releases, not Git
@@ -341,6 +375,7 @@ Specifically:
 ### Alternative 5: Rancher Fleet
 
 **Pros**:
+
 - Built into Rancher platform
 - GitOps-based
 - Multi-cluster management
@@ -348,6 +383,7 @@ Specifically:
 - Good for Rancher users
 
 **Cons**:
+
 - **Rancher Dependency**: Requires Rancher platform
 - **Smaller Community**: Much smaller than ArgoCD/Flux
 - **Less Mature**: Newer project, less battle-tested
@@ -360,12 +396,14 @@ Specifically:
 ### Alternative 6: GitLab AutoDevOps
 
 **Pros**:
+
 - Integrated with GitLab
 - Auto-configured pipelines
 - Built-in deployment
 - Good for GitLab-centric shops
 
 **Cons**:
+
 - **GitLab Lock-In**: Only works with GitLab
 - **Not GitOps**: Push-based, not declarative
 - **Opinionated**: Limited customization
@@ -378,12 +416,14 @@ Specifically:
 ### Alternative 7: Weave GitOps (Commercial)
 
 **Pros**:
+
 - Built on Flux CD
 - Nice UI for Flux
 - Enterprise features
 - Good for Flux users
 
 **Cons**:
+
 - **Commercial**: Core features open source, but UI and advanced features paid
 - **Cost**: Pricing unclear, per-cluster
 - **Flux Dependency**: Requires Flux understanding
@@ -484,6 +524,7 @@ gitops-repo/
 ```
 
 **Alternative** (polyrepo approach):
+
 - Separate repository per team/service
 - Pros: Team autonomy, clear ownership
 - Cons: Harder to enforce consistency, more repositories to manage
@@ -507,16 +548,16 @@ spec:
           - path: apps/prod/*/*
   template:
     metadata:
-      name: '{{path.basename}}'
+      name: "{{path.basename}}"
     spec:
       project: default
       source:
         repoURL: https://github.com/paruff/fawkes-gitops
         targetRevision: HEAD
-        path: '{{path}}'
+        path: "{{path}}"
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{path[1]}}' # team name from path
+        namespace: "{{path[1]}}" # team name from path
       syncPolicy:
         automated:
           prune: true
@@ -528,11 +569,12 @@ spec:
 ### Sync Policies
 
 **Automated Sync** (recommended for most apps):
+
 ```yaml
 syncPolicy:
   automated:
-    prune: true       # Delete resources removed from Git
-    selfHeal: true    # Revert manual changes
+    prune: true # Delete resources removed from Git
+    selfHeal: true # Revert manual changes
   syncOptions:
     - CreateNamespace=true
   retry:
@@ -544,9 +586,10 @@ syncPolicy:
 ```
 
 **Manual Sync** (for critical production apps initially):
+
 ```yaml
 syncPolicy:
-  manual: {}  # Require manual approval for sync
+  manual: {} # Require manual approval for sync
 ```
 
 ### Progressive Delivery with Argo Rollouts
@@ -563,14 +606,14 @@ spec:
   strategy:
     canary:
       steps:
-        - setWeight: 20    # 20% traffic to canary
-        - pause: {duration: 5m}
-        - setWeight: 40    # 40% traffic
-        - pause: {duration: 5m}
-        - setWeight: 60    # 60% traffic
-        - pause: {duration: 5m}
-        - setWeight: 80    # 80% traffic
-        - pause: {duration: 5m}
+        - setWeight: 20 # 20% traffic to canary
+        - pause: { duration: 5m }
+        - setWeight: 40 # 40% traffic
+        - pause: { duration: 5m }
+        - setWeight: 60 # 60% traffic
+        - pause: { duration: 5m }
+        - setWeight: 80 # 80% traffic
+        - pause: { duration: 5m }
       analysis:
         templates:
           - templateName: error-rate-analysis
@@ -651,14 +694,14 @@ spec:
             url: https://prod-cluster
   template:
     metadata:
-      name: 'sample-app-{{cluster}}'
+      name: "sample-app-{{cluster}}"
     spec:
       project: default
       source:
         repoURL: https://github.com/paruff/fawkes-gitops
-        path: 'apps/{{cluster}}/sample-app'
+        path: "apps/{{cluster}}/sample-app"
       destination:
-        server: '{{url}}'
+        server: "{{url}}"
         namespace: sample-app
 ```
 
@@ -674,9 +717,9 @@ metadata:
 spec:
   description: Team A applications
   sourceRepos:
-    - 'https://github.com/paruff/fawkes-gitops'
+    - "https://github.com/paruff/fawkes-gitops"
   destinations:
-    - namespace: 'team-a-*'
+    - namespace: "team-a-*"
       server: https://kubernetes.default.svc
   roles:
     - name: team-a-developer
@@ -712,16 +755,19 @@ spec:
 ### Monitoring & Observability
 
 **Prometheus Metrics**:
+
 - argocd_app_sync_total (sync attempts)
 - argocd_app_sync_status (current sync status)
 - argocd_app_health_status (application health)
 - argocd_git_request_total (Git operations)
 
 **Grafana Dashboard**:
+
 - Official ArgoCD dashboard (ID: 14584)
 - Customizations for Fawkes-specific views
 
 **Alerts**:
+
 - Application OutOfSync >30 minutes
 - Application Degraded >15 minutes
 - Sync Failures (3 consecutive)
@@ -742,6 +788,7 @@ echo -n 'my-secret-value' | kubectl create secret generic my-secret \
 ```
 
 **Option 2: External Secrets Operator**:
+
 - Fetch secrets from Vault, AWS Secrets Manager, etc.
 - Keep secret references in Git, not actual secrets
 - Better for large-scale deployments
@@ -751,11 +798,13 @@ echo -n 'my-secret-value' | kubectl create secret generic my-secret \
 ### Backup & Disaster Recovery
 
 **Backup Strategy**:
+
 - ArgoCD configuration stored in Git (Infrastructure as Code)
 - Application manifests in GitOps repository
 - ArgoCD state in Kubernetes (can be recreated)
 
 **Recovery**:
+
 1. Redeploy ArgoCD from Helm chart
 2. Re-add clusters
 3. Create Applications pointing to Git repository
@@ -767,6 +816,7 @@ echo -n 'my-secret-value' | kubectl create secret generic my-secret \
 ### Performance Optimization
 
 **For Large Deployments**:
+
 - Increase application controller replicas
 - Tune sync timeouts and retry logic
 - Use ApplicationSets instead of individual Applications
@@ -774,6 +824,7 @@ echo -n 'my-secret-value' | kubectl create secret generic my-secret \
 - Optimize Git repository size (use shallow clones)
 
 **Resource Limits**:
+
 ```yaml
 spec:
   resources:
@@ -788,6 +839,7 @@ spec:
 ## Monitoring This Decision
 
 We will revisit this ADR if:
+
 - ArgoCD project becomes unmaintained or development slows
 - Performance issues arise that cannot be resolved
 - A superior GitOps tool emerges with better fit
@@ -811,6 +863,7 @@ We will revisit this ADR if:
 ### ArgoCD vs. Flux: The Eternal Debate
 
 **When to choose ArgoCD**:
+
 - Want built-in, feature-rich UI
 - Prefer visual application topology
 - Need strong RBAC out-of-box
@@ -818,6 +871,7 @@ We will revisit this ADR if:
 - Want simpler mental model
 
 **When to choose Flux**:
+
 - Prefer CLI-first workflow
 - Want lower resource usage
 - Need advanced multi-tenancy
@@ -839,6 +893,7 @@ We will revisit this ADR if:
 ### Progressive Delivery ROI
 
 Argo Rollouts adds complexity but significantly reduces change failure rate:
+
 - Canary deployments catch issues before full rollout
 - Automated rollback based on metrics prevents outages
 - Traffic shifting minimizes blast radius

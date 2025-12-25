@@ -15,10 +15,7 @@ from fastapi.responses import Response
 from app import __version__
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Configuration
@@ -28,31 +25,24 @@ MATTERMOST_URL = os.getenv("MATTERMOST_URL", "http://mattermost.fawkes.svc.clust
 
 # Prometheus metrics
 friction_logs_total = Counter(
-    "friction_bot_logs_total",
-    "Total number of friction logs submitted via bot",
-    ["platform", "status"]
+    "friction_bot_logs_total", "Total number of friction logs submitted via bot", ["platform", "status"]
 )
 slash_commands_total = Counter(
-    "friction_bot_slash_commands_total",
-    "Total number of slash commands received",
-    ["command", "platform"]
+    "friction_bot_slash_commands_total", "Total number of slash commands received", ["command", "platform"]
 )
-request_duration = Histogram(
-    "friction_bot_request_duration_seconds",
-    "Request processing time",
-    ["endpoint"]
-)
+request_duration = Histogram("friction_bot_request_duration_seconds", "Request processing time", ["endpoint"])
 
 # FastAPI app
 app = FastAPI(
     title="Fawkes Friction Bot",
     description="Slack/Mattermost bot for logging developer friction points",
-    version=__version__
+    version=__version__,
 )
 
 
 class FrictionData(BaseModel):
     """Model for friction data."""
+
     title: str = Field(..., description="Brief title of the friction point")
     description: str = Field(..., description="Detailed description")
     category: str = Field(default="Developer Experience", description="Friction category")
@@ -63,6 +53,7 @@ class FrictionData(BaseModel):
 
 class MattermostSlashCommand(BaseModel):
     """Model for Mattermost slash command."""
+
     token: str
     team_domain: str
     team_id: str
@@ -88,11 +79,7 @@ def send_to_insights_api(friction_data: Dict[str, Any]) -> Dict[str, Any]:
         requests.HTTPError: If API request fails
     """
     try:
-        response = requests.post(
-            f"{INSIGHTS_API_URL}/insights",
-            json=friction_data,
-            timeout=10
-        )
+        response = requests.post(f"{INSIGHTS_API_URL}/insights", json=friction_data, timeout=10)
         response.raise_for_status()
         return response.json()
     except requests.RequestException as e:
@@ -109,10 +96,7 @@ def send_mattermost_response(response_url: str, message: str, ephemeral: bool = 
         ephemeral: Whether message should be visible only to user
     """
     try:
-        payload = {
-            "text": message,
-            "response_type": "ephemeral" if ephemeral else "in_channel"
-        }
+        payload = {"text": message, "response_type": "ephemeral" if ephemeral else "in_channel"}
         requests.post(response_url, json=payload, timeout=5)
     except requests.RequestException as e:
         logger.error(f"Failed to send Mattermost response: {e}")
@@ -148,7 +132,7 @@ def health_check():
         "status": "healthy",
         "service": "friction-bot",
         "version": __version__,
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.utcnow().isoformat(),
     }
 
 
@@ -169,7 +153,7 @@ async def slack_friction_command(
     user_name: str = Form(...),
     command: str = Form(...),
     text: str = Form(...),
-    response_url: str = Form(...)
+    response_url: str = Form(...),
 ):
     """Handle Slack /friction slash command.
 
@@ -198,16 +182,13 @@ async def slack_friction_command(
                 "`/friction Slow CI builds | Maven builds take 20+ min | CI/CD | high`\n\n"
                 "*Priority options:* `low`, `medium`, `high`, `critical`\n"
                 "*Common categories:* `CI/CD`, `Documentation`, `Tooling`, `Infrastructure`"
-            )
+            ),
         }
 
     parsed = parse_friction_command(text)
 
     if not parsed["title"]:
-        return {
-            "response_type": "ephemeral",
-            "text": "⚠️ Please provide at least a title for the friction point."
-        }
+        return {"response_type": "ephemeral", "text": "⚠️ Please provide at least a title for the friction point."}
 
     # Create insight
     insight_data = {
@@ -224,7 +205,7 @@ async def slack_friction_command(
             "team_id": team_id,
             "channel_id": channel_id,
             "user_id": user_id,
-        }
+        },
     }
 
     try:
@@ -240,15 +221,12 @@ async def slack_friction_command(
                 f"**Priority:** {parsed['priority']}\n"
                 f"**ID:** {result.get('id', 'N/A')}\n\n"
                 f"_Thanks for helping us improve the platform!_ 🎯"
-            )
+            ),
         }
     except Exception as e:
         friction_logs_total.labels(platform="slack", status="error").inc()
         logger.error(f"Error creating insight: {e}")
-        return {
-            "response_type": "ephemeral",
-            "text": f"❌ Failed to log friction: {str(e)}"
-        }
+        return {"response_type": "ephemeral", "text": f"❌ Failed to log friction: {str(e)}"}
 
 
 @app.post("/mattermost/slash/friction")
@@ -290,16 +268,13 @@ async def mattermost_friction_command(request: Request):
                 "`/friction Slow CI builds | Maven builds take 20+ min | CI/CD | high`\n\n"
                 "**Priority options:** `low`, `medium`, `high`, `critical`\n"
                 "**Common categories:** `CI/CD`, `Documentation`, `Tooling`, `Infrastructure`"
-            )
+            ),
         }
 
     parsed = parse_friction_command(text)
 
     if not parsed["title"]:
-        return {
-            "response_type": "ephemeral",
-            "text": "⚠️ Please provide at least a title for the friction point."
-        }
+        return {"response_type": "ephemeral", "text": "⚠️ Please provide at least a title for the friction point."}
 
     # Create insight
     insight_data = {
@@ -316,7 +291,7 @@ async def mattermost_friction_command(request: Request):
             "team_id": team_id,
             "channel_id": channel_id,
             "user_id": user_id,
-        }
+        },
     }
 
     try:
@@ -332,15 +307,12 @@ async def mattermost_friction_command(request: Request):
                 f"**Priority:** {parsed['priority']}\n"
                 f"**ID:** {result.get('id', 'N/A')}\n\n"
                 f"_Thanks for helping us improve the platform!_ 🎯"
-            )
+            ),
         }
     except Exception as e:
         friction_logs_total.labels(platform="mattermost", status="error").inc()
         logger.error(f"Error creating insight: {e}")
-        return {
-            "response_type": "ephemeral",
-            "text": f"❌ Failed to log friction: {str(e)}"
-        }
+        return {"response_type": "ephemeral", "text": f"❌ Failed to log friction: {str(e)}"}
 
 
 @app.post("/api/v1/friction")
@@ -362,7 +334,7 @@ async def api_log_friction(friction: FrictionData):
         "author": friction.author,
         "metadata": {
             "platform": "api",
-        }
+        },
     }
 
     try:
@@ -377,4 +349,5 @@ async def api_log_friction(friction: FrictionData):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

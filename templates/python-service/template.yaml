@@ -32,16 +32,16 @@ spec:
           title: Service Name
           type: string
           description: Unique name for your service (lowercase, hyphen-separated)
-          pattern: '^[a-z][a-z0-9-]*[a-z0-9]$'
+          pattern: "^[a-z][a-z0-9-]*[a-z0-9]$"
           ui:autofocus: true
-          ui:help: 'Example: user-authentication-service'
+          ui:help: "Example: user-authentication-service"
 
         description:
           title: Description
           type: string
           description: Brief description of what this service does
           ui:widget: textarea
-          ui:help: 'Example: Handles user authentication and JWT token generation'
+          ui:help: "Example: Handles user authentication and JWT token generation"
 
         owner:
           title: Owner Team
@@ -108,7 +108,7 @@ spec:
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
+        catalogInfoPath: "/catalog-info.yaml"
 
   output:
     links:

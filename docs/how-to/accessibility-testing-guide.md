@@ -46,6 +46,7 @@ npm run lighthouse:ci
 [axe-core](https://github.com/dequelabs/axe-core) is a fast, lightweight accessibility testing engine that runs automated WCAG 2.0, 2.1, and Section 508 accessibility tests.
 
 **What it tests:**
+
 - Color contrast
 - ARIA attributes
 - Semantic HTML
@@ -59,6 +60,7 @@ npm run lighthouse:ci
 [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) provides automated auditing, performance metrics, and best practices for web pages.
 
 **What it tests:**
+
 - Accessibility score (0-100)
 - WCAG compliance
 - Best practices
@@ -135,6 +137,7 @@ describe('MyComponent Accessibility', () => {
 ### GitHub Actions
 
 Accessibility tests run automatically on:
+
 - Every pull request
 - Push to main branch
 - Daily at 9 AM UTC (scheduled)
@@ -173,12 +176,12 @@ stage('Accessibility Tests') {
 
 The pipeline enforces these quality gates:
 
-| Gate | Threshold | Action |
-|------|-----------|--------|
-| Axe-Core Tests | 0 violations | ❌ Fail build |
-| Lighthouse Score | ≥ 90/100 | ❌ Fail build |
-| WCAG 2.1 AA | Must comply | ❌ Fail build |
-| Color Contrast | 4.5:1 text, 3:1 large | ❌ Fail build |
+| Gate             | Threshold             | Action        |
+| ---------------- | --------------------- | ------------- |
+| Axe-Core Tests   | 0 violations          | ❌ Fail build |
+| Lighthouse Score | ≥ 90/100              | ❌ Fail build |
+| WCAG 2.1 AA      | Must comply           | ❌ Fail build |
+| Color Contrast   | 4.5:1 text, 3:1 large | ❌ Fail build |
 
 ## Understanding Test Results
 
@@ -218,6 +221,7 @@ Lighthouse provides a score from 0-100:
 - **0-69**: ❌ Poor (does not meet requirements)
 
 Reports include:
+
 - Overall accessibility score
 - Detailed audit results
 - Opportunities for improvement
@@ -230,11 +234,13 @@ Reports include:
 #### 1. Missing Alt Text
 
 **Problem:**
+
 ```html
 <img src="logo.png" />
 ```
 
 **Fix:**
+
 ```html
 <img src="logo.png" alt="Company logo" />
 ```
@@ -242,6 +248,7 @@ Reports include:
 #### 2. Poor Color Contrast
 
 **Problem:**
+
 ```css
 .text {
   color: #999;
@@ -251,6 +258,7 @@ Reports include:
 ```
 
 **Fix:**
+
 ```css
 .text {
   color: #666;
@@ -262,17 +270,19 @@ Reports include:
 #### 3. Missing Form Labels
 
 **Problem:**
+
 ```html
 <input type="email" id="email" />
 ```
 
 **Fix:**
+
 ```html
-<label htmlFor="email">Email Address</label>
-<input type="email" id="email" />
+<label htmlFor="email">Email Address</label> <input type="email" id="email" />
 ```
 
 Or use aria-label:
+
 ```html
 <input type="email" aria-label="Email Address" />
 ```
@@ -280,11 +290,13 @@ Or use aria-label:
 #### 4. Invalid ARIA Attributes
 
 **Problem:**
+
 ```html
 <div role="button" aria-pressed="yes">Click me</div>
 ```
 
 **Fix:**
+
 ```html
 <button aria-pressed="true">Click me</button>
 ```
@@ -292,24 +304,22 @@ Or use aria-label:
 #### 5. Missing Keyboard Access
 
 **Problem:**
+
 ```html
-<div onClick={handleClick}>Clickable</div>
+<div onClick="{handleClick}">Clickable</div>
 ```
 
 **Fix:**
+
 ```html
-<button onClick={handleClick}>Clickable</button>
+<button onClick="{handleClick}">Clickable</button>
 ```
 
 Or make div keyboard accessible:
+
 ```html
-<div
-  role="button"
-  tabIndex={0}
-  onClick={handleClick}
-  onKeyPress={(e) => e.key === 'Enter' && handleClick()}
->
-  Clickable
+<div role="button" tabindex="{0}" onClick="{handleClick}" onKeyPress="{(e)" ="">
+  e.key === 'Enter' && handleClick()} > Clickable
 </div>
 ```
 
@@ -329,11 +339,13 @@ Or make div keyboard accessible:
 ### Grafana Dashboard
 
 Access the accessibility dashboard at:
+
 ```
 https://grafana.fawkes.idp/d/accessibility
 ```
 
 **Dashboard features:**
+
 - Overall accessibility score trend
 - Test pass/fail rate
 - Violations by severity
@@ -369,6 +381,7 @@ wcag_aa_compliance_status
 **Cause**: Environment differences, missing dependencies, or timing issues.
 
 **Solution**:
+
 1. Check CI logs for specific errors
 2. Ensure all dependencies are in `package.json`
 3. Run tests with CI flag locally:
@@ -382,6 +395,7 @@ wcag_aa_compliance_status
 **Cause**: Storybook build issues, network problems, or threshold too high.
 
 **Solution**:
+
 1. Build Storybook locally and inspect:
    ```bash
    npm run build-storybook
@@ -396,6 +410,7 @@ wcag_aa_compliance_status
 **Cause**: Axe-core might flag valid patterns as violations.
 
 **Solution**:
+
 1. Review the violation carefully
 2. Check if it's a legitimate issue
 3. If it's a false positive, add to `.axerc.json`:
@@ -413,6 +428,7 @@ wcag_aa_compliance_status
 **Cause**: Workflow configuration issues or missing secrets.
 
 **Solution**:
+
 1. Check workflow logs in GitHub Actions
 2. Verify all required secrets are set
 3. Check file paths are correct
@@ -424,6 +440,7 @@ wcag_aa_compliance_status
 **Cause**: Lighthouse might be waiting for user input or timing out.
 
 **Solution**:
+
 1. Check Jenkins console output
 2. Increase timeout in `lighthouserc.json`:
    ```json
@@ -440,22 +457,26 @@ wcag_aa_compliance_status
 ## Resources
 
 ### WCAG Guidelines
+
 - [WCAG 2.1 Quick Reference](https://www.w3.org/WAI/WCAG21/quickref/)
 - [Understanding WCAG 2.1](https://www.w3.org/WAI/WCAG21/Understanding/)
 - [How to Meet WCAG](https://www.w3.org/WAI/WCAG21/quickref/)
 
 ### Tools Documentation
+
 - [axe-core Documentation](https://github.com/dequelabs/axe-core)
 - [jest-axe Documentation](https://github.com/nickcolley/jest-axe)
 - [Lighthouse CI Documentation](https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/getting-started.md)
 
 ### Learning Resources
+
 - [WebAIM Articles](https://webaim.org/articles/)
 - [A11y Project](https://www.a11yproject.com/)
 - [MDN Accessibility](https://developer.mozilla.org/en-US/docs/Web/Accessibility)
 - [Inclusive Components](https://inclusive-components.design/)
 
 ### Browser Extensions
+
 - [axe DevTools](https://www.deque.com/axe/devtools/)
 - [WAVE](https://wave.webaim.org/extension/)
 - [Lighthouse](https://developers.google.com/web/tools/lighthouse)

@@ -17,10 +17,12 @@ Comprehensive Developer Experience dashboard showing all 5 SPACE framework dimen
 #### Panels
 
 - **DevEx Overview**:
+
   - Overall DevEx Health Score: Composite score (0-100) based on all SPACE dimensions
   - SPACE Dimensions Status: Bar gauge showing health of all 5 dimensions (0-5 scale)
 
 - **SATISFACTION**:
+
   - Net Promoter Score (NPS): How likely developers are to recommend platform (gauge, -100 to 100)
   - Platform Satisfaction Rating: Average satisfaction rating (1-5 scale)
   - Survey Response Rate: Percentage of developers responding to surveys
@@ -28,12 +30,14 @@ Comprehensive Developer Experience dashboard showing all 5 SPACE framework dimen
   - NPS Trend (30 days): Historical NPS trend
 
 - **PERFORMANCE**:
+
   - Deployment Frequency: Deploys per day (stat with trend)
   - Lead Time for Changes: Commit to production time in hours (gauge)
   - Change Failure Rate: Percentage of failed deployments (gauge)
   - Build Success Rate: Percentage of successful builds
 
 - **ACTIVITY**:
+
   - Active Developers: Count of developers active in last 7 days
   - Commits (7d): Total commits in last 7 days
   - Pull Requests (7d): Total PRs created in last 7 days
@@ -42,12 +46,14 @@ Comprehensive Developer Experience dashboard showing all 5 SPACE framework dimen
   - Platform Engagement: Percentage of developers actively using platform weekly
 
 - **COMMUNICATION & COLLABORATION**:
+
   - Avg Review Time: Average time to first code review in hours (gauge)
   - Comments per PR: Average comments per pull request
   - Cross-Team PRs: Percentage of PRs involving cross-team collaboration
   - Knowledge Sharing: Documentation contributions (wiki edits, TechDocs)
 
 - **EFFICIENCY & FLOW**:
+
   - Flow State Achievement: Percentage achieving flow 3+ days per week
   - Valuable Work Time: Average % of time spent on valuable work (gauge)
   - Friction Incidents (30d): Total friction incidents reported in last 30 days
@@ -102,36 +108,42 @@ space_cognitive_load_avg{team="platform"}
 #### Thresholds
 
 - **DevEx Health Score**:
+
   - 🔴 Red: < 50
   - 🟠 Orange: 50-59
   - 🟡 Yellow: 60-79
   - 🟢 Green: ≥ 80
 
 - **NPS**:
+
   - 🔴 Red: < 0
   - 🟠 Orange: 0-49
   - 🟡 Yellow: 50-69
   - 🟢 Green: ≥ 70
 
 - **Satisfaction Rating**:
+
   - 🔴 Red: < 2.5
   - 🟠 Orange: 2.5-3.4
   - 🟡 Yellow: 3.5-3.9
   - 🟢 Green: ≥ 4.0
 
 - **Lead Time**:
+
   - 🟢 Green: < 1 hour (Elite)
   - 🟡 Yellow: 1-24 hours
   - 🟠 Orange: 24-168 hours (1 week)
   - 🔴 Red: > 168 hours
 
 - **Change Failure Rate**:
+
   - 🟢 Green: 0-15% (Elite)
   - 🟡 Yellow: 15-30%
   - 🟠 Orange: 30-45%
   - 🔴 Red: > 45%
 
 - **Flow State Achievement**:
+
   - 🔴 Red: < 50%
   - 🟡 Yellow: 50-59%
   - 🟢 Green: ≥ 60%
@@ -145,12 +157,14 @@ space_cognitive_load_avg{team="platform"}
 #### Annotations
 
 The dashboard includes automatic annotations for:
+
 - **Deployments**: Green markers when deployments occur
 - **Incidents**: Red markers when incidents are detected
 
 #### Implementation Notes
 
 Requires:
+
 1. SPACE metrics service running (`services/space-metrics/`)
 2. Prometheus scraping SPACE metrics service `/metrics` endpoint
 3. ServiceMonitor configured for metrics collection
@@ -162,6 +176,7 @@ See [SPACE Metrics Service README](../../../../services/space-metrics/README.md)
 #### Alerting
 
 The dashboard supports alerting on degrading metrics:
+
 - DevEx health score drops below 60
 - NPS score drops below 40
 - Friction incidents exceed 50 per month per 100 developers
@@ -183,6 +198,7 @@ Comprehensive research insights visualization dashboard showing insight trends, 
 #### Panels
 
 - **Overview Section**:
+
   - Total Research Insights: Overall count of captured insights
   - Validated Insights: Published insights count
   - Published (Last 7 Days): Recent publication rate
@@ -191,19 +207,23 @@ Comprehensive research insights visualization dashboard showing insight trends, 
   - Total Tags: Tag count
 
 - **Status & Priority Analysis**:
+
   - Insights by Status: Distribution pie chart (draft, published, archived)
   - Insights by Priority: Distribution pie chart (low, medium, high, critical)
   - Insights Status Over Time: Time series trend of status changes
 
 - **Category Analytics**:
+
   - Insights by Category: Bar gauge showing count per category
   - Category Distribution: Donut chart of proportional distribution
 
 - **Validation Metrics**:
+
   - Validation Rate by Category: Percentage of published insights per category
   - Time to Action (Hours): Average time from creation to publication
 
 - **Tag Analytics**:
+
   - Top Tags by Usage: Bar gauge of most frequently used tags
   - Tag Usage Distribution: Donut chart of tag popularity
 
@@ -248,11 +268,13 @@ research_insights_published_last_30d
 #### Thresholds
 
 - **Published (7 Days)**:
+
   - 🔴 Red: 0 insights
   - 🟡 Yellow: 1-4 insights
   - 🟢 Green: ≥ 5 insights
 
 - **Validation Rate**:
+
   - 🔴 Red: < 50%
   - 🟡 Yellow: 50-75%
   - 🟢 Green: ≥ 75%
@@ -266,6 +288,7 @@ research_insights_published_last_30d
 #### Implementation Notes
 
 Requires:
+
 1. Insights service running with Prometheus metrics enabled (`services/insights/`)
 2. Prometheus scraping insights service `/metrics` endpoint
 3. ServiceMonitor configured for metrics collection
@@ -458,24 +481,29 @@ Comprehensive Value Stream Mapping flow metrics dashboard showing WIP, throughpu
 #### Panels
 
 - **Flow Metrics Overview**:
+
   - Total WIP (Work in Progress): Count across all stages
   - Throughput: Items completed in last 7 days
   - Lead Time (P50): Median time from backlog to production
   - Avg Cycle Time: Average completion time
 
 - **Cumulative Flow Diagram**:
+
   - WIP by Stage Over Time: Stacked area chart showing work distribution
   - Identifies where work accumulates
 
 - **Throughput & Flow**:
+
   - Daily Throughput: Bar chart of items completed per day
   - Weekly Throughput Trend: 7-day rolling average
 
 - **Cycle Time Analysis**:
+
   - Cycle Time by Stage: Median time spent in each stage
   - Stage Cycle Time Distribution: Current stage timings
 
 - **Lead Time Trends**:
+
   - Lead Time Percentiles: P50, P75, P95 over time
 
 - **Bottleneck Detection**:
@@ -510,12 +538,14 @@ sum(rate(vsm_stage_transitions_total{to_stage="Production"}[5m]))
 #### Thresholds
 
 - **WIP**:
+
   - 🟢 Green: < 20 items
   - 🟡 Yellow: 20-50 items
   - 🟠 Orange: 50-100 items
   - 🔴 Red: > 100 items
 
 - **Lead Time**:
+
   - 🟢 Green: < 24 hours
   - 🟡 Yellow: 24-168 hours (1-7 days)
   - 🟠 Orange: 168-336 hours (1-2 weeks)
@@ -530,6 +560,7 @@ sum(rate(vsm_stage_transitions_total{to_stage="Production"}[5m]))
 #### Implementation Notes
 
 Requires:
+
 1. VSM service running (`services/vsm/`)
 2. Work items being tracked through stages
 3. Prometheus scraping VSM `/metrics` endpoint
@@ -550,19 +581,23 @@ Comprehensive monitoring of data quality metrics from Great Expectations validat
 #### Panels
 
 - **Overview Section**:
+
   - Overall Data Quality Score: Percentage of all expectations passing
   - Validation Pass/Fail Summary: Current status counts
   - Total Validation Runs: Activity in last 24 hours
 
 - **Validation Results by Datasource**:
+
   - Status table: Per-datasource validation status with success rates
   - Success rate bar gauges: Visual comparison across datasources
 
 - **Failed Expectations**:
+
   - Pie chart: Distribution of failures by datasource
   - Time series: Trend of failed expectations over time
 
 - **Data Freshness**:
+
   - Status indicators: Time since last validation per datasource
 
 - **Historical Trends**:
@@ -602,6 +637,7 @@ data_quality_expectations_successful{datasource="backstage"}
 #### Thresholds
 
 - **Quality Score**:
+
   - 🔴 Red: < 70%
   - 🟠 Orange: 70-85%
   - 🟡 Yellow: 85-95%
@@ -616,6 +652,7 @@ data_quality_expectations_successful{datasource="backstage"}
 #### Implementation Notes
 
 Requires:
+
 1. Great Expectations data quality service running
 2. Prometheus exporter deployed (see `platform/apps/data-quality/`)
 3. ServiceMonitor configured for metrics scraping
@@ -636,6 +673,7 @@ Comprehensive AI-powered observability dashboard showing anomaly detection, smar
 #### Panels
 
 - **Active Anomalies Feed (Real-Time)**:
+
   - Active Anomalies Count: Current number of detected anomalies
   - Critical Anomalies: Critical severity anomalies requiring immediate attention
   - Active Alert Groups: Smart alert groups currently active
@@ -643,6 +681,7 @@ Comprehensive AI-powered observability dashboard showing anomaly detection, smar
   - Real-Time Anomaly Feed: Live table of detected anomalies with details
 
 - **Anomaly Detection Performance**:
+
   - Anomaly Detection Accuracy: Detection accuracy percentage (target >95%)
   - False Positive Rate: Current FP rate (target <5%)
   - ML Models Loaded: Number of active ML models
@@ -650,6 +689,7 @@ Comprehensive AI-powered observability dashboard showing anomaly detection, smar
   - Anomalies by Severity Over Time: Trend analysis by severity level
 
 - **Smart Alert Groups**:
+
   - Alert Grouping Efficiency: Total alert groups vs individual alerts
   - Alerts Suppressed: Number of alerts suppressed by suppression engine
   - Alert Fatigue Reduction: Percentage of alert noise reduced (target >50%)
@@ -659,6 +699,7 @@ Comprehensive AI-powered observability dashboard showing anomaly detection, smar
   - Suppression Reasons: Why alerts were suppressed (pie chart)
 
 - **Root Cause Analysis**:
+
   - Root Cause Analysis Success Rate: Percentage of successful RCA executions
   - RCA Executions: Total root cause analyses performed
   - RCA Status Distribution: Success vs failure rates
@@ -695,18 +736,21 @@ smart_alerting_routed_total{channel}
 #### Thresholds
 
 - **Anomaly Detection Accuracy**:
+
   - 🔴 Red: < 85%
   - 🟠 Orange: 85-92%
   - 🟡 Yellow: 92-95%
   - 🟢 Green: ≥ 95%
 
 - **False Positive Rate**:
+
   - 🟢 Green: < 3%
   - 🟡 Yellow: 3-5%
   - 🟠 Orange: 5-8%
   - 🔴 Red: > 8%
 
 - **Alert Fatigue Reduction**:
+
   - 🔴 Red: < 30%
   - 🟡 Yellow: 30-50%
   - 🟢 Green: ≥ 50%
@@ -720,12 +764,14 @@ smart_alerting_routed_total{channel}
 #### Annotations
 
 The dashboard includes automatic annotations for:
+
 - **Critical Anomalies**: Red markers when critical anomalies are detected
 - **Alert Groups**: Orange markers when new alert groups are created
 
 #### Implementation Notes
 
 Requires:
+
 1. Anomaly detection service running (see `services/anomaly-detection/`)
 2. Smart alerting service running (see `services/smart-alerting/`)
 3. Prometheus scraping both services' `/metrics` endpoints
@@ -734,10 +780,12 @@ Requires:
 #### Anomaly Timeline UI
 
 In addition to the Grafana dashboard, an interactive HTML timeline is available at:
+
 - **File**: `services/anomaly-detection/ui/timeline.html`
 - **URL**: `http://anomaly-detection.local/timeline` (when deployed)
 
 The timeline provides:
+
 - Interactive anomaly visualization over time
 - Correlated events (deployments, config changes)
 - Incident markers
@@ -798,11 +846,13 @@ Most dashboards include template variables for dynamic filtering:
 ### Dashboard Not Appearing
 
 1. Check ConfigMap exists:
+
    ```bash
    kubectl get configmap -n monitoring -l grafana_dashboard=1
    ```
 
 2. Check Grafana logs:
+
    ```bash
    kubectl logs -n monitoring deployment/prometheus-grafana -f
    ```
@@ -812,6 +862,7 @@ Most dashboards include template variables for dynamic filtering:
 ### No Data Displayed
 
 1. Verify Prometheus is scraping targets:
+
    ```bash
    # Check targets
    kubectl port-forward -n monitoring svc/prometheus-prometheus 9090:9090
@@ -819,6 +870,7 @@ Most dashboards include template variables for dynamic filtering:
    ```
 
 2. Check metrics exist:
+
    ```promql
    # In Prometheus UI, query for:
    up
@@ -884,4 +936,3 @@ For issues with dashboards:
 2. Review Grafana and Prometheus logs
 3. Consult the [platform documentation](../../../../docs/)
 4. Open an issue in the GitHub repository
-

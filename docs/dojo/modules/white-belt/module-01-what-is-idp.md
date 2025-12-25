@@ -47,8 +47,8 @@ You've mastered this module when you can:
 
 ### 📺 Video: What is an Internal Delivery Platform? (7 minutes)
 
-> **[VIDEO PLACEHOLDER]**
-> **Script Summary**:
+> **[VIDEO PLACEHOLDER]** > **Script Summary**:
+>
 > - Opening: Show developer frustration with 12-step deployment process
 > - Definition: IDP as "self-service platform that provides golden paths"
 > - Key components: Portal, CI/CD, Observability, Infrastructure
@@ -79,34 +79,38 @@ Think of it as **"paved roads for software delivery"**—just as cities build ro
 
 ### The Platform as a Product Mindset
 
-Traditional IT: *"Here are some tools. Figure it out yourself."*
-Platform Engineering: *"What do you need to be productive? Let me build that for you."*
+Traditional IT: _"Here are some tools. Figure it out yourself."_
+Platform Engineering: _"What do you need to be productive? Let me build that for you."_
 
 #### Key Principles
 
 **1. Developers are Your Customers**
+
 - Understand their pain points through interviews and surveys
 - Measure satisfaction with NPS (Net Promoter Score)
 - Iterate based on feedback, not assumptions
 
 **2. Build for the 80% Use Case**
+
 - Provide golden paths for common scenarios
 - Allow escape hatches for advanced users
 - Don't try to solve every edge case immediately
 
 **3. Measure Platform Value**
+
 - Track adoption rates (% of teams using the platform)
 - Monitor time saved (before vs. after metrics)
 - Calculate cost efficiency (infrastructure + personnel)
 
 **4. Treat It Like a Product**
+
 - Maintain a roadmap based on customer needs
 - Version releases and communicate changes
 - Provide documentation and support
 
 ### Team Topologies & Enabling Teams
 
-The book *Team Topologies* by Matthew Skelton and Manuel Pais introduces four fundamental team types. Platform teams are **Enabling Teams**.
+The book _Team Topologies_ by Matthew Skelton and Manuel Pais introduces four fundamental team types. Platform teams are **Enabling Teams**.
 
 #### The Four Team Types
 
@@ -140,12 +144,14 @@ Modern developers spend **70-80% of their time** on non-value-added activities:
 #### The Business Impact
 
 Without a platform:
+
 - **Slower time to market**: Weeks or months to deploy new services
 - **Higher operational costs**: Manual work doesn't scale
 - **Increased risk**: No standardization leads to security vulnerabilities
 - **Developer attrition**: Frustrated developers leave for better experiences
 
 With a platform:
+
 - **Faster deployments**: From weeks to minutes
 - **Lower costs**: Automation reduces manual work by 60-80%
 - **Better security**: Security built into golden paths
@@ -154,6 +160,7 @@ With a platform:
 #### Real-World Example: Spotify
 
 Spotify's Backstage (which Fawkes uses!) reduced their time to:
+
 - **Provision a new service**: From 4 weeks → 5 minutes
 - **Deploy to production**: From 2 hours → 10 minutes
 - **Onboard a new developer**: From 2 weeks → 1 day
@@ -196,37 +203,42 @@ Fawkes provides a complete IDP built on industry-standard open-source tools:
 
 #### Key Fawkes Components
 
-| Component | Purpose | Technology |
-|-----------|---------|------------|
-| **Backstage** | Developer portal, service catalog | Backstage by Spotify |
-| **Jenkins** | CI/CD pipelines | Jenkins with K8s agents |
-| **ArgoCD** | GitOps continuous deployment | ArgoCD |
-| **Harbor** | Container registry | Harbor registry |
-| **Prometheus/Grafana** | Metrics & monitoring | Prometheus stack |
-| **OpenSearch** | Log aggregation & search | OpenSearch |
-| **Grafana Tempo** | Distributed tracing | Grafana Tempo |
-| **Mattermost** | Team collaboration | Mattermost |
-| **Focalboard** | Project tracking | Focalboard |
+| Component              | Purpose                           | Technology              |
+| ---------------------- | --------------------------------- | ----------------------- |
+| **Backstage**          | Developer portal, service catalog | Backstage by Spotify    |
+| **Jenkins**            | CI/CD pipelines                   | Jenkins with K8s agents |
+| **ArgoCD**             | GitOps continuous deployment      | ArgoCD                  |
+| **Harbor**             | Container registry                | Harbor registry         |
+| **Prometheus/Grafana** | Metrics & monitoring              | Prometheus stack        |
+| **OpenSearch**         | Log aggregation & search          | OpenSearch              |
+| **Grafana Tempo**      | Distributed tracing               | Grafana Tempo           |
+| **Mattermost**         | Team collaboration                | Mattermost              |
+| **Focalboard**         | Project tracking                  | Focalboard              |
 
 ### Common Pitfalls & How to Avoid Them
 
 #### ❌ Pitfall 1: Building in Isolation
-**Problem**: Platform team builds what they *think* developers need without asking them.
+
+**Problem**: Platform team builds what they _think_ developers need without asking them.
 **Solution**: Conduct regular developer interviews, track NPS, dogfood your own platform.
 
 #### ❌ Pitfall 2: Too Much Control
+
 **Problem**: Platform so restrictive that developers route around it.
 **Solution**: Provide golden paths for 80% of cases, escape hatches for edge cases.
 
 #### ❌ Pitfall 3: No Documentation
+
 **Problem**: Great platform, but no one knows how to use it.
 **Solution**: Documentation is a first-class feature. Use TechDocs, record videos, provide examples.
 
 #### ❌ Pitfall 4: Ignoring Feedback
+
 **Problem**: Developers complain but nothing changes.
 **Solution**: Public roadmap, regular releases, visible responsiveness to feedback.
 
 #### ❌ Pitfall 5: No Metrics
+
 **Problem**: Can't prove platform value to leadership.
 **Solution**: Track DORA metrics, adoption rates, time saved, cost efficiency.
 
@@ -236,32 +248,26 @@ Fawkes provides a complete IDP built on industry-standard open-source tools:
 
 ### 📺 Video: Fawkes Platform Tour (10 minutes)
 
-> **[VIDEO PLACEHOLDER]**
-> **Script**: Instructor walks through Fawkes platform showing:
+> **[VIDEO PLACEHOLDER]** > **Script**: Instructor walks through Fawkes platform showing:
 >
 > 1. **Backstage Home** (1 min)
 >    - Overview page, quick links
 >    - Component search
->
 > 2. **Service Catalog** (2 min)
 >    - Browse services
 >    - View service details (APIs, docs, owner)
 >    - Dependencies visualization
->
 > 3. **TechDocs** (1 min)
 >    - Navigate documentation
 >    - Search functionality
->
 > 4. **Create New Service** (2 min)
 >    - Click "Create" → choose template
 >    - Fill in service details
 >    - Show generated repository
->
 > 5. **DORA Dashboard** (2 min)
 >    - View deployment frequency
 >    - Lead time for changes
 >    - Show live metrics
->
 > 6. **CI/CD View** (2 min)
 >    - Jenkins integration
 >    - Pipeline status
@@ -293,6 +299,7 @@ You'll explore the Fawkes Backstage portal, navigate the service catalog, and un
 ### Lab Environment
 
 When you click "Start Lab", we'll provision:
+
 - ✅ Access to Fawkes demo environment
 - ✅ Read-only access to sample services
 - ✅ Your personal lab notebook (Markdown file)
@@ -305,6 +312,7 @@ When you click "Start Lab", we'll provision:
 #### Part 1: Navigate Backstage (15 points)
 
 1. **Access Backstage** (3 points)
+
    - Click "Start Lab" button below
    - Log in with your dojo credentials
    - Find the "Home" page
@@ -312,6 +320,7 @@ When you click "Start Lab", we'll provision:
    ✅ **Validation**: We'll check that you logged in successfully
 
 2. **Explore the Catalog** (6 points)
+
    - Click "Catalog" in the left sidebar
    - Find a service called `sample-spring-boot-app`
    - Open its details page
@@ -320,6 +329,7 @@ When you click "Start Lab", we'll provision:
    ✅ **Validation**: We'll check that you visited the service page
 
 3. **View Documentation** (6 points)
+
    - While on the `sample-spring-boot-app` page, click "Docs" tab
    - Read the "Getting Started" documentation
    - Notice the "Edit on GitHub" link
@@ -329,6 +339,7 @@ When you click "Start Lab", we'll provision:
 #### Part 2: Understand Service Details (20 points)
 
 4. **Identify Service Owner** (5 points)
+
    - On the `sample-spring-boot-app` page, find the "About" section
    - Note the owner (person or team)
    - Find the Mattermost channel for support
@@ -336,12 +347,14 @@ When you click "Start Lab", we'll provision:
    📝 **Submit**: Who owns this service? (Type answer in lab notebook)
 
 5. **Explore Dependencies** (5 points)
+
    - Click the "Dependencies" tab
    - Identify what APIs this service depends on
 
    📝 **Submit**: How many dependencies does this service have?
 
 6. **Check CI/CD Status** (5 points)
+
    - Click the "CI/CD" tab
    - View the latest Jenkins pipeline run
    - Note whether the build passed or failed
@@ -349,6 +362,7 @@ When you click "Start Lab", we'll provision:
    📝 **Submit**: What was the status of the last build?
 
 7. **Review DORA Metrics** (5 points)
+
    - Navigate to "DORA Metrics" from the left sidebar
    - Find the deployment frequency for the last 7 days
    - Note the lead time for changes
@@ -358,6 +372,7 @@ When you click "Start Lab", we'll provision:
 #### Part 3: Platform Architecture Understanding (15 points)
 
 8. **Identify Platform Components** (10 points)
+
    - Navigate to "Platform Services" from the left sidebar
    - You should see tiles for Jenkins, ArgoCD, Harbor, Grafana, etc.
    - Click on each one to see its status
@@ -365,6 +380,7 @@ When you click "Start Lab", we'll provision:
    📝 **Submit**: List the 5 platform services you found (comma-separated)
 
 9. **Explore a Deployment** (5 points)
+
    - Click on "ArgoCD" tile to open ArgoCD
    - Browse the applications
    - Find the `sample-spring-boot-app` in the list
@@ -380,6 +396,7 @@ Once you've completed all tasks:
 3. Click "Submit Lab" button in Backstage
 
 **Auto-grading will run within 1 minute.** You'll see:
+
 - ✅ Checks that passed (green)
 - ❌ Checks that failed (red) with hints
 - Final score out of 50 points
@@ -388,20 +405,24 @@ Once you've completed all tasks:
 ### Troubleshooting Hints
 
 **Can't log in to Backstage?**
+
 - Verify you're using your dojo username (not email)
 - Try incognito/private browsing mode
 - Check #dojo-support in Mattermost
 
 **Can't find a service?**
+
 - Use the search bar (top right)
 - Check that catalog loaded (refresh if empty)
 - Try filtering by "Kind: Component"
 
 **ArgoCD or other tools not opening?**
+
 - Some links open in new tabs (check pop-up blocker)
 - You may need to accept security warnings (self-signed certs in demo environment)
 
 **Lab not grading?**
+
 - Ensure you clicked "Submit Lab" button
 - Wait up to 60 seconds for auto-grading
 - Check that all required answers are in your lab notebook
@@ -415,6 +436,7 @@ Once you've completed all tasks:
 **Instructions**: Answer all 10 questions. You need 8/10 (80%) to pass. Unlimited attempts allowed.
 
 #### Question 1
+
 **What is the primary purpose of an Internal Delivery Platform?**
 
 - [ ] A) Replace all existing tools with a single monolithic system
@@ -427,6 +449,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 2
+
 **According to Team Topologies, what type of team is a platform team?**
 
 - [ ] A) Stream-aligned team
@@ -439,6 +462,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 3
+
 **What does "Platform as a Product" mean?**
 
 - [ ] A) Selling your platform to external customers
@@ -451,6 +475,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 4
+
 **Which of these is NOT a characteristic of a well-designed IDP?**
 
 - [ ] A) Self-service capabilities
@@ -463,6 +488,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 5
+
 **What is Backstage in the Fawkes platform?**
 
 - [ ] A) The CI/CD pipeline tool
@@ -475,6 +501,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 6
+
 **Why do organizations invest in Internal Delivery Platforms?**
 
 - [ ] A) Because it's a trendy thing to do
@@ -487,6 +514,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 7
+
 **What does "golden path" mean in platform engineering?**
 
 - [x] A) The recommended, easy-to-follow path for common use cases
@@ -499,6 +527,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 8
+
 **Which metric is NOT typically used to measure platform success?**
 
 - [ ] A) Developer Net Promoter Score (NPS)
@@ -511,6 +540,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 9
+
 **In Fawkes, which tool is responsible for GitOps-based deployments?**
 
 - [ ] A) Jenkins
@@ -523,6 +553,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 10
+
 **What is a common pitfall when building an IDP?**
 
 - [x] A) Building in isolation without talking to developers
@@ -552,6 +583,7 @@ Once you've completed all tasks:
 Congratulations! 🎉 You've completed Module 1. Let's recap:
 
 ✅ **You now understand**:
+
 - What an Internal Delivery Platform is and why it matters
 - The "Platform as a Product" mindset
 - How Team Topologies applies to platform teams
@@ -559,6 +591,7 @@ Congratulations! 🎉 You've completed Module 1. Let's recap:
 - How to navigate Backstage and find information
 
 ✅ **You can now**:
+
 - Explain the business value of IDPs to colleagues
 - Navigate the Fawkes Backstage portal confidently
 - Identify the core components of the platform
@@ -567,16 +600,19 @@ Congratulations! 🎉 You've completed Module 1. Let's recap:
 ### How This Connects to Your Work
 
 **For Developers**:
+
 - You now understand why your company invested in a platform
 - You know where to find docs, who to ask for help, and how to deploy apps
 - You can take advantage of golden paths instead of reinventing the wheel
 
 **For Platform Engineers**:
+
 - You understand your role as an "enabling team"
 - You know how to treat developers as customers
 - You can articulate the value of the platform to stakeholders
 
 **For Leaders**:
+
 - You can explain how platforms accelerate delivery and reduce costs
 - You understand the metrics that matter (DORA, NPS, adoption)
 - You can make the case for platform investments
@@ -586,12 +622,15 @@ Congratulations! 🎉 You've completed Module 1. Let's recap:
 Take 2 minutes to think about:
 
 1. **What surprised you most about IDPs?**
+
    - Was there a concept that changed your perspective?
 
 2. **How does your current workflow compare?**
+
    - Are you using a platform? Doing things manually? Somewhere in between?
 
 3. **What would improve your developer experience?**
+
    - If you could wave a magic wand, what would you change?
 
 4. **Who could benefit from this knowledge?**
@@ -600,17 +639,20 @@ Take 2 minutes to think about:
 ### Additional Resources
 
 **📚 Further Reading**:
+
 - [Team Topologies Book](https://teamtopologies.com) - Foundation for platform thinking
 - [Backstage Documentation](https://backstage.io/docs/overview/what-is-backstage) - Learn more about Backstage
 - [Platform Engineering Community](https://platformengineering.org) - Join the community
 - [DORA Research](https://dora.dev) - Dive into the research behind DORA metrics
 
 **🎥 Videos to Watch**:
+
 - "What is Platform Engineering?" by Luca Galante (10 min)
 - "Spotify's Backstage Journey" (15 min)
 - "Building a Platform as a Product" by Camille Fournier (30 min)
 
 **💬 Community**:
+
 - Join `#dojo-white-belt` in Mattermost
 - Share your "aha!" moments
 - Help others who are just starting
@@ -620,6 +662,7 @@ Take 2 minutes to think about:
 **Next Up: DORA Metrics - The North Star**
 
 In Module 2, you'll learn:
+
 - The Four Key Metrics (Deployment Frequency, Lead Time, MTTR, Change Failure Rate)
 - Why these metrics matter to your business
 - How Fawkes automatically tracks DORA metrics
@@ -637,6 +680,7 @@ In Module 2, you'll learn:
 ### ✅ You've Completed Module 1!
 
 **Next Steps**:
+
 1. ✅ Mark this module complete in your Backstage profile
 2. 📊 View your progress on the Dojo dashboard
 3. 💬 Share your completion in `#dojo-achievements` (optional but encouraged!)
@@ -649,11 +693,13 @@ In Module 2, you'll learn:
 ---
 
 **Questions or Issues?**
+
 - 💬 Ask in `#dojo-white-belt` on Mattermost
 - 📧 Email: dojo@fawkes.io
 - 🐛 Report bugs: [GitHub Issues](https://github.com/paruff/fawkes/issues)
 
 **Feedback?**
+
 - Rate this module (takes 30 seconds)
 - Suggest improvements
 - Help us make the dojo better!

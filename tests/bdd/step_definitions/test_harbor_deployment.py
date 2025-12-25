@@ -20,7 +20,7 @@ import requests
 from pytest_bdd import given, when, then, parsers, scenarios
 
 # Load all scenarios from the feature file
-scenarios('../features/harbor-deployment.feature')
+scenarios("../features/harbor-deployment.feature")
 
 
 def _kubectl_json(args: list[str]) -> Dict:
@@ -46,6 +46,7 @@ def _kubectl_text(args: list[str]) -> str:
 
 # Background steps
 
+
 @given("I have kubectl configured for the cluster")
 def kubectl_configured():
     """Verify kubectl is configured and can reach the cluster."""
@@ -55,8 +56,7 @@ def kubectl_configured():
 @given("the ingress-nginx controller is deployed and running")
 def ingress_nginx_running():
     """Verify ingress-nginx is running."""
-    data = _kubectl_json(["-n", "ingress-nginx", "get", "deployment",
-                          "ingress-nginx-controller", "-o", "json"])
+    data = _kubectl_json(["-n", "ingress-nginx", "get", "deployment", "ingress-nginx-controller", "-o", "json"])
     status = data.get("status", {})
     ready_replicas = status.get("readyReplicas", 0)
     assert ready_replicas > 0, "ingress-nginx controller not ready"
@@ -66,8 +66,17 @@ def ingress_nginx_running():
 def cloudnativepg_installed():
     """Verify CloudNativePG Operator is installed."""
     try:
-        _kubectl_json(["get", "deployment", "-n", "cloudnativepg-system",
-                      "cloudnativepg-operator-controller-manager", "-o", "json"])
+        _kubectl_json(
+            [
+                "get",
+                "deployment",
+                "-n",
+                "cloudnativepg-system",
+                "cloudnativepg-operator-controller-manager",
+                "-o",
+                "json",
+            ]
+        )
     except RuntimeError:
         pytest.skip("CloudNativePG Operator not installed")
 
@@ -75,14 +84,16 @@ def cloudnativepg_installed():
 @given("the CloudNativePG Operator is running")
 def cloudnativepg_running():
     """Verify CloudNativePG Operator is running."""
-    data = _kubectl_json(["-n", "cloudnativepg-system", "get", "deployment",
-                         "cloudnativepg-operator-controller-manager", "-o", "json"])
+    data = _kubectl_json(
+        ["-n", "cloudnativepg-system", "get", "deployment", "cloudnativepg-operator-controller-manager", "-o", "json"]
+    )
     status = data.get("status", {})
     ready_replicas = status.get("readyReplicas", 0)
     assert ready_replicas > 0, "CloudNativePG Operator not ready"
 
 
 # Database scenario steps
+
 
 @when("the Harbor database cluster is deployed")
 def deploy_harbor_database(context: Dict):
@@ -126,7 +137,8 @@ def database_credentials_exist(secret_name: str):
 
 # Namespace scenario steps
 
-@when(parsers.cfparse('I check for the {namespace} namespace'))
+
+@when(parsers.cfparse("I check for the {namespace} namespace"))
 def check_namespace(namespace: str, context: Dict):
     """Check if namespace exists."""
     try:
@@ -154,6 +166,7 @@ def namespace_is_active(namespace: str, context: Dict):
 
 # Pods scenario steps
 
+
 @given(parsers.cfparse('Harbor is deployed in namespace "{namespace}"'))
 def harbor_deployed(namespace: str):
     """Verify Harbor is deployed."""
@@ -175,7 +188,7 @@ def check_harbor_pods(context: Dict):
         context["harbor_pods"] = []
 
 
-@then("the following pods should be running in namespace \"fawkes\":")
+@then('the following pods should be running in namespace "fawkes":')
 def pods_running(datatable, context: Dict):
     """Verify specified pods are running."""
     pods = context.get("harbor_pods", [])
@@ -222,6 +235,7 @@ def all_harbor_pods_ready(timeout: int, context: Dict):
 
 
 # Ingress scenario steps
+
 
 @given("Harbor is deployed with ingress enabled")
 def harbor_ingress_enabled():
@@ -282,13 +296,13 @@ def harbor_ui_accessible(url: str):
         # Try to access Harbor UI
         response = requests.get(url, timeout=10, allow_redirects=True)
         # Harbor typically returns 200 or redirects to login
-        assert response.status_code in [200, 302, 401], \
-            f"Harbor UI returned status {response.status_code}"
+        assert response.status_code in [200, 302, 401], f"Harbor UI returned status {response.status_code}"
     except requests.exceptions.RequestException as e:
         pytest.skip(f"Cannot access Harbor UI: {e}")
 
 
 # Authentication scenario steps
+
 
 @given("Harbor UI is accessible")
 def harbor_ui_accessible_given():
@@ -323,12 +337,12 @@ def see_dashboard(context: Dict):
 
 # Trivy scanner scenario steps
 
+
 @when("I check the Trivy scanner pod")
 def check_trivy_pod(context: Dict):
     """Check Trivy scanner pod."""
     try:
-        pods = _kubectl_json(["-n", "fawkes", "get", "pods",
-                             "-l", "component=trivy", "-o", "json"])
+        pods = _kubectl_json(["-n", "fawkes", "get", "pods", "-l", "component=trivy", "-o", "json"])
         context["trivy_pods"] = pods.get("items", [])
     except RuntimeError:
         context["trivy_pods"] = []
@@ -354,6 +368,7 @@ def trivy_registered():
 
 
 # Additional placeholder steps for scenarios not fully implemented
+
 
 @given("Harbor is deployed and accessible")
 def harbor_deployed_accessible():
@@ -507,8 +522,7 @@ def harbor_with_redis():
 def check_redis_pod(namespace: str, context: Dict):
     """Check Redis pod."""
     try:
-        pods = _kubectl_json(["-n", namespace, "get", "pods",
-                             "-l", "component=redis", "-o", "json"])
+        pods = _kubectl_json(["-n", namespace, "get", "pods", "-l", "component=redis", "-o", "json"])
         context["redis_pods"] = pods.get("items", [])
     except RuntimeError:
         context["redis_pods"] = []

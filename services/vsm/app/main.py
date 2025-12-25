@@ -20,24 +20,27 @@ from prometheus_client import make_asgi_app, Counter, Histogram, Gauge
 from app.database import get_db, init_db, engine
 from app.models import WorkItem, Stage, StageTransition, FlowMetrics, WorkItemType
 from app.schemas import (
-    WorkItemCreate, WorkItemResponse, StageTransitionCreate,
-    StageTransitionResponse, WorkItemHistory, FlowMetricsResponse,
-    StageResponse, HealthResponse
+    WorkItemCreate,
+    WorkItemResponse,
+    StageTransitionCreate,
+    StageTransitionResponse,
+    WorkItemHistory,
+    FlowMetricsResponse,
+    StageResponse,
+    HealthResponse,
 )
 
 # Import Focalboard integration
 try:
     from integrations.focalboard import router as focalboard_router
+
     FOCALBOARD_INTEGRATION_AVAILABLE = True
 except ImportError as e:
     logger.warning(f"Focalboard integration not available: {e}")
     FOCALBOARD_INTEGRATION_AVAILABLE = False
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Configuration
@@ -45,53 +48,33 @@ VERSION = "0.1.0"
 
 
 # Prometheus metrics
-REQUEST_COUNT = Counter(
-    'vsm_requests_total',
-    'Total VSM requests',
-    ['method', 'endpoint', 'status']
-)
+REQUEST_COUNT = Counter("vsm_requests_total", "Total VSM requests", ["method", "endpoint", "status"])
 
-WORK_ITEMS_CREATED = Counter(
-    'vsm_work_items_created_total',
-    'Total work items created',
-    ['type']
-)
+WORK_ITEMS_CREATED = Counter("vsm_work_items_created_total", "Total work items created", ["type"])
 
-STAGE_TRANSITIONS = Counter(
-    'vsm_stage_transitions_total',
-    'Total stage transitions',
-    ['from_stage', 'to_stage']
-)
+STAGE_TRANSITIONS = Counter("vsm_stage_transitions_total", "Total stage transitions", ["from_stage", "to_stage"])
 
 CYCLE_TIME = Histogram(
-    'vsm_cycle_time_hours',
-    'Cycle time for work items in hours',
-    buckets=[1, 4, 8, 24, 48, 72, 168, 336, 720]  # 1h to 30 days
+    "vsm_cycle_time_hours",
+    "Cycle time for work items in hours",
+    buckets=[1, 4, 8, 24, 48, 72, 168, 336, 720],  # 1h to 30 days
 )
 
-WIP_GAUGE = Gauge(
-    'vsm_work_in_progress',
-    'Current work in progress',
-    ['stage']
-)
+WIP_GAUGE = Gauge("vsm_work_in_progress", "Current work in progress", ["stage"])
 
 STAGE_CYCLE_TIME = Histogram(
-    'vsm_stage_cycle_time_seconds',
-    'Cycle time per stage in seconds',
-    ['stage'],
-    buckets=[3600, 14400, 28800, 86400, 172800, 259200, 604800, 1209600, 2592000]  # 1h to 30 days
+    "vsm_stage_cycle_time_seconds",
+    "Cycle time per stage in seconds",
+    ["stage"],
+    buckets=[3600, 14400, 28800, 86400, 172800, 259200, 604800, 1209600, 2592000],  # 1h to 30 days
 )
 
-THROUGHPUT_COUNTER = Counter(
-    'vsm_throughput_per_day',
-    'Number of items completed per day',
-    ['date']
-)
+THROUGHPUT_COUNTER = Counter("vsm_throughput_per_day", "Number of items completed per day", ["date"])
 
 LEAD_TIME = Histogram(
-    'vsm_lead_time_seconds',
-    'Lead time from backlog to production in seconds',
-    buckets=[3600, 14400, 28800, 86400, 172800, 259200, 604800, 1209600, 2592000]  # 1h to 30 days
+    "vsm_lead_time_seconds",
+    "Lead time from backlog to production in seconds",
+    buckets=[3600, 14400, 28800, 86400, 172800, 259200, 604800, 1209600, 2592000],  # 1h to 30 days
 )
 
 
@@ -120,7 +103,7 @@ app = FastAPI(
     title="VSM Service",
     description="Value Stream Mapping service for work item tracking and flow metrics",
     version=VERSION,
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Add Focalboard integration router
@@ -141,11 +124,7 @@ async def add_metrics(request, call_next):
     start_time = time.time()
     response = await call_next(request)
 
-    REQUEST_COUNT.labels(
-        method=request.method,
-        endpoint=request.url.path,
-        status=response.status_code
-    ).inc()
+    REQUEST_COUNT.labels(method=request.method, endpoint=request.url.path, status=response.status_code).inc()
 
     return response
 
@@ -160,7 +139,7 @@ async def root():
         "history": "/api/v1/work-items/{id}/history",
         "stages": "/api/v1/stages",
         "health": "/api/v1/health",
-        "prometheus": "/metrics"
+        "prometheus": "/metrics",
     }
 
     # Add Focalboard endpoints if integration is available
@@ -173,10 +152,8 @@ async def root():
         "service": "vsm-service",
         "status": "running",
         "version": VERSION,
-        "integrations": {
-            "focalboard": FOCALBOARD_INTEGRATION_AVAILABLE
-        },
-        "endpoints": endpoints
+        "integrations": {"focalboard": FOCALBOARD_INTEGRATION_AVAILABLE},
+        "endpoints": endpoints,
     }
 
 
@@ -199,7 +176,7 @@ async def health(db: Session = Depends(get_db)):
         status="UP" if database_connected else "DEGRADED",
         service="vsm-service",
         version=VERSION,
-        database_connected=database_connected
+        database_connected=database_connected,
     )
 
 
@@ -220,10 +197,7 @@ async def ready(db: Session = Depends(get_db)):
 
 
 @app.post("/api/v1/work-items", response_model=WorkItemResponse, status_code=201, tags=["Work Items"])
-async def create_work_item(
-    work_item: WorkItemCreate,
-    db: Session = Depends(get_db)
-):
+async def create_work_item(work_item: WorkItemCreate, db: Session = Depends(get_db)):
     """
     Create a new work item.
 
@@ -236,10 +210,7 @@ async def create_work_item(
     """
     try:
         # Create work item
-        db_work_item = WorkItem(
-            title=work_item.title,
-            type=work_item.type
-        )
+        db_work_item = WorkItem(title=work_item.title, type=work_item.type)
         db.add(db_work_item)
         db.commit()
         db.refresh(db_work_item)
@@ -247,11 +218,7 @@ async def create_work_item(
         # Add initial transition to Backlog
         backlog_stage = db.query(Stage).filter(Stage.name == "Backlog").first()
         if backlog_stage:
-            transition = StageTransition(
-                work_item_id=db_work_item.id,
-                from_stage_id=None,
-                to_stage_id=backlog_stage.id
-            )
+            transition = StageTransition(work_item_id=db_work_item.id, from_stage_id=None, to_stage_id=backlog_stage.id)
             db.add(transition)
             db.commit()
 
@@ -271,7 +238,7 @@ async def create_work_item(
             type=db_work_item.type,
             created_at=db_work_item.created_at,
             updated_at=db_work_item.updated_at,
-            current_stage=current_stage_name
+            current_stage=current_stage_name,
         )
 
     except Exception as e:
@@ -282,9 +249,7 @@ async def create_work_item(
 
 @app.put("/api/v1/work-items/{work_item_id}/transition", response_model=StageTransitionResponse, tags=["Work Items"])
 async def transition_work_item(
-    work_item_id: int,
-    transition_request: StageTransitionCreate,
-    db: Session = Depends(get_db)
+    work_item_id: int, transition_request: StageTransitionCreate, db: Session = Depends(get_db)
 ):
     """
     Move work item to a new stage.
@@ -324,11 +289,7 @@ async def transition_work_item(
 
     try:
         # Create transition
-        transition = StageTransition(
-            work_item_id=work_item_id,
-            from_stage_id=from_stage_id,
-            to_stage_id=to_stage.id
-        )
+        transition = StageTransition(work_item_id=work_item_id, from_stage_id=from_stage_id, to_stage_id=to_stage.id)
         db.add(transition)
 
         # Update work item timestamp
@@ -338,10 +299,7 @@ async def transition_work_item(
         db.refresh(transition)
 
         # Update metrics
-        STAGE_TRANSITIONS.labels(
-            from_stage=from_stage_name or "none",
-            to_stage=to_stage.name
-        ).inc()
+        STAGE_TRANSITIONS.labels(from_stage=from_stage_name or "none", to_stage=to_stage.name).inc()
 
         # Calculate stage cycle time (time spent in from_stage)
         if from_stage_id and current_transition:
@@ -360,7 +318,7 @@ async def transition_work_item(
                 LEAD_TIME.observe(lead_time_seconds)
 
             # Increment throughput counter with current date
-            current_date = transition.timestamp.strftime('%Y-%m-%d')
+            current_date = transition.timestamp.strftime("%Y-%m-%d")
             THROUGHPUT_COUNTER.labels(date=current_date).inc()
 
         logger.info(f"Transitioned work item {work_item_id} from {from_stage_name} to {to_stage.name}")
@@ -370,7 +328,7 @@ async def transition_work_item(
             work_item_id=work_item_id,
             from_stage=from_stage_name,
             to_stage=to_stage.name,
-            timestamp=transition.timestamp
+            timestamp=transition.timestamp,
         )
 
     except Exception as e:
@@ -380,10 +338,7 @@ async def transition_work_item(
 
 
 @app.get("/api/v1/work-items/{work_item_id}/history", response_model=WorkItemHistory, tags=["Work Items"])
-async def get_work_item_history(
-    work_item_id: int,
-    db: Session = Depends(get_db)
-):
+async def get_work_item_history(work_item_id: int, db: Session = Depends(get_db)):
     """
     Get stage history for a work item.
 
@@ -425,21 +380,17 @@ async def get_work_item_history(
                 work_item_id=work_item_id,
                 from_stage=from_stage_name,
                 to_stage=to_stage_name,
-                timestamp=transition.timestamp
+                timestamp=transition.timestamp,
             )
         )
 
-    return WorkItemHistory(
-        work_item_id=work_item_id,
-        work_item_title=work_item.title,
-        transitions=transition_responses
-    )
+    return WorkItemHistory(work_item_id=work_item_id, work_item_title=work_item.title, transitions=transition_responses)
 
 
 @app.get("/api/v1/metrics", response_model=FlowMetricsResponse, tags=["Metrics"])
 async def get_flow_metrics(
     days: int = Query(7, description="Number of days to calculate metrics for", ge=1, le=90),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     Get flow metrics (WIP, throughput, cycle time).
@@ -464,7 +415,7 @@ async def get_flow_metrics(
                 .filter(
                     StageTransition.to_stage_id == production_stage.id,
                     StageTransition.timestamp >= period_start,
-                    StageTransition.timestamp <= period_end
+                    StageTransition.timestamp <= period_end,
                 )
                 .count()
             )
@@ -472,18 +423,22 @@ async def get_flow_metrics(
         # Calculate WIP (average work in progress)
         # Count work items that have transitions but haven't reached production
         wip_count = (
-            db.query(WorkItem)
-            .join(StageTransition)
-            .filter(
-                WorkItem.id.notin_(
-                    db.query(StageTransition.work_item_id)
-                    .filter(StageTransition.to_stage_id == production_stage.id)
-                    .subquery()
+            (
+                db.query(WorkItem)
+                .join(StageTransition)
+                .filter(
+                    WorkItem.id.notin_(
+                        db.query(StageTransition.work_item_id)
+                        .filter(StageTransition.to_stage_id == production_stage.id)
+                        .subquery()
+                    )
                 )
+                .distinct()
+                .count()
             )
-            .distinct()
-            .count()
-        ) if production_stage else 0
+            if production_stage
+            else 0
+        )
 
         # Calculate cycle times for completed items
         cycle_times = []
@@ -493,7 +448,7 @@ async def get_flow_metrics(
                 .filter(
                     StageTransition.to_stage_id == production_stage.id,
                     StageTransition.timestamp >= period_start,
-                    StageTransition.timestamp <= period_end
+                    StageTransition.timestamp <= period_end,
                 )
                 .all()
             )
@@ -526,10 +481,7 @@ async def get_flow_metrics(
             # Get work items whose most recent transition is to this stage
             # Subquery to get the latest transition for each work item
             latest_transitions = (
-                db.query(
-                    StageTransition.work_item_id,
-                    func.max(StageTransition.timestamp).label('max_timestamp')
-                )
+                db.query(StageTransition.work_item_id, func.max(StageTransition.timestamp).label("max_timestamp"))
                 .group_by(StageTransition.work_item_id)
                 .subquery()
             )
@@ -539,8 +491,8 @@ async def get_flow_metrics(
                 db.query(StageTransition)
                 .join(
                     latest_transitions,
-                    (StageTransition.work_item_id == latest_transitions.c.work_item_id) &
-                    (StageTransition.timestamp == latest_transitions.c.max_timestamp)
+                    (StageTransition.work_item_id == latest_transitions.c.work_item_id)
+                    & (StageTransition.timestamp == latest_transitions.c.max_timestamp),
                 )
                 .filter(StageTransition.to_stage_id == stage.id)
                 .count()
@@ -555,7 +507,7 @@ async def get_flow_metrics(
             cycle_time_p85=round(cycle_time_p85, 2) if cycle_time_p85 else None,
             cycle_time_p95=round(cycle_time_p95, 2) if cycle_time_p95 else None,
             period_start=period_start,
-            period_end=period_end
+            period_end=period_end,
         )
 
     except Exception as e:
@@ -583,7 +535,7 @@ async def list_stages(db: Session = Depends(get_db)):
             type=stage.type,
             category=stage.category,
             wip_limit=stage.wip_limit,
-            description=stage.description
+            description=stage.description,
         )
         for stage in stages
     ]
@@ -660,4 +612,5 @@ def calculate_lead_time(work_item_id: int, db: Session) -> Optional[float]:
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -41,6 +41,7 @@ Use these questions to select appropriate interview participants:
 5. **Platform Usage**: Which platform tools do you use daily? (e.g., CI/CD, monitoring, service catalog)
 
 **Selection Criteria**:
+
 - Mix of experience levels (junior, mid, senior)
 - Diverse roles (developers, DevOps, platform engineers)
 - Various teams and business units
@@ -51,48 +52,55 @@ Use these questions to select appropriate interview participants:
 #### Current State
 
 1. **Walk me through your typical development workflow from local development to production.**
-   - *Follow-up*: What tools do you use at each stage?
-   - *Follow-up*: Where do you spend the most time?
+
+   - _Follow-up_: What tools do you use at each stage?
+   - _Follow-up_: Where do you spend the most time?
 
 2. **What are the biggest challenges you face when deploying applications?**
-   - *Follow-up*: How often does this happen?
-   - *Follow-up*: How do you currently work around these issues?
+
+   - _Follow-up_: How often does this happen?
+   - _Follow-up_: How do you currently work around these issues?
 
 3. **Describe the last time you had to troubleshoot a production issue.**
-   - *Follow-up*: What information did you need?
-   - *Follow-up*: How long did it take to resolve?
-   - *Follow-up*: What made it difficult?
+
+   - _Follow-up_: What information did you need?
+   - _Follow-up_: How long did it take to resolve?
+   - _Follow-up_: What made it difficult?
 
 4. **What tasks do you find yourself doing repeatedly that feel like they should be automated?**
-   - *Follow-up*: How much time do these tasks consume?
-   - *Follow-up*: Have you tried to automate them?
+   - _Follow-up_: How much time do these tasks consume?
+   - _Follow-up_: Have you tried to automate them?
 
 #### Pain Points
 
 5. **What frustrates you most about the current platform?**
-   - *Follow-up*: Can you give me a specific example?
-   - *Follow-up*: How does this impact your work?
+
+   - _Follow-up_: Can you give me a specific example?
+   - _Follow-up_: How does this impact your work?
 
 6. **What information do you wish you had easier access to?**
-   - *Follow-up*: Where do you currently find this information?
-   - *Follow-up*: How often do you need it?
+
+   - _Follow-up_: Where do you currently find this information?
+   - _Follow-up_: How often do you need it?
 
 7. **Tell me about a time when the platform prevented you from doing your job effectively.**
-   - *Follow-up*: What was the business impact?
-   - *Follow-up*: How was it eventually resolved?
+   - _Follow-up_: What was the business impact?
+   - _Follow-up_: How was it eventually resolved?
 
 #### Ideal State
 
 8. **If you could wave a magic wand and improve one thing about the platform, what would it be?**
-   - *Follow-up*: Why is this most important to you?
-   - *Follow-up*: How would this change your day-to-day work?
+
+   - _Follow-up_: Why is this most important to you?
+   - _Follow-up_: How would this change your day-to-day work?
 
 9. **What does "developer experience" mean to you?**
-   - *Follow-up*: Can you give examples of good vs. bad developer experience?
+
+   - _Follow-up_: Can you give examples of good vs. bad developer experience?
 
 10. **What capabilities or features do you wish the platform had?**
-    - *Follow-up*: What would you use them for?
-    - *Follow-up*: What's preventing you from achieving this today?
+    - _Follow-up_: What would you use them for?
+    - _Follow-up_: What's preventing you from achieving this today?
 
 ### Follow-up Questions
 
@@ -106,12 +114,14 @@ Use these questions to select appropriate interview participants:
 ### Interview Guidelines
 
 **Before the Interview:**
+
 - Schedule 45-60 minutes
 - Send objectives and topics in advance
 - Request permission to record
 - Prepare your note-taking system
 
 **During the Interview:**
+
 - Start with rapport building
 - Use the "5 Whys" technique to dig deeper
 - Observe non-verbal cues
@@ -120,6 +130,7 @@ Use these questions to select appropriate interview participants:
 - Take notes on direct quotes
 
 **After the Interview:**
+
 - Send thank you note
 - Synthesize notes within 24 hours
 - Identify key themes and insights
@@ -148,6 +159,7 @@ Use these questions to select appropriate interview participants:
 5. **Environment**: Do you have access to [required environment/tools]?
 
 **Selection Criteria**:
+
 - Representative of target user personas
 - Mix of technical skill levels
 - Unfamiliar with the specific feature (for new features)
@@ -158,22 +170,25 @@ Use these questions to select appropriate interview participants:
 #### Pre-Task Questions
 
 1. **What are your expectations for this feature?**
-   - *Follow-up*: What problems do you hope it solves?
+
+   - _Follow-up_: What problems do you hope it solves?
 
 2. **Have you used similar features in other platforms?**
-   - *Follow-up*: What did you like or dislike about them?
+   - _Follow-up_: What did you like or dislike about them?
 
 #### Task Scenarios
 
 **Task Format**: "Imagine you need to [accomplish goal]. Use the platform to complete this task."
 
 **Example Tasks**:
+
 - Task 1: Deploy a new microservice to the development environment
 - Task 2: Set up monitoring and alerts for your service
 - Task 3: View the deployment history and rollback to a previous version
 - Task 4: Configure environment variables for your application
 
 **For Each Task, Observe**:
+
 - Time to completion
 - Number of clicks/steps
 - Errors or wrong paths taken
@@ -181,22 +196,26 @@ Use these questions to select appropriate interview participants:
 - Facial expressions and body language
 
 **During Tasks, Ask**:
+
 1. **What are you thinking as you do this?** (Think-aloud protocol)
 2. **What do you expect to happen when you click that?**
 3. **Is this what you expected to see?**
-   - *If not*: What did you expect?
+   - _If not_: What did you expect?
 4. **How would you describe what you just did?**
 
 #### Post-Task Questions
 
 5. **How easy or difficult was that task?** (Scale 1-5: Very Difficult to Very Easy)
-   - *Follow-up*: What made it [easy/difficult]?
+
+   - _Follow-up_: What made it [easy/difficult]?
 
 6. **Was there anything confusing or unclear?**
-   - *Follow-up*: What would have helped?
+
+   - _Follow-up_: What would have helped?
 
 7. **Did you feel confident completing this task?**
-   - *Follow-up*: What created uncertainty?
+
+   - _Follow-up_: What created uncertainty?
 
 8. **What would you change about this workflow?**
 
@@ -205,7 +224,8 @@ Use these questions to select appropriate interview participants:
 9. **Overall, how would you rate your experience?** (Scale 1-5: Very Poor to Excellent)
 
 10. **Would you use this feature in your daily work?**
-    - *Follow-up*: Why or why not?
+
+    - _Follow-up_: Why or why not?
 
 11. **What did you like most about the experience?**
 
@@ -216,6 +236,7 @@ Use these questions to select appropriate interview participants:
 ### Testing Guidelines
 
 **Before the Session:**
+
 - Prepare test environment
 - Create realistic test data
 - Test your recording setup
@@ -223,6 +244,7 @@ Use these questions to select appropriate interview participants:
 - Prepare consent form
 
 **During the Session:**
+
 - Encourage think-aloud narration
 - Don't provide help unless stuck for >2 minutes
 - Take notes on both actions and comments
@@ -230,6 +252,7 @@ Use these questions to select appropriate interview participants:
 - Record time and success metrics
 
 **After the Session:**
+
 - Calculate success rates and time-on-task
 - Categorize issues by severity (critical, major, minor)
 - Identify patterns across participants
@@ -257,6 +280,7 @@ Use these questions to select appropriate interview participants:
 4. **Context**: What is your primary use case for this feature?
 
 **Selection Criteria**:
+
 - Active users of the feature
 - Mix of successful and struggling users
 - Different use cases
@@ -267,47 +291,55 @@ Use these questions to select appropriate interview participants:
 #### Usage Patterns
 
 1. **How do you typically use [feature] in your workflow?**
-   - *Follow-up*: Walk me through a recent example.
-   - *Follow-up*: How often do you use it?
+
+   - _Follow-up_: Walk me through a recent example.
+   - _Follow-up_: How often do you use it?
 
 2. **What prompted you to start using this feature?**
-   - *Follow-up*: What alternatives did you consider?
+
+   - _Follow-up_: What alternatives did you consider?
 
 3. **What do you use this feature for?**
-   - *Follow-up*: Are there use cases we might not have anticipated?
+   - _Follow-up_: Are there use cases we might not have anticipated?
 
 #### Satisfaction
 
 4. **On a scale of 1-10, how satisfied are you with [feature]?**
-   - *Follow-up*: What would it take to make it a 10?
+
+   - _Follow-up_: What would it take to make it a 10?
 
 5. **What do you like most about this feature?**
-   - *Follow-up*: Why is that important to you?
+
+   - _Follow-up_: Why is that important to you?
 
 6. **What frustrates you about this feature?**
-   - *Follow-up*: How do you work around these limitations?
+
+   - _Follow-up_: How do you work around these limitations?
 
 7. **Is there anything missing that would make this feature more useful?**
-   - *Follow-up*: What would you use that for?
+   - _Follow-up_: What would you use that for?
 
 #### Specific Feedback
 
 8. **How intuitive is the feature to use?** (Scale 1-5)
-   - *Follow-up*: What was confusing when you first used it?
-   - *Follow-up*: What would make it more intuitive?
+
+   - _Follow-up_: What was confusing when you first used it?
+   - _Follow-up_: What would make it more intuitive?
 
 9. **How well does the feature integrate with your other tools?**
-   - *Follow-up*: What integration would be most valuable?
+
+   - _Follow-up_: What integration would be most valuable?
 
 10. **How is the performance of this feature?**
-    - *Follow-up*: Have you experienced any issues?
-    - *Follow-up*: How does this impact your work?
+    - _Follow-up_: Have you experienced any issues?
+    - _Follow-up_: How does this impact your work?
 
 #### Future Direction
 
 11. **If you could add one capability to this feature, what would it be?**
-    - *Follow-up*: How would you use that capability?
-    - *Follow-up*: How important is this to your work?
+
+    - _Follow-up_: How would you use that capability?
+    - _Follow-up_: How important is this to your work?
 
 12. **What would make you use this feature more often?**
 
@@ -324,18 +356,21 @@ Use these questions to select appropriate interview participants:
 ### Interview Guidelines
 
 **Before the Interview:**
+
 - Review usage data for the participant
 - Identify specific behaviors to explore
 - Prepare scenarios if needed
 - Have recent feedback/issues available
 
 **During the Interview:**
+
 - Ask for demonstrations when possible
 - Explore both positive and negative experiences
 - Dig into workarounds (they reveal needs)
 - Validate feature requests with use cases
 
 **After the Interview:**
+
 - Categorize feedback (bugs, enhancements, education)
 - Prioritize by impact and feasibility
 - Close the loop with participants on actions taken
@@ -363,6 +398,7 @@ Use these questions to select appropriate interview participants:
 4. **First Impressions**: What was your initial impression of the platform?
 
 **Selection Criteria**:
+
 - Users within first 30-90 days
 - Mix of self-guided and trained users
 - Different roles and backgrounds
@@ -373,60 +409,69 @@ Use these questions to select appropriate interview participants:
 #### First Impressions
 
 1. **What were your first impressions when you started using the platform?**
-   - *Follow-up*: What surprised you (positively or negatively)?
+
+   - _Follow-up_: What surprised you (positively or negatively)?
 
 2. **How clear was it what the platform could do for you?**
-   - *Follow-up*: What helped you understand this?
-   - *Follow-up*: What was confusing?
+
+   - _Follow-up_: What helped you understand this?
+   - _Follow-up_: What was confusing?
 
 3. **What did you want to accomplish first?**
-   - *Follow-up*: Were you able to achieve it?
-   - *Follow-up*: How long did it take?
+   - _Follow-up_: Were you able to achieve it?
+   - _Follow-up_: How long did it take?
 
 #### Onboarding Experience
 
 4. **Walk me through how you learned to use the platform.**
-   - *Follow-up*: What resources did you use?
-   - *Follow-up*: What did you find most helpful?
+
+   - _Follow-up_: What resources did you use?
+   - _Follow-up_: What did you find most helpful?
 
 5. **What was the hardest thing to figure out?**
-   - *Follow-up*: How did you eventually solve it?
-   - *Follow-up*: How long did it take?
+
+   - _Follow-up_: How did you eventually solve it?
+   - _Follow-up_: How long did it take?
 
 6. **Did you get stuck at any point?**
-   - *Follow-up*: What helped you get unstuck?
-   - *Follow-up*: Who or what did you turn to for help?
+
+   - _Follow-up_: What helped you get unstuck?
+   - _Follow-up_: Who or what did you turn to for help?
 
 7. **How useful was the documentation?**
-   - *Follow-up*: What was missing or unclear?
-   - *Follow-up*: What documentation did you wish existed?
+   - _Follow-up_: What was missing or unclear?
+   - _Follow-up_: What documentation did you wish existed?
 
 #### Knowledge Gaps
 
 8. **What concepts or features are you still unclear about?**
-   - *Follow-up*: Why do you think that is?
+
+   - _Follow-up_: Why do you think that is?
 
 9. **What do you wish someone had told you when you started?**
-   - *Follow-up*: How did you eventually learn this?
+
+   - _Follow-up_: How did you eventually learn this?
 
 10. **Are there features you haven't tried yet?**
-    - *Follow-up*: Why not?
-    - *Follow-up*: What would motivate you to try them?
+    - _Follow-up_: Why not?
+    - _Follow-up_: What would motivate you to try them?
 
 #### Comparison
 
 11. **How does this platform compare to others you've used?**
-    - *Follow-up*: What does it do better?
-    - *Follow-up*: What could it learn from others?
+
+    - _Follow-up_: What does it do better?
+    - _Follow-up_: What could it learn from others?
 
 12. **How long did it take before you felt productive?**
-    - *Follow-up*: What milestone made you feel that way?
-    - *Follow-up*: What would have accelerated this?
+    - _Follow-up_: What milestone made you feel that way?
+    - _Follow-up_: What would have accelerated this?
 
 #### Suggestions
 
 13. **If you were redesigning the onboarding experience, what would you change?**
-    - *Follow-up*: What should stay the same?
+
+    - _Follow-up_: What should stay the same?
 
 14. **What would have made your first week easier?**
 
@@ -443,12 +488,14 @@ Use these questions to select appropriate interview participants:
 ### Interview Guidelines
 
 **Before the Interview:**
+
 - Interview early (within 2 weeks of onboarding)
 - Review their activity logs
 - Identify which onboarding path they took
 - Prepare to capture emotional responses
 
 **During the Interview:**
+
 - Focus on the journey, not just facts
 - Capture what they tried that didn't work
 - Ask about emotional highs and lows
@@ -456,6 +503,7 @@ Use these questions to select appropriate interview participants:
 - Explore workarounds and external resources used
 
 **After the Interview:**
+
 - Map the actual onboarding journey
 - Identify drop-off points
 - Categorize issues (docs, UX, training, technical)

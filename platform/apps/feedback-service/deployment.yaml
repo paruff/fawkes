@@ -33,91 +33,91 @@ spec:
         runAsGroup: 65534
         fsGroup: 65534
       containers:
-      - name: feedback-service
-        image: feedback-service:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 8000
-          name: http
-          protocol: TCP
-        env:
-        - name: DATABASE_URL
-          value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@db-feedback-dev-rw.fawkes.svc.cluster.local:5432/feedback_db"
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: db-feedback-credentials
-              key: username
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-feedback-credentials
-              key: password
-        - name: ADMIN_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: feedback-admin-token
-              key: token
-        - name: GITHUB_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: feedback-github-token
-              key: token
-              optional: true
-        - name: GITHUB_OWNER
-          value: "paruff"
-        - name: GITHUB_REPO
-          value: "fawkes"
-        - name: MATTERMOST_WEBHOOK_URL
-          valueFrom:
-            secretKeyRef:
-              name: feedback-mattermost-webhook
-              key: url
-              optional: true
-        - name: NOTIFICATION_ENABLED
-          value: "true"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 30
-          periodSeconds: 30
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: false
-          runAsNonRoot: true
-          runAsUser: 65534
-          capabilities:
-            drop:
-              - ALL
-          seccompProfile:
-            type: RuntimeDefault
+        - name: feedback-service
+          image: feedback-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+              name: http
+              protocol: TCP
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@db-feedback-dev-rw.fawkes.svc.cluster.local:5432/feedback_db"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-feedback-credentials
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-feedback-credentials
+                  key: password
+            - name: ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: feedback-admin-token
+                  key: token
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: feedback-github-token
+                  key: token
+                  optional: true
+            - name: GITHUB_OWNER
+              value: "paruff"
+            - name: GITHUB_REPO
+              value: "fawkes"
+            - name: MATTERMOST_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: feedback-mattermost-webhook
+                  key: url
+                  optional: true
+            - name: NOTIFICATION_ENABLED
+              value: "true"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: 65534
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - feedback-service
-              topologyKey: kubernetes.io/hostname
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - feedback-service
+                topologyKey: kubernetes.io/hostname

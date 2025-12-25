@@ -58,22 +58,24 @@ cd fawkes
 
 Fawkes supports multiple implementation paths based on your cloud provider:
 
-| Cloud | Implementation | Documentation |
-|-------|---------------|---------------|
-| Azure | AKS + Flux | [Azure Guide](platform/iac/azure/README.md) |
-| AWS | EKS + ArgoCD | [AWS Guide](platform/iac/aws/README.md) |
-| GCP | GKE + Cloud Build | [GCP Guide](platform/iac/gcp/README.md) |
+| Cloud | Implementation    | Documentation                               |
+| ----- | ----------------- | ------------------------------------------- |
+| Azure | AKS + Flux        | [Azure Guide](platform/iac/azure/README.md) |
+| AWS   | EKS + ArgoCD      | [AWS Guide](platform/iac/aws/README.md)     |
+| GCP   | GKE + Cloud Build | [GCP Guide](platform/iac/gcp/README.md)     |
 
 ## 3. Infrastructure Deployment
 
 We use a GitOps approach for infrastructure management. Changes are made through pull requests:
 
 1. Create a feature branch:
+
 ```bash
 git checkout -b feature/add-new-service
 ```
 
 2. Make changes to infrastructure definitions in `platform/iac/`:
+
 ```yaml
 # Example service definition
 apiVersion: apps/v1
@@ -86,6 +88,7 @@ spec:
 ```
 
 3. Commit and push changes:
+
 ```bash
 git add .
 git commit -m "feat: add new service deployment"
@@ -124,6 +127,7 @@ Before accessing Backstage, configure GitHub OAuth authentication:
 To deploy or add a new service:
 
 1. Define the service in `platform/apps/`:
+
 ```yaml
 # Example service manifest
 apiVersion: argoproj.io/v1alpha1

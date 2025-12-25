@@ -42,6 +42,7 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
 7. **Share Design**: Share the project with the team for review
 
 **Best Practices**:
+
 - Use component libraries to ensure consistency
 - Name layers clearly for developer handoff
 - Add annotations and comments for complex interactions
@@ -62,6 +63,7 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
 5. **Approve**: Team approves the final design
 
 **Review Checklist**:
+
 - [ ] Designs follow brand guidelines
 - [ ] All interactions are clearly defined
 - [ ] Components map to design system components
@@ -78,11 +80,13 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
 **Steps**:
 
 1. **Get Design ID**:
+
    - Open the design file in Penpot
    - Copy the project ID and file ID from the URL
    - Format: `{project-id}/{file-id}`
 
 2. **Update Component Catalog**:
+
    ```yaml
    # catalog-info.yaml
    apiVersion: backstage.io/v1alpha1
@@ -101,6 +105,7 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
    ```
 
 3. **Export Design Specs**:
+
    - Export design tokens (colors, spacing, typography)
    - Export assets (icons, images) to `/assets` directory
    - Document component specifications in README
@@ -108,6 +113,7 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
 4. **Create Issue**: Create a GitHub issue with design link and specifications
 
 **Deliverables**:
+
 - Component specifications document
 - Exported assets
 - Annotated catalog-info.yaml
@@ -122,16 +128,18 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
 **Steps**:
 
 1. **View Design in Backstage**:
+
    - Navigate to component in Backstage catalog
    - Click "Design" tab to view embedded Penpot design
    - Review all design states and interactions
 
 2. **Map to Design System Components**:
+
    ```tsx
    // Check component mapping
    // Penpot "Button/Primary" → Design System Button variant="primary"
 
-   import { Button, Card, Input } from '@fawkes/design-system';
+   import { Button, Card, Input } from "@fawkes/design-system";
 
    function UserProfile() {
      return (
@@ -144,8 +152,9 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
    ```
 
 3. **Implement with Design Tokens**:
+
    ```tsx
-   import { tokens } from '@fawkes/design-system';
+   import { tokens } from "@fawkes/design-system";
 
    const styles = {
      container: {
@@ -157,6 +166,7 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
    ```
 
 4. **Export Assets from Penpot**:
+
    - Select element in Penpot
    - Click "Export" → Choose format (SVG, PNG)
    - Download and add to project assets
@@ -168,6 +178,7 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
    - Run accessibility tests
 
 **Development Checklist**:
+
 - [ ] All design states implemented
 - [ ] Design tokens used consistently
 - [ ] Assets exported and optimized
@@ -185,16 +196,19 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
 **Steps**:
 
 1. **Automated Detection**:
+
    - Jenkins job runs hourly
    - Detects new or updated Penpot components
    - Compares with design system components
 
 2. **Validation**:
+
    - Checks component mapping configuration
    - Validates design tokens match
    - Identifies missing or outdated components
 
 3. **Update Storybook**:
+
    - Generates updated Storybook documentation
    - Adds Penpot design preview to each component
    - Links to source design files
@@ -205,6 +219,7 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
    - Flags any discrepancies
 
 **Sync Configuration**:
+
 ```yaml
 # .penpot-sync.yaml
 sync:
@@ -230,22 +245,26 @@ sync:
 **Steps**:
 
 1. **Visual Comparison**:
+
    - Open component in Backstage
    - Compare implementation with Penpot design side-by-side
    - Check pixel-perfect alignment
 
 2. **Interaction Testing**:
+
    - Test all interactive states
    - Verify animations and transitions
    - Check keyboard navigation
 
 3. **Accessibility Testing**:
+
    - Run axe accessibility scanner
    - Test with screen reader
    - Verify color contrast ratios
    - Test keyboard-only navigation
 
 4. **Responsive Testing**:
+
    - Test on different screen sizes
    - Verify mobile touch interactions
    - Check tablet layouts
@@ -255,6 +274,7 @@ sync:
    - Document any browser-specific issues
 
 **QA Checklist**:
+
 - [ ] Visual design matches Penpot mockup
 - [ ] All interactive states work correctly
 - [ ] Accessibility standards met (WCAG 2.1 AA)
@@ -271,17 +291,20 @@ sync:
 **Steps**:
 
 1. **Deploy to Staging**:
+
    ```bash
    # Automatically deployed via ArgoCD
    kubectl get pods -n fawkes-staging -l app=user-profile
    ```
 
 2. **Update Storybook**:
+
    - Storybook automatically rebuilds
    - New component documentation published
    - Design preview embedded in stories
 
 3. **Update Documentation**:
+
    - Add usage examples to component README
    - Document props and variants
    - Include design rationale
@@ -293,17 +316,21 @@ sync:
    ```
 
 **Documentation Template**:
+
 ```markdown
 # User Profile Component
 
 ## Overview
+
 Displays user information with editable fields.
 
 ## Design
+
 - [View in Penpot](https://penpot.fawkes.local/workspace/abc123/def456)
 - [Backstage Page](https://backstage.fawkes.local/catalog/default/component/user-profile)
 
 ## Usage
+
 \`\`\`tsx
 import { UserProfile } from '@fawkes/components';
 
@@ -311,17 +338,20 @@ import { UserProfile } from '@fawkes/components';
 \`\`\`
 
 ## Props
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| userId | string | required | User ID to load |
-| onSave | function | - | Save callback |
+
+| Prop   | Type     | Default  | Description     |
+| ------ | -------- | -------- | --------------- |
+| userId | string   | required | User ID to load |
+| onSave | function | -        | Save callback   |
 
 ## Variants
+
 - Default: Standard user profile
 - Compact: Reduced padding for lists
 - ReadOnly: Display-only mode
 
 ## Accessibility
+
 - ARIA labels on all inputs
 - Keyboard navigation supported
 - Screen reader optimized
@@ -330,21 +360,25 @@ import { UserProfile } from '@fawkes/components';
 ## Tools Reference
 
 ### Penpot
+
 - **URL**: https://penpot.fawkes.local
 - **Purpose**: Design creation and collaboration
 - **Key Features**: Real-time collaboration, version control, developer handoff
 
 ### Backstage
+
 - **URL**: https://backstage.fawkes.local
 - **Purpose**: Developer portal with embedded design viewer
 - **Key Features**: Component catalog, design tab, TechDocs integration
 
 ### Design System
+
 - **URL**: https://design-system.fawkes.local
 - **Purpose**: Component library and documentation
 - **Key Features**: 40+ components, design tokens, Storybook playground
 
 ### Component Mapping Tool
+
 - **Location**: `/platform/apps/backstage/plugins/penpot-viewer.yaml`
 - **Purpose**: Map Penpot components to design system components
 - **Usage**: Auto-validates design implementation consistency
@@ -356,6 +390,7 @@ import { UserProfile } from '@fawkes/components';
 **Problem**: Design tab is empty in Backstage
 
 **Solution**:
+
 1. Verify annotation in `catalog-info.yaml`:
    ```yaml
    annotations:
@@ -375,6 +410,7 @@ import { UserProfile } from '@fawkes/components';
 **Problem**: Design system components not syncing with Penpot
 
 **Solution**:
+
 1. Check component mapping configuration:
    ```bash
    kubectl get configmap -n fawkes penpot-component-mapping -o yaml
@@ -390,6 +426,7 @@ import { UserProfile } from '@fawkes/components';
 **Problem**: Cannot export assets from Penpot
 
 **Solution**:
+
 1. Verify Penpot exporter service is running:
    ```bash
    kubectl get pods -n fawkes -l component=exporter

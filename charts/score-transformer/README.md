@@ -18,16 +18,19 @@ The SCORE transformer is implemented as a **Kustomize generator plugin** that:
 [score-k8s](https://github.com/score-spec/score-k8s) is the official Kubernetes implementation of the SCORE specification.
 
 **Pros**:
+
 - Official implementation, maintained by SCORE community
 - Supports full SCORE spec
 - Regular updates and bug fixes
 - Good documentation
 
 **Cons**:
+
 - May require customization for Fawkes-specific extensions
 - Additional binary dependency in CI/CD pipeline
 
 **Usage**:
+
 ```bash
 # Install score-k8s
 curl -Lo score-k8s https://github.com/score-spec/score-k8s/releases/download/v0.1.0/score-k8s_0.1.0_linux_amd64
@@ -44,11 +47,13 @@ score-k8s generate score.yaml \
 A lightweight Python script that runs as a Kustomize exec plugin.
 
 **Pros**:
+
 - Full control over transformation logic
 - Easy to add Fawkes-specific features
 - No external binary dependencies (Python already in pipeline)
 
 **Cons**:
+
 - Maintenance burden on platform team
 - Need to keep up with SCORE spec changes
 
@@ -132,11 +137,13 @@ generators:
 ### 3. ArgoCD Sync
 
 When ArgoCD syncs, it runs:
+
 ```bash
 kustomize build overlays/dev | kubectl apply -f -
 ```
 
 Which executes:
+
 1. Kustomize reads `generators` block
 2. Runs `score-transformer` on `score.yaml`
 3. Generates base K8s manifests
@@ -148,6 +155,7 @@ Which executes:
 Environment-specific values are injected via Kustomize overlays:
 
 **overlays/dev/kustomization.yaml**:
+
 ```yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
@@ -173,6 +181,7 @@ replicas:
 ```
 
 **overlays/prod/kustomization.yaml**:
+
 ```yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
@@ -202,21 +211,21 @@ patchesStrategicMerge:
 
 ### Core Resources (v1)
 
-| SCORE Type | Fawkes Implementation | K8s Resource |
-|------------|----------------------|--------------|
-| `postgres` | CloudNativePG Cluster | ExternalSecret (credentials) |
-| `redis` | Redis Helm Chart | ExternalSecret (credentials) |
-| `secret` | External Secrets Operator | ExternalSecret → Secret |
-| `volume` | PersistentVolumeClaim | PVC |
+| SCORE Type | Fawkes Implementation     | K8s Resource                 |
+| ---------- | ------------------------- | ---------------------------- |
+| `postgres` | CloudNativePG Cluster     | ExternalSecret (credentials) |
+| `redis`    | Redis Helm Chart          | ExternalSecret (credentials) |
+| `secret`   | External Secrets Operator | ExternalSecret → Secret      |
+| `volume`   | PersistentVolumeClaim     | PVC                          |
 
 ### Extended Resources (Future)
 
-| SCORE Type | Fawkes Implementation |
-|------------|----------------------|
-| `mysql` | CloudNativePG (MySQL) |
-| `s3` | Terraform-provisioned S3 bucket |
-| `rabbitmq` | RabbitMQ Operator |
-| `kafka` | Strimzi Kafka Operator |
+| SCORE Type | Fawkes Implementation           |
+| ---------- | ------------------------------- |
+| `mysql`    | CloudNativePG (MySQL)           |
+| `s3`       | Terraform-provisioned S3 bucket |
+| `rabbitmq` | RabbitMQ Operator               |
+| `kafka`    | Strimzi Kafka Operator          |
 
 ## Fawkes Extensions
 
@@ -225,17 +234,18 @@ Beyond standard SCORE, we support Fawkes-specific extensions under `extensions.f
 ```yaml
 extensions:
   fawkes:
-    team: my-team                  # For RBAC and billing
+    team: my-team # For RBAC and billing
     deployment:
-      autoscaling: {...}           # HPA configuration
+      autoscaling: { ... } # HPA configuration
     observability:
-      metrics: {...}               # Prometheus scraping
-      tracing: {...}               # OpenTelemetry config
+      metrics: { ... } # Prometheus scraping
+      tracing: { ... } # OpenTelemetry config
     security:
-      networkPolicy: {...}         # Network policies
+      networkPolicy: { ... } # Network policies
 ```
 
 These are transformed into:
+
 - ServiceAccount with team RBAC
 - HorizontalPodAutoscaler
 - PodMonitor (Prometheus)
@@ -276,6 +286,7 @@ kubectl apply --dry-run=client -f /tmp/manifests
 ### Issue: Generated manifests missing expected resources
 
 **Solution**: Check score.yaml syntax with official validator:
+
 ```bash
 score-k8s validate score.yaml
 ```
@@ -283,6 +294,7 @@ score-k8s validate score.yaml
 ### Issue: Environment variables not interpolated
 
 **Solution**: Ensure environment config is in Kustomize overlay:
+
 ```yaml
 configMapGenerator:
   - name: env-config
@@ -293,6 +305,7 @@ configMapGenerator:
 ### Issue: Custom Fawkes extensions not applied
 
 **Solution**: Verify `post-processor.py` is being executed. Check ArgoCD logs:
+
 ```bash
 kubectl logs -n argocd <argocd-pod> | grep score-transformer
 ```

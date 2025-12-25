@@ -10,20 +10,20 @@ metadata:
   name: mcp-inspector-read
 rules:
   - apiGroups: [""]
-    resources: ["pods","services","endpoints","nodes","namespaces","events"]
-    verbs: ["get","list","watch"]
+    resources: ["pods", "services", "endpoints", "nodes", "namespaces", "events"]
+    verbs: ["get", "list", "watch"]
   - apiGroups: ["apps"]
-    resources: ["deployments","statefulsets","daemonsets","replicasets"]
-    verbs: ["get","list","watch"]
+    resources: ["deployments", "statefulsets", "daemonsets", "replicasets"]
+    verbs: ["get", "list", "watch"]
   - apiGroups: ["batch"]
-    resources: ["jobs","cronjobs"]
-    verbs: ["get","list","watch"]
+    resources: ["jobs", "cronjobs"]
+    verbs: ["get", "list", "watch"]
   - apiGroups: ["argoproj.io"]
-    resources: ["applications","appprojects","applicationsets"]
-    verbs: ["get","list","watch"]
+    resources: ["applications", "appprojects", "applicationsets"]
+    verbs: ["get", "list", "watch"]
   - apiGroups: ["metrics.k8s.io"]
-    resources: ["pods","nodes"]
-    verbs: ["get","list"]
+    resources: ["pods", "nodes"]
+    verbs: ["get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding

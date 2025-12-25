@@ -35,6 +35,7 @@ Use these questions to select appropriate interview participants:
 5. **Business Context**: What business metrics or KPIs are you accountable for?
 
 **Selection Criteria**:
+
 - Product managers, engineering managers, directors, VPs
 - Business stakeholders who depend on platform capabilities
 - Decision-makers for platform investment or priorities
@@ -77,19 +78,21 @@ Use these questions to select appropriate interview participants:
 **Objective**: Establish rapport and understand the participant's role and priorities
 
 1. **Can you tell me about your role and what you're responsible for?**
-   - *Follow-up*: What teams or business areas do you oversee?
-   - *Follow-up*: What are your primary success metrics or KPIs?
-   - *Follow-up*: How does your team interact with the platform?
+
+   - _Follow-up_: What teams or business areas do you oversee?
+   - _Follow-up_: What are your primary success metrics or KPIs?
+   - _Follow-up_: How does your team interact with the platform?
 
 2. **How familiar are you with the Fawkes platform and its capabilities?**
-   - *Follow-up*: What's your understanding of what the platform does?
-   - *Follow-up*: How often do you interact with the platform directly vs. through reports?
-   - *Follow-up*: What's your primary source of information about the platform?
+
+   - _Follow-up_: What's your understanding of what the platform does?
+   - _Follow-up_: How often do you interact with the platform directly vs. through reports?
+   - _Follow-up_: What's your primary source of information about the platform?
 
 3. **What are your top business priorities for the next 6-12 months?**
-   - *Follow-up*: How does the platform support (or hinder) these priorities?
-   - *Follow-up*: What would success look like?
-   - *Follow-up*: What would cause these priorities to fail?
+   - _Follow-up_: How does the platform support (or hinder) these priorities?
+   - _Follow-up_: What would success look like?
+   - _Follow-up_: What would cause these priorities to fail?
 
 ---
 
@@ -100,28 +103,31 @@ Use these questions to select appropriate interview participants:
 **JTBD Focus**: "Help me demonstrate the business value and ROI of platform investments"
 
 4. **How do you measure the value the platform provides to the business?**
-   - *Follow-up*: What metrics matter most to you?
-   - *Follow-up*: How do you currently track these metrics?
-   - *Follow-up*: What metrics are difficult to measure but important?
-   - *Pain point*: What visibility is missing that you need?
+
+   - _Follow-up_: What metrics matter most to you?
+   - _Follow-up_: How do you currently track these metrics?
+   - _Follow-up_: What metrics are difficult to measure but important?
+   - _Pain point_: What visibility is missing that you need?
 
 5. **When was the last time you had to justify platform investments to leadership?**
-   - *Follow-up*: What information did you need to make your case?
-   - *Follow-up*: What was most difficult about making this case?
-   - *Follow-up*: What data or evidence would have made it easier?
-   - *JTBD*: What would help you articulate platform ROI more effectively?
+
+   - _Follow-up_: What information did you need to make your case?
+   - _Follow-up_: What was most difficult about making this case?
+   - _Follow-up_: What data or evidence would have made it easier?
+   - _JTBD_: What would help you articulate platform ROI more effectively?
 
 6. **How does the platform impact your team's ability to deliver business value?**
-   - *Follow-up*: Can you give me a specific example?
-   - *Follow-up*: How do you measure time-to-market or delivery velocity?
-   - *Follow-up*: Where does the platform accelerate delivery? Where does it slow it down?
-   - *Pain point*: What bottlenecks or delays are platform-related?
+
+   - _Follow-up_: Can you give me a specific example?
+   - _Follow-up_: How do you measure time-to-market or delivery velocity?
+   - _Follow-up_: Where does the platform accelerate delivery? Where does it slow it down?
+   - _Pain point_: What bottlenecks or delays are platform-related?
 
 7. **Tell me about a time when the platform directly contributed to a business win.**
-   - *Follow-up*: What capability or feature enabled this?
-   - *Follow-up*: How did you discover this value?
-   - *Follow-up*: How was this communicated to leadership?
-   - *JTBD*: How can we make these wins more visible?
+   - _Follow-up_: What capability or feature enabled this?
+   - _Follow-up_: How did you discover this value?
+   - _Follow-up_: How was this communicated to leadership?
+   - _JTBD_: How can we make these wins more visible?
 
 ---
 
@@ -132,27 +138,30 @@ Use these questions to select appropriate interview participants:
 **JTBD Focus**: "Help me have visibility into progress and make informed decisions"
 
 8. **What information do you need to understand how product development is progressing?**
-   - *Follow-up*: Where do you get this information today?
-   - *Follow-up*: How real-time or up-to-date is it?
-   - *Follow-up*: How much effort does it take to gather this information?
-   - *Pain point*: What visibility gaps exist?
+
+   - _Follow-up_: Where do you get this information today?
+   - _Follow-up_: How real-time or up-to-date is it?
+   - _Follow-up_: How much effort does it take to gather this information?
+   - _Pain point_: What visibility gaps exist?
 
 9. **How do you stay informed about platform health, incidents, or issues?**
-   - *Follow-up*: How do you learn about problems?
-   - *Follow-up*: How quickly do you find out about incidents?
-   - *Follow-up*: What impact do platform issues have on your business?
-   - *JTBD*: What early warning signals would you want?
+
+   - _Follow-up_: How do you learn about problems?
+   - _Follow-up_: How quickly do you find out about incidents?
+   - _Follow-up_: What impact do platform issues have on your business?
+   - _JTBD_: What early warning signals would you want?
 
 10. **Describe a time when you were surprised by a delay or problem. What happened?**
-    - *Follow-up*: Why were you surprised? What information were you missing?
-    - *Follow-up*: How did this impact your plans or commitments?
-    - *Follow-up*: What would have helped you see this coming?
-    - *Pain point*: What causes blind spots in your visibility?
+
+    - _Follow-up_: Why were you surprised? What information were you missing?
+    - _Follow-up_: How did this impact your plans or commitments?
+    - _Follow-up_: What would have helped you see this coming?
+    - _Pain point_: What causes blind spots in your visibility?
 
 11. **What decisions do you regularly make that depend on platform capabilities or performance?**
-    - *Follow-up*: What information do you need to make these decisions?
-    - *Follow-up*: How confident are you in the data you have?
-    - *Follow-up*: What would make decision-making easier or faster?
+    - _Follow-up_: What information do you need to make these decisions?
+    - _Follow-up_: How confident are you in the data you have?
+    - _Follow-up_: What would make decision-making easier or faster?
 
 ---
 
@@ -163,26 +172,29 @@ Use these questions to select appropriate interview participants:
 **JTBD Focus**: "Help me deliver features faster than competitors and respond to market changes"
 
 12. **How does the platform impact your time-to-market?**
-    - *Follow-up*: Can you give me a recent example of shipping a feature?
-    - *Follow-up*: What accelerated delivery? What slowed it down?
-    - *Follow-up*: How does your time-to-market compare to competitors or industry benchmarks?
-    - *Pain point*: What platform limitations affect your speed?
+
+    - _Follow-up_: Can you give me a recent example of shipping a feature?
+    - _Follow-up_: What accelerated delivery? What slowed it down?
+    - _Follow-up_: How does your time-to-market compare to competitors or industry benchmarks?
+    - _Pain point_: What platform limitations affect your speed?
 
 13. **Tell me about a time when you had to respond quickly to a market opportunity or competitive threat.**
-    - *Follow-up*: How did the platform support (or hinder) your response?
-    - *Follow-up*: What would have made you more agile?
-    - *Follow-up*: What capabilities do competitors have that you wish you had?
-    - *JTBD*: What would enable you to move faster?
+
+    - _Follow-up_: How did the platform support (or hinder) your response?
+    - _Follow-up_: What would have made you more agile?
+    - _Follow-up_: What capabilities do competitors have that you wish you had?
+    - _JTBD_: What would enable you to move faster?
 
 14. **What features or capabilities do you prioritize but struggle to deliver quickly?**
-    - *Follow-up*: Why are they slow to deliver?
-    - *Follow-up*: What's the business cost of these delays?
-    - *Follow-up*: What would it take to cut delivery time in half?
+
+    - _Follow-up_: Why are they slow to deliver?
+    - _Follow-up_: What's the business cost of these delays?
+    - _Follow-up_: What would it take to cut delivery time in half?
 
 15. **How do you balance speed with quality, security, and reliability?**
-    - *Follow-up*: What trade-offs do you face?
-    - *Follow-up*: How does the platform help or hinder finding the right balance?
-    - *Follow-up*: What guardrails or automation would help?
+    - _Follow-up_: What trade-offs do you face?
+    - _Follow-up_: How does the platform help or hinder finding the right balance?
+    - _Follow-up_: What guardrails or automation would help?
 
 ---
 
@@ -193,28 +205,31 @@ Use these questions to select appropriate interview participants:
 **JTBD Focus**: "Help me maximize team productivity and effectiveness"
 
 16. **How do you assess whether your engineering teams are productive?**
-    - *Follow-up*: What signals or metrics do you look at?
-    - *Follow-up*: How does the platform impact productivity?
-    - *Follow-up*: What feedback do you hear from developers about the platform?
-    - *Pain point*: What developer frustrations are you aware of?
+
+    - _Follow-up_: What signals or metrics do you look at?
+    - _Follow-up_: How does the platform impact productivity?
+    - _Follow-up_: What feedback do you hear from developers about the platform?
+    - _Pain point_: What developer frustrations are you aware of?
 
 17. **What percentage of your team's time is spent on feature development vs. other activities?**
-    - *Follow-up*: What other activities consume time? (operations, debugging, meetings, etc.)
-    - *Follow-up*: How does this compare to what you'd consider ideal?
-    - *Follow-up*: What would it take to shift more time toward feature development?
-    - *JTBD*: How can the platform reduce toil and free up developer time?
+
+    - _Follow-up_: What other activities consume time? (operations, debugging, meetings, etc.)
+    - _Follow-up_: How does this compare to what you'd consider ideal?
+    - _Follow-up_: What would it take to shift more time toward feature development?
+    - _JTBD_: How can the platform reduce toil and free up developer time?
 
 18. **Tell me about your experience hiring and onboarding new team members.**
-    - *Follow-up*: How long does it take for new hires to be productive?
-    - *Follow-up*: What platform-related challenges do they face?
-    - *Follow-up*: What would accelerate onboarding?
-    - *Pain point*: What makes the platform hard to learn?
+
+    - _Follow-up_: How long does it take for new hires to be productive?
+    - _Follow-up_: What platform-related challenges do they face?
+    - _Follow-up_: What would accelerate onboarding?
+    - _Pain point_: What makes the platform hard to learn?
 
 19. **How do you retain and develop talent on your team?**
-    - *Follow-up*: What do team members enjoy about their work?
-    - *Follow-up*: What causes frustration or burnout?
-    - *Follow-up*: How does the platform impact job satisfaction?
-    - *JTBD*: What platform improvements would improve retention?
+    - _Follow-up_: What do team members enjoy about their work?
+    - _Follow-up_: What causes frustration or burnout?
+    - _Follow-up_: How does the platform impact job satisfaction?
+    - _JTBD_: What platform improvements would improve retention?
 
 ---
 
@@ -225,21 +240,23 @@ Use these questions to select appropriate interview participants:
 **JTBD Focus**: "Help me make smart investments in platform capabilities"
 
 20. **How do you prioritize platform improvements vs. feature development?**
-    - *Follow-up*: What framework or criteria do you use?
-    - *Follow-up*: How do you communicate these trade-offs to stakeholders?
-    - *Follow-up*: What pressure do you face to prioritize one over the other?
-    - *Pain point*: What makes prioritization difficult?
+
+    - _Follow-up_: What framework or criteria do you use?
+    - _Follow-up_: How do you communicate these trade-offs to stakeholders?
+    - _Follow-up_: What pressure do you face to prioritize one over the other?
+    - _Pain point_: What makes prioritization difficult?
 
 21. **What platform capabilities are you missing that would unlock new business opportunities?**
-    - *Follow-up*: What opportunities are you unable to pursue today?
-    - *Follow-up*: What's the business value of these opportunities?
-    - *Follow-up*: What's preventing you from building these capabilities?
-    - *JTBD*: What would change your platform investment strategy?
+
+    - _Follow-up_: What opportunities are you unable to pursue today?
+    - _Follow-up_: What's the business value of these opportunities?
+    - _Follow-up_: What's preventing you from building these capabilities?
+    - _JTBD_: What would change your platform investment strategy?
 
 22. **How do you stay informed about platform strategy and roadmap?**
-    - *Follow-up*: How much visibility do you have into what's coming?
-    - *Follow-up*: How much input do you have into platform priorities?
-    - *Follow-up*: What would improve platform governance or communication?
+    - _Follow-up_: How much visibility do you have into what's coming?
+    - _Follow-up_: How much input do you have into platform priorities?
+    - _Follow-up_: What would improve platform governance or communication?
 
 ---
 
@@ -248,10 +265,11 @@ Use these questions to select appropriate interview participants:
 **Objective**: Capture overall sentiment and strategic insights
 
 23. **If you could change one thing about how the platform supports your business goals, what would it be?**
-    - *Follow-up*: Why is this the most important thing?
-    - *Follow-up*: What would the business impact be if this changed?
+    - _Follow-up_: Why is this the most important thing?
+    - _Follow-up_: What would the business impact be if this changed?
 
 **Wrap-up**:
+
 - "Is there anything else about the platform's business impact or your needs that we haven't covered but you think is important?"
 - "Can we reach out to you for follow-up questions if needed?"
 - "Would you be interested in reviewing platform strategy or roadmap proposals?"
@@ -293,6 +311,7 @@ Use these questions to select appropriate interview participants:
 Ensure all interviews cover these critical areas:
 
 ### Jobs to be Done (JTBD)
+
 - [ ] Demonstrate business value and ROI of platform investments
 - [ ] Have visibility into progress and make informed decisions
 - [ ] Deliver features faster than competitors
@@ -302,6 +321,7 @@ Ensure all interviews cover these critical areas:
 - [ ] Balance speed with quality, security, and reliability
 
 ### Pain Points
+
 - [ ] Limited visibility into engineering progress
 - [ ] Difficulty measuring platform ROI or business value
 - [ ] Long time-to-market for platform improvements
@@ -314,6 +334,7 @@ Ensure all interviews cover these critical areas:
 - [ ] Difficulty justifying platform costs to leadership
 
 ### Workarounds
+
 - [ ] Manual status reports and data collection
 - [ ] Attending multiple meetings for visibility
 - [ ] Building features outside the platform
@@ -339,6 +360,7 @@ Ensure all interviews cover these critical areas:
 ### Sentiment Analysis
 
 Track emotional responses to:
+
 - Platform value (confidence, uncertainty)
 - Visibility and data (satisfaction, frustration)
 - Time-to-market (pride, concern)
@@ -349,6 +371,7 @@ Track emotional responses to:
 ### Pattern Identification
 
 Look for common themes across interviews:
+
 - Recurring pain points (3+ participants mention)
 - Consistent metrics or KPIs that matter
 - Similar visibility gaps
@@ -360,6 +383,7 @@ Look for common themes across interviews:
 ## Tips for Effective Interviewing
 
 ### Do's ✅
+
 - **Speak their language**: Use business terms (ROI, time-to-market, KPIs) not just technical jargon
 - **Respect their time**: Be punctual and efficient—executives are busy
 - **Ask for specifics**: "Can you give me a recent example?" grounds abstract concepts
@@ -369,6 +393,7 @@ Look for common themes across interviews:
 - **Be strategic**: Focus on high-level goals, not implementation details
 
 ### Don'ts ❌
+
 - **Don't get too technical**: Unless they're technical, avoid deep technical discussions
 - **Don't defend the platform**: Stay curious and neutral
 - **Don't dismiss "soft" concerns**: Culture, morale, and team health matter
@@ -378,6 +403,7 @@ Look for common themes across interviews:
 - **Don't assume they know platform details**: Explain context when needed
 
 ### Effective Follow-up Questions
+
 - "What's the business impact of that?"
 - "How do you measure that today?"
 - "What would that enable you to do?"
@@ -392,6 +418,7 @@ Look for common themes across interviews:
 ## Special Considerations for Executive Interviews
 
 ### Preparation
+
 - Research their background and recent company initiatives
 - Review quarterly results or public statements if available
 - Understand their team structure and scope
@@ -399,6 +426,7 @@ Look for common themes across interviews:
 - Have metrics and data ready if they ask
 
 ### During Interview
+
 - Be respectful of their time—start and end on schedule
 - Get to strategic questions quickly
 - Follow their lead on depth vs. breadth
@@ -406,6 +434,7 @@ Look for common themes across interviews:
 - Clarify acronyms or initiatives you're unfamiliar with
 
 ### After Interview
+
 - Send a professional thank-you within 24 hours
 - Share high-level insights (not raw transcripts) with appropriate stakeholders
 - Follow up on any commitments you made
@@ -431,6 +460,7 @@ Look for common themes across interviews:
 ## Changelog
 
 ### Version 1.0 - December 2025
+
 - Initial interview guide created for stakeholders and leadership
 - 23 main questions across 6 sections
 - Focus on business value, ROI, visibility, and strategic decision-making

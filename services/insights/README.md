@@ -71,6 +71,7 @@ Once running, access the interactive API documentation at:
 ### Tables
 
 #### insights
+
 Stores captured insights and learnings.
 
 - `id`: Primary key
@@ -87,6 +88,7 @@ Stores captured insights and learnings.
 - `published_at`: Publication timestamp
 
 #### categories
+
 Hierarchical categorization for insights.
 
 - `id`: Primary key
@@ -100,6 +102,7 @@ Hierarchical categorization for insights.
 - `updated_at`: Last update timestamp
 
 #### tags
+
 Flexible tagging system.
 
 - `id`: Primary key
@@ -111,6 +114,7 @@ Flexible tagging system.
 - `usage_count`: Number of insights using this tag
 
 #### insight_tags
+
 Many-to-many association between insights and tags.
 
 - `insight_id`: Foreign key to insights

@@ -24,11 +24,13 @@ kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=datahub -n fawk
 ### Access DataHub UI
 
 Local development:
+
 ```
 http://datahub.127.0.0.1.nip.io
 ```
 
 Default credentials (MVP):
+
 - Username: `datahub`
 - Password: `datahub`
 
@@ -37,6 +39,7 @@ Default credentials (MVP):
 #### Automated Ingestion (Recommended)
 
 Automated ingestion is configured via CronJobs:
+
 - **PostgreSQL** (Backstage, Harbor, SonarQube): Daily at 2 AM UTC
 - **Kubernetes resources**: Hourly
 - **GitHub & Jenkins**: Every 6 hours
@@ -56,17 +59,20 @@ kubectl logs -n fawkes -l component=ingestion,source=postgres --tail=100
 For manual or one-time ingestion:
 
 1. Install DataHub CLI:
+
 ```bash
 pip install 'acryl-datahub[all]'
 ```
 
 2. Set credentials:
+
 ```bash
 export POSTGRES_BACKSTAGE_USER="backstage_user"
 export POSTGRES_BACKSTAGE_PASSWORD="your-password"
 ```
 
 3. Run ingestion:
+
 ```bash
 # PostgreSQL databases
 datahub ingest -c ingestion/postgres.yaml
@@ -134,12 +140,14 @@ See `ingestion/README.md` for comprehensive ingestion documentation.
 ### Accessing DataHub
 
 Local development:
+
 ```bash
 # Access UI
 http://datahub.127.0.0.1.nip.io
 ```
 
 Default credentials:
+
 - Username: `datahub`
 - Password: `datahub`
 
@@ -227,14 +235,7 @@ results = context.run_checkpoint(
 
 ```graphql
 query {
-  search(
-    input: {
-      type: DATASET
-      query: "backstage"
-      start: 0
-      count: 10
-    }
-  ) {
+  search(input: { type: DATASET, query: "backstage", start: 0, count: 10 }) {
     searchResults {
       entity {
         ... on Dataset {
@@ -252,14 +253,7 @@ query {
 
 ```graphql
 query {
-  browse(
-    input: {
-      type: DATASET
-      path: ["prod", "analytics"]
-      start: 0
-      count: 10
-    }
-  ) {
+  browse(input: { type: DATASET, path: ["prod", "analytics"], start: 0, count: 10 }) {
     entities {
       name
       type

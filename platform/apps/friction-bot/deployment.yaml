@@ -24,48 +24,48 @@ spec:
         runAsUser: 10001
         fsGroup: 10001
       containers:
-      - name: friction-bot
-        image: friction-bot:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - name: http
-          containerPort: 8000
-          protocol: TCP
-        env:
-        - name: INSIGHTS_API_URL
-          value: "http://insights-service.fawkes.svc.cluster.local:8000"
-        - name: BOT_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: friction-bot-secret
-              key: bot-token
-              optional: true
-        - name: MATTERMOST_URL
-          value: "http://mattermost.fawkes.svc.cluster.local:8065"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 10
-          periodSeconds: 30
-          timeoutSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          timeoutSeconds: 3
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: false
+        - name: friction-bot
+          image: friction-bot:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          env:
+            - name: INSIGHTS_API_URL
+              value: "http://insights-service.fawkes.svc.cluster.local:8000"
+            - name: BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: friction-bot-secret
+                  key: bot-token
+                  optional: true
+            - name: MATTERMOST_URL
+              value: "http://mattermost.fawkes.svc.cluster.local:8065"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: false

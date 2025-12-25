@@ -14,7 +14,7 @@ metadata:
     environment: production
     team: platform
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"  # Deploy after cert-manager
+    argocd.argoproj.io/sync-wave: "-2" # Deploy after cert-manager
 spec:
   project: default
 
@@ -35,7 +35,7 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=false  # cert-manager namespace already created
+      - CreateNamespace=false # cert-manager namespace already created
       - PrunePropagationPolicy=foreground
     retry:
       limit: 5

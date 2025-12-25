@@ -17,7 +17,7 @@ def mock_env(monkeypatch):
 @pytest.fixture
 def mock_http_client():
     """Mock HTTP client."""
-    with patch('httpx.AsyncClient') as mock:
+    with patch("httpx.AsyncClient") as mock:
         mock_instance = Mock(spec=httpx.AsyncClient)
         mock_instance.get = Mock()
         mock_instance.post = Mock()
@@ -28,6 +28,7 @@ def mock_http_client():
 def test_root_endpoint(mock_env):
     """Test root endpoint returns service info."""
     from app.main import app
+
     client = TestClient(app)
 
     response = client.get("/")
@@ -41,6 +42,7 @@ def test_root_endpoint(mock_env):
 def test_health_endpoint(mock_env):
     """Test health check endpoint."""
     from app.main import app
+
     client = TestClient(app)
 
     response = client.get("/health")
@@ -56,6 +58,7 @@ def test_health_endpoint(mock_env):
 def test_ready_endpoint_success(mock_env):
     """Test readiness endpoint when configured."""
     from app.main import app
+
     client = TestClient(app)
 
     response = client.get("/ready")
@@ -95,11 +98,7 @@ def test_verify_github_signature_valid(mock_env):
     payload = b'{"test": "data"}'
     secret = "test-secret"
 
-    signature = hmac.new(
-        secret.encode(),
-        msg=payload,
-        digestmod=hashlib.sha256
-    ).hexdigest()
+    signature = hmac.new(secret.encode(), msg=payload, digestmod=hashlib.sha256).hexdigest()
 
     assert verify_github_signature(payload, f"sha256={signature}") is True
 
@@ -117,15 +116,13 @@ def test_verify_github_signature_invalid(mock_env):
 def test_webhook_invalid_signature(mock_env):
     """Test webhook rejects invalid signature."""
     from app.main import app
+
     client = TestClient(app)
 
     response = client.post(
         "/webhook/github",
         json={"action": "opened"},
-        headers={
-            "X-Hub-Signature-256": "sha256=invalid",
-            "X-GitHub-Event": "pull_request"
-        }
+        headers={"X-Hub-Signature-256": "sha256=invalid", "X-GitHub-Event": "pull_request"},
     )
     assert response.status_code == 401
 
@@ -141,31 +138,22 @@ def test_webhook_pull_request_opened(mock_env):
 
     payload = {
         "action": "opened",
-        "pull_request": {
-            "number": 123,
-            "diff_url": "https://github.com/test/repo/pull/123.diff"
-        },
-        "repository": {
-            "full_name": "test/repo"
-        }
+        "pull_request": {"number": 123, "diff_url": "https://github.com/test/repo/pull/123.diff"},
+        "repository": {"full_name": "test/repo"},
     }
 
     payload_bytes = json.dumps(payload).encode()
-    signature = hmac.new(
-        "test-secret".encode(),
-        msg=payload_bytes,
-        digestmod=hashlib.sha256
-    ).hexdigest()
+    signature = hmac.new("test-secret".encode(), msg=payload_bytes, digestmod=hashlib.sha256).hexdigest()
 
-    with patch('app.main.process_pull_request_review'):
+    with patch("app.main.process_pull_request_review"):
         response = client.post(
             "/webhook/github",
             json=payload,
             headers={
                 "X-Hub-Signature-256": f"sha256={signature}",
                 "X-GitHub-Event": "pull_request",
-                "Content-Type": "application/json"
-            }
+                "Content-Type": "application/json",
+            },
         )
 
     assert response.status_code == 202
@@ -184,19 +172,12 @@ def test_webhook_ignores_other_events(mock_env):
 
     payload = {"action": "created"}
     payload_bytes = json.dumps(payload).encode()
-    signature = hmac.new(
-        "test-secret".encode(),
-        msg=payload_bytes,
-        digestmod=hashlib.sha256
-    ).hexdigest()
+    signature = hmac.new("test-secret".encode(), msg=payload_bytes, digestmod=hashlib.sha256).hexdigest()
 
     response = client.post(
         "/webhook/github",
         json=payload,
-        headers={
-            "X-Hub-Signature-256": f"sha256={signature}",
-            "X-GitHub-Event": "issue_comment"
-        }
+        headers={"X-Hub-Signature-256": f"sha256={signature}", "X-GitHub-Event": "issue_comment"},
     )
 
     assert response.status_code == 200
@@ -207,6 +188,7 @@ def test_webhook_ignores_other_events(mock_env):
 def test_stats_endpoint(mock_env):
     """Test stats endpoint."""
     from app.main import app
+
     client = TestClient(app)
 
     response = client.get("/stats")

@@ -10,7 +10,7 @@ from app.ai_triage import (
     detect_duplicates,
     _calculate_similarity,
     determine_milestone,
-    triage_feedback
+    triage_feedback,
 )
 
 
@@ -24,7 +24,7 @@ class TestCalculatePriorityScore:
             category="Security",
             comment="Critical security vulnerability causing data loss",
             rating=1,
-            sentiment_compound=-0.8
+            sentiment_compound=-0.8,
         )
 
         assert priority == "P0"
@@ -39,7 +39,7 @@ class TestCalculatePriorityScore:
             category="Performance",
             comment="Major error causing application failure",
             rating=2,
-            sentiment_compound=-0.3
+            sentiment_compound=-0.3,
         )
 
         assert priority in ["P0", "P1"]
@@ -53,7 +53,7 @@ class TestCalculatePriorityScore:
             category="Features",
             comment="Would be nice to have feature X for better workflow",
             rating=4,
-            sentiment_compound=0.1
+            sentiment_compound=0.1,
         )
 
         assert priority in ["P2", "P3"]
@@ -67,7 +67,7 @@ class TestCalculatePriorityScore:
             category="UI/UX",
             comment="Minor suggestion to polish the interface",
             rating=5,
-            sentiment_compound=0.5
+            sentiment_compound=0.5,
         )
 
         assert priority == "P3"
@@ -77,11 +77,7 @@ class TestCalculatePriorityScore:
     def test_without_sentiment(self):
         """Test priority calculation without sentiment."""
         priority, score, details = calculate_priority_score(
-            feedback_type="bug_report",
-            category="Bug Report",
-            comment="Bug found",
-            rating=2,
-            sentiment_compound=None
+            feedback_type="bug_report", category="Bug Report", comment="Bug found", rating=2, sentiment_compound=None
         )
 
         assert priority in ["P0", "P1", "P2", "P3"]
@@ -94,7 +90,7 @@ class TestCalculatePriorityScore:
             category="General",
             comment="This is a critical blocker causing outage",
             rating=1,
-            sentiment_compound=-0.5
+            sentiment_compound=-0.5,
         )
 
         assert "critical" in details["matched_keywords"]
@@ -109,10 +105,7 @@ class TestSuggestLabels:
     def test_bug_report_labels(self):
         """Test labels for bug report."""
         labels = suggest_labels(
-            feedback_type="bug_report",
-            category="UI/UX",
-            priority="P0",
-            comment="Security issue in UI"
+            feedback_type="bug_report", category="UI/UX", priority="P0", comment="Security issue in UI"
         )
 
         assert "feedback" in labels
@@ -128,7 +121,7 @@ class TestSuggestLabels:
             feedback_type="feature_request",
             category="Features",
             priority="P2",
-            comment="Add new feature for better performance"
+            comment="Add new feature for better performance",
         )
 
         assert "enhancement" in labels
@@ -141,7 +134,7 @@ class TestSuggestLabels:
             feedback_type="feedback",
             category="Documentation",
             priority="P3",
-            comment="The documentation needs improvement"
+            comment="The documentation needs improvement",
         )
 
         assert "documentation" in labels
@@ -153,7 +146,7 @@ class TestSuggestLabels:
             feedback_type="feedback",
             category="UI/UX",
             priority="P2",
-            comment="Screen reader support is needed for accessibility"
+            comment="Screen reader support is needed for accessibility",
         )
 
         assert "accessibility" in labels
@@ -164,7 +157,7 @@ class TestSuggestLabels:
             feedback_type="bug_report",
             category="Performance",
             priority="P1",
-            comment="Security vulnerability causing performance issues in the UI"
+            comment="Security vulnerability causing performance issues in the UI",
         )
 
         assert "security" in labels
@@ -187,10 +180,7 @@ class TestCalculateSimilarity:
 
     def test_similar_strings(self):
         """Test similarity of similar strings."""
-        similarity = _calculate_similarity(
-            "the application is very slow",
-            "the app is extremely slow"
-        )
+        similarity = _calculate_similarity("the application is very slow", "the app is extremely slow")
         assert similarity > 0.5
 
     def test_empty_strings(self):
@@ -201,10 +191,7 @@ class TestCalculateSimilarity:
 
     def test_partial_match(self):
         """Test partial string match."""
-        similarity = _calculate_similarity(
-            "bug in login page",
-            "issue with login"
-        )
+        similarity = _calculate_similarity("bug in login page", "issue with login")
         assert 0.3 < similarity < 0.8
 
 
@@ -218,17 +205,13 @@ class TestDetectDuplicates:
         mock_response.status_code = 200
         mock_response.json.return_value = {"items": []}
 
-        with patch('app.ai_triage.GITHUB_TOKEN', 'test-token'), \
-             patch('httpx.AsyncClient') as mock_client:
-
+        with patch("app.ai_triage.GITHUB_TOKEN", "test-token"), patch("httpx.AsyncClient") as mock_client:
             mock_client_instance = AsyncMock()
             mock_client.return_value.__aenter__.return_value = mock_client_instance
             mock_client_instance.get = AsyncMock(return_value=mock_response)
 
             duplicates = await detect_duplicates(
-                comment="This is a unique issue",
-                category="UI/UX",
-                feedback_type="bug_report"
+                comment="This is a unique issue", category="UI/UX", feedback_type="bug_report"
             )
 
             assert duplicates == []
@@ -245,14 +228,12 @@ class TestDetectDuplicates:
                     "html_url": "https://github.com/test/repo/issues/123",
                     "title": "Bug: Login page is broken",
                     "body": "The login page is not working properly",
-                    "state": "open"
+                    "state": "open",
                 }
             ]
         }
 
-        with patch('app.ai_triage.GITHUB_TOKEN', 'test-token'), \
-             patch('httpx.AsyncClient') as mock_client:
-
+        with patch("app.ai_triage.GITHUB_TOKEN", "test-token"), patch("httpx.AsyncClient") as mock_client:
             mock_client_instance = AsyncMock()
             mock_client.return_value.__aenter__.return_value = mock_client_instance
             mock_client_instance.get = AsyncMock(return_value=mock_response)
@@ -261,7 +242,7 @@ class TestDetectDuplicates:
                 comment="The login page is not working properly",
                 category="Bug Report",
                 feedback_type="bug_report",
-                similarity_threshold=0.7
+                similarity_threshold=0.7,
             )
 
             assert len(duplicates) > 0
@@ -271,12 +252,8 @@ class TestDetectDuplicates:
     @pytest.mark.asyncio
     async def test_without_github_token(self):
         """Test duplicate detection without GitHub token."""
-        with patch('app.ai_triage.GITHUB_TOKEN', None):
-            duplicates = await detect_duplicates(
-                comment="Test issue",
-                category="General",
-                feedback_type="feedback"
-            )
+        with patch("app.ai_triage.GITHUB_TOKEN", None):
+            duplicates = await detect_duplicates(comment="Test issue", category="General", feedback_type="feedback")
 
             assert duplicates == []
 
@@ -286,18 +263,12 @@ class TestDetectDuplicates:
         mock_response = Mock()
         mock_response.status_code = 500
 
-        with patch('app.ai_triage.GITHUB_TOKEN', 'test-token'), \
-             patch('httpx.AsyncClient') as mock_client:
-
+        with patch("app.ai_triage.GITHUB_TOKEN", "test-token"), patch("httpx.AsyncClient") as mock_client:
             mock_client_instance = AsyncMock()
             mock_client.return_value.__aenter__.return_value = mock_client_instance
             mock_client_instance.get = AsyncMock(return_value=mock_response)
 
-            duplicates = await detect_duplicates(
-                comment="Test issue",
-                category="General",
-                feedback_type="feedback"
-            )
+            duplicates = await detect_duplicates(comment="Test issue", category="General", feedback_type="feedback")
 
             assert duplicates == []
 
@@ -332,14 +303,14 @@ class TestTriageFeedback:
     @pytest.mark.asyncio
     async def test_triage_with_no_duplicates(self):
         """Test triage when no duplicates are found."""
-        with patch('app.ai_triage.detect_duplicates', return_value=[]):
+        with patch("app.ai_triage.detect_duplicates", return_value=[]):
             result = await triage_feedback(
                 feedback_id=1,
                 feedback_type="bug_report",
                 category="Security",
                 comment="Critical security issue",
                 rating=1,
-                sentiment_compound=-0.8
+                sentiment_compound=-0.8,
             )
 
             assert result["feedback_id"] == 1
@@ -358,18 +329,18 @@ class TestTriageFeedback:
                 "issue_url": "https://github.com/test/repo/issues/123",
                 "title": "Similar issue",
                 "similarity": 0.85,
-                "state": "open"
+                "state": "open",
             }
         ]
 
-        with patch('app.ai_triage.detect_duplicates', return_value=mock_duplicates):
+        with patch("app.ai_triage.detect_duplicates", return_value=mock_duplicates):
             result = await triage_feedback(
                 feedback_id=2,
                 feedback_type="bug_report",
                 category="Performance",
                 comment="Performance issue",
                 rating=2,
-                sentiment_compound=-0.3
+                sentiment_compound=-0.3,
             )
 
             assert result["should_create_issue"] is False
@@ -379,14 +350,14 @@ class TestTriageFeedback:
     @pytest.mark.asyncio
     async def test_triage_feature_request(self):
         """Test triage for feature request."""
-        with patch('app.ai_triage.detect_duplicates', return_value=[]):
+        with patch("app.ai_triage.detect_duplicates", return_value=[]):
             result = await triage_feedback(
                 feedback_id=3,
                 feedback_type="feature_request",
                 category="Features",
                 comment="Add new feature for better workflow",
                 rating=4,
-                sentiment_compound=0.2
+                sentiment_compound=0.2,
             )
 
             assert result["priority"] in ["P2", "P3"]

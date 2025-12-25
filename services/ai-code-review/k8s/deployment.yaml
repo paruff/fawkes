@@ -29,96 +29,96 @@ spec:
         runAsUser: 65534
         fsGroup: 65534
       containers:
-      - name: ai-code-review
-        image: ai-code-review:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - name: http
-          containerPort: 8000
-          protocol: TCP
-        env:
-        - name: GITHUB_WEBHOOK_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: ai-code-review-secrets
-              key: GITHUB_WEBHOOK_SECRET
-        - name: GITHUB_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: ai-code-review-secrets
-              key: GITHUB_TOKEN
-        - name: LLM_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: ai-code-review-secrets
-              key: LLM_API_KEY
-        - name: SONARQUBE_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: ai-code-review-secrets
-              key: SONARQUBE_TOKEN
-        - name: RAG_SERVICE_URL
-          valueFrom:
-            configMapKeyRef:
-              name: ai-code-review-config
-              key: RAG_SERVICE_URL
-        - name: SONARQUBE_URL
-          valueFrom:
-            configMapKeyRef:
-              name: ai-code-review-config
-              key: SONARQUBE_URL
-        - name: LLM_API_URL
-          valueFrom:
-            configMapKeyRef:
-              name: ai-code-review-config
-              key: LLM_API_URL
-        - name: LLM_MODEL
-          valueFrom:
-            configMapKeyRef:
-              name: ai-code-review-config
-              key: LLM_MODEL
-        - name: FALSE_POSITIVE_THRESHOLD
-          valueFrom:
-            configMapKeyRef:
-              name: ai-code-review-config
-              key: FALSE_POSITIVE_THRESHOLD
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "200m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: http
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 65534
-          capabilities:
-            drop:
-            - ALL
-        volumeMounts:
-        - name: tmp
-          mountPath: /tmp
+        - name: ai-code-review
+          image: ai-code-review:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          env:
+            - name: GITHUB_WEBHOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: ai-code-review-secrets
+                  key: GITHUB_WEBHOOK_SECRET
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: ai-code-review-secrets
+                  key: GITHUB_TOKEN
+            - name: LLM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ai-code-review-secrets
+                  key: LLM_API_KEY
+            - name: SONARQUBE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: ai-code-review-secrets
+                  key: SONARQUBE_TOKEN
+            - name: RAG_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ai-code-review-config
+                  key: RAG_SERVICE_URL
+            - name: SONARQUBE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ai-code-review-config
+                  key: SONARQUBE_URL
+            - name: LLM_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ai-code-review-config
+                  key: LLM_API_URL
+            - name: LLM_MODEL
+              valueFrom:
+                configMapKeyRef:
+                  name: ai-code-review-config
+                  key: LLM_MODEL
+            - name: FALSE_POSITIVE_THRESHOLD
+              valueFrom:
+                configMapKeyRef:
+                  name: ai-code-review-config
+                  key: FALSE_POSITIVE_THRESHOLD
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
       volumes:
-      - name: tmp
-        emptyDir: {}
+        - name: tmp
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: ServiceAccount

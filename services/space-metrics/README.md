@@ -31,21 +31,25 @@ The SPACE Metrics Service implements the SPACE framework for measuring developer
 ### Local Development
 
 1. Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 2. Set environment variables:
+
 ```bash
 export DATABASE_URL="postgresql://space:space@localhost:5432/space_metrics"
 ```
 
 3. Run database migrations:
+
 ```bash
 alembic upgrade head
 ```
 
 4. Start the service:
+
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
@@ -62,6 +66,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 ## Privacy & Ethics
 
 This service implements privacy-first design:
+
 - No individual developer metrics exposed
 - Aggregation threshold of 5+ developers
 - Anonymous survey responses

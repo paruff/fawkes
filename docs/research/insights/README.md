@@ -5,6 +5,7 @@ This directory contains synthesized insights from user research activities. Insi
 ## About Insights
 
 Research insights are:
+
 - **Synthesized**: Patterns across multiple interviews, surveys, or data sources
 - **Evidence-Based**: Grounded in actual user research
 - **Actionable**: Include recommendations for product improvements
@@ -13,6 +14,7 @@ Research insights are:
 ## Creating Insights
 
 1. **Review research artifacts**:
+
    - Multiple interview notes
    - Survey results
    - Analytics data
@@ -20,34 +22,41 @@ Research insights are:
    - Usage patterns
 
 2. **Identify patterns**:
+
    - Common pain points across users
    - Frequently requested features
    - Workflow inefficiencies
    - Unmet needs
 
 3. **Document insights**:
+
    ```markdown
    # [Topic] Insights - [Date]
 
    ## Summary
+
    [2-3 sentence overview of key findings]
 
    ## Key Findings
+
    1. [Finding 1 with supporting evidence]
    2. [Finding 2 with supporting evidence]
    3. [Finding 3 with supporting evidence]
 
    ## Evidence
+
    - [Reference to interviews: "5/7 platform engineers mentioned..."]
    - [Survey data: "68% of developers reported..."]
    - [Analytics: "Average time to first deployment: 4.5 hours"]
 
    ## Impact
+
    - [How this affects users]
    - [Business impact]
    - [DORA metrics impact]
 
    ## Recommendations
+
    1. [Prioritized action 1]
       - Expected impact: [High/Medium/Low]
       - Effort estimate: [High/Medium/Low]
@@ -55,11 +64,13 @@ Research insights are:
    3. [Prioritized action 3]
 
    ## Next Steps
+
    - [Follow-up research needed]
    - [Features to prioritize]
    - [Experiments to run]
 
    ## Related Artifacts
+
    - [Link to interviews]
    - [Link to personas]
    - [Link to journey maps]
@@ -70,6 +81,7 @@ Research insights are:
 Use: `YYYY-MM-{topic}-insights.md`
 
 Examples:
+
 - `2025-12-deployment-experience-insights.md`
 - `2025-Q4-platform-adoption-insights.md`
 - `2026-01-observability-gaps-insights.md`
@@ -77,21 +89,25 @@ Examples:
 ## Types of Insights
 
 ### Sprint Insights
+
 - **Frequency**: After each research sprint (2-4 weeks)
 - **Scope**: Specific topic or feature
 - **Purpose**: Inform current sprint planning
 
 ### Quarterly Insights
+
 - **Frequency**: End of each quarter
 - **Scope**: Broader themes and patterns
 - **Purpose**: Strategic planning and OKR setting
 
 ### Ad-hoc Insights
+
 - **Frequency**: As needed
 - **Scope**: Emerging patterns or urgent findings
 - **Purpose**: Rapid decision-making
 
 ### Annual Synthesis
+
 - **Frequency**: End of year
 - **Scope**: Year-over-year trends
 - **Purpose**: Long-term strategy and retrospective
@@ -107,6 +123,7 @@ Examples:
 ## Best Practices
 
 ✅ **Do:**
+
 - Base insights on multiple data sources
 - Include quantitative and qualitative evidence
 - Cite specific sources (interview dates, survey n=)
@@ -116,6 +133,7 @@ Examples:
 - Share insights with stakeholders
 
 ❌ **Don't:**
+
 - Base insights on single interviews
 - Cherry-pick data to support assumptions
 - Make recommendations without evidence
@@ -154,6 +172,7 @@ Before publishing an insight, ensure:
 **Format**: 30-45 minute presentation
 
 **Agenda**:
+
 1. Context: What we researched and why (5 min)
 2. Method: How we gathered data (5 min)
 3. Key findings: Top 3-5 insights (15 min)
@@ -163,6 +182,7 @@ Before publishing an insight, ensure:
 **Audience**: Product, engineering, design, leadership
 
 **Deliverables**:
+
 - Slide deck (keep it visual)
 - Written insight document
 - Recording for those who can't attend

@@ -19,42 +19,49 @@ The Insights Database and Tracking System is a structured platform for capturing
 ## Key Features
 
 ### 1. Structured Insights Storage
+
 - Capture insights with rich metadata (title, description, content, source)
 - Track authorship and timestamps
 - Manage insight lifecycle (draft, published, archived)
 - Priority levels (low, medium, high, critical)
 
 ### 2. Tagging System
+
 - Flexible tagging for cross-categorization
 - Tag usage tracking for popularity metrics
 - Color-coded tags for visual organization
 - Automatic usage count maintenance
 
 ### 3. Hierarchical Categories
+
 - Parent-child category relationships
 - Unlimited nesting depth
 - Visual indicators (colors and icons)
 - Category-level insight counts
 
 ### 4. Advanced Search
+
 - Full-text search across title, description, and content
 - Multi-filter support (category, tags, priority, status, author)
 - Tag-based filtering with AND logic
 - Pagination support
 
 ### 5. Statistics and Aggregation
+
 - Insights by status, priority, and category
 - Tag usage statistics
 - Recent insights tracking
 - Real-time aggregations
 
 ### 6. RESTful API
+
 - Comprehensive REST endpoints
 - OpenAPI documentation
 - Pydantic schema validation
 - CORS support
 
 ### 7. Observability
+
 - Prometheus metrics
 - Health check endpoint
 - Request duration tracking
@@ -185,65 +192,71 @@ The Insights Database and Tracking System is a structured platform for capturing
 ### Table Definitions
 
 #### insights
+
 Main table for storing insights.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | INTEGER | Primary key |
-| title | VARCHAR(500) | Insight title (indexed) |
-| description | TEXT | Short description or summary |
-| content | TEXT | Extended content or details |
-| source | VARCHAR(255) | Source of the insight |
-| author | VARCHAR(255) | Insight author (indexed) |
-| category_id | INTEGER | Foreign key to categories (indexed) |
-| priority | VARCHAR(20) | Priority: low, medium, high, critical (indexed) |
-| status | VARCHAR(20) | Status: draft, published, archived (indexed) |
-| created_at | TIMESTAMP | Creation timestamp (indexed) |
-| updated_at | TIMESTAMP | Last update timestamp |
-| published_at | TIMESTAMP | Publication timestamp |
+| Column       | Type         | Description                                     |
+| ------------ | ------------ | ----------------------------------------------- |
+| id           | INTEGER      | Primary key                                     |
+| title        | VARCHAR(500) | Insight title (indexed)                         |
+| description  | TEXT         | Short description or summary                    |
+| content      | TEXT         | Extended content or details                     |
+| source       | VARCHAR(255) | Source of the insight                           |
+| author       | VARCHAR(255) | Insight author (indexed)                        |
+| category_id  | INTEGER      | Foreign key to categories (indexed)             |
+| priority     | VARCHAR(20)  | Priority: low, medium, high, critical (indexed) |
+| status       | VARCHAR(20)  | Status: draft, published, archived (indexed)    |
+| created_at   | TIMESTAMP    | Creation timestamp (indexed)                    |
+| updated_at   | TIMESTAMP    | Last update timestamp                           |
+| published_at | TIMESTAMP    | Publication timestamp                           |
 
 **Indexes**:
+
 - `idx_insights_status_priority` (status, priority)
 - `idx_insights_category_status` (category_id, status)
 - `idx_insights_author_status` (author, status)
 
 #### categories
+
 Hierarchical categories for organizing insights.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | INTEGER | Primary key |
-| name | VARCHAR(100) | Category name (unique, indexed) |
-| slug | VARCHAR(100) | URL-friendly slug (unique, indexed) |
-| description | TEXT | Category description |
-| parent_id | INTEGER | Parent category ID (self-referential FK) |
-| color | VARCHAR(7) | Hex color code for UI |
-| icon | VARCHAR(50) | Icon name for UI |
-| created_at | TIMESTAMP | Creation timestamp |
-| updated_at | TIMESTAMP | Last update timestamp |
+| Column      | Type         | Description                              |
+| ----------- | ------------ | ---------------------------------------- |
+| id          | INTEGER      | Primary key                              |
+| name        | VARCHAR(100) | Category name (unique, indexed)          |
+| slug        | VARCHAR(100) | URL-friendly slug (unique, indexed)      |
+| description | TEXT         | Category description                     |
+| parent_id   | INTEGER      | Parent category ID (self-referential FK) |
+| color       | VARCHAR(7)   | Hex color code for UI                    |
+| icon        | VARCHAR(50)  | Icon name for UI                         |
+| created_at  | TIMESTAMP    | Creation timestamp                       |
+| updated_at  | TIMESTAMP    | Last update timestamp                    |
 
 #### tags
+
 Flexible tags for cross-categorization.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | INTEGER | Primary key |
-| name | VARCHAR(50) | Tag name (unique, indexed) |
-| slug | VARCHAR(50) | URL-friendly slug (unique, indexed) |
-| description | TEXT | Tag description |
-| color | VARCHAR(7) | Hex color code for UI |
-| created_at | TIMESTAMP | Creation timestamp |
-| usage_count | INTEGER | Number of insights using this tag |
+| Column      | Type        | Description                         |
+| ----------- | ----------- | ----------------------------------- |
+| id          | INTEGER     | Primary key                         |
+| name        | VARCHAR(50) | Tag name (unique, indexed)          |
+| slug        | VARCHAR(50) | URL-friendly slug (unique, indexed) |
+| description | TEXT        | Tag description                     |
+| color       | VARCHAR(7)  | Hex color code for UI               |
+| created_at  | TIMESTAMP   | Creation timestamp                  |
+| usage_count | INTEGER     | Number of insights using this tag   |
 
 #### insight_tags
+
 Many-to-many association between insights and tags.
 
-| Column | Type | Description |
-|--------|------|-------------|
+| Column     | Type    | Description                  |
+| ---------- | ------- | ---------------------------- |
 | insight_id | INTEGER | Foreign key to insights (PK) |
-| tag_id | INTEGER | Foreign key to tags (PK) |
+| tag_id     | INTEGER | Foreign key to tags (PK)     |
 
 **Indexes**:
+
 - `idx_insight_tags_insight_id` (insight_id)
 - `idx_insight_tags_tag_id` (tag_id)
 
@@ -254,6 +267,7 @@ Many-to-many association between insights and tags.
 ### Insights Endpoints
 
 #### Create Insight
+
 ```http
 POST /insights
 Content-Type: application/json
@@ -272,6 +286,7 @@ Content-Type: application/json
 ```
 
 **Response**: `201 Created`
+
 ```json
 {
   "id": 1,
@@ -292,11 +307,13 @@ Content-Type: application/json
 ```
 
 #### List Insights
+
 ```http
 GET /insights?page=1&page_size=20&status=published&priority=high
 ```
 
 **Response**: `200 OK`
+
 ```json
 {
   "total": 42,
@@ -307,6 +324,7 @@ GET /insights?page=1&page_size=20&status=published&priority=high
 ```
 
 #### Search Insights
+
 ```http
 POST /insights/search
 Content-Type: application/json
@@ -324,11 +342,13 @@ Content-Type: application/json
 ```
 
 #### Get Insight
+
 ```http
 GET /insights/{insight_id}
 ```
 
 #### Update Insight
+
 ```http
 PUT /insights/{insight_id}
 Content-Type: application/json
@@ -341,6 +361,7 @@ Content-Type: application/json
 ```
 
 #### Delete Insight
+
 ```http
 DELETE /insights/{insight_id}
 ```
@@ -350,6 +371,7 @@ DELETE /insights/{insight_id}
 ### Tags Endpoints
 
 #### Create Tag
+
 ```http
 POST /tags
 Content-Type: application/json
@@ -363,21 +385,25 @@ Content-Type: application/json
 ```
 
 #### List Tags
+
 ```http
 GET /tags?skip=0&limit=100
 ```
 
 #### Get Tag
+
 ```http
 GET /tags/{tag_id}
 ```
 
 #### Update Tag
+
 ```http
 PUT /tags/{tag_id}
 ```
 
 #### Delete Tag
+
 ```http
 DELETE /tags/{tag_id}
 ```
@@ -385,6 +411,7 @@ DELETE /tags/{tag_id}
 ### Categories Endpoints
 
 #### Create Category
+
 ```http
 POST /categories
 Content-Type: application/json
@@ -400,21 +427,25 @@ Content-Type: application/json
 ```
 
 #### List Categories
+
 ```http
 GET /categories?skip=0&limit=100
 ```
 
 #### Get Category
+
 ```http
 GET /categories/{category_id}
 ```
 
 #### Update Category
+
 ```http
 PUT /categories/{category_id}
 ```
 
 #### Delete Category
+
 ```http
 DELETE /categories/{category_id}
 ```
@@ -424,11 +455,13 @@ DELETE /categories/{category_id}
 ### Statistics Endpoint
 
 #### Get Statistics
+
 ```http
 GET /statistics
 ```
 
 **Response**: `200 OK`
+
 ```json
 {
   "total_insights": 156,
@@ -458,11 +491,13 @@ GET /statistics
 ### Health & Metrics
 
 #### Health Check
+
 ```http
 GET /health
 ```
 
 **Response**: `200 OK`
+
 ```json
 {
   "status": "healthy",
@@ -473,11 +508,13 @@ GET /health
 ```
 
 #### Prometheus Metrics
+
 ```http
 GET /metrics
 ```
 
 **Metrics Exposed**:
+
 - `insights_created_total`: Total insights created
 - `insights_updated_total`: Total insights updated
 - `insights_deleted_total`: Total insights deleted
@@ -570,12 +607,8 @@ Access insights via the unified GraphQL API:
 # Query insights with filters
 query {
   insights(
-    where: {
-      status: {_eq: "published"}
-      priority: {_eq: "high"}
-      category: {name: {_eq: "Technical"}}
-    }
-    order_by: {created_at: desc}
+    where: { status: { _eq: "published" }, priority: { _eq: "high" }, category: { name: { _eq: "Technical" } } }
+    order_by: { created_at: desc }
     limit: 20
   ) {
     id
@@ -619,9 +652,9 @@ query {
   insights(
     where: {
       _or: [
-        {title: {_ilike: "%performance%"}}
-        {description: {_ilike: "%performance%"}}
-        {content: {_ilike: "%performance%"}}
+        { title: { _ilike: "%performance%" } }
+        { description: { _ilike: "%performance%" } }
+        { content: { _ilike: "%performance%" } }
       ]
     }
   ) {
@@ -637,6 +670,7 @@ query {
 #### 1. Insights Overview Dashboard
 
 **Components**:
+
 - Total insights count
 - Insights by status (pie chart)
 - Insights by priority (bar chart)
@@ -649,6 +683,7 @@ query {
 #### 2. Insights List View
 
 **Components**:
+
 - Filterable table/grid
 - Search bar
 - Category filter dropdown
@@ -663,6 +698,7 @@ query {
 #### 3. Insight Detail View
 
 **Components**:
+
 - Full insight content
 - Metadata (author, dates, source)
 - Category badge
@@ -676,6 +712,7 @@ query {
 #### 4. Category Tree View
 
 **Components**:
+
 - Hierarchical category display
 - Insight count per category
 - Color-coded categories
@@ -687,6 +724,7 @@ query {
 #### 5. Tag Cloud View
 
 **Components**:
+
 - Size-based tag visualization (by usage_count)
 - Color-coded tags
 - Click to filter insights
@@ -697,15 +735,18 @@ query {
 ### Dashboard Refresh Strategy
 
 **Real-Time Data**:
+
 - Health status: Poll `/health` every 30s
 - Statistics: Poll `/statistics` every 60s
 
 **On-Demand Data**:
+
 - Insights list: Fetch on page load and filter changes
 - Search results: Fetch on search submission
 - Detail view: Fetch on insight selection
 
 **Metrics**:
+
 - Prometheus metrics: Scrape `/metrics` every 15s
 - Display in monitoring dashboard (Grafana)
 
@@ -733,21 +774,27 @@ query {
 
 ```markdown
 ## Context
+
 [What was the situation or problem?]
 
 ## Insight
+
 [What did we learn or discover?]
 
 ## Impact
+
 [What was the result or benefit?]
 
 ## Action Items
+
 - [Specific actions taken or recommended]
 
 ## References
+
 - [Links to related documentation, incidents, PRs, etc.]
 
 ## Related
+
 - [Links to related insights]
 ```
 
@@ -922,31 +969,31 @@ stats = client.get_statistics()
 
 ```typescript
 class InsightsClient {
-  constructor(private baseUrl: string = 'http://localhost:8000') {}
+  constructor(private baseUrl: string = "http://localhost:8000") {}
 
   async createInsight(insightData: any): Promise<any> {
     const response = await fetch(`${this.baseUrl}/insights`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(insightData)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(insightData),
     });
-    if (!response.ok) throw new Error('Failed to create insight');
+    if (!response.ok) throw new Error("Failed to create insight");
     return response.json();
   }
 
   async searchInsights(query: string, filters: any = {}): Promise<any> {
     const response = await fetch(`${this.baseUrl}/insights/search`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query, ...filters })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, ...filters }),
     });
-    if (!response.ok) throw new Error('Search failed');
+    if (!response.ok) throw new Error("Search failed");
     return response.json();
   }
 
   async getStatistics(): Promise<any> {
     const response = await fetch(`${this.baseUrl}/statistics`);
-    if (!response.ok) throw new Error('Failed to get statistics');
+    if (!response.ok) throw new Error("Failed to get statistics");
     return response.json();
   }
 }
@@ -956,19 +1003,19 @@ const client = new InsightsClient();
 
 // Create insight
 const insight = await client.createInsight({
-  title: 'My Learning',
-  description: 'What I learned',
-  author: 'me',
+  title: "My Learning",
+  description: "What I learned",
+  author: "me",
   category_id: 1,
-  priority: 'medium',
-  status: 'published',
-  tag_ids: [1, 2]
+  priority: "medium",
+  status: "published",
+  tag_ids: [1, 2],
 });
 
 // Search insights
-const results = await client.searchInsights('performance', {
-  status: 'published',
-  priority: 'high'
+const results = await client.searchInsights("performance", {
+  status: "published",
+  priority: "high",
 });
 
 // Get statistics
@@ -982,14 +1029,17 @@ const stats = await client.getStatistics();
 ### Query Optimization
 
 1. **Composite Indexes**: Used for common multi-column queries
+
    - `(status, priority)` for filtering
    - `(category_id, status)` for category-based queries
    - `(author, status)` for author-based queries
 
 2. **Connection Pooling**: 10 connections by default
+
    - Adjust `pool_size` in `database.py` for higher load
 
 3. **Pagination**: All list endpoints support pagination
+
    - Maximum page size: 100 items
    - Default page size: 20 items
 
@@ -1002,6 +1052,7 @@ const stats = await client.getStatistics();
 1. **Read Replicas**: Use PostgreSQL read replicas for search-heavy workloads
 
 2. **Caching**: Add Redis caching for:
+
    - Statistics endpoint (TTL: 60s)
    - Popular searches (TTL: 300s)
    - Tag and category lists (TTL: 600s)
@@ -1093,6 +1144,7 @@ logging.basicConfig(
 **Symptom**: `database_connected: false` in health check
 
 **Solution**:
+
 ```bash
 # Check DATABASE_URL
 echo $DATABASE_URL
@@ -1109,6 +1161,7 @@ kubectl get pods -n fawkes | grep postgres
 **Symptom**: High API latency
 
 **Solution**:
+
 ```sql
 -- Enable query logging
 SET log_statement = 'all';
@@ -1126,6 +1179,7 @@ EXPLAIN ANALYZE SELECT * FROM insights WHERE status = 'published';
 **Symptom**: `usage_count` doesn't match actual usage
 
 **Solution**:
+
 ```sql
 -- Recalculate usage counts
 UPDATE tags t

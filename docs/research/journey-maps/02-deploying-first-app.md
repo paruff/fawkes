@@ -30,6 +30,7 @@
 ### Stage 1: Pre-Deployment Planning (Day before, 1 hour)
 
 **Actions**:
+
 1. Reviews "Deployment Checklist" from Confluence
 2. Discusses deployment plan with tech lead in standup
 3. Checks if all dependencies (database, message queue) are ready
@@ -39,6 +40,7 @@
 7. Posts deployment plan in team Mattermost channel
 
 **Thoughts**:
+
 - "What if I miss something critical?"
 - "Is 2 hours enough time?"
 - "Should I deploy during standup so team is available?"
@@ -47,6 +49,7 @@
 **Emotions**: Anxious 😟 (Intensity: 3/5)
 
 **Pain Points**:
+
 - Deployment checklist is generic (not service-specific)
 - Unclear exactly what needs to be prepared
 - No automated validation of readiness
@@ -54,6 +57,7 @@
 - Deployment windows are self-imposed (no guidance)
 
 **Opportunities**:
+
 - Automated pre-deployment readiness check
 - Service-specific deployment checklist generation
 - One-click rollback capability
@@ -61,6 +65,7 @@
 - Deployment plan template with risk assessment
 
 **Touchpoints**:
+
 - Confluence (checklist and runbook)
 - Mattermost (team communication)
 - Standup (verbal discussion)
@@ -71,6 +76,7 @@
 ### Stage 2: Creating Service Manifests (2-3 hours)
 
 **Actions**:
+
 1. Searches for "how to create new service" in docs
 2. Finds example service repo to copy from
 3. Creates new repo from template (or copies structure manually)
@@ -85,6 +91,7 @@
 12. Makes several trial-and-error attempts to get YAML syntax right
 
 **Thoughts**:
+
 - "There must be a generator for this"
 - "How much memory does this service actually need?"
 - "Am I following the same conventions as everyone else?"
@@ -94,6 +101,7 @@
 **Emotions**: Frustrated 😟 (Intensity: 4/5)
 
 **Pain Points**:
+
 - No service scaffolding tool (manual YAML creation)
 - Copy-paste from other services is brittle and error-prone
 - Resource sizing is guesswork (no recommendations)
@@ -103,6 +111,7 @@
 - Security best practices not encoded in templates
 
 **Opportunities**:
+
 - Service creation wizard in Backstage
 - Golden path templates for common service types
 - Resource recommendation engine based on similar services
@@ -112,6 +121,7 @@
 - Interactive CLI tool (like `create-react-app`)
 
 **Touchpoints**:
+
 - Documentation (searching for examples)
 - GitHub (template repos)
 - Text editor (YAML authoring)
@@ -123,6 +133,7 @@
 ### Stage 3: Initial Deployment to Dev (1 hour)
 
 **Actions**:
+
 1. Commits manifests to feature branch
 2. Creates PR for review
 3. CI pipeline runs - linting passes
@@ -140,6 +151,7 @@
 15. Tests endpoints with curl - works!
 
 **Thoughts**:
+
 - "Why are there so many ways this can fail?"
 - "What does 'ImagePullBackOff' mean?"
 - "Where are the logs?"
@@ -149,6 +161,7 @@
 **Emotions**: Stressed → Relieved 😟 → 😊 (Intensity: 5/5 → 2/5)
 
 **Pain Points**:
+
 - Cryptic Kubernetes error messages
 - Multiple failure modes (image pull, startup, config)
 - Trial and error debugging cycle
@@ -157,6 +170,7 @@
 - Each fix requires full commit + deploy cycle
 
 **Opportunities**:
+
 - Plain-English error explanations with troubleshooting steps
 - Real-time deployment status dashboard
 - Integrated log viewer in Backstage
@@ -165,6 +179,7 @@
 - Deployment notification with status updates
 
 **Touchpoints**:
+
 - GitHub (code commits)
 - CI pipeline (validation)
 - ArgoCD (sync status)
@@ -176,6 +191,7 @@
 ### Stage 4: Testing in Staging (1 hour)
 
 **Actions**:
+
 1. Promotes changes to staging branch/environment
 2. ArgoCD syncs staging environment
 3. Service deploys successfully (lessons learned from dev)
@@ -189,6 +205,7 @@
 11. Gets approval from tech lead to proceed to production
 
 **Thoughts**:
+
 - "Staging should be exactly like production, but is it?"
 - "Are these test failures real or environmental?"
 - "What if production has different issues?"
@@ -197,6 +214,7 @@
 **Emotions**: Cautious 😐 (Intensity: 3/5)
 
 **Pain Points**:
+
 - Configuration drift between environments
 - Manual testing is time-consuming
 - Unclear what "ready for production" means
@@ -205,6 +223,7 @@
 - Approval process is manual (Slack messages)
 
 **Opportunities**:
+
 - Automated smoke tests run after deployment
 - Environment parity validation
 - Clear deployment gates with automated checks
@@ -213,6 +232,7 @@
 - Deployment approval workflow in Backstage
 
 **Touchpoints**:
+
 - ArgoCD (staging deployment)
 - Test suite (integration tests)
 - Postman (manual testing)
@@ -224,6 +244,7 @@
 ### Stage 5: Production Deployment (2-3 hours including monitoring)
 
 **Actions**:
+
 1. Final review of production manifests
 2. Posts in team channel: "Starting production deployment"
 3. Merges staging changes to production branch
@@ -243,6 +264,7 @@
 17. Updates deployment log in Confluence
 
 **Thoughts**:
+
 - "Please don't break production"
 - "Is that error spike normal?"
 - "How long should I keep watching?"
@@ -252,6 +274,7 @@
 **Emotions**: Anxious → Relieved 😟 → 😊 (Intensity: 4/5 → 1/5)
 
 **Pain Points**:
+
 - All-or-nothing deployment (no gradual rollout)
 - Manual traffic shifting
 - Unclear when to stop monitoring
@@ -260,6 +283,7 @@
 - Manual status updates to team
 
 **Opportunities**:
+
 - Canary deployments with automatic traffic shifting
 - Automated rollback if error rate exceeds threshold
 - Clear "deployment complete and healthy" signal
@@ -268,6 +292,7 @@
 - Deployment health scorecard
 
 **Touchpoints**:
+
 - GitHub (production branch merge)
 - ArgoCD (deployment orchestration)
 - kubectl (status checking)
@@ -280,6 +305,7 @@
 ### Stage 6: Post-Deployment Monitoring (Next day, 30 minutes)
 
 **Actions**:
+
 1. Checks metrics first thing in the morning
 2. Reviews overnight logs for any errors
 3. Validates business metrics (emails/SMS sent successfully)
@@ -290,6 +316,7 @@
 8. Adds notes to deployment runbook (lessons learned)
 
 **Thoughts**:
+
 - "Did everything stay healthy overnight?"
 - "Any surprises in production traffic?"
 - "What did I learn for next time?"
@@ -298,6 +325,7 @@
 **Emotions**: Satisfied 😊 (Intensity: 1/5)
 
 **Pain Points**:
+
 - Manual overnight monitoring required
 - No proactive "all clear" notification
 - Business metrics in different system from technical metrics
@@ -305,6 +333,7 @@
 - Lessons learned don't automatically improve process
 
 **Opportunities**:
+
 - Automated 24-hour deployment health report
 - Proactive notification when deployment is fully validated
 - Unified dashboard (technical + business metrics)
@@ -313,6 +342,7 @@
 - Post-deployment retrospective template
 
 **Touchpoints**:
+
 - Grafana (metrics review)
 - Logs (error checking)
 - Business dashboard (business metrics)
@@ -475,6 +505,7 @@ graph LR
 ### Validation with Personas
 
 This journey map aligns with:
+
 - **Application Developer persona** (Maria Rodriguez): Matches documented pain points around deployment complexity and unclear capabilities
 - **Platform Developer persona** (Alex Chen): Supports goal of enabling self-service and reducing support requests
 
@@ -483,6 +514,7 @@ This journey map aligns with:
 ## 7. Improvement Roadmap
 
 ### Phase 1 (Month 1) - Quick Wins
+
 - [ ] Create service template repository with examples
 - [ ] Improve Kubernetes error messages (custom error catalog)
 - [ ] Add pre-deployment validation to CI pipeline
@@ -491,6 +523,7 @@ This journey map aligns with:
 - [ ] Document resource sizing guidelines
 
 ### Phase 2 (Month 2-3) - Enhanced Experience
+
 - [ ] Build service creation CLI tool
 - [ ] Implement automated smoke tests
 - [ ] Create integrated log viewer in Backstage
@@ -499,6 +532,7 @@ This journey map aligns with:
 - [ ] Create deployment runbook templates
 
 ### Phase 3 (Month 4-6) - Strategic Improvements
+
 - [ ] Build service scaffolding wizard in Backstage
 - [ ] Implement canary deployments
 - [ ] Create resource recommendation engine

@@ -11,12 +11,12 @@ Continuous Delivery (CD) is a software development practice where code changes a
 
 ## Core Principles
 
-| Principle | Description | Implementation |
-|-----------|-------------|----------------|
+| Principle                                                                       | Description                                     | Implementation                  |
+| ------------------------------------------------------------------------------- | ----------------------------------------------- | ------------------------------- |
 | ![](../assets/images/icons/trunk.png){ width="24" } **Trunk-Based Development** | Work in small batches with short-lived branches | Git workflow with feature flags |
-| ![](../assets/images/icons/automation.png){ width="24" } **Automation** | Automate build, test, and deployment processes | Jenkins, GitHub Actions |
-| ![](../assets/images/icons/testing.png){ width="24" } **Comprehensive Testing** | Implement automated testing at all levels | Selenium, JUnit, Cypress |
-| ![](../assets/images/icons/gitops.png){ width="24" } **GitOps** | Use Git as single source of truth | ArgoCD, Flux |
+| ![](../assets/images/icons/automation.png){ width="24" } **Automation**         | Automate build, test, and deployment processes  | Jenkins, GitHub Actions         |
+| ![](../assets/images/icons/testing.png){ width="24" } **Comprehensive Testing** | Implement automated testing at all levels       | Selenium, JUnit, Cypress        |
+| ![](../assets/images/icons/gitops.png){ width="24" } **GitOps**                 | Use Git as single source of truth               | ArgoCD, Flux                    |
 
 ## Implementation Guide
 
@@ -36,29 +36,29 @@ git push origin feature/small-change
 ```yaml
 # Example Jenkins Pipeline
 pipeline {
-    agent any
-    stages {
-        stage('Build') {
-            steps {
-                sh 'make build'
-            }
-        }
-        stage('Test') {
-            parallel {
-                stage('Unit') {
-                    steps { sh 'make test-unit' }
-                }
-                stage('Integration') {
-                    steps { sh 'make test-integration' }
-                }
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'make deploy'
-            }
-        }
-    }
+agent any
+stages {
+stage('Build') {
+steps {
+sh 'make build'
+}
+}
+stage('Test') {
+parallel {
+stage('Unit') {
+steps { sh 'make test-unit' }
+}
+stage('Integration') {
+steps { sh 'make test-integration' }
+}
+}
+}
+stage('Deploy') {
+steps {
+sh 'make deploy'
+}
+}
+}
 }
 ```
 
@@ -78,26 +78,29 @@ public class FeatureFlags {
 
 Based on DORA research, track these metrics:
 
-| Metric | Elite Performance | Implementation |
-|--------|------------------|----------------|
-| Deployment Frequency | Multiple deploys per day | `deployment_frequency = deploys / time_period` |
-| Lead Time for Changes | Less than one hour | `lead_time = time_to_production - commit_time` |
-| Change Failure Rate | 0-15% | `failure_rate = failed_deploys / total_deploys` |
-| Time to Restore | Less than one hour | `mttr = restore_time - failure_time` |
+| Metric                | Elite Performance        | Implementation                                  |
+| --------------------- | ------------------------ | ----------------------------------------------- |
+| Deployment Frequency  | Multiple deploys per day | `deployment_frequency = deploys / time_period`  |
+| Lead Time for Changes | Less than one hour       | `lead_time = time_to_production - commit_time`  |
+| Change Failure Rate   | 0-15%                    | `failure_rate = failed_deploys / total_deploys` |
+| Time to Restore       | Less than one hour       | `mttr = restore_time - failure_time`            |
 
 ## Best Practices
 
 ### 1. Build Process
+
 - Use deterministic builds
 - Cache dependencies
 - Implement parallel processing
 
 ### 2. Testing Strategy
+
 - Maintain test pyramid
 - Automate all tests
 - Include security testing
 
 ### 3. Deployment Process
+
 ```yaml
 # Example ArgoCD Application
 apiVersion: argoproj.io/v1alpha1
@@ -117,12 +120,14 @@ spec:
 ## Common Anti-Patterns
 
 ❌ **Avoid These Practices:**
+
 - Long-lived feature branches
 - Manual deployment steps
 - Infrequent integration
 - Environment-specific builds
 
 ✅ **Instead Do This:**
+
 - Merge to trunk daily
 - Automate everything
 - Practice continuous integration
@@ -130,13 +135,13 @@ spec:
 
 ## Tools Integration
 
-| Category | Tools | Purpose |
-|----------|-------|---------|
-| CI/CD | Jenkins, GitHub Actions | Pipeline automation |
-| Version Control | Git | Source code management |
-| Testing | Selenium, JUnit | Automated testing |
-| Deployment | ArgoCD, Argo Rollouts | Deployment automation |
-| Monitoring | Prometheus, Grafana | Performance tracking |
+| Category        | Tools                   | Purpose                |
+| --------------- | ----------------------- | ---------------------- |
+| CI/CD           | Jenkins, GitHub Actions | Pipeline automation    |
+| Version Control | Git                     | Source code management |
+| Testing         | Selenium, JUnit         | Automated testing      |
+| Deployment      | ArgoCD, Argo Rollouts   | Deployment automation  |
+| Monitoring      | Prometheus, Grafana     | Performance tracking   |
 
 ## References
 

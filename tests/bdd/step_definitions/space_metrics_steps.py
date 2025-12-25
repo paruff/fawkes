@@ -36,9 +36,7 @@ def get_pod_name(core_api, namespace, label_selector, timeout=120):
     while time.time() < deadline:
         try:
             pods = core_api.list_namespaced_pod(
-                namespace=namespace,
-                label_selector=label_selector,
-                field_selector="status.phase=Running"
+                namespace=namespace, label_selector=label_selector, field_selector="status.phase=Running"
             )
             if pods.items:
                 pod_name = pods.items[0].metadata.name
@@ -105,11 +103,12 @@ def parse_table_to_dict(table):
 
 # Background steps
 
-@given('the SPACE metrics service is deployed')
+
+@given("the SPACE metrics service is deployed")
 def step_space_metrics_deployed(context):
     """Verify SPACE metrics service is deployed."""
     core_api, apps_api = load_kube_clients()
-    namespace = getattr(context, 'namespace', 'fawkes-local')
+    namespace = getattr(context, "namespace", "fawkes-local")
 
     context.namespace = namespace
     context.core_api = core_api
@@ -136,7 +135,7 @@ def step_space_metrics_deployed(context):
         raise
 
 
-@given('the database is initialized')
+@given("the database is initialized")
 def step_database_initialized(context):
     """Verify database connection is available."""
     # Check if database secret exists
@@ -154,7 +153,8 @@ def step_database_initialized(context):
 
 # Health check steps
 
-@when('I check the health endpoint')
+
+@when("I check the health endpoint")
 def step_check_health_endpoint(context):
     """Check the health endpoint of SPACE metrics service."""
     try:
@@ -178,20 +178,23 @@ def step_check_health_endpoint(context):
 def step_verify_status(context, status):
     """Verify the service status."""
     assert context.health_status_code == 200, f"Expected 200, got {context.health_status_code}"
-    assert context.health_response.get('status') == status, \
-        f"Expected status '{status}', got '{context.health_response.get('status')}'"
+    assert (
+        context.health_response.get("status") == status
+    ), f"Expected status '{status}', got '{context.health_response.get('status')}'"
 
 
 @then('the response should include service name "{service_name}"')
 def step_verify_service_name(context, service_name):
     """Verify the service name in response."""
-    assert context.health_response.get('service') == service_name, \
-        f"Expected service '{service_name}', got '{context.health_response.get('service')}'"
+    assert (
+        context.health_response.get("service") == service_name
+    ), f"Expected service '{service_name}', got '{context.health_response.get('service')}'"
 
 
 # SPACE dimensions steps
 
-@when('I request SPACE metrics')
+
+@when("I request SPACE metrics")
 def step_request_space_metrics(context):
     """Request all SPACE metrics."""
     try:
@@ -206,28 +209,29 @@ def step_request_space_metrics(context):
         context.space_metrics = {}
 
 
-@then('I should receive data for all 5 dimensions')
+@then("I should receive data for all 5 dimensions")
 def step_verify_all_dimensions(context):
     """Verify all 5 SPACE dimensions are present."""
     metrics = context.space_metrics
-    assert 'dimensions' in metrics or all(dim in metrics for dim in [
-        'satisfaction', 'performance', 'activity', 'communication', 'efficiency'
-    ]), "Not all SPACE dimensions are present"
+    assert "dimensions" in metrics or all(
+        dim in metrics for dim in ["satisfaction", "performance", "activity", "communication", "efficiency"]
+    ), "Not all SPACE dimensions are present"
 
 
 @then('the dimensions should include "{dimension}"')
 def step_verify_dimension_included(context, dimension):
     """Verify specific dimension is included."""
     metrics = context.space_metrics
-    if 'dimensions' in metrics:
-        assert dimension in metrics['dimensions'], f"Dimension '{dimension}' not found"
+    if "dimensions" in metrics:
+        assert dimension in metrics["dimensions"], f"Dimension '{dimension}' not found"
     else:
         assert dimension in metrics, f"Dimension '{dimension}' not found"
 
 
 # Individual dimension steps
 
-@when('I request {dimension} dimension metrics')
+
+@when("I request {dimension} dimension metrics")
 def step_request_dimension_metrics(context, dimension):
     """Request metrics for a specific dimension."""
     try:
@@ -243,7 +247,7 @@ def step_request_dimension_metrics(context, dimension):
         context.dimension_metrics = {}
 
 
-@then('I should receive {dimension} data')
+@then("I should receive {dimension} data")
 def step_verify_dimension_data(context, dimension):
     """Verify dimension data is received."""
     assert context.dimension_metrics, f"No data received for {dimension} dimension"
@@ -267,36 +271,37 @@ def step_verify_field_in_data(context, field):
             return any(find_field_recursive(item, target_field) for item in obj)
         return False
 
-    assert find_field_recursive(context.dimension_metrics, field), \
-        f"Field '{field}' not found in response"
+    assert find_field_recursive(context.dimension_metrics, field), f"Field '{field}' not found in response"
 
 
 # Survey integration steps
 
-@when('I submit a pulse survey response')
+
+@when("I submit a pulse survey response")
 def step_submit_pulse_survey(context):
     """Submit a pulse survey response."""
     try:
         pod_name = context.pod_name
 
         # Build survey data from table or use defaults
-        if hasattr(context, 'table') and context.table:
+        if hasattr(context, "table") and context.table:
             survey_data = parse_table_to_dict(context.table)
         else:
             # Default survey data
-            survey_data = {
-                "valuable_work_percentage": 70.0,
-                "flow_state_days": 3.0,
-                "cognitive_load": 3.0
-            }
+            survey_data = {"valuable_work_percentage": 70.0, "flow_state_days": 3.0, "cognitive_load": 3.0}
 
         # Execute POST request
         json_data = json.dumps(survey_data)
         command = [
-            "curl", "-s", "-X", "POST",
-            "-H", "Content-Type: application/json",
-            "-d", json_data,
-            "http://localhost:8000/api/v1/surveys/pulse/submit"
+            "curl",
+            "-s",
+            "-X",
+            "POST",
+            "-H",
+            "Content-Type: application/json",
+            "-d",
+            json_data,
+            "http://localhost:8000/api/v1/surveys/pulse/submit",
         ]
         output = exec_in_pod(context.core_api, context.namespace, pod_name, command)
 
@@ -307,25 +312,27 @@ def step_submit_pulse_survey(context):
         context.survey_response = {"status": "error", "message": str(e)}
 
 
-@then('the survey should be accepted')
+@then("the survey should be accepted")
 def step_verify_survey_accepted(context):
     """Verify survey was accepted."""
-    assert context.survey_response.get('status') in ['success', 'accepted'], \
-        f"Survey not accepted: {context.survey_response}"
+    assert context.survey_response.get("status") in [
+        "success",
+        "accepted",
+    ], f"Survey not accepted: {context.survey_response}"
 
 
-@then('I should receive a success confirmation')
+@then("I should receive a success confirmation")
 def step_verify_success_confirmation(context):
     """Verify success confirmation is received."""
     # Check for explicit success status
-    if context.survey_response.get('status') == 'success':
+    if context.survey_response.get("status") == "success":
         return
 
     # Check for common success indicators
-    success_indicators = ['status', 'result', 'message']
+    success_indicators = ["status", "result", "message"]
     for indicator in success_indicators:
         value = context.survey_response.get(indicator)
-        if value and 'success' in str(value).lower():
+        if value and "success" in str(value).lower():
             return
 
     # If no success found, fail with helpful message
@@ -334,30 +341,32 @@ def step_verify_success_confirmation(context):
 
 # Friction logging steps
 
-@when('I log a friction incident')
+
+@when("I log a friction incident")
 def step_log_friction_incident(context):
     """Log a friction incident."""
     try:
         pod_name = context.pod_name
 
         # Build friction data from table or use defaults
-        if hasattr(context, 'table') and context.table:
+        if hasattr(context, "table") and context.table:
             friction_data = parse_table_to_dict(context.table)
         else:
             # Default friction data
-            friction_data = {
-                "title": "Test friction",
-                "description": "Testing friction logging",
-                "severity": "low"
-            }
+            friction_data = {"title": "Test friction", "description": "Testing friction logging", "severity": "low"}
 
         # Execute POST request
         json_data = json.dumps(friction_data)
         command = [
-            "curl", "-s", "-X", "POST",
-            "-H", "Content-Type: application/json",
-            "-d", json_data,
-            "http://localhost:8000/api/v1/friction/log"
+            "curl",
+            "-s",
+            "-X",
+            "POST",
+            "-H",
+            "Content-Type: application/json",
+            "-d",
+            json_data,
+            "http://localhost:8000/api/v1/friction/log",
         ]
         output = exec_in_pod(context.core_api, context.namespace, pod_name, command)
 
@@ -368,16 +377,19 @@ def step_log_friction_incident(context):
         context.friction_response = {"status": "error", "message": str(e)}
 
 
-@then('the friction incident should be logged')
+@then("the friction incident should be logged")
 def step_verify_friction_logged(context):
     """Verify friction incident was logged."""
-    assert context.friction_response.get('status') in ['success', 'logged'], \
-        f"Friction not logged: {context.friction_response}"
+    assert context.friction_response.get("status") in [
+        "success",
+        "logged",
+    ], f"Friction not logged: {context.friction_response}"
 
 
 # DevEx health score steps
 
-@when('I request the DevEx health score')
+
+@when("I request the DevEx health score")
 def step_request_health_score(context):
     """Request the DevEx health score."""
     try:
@@ -392,24 +404,25 @@ def step_request_health_score(context):
         context.health_score_response = {}
 
 
-@then('I should receive a health score between {min_score:d} and {max_score:d}')
+@then("I should receive a health score between {min_score:d} and {max_score:d}")
 def step_verify_health_score_range(context, min_score, max_score):
     """Verify health score is in valid range."""
-    score = context.health_score_response.get('score', context.health_score_response.get('health_score', -1))
-    assert min_score <= score <= max_score, \
-        f"Health score {score} not in range [{min_score}, {max_score}]"
+    score = context.health_score_response.get("score", context.health_score_response.get("health_score", -1))
+    assert min_score <= score <= max_score, f"Health score {score} not in range [{min_score}, {max_score}]"
 
 
-@then('the response should include a status indicator')
+@then("the response should include a status indicator")
 def step_verify_status_indicator(context):
     """Verify status indicator is present."""
-    assert 'status' in context.health_score_response or 'indicator' in context.health_score_response, \
-        "No status indicator found in response"
+    assert (
+        "status" in context.health_score_response or "indicator" in context.health_score_response
+    ), "No status indicator found in response"
 
 
 # Prometheus metrics steps
 
-@when('I request Prometheus metrics')
+
+@when("I request Prometheus metrics")
 def step_request_prometheus_metrics(context):
     """Request Prometheus metrics."""
     try:
@@ -427,13 +440,13 @@ def step_request_prometheus_metrics(context):
 @then('the metrics should include "{metric_name}"')
 def step_verify_metric_included(context, metric_name):
     """Verify specific metric is included in Prometheus output."""
-    assert metric_name in context.prometheus_metrics, \
-        f"Metric '{metric_name}' not found in Prometheus output"
+    assert metric_name in context.prometheus_metrics, f"Metric '{metric_name}' not found in Prometheus output"
 
 
 # Privacy compliance steps
 
-@when('I request aggregated metrics')
+
+@when("I request aggregated metrics")
 def step_request_aggregated_metrics(context):
     """Request aggregated metrics."""
     try:
@@ -448,28 +461,24 @@ def step_request_aggregated_metrics(context):
         context.aggregated_metrics = ""
 
 
-@then('individual developer data should not be exposed')
+@then("individual developer data should not be exposed")
 def step_verify_no_individual_data(context):
     """Verify individual developer data is not exposed."""
     # Check for common individual identifiers
-    forbidden_fields = ['user_id', 'username', 'email', 'developer_name', 'developer_id']
+    forbidden_fields = ["user_id", "username", "email", "developer_name", "developer_id"]
     metrics_text = context.aggregated_metrics.lower()
 
     for field in forbidden_fields:
-        assert field not in metrics_text, \
-            f"Individual identifier '{field}' found in metrics response"
+        assert field not in metrics_text, f"Individual identifier '{field}' found in metrics response"
 
 
-@then('metrics should be aggregated for teams of {threshold:d}+ developers')
+@then("metrics should be aggregated for teams of {threshold:d}+ developers")
 def step_verify_aggregation_threshold(context, threshold):
     """Verify aggregation threshold is enforced."""
     try:
         # Check ConfigMap for aggregation threshold
-        configmap = context.core_api.read_namespaced_config_map(
-            "space-metrics-config",
-            context.namespace
-        )
-        threshold_value = configmap.data.get('aggregation-threshold', '0')
+        configmap = context.core_api.read_namespaced_config_map("space-metrics-config", context.namespace)
+        threshold_value = configmap.data.get("aggregation-threshold", "0")
 
         try:
             config_threshold = int(threshold_value)
@@ -478,25 +487,34 @@ def step_verify_aggregation_threshold(context, threshold):
                 f"Aggregation threshold configuration is invalid: '{threshold_value}' is not a valid integer"
             ) from e
 
-        assert config_threshold >= threshold, \
-            f"Aggregation threshold {config_threshold} is less than required {threshold}"
+        assert (
+            config_threshold >= threshold
+        ), f"Aggregation threshold {config_threshold} is less than required {threshold}"
         logger.info(f"Aggregation threshold verified: {config_threshold}")
     except client.exceptions.ApiException as e:
         logger.warning(f"Could not verify aggregation threshold: {e}")
         # Don't fail test if we can't check the config
 
 
-@then('no personal identifiers should be in the response')
+@then("no personal identifiers should be in the response")
 def step_verify_no_personal_identifiers(context):
     """Verify no personal identifiers in response."""
     # This is similar to the individual data check
     personal_identifiers = [
-        'user_id', 'userid', 'username', 'user_name',
-        'email', 'e-mail', 'developer_name', 'developername',
-        'developer_id', 'developerid', 'person_id', 'personid'
+        "user_id",
+        "userid",
+        "username",
+        "user_name",
+        "email",
+        "e-mail",
+        "developer_name",
+        "developername",
+        "developer_id",
+        "developerid",
+        "person_id",
+        "personid",
     ]
     metrics_text = context.aggregated_metrics.lower()
 
     for identifier in personal_identifiers:
-        assert identifier not in metrics_text, \
-            f"Personal identifier '{identifier}' found in response"
+        assert identifier not in metrics_text, f"Personal identifier '{identifier}' found in response"

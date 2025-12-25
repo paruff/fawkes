@@ -30,6 +30,7 @@
 ### Stage 1: Alert Reception & Initial Assessment (5 minutes)
 
 **Actions**:
+
 1. Alert notification arrives in Mattermost
 2. Alert message shows: "High Error Rate: payment-service"
 3. Clicks on Grafana dashboard link in alert
@@ -40,6 +41,7 @@
 8. Classifies as Severity 2 (customer-impacting, not total outage)
 
 **Thoughts**:
+
 - "What changed recently?"
 - "Is this customer-facing or internal?"
 - "Do I need to escalate immediately?"
@@ -48,6 +50,7 @@
 **Emotions**: Alarmed 😟 (Intensity: 4/5)
 
 **Pain Points**:
+
 - Alert lacks context (which endpoints? which errors? since when?)
 - Not immediately clear if it's customer-facing
 - Manual incident creation and classification
@@ -55,6 +58,7 @@
 - No automatic correlation with recent deployments
 
 **Opportunities**:
+
 - Rich alert context (affected endpoints, error types, timeline)
 - Automatic severity classification based on customer impact
 - Auto-created incident with pre-filled details
@@ -62,6 +66,7 @@
 - Suggested runbooks based on alert type
 
 **Touchpoints**:
+
 - Mattermost (alert notification)
 - Grafana (dashboard)
 - Incident management system
@@ -72,6 +77,7 @@
 ### Stage 2: Finding Relevant Logs (15 minutes)
 
 **Actions**:
+
 1. Opens Kibana (log aggregation system)
 2. Searches for "payment-service" - gets 100,000+ results
 3. Adds time filter (last 30 minutes) - still 10,000+ results
@@ -85,6 +91,7 @@
 11. Asks platform team for help finding specific traces
 
 **Thoughts**:
+
 - "There's too much noise in the logs"
 - "Are these errors related or separate issues?"
 - "Why are the timestamps in different formats?"
@@ -94,6 +101,7 @@
 **Emotions**: Frustrated 😟 (Intensity: 5/5)
 
 **Pain Points**:
+
 - Log searching is manual and time-consuming
 - Too much log noise (no filtering for relevant entries)
 - Multiple log sources (application, infrastructure, dependencies)
@@ -102,6 +110,7 @@
 - Error messages don't provide enough context
 
 **Opportunities**:
+
 - Integrated log viewer with smart filtering
 - Automatic correlation of related logs across services
 - Distributed tracing with trace IDs in all logs
@@ -110,6 +119,7 @@
 - Structured logging with consistent formats
 
 **Touchpoints**:
+
 - Kibana (log search)
 - Multiple service logs
 - Platform team (asking for help)
@@ -120,6 +130,7 @@
 ### Stage 3: Root Cause Analysis (20 minutes)
 
 **Actions**:
+
 1. With help, finds trace IDs in logs
 2. Opens Jaeger (distributed tracing)
 3. Searches for failing traces
@@ -133,6 +144,7 @@
 11. Confirms root cause: connection pool exhaustion
 
 **Thoughts**:
+
 - "Finally, I'm getting somewhere"
 - "Why didn't I see this earlier?"
 - "How do I fix this quickly?"
@@ -141,6 +153,7 @@
 **Emotions**: Focused → Relieved 😐 → 😊 (Intensity: 4/5 → 2/5)
 
 **Pain Points**:
+
 - Had to use 3 different tools (Kibana, Grafana, Jaeger)
 - Manual correlation between tools
 - No automatic root cause suggestions
@@ -149,6 +162,7 @@
 - Platform team assistance required
 
 **Opportunities**:
+
 - Unified observability view (metrics, logs, traces)
 - Automatic root cause analysis suggestions
 - Show recent deployments/changes in incident view
@@ -157,6 +171,7 @@
 - Anomaly detection (flag unusual patterns automatically)
 
 **Touchpoints**:
+
 - Jaeger (distributed tracing)
 - Grafana (metrics correlation)
 - Kibana (log analysis)
@@ -168,6 +183,7 @@
 ### Stage 4: Implementing Fix (30 minutes)
 
 **Actions**:
+
 1. Identifies two options: rollback or quick fix
 2. Decides on quick fix (increase connection pool size)
 3. Updates service configuration (environment variable)
@@ -182,6 +198,7 @@
 12. Declares incident resolved
 
 **Thoughts**:
+
 - "Should I rollback or fix forward?"
 - "Is this safe to deploy without full review?"
 - "How fast can I get this to production?"
@@ -191,6 +208,7 @@
 **Emotions**: Stressed → Relieved 😟 → 😊 (Intensity: 5/5 → 1/5)
 
 **Pain Points**:
+
 - Unclear rollback vs. fix-forward decision criteria
 - Manual configuration changes
 - No fast-track deployment process for incidents
@@ -199,6 +217,7 @@
 - No automated verification of fix
 
 **Opportunities**:
+
 - Incident response mode with fast-track deployment
 - Configuration hot-reload without full restart
 - Automatic rollback if fix doesn't work
@@ -207,6 +226,7 @@
 - A/B testing fix on subset of traffic first
 
 **Touchpoints**:
+
 - Configuration files (service config)
 - GitHub (PR creation)
 - CI pipeline (testing)
@@ -218,6 +238,7 @@
 ### Stage 5: Verification & Communication (15 minutes)
 
 **Actions**:
+
 1. Continues monitoring for 10 more minutes
 2. Verifies error rate stays at baseline
 3. Checks latency - back to normal
@@ -229,6 +250,7 @@
 9. Schedules post-incident review for tomorrow
 
 **Thoughts**:
+
 - "How long should I keep watching?"
 - "Are we sure it's fixed?"
 - "Who needs to know about this?"
@@ -237,6 +259,7 @@
 **Emotions**: Cautious → Satisfied 😐 → 😊 (Intensity: 2/5 → 1/5)
 
 **Pain Points**:
+
 - Unclear when to declare incident resolved
 - Manual status updates to multiple channels
 - No template for incident communication
@@ -244,6 +267,7 @@
 - Post-incident review scheduling is manual
 
 **Opportunities**:
+
 - Automatic "all clear" notification after stability period
 - Incident status broadcasts to all stakeholders
 - Communication templates for different severity levels
@@ -252,6 +276,7 @@
 - Customer impact assessment
 
 **Touchpoints**:
+
 - Grafana (continued monitoring)
 - Mattermost (team and stakeholder updates)
 - Incident management system (documentation)
@@ -262,6 +287,7 @@
 ### Stage 6: Post-Incident Review (Next day, 1 hour)
 
 **Actions**:
+
 1. Team meets for post-incident review
 2. Reviews incident timeline
 3. Discusses what went well:
@@ -280,6 +306,7 @@
 7. Shares with broader engineering team
 
 **Thoughts**:
+
 - "How do we prevent this next time?"
 - "What systemic issues did this reveal?"
 - "Are we learning from our incidents?"
@@ -287,6 +314,7 @@
 **Emotions**: Reflective 😐 (Intensity: 2/5)
 
 **Pain Points**:
+
 - Manual incident timeline reconstruction
 - Action items often don't get completed
 - Learnings stay within team (not shared broadly)
@@ -294,6 +322,7 @@
 - Post-incident reviews scheduled manually
 
 **Opportunities**:
+
 - Auto-generated incident timeline
 - Action item tracking with accountability
 - Incident knowledge base (searchable)
@@ -302,6 +331,7 @@
 - Share learnings platform-wide
 
 **Touchpoints**:
+
 - Zoom/meeting room (review session)
 - Incident management system (documentation)
 - Confluence (retrospective documentation)
@@ -456,6 +486,7 @@ graph LR
 ### Validation with Personas
 
 This journey map aligns with:
+
 - **Application Developer persona** (Maria Rodriguez): Matches pain point about difficult production troubleshooting
 - **Platform Developer persona** (Alex Chen): Matches pain points about observability gaps and alert fatigue
 
@@ -464,6 +495,7 @@ This journey map aligns with:
 ## 7. Improvement Roadmap
 
 ### Phase 1 (Month 1) - Quick Wins
+
 - [ ] Enhance alert context (add affected components, error samples)
 - [ ] Create incident runbook templates
 - [ ] Add trace IDs to all service logs
@@ -472,6 +504,7 @@ This journey map aligns with:
 - [ ] Set up incident communication templates
 
 ### Phase 2 (Month 2-3) - Enhanced Experience
+
 - [ ] Build unified observability view in Backstage
 - [ ] Implement automatic log correlation
 - [ ] Create service dependency visualization
@@ -480,6 +513,7 @@ This journey map aligns with:
 - [ ] Add similar incident detection
 
 ### Phase 3 (Month 4-6) - Strategic Improvements
+
 - [ ] Implement AIOps root cause analysis
 - [ ] Build incident response mode with fast-track
 - [ ] Create predictive alerting

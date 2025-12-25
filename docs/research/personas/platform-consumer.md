@@ -26,6 +26,7 @@
 **Reporting Structure**: Reports to Director of Product, cross-functional team leadership
 
 **Key Responsibilities**:
+
 - Define product roadmap and prioritize features based on business value
 - Collaborate with engineering, design, and business stakeholders
 - Track product metrics and KPIs (user engagement, revenue impact, adoption)
@@ -33,6 +34,7 @@
 - Make data-driven decisions about product investments
 
 **Time Allocation**:
+
 - 35% on strategy and roadmap planning
 - 25% on stakeholder communication and alignment
 - 20% on data analysis and metrics review
@@ -44,6 +46,7 @@
 ### Goals and Motivations
 
 **Primary Goals**:
+
 1. Deliver features that drive measurable business outcomes (revenue, user engagement)
 2. Reduce time-to-market for new capabilities (from idea to production in 6 weeks or less)
 3. Maintain visibility into development progress and platform health
@@ -51,6 +54,7 @@
 5. Demonstrate ROI of platform investments to leadership
 
 **Success Metrics**:
+
 - Feature adoption rates (target: >60% within 3 months)
 - Time from ideation to production deployment
 - Platform uptime and reliability (user-facing)
@@ -58,11 +62,13 @@
 - Business KPIs (revenue, user engagement, cost savings)
 
 **Motivations**:
+
 - **Professional**: Wants to build products users love and that drive business growth
 - **Personal**: Enjoys solving complex problems at the intersection of technology and business
 - **Team**: Values transparent communication and data-driven decision making
 
 **What drives them at work**:
+
 > "I need to balance what users want, what the business needs, and what engineering can deliver. The platform should empower us to move fast without sacrificing quality or visibility."
 
 ---
@@ -72,12 +78,14 @@
 **Major Pain Points**:
 
 1. **Limited Visibility into Engineering Progress**
+
    - **Description**: Difficult to understand actual development status, blockers, and delivery timelines without attending multiple standups
    - **Impact**: Can't accurately communicate to stakeholders, late surprises on delays, difficulty prioritizing
    - **Frequency**: Daily - relies on Jira updates that are often outdated or incomplete
    - **Current Workaround**: Attend multiple standups, send frequent Slack messages, manual status reports
 
 2. **Lack of Product Usage Analytics**
+
    - **Description**: Can't easily measure feature adoption, user engagement, or identify underutilized capabilities
    - **Impact**: Difficult to justify platform investments, can't data-drive roadmap, miss optimization opportunities
    - **Frequency**: Monthly when preparing leadership reviews
@@ -90,6 +98,7 @@
    - **Current Workaround**: Prioritize ruthlessly, sometimes build workarounds outside the platform
 
 **Frustrations**:
+
 - Difficulty translating technical platform metrics into business value
 - Limited self-service access to platform insights and analytics
 - Disconnected tools requiring context switching (Jira, Confluence, Grafana, Backstage)
@@ -101,6 +110,7 @@
 ### Tools and Workflows
 
 **Primary Tools**:
+
 - **Product Management**: Jira, Confluence, Miro (for roadmapping)
 - **Analytics**: Google Analytics, Mixpanel, custom dashboards
 - **Communication**: Slack/Mattermost, Zoom, Email
@@ -109,6 +119,7 @@
 - **Platform Visibility**: Backstage (occasionally), Grafana (when needed)
 
 **Typical Daily Workflow**:
+
 1. **8:30 AM** - Review overnight metrics, check for incidents or anomalies
 2. **9:00 AM** - Standup with engineering team, unblock issues
 3. **10:00 AM** - Review PRs and feature specifications for upcoming work
@@ -121,6 +132,7 @@
 10. **5:00 PM** - Prepare for next day, review action items
 
 **Platform Interaction Points**:
+
 - Checks Backstage weekly to understand service catalog and dependencies
 - Reviews DORA metrics monthly for leadership presentations
 - Accesses Grafana dashboards when investigating user-reported issues
@@ -133,6 +145,7 @@
 **Overall Technical Proficiency**: Beginner to Intermediate (Technical PM background)
 
 **Specific Skills**:
+
 - **Programming Languages**: Basic understanding of code concepts, can read simple Python/JavaScript
 - **Cloud Platforms**: Understands AWS/Azure concepts at high level, not hands-on
 - **Containers & Orchestration**: Knows what Kubernetes is, understands container benefits, not operational
@@ -161,6 +174,7 @@
 ### Behaviors and Preferences
 
 **Communication Preferences**:
+
 - Prefers visual dashboards and executive summaries over detailed technical reports
 - Likes async updates (Slack, Confluence) but appreciates face-time for complex discussions
 - Documentation style: Executive summaries with drill-down capability for details
@@ -177,6 +191,7 @@
 ### Needs from the Platform
 
 **Must Have**:
+
 1. Real-time visibility into feature deployment status and health
 2. Product usage analytics and adoption metrics
 3. Clear understanding of platform capabilities and roadmap
@@ -184,6 +199,7 @@
 5. Ability to communicate platform value to non-technical stakeholders
 
 **Should Have**:
+
 1. Integration between product metrics and platform metrics
 2. Automated alerting for user-impacting issues
 3. Cost visibility and optimization insights
@@ -191,6 +207,7 @@
 5. User feedback collection integrated into platform
 
 **Nice to Have**:
+
 1. AI-powered insights and recommendations
 2. Predictive analytics for capacity planning
 3. Competitive benchmarking (DORA metrics vs. industry)

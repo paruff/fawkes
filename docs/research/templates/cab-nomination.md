@@ -26,6 +26,7 @@
 [e.g., 6 months]
 
 **Deployment Stage**:
+
 - [ ] Production
 - [ ] Staging/Pre-production
 - [ ] Development/POC
@@ -35,19 +36,21 @@
 [e.g., Multi-team platform engineering, DORA metrics tracking, GitOps deployment]
 
 **Fawkes Components Used** (check all that apply):
+
 - [ ] Backstage (Developer Portal)
 - [ ] ArgoCD (GitOps)
 - [ ] Jenkins (CI/CD)
 - [ ] Observability Stack (Prometheus, Grafana, Tempo)
 - [ ] Security Scanning (SonarQube, Trivy)
 - [ ] Vault (Secrets Management)
-- [ ] Other: _______________
+- [ ] Other: **\*\***\_\_\_**\*\***
 
 ---
 
 ## Background and Qualifications
 
 **Organization Size**:
+
 - [ ] Startup (1-50 employees)
 - [ ] Small (51-200 employees)
 - [ ] Medium (201-1000 employees)
@@ -67,26 +70,28 @@
 [e.g., 7 years]
 
 **Relevant Experience** (check all that apply):
+
 - [ ] Platform Engineering
 - [ ] DevOps Leadership
 - [ ] Site Reliability Engineering
 - [ ] Infrastructure Engineering
 - [ ] Developer Experience
 - [ ] Engineering Management
-- [ ] Other: _______________
+- [ ] Other: **\*\***\_\_\_**\*\***
 
 ---
 
 ## Community Involvement
 
 **Current Fawkes Community Participation** (check all that apply):
+
 - [ ] GitHub Issues (opened or commented)
 - [ ] GitHub Discussions participation
 - [ ] Pull Requests contributed
 - [ ] Mattermost participation
 - [ ] Documentation contributions
 - [ ] New user - minimal participation so far
-- [ ] Other: _______________
+- [ ] Other: **\*\***\_\_\_**\*\***
 
 **Examples of Participation** (optional):
 [Links to issues, PRs, discussions, or brief description]
@@ -102,6 +107,7 @@
 [e.g., Specific industry vertical, unique use case, organization size, geographic region, technical expertise]
 
 **Specific areas where you'd like to provide input** (check all that apply):
+
 - [ ] Platform architecture and design
 - [ ] Developer experience and self-service capabilities
 - [ ] DORA metrics and observability
@@ -110,9 +116,10 @@
 - [ ] Documentation and learning resources
 - [ ] Community building
 - [ ] Enterprise adoption
-- [ ] Specific technical domain: _______________
+- [ ] Specific technical domain: **\*\***\_\_\_**\*\***
 
 **Can you commit to the quarterly time requirement (4-6 hours per quarter)?**
+
 - [ ] Yes
 - [ ] No
 - [ ] Need more information
@@ -122,6 +129,7 @@
 ## Availability
 
 **Preferred Meeting Times** (for quarterly calls):
+
 - [ ] US Morning (9-11 AM ET)
 - [ ] US Afternoon (2-4 PM ET)
 - [ ] Europe Morning (9-11 AM CET)
@@ -150,20 +158,23 @@
 ## References
 
 **Can we contact you for a 30-minute intro call if we'd like to learn more?**
+
 - [ ] Yes
 - [ ] No
 
 **Preferred Contact Method**:
+
 - [ ] GitHub (mention @username)
-- [ ] Email: _______________
-- [ ] Mattermost: _______________
-- [ ] LinkedIn: _______________
+- [ ] Email: **\*\***\_\_\_**\*\***
+- [ ] Mattermost: **\*\***\_\_\_**\*\***
+- [ ] LinkedIn: **\*\***\_\_\_**\*\***
 
 ---
 
 ## Agreement
 
 By submitting this nomination, I/the nominee:
+
 - [ ] Acknowledge the time commitment of 4-6 hours per quarter
 - [ ] Agree to keep pre-release information confidential when applicable
 - [ ] Understand there is no monetary compensation
@@ -181,10 +192,11 @@ By submitting this nomination, I/the nominee:
 **Reviewer**:
 
 **Status**:
+
 - [ ] Under Review
 - [ ] Interview Scheduled
 - [ ] Approved - Onboarding
-- [ ] Not Selected - Reason: _______________
+- [ ] Not Selected - Reason: **\*\***\_\_\_**\*\***
 - [ ] Waitlist
 
 **Notes**:

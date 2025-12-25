@@ -30,6 +30,7 @@
 ### Stage 1: Contribution Idea Formation (1 week)
 
 **Actions**:
+
 1. Identifies pattern used across multiple services
 2. Discusses with teammates - they think it would be valuable
 3. Mentions idea in team retrospective
@@ -42,6 +43,7 @@
 10. Platform team responds enthusiastically: "Yes! We'd love contributions"
 
 **Thoughts**:
+
 - "Is this good enough to share?"
 - "Will the platform team want this?"
 - "Is there a process I should follow?"
@@ -51,6 +53,7 @@
 **Emotions**: Uncertain → Encouraged 😐 → 😊 (Intensity: 3/5 → 2/5)
 
 **Pain Points**:
+
 - Unclear what types of contributions are welcome
 - CONTRIBUTING.md focuses on code, not templates/docs
 - Don't know if idea is valuable before investing time
@@ -59,6 +62,7 @@
 - Uncertain about permissions and access
 
 **Opportunities**:
+
 - Contribution ideas board (see what others are working on)
 - "Good first contribution" guidance
 - Contribution proposal template
@@ -68,6 +72,7 @@
 - Contributor onboarding guide
 
 **Touchpoints**:
+
 - Team discussion (idea validation)
 - GitHub CONTRIBUTING.md (process search)
 - Mattermost (asking for permission)
@@ -78,6 +83,7 @@
 ### Stage 2: Preparing the Contribution (1 week, ~8 hours)
 
 **Actions**:
+
 1. Forks platform template repository
 2. Cleans up template code (removes app-specific logic)
 3. Adds parameterization for common values
@@ -90,6 +96,7 @@
 10. Prepares to submit PR
 
 **Thoughts**:
+
 - "Is this clean enough?"
 - "What level of documentation is expected?"
 - "Should I include tests?"
@@ -99,6 +106,7 @@
 **Emotions**: Focused → Nervous 😐 → 😟 (Intensity: 2/5 → 3/5)
 
 **Pain Points**:
+
 - No contribution checklist or quality bar
 - Unclear what documentation is expected
 - Don't know if template structure matches conventions
@@ -107,6 +115,7 @@
 - Fear of rejection or criticism
 
 **Opportunities**:
+
 - Contribution quality checklist
 - Template contribution guide
 - Automated validation (linting, structure check)
@@ -116,6 +125,7 @@
 - Supportive community culture
 
 **Touchpoints**:
+
 - GitHub (forking, coding)
 - Local development (testing)
 - Colleague (peer review)
@@ -126,6 +136,7 @@
 ### Stage 3: Submitting Pull Request (30 minutes)
 
 **Actions**:
+
 1. Creates PR against main branch
 2. Fills out PR template
 3. Describes purpose: "Add REST API microservice template"
@@ -138,6 +149,7 @@
 10. Gets auto-response from CI: some checks running
 
 **Thoughts**:
+
 - "Did I fill out the template correctly?"
 - "Who will review this?"
 - "How long will this take?"
@@ -146,6 +158,7 @@
 **Emotions**: Nervous 😟 (Intensity: 3/5)
 
 **Pain Points**:
+
 - PR template is generic (not specific to contribution type)
 - Unclear who will review or how long it takes
 - Don't know what CI checks are running
@@ -153,6 +166,7 @@
 - Uncertain about next steps
 
 **Opportunities**:
+
 - Contribution-specific PR templates
 - Automatic reviewer assignment based on contribution type
 - Expected review time ranges
@@ -161,6 +175,7 @@
 - Clear review criteria published
 
 **Touchpoints**:
+
 - GitHub (PR creation)
 - CI pipeline (automated checks)
 - Mattermost (notification to team)
@@ -171,6 +186,7 @@
 ### Stage 4: Review and Iteration (1 week)
 
 **Actions**:
+
 1. Platform team member reviews after 2 days
 2. Leaves positive comment: "Great idea! Some suggestions..."
 3. Requests changes:
@@ -189,6 +205,7 @@
 12. Gets approval! 🎉
 
 **Thoughts**:
+
 - "These are good suggestions"
 - "Wish some of this was in documentation upfront"
 - "They're being really helpful and supportive"
@@ -198,6 +215,7 @@
 **Emotions**: Nervous → Learning → Proud 😟 → 😐 → 😊 (Intensity: 3/5 → 2/5 → 1/5)
 
 **Pain Points**:
+
 - Some review feedback assumes knowledge not documented
 - Multiple review rounds (could some be caught earlier?)
 - Context switching (working on other tasks between reviews)
@@ -205,6 +223,7 @@
 - Uncertainty about whether approved means ready to merge
 
 **Opportunities**:
+
 - Automated checks for common review feedback
 - Contribution guide with all requirements upfront
 - Pair contribution sessions (live coding with platform team)
@@ -213,6 +232,7 @@
 - Learning resources linked in reviews
 
 **Touchpoints**:
+
 - GitHub (review comments, code changes)
 - CI pipeline (automated validation)
 - Documentation (researching requirements)
@@ -223,6 +243,7 @@
 ### Stage 5: Merge and Documentation (2 days)
 
 **Actions**:
+
 1. Platform team merges PR
 2. PR gets merged into main branch
 3. Maria's contribution is live! 🎉
@@ -237,6 +258,7 @@
 9. Maria receives GitHub contributor badge
 
 **Thoughts**:
+
 - "My code is in the platform!"
 - "Other teams will use this!"
 - "This was a great experience"
@@ -245,12 +267,14 @@
 **Emotions**: Proud 😊 (Intensity: 1/5)
 
 **Pain Points**:
+
 - Not immediately clear that contribution is live
 - Manual addition to template catalog
 - No automatic notification to potential users
 - Recognition was offered but not automatic
 
 **Opportunities**:
+
 - Automatic contributor recognition
 - Automatic template catalog update
 - New contribution announcement
@@ -259,6 +283,7 @@
 - Gamification (badges, levels)
 
 **Touchpoints**:
+
 - GitHub (merge notification)
 - Backstage (template catalog)
 - Mattermost (announcement)
@@ -269,6 +294,7 @@
 ### Stage 6: Post-Contribution Engagement (Ongoing)
 
 **Actions**:
+
 1. Other teams start using the template
 2. Receives questions in Mattermost about usage
 3. Helps teams troubleshoot
@@ -281,6 +307,7 @@
 10. Feels like valued member of platform community
 
 **Thoughts**:
+
 - "People are actually using this!"
 - "Glad I can help others succeed"
 - "I understand the platform so much better now"
@@ -289,6 +316,7 @@
 **Emotions**: Fulfilled 😊 (Intensity: 1/5)
 
 **Pain Points**:
+
 - No notification when template is used (miss seeing impact)
 - Support questions arrive in different channels
 - Unclear expectations for maintaining contribution
@@ -296,6 +324,7 @@
 - No easy way to see contribution usage stats
 
 **Opportunities**:
+
 - Contribution impact dashboard (usage, feedback)
 - Dedicated support channel per contribution
 - Clear maintenance expectations and ownership
@@ -305,6 +334,7 @@
 - Path from contributor to platform team member
 
 **Touchpoints**:
+
 - Mattermost (support questions)
 - GitHub (bug fixes, reviews)
 - Demo day (presentation)
@@ -474,6 +504,7 @@ graph LR
 ### Validation with Personas
 
 This journey map aligns with:
+
 - **Application Developer persona** (Maria Rodriguez): Demonstrates path from platform user to contributor
 - **Platform Developer persona** (Alex Chen): Supports goal of building community and sharing platform ownership
 
@@ -482,6 +513,7 @@ This journey map aligns with:
 ## 7. Improvement Roadmap
 
 ### Phase 1 (Month 1) - Quick Wins
+
 - [ ] Create contribution types guide
 - [ ] Add "Good first contribution" examples
 - [ ] Create contribution proposal template
@@ -490,6 +522,7 @@ This journey map aligns with:
 - [ ] Add contributor recognition in changelog
 
 ### Phase 2 (Month 2-3) - Enhanced Experience
+
 - [ ] Create contribution quality checklist
 - [ ] Implement automated quality checks
 - [ ] Build contribution-specific PR templates
@@ -498,6 +531,7 @@ This journey map aligns with:
 - [ ] Set up monthly contributor office hours
 
 ### Phase 3 (Month 4-6) - Strategic Improvements
+
 - [ ] Build contribution impact dashboard
 - [ ] Create formal contributor program (bronze/silver/gold levels)
 - [ ] Implement pair contribution sessions

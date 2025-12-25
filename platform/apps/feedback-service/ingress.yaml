@@ -26,13 +26,13 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: feedback.127.0.0.1.nip.io
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: feedback-service
-            port:
-              number: 8000
+    - host: feedback.127.0.0.1.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: feedback-service
+                port:
+                  number: 8000

@@ -26,6 +26,7 @@
 **Reporting Structure**: Reports to Engineering Lead, Product Development
 
 **Key Responsibilities**:
+
 - Develop and maintain payment processing microservices (Java/Spring Boot)
 - Implement new features based on product requirements
 - Fix bugs and resolve production issues
@@ -33,6 +34,7 @@
 - Participate in code reviews and sprint planning
 
 **Time Allocation**:
+
 - 60% on feature development
 - 20% on bug fixes and technical debt
 - 10% on meetings (standup, planning, retros)
@@ -43,23 +45,27 @@
 ### Goals and Motivations
 
 **Primary Goals**:
+
 1. Ship features quickly and reliably (2-week sprint cycles)
 2. Minimize production bugs and incidents
 3. Learn new technologies and improve coding skills
 4. Maintain work-life balance (no weekend deployments or pages)
 
 **Success Metrics**:
+
 - Features delivered on time
 - Low bug count in production
 - Positive code review feedback
 - Team velocity
 
 **Motivations**:
+
 - **Professional**: Wants to become a senior developer, improve full-stack skills
 - **Personal**: Values predictable work hours, enjoys problem-solving
 - **Team**: Likes collaborating with designers and product managers to ship user-facing features
 
 **What drives them at work**:
+
 > "I love the moment when a feature goes live and users can actually use it. I want to spend my time writing code that matters, not fighting with infrastructure."
 
 ---
@@ -69,12 +75,14 @@
 **Major Pain Points**:
 
 1. **Deployment Complexity and Anxiety**
+
    - **Description**: Deploying to production is stressful—unclear deployment status, fear of breaking things, rollback is manual
    - **Impact**: Delays releases, causes after-hours deployments, high stress
    - **Frequency**: Deploys 2-3 times per sprint, each deployment takes 30-60 minutes of monitoring
    - **Current Workaround**: Deploy early in the day, keep teammates on standby, manual rollback scripts
 
 2. **Difficult Production Troubleshooting**
+
    - **Description**: When production issues occur, hard to find relevant logs, unclear which service is failing
    - **Impact**: Long resolution times, interrupts feature work, need platform team help
    - **Frequency**: 1-2 production issues per month
@@ -87,6 +95,7 @@
    - **Current Workaround**: Asks colleagues, searches Confluence (often outdated)
 
 **Frustrations**:
+
 - Time spent on operational tasks instead of feature development
 - Fear of breaking production
 - Waiting on platform team for support
@@ -97,6 +106,7 @@
 ### Tools and Workflows
 
 **Primary Tools**:
+
 - **Development**: IntelliJ IDEA, Postman, Docker Desktop
 - **Version Control**: Git, GitHub (uses GitHub Desktop sometimes)
 - **CI/CD**: Jenkins (triggered by PR merge)
@@ -104,6 +114,7 @@
 - **Communication**: Mattermost, Jira, Confluence
 
 **Typical Daily Workflow**:
+
 1. **9:00 AM** - Standup, check Jira tickets, read code review comments
 2. **9:30 AM** - Feature development in local environment
 3. **12:00 PM** - Lunch
@@ -115,6 +126,7 @@
 9. **5:00 PM** - End of day
 
 **Platform Interaction Points**:
+
 - Deploys to dev/staging multiple times per day (automatic via Jenkins)
 - Deploys to production 2-3 times per sprint (manual trigger)
 - Checks logs when investigating bugs (weekly)
@@ -127,6 +139,7 @@
 **Overall Technical Proficiency**: Intermediate
 
 **Specific Skills**:
+
 - **Programming Languages**: Java (Advanced), JavaScript (Intermediate), SQL (Intermediate)
 - **Cloud Platforms**: AWS (Beginner - knows EC2, S3, RDS basics)
 - **Containers & Orchestration**: Docker (Intermediate), Kubernetes (Beginner - knows basics, not comfortable with kubectl)
@@ -155,6 +168,7 @@
 ### Behaviors and Preferences
 
 **Communication Preferences**:
+
 - Prefers Mattermost for quick questions, Zoom for pair programming
 - Documentation style: Wants quick start guides with examples, not comprehensive docs
 - Feedback style: Appreciates constructive code review comments with explanations
@@ -170,6 +184,7 @@
 ### Needs from the Platform
 
 **Must Have**:
+
 1. Simple, reliable deployments with clear status
 2. Easy access to application logs and errors
 3. Automatic rollback when deployments fail
@@ -177,12 +192,14 @@
 5. Clear error messages and troubleshooting guides
 
 **Should Have**:
+
 1. Integrated testing environments
 2. Feature flags for safe rollouts
 3. Performance metrics (response time, error rate)
 4. Notifications for deployment success/failure
 
 **Nice to Have**:
+
 1. Local development environment that matches production
 2. Distributed tracing for debugging
 3. Cost visibility for their services

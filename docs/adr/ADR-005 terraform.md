@@ -1,6 +1,7 @@
 # ADR-005: Terraform for Infrastructure as Code
 
 ## Status
+
 **Accepted** - October 8, 2025
 
 ## Context
@@ -10,6 +11,7 @@ Fawkes requires an Infrastructure as Code (IaC) tool to provision and manage clo
 ### The Need for Infrastructure as Code
 
 **Current Challenges Without IaC**:
+
 - **Manual Provisioning**: Error-prone, time-consuming, not documented
 - **Configuration Drift**: Infrastructure diverges from documented state
 - **No Version Control**: Can't track infrastructure changes over time
@@ -20,6 +22,7 @@ Fawkes requires an Infrastructure as Code (IaC) tool to provision and manage clo
 - **Tribal Knowledge**: Infrastructure setup exists only in operators' heads
 
 **What Infrastructure as Code Provides**:
+
 1. **Declarative Configuration**: Describe desired state, tool handles how to achieve it
 2. **Version Control**: All infrastructure changes tracked in Git
 3. **Code Review**: Infrastructure changes go through PR process
@@ -32,6 +35,7 @@ Fawkes requires an Infrastructure as Code (IaC) tool to provision and manage clo
 ### Requirements for IaC Tool
 
 **Core Requirements**:
+
 - **Multi-Cloud**: Support AWS, Azure, GCP with consistent workflow
 - **Declarative**: Describe desired state, not procedural steps
 - **State Management**: Track current infrastructure state
@@ -42,12 +46,14 @@ Fawkes requires an Infrastructure as Code (IaC) tool to provision and manage clo
 - **Open Source**: Transparent, no vendor lock-in
 
 **DORA Alignment**:
+
 - **Infrastructure Changes**: Version-controlled, reviewable infrastructure
 - **Deployment Frequency**: Automated infrastructure enables faster deployments
 - **Lead Time**: Infrastructure provisioning no longer bottleneck
 - **Change Failure Rate**: Preview changes before applying reduces errors
 
 **Integration Requirements**:
+
 - **GitHub**: Store modules and configurations
 - **Jenkins**: Automate terraform apply in pipelines
 - **Kubernetes**: Provision clusters, configure resources
@@ -57,24 +63,28 @@ Fawkes requires an Infrastructure as Code (IaC) tool to provision and manage clo
 ### Forces at Play
 
 **Technical Forces**:
+
 - Need multi-cloud support for flexibility
 - State management critical for tracking resources
 - Preview capability reduces risk of changes
 - Modular approach enables code reuse
 
 **Operational Forces**:
+
 - Platform team can't manually provision everything
 - Need disaster recovery capabilities
 - Environment parity critical for testing
 - Self-service infrastructure reduces tickets
 
 **Developer Experience Forces**:
+
 - Developers want infrastructure on-demand
 - Need clear documentation of infrastructure
 - Want confidence changes won't break production
 - Prefer familiar tools and workflows
 
 **Ecosystem Forces**:
+
 - Terraform has dominant market share
 - Extensive provider ecosystem
 - Large community and knowledge base
@@ -85,6 +95,7 @@ Fawkes requires an Infrastructure as Code (IaC) tool to provision and manage clo
 **We will use Terraform as the primary Infrastructure as Code tool for Fawkes.**
 
 Specifically:
+
 - **Terraform OSS** (Open Source, latest stable version)
 - **HCL** (HashiCorp Configuration Language)
 - **Terraform Cloud** for state management (free tier, 5 users)
@@ -99,36 +110,42 @@ Specifically:
 1. **Industry Standard**: Terraform is the most widely adopted IaC tool, with 40,000+ GitHub stars, used by 70%+ of organizations doing multi-cloud
 
 2. **True Multi-Cloud**: Consistent workflow across clouds:
+
    - Same HCL syntax for AWS, Azure, GCP
    - Unified state management
    - Single tool to learn
    - Providers for 3,000+ services
 
 3. **Mature and Battle-Tested**:
+
    - 10+ years of development
    - Production-proven at enterprise scale
    - Extensive real-world validation
    - Known edge cases well-documented
 
 4. **Declarative Language**: HCL describes desired state:
+
    - Easy to read and understand
    - Predictable behavior
    - Idempotent operations
    - Less error-prone than imperative scripts
 
 5. **State Management**:
+
    - Tracks actual infrastructure state
    - Enables drift detection
    - Supports team collaboration
    - Remote state backends (S3, Terraform Cloud)
 
 6. **Plan Before Apply**:
+
    - Preview changes before executing
    - Reduces fear of infrastructure changes
    - Catch mistakes before they happen
    - Show changes in PR reviews
 
 7. **Massive Provider Ecosystem**:
+
    - AWS: 1,000+ resources
    - Azure: 1,500+ resources
    - GCP: 800+ resources
@@ -136,24 +153,28 @@ Specifically:
    - 3,000+ total providers
 
 8. **Module Registry**:
+
    - Public registry with 10,000+ modules
    - Reusable, community-validated code
    - Can publish private modules
    - Accelerates development
 
 9. **Large Community**:
+
    - Extensive documentation
    - Thousands of tutorials and examples
    - Active forums and Slack channels
    - Commercial support available (HashiCorp)
 
 10. **Testing Support**:
+
     - Terratest for integration testing
     - terraform validate for syntax
     - terraform fmt for formatting
     - tflint for best practices
 
 11. **CI/CD Integration**:
+
     - Easy to integrate with Jenkins
     - Automated plan on PR
     - Automated apply on merge
@@ -225,6 +246,7 @@ Specifically:
 ### Mitigation Strategies
 
 1. **State Management**:
+
    - Use remote state backend (Terraform Cloud or S3)
    - Enable state locking (DynamoDB for S3)
    - Never manually edit state files
@@ -232,6 +254,7 @@ Specifically:
    - Document state management procedures
 
 2. **Learning Curve**:
+
    - Provide Terraform training workshops
    - Create comprehensive module documentation
    - Use module examples extensively
@@ -239,6 +262,7 @@ Specifically:
    - Leverage community resources
 
 3. **State Drift**:
+
    - Educate team: never make manual changes
    - Run terraform plan regularly to detect drift
    - Use cloud provider guard rails (SCPs, policies)
@@ -246,6 +270,7 @@ Specifically:
    - Document procedure for importing manual changes
 
 4. **Breaking Changes**:
+
    - Pin provider versions in code
    - Test updates in non-production first
    - Follow Terraform upgrade guides carefully
@@ -253,6 +278,7 @@ Specifically:
    - Budget time for major upgrades
 
 5. **Cost of Mistakes**:
+
    - Protect production with different credentials
    - Use terraform plan before every apply
    - Require PR approval for production changes
@@ -270,6 +296,7 @@ Specifically:
 ### Alternative 1: Pulumi
 
 **Pros**:
+
 - Use real programming languages (Python, TypeScript, Go, C#)
 - Familiar to developers (no new language to learn)
 - Strong typing and IDE support
@@ -278,6 +305,7 @@ Specifically:
 - Growing quickly
 
 **Cons**:
+
 - **Smaller Community**: Much smaller than Terraform
 - **Fewer Providers**: 100+ providers vs. Terraform's 3,000+
 - **Less Mature**: Newer (2018 vs. Terraform 2014)
@@ -290,6 +318,7 @@ Specifically:
 ### Alternative 2: AWS CloudFormation
 
 **Pros**:
+
 - Native AWS integration
 - No state management needed
 - AWS-supported and maintained
@@ -298,6 +327,7 @@ Specifically:
 - AWS console integration
 
 **Cons**:
+
 - **AWS Only**: Cannot manage Azure, GCP, or other providers
 - **Verbose YAML/JSON**: Much more verbose than Terraform HCL
 - **Limited Features**: Fewer advanced features than Terraform
@@ -310,12 +340,14 @@ Specifically:
 ### Alternative 3: Azure Resource Manager (ARM) Templates
 
 **Pros**:
+
 - Native Azure integration
 - Free (included with Azure)
 - Azure portal integration
 - What-if preview capability
 
 **Cons**:
+
 - **Azure Only**: Cannot manage AWS, GCP
 - **JSON Verbose**: Very verbose JSON syntax
 - **Complex Syntax**: Difficult to write and maintain
@@ -327,6 +359,7 @@ Specifically:
 ### Alternative 4: Ansible
 
 **Pros**:
+
 - General-purpose automation (not just infrastructure)
 - Agentless (SSH-based)
 - YAML syntax (familiar)
@@ -334,6 +367,7 @@ Specifically:
 - Can manage configuration in addition to infrastructure
 
 **Cons**:
+
 - **Imperative, Not Declarative**: Procedural scripts vs. desired state
 - **No Built-In State**: Doesn't track infrastructure state
 - **Idempotency Issues**: Not guaranteed idempotent
@@ -346,6 +380,7 @@ Specifically:
 ### Alternative 5: Crossplane
 
 **Pros**:
+
 - Kubernetes-native (CRDs)
 - Declarative, Kubernetes-style
 - GitOps integration native
@@ -354,6 +389,7 @@ Specifically:
 - CNCF project (good governance)
 
 **Cons**:
+
 - **Less Mature**: Newer than Terraform (2018)
 - **Smaller Ecosystem**: Fewer providers than Terraform
 - **Steeper Learning Curve**: Kubernetes CRDs more complex than HCL
@@ -366,6 +402,7 @@ Specifically:
 ### Alternative 6: OpenTofu
 
 **Pros**:
+
 - Terraform fork (fully compatible)
 - Open source (Linux Foundation)
 - Community-driven
@@ -373,6 +410,7 @@ Specifically:
 - Free forever
 
 **Cons**:
+
 - **Very New**: Fork created August 2023
 - **Uncertain Future**: Will it maintain compatibility?
 - **Smaller Team**: Fewer contributors than Terraform
@@ -384,12 +422,14 @@ Specifically:
 ### Alternative 7: Terraform CDK (Cloud Development Kit)
 
 **Pros**:
+
 - Use programming languages (TypeScript, Python, Java, C#, Go)
 - Generates Terraform JSON
 - Familiar to developers
 - HashiCorp-maintained
 
 **Cons**:
+
 - **Additional Layer**: Complexity of language + Terraform
 - **Less Mature**: Newer than core Terraform
 - **Smaller Community**: Fewer examples than HCL
@@ -601,8 +641,8 @@ name: Terraform Plan
 on:
   pull_request:
     paths:
-      - 'environments/**'
-      - 'modules/**'
+      - "environments/**"
+      - "modules/**"
 
 jobs:
   plan:
@@ -730,6 +770,7 @@ terraform {
 ### Migration to Crossplane (Phase 2)
 
 **Path Forward**:
+
 1. **Phase 1** (Months 1-6): Use Terraform exclusively
 2. **Phase 2** (Months 7-12): Evaluate Crossplane maturity
 3. **Phase 3** (Year 2): Gradual migration:
@@ -740,6 +781,7 @@ terraform {
 4. **Phase 4** (Year 2-3): Complete migration to Crossplane
 
 **Why Crossplane Eventually**:
+
 - Kubernetes-native (consistent with platform)
 - GitOps integration seamless
 - Better abstraction for self-service
@@ -747,6 +789,7 @@ terraform {
 - Unified control plane
 
 **Why Terraform First**:
+
 - Mature and proven today
 - Larger ecosystem and community
 - Easier learning curve
@@ -756,6 +799,7 @@ terraform {
 ## Monitoring This Decision
 
 We will revisit this ADR if:
+
 - Terraform license changes make OSS version unusable
 - Crossplane reaches maturity level where migration makes sense
 - Pulumi ecosystem and community significantly grow
@@ -780,12 +824,14 @@ We will revisit this ADR if:
 ### Terraform vs. Pulumi: The Debate
 
 **Use Terraform when**:
+
 - Want largest ecosystem and community
 - Prefer declarative DSL over programming
 - Need maximum provider coverage
 - Want battle-tested maturity
 
 **Use Pulumi when**:
+
 - Strong programming culture in organization
 - Want to use existing language (Python, TypeScript, Go)
 - Need complex logic in infrastructure code
@@ -796,10 +842,12 @@ We will revisit this ADR if:
 ### Terraform License Change Context
 
 In August 2023, HashiCorp changed Terraform license from MPL to BSL (Business Source License). This prevents:
+
 - Using Terraform in commercial competing products
 - Hosting Terraform as paid service
 
 For Fawkes:
+
 - **Not Affected**: Using Terraform for our platform is permitted
 - **No Commercial Product**: We're not selling Terraform itself
 - **OpenTofu Available**: Fork exists if needed
@@ -809,17 +857,20 @@ This decision may be revisited if BSL becomes more restrictive or OpenTofu prove
 ### State Management is Critical
 
 **State file contains**:
+
 - All provisioned resource IDs
 - Resource attributes and metadata
 - Dependencies between resources
 - Terraform version used
 
 **If state file is lost**:
+
 - Terraform can't manage existing resources
 - Must import all resources manually (tedious)
 - Or destroy and recreate everything (disruptive)
 
 **Protection strategies**:
+
 - Remote state backend (S3, Terraform Cloud)
 - State file versioning enabled
 - Regular backups

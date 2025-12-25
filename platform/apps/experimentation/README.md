@@ -5,6 +5,7 @@ A/B testing framework with statistical analysis, variant assignment, and results
 ## Overview
 
 The Experimentation Service provides a complete A/B testing platform that integrates with:
+
 - **Unleash**: Feature flag management for experiment traffic control
 - **Plausible**: Analytics platform for event tracking
 - **Prometheus/Grafana**: Metrics and visualization
@@ -12,6 +13,7 @@ The Experimentation Service provides a complete A/B testing platform that integr
 ## Components
 
 ### 1. Experimentation Service (FastAPI)
+
 - Experiment CRUD operations
 - Variant assignment using consistent hashing
 - Event tracking and analytics
@@ -19,6 +21,7 @@ The Experimentation Service provides a complete A/B testing platform that integr
 - **Deployment**: 2 replicas, 200m-1 CPU, 256Mi-1Gi RAM
 
 ### 2. PostgreSQL Database (CloudNativePG)
+
 - Experiment metadata storage
 - Variant assignments
 - Event tracking data
@@ -79,6 +82,7 @@ kubectl logs -n fawkes -l app=experimentation --tail=100
 ### Environment Variables
 
 Configured via ConfigMap and Secrets:
+
 - `DATABASE_URL` - PostgreSQL connection string (from secret)
 - `ADMIN_TOKEN` - API authentication token (from secret)
 - `UNLEASH_URL` - Unleash API endpoint
@@ -87,6 +91,7 @@ Configured via ConfigMap and Secrets:
 ### Security
 
 ⚠️ **Production Security**:
+
 1. Replace default credentials in secrets
 2. Use External Secrets Operator with Vault
 3. Enable TLS for database connections
@@ -157,7 +162,7 @@ Add to `app-config.yaml`:
 ```yaml
 proxy:
   endpoints:
-    '/experimentation/api':
+    "/experimentation/api":
       target: http://experimentation.fawkes.svc:8000/api/
       changeOrigin: true
 ```
@@ -166,21 +171,21 @@ proxy:
 
 ```typescript
 // TypeScript/JavaScript example
-import axios from 'axios';
+import axios from "axios";
 
 async function getExperimentVariant(experimentId: string, userId: string) {
-  const response = await axios.post(
-    `https://experimentation.fawkes.idp/api/v1/experiments/${experimentId}/assign`,
-    { user_id: userId }
-  );
+  const response = await axios.post(`https://experimentation.fawkes.idp/api/v1/experiments/${experimentId}/assign`, {
+    user_id: userId,
+  });
   return response.data.variant;
 }
 
 async function trackEvent(experimentId: string, userId: string, eventName: string) {
-  await axios.post(
-    `https://experimentation.fawkes.idp/api/v1/experiments/${experimentId}/track`,
-    { user_id: userId, event_name: eventName, value: 1.0 }
-  );
+  await axios.post(`https://experimentation.fawkes.idp/api/v1/experiments/${experimentId}/track`, {
+    user_id: userId,
+    event_name: eventName,
+    value: 1.0,
+  });
 }
 ```
 
@@ -189,6 +194,7 @@ async function trackEvent(experimentId: string, userId: string, eventName: strin
 ### Prometheus Metrics
 
 The service exposes comprehensive metrics:
+
 - `experimentation_experiments_total{status}` - Total experiments
 - `experimentation_variant_assignments_total{experiment_id,variant}` - Assignments
 - `experimentation_events_total{experiment_id,variant,event_name}` - Events tracked
@@ -197,6 +203,7 @@ The service exposes comprehensive metrics:
 ### Grafana Dashboard
 
 Pre-built dashboard available at `/grafana/d/experimentation` includes:
+
 - Active experiments gauge
 - Variant assignment distribution
 - Conversion rate comparison
@@ -245,11 +252,11 @@ kubectl logs -n fawkes -l app=experimentation --tail=50
 
 Target: <70% CPU/Memory utilization
 
-| Component | Requests | Limits | Replicas | Total |
-|-----------|----------|--------|----------|-------|
-| Experimentation | 200m CPU, 256Mi | 1 CPU, 1Gi | 2 | 400m-2 CPU, 512Mi-2Gi |
-| PostgreSQL | 200m CPU, 256Mi | 500m CPU, 512Mi | 3 | 600m-1.5 CPU, 768Mi-1.5Gi |
-| **Total** | - | - | - | **1-3.5 CPU, 1.25-3.5Gi** |
+| Component       | Requests        | Limits          | Replicas | Total                     |
+| --------------- | --------------- | --------------- | -------- | ------------------------- |
+| Experimentation | 200m CPU, 256Mi | 1 CPU, 1Gi      | 2        | 400m-2 CPU, 512Mi-2Gi     |
+| PostgreSQL      | 200m CPU, 256Mi | 500m CPU, 512Mi | 3        | 600m-1.5 CPU, 768Mi-1.5Gi |
+| **Total**       | -               | -               | -        | **1-3.5 CPU, 1.25-3.5Gi** |
 
 ## References
 
