@@ -6,10 +6,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 
   default_node_pool {
-    name       = "systemnp"
-    vm_size    = var.node_vm_size
-    node_count = var.node_count
-    type       = "VirtualMachineScaleSets"
+    name           = "systemnp"
+    vm_size        = var.node_vm_size
+    node_count     = var.node_count
+    type           = "VirtualMachineScaleSets"
     vnet_subnet_id = azurerm_subnet.aks.id
     upgrade_settings {
       max_surge = "33%"

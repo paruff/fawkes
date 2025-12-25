@@ -150,7 +150,7 @@ variable "user_node_pool_spot_max_price" {
 variable "private_cluster_enabled" {
   description = "Enable private cluster mode (no public endpoint)"
   type        = bool
-  default     = false  # Changed from true - use public cluster for dev
+  default     = false # Changed from true - use public cluster for dev
 }
 
 # NOTE: Azure Container Registry variables removed - Fawkes uses Harbor

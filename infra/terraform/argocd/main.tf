@@ -33,11 +33,11 @@ provider "helm" {
 }
 
 resource "helm_release" "argocd" {
-  name       = var.release_name
-  repository = var.chart_repo
-  chart      = var.chart_name
-  version    = var.chart_version != "" ? var.chart_version : null
-  namespace  = var.namespace
+  name             = var.release_name
+  repository       = var.chart_repo
+  chart            = var.chart_name
+  version          = var.chart_version != "" ? var.chart_version : null
+  namespace        = var.namespace
   create_namespace = true
   # Install CRDs via Helm to shift CRD management from the bootstrap script to Terraform/Helm
   skip_crds = false
@@ -46,8 +46,8 @@ resource "helm_release" "argocd" {
   # providing their own values via the values override file path variable.
   values = [file("${path.module}/values.yaml")]
 
-  timeout = 600
-  atomic  = true
+  timeout       = 600
+  atomic        = true
   recreate_pods = true
 }
 

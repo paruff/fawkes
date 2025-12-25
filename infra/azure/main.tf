@@ -176,7 +176,7 @@ resource "azurerm_storage_container" "terraform_state" {
 
 # Get your current public IP (IPv4 only for AKS)
 data "http" "my_ip" {
-  url = "https://ipv4.icanhazip.com"  # Forces IPv4 response
+  url = "https://ipv4.icanhazip.com" # Forces IPv4 response
 }
 
 # Get current Azure client configuration
@@ -192,6 +192,6 @@ resource "azurerm_role_assignment" "aks_cluster_admin" {
 # Wait for role assignment propagation
 resource "time_sleep" "wait_for_rbac" {
   depends_on = [azurerm_role_assignment.aks_cluster_admin]
-  
+
   create_duration = "30s"
 }

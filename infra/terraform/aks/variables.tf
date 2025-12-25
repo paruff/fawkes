@@ -23,7 +23,7 @@ variable "rg_name" {
 variable "tags" {
   description = "Common resource tags"
   type        = map(string)
-  default     = {
+  default = {
     app       = "fawkes"
     component = "platform"
   }
