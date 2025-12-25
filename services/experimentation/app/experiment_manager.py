@@ -280,7 +280,8 @@ class ExperimentManager:
     
     def _hash_user(self, key: str) -> float:
         """Generate consistent hash for user (0.0 to 1.0)"""
-        hash_value = int(hashlib.md5(key.encode()).hexdigest(), 16)
+        # Use SHA-256 for secure hashing (not MD5)
+        hash_value = int(hashlib.sha256(key.encode()).hexdigest(), 16)
         return (hash_value % 10000) / 10000.0
     
     def _select_variant(self, experiment_id: str, user_id: str, variants: List[Dict]) -> str:

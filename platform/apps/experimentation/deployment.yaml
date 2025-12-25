@@ -29,8 +29,10 @@ metadata:
     app: experimentation
     component: service
   annotations:
-    # WARNING: This secret contains default development values
-    # For production, use External Secrets Operator to sync from Vault
+    # ⚠️ CRITICAL SECURITY WARNING: This secret contains default development values
+    # NEVER use this token in production environments!
+    # For production, MUST use External Secrets Operator to sync from Vault
+    # Generate secure token: openssl rand -hex 32
 type: Opaque
 stringData:
   # ⚠️ SECURITY WARNING: Replace before production!
