@@ -174,7 +174,7 @@ Feature: Product Analytics Platform
     And each site should have isolated data
     And no third-party data sharing should occur
 
-  @dev @prod
+  @local
   Scenario: Performance requirements met
     Given I navigate to the Plausible dashboard
     When the dashboard loads
@@ -182,7 +182,7 @@ Feature: Product Analytics Platform
     And API queries should respond within 1 second
     And the tracking script should not impact page load time
 
-  @dev @prod
+  @local
   Scenario: High availability validated
     Given Plausible is deployed with HA configuration
     When I check the deployment status
@@ -191,7 +191,7 @@ Feature: Product Analytics Platform
     And pod anti-affinity should be configured
     And the service should remain available during pod restarts
 
-  @dev @prod
+  @local
   Scenario: Monitoring and alerting configured
     Given Plausible is deployed
     When I check the monitoring configuration
