@@ -114,29 +114,31 @@ gh repo create platform-research --private --template paruff/fawkes-research-tem
 
 ### Discovery Cadence Model
 
+> **Note**: The dates shown below are illustrative. Teams should customize the timeline to match their current planning period.
+
 ```mermaid
 gantt
-    title Continuous Discovery Cadence
+    title Continuous Discovery Cadence (Example Timeline)
     dateFormat  YYYY-MM-DD
     
     section Weekly
-    User Interviews (2-3)           :active, week1, 2024-01-01, 7d
-    Analytics Review                :active, week2, 2024-01-01, 7d
-    Support Ticket Analysis         :active, week3, 2024-01-01, 7d
+    User Interviews (2-3)           :active, week1, 2025-01-06, 7d
+    Analytics Review                :active, week2, 2025-01-06, 7d
+    Support Ticket Analysis         :active, week3, 2025-01-06, 7d
     
     section Bi-Weekly
-    Discovery Synthesis             :        bi1, 2024-01-08, 3d
-    Roadmap Prioritization          :        bi2, 2024-01-11, 2d
+    Discovery Synthesis             :        bi1, 2025-01-13, 3d
+    Roadmap Prioritization          :        bi2, 2025-01-16, 2d
     
     section Monthly
-    NPS Survey                      :        mon1, 2024-01-01, 3d
-    All-Hands Research Share        :        mon2, 2024-01-25, 1d
-    Discovery Retrospective         :        mon3, 2024-01-30, 2h
+    NPS Survey                      :        mon1, 2025-01-06, 3d
+    All-Hands Research Share        :        mon2, 2025-01-27, 1d
+    Discovery Retrospective         :        mon3, 2025-01-31, 1d
     
     section Quarterly
-    Comprehensive User Research     :        q1, 2024-01-01, 14d
-    Journey Mapping Workshop        :        q2, 2024-01-15, 2d
-    Platform Health Review          :        q3, 2024-03-28, 1d
+    Comprehensive User Research     :        q1, 2025-01-06, 14d
+    Journey Mapping Workshop        :        q2, 2025-01-20, 2d
+    Platform Health Review          :        q3, 2025-03-31, 1d
 ```
 
 ---
