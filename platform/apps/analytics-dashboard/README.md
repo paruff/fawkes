@@ -400,7 +400,7 @@ kubectl exec -n fawkes deployment/analytics-dashboard -- wget -q -O- http://loca
 
 ## Dependencies
 
-- **Depends on**: 
+- **Depends on**:
   - Issue #547 (Event tracking infrastructure)
   - Issue #549 (Data collection pipeline)
   - Issue #97 (Plausible Analytics)

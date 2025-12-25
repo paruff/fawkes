@@ -4,10 +4,10 @@
 
 This guide explains how to run and validate AT-E1-002 acceptance tests for GitOps with ArgoCD.
 
-**Test ID**: AT-E1-002  
-**Category**: GitOps  
-**Description**: ArgoCD manages all platform components  
-**Priority**: P0 - Critical  
+**Test ID**: AT-E1-002
+**Category**: GitOps
+**Description**: ArgoCD manages all platform components
+**Priority**: P0 - Critical
 
 ## Prerequisites
 
@@ -303,7 +303,7 @@ https://argo-cd.readthedocs.io/en/stable/cli_installation/
 - name: Run AT-E1-002 Validation
   run: |
     ./tests/acceptance/run-test.sh AT-E1-002
-    
+
 - name: Upload Test Report
   uses: actions/upload-artifact@v3
   if: always()

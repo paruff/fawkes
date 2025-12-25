@@ -32,7 +32,7 @@ log_error() {
 # Test Prometheus is reachable
 test_prometheus_health() {
     log_info "Testing Prometheus health endpoint..."
-    
+
     if curl -sf "${PROMETHEUS_URL}/-/healthy" >/dev/null 2>&1; then
         log_success "Prometheus is healthy"
         return 0
@@ -45,12 +45,12 @@ test_prometheus_health() {
 # Test Prometheus has targets
 test_prometheus_targets() {
     log_info "Testing Prometheus scrape targets..."
-    
+
     local response=$(curl -sf "${PROMETHEUS_URL}/api/v1/targets" 2>/dev/null || echo '{}')
     # Note: Using grep for simplicity. For production, consider using jq:
     # local active_targets=$(echo "$response" | jq '.data.activeTargets | map(select(.health == "up")) | length')
     local active_targets=$(echo "$response" | grep -o '"health":"up"' | wc -l)
-    
+
     if [ "$active_targets" -gt 0 ]; then
         log_success "Prometheus has $active_targets active targets"
         return 0
@@ -63,10 +63,10 @@ test_prometheus_targets() {
 # Test that 'up' metric is available
 test_up_metric() {
     log_info "Testing 'up' metric availability..."
-    
+
     local response=$(curl -sf "${PROMETHEUS_URL}/api/v1/query?query=up" 2>/dev/null || echo '{}')
     local result_count=$(echo "$response" | grep -o '"result":\[' | wc -l)
-    
+
     if [ "$result_count" -gt 0 ]; then
         log_success "'up' metric is available"
         return 0
@@ -79,10 +79,10 @@ test_up_metric() {
 # Test DORA metrics are being collected
 test_dora_metrics() {
     log_info "Testing DORA metrics availability..."
-    
+
     # Check for deployment frequency metric
     local response=$(curl -sf "${PROMETHEUS_URL}/api/v1/query?query=dora_deployment_frequency" 2>/dev/null || echo '{}')
-    
+
     if echo "$response" | grep -q '"status":"success"'; then
         log_success "DORA metrics are being collected"
         return 0
@@ -101,17 +101,17 @@ main() {
     echo ""
     echo "  Prometheus URL: $PROMETHEUS_URL"
     echo ""
-    
+
     local failures=0
-    
+
     test_prometheus_health || ((failures++))
     test_prometheus_targets || ((failures++))
     test_up_metric || ((failures++))
     test_dora_metrics || ((failures++))
-    
+
     echo ""
     echo "========================================================================"
-    
+
     if [ $failures -eq 0 ]; then
         echo -e "  ${GREEN}✓ All Prometheus metric tests passed${NC}"
         echo "========================================================================"

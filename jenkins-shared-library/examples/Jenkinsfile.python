@@ -7,11 +7,11 @@
 goldenPathPipeline {
     appName = 'python-api'
     language = 'python'
-    
+
     // Custom Python commands
     buildCommand = 'pip install -r requirements.txt && pip install -e .'
     testCommand = 'pytest tests/unit --junitxml=test-results.xml --cov=src --cov-report=xml'
     bddTestCommand = 'behave --junit --junit-directory=bdd-results'
-    
+
     notifyChannel = 'python-team'
 }

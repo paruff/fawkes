@@ -1,6 +1,6 @@
 /**
  * Design Tokens - Spacing
- * 
+ *
  * Spacing scale for margins, padding, and gaps
  */
 

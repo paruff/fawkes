@@ -40,7 +40,7 @@ Replace placeholders in all files:
 
 Edit each file to match your component's needs:
 
-1. **README.md**: 
+1. **README.md**:
    - Fill in purpose, features, architecture
    - Add component-specific configuration
    - Document integration points

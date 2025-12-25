@@ -61,8 +61,8 @@ A critical vulnerability is discovered in `glibc` (the C library used by most Li
 4. Re-deploy every application
 5. Hope you found all the Dockerfiles (did you check that archived repo?)
 
-**Time to Patch**: Days to weeks  
-**MTTR Impact**: ⬆️ (High)  
+**Time to Patch**: Days to weeks
+**MTTR Impact**: ⬆️ (High)
 **Deployment Frequency**: ⬇️ (Slowed by rebuild toil)
 
 ### The "Works on My Machine" Syndrome
@@ -117,8 +117,8 @@ This is where Buildpacks shine:
 4. Push updated image to registry
 5. Deploy with confidence (app layers untouched)
 
-**Time to Patch**: Minutes  
-**MTTR Impact**: ⬇️ (Low)  
+**Time to Patch**: Minutes
+**MTTR Impact**: ⬇️ (Low)
 **Deployment Frequency**: Maintains high (no rebuild bottleneck)
 
 ```mermaid
@@ -126,7 +126,7 @@ graph TB
     A[App Layers] -->|Unchanged| B[New Image]
     C[Old OS Layers] -.->|Replaced| D[Patched OS Layers]
     D --> B
-    
+
     style C fill:#ff6b6b
     style D fill:#4CAF50
 ```
@@ -211,7 +211,7 @@ graph LR
     A -->|Edge Case| C[Dockerfile]
     B -->|90% of apps| D[Production]
     C -->|10% of apps| D
-    
+
     style B fill:#4CAF50
     style C fill:#FFA726
 ```
@@ -265,7 +265,7 @@ In December 2021, the **Log4Shell** vulnerability (CVE-2021-44228) was discovere
 5. **Re-deploy** - 300 deployments over 2 weeks
 6. **Miss stragglers** - That archived repo? Still vulnerable
 
-**Time to Remediate**: 2-3 weeks  
+**Time to Remediate**: 2-3 weeks
 **Human Effort**: Hundreds of developer-hours
 
 ### Buildpack World Response
@@ -277,7 +277,7 @@ In December 2021, the **Log4Shell** vulnerability (CVE-2021-44228) was discovere
 5. **Automated deployment** - GitOps syncs new images
 6. **Complete coverage** - Every Java app patched automatically
 
-**Time to Remediate**: 2-3 days  
+**Time to Remediate**: 2-3 days
 **Human Effort**: One platform engineer
 
 **This is the promise of Buildpacks**: When a platform team of 3 can patch 300 applications faster than 300 developers, you've achieved leverage.
@@ -286,17 +286,17 @@ In December 2021, the **Log4Shell** vulnerability (CVE-2021-44228) was discovere
 
 ### Principle 1: Convention Over Configuration
 
-**Dockerfile Philosophy**: "Give developers full control; they'll make good choices."  
+**Dockerfile Philosophy**: "Give developers full control; they'll make good choices."
 **Reality**: Developers copy-paste, cargo-cult, and move fast (breaking things).
 
-**Buildpack Philosophy**: "Encode best practices; let developers override when necessary."  
+**Buildpack Philosophy**: "Encode best practices; let developers override when necessary."
 **Reality**: 90% follow convention happily. 10% understand enough to safely override.
 
 ### Principle 2: Separation of Concerns
 
 **Dockerfile**: Developer is responsible for OS, runtime, dependencies, app code, optimization, security.
 
-**Buildpack**: 
+**Buildpack**:
 - **Platform Team**: Maintains OS, runtime, build tools (centralized expertise)
 - **Developer**: Focuses on application code and business logic
 - **Clear Boundary**: `package.json` is the interface; everything below is abstracted
@@ -308,7 +308,7 @@ In December 2021, the **Log4Shell** vulnerability (CVE-2021-44228) was discovere
 Operational Efficiency = (Standard Patterns) / (Custom Snowflakes)
 ```
 
-100 unique Dockerfiles = 100 maintenance burdens  
+100 unique Dockerfiles = 100 maintenance burdens
 100 apps using 1 buildpack = 1 maintenance point
 
 **This is why platforms exist**: To amortize expertise across many teams.
@@ -327,7 +327,7 @@ Operational Efficiency = (Standard Patterns) / (Custom Snowflakes)
 
 ### "Buildpacks are a black box; I don't trust what I don't understand."
 
-**Response**: 
+**Response**:
 1. **Buildpacks are open source** - [Paketo Buildpacks on GitHub](https://github.com/paketo-buildpacks)
 2. **Full transparency** - Run `pack build --verbose` to see every command
 3. **SBOM generated** - Bill of Materials shows exactly what's in your image
@@ -344,7 +344,7 @@ Operational Efficiency = (Standard Patterns) / (Custom Snowflakes)
 ---
 nodejs:
   version: 18
-  
+
 extensions:
   - name: install-custom-tool
     run: |
@@ -379,7 +379,7 @@ Buildpacks are a **philosophical choice**, not just a technical one. They repres
 3. **Security is a platform concern** - Not every team's homework
 4. **Convention liberates** - By removing low-level decisions, we free developers to focus on business value
 
-The question isn't "Can I write a better Dockerfile than a buildpack?" (you might).  
+The question isn't "Can I write a better Dockerfile than a buildpack?" (you might).
 The question is "Can I maintain 50 better Dockerfiles, patch them in hours during a CVE, and train my whole team to do the same?" (you can't).
 
 **Buildpacks are the Golden Path because they scale.**

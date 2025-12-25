@@ -39,7 +39,7 @@ echo -n "Checking deployment... "
 if kubectl get deployment ${SERVICE_NAME} -n ${NAMESPACE} &> /dev/null; then
     REPLICAS=$(kubectl get deployment ${SERVICE_NAME} -n ${NAMESPACE} -o jsonpath='{.status.availableReplicas}')
     DESIRED=$(kubectl get deployment ${SERVICE_NAME} -n ${NAMESPACE} -o jsonpath='{.spec.replicas}')
-    
+
     if [ "$REPLICAS" == "$DESIRED" ]; then
         echo -e "${GREEN}✓ ${REPLICAS}/${DESIRED} replicas ready${NC}"
     else
@@ -75,7 +75,7 @@ fi
 echo -n "Checking secrets... "
 if kubectl get secret ${SERVICE_NAME}-secrets -n ${NAMESPACE} &> /dev/null; then
     echo -e "${GREEN}✓ exists${NC}"
-    
+
     # Check if secrets are configured (not default "changeme")
     SECRET_DATA=$(kubectl get secret ${SERVICE_NAME}-secrets -n ${NAMESPACE} -o jsonpath='{.data.GITHUB_TOKEN}' | base64 -d)
     if [ "$SECRET_DATA" == "changeme" ]; then
@@ -92,7 +92,7 @@ POD_NAME=$(kubectl get pods -n ${NAMESPACE} -l app=${SERVICE_NAME} -o jsonpath='
 
 if [ -n "$POD_NAME" ]; then
     HEALTH_STATUS=$(kubectl exec -n ${NAMESPACE} ${POD_NAME} -- curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/health || echo "000")
-    
+
     if [ "$HEALTH_STATUS" == "200" ]; then
         echo -e "${GREEN}✓ healthy${NC}"
     else
@@ -106,7 +106,7 @@ fi
 echo -n "Checking service readiness... "
 if [ -n "$POD_NAME" ]; then
     READY_STATUS=$(kubectl exec -n ${NAMESPACE} ${POD_NAME} -- curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/ready || echo "000")
-    
+
     if [ "$READY_STATUS" == "200" ]; then
         echo -e "${GREEN}✓ ready${NC}"
     elif [ "$READY_STATUS" == "503" ]; then

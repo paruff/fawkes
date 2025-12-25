@@ -77,7 +77,7 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
 
 **Steps**:
 
-1. **Get Design ID**: 
+1. **Get Design ID**:
    - Open the design file in Penpot
    - Copy the project ID and file ID from the URL
    - Format: `{project-id}/{file-id}`
@@ -130,9 +130,9 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
    ```tsx
    // Check component mapping
    // Penpot "Button/Primary" → Design System Button variant="primary"
-   
+
    import { Button, Card, Input } from '@fawkes/design-system';
-   
+
    function UserProfile() {
      return (
        <Card>
@@ -146,7 +146,7 @@ The Fawkes platform integrates Penpot, an open-source design tool, to enable sea
 3. **Implement with Design Tokens**:
    ```tsx
    import { tokens } from '@fawkes/design-system';
-   
+
    const styles = {
      container: {
        padding: tokens.spacing[4], // From Penpot spacing

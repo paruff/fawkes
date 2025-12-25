@@ -41,10 +41,10 @@ Edit `k8s/secret.yaml` and update:
 stringData:
   # Database URL (will be auto-created by CloudNativePG)
   database_url: "postgresql://nps:YOUR_DB_PASSWORD@db-nps-dev-rw.fawkes.svc.cluster.local:5432/nps_db"
-  
+
   # Mattermost bot token from Step 1
   mattermost_token: "YOUR_MATTERMOST_BOT_TOKEN"
-  
+
   # Mattermost bot user ID from Step 1
   mattermost_bot_user_id: "YOUR_BOT_USER_ID"
 ```

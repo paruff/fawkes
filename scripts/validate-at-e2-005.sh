@@ -117,7 +117,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 run_test
 if kubectl get cluster db-vsm-dev -n "$NAMESPACE" &> /dev/null; then
     log_success "PostgreSQL cluster db-vsm-dev exists"
-    
+
     # Check cluster health - check multiple possible status values
     CLUSTER_STATUS=$(kubectl get cluster db-vsm-dev -n "$NAMESPACE" -o jsonpath='{.status.phase}' 2>/dev/null || echo "Unknown")
     if [[ "$CLUSTER_STATUS" =~ ^(Cluster in healthy state|Ready|healthy)$ ]]; then
@@ -158,11 +158,11 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 run_test
 if kubectl get deployment vsm-service -n "$NAMESPACE" &> /dev/null; then
     log_success "VSM service deployment exists"
-    
+
     # Check replicas
     READY_REPLICAS=$(kubectl get deployment vsm-service -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo "0")
     DESIRED_REPLICAS=$(kubectl get deployment vsm-service -n "$NAMESPACE" -o jsonpath='{.spec.replicas}' 2>/dev/null || echo "0")
-    
+
     run_test
     if [ "$READY_REPLICAS" -ge 2 ] && [ "$READY_REPLICAS" -eq "$DESIRED_REPLICAS" ]; then
         log_success "VSM service has $READY_REPLICAS/$DESIRED_REPLICAS replicas ready"
@@ -211,14 +211,14 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 PORT_FORWARD_PID=""
 if ! curl -s -f "http://${VSM_HOST}/api/v1/health" &>/dev/null; then
     log_warning "Cannot access VSM via $VSM_HOST, trying port-forward..."
-    
+
     # Setup port-forward in background
     kubectl port-forward -n "$NAMESPACE" svc/vsm-service 8080:80 &>/dev/null &
     PORT_FORWARD_PID=$!
     sleep 3
-    
+
     VSM_HOST="localhost:8080"
-    
+
     # Cleanup function
     cleanup() {
         if [ -n "${PORT_FORWARD_PID:-}" ]; then
@@ -306,7 +306,7 @@ if command -v jq &> /dev/null; then
     HAS_THROUGHPUT=$(echo "$METRICS_DATA" | jq 'has("throughput")' 2>/dev/null || echo "false")
     HAS_WIP=$(echo "$METRICS_DATA" | jq 'has("wip") or has("work_in_progress")' 2>/dev/null || echo "false")
     HAS_CYCLE_TIME=$(echo "$METRICS_DATA" | jq 'has("cycle_time") or has("cycle_time_avg")' 2>/dev/null || echo "false")
-    
+
     if [ "$HAS_THROUGHPUT" = "true" ] || [ "$HAS_WIP" = "true" ] || [ "$HAS_CYCLE_TIME" = "true" ]; then
         log_success "VSM flow metrics are being calculated"
     else
@@ -333,7 +333,7 @@ run_test
 PROM_METRICS=$(curl -s "http://${VSM_HOST}/metrics" 2>/dev/null || echo "")
 if echo "$PROM_METRICS" | grep -q "vsm_"; then
     log_success "Prometheus metrics are exposed"
-    
+
     # Count VSM-specific metrics
     VSM_METRICS_COUNT=$(echo "$PROM_METRICS" | grep -c "^vsm_" || echo "0")
     log_info "Found $VSM_METRICS_COUNT VSM-specific metrics"
@@ -365,13 +365,13 @@ if command -v jq &> /dev/null; then
     CPU_LIMIT=$(echo "$RESOURCES" | jq -r '.spec.template.spec.containers[0].resources.limits.cpu' 2>/dev/null || echo "null")
     MEM_REQUEST=$(echo "$RESOURCES" | jq -r '.spec.template.spec.containers[0].resources.requests.memory' 2>/dev/null || echo "null")
     MEM_LIMIT=$(echo "$RESOURCES" | jq -r '.spec.template.spec.containers[0].resources.limits.memory' 2>/dev/null || echo "null")
-    
+
     if [ "$CPU_REQUEST" != "null" ] && [ "$MEM_REQUEST" != "null" ]; then
         log_success "Resource requests configured (CPU: $CPU_REQUEST, Memory: $MEM_REQUEST)"
     else
         log_warning "Resource requests not configured"
     fi
-    
+
     if [ "$CPU_LIMIT" != "null" ] && [ "$MEM_LIMIT" != "null" ]; then
         log_success "Resource limits configured (CPU: $CPU_LIMIT, Memory: $MEM_LIMIT)"
     else
@@ -393,7 +393,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 run_test
 if kubectl get application vsm-service -n argocd &> /dev/null 2>&1; then
     log_success "ArgoCD application exists"
-    
+
     # Check sync status
     SYNC_STATUS=$(kubectl get application vsm-service -n argocd -o jsonpath='{.status.sync.status}' 2>/dev/null || echo "Unknown")
     if [ "$SYNC_STATUS" = "Synced" ]; then
@@ -401,7 +401,7 @@ if kubectl get application vsm-service -n argocd &> /dev/null 2>&1; then
     else
         log_warning "ArgoCD sync status: $SYNC_STATUS"
     fi
-    
+
     # Check health status
     HEALTH_STATUS=$(kubectl get application vsm-service -n argocd -o jsonpath='{.status.health.status}' 2>/dev/null || echo "Unknown")
     if [ "$HEALTH_STATUS" = "Healthy" ]; then

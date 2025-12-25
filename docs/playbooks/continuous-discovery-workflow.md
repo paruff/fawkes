@@ -5,8 +5,8 @@ description: "Comprehensive guide to continuous discovery process including cade
 
 # Playbook: Continuous Discovery Workflow
 
-> **Estimated Duration**: Ongoing cadence (weekly/bi-weekly activities)  
-> **Complexity**: ⭐⭐⭐ Medium-High  
+> **Estimated Duration**: Ongoing cadence (weekly/bi-weekly activities)
+> **Complexity**: ⭐⭐⭐ Medium-High
 > **Target Audience**: Platform Product Managers, Platform Engineers, UX Researchers
 
 ---
@@ -120,21 +120,21 @@ gh repo create platform-research --private --template paruff/fawkes-research-tem
 gantt
     title Continuous Discovery Cadence (Example Timeline)
     dateFormat  YYYY-MM-DD
-    
+
     section Weekly
     User Interviews (2-3)           :active, week1, 2025-01-06, 7d
     Analytics Review                :active, week2, 2025-01-06, 7d
     Support Ticket Analysis         :active, week3, 2025-01-06, 7d
-    
+
     section Bi-Weekly
     Discovery Synthesis             :        bi1, 2025-01-13, 3d
     Roadmap Prioritization          :        bi2, 2025-01-16, 2d
-    
+
     section Monthly
     NPS Survey                      :        mon1, 2025-01-06, 3d
     All-Hands Research Share        :        mon2, 2025-01-27, 1d
     Discovery Retrospective         :        mon3, 2025-01-31, 1d
-    
+
     section Quarterly
     Comprehensive User Research     :        q1, 2025-01-06, 14d
     Journey Mapping Workshop        :        q2, 2025-01-20, 2d
@@ -155,17 +155,17 @@ graph TB
     PM[Platform Product Manager<br/>Discovery Lead] --> UX[UX Researcher<br/>Research Specialist]
     PM --> PE[Platform Engineer<br/>Technical Validation]
     PM --> DA[Data Analyst<br/>Analytics & Metrics]
-    
+
     UX --> INT[Conducts Interviews]
     UX --> SYN[Synthesizes Insights]
     PE --> PRO[Prototypes Solutions]
     PE --> VAL[Technical Feasibility]
     DA --> DAS[Dashboard Analysis]
     DA --> REP[Research Reports]
-    
+
     PM --> RMP[Owns Roadmap]
     PM --> PRI[Prioritization]
-    
+
     style PM fill:#4CAF50
     style UX fill:#2196F3
     style PE fill:#FF9800
@@ -333,7 +333,7 @@ graph TB
 
 👋 **We need your help!**
 
-The Platform Team is interviewing developers to understand your workflows 
+The Platform Team is interviewing developers to understand your workflows
 and pain points. We want to build features you'll actually use!
 
 **What**: 30-minute conversation about your dev experience
@@ -415,10 +415,10 @@ Use the template from `docs/research/templates/interview-guide.md`:
 # Interview Insights: [Participant Name] - [Date]
 
 ## Key Quotes
-> "I spend 2 hours every week debugging Jenkins pipelines because 
+> "I spend 2 hours every week debugging Jenkins pipelines because
 > the error messages don't tell me what's actually wrong."
 
-> "I'd love to use Backstage, but I can't find my team's services. 
+> "I'd love to use Backstage, but I can't find my team's services.
 > The search doesn't work how I expect."
 
 ## Pain Points
@@ -561,14 +561,14 @@ H3: Jenkins errors overwhelming (too much noise)
 - **How Do I...?** (40%): Documentation/onboarding gaps
   - "How do I deploy to production?" (8 tickets)
   - "How do I add a new environment?" (5 tickets)
-  
+
 - **Something Broke** (35%): Platform reliability issues
   - "ArgoCD not syncing" (6 tickets)
   - "Jenkins build stuck" (4 tickets)
-  
+
 - **Feature Request** (15%): Missing capabilities
   - "Can we have staging environments?" (3 tickets)
-  
+
 - **Access/Permissions** (10%): Onboarding issues
   - "Can't access Vault" (2 tickets)
 
@@ -589,11 +589,11 @@ H3: Jenkins errors overwhelming (too much noise)
 - "How do I deploy to prod?" → **Onboarding problem**
   - Root cause: Docs outdated, no guided tutorial
   - Solution: Create interactive onboarding flow in Backstage
-  
+
 - ArgoCD sync issues → **Reliability problem**
   - Root cause: Network timeouts to Git repo
   - Solution: Increase timeout, add retry logic
-  
+
 - Jenkins build queue → **Capacity problem**
   - Root cause: Too few executors
   - Solution: Auto-scaling agents
@@ -632,7 +632,7 @@ Action: Create guided deployment tutorial + update docs
 # Platform NPS Survey - [Month]
 
 ## Core Question
-On a scale of 0-10, how likely are you to recommend the Fawkes platform 
+On a scale of 0-10, how likely are you to recommend the Fawkes platform
 to a colleague?
 
 [0] [1] [2] [3] [4] [5] [6] [7] [8] [9] [10]
@@ -739,7 +739,7 @@ to a colleague?
 # Discovery Insights: Jan 26, 2024
 
 ## Theme 1: Deployment Process Friction
-**Insight**: New developers struggle to deploy to production because the 
+**Insight**: New developers struggle to deploy to production because the
 process is undocumented, multi-step, and error-prone.
 
 **Evidence**:
@@ -748,7 +748,7 @@ process is undocumented, multi-step, and error-prone.
 - Analytics: 70% of first deployments fail
 - NPS: "Deployment too complex" mentioned by 8 detractors
 
-**User Need**: "As a new developer, I need a guided deployment workflow 
+**User Need**: "As a new developer, I need a guided deployment workflow
 so I can ship my first feature confidently within my first week."
 
 **Opportunity**: Create Backstage deployment wizard with pre-flight checks
@@ -756,7 +756,7 @@ so I can ship my first feature confidently within my first week."
 **Priority**: P0 (blocks new developer productivity)
 
 ## Theme 2: Observability Gaps
-**Insight**: Developers can't troubleshoot production issues quickly 
+**Insight**: Developers can't troubleshoot production issues quickly
 because logs, metrics, and traces are in separate tools.
 
 **Evidence**:
@@ -764,7 +764,7 @@ because logs, metrics, and traces are in separate tools.
 - Support: 15 tickets related to "Where do I find logs?"
 - Analytics: Grafana + Tempo + Loki used <20% of developers
 
-**User Need**: "As a backend engineer, I need unified observability 
+**User Need**: "As a backend engineer, I need unified observability
 so I can debug incidents in minutes, not hours."
 
 **Opportunity**: Backstage observability tab (unified view)
@@ -772,7 +772,7 @@ so I can debug incidents in minutes, not hours."
 **Priority**: P1 (slows incident response)
 
 ## Theme 3: Jenkins Pain
-**Insight**: Jenkins pipeline failures are common and confusing because 
+**Insight**: Jenkins pipeline failures are common and confusing because
 error messages don't explain root cause.
 
 **Evidence**:
@@ -781,7 +781,7 @@ error messages don't explain root cause.
 - Analytics: 22% pipeline failure rate (vs. 15% industry avg)
 - NPS: Jenkins mentioned in 12 detractor responses
 
-**User Need**: "As any developer, I need clear error messages from CI 
+**User Need**: "As any developer, I need clear error messages from CI
 so I can fix my pipeline without asking for help."
 
 **Opportunity**: Implement error categorization and suggested fixes
@@ -844,7 +844,7 @@ Week 3-4: Quantitative Analysis
 **Researcher**: [Name, Email]
 
 ## Purpose
-We're conducting research to understand how developers use the Fawkes 
+We're conducting research to understand how developers use the Fawkes
 platform and identify opportunities for improvement.
 
 ## What You'll Do
@@ -888,7 +888,7 @@ Signature: _________________ Date: _________
 
 [Who] needs [what] because [why].
 
-**Example**: New backend engineers need a guided database migration workflow 
+**Example**: New backend engineers need a guided database migration workflow
 because manual SQL changes are error-prone and block deployments.
 
 ---
@@ -896,9 +896,9 @@ because manual SQL changes are error-prone and block deployments.
 ## Evidence
 
 ### Qualitative
-- Interview with Alex (Backend Engineer): "I spent 4 hours debugging a 
+- Interview with Alex (Backend Engineer): "I spent 4 hours debugging a
   failed migration last week. The error message didn't help at all."
-- Interview with Jordan (Tech Lead): "Our team has a 'migration checklist' 
+- Interview with Jordan (Tech Lead): "Our team has a 'migration checklist'
   in Notion because the platform doesn't guide us."
 - Support ticket #1234: "My migration failed in production, how do I rollback?"
 
@@ -943,11 +943,11 @@ because manual SQL changes are error-prone and block deployments.
 ## Proposed Solution
 
 ### User Story
-As a backend engineer, I want to run database migrations through a guided 
+As a backend engineer, I want to run database migrations through a guided
 workflow in Backstage so that I can deploy changes safely without manual steps.
 
 ### Solution Hypothesis
-If we provide a Backstage migration wizard with pre-flight checks and 
+If we provide a Backstage migration wizard with pre-flight checks and
 automated rollback, then migration failure rate will drop from 18% to <5%.
 
 ### Key Features
@@ -1081,13 +1081,13 @@ automated rollback, then migration failure rate will drop from 18% to <5%.
 
 ## Developer Voice
 
-> "I love the golden path templates. They saved me hours when starting 
+> "I love the golden path templates. They saved me hours when starting
 > a new service." — Frontend Engineer (Promoter, NPS 10)
 
-> "The platform is great once you know how to use it, but the learning 
+> "The platform is great once you know how to use it, but the learning
 > curve is steep. Better docs would help." — Backend Engineer (Passive, NPS 7)
 
-> "Jenkins is my biggest frustration. The error messages don't tell me 
+> "Jenkins is my biggest frustration. The error messages don't tell me
 > what's wrong, so I waste time guessing." — Full-Stack Engineer (Detractor, NPS 5)
 
 ---
@@ -1239,19 +1239,19 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 
 ### 3. Mix Qualitative and Quantitative
 
-**Qualitative** (interviews, surveys): Understand the "why"  
+**Qualitative** (interviews, surveys): Understand the "why"
 **Quantitative** (analytics, tickets): Understand the "what" and "how much"
 
 **Best Practice**: Use both. Triangulate findings.
 
 ### 4. Build Evidence, Not Opinions
 
-**Weak**: "I think developers would like feature X."  
+**Weak**: "I think developers would like feature X."
 **Strong**: "8 of 10 backend engineers mentioned needing X. Analytics show current workaround used 50x/day."
 
 ### 5. Show, Don't Just Tell
 
-**Weak**: "Deployment is confusing."  
+**Weak**: "Deployment is confusing."
 **Strong**: "Watch this video of a new developer taking 40 minutes to deploy because they couldn't find the docs."
 
 ### 6. Small Batch Discovery
@@ -1434,10 +1434,10 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 
 ### Executive Summary
 
-> "We've implemented a continuous discovery process that ensures every platform 
-> feature is backed by evidence of real developer needs. This approach has 
-> increased feature adoption from 40% to 80%, improved developer NPS by 25 points, 
-> and reduced wasted engineering effort by 60%. We're now building the right things, 
+> "We've implemented a continuous discovery process that ensures every platform
+> feature is backed by evidence of real developer needs. This approach has
+> increased feature adoption from 40% to 80%, improved developer NPS by 25 points,
+> and reduced wasted engineering effort by 60%. We're now building the right things,
 > not just building things right."
 
 ### Key Messages for Stakeholders
@@ -1480,7 +1480,7 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
     - Time from idea to value dropped 60% (because we build right features)
     - Feature adoption improved 2x (because features solve real problems)
     - Support burden dropped 30% (because features are intuitive)
-    
+
     Net result: We deliver more value, faster, not slower.
 
 ??? question "How do we know this is working?"
@@ -1489,7 +1489,7 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
     1. **Input**: Are we doing discovery? (10-12 interviews/month ✅)
     2. **Output**: Is discovery producing insights? (3-5 validated insights/month ✅)
     3. **Outcome**: Is discovery improving results? (NPS +40 ✅, adoption 80% ✅, DORA improved ✅)
-    
+
     All three levels show positive results.
 
 ??? question "What if developers don't participate?"
@@ -1498,7 +1498,7 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
     - **Incentives**: Gift cards, early access, recognition
     - **Influence**: Participants see their feedback shape roadmap
     - **Respect**: We keep interviews short (30-45 min), scheduling flexible
-    
+
     Current participation rate: >70% of invited developers agree to interviews.
 
 ??? question "Can we scale discovery as the platform grows?"
@@ -1508,7 +1508,7 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
     - **Sampling**: We don't need to interview everyone—10-12/month surfaces patterns
     - **Self-service**: NPS surveys scale to hundreds of developers
     - **Process**: The process is lightweight and embedded in weekly rituals
-    
+
     As we grow, we'll add 1 FTE dedicated to research per 100 platform users.
 
 ### Follow-Up Actions

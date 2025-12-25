@@ -5,7 +5,7 @@ description: Get your first application running on Fawkes in under 30 minutes
 
 # Deploy Your First Service
 
-**Time to Complete**: 30 minutes  
+**Time to Complete**: 30 minutes
 **Goal**: Deploy a simple web service to the Fawkes platform and see it running, secured, and visible in Backstage.
 
 ## What You'll Learn
@@ -38,21 +38,21 @@ First, let's confirm you can connect to the Fawkes cluster.
    ```bash
    kubectl config current-context
    ```
-   
+
    You should see a context name containing "fawkes" or your cluster name.
 
 2. Verify you can list namespaces:
    ```bash
    kubectl get namespaces
    ```
-   
+
    You should see core Fawkes namespaces like `fawkes-platform`, `argocd`, `vault`, etc.
 
 3. Check your assigned namespace:
    ```bash
    kubectl get namespace my-first-app
    ```
-   
+
    If this returns an error, create the namespace:
    ```bash
    kubectl create namespace my-first-app
@@ -266,26 +266,26 @@ Since we're not using Cloud Native Buildpacks in this first tutorial (that's Tut
 1. Create a `Dockerfile`:
    ```dockerfile
    FROM node:18-alpine
-   
+
    # Create app directory
    WORKDIR /app
-   
+
    # Install dependencies
    COPY package*.json ./
    RUN npm ci --only=production
-   
+
    # Copy app source
    COPY server.js ./
-   
+
    # Create non-root user
    RUN addgroup -g 1000 appuser && \
        adduser -D -u 1000 -G appuser appuser && \
        chown -R appuser:appuser /app
-   
+
    USER appuser
-   
+
    EXPOSE 8080
-   
+
    CMD ["npm", "start"]
    ```
 
@@ -362,7 +362,7 @@ Let's confirm everything is working.
    ```bash
    kubectl get pods -n my-first-app
    ```
-   
+
    You should see 2 pods running (we specified `replicas: 2`):
    ```
    NAME                            READY   STATUS    RESTARTS   AGE
@@ -379,19 +379,19 @@ Let's confirm everything is working.
    ```bash
    kubectl get ingress -n my-first-app
    ```
-   
+
    Note the `ADDRESS` field - this is your ingress IP.
 
 4. Test the endpoint locally first:
    ```bash
    kubectl port-forward -n my-first-app svc/hello-fawkes 8080:80
    ```
-   
+
    In another terminal:
    ```bash
    curl http://localhost:8080
    ```
-   
+
    You should see:
    ```json
    {

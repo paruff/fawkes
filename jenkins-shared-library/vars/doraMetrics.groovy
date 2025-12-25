@@ -12,7 +12,7 @@
  *
  * Usage in Jenkinsfile:
  * @Library('fawkes-pipeline-library') _
- * 
+ *
  * doraMetrics.recordBuild(
  *     service: 'my-service',
  *     status: 'success',
@@ -49,11 +49,11 @@ def recordBuild(Map config = [:]) {
         buildUrl: env.BUILD_URL ?: '',
         timestamp: new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone('UTC'))
     ]
-    
+
     config = defaults + config
-    
+
     def devlakeApiUrl = env.DEVLAKE_API_URL ?: 'http://devlake.fawkes-devlake.svc:8080'
-    
+
     def payload = """
     {
         "service": "${config.service}",
@@ -69,7 +69,7 @@ def recordBuild(Map config = [:]) {
         "type": "ci_build"
     }
     """
-    
+
     try {
         httpRequest(
             url: "${devlakeApiUrl}/api/plugins/webhook/1/cicd",
@@ -107,11 +107,11 @@ def recordQualityGate(Map config = [:]) {
         buildNumber: env.BUILD_NUMBER ?: '0',
         timestamp: new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone('UTC'))
     ]
-    
+
     config = defaults + config
-    
+
     def devlakeApiUrl = env.DEVLAKE_API_URL ?: 'http://devlake.fawkes-devlake.svc:8080'
-    
+
     def payload = """
     {
         "service": "${config.service}",
@@ -127,7 +127,7 @@ def recordQualityGate(Map config = [:]) {
         "type": "quality_gate"
     }
     """
-    
+
     try {
         httpRequest(
             url: "${devlakeApiUrl}/api/plugins/webhook/1/cicd",
@@ -166,11 +166,11 @@ def recordTestResults(Map config = [:]) {
         buildNumber: env.BUILD_NUMBER ?: '0',
         timestamp: new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone('UTC'))
     ]
-    
+
     config = defaults + config
-    
+
     def devlakeApiUrl = env.DEVLAKE_API_URL ?: 'http://devlake.fawkes-devlake.svc:8080'
-    
+
     def payload = """
     {
         "service": "${config.service}",
@@ -186,7 +186,7 @@ def recordTestResults(Map config = [:]) {
         "type": "test_results"
     }
     """
-    
+
     try {
         httpRequest(
             url: "${devlakeApiUrl}/api/plugins/webhook/1/cicd",
@@ -270,16 +270,16 @@ def recordPipelineComplete(Map config = [:]) {
         service: env.JOB_BASE_NAME ?: 'unknown-service',
         pipelineResult: currentBuild.currentResult ?: 'UNKNOWN'
     ]
-    
+
     config = defaults + config
-    
+
     // Record final build status
     recordBuild(
         service: config.service,
         status: config.pipelineResult == 'SUCCESS' ? 'success' : 'failure',
         stage: 'pipeline-complete'
     )
-    
+
     // Log summary
     echo """
     ============================================
@@ -289,7 +289,7 @@ def recordPipelineComplete(Map config = [:]) {
     Duration: ${currentBuild.durationString}
     Commit: ${env.GIT_COMMIT?.take(7) ?: 'unknown'}
     Branch: ${env.BRANCH_NAME ?: 'unknown'}
-    
+
     NOTE: Deployment metrics are tracked via ArgoCD.
     View DORA dashboard: http://devlake-grafana.127.0.0.1.nip.io
     ============================================
@@ -321,7 +321,7 @@ def isRetryBuild() {
  */
 def getReworkMetrics(String service) {
     def devlakeApiUrl = env.DEVLAKE_API_URL ?: 'http://devlake.fawkes-devlake.svc:8080'
-    
+
     try {
         def response = httpRequest(
             url: "${devlakeApiUrl}/api/dora/rework?project=${service}",
@@ -329,9 +329,9 @@ def getReworkMetrics(String service) {
             contentType: 'APPLICATION_JSON',
             validResponseCodes: '200:299'
         )
-        
+
         def metrics = readJSON text: response.content
-        
+
         echo """
         ============================================
         📊 Rework Metrics for ${service}
@@ -343,7 +343,7 @@ def getReworkMetrics(String service) {
         Avg Build Duration: ${metrics.avgBuildDuration?.value ?: 'N/A'} min
         ============================================
         """
-        
+
         return metrics
     } catch (Exception e) {
         echo "⚠️ DORA: Unable to fetch rework metrics: ${e.message}"
@@ -360,7 +360,7 @@ def getReworkMetrics(String service) {
  */
 def getMetricsSummary(String service) {
     def devlakeApiUrl = env.DEVLAKE_API_URL ?: 'http://devlake.fawkes-devlake.svc:8080'
-    
+
     try {
         def response = httpRequest(
             url: "${devlakeApiUrl}/api/dora/metrics?project=${service}",
@@ -368,9 +368,9 @@ def getMetricsSummary(String service) {
             contentType: 'APPLICATION_JSON',
             validResponseCodes: '200:299'
         )
-        
+
         def metrics = readJSON text: response.content
-        
+
         echo """
         ============================================
         📊 DORA Metrics for ${service}
@@ -381,13 +381,13 @@ def getMetricsSummary(String service) {
         Mean Time to Restore: ${metrics.meanTimeToRestore?.value ?: 'N/A'} ${metrics.meanTimeToRestore?.unit ?: ''}
         Operational Performance: ${metrics.operationalPerformance?.value ?: 'N/A'}%
         ============================================
-        
+
         CI/Rework Metrics (Jenkins):
         Build Success Rate: ${metrics.buildSuccessRate?.value ?: 'N/A'}%
         Rework Rate: ${metrics.reworkRate?.value ?: 'N/A'}%
         ============================================
         """
-        
+
         return metrics
     } catch (Exception e) {
         echo "⚠️ DORA: Unable to fetch metrics summary: ${e.message}"

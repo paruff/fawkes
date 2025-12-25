@@ -28,10 +28,10 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def get_db() -> Generator[Session, None, None]:
     """
     Dependency function to get database session.
-    
+
     Yields:
         Database session
-        
+
     Usage:
         @app.get("/items")
         def read_items(db: Session = Depends(get_db)):
@@ -47,7 +47,7 @@ def get_db() -> Generator[Session, None, None]:
 def check_db_connection() -> bool:
     """
     Check if database connection is working.
-    
+
     Returns:
         True if connection is successful, False otherwise
     """

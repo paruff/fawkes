@@ -152,7 +152,7 @@ async def init_database():
     try:
         db_pool = await asyncpg.create_pool(DATABASE_URL)
         logger.info("✅ Connected to database successfully")
-        
+
         # Create table if not exists
         async with db_pool.acquire() as conn:
             await conn.execute("""
@@ -178,19 +178,19 @@ async def init_database():
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     status_changed_at TIMESTAMP
                 );
-                
+
                 CREATE INDEX IF NOT EXISTS idx_feedback_status ON feedback(status);
                 CREATE INDEX IF NOT EXISTS idx_feedback_category ON feedback(category);
                 CREATE INDEX IF NOT EXISTS idx_feedback_created_at ON feedback(created_at DESC);
                 CREATE INDEX IF NOT EXISTS idx_feedback_sentiment ON feedback(sentiment);
                 CREATE INDEX IF NOT EXISTS idx_feedback_type ON feedback(feedback_type);
                 CREATE INDEX IF NOT EXISTS idx_feedback_github_issue ON feedback(github_issue_url);
-                
+
                 -- Add status_changed_at column if it doesn't exist (migration)
                 DO $$
                 BEGIN
                     IF NOT EXISTS (
-                        SELECT 1 FROM information_schema.columns 
+                        SELECT 1 FROM information_schema.columns
                         WHERE table_name='feedback' AND column_name='status_changed_at'
                     ) THEN
                         ALTER TABLE feedback ADD COLUMN status_changed_at TIMESTAMP;
@@ -209,7 +209,7 @@ async def lifespan(app: FastAPI):
     """Manage application lifespan (startup/shutdown)."""
     # Startup
     await init_database()
-    
+
     # Initial metrics refresh
     if db_pool:
         try:
@@ -218,9 +218,9 @@ async def lifespan(app: FastAPI):
             logger.info("✅ Initial metrics refresh completed")
         except Exception as e:
             logger.warning(f"⚠️  Initial metrics refresh failed: {e}")
-    
+
     yield
-    
+
     # Shutdown
     if db_pool:
         await db_pool.close()
@@ -256,7 +256,7 @@ async def verify_admin_token(authorization: Optional[str] = Header(None)):
     """Verify admin token for protected endpoints."""
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing or invalid authorization header")
-    
+
     token = authorization.replace("Bearer ", "")
     if token != ADMIN_TOKEN:
         raise HTTPException(status_code=403, detail="Invalid admin token")
@@ -275,7 +275,7 @@ async def health_check():
         except Exception as e:
             logger.error(f"Database health check failed: {e}")
             db_connected = False
-    
+
     return HealthResponse(
         status="healthy" if db_connected else "degraded",
         service="feedback-service",
@@ -290,7 +290,7 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
     """Submit new feedback with optional screenshot and GitHub issue creation."""
     if not db_pool:
         raise HTTPException(status_code=503, detail="Database not available")
-    
+
     # Validate feedback type
     valid_types = ["feedback", "bug_report", "feature_request"]
     if feedback.feedback_type not in valid_types:
@@ -298,12 +298,12 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
             status_code=400,
             detail=f"Invalid feedback_type. Must be one of: {', '.join(valid_types)}"
         )
-    
+
     with feedback_request_duration.labels(endpoint="submit_feedback").time():
         try:
             # Analyze sentiment of the comment
             sentiment, compound, pos, neu, neg = analyze_feedback_sentiment(feedback.comment)
-            
+
             # Process screenshot if provided
             screenshot_bytes = None
             if feedback.screenshot:
@@ -313,16 +313,16 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
                     screenshot_data = feedback.screenshot
                     if ',' in screenshot_data:
                         screenshot_data = screenshot_data.split(',', 1)[1]
-                    
+
                     screenshot_bytes = base64.b64decode(screenshot_data)
-                    
+
                     # Basic validation - check if it's a reasonable size (< 5MB)
                     if len(screenshot_bytes) > 5 * 1024 * 1024:
                         raise HTTPException(
                             status_code=400,
                             detail="Screenshot too large (max 5MB)"
                         )
-                    
+
                     logger.info(f"Screenshot received: {len(screenshot_bytes)} bytes")
                 except Exception as e:
                     logger.error(f"Error processing screenshot: {e}")
@@ -330,7 +330,7 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
                         status_code=400,
                         detail="Invalid screenshot data. Must be base64 encoded image."
                     )
-            
+
             async with db_pool.acquire() as conn:
                 row = await conn.fetchrow(
                     """
@@ -360,26 +360,26 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
                     feedback.browser_info,
                     feedback.user_agent
                 )
-                
+
                 # Update metrics
                 feedback_submissions_total.labels(
                     category=feedback.category,
                     rating=str(feedback.rating)
                 ).inc()
-                
+
                 feedback_id = row['id']
-                
+
                 logger.info(
                     f"Feedback submitted: ID={feedback_id}, type={feedback.feedback_type}, "
                     f"category={feedback.category}, rating={feedback.rating}, "
                     f"sentiment={sentiment}, has_screenshot={row['has_screenshot']}"
                 )
-                
+
                 # Create GitHub issue if requested and enabled
                 github_issue_url = None
                 if feedback.create_github_issue and is_github_enabled():
                     logger.info(f"Creating GitHub issue for feedback ID {feedback_id}")
-                    
+
                     # Create issue in background to not block response
                     async def create_issue_task():
                         success, issue_url, error = await create_github_issue(
@@ -394,13 +394,13 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
                             browser_info=feedback.browser_info,
                             user_agent=feedback.user_agent
                         )
-                        
+
                         if success and issue_url:
                             # Update feedback record with GitHub issue URL
                             async with db_pool.acquire() as update_conn:
                                 await update_conn.execute(
                                     """
-                                    UPDATE feedback 
+                                    UPDATE feedback
                                     SET github_issue_url = $1, updated_at = CURRENT_TIMESTAMP
                                     WHERE id = $2
                                     """,
@@ -410,13 +410,13 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
                             logger.info(f"✅ Linked GitHub issue to feedback ID {feedback_id}: {issue_url}")
                         elif error:
                             logger.error(f"❌ Failed to create GitHub issue for feedback ID {feedback_id}: {error}")
-                    
+
                     # Add to background tasks
                     background_tasks.add_task(create_issue_task)
-                    
+
                 elif feedback.create_github_issue and not is_github_enabled():
                     logger.warning("GitHub issue creation requested but GitHub integration not enabled")
-                
+
                 return FeedbackResponse(
                     id=row['id'],
                     rating=row['rating'],
@@ -454,33 +454,33 @@ async def list_feedback(
     """List all feedback (admin only)."""
     if not db_pool:
         raise HTTPException(status_code=503, detail="Database not available")
-    
+
     with feedback_request_duration.labels(endpoint="list_feedback").time():
         try:
             offset = (page - 1) * page_size
-            
+
             # Build query with filters
             where_clauses = []
             params = []
             param_idx = 1
-            
+
             if status:
                 where_clauses.append(f"status = ${param_idx}")
                 params.append(status)
                 param_idx += 1
-            
+
             if category:
                 where_clauses.append(f"category = ${param_idx}")
                 params.append(category)
                 param_idx += 1
-            
+
             where_sql = " WHERE " + " AND ".join(where_clauses) if where_clauses else ""
-            
+
             async with db_pool.acquire() as conn:
                 # Get total count
                 count_query = f"SELECT COUNT(*) FROM feedback{where_sql}"
                 total = await conn.fetchval(count_query, *params)
-                
+
                 # Get paginated results
                 query = f"""
                     SELECT id, rating, category, comment, email, page_url, status,
@@ -493,9 +493,9 @@ async def list_feedback(
                     LIMIT ${param_idx} OFFSET ${param_idx + 1}
                 """
                 params.extend([page_size, offset])
-                
+
                 rows = await conn.fetch(query, *params)
-                
+
                 items = [
                     FeedbackResponse(
                         id=row['id'],
@@ -517,7 +517,7 @@ async def list_feedback(
                     )
                     for row in rows
                 ]
-                
+
                 return FeedbackListResponse(
                     items=items,
                     total=total,
@@ -540,7 +540,7 @@ async def update_feedback_status(
     """Update feedback status (admin only) and sync with GitHub if applicable."""
     if not db_pool:
         raise HTTPException(status_code=503, detail="Database not available")
-    
+
     # Validate status
     valid_statuses = ["open", "in_progress", "resolved", "dismissed"]
     if status_update.status not in valid_statuses:
@@ -548,7 +548,7 @@ async def update_feedback_status(
             status_code=400,
             detail=f"Invalid status. Must be one of: {', '.join(valid_statuses)}"
         )
-    
+
     with feedback_request_duration.labels(endpoint="update_status").time():
         try:
             async with db_pool.acquire() as conn:
@@ -557,15 +557,15 @@ async def update_feedback_status(
                     "SELECT status FROM feedback WHERE id = $1",
                     feedback_id
                 )
-                
+
                 if not current_row:
                     raise HTTPException(status_code=404, detail="Feedback not found")
-                
+
                 # Update status and set status_changed_at if status is actually changing
                 # (and if it's changing from 'open' to any other status for first action tracking)
                 status_is_changing = current_row['status'] != status_update.status
                 first_action = current_row['status'] == 'open' and status_update.status != 'open'
-                
+
                 if status_is_changing and first_action:
                     row = await conn.fetchrow(
                         """
@@ -582,7 +582,7 @@ async def update_feedback_status(
                         status_update.status,
                         feedback_id
                     )
-                    
+
                     # Record time-to-action metric (time from created_at to now)
                     if row['created_at'] and row['status_changed_at']:
                         time_to_action = (row['status_changed_at'] - row['created_at']).total_seconds()
@@ -602,17 +602,17 @@ async def update_feedback_status(
                         status_update.status,
                         feedback_id
                     )
-                
+
                 if not row:
                     raise HTTPException(status_code=404, detail="Feedback not found")
-                
+
                 logger.info(f"Feedback status updated: ID={feedback_id}, status={status_update.status}")
-                
+
                 # If there's a GitHub issue linked, update it as well
                 github_issue_url = row['github_issue_url']
                 if github_issue_url and is_github_enabled():
                     logger.info(f"Syncing status update to GitHub issue: {github_issue_url}")
-                    
+
                     # Update in background to not block response
                     async def update_github_task():
                         success, error = await update_issue_status(
@@ -624,9 +624,9 @@ async def update_feedback_status(
                             logger.info(f"✅ Synced status to GitHub issue for feedback ID {feedback_id}")
                         elif error:
                             logger.error(f"❌ Failed to sync status to GitHub: {error}")
-                    
+
                     background_tasks.add_task(update_github_task)
-                
+
                 return FeedbackResponse(
                     id=row['id'],
                     rating=row['rating'],
@@ -658,7 +658,7 @@ async def get_feedback_stats(_token: str = Depends(verify_admin_token)):
     """Get aggregated feedback statistics (admin only)."""
     if not db_pool:
         raise HTTPException(status_code=503, detail="Database not available")
-    
+
     with feedback_request_duration.labels(endpoint="get_stats").time():
         try:
             async with db_pool.acquire() as conn:
@@ -666,25 +666,25 @@ async def get_feedback_stats(_token: str = Depends(verify_admin_token)):
                 total_and_avg = await conn.fetchrow(
                     "SELECT COUNT(*) as total, AVG(rating) as avg_rating FROM feedback"
                 )
-                
+
                 # By category
                 category_rows = await conn.fetch(
                     "SELECT category, COUNT(*) as count FROM feedback GROUP BY category"
                 )
                 by_category = {row['category']: row['count'] for row in category_rows}
-                
+
                 # By status
                 status_rows = await conn.fetch(
                     "SELECT status, COUNT(*) as count FROM feedback GROUP BY status"
                 )
                 by_status = {row['status']: row['count'] for row in status_rows}
-                
+
                 # By rating
                 rating_rows = await conn.fetch(
                     "SELECT rating, COUNT(*) as count FROM feedback GROUP BY rating ORDER BY rating"
                 )
                 by_rating = {str(row['rating']): row['count'] for row in rating_rows}
-                
+
                 return FeedbackStats(
                     total_feedback=total_and_avg['total'],
                     average_rating=float(total_and_avg['avg_rating']) if total_and_avg['avg_rating'] else 0.0,
@@ -703,11 +703,11 @@ async def refresh_metrics(_token: str = Depends(verify_admin_token)):
     """Manually refresh all Prometheus metrics (admin only)."""
     if not db_pool:
         raise HTTPException(status_code=503, detail="Database not available")
-    
+
     try:
         async with db_pool.acquire() as conn:
             await update_all_metrics(conn)
-        
+
         return {
             "status": "success",
             "message": "All metrics refreshed successfully"
@@ -762,7 +762,7 @@ async def get_feedback_screenshot(
     """Get screenshot data for a specific feedback (admin only)."""
     if not db_pool:
         raise HTTPException(status_code=503, detail="Database not available")
-    
+
     try:
         async with db_pool.acquire() as conn:
             row = await conn.fetchrow(
@@ -771,18 +771,18 @@ async def get_feedback_screenshot(
                 """,
                 feedback_id
             )
-            
+
             if not row:
                 raise HTTPException(status_code=404, detail="Feedback not found")
-            
+
             screenshot_bytes = row['screenshot']
-            
+
             if not screenshot_bytes:
                 raise HTTPException(status_code=404, detail="No screenshot available for this feedback")
-            
+
             # Return screenshot as base64 encoded string
             screenshot_base64 = base64.b64encode(screenshot_bytes).decode('utf-8')
-            
+
             return {
                 "feedback_id": feedback_id,
                 "screenshot": f"data:image/png;base64,{screenshot_base64}",
@@ -803,7 +803,7 @@ async def triage_feedback_endpoint(
 ):
     """
     Run AI triage on specific feedback submission.
-    
+
     This endpoint analyzes feedback and provides:
     - Priority score and label (P0-P3)
     - Suggested GitHub labels
@@ -813,23 +813,23 @@ async def triage_feedback_endpoint(
     """
     if not db_pool:
         raise HTTPException(status_code=503, detail="Database not available")
-    
+
     try:
         async with db_pool.acquire() as conn:
             # Fetch feedback details
             row = await conn.fetchrow(
                 """
-                SELECT id, feedback_type, category, comment, rating, 
+                SELECT id, feedback_type, category, comment, rating,
                        sentiment_compound, status
-                FROM feedback 
+                FROM feedback
                 WHERE id = $1
                 """,
                 feedback_id
             )
-            
+
             if not row:
                 raise HTTPException(status_code=404, detail="Feedback not found")
-            
+
             # Run AI triage
             triage_result = await triage_feedback(
                 feedback_id=row['id'],
@@ -839,14 +839,14 @@ async def triage_feedback_endpoint(
                 rating=row['rating'],
                 sentiment_compound=row['sentiment_compound']
             )
-            
+
             logger.info(f"Triage completed for feedback ID {feedback_id}: {triage_result}")
-            
+
             return {
                 "status": "success",
                 "triage": triage_result
             }
-            
+
     except HTTPException:
         raise
     except Exception as e:
@@ -865,48 +865,48 @@ async def automate_validated_feedback(
 ):
     """
     Automatically process validated feedback and create GitHub issues.
-    
+
     This endpoint:
     1. Fetches validated feedback (status='open', optionally filtered)
     2. Runs AI triage on each feedback
     3. Creates GitHub issues for high-priority, non-duplicate feedback
     4. Sends notifications
-    
+
     This can be called manually or triggered by a cron job.
     """
     if not db_pool:
         raise HTTPException(status_code=503, detail="Database not available")
-    
+
     if not is_github_enabled():
         raise HTTPException(
-            status_code=503, 
+            status_code=503,
             detail="GitHub integration not enabled. Set GITHUB_TOKEN environment variable."
         )
-    
+
     try:
         async with db_pool.acquire() as conn:
             # Build query to fetch validated feedback
             query_parts = ["SELECT * FROM feedback WHERE status = 'open' AND github_issue_url IS NULL"]
             params = []
             param_idx = 1
-            
+
             if min_rating:
                 query_parts.append(f"AND rating <= ${param_idx}")
                 params.append(min_rating)
                 param_idx += 1
-            
+
             if feedback_type:
                 query_parts.append(f"AND feedback_type = ${param_idx}")
                 params.append(feedback_type)
                 param_idx += 1
-            
+
             query_parts.append(f"ORDER BY created_at DESC LIMIT ${param_idx}")
             params.append(limit)
-            
+
             query = " ".join(query_parts)
-            
+
             feedback_items = await conn.fetch(query, *params)
-            
+
             if not feedback_items:
                 return {
                     "status": "success",
@@ -914,12 +914,12 @@ async def automate_validated_feedback(
                     "processed": 0,
                     "issues_created": 0
                 }
-            
+
             processed = 0
             issues_created = 0
             skipped_duplicates = 0
             errors = []
-            
+
             # Process each feedback item
             for feedback in feedback_items:
                 try:
@@ -932,9 +932,9 @@ async def automate_validated_feedback(
                         rating=feedback['rating'],
                         sentiment_compound=feedback['sentiment_compound']
                     )
-                    
+
                     processed += 1
-                    
+
                     # Skip if duplicates found
                     if not triage_result['should_create_issue']:
                         skipped_duplicates += 1
@@ -942,7 +942,7 @@ async def automate_validated_feedback(
                             f"Skipping feedback ID {feedback['id']}: "
                             f"{triage_result['triage_reason']}"
                         )
-                        
+
                         # Notify about duplicates
                         if triage_result['potential_duplicates']:
                             background_tasks.add_task(
@@ -952,9 +952,9 @@ async def automate_validated_feedback(
                                 feedback['category'],
                                 feedback['comment']
                             )
-                        
+
                         continue
-                    
+
                     # Create GitHub issue in background
                     async def create_issue_background():
                         success, issue_url, error = await create_github_issue(
@@ -969,14 +969,14 @@ async def automate_validated_feedback(
                             browser_info=feedback['browser_info'],
                             user_agent=feedback['user_agent']
                         )
-                        
+
                         if success and issue_url:
                             # Update feedback with GitHub issue URL
                             async with db_pool.acquire() as update_conn:
                                 await update_conn.execute(
                                     """
-                                    UPDATE feedback 
-                                    SET github_issue_url = $1, 
+                                    UPDATE feedback
+                                    SET github_issue_url = $1,
                                         status = 'in_progress',
                                         updated_at = CURRENT_TIMESTAMP
                                     WHERE id = $2
@@ -988,7 +988,7 @@ async def automate_validated_feedback(
                                 f"✅ Automated issue created for feedback ID {feedback['id']}: "
                                 f"{issue_url} (Priority: {triage_result['priority']})"
                             )
-                            
+
                             # Send notification about issue creation
                             await notify_issue_created(
                                 feedback_id=feedback['id'],
@@ -1002,15 +1002,15 @@ async def automate_validated_feedback(
                             logger.error(
                                 f"❌ Failed to create issue for feedback ID {feedback['id']}: {error}"
                             )
-                    
+
                     background_tasks.add_task(create_issue_background)
                     issues_created += 1
-                    
+
                 except Exception as e:
                     error_msg = f"Error processing feedback ID {feedback['id']}: {str(e)}"
                     logger.error(error_msg)
                     errors.append(error_msg)
-            
+
             result = {
                 "status": "success",
                 "message": f"Processed {processed} feedback items",
@@ -1019,12 +1019,12 @@ async def automate_validated_feedback(
                 "skipped_duplicates": skipped_duplicates,
                 "errors": errors if errors else None
             }
-            
+
             logger.info(
                 f"Automation complete: processed={processed}, "
                 f"issues_created={issues_created}, skipped={skipped_duplicates}"
             )
-            
+
             # Send automation summary notification
             background_tasks.add_task(
                 notify_automation_summary,
@@ -1033,9 +1033,9 @@ async def automate_validated_feedback(
                 skipped_duplicates,
                 errors
             )
-            
+
             return result
-            
+
     except HTTPException:
         raise
     except Exception as e:

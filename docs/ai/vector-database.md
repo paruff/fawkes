@@ -221,7 +221,7 @@ client.data_object.create(
 # Batch indexing for better performance
 with client.batch as batch:
     batch.batch_size = 100
-    
+
     for doc in documents:
         batch.add_data_object(
             data_object=doc,
@@ -358,7 +358,7 @@ Integrate with LLM for RAG:
 ```python
 def answer_question(question: str, llm_client) -> str:
     """Answer question using RAG pattern."""
-    
+
     # 1. Retrieve relevant context from Weaviate
     result = (
         client.query
@@ -368,23 +368,23 @@ def answer_question(question: str, llm_client) -> str:
         .with_additional(["certainty"])
         .do()
     )
-    
+
     docs = result["data"]["Get"]["FawkesDocument"]
-    
+
     # 2. Filter by relevance threshold
     relevant_docs = [
-        doc for doc in docs 
+        doc for doc in docs
         if doc["_additional"]["certainty"] > 0.7
     ]
-    
+
     # 3. Construct context
     context = "\n\n".join([
         f"# {doc['title']}\n{doc['content']}"
         for doc in relevant_docs
     ])
-    
+
     # 4. Create prompt with context
-    prompt = f"""Based on the following context from Fawkes documentation, 
+    prompt = f"""Based on the following context from Fawkes documentation,
 answer the question.
 
 Context:
@@ -393,10 +393,10 @@ Context:
 Question: {question}
 
 Answer:"""
-    
+
     # 5. Get answer from LLM
     answer = llm_client.generate(prompt)
-    
+
     return answer
 ```
 
@@ -493,7 +493,7 @@ weaviate_memory_usage_bytes
 **Query Performance Dashboard**:
 ```promql
 # 95th percentile query latency
-histogram_quantile(0.95, 
+histogram_quantile(0.95,
   rate(weaviate_query_duration_seconds_bucket[5m])
 )
 
@@ -539,7 +539,7 @@ print(f"Objects: {result['data']['Aggregate']['FawkesDocument'][0]['meta']['coun
 with client.batch as batch:
     batch.batch_size = 10
     # ... add objects ...
-    
+
     # Check for errors
     if batch.failed_objects:
         print(f"Failed: {batch.failed_objects}")

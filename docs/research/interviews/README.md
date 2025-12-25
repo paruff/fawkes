@@ -15,8 +15,8 @@ User interviews help us understand:
 We have developed specialized interview guides for three key personas:
 
 ### 1. [Application Developer Interview Guide](./application-developer-interview-guide.md)
-**Target Persona**: Application Developer (Maria Rodriguez - "The Feature Shipper")  
-**Duration**: 45-60 minutes  
+**Target Persona**: Application Developer (Maria Rodriguez - "The Feature Shipper")
+**Duration**: 45-60 minutes
 **Focus Areas**:
 - Development workflow from local to production
 - Deployment complexity and confidence
@@ -27,8 +27,8 @@ We have developed specialized interview guides for three key personas:
 **Key Topics**: 20 main questions covering JTBD, pain points, and workarounds
 
 ### 2. [Platform Engineer Interview Guide](./platform-engineer-interview-guide.md)
-**Target Persona**: Platform Engineer (Alex Chen - "The Infrastructure Guardian")  
-**Duration**: 45-60 minutes  
+**Target Persona**: Platform Engineer (Alex Chen - "The Infrastructure Guardian")
+**Duration**: 45-60 minutes
 **Focus Areas**:
 - Platform operations and reliability
 - Developer support and enablement
@@ -39,8 +39,8 @@ We have developed specialized interview guides for three key personas:
 **Key Topics**: 23 main questions covering reliability, automation, and developer self-service
 
 ### 3. [Stakeholder/Leadership Interview Guide](./stakeholder-interview-guide.md)
-**Target Persona**: Platform Consumer - Stakeholder (Sarah Kim - "The Value Navigator")  
-**Duration**: 45-60 minutes  
+**Target Persona**: Platform Consumer - Stakeholder (Sarah Kim - "The Value Navigator")
+**Duration**: 45-60 minutes
 **Focus Areas**:
 - Business value and ROI
 - Visibility and decision-making
@@ -70,10 +70,10 @@ We have developed specialized interview guides for three key personas:
    # Reference the guide for your target persona
    # Application Developers
    cat application-developer-interview-guide.md
-   
+
    # Platform Engineers
    cat platform-engineer-interview-guide.md
-   
+
    # Stakeholders/Leadership
    cat stakeholder-interview-guide.md
    ```

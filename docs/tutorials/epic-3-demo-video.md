@@ -5,8 +5,8 @@ description: Access the Epic 3 Product Discovery & UX walkthrough video demonstr
 
 # Epic 3 Demo Video
 
-**Status**: 🎬 Ready for Recording  
-**Duration**: 30 minutes  
+**Status**: 🎬 Ready for Recording
+**Duration**: 30 minutes
 **Epic**: Product Discovery & UX
 
 ## Video Access
@@ -23,10 +23,10 @@ Once recorded, the video will be available here:
 
 To record this video, use these comprehensive guides:
 
-📝 **[Full Recording Script](epic-3-demo-video-script.md)**  
+📝 **[Full Recording Script](epic-3-demo-video-script.md)**
 Detailed 30-minute script covering all Epic 3 deliverables with timestamps and talking points.
 
-✅ **[Recording Checklist](epic-3-demo-video-checklist.md)**  
+✅ **[Recording Checklist](epic-3-demo-video-checklist.md)**
 Quick reference checklist for setup, recording, and post-production.
 
 ## What the Video Covers

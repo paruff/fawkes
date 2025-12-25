@@ -19,7 +19,7 @@ def test_prometheus_exporter_imports():
     # Just check the file exists and has valid python syntax
     exporter_path = Path(__file__).parent.parent / "prometheus-exporter.py"
     assert exporter_path.exists(), "prometheus-exporter.py not found"
-    
+
     # Try to compile it
     try:
         with open(exporter_path, 'r') as f:
@@ -140,7 +140,7 @@ def test_requirements_includes_prometheus_client():
     """Test that requirements.txt includes prometheus-client."""
     requirements_path = Path(__file__).parent.parent / "requirements.txt"
     assert requirements_path.exists(), "requirements.txt not found"
-    
+
     with open(requirements_path, 'r') as f:
         content = f.read()
         assert 'prometheus-client' in content or 'prometheus_client' in content, \

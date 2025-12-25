@@ -10,7 +10,7 @@ export interface IconButtonProps extends BaseComponentProps {
 
 /**
  * Button with only an icon
- * 
+ *
  * @component
  * @example
  * ```tsx

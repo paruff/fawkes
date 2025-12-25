@@ -10,7 +10,7 @@ export interface PaginationProps extends BaseComponentProps {
 
 /**
  * Pagination controls
- * 
+ *
  * @component
  * @example
  * ```tsx

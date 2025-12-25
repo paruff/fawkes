@@ -132,7 +132,7 @@ Edit `platform/apps/backstage/config.yaml`:
 # Add OpenReplay configuration
 app:
   # ... existing config ...
-  
+
   # OpenReplay session recording
   openReplay:
     enabled: true
@@ -290,9 +290,9 @@ tracker.event('confusion_point', { element: 'create_button', action: 'looking_fo
 
 3. **Mark Confusion Points** (optional):
    ```javascript
-   tracker.event('confusion', { 
+   tracker.event('confusion', {
      location: 'navigation_menu',
-     looking_for: 'create_button' 
+     looking_for: 'create_button'
    });
    ```
 
@@ -422,7 +422,7 @@ kubectl logs -n openreplay deploy/openreplay-ingestor --tail=100
    ```bash
    # Scale ingestion pods
    kubectl scale deployment openreplay-ingestor -n openreplay --replicas=3
-   
+
    # Scale API pods
    kubectl scale deployment openreplay-api -n openreplay --replicas=2
    ```
@@ -532,7 +532,7 @@ spec:
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: December 2025  
-**Owner**: Product Team  
+**Document Version**: 1.0
+**Last Updated**: December 2025
+**Owner**: Product Team
 **Next Review**: June 2026

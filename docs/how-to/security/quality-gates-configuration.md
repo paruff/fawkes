@@ -45,7 +45,7 @@ To customize the quality gate for a specific project:
    ```bash
    # Local development
    open http://sonarqube.127.0.0.1.nip.io
-   
+
    # Production
    open https://sonarqube.fawkes.example.com
    ```
@@ -92,7 +92,7 @@ To customize the quality gate for a specific project:
    ```properties
    # Exclude third-party code
    sonar.exclusions=**/vendor/**,**/node_modules/**
-   
+
    # Exclude generated code
    sonar.exclusions=**/generated/**
    ```
@@ -194,29 +194,29 @@ goldenPathPipeline {
 
    ```text
    # .trivyignore
-   # 
+   #
    # Format: CVE-ID [exp:YYYY-MM-DD] [# comment]
    #
-   
+
    # Example 1: False positive - application doesn't use vulnerable code path
    CVE-2023-12345  # PostgreSQL CVE, but we use prepared statements exclusively
-   
+
    # Example 2: No fix available yet, mitigation in place
    CVE-2023-67890 exp:2024-12-31  # WAF rules block exploit, vendor fix expected Q1 2024
-   
+
    # Example 3: Vendor confirmed not vulnerable
    CVE-2023-11111  # Alpine maintainers confirmed package version not affected
    ```
 
 2. **Document in Security Log**:
-   
+
    Create or update `SECURITY.md` in your repository:
-   
+
    ```markdown
    # Security Exceptions
-   
+
    ## Trivy Scan Overrides
-   
+
    ### CVE-2023-12345 (PostgreSQL SQL Injection)
    - **Severity**: HIGH
    - **Affected Package**: postgresql@13.2
@@ -230,7 +230,7 @@ goldenPathPipeline {
 3. **Temporary Override for Hotfixes**:
 
    For urgent deployments, you can temporarily lower the threshold:
-   
+
    ```groovy
    // URGENT HOTFIX: Relaxed security scanning for production incident
    // Issue: INCIDENT-456
@@ -277,21 +277,21 @@ Gitleaks scans for hardcoded secrets, API keys, and credentials in the codebase.
 
    ```toml
    # .gitleaks.toml
-   
+
    [allowlist]
    description = "Allowlist for false positives"
-   
+
    # Allow specific pattern
    regexes = [
        "EXAMPLE_NOT_REAL_KEY",  # Test fixtures
    ]
-   
+
    # Allow specific file paths
    paths = [
        "tests/fixtures/test-data.json",
        "docs/examples/",
    ]
-   
+
    # Allow specific commits (use sparingly!)
    commits = [
        "abc123def456",  # Migration commit with dummy data
@@ -302,9 +302,9 @@ Gitleaks scans for hardcoded secrets, API keys, and credentials in the codebase.
 
    ```markdown
    # .gitleaks-exceptions.md
-   
+
    ## Gitleaks Allowlist Exceptions
-   
+
    ### tests/fixtures/test-data.json
    - **Pattern**: JWT token pattern
    - **Reason**: Test fixture with non-functional token
@@ -407,7 +407,7 @@ goldenPathPipeline {
     language = 'java'
     dockerImage = 'harbor.fawkes.local/fawkes/user-service'
     sonarProject = 'user-service'
-    
+
     // Quality gates (using defaults)
     // trivySeverity = 'HIGH,CRITICAL'  // default
     // trivyExitCode = '1'               // default
@@ -433,7 +433,7 @@ goldenPathPipeline {
     appName = 'analytics-api'
     language = 'python'
     dockerImage = 'harbor.fawkes.local/fawkes/analytics-api'
-    
+
     // Quality gates use defaults
     // trivySeverity = 'HIGH,CRITICAL'
 }
@@ -457,7 +457,7 @@ goldenPathPipeline {
     appName = 'web-frontend'
     language = 'node'
     dockerImage = 'harbor.fawkes.local/fawkes/web-frontend'
-    
+
     // All quality gates enabled by default
 }
 ```
@@ -487,7 +487,7 @@ goldenPathPipeline {
     appName = 'event-processor'
     language = 'go'
     dockerImage = 'harbor.fawkes.local/fawkes/event-processor'
-    
+
     // Quality gates enabled by default
 }
 ```
@@ -622,7 +622,7 @@ Monitor quality gate performance in Grafana:
 ### DON'T ❌
 
 - **Don't disable gates** without approval
-- **Don't leave overrides indefinitely** 
+- **Don't leave overrides indefinitely**
 - **Don't ignore MEDIUM/LOW** findings entirely
 - **Don't commit secrets** even temporarily
 - **Don't use same override** across multiple projects
@@ -662,6 +662,6 @@ For questions or assistance:
 
 ---
 
-**Maintained by**: Fawkes Platform Team  
-**Last Updated**: December 2024  
+**Maintained by**: Fawkes Platform Team
+**Last Updated**: December 2024
 **Related Issues**: #19 (SonarQube), #20 (Trivy), #21 (Secrets), #22 (Quality Gates)

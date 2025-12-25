@@ -103,22 +103,22 @@ success_rate = Gauge(
 
 class MetricsExporter:
     """Exports Great Expectations metrics to Prometheus."""
-    
+
     def __init__(self, results_dir: str = "/app/gx/uncommitted/validations"):
         """
         Initialize the metrics exporter.
-        
+
         Args:
             results_dir: Directory containing validation results
         """
         self.results_dir = Path(results_dir)
         self.last_update = {}
         logger.info(f"Initialized MetricsExporter with results_dir: {results_dir}")
-    
+
     def parse_checkpoint_result(self, result_data: Dict[str, Any]) -> None:
         """
         Parse a checkpoint result and update metrics.
-        
+
         Args:
             result_data: Checkpoint result data from Great Expectations
         """
@@ -128,7 +128,7 @@ class MetricsExporter:
             success = result_data.get('success', False)
             statistics = result_data.get('statistics', {})
             run_time = result_data.get('run_time', time.time())
-            
+
             # Extract suite name from checkpoint
             # Note: This uses a simple naming convention: checkpoint names should end with "_checkpoint"
             # and optionally contain "_db" before that. Examples:
@@ -140,40 +140,40 @@ class MetricsExporter:
                 datasource = checkpoint_name.replace('_checkpoint', '')
             if '_db' in datasource:
                 datasource = datasource.replace('_db', '')
-            
+
             suite_name = result_data.get('expectation_suite_name', checkpoint_name)
-            
+
             # Update validation success metric
             validation_success.labels(
                 datasource=datasource,
                 suite=suite_name,
                 checkpoint=checkpoint_name
             ).set(1 if success else 0)
-            
+
             # Update expectations metrics
             evaluated = statistics.get('evaluated_expectations', 0)
             successful = statistics.get('successful_expectations', 0)
             unsuccessful = statistics.get('unsuccessful_expectations', 0)
             success_percent = statistics.get('success_percent', 0)
-            
+
             expectations_total.labels(
                 datasource=datasource,
                 suite=suite_name,
                 checkpoint=checkpoint_name
             ).set(evaluated)
-            
+
             expectations_successful.labels(
                 datasource=datasource,
                 suite=suite_name,
                 checkpoint=checkpoint_name
             ).set(successful)
-            
+
             success_rate.labels(
                 datasource=datasource,
                 suite=suite_name,
                 checkpoint=checkpoint_name
             ).set(success_percent)
-            
+
             # Update validation runs counter
             status = 'success' if success else 'failure'
             validation_runs.labels(
@@ -182,7 +182,7 @@ class MetricsExporter:
                 checkpoint=checkpoint_name,
                 status=status
             ).inc()
-            
+
             # Update expectation failures
             if unsuccessful > 0:
                 expectation_failures.labels(
@@ -191,7 +191,7 @@ class MetricsExporter:
                     expectation_type='all',
                     checkpoint=checkpoint_name
                 ).inc(unsuccessful)
-            
+
             # Update data freshness
             current_time = time.time()
             seconds_since_validation = current_time - run_time
@@ -199,36 +199,36 @@ class MetricsExporter:
                 datasource=datasource,
                 suite=suite_name
             ).set(seconds_since_validation)
-            
+
             # Track last update time
             self.last_update[checkpoint_name] = current_time
-            
+
             logger.info(
                 f"Updated metrics for checkpoint={checkpoint_name}, "
                 f"success={success}, evaluated={evaluated}, "
                 f"successful={successful}, failed={unsuccessful}"
             )
-            
+
         except Exception as e:
             logger.error(f"Error parsing checkpoint result: {e}", exc_info=True)
-    
+
     def load_latest_results(self) -> None:
         """Load the latest validation results from disk."""
         if not self.results_dir.exists():
             logger.warning(f"Results directory does not exist: {self.results_dir}")
             return
-        
+
         try:
             # Find all validation result files
             result_files = list(self.results_dir.glob("**/*.json"))
-            
+
             if not result_files:
                 logger.warning(f"No validation results found in {self.results_dir}")
                 return
-            
+
             # Sort by modification time and process recent ones
             result_files.sort(key=lambda f: f.stat().st_mtime, reverse=True)
-            
+
             # Process up to 20 most recent results to avoid staleness
             processed = 0
             for result_file in result_files[:20]:
@@ -239,16 +239,16 @@ class MetricsExporter:
                         processed += 1
                 except Exception as e:
                     logger.error(f"Error loading result file {result_file}: {e}")
-            
+
             logger.info(f"Processed {processed} validation results")
-            
+
         except Exception as e:
             logger.error(f"Error loading latest results: {e}", exc_info=True)
-    
+
     def parse_inline_result(self, result_json: str) -> None:
         """
         Parse a JSON result string and update metrics.
-        
+
         Args:
             result_json: JSON string with validation results
         """
@@ -263,26 +263,26 @@ class MetricsExporter:
 
 class MetricsHandler(BaseHTTPRequestHandler):
     """HTTP handler for Prometheus metrics endpoint."""
-    
+
     # Note: Using a class attribute for simplicity in single-threaded HTTP server
     # For production multi-threaded environments, consider passing exporter through
     # handler constructor or using a thread-safe approach
     exporter: MetricsExporter = None
-    
+
     def do_GET(self):
         """Handle GET requests."""
         if self.path == '/metrics':
             # Refresh metrics before serving
             if self.exporter:
                 self.exporter.load_latest_results()
-            
+
             # Generate and send metrics
             metrics = generate_latest(registry)
             self.send_response(200)
             self.send_header('Content-Type', CONTENT_TYPE_LATEST)
             self.end_headers()
             self.write_output(metrics)
-        
+
         elif self.path == '/health' or self.path == '/healthz':
             # Health check endpoint
             self.send_response(200)
@@ -294,17 +294,17 @@ class MetricsHandler(BaseHTTPRequestHandler):
                 'timestamp': datetime.utcnow().isoformat()
             }
             self.write_output(json.dumps(health_data).encode())
-        
+
         else:
             # 404 for other paths
             self.send_response(404)
             self.end_headers()
             self.write_output(b'Not Found')
-    
+
     def write_output(self, output: bytes):
         """Write output to response."""
         self.wfile.write(output)
-    
+
     def log_message(self, format, *args):
         """Override to use our logger."""
         logger.info(f"{self.address_string()} - {format % args}")
@@ -313,25 +313,25 @@ class MetricsHandler(BaseHTTPRequestHandler):
 def run_server(port: int = 9110, results_dir: str = "/app/gx/uncommitted/validations"):
     """
     Run the Prometheus metrics HTTP server.
-    
+
     Args:
         port: Port to listen on
         results_dir: Directory containing validation results
     """
     # Create exporter
     exporter = MetricsExporter(results_dir=results_dir)
-    
+
     # Set exporter on handler class
     MetricsHandler.exporter = exporter
-    
+
     # Load initial results
     exporter.load_latest_results()
-    
+
     # Start HTTP server
     server = HTTPServer(('', port), MetricsHandler)
     logger.info(f"Starting Prometheus exporter on port {port}")
     logger.info(f"Metrics available at http://localhost:{port}/metrics")
-    
+
     try:
         server.serve_forever()
     except KeyboardInterrupt:
@@ -366,23 +366,23 @@ def main():
         type=str,
         help='Parse a JSON result string and exit (for testing)'
     )
-    
+
     args = parser.parse_args()
-    
+
     # One-shot mode for testing
     if args.oneshot:
         exporter = MetricsExporter(results_dir=args.results_dir)
         exporter.load_latest_results()
         print(generate_latest(registry).decode())
         return
-    
+
     # JSON mode for testing
     if args.json:
         exporter = MetricsExporter(results_dir=args.results_dir)
         exporter.parse_inline_result(args.json)
         print(generate_latest(registry).decode())
         return
-    
+
     # Normal server mode
     run_server(port=args.port, results_dir=args.results_dir)
 

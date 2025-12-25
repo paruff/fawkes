@@ -114,10 +114,10 @@ The test suite validates acceptance criteria for AT-E1-001:
     az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} \
       -p ${{ secrets.AZURE_CLIENT_SECRET }} \
       --tenant ${{ secrets.AZURE_TENANT_ID }}
-    
+
     inspec exec infra/azure/inspec/ -t azure:// \
       --reporter cli json:aks-inspec-results.json
-    
+
 - name: Upload Test Results
   uses: actions/upload-artifact@v3
   with:
@@ -134,7 +134,7 @@ stage('InSpec Tests') {
             sh '''
                 az login --service-principal -u $AZURE_CLIENT_ID \
                   -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
-                
+
                 inspec exec infra/azure/inspec/ -t azure:// \
                   --reporter cli junit:reports/aks-inspec.xml
             '''

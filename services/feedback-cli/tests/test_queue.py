@@ -26,7 +26,7 @@ def test_queue_initialization(temp_queue_dir):
     """Test queue initialization."""
     queue_path = temp_queue_dir / "queue.json"
     queue = OfflineQueue(str(queue_path))
-    
+
     assert queue.queue_path == queue_path
     assert queue.size() == 0
 
@@ -38,9 +38,9 @@ def test_add_to_queue(queue):
         "category": "Test",
         "comment": "Test comment",
     }
-    
+
     queue.add(feedback_data)
-    
+
     assert queue.size() == 1
     items = queue.get_all()
     assert len(items) == 1
@@ -58,7 +58,7 @@ def test_add_multiple_items(queue):
             "category": f"Category{i}",
             "comment": f"Comment{i}",
         })
-    
+
     assert queue.size() == 3
 
 
@@ -77,10 +77,10 @@ def test_remove_from_queue(queue):
             "category": f"Category{i}",
             "comment": f"Comment{i}",
         })
-    
+
     # Remove middle item
     queue.remove(1)
-    
+
     assert queue.size() == 2
     items = queue.get_all()
     assert items[0]["category"] == "Category0"
@@ -90,11 +90,11 @@ def test_remove_from_queue(queue):
 def test_remove_invalid_index(queue):
     """Test removing with invalid index."""
     queue.add({"rating": 5, "category": "Test", "comment": "Test"})
-    
+
     # Should not raise error, just do nothing
     queue.remove(10)
     assert queue.size() == 1
-    
+
     queue.remove(-1)
     assert queue.size() == 1
 
@@ -106,14 +106,14 @@ def test_increment_attempts(queue):
         "category": "Test",
         "comment": "Test",
     })
-    
+
     items = queue.get_all()
     assert items[0]["attempts"] == 0
-    
+
     queue.increment_attempts(0)
     items = queue.get_all()
     assert items[0]["attempts"] == 1
-    
+
     queue.increment_attempts(0)
     items = queue.get_all()
     assert items[0]["attempts"] == 2
@@ -127,11 +127,11 @@ def test_clear_queue(queue):
             "category": f"Category{i}",
             "comment": f"Comment{i}",
         })
-    
+
     assert queue.size() == 5
-    
+
     queue.clear()
-    
+
     assert queue.size() == 0
     assert queue.get_all() == []
 
@@ -139,7 +139,7 @@ def test_clear_queue(queue):
 def test_queue_persistence(temp_queue_dir):
     """Test queue persistence across instances."""
     queue_path = temp_queue_dir / "queue.json"
-    
+
     # Create first queue and add items
     queue1 = OfflineQueue(str(queue_path))
     queue1.add({
@@ -147,10 +147,10 @@ def test_queue_persistence(temp_queue_dir):
         "category": "Persistent",
         "comment": "This should persist",
     })
-    
+
     # Create new queue instance
     queue2 = OfflineQueue(str(queue_path))
-    
+
     # Should have the same item
     assert queue2.size() == 1
     items = queue2.get_all()
@@ -160,11 +160,11 @@ def test_queue_persistence(temp_queue_dir):
 def test_queue_corrupted_file(temp_queue_dir):
     """Test handling corrupted queue file."""
     queue_path = temp_queue_dir / "queue.json"
-    
+
     # Write invalid JSON
     with open(queue_path, "w") as f:
         f.write("invalid json{{{")
-    
+
     # Should handle gracefully and return empty list
     queue = OfflineQueue(str(queue_path))
     items = queue.get_all()
@@ -180,7 +180,7 @@ def test_queued_feedback_model():
         queued_at="2024-01-01T00:00:00",
         attempts=0,
     )
-    
+
     assert feedback.rating == 5
     assert feedback.category == "Test"
     assert feedback.attempts == 0
@@ -196,9 +196,9 @@ def test_queue_with_optional_fields(queue):
         "page_url": "https://example.com",
         "feedback_type": "bug_report",
     }
-    
+
     queue.add(feedback_data)
-    
+
     items = queue.get_all()
     assert items[0]["email"] == "test@example.com"
     assert items[0]["page_url"] == "https://example.com"
@@ -209,17 +209,17 @@ def test_queue_json_format(temp_queue_dir):
     """Test queue file JSON format."""
     queue_path = temp_queue_dir / "queue.json"
     queue = OfflineQueue(str(queue_path))
-    
+
     queue.add({
         "rating": 5,
         "category": "Test",
         "comment": "Test",
     })
-    
+
     # Read and verify JSON format
     with open(queue_path, "r") as f:
         data = json.load(f)
-    
+
     assert isinstance(data, list)
     assert len(data) == 1
     assert "rating" in data[0]

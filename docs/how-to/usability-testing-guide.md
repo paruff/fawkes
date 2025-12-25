@@ -2,11 +2,11 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: December 2025  
-**Status**: Active  
-**Owner**: Product Team  
-**Audience**: Product Managers, UX Researchers, Platform Engineers conducting usability tests  
+**Version**: 1.0
+**Last Updated**: December 2025
+**Status**: Active
+**Owner**: Product Team
+**Audience**: Product Managers, UX Researchers, Platform Engineers conducting usability tests
 
 ---
 
@@ -131,14 +131,14 @@ Tasks should be:
 
 **Goal**: [What the user needs to accomplish]
 
-**Success Criteria**: 
+**Success Criteria**:
 - [ ] User completes task without assistance
 - [ ] Task completed in [X] minutes or less
 - [ ] User expresses confidence (rating 4/5 or higher)
 
 **Starting Point**: [Where user begins - URL or state]
 
-**Acceptance**: 
+**Acceptance**:
 - Task is complete when: [specific end state]
 ```
 
@@ -151,7 +151,7 @@ Tasks should be:
 
 **Goal**: Use Backstage to create a new application from a template and deploy it to the development environment.
 
-**Success Criteria**: 
+**Success Criteria**:
 - [ ] User finds the software catalog
 - [ ] User creates new app from template
 - [ ] User triggers deployment
@@ -210,21 +210,21 @@ Tasks should be:
 
 **Build Rapport:**
 ```
-"Hi [Name], thanks so much for joining me today. I'm [Your Name] from the 
+"Hi [Name], thanks so much for joining me today. I'm [Your Name] from the
 Product Team, and I'm excited to learn from you.
 
-Today we're going to test some workflows in the Fawkes platform. I want to 
-emphasize that we're testing the platform, not you. There are no wrong 
-answers or mistakes you can make. If something is confusing or doesn't work, 
+Today we're going to test some workflows in the Fawkes platform. I want to
+emphasize that we're testing the platform, not you. There are no wrong
+answers or mistakes you can make. If something is confusing or doesn't work,
 that's valuable feedback for us.
 
-I'll ask you to complete some tasks while thinking aloud - basically, narrate 
-what you're thinking and doing as you go. This helps me understand your 
-thought process. I might occasionally ask follow-up questions, but I won't 
+I'll ask you to complete some tasks while thinking aloud - basically, narrate
+what you're thinking and doing as you go. This helps me understand your
+thought process. I might occasionally ask follow-up questions, but I won't
 be able to help with the tasks themselves.
 
-Your responses will be anonymized, and we won't share anything that identifies 
-you personally. With your permission, I'd like to record this session for 
+Your responses will be anonymized, and we won't share anything that identifies
+you personally. With your permission, I'd like to record this session for
 note-taking purposes only. Are you comfortable with that?"
 ```
 
@@ -236,16 +236,16 @@ note-taking purposes only. Are you comfortable with that?"
 
 **Set Expectations:**
 ```
-"We'll spend about [45-60 minutes] today. I have [N] tasks for you to try. 
-For each one, I'll give you a scenario and ask you to accomplish a goal. 
+"We'll spend about [45-60 minutes] today. I have [N] tasks for you to try.
+For each one, I'll give you a scenario and ask you to accomplish a goal.
 Please share your screen so I can see what you're doing.
 
-Remember to think aloud - tell me what you're looking for, what you expect 
-to happen, if you're confused, or if something surprises you. This running 
+Remember to think aloud - tell me what you're looking for, what you expect
+to happen, if you're confused, or if something surprises you. This running
 commentary is incredibly valuable.
 
-If you get stuck, I'll give you 2-3 minutes to try to figure it out, then 
-I might jump in with a hint. Some tasks might be impossible - that's okay 
+If you get stuck, I'll give you 2-3 minutes to try to figure it out, then
+I might jump in with a hint. Some tasks might be impossible - that's okay
 and useful for us to know.
 
 Any questions before we start?"
@@ -319,14 +319,14 @@ After all tasks:
 
 **Thank Participant:**
 ```
-"Thank you so much for your time and honest feedback. This is incredibly 
+"Thank you so much for your time and honest feedback. This is incredibly
 valuable for improving the platform.
 
-Your feedback will be anonymized and shared with the team. We'll use it to 
-prioritize improvements. You might see some changes in the next few months 
+Your feedback will be anonymized and shared with the team. We'll use it to
+prioritize improvements. You might see some changes in the next few months
 based on what we learned today.
 
-Can we reach out if we have follow-up questions or want to test improvements 
+Can we reach out if we have follow-up questions or want to test improvements
 with you?"
 ```
 
@@ -346,7 +346,7 @@ with you?"
 #### OpenReplay Session Recording
 - **Best for**: Unmoderated remote tests, replay sessions
 - **Access**: https://openreplay.fawkes.local
-- **Features**: 
+- **Features**:
   - Session replay with DOM recording
   - Console logs and network traffic
   - User interaction heatmaps
@@ -417,10 +417,10 @@ File: `docs/research/data/processed/usability-tests/YYYY-MM-DD-{persona}-{featur
 - **Status**: Success / Partial / Failure
 - **Time**: [X] minutes
 - **Confidence**: [1-5]
-- **Observations**: 
+- **Observations**:
   - [Observation 1]
   - [Observation 2]
-- **Quotes**: 
+- **Quotes**:
   - "[Direct quote about confusion]"
   - "[Direct quote about success]"
 - **Issues**:
@@ -461,9 +461,9 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 ## Key Findings
 
 ### Finding 1: [Critical Issue]
-**Severity**: Critical  
-**Frequency**: [X/N] participants affected  
-**Impact**: [Description of user impact]  
+**Severity**: Critical
+**Frequency**: [X/N] participants affected
+**Impact**: [Description of user impact]
 
 **Evidence**:
 - Task 2: 6/8 participants failed to complete
@@ -630,6 +630,6 @@ File: `docs/research/insights/YYYY-MM-{feature}-usability-findings.md`
 
 ---
 
-**Document Owner**: Product Team  
-**Last Review**: December 2025  
+**Document Owner**: Product Team
+**Last Review**: December 2025
 **Next Review**: June 2026 or based on feedback

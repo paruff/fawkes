@@ -307,13 +307,13 @@ Flow Efficiency = Active Time / (Active Time + Wait Time)
 for stage in value_stream:
     avg_cycle_time = historical_average(stage)
     std_dev = standard_deviation(stage)
-    
+
     current_items = items_in_stage(stage)
-    
+
     for item in current_items:
         if item.time_in_stage > avg_cycle_time + (2 * std_dev):
             alert(f"Item {item.id} stuck in {stage}")
-    
+
     # Stage-level bottleneck
     if count(current_items) > historical_average_wip * 1.5:
         alert(f"Bottleneck detected in {stage}")
@@ -421,7 +421,7 @@ jobs:
         id: work_item
         run: |
           echo "ID=$(git log -1 --pretty=%B | grep -oP 'FOC-\d+')" >> $GITHUB_OUTPUT
-      
+
       - name: Notify VSM Hub
         run: |
           curl -X POST $VSM_HUB_URL/events \
@@ -495,7 +495,7 @@ data:
     headers:
     - name: Content-Type
       value: application/json
-  
+
   trigger.on-deployed: |
     - when: app.status.operationState.phase in ['Succeeded']
       send: [vsm-hub-deployment-success]

@@ -12,12 +12,12 @@ The Fawkes Design System is a comprehensive component library built for the Fawk
 
 ## Features
 
-✅ **40+ Components** - Comprehensive coverage of UI needs  
-✅ **Design Tokens** - Centralized design decisions  
-✅ **Accessibility** - WCAG 2.1 AA compliant  
-✅ **TypeScript** - Full type safety  
-✅ **Tested** - Unit, integration, and accessibility tests  
-✅ **Documented** - Interactive Storybook documentation  
+✅ **40+ Components** - Comprehensive coverage of UI needs
+✅ **Design Tokens** - Centralized design decisions
+✅ **Accessibility** - WCAG 2.1 AA compliant
+✅ **TypeScript** - Full type safety
+✅ **Tested** - Unit, integration, and accessibility tests
+✅ **Documented** - Interactive Storybook documentation
 
 ## Installation
 

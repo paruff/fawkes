@@ -16,7 +16,7 @@ Usage: $0 [options]
 Options:
   -y, --yes                         Run non-interactively (auto-accept prompts)
       --accept-driver-permissions   Automatically set hyperkit driver permissions (sudo)
-  -f, --file <path>                 Path to Brewfile (default: 
+  -f, --file <path>                 Path to Brewfile (default:
                                     ${BREWFILE_PATH})
       --no-lock                     Deprecated: ignored (brew bundle removed this flag)
   -h, --help                        Show this help

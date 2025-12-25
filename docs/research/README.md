@@ -53,7 +53,7 @@ research/
    ```bash
    # Install Git LFS (if not already installed)
    git lfs install
-   
+
    # Pull LFS files
    git lfs pull
    ```
@@ -74,7 +74,7 @@ research/
    ```bash
    # Copy a template
    cp templates/persona.md personas/my-new-persona.md
-   
+
    # Edit the file with your content
    vim personas/my-new-persona.md
    ```
@@ -483,7 +483,7 @@ Before submitting research artifacts, ensure:
 
 ---
 
-**Version**: 1.0  
-**Last Updated**: December 23, 2025  
-**Owner**: Product Team  
+**Version**: 1.0
+**Last Updated**: December 23, 2025
+**Owner**: Product Team
 **Status**: Active

@@ -152,6 +152,16 @@ repos:
         args: ['--severity=warning']
 
   # ============================================================================
+  # Go Code Quality
+  # ============================================================================
+  - repo: https://github.com/golangci/golangci-lint
+    rev: v1.55.2
+    hooks:
+      - id: golangci-lint
+        name: Lint Go code
+        args: ['--fast']
+
+  # ============================================================================
   # Custom Local Hooks for Fawkes-Specific Validation
   # ============================================================================
   - repo: local

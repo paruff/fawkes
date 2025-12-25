@@ -48,7 +48,7 @@ The Fawkes platform uses **OpenTelemetry Collector** for unified log collection 
 
 ### 1. OpenTelemetry Collector (Already Deployed)
 
-**Status**: ✅ Deployed in `monitoring` namespace  
+**Status**: ✅ Deployed in `monitoring` namespace
 **Configuration**: `platform/apps/opentelemetry/otel-collector-application.yaml`
 
 **Key Features**:
@@ -84,7 +84,7 @@ filelog:
 
 ### 2. OpenSearch Cluster
 
-**Status**: Ready to deploy  
+**Status**: Ready to deploy
 **Configuration**: `platform/apps/opensearch/opensearch-application.yaml`
 
 **Deployment Details**:
@@ -107,7 +107,7 @@ roles: [master, ingest, data, remote_cluster_client]
 
 ### 3. OpenSearch Dashboards
 
-**Status**: Ready to deploy  
+**Status**: Ready to deploy
 **Configuration**: `platform/apps/opensearch/opensearch-dashboards-application.yaml`
 
 **Deployment Details**:
@@ -120,7 +120,7 @@ roles: [master, ingest, data, remote_cluster_client]
 
 ### 4. Index State Management (ISM) Policy
 
-**Status**: Ready to deploy  
+**Status**: Ready to deploy
 **Configuration**: `platform/apps/opensearch/ism-retention-policy.yaml`
 
 **30-Day Retention Policy**:
@@ -146,7 +146,7 @@ States:
 
 ### 5. Index Patterns and Templates
 
-**Status**: Ready to deploy  
+**Status**: Ready to deploy
 **Configuration**: `platform/apps/opensearch/configure-index-patterns.yaml`
 
 **Index Templates**:

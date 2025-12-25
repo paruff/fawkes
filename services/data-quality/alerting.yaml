@@ -19,15 +19,15 @@ rules:
       webhook_url: ${MATTERMOST_WEBHOOK_URL}
       message_template: |
         ## 🚨 Data Quality Alert
-        
+
         **Alert**: Data Quality Validation Failed
         **Database**: {{database}}
         **Suite**: {{expectation_suite}}
         **Failed Expectations**: {{failed_count}}
         **Time**: {{timestamp}}
-        
+
         **Action Required**: Review failed expectations and investigate data issues.
-        
+
         [View Details]({{data_docs_url}})
 
   # Alert on data freshness issues
@@ -44,12 +44,12 @@ rules:
       webhook_url: ${MATTERMOST_WEBHOOK_URL}
       message_template: |
         ## ⚠️  Data Freshness Alert
-        
+
         **Alert**: Data validation is overdue
         **Database**: {{database}}
         **Last Validation**: {{last_validation_time}}
         **Expected Interval**: 6 hours
-        
+
         **Action Required**: Check CronJob status and ensure validations are running.
 
   # Alert on high failure rate
@@ -66,13 +66,13 @@ rules:
       webhook_url: ${MATTERMOST_WEBHOOK_URL}
       message_template: |
         ## 🔥 Critical Data Quality Alert
-        
+
         **Alert**: High failure rate detected
         **Failure Rate**: {{failure_rate}}%
         **Period**: Last hour
-        
+
         **Action Required**: Immediate investigation required. Multiple data quality issues detected.
-        
+
         [View Dashboard]({{grafana_dashboard_url}})
 
 # Daily Summary Configuration
@@ -82,25 +82,25 @@ daily_summary:
   webhook_url: ${MATTERMOST_WEBHOOK_URL}
   message_template: |
     ## 📊 Daily Data Quality Summary
-    
+
     **Date**: {{date}}
-    
+
     ### Overall Status
     - Total Validations: {{total_validations}}
     - Successful: ✅ {{successful_validations}}
     - Failed: ❌ {{failed_validations}}
     - Success Rate: {{success_rate}}%
-    
+
     ### By Database
     {{#databases}}
     - **{{name}}**: {{status}} ({{last_validation}})
     {{/databases}}
-    
+
     ### Top Issues
     {{#top_failures}}
     - {{expectation_type}}: {{count}} failures
     {{/top_failures}}
-    
+
     [View Full Report]({{data_docs_url}})
 
 # Notification Channels
@@ -111,7 +111,7 @@ channels:
     channel: "#data-quality"
     username: "Data Quality Bot"
     icon_emoji: ":chart_with_upwards_trend:"
-  
+
   # Future: Add email, Slack, PagerDuty, etc.
   email:
     enabled: false
@@ -120,7 +120,7 @@ channels:
     from_address: data-quality@fawkes.local
     to_addresses:
       - data-team@example.com
-  
+
   slack:
     enabled: false
     webhook_url: ${SLACK_WEBHOOK_URL}
@@ -131,15 +131,15 @@ thresholds:
   critical:
     failure_rate: 0.5  # 50% or more failures
     stale_data_hours: 24
-  
+
   high:
     failure_rate: 0.2  # 20% or more failures
     stale_data_hours: 12
-  
+
   medium:
     failure_rate: 0.1  # 10% or more failures
     stale_data_hours: 8
-  
+
   low:
     failure_rate: 0.05  # 5% or more failures
     stale_data_hours: 6

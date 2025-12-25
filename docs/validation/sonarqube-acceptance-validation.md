@@ -2,8 +2,8 @@
 
 ## Issue: paruff/fawkes#19 - Deploy SonarQube for code quality
 
-**Date**: December 15, 2025  
-**Status**: ✅ Ready for Deployment  
+**Date**: December 15, 2025
+**Status**: ✅ Ready for Deployment
 **Validation Type**: Pre-deployment Configuration Validation
 
 ---
@@ -99,7 +99,7 @@ kubectl get application -n fawkes sonarqube -o jsonpath='{.status.health.status}
      jdbcUsername: "sonarqube_user"
      jdbcSecretName: "db-sonarqube-credentials"
      jdbcSecretPasswordKey: "password"
-   
+
    postgresql:
      enabled: false  # Disable embedded PostgreSQL
    ```
@@ -354,12 +354,12 @@ stage('Quality Gate') {
                 def sonarUrl = env.SONARQUBE_URL ?: 'http://sonarqube.fawkes.svc:9000'
                 def projectKey = config.sonarProject ?: config.appName ?: 'unknown-project'
                 def reportUrl = "${sonarUrl}/dashboard?id=${projectKey}&branch=${branchName}"
-                
+
                 echo "SonarQube Quality Gate: ${qg.status}"
-                
+
                 if (qg.status != 'OK') {
                     error """Quality Gate Failed: ${qg.status}
-                    
+
 Please review the SonarQube analysis for details:
 ${reportUrl}"""
                 }

@@ -1,6 +1,6 @@
 /**
  * Event Tracking Schema for Fawkes Platform
- * 
+ *
  * This file defines the comprehensive event taxonomy for tracking
  * user actions, feature usage, errors, and performance metrics
  * across the Fawkes Internal Delivery Platform.
@@ -14,40 +14,40 @@ export enum EventCategory {
   NAVIGATION = 'navigation',
   CATALOG = 'catalog',
   SEARCH = 'search',
-  
+
   // Service Creation & Management
   SCAFFOLDING = 'scaffolding',
   SERVICE_MANAGEMENT = 'service_management',
-  
+
   // Documentation
   DOCUMENTATION = 'documentation',
   TECHDOCS = 'techdocs',
-  
+
   // CI/CD & Deployment
   CICD = 'cicd',
   DEPLOYMENT = 'deployment',
   PIPELINE = 'pipeline',
-  
+
   // Collaboration & Feedback
   FEEDBACK = 'feedback',
   COLLABORATION = 'collaboration',
-  
+
   // Platform Features
   FEATURE_USAGE = 'feature_usage',
   PLUGIN_INTERACTION = 'plugin_interaction',
-  
+
   // Errors & Issues
   ERROR = 'error',
   VALIDATION = 'validation',
-  
+
   // Performance
   PERFORMANCE = 'performance',
   METRICS = 'metrics',
-  
+
   // Security & Compliance
   SECURITY = 'security',
   COMPLIANCE = 'compliance',
-  
+
   // User Management
   USER = 'user',
   AUTHENTICATION = 'authentication',
@@ -62,37 +62,37 @@ export enum EventAction {
   CLICK = 'click',
   SUBMIT = 'submit',
   CANCEL = 'cancel',
-  
+
   // CRUD operations
   CREATE = 'create',
   READ = 'read',
   UPDATE = 'update',
   DELETE = 'delete',
-  
+
   // Navigation
   NAVIGATE = 'navigate',
   SEARCH = 'search',
   FILTER = 'filter',
   SORT = 'sort',
-  
+
   // CI/CD
   BUILD = 'build',
   DEPLOY = 'deploy',
   SYNC = 'sync',
   ROLLBACK = 'rollback',
-  
+
   // Interaction
   EXPAND = 'expand',
   COLLAPSE = 'collapse',
   DOWNLOAD = 'download',
   UPLOAD = 'upload',
-  
+
   // Status
   START = 'start',
   COMPLETE = 'complete',
   FAIL = 'fail',
   TIMEOUT = 'timeout',
-  
+
   // Error handling
   ERROR = 'error',
   WARNING = 'warning',
@@ -107,36 +107,36 @@ export interface EventProperties {
   component?: string;
   page?: string;
   section?: string;
-  
+
   // Identifiers
   entityId?: string;
   entityName?: string;
   entityKind?: string;
-  
+
   // User context
   team?: string;
   role?: string;
-  
+
   // Technical details
   language?: string;
   framework?: string;
   template?: string;
-  
+
   // CI/CD context
   buildId?: string;
   pipelineId?: string;
   deploymentTarget?: string;
-  
+
   // Performance metrics
   duration?: number;
   responseTime?: number;
   errorCode?: string;
-  
+
   // Feature flags
   featureFlag?: string;
   experimentId?: string;
   variant?: string;
-  
+
   // Custom fields
   [key: string]: string | number | boolean | undefined;
 }
@@ -182,7 +182,7 @@ export const PredefinedEvents = {
     action: EventAction.VIEW,
     label: 'Component Detail',
   },
-  
+
   // Scaffolding events (10 events)
   START_SCAFFOLDING: {
     category: EventCategory.SCAFFOLDING,
@@ -234,7 +234,7 @@ export const PredefinedEvents = {
     action: EventAction.CREATE,
     label: 'React App Template',
   },
-  
+
   // Documentation events (6 events)
   VIEW_DOCS: {
     category: EventCategory.DOCUMENTATION,
@@ -266,7 +266,7 @@ export const PredefinedEvents = {
     action: EventAction.DOWNLOAD,
     label: 'Download Documentation',
   },
-  
+
   // CI/CD events (12 events)
   VIEW_PIPELINE: {
     category: EventCategory.CICD,
@@ -328,7 +328,7 @@ export const PredefinedEvents = {
     action: EventAction.CANCEL,
     label: 'Cancel Deployment',
   },
-  
+
   // Feedback events (8 events)
   SUBMIT_FEEDBACK: {
     category: EventCategory.FEEDBACK,
@@ -370,7 +370,7 @@ export const PredefinedEvents = {
     action: EventAction.SUBMIT,
     label: 'Respond to Feedback',
   },
-  
+
   // Feature usage events (6 events)
   USE_KUBERNETES_PLUGIN: {
     category: EventCategory.PLUGIN_INTERACTION,
@@ -402,7 +402,7 @@ export const PredefinedEvents = {
     action: EventAction.CLICK,
     label: 'Share Resource',
   },
-  
+
   // Error events (5 events)
   PAGE_ERROR: {
     category: EventCategory.ERROR,
@@ -429,7 +429,7 @@ export const PredefinedEvents = {
     action: EventAction.ERROR,
     label: 'Authorization Error',
   },
-  
+
   // Performance events (4 events)
   PAGE_LOAD: {
     category: EventCategory.PERFORMANCE,
@@ -451,7 +451,7 @@ export const PredefinedEvents = {
     action: EventAction.TIMEOUT,
     label: 'Operation Timeout',
   },
-  
+
   // User events (4 events)
   LOGIN: {
     category: EventCategory.AUTHENTICATION,
@@ -477,10 +477,10 @@ export const PredefinedEvents = {
 
 /**
  * Event naming conventions
- * 
+ *
  * Format: {category}.{action}.{label}
  * Example: scaffolding.create.java_service
- * 
+ *
  * Guidelines:
  * - Use lowercase with underscores
  * - Be specific but concise
@@ -503,7 +503,7 @@ export function validateEvent(event: Event): boolean {
     console.error('Event must have category and action');
     return false;
   }
-  
+
   if (event.properties) {
     // Ensure properties are serializable
     try {
@@ -513,6 +513,6 @@ export function validateEvent(event: Event): boolean {
       return false;
     }
   }
-  
+
   return true;
 }

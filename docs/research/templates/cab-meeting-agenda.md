@@ -1,9 +1,9 @@
 # Customer Advisory Board Meeting Agenda
 
-**Quarter**: [Q1/Q2/Q3/Q4] [YEAR]  
-**Date**: [YYYY-MM-DD]  
-**Time**: [Time] [Timezone]  
-**Duration**: 2 hours  
+**Quarter**: [Q1/Q2/Q3/Q4] [YEAR]
+**Date**: [YYYY-MM-DD]
+**Time**: [Time] [Timezone]
+**Duration**: 2 hours
 **Location**: [Video Conference Link]
 
 ---
@@ -18,12 +18,12 @@
 
 **Attendees**:
 - **CAB Members**: [List names or @fawkes/advisory-board]
-- **Fawkes Team**: 
+- **Fawkes Team**:
   - Product Lead: [Name]
   - Engineering Lead: [Name]
   - Community Manager: [Name]
 
-**Recording**: 
+**Recording**:
 - [ ] Yes - with member permission
 - [ ] No
 
@@ -169,7 +169,7 @@
 
 **Topic**: [Specific feature or decision requiring detailed input]
 
-**Background**: 
+**Background**:
 [Context and why this needs focused discussion]
 
 **Current Thinking**:
@@ -264,7 +264,7 @@
 
 ---
 
-**Meeting Facilitator**: [Name]  
-**Notes Taken By**: [Name]  
-**Document Version**: 1.0  
+**Meeting Facilitator**: [Name]
+**Notes Taken By**: [Name]
+**Document Version**: 1.0
 **Last Updated**: [Date]

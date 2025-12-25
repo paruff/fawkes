@@ -2,11 +2,11 @@
 
 ## Document Information
 
-**Test Date**: [YYYY-MM-DD]  
-**Facilitator**: [Your Name]  
-**Note-Taker**: [Name or N/A]  
-**Feature/Area Being Tested**: [e.g., "Application Deployment Workflow"]  
-**Version**: 1.0  
+**Test Date**: [YYYY-MM-DD]
+**Facilitator**: [Your Name]
+**Note-Taker**: [Name or N/A]
+**Feature/Area Being Tested**: [e.g., "Application Deployment Workflow"]
+**Version**: 1.0
 
 ---
 
@@ -22,8 +22,8 @@
 - **Number of Participants**: [5-8 recommended]
 - **Experience Level**: [Mix of junior, mid, senior]
 
-**Format**: [Moderated Remote / Unmoderated / In-Person]  
-**Duration**: [45-60 minutes]  
+**Format**: [Moderated Remote / Unmoderated / In-Person]
+**Duration**: [45-60 minutes]
 **Recording**: [Yes - Screen + Audio / Yes - Screen Only / No]
 
 ---
@@ -32,7 +32,7 @@
 
 ### Environment Preparation
 
-**Test Environment**: [URL or environment name]  
+**Test Environment**: [URL or environment name]
 **Test Account Credentials**:
 - Username: `[test-username]`
 - Password: `[test-password]` (or provide secure access method)
@@ -67,7 +67,7 @@
 **Greeting and Rapport Building:**
 
 ```
-"Hi [Participant Name], thanks so much for joining me today! I'm [Your Name] 
+"Hi [Participant Name], thanks so much for joining me today! I'm [Your Name]
 from the Product Team. How's your day going?"
 
 [Brief small talk - 1-2 minutes]
@@ -78,26 +78,26 @@ from the Product Team. How's your day going?"
 **Introduction:**
 
 ```
-"Today, we're going to test [feature/workflow] in the Fawkes platform. I want 
-to emphasize upfront: we're testing the platform, not you. There are absolutely 
+"Today, we're going to test [feature/workflow] in the Fawkes platform. I want
+to emphasize upfront: we're testing the platform, not you. There are absolutely
 no wrong answers or mistakes you can make.
 
-If something is confusing, doesn't work as you expect, or frustrates you - 
+If something is confusing, doesn't work as you expect, or frustrates you -
 that's exactly what we want to know. It means we need to improve the platform.
 
-I'll ask you to complete some realistic tasks that [persona type] might do in 
-their daily work. While you're working on these tasks, I'll ask you to 'think 
+I'll ask you to complete some realistic tasks that [persona type] might do in
+their daily work. While you're working on these tasks, I'll ask you to 'think
 aloud' - basically, narrate what you're doing and thinking.
 
-For example, if you're looking for a button, you might say: 'I'm looking for 
-a way to create a new application. I expect to see a button somewhere near 
+For example, if you're looking for a button, you might say: 'I'm looking for
+a way to create a new application. I expect to see a button somewhere near
 the top...'
 
-This running commentary helps me understand your thought process and what 
+This running commentary helps me understand your thought process and what
 you're expecting to see or happen.
 
-I might occasionally ask follow-up questions, but I won't be able to help 
-with the tasks themselves - we want to see how the platform works for you 
+I might occasionally ask follow-up questions, but I won't be able to help
+with the tasks themselves - we want to see how the platform works for you
 without guidance.
 
 Does that make sense? Any questions so far?"
@@ -108,19 +108,19 @@ Does that make sense? Any questions so far?"
 ```
 "Before we start, I need to get your consent for a couple of things:
 
-1. Are you comfortable participating in this usability test? Your participation 
+1. Are you comfortable participating in this usability test? Your participation
    is completely voluntary, and you can stop at any time.
 
-2. With your permission, I'd like to record this session - both your screen 
-   and our audio. This recording is purely for note-taking purposes. It will 
-   be stored securely, only accessible to the research team, and will be 
+2. With your permission, I'd like to record this session - both your screen
+   and our audio. This recording is purely for note-taking purposes. It will
+   be stored securely, only accessible to the research team, and will be
    deleted after we transcribe our notes.
-   
-   We will never share anything that identifies you personally. In our reports, 
-   you'll be referred to as something like 'Participant 3' or 'Senior Platform 
+
+   We will never share anything that identifies you personally. In our reports,
+   you'll be referred to as something like 'Participant 3' or 'Senior Platform
    Engineer'.
 
-Are you comfortable with me recording? Great, thank you. Let me start the 
+Are you comfortable with me recording? Great, thank you. Let me start the
 recording now.
 
 [Start recording]
@@ -136,19 +136,19 @@ Thank you."
 **Set Expectations:**
 
 ```
-"We have about [45-60 minutes] together. I have [N] tasks for you to try, 
+"We have about [45-60 minutes] together. I have [N] tasks for you to try,
 and then a few wrap-up questions at the end.
 
-For each task, I'll give you a scenario - a reason why you'd want to do this - 
+For each task, I'll give you a scenario - a reason why you'd want to do this -
 and then ask you to accomplish a goal using the platform.
 
-Please share your screen so I can see what you're doing. And remember to think 
-aloud as you work - tell me what you're looking for, what you're thinking, 
+Please share your screen so I can see what you're doing. And remember to think
+aloud as you work - tell me what you're looking for, what you're thinking,
 if you're confused, or if something surprises you.
 
-If you get really stuck on a task, I'll give you a couple of minutes to try 
-to figure it out, and then I might jump in with a hint. Some tasks might even 
-be impossible to complete - if that's the case, that's really valuable feedback 
+If you get really stuck on a task, I'll give you a couple of minutes to try
+to figure it out, and then I might jump in with a hint. Some tasks might even
+be impossible to complete - if that's the case, that's really valuable feedback
 for us.
 
 Do you have any questions before we dive in?"
@@ -165,8 +165,8 @@ Do you have any questions before we dive in?"
 "[Provide context and motivation for the task]
 
 For example:
-You're a new developer who just joined a team. Your team lead has asked you 
-to deploy your first microservice to the development environment. You have 
+You're a new developer who just joined a team. Your team lead has asked you
+to deploy your first microservice to the development environment. You have
 a Node.js application ready to go."
 ```
 
@@ -175,7 +175,7 @@ a Node.js application ready to go."
 "Your goal is to: [Clear, specific objective]
 
 For example:
-Use the Backstage developer portal to create a new application from the 
+Use the Backstage developer portal to create a new application from the
 Node.js template and deploy it to the development environment."
 ```
 
@@ -200,8 +200,8 @@ Go ahead and share your screen now, and please start thinking aloud as you work.
 
 **Observation Notes:**
 
-Time Started: ________  
-Time Completed: ________  
+Time Started: ________
+Time Completed: ________
 Task Status: ☐ Success  ☐ Partial Success  ☐ Failure
 
 **Actions Taken:**
@@ -225,25 +225,25 @@ Task Status: ☐ Success  ☐ Partial Success  ☐ Failure
 
 **If Stuck (After 2-3 Minutes):**
 ```
-"I can see you're working through this. Can you tell me what you're trying 
+"I can see you're working through this. Can you tell me what you're trying
 to find or do right now?"
 
 [If still stuck after another minute, provide hint]:
 "Let me give you a hint: [minimal hint that gets them unstuck]"
 
 [If still unable to proceed]:
-"Okay, let's pause here. This is really valuable feedback - if you can't 
-find it, we need to make it more obvious. Let me show you where it is, and 
+"Okay, let's pause here. This is really valuable feedback - if you can't
+find it, we need to make it more obvious. Let me show you where it is, and
 then we'll move on to the next task."
 ```
 
 **Post-Task Questions:**
 ```
-"Okay, let's pause there. 
+"Okay, let's pause there.
 
 1. How did that feel? (Let them respond naturally)
 
-2. On a scale of 1 to 5, where 1 is 'not at all confident' and 5 is 'very 
+2. On a scale of 1 to 5, where 1 is 'not at all confident' and 5 is 'very
    confident', how confident are you that you completed that task correctly?
 
 3. What was most confusing or frustrating about that task?
@@ -279,8 +279,8 @@ then we'll move on to the next task."
 
 **Observation Notes:**
 
-Time Started: ________  
-Time Completed: ________  
+Time Started: ________
+Time Completed: ________
 Task Status: ☐ Success  ☐ Partial Success  ☐ Failure
 
 [Continue with observation sections as in Task 1]
@@ -298,12 +298,12 @@ Task Status: ☐ Success  ☐ Partial Success  ☐ Failure
 **Overall Experience:**
 
 ```
-"Thank you for working through those tasks. Now I have some questions about 
+"Thank you for working through those tasks. Now I have some questions about
 your overall experience.
 
-1. Overall, how would you rate the ease of use of [feature/workflow] on a 
+1. Overall, how would you rate the ease of use of [feature/workflow] on a
    scale of 1 to 5, where 1 is very difficult and 5 is very easy?
-   
+
    Rating: [ ]
    Why that rating?
 
@@ -313,18 +313,18 @@ your overall experience.
 
 4. What surprised you - either positively or negatively - about the platform?
 
-5. Thinking about your normal workflow, is there anything missing that you'd 
+5. Thinking about your normal workflow, is there anything missing that you'd
    expect to see or be able to do?
 
-6. If you could wave a magic wand and change one thing about what you tested 
+6. If you could wave a magic wand and change one thing about what you tested
    today, what would it be?
 
-7. Is there anything we didn't test today that you think would be important 
+7. Is there anything we didn't test today that you think would be important
    for [persona type] to be able to do?
 
-8. On a scale of 1 to 5, how likely would you be to recommend this platform 
+8. On a scale of 1 to 5, how likely would you be to recommend this platform
    to a colleague?
-   
+
    Rating: [ ]
    Why that rating?"
 ```
@@ -341,19 +341,19 @@ your overall experience.
 **Thank You:**
 
 ```
-"This has been incredibly valuable. Thank you so much for your time and your 
-honest feedback. You've given us really important insights that will help us 
+"This has been incredibly valuable. Thank you so much for your time and your
+honest feedback. You've given us really important insights that will help us
 improve the platform.
 
-Your feedback will be anonymized and shared with the product and engineering 
-teams. We'll use it to prioritize improvements to [feature/workflow]. You 
+Your feedback will be anonymized and shared with the product and engineering
+teams. We'll use it to prioritize improvements to [feature/workflow]. You
 might see some changes in the next few months based on what we learned today.
 
 Before we finish, I have two quick administrative things:
 
 1. Can we reach out to you if we have brief follow-up questions? [Note response]
 
-2. Would you be willing to participate in future usability tests as we improve 
+2. Would you be willing to participate in future usability tests as we improve
    the platform? [Note response]
 
 Great. We'll send you [incentive/thank-you gift] within [timeframe].
@@ -498,6 +498,6 @@ Thanks again, [Name]. Have a great rest of your day!"
 
 ---
 
-**Template Version**: 1.0  
-**Last Updated**: December 2025  
+**Template Version**: 1.0
+**Last Updated**: December 2025
 **Owner**: Product Team

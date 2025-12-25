@@ -10,7 +10,7 @@ export interface ListProps extends BaseComponentProps {
 
 /**
  * List component
- * 
+ *
  * @component
  * @example
  * ```tsx

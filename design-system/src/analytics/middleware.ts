@@ -222,7 +222,7 @@ export const privacyMiddleware: EventMiddleware = (event: Event) => {
 export function loggingMiddleware(logLevel: 'debug' | 'info' | 'warn' | 'error' = 'info'): EventMiddleware {
   return (event: Event) => {
     const message = `Event: ${event.category}.${event.action}`;
-    
+
     switch (logLevel) {
       case 'debug':
         console.debug(message, event);

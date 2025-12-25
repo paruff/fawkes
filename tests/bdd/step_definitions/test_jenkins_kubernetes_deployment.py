@@ -164,11 +164,11 @@ def check_agent_templates(jenkins_context, jenkins_api_helper):
 def verify_agent_templates(jenkins_context):
     """Verify expected agent templates exist."""
     templates = jenkins_context.get('agent_templates', [])
-    
+
     # Expected templates from JCasC configuration
     expected_templates = ['jnlp-agent', 'maven-agent', 'python-agent', 'node-agent', 'go-agent']
     template_names = [t.get('name') for t in templates]
-    
+
     for expected_name in expected_templates:
         assert expected_name in template_names, \
             f"Agent template {expected_name} not found"
@@ -251,7 +251,7 @@ def jenkins_with_ingress(jenkins_context, kubectl_helper):
 @when(parsers.parse('I access the Jenkins URL "{url}"'))
 def access_jenkins_url(jenkins_context, url):
     """Access Jenkins via HTTP (mocked for unit test).
-    
+
     Note: In integration tests, this would actually make HTTP request.
     For unit tests, we mock a successful response.
     """

@@ -123,7 +123,7 @@ class TestATE1001Validation:
         """Test that validation report is generated."""
         assert validation_result["report"] is not None, \
             "Validation report was not generated"
-        
+
         # Check report structure
         assert "test_suite" in validation_result["report"]
         assert validation_result["report"]["test_suite"] == "AT-E1-001"
@@ -137,7 +137,7 @@ class TestATE1001Validation:
         """Test that all AT-E1-001 acceptance criteria pass."""
         assert validation_result["exit_code"] == 0, \
             f"Validation failed. Check output:\n{validation_result['stdout']}\n{validation_result['stderr']}"
-        
+
         if validation_result["report"]:
             summary = validation_result["report"]["summary"]
             assert summary["failed"] == 0, \

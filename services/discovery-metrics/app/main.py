@@ -122,10 +122,10 @@ async def update_interview(interview_id: int, interview_data: InterviewUpdate, d
     interview = db.query(Interview).filter(Interview.id == interview_id).first()
     if not interview:
         raise HTTPException(status_code=404, detail="Interview not found")
-    
+
     for key, value in interview_data.model_dump(exclude_unset=True).items():
         setattr(interview, key, value)
-    
+
     db.commit()
     db.refresh(interview)
     return interview
@@ -179,15 +179,15 @@ async def update_insight(insight_id: int, insight_data: DiscoveryInsightUpdate, 
     insight = db.query(DiscoveryInsight).filter(DiscoveryInsight.id == insight_id).first()
     if not insight:
         raise HTTPException(status_code=404, detail="Insight not found")
-    
+
     for key, value in insight_data.model_dump(exclude_unset=True).items():
         setattr(insight, key, value)
-    
+
     # Calculate time to validation if validated
     if insight_data.validated_date and insight.captured_date:
         days = (insight_data.validated_date - insight.captured_date).days
         insight.time_to_validation_days = float(days)
-    
+
     db.commit()
     db.refresh(insight)
     return insight
@@ -238,15 +238,15 @@ async def update_experiment(experiment_id: int, experiment_data: ExperimentUpdat
     experiment = db.query(Experiment).filter(Experiment.id == experiment_id).first()
     if not experiment:
         raise HTTPException(status_code=404, detail="Experiment not found")
-    
+
     for key, value in experiment_data.model_dump(exclude_unset=True).items():
         setattr(experiment, key, value)
-    
+
     # Calculate duration if end date is set
     if experiment_data.end_date and experiment.start_date:
         days = (experiment_data.end_date - experiment.start_date).days
         experiment.duration_days = days
-    
+
     db.commit()
     db.refresh(experiment)
     return experiment
@@ -294,20 +294,20 @@ async def update_feature(feature_id: int, feature_data: FeatureValidationUpdate,
     feature = db.query(FeatureValidation).filter(FeatureValidation.id == feature_id).first()
     if not feature:
         raise HTTPException(status_code=404, detail="Feature validation not found")
-    
+
     for key, value in feature_data.model_dump(exclude_unset=True).items():
         setattr(feature, key, value)
-    
+
     # Calculate time to validate
     if feature_data.validated_date and feature.proposed_date:
         days = (feature_data.validated_date - feature.proposed_date).days
         feature.time_to_validate_days = float(days)
-    
+
     # Calculate time to ship
     if feature_data.shipped_date and feature.proposed_date:
         days = (feature_data.shipped_date - feature.proposed_date).days
         feature.time_to_ship_days = float(days)
-    
+
     db.commit()
     db.refresh(feature)
     return feature
@@ -347,17 +347,17 @@ async def get_statistics(db: Session = Depends(get_db)):
     completed_interviews = db.query(Interview).filter(
         Interview.status == InterviewStatus.COMPLETED
     ).count()
-    
+
     total_insights = db.query(DiscoveryInsight).count()
     validated_insights = db.query(DiscoveryInsight).filter(
         DiscoveryInsight.status.in_([InsightStatus.VALIDATED, InsightStatus.IMPLEMENTED])
     ).count()
-    
+
     total_experiments = db.query(Experiment).count()
     completed_experiments = db.query(Experiment).filter(
         Experiment.status == ExperimentStatus.COMPLETED
     ).count()
-    
+
     total_features = db.query(FeatureValidation).count()
     validated_features = db.query(FeatureValidation).filter(
         FeatureValidation.status.in_([
@@ -369,19 +369,19 @@ async def get_statistics(db: Session = Depends(get_db)):
     shipped_features = db.query(FeatureValidation).filter(
         FeatureValidation.status == FeatureStatus.SHIPPED
     ).count()
-    
+
     avg_validation_time = db.query(
         func.avg(DiscoveryInsight.time_to_validation_days)
     ).filter(DiscoveryInsight.time_to_validation_days.isnot(None)).scalar()
-    
+
     avg_ship_time = db.query(
         func.avg(FeatureValidation.time_to_ship_days)
     ).filter(FeatureValidation.time_to_ship_days.isnot(None)).scalar()
-    
+
     validation_rate = (validated_insights / total_insights * 100) if total_insights > 0 else 0
     experiment_success_rate = (completed_experiments / total_experiments * 100) if total_experiments > 0 else 0
     feature_validation_rate = (validated_features / total_features * 100) if total_features > 0 else 0
-    
+
     return DiscoveryStatistics(
         total_interviews=total_interviews,
         completed_interviews=completed_interviews,

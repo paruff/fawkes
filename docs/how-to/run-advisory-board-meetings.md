@@ -290,7 +290,7 @@ Follow-up thoughts? Keep the conversation going in this channel! 💬
 Title: [CAB Q1] Improve documentation for multi-cloud setup
 
 **Context**:
-In Q1 2026 CAB meeting, members requested better documentation for 
+In Q1 2026 CAB meeting, members requested better documentation for
 running Fawkes across multiple cloud providers simultaneously.
 
 **Request Details**:
@@ -316,8 +316,8 @@ running Fawkes across multiple cloud providers simultaneously.
 ```markdown
 Hi [Name],
 
-Thanks so much for joining our Q[X] CAB meeting! Your insights on 
-[specific topic] were really valuable and will directly influence 
+Thanks so much for joining our Q[X] CAB meeting! Your insights on
+[specific topic] were really valuable and will directly influence
 how we approach [feature/decision].
 
 Looking forward to the next one in [Month]!
@@ -339,8 +339,8 @@ Best,
 
 **Example**:
 ```markdown
-Update on CAB feedback: We've started work on the multi-cloud 
-documentation requested in last meeting. First draft will be ready 
+Update on CAB feedback: We've started work on the multi-cloud
+documentation requested in last meeting. First draft will be ready
 for review next week. @member1 @member2 - we'll tag you for review!
 ```
 
@@ -645,6 +645,6 @@ This guide will evolve based on experience. Share improvements and lessons learn
 
 ---
 
-**Version**: 1.0  
-**Last Updated**: December 25, 2025  
+**Version**: 1.0
+**Last Updated**: December 25, 2025
 **Owner**: Product Team

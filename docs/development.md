@@ -71,13 +71,53 @@ Ensure you have the following tools installed:
 
 ## Coding Standards
 
-- **Language**: Follow the conventions of the language used in the respective module (e.g., Java, Python, Bash).
-- **Linting**: Use linters to ensure code quality:
-  - YAML: `yamllint`
-  - Shell: `shellcheck`
-  - Python: `flake8`
-  - Java: Checkstyle or SonarQube
-- **Documentation**: Add comments and update relevant documentation for any changes.
+Fawkes enforces comprehensive code quality standards for all languages. All code must pass automated linting before merge.
+
+### Quick Start
+
+```bash
+# Install pre-commit hooks (one-time setup)
+make pre-commit-setup
+
+# Run all linters on your changes
+make lint
+
+# Run specific linter
+pre-commit run shellcheck --all-files
+```
+
+### Language-Specific Linters
+
+- **Bash**: ShellCheck - Shell script linting
+- **Python**: Black (formatter) + Flake8 (linter)
+- **Go**: golangci-lint - Comprehensive Go linting
+- **YAML**: yamllint - YAML syntax and style
+- **JSON**: check-json - JSON validation
+- **Markdown**: markdownlint - Documentation linting
+- **Terraform**: terraform fmt, TFLint, tfsec - IaC linting and security
+
+### IDE Integration
+
+Configure your IDE for automatic linting:
+
+**VS Code**: Install recommended extensions
+```bash
+make setup-vscode
+```
+
+**Other IDEs**: See [Code Quality Standards](how-to/development/code-quality-standards.md#ide-integration)
+
+### Detailed Documentation
+
+For comprehensive coding standards, linting rules, and troubleshooting:
+
+📖 **[Code Quality Standards](how-to/development/code-quality-standards.md)**
+
+This includes:
+- Language-specific style guides
+- Security scanning requirements
+- IDE integration guides
+- Common issues and solutions
 
 ---
 

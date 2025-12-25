@@ -385,10 +385,10 @@ az group delete --name fawkes-rg --yes --no-wait
 
 ## Sign-Off
 
-Validated by: _________________  
-Date: _________________  
-Environment: [ ] Dev [ ] Stage [ ] Prod  
-All critical checks passed: [ ] Yes [ ] No  
+Validated by: _________________
+Date: _________________
+Environment: [ ] Dev [ ] Stage [ ] Prod
+All critical checks passed: [ ] Yes [ ] No
 
 Notes:
 _________________________________________________________________

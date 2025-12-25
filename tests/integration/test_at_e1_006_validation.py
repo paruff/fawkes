@@ -123,7 +123,7 @@ class TestATE1006Validation:
         """Test that validation report is generated."""
         assert validation_result["report"] is not None, \
             "Validation report was not generated"
-        
+
         # Check report structure
         assert "test_suite" in validation_result["report"]
         assert "AT-E1-006" in validation_result["report"]["test_suite"]

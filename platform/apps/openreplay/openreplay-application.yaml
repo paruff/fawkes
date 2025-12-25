@@ -15,10 +15,10 @@ spec:
       releaseName: openreplay
       values: |
         # OpenReplay configuration for Fawkes usability testing
-        
+
         # Domain configuration
         domainName: openreplay.fawkes.local
-        
+
         # Ingress configuration
         ingress:
           enabled: true
@@ -36,7 +36,7 @@ spec:
             - secretName: openreplay-tls
               hosts:
                 - openreplay.fawkes.local
-        
+
         # PostgreSQL for metadata
         postgresql:
           enabled: true
@@ -56,7 +56,7 @@ spec:
             limits:
               memory: 1Gi
               cpu: 500m
-        
+
         # MinIO for session recordings storage
         minio:
           enabled: true
@@ -74,7 +74,7 @@ spec:
             limits:
               memory: 1Gi
               cpu: 500m
-        
+
         # Redis for caching
         redis:
           enabled: true
@@ -89,9 +89,9 @@ spec:
             limits:
               memory: 512Mi
               cpu: 200m
-        
+
         # OpenReplay components
-        
+
         # Frontend application
         frontend:
           replicaCount: 1
@@ -102,7 +102,7 @@ spec:
             limits:
               memory: 512Mi
               cpu: 200m
-        
+
         # API server
         api:
           replicaCount: 1
@@ -113,7 +113,7 @@ spec:
             limits:
               memory: 1Gi
               cpu: 500m
-        
+
         # Session ingestion service
         http:
           replicaCount: 1
@@ -124,7 +124,7 @@ spec:
             limits:
               memory: 512Mi
               cpu: 200m
-        
+
         # WebSocket service for real-time replay
         websocket:
           replicaCount: 1
@@ -135,19 +135,19 @@ spec:
             limits:
               memory: 512Mi
               cpu: 200m
-        
+
         # Data retention configuration
         storage:
           # Auto-delete sessions older than this many days
           retentionDays: 90
-        
+
         # Privacy and security
         security:
           # Enable HTTPS
           ssl: true
           # Session recording consent required
           consentRequired: true
-        
+
         # Feature flags
         features:
           # Enable console log capture
@@ -158,11 +158,11 @@ spec:
           capturePerformance: true
           # Enable click heatmaps
           captureHeatmaps: true
-  
+
   destination:
     server: https://kubernetes.default.svc
     namespace: openreplay
-  
+
   syncPolicy:
     automated:
       prune: true
@@ -178,7 +178,7 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
-  
+
   # Health checks
   ignoreDifferences:
     - group: apps

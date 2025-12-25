@@ -130,14 +130,14 @@ log_info "Test 5: Checking GraphQL endpoint health..."
 # Try to access via port-forward if ingress not accessible
 if ! curl -s -f "http://${HASURA_HOST}/healthz" &>/dev/null; then
     log_warning "Cannot access Hasura via $HASURA_HOST, trying port-forward..."
-    
+
     # Setup port-forward in background
     kubectl port-forward -n "$NAMESPACE" svc/hasura 8080:8080 &>/dev/null &
     PORT_FORWARD_PID=$!
     sleep 3
-    
+
     HASURA_HOST="localhost:8080"
-    
+
     # Cleanup function
     cleanup() {
         if [ -n "${PORT_FORWARD_PID:-}" ]; then
@@ -194,7 +194,7 @@ for i in $(seq 1 $ITERATIONS); do
         -d "$SIMPLE_QUERY" \
         "http://${HASURA_HOST}/v1/graphql" &>/dev/null
     END=$(date +%s%N)
-    
+
     ELAPSED=$(( (END - START) / 1000000 ))  # Convert to milliseconds
     TOTAL_TIME=$(( TOTAL_TIME + ELAPSED ))
 done

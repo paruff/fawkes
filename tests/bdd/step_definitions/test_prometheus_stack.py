@@ -169,12 +169,12 @@ def pods_running(namespace: str, datatable, context: Dict):
     """Verify specified pods are running."""
     pods = context.get("prometheus_pods", [])
     pod_names = [pod.get("metadata", {}).get("name", "") for pod in pods]
-    
+
     for row in datatable:
         component = row["component"]
         matching_pods = [name for name in pod_names if component in name]
         assert len(matching_pods) > 0, f"No pods found matching component: {component}"
-        
+
         # Check that at least one matching pod is running
         running_count = 0
         for pod in pods:
@@ -183,7 +183,7 @@ def pods_running(namespace: str, datatable, context: Dict):
                 phase = pod.get("status", {}).get("phase")
                 if phase == "Running":
                     running_count += 1
-        
+
         assert running_count > 0, f"No running pods found for component: {component}"
 
 
@@ -191,12 +191,12 @@ def pods_running(namespace: str, datatable, context: Dict):
 def all_pods_ready(timeout: int, context: Dict):
     """Verify all Prometheus pods are ready within timeout."""
     start_time = time.time()
-    
+
     while time.time() - start_time < timeout:
         try:
             pods = _kubectl_json(["-n", "monitoring", "get", "pods", "-o", "json"])
             all_ready = True
-            
+
             for pod in pods.get("items", []):
                 conditions = pod.get("status", {}).get("conditions", [])
                 ready = False
@@ -204,18 +204,18 @@ def all_pods_ready(timeout: int, context: Dict):
                     if condition.get("type") == "Ready" and condition.get("status") == "True":
                         ready = True
                         break
-                
+
                 if not ready:
                     all_ready = False
                     break
-            
+
             if all_ready and len(pods.get("items", [])) > 0:
                 return
         except RuntimeError:
             pass
-        
+
         time.sleep(5)
-    
+
     pytest.fail(f"Not all Prometheus pods became ready within {timeout} seconds")
 
 
@@ -283,7 +283,7 @@ def check_pvcs(namespace: str, context: Dict):
 def pvc_for_prometheus_exists(context: Dict):
     """Verify a PVC for Prometheus exists."""
     pvcs = context.get("pvcs", [])
-    prometheus_pvcs = [pvc for pvc in pvcs 
+    prometheus_pvcs = [pvc for pvc in pvcs
                       if "prometheus" in pvc.get("metadata", {}).get("name", "").lower()]
     assert len(prometheus_pvcs) > 0, "No PVC found for Prometheus"
 
@@ -292,10 +292,10 @@ def pvc_for_prometheus_exists(context: Dict):
 def pvc_bound(context: Dict):
     """Verify PVC is bound."""
     pvcs = context.get("pvcs", [])
-    prometheus_pvcs = [pvc for pvc in pvcs 
+    prometheus_pvcs = [pvc for pvc in pvcs
                       if "prometheus" in pvc.get("metadata", {}).get("name", "").lower()]
     assert len(prometheus_pvcs) > 0, "No PVC found for Prometheus"
-    
+
     for pvc in prometheus_pvcs:
         phase = pvc.get("status", {}).get("phase")
         assert phase == "Bound", f"PVC is {phase}, not Bound"
@@ -305,10 +305,10 @@ def pvc_bound(context: Dict):
 def pvc_size(size: str, context: Dict):
     """Verify PVC size is at least the specified size."""
     pvcs = context.get("pvcs", [])
-    prometheus_pvcs = [pvc for pvc in pvcs 
+    prometheus_pvcs = [pvc for pvc in pvcs
                       if "prometheus" in pvc.get("metadata", {}).get("name", "").lower()]
     assert len(prometheus_pvcs) > 0, "No PVC found for Prometheus"
-    
+
     # Parse size (e.g., "20Gi")
     # In a real implementation, we'd compare the actual size
     # For now, we'll just verify the PVC has a size specified
@@ -343,7 +343,7 @@ def check_ingress(namespace: str, context: Dict):
 def ingress_exists(service: str, context: Dict):
     """Verify ingress exists for the service."""
     ingresses = context.get("ingresses", [])
-    matching_ingresses = [ing for ing in ingresses 
+    matching_ingresses = [ing for ing in ingresses
                          if service.lower() in ing.get("metadata", {}).get("name", "").lower()]
     assert len(matching_ingresses) > 0, f"No ingress found for service: {service}"
     context["current_ingress"] = matching_ingresses[0]
@@ -354,7 +354,7 @@ def ingress_has_host(host: str, context: Dict):
     """Verify ingress has the specified host."""
     ingress = context.get("current_ingress")
     assert ingress is not None, "No ingress to check"
-    
+
     rules = ingress.get("spec", {}).get("rules", [])
     hosts = [rule.get("host") for rule in rules]
     assert host in hosts, f"Host {host} not found in ingress (found: {hosts})"
@@ -365,7 +365,7 @@ def ingress_uses_class(class_name: str, context: Dict):
     """Verify ingress uses the specified class."""
     ingress = context.get("current_ingress")
     assert ingress is not None, "No ingress to check"
-    
+
     ing_class = ingress.get("spec", {}).get("ingressClassName")
     assert ing_class == class_name, f"Ingress class is {ing_class}, not {class_name}"
 
@@ -572,10 +572,10 @@ def servicemonitor_targets_namespace(namespace: str, context: Dict):
     """Verify ServiceMonitor targets the specified namespace."""
     sm = context.get("current_servicemonitor")
     assert sm is not None, "ServiceMonitor does not exist"
-    
+
     ns_selector = sm.get("spec", {}).get("namespaceSelector", {})
     match_names = ns_selector.get("matchNames", [])
-    
+
     if match_names:
         assert namespace in match_names, f"ServiceMonitor doesn't target namespace {namespace}"
 
@@ -607,7 +607,7 @@ def check_node_exporter(context: Dict):
                             "-l", "app.kubernetes.io/name=prometheus-node-exporter",
                             "-o", "json"])
         context["node_exporter_pods"] = pods.get("items", [])
-        
+
         nodes = _kubectl_json(["get", "nodes", "-o", "json"])
         context["cluster_nodes"] = nodes.get("items", [])
     except RuntimeError:
@@ -620,7 +620,7 @@ def node_exporter_on_all_nodes(context: Dict):
     """Verify node-exporter is running on all nodes."""
     pods = context.get("node_exporter_pods", [])
     nodes = context.get("cluster_nodes", [])
-    
+
     # Should have at least one pod per node
     assert len(pods) >= len(nodes), "Not enough node-exporter pods for all nodes"
 
@@ -736,7 +736,7 @@ def check_resource_specs(context: Dict):
     try:
         deployments = _kubectl_json(["-n", "monitoring", "get", "deployments", "-o", "json"])
         statefulsets = _kubectl_json(["-n", "monitoring", "get", "statefulsets", "-o", "json"])
-        
+
         context["prometheus_deployments"] = deployments.get("items", [])
         context["prometheus_statefulsets"] = statefulsets.get("items", [])
     except RuntimeError:
@@ -749,9 +749,9 @@ def cpu_requests_defined(context: Dict):
     """Verify all deployments have CPU requests."""
     deployments = context.get("prometheus_deployments", [])
     statefulsets = context.get("prometheus_statefulsets", [])
-    
+
     all_workloads = deployments + statefulsets
-    
+
     for workload in all_workloads:
         containers = workload.get("spec", {}).get("template", {}).get("spec", {}).get("containers", [])
         for container in containers:
@@ -765,9 +765,9 @@ def memory_requests_defined(context: Dict):
     """Verify all deployments have memory requests."""
     deployments = context.get("prometheus_deployments", [])
     statefulsets = context.get("prometheus_statefulsets", [])
-    
+
     all_workloads = deployments + statefulsets
-    
+
     for workload in all_workloads:
         containers = workload.get("spec", {}).get("template", {}).get("spec", {}).get("containers", [])
         for container in containers:
@@ -781,9 +781,9 @@ def cpu_limits_defined(context: Dict):
     """Verify all deployments have CPU limits."""
     deployments = context.get("prometheus_deployments", [])
     statefulsets = context.get("prometheus_statefulsets", [])
-    
+
     all_workloads = deployments + statefulsets
-    
+
     for workload in all_workloads:
         containers = workload.get("spec", {}).get("template", {}).get("spec", {}).get("containers", [])
         for container in containers:
@@ -797,9 +797,9 @@ def memory_limits_defined(context: Dict):
     """Verify all deployments have memory limits."""
     deployments = context.get("prometheus_deployments", [])
     statefulsets = context.get("prometheus_statefulsets", [])
-    
+
     all_workloads = deployments + statefulsets
-    
+
     for workload in all_workloads:
         containers = workload.get("spec", {}).get("template", {}).get("spec", {}).get("containers", [])
         for container in containers:
@@ -814,7 +814,7 @@ def memory_limits_defined(context: Dict):
 def pvc_for_alertmanager_exists(context: Dict):
     """Verify a PVC for Alertmanager exists."""
     pvcs = context.get("pvcs", [])
-    alertmanager_pvcs = [pvc for pvc in pvcs 
+    alertmanager_pvcs = [pvc for pvc in pvcs
                         if "alertmanager" in pvc.get("metadata", {}).get("name", "").lower()]
     assert len(alertmanager_pvcs) > 0, "No PVC found for Alertmanager"
 

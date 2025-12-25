@@ -5,8 +5,8 @@ description: "[Brief description of what this playbook achieves]"
 
 # Playbook: [TITLE]
 
-> **Estimated Duration**: [X hours/days]  
-> **Complexity**: ⭐⭐ [Low/Medium/High]  
+> **Estimated Duration**: [X hours/days]
+> **Complexity**: ⭐⭐ [Low/Medium/High]
 > **Target Audience**: [Platform Engineers / DevOps Engineers / Consultants]
 
 ---

@@ -1,6 +1,6 @@
 /**
  * VSM Flow Metrics Widget for Focalboard
- * 
+ *
  * Displays real-time flow metrics from the VSM service including:
  * - Work in Progress (WIP) by stage
  * - Cycle time per column/stage

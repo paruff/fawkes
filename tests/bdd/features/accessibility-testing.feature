@@ -130,7 +130,7 @@ Feature: Automated Accessibility Testing
     And metrics should be available in Prometheus
     And metrics should be visualized in Grafana
 
-  @accessibility @alerts @normal  
+  @accessibility @alerts @normal
   Scenario: Alerts are triggered for accessibility failures
     Given accessibility monitoring is configured
     When accessibility tests fail on main branch

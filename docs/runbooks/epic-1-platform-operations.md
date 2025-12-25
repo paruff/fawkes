@@ -1,8 +1,8 @@
 # Epic 1: Platform Operations Runbook
 
-**Version**: 1.0  
-**Last Updated**: December 2024  
-**Status**: Production Ready  
+**Version**: 1.0
+**Last Updated**: December 2024
+**Status**: Production Ready
 **Target Audience**: Platform Engineers, SREs, DevOps Engineers
 
 ---
@@ -349,7 +349,7 @@ kubectl logs <pod-name> -n <namespace> --previous
    ```bash
    # Verify ConfigMap exists
    kubectl get configmap -n <namespace>
-   
+
    # Verify Secret exists
    kubectl get secret -n <namespace>
    ```

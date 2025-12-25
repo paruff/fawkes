@@ -10,7 +10,7 @@ export interface DividerProps extends BaseComponentProps {
 
 /**
  * Visual divider
- * 
+ *
  * @component
  * @example
  * ```tsx

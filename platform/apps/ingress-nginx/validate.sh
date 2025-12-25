@@ -46,9 +46,9 @@ check_pods() {
     local namespace=$1
     local label=$2
     local expected_count=$3
-    
+
     actual_count=$(kubectl get pods -n $namespace -l $label --field-selector=status.phase=Running --no-headers 2>/dev/null | wc -l)
-    
+
     if [ $actual_count -ge $expected_count ]; then
         echo -e "${GREEN}✅${NC} Pods running in namespace $namespace (label: $label): $actual_count/$expected_count"
         return 0
@@ -61,10 +61,10 @@ check_pods() {
 check_service() {
     local namespace=$1
     local service=$2
-    
+
     if kubectl get service -n $namespace $service &> /dev/null; then
         echo -e "${GREEN}✅${NC} Service $service exists in namespace $namespace"
-        
+
         # Check if LoadBalancer has external IP
         lb_ip=$(kubectl get svc -n $namespace $service -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null)
         if [ -n "$lb_ip" ]; then
@@ -82,10 +82,10 @@ check_service() {
 check_ingress() {
     local namespace=$1
     local ingress=$2
-    
+
     if kubectl get ingress -n $namespace $ingress &> /dev/null; then
         echo -e "${GREEN}✅${NC} Ingress $ingress exists in namespace $namespace"
-        
+
         # Check ingress address
         address=$(kubectl get ingress -n $namespace $ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null)
         if [ -n "$address" ]; then

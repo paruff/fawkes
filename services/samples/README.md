@@ -13,8 +13,8 @@ A Java Spring Boot microservice demonstrating:
 - Kubernetes deployment with proper resource limits
 - GitOps deployment via ArgoCD
 
-**Access**: https://sample-java-app.fawkes.idp  
-**Language**: Java 21 with Spring Boot 3.4.1  
+**Access**: https://sample-java-app.fawkes.idp
+**Language**: Java 21 with Spring Boot 3.4.1
 **Metrics**: `/actuator/prometheus`
 
 ### 2. Sample Python FastAPI App (`sample-python-app`)
@@ -26,8 +26,8 @@ A Python FastAPI application demonstrating:
 - Health and readiness endpoints
 - Uvicorn ASGI server
 
-**Access**: https://sample-python-app.fawkes.idp  
-**Language**: Python 3.12 with FastAPI 0.115.5  
+**Access**: https://sample-python-app.fawkes.idp
+**Language**: Python 3.12 with FastAPI 0.115.5
 **Metrics**: `/metrics`
 
 ### 3. Sample Node.js Express App (`sample-nodejs-app`)
@@ -39,8 +39,8 @@ A Node.js Express service demonstrating:
 - Graceful shutdown handling
 - Health check endpoints
 
-**Access**: https://sample-nodejs-app.fawkes.idp  
-**Language**: Node.js 20 with Express 4.21.2  
+**Access**: https://sample-nodejs-app.fawkes.idp
+**Language**: Node.js 20 with Express 4.21.2
 **Metrics**: `/metrics`
 
 ## Purpose

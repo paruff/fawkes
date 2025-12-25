@@ -32,9 +32,9 @@ kubectl apply -f my-deployment.yaml
 
 # Error message will reference the policy:
 # Error from server: admission webhook "validate.kyverno.svc" denied the request:
-# 
+#
 # policy Deployment/my-app-deployment for resource violation:
-# 
+#
 # require-non-root:
 #   runAsNonRoot: 'must set runAsNonRoot to true'
 ```
@@ -116,7 +116,7 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000      # Non-root user ID
         fsGroup: 1000        # File system group
-      
+
       containers:
       - name: my-app
         image: my-app:v1.0.0
@@ -236,7 +236,7 @@ spec:
       containers:
       - name: my-app
         image: my-app:v1.0.0
-        
+
         # Add liveness probe
         livenessProbe:
           httpGet:
@@ -246,7 +246,7 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
-        
+
         # Add readiness probe
         readinessProbe:
           httpGet:
@@ -281,13 +281,13 @@ spec:
           - my-namespace
         names:
           - legacy-app*  # Wildcard supported
-  
+
   # Which policies to exclude from
   exceptions:
   - policyName: require-non-root
     ruleNames:
     - validate-runAsNonRoot
-  
+
   # Justification (good practice)
   background: "Legacy database container requires root for initialization scripts"
 ```

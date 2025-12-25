@@ -212,7 +212,7 @@ Create aggregated view for common DORA queries:
 
 ```sql
 CREATE VIEW dora_metrics_summary AS
-SELECT 
+SELECT
   DATE_TRUNC('week', date) as week,
   AVG(deployment_frequency) as avg_deployment_frequency,
   AVG(lead_time_for_changes) as avg_lead_time,
@@ -228,7 +228,7 @@ ORDER BY week DESC;
 
 ```sql
 CREATE VIEW catalog_summary AS
-SELECT 
+SELECT
   kind,
   COUNT(*) as count,
   COUNT(DISTINCT spec->>'owner') as unique_owners,
@@ -241,7 +241,7 @@ GROUP BY kind;
 
 ```sql
 CREATE VIEW vsm_flow_metrics AS
-SELECT 
+SELECT
   DATE_TRUNC('day', timestamp) as date,
   stage_id,
   COUNT(DISTINCT work_item_id) as items_transitioned,
@@ -259,10 +259,10 @@ Expose PostgreSQL functions as GraphQL queries:
 -- Function to calculate cycle time for a work item
 CREATE OR REPLACE FUNCTION calculate_cycle_time(item_id UUID)
 RETURNS INTERVAL AS $$
-  SELECT 
-    MAX(timestamp) - MIN(timestamp) 
-  FROM stage_transitions 
-  WHERE work_item_id = item_id 
+  SELECT
+    MAX(timestamp) - MIN(timestamp)
+  FROM stage_transitions
+  WHERE work_item_id = item_id
     AND to_stage IN (SELECT id FROM stages WHERE type = 'done');
 $$ LANGUAGE SQL STABLE;
 ```
@@ -308,14 +308,14 @@ api_limits:
       admin: 20
       developer: 10
       viewer: 5
-  
+
   node_limit:
     global: 100
     per_role:
       admin: 1000
       developer: 500
       viewer: 100
-  
+
   rate_limit:
     global:
       max_req_per_min: 1000

@@ -36,7 +36,7 @@ def test_focalboard_webhook_endpoint_exists():
         "boardId": "test-board",
         "workspaceId": "test-workspace"
     }
-    
+
     response = client.post("/api/v1/focalboard/webhook", json=payload)
     # Should return 200 even if DB fails (webhook should not retry on errors)
     assert response.status_code in [200, 500, 503]
@@ -45,7 +45,7 @@ def test_focalboard_webhook_endpoint_exists():
 def test_focalboard_stage_mapping_endpoint():
     """Test that stage mapping endpoint returns correct data."""
     response = client.get("/api/v1/focalboard/stages/mapping")
-    
+
     # May fail if integration not available
     if response.status_code == 200:
         data = response.json()
@@ -63,7 +63,7 @@ def test_focalboard_column_stage_mapping():
     """Test column to stage mapping logic."""
     try:
         from integrations.focalboard import FocalboardColumnStageMapping
-        
+
         # Test known mappings
         assert FocalboardColumnStageMapping.get_stage("backlog") == "Backlog"
         assert FocalboardColumnStageMapping.get_stage("Backlog") == "Backlog"
@@ -71,15 +71,15 @@ def test_focalboard_column_stage_mapping():
         assert FocalboardColumnStageMapping.get_stage("development") == "Development"
         assert FocalboardColumnStageMapping.get_stage("to do") == "Backlog"
         assert FocalboardColumnStageMapping.get_stage("done") == "Production"
-        
+
         # Test reverse mapping
         assert FocalboardColumnStageMapping.get_column("Backlog") is not None
         assert FocalboardColumnStageMapping.get_column("Development") is not None
         assert FocalboardColumnStageMapping.get_column("Production") is not None
-        
+
         # Test unknown mapping
         assert FocalboardColumnStageMapping.get_stage("unknown-column") is None
-        
+
     except ImportError:
         pytest.skip("Focalboard integration not available")
 
@@ -100,10 +100,10 @@ def test_webhook_card_created_validation():
         "boardId": "board-1",
         "workspaceId": "workspace-1"
     }
-    
+
     response = client.post("/api/v1/focalboard/webhook", json=valid_payload)
     assert response.status_code in [200, 500, 503]
-    
+
     # Invalid payload - missing required fields
     invalid_payload = {
         "action": "card.created",
@@ -112,7 +112,7 @@ def test_webhook_card_created_validation():
             # Missing required fields like title, boardId, status, etc.
         }
     }
-    
+
     response = client.post("/api/v1/focalboard/webhook", json=invalid_payload)
     # Should return validation error
     assert response.status_code == 422
@@ -133,7 +133,7 @@ def test_webhook_card_moved_validation():
         "boardId": "board-1",
         "workspaceId": "workspace-1"
     }
-    
+
     response = client.post("/api/v1/focalboard/webhook", json=payload)
     assert response.status_code in [200, 500, 503]
 
@@ -143,11 +143,11 @@ def test_sync_board_endpoint():
     sync_request = {
         "board_id": "test-board-123"
     }
-    
+
     response = client.post("/api/v1/focalboard/sync", json=sync_request)
     # Should return 200 with sync results or error
     assert response.status_code in [200, 500, 503]
-    
+
     if response.status_code == 200:
         data = response.json()
         assert "status" in data
@@ -168,7 +168,7 @@ def test_focalboard_endpoints_in_root():
     response = client.get("/")
     assert response.status_code == 200
     data = response.json()
-    
+
     if data.get("integrations", {}).get("focalboard"):
         # If integration is available, endpoints should be listed
         endpoints = data.get("endpoints", {})

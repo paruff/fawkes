@@ -223,6 +223,9 @@ validate-jcasc: ## Validate Jenkins Configuration as Code (JCasC) files
 
 validate-jenkins: validate-jcasc ## Alias for validate-jcasc
 
+validate-issue-109: ## Validate Code Quality Standards implementation (Issue #109)
+	@./scripts/validate-issue-109.sh
+
 ## Azure Infrastructure Management
 .PHONY: azure-init azure-plan azure-apply azure-destroy azure-refresh-kubeconfig azure-clean-rebuild azure-access
 

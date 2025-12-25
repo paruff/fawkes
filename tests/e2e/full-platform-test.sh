@@ -75,14 +75,14 @@ check_time_limit() {
     local elapsed=$((current_time - START_TIME))
     local elapsed_min=$((elapsed / 60))
     local elapsed_sec=$((elapsed % 60))
-    
+
     log_info "Elapsed time: ${elapsed_min}m ${elapsed_sec}s / 20m max"
-    
+
     if [ $elapsed -gt $MAX_TIME ]; then
         log_error "Time limit exceeded (>20 minutes)"
         return 1
     fi
-    
+
     return 0
 }
 
@@ -131,22 +131,22 @@ EOF
 
 validate_epic_deliverables() {
     log_header "Validating Epic 1 Deliverables"
-    
+
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    
+
     local failed_tests=()
     local passed_tests=()
-    
+
     for test_id in "${EPIC_TESTS[@]}"; do
         log_section "Validating $test_id"
-        
+
         local validation_script="${ROOT_DIR}/scripts/validate-${test_id,,}.sh"
-        
+
         if [ ! -f "$validation_script" ]; then
             log_warning "$test_id: Validation script not found, skipping"
             continue
         fi
-        
+
         # Run validation script with timeout
         if timeout 300 "$validation_script" > /dev/null 2>&1; then
             log_success "$test_id: PASSED"
@@ -156,12 +156,12 @@ validate_epic_deliverables() {
             failed_tests+=("$test_id")
         fi
     done
-    
+
     echo ""
     log_info "Epic 1 Deliverables Summary:"
     log_info "  Passed: ${#passed_tests[@]}/${#EPIC_TESTS[@]}"
     log_info "  Failed: ${#failed_tests[@]}/${#EPIC_TESTS[@]}"
-    
+
     if [ ${#failed_tests[@]} -eq 0 ]; then
         log_success "All Epic 1 deliverables validated"
         return 0
@@ -173,10 +173,10 @@ validate_epic_deliverables() {
 
 test_synthetic_user_scenario() {
     log_header "Synthetic User Scenario Test"
-    
+
     log_section "Step 1: Developer scaffolds app via Backstage"
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    
+
     # Verify Backstage is accessible and has templates
     if kubectl get deployment backstage -n fawkes &> /dev/null; then
         local templates_count=$(find "${ROOT_DIR}/templates" -name "template.yaml" 2>/dev/null | wc -l)
@@ -190,10 +190,10 @@ test_synthetic_user_scenario() {
         log_error "Backstage not deployed"
         return 1
     fi
-    
+
     log_section "Step 2: Code pushed to Git triggers Jenkins build"
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    
+
     # Verify Jenkins is running and has pipelines
     if kubectl get pod -n fawkes -l app.kubernetes.io/component=jenkins-controller &> /dev/null; then
         if [ -f "${ROOT_DIR}/jenkins-shared-library/vars/goldenPathPipeline.groovy" ]; then
@@ -206,51 +206,51 @@ test_synthetic_user_scenario() {
         log_error "Jenkins controller not running"
         return 1
     fi
-    
+
     log_section "Step 3: Jenkins builds, tests, scans, pushes to Harbor"
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    
+
     # Verify security scanning tools are configured
     local security_tools=0
-    
+
     if kubectl get deployment sonarqube -n fawkes &> /dev/null 2>&1 || \
        kubectl get statefulset sonarqube -n fawkes &> /dev/null 2>&1; then
         security_tools=$((security_tools + 1))
         log_info "  ✓ SonarQube (SAST) available"
     fi
-    
+
     if grep -q "trivy" "${ROOT_DIR}/jenkins-shared-library/vars/"*.groovy 2>/dev/null; then
         security_tools=$((security_tools + 1))
         log_info "  ✓ Trivy (container scan) configured"
     fi
-    
+
     if grep -q "secretsScan\|gitleaks" "${ROOT_DIR}/jenkins-shared-library/vars/"*.groovy 2>/dev/null || \
        [ -f "${ROOT_DIR}/.gitleaks.toml" ]; then
         security_tools=$((security_tools + 1))
         log_info "  ✓ Secrets scanning configured"
     fi
-    
+
     # Verify Harbor is running
     if kubectl get deployment harbor-core -n fawkes &> /dev/null 2>&1; then
         security_tools=$((security_tools + 1))
         log_info "  ✓ Harbor registry with Trivy scanner"
     fi
-    
+
     if [ $security_tools -ge 3 ]; then
         log_success "Security scanning integrated (${security_tools}/4 tools)"
     else
         log_error "Insufficient security scanning tools (${security_tools}/4)"
         return 1
     fi
-    
+
     log_section "Step 4: ArgoCD detects new image and deploys"
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    
+
     # Verify ArgoCD is running with auto-sync
     if kubectl get deployment argocd-server -n fawkes &> /dev/null; then
         local auto_sync_apps=$(kubectl get applications -n fawkes -o json 2>/dev/null | \
             jq -r '[.items[] | select(.spec.syncPolicy.automated != null)] | length' 2>/dev/null || echo "0")
-        
+
         if [ "$auto_sync_apps" -gt 0 ]; then
             log_success "ArgoCD auto-sync enabled (${auto_sync_apps} apps)"
         else
@@ -260,10 +260,10 @@ test_synthetic_user_scenario() {
         log_error "ArgoCD not deployed"
         return 1
     fi
-    
+
     log_section "Step 5: App accessible via ingress"
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    
+
     # Verify ingress controller is running
     if kubectl get deployment ingress-nginx-controller -n ingress-nginx &> /dev/null 2>&1 || \
        kubectl get daemonset ingress-nginx-controller -n ingress-nginx &> /dev/null 2>&1; then
@@ -272,10 +272,10 @@ test_synthetic_user_scenario() {
         log_error "Ingress controller not found"
         return 1
     fi
-    
+
     log_section "Step 6: DORA metrics updated"
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    
+
     if [ "$VERIFY_METRICS" = "true" ]; then
         # Verify DevLake/DORA metrics service
         if kubectl get pods -n fawkes-devlake -l app=devlake &> /dev/null 2>&1; then
@@ -291,32 +291,32 @@ test_synthetic_user_scenario() {
     else
         log_info "Skipping DORA metrics verification (--verify-metrics not set)"
     fi
-    
+
     log_section "Step 7: Observability data flowing (metrics, logs, traces)"
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    
+
     if [ "$VERIFY_OBSERVABILITY" = "true" ]; then
         local observability_components=0
-        
+
         # Check Prometheus
         if kubectl get statefulset -n monitoring -l app.kubernetes.io/name=prometheus &> /dev/null 2>&1; then
             observability_components=$((observability_components + 1))
             log_info "  ✓ Prometheus (metrics)"
         fi
-        
+
         # Check Grafana
         if kubectl get deployment -n monitoring -l app.kubernetes.io/name=grafana &> /dev/null 2>&1; then
             observability_components=$((observability_components + 1))
             log_info "  ✓ Grafana (dashboards)"
         fi
-        
+
         # Check OpenTelemetry
         if kubectl get deployment -n fawkes opentelemetry-collector &> /dev/null 2>&1 || \
            kubectl get daemonset -n fawkes opentelemetry-collector &> /dev/null 2>&1; then
             observability_components=$((observability_components + 1))
             log_info "  ✓ OpenTelemetry (traces)"
         fi
-        
+
         if [ $observability_components -ge 2 ]; then
             log_success "Observability stack deployed (${observability_components}/3 components)"
         else
@@ -326,27 +326,27 @@ test_synthetic_user_scenario() {
     else
         log_info "Skipping observability verification (--verify-observability not set)"
     fi
-    
+
     log_success "Synthetic user scenario validated"
     return 0
 }
 
 verify_no_manual_intervention() {
     log_header "Verify Zero Manual Intervention"
-    
+
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    
+
     local automation_score=0
-    
+
     # Check ArgoCD auto-sync
     local auto_sync_apps=$(kubectl get applications -n fawkes -o json 2>/dev/null | \
         jq -r '[.items[] | select(.spec.syncPolicy.automated != null)] | length' 2>/dev/null || echo "0")
-    
+
     if [ "$auto_sync_apps" -gt 0 ]; then
         automation_score=$((automation_score + 1))
         log_info "  ✓ ArgoCD auto-sync enabled"
     fi
-    
+
     # Check Jenkins automation
     if [ -f "${ROOT_DIR}/jenkins-shared-library/vars/goldenPathPipeline.groovy" ]; then
         if grep -q "checkout scm" "${ROOT_DIR}/jenkins-shared-library/vars/goldenPathPipeline.groovy"; then
@@ -354,19 +354,19 @@ verify_no_manual_intervention() {
             log_info "  ✓ Jenkins SCM automation"
         fi
     fi
-    
+
     # Check webhook configurations
     if [ -f "${ROOT_DIR}/.pre-commit-config.yaml" ]; then
         automation_score=$((automation_score + 1))
         log_info "  ✓ Pre-commit hooks configured"
     fi
-    
+
     # Check GitOps automation
     if [ -f "${ROOT_DIR}/platform/apps/platform-bootstrap.yaml" ]; then
         automation_score=$((automation_score + 1))
         log_info "  ✓ GitOps app-of-apps pattern"
     fi
-    
+
     if [ $automation_score -ge 3 ]; then
         log_success "Zero manual intervention validated (${automation_score}/4 automation checks)"
         return 0
@@ -378,9 +378,9 @@ verify_no_manual_intervention() {
 
 verify_all_health_checks() {
     log_header "Verify All Component Health Checks"
-    
+
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    
+
     local critical_components=(
         "fawkes:backstage:deployment"
         "fawkes:jenkins:pod:app.kubernetes.io/component=jenkins-controller"
@@ -388,14 +388,14 @@ verify_all_health_checks() {
         "monitoring:prometheus:statefulset:app.kubernetes.io/name=prometheus"
         "monitoring:grafana:deployment:app.kubernetes.io/name=grafana"
     )
-    
+
     local healthy=0
     local total=0
-    
+
     for component_def in "${critical_components[@]}"; do
         IFS=':' read -r namespace name type label <<< "$component_def"
         total=$((total + 1))
-        
+
         if [ "$type" = "deployment" ]; then
             if kubectl get deployment "$name" -n "$namespace" &> /dev/null; then
                 local ready=$(kubectl get deployment "$name" -n "$namespace" -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo "0")
@@ -434,12 +434,12 @@ verify_all_health_checks() {
             fi
         fi
     done
-    
+
     local health_pct=0
     if [ $total -gt 0 ]; then
         health_pct=$((healthy * 100 / total))
     fi
-    
+
     if [ $health_pct -ge 80 ]; then
         log_success "Component health checks passed (${healthy}/${total} healthy, ${health_pct}%)"
         return 0
@@ -451,12 +451,12 @@ verify_all_health_checks() {
 
 verify_dora_dashboard() {
     log_header "Verify DORA Metrics Dashboard"
-    
+
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    
+
     # Check if Grafana dashboard exists
     local dashboard_file="${ROOT_DIR}/platform/apps/grafana/dashboards/dora-metrics-dashboard.json"
-    
+
     if [ ! -f "$dashboard_file" ]; then
         log_warning "DORA dashboard file not found at $dashboard_file"
         # Try alternative location
@@ -466,9 +466,9 @@ verify_dora_dashboard() {
             return 1
         fi
     fi
-    
+
     log_info "Found DORA dashboard: $(basename "$dashboard_file")"
-    
+
     # Validate dashboard has required metrics
     local required_metrics=(
         "deployment.frequency"
@@ -476,14 +476,14 @@ verify_dora_dashboard() {
         "change.failure.rate"
         "time.to.restore"
     )
-    
+
     local found_metrics=0
     for metric in "${required_metrics[@]}"; do
         if grep -qi "$metric\|${metric//./_}\|${metric//./}" "$dashboard_file" 2>/dev/null; then
             found_metrics=$((found_metrics + 1))
         fi
     done
-    
+
     if [ $found_metrics -ge 3 ]; then
         log_success "DORA dashboard has required metrics (${found_metrics}/4)"
         return 0
@@ -495,37 +495,37 @@ verify_dora_dashboard() {
 
 check_component_logs() {
     log_header "Check Component Logs for Errors"
-    
+
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    
+
     local namespaces=("fawkes" "monitoring" "fawkes-devlake")
     local error_count=0
-    
+
     for namespace in "${namespaces[@]}"; do
         if ! kubectl get namespace "$namespace" &> /dev/null; then
             log_warning "Namespace $namespace not found, skipping"
             continue
         fi
-        
+
         log_section "Checking logs in namespace: $namespace"
-        
+
         # Get recent error/fatal logs (last 5 minutes)
         local pods=$(kubectl get pods -n "$namespace" -o jsonpath='{.items[*].metadata.name}' 2>/dev/null)
-        
+
         for pod in $pods; do
             # Check for critical errors in recent logs
             local errors=$(kubectl logs --tail=100 --since=5m "$pod" -n "$namespace" 2>/dev/null | \
                 grep -iE "error|fatal|exception|panic" | \
                 grep -viE "level=error.*context canceled|expected error|test.*error|deprecated" | \
                 wc -l || echo "0")
-            
+
             if [ "$errors" -gt 10 ]; then
                 log_warning "  Pod $pod has $errors error lines (may be expected)"
                 error_count=$((error_count + 1))
             fi
         done
     done
-    
+
     if [ $error_count -eq 0 ]; then
         log_success "No critical errors found in component logs"
         return 0
@@ -537,42 +537,42 @@ check_component_logs() {
 
 verify_platform_ready_epic2() {
     log_header "Verify Platform Ready for Epic 2"
-    
+
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
-    
+
     local readiness_checks=0
-    
+
     # Check Epic 1 components are stable
     log_section "Epic 1 Foundation Stability"
     if kubectl get deployment -A &> /dev/null; then
         readiness_checks=$((readiness_checks + 1))
         log_info "  ✓ Kubernetes cluster stable"
     fi
-    
+
     # Check GitOps is operational
     if kubectl get applications -n fawkes &> /dev/null; then
         readiness_checks=$((readiness_checks + 1))
         log_info "  ✓ GitOps operational"
     fi
-    
+
     # Check CI/CD is operational
     if kubectl get pod -n fawkes -l app.kubernetes.io/component=jenkins-controller &> /dev/null; then
         readiness_checks=$((readiness_checks + 1))
         log_info "  ✓ CI/CD operational"
     fi
-    
+
     # Check observability is operational
     if kubectl get statefulset -n monitoring -l app.kubernetes.io/name=prometheus &> /dev/null; then
         readiness_checks=$((readiness_checks + 1))
         log_info "  ✓ Observability operational"
     fi
-    
+
     # Check documentation exists
     if [ -f "${ROOT_DIR}/README.md" ] && [ -f "${ROOT_DIR}/docs/architecture.md" ]; then
         readiness_checks=$((readiness_checks + 1))
         log_info "  ✓ Documentation available"
     fi
-    
+
     if [ $readiness_checks -ge 4 ]; then
         log_success "Platform ready for Epic 2 (${readiness_checks}/5 checks)"
         return 0
@@ -588,15 +588,15 @@ verify_platform_ready_epic2() {
 
 generate_final_report() {
     log_header "Final Test Report"
-    
+
     local end_time=$(date +%s)
     local duration=$((end_time - START_TIME))
     local duration_min=$((duration / 60))
     local duration_sec=$((duration % 60))
-    
+
     # Create reports directory
     mkdir -p "$(dirname "$REPORT_FILE")"
-    
+
     # Generate JSON report
     cat > "$REPORT_FILE" << EOF
 {
@@ -629,7 +629,7 @@ done)
   "status": "$([ $TESTS_FAILED -eq 0 ] && [ $duration -le $MAX_TIME ] && echo "PASSED" || echo "FAILED")"
 }
 EOF
-    
+
     # Print summary
     echo ""
     echo "=============================================="
@@ -641,7 +641,7 @@ EOF
     echo "Passed:         $TESTS_PASSED"
     echo "Failed:         $TESTS_FAILED"
     echo ""
-    
+
     if [ $TESTS_FAILED -eq 0 ] && [ $duration -le $MAX_TIME ]; then
         log_success "AT-E1-012: PASSED ✓"
         echo ""
@@ -708,46 +708,46 @@ main() {
                 ;;
         esac
     done
-    
+
     log_header "AT-E1-012: Full Platform Validation Test"
     log_info "Epic 1: DORA 2023 Foundation - Final Validation"
     log_info "Template: $TEMPLATE"
     log_info "Verify Metrics: $VERIFY_METRICS"
     log_info "Verify Observability: $VERIFY_OBSERVABILITY"
     echo ""
-    
+
     # Run validation phases
     local overall_result=0
-    
+
     # Phase 1: Validate all Epic 1 deliverables
     validate_epic_deliverables || overall_result=1
     check_time_limit || overall_result=1
-    
+
     # Phase 2: Test synthetic user scenario
     test_synthetic_user_scenario || overall_result=1
     check_time_limit || overall_result=1
-    
+
     # Phase 3: Verify automation
     verify_no_manual_intervention || overall_result=1
-    
+
     # Phase 4: Verify component health
     verify_all_health_checks || overall_result=1
-    
+
     # Phase 5: Verify DORA metrics dashboard
     if [ "$VERIFY_METRICS" = "true" ]; then
         verify_dora_dashboard || overall_result=1
     fi
-    
+
     # Phase 6: Check component logs
     check_component_logs || overall_result=1
-    
+
     # Phase 7: Verify platform readiness for Epic 2
     verify_platform_ready_epic2 || overall_result=1
-    
+
     # Generate final report
     generate_final_report
     local report_result=$?
-    
+
     exit $((overall_result + report_result))
 }
 

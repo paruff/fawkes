@@ -68,10 +68,10 @@ describe('MyFunction', () => {
   it('should return expected value', () => {
     // Arrange
     const input = setupTestData();
-    
+
     // Act
     const result = myFunction(input);
-    
+
     // Assert
     expect(result).toBe(expectedValue);
   });
@@ -91,7 +91,7 @@ Example:
 ```javascript
 /**
  * Calculate the total price of items.
- * 
+ *
  * @param {Array<Item>} items - List of items to calculate total for
  * @returns {number} Total price
  * @throws {Error} If items list is empty

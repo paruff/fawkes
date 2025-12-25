@@ -12,17 +12,17 @@ apiVersion: score.dev/v1b1
 # Metadata about the workload
 metadata:
   name: "my-service"  # Replace with your service name
-  
+
 # Container definitions
 containers:
   # Main application container
   web:
     image: "harbor.fawkes.local/my-team/my-service:latest"  # Replace with your image
-    
+
     # Command to run (optional, uses image default if not specified)
     # command: ["/app/server"]
     # args: ["--port", "8080"]
-    
+
     # Container resource requirements
     resources:
       limits:
@@ -31,22 +31,22 @@ containers:
       requests:
         memory: "256Mi"
         cpu: "250m"
-    
+
     # Environment variables
     variables:
       # Static environment variables
       LOG_LEVEL: "info"
       ENVIRONMENT: "${ENVIRONMENT}"  # Injected by platform based on deployment environment
-      
+
       # Variables from resources (databases, caches, etc.)
       # These are automatically populated when resources are provisioned
       DATABASE_URL: "${resources.db.connection_string}"
       REDIS_URL: "${resources.cache.connection_string}"
-      
+
       # Variables from secrets
       # These reference External Secrets managed by the platform
       API_KEY: "${resources.api-secret.API_KEY}"
-    
+
     # Files to mount into the container (optional)
     # files:
     #   - target: /app/config/app.yaml
@@ -55,7 +55,7 @@ containers:
     #       application:
     #         name: my-service
     #         debug: false
-    
+
     # Readiness probe
     livenessProbe:
       httpGet:
@@ -63,7 +63,7 @@ containers:
         port: 8080
       initialDelaySeconds: 30
       periodSeconds: 10
-      
+
     # Liveness probe
     readinessProbe:
       httpGet:
@@ -83,7 +83,7 @@ service:
 # Resources required by the application
 # The platform translates these into actual infrastructure
 resources:
-  
+
   # PostgreSQL database
   # Platform provisions this via CloudNativePG operator
   db:
@@ -96,7 +96,7 @@ resources:
     properties:
       # Database will be created with this name
       database: "myapp"
-  
+
   # Redis cache
   # Platform provisions this via Redis operator or Helm chart
   cache:
@@ -107,7 +107,7 @@ resources:
     properties:
       # Cache configuration
       maxmemory-policy: "allkeys-lru"
-  
+
   # Secret from Vault
   # Platform provisions this via External Secrets Operator
   api-secret:
@@ -121,7 +121,7 @@ resources:
       keys:
         - API_KEY
         - JWT_SECRET
-  
+
   # Persistent volume for uploads/data
   # Platform provisions this via PersistentVolumeClaim
   storage:
@@ -154,12 +154,12 @@ extensions:
   fawkes:
     # Team ownership for RBAC and billing
     team: "my-team"
-    
+
     # Deployment strategy
     deployment:
       strategy: "RollingUpdate"
       replicas: 2
-      
+
       # Horizontal Pod Autoscaling
       autoscaling:
         enabled: true
@@ -167,7 +167,7 @@ extensions:
         maxReplicas: 10
         targetCPUUtilizationPercentage: 70
         targetMemoryUtilizationPercentage: 80
-    
+
     # Observability configuration
     observability:
       # Prometheus metrics scraping
@@ -175,34 +175,34 @@ extensions:
         enabled: true
         port: 9090
         path: "/metrics"
-      
+
       # Distributed tracing
       tracing:
         enabled: true
         samplingRate: 0.1  # 10% of requests
-      
+
       # Logging
       logging:
         enabled: true
         format: "json"
         level: "info"
-    
+
     # Security policies
     security:
       # Pod Security Standards
       podSecurityStandard: "restricted"
-      
+
       # Run as non-root user
       runAsNonRoot: true
       runAsUser: 65534
-      
+
       # Network policies
       networkPolicy:
         enabled: true
         allowedNamespaces:
           - "my-team"
           - "fawkes"
-    
+
     # DORA metrics tracking
     dora:
       enabled: true

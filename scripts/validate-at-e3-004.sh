@@ -54,7 +54,7 @@ print_summary() {
     echo "Total Tests:  $TOTAL_TESTS"
     echo -e "Passed:       ${GREEN}$PASSED_TESTS${NC}"
     echo -e "Failed:       ${RED}$FAILED_TESTS${NC}"
-    
+
     if [ $FAILED_TESTS -gt 0 ]; then
         echo ""
         echo "Failed Tests:"

@@ -34,13 +34,13 @@ echo ""
 echo -e "${YELLOW}[TEST 2]${NC} Checking OpenTelemetry Collector DaemonSet..."
 if kubectl get daemonset $OTEL_COLLECTOR_NAME -n $MONITORING_NS > /dev/null 2>&1; then
     echo -e "${GREEN}✓${NC} OpenTelemetry Collector DaemonSet exists"
-    
+
     # Check if all desired pods are ready
     DESIRED=$(kubectl get daemonset $OTEL_COLLECTOR_NAME -n $MONITORING_NS -o jsonpath='{.status.desiredNumberScheduled}')
     READY=$(kubectl get daemonset $OTEL_COLLECTOR_NAME -n $MONITORING_NS -o jsonpath='{.status.numberReady}')
-    
+
     echo "  Desired: $DESIRED, Ready: $READY"
-    
+
     if [ "$DESIRED" -eq "$READY" ]; then
         echo -e "${GREEN}✓${NC} All OpenTelemetry Collector pods are ready"
     else
@@ -56,14 +56,14 @@ echo ""
 echo -e "${YELLOW}[TEST 3]${NC} Checking OTLP receiver ports..."
 if kubectl get service -n $MONITORING_NS | grep -q "otel-collector"; then
     SERVICE_NAME=$(kubectl get service -n $MONITORING_NS | grep "otel-collector" | awk '{print $1}' | head -1)
-    
+
     # Check for port 4317 (gRPC)
     if kubectl get service $SERVICE_NAME -n $MONITORING_NS -o jsonpath='{.spec.ports[*].port}' | grep -q "4317"; then
         echo -e "${GREEN}✓${NC} OTLP gRPC port 4317 is exposed"
     else
         echo -e "${RED}✗${NC} OTLP gRPC port 4317 is not exposed"
     fi
-    
+
     # Check for port 4318 (HTTP)
     if kubectl get service $SERVICE_NAME -n $MONITORING_NS -o jsonpath='{.spec.ports[*].port}' | grep -q "4318"; then
         echo -e "${GREEN}✓${NC} OTLP HTTP port 4318 is exposed"
@@ -81,7 +81,7 @@ COLLECTOR_POD=$(kubectl get pods -n $MONITORING_NS -l app.kubernetes.io/name=ope
 
 if [ -n "$COLLECTOR_POD" ]; then
     echo "  Using pod: $COLLECTOR_POD"
-    
+
     if kubectl exec -n $MONITORING_NS $COLLECTOR_POD -- wget -q -O- http://localhost:13133 > /dev/null 2>&1; then
         echo -e "${GREEN}✓${NC} Health endpoint is accessible"
     else
@@ -109,7 +109,7 @@ if [ -d "$SAMPLE_APP_DIR" ]; then
     echo "  Building sample application image..."
     docker build -t otel-sample-app:latest "$SAMPLE_APP_DIR" > /dev/null 2>&1
     echo -e "${GREEN}✓${NC} Sample application image built"
-    
+
     # Load image into kind cluster if detected
     # Check for kind cluster by looking for kind-specific context
     CURRENT_CONTEXT=$(kubectl config current-context)
@@ -123,7 +123,7 @@ fi
 if [ -f "$SAMPLE_APP_DIR/deployment.yaml" ]; then
     kubectl apply -f "$SAMPLE_APP_DIR/deployment.yaml" > /dev/null 2>&1
     echo -e "${GREEN}✓${NC} Sample application deployed"
-    
+
     # Wait for deployment to be ready
     echo "  Waiting for sample application to be ready..."
     kubectl wait --for=condition=available --timeout=60s deployment/$SAMPLE_APP_NAME -n $DEMO_NS > /dev/null 2>&1 || true
@@ -141,20 +141,20 @@ SAMPLE_POD=$(kubectl get pods -n $DEMO_NS -l app=$SAMPLE_APP_NAME -o jsonpath='{
 
 if [ -n "$SAMPLE_POD" ]; then
     echo "  Using pod: $SAMPLE_POD"
-    
+
     # Port forward to sample app
     kubectl port-forward -n $DEMO_NS $SAMPLE_POD 8080:8080 > /dev/null 2>&1 &
     PF_PID=$!
     sleep 2
-    
+
     # Generate traces
     echo "  Generating traces..."
     curl -s http://localhost:8080/hello/Platform > /dev/null && echo -e "${GREEN}✓${NC} Generated greeting trace"
     curl -s http://localhost:8080/work > /dev/null && echo -e "${GREEN}✓${NC} Generated work trace with nested spans"
-    
+
     # Kill port-forward
     kill $PF_PID > /dev/null 2>&1 || true
-    
+
     echo -e "${GREEN}✓${NC} Sample traces generated"
 else
     echo -e "${YELLOW}⚠${NC} Sample application pod not found"
@@ -192,7 +192,7 @@ echo -e "${YELLOW}[TEST 8]${NC} Checking collector logs for trace activity..."
 if [ -n "$COLLECTOR_POD" ]; then
     # Get recent logs and look for specific trace processing patterns
     RECENT_LOGS=$(kubectl logs -n $MONITORING_NS $COLLECTOR_POD --tail=100 2>/dev/null || echo "")
-    
+
     # Check for span-related activity indicating trace processing
     if echo "$RECENT_LOGS" | grep -qE "(span|trace_id|SpanData|ExportTraceServiceRequest)"; then
         echo -e "${GREEN}✓${NC} Collector is processing traces (span data detected)"

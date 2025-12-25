@@ -13,7 +13,7 @@ class PulseSurveyResponse(BaseModel):
     cognitive_load: float = Field(..., ge=1, le=5, description="Cognitive load rating 1-5")
     friction_incidents: bool = Field(..., description="Experienced friction this week")
     comment: Optional[str] = Field(None, max_length=1000, description="Optional feedback")
-    
+
     class Config:
         json_schema_extra = {
             "example": {
@@ -31,7 +31,7 @@ class SurveyDistributionRequest(BaseModel):
     type: str = Field(..., description="Survey type: pulse or deep_dive")
     test_mode: bool = Field(False, description="Test mode sends to limited users")
     test_users: Optional[List[str]] = Field(None, description="Specific users for test mode")
-    
+
     class Config:
         json_schema_extra = {
             "example": {
@@ -53,7 +53,7 @@ class CampaignResponse(BaseModel):
     total_sent: int
     total_responses: int
     response_rate: float
-    
+
     class Config:
         from_attributes = True
 
@@ -67,7 +67,7 @@ class PulseAnalytics(BaseModel):
     avg_cognitive_load: float
     friction_incidents_pct: float
     response_count: int
-    
+
     class Config:
         from_attributes = True
 
@@ -114,7 +114,7 @@ class NASATLXRequest(BaseModel):
     """NASA-TLX assessment request"""
     task_type: str = Field(..., description="Type of task: deployment, pr_review, incident_response, build, etc.")
     task_id: Optional[str] = Field(None, description="Optional reference to specific task")
-    
+
     # NASA-TLX dimensions (0-100 scale)
     mental_demand: float = Field(..., ge=0, le=100, description="How mentally demanding was the task?")
     physical_demand: float = Field(..., ge=0, le=100, description="How physically demanding was the task?")
@@ -122,11 +122,11 @@ class NASATLXRequest(BaseModel):
     performance: float = Field(..., ge=0, le=100, description="How successful were you? (100=perfect, 0=failure)")
     effort: float = Field(..., ge=0, le=100, description="How hard did you have to work?")
     frustration: float = Field(..., ge=0, le=100, description="How insecure, discouraged, irritated were you?")
-    
+
     # Optional context
     duration_minutes: Optional[int] = Field(None, ge=0, description="How long did the task take?")
     comment: Optional[str] = Field(None, max_length=2000, description="Optional feedback")
-    
+
     class Config:
         json_schema_extra = {
             "example": {
@@ -150,7 +150,7 @@ class NASATLXResponse(BaseModel):
     user_id: str
     task_type: str
     task_id: Optional[str]
-    
+
     mental_demand: float
     physical_demand: float
     temporal_demand: float
@@ -158,11 +158,11 @@ class NASATLXResponse(BaseModel):
     effort: float
     frustration: float
     overall_workload: float
-    
+
     duration_minutes: Optional[int]
     comment: Optional[str]
     submitted_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -181,7 +181,7 @@ class NASATLXAnalytics(BaseModel):
     task_type: str
     week: int
     year: int
-    
+
     avg_mental_demand: float
     avg_physical_demand: float
     avg_temporal_demand: float
@@ -189,9 +189,9 @@ class NASATLXAnalytics(BaseModel):
     avg_effort: float
     avg_frustration: float
     avg_overall_workload: float
-    
+
     response_count: int
-    
+
     class Config:
         from_attributes = True
 

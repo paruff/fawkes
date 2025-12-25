@@ -8,18 +8,18 @@
 goldenPathPipeline {
     appName = '${{ values.name }}'
     language = 'python'
-    
+
     // Python build commands
     buildCommand = 'pip install -r requirements.txt'
     testCommand = 'pytest tests/unit --junitxml=test-results.xml --cov=app --cov-report=xml'
     bddTestCommand = 'behave tests/bdd/features --junit --junit-directory=bdd-results'
-    
+
     // Docker registry configuration
     dockerRegistry = 'harbor.fawkes.local'
-    
+
     // SonarQube configuration
     sonarProject = '${{ values.name }}'
-    
+
     // Notification channel
     notifyChannel = 'ci-builds'
 }

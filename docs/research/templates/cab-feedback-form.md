@@ -14,7 +14,7 @@
 
 **Topic**: [Brief description of what feedback is needed on]
 
-**Context**: 
+**Context**:
 [1-2 paragraphs providing background on why this feedback is needed and how it will be used]
 
 ---
@@ -248,9 +248,9 @@
 
 ## For Admin Use Only
 
-**Review Date**: 
+**Review Date**:
 
-**Reviewed By**: 
+**Reviewed By**:
 
 **Feedback Summary**:
 [Key takeaways from this response]
@@ -273,6 +273,6 @@
 
 ---
 
-**Template Version**: 1.0  
-**Last Updated**: December 25, 2025  
+**Template Version**: 1.0
+**Last Updated**: December 25, 2025
 **Owner**: Product Team

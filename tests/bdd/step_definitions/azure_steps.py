@@ -57,7 +57,7 @@ def azure_credentials_configured():
     if result.returncode != 0:
         import pytest
         pytest.skip("Azure credentials not configured. Run 'az login' first.")
-    
+
     account_info = json.loads(result.stdout)
     assert account_info.get('id'), "Azure subscription not found"
 
@@ -81,16 +81,16 @@ def aks_cluster_exists(context):
     """Verify AKS cluster exists"""
     resource_group = os.getenv('AZURE_RESOURCE_GROUP', 'fawkes-rg')
     cluster_name = os.getenv('AZURE_CLUSTER_NAME', 'fawkes-aks')
-    
+
     result = run_cmd(
         f'az aks show --resource-group {resource_group} --name {cluster_name} -o json',
         check=False
     )
-    
+
     if result.returncode != 0:
         import pytest
         pytest.skip(f"AKS cluster {cluster_name} not found in {resource_group}")
-    
+
     cluster_info = json.loads(result.stdout)
     context['cluster_info'] = cluster_info
     context['resource_group'] = resource_group
@@ -111,7 +111,7 @@ def inspec_with_azure():
     if result.returncode != 0:
         import pytest
         pytest.skip("InSpec not installed")
-    
+
     # Check for azure plugin
     result = run_cmd('inspec plugin list', check=False)
     if 'inspec-azure' not in result.stdout:
@@ -131,7 +131,7 @@ def check_cluster_status(context):
     """Check AKS cluster status"""
     resource_group = context.get('resource_group', 'fawkes-rg')
     cluster_name = context.get('cluster_name', 'fawkes-aks')
-    
+
     result = run_cmd(
         f'az aks show --resource-group {resource_group} --name {cluster_name} -o json'
     )
@@ -142,7 +142,7 @@ def check_acr_integration(context):
     """Check ACR integration"""
     resource_group = context.get('resource_group', 'fawkes-rg')
     cluster_name = context.get('cluster_name', 'fawkes-aks')
-    
+
     result = run_cmd(
         f'az aks show --resource-group {resource_group} --name {cluster_name} -o json'
     )
@@ -217,7 +217,7 @@ def check_terraform_components(context, datatable):
     # Read main.tf to check for components
     with open('infra/azure/main.tf', 'r') as f:
         terraform_config = f.read()
-    
+
     for row in datatable:
         component = row['Component']
         if component == 'Resource Group':
@@ -270,7 +270,7 @@ def all_nodes_ready():
     """Verify all nodes are Ready"""
     result = run_cmd('kubectl get nodes -o json')
     nodes = json.loads(result.stdout)
-    
+
     for node in nodes['items']:
         conditions = node['status']['conditions']
         ready_condition = next((c for c in conditions if c['type'] == 'Ready'), None)
@@ -283,10 +283,10 @@ def system_pool_has_nodes(context, count):
     """Verify system node pool node count"""
     cluster_status = context.get('cluster_status', {})
     agent_pools = cluster_status.get('agentPoolProfiles', [])
-    
+
     system_pools = [p for p in agent_pools if p.get('mode') == 'System']
     assert len(system_pools) > 0, "No system node pool found"
-    
+
     total_system_nodes = sum(p.get('count', 0) for p in system_pools)
     assert total_system_nodes == count, \
         f"Expected {count} system nodes, got {total_system_nodes}"
@@ -296,10 +296,10 @@ def user_pool_autoscaling(context):
     """Verify user pool has auto-scaling"""
     cluster_status = context.get('cluster_status', {})
     agent_pools = cluster_status.get('agentPoolProfiles', [])
-    
+
     user_pools = [p for p in agent_pools if p.get('mode') == 'User']
     assert len(user_pools) > 0, "No user node pool found"
-    
+
     autoscaling_enabled = any(p.get('enableAutoScaling') for p in user_pools)
     assert autoscaling_enabled, "Auto-scaling not enabled on any user pool"
 

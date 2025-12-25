@@ -2,11 +2,11 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: December 2025  
-**Status**: Active  
-**Owner**: Product Team  
-**Audience**: Researchers, Product Managers, UX Designers conducting user interviews  
+**Version**: 1.0
+**Last Updated**: December 2025
+**Status**: Active
+**Owner**: Product Team
+**Audience**: Researchers, Product Managers, UX Designers conducting user interviews
 
 ---
 
@@ -184,23 +184,23 @@ This protocol applies to:
 
 **Set Context**:
 ```
-"Thank you for taking the time to speak with me today. I'm [Your Name] 
-from the Product Team, and I'm conducting research to understand 
+"Thank you for taking the time to speak with me today. I'm [Your Name]
+from the Product Team, and I'm conducting research to understand
 [research objective].
 
-We're here to learn from your experience and perspective. This isn't a 
-test—there are no wrong answers. We want to understand your workflows, 
+We're here to learn from your experience and perspective. This isn't a
+test—there are no wrong answers. We want to understand your workflows,
 challenges, and needs so we can improve the platform.
 
-Your responses will be anonymized, and we won't share anything that 
+Your responses will be anonymized, and we won't share anything that
 identifies you personally. The insights will inform platform improvements.
 
-[If recording:] With your permission, I'd like to record this session 
-for note-taking purposes only. The recording will be deleted after we 
+[If recording:] With your permission, I'd like to record this session
+for note-taking purposes only. The recording will be deleted after we
 transcribe it. Are you comfortable with that?
 
-We have about [45-60 minutes]. I'll ask questions and would love to hear 
-examples, see demonstrations, or anything else you'd like to share. 
+We have about [45-60 minutes]. I'll ask questions and would love to hear
+examples, see demonstrations, or anything else you'd like to share.
 Feel free to be candid—we value honest feedback.
 
 Do you have any questions before we start?"
@@ -642,6 +642,6 @@ After the interview:
 
 ---
 
-**Document Owner**: Product Team  
-**Last Review**: December 2025  
+**Document Owner**: Product Team
+**Last Review**: December 2025
 **Next Review**: June 2026 or as needed based on feedback

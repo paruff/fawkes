@@ -221,14 +221,14 @@ func processDeployment(ctx context.Context, app string) error {
         ),
     )
     defer span.End()
-    
+
     // Business logic here
     if err := syncApplication(ctx, app); err != nil {
         span.RecordError(err)
         span.SetStatus(codes.Error, err.Error())
         return err
     }
-    
+
     return nil
 }
 ```
@@ -251,12 +251,12 @@ data:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
-    
+
     processors:
       batch:
         timeout: 10s
         send_batch_size: 1024
-      
+
       # Tail-based sampling - keep all errors, sample successes
       tail_sampling:
         decision_wait: 10s
@@ -272,7 +272,7 @@ data:
           - name: probabilistic-sampling
             type: probabilistic
             probabilistic: {sampling_percentage: 10}
-      
+
       # Add Kubernetes metadata
       k8sattributes:
         auth_type: "serviceAccount"
@@ -284,7 +284,7 @@ data:
             - k8s.deployment.name
             - k8s.namespace.name
             - k8s.node.name
-      
+
       # Scrub sensitive data
       attributes:
         actions:
@@ -294,24 +294,24 @@ data:
             action: delete
           - key: db.statement
             action: hash
-    
+
     exporters:
       otlp:
         endpoint: tempo:4317
         tls:
           insecure: true
-      
+
       # Also export to Prometheus for exemplars
       prometheus:
         endpoint: 0.0.0.0:8889
-    
+
     service:
       pipelines:
         traces:
           receivers: [otlp]
           processors: [k8sattributes, tail_sampling, attributes, batch]
           exporters: [otlp]
-        
+
         metrics:
           receivers: [otlp]
           processors: [batch]
@@ -331,7 +331,7 @@ data:
   tempo.yaml: |
     server:
       http_listen_port: 3200
-    
+
     distributor:
       receivers:
         otlp:
@@ -340,16 +340,16 @@ data:
               endpoint: 0.0.0.0:4317
             http:
               endpoint: 0.0.0.0:4318
-    
+
     ingester:
       trace_idle_period: 10s
       max_block_bytes: 1_000_000
       max_block_duration: 5m
-    
+
     compactor:
       compaction:
         block_retention: 168h  # 7 days
-    
+
     storage:
       trace:
         backend: s3
@@ -362,7 +362,7 @@ data:
         pool:
           max_workers: 100
           queue_depth: 10000
-    
+
     overrides:
       defaults:
         metrics_generator:
@@ -488,7 +488,7 @@ datasources:
 
 **Deployment trace (commit to production)**:
 ```traceql
-{resource.service.name="jenkins" || resource.service.name="argocd"} 
+{resource.service.name="jenkins" || resource.service.name="argocd"}
   | {span.git.commit.sha="abc123def"}
 ```
 
@@ -522,7 +522,7 @@ datasources:
 
 **Query to calculate lead time**:
 ```traceql
-{span.git.commit.sha="abc123"} 
+{span.git.commit.sha="abc123"}
   | {span.name="deploy-to-production"}
 ```
 
@@ -548,16 +548,16 @@ processors:
       # Remove authorization headers
       - key: http.request.header.authorization
         action: delete
-      
+
       # Hash SQL statements (preserve structure, hide values)
       - key: db.statement
         action: hash
-      
+
       # Redact email addresses
       - key: user.email
         action: update
         value: "REDACTED"
-      
+
       # Remove credit card numbers from URLs
       - key: http.url
         action: update
@@ -919,13 +919,13 @@ groups:
     for: 10m
     annotations:
       summary: "High trace ingestion error rate"
-      
+
   - alert: TempoHighQueryLatency
     expr: histogram_quantile(0.95, tempo_query_frontend_duration_seconds_bucket) > 10
     for: 5m
     annotations:
       summary: "Tempo query latency P95 > 10s"
-      
+
   - alert: TempoStorageUsageHigh
     expr: tempo_ingester_bytes_metric_total > 100e9  # 100GB
     annotations:

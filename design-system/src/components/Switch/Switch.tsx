@@ -10,7 +10,7 @@ export interface SwitchProps extends BaseComponentProps {
 
 /**
  * Toggle switch component
- * 
+ *
  * @component
  * @example
  * ```tsx

@@ -273,7 +273,7 @@ Add to your workflow:
   run: |
     az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
     ./scripts/validate-at-e1-001.sh --resource-group fawkes-rg --cluster-name fawkes-aks
-  
+
 - name: Upload Validation Report
   if: always()
   uses: actions/upload-artifact@v3

@@ -5,9 +5,9 @@ description: Comprehensive script for recording a 30-minute demo of Epic 1 platf
 
 # Epic 1 Demo Video Walkthrough Script
 
-**Duration**: 30 minutes  
-**Epic**: DORA 2023 Foundation  
-**Milestone**: 1.4 - DORA Metrics & Integration  
+**Duration**: 30 minutes
+**Epic**: DORA 2023 Foundation
+**Milestone**: 1.4 - DORA Metrics & Integration
 **Target Audience**: Platform Engineers, Development Teams, Stakeholders
 
 ## Overview
@@ -65,7 +65,7 @@ Verify access to these services before recording:
 Switch to architecture diagram or browser showing documentation:
 
 > "Let's start with a quick overview of what we've built. The Fawkes platform runs on a 4-node Kubernetes cluster and includes:
-> 
+>
 > - **Developer Experience Layer** with Backstage as our developer portal
 > - **GitOps Layer** using ArgoCD for declarative deployments
 > - **CI/CD Layer** with Jenkins and our golden path pipelines
@@ -73,20 +73,20 @@ Switch to architecture diagram or browser showing documentation:
 > - **Observability Layer** with Prometheus, Grafana, and OpenTelemetry
 > - **DORA Metrics Layer** powered by Apache DevLake
 > - **Container Registry** using Harbor with integrated security scanning
-> 
+>
 > All of this is managed as code, follows GitOps principles, and automatically collects DORA metrics."
 
 **[1:30-3:00] Epic 1 Key Deliverables**
 
 > "Our Epic 1 delivers on these key objectives:
-> 
+>
 > 1. **Automated Infrastructure** - Everything deployed via GitOps
 > 2. **Developer Self-Service** - 3 golden path templates ready to use
 > 3. **Security by Default** - Every deployment goes through automated security scanning
 > 4. **Observable by Design** - All components emit metrics, logs, and traces
 > 5. **DORA Metrics Automation** - Real-time tracking of all 4 key metrics
 > 6. **Resource Optimized** - Running at less than 70% CPU and memory utilization
-> 
+>
 > Let's dive in and see it all in action!"
 
 ---
@@ -98,7 +98,7 @@ Switch to architecture diagram or browser showing documentation:
 Navigate to Backstage (`https://backstage.127.0.0.1.nip.io`):
 
 > "First, let's look at our developer portal powered by Backstage. This is the single pane of glass for developers to discover services, create new applications, and access platform resources.
-> 
+>
 > Here's the home page showing:
 > - Service catalog with all deployed components
 > - Documentation hub (TechDocs)
@@ -115,7 +115,7 @@ Click on "Catalog" and browse services:
 > - CI/CD pipeline status
 > - Deployment information
 > - Dependencies and API documentation
-> 
+>
 > Let's click on one of our sample services to see more details..."
 
 Show a service detail page:
@@ -132,11 +132,11 @@ Show a service detail page:
 Navigate to "Create" section:
 
 > "Now let's see how easy it is to create a new service. We have three golden path templates available:
-> 
+>
 > 1. **Node.js Microservice** - Express-based REST API
 > 2. **Python Service** - Flask/FastAPI application
 > 3. **Java Spring Boot Service** - Enterprise Java application
-> 
+>
 > Each template includes:
 > - Pre-configured Jenkinsfile using our shared pipeline library
 > - Security scanning configuration
@@ -144,7 +144,7 @@ Navigate to "Create" section:
 > - Dockerfile and .dockerignore
 > - Basic tests and BDD scenarios
 > - ArgoCD application configuration
-> 
+>
 > Let me create a new Node.js service..."
 
 Walk through creating a service (can be fast-forwarded or summarized):
@@ -158,7 +158,7 @@ Walk through creating a service (can be fast-forwarded or summarized):
 > - Jenkins pipeline automatically configured
 > - ArgoCD application registered
 > - Service visible in Backstage catalog
-> 
+>
 > That's the power of golden paths - consistent, secure, and fast!"
 
 **[7:00-8:00] TechDocs and Documentation**
@@ -171,7 +171,7 @@ Click on "Docs" section:
 > - Architecture decisions (ADRs)
 > - Runbooks and troubleshooting guides
 > - Dojo learning modules
-> 
+>
 > Everything is documentation-as-code, versioned in Git, and automatically published."
 
 ---
@@ -183,7 +183,7 @@ Click on "Docs" section:
 Navigate to ArgoCD (`https://argocd.127.0.0.1.nip.io`):
 
 > "Now let's look at ArgoCD, our GitOps engine. ArgoCD continuously monitors our Git repositories and ensures that what's running in Kubernetes matches what's defined in Git.
-> 
+>
 > Here's our applications dashboard showing all deployed components. You can see:
 > - Application health status (all green and healthy)
 > - Sync status (all synchronized)
@@ -195,13 +195,13 @@ Navigate to ArgoCD (`https://argocd.127.0.0.1.nip.io`):
 Click on one of the applications (e.g., a sample app):
 
 > "Let's drill into one of our applications. Here we can see:
-> 
+>
 > - **Application Tree**: Visual representation of all Kubernetes resources
 > - **Deployment, Service, ConfigMap, Secret** - all the components
 > - **Real-time Status**: Pod health and resource consumption
 > - **Git Source**: Exactly which commit is currently deployed
 > - **Sync Policy**: Auto-sync enabled with automated self-healing
-> 
+>
 > If I click on any resource, I can see its full YAML definition and live status."
 
 Show resource details and logs.
@@ -209,14 +209,14 @@ Show resource details and logs.
 **[10:30-11:30] GitOps Workflow**
 
 > "The GitOps workflow is simple:
-> 
+>
 > 1. Developer pushes code to Git
 > 2. Jenkins pipeline runs tests and builds container image
 > 3. Jenkins updates the GitOps repo with new image tag
 > 4. ArgoCD detects the change and syncs to Kubernetes
 > 5. Application is deployed with zero downtime
 > 6. DORA metrics are automatically recorded
-> 
+>
 > Let's see this in action with our CI/CD pipeline next."
 
 **[11:30-12:00] Manual Sync and Rollback**
@@ -236,12 +236,12 @@ Demonstrate the rollback UI (don't actually roll back):
 Navigate to Jenkins (`https://jenkins.127.0.0.1.nip.io`):
 
 > "Jenkins is our CI/CD engine, and we've implemented a Golden Path pipeline that enforces best practices. Here's our Jenkins dashboard showing:
-> 
+>
 > - All configured pipelines
 > - Recent build history
 > - Build success/failure rates
 > - Active build agents
-> 
+>
 > Every repository created from our Backstage templates automatically gets a Jenkins pipeline."
 
 **[13:00-15:00] Golden Path Pipeline Execution**
@@ -249,7 +249,7 @@ Navigate to Jenkins (`https://jenkins.127.0.0.1.nip.io`):
 Click on a pipeline and show recent build:
 
 > "Let's look at a pipeline execution. Our Golden Path enforces these mandatory stages:
-> 
+>
 > 1. **Checkout** - Pull code from Git
 > 2. **Unit Tests** - Run all unit tests with coverage
 > 3. **BDD Tests** - Execute Gherkin/Cucumber scenarios
@@ -259,7 +259,7 @@ Click on a pipeline and show recent build:
 > 7. **Push Artifact** - Push to Harbor registry (main branch only)
 > 8. **Update GitOps** - Update deployment manifests (main branch only)
 > 9. **Record DORA Metrics** - Automatically capture deployment data
-> 
+>
 > Let's watch a pipeline run..."
 
 Show the pipeline stages visualized:
@@ -270,7 +270,7 @@ Show the pipeline stages visualized:
 > - Security scan results with quality gates
 > - Container image tags and locations
 > - Links to SonarQube for detailed analysis
-> 
+>
 > This is trunk-based development in action - only main branch builds produce artifacts."
 
 **[15:00-16:00] PR Validation Pipeline**
@@ -283,7 +283,7 @@ Show a PR pipeline:
 > - Fast feedback (< 5 minutes)
 > - No artifacts produced
 > - No deployments
-> 
+>
 > This gives developers fast feedback before merging, reducing our Change Failure Rate."
 
 **[16:00-17:00] Pipeline Configuration**
@@ -312,13 +312,13 @@ goldenPathPipeline {
 Navigate to SonarQube (`https://sonarqube.127.0.0.1.nip.io`):
 
 > "Security is built into every deployment. SonarQube performs static application security testing on every code change. Here we can see:
-> 
+>
 > - Code quality metrics
 > - Security vulnerabilities detected
 > - Code coverage percentages
 > - Technical debt measurements
 > - Quality gate pass/fail status
-> 
+>
 > Our pipelines will fail if critical security issues are detected."
 
 Click on a project to show details:
@@ -339,7 +339,7 @@ Navigate to Harbor (`https://harbor.127.0.0.1.nip.io`):
 > - Checked for CVEs in base images
 > - Signed and verified
 > - SBOM (Software Bill of Materials) generated
-> 
+>
 > Let's look at a scanned image..."
 
 Show an image with scan results:
@@ -369,7 +369,7 @@ Run a sample query (e.g., `up` or `container_cpu_usage_seconds_total`):
 > - Application metrics (request rates, errors, latencies)
 > - Business metrics (transactions, users, revenue)
 > - DORA metrics (deployment frequency, lead time)
-> 
+>
 > Everything is instrumented and observable."
 
 **[21:00-23:00] Grafana Dashboards**
@@ -377,13 +377,13 @@ Run a sample query (e.g., `up` or `container_cpu_usage_seconds_total`):
 Navigate to Grafana (`https://grafana.127.0.0.1.nip.io`):
 
 > "Grafana provides beautiful visualizations of all this data. We have dashboards for:
-> 
+>
 > 1. **Cluster Overview** - Kubernetes health and resource usage
 > 2. **Application Performance** - RED metrics (Rate, Errors, Duration)
 > 3. **Pipeline Metrics** - CI/CD performance and trends
 > 4. **Security Metrics** - Vulnerability tracking over time
 > 5. **DORA Metrics** - The four key metrics (which we'll see in detail next)
-> 
+>
 > Let me show you a few..."
 
 Click through 2-3 dashboards briefly:
@@ -403,7 +403,7 @@ Navigate to DevLake (`https://devlake.127.0.0.1.nip.io`):
 > - Jenkins (builds, tests)
 > - ArgoCD (deployments)
 > - Prometheus (incidents, uptime)
-> 
+>
 > And automatically calculates all four DORA metrics. Let's see our dashboard..."
 
 **[24:00-26:00] The Four Key Metrics**
@@ -411,25 +411,25 @@ Navigate to DevLake (`https://devlake.127.0.0.1.nip.io`):
 Navigate to DORA dashboard:
 
 > "Here are the four key DORA metrics that predict software delivery performance:
-> 
+>
 > **1. Deployment Frequency**
 > Currently showing: [point to chart]
 > - We're deploying multiple times per day
 > - This is 'Elite' performance according to DORA research
 > - Every ArgoCD sync is captured automatically
-> 
+>
 > **2. Lead Time for Changes**
 > Currently showing: [point to chart]
 > - Time from commit to production: [X hours/minutes]
 > - This includes code review, CI, and deployment time
 > - We're tracking the full value stream
-> 
+>
 > **3. Change Failure Rate**
 > Currently showing: [point to chart]
 > - X% of deployments require remediation
 > - Tracked via failed ArgoCD syncs and production incidents
 > - Our golden path and testing helps keep this low
-> 
+>
 > **4. Mean Time to Restore (MTTR)**
 > Currently showing: [point to chart]
 > - Average time to recover from incidents: [X hours/minutes]
@@ -441,12 +441,12 @@ Navigate to DORA dashboard:
 Show trend charts:
 
 > "These aren't just vanity metrics - they drive improvement:
-> 
+>
 > - We can see how changes to our pipeline affect lead time
 > - We track if our testing strategy reduces failure rates
 > - We measure if our observability improves MTTR
 > - Teams can compare their performance and learn from each other
-> 
+>
 > The best part? All this data collection is completely automatic. Developers don't need to do anything special."
 
 **[27:00-28:00] Team & Project Breakdowns**
@@ -458,7 +458,7 @@ Show drill-down views:
 > - Specific projects
 > - Time periods
 > - Deployment environments
-> 
+>
 > This helps us identify both high performers (to learn from) and areas needing support."
 
 ---
@@ -468,7 +468,7 @@ Show drill-down views:
 **[28:00-29:00] End-to-End Golden Path**
 
 > "Let me quickly summarize the complete developer workflow we've built:
-> 
+>
 > 1. Developer creates service from Backstage template
 > 2. Writes code and opens Pull Request
 > 3. PR pipeline runs fast feedback tests
@@ -481,7 +481,7 @@ Show drill-down views:
 > 10. DORA metrics automatically recorded
 > 11. Observability dashboards show deployment
 > 12. Service is live and monitored
-> 
+>
 > All of this is automated, secure, and measured!"
 
 **[29:00-29:30] Platform Health Check**
@@ -502,23 +502,23 @@ kubectl top nodes
 **[29:30-30:00] Summary & Resources**
 
 > "To recap, Epic 1 delivers:
-> 
-> ✅ Complete developer self-service platform  
-> ✅ Automated security and quality gates  
-> ✅ Full observability and DORA metrics  
-> ✅ GitOps-based deployments  
-> ✅ Three production-ready golden path templates  
-> ✅ Resource-optimized infrastructure  
-> 
+>
+> ✅ Complete developer self-service platform
+> ✅ Automated security and quality gates
+> ✅ Full observability and DORA metrics
+> ✅ GitOps-based deployments
+> ✅ Three production-ready golden path templates
+> ✅ Resource-optimized infrastructure
+>
 > All the code, documentation, and configuration is available in the Fawkes repository at github.com/paruff/fawkes.
-> 
+>
 > Key documentation:
 > - Architecture: `/docs/architecture.md`
 > - Getting Started: `/docs/getting-started.md`
 > - Golden Path Usage: `/docs/golden-path-usage.md`
 > - DORA Metrics Guide: `/docs/observability/dora-metrics-guide.md`
 > - Runbooks: `/docs/runbooks/epic-1-platform-operations.md`
-> 
+>
 > Thank you for watching! If you have questions, please open an issue in the repository. Happy coding!"
 
 ---
@@ -593,7 +593,7 @@ A comprehensive 30-minute demonstration of the Fawkes Internal Developer Platfor
 
 🎯 Complete platform overview
 🛠️ Developer portal (Backstage) with service catalog
-🔄 GitOps deployments with ArgoCD  
+🔄 GitOps deployments with ArgoCD
 ⚙️ CI/CD golden path with Jenkins
 🔒 Security scanning (SonarQube, Trivy, Vault)
 📊 Observability stack (Prometheus, Grafana, OpenTelemetry)
@@ -695,7 +695,7 @@ A comprehensive 30-minute demonstration of the Fawkes Internal Developer Platfor
 
 ---
 
-**Version**: 1.0  
-**Last Updated**: December 2024  
-**Related Issues**: paruff/fawkes#37  
+**Version**: 1.0
+**Last Updated**: December 2024
+**Related Issues**: paruff/fawkes#37
 **Dependencies**: paruff/fawkes#34, paruff/fawkes#36

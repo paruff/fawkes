@@ -86,11 +86,11 @@ CREATE TABLE flow_items (
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
     completed_at TIMESTAMP,
-    
+
     -- Metadata
     labels JSONB,
     metadata JSONB,
-    
+
     -- Indexes
     CONSTRAINT flow_items_external_id_key UNIQUE (external_id, team_id)
 );
@@ -108,12 +108,12 @@ CREATE TABLE stage_transitions (
     to_stage VARCHAR(50) NOT NULL,
     transitioned_at TIMESTAMP NOT NULL DEFAULT NOW(),
     duration_seconds INTEGER,  -- Time spent in from_stage
-    
+
     -- Metadata
     triggered_by VARCHAR(100),  -- user, automation, webhook
     event_type VARCHAR(100),
     event_payload JSONB,
-    
+
     -- Indexes
     CONSTRAINT stage_transitions_flow_item_stage UNIQUE (flow_item_id, to_stage)
 );
@@ -127,20 +127,20 @@ CREATE TABLE stage_metrics (
     id BIGSERIAL PRIMARY KEY,
     flow_item_id UUID NOT NULL REFERENCES flow_items(id) ON DELETE CASCADE,
     stage VARCHAR(50) NOT NULL,
-    
+
     -- Time tracking
     started_at TIMESTAMP,
     ended_at TIMESTAMP,
     active_time_seconds INTEGER DEFAULT 0,
     wait_time_seconds INTEGER DEFAULT 0,
-    
+
     -- Calculated metrics
     flow_efficiency_percent DECIMAL(5,2),
-    
+
     -- Metadata
     blockers JSONB,  -- List of blockers encountered
     metadata JSONB,
-    
+
     CONSTRAINT stage_metrics_flow_item_stage UNIQUE (flow_item_id, stage)
 );
 
@@ -152,12 +152,12 @@ CREATE TABLE teams (
     id VARCHAR(100) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    
+
     -- Configuration
     wip_limit INTEGER DEFAULT 20,
     target_flow_time_hours INTEGER DEFAULT 96,  -- 4 days
     target_flow_efficiency_percent INTEGER DEFAULT 40,
-    
+
     -- Metadata
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -172,23 +172,23 @@ CREATE TABLE webhook_events (
     received_at TIMESTAMP NOT NULL DEFAULT NOW(),
     processed_at TIMESTAMP,
     processing_status VARCHAR(50) DEFAULT 'pending',  -- pending, processed, failed
-    
+
     -- Event data
     payload JSONB NOT NULL,
     headers JSONB,
-    
+
     -- Processing info
     flow_item_id UUID REFERENCES flow_items(id),
     error_message TEXT,
     retry_count INTEGER DEFAULT 0,
-    
+
     -- Partitioning by month
     CHECK (received_at >= DATE '2025-01-01')
 );
 
 CREATE INDEX idx_webhook_events_source ON webhook_events(source, event_type);
 CREATE INDEX idx_webhook_events_received_at ON webhook_events(received_at);
-CREATE INDEX idx_webhook_events_processing_status ON webhook_events(processing_status) 
+CREATE INDEX idx_webhook_events_processing_status ON webhook_events(processing_status)
     WHERE processing_status != 'processed';
 
 -- Partition webhook_events by month for performance
@@ -200,7 +200,7 @@ CREATE TABLE daily_team_metrics (
     id BIGSERIAL PRIMARY KEY,
     team_id VARCHAR(100) NOT NULL REFERENCES teams(id),
     metric_date DATE NOT NULL,
-    
+
     -- Flow metrics
     flow_velocity DECIMAL(10,2),              -- items/week
     flow_time_p50_hours DECIMAL(10,2),
@@ -208,20 +208,20 @@ CREATE TABLE daily_team_metrics (
     flow_time_p95_hours DECIMAL(10,2),
     flow_efficiency_percent DECIMAL(5,2),
     flow_load INTEGER,                         -- WIP count
-    
+
     -- Item counts
     items_completed INTEGER DEFAULT 0,
     items_started INTEGER DEFAULT 0,
     items_cancelled INTEGER DEFAULT 0,
-    
+
     -- Breakdown by type
     features_completed INTEGER DEFAULT 0,
     bugs_completed INTEGER DEFAULT 0,
     chores_completed INTEGER DEFAULT 0,
-    
+
     -- Calculated
     calculated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    
+
     CONSTRAINT daily_team_metrics_team_date UNIQUE (team_id, metric_date)
 );
 
@@ -229,27 +229,27 @@ CREATE INDEX idx_daily_team_metrics_team_date ON daily_team_metrics(team_id, met
 
 -- Materialized view for current flow metrics (refreshed every 5 minutes)
 CREATE MATERIALIZED VIEW current_flow_metrics AS
-SELECT 
+SELECT
     fi.team_id,
     COUNT(*) FILTER (WHERE fi.status = 'in_progress') as current_wip,
     COUNT(*) FILTER (WHERE fi.completed_at >= NOW() - INTERVAL '7 days') as completed_last_7d,
     COUNT(*) FILTER (WHERE fi.completed_at >= NOW() - INTERVAL '30 days') as completed_last_30d,
-    
+
     -- Flow time percentiles (last 30 days)
-    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY 
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY
         EXTRACT(EPOCH FROM (fi.completed_at - fi.created_at))/3600
     ) FILTER (WHERE fi.completed_at >= NOW() - INTERVAL '30 days') as flow_time_p50_hours,
-    
-    PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY 
+
+    PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY
         EXTRACT(EPOCH FROM (fi.completed_at - fi.created_at))/3600
     ) FILTER (WHERE fi.completed_at >= NOW() - INTERVAL '30 days') as flow_time_p95_hours,
-    
+
     -- Flow efficiency (last 30 days)
     AVG(
         (SELECT SUM(sm.active_time_seconds) FROM stage_metrics sm WHERE sm.flow_item_id = fi.id) /
         NULLIF(EXTRACT(EPOCH FROM (fi.completed_at - fi.created_at)), 0) * 100
     ) FILTER (WHERE fi.completed_at >= NOW() - INTERVAL '30 days') as avg_flow_efficiency_percent,
-    
+
     MAX(fi.updated_at) as last_updated
 FROM flow_items fi
 GROUP BY fi.team_id;
@@ -506,7 +506,7 @@ INSERT INTO webhook_events (source, event_type, payload)
 VALUES ('github', 'pull_request.opened', '{"pr_number": 456, ...}');
 
 # Step 2: Identify or create flow item
-SELECT id FROM flow_items 
+SELECT id FROM flow_items
 WHERE external_id = 'sample-app#456' AND team_id = 'alpha';
 
 # Step 3: Create stage transition
@@ -514,7 +514,7 @@ INSERT INTO stage_transitions (flow_item_id, from_stage, to_stage, transitioned_
 VALUES ('uuid-123', 'development', 'code_review', '2025-01-15T10:30:00Z');
 
 # Step 4: Update flow item current stage
-UPDATE flow_items 
+UPDATE flow_items
 SET current_stage = 'code_review', updated_at = NOW()
 WHERE id = 'uuid-123';
 
@@ -554,7 +554,7 @@ flow_velocity_items_per_week{team="alpha"}
 SELECT * FROM flow_items WHERE external_id = 'USER-123';
 
 -- All stage transitions
-SELECT 
+SELECT
     st.from_stage,
     st.to_stage,
     st.transitioned_at,
@@ -565,7 +565,7 @@ WHERE fi.external_id = 'USER-123'
 ORDER BY st.transitioned_at;
 
 -- Stage-level metrics
-SELECT 
+SELECT
     sm.stage,
     sm.started_at,
     sm.ended_at,
@@ -578,10 +578,10 @@ WHERE fi.external_id = 'USER-123'
 ORDER BY sm.started_at;
 
 -- Calculate total flow efficiency
-SELECT 
+SELECT
     SUM(sm.active_time_seconds) as total_active,
     SUM(sm.active_time_seconds + sm.wait_time_seconds) as total_time,
-    (SUM(sm.active_time_seconds)::float / 
+    (SUM(sm.active_time_seconds)::float /
      NULLIF(SUM(sm.active_time_seconds + sm.wait_time_seconds), 0) * 100) as flow_efficiency
 FROM stage_metrics sm
 JOIN flow_items fi ON sm.flow_item_id = fi.id
@@ -727,26 +727,26 @@ Deletion Policy:
 -- Indexes for common query patterns
 
 -- Dashboard: Team metrics
-CREATE INDEX CONCURRENTLY idx_flow_items_team_completed 
-ON flow_items(team_id, completed_at) 
+CREATE INDEX CONCURRENTLY idx_flow_items_team_completed
+ON flow_items(team_id, completed_at)
 WHERE status = 'completed';
 
 -- Dashboard: WIP count
-CREATE INDEX CONCURRENTLY idx_flow_items_team_in_progress 
-ON flow_items(team_id) 
+CREATE INDEX CONCURRENTLY idx_flow_items_team_in_progress
+ON flow_items(team_id)
 WHERE status = 'in_progress';
 
 -- Drill-down: Flow item lookup
-CREATE INDEX CONCURRENTLY idx_flow_items_external_id_hash 
+CREATE INDEX CONCURRENTLY idx_flow_items_external_id_hash
 ON flow_items USING hash(external_id);
 
 -- Analytics: Stage efficiency
-CREATE INDEX CONCURRENTLY idx_stage_metrics_stage_efficiency 
+CREATE INDEX CONCURRENTLY idx_stage_metrics_stage_efficiency
 ON stage_metrics(stage, flow_efficiency_percent);
 
 -- Webhook processing: Unprocessed events
-CREATE INDEX CONCURRENTLY idx_webhook_events_pending 
-ON webhook_events(source, received_at) 
+CREATE INDEX CONCURRENTLY idx_webhook_events_pending
+ON webhook_events(source, received_at)
 WHERE processing_status = 'pending';
 ```
 
@@ -762,7 +762,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Schedule via pg_cron (every 5 minutes)
-SELECT cron.schedule('refresh-flow-metrics', '*/5 * * * *', 
+SELECT cron.schedule('refresh-flow-metrics', '*/5 * * * *',
     'SELECT refresh_flow_metrics_view()');
 ```
 
@@ -827,9 +827,9 @@ def get_team_metrics_bad(team_id):
 # Good: Parameterized, prepared statement
 def get_team_metrics_good(team_id):
     query = text("""
-        SELECT * FROM daily_team_metrics 
-        WHERE team_id = :team_id 
-        ORDER BY metric_date DESC 
+        SELECT * FROM daily_team_metrics
+        WHERE team_id = :team_id
+        ORDER BY metric_date DESC
         LIMIT 30
     """)
     return engine.execute(query, {"team_id": team_id})
@@ -863,30 +863,30 @@ def get_team_flow_metrics(team_id: str, force_refresh: bool = False):
     Cache TTL: 5 minutes
     """
     cache_key = f"flow_metrics:team:{team_id}"
-    
+
     # Try cache first
     if not force_refresh:
         cached = redis_client.get(cache_key)
         if cached:
             return json.loads(cached)
-    
+
     # Cache miss - query database
     metrics = calculate_team_metrics(team_id)
-    
+
     # Store in cache with 5-minute TTL
     redis_client.setex(
         cache_key,
         300,  # 5 minutes
         json.dumps(metrics)
     )
-    
+
     return metrics
 
 # Cache invalidation on write
 def update_flow_item(flow_item_id: str, updates: dict):
     # Update database
     update_database(flow_item_id, updates)
-    
+
     # Invalidate team cache
     flow_item = get_flow_item(flow_item_id)
     redis_client.delete(f"flow_metrics:team:{flow_item.team_id}")
@@ -1000,7 +1000,7 @@ backup:
 
 ```sql
 -- Check current connections
-SELECT 
+SELECT
     datname,
     count(*) as connections,
     usename
@@ -1010,7 +1010,7 @@ GROUP BY datname, usename
 ORDER BY connections DESC;
 
 -- Check long-running queries
-SELECT 
+SELECT
     pid,
     now() - pg_stat_activity.query_start AS duration,
     query,
@@ -1026,8 +1026,8 @@ ORDER BY duration DESC;
 1. **Immediate**: Kill long-running queries if safe
 
 ```sql
-SELECT pg_terminate_backend(pid) 
-FROM pg_stat_activity 
+SELECT pg_terminate_backend(pid)
+FROM pg_stat_activity
 WHERE pid = <problematic_pid>;
 ```
 
@@ -1066,7 +1066,7 @@ SELECT pg_reload_conf();
 
 ```sql
 -- Find slow queries
-SELECT 
+SELECT
     query,
     calls,
     mean_exec_time,
@@ -1078,7 +1078,7 @@ ORDER BY mean_exec_time DESC
 LIMIT 10;
 
 -- Check for missing indexes
-SELECT 
+SELECT
     schemaname,
     tablename,
     seq_scan,
@@ -1092,7 +1092,7 @@ WHERE seq_scan > 100
 ORDER BY seq_tup_read DESC;
 
 -- Check table bloat
-SELECT 
+SELECT
     schemaname,
     tablename,
     pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as size,
@@ -1133,7 +1133,7 @@ VACUUM ANALYZE stage_transitions;
 ```sql
 -- Create aggregated table for better performance
 CREATE TABLE team_metrics_summary AS
-SELECT 
+SELECT
     team_id,
     date_trunc('day', completed_at) as date,
     count(*) as items_completed,
@@ -1166,7 +1166,7 @@ CREATE INDEX ON team_metrics_summary(team_id, date DESC);
 
 ```sql
 -- Check backlog size
-SELECT 
+SELECT
     source,
     count(*) as pending_count
 FROM webhook_events
@@ -1174,7 +1174,7 @@ WHERE processing_status = 'pending'
 GROUP BY source;
 
 -- Check for failures
-SELECT 
+SELECT
     source,
     event_type,
     error_message,
@@ -1186,7 +1186,7 @@ GROUP BY source, event_type, error_message
 ORDER BY failure_count DESC;
 
 -- Check processing rate
-SELECT 
+SELECT
     date_trunc('minute', processed_at) as minute,
     count(*) as processed_count
 FROM webhook_events
@@ -1233,7 +1233,7 @@ def process_webhooks_batch(events: List[WebhookEvent]):
     with database.transaction():
         for event in events:
             process_webhook(event)
-    
+
     # Commit once instead of 100 times
 ```
 
@@ -1258,14 +1258,14 @@ def process_webhooks_batch(events: List[WebhookEvent]):
 
 ```sql
 -- Check database sizes
-SELECT 
+SELECT
     datname,
     pg_size_pretty(pg_database_size(datname)) as size
 FROM pg_database
 ORDER BY pg_database_size(datname) DESC;
 
 -- Check table sizes
-SELECT 
+SELECT
     schemaname,
     tablename,
     pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as total_size,
@@ -1276,11 +1276,11 @@ WHERE schemaname = 'public'
 ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
 
 -- Check WAL size
-SELECT 
+SELECT
     pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(), '0/0')) as wal_size;
 
 -- Check bloat
-SELECT 
+SELECT
     schemaname,
     tablename,
     pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as size,
@@ -1329,14 +1329,14 @@ def cleanup_old_data():
     old_items = FlowItem.query.filter(
         FlowItem.completed_at < datetime.now() - timedelta(days=90)
     ).all()
-    
+
     for item in old_items:
         # Export to S3
         export_to_s3(item)
-        
+
         # Delete from database
         database.session.delete(item)
-    
+
     database.session.commit()
 ```
 
@@ -1625,25 +1625,25 @@ groups:
           sum by (team) (
             increase(flow_items_completed_total[7d])
           )
-      
+
       # Flow Time P50 - Pre-calculate percentile
       - record: flow_time_p50_hours:team
         expr: |
-          histogram_quantile(0.5, 
+          histogram_quantile(0.5,
             sum by (team, le) (
               rate(flow_time_seconds_bucket[30d])
             )
           ) / 3600
-      
+
       # Flow Time P95
       - record: flow_time_p95_hours:team
         expr: |
-          histogram_quantile(0.95, 
+          histogram_quantile(0.95,
             sum by (team, le) (
               rate(flow_time_seconds_bucket[30d])
             )
           ) / 3600
-      
+
       # Stage Wait Time Average
       - record: stage_wait_time_avg_hours:team:stage
         expr: |
@@ -1652,14 +1652,14 @@ groups:
             /
             rate(stage_wait_time_seconds_count[1h])
           ) / 3600
-      
+
       # Webhook Processing Rate
       - record: webhook_events_processing_rate:source
         expr: |
           sum by (source) (
             rate(webhook_events_processed_total[5m])
           )
-      
+
       # Webhook Processing Error Rate
       - record: webhook_events_error_rate:source
         expr: |

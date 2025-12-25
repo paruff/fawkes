@@ -2,12 +2,12 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: December 2025  
-**Status**: Active  
-**Owner**: Product Team  
-**Based on**: 6 interviews with product managers and business stakeholders (Nov-Dec 2025)  
-**Validation**: Reviewed and confirmed by 4 product and business leaders  
+**Version**: 1.0
+**Last Updated**: December 2025
+**Status**: Active
+**Owner**: Product Team
+**Based on**: 6 interviews with product managers and business stakeholders (Nov-Dec 2025)
+**Validation**: Reviewed and confirmed by 4 product and business leaders
 
 ---
 

@@ -2,10 +2,10 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: December 25, 2025  
-**Status**: Active  
-**Owner**: Product Team  
+**Version**: 1.0
+**Last Updated**: December 25, 2025
+**Status**: Active
+**Owner**: Product Team
 **Milestone**: M3.4
 
 ---
@@ -107,7 +107,7 @@ The Fawkes Customer Advisory Board (CAB) is a strategic group of 5-7 key users a
 **New Member Onboarding Process** (Week 1):
 
 1. **Welcome Email**: Introduction and expectations
-2. **Access Granted**: 
+2. **Access Granted**:
    - Mattermost `#cab-advisory-board` private channel
    - GitHub Team: `@fawkes/advisory-board`
    - Early access repository (if applicable)
@@ -428,30 +428,30 @@ Members: @fawkes/advisory-board + product-team
 
 ### For Prospective Members
 
-**Q: How much time is required?**  
+**Q: How much time is required?**
 A: Approximately 4-6 hours per quarter - 2 hours for the meeting, 1-2 hours for async participation, 2 hours for feature testing (optional).
 
-**Q: Can I join if I'm not using Fawkes in production yet?**  
+**Q: Can I join if I'm not using Fawkes in production yet?**
 A: We prefer production users, but staging/pre-production with serious evaluation is acceptable.
 
-**Q: Is there any compensation?**  
+**Q: Is there any compensation?**
 A: No monetary compensation. Benefits include strategic influence, early access, recognition, and networking.
 
-**Q: What if I can't attend a quarterly meeting?**  
+**Q: What if I can't attend a quarterly meeting?**
 A: That's okay occasionally. We'll share recordings and notes. We hope for >50% meeting attendance over the year.
 
-**Q: How do I nominate myself?**  
+**Q: How do I nominate myself?**
 A: Post in GitHub Discussions using the CAB nomination template or email the product team directly.
 
 ### For the Team
 
-**Q: How do we handle disagreements within CAB?**  
+**Q: How do we handle disagreements within CAB?**
 A: Encourage healthy debate. Product team makes final decisions considering all input and explains rationale.
 
-**Q: What if a member becomes inactive?**  
+**Q: What if a member becomes inactive?**
 A: Reach out to check in. If unresponsive for 2 consecutive quarters, politely off-board and open spot for new member.
 
-**Q: Can members join temporarily for a specific topic?**  
+**Q: Can members join temporarily for a specific topic?**
 A: Yes, we can invite "guest advisors" for specific expertise without full CAB membership.
 
 ---
@@ -479,8 +479,8 @@ A: Yes, we can invite "guest advisors" for specific expertise without full CAB m
 
 ---
 
-**Status**: ✅ Board formation in progress  
-**Next Steps**: 
+**Status**: ✅ Board formation in progress
+**Next Steps**:
 1. Create supporting templates
 2. Announce CAB formation to community
 3. Open nominations

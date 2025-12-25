@@ -6,10 +6,10 @@ expect.extend(toHaveNoViolations);
 
 /**
  * Comprehensive Accessibility Test Suite
- * 
+ *
  * This test suite runs automated accessibility checks using axe-core
  * against all components in the design system to ensure WCAG 2.1 AA compliance.
- * 
+ *
  * Tests are run as part of the CI/CD pipeline and will fail the build
  * if any accessibility violations are detected.
  */
@@ -69,7 +69,7 @@ describe('Design System Accessibility (WCAG 2.1 AA)', () => {
 
     it('should have proper ARIA roles for different variants', async () => {
       const variants = ['success', 'error', 'warning', 'info'] as const;
-      
+
       for (const variant of variants) {
         const { container } = render(
           <Components.Alert variant={variant}>Alert message</Components.Alert>

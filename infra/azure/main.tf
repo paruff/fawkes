@@ -192,6 +192,6 @@ resource "azurerm_role_assignment" "aks_cluster_admin" {
 # Wait for role assignment propagation
 resource "time_sleep" "wait_for_rbac" {
   depends_on = [azurerm_role_assignment.aks_cluster_admin]
-  
+
   create_duration = "30s"
 }

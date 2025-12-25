@@ -9,9 +9,9 @@ description: Structured system for capturing, organizing, and tracking insights 
 
 The Insights Database and Tracking System is a structured platform for capturing, organizing, and tracking organizational learnings, best practices, and knowledge. It provides a comprehensive solution for knowledge management with features like tagging, hierarchical categorization, and advanced search capabilities.
 
-**Service Name**: `insights`  
-**Database**: PostgreSQL 15+  
-**API Framework**: FastAPI  
+**Service Name**: `insights`
+**Database**: PostgreSQL 15+
+**API Framework**: FastAPI
 **API Documentation**: `/docs` (Swagger), `/redoc` (ReDoc)
 
 ---
@@ -502,9 +502,9 @@ SELECT status, COUNT(*) FROM insights GROUP BY status;
 SELECT priority, COUNT(*) FROM insights GROUP BY priority;
 
 # Insights by category
-SELECT c.name, COUNT(i.id) 
-FROM categories c 
-LEFT JOIN insights i ON c.id = i.category_id 
+SELECT c.name, COUNT(i.id)
+FROM categories c
+LEFT JOIN insights i ON c.id = i.category_id
 GROUP BY c.name;
 ```
 
@@ -532,15 +532,15 @@ Filter insights by date ranges for trend analysis:
 
 ```sql
 -- Insights created in last 30 days
-SELECT DATE(created_at), COUNT(*) 
-FROM insights 
+SELECT DATE(created_at), COUNT(*)
+FROM insights
 WHERE created_at >= NOW() - INTERVAL '30 days'
 GROUP BY DATE(created_at);
 
 -- Insights by status over time
-SELECT DATE(created_at), status, COUNT(*) 
-FROM insights 
-GROUP BY DATE(created_at), status 
+SELECT DATE(created_at), status, COUNT(*)
+FROM insights
+GROUP BY DATE(created_at), status
 ORDER BY DATE(created_at);
 ```
 
@@ -871,7 +871,7 @@ class InsightsClient:
     def __init__(self, base_url: str = "http://localhost:8000"):
         self.base_url = base_url
         self.client = httpx.Client()
-    
+
     def create_insight(self, insight_data: dict):
         response = self.client.post(
             f"{self.base_url}/insights",
@@ -879,7 +879,7 @@ class InsightsClient:
         )
         response.raise_for_status()
         return response.json()
-    
+
     def search_insights(self, query: str, filters: dict = None):
         search_request = {"query": query, **(filters or {})}
         response = self.client.post(
@@ -888,7 +888,7 @@ class InsightsClient:
         )
         response.raise_for_status()
         return response.json()
-    
+
     def get_statistics(self):
         response = self.client.get(f"{self.base_url}/statistics")
         response.raise_for_status()

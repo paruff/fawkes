@@ -39,6 +39,28 @@ git push origin feature/your-feature-name
 | ![](assets/images/icons/docs.png){ width="24" } **Documentation** | Update relevant docs |
 | ![](assets/images/icons/ci.png){ width="24" } **CI/CD** | Ensure all checks pass |
 
+### 3. Code Quality Standards
+
+All contributions must meet our code quality standards:
+
+```bash
+# One-time setup: Install pre-commit hooks
+make pre-commit-setup
+
+# Before committing: Run linters
+make lint
+
+# Pre-commit will automatically run on git commit
+```
+
+**All code must**:
+- Pass automated linting (Bash, Python, Go, YAML, JSON, Markdown, Terraform)
+- Pass security scanning (secrets detection, SAST, container scanning)
+- Follow language-specific style guides
+- Include appropriate tests
+
+📖 **See**: [Code Quality Standards](how-to/development/code-quality-standards.md) for detailed requirements
+
 ## Adding New Content
 
 ### Documentation

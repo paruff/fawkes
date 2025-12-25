@@ -37,7 +37,7 @@ def test_create_work_item_validation():
         json={"title": "Test item", "type": "invalid_type"}
     )
     assert response.status_code == 422  # Validation error
-    
+
     # Test with missing title
     response = client.post(
         "/api/v1/work-items",
@@ -62,7 +62,7 @@ def test_metrics_endpoint_structure():
     response = client.get("/api/v1/metrics")
     # May fail if DB not connected
     assert response.status_code in [200, 500, 503]
-    
+
     if response.status_code == 200:
         data = response.json()
         assert "throughput" in data
@@ -76,7 +76,7 @@ def test_stages_endpoint_structure():
     response = client.get("/api/v1/stages")
     # May fail if DB not connected
     assert response.status_code in [200, 500, 503]
-    
+
     if response.status_code == 200:
         data = response.json()
         assert isinstance(data, list)
@@ -95,14 +95,14 @@ def test_prometheus_metrics_content():
     response = client.get("/metrics")
     assert response.status_code == 200
     content = response.text
-    
+
     # Check for VSM-specific metric types
     assert "vsm_requests_total" in content
     assert "vsm_work_items_created_total" in content
     assert "vsm_stage_transitions_total" in content
     assert "vsm_cycle_time_hours" in content
     assert "vsm_work_in_progress" in content
-    
+
     # Check for new flow metrics
     assert "vsm_stage_cycle_time_seconds" in content
     assert "vsm_throughput_per_day" in content
@@ -113,15 +113,15 @@ def test_calculate_cycle_time():
     """Test cycle time calculation function."""
     from app.main import calculate_cycle_time
     from unittest.mock import Mock
-    
+
     # Mock database session
     db_mock = Mock()
-    
+
     # Test with no transitions
     db_mock.query().filter().order_by().all.return_value = []
     result = calculate_cycle_time(1, db_mock)
     assert result is None
-    
+
     # Test with single transition
     db_mock.query().filter().order_by().all.return_value = [Mock()]
     result = calculate_cycle_time(1, db_mock)
@@ -132,15 +132,15 @@ def test_calculate_lead_time():
     """Test lead time calculation function."""
     from app.main import calculate_lead_time
     from unittest.mock import Mock
-    
+
     # Mock database session
     db_mock = Mock()
-    
+
     # Test with no transitions
     db_mock.query().filter().order_by().all.return_value = []
     result = calculate_lead_time(1, db_mock)
     assert result is None
-    
+
     # Test with single transition
     db_mock.query().filter().order_by().all.return_value = [Mock()]
     result = calculate_lead_time(1, db_mock)

@@ -1,8 +1,8 @@
 # ADR-032: Product Analytics Platform Selection
 
-**Status**: Accepted  
-**Date**: 2025-12-25  
-**Decision Makers**: Platform Team  
+**Status**: Accepted
+**Date**: 2025-12-25
+**Decision Makers**: Platform Team
 **Tags**: analytics, observability, privacy, gdpr
 
 ## Context

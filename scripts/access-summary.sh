@@ -60,23 +60,23 @@ port_forward() {
 
 show_argocd() {
   print_service_header "🔷 ArgoCD (GitOps CD)"
-  
+
   if ! check_namespace "$ARGO_NS"; then
     echo -e "${RED}ArgoCD namespace not found${NC}"
     return 1
   fi
-  
+
   local host
   host=$(get_ingress_host "argocd-server" "$ARGO_NS")
   if [[ -n "$host" ]]; then
     echo "   External URL: https://$host"
   fi
-  
+
   echo "   Local URL:    http://localhost:8080"
   echo "   Namespace:    $ARGO_NS"
   echo ""
   echo "   Username:     admin"
-  
+
   local password
   password=$(get_password "argocd-initial-admin-secret" "$ARGO_NS" "password")
   echo "   Password:     $password"
@@ -85,7 +85,7 @@ show_argocd() {
   echo ""
   echo "   CLI Login:    argocd login localhost:8080 --username admin --password '$password' --insecure"
   echo ""
-  
+
   if [[ "$SERVICE" == "argocd" ]]; then
     read -p "Start port-forward now? [y/N]: " START_PF
     if [[ "$START_PF" =~ ^[Yy]$ ]]; then
@@ -96,30 +96,30 @@ show_argocd() {
 
 show_jenkins() {
   print_service_header "🔷 Jenkins (CI/CD)"
-  
+
   if ! check_namespace "jenkins"; then
     echo -e "${YELLOW}Jenkins namespace not found (not deployed)${NC}"
     return 0
   fi
-  
+
   local host
   host=$(get_ingress_host "jenkins" "jenkins")
   if [[ -n "$host" ]]; then
     echo "   External URL: https://$host"
   fi
-  
+
   echo "   Local URL:    http://localhost:8081"
   echo "   Namespace:    jenkins"
   echo ""
   echo "   Username:     admin"
-  
+
   local password
   password=$(get_password "jenkins" "jenkins" "jenkins-admin-password")
   echo "   Password:     $password"
   echo ""
   echo "   Port Forward: kubectl -n jenkins port-forward svc/jenkins 8081:8080"
   echo ""
-  
+
   if [[ "$SERVICE" == "jenkins" ]]; then
     read -p "Start port-forward now? [y/N]: " START_PF
     if [[ "$START_PF" =~ ^[Yy]$ ]]; then
@@ -130,21 +130,21 @@ show_jenkins() {
 
 show_backstage() {
   print_service_header "🔷 Backstage (Developer Portal)"
-  
+
   local ns="backstage"
   check_namespace "backstage" || ns="fawkes"
-  
+
   if ! check_namespace "$ns"; then
     echo -e "${YELLOW}Backstage namespace not found (not deployed)${NC}"
     return 0
   fi
-  
+
   local host
   host=$(get_ingress_host "backstage" "$ns")
   if [[ -n "$host" ]]; then
     echo "   External URL: https://$host"
   fi
-  
+
   echo "   Local URL:    http://localhost:7007"
   echo "   Namespace:    $ns"
   echo ""
@@ -152,7 +152,7 @@ show_backstage() {
   echo ""
   echo "   Port Forward: kubectl -n $ns port-forward svc/backstage 7007:7007"
   echo ""
-  
+
   if [[ "$SERVICE" == "backstage" ]]; then
     read -p "Start port-forward now? [y/N]: " START_PF
     if [[ "$START_PF" =~ ^[Yy]$ ]]; then
@@ -163,33 +163,33 @@ show_backstage() {
 
 show_grafana() {
   print_service_header "🔷 Grafana (Observability)"
-  
+
   local ns="grafana"
   check_namespace "grafana" || ns="fawkes"
-  
+
   if ! check_namespace "$ns"; then
     echo -e "${YELLOW}Grafana namespace not found (not deployed)${NC}"
     return 0
   fi
-  
+
   local host
   host=$(get_ingress_host "grafana" "$ns")
   if [[ -n "$host" ]]; then
     echo "   External URL: https://$host"
   fi
-  
+
   echo "   Local URL:    http://localhost:3000"
   echo "   Namespace:    $ns"
   echo ""
   echo "   Username:     admin"
-  
+
   local password
   password=$(get_password "grafana" "$ns" "admin-password")
   echo "   Password:     $password"
   echo ""
   echo "   Port Forward: kubectl -n $ns port-forward svc/grafana 3000:80"
   echo ""
-  
+
   if [[ "$SERVICE" == "grafana" ]]; then
     read -p "Start port-forward now? [y/N]: " START_PF
     if [[ "$START_PF" =~ ^[Yy]$ ]]; then
@@ -200,15 +200,15 @@ show_grafana() {
 
 show_prometheus() {
   print_service_header "🔷 Prometheus (Metrics)"
-  
+
   local ns="prometheus"
   check_namespace "prometheus" || ns="fawkes"
-  
+
   if ! check_namespace "$ns"; then
     echo -e "${YELLOW}Prometheus namespace not found (not deployed)${NC}"
     return 0
   fi
-  
+
   echo "   Local URL:    http://localhost:9090"
   echo "   Namespace:    $ns"
   echo ""
@@ -218,18 +218,18 @@ show_prometheus() {
 
 show_sonarqube() {
   print_service_header "🔷 SonarQube (Code Quality)"
-  
+
   if ! check_namespace "sonarqube"; then
     echo -e "${YELLOW}SonarQube namespace not found (not deployed)${NC}"
     return 0
   fi
-  
+
   local host
   host=$(get_ingress_host "sonarqube" "sonarqube")
   if [[ -n "$host" ]]; then
     echo "   External URL: https://$host"
   fi
-  
+
   echo "   Local URL:    http://localhost:9000"
   echo "   Namespace:    sonarqube"
   echo ""
@@ -242,15 +242,15 @@ show_sonarqube() {
 
 show_cluster_info() {
   print_service_header "📍 Cluster Information"
-  
+
   local ctx
   ctx=$(kubectl config current-context 2>/dev/null || echo "unknown")
   echo "   Context:      $ctx"
-  
+
   local nodes
   nodes=$(kubectl get nodes --no-headers 2>/dev/null | wc -l | tr -d ' ')
   echo "   Nodes:        $nodes"
-  
+
   local version
   version=$(kubectl version --short 2>/dev/null | grep "Server Version" | awk '{print $3}' || echo "unknown")
   echo "   K8s Version:  $version"
@@ -261,12 +261,12 @@ show_azure_info() {
   if ! command -v az >/dev/null 2>&1; then
     return 0
   fi
-  
+
   print_service_header "☁️  Azure AKS Information"
-  
+
   local rg="${TF_VAR_resource_group_name:-fawkes-rg}"
   local cluster="${TF_VAR_cluster_name:-fawkes-dev}"
-  
+
   if az aks show -g "$rg" -n "$cluster" >/dev/null 2>&1; then
     echo "   Resource Group: $rg"
     echo "   Cluster Name:   $cluster"
@@ -284,7 +284,7 @@ show_azure_info() {
 
 show_quick_commands() {
   print_service_header "⚡ Quick Commands"
-  
+
   echo "   View all pods:         kubectl get pods -A"
   echo "   View ArgoCD apps:      kubectl get applications -n $ARGO_NS"
   echo "   View ingress:          kubectl get ingress -A"
@@ -298,7 +298,7 @@ show_quick_commands() {
 # Main execution
 main() {
   print_header "🎉 FAWKES PLATFORM ACCESS GUIDE"
-  
+
   case "$SERVICE" in
     all)
       show_cluster_info
@@ -316,7 +316,7 @@ main() {
     grafana) show_grafana ;;
     prometheus) show_prometheus ;;
     sonarqube) show_sonarqube ;;
-    azure) 
+    azure)
       show_cluster_info
       show_azure_info
       show_argocd
@@ -328,7 +328,7 @@ main() {
       exit 1
       ;;
   esac
-  
+
   echo "════════════════════════════════════════════════════════════════════════════════"
   echo ""
 }

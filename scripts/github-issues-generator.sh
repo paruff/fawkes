@@ -75,7 +75,7 @@ create_issue() {
     local body=$3
     local labels=$4
     local milestone=$5
-    
+
     if [ "$DRY_RUN" = true ]; then
         echo -e "${YELLOW}[DRY RUN]${NC} Would create: #$issue_number - $title"
         echo "  Labels: $labels"
@@ -95,14 +95,14 @@ create_issue() {
 # Function to generate Epic 1 issues
 generate_epic1() {
     echo -e "${GREEN}=== Generating Epic 1 Issues (DORA 2023 Foundation) ===${NC}"
-    
+
     # Issue #1: Local K8s Cluster
     create_issue 1 "Set up 4-node local K8s cluster" \
 "# Issue #1: Set up 4-node local K8s cluster
 
-**Epic**: Epic 1 - DORA 2023 Foundation  
-**Milestone**: 1.1 - Local Infrastructure  
-**Priority**: P0  
+**Epic**: Epic 1 - DORA 2023 Foundation
+**Milestone**: 1.1 - Local Infrastructure
+**Priority**: P0
 **Estimated Effort**: 4 hours
 
 ## Description
@@ -191,9 +191,9 @@ kubectl get nodes  # Should show 4 Ready nodes
     create_issue 2 "Deploy ingress controller (nginx or traefik)" \
 "# Issue #2: Deploy ingress controller
 
-**Epic**: Epic 1 - DORA 2023 Foundation  
-**Milestone**: 1.1 - Local Infrastructure  
-**Priority**: P0  
+**Epic**: Epic 1 - DORA 2023 Foundation
+**Milestone**: 1.1 - Local Infrastructure
+**Priority**: P0
 **Estimated Effort**: 2 hours
 
 ## Description
@@ -252,9 +252,9 @@ curl http://test.local  # Should return test page
     create_issue 3 "Configure persistent storage (StorageClass)" \
 "# Issue #3: Configure persistent storage
 
-**Epic**: Epic 1 - DORA 2023 Foundation  
-**Milestone**: 1.1 - Local Infrastructure  
-**Priority**: P0  
+**Epic**: Epic 1 - DORA 2023 Foundation
+**Milestone**: 1.1 - Local Infrastructure
+**Priority**: P0
 **Estimated Effort**: 2 hours
 
 ## Description
@@ -310,7 +310,7 @@ kubectl get pvc  # Should show Bound
 
     # Continue with remaining Epic 1 issues...
     # (Issues #4-38 follow same pattern)
-    
+
     echo ""
     echo -e "${GREEN}Epic 1: Generated issues #1-38${NC}"
 }
@@ -318,14 +318,14 @@ kubectl get pvc  # Should show Bound
 # Function to generate Epic 2 issues
 generate_epic2() {
     echo -e "${GREEN}=== Generating Epic 2 Issues (AI & Data Platform) ===${NC}"
-    
+
     # Issue #39: Vector Database
     create_issue 39 "Deploy vector database (Weaviate)" \
 "# Issue #39: Deploy vector database
 
-**Epic**: Epic 2 - AI & Data Platform  
-**Milestone**: 2.1 - AI Foundation  
-**Priority**: P0  
+**Epic**: Epic 2 - AI & Data Platform
+**Milestone**: 2.1 - AI Foundation
+**Priority**: P0
 **Estimated Effort**: 4 hours
 
 ## Description
@@ -381,9 +381,9 @@ python services/rag/scripts/test-indexing.py
 " \
     "epic-2-ai-data,p0-critical,type-infrastructure,comp-ai,type-ai-agent" \
     "2.1 - AI Foundation"
-    
+
     # Continue with remaining Epic 2 issues #40-72...
-    
+
     echo ""
     echo -e "${GREEN}Epic 2: Generated issues #39-72${NC}"
 }
@@ -391,14 +391,14 @@ python services/rag/scripts/test-indexing.py
 # Function to generate Epic 3 issues
 generate_epic3() {
     echo -e "${GREEN}=== Generating Epic 3 Issues (Product Discovery & UX) ===${NC}"
-    
+
     # Issue #73: Research Repository
     create_issue 73 "Deploy research repository in Backstage" \
 "# Issue #73: Deploy research repository in Backstage
 
-**Epic**: Epic 3 - Product Discovery & UX  
-**Milestone**: 3.1 - User Research Infrastructure  
-**Priority**: P0  
+**Epic**: Epic 3 - Product Discovery & UX
+**Milestone**: 3.1 - User Research Infrastructure
+**Priority**: P0
 **Estimated Effort**: 3 hours
 
 ## Description
@@ -452,9 +452,9 @@ curl http://backstage.local/api/catalog/entities?kind=Research
 " \
     "epic-3-discovery,p0-critical,type-feature,comp-backstage,type-ai-agent" \
     "3.1 - User Research Infrastructure"
-    
+
     # Continue with remaining Epic 3 issues #74-108...
-    
+
     echo ""
     echo -e "${GREEN}Epic 3: Generated issues #73-108${NC}"
 }

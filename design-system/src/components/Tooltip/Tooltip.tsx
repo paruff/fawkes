@@ -10,7 +10,7 @@ export interface TooltipProps extends BaseComponentProps {
 
 /**
  * Tooltip overlay
- * 
+ *
  * @component
  * @example
  * ```tsx

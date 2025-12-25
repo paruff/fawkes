@@ -193,7 +193,7 @@ Override default commands when needed:
 goldenPathPipeline {
     appName = 'my-service'
     language = 'java'
-    
+
     // Custom commands
     buildCommand = 'mvn clean package -P production -DskipTests'
     testCommand = 'mvn test -Dtest=UnitTests'
