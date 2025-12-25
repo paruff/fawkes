@@ -1,0 +1,163 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
+# golangci-lint configuration for Fawkes
+# https://golangci-lint.run/usage/configuration/
+
+# Run configuration
+run:
+  # Timeout for analysis
+  timeout: 5m
+
+  # Include test files
+  tests: true
+
+  # Which dirs to skip
+  skip-dirs:
+    - vendor
+    - third_party
+    - node_modules
+
+# Linters configuration
+linters:
+  enable:
+    - gofmt          # Check formatting
+    - govet          # Reports suspicious constructs
+    - errcheck       # Check for unchecked errors
+    - staticcheck    # Advanced static analysis
+    - gosimple       # Simplify code
+    - ineffassign    # Detect ineffectual assignments
+    - unused         # Check for unused code
+    - typecheck      # Type-check code
+    - gocritic       # Comprehensive checks
+    - gocyclo        # Cyclomatic complexity
+    - goimports      # Check imports
+    - misspell       # Spell checking
+    - revive         # Fast, extensible, flexible, clean
+    - gosec          # Security checks
+
+  disable:
+    - deadcode       # Deprecated
+    - varcheck       # Deprecated
+    - structcheck    # Deprecated
+    - golint         # Deprecated, use revive
+
+# Linter-specific settings
+linters-settings:
+  gofmt:
+    # Simplify code
+    simplify: true
+
+  govet:
+    # Enable all checks
+    enable-all: true
+
+  errcheck:
+    # Report on errors in type assertions: `a := b.(MyStruct)`
+    check-type-assertions: true
+    # Report on blank error assignments: `num, _ := strconv.Atoi(numStr)`
+    check-blank: false
+
+  gocyclo:
+    # Minimal cyclomatic complexity to report
+    min-complexity: 15
+
+  gocritic:
+    # Which checks to enable
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+    disabled-checks:
+      - whyNoLint
+      - unnamedResult
+
+  misspell:
+    # Locale for spell checking
+    locale: US
+
+  revive:
+    # Enable all rules by default
+    enable-all-rules: false
+    rules:
+      # Enabled rules
+      - name: blank-imports
+      - name: context-as-argument
+      - name: context-keys-type
+      - name: dot-imports
+      - name: error-return
+      - name: error-strings
+      - name: error-naming
+      - name: exported
+      - name: if-return
+      - name: increment-decrement
+      - name: var-naming
+      - name: var-declaration
+      - name: package-comments
+      - name: range
+      - name: receiver-naming
+      - name: time-naming
+      - name: unexported-return
+      - name: indent-error-flow
+      - name: errorf
+      - name: empty-block
+      - name: superfluous-else
+      - name: unused-parameter
+      - name: unreachable-code
+      - name: redefines-builtin-id
+
+  gosec:
+    # Exclude specific checks
+    excludes:
+      - G104  # Audit errors not checked (covered by errcheck)
+
+# Issues configuration
+issues:
+  # Maximum issues count per linter
+  max-issues-per-linter: 0
+
+  # Maximum count of issues with the same text
+  max-same-issues: 0
+
+  # List of regexps for excluding files
+  exclude-rules:
+    # Exclude test files from certain checks
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - gosec
+
+    # Exclude example files from certain checks
+    - path: examples/
+      linters:
+        - errcheck
+        - gosec
+
+# Output configuration
+output:
+  # Format: colored-line-number, line-number, json, tab, checkstyle
+  format: colored-line-number
+
+  # Print lines of code with issue
+  print-issued-lines: true
+
+  # Print linter name in issue line
+  print-linter-name: true
