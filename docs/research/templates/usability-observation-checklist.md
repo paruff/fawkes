@@ -2,21 +2,21 @@
 
 ## Session Information
 
-**Test Date**: _______________  
-**Participant ID**: P___ (e.g., P01, P02)  
-**Facilitator**: _______________  
-**Observer/Note-Taker**: _______________  
-**Feature Tested**: _______________  
-**Session Start Time**: _______________  
-**Session End Time**: _______________  
+**Test Date**: _______________
+**Participant ID**: P___ (e.g., P01, P02)
+**Facilitator**: _______________
+**Observer/Note-Taker**: _______________
+**Feature Tested**: _______________
+**Session Start Time**: _______________
+**Session End Time**: _______________
 
 ---
 
 ## Participant Profile
 
-**Role**: ☐ Application Developer  ☐ Platform Engineer  ☐ DevOps  ☐ SRE  ☐ Other: __________  
-**Experience Level**: ☐ Junior (0-2 years)  ☐ Mid (3-5 years)  ☐ Senior (6+ years)  
-**Platform Familiarity**: ☐ New User  ☐ Occasional  ☐ Regular  ☐ Power User  
+**Role**: ☐ Application Developer  ☐ Platform Engineer  ☐ DevOps  ☐ SRE  ☐ Other: __________
+**Experience Level**: ☐ Junior (0-2 years)  ☐ Mid (3-5 years)  ☐ Senior (6+ years)
+**Platform Familiarity**: ☐ New User  ☐ Occasional  ☐ Regular  ☐ Power User
 **Tech Stack**: _______________
 
 ---
@@ -28,11 +28,11 @@
 **Time Started**: _______  **Time Completed**: _______  **Duration**: _______ min
 
 **Task Status:**
-☐ **Success** - Completed without assistance  
-☐ **Partial Success** - Completed with hints/help  
-☐ **Failure** - Could not complete  
+☐ **Success** - Completed without assistance
+☐ **Partial Success** - Completed with hints/help
+☐ **Failure** - Could not complete
 
-**Confidence Rating** (1-5): [ ]  
+**Confidence Rating** (1-5): [ ]
 **Assistance Needed**: ☐ None  ☐ Minor Hint  ☐ Significant Help  ☐ Task Abandoned
 
 **Path Taken:**
@@ -42,9 +42,9 @@
 - [Continue as needed]
 
 **Expected Path:**
-☐ Followed expected path  
-☐ Deviated but recovered  
-☐ Completely different approach  
+☐ Followed expected path
+☐ Deviated but recovered
+☐ Completely different approach
 
 **Errors/Wrong Turns:**
 - [ ] _______________
@@ -57,13 +57,13 @@
 > "_______________________________________"
 
 **Observed Behaviors:**
-☐ Hesitation (where? ______________)  
-☐ Backtracking (from where? ______________)  
-☐ Scanning/searching (for what? ______________)  
-☐ Confusion (about what? ______________)  
-☐ Frustration (when? ______________)  
-☐ Delight/satisfaction (when? ______________)  
-☐ Surprise (at what? ______________)  
+☐ Hesitation (where? ______________)
+☐ Backtracking (from where? ______________)
+☐ Scanning/searching (for what? ______________)
+☐ Confusion (about what? ______________)
+☐ Frustration (when? ______________)
+☐ Delight/satisfaction (when? ______________)
+☐ Surprise (at what? ______________)
 
 **Issues Encountered:**
 
@@ -83,7 +83,7 @@
 **Task Status:**
 ☐ Success  ☐ Partial Success  ☐ Failure
 
-**Confidence Rating** (1-5): [ ]  
+**Confidence Rating** (1-5): [ ]
 **Assistance Needed**: ☐ None  ☐ Minor Hint  ☐ Significant Help  ☐ Task Abandoned
 
 **Path Taken:**
@@ -92,8 +92,8 @@
 - Third action: _______________
 
 **Expected Path:**
-☐ Followed expected path  
-☐ Deviated but recovered  
+☐ Followed expected path
+☐ Deviated but recovered
 ☐ Completely different approach
 
 **Errors/Wrong Turns:**
@@ -106,7 +106,7 @@
 > "_______________________________________"
 
 **Observed Behaviors:**
-☐ Hesitation  ☐ Backtracking  ☐ Scanning/searching  
+☐ Hesitation  ☐ Backtracking  ☐ Scanning/searching
 ☐ Confusion  ☐ Frustration  ☐ Delight  ☐ Surprise
 
 **Issues Encountered:**
@@ -145,10 +145,10 @@
 
 ### Think-Aloud Quality
 
-☐ Excellent - Constant narration, very revealing  
-☐ Good - Regular commentary with prompting  
-☐ Fair - Occasional thoughts, needed frequent reminders  
-☐ Poor - Minimal verbalization despite prompting  
+☐ Excellent - Constant narration, very revealing
+☐ Good - Regular commentary with prompting
+☐ Fair - Occasional thoughts, needed frequent reminders
+☐ Poor - Minimal verbalization despite prompting
 
 **Notes on thought process:**
 _______________
@@ -161,7 +161,7 @@ _______________
 - Expected to find but didn't: _______________
 
 **Search Behavior:**
-☐ Used search feature  ☐ Did not use search  ☐ Tried but failed to find search  
+☐ Used search feature  ☐ Did not use search  ☐ Tried but failed to find search
 Search terms used: _______________
 
 **Visual Scanning:**
@@ -174,14 +174,14 @@ Search terms used: _______________
 ## Usability Issues Log
 
 ### Issue 1
-**Severity**: ☐ Critical  ☐ Major  ☐ Minor  ☐ Enhancement  
-**Task**: [Task number and name]  
-**Timestamp**: _______  
-**Description**: _______________  
-**User Quote**: "_______________________________________"  
-**Impact**: ☐ Blocked task  ☐ Significant delay  ☐ Minor frustration  ☐ Suggestion  
-**Frequency**: ☐ First time seen  ☐ Seen before  ☐ Pattern emerging  
-**Workaround Found**: ☐ Yes  ☐ No  
+**Severity**: ☐ Critical  ☐ Major  ☐ Minor  ☐ Enhancement
+**Task**: [Task number and name]
+**Timestamp**: _______
+**Description**: _______________
+**User Quote**: "_______________________________________"
+**Impact**: ☐ Blocked task  ☐ Significant delay  ☐ Minor frustration  ☐ Suggestion
+**Frequency**: ☐ First time seen  ☐ Seen before  ☐ Pattern emerging
+**Workaround Found**: ☐ Yes  ☐ No
 **Recommendation**: _______________
 
 ### Issue 2
@@ -191,13 +191,13 @@ Search terms used: _______________
 
 ## Post-Task Questions Summary
 
-**Overall Ease of Use Rating** (1-5): [ ]  
+**Overall Ease of Use Rating** (1-5): [ ]
 Rationale: _______________
 
-**Most Difficult Task**: _______________  
+**Most Difficult Task**: _______________
 Why: _______________
 
-**Easiest Task**: _______________  
+**Easiest Task**: _______________
 Why: _______________
 
 **Biggest Surprise** (positive or negative): _______________
@@ -206,7 +206,7 @@ Why: _______________
 
 **One Thing to Change**: _______________
 
-**Likelihood to Recommend** (1-5): [ ]  
+**Likelihood to Recommend** (1-5): [ ]
 Why: _______________
 
 ---
@@ -283,6 +283,6 @@ _______________
 
 ---
 
-**Checklist Version**: 1.0  
-**Last Updated**: December 2025  
+**Checklist Version**: 1.0
+**Last Updated**: December 2025
 **Owner**: Product Team

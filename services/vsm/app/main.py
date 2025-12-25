@@ -108,9 +108,9 @@ async def lifespan(app: FastAPI):
         logger.error(f"❌ Failed to initialize database: {e}")
         # Re-raise to prevent app from starting with broken DB
         raise RuntimeError(f"Database initialization failed: {e}") from e
-    
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down VSM service")
 
@@ -140,13 +140,13 @@ async def add_metrics(request, call_next):
     """Add prometheus metrics to all requests."""
     start_time = time.time()
     response = await call_next(request)
-    
+
     REQUEST_COUNT.labels(
         method=request.method,
         endpoint=request.url.path,
         status=response.status_code
     ).inc()
-    
+
     return response
 
 
@@ -162,13 +162,13 @@ async def root():
         "health": "/api/v1/health",
         "prometheus": "/metrics"
     }
-    
+
     # Add Focalboard endpoints if integration is available
     if FOCALBOARD_INTEGRATION_AVAILABLE:
         endpoints["focalboard_webhook"] = "/api/v1/focalboard/webhook"
         endpoints["focalboard_sync"] = "/api/v1/focalboard/sync"
         endpoints["focalboard_mapping"] = "/api/v1/focalboard/stages/mapping"
-    
+
     return {
         "service": "vsm-service",
         "status": "running",
@@ -184,7 +184,7 @@ async def root():
 async def health(db: Session = Depends(get_db)):
     """
     Health check endpoint.
-    
+
     Returns service status and database connection status.
     """
     database_connected = False
@@ -194,7 +194,7 @@ async def health(db: Session = Depends(get_db)):
         database_connected = True
     except Exception as e:
         logger.warning(f"Database health check failed: {e}")
-    
+
     return HealthResponse(
         status="UP" if database_connected else "DEGRADED",
         service="vsm-service",
@@ -207,7 +207,7 @@ async def health(db: Session = Depends(get_db)):
 async def ready(db: Session = Depends(get_db)):
     """
     Readiness check endpoint for Kubernetes.
-    
+
     Returns 200 if service is ready to accept traffic, 503 otherwise.
     """
     try:
@@ -226,11 +226,11 @@ async def create_work_item(
 ):
     """
     Create a new work item.
-    
+
     Args:
         work_item: Work item creation request
         db: Database session
-        
+
     Returns:
         Created work item
     """
@@ -243,7 +243,7 @@ async def create_work_item(
         db.add(db_work_item)
         db.commit()
         db.refresh(db_work_item)
-        
+
         # Add initial transition to Backlog
         backlog_stage = db.query(Stage).filter(Stage.name == "Backlog").first()
         if backlog_stage:
@@ -254,17 +254,17 @@ async def create_work_item(
             )
             db.add(transition)
             db.commit()
-        
+
         # Update metrics
         WORK_ITEMS_CREATED.labels(type=work_item.type.value).inc()
-        
+
         logger.info(f"Created work item {db_work_item.id}: {db_work_item.title}")
-        
+
         # Get current stage
         current_stage_name = None
         if backlog_stage:
             current_stage_name = backlog_stage.name
-        
+
         return WorkItemResponse(
             id=db_work_item.id,
             title=db_work_item.title,
@@ -273,7 +273,7 @@ async def create_work_item(
             updated_at=db_work_item.updated_at,
             current_stage=current_stage_name
         )
-        
+
     except Exception as e:
         logger.error(f"Failed to create work item: {e}")
         db.rollback()
@@ -288,12 +288,12 @@ async def transition_work_item(
 ):
     """
     Move work item to a new stage.
-    
+
     Args:
         work_item_id: Work item ID
         transition_request: Transition request with target stage
         db: Database session
-        
+
     Returns:
         Stage transition record
     """
@@ -301,12 +301,12 @@ async def transition_work_item(
     work_item = db.query(WorkItem).filter(WorkItem.id == work_item_id).first()
     if not work_item:
         raise HTTPException(status_code=404, detail=f"Work item {work_item_id} not found")
-    
+
     # Get target stage
     to_stage = db.query(Stage).filter(Stage.name == transition_request.to_stage).first()
     if not to_stage:
         raise HTTPException(status_code=404, detail=f"Stage '{transition_request.to_stage}' not found")
-    
+
     # Get current stage (most recent transition)
     current_transition = (
         db.query(StageTransition)
@@ -314,14 +314,14 @@ async def transition_work_item(
         .order_by(StageTransition.timestamp.desc())
         .first()
     )
-    
+
     from_stage_id = current_transition.to_stage_id if current_transition else None
     from_stage_name = None
     if from_stage_id:
         from_stage = db.query(Stage).filter(Stage.id == from_stage_id).first()
         if from_stage:
             from_stage_name = from_stage.name
-    
+
     try:
         # Create transition
         transition = StageTransition(
@@ -330,41 +330,41 @@ async def transition_work_item(
             to_stage_id=to_stage.id
         )
         db.add(transition)
-        
+
         # Update work item timestamp
         work_item.updated_at = datetime.now(timezone.utc)
-        
+
         db.commit()
         db.refresh(transition)
-        
+
         # Update metrics
         STAGE_TRANSITIONS.labels(
             from_stage=from_stage_name or "none",
             to_stage=to_stage.name
         ).inc()
-        
+
         # Calculate stage cycle time (time spent in from_stage)
         if from_stage_id and current_transition:
             stage_duration_seconds = (transition.timestamp - current_transition.timestamp).total_seconds()
             STAGE_CYCLE_TIME.labels(stage=from_stage_name).observe(stage_duration_seconds)
-        
+
         # If moved to production, calculate cycle time and lead time
         if to_stage.name == "Production":
             cycle_time_hours = calculate_cycle_time(work_item_id, db)
             if cycle_time_hours:
                 CYCLE_TIME.observe(cycle_time_hours)
-            
+
             # Calculate lead time (from first transition to production)
             lead_time_seconds = calculate_lead_time(work_item_id, db)
             if lead_time_seconds:
                 LEAD_TIME.observe(lead_time_seconds)
-            
+
             # Increment throughput counter with current date
             current_date = transition.timestamp.strftime('%Y-%m-%d')
             THROUGHPUT_COUNTER.labels(date=current_date).inc()
-        
+
         logger.info(f"Transitioned work item {work_item_id} from {from_stage_name} to {to_stage.name}")
-        
+
         return StageTransitionResponse(
             id=transition.id,
             work_item_id=work_item_id,
@@ -372,7 +372,7 @@ async def transition_work_item(
             to_stage=to_stage.name,
             timestamp=transition.timestamp
         )
-        
+
     except Exception as e:
         logger.error(f"Failed to transition work item: {e}")
         db.rollback()
@@ -386,11 +386,11 @@ async def get_work_item_history(
 ):
     """
     Get stage history for a work item.
-    
+
     Args:
         work_item_id: Work item ID
         db: Database session
-        
+
     Returns:
         Work item history with all stage transitions
     """
@@ -398,7 +398,7 @@ async def get_work_item_history(
     work_item = db.query(WorkItem).filter(WorkItem.id == work_item_id).first()
     if not work_item:
         raise HTTPException(status_code=404, detail=f"Work item {work_item_id} not found")
-    
+
     # Get all transitions
     transitions = (
         db.query(StageTransition)
@@ -406,7 +406,7 @@ async def get_work_item_history(
         .order_by(StageTransition.timestamp.asc())
         .all()
     )
-    
+
     # Build response
     transition_responses = []
     for transition in transitions:
@@ -415,10 +415,10 @@ async def get_work_item_history(
             from_stage = db.query(Stage).filter(Stage.id == transition.from_stage_id).first()
             if from_stage:
                 from_stage_name = from_stage.name
-        
+
         to_stage = db.query(Stage).filter(Stage.id == transition.to_stage_id).first()
         to_stage_name = to_stage.name if to_stage else "Unknown"
-        
+
         transition_responses.append(
             StageTransitionResponse(
                 id=transition.id,
@@ -428,7 +428,7 @@ async def get_work_item_history(
                 timestamp=transition.timestamp
             )
         )
-    
+
     return WorkItemHistory(
         work_item_id=work_item_id,
         work_item_title=work_item.title,
@@ -443,17 +443,17 @@ async def get_flow_metrics(
 ):
     """
     Get flow metrics (WIP, throughput, cycle time).
-    
+
     Args:
         days: Number of days to calculate metrics for (default: 7)
         db: Database session
-        
+
     Returns:
         Flow metrics for the specified period
     """
     period_end = datetime.now(timezone.utc)
     period_start = period_end - timedelta(days=days)
-    
+
     try:
         # Calculate throughput (items completed in period)
         production_stage = db.query(Stage).filter(Stage.name == "Production").first()
@@ -468,7 +468,7 @@ async def get_flow_metrics(
                 )
                 .count()
             )
-        
+
         # Calculate WIP (average work in progress)
         # Count work items that have transitions but haven't reached production
         wip_count = (
@@ -484,7 +484,7 @@ async def get_flow_metrics(
             .distinct()
             .count()
         ) if production_stage else 0
-        
+
         # Calculate cycle times for completed items
         cycle_times = []
         if production_stage:
@@ -497,18 +497,18 @@ async def get_flow_metrics(
                 )
                 .all()
             )
-            
+
             for (work_item_id,) in completed_items:
                 cycle_time = calculate_cycle_time(work_item_id, db)
                 if cycle_time:
                     cycle_times.append(cycle_time)
-        
+
         # Calculate cycle time statistics
         cycle_time_avg = None
         cycle_time_p50 = None
         cycle_time_p85 = None
         cycle_time_p95 = None
-        
+
         if cycle_times:
             cycle_times.sort()
             n = len(cycle_times)
@@ -517,7 +517,7 @@ async def get_flow_metrics(
             cycle_time_p50 = cycle_times[min(int(n * 0.5), n - 1)]
             cycle_time_p85 = cycle_times[min(int(n * 0.85), n - 1)]
             cycle_time_p95 = cycle_times[min(int(n * 0.95), n - 1)]
-        
+
         # Update WIP gauge - count items currently in each stage
         # A work item is in a stage if its most recent transition is to that stage
         # and it hasn't moved to production yet
@@ -533,7 +533,7 @@ async def get_flow_metrics(
                 .group_by(StageTransition.work_item_id)
                 .subquery()
             )
-            
+
             # Count work items where the latest transition is to this stage
             stage_wip = (
                 db.query(StageTransition)
@@ -546,7 +546,7 @@ async def get_flow_metrics(
                 .count()
             )
             WIP_GAUGE.labels(stage=stage.name).set(stage_wip)
-        
+
         return FlowMetricsResponse(
             throughput=throughput,
             wip=float(wip_count),
@@ -557,7 +557,7 @@ async def get_flow_metrics(
             period_start=period_start,
             period_end=period_end
         )
-        
+
     except Exception as e:
         logger.error(f"Failed to calculate flow metrics: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to calculate flow metrics: {str(e)}")
@@ -567,10 +567,10 @@ async def get_flow_metrics(
 async def list_stages(db: Session = Depends(get_db)):
     """
     List all available stages.
-    
+
     Args:
         db: Database session
-        
+
     Returns:
         List of all stages in order
     """
@@ -592,11 +592,11 @@ async def list_stages(db: Session = Depends(get_db)):
 def calculate_cycle_time(work_item_id: int, db: Session) -> Optional[float]:
     """
     Calculate cycle time for a work item in hours.
-    
+
     Args:
         work_item_id: Work item ID
         db: Database session
-        
+
     Returns:
         Cycle time in hours or None if cannot be calculated
     """
@@ -606,31 +606,31 @@ def calculate_cycle_time(work_item_id: int, db: Session) -> Optional[float]:
         .order_by(StageTransition.timestamp.asc())
         .all()
     )
-    
+
     if len(transitions) < 2:
         return None
-    
+
     # Calculate time from first to last transition
     start_time = transitions[0].timestamp
     end_time = transitions[-1].timestamp
-    
+
     cycle_time_seconds = (end_time - start_time).total_seconds()
     cycle_time_hours = cycle_time_seconds / 3600
-    
+
     return cycle_time_hours
 
 
 def calculate_lead_time(work_item_id: int, db: Session) -> Optional[float]:
     """
     Calculate lead time for a work item in seconds (from backlog to production).
-    
+
     Lead time is the total time from when work item enters the system (first transition)
     to when it reaches production.
-    
+
     Args:
         work_item_id: Work item ID
         db: Database session
-        
+
     Returns:
         Lead time in seconds or None if cannot be calculated or not yet in production
     """
@@ -640,21 +640,21 @@ def calculate_lead_time(work_item_id: int, db: Session) -> Optional[float]:
         .order_by(StageTransition.timestamp.asc())
         .all()
     )
-    
+
     if len(transitions) < 2:
         return None
-    
+
     # Verify the last transition is to Production
     production_stage = db.query(Stage).filter(Stage.name == "Production").first()
     if not production_stage or transitions[-1].to_stage_id != production_stage.id:
         return None
-    
+
     # Calculate time from first transition to production
     start_time = transitions[0].timestamp
     end_time = transitions[-1].timestamp
-    
+
     lead_time_seconds = (end_time - start_time).total_seconds()
-    
+
     return lead_time_seconds
 
 

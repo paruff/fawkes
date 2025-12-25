@@ -10,22 +10,22 @@ metadata:
 spec:
   instances: 3
   primaryUpdateStrategy: unsupervised
-  
+
   storage:
     size: 5Gi
     storageClass: local-path
-  
+
   bootstrap:
     initdb:
       database: devex_surveys
       owner: devex
       secret:
         name: db-devex-credentials
-  
+
   monitoring:
     enabled: true
     podMonitorEnabled: true
-  
+
   resources:
     requests:
       cpu: 100m

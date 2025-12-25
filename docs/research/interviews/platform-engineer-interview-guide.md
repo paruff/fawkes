@@ -2,13 +2,13 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: December 2025  
-**Status**: Active  
-**Owner**: Product Team  
-**Target Persona**: Platform Engineer (Alex Chen - "The Infrastructure Guardian")  
-**Interview Type**: Discovery Interview  
-**Estimated Duration**: 45-60 minutes  
+**Version**: 1.0
+**Last Updated**: December 2025
+**Status**: Active
+**Owner**: Product Team
+**Target Persona**: Platform Engineer (Alex Chen - "The Infrastructure Guardian")
+**Interview Type**: Discovery Interview
+**Estimated Duration**: 45-60 minutes
 
 ---
 
@@ -251,7 +251,7 @@ Use these questions to select appropriate interview participants:
     - *Follow-up*: Why is this the most important thing to you?
     - *Follow-up*: How would your role or the developer experience change?
 
-**Wrap-up**: 
+**Wrap-up**:
 - "Is there anything else about platform operations or challenges that we haven't covered but you think is important?"
 - "Can we reach out to you for follow-up questions if needed?"
 - "Would you be interested in providing feedback on platform improvements before they're released?"
@@ -395,7 +395,7 @@ Look for common themes across interviews:
 - [Research Repository README](../README.md)
 - [Consent Form Template](./consent-form.md)
 - [DORA Metrics Documentation](../../observability/dora-metrics.md)
-- **Recommended Reading**: 
+- **Recommended Reading**:
   - "The Site Reliability Workbook" by Google SRE Team
   - "Team Topologies" by Matthew Skelton and Manuel Pais
 
@@ -411,6 +411,6 @@ Look for common themes across interviews:
 
 ---
 
-**Document Owner**: Product Team  
-**Last Review**: December 2025  
+**Document Owner**: Product Team
+**Last Review**: December 2025
 **Next Review**: March 2026 (or after 10+ interviews)

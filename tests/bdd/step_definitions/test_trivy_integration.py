@@ -27,9 +27,9 @@ def step_jenkins_deployed(context):
     context.execute_steps('''
         Given I have kubectl configured for the cluster
     ''')
-    
+
     namespace = getattr(context, 'namespace', DEFAULT_NAMESPACE)
-    
+
     # Check Jenkins deployment
     apps_v1 = client.AppsV1Api()
     try:
@@ -49,7 +49,7 @@ def step_harbor_with_trivy(context):
     """Verify Harbor is deployed with Trivy scanner enabled."""
     namespace = getattr(context, 'namespace', DEFAULT_NAMESPACE)
     apps_v1 = client.AppsV1Api()
-    
+
     # Check Harbor core deployment
     try:
         harbor_core = apps_v1.read_namespaced_deployment(
@@ -59,7 +59,7 @@ def step_harbor_with_trivy(context):
         assert harbor_core.status.ready_replicas >= 1, "Harbor core not ready"
     except ApiException as e:
         raise AssertionError(f"Harbor deployment not found: {e}")
-    
+
     # Check Trivy scanner pod
     v1 = client.CoreV1Api()
     try:
@@ -77,7 +77,7 @@ def step_harbor_with_trivy(context):
 def step_golden_path_configured(context):
     """Verify Golden Path shared library is configured."""
     namespace = getattr(context, 'namespace', DEFAULT_NAMESPACE)
-    
+
     # Check Jenkins ConfigMap for shared library configuration
     v1 = client.CoreV1Api()
     try:
@@ -339,8 +339,8 @@ def step_pod_has_database(context):
     # Check for volume mount or PVC
     pod = context.trivy_pods[0]
     has_volume = any(
-        'trivy' in vm.name.lower() 
-        for container in pod.spec.containers 
+        'trivy' in vm.name.lower()
+        for container in pod.spec.containers
         for vm in container.volume_mounts or []
     )
     assert has_volume, "Trivy database volume not found"
@@ -420,7 +420,7 @@ def step_pipeline_result(context, result):
             expected_status = 'SUCCESS'
     else:  # MEDIUM, LOW
         expected_status = 'SUCCESS'
-    
+
     # Verify against actual result
     if result == 'fail':
         assert expected_status == 'FAILURE', \

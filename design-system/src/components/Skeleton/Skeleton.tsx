@@ -10,7 +10,7 @@ export interface SkeletonProps extends BaseComponentProps {
 
 /**
  * Skeleton loader
- * 
+ *
  * @component
  * @example
  * ```tsx

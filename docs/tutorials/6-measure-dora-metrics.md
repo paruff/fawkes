@@ -5,7 +5,7 @@ description: Analyze your service's performance using DORA metrics in Apache Dev
 
 # Measure DORA Metrics
 
-**Time to Complete**: 30 minutes  
+**Time to Complete**: 30 minutes
 **Goal**: Understand how your service contributes to team DORA metrics and use data to drive improvements.
 
 ## What You'll Learn
@@ -34,7 +34,7 @@ Before you begin, ensure you have:
     2. **Lead Time for Changes** - Time from commit to production
     3. **Change Failure Rate** - % of deployments causing failures
     4. **Time to Restore Service** - Time to recover from failures
-    
+
     [Learn more about DORA capabilities](../capabilities.md).
 
 ## Step 1: Understand DORA Metrics
@@ -45,10 +45,10 @@ Let's review what each metric measures and why it matters.
 
 **Definition**: How often an organization successfully releases to production.
 
-**Elite Performance**: Multiple deploys per day  
+**Elite Performance**: Multiple deploys per day
 **Industry Average**: Between once per week and once per month
 
-**Why it matters**: 
+**Why it matters**:
 - High frequency = smaller changes
 - Smaller changes = lower risk
 - Lower risk = faster feedback
@@ -57,7 +57,7 @@ Let's review what each metric measures and why it matters.
 
 **Definition**: Time from code committed to code successfully running in production.
 
-**Elite Performance**: Less than one hour  
+**Elite Performance**: Less than one hour
 **Industry Average**: Between one week and one month
 
 **Why it matters**:
@@ -69,7 +69,7 @@ Let's review what each metric measures and why it matters.
 
 **Definition**: Percentage of changes that result in a failure in production.
 
-**Elite Performance**: 0-15%  
+**Elite Performance**: 0-15%
 **Industry Average**: 31-45%
 
 **Why it matters**:
@@ -81,7 +81,7 @@ Let's review what each metric measures and why it matters.
 
 **Definition**: Time it takes to recover from a failure in production.
 
-**Elite Performance**: Less than one hour  
+**Elite Performance**: Less than one hour
 **Industry Average**: Less than one day
 
 **Why it matters**:
@@ -155,7 +155,7 @@ Fawkes automatically collects most DORA data, but let's verify the configuration
    ```bash
    kubectl get configmap argocd-notifications-cm -n argocd -o yaml
    ```
-   
+
    Should include a DevLake webhook trigger.
 
 4. Check that your GitHub repository is connected:
@@ -206,9 +206,9 @@ Let's create some deployments to populate the metrics.
    # Change 2
    git commit --allow-empty -m "Trigger deployment 2"
    git push
-   
+
    # Wait 5 minutes
-   
+
    # Change 3
    git commit --allow-empty -m "Trigger deployment 3"
    git push
@@ -273,7 +273,7 @@ Now let's see how long it takes from commit to production.
    ├─ PR Approved: +10 minutes
    ├─ PR Merged: +2 minutes
    └─ Deployed: +3 minutes
-   
+
    Total Lead Time: 20 minutes ✅ Elite
    ```
 
@@ -348,7 +348,7 @@ Finally, let's look at recovery time when failures do occur.
    ├─ Fix Identified: +10 minutes (Found bad config)
    ├─ Rollback Initiated: +2 minutes (ArgoCD rollback)
    └─ Service Restored: +3 minutes (Health checks pass)
-   
+
    Total MTTR: 21 minutes ✅ Elite
    ```
 
@@ -356,9 +356,9 @@ Finally, let's look at recovery time when failures do occur.
    ```bash
    # Break the service temporarily
    kubectl scale deployment hello-fawkes -n my-first-app --replicas=0
-   
+
    # Wait 2 minutes for alert
-   
+
    # Restore service
    kubectl scale deployment hello-fawkes -n my-first-app --replicas=2
    ```

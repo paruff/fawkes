@@ -1,6 +1,6 @@
 /**
  * Event Tracking Library for Fawkes Platform
- * 
+ *
  * Provides a unified interface for tracking events across the platform
  * with Plausible Analytics integration and validation.
  */
@@ -64,10 +64,10 @@ export class EventTracker {
 
     // Load Plausible script if not already loaded
     this.loadPlausibleScript();
-    
+
     this.initialized = true;
     this.log('Event tracker initialized', this.config);
-    
+
     // Process any queued events
     this.processQueue();
   }
@@ -79,7 +79,7 @@ export class EventTracker {
     if (typeof window === 'undefined') {
       return false;
     }
-    return window.location.hostname === 'localhost' || 
+    return window.location.hostname === 'localhost' ||
            window.location.hostname === '127.0.0.1' ||
            window.location.hostname === '[::1]';
   }
@@ -105,7 +105,7 @@ export class EventTracker {
     script.defer = true;
     script.setAttribute('data-domain', this.config.domain);
     script.src = `${this.config.baseUrl}/js/script.js`;
-    
+
     document.head.appendChild(script);
     this.log('Plausible script loaded');
   }
@@ -139,7 +139,7 @@ export class EventTracker {
       properties: { ...eventTemplate.properties, ...properties },
       value: eventTemplate.value,
     };
-    
+
     this.track(event);
   }
 
@@ -150,9 +150,9 @@ export class EventTracker {
     if (typeof window !== 'undefined' && window.plausible) {
       const pageUrl = url || window.location.pathname;
       this.log('Tracking page view', pageUrl);
-      
+
       // Use Plausible's built-in page view tracking
-      window.plausible('pageview', { 
+      window.plausible('pageview', {
         props: properties as Record<string, string | number | boolean>
       });
     }
@@ -164,8 +164,8 @@ export class EventTracker {
   public trackCustom(eventName: string, properties?: EventProperties): void {
     if (typeof window !== 'undefined' && window.plausible) {
       this.log('Tracking custom event', eventName, properties);
-      
-      window.plausible(eventName, { 
+
+      window.plausible(eventName, {
         props: properties as Record<string, string | number | boolean>
       });
     }
@@ -182,18 +182,18 @@ export class EventTracker {
 
     // Format event name
     const eventName = formatEventName(event);
-    
+
     // Prepare properties
     const props: Record<string, string | number | boolean> = {};
-    
+
     if (event.label) {
       props.label = event.label;
     }
-    
+
     if (event.value !== undefined) {
       props.value = event.value;
     }
-    
+
     if (event.properties) {
       Object.entries(event.properties).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
@@ -203,7 +203,7 @@ export class EventTracker {
     }
 
     this.log('Sending event', eventName, props);
-    
+
     try {
       window.plausible(eventName, { props });
     } catch (error) {
@@ -220,10 +220,10 @@ export class EventTracker {
     }
 
     this.log(`Processing ${this.queue.length} queued events`);
-    
+
     const events = [...this.queue];
     this.queue = [];
-    
+
     events.forEach(event => this.sendEvent(event));
   }
 
@@ -241,7 +241,7 @@ export class EventTracker {
    */
   public setEnabled(enabled: boolean): void {
     this.initialized = enabled;
-    
+
     if (enabled) {
       this.initialize();
     }
@@ -301,7 +301,7 @@ export function trackEvent(event: Event): void {
  * Helper function to track a predefined event
  */
 export function trackPredefinedEvent(
-  eventTemplate: Partial<Event>, 
+  eventTemplate: Partial<Event>,
   properties?: EventProperties
 ): void {
   if (trackerInstance) {
@@ -328,8 +328,8 @@ export function trackCustomEvent(eventName: string, properties?: EventProperties
 declare global {
   interface Window {
     plausible?: (
-      eventName: string, 
-      options?: { 
+      eventName: string,
+      options?: {
         props?: Record<string, string | number | boolean>;
         callback?: () => void;
       }

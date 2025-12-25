@@ -17,16 +17,16 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  
+
   source:
     repoURL: https://github.com/paruff/fawkes
     targetRevision: HEAD
     path: platform/apps/feedback-service
-  
+
   destination:
     server: https://kubernetes.default.svc
     namespace: fawkes
-  
+
   syncPolicy:
     automated:
       prune: true
@@ -42,7 +42,7 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
-  
+
   ignoreDifferences:
     - group: apps
       kind: Deployment

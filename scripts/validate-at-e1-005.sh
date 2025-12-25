@@ -90,9 +90,9 @@ record_test() {
     local test_name="$1"
     local status="$2"
     local message="$3"
-    
+
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
-    
+
     if [ "$status" = "PASS" ]; then
         PASSED_TESTS=$((PASSED_TESTS + 1))
         log_success "$test_name: $message"
@@ -100,28 +100,28 @@ record_test() {
         FAILED_TESTS=$((FAILED_TESTS + 1))
         log_error "$test_name: $message"
     fi
-    
+
     # Escape JSON special characters
     local escaped_name=$(echo "$test_name" | sed 's/\\/\\\\/g; s/"/\\"/g')
     local escaped_message=$(echo "$message" | sed 's/\\/\\\\/g; s/"/\\"/g')
-    
+
     TEST_RESULTS+=("{\"name\":\"$escaped_name\",\"status\":\"$status\",\"message\":\"$escaped_message\"}")
 }
 
 generate_report() {
     mkdir -p "$REPORT_DIR"
-    
+
     local status="FAILED"
     if [ "$FAILED_TESTS" -eq 0 ]; then
         status="PASSED"
     fi
-    
+
     # Build tests JSON array
     local tests_json=""
     if [ ${#TEST_RESULTS[@]} -gt 0 ]; then
         tests_json=$(printf '%s\n' "${TEST_RESULTS[@]}" | paste -sd ',' -)
     fi
-    
+
     cat > "$REPORT_FILE" <<EOF
 {
   "test_id": "AT-E1-005",
@@ -138,7 +138,7 @@ generate_report() {
   ]
 }
 EOF
-    
+
     log_info "Report generated: $REPORT_FILE"
 }
 
@@ -148,20 +148,20 @@ EOF
 
 validate_prerequisites() {
     log_info "Validating prerequisites..."
-    
+
     # Check kubectl
     if ! command -v kubectl &> /dev/null; then
         record_test "Prerequisites" "FAIL" "kubectl not found"
         return 1
     fi
-    
+
     # Check jq (optional but helpful)
     if ! command -v jq &> /dev/null; then
         log_warning "jq not found - some tests may be limited"
     fi
-    
+
     record_test "Prerequisites" "PASS" "kubectl available"
-    
+
     # Check cluster access
     if ! kubectl cluster-info &> /dev/null; then
         record_test "Cluster Access" "FAIL" "Cannot access Kubernetes cluster"
@@ -172,7 +172,7 @@ validate_prerequisites() {
 
 validate_namespace() {
     log_info "Checking namespace '$NAMESPACE'..."
-    
+
     if kubectl get namespace "$NAMESPACE" &> /dev/null; then
         local status=$(kubectl get namespace "$NAMESPACE" -o jsonpath='{.status.phase}')
         if [ "$status" = "Active" ]; then
@@ -189,12 +189,12 @@ validate_namespace() {
 
 validate_sonarqube_deployment() {
     log_info "Checking SonarQube deployment..."
-    
+
     # Check SonarQube pods
     if kubectl get pods -n "$NAMESPACE" -l app=sonarqube -o json 2>/dev/null | grep -q "Running"; then
         local pod_count=$(kubectl get pods -n "$NAMESPACE" -l app=sonarqube -o json 2>/dev/null | jq '.items | length' || echo "0")
         local running=$(kubectl get pods -n "$NAMESPACE" -l app=sonarqube -o json 2>/dev/null | jq '[.items[] | select(.status.phase=="Running")] | length' || echo "0")
-        
+
         if [ "$running" -gt 0 ]; then
             record_test "SonarQube Deployment" "PASS" "SonarQube pod(s) running ($running/$pod_count)"
         else
@@ -205,7 +205,7 @@ validate_sonarqube_deployment() {
         record_test "SonarQube Deployment" "FAIL" "SonarQube pods not found"
         return 1
     fi
-    
+
     # Check SonarQube service
     if kubectl get service -n "$NAMESPACE" -l app=sonarqube &> /dev/null; then
         record_test "SonarQube Service" "PASS" "SonarQube service exists"
@@ -216,7 +216,7 @@ validate_sonarqube_deployment() {
 
 validate_sonarqube_database() {
     log_info "Checking SonarQube PostgreSQL database..."
-    
+
     # Check for CloudNativePG cluster
     if kubectl get cluster db-sonarqube-dev -n "$NAMESPACE" &> /dev/null 2>&1; then
         local instances=$(kubectl get cluster db-sonarqube-dev -n "$NAMESPACE" -o jsonpath='{.spec.instances}' 2>/dev/null || echo "0")
@@ -224,7 +224,7 @@ validate_sonarqube_database() {
     else
         record_test "SonarQube Database" "WARN" "SonarQube database configuration not found (may use embedded DB)"
     fi
-    
+
     # Check for database credentials secret
     if kubectl get secret db-sonarqube-credentials -n "$NAMESPACE" &> /dev/null 2>&1 || \
        kubectl get secret sonarqube-postgresql -n "$NAMESPACE" &> /dev/null 2>&1; then
@@ -236,7 +236,7 @@ validate_sonarqube_database() {
 
 validate_sonarqube_accessibility() {
     log_info "Checking SonarQube accessibility..."
-    
+
     # Check ingress
     if kubectl get ingress -n "$NAMESPACE" -o json 2>/dev/null | jq -e '.items[] | select(.metadata.name | contains("sonarqube"))' &> /dev/null; then
         local host=$(kubectl get ingress -n "$NAMESPACE" -o json 2>/dev/null | jq -r '.items[] | select(.metadata.name | contains("sonarqube")) | .spec.rules[0].host' | head -1)
@@ -244,7 +244,7 @@ validate_sonarqube_accessibility() {
     else
         record_test "SonarQube Ingress" "WARN" "SonarQube ingress not found"
     fi
-    
+
     # Try to access SonarQube API (may fail if ingress not reachable from test environment)
     if command -v curl &> /dev/null; then
         if curl -f -s --connect-timeout 5 "$SONARQUBE_URL/api/system/health" &> /dev/null; then
@@ -257,7 +257,7 @@ validate_sonarqube_accessibility() {
 
 validate_trivy_integration() {
     log_info "Checking Trivy integration..."
-    
+
     # Check if Trivy is available in Harbor
     if kubectl get pods -n "$NAMESPACE" -l component=trivy -o json 2>/dev/null | jq -e '.items[] | select(.status.phase=="Running")' &> /dev/null; then
         record_test "Trivy Scanner (Harbor)" "PASS" "Trivy scanner pod running in Harbor"
@@ -266,7 +266,7 @@ validate_trivy_integration() {
     else
         record_test "Trivy Scanner (Harbor)" "WARN" "Trivy scanner pod not found in Harbor (may be in different namespace)"
     fi
-    
+
     # Check Trivy integration in Jenkins shared library
     if [ -f "jenkins-shared-library/vars/securityScan.groovy" ] && \
        grep -q "trivy image" jenkins-shared-library/vars/securityScan.groovy; then
@@ -278,7 +278,7 @@ validate_trivy_integration() {
 
 validate_secrets_scanning() {
     log_info "Checking secrets scanning integration..."
-    
+
     # Check for Gitleaks integration
     if [ -f "jenkins-shared-library/vars/securityScan.groovy" ] && \
        grep -q "gitleaks detect" jenkins-shared-library/vars/securityScan.groovy; then
@@ -288,7 +288,7 @@ validate_secrets_scanning() {
     else
         record_test "Secrets Scanning (Gitleaks)" "WARN" "Gitleaks configuration not found"
     fi
-    
+
     # Check for git-secrets or TruffleHog
     if [ -f "jenkins-shared-library/vars/goldenPathPipeline.groovy" ] && \
        grep -qi "gitleaks\|trufflehog\|git-secrets" jenkins-shared-library/vars/goldenPathPipeline.groovy; then
@@ -300,7 +300,7 @@ validate_secrets_scanning() {
 
 validate_quality_gates() {
     log_info "Checking security quality gates configuration..."
-    
+
     # Check SonarQube quality gate in shared library
     if [ -f "jenkins-shared-library/vars/securityScan.groovy" ] && \
        grep -q "waitForQualityGate" jenkins-shared-library/vars/securityScan.groovy; then
@@ -308,7 +308,7 @@ validate_quality_gates() {
     else
         record_test "SonarQube Quality Gate" "WARN" "SonarQube quality gate check not found"
     fi
-    
+
     # Check Trivy severity threshold
     if [ -f "jenkins-shared-library/vars/goldenPathPipeline.groovy" ] && \
        grep -q "trivySeverity.*HIGH,CRITICAL" jenkins-shared-library/vars/goldenPathPipeline.groovy; then
@@ -316,7 +316,7 @@ validate_quality_gates() {
     else
         record_test "Trivy Quality Gate" "WARN" "Trivy quality gate configuration not found"
     fi
-    
+
     # Check quality gate enforcement
     if [ -f "jenkins-shared-library/vars/goldenPathPipeline.groovy" ] && \
        grep -q "failOnVulnerabilities\|trivyExitCode" jenkins-shared-library/vars/goldenPathPipeline.groovy; then
@@ -328,21 +328,21 @@ validate_quality_gates() {
 
 validate_jenkins_integration() {
     log_info "Checking Jenkins security scanning integration..."
-    
+
     # Check Jenkins is deployed
     if kubectl get pods -n "$NAMESPACE" -l app.kubernetes.io/name=jenkins -o json 2>/dev/null | grep -q "Running"; then
         record_test "Jenkins Deployment" "PASS" "Jenkins pod(s) running"
     else
         record_test "Jenkins Deployment" "WARN" "Jenkins pods not found or not running"
     fi
-    
+
     # Check shared library exists
     if [ -d "jenkins-shared-library/vars" ]; then
         record_test "Jenkins Shared Library" "PASS" "Jenkins shared library directory exists"
     else
         record_test "Jenkins Shared Library" "FAIL" "Jenkins shared library not found"
     fi
-    
+
     # Check security scan function
     if [ -f "jenkins-shared-library/vars/securityScan.groovy" ]; then
         record_test "Security Scan Function" "PASS" "securityScan.groovy exists"
@@ -353,21 +353,21 @@ validate_jenkins_integration() {
 
 validate_security_documentation() {
     log_info "Checking security scanning documentation..."
-    
+
     # Check for security documentation
     if [ -f "docs/how-to/security/quality-gates-configuration.md" ]; then
         record_test "Quality Gates Documentation" "PASS" "Quality gates configuration documentation exists"
     else
         record_test "Quality Gates Documentation" "WARN" "Quality gates configuration documentation not found"
     fi
-    
+
     # Check Trivy documentation
     if [ -f "platform/apps/trivy/README.md" ]; then
         record_test "Trivy Documentation" "PASS" "Trivy documentation exists"
     else
         record_test "Trivy Documentation" "WARN" "Trivy documentation not found"
     fi
-    
+
     # Check SonarQube documentation
     if [ -f "platform/apps/sonarqube/README.md" ] || \
        [ -f "platform/apps/sonarqube/sonarqube-notes.md" ]; then
@@ -379,7 +379,7 @@ validate_security_documentation() {
 
 validate_sbom_capability() {
     log_info "Checking SBOM generation capability..."
-    
+
     # Check for Syft or similar SBOM tool integration
     if [ -f "jenkins-shared-library/vars/securityScan.groovy" ] && \
        grep -qi "syft\|sbom\|cyclonedx" jenkins-shared-library/vars/securityScan.groovy; then
@@ -393,7 +393,7 @@ validate_sbom_capability() {
 
 validate_security_policy() {
     log_info "Checking security policy-as-code deployment..."
-    
+
     # Check for OPA/Gatekeeper
     if kubectl get pods -n gatekeeper-system &> /dev/null 2>&1 || \
        kubectl get constrainttemplates &> /dev/null 2>&1; then
@@ -413,14 +413,14 @@ validate_security_policy() {
 
 validate_bdd_tests() {
     log_info "Checking BDD test coverage for security scanning..."
-    
+
     # Check for security-related BDD tests
     if [ -f "tests/bdd/features/security-quality-gates.feature" ]; then
         record_test "BDD Tests (Quality Gates)" "PASS" "Security quality gates BDD tests exist"
     else
         record_test "BDD Tests (Quality Gates)" "WARN" "Security quality gates BDD tests not found"
     fi
-    
+
     if [ -f "tests/bdd/features/secrets-scanning.feature" ]; then
         record_test "BDD Tests (Secrets)" "PASS" "Secrets scanning BDD tests exist"
     else
@@ -470,7 +470,7 @@ parse_args() {
 
 main() {
     parse_args "$@"
-    
+
     echo ""
     log_info "=============================================="
     log_info "AT-E1-005: DevSecOps Security Scanning Validation"
@@ -479,7 +479,7 @@ main() {
     log_info "SonarQube URL: $SONARQUBE_URL"
     log_info "Jenkins URL: $JENKINS_URL"
     echo ""
-    
+
     # Run all validations
     validate_prerequisites || true
     validate_namespace || true
@@ -494,7 +494,7 @@ main() {
     validate_sbom_capability || true
     validate_security_policy || true
     validate_bdd_tests || true
-    
+
     echo ""
     log_info "=============================================="
     log_info "Validation Summary"
@@ -503,10 +503,10 @@ main() {
     log_success "Passed: $PASSED_TESTS"
     log_error "Failed: $FAILED_TESTS"
     echo ""
-    
+
     # Generate report
     generate_report
-    
+
     # Exit with appropriate code
     if [ "$FAILED_TESTS" -eq 0 ]; then
         log_success "AT-E1-005 validation PASSED!"

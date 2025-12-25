@@ -6,7 +6,7 @@ Resource allocations optimized for all 25+ Fawkes platform components to maintai
 
 **Result:**
 - 35% reduction in CPU requests
-- 40% reduction in CPU limits  
+- 40% reduction in CPU limits
 - 24% reduction in memory requests
 - 27% reduction in memory limits
 - 15-20% more capacity for applications
@@ -137,8 +137,8 @@ Add Prometheus alerts (see `docs/resource-sizing-guide.md`):
 - alert: HighCPUUsage
   expr: (container_cpu_usage / container_cpu_limit) > 0.7
   for: 15m
-  
-# High memory usage alert  
+
+# High memory usage alert
 - alert: HighMemoryUsage
   expr: (container_memory_usage / container_memory_limit) > 0.7
   for: 15m
@@ -152,5 +152,5 @@ Add Prometheus alerts (see `docs/resource-sizing-guide.md`):
 
 ---
 
-**Status**: ✅ Ready for deployment validation  
+**Status**: ✅ Ready for deployment validation
 **Last Updated**: 2025-12-16

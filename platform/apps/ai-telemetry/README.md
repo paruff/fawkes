@@ -239,8 +239,8 @@ Time-series graph showing:
 
 **Query:**
 ```promql
-sum(rate(ai_copilot_suggestions_total{accepted="true"}[1h])) 
-/ 
+sum(rate(ai_copilot_suggestions_total{accepted="true"}[1h]))
+/
 sum(rate(ai_copilot_suggestions_total[1h]))
 ```
 
@@ -414,8 +414,8 @@ groups:
     rules:
       - alert: LowCopilotAcceptanceRate
         expr: |
-          sum(rate(ai_copilot_suggestions_total{accepted="true"}[1h])) 
-          / 
+          sum(rate(ai_copilot_suggestions_total{accepted="true"}[1h]))
+          /
           sum(rate(ai_copilot_suggestions_total[1h])) < 0.3
         for: 2h
         labels:

@@ -10,7 +10,7 @@ export interface TabsProps extends BaseComponentProps {
 
 /**
  * Tab navigation component
- * 
+ *
  * @component
  * @example
  * ```tsx

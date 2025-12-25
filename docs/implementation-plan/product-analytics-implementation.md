@@ -169,7 +169,7 @@ make validate-at-e3-011 NAMESPACE=fawkes
 1. **BDD Tests**: `tests/bdd/features/product-analytics.feature`
    - 20+ scenarios covering all acceptance criteria
    - Tests privacy compliance, Backstage integration, custom events
-   
+
 2. **Validation Scripts**:
    - `platform/apps/plausible/validate-plausible.sh` - Component validation
    - `scripts/validate-product-analytics.sh` - AT-E3-011 validation
@@ -246,7 +246,7 @@ Prometheus monitoring available:
    ```bash
    # Check logs
    kubectl logs -n fawkes deployment/plausible
-   
+
    # Check init containers
    kubectl describe pod -n fawkes -l app=plausible
    ```
@@ -255,7 +255,7 @@ Prometheus monitoring available:
    ```bash
    # Verify PostgreSQL is ready
    kubectl get cluster db-plausible-dev -n fawkes
-   
+
    # Check database credentials
    kubectl get secret db-plausible-credentials -n fawkes -o yaml
    ```
@@ -264,7 +264,7 @@ Prometheus monitoring available:
    ```bash
    # Check ClickHouse logs
    kubectl logs -n fawkes statefulset/plausible-clickhouse
-   
+
    # Verify storage
    kubectl get pvc -n fawkes -l component=clickhouse
    ```

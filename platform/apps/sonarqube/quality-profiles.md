@@ -8,7 +8,7 @@ Quality Profiles define the set of rules applied during code analysis. Fawkes us
 
 ### Java Quality Profile
 
-**Profile Name**: `Fawkes Java`  
+**Profile Name**: `Fawkes Java`
 **Parent**: Sonar way (built-in)
 
 #### Additional Rules Enabled
@@ -36,7 +36,7 @@ For Spring Boot applications, the following rules are adjusted:
 
 ### Python Quality Profile
 
-**Profile Name**: `Fawkes Python`  
+**Profile Name**: `Fawkes Python`
 **Parent**: Sonar way (built-in)
 
 #### Additional Rules Enabled
@@ -63,7 +63,7 @@ For FastAPI applications:
 
 ### Node.js/JavaScript Quality Profile
 
-**Profile Name**: `Fawkes JavaScript`  
+**Profile Name**: `Fawkes JavaScript`
 **Parent**: Sonar way (built-in)
 
 #### Additional Rules Enabled
@@ -96,7 +96,7 @@ For Express applications:
    ```bash
    # Local development
    http://sonarqube.127.0.0.1.nip.io
-   
+
    # Production
    https://sonarqube.fawkes.idp
    ```

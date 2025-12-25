@@ -21,7 +21,7 @@ def initialize_feature_flags():
 def check_feature_enabled(feature_name: str, user_id: str = None) -> bool:
     """Check if a feature flag is enabled."""
     client = api.get_client()
-    
+
     context = EvaluationContext(
         targeting_key=user_id or "anonymous",
         attributes={
@@ -29,7 +29,7 @@ def check_feature_enabled(feature_name: str, user_id: str = None) -> bool:
             "team": "data-platform",
         }
     )
-    
+
     return client.get_boolean_value(
         flag_key=feature_name,
         default_value=False,

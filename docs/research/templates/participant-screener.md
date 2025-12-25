@@ -12,65 +12,65 @@ This screener helps identify and recruit appropriate participants for usability 
 
 **1. What is your current role?**
 
-☐ Application Developer  
-☐ Platform Engineer  
-☐ DevOps Engineer  
-☐ Site Reliability Engineer (SRE)  
-☐ QA/Test Engineer  
-☐ Engineering Manager  
+☐ Application Developer
+☐ Platform Engineer
+☐ DevOps Engineer
+☐ Site Reliability Engineer (SRE)
+☐ QA/Test Engineer
+☐ Engineering Manager
 ☐ Other: __________
 
 **2. How long have you been in this role?**
 
-☐ Less than 6 months  
-☐ 6 months - 1 year  
-☐ 1-2 years  
-☐ 3-5 years  
-☐ 6-10 years  
+☐ Less than 6 months
+☐ 6 months - 1 year
+☐ 1-2 years
+☐ 3-5 years
+☐ 6-10 years
 ☐ More than 10 years
 
 **3. What is your overall experience level in software development/operations?**
 
-☐ Junior (0-2 years total experience)  
-☐ Mid-level (3-5 years total experience)  
-☐ Senior (6-10 years total experience)  
+☐ Junior (0-2 years total experience)
+☐ Mid-level (3-5 years total experience)
+☐ Senior (6-10 years total experience)
 ☐ Staff/Principal (10+ years total experience)
 
 ### Platform Usage
 
 **4. How often do you interact with the Fawkes platform or internal developer platform?**
 
-☐ Multiple times per day  
-☐ Daily  
-☐ Several times per week  
-☐ Once a week  
-☐ A few times per month  
-☐ Rarely  
+☐ Multiple times per day
+☐ Daily
+☐ Several times per week
+☐ Once a week
+☐ A few times per month
+☐ Rarely
 ☐ Never (first time)
 
 **Screening**: Aim for mix of frequencies. Include at least 1-2 new/occasional users and 3-4 regular users.
 
 **5. Which platform capabilities do you use most frequently? (Select all that apply)**
 
-☐ Deploying applications  
-☐ CI/CD pipelines  
-☐ Monitoring and observability  
-☐ Service catalog/templates  
-☐ Infrastructure provisioning  
-☐ Debugging/troubleshooting  
-☐ Security scanning  
-☐ Documentation  
+☐ Deploying applications
+☐ CI/CD pipelines
+☐ Monitoring and observability
+☐ Service catalog/templates
+☐ Infrastructure provisioning
+☐ Debugging/troubleshooting
+☐ Security scanning
+☐ Documentation
 ☐ Other: __________
 
 **6. What programming languages or frameworks do you primarily work with? (Select all that apply)**
 
-☐ Java/Spring Boot  
-☐ Python/Django/Flask  
-☐ Node.js/Express  
-☐ Go  
-☐ .NET/C#  
-☐ Ruby/Rails  
-☐ React/Vue/Angular  
+☐ Java/Spring Boot
+☐ Python/Django/Flask
+☐ Node.js/Express
+☐ Go
+☐ .NET/C#
+☐ Ruby/Rails
+☐ React/Vue/Angular
 ☐ Other: __________
 
 **Screening**: Ensure representation of major tech stacks used in your organization.
@@ -79,44 +79,44 @@ This screener helps identify and recruit appropriate participants for usability 
 
 **7. Are you available to participate in a 60-minute usability testing session in the next [timeframe, e.g., 2 weeks]?**
 
-☐ Yes  
-☐ No  
+☐ Yes
+☐ No
 ☐ Maybe (depends on timing)
 
 **If Yes or Maybe, please provide your availability:**
 
-Preferred days: ☐ Mon  ☐ Tue  ☐ Wed  ☐ Thu  ☐ Fri  
+Preferred days: ☐ Mon  ☐ Tue  ☐ Wed  ☐ Thu  ☐ Fri
 Preferred times: ☐ Morning (9-11am)  ☐ Midday (11am-2pm)  ☐ Afternoon (2-5pm)
 
-Best way to reach you: __________  
-Email: __________  
+Best way to reach you: __________
+Email: __________
 Mattermost/Slack handle: __________
 
 **8. Do you have access to a reliable internet connection and ability to share your screen during a video call?**
 
-☐ Yes  
+☐ Yes
 ☐ No (may require in-person session)
 
 **9. Are you comfortable being recorded (screen and audio) during the session? Recordings are used for note-taking only and are deleted after analysis.**
 
-☐ Yes  
-☐ No  
+☐ Yes
+☐ No
 ☐ Unsure (need more information)
 
 ### Screening Criteria
 
 **10. Have you participated in a usability test or user research session in the past 3 months?**
 
-☐ Yes  
+☐ Yes
 ☐ No
 
 **Screening**: If testing frequently, may want to prioritize those who haven't tested recently to get fresh perspectives.
 
 **11. [Optional - For Feature-Specific Testing] Have you used [specific feature being tested] before?**
 
-☐ Yes, regularly  
-☐ Yes, occasionally  
-☐ Yes, once or twice  
+☐ Yes, regularly
+☐ Yes, occasionally
+☐ Yes, once or twice
 ☐ No, never
 
 **Screening**: Depends on test goals. For new features, recruit mix of experienced and new users.
@@ -174,7 +174,7 @@ _______________________________________________
 
 ### Screening Decision
 
-**Participant ID**: P__  
+**Participant ID**: P__
 **Decision**: ☐ Selected  ☐ Waitlist  ☐ Not Selected
 
 **Rationale**: _______________
@@ -192,11 +192,11 @@ _______________________________________________
 ```
 Hi [Name],
 
-Thanks for your interest in participating in usability testing for the Fawkes 
+Thanks for your interest in participating in usability testing for the Fawkes
 platform!
 
-Based on your responses, we'd love to have you participate in a session to 
-test [feature/workflow]. Your feedback will directly inform improvements to 
+Based on your responses, we'd love to have you participate in a session to
+test [feature/workflow]. Your feedback will directly inform improvements to
 the platform.
 
 **Session Details:**
@@ -206,8 +206,8 @@ the platform.
 - **Compensation**: [Gift card / Swag / Recognition]
 
 **What to Expect:**
-You'll complete realistic tasks using the platform while thinking aloud. We're 
-testing the platform, not you - there are no wrong answers. If something is 
+You'll complete realistic tasks using the platform while thinking aloud. We're
+testing the platform, not you - there are no wrong answers. If something is
 confusing or doesn't work, that's exactly what we want to know!
 
 **Available Times:**
@@ -238,14 +238,14 @@ Thanks,
 ```
 Hi [Name],
 
-Thank you for your interest in participating in usability testing for the 
+Thank you for your interest in participating in usability testing for the
 Fawkes platform!
 
-We received more responses than we have slots available for this round of 
-testing. We've placed you on our waitlist and will reach out if we have 
+We received more responses than we have slots available for this round of
+testing. We've placed you on our waitlist and will reach out if we have
 openings or for future testing opportunities.
 
-We truly appreciate your willingness to help improve the platform. Your input 
+We truly appreciate your willingness to help improve the platform. Your input
 is valuable, and we hope to work with you soon!
 
 Best,
@@ -279,8 +279,8 @@ This is a friendly reminder about your usability testing session tomorrow:
 - Have a glass of water nearby!
 
 **What to Expect:**
-You'll complete realistic tasks using the platform while thinking aloud. 
-Remember, we're testing the platform, not you. Your honest feedback - both 
+You'll complete realistic tasks using the platform while thinking aloud.
+Remember, we're testing the platform, not you. Your honest feedback - both
 positive and negative - is incredibly valuable.
 
 **Running Late or Need to Reschedule?**
@@ -306,8 +306,8 @@ Thanks,
 ```
 Hi [Name],
 
-Thank you so much for participating in today's usability testing session! 
-Your feedback was incredibly valuable and will directly inform improvements 
+Thank you so much for participating in today's usability testing session!
+Your feedback was incredibly valuable and will directly inform improvements
 to the platform.
 
 **What Happens Next:**
@@ -319,7 +319,7 @@ to the platform.
 [Details about gift card, swag, or other thank you]
 
 **Future Testing:**
-We may reach out again in the future for follow-up sessions or to test new 
+We may reach out again in the future for follow-up sessions or to test new
 features. You can opt out at any time by replying to this email.
 
 Thank you again for helping us make the Fawkes platform better!
@@ -331,6 +331,6 @@ Best,
 
 ---
 
-**Template Version**: 1.0  
-**Last Updated**: December 2025  
+**Template Version**: 1.0
+**Last Updated**: December 2025
 **Owner**: Product Team

@@ -2,11 +2,11 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: December 2025  
-**Status**: Active  
-**Owner**: Product Team  
-**Based on**: User interviews and feature request observations (Nov-Dec 2025)  
+**Version**: 1.0
+**Last Updated**: December 2025
+**Status**: Active
+**Owner**: Product Team
+**Based on**: User interviews and feature request observations (Nov-Dec 2025)
 **Related Personas**: [Application Developer](../personas/application-developer.md), [Platform Consumer](../personas/platform-consumer.md)
 
 ---
@@ -354,39 +354,39 @@
 ```mermaid
 graph TB
     Start([Team Identifies Need]) --> Stage1[Stage 1: Identifying the Need]
-    
+
     Stage1 --> Research{Already Exists?}
     Research -->|Yes| Learn[Learn About Existing Feature]
     Learn --> End1([Use Existing Feature])
-    
+
     Research -->|No| Stage2[Stage 2: Submitting Request]
     Stage2 --> Submitted[Request Submitted]
     Submitted --> Stage3[Stage 3: Waiting for Response]
-    
+
     Stage3 --> FollowUp{Any Response?}
     FollowUp -->|No| Escalate[Ask for Status Update]
     Escalate --> Stage3
-    
+
     FollowUp -->|Yes| Stage4[Stage 4: Prioritization Discussion]
     Stage4 --> Approved{Request Approved?}
-    
+
     Approved -->|No| Rejected[Request Declined or Deferred]
     Rejected --> BuildWorkaround{Build Workaround?}
     BuildWorkaround -->|Yes| Shadow[Shadow IT Solution]
     BuildWorkaround -->|No| Revisit[Revisit Later]
-    
+
     Approved -->|Yes| Stage5[Stage 5: Development & Updates]
     Stage5 --> BetaReady[Beta Version Ready]
     BetaReady --> Stage6[Stage 6: Testing & Feedback]
-    
+
     Stage6 --> Feedback[Provide Feedback]
     Feedback --> Improvements[Platform Team Iterates]
     Improvements --> Stage7[Stage 7: General Availability]
-    
+
     Stage7 --> Adoption[Team Adopts Feature]
     Adoption --> Success[Share Success Story]
     Success --> End2([Feature in Production])
-    
+
     Stage1 -.->|Pain| Pain1["Unclear capabilities<br/>No roadmap visibility"]
     Stage2 -.->|Pain| Pain2["Generic template<br/>No guidance"]
     Stage3 -.->|Pain| Pain3["Black box<br/>No updates"]
@@ -394,7 +394,7 @@ graph TB
     Stage5 -.->|Pain| Pain5["Sparse communication<br/>No involvement"]
     Stage6 -.->|Pain| Pain6["Incomplete docs<br/>Ad-hoc feedback"]
     Stage7 -.->|Pain| Pain7["Manual migration<br/>Low awareness"]
-    
+
     Pain1 -.->|Fix| Opp1["Feature catalog<br/>Public roadmap"]
     Pain2 -.->|Fix| Opp2["Guided template<br/>Similar detection"]
     Pain3 -.->|Fix| Opp3["Auto updates<br/>Status dashboard"]
@@ -402,7 +402,7 @@ graph TB
     Pain5 -.->|Fix| Opp5["Regular updates<br/>Design reviews"]
     Pain6 -.->|Fix| Opp6["Beta program<br/>Structured feedback"]
     Pain7 -.->|Fix| Opp7["Auto migration<br/>Launch campaign"]
-    
+
     style Start fill:#e1f5e1
     style End1 fill:#90EE90
     style End2 fill:#90EE90
@@ -439,7 +439,7 @@ graph LR
         S5 --> S6["Week 1-2<br/>Beta Testing<br/>😊 2/5"]
         S6 --> S7["Ongoing<br/>GA & Adoption<br/>😊 1/5"]
     end
-    
+
     style S1 fill:#FFD700
     style S2 fill:#FFA500
     style S3 fill:#FF6B6B

@@ -36,7 +36,7 @@ def test_submit_feedback_success(client):
     )
 
     result = client.submit_feedback(feedback)
-    
+
     assert result["id"] == 123
     assert result["rating"] == 5
     assert result["category"] == "UI/UX"
@@ -61,7 +61,7 @@ def test_list_feedback(client):
     )
 
     result = client.list_feedback(limit=10)
-    
+
     assert len(result["items"]) == 2
     assert result["total"] == 2
 
@@ -82,7 +82,7 @@ def test_get_feedback(client):
     )
 
     result = client.get_feedback(123)
-    
+
     assert result["id"] == 123
 
 
@@ -114,7 +114,7 @@ def test_health_check_failure(client):
 def test_client_with_api_key():
     """Test client initialization with API key."""
     client = FeedbackClient("http://test-api.com", api_key="my-key")
-    
+
     assert "Authorization" in client.session.headers
     assert client.session.headers["Authorization"] == "Bearer my-key"
 
@@ -122,7 +122,7 @@ def test_client_with_api_key():
 def test_client_without_api_key():
     """Test client initialization without API key."""
     client = FeedbackClient("http://test-api.com")
-    
+
     assert "Authorization" not in client.session.headers
 
 
@@ -135,7 +135,7 @@ def test_feedback_submission_validation():
         comment="This is a test",
     )
     assert feedback.rating == 5
-    
+
     # Invalid rating (too low)
     with pytest.raises(Exception):
         FeedbackSubmission(
@@ -143,7 +143,7 @@ def test_feedback_submission_validation():
             category="Test",
             comment="Invalid",
         )
-    
+
     # Invalid rating (too high)
     with pytest.raises(Exception):
         FeedbackSubmission(
@@ -163,7 +163,7 @@ def test_feedback_submission_with_optional_fields():
         page_url="https://example.com",
         feedback_type="bug_report",
     )
-    
+
     assert feedback.email == "test@example.com"
     assert feedback.page_url == "https://example.com"
     assert feedback.feedback_type == "bug_report"

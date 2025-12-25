@@ -180,18 +180,18 @@ def call(Map config = [:]) {
                                     def projectKey = config.sonarProject ?: config.appName ?: 'unknown-project'
                                     def branchName = env.BRANCH_NAME ?: 'main'
                                     def reportUrl = "${sonarUrl}/dashboard?id=${projectKey}&branch=${branchName}"
-                                    
+
                                     echo "=============================================="
                                     echo "SonarQube Quality Gate: ${qg.status}"
                                     echo "=============================================="
                                     echo "📊 View detailed analysis report:"
                                     echo "   ${reportUrl}"
                                     echo "=============================================="
-                                    
+
                                     // Add link to build description for easy access
-                                    currentBuild.description = (currentBuild.description ?: '') + 
+                                    currentBuild.description = (currentBuild.description ?: '') +
                                         "\n<a href='${reportUrl}'>📊 SonarQube Report</a>"
-                                    
+
                                     if (qg.status != 'OK') {
                                         def failureReason = """
 ❌ QUALITY GATE FAILED: ${qg.status}
@@ -209,7 +209,7 @@ Common failure reasons:
                                         echo failureReason
                                         error "Quality Gate failed: ${qg.status}. See: ${reportUrl}"
                                     }
-                                    
+
                                     echo "✅ Quality Gate passed successfully!"
                                 }
                             }
@@ -530,9 +530,9 @@ def publishBddResults(String language) {
 def runSonarScan(Map config) {
     def branch = env.BRANCH_NAME ?: 'main'
     def commitSha = env.GIT_COMMIT ?: ''
-    
+
     echo "Running SonarQube analysis for ${config.sonarProject} on branch ${branch}"
-    
+
     switch (config.language) {
         case 'java':
             sh """
@@ -601,7 +601,7 @@ def runDependencyCheck(Map config) {
 
 /**
  * Run secrets detection with Gitleaks
- * 
+ *
  * Scans the repository for hardcoded secrets, API keys, passwords, and other
  * sensitive information. Uses the .gitleaks.toml configuration file if present.
  * Fails the pipeline if secrets are detected to prevent accidental commits.
@@ -610,9 +610,9 @@ def runSecretsCheck(Map config) {
     echo "=============================================="
     echo "Scanning for secrets with Gitleaks"
     echo "=============================================="
-    
+
     def exitCode = 0
-    
+
     try {
         // Run Gitleaks scan with verbose output
         sh """
@@ -651,7 +651,7 @@ For help, see: docs/how-to/security/secrets-management.md
 """
         // Archive the report for review
         archiveArtifacts artifacts: 'gitleaks-report.json', allowEmptyArchive: true
-        
+
         // Fail the build
         error "Secrets detected in code. Pipeline failed for security reasons."
     }
@@ -671,14 +671,14 @@ def updateGitOpsManifest(Map config) {
             # Configure git credential helper to avoid credentials in clone URL
             git config --global credential.helper 'store --file=/tmp/.git-credentials'
             echo "https://\${GIT_USER}:\${GIT_TOKEN}@github.com" > /tmp/.git-credentials
-            
+
             git clone https://github.com/paruff/fawkes-gitops.git gitops-repo
             cd gitops-repo
-            
+
             # Update image tag in deployment manifest
             if [ -f "apps/dev/${config.appName}/deployment.yaml" ]; then
                 sed -i 's|image: ${config.dockerImage}:.*|image: ${FULL_IMAGE}|g' apps/dev/${config.appName}/deployment.yaml
-                
+
                 git config user.name "Jenkins CI"
                 git config user.email "jenkins@fawkes.local"
                 git add apps/dev/${config.appName}/deployment.yaml
@@ -687,7 +687,7 @@ def updateGitOpsManifest(Map config) {
             else
                 echo "Warning: Deployment manifest not found for ${config.appName}"
             fi
-            
+
             # Clean up credentials
             rm -f /tmp/.git-credentials
         """
@@ -696,7 +696,7 @@ def updateGitOpsManifest(Map config) {
 
 /**
  * Record CI/DORA metrics using the doraMetrics shared library
- * 
+ *
  * NOTE: In Fawkes GitOps architecture:
  * - ArgoCD is the primary source for deployment frequency metrics
  * - Jenkins provides CI metrics: build success, rework, quality gates

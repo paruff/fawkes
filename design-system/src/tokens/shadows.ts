@@ -1,6 +1,6 @@
 /**
  * Design Tokens - Shadows
- * 
+ *
  * Box shadow values for depth and elevation
  */
 

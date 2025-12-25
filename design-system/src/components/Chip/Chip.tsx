@@ -10,7 +10,7 @@ export interface ChipProps extends BaseComponentProps {
 
 /**
  * Chip/tag component
- * 
+ *
  * @component
  * @example
  * ```tsx

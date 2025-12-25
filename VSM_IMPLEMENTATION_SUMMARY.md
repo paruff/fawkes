@@ -36,7 +36,7 @@ Successfully implemented VSM (Value Stream Mapping) tracking service for issue #
 - **Alembic Migrations**:
   - Initial migration (001) creates all tables
   - Default stages pre-populated
-  
+
 - **Tables**:
   - `work_items` - Work item tracking
   - `stages` - 6 default stages (Backlog → Production)

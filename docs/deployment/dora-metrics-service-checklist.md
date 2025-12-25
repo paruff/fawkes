@@ -9,7 +9,7 @@ description: Step-by-step checklist for deploying and validating the DORA metric
 
 This checklist ensures the DORA Metrics Service (DevLake) is properly deployed and functional in the Fawkes platform.
 
-**Estimated Time**: 30-45 minutes  
+**Estimated Time**: 30-45 minutes
 **Prerequisites**: Kubernetes cluster, ArgoCD, External Secrets Operator
 
 ---
@@ -79,11 +79,11 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
   kubectl create secret generic devlake-secrets -n fawkes \
     --from-literal=encryption-secret=$(openssl rand -base64 32) \
     --from-literal=api-token=$(openssl rand -base64 32)
-  
+
   kubectl create secret generic devlake-db -n fawkes \
     --from-literal=mysql-root-password=$(openssl rand -base64 32) \
     --from-literal=mysql-password=$(openssl rand -base64 32)
-  
+
   kubectl create secret generic devlake-grafana-secrets -n fawkes \
     --from-literal=admin-password=$(openssl rand -base64 32)
   ```
@@ -186,7 +186,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
   ```bash
   # Get root password first
   MYSQL_ROOT_PASSWORD=$(kubectl get secret devlake-db -n fawkes -o jsonpath='{.data.mysql-root-password}' | base64 -d)
-  
+
   # Connect to MySQL
   kubectl exec -it -n fawkes devlake-mysql-0 -- mysql -u root -p
   # Enter the password when prompted
@@ -532,9 +532,9 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 - [ ] BDD tests passed
 - [ ] Documentation updated
 
-**Deployed by**: _________________  
-**Date**: _________________  
-**Verified by**: _________________  
+**Deployed by**: _________________
+**Date**: _________________
+**Verified by**: _________________
 **Date**: _________________
 
 ---

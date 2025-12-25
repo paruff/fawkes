@@ -124,7 +124,7 @@ This document summarizes the resource optimization and tuning work completed for
    ```bash
    # Automated validation
    make validate-resources
-   
+
    # Manual check
    kubectl top nodes
    kubectl top pods -n fawkes
@@ -134,7 +134,7 @@ This document summarizes the resource optimization and tuning work completed for
    ```bash
    # Check for evictions
    kubectl get pods -A --field-selector=status.phase=Failed
-   
+
    # Check pod restarts
    kubectl get pods -n fawkes -o wide
    ```
@@ -291,9 +291,9 @@ See `docs/resource-sizing-guide.md` for complete Prometheus alert rules.
 
 ## Sign-off
 
-**Implementer**: GitHub Copilot  
-**Date**: 2025-12-16  
-**Status**: Implementation Complete - Awaiting Deployment Validation  
+**Implementer**: GitHub Copilot
+**Date**: 2025-12-16
+**Status**: Implementation Complete - Awaiting Deployment Validation
 
 **Next Steps**:
 1. Deploy to development environment

@@ -1,8 +1,8 @@
 # ADR-033: Feature Flags Platform with Unleash and OpenFeature
 
-**Status**: Accepted  
-**Date**: 2025-12-25  
-**Decision Makers**: Platform Team  
+**Status**: Accepted
+**Date**: 2025-12-25
+**Decision Makers**: Platform Team
 **Tags**: feature-flags, unleash, openfeature, experimentation, a-b-testing
 
 ## Context

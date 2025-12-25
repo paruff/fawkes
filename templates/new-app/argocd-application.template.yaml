@@ -10,19 +10,19 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  
+
   source:
     repoURL: https://github.com/paruff/fawkes
     targetRevision: main
     path: platform/apps/component-name
-    
+
     # Use one of the following source types:
-    
+
     # Option 1: Plain Kubernetes manifests with Kustomize
     # kustomize:
     #   namePrefix: ""
     #   nameSuffix: ""
-    
+
     # Option 2: Helm chart from this repo
     # helm:
     #   valueFiles:
@@ -30,42 +30,42 @@ spec:
     #   parameters:
     #     - name: image.tag
     #       value: "v1.0.0"  # Always use specific versions
-    
+
     # Option 3: External Helm chart
     # chart: component-name
     # helm:
     #   valueFiles:
     #     - values.yaml
-  
+
   destination:
     server: https://kubernetes.default.svc
     namespace: component-namespace
-  
+
   syncPolicy:
     automated:
       prune: true      # Delete resources not in Git
       selfHeal: true   # Force sync when drift detected
       allowEmpty: false
-    
+
     syncOptions:
       - CreateNamespace=true  # Auto-create namespace
       - PruneLast=true        # Prune resources at the end
       - ServerSideApply=true  # Use server-side apply
-    
+
     retry:
       limit: 5
       backoff:
         duration: 5s
         factor: 2
         maxDuration: 3m
-  
+
   # Ignore differences in certain fields
   ignoreDifferences:
     - group: apps
       kind: Deployment
       jsonPointers:
         - /spec/replicas  # Ignore HPA-controlled replicas
-  
+
   # Health assessment
   health:
     check:

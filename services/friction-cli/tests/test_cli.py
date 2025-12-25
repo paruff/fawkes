@@ -244,7 +244,7 @@ def test_config_init(mock_config_manager, mock_client_class, runner):
     mock_client = Mock()
     mock_client.health_check.return_value = True
     mock_client_class.return_value = mock_client
-    
+
     mock_manager = Mock()
     mock_config_manager.return_value = mock_manager
 
@@ -264,7 +264,7 @@ def test_cli_without_config(runner):
     with patch("friction_cli.cli.ConfigManager") as mock_config_manager:
         mock_config = FrictionConfig()
         mock_config_manager.return_value.config = mock_config
-        
+
         result = runner.invoke(main, ["config", "show"])
-        
+
         assert result.exit_code == 0

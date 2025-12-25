@@ -20,7 +20,7 @@ MAX_COMMENTS_PER_REVIEW = 50  # Maximum comments to post in single review
 
 class ReviewEngine:
     """Engine for performing AI-powered code reviews."""
-    
+
     def __init__(
         self,
         rag_service_url: str,
@@ -41,7 +41,7 @@ class ReviewEngine:
         self.sonarqube_url = sonarqube_url
         self.sonarqube_token = sonarqube_token
         self.http_client = http_client
-        
+
     async def review_pull_request(
         self,
         pr_data: Dict,
@@ -50,38 +50,38 @@ class ReviewEngine:
         """Review a pull request and post comments."""
         import time
         start_time = time.time()
-        
+
         pr_number = pr_data.get('number')
         repo_full_name = repo_data.get('full_name')
-        
+
         # Fetch PR diff
         diff = await self._fetch_pr_diff(pr_data.get('diff_url'))
-        
+
         # Fetch PR files
         files = await self._fetch_pr_files(repo_full_name, pr_number)
-        
+
         # Query RAG for relevant patterns/standards
         rag_context = await self._query_rag_for_context(files)
-        
+
         # Get SonarQube findings if available
         sonarqube_findings = await self._fetch_sonarqube_findings(repo_full_name, pr_number)
-        
+
         # Generate review comments using LLM
         comments = await self._generate_review_comments(
             diff, files, rag_context, sonarqube_findings
         )
-        
+
         # Filter out low-confidence comments
         filtered_comments = self._filter_comments(comments)
-        
+
         # Post comments to GitHub
         await self._post_review_to_github(repo_full_name, pr_number, filtered_comments)
-        
+
         # Calculate false positive rate estimate
         fp_rate = self._estimate_false_positive_rate(filtered_comments)
-        
+
         duration_ms = (time.time() - start_time) * 1000
-        
+
         return ReviewResult(
             pr_number=pr_number,
             repository=repo_full_name,
@@ -90,7 +90,7 @@ class ReviewEngine:
             total_issues=len(filtered_comments),
             false_positive_rate=fp_rate
         )
-    
+
     async def _fetch_pr_diff(self, diff_url: str) -> str:
         """Fetch PR diff from GitHub."""
         try:
@@ -104,7 +104,7 @@ class ReviewEngine:
         except Exception as e:
             logger.error(f"Failed to fetch PR diff: {e}")
             return ""
-    
+
     async def _fetch_pr_files(self, repo: str, pr_number: int) -> List[Dict]:
         """Fetch list of files changed in PR."""
         try:
@@ -119,7 +119,7 @@ class ReviewEngine:
         except Exception as e:
             logger.error(f"Failed to fetch PR files: {e}")
             return []
-    
+
     async def _query_rag_for_context(self, files: List[Dict]) -> str:
         """Query RAG service for relevant patterns and standards."""
         try:
@@ -129,15 +129,15 @@ class ReviewEngine:
                 filename = file.get('filename', '')
                 if '.' in filename:
                     file_extensions.add(filename.split('.')[-1])
-            
+
             query = f"code review standards and best practices for {', '.join(file_extensions)} files"
-            
+
             response = await self.http_client.post(
                 f"{self.rag_service_url}/api/v1/query",
                 json={"query": query, "top_k": 5},
                 timeout=10.0
             )
-            
+
             if response.status_code == 200:
                 data = response.json()
                 results = data.get('results', [])
@@ -150,7 +150,7 @@ class ReviewEngine:
         except Exception as e:
             logger.error(f"Failed to query RAG service: {e}")
             return ""
-    
+
     async def _fetch_sonarqube_findings(
         self,
         repo: str,
@@ -160,18 +160,18 @@ class ReviewEngine:
         try:
             # Lazy import to avoid loading unless needed
             from ..integrations.sonarqube import SonarQubeIntegration
-            
+
             integration = SonarQubeIntegration(
                 sonarqube_url=self.sonarqube_url,
                 sonarqube_token=self.sonarqube_token,
                 http_client=self.http_client
             )
-            
+
             return await integration.get_pr_findings(repo, pr_number)
         except Exception as e:
             logger.error(f"Failed to fetch SonarQube findings: {e}")
             return []
-    
+
     async def _generate_review_comments(
         self,
         diff: str,
@@ -181,26 +181,26 @@ class ReviewEngine:
     ) -> List[ReviewComment]:
         """Generate review comments using LLM."""
         comments = []
-        
+
         # Load prompts (lazy import to avoid circular dependency)
         from ..prompts.loader import PromptLoader
         prompt_loader = PromptLoader()
-        
+
         # Analyze each file
         for file_data in files[:MAX_FILES_TO_REVIEW]:
             filename = file_data.get('filename', '')
             patch = file_data.get('patch', '')
-            
+
             if not patch:
                 continue
-            
+
             # Skip binary files and large files
             if file_data.get('status') == 'removed' or len(patch) > 10000:
                 continue
-            
+
             # Generate comments for different categories
             categories = ['security', 'performance', 'best_practices', 'documentation']
-            
+
             for category in categories:
                 try:
                     file_comments = await self._analyze_file_with_llm(
@@ -213,12 +213,12 @@ class ReviewEngine:
                     comments.extend(file_comments)
                 except Exception as e:
                     logger.error(f"Failed to analyze {filename} for {category}: {e}")
-        
+
         # Merge with SonarQube findings
         comments = self._merge_with_sonarqube(comments, sonarqube_findings)
-        
+
         return comments
-    
+
     async def _analyze_file_with_llm(
         self,
         filename: str,
@@ -231,7 +231,7 @@ class ReviewEngine:
         try:
             # Get prompt for category
             system_prompt = prompt_loader.get_prompt(category, rag_context)
-            
+
             # Build user message
             user_message = f"""Review the following code changes in file: {filename}
 
@@ -250,13 +250,13 @@ Provide review comments in JSON format:
   }}
 ]
 """
-            
+
             # Call LLM API
             headers = {
                 "Authorization": f"Bearer {self.llm_api_key}",
                 "Content-Type": "application/json"
             }
-            
+
             payload = {
                 "model": self.llm_model,
                 "messages": [
@@ -266,30 +266,30 @@ Provide review comments in JSON format:
                 "temperature": 0.3,
                 "max_tokens": 1000
             }
-            
+
             response = await self.http_client.post(
                 self.llm_api_url,
                 headers=headers,
                 json=payload,
                 timeout=30.0
             )
-            
+
             if response.status_code != 200:
                 logger.warning(f"LLM API returned status {response.status_code}")
                 return []
-            
+
             # Parse response
             result = response.json()
             content = result.get('choices', [{}])[0].get('message', {}).get('content', '')
-            
+
             # Extract JSON from response
             comments = self._parse_llm_response(content, filename, category)
             return comments
-            
+
         except Exception as e:
             logger.error(f"Failed to analyze file with LLM: {e}")
             return []
-    
+
     def _parse_llm_response(
         self,
         content: str,
@@ -298,7 +298,7 @@ Provide review comments in JSON format:
     ) -> List[ReviewComment]:
         """Parse LLM response into ReviewComment objects."""
         comments = []
-        
+
         try:
             # Try to extract JSON from markdown code blocks
             if "```json" in content:
@@ -309,9 +309,9 @@ Provide review comments in JSON format:
                 json_start = content.index("```") + 3
                 json_end = content.index("```", json_start)
                 content = content[json_start:json_end].strip()
-            
+
             data = json.loads(content)
-            
+
             if isinstance(data, list):
                 for item in data:
                     if isinstance(item, dict):
@@ -325,9 +325,9 @@ Provide review comments in JSON format:
                         ))
         except Exception as e:
             logger.warning(f"Failed to parse LLM response: {e}")
-        
+
         return comments
-    
+
     def _merge_with_sonarqube(
         self,
         ai_comments: List[ReviewComment],
@@ -336,7 +336,7 @@ Provide review comments in JSON format:
         """Merge AI comments with SonarQube findings, deduplicating."""
         # For now, just add both (deduplication logic can be added later)
         merged = list(ai_comments)
-        
+
         for finding in sonarqube_findings:
             # Convert SonarQube finding to ReviewComment
             comment = ReviewComment(
@@ -348,23 +348,23 @@ Provide review comments in JSON format:
                 confidence=0.95  # SonarQube findings have high confidence
             )
             merged.append(comment)
-        
+
         return merged
-    
+
     def _filter_comments(self, comments: List[ReviewComment]) -> List[ReviewComment]:
         """Filter out low-confidence comments."""
         # Keep comments with confidence >= 0.6
         return [c for c in comments if c.confidence >= 0.6]
-    
+
     def _estimate_false_positive_rate(self, comments: List[ReviewComment]) -> float:
         """Estimate false positive rate based on confidence scores."""
         if not comments:
             return 0.0
-        
+
         # False positive rate is inverse of average confidence
         avg_confidence = sum(c.confidence for c in comments) / len(comments)
         return max(0.0, 1.0 - avg_confidence)
-    
+
     async def _post_review_to_github(
         self,
         repo: str,
@@ -381,26 +381,26 @@ Provide review comments in JSON format:
                     "line": comment.line,
                     "body": f"**[{comment.category.upper()}]** [{comment.severity.upper()}]\n\n{comment.body}\n\n*Confidence: {comment.confidence:.0%}*"
                 })
-            
+
             # Post review
             url = f"https://api.github.com/repos/{repo}/pulls/{pr_number}/reviews"
             headers = {
                 "Authorization": f"Bearer {self.github_token}",
                 "Accept": "application/vnd.github.v3+json"
             }
-            
+
             payload = {
                 "event": "COMMENT",
                 "body": f"AI Code Review completed. Found {len(comments)} potential issues.",
                 "comments": review_comments
             }
-            
+
             response = await self.http_client.post(url, headers=headers, json=payload)
-            
+
             if response.status_code == 200:
                 logger.info(f"Successfully posted {len(review_comments)} review comments")
             else:
                 logger.warning(f"Failed to post review: {response.status_code} - {response.text}")
-                
+
         except Exception as e:
             logger.error(f"Failed to post review to GitHub: {e}")

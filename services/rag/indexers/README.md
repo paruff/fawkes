@@ -268,15 +268,15 @@ class MyIndexer:
         self.dry_run = dry_run
         if not dry_run:
             self._connect_weaviate()
-    
+
     def fetch_content(self):
         # Retrieve content from source
         pass
-    
+
     def chunk_content(self, content):
         # Split content into chunks
         pass
-    
+
     def index_content(self, content, metadata):
         # Store in Weaviate
         pass

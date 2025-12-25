@@ -135,7 +135,7 @@ We will adopt the **SPACE framework** as our comprehensive Developer Experience 
 **Example Survey Question**:
 
 ```
-On a scale of 0-10, how likely are you to recommend 
+On a scale of 0-10, how likely are you to recommend
 the Fawkes platform to a colleague?
 
 0 = Not at all likely
@@ -291,18 +291,18 @@ Code Review Health Score: 87/100
 ```
 Quick Check-In (2 minutes)
 
-1. This week, approximately what % of your time 
+1. This week, approximately what % of your time
    was spent on work you found valuable?
    [Slider: 0% - 100%]
 
-2. How many times did you achieve "flow state" 
+2. How many times did you achieve "flow state"
    (deep, focused work)?
    [ ] Never  [ ] 1-2 times  [ ] 3-4 times  [ ] 5+ times
 
 3. Rate your cognitive load this week:
    [ ] Very Low  [ ] Low  [ ] Moderate  [ ] High  [ ] Overwhelming
 
-4. Did you experience any significant friction 
+4. Did you experience any significant friction
    using the platform?
    [ ] No  [ ] Yes → [Report details]
 

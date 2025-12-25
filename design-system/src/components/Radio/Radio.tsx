@@ -10,7 +10,7 @@ export interface RadioProps extends BaseComponentProps {
 
 /**
  * Radio button input
- * 
+ *
  * @component
  * @example
  * ```tsx

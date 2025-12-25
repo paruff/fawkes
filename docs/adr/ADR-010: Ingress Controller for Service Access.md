@@ -256,7 +256,7 @@ Grafana dashboards: **NGINX Ingress Controller** (official dashboard ID: 9614)
 ```yaml
 controller:
   replicaCount: 3
-  
+
   resources:
     requests:
       cpu: 100m
@@ -264,18 +264,18 @@ controller:
     limits:
       cpu: 500m
       memory: 512Mi
-  
+
   service:
     type: LoadBalancer
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
       service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
-  
+
   metrics:
     enabled: true
     serviceMonitor:
       enabled: true
-  
+
   config:
     use-forwarded-headers: "true"
     compute-full-forwarded-for: "true"
@@ -284,7 +284,7 @@ controller:
     proxy-body-size: "50m"
     ssl-protocols: "TLSv1.2 TLSv1.3"
     ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384"
-    
+
   podAnnotations:
     prometheus.io/scrape: "true"
     prometheus.io/port: "10254"
@@ -569,12 +569,12 @@ groups:
     for: 5m
     annotations:
       summary: "High 5xx error rate detected"
-      
+
   - alert: CertificateExpiring
     expr: (nginx_ingress_controller_ssl_expire_time_seconds - time()) / 86400 < 7
     annotations:
       summary: "TLS certificate expiring in less than 7 days"
-      
+
   - alert: HighLatency
     expr: histogram_quantile(0.95, nginx_ingress_controller_request_duration_seconds_bucket) > 5
     for: 10m

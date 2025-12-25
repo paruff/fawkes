@@ -16,18 +16,18 @@ metadata:
 spec:
   instances: 2
   imageName: ghcr.io/cloudnative-pg/postgresql:16
-  
+
   bootstrap:
     initdb:
       database: feedback_db
       owner: feedback
       secret:
         name: db-feedback-credentials
-  
+
   storage:
     size: 5Gi
     storageClass: standard
-  
+
   resources:
     requests:
       memory: "256Mi"
@@ -35,16 +35,16 @@ spec:
     limits:
       memory: "512Mi"
       cpu: "500m"
-  
+
   postgresql:
     parameters:
       shared_buffers: "128MB"
       max_connections: "100"
       work_mem: "4MB"
-  
+
   monitoring:
     enabled: true
-  
+
   # Backup configuration disabled - requires S3 credentials setup
   # To enable backups:
   # 1. Create S3 bucket for backups

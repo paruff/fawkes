@@ -152,9 +152,9 @@ View traces in Grafana by querying Tempo with:
 
 ## Acceptance Criteria
 
-✅ **OTel Collector deployed as DaemonSet** - Running on all nodes in monitoring namespace  
-✅ **Receivers configured (OTLP, Prometheus)** - OTLP gRPC (4317), HTTP (4318), Prometheus scraping, Kubeletstats, Hostmetrics  
-✅ **Exporters configured (Prometheus, OpenSearch)** - Prometheus Remote Write, OpenSearch for logs, Tempo for traces  
+✅ **OTel Collector deployed as DaemonSet** - Running on all nodes in monitoring namespace
+✅ **Receivers configured (OTLP, Prometheus)** - OTLP gRPC (4317), HTTP (4318), Prometheus scraping, Kubeletstats, Hostmetrics
+✅ **Exporters configured (Prometheus, OpenSearch)** - Prometheus Remote Write, OpenSearch for logs, Tempo for traces
 ✅ **Sample traces flowing** - Sample application generates and exports traces via OTLP
 
 ## Configuration Files

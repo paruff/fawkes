@@ -79,9 +79,9 @@ record_test_result() {
     local status=$2
     local message=$3
     local details=${4:-""}
-    
+
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
-    
+
     if [ "$status" = "PASS" ]; then
         PASSED_TESTS=$((PASSED_TESTS + 1))
         log_success "$test_name: $message"
@@ -89,7 +89,7 @@ record_test_result() {
         FAILED_TESTS=$((FAILED_TESTS + 1))
         log_error "$test_name: $message"
     fi
-    
+
     TEST_RESULTS+=("{\"test\":\"$test_name\",\"status\":\"$status\",\"message\":\"$message\",\"details\":\"$details\"}")
 }
 
@@ -99,21 +99,21 @@ record_test_result() {
 
 setup_test_environment() {
     log_info "Setting up test environment..."
-    
+
     # Create test directory
     mkdir -p "$TEST_DIR"
     mkdir -p "$RESULTS_DIR"
-    
+
     log_success "Test environment ready at $TEST_DIR"
 }
 
 cleanup_test_environment() {
     log_info "Cleaning up test environment..."
-    
+
     if [ -d "$TEST_DIR" ]; then
         rm -rf "$TEST_DIR"
     fi
-    
+
     log_success "Test environment cleaned up"
 }
 
@@ -123,9 +123,9 @@ cleanup_test_environment() {
 
 test_generate_rest_api() {
     log_info "Test 1: Generate REST API with AI..."
-    
+
     local api_file="$TEST_DIR/api.py"
-    
+
     # Simulate AI code generation with a template
     # In practice, this would use GitHub Copilot or similar
     cat > "$api_file" << 'EOF'
@@ -177,9 +177,9 @@ async def search_documents(query: DocumentQuery):
             .with_additional(["certainty"])
             .do()
         )
-        
+
         docs = result.get("data", {}).get("Get", {}).get("FawkesDocument", [])
-        
+
         # Filter by certainty threshold
         filtered_docs = [
             DocumentResult(
@@ -191,9 +191,9 @@ async def search_documents(query: DocumentQuery):
             for doc in docs
             if doc["_additional"]["certainty"] >= query.threshold
         ]
-        
+
         return filtered_docs
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -207,15 +207,15 @@ async def get_statistics():
             .with_meta_count()
             .do()
         )
-        
+
         count = result["data"]["Aggregate"]["FawkesDocument"][0]["meta"]["count"]
-        
+
         return {
             "total_documents": count,
             "api_version": "1.0.0",
             "database": "weaviate"
         }
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -223,13 +223,13 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
 EOF
-    
+
     # Verify file was created
     if [ ! -f "$api_file" ]; then
         record_test_result "REST_API_GENERATION" "FAIL" "API file not created"
         return 1
     fi
-    
+
     # Check syntax
     if python3 -m py_compile "$api_file" 2>/dev/null; then
         record_test_result "REST_API_SYNTAX" "PASS" "Python syntax is valid"
@@ -237,7 +237,7 @@ EOF
         record_test_result "REST_API_SYNTAX" "FAIL" "Python syntax errors found"
         return 1
     fi
-    
+
     # Check for required imports
     if grep -q "from fastapi import FastAPI" "$api_file" && \
        grep -q "from pydantic import BaseModel" "$api_file" && \
@@ -247,7 +247,7 @@ EOF
         record_test_result "REST_API_IMPORTS" "FAIL" "Missing required imports"
         return 1
     fi
-    
+
     # Check for endpoints
     if grep -q "@app.get" "$api_file" && grep -q "@app.post" "$api_file"; then
         record_test_result "REST_API_ENDPOINTS" "PASS" "API endpoints defined"
@@ -255,7 +255,7 @@ EOF
         record_test_result "REST_API_ENDPOINTS" "FAIL" "Missing API endpoints"
         return 1
     fi
-    
+
     # Check for error handling
     if grep -q "HTTPException" "$api_file" && grep -q "try:" "$api_file"; then
         record_test_result "REST_API_ERROR_HANDLING" "PASS" "Error handling implemented"
@@ -263,7 +263,7 @@ EOF
         record_test_result "REST_API_ERROR_HANDLING" "FAIL" "Missing error handling"
         return 1
     fi
-    
+
     log_success "REST API generation test completed successfully"
     return 0
 }
@@ -274,9 +274,9 @@ EOF
 
 test_generate_terraform_module() {
     log_info "Test 2: Generate Terraform module with AI..."
-    
+
     local tf_file="$TEST_DIR/aks-cluster.tf"
-    
+
     # Simulate AI code generation for Terraform
     cat > "$tf_file" << 'EOF'
 # Terraform module for Azure AKS cluster
@@ -284,7 +284,7 @@ test_generate_terraform_module() {
 
 terraform {
   required_version = ">= 1.6.0"
-  
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -314,7 +314,7 @@ variable "node_count" {
   description = "Number of nodes in the default node pool"
   type        = number
   default     = 3
-  
+
   validation {
     condition     = var.node_count >= 1 && var.node_count <= 10
     error_message = "Node count must be between 1 and 10"
@@ -342,9 +342,9 @@ resource "azurerm_kubernetes_cluster" "main" {
   location            = var.location
   resource_group_name = var.resource_group_name
   dns_prefix          = "${var.cluster_name}-dns"
-  
+
   kubernetes_version = "1.28"
-  
+
   default_node_pool {
     name                = "default"
     node_count          = var.node_count
@@ -352,28 +352,28 @@ resource "azurerm_kubernetes_cluster" "main" {
     enable_auto_scaling = true
     min_count           = 1
     max_count           = 5
-    
+
     upgrade_settings {
       max_surge = "10%"
     }
   }
-  
+
   identity {
     type = "SystemAssigned"
   }
-  
+
   network_profile {
     network_plugin    = "azure"
     network_policy    = "calico"
     load_balancer_sku = "standard"
   }
-  
+
   azure_policy_enabled = true
-  
+
   oms_agent {
     log_analytics_workspace_id = azurerm_log_analytics_workspace.main.id
   }
-  
+
   tags = var.tags
 }
 
@@ -383,7 +383,7 @@ resource "azurerm_log_analytics_workspace" "main" {
   resource_group_name = var.resource_group_name
   sku                 = "PerGB2018"
   retention_in_days   = 30
-  
+
   tags = var.tags
 }
 
@@ -408,13 +408,13 @@ output "log_analytics_workspace_id" {
   value       = azurerm_log_analytics_workspace.main.id
 }
 EOF
-    
+
     # Verify file was created
     if [ ! -f "$tf_file" ]; then
         record_test_result "TERRAFORM_GENERATION" "FAIL" "Terraform file not created"
         return 1
     fi
-    
+
     # Check Terraform syntax
     cd "$TEST_DIR"
     if terraform fmt -check "$tf_file" >/dev/null 2>&1; then
@@ -424,7 +424,7 @@ EOF
         terraform fmt "$tf_file" >/dev/null 2>&1
         record_test_result "TERRAFORM_FORMAT" "PASS" "Terraform file formatted successfully"
     fi
-    
+
     if terraform validate -no-color 2>/dev/null || terraform init -backend=false >/dev/null 2>&1; then
         record_test_result "TERRAFORM_SYNTAX" "PASS" "Terraform syntax is valid"
     else
@@ -432,7 +432,7 @@ EOF
         record_test_result "TERRAFORM_SYNTAX" "PASS" "Terraform syntax appears valid (manual check)"
     fi
     cd - >/dev/null
-    
+
     # Check for required blocks
     if grep -q "terraform {" "$tf_file" && \
        grep -q "required_providers" "$tf_file" && \
@@ -442,7 +442,7 @@ EOF
         record_test_result "TERRAFORM_STRUCTURE" "FAIL" "Missing required Terraform blocks"
         return 1
     fi
-    
+
     # Check for variables and outputs
     if grep -q "variable \"" "$tf_file" && grep -q "output \"" "$tf_file"; then
         record_test_result "TERRAFORM_IO" "PASS" "Variables and outputs defined"
@@ -450,26 +450,26 @@ EOF
         record_test_result "TERRAFORM_IO" "FAIL" "Missing variables or outputs"
         return 1
     fi
-    
+
     # Check for best practices
     local warnings=0
-    
+
     if ! grep -q "validation {" "$tf_file"; then
         log_warning "No variable validation found"
         warnings=$((warnings + 1))
     fi
-    
+
     if ! grep -q "description =" "$tf_file"; then
         log_warning "Missing descriptions"
         warnings=$((warnings + 1))
     fi
-    
+
     if [ $warnings -eq 0 ]; then
         record_test_result "TERRAFORM_BEST_PRACTICES" "PASS" "Follows Terraform best practices"
     else
         record_test_result "TERRAFORM_BEST_PRACTICES" "PASS" "Minor best practice issues ($warnings warnings)"
     fi
-    
+
     log_success "Terraform module generation test completed successfully"
     return 0
 }
@@ -480,9 +480,9 @@ EOF
 
 test_generate_test_cases() {
     log_info "Test 3: Generate test cases with AI..."
-    
+
     local test_file="$TEST_DIR/test_api.py"
-    
+
     # Simulate AI test case generation
     cat > "$test_file" << 'EOF'
 """
@@ -519,28 +519,28 @@ def mock_weaviate():
 
 class TestHealthEndpoint:
     """Test health check endpoint"""
-    
+
     def test_health_check_returns_200(self, client):
         """Test that health check returns 200 OK"""
         # Mocked test - in reality would call API
         expected_status = 200
         expected_response = {"status": "healthy", "service": "fawkes-api"}
-        
+
         assert expected_status == 200
         assert "status" in expected_response
         assert expected_response["status"] == "healthy"
-    
+
     def test_health_check_returns_correct_format(self):
         """Test health check response format"""
         response = {"status": "healthy", "service": "fawkes-api"}
-        
+
         assert isinstance(response, dict)
         assert "status" in response
         assert "service" in response
 
 class TestSearchEndpoint:
     """Test document search endpoint"""
-    
+
     def test_search_with_valid_query(self, mock_weaviate):
         """Test search with valid query"""
         # Mock Weaviate response
@@ -558,14 +558,14 @@ class TestSearchEndpoint:
                 }
             }
         }
-        
+
         mock_weaviate.return_value.query.get.return_value.with_near_text.return_value.with_limit.return_value.with_additional.return_value.do.return_value = mock_response
-        
+
         # Test assertions
         assert "data" in mock_response
         assert len(mock_response["data"]["Get"]["FawkesDocument"]) > 0
         assert mock_response["data"]["Get"]["FawkesDocument"][0]["_additional"]["certainty"] >= 0.7
-    
+
     def test_search_filters_low_certainty(self):
         """Test that low certainty results are filtered"""
         docs = [
@@ -573,19 +573,19 @@ class TestSearchEndpoint:
             {"certainty": 0.5, "title": "Low relevance"},
             {"certainty": 0.8, "title": "Medium relevance"},
         ]
-        
+
         threshold = 0.7
         filtered = [doc for doc in docs if doc["certainty"] >= threshold]
-        
+
         assert len(filtered) == 2
         assert all(doc["certainty"] >= threshold for doc in filtered)
-    
+
     def test_search_with_custom_limit(self):
         """Test search with custom result limit"""
         limit = 5
         assert limit > 0
         assert limit <= 100  # Reasonable max limit
-    
+
     def test_search_handles_empty_results(self):
         """Test search handles empty results gracefully"""
         empty_response = {
@@ -595,14 +595,14 @@ class TestSearchEndpoint:
                 }
             }
         }
-        
+
         docs = empty_response["data"]["Get"]["FawkesDocument"]
         assert isinstance(docs, list)
         assert len(docs) == 0
 
 class TestStatisticsEndpoint:
     """Test statistics endpoint"""
-    
+
     def test_stats_returns_document_count(self):
         """Test that stats returns document count"""
         stats = {
@@ -610,11 +610,11 @@ class TestStatisticsEndpoint:
             "api_version": "1.0.0",
             "database": "weaviate"
         }
-        
+
         assert "total_documents" in stats
         assert isinstance(stats["total_documents"], int)
         assert stats["total_documents"] >= 0
-    
+
     def test_stats_includes_version(self):
         """Test that stats includes API version"""
         stats = {
@@ -622,25 +622,25 @@ class TestStatisticsEndpoint:
             "api_version": "1.0.0",
             "database": "weaviate"
         }
-        
+
         assert "api_version" in stats
         assert stats["api_version"] == "1.0.0"
 
 class TestErrorHandling:
     """Test error handling"""
-    
+
     def test_handles_weaviate_connection_error(self):
         """Test handling of Weaviate connection errors"""
         error_message = "Connection refused"
-        
+
         # In real scenario, would test actual exception handling
         assert len(error_message) > 0
-    
+
     def test_handles_invalid_query(self):
         """Test handling of invalid queries"""
         # Test with various invalid inputs
         invalid_queries = ["", None, " ", "\n"]
-        
+
         for query in invalid_queries:
             if query is None or (isinstance(query, str) and query.strip() == ""):
                 # Should be handled as invalid
@@ -649,13 +649,13 @@ class TestErrorHandling:
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
 EOF
-    
+
     # Verify file was created
     if [ ! -f "$test_file" ]; then
         record_test_result "TEST_GENERATION" "FAIL" "Test file not created"
         return 1
     fi
-    
+
     # Check Python syntax
     if python3 -m py_compile "$test_file" 2>/dev/null; then
         record_test_result "TEST_SYNTAX" "PASS" "Test syntax is valid"
@@ -663,7 +663,7 @@ EOF
         record_test_result "TEST_SYNTAX" "FAIL" "Test syntax errors found"
         return 1
     fi
-    
+
     # Check for pytest structure
     if grep -q "import pytest" "$test_file" && \
        grep -q "@pytest.fixture" "$test_file" && \
@@ -673,7 +673,7 @@ EOF
         record_test_result "TEST_STRUCTURE" "FAIL" "Invalid pytest structure"
         return 1
     fi
-    
+
     # Check for test classes
     if grep -q "class Test" "$test_file"; then
         record_test_result "TEST_ORGANIZATION" "PASS" "Tests organized in classes"
@@ -681,7 +681,7 @@ EOF
         record_test_result "TEST_ORGANIZATION" "FAIL" "Missing test classes"
         return 1
     fi
-    
+
     # Check for assertions
     if grep -q "assert " "$test_file"; then
         local assertion_count=$(grep -c "assert " "$test_file")
@@ -690,7 +690,7 @@ EOF
         record_test_result "TEST_ASSERTIONS" "FAIL" "No assertions found"
         return 1
     fi
-    
+
     # Check for mocking
     if grep -q "Mock\|patch\|mock" "$test_file"; then
         record_test_result "TEST_MOCKING" "PASS" "Uses mocking for dependencies"
@@ -698,7 +698,7 @@ EOF
         record_test_result "TEST_MOCKING" "FAIL" "Missing mock usage"
         return 1
     fi
-    
+
     # Run pytest to verify tests are valid
     if python3 -m pytest "$test_file" --collect-only >/dev/null 2>&1; then
         record_test_result "TEST_COLLECTION" "PASS" "Tests can be collected by pytest"
@@ -706,7 +706,7 @@ EOF
         log_warning "pytest collection failed (may need dependencies)"
         record_test_result "TEST_COLLECTION" "PASS" "Test file structure is valid (manual check)"
     fi
-    
+
     log_success "Test case generation test completed successfully"
     return 0
 }
@@ -717,9 +717,9 @@ EOF
 
 test_check_common_issues() {
     log_info "Test 4: Check for common issues in generated code..."
-    
+
     local issues_found=0
-    
+
     # Check for hardcoded credentials
     if grep -r "password\|secret\|token\|api[_-]key" "$TEST_DIR" --include="*.py" --include="*.tf" | grep -v "^#" | grep -v "variable\|description\|sensitive"; then
         log_warning "Potential hardcoded credentials found"
@@ -727,7 +727,7 @@ test_check_common_issues() {
     else
         record_test_result "SECURITY_NO_HARDCODED_SECRETS" "PASS" "No hardcoded credentials found"
     fi
-    
+
     # Check for SQL injection vulnerabilities
     if grep -r "execute.*+\|%s" "$TEST_DIR" --include="*.py"; then
         log_warning "Potential SQL injection vulnerability"
@@ -735,7 +735,7 @@ test_check_common_issues() {
     else
         record_test_result "SECURITY_NO_SQL_INJECTION" "PASS" "No SQL injection patterns found"
     fi
-    
+
     # Check for insecure HTTP (should use HTTPS)
     if grep -r "http://.*api\|http://.*prod" "$TEST_DIR" --include="*.py" --include="*.tf" | grep -v "localhost\|127.0.0.1\|\.svc"; then
         log_warning "HTTP used instead of HTTPS for external services"
@@ -743,7 +743,7 @@ test_check_common_issues() {
     else
         record_test_result "SECURITY_HTTPS" "PASS" "No insecure HTTP usage found"
     fi
-    
+
     # Check for proper error handling
     local files_without_error_handling=0
     for file in "$TEST_DIR"/*.py; do
@@ -751,14 +751,14 @@ test_check_common_issues() {
             files_without_error_handling=$((files_without_error_handling + 1))
         fi
     done
-    
+
     if [ $files_without_error_handling -eq 0 ]; then
         record_test_result "QUALITY_ERROR_HANDLING" "PASS" "All files have error handling"
     else
         record_test_result "QUALITY_ERROR_HANDLING" "FAIL" "$files_without_error_handling files without error handling"
         issues_found=$((issues_found + 1))
     fi
-    
+
     # Check for TODO/FIXME comments
     if grep -r "TODO\|FIXME\|XXX\|HACK" "$TEST_DIR" --include="*.py" --include="*.tf"; then
         log_warning "Found TODO/FIXME comments (review needed)"
@@ -766,7 +766,7 @@ test_check_common_issues() {
     else
         record_test_result "QUALITY_TODOS" "PASS" "No outstanding TODOs"
     fi
-    
+
     if [ $issues_found -eq 0 ]; then
         log_success "No critical issues found in generated code"
         return 0
@@ -782,13 +782,13 @@ test_check_common_issues() {
 
 generate_report() {
     log_info "Generating test report..."
-    
+
     local report_json="["
     for result in "${TEST_RESULTS[@]}"; do
         report_json="$report_json$result,"
     done
     report_json="${report_json%,}]"  # Remove trailing comma
-    
+
     # Create full report
     cat > "$RESULTS_FILE" << EOF
 {
@@ -803,9 +803,9 @@ generate_report() {
   "results": $report_json
 }
 EOF
-    
+
     log_success "Report saved to $RESULTS_FILE"
-    
+
     # Print summary
     echo ""
     echo "========================================="
@@ -842,24 +842,24 @@ main() {
                 ;;
         esac
     done
-    
+
     log_info "Starting AI code generation tests..."
-    
+
     # Setup
     setup_test_environment
-    
+
     # Run tests
     test_generate_rest_api || true
     test_generate_terraform_module || true
     test_generate_test_cases || true
     test_check_common_issues || true
-    
+
     # Generate report
     generate_report
-    
+
     # Cleanup
     cleanup_test_environment
-    
+
     # Exit with appropriate code
     if [ $FAILED_TESTS -eq 0 ]; then
         log_success "All tests passed! ✨"

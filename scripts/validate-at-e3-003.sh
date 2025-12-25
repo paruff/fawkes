@@ -80,9 +80,9 @@ record_test_result() {
     local test_name=$1
     local status=$2
     local message=$3
-    
+
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
-    
+
     if [ "$status" = "PASS" ]; then
         PASSED_TESTS=$((PASSED_TESTS + 1))
         log_success "$test_name: $message"
@@ -90,7 +90,7 @@ record_test_result() {
         FAILED_TESTS=$((FAILED_TESTS + 1))
         log_error "$test_name: $message"
     fi
-    
+
     TEST_RESULTS+=("{\"test\":\"$test_name\",\"status\":\"$status\",\"message\":\"$message\"}")
 }
 
@@ -349,7 +349,7 @@ if [ -f "platform/apps/grafana/dashboards/feedback-analytics.json" ]; then
     [[ "$DASHBOARD_CONTENT" == *"sentiment"* ]] && ((METRICS_FOUND++))
     [[ "$DASHBOARD_CONTENT" == *"feedback"* ]] && ((METRICS_FOUND++))
     [[ "$DASHBOARD_CONTENT" == *"rating"* ]] && ((METRICS_FOUND++))
-    
+
     if [ $METRICS_FOUND -ge 3 ]; then
         record_test_result "Dashboard Metrics" "PASS" "Dashboard has key feedback metrics ($METRICS_FOUND found)"
     else

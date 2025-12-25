@@ -5,8 +5,8 @@ description: Comprehensive guide for using all Epic 3 Product Discovery and UX c
 
 # Epic 3 Product Discovery & UX User Guide
 
-**Version**: 1.0  
-**Last Updated**: December 2024  
+**Version**: 1.0
+**Last Updated**: December 2024
 **Target Audience**: Development Teams, Product Managers, UX Researchers, Platform Engineers
 
 ## Overview
@@ -302,7 +302,7 @@ curl http://localhost:8080/api/v1/feedback?status=validated | jq .
 - **Retention**: Weekly/Monthly Active Users
 - **Discovery**: Time to feature discovery
 
-📖 **Detailed Guide**: [Product Analytics Quickstart](product-analytics-quickstart.md)  
+📖 **Detailed Guide**: [Product Analytics Quickstart](product-analytics-quickstart.md)
 📖 **Detailed Guide**: [Event Tracking Integration](event-tracking-integration.md)
 
 ### Feature Flags & Experimentation
@@ -736,5 +736,5 @@ This guide itself can be improved! If you have suggestions:
 - DM @feedback in Mattermost
 - Open a GitHub issue with label `documentation`
 
-**Last Updated**: December 2024  
+**Last Updated**: December 2024
 **Maintainers**: Platform Team, Product Team, UX Research Team

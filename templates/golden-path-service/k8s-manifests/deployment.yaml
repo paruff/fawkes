@@ -40,13 +40,13 @@ spec:
         runAsUser: 65534
         runAsGroup: 65534
         fsGroup: 65534
-      
+
       containers:
         - name: web
           # Image from score.yaml containers.web.image
           image: harbor.fawkes.local/my-team/my-service:latest
           imagePullPolicy: IfNotPresent
-          
+
           # Ports from score.yaml service.ports
           ports:
             - name: http
@@ -55,35 +55,35 @@ spec:
             - name: metrics
               containerPort: 9090
               protocol: TCP
-          
+
           # Environment variables from score.yaml containers.web.variables
           env:
             - name: LOG_LEVEL
               value: "info"
             - name: ENVIRONMENT
               value: "dev"  # Injected by environment overlay
-            
+
             # Database connection (from resources.db)
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
                   name: my-service-db-credentials
                   key: connection_string
-            
+
             # Redis connection (from resources.cache)
             - name: REDIS_URL
               valueFrom:
                 secretKeyRef:
                   name: my-service-cache-credentials
                   key: connection_string
-            
+
             # API keys (from resources.api-secret)
             - name: API_KEY
               valueFrom:
                 secretKeyRef:
                   name: my-service-api-secret
                   key: API_KEY
-          
+
           # Resources from score.yaml containers.web.resources
           resources:
             requests:
@@ -92,14 +92,14 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
-          
+
           # Volume mounts (from resources.storage)
           volumeMounts:
             - name: uploads
               mountPath: /app/uploads
             - name: tmp
               mountPath: /tmp
-          
+
           # Health checks from score.yaml
           livenessProbe:
             httpGet:
@@ -109,7 +109,7 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 3
-          
+
           readinessProbe:
             httpGet:
               path: /ready
@@ -118,7 +118,7 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 3
             failureThreshold: 3
-          
+
           # Security context
           securityContext:
             allowPrivilegeEscalation: false
@@ -130,7 +130,7 @@ spec:
                 - ALL
             seccompProfile:
               type: RuntimeDefault
-      
+
       # Volumes
       volumes:
         - name: uploads

@@ -146,7 +146,7 @@ For production deployments, you MUST:
    ```bash
    # Edit platform/apps/jenkins/secrets.yaml
    # Replace CHANGE_ME_jenkins_admin_password with a strong password
-   
+
    # Apply the secret
    kubectl apply -f platform/apps/jenkins/secrets.yaml
    ```
@@ -159,10 +159,10 @@ For production deployments, you MUST:
          secretKeyRef:
            name: jenkins-admin-credentials
            key: password
-   
+
    admin:
      password: "{{ .Values.adminPassword }}"  # Reference from secret
-   
+
    JENKINS_OPTS: "--argumentsRealm.passwd.admin={{ .Values.adminPassword }} -Djenkins.install.runSetupWizard=false"
    ```
 

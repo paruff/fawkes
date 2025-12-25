@@ -5,7 +5,7 @@ description: Move from Dockerfiles to Cloud Native Buildpacks for automated, sec
 
 # Migrate to Cloud Native Buildpacks
 
-**Time to Complete**: 25 minutes  
+**Time to Complete**: 25 minutes
 **Goal**: Replace your Dockerfile with Cloud Native Buildpacks (CNB) for automated, secure, and maintainable container builds.
 
 ## What You'll Learn
@@ -38,24 +38,24 @@ Let's review what your Dockerfile is doing and how Buildpacks will replace it.
 1. View your current `Dockerfile`:
    ```dockerfile
    FROM node:18-alpine
-   
+
    WORKDIR /app
-   
+
    COPY package*.json ./
    RUN npm ci --only=production
-   
+
    COPY server.js ./
    COPY tracing.js ./
    COPY vault-client.js ./
-   
+
    RUN addgroup -g 1000 appuser && \
        adduser -D -u 1000 -G appuser appuser && \
        chown -R appuser:appuser /app
-   
+
    USER appuser
-   
+
    EXPOSE 8080
-   
+
    CMD ["npm", "start"]
    ```
 
@@ -192,11 +192,11 @@ Now for the exciting part - building your first Buildpack image!
    [detector] paketo-buildpacks/node-run-script    1.0.5
    [detector] paketo-buildpacks/node-start         1.0.5
    [detector] paketo-buildpacks/procfile           5.6.3
-   
+
    ===> BUILDING
    [builder] Running npm ci...
    [builder] Installing node_modules...
-   
+
    ===> EXPORTING
    [exporter] Adding layer 'paketo-buildpacks/node-engine:node'
    [exporter] Adding layer 'paketo-buildpacks/npm-install:modules'
@@ -231,7 +231,7 @@ Let's see how the Buildpack image compares to your Dockerfile image.
    ```bash
    # Dockerfile image
    docker history YOUR-USERNAME/hello-fawkes:v3.0.0
-   
+
    # Buildpack image
    docker history YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
    ```
@@ -259,7 +259,7 @@ Before deploying, let's verify the image works correctly.
    ```bash
    curl http://localhost:8080/
    ```
-   
+
    Should return:
    ```json
    {
@@ -275,7 +275,7 @@ Before deploying, let's verify the image works correctly.
    ```bash
    docker exec hello-fawkes-test whoami
    ```
-   
+
    Should output: `cnb` (Buildpacks default non-root user)
 
 4. Stop and remove the test container:
@@ -359,7 +359,7 @@ One of the key benefits of Buildpacks is "rebasing" - updating base images witho
    ```bash
    pack inspect YOUR-USERNAME/hello-fawkes:v4.0.0-buildpack
    ```
-   
+
    Note the "Run Image" section.
 
 2. Rebase to the latest base image (simulating a security update):
@@ -386,7 +386,7 @@ One of the key benefits of Buildpacks is "rebasing" - updating base images witho
     - CI/CD pipeline runs `pack rebase` nightly
     - Images get security updates without code changes
     - ArgoCD deploys updated images automatically
-    
+
     This is how you patch 100 microservices in minutes, not weeks.
 
 !!! success "Checkpoint"

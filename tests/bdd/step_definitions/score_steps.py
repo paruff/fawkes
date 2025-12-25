@@ -55,7 +55,7 @@ def step_impl(context):
     """Verify score.yaml has application parameters."""
     with open(context.score_file, 'r') as f:
         score_data = yaml.safe_load(f)
-    
+
     assert 'containers' in score_data, "score.yaml missing 'containers'"
     assert 'metadata' in score_data, "score.yaml missing 'metadata'"
 
@@ -65,7 +65,7 @@ def step_impl(context):
     """Verify score.yaml defines resources."""
     with open(context.score_file, 'r') as f:
         score_data = yaml.safe_load(f)
-    
+
     # Template should have example resources
     assert 'resources' in score_data, "score.yaml missing 'resources'"
 
@@ -106,33 +106,33 @@ def step_impl(context):
     with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
         yaml.dump(context.test_score, f)
         score_file = f.name
-    
+
     try:
         # Generate manifests using transformer
         output_dir = tempfile.mkdtemp()
         result = run(
-            ['python3', str(context.transformer_path), 
+            ['python3', str(context.transformer_path),
              '--score', score_file,
              '--environment', 'dev',
              '--output', output_dir],
             capture_output=True,
             text=True
         )
-        
+
         # Check if deployment was generated
         deployment_file = Path(output_dir) / 'deployment.yaml'
         assert deployment_file.exists(), "Deployment manifest not generated"
-        
+
         with open(deployment_file, 'r') as f:
             deployment = yaml.safe_load(f)
-        
+
         # Verify memory limit in deployment
         container = deployment['spec']['template']['spec']['containers'][0]
         expected_memory = context.test_score['containers']['web']['resources']['limits']['memory']
         actual_memory = container['resources']['limits']['memory']
         assert actual_memory == expected_memory, \
             f"Memory mismatch: expected {expected_memory}, got {actual_memory}"
-        
+
         context.generated_manifests = output_dir
     finally:
         os.unlink(score_file)
@@ -170,12 +170,12 @@ def step_impl(context, environment):
 def step_impl(context, environment):
     """Deploy score.yaml to target environment."""
     context.target_environment = environment.lower()
-    
+
     # Write score.yaml
     with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
         yaml.dump(context.test_score, f)
         score_file = f.name
-    
+
     try:
         # Generate manifests for target environment
         output_dir = tempfile.mkdtemp()
@@ -187,7 +187,7 @@ def step_impl(context, environment):
             capture_output=True,
             text=True
         )
-        
+
         context.deployment_result = result
         context.generated_manifests = output_dir
         context.score_file_path = score_file
@@ -224,7 +224,7 @@ def step_impl(context, environment):
     if ingress_file.exists():
         with open(ingress_file, 'r') as f:
             ingress = yaml.safe_load(f)
-        
+
         expected_host = f"portable-app.{environment.lower()}.fawkes.idp"
         actual_host = ingress['spec']['rules'][0]['host']
         assert actual_host == expected_host, \
@@ -262,7 +262,7 @@ def step_impl(context):
     with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
         yaml.dump(context.test_score, f)
         score_file = f.name
-    
+
     try:
         output_dir = tempfile.mkdtemp()
         result = run(
@@ -273,7 +273,7 @@ def step_impl(context):
             capture_output=True,
             text=True
         )
-        
+
         context.transformation_result = result
         context.generated_manifests = output_dir
     finally:
@@ -294,7 +294,7 @@ def step_impl(context):
     for manifest_file in Path(context.generated_manifests).glob('*.yaml'):
         with open(manifest_file, 'r') as f:
             manifest = yaml.safe_load(f)
-        
+
         annotations = manifest.get('metadata', {}).get('annotations', {})
         assert 'score.dev/source' in annotations, \
             f"{manifest_file.name} missing score.dev/source annotation"
@@ -306,7 +306,7 @@ def after_scenario(context, scenario):
     if hasattr(context, 'generated_manifests'):
         if os.path.exists(context.generated_manifests):
             shutil.rmtree(context.generated_manifests)
-    
+
     if hasattr(context, 'score_file_path'):
         if os.path.exists(context.score_file_path):
             os.unlink(context.score_file_path)

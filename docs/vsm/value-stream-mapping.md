@@ -17,8 +17,8 @@ VSM provides visibility into your delivery pipeline, helping you understand wher
 Fawkes implements an 8-stage value stream that tracks work items through their complete lifecycle:
 
 ### 1. Backlog (Wait Stage)
-**Type**: Wait  
-**WIP Limit**: None  
+**Type**: Wait
+**WIP Limit**: None
 **Description**: Work items waiting to be analyzed and prioritized. This is the entry point to the value stream where new ideas, features, bugs, and tasks are collected before being pulled into active work.
 
 **Key Activities**:
@@ -31,8 +31,8 @@ Fawkes implements an 8-stage value stream that tracks work items through their c
 ---
 
 ### 2. Design (Active Stage)
-**Type**: Active  
-**WIP Limit**: 5  
+**Type**: Active
+**WIP Limit**: 5
 **Description**: Active design and analysis phase where requirements are refined, architecture is designed, and implementation approach is planned.
 
 **Key Activities**:
@@ -53,8 +53,8 @@ Fawkes implements an 8-stage value stream that tracks work items through their c
 ---
 
 ### 3. Development (Active Stage)
-**Type**: Active  
-**WIP Limit**: 10  
+**Type**: Active
+**WIP Limit**: 10
 **Description**: Active implementation phase where code is written, unit tests are created, and features are implemented according to design specifications.
 
 **Key Activities**:
@@ -75,8 +75,8 @@ Fawkes implements an 8-stage value stream that tracks work items through their c
 ---
 
 ### 4. Code Review (Wait Stage)
-**Type**: Wait  
-**WIP Limit**: 8  
+**Type**: Wait
+**WIP Limit**: 8
 **Description**: Work items waiting for peer review. Code changes are reviewed for quality, security, maintainability, and adherence to coding standards.
 
 **Key Activities**:
@@ -97,8 +97,8 @@ Fawkes implements an 8-stage value stream that tracks work items through their c
 ---
 
 ### 5. Testing (Active Stage)
-**Type**: Active  
-**WIP Limit**: 8  
+**Type**: Active
+**WIP Limit**: 8
 **Description**: Active testing phase including integration testing, acceptance testing, and quality assurance. QA validates functionality against requirements.
 
 **Key Activities**:
@@ -120,8 +120,8 @@ Fawkes implements an 8-stage value stream that tracks work items through their c
 ---
 
 ### 6. Deployment Approval (Wait Stage)
-**Type**: Wait  
-**WIP Limit**: 5  
+**Type**: Wait
+**WIP Limit**: 5
 **Description**: Work items waiting for deployment approval from stakeholders or release managers. This gate ensures proper change management and coordination before production deployment.
 
 **Key Activities**:
@@ -142,8 +142,8 @@ Fawkes implements an 8-stage value stream that tracks work items through their c
 ---
 
 ### 7. Deploy (Active Stage)
-**Type**: Active  
-**WIP Limit**: 3  
+**Type**: Active
+**WIP Limit**: 3
 **Description**: Active deployment phase where changes are rolled out to production. Includes deployment execution, smoke testing, and initial monitoring to ensure successful release.
 
 **Key Activities**:
@@ -164,8 +164,8 @@ Fawkes implements an 8-stage value stream that tracks work items through their c
 ---
 
 ### 8. Production (Done Stage)
-**Type**: Done  
-**WIP Limit**: None  
+**Type**: Done
+**WIP Limit**: None
 **Description**: Work items successfully deployed and running in production. This is the final stage indicating value delivery to end users.
 
 **Outcomes**:
@@ -257,9 +257,9 @@ This returns complete stage transition history with timestamps, allowing you to 
 ## Understanding Flow Metrics
 
 ### Throughput
-**Definition**: Number of work items completed in a time period  
-**Calculation**: Count of items reaching Production stage  
-**Target**: Increasing trend over time  
+**Definition**: Number of work items completed in a time period
+**Calculation**: Count of items reaching Production stage
+**Target**: Increasing trend over time
 **Use**: Measure team delivery rate
 
 ```bash
@@ -267,9 +267,9 @@ curl http://vsm-service/api/v1/metrics?days=7
 ```
 
 ### Work In Progress (WIP)
-**Definition**: Number of work items currently in flight  
-**Calculation**: Items with transitions but not yet in Production  
-**Target**: Keep within WIP limits  
+**Definition**: Number of work items currently in flight
+**Calculation**: Items with transitions but not yet in Production
+**Target**: Keep within WIP limits
 **Use**: Prevent overloading and multitasking
 
 **WIP Limits by Stage**:
@@ -287,9 +287,9 @@ curl http://vsm-service/api/v1/metrics?days=7
 - Improves flow and quality
 
 ### Cycle Time
-**Definition**: Time from starting work to completing it  
-**Calculation**: Time from Backlog → Production  
-**Target**: Consistent and decreasing  
+**Definition**: Time from starting work to completing it
+**Calculation**: Time from Backlog → Production
+**Target**: Consistent and decreasing
 **Use**: Measure speed of delivery
 
 **Percentiles**:
@@ -298,14 +298,14 @@ curl http://vsm-service/api/v1/metrics?days=7
 - **P95**: 95% of items complete faster (handle outliers)
 
 ### Lead Time
-**Definition**: Total time from idea to production  
-**Calculation**: Time from creation → Production  
+**Definition**: Total time from idea to production
+**Calculation**: Time from creation → Production
 **Use**: Customer perspective on delivery speed
 
 ### Flow Efficiency
-**Definition**: Ratio of active time to total time  
-**Calculation**: (Active stage time) / (Total cycle time)  
-**Target**: > 40% (industry average is 15%)  
+**Definition**: Ratio of active time to total time
+**Calculation**: (Active stage time) / (Total cycle time)
+**Target**: > 40% (industry average is 15%)
 **Use**: Identify waste and wait time
 
 **Formula**:
@@ -322,7 +322,7 @@ Wait Time = Backlog + Code Review + Deployment Approval
 Bottlenecks are stages where work items accumulate and slow down flow. Use these indicators:
 
 ### 1. High WIP in a Stage
-**Symptom**: Stage consistently at or above WIP limit  
+**Symptom**: Stage consistently at or above WIP limit
 **Example**: 8+ items in Code Review stage
 
 **Investigation**:
@@ -346,7 +346,7 @@ curl http://vsm-service/metrics | grep vsm_work_in_progress
 - Implement automated checks (linting, security scans)
 
 ### 2. Long Cycle Time
-**Symptom**: Items taking much longer than expected  
+**Symptom**: Items taking much longer than expected
 **Example**: P85 cycle time > 7 days for features
 
 **Investigation**:
@@ -371,7 +371,7 @@ curl http://vsm-service/api/v1/work-items/123/history
 - Reduce deployment approval overhead
 
 ### 3. Low Flow Efficiency
-**Symptom**: Most time spent in wait stages  
+**Symptom**: Most time spent in wait stages
 **Example**: Flow efficiency < 30%
 
 **Investigation**:
@@ -390,7 +390,7 @@ curl http://vsm-service/api/v1/work-items/123/history
 - Reduce batch sizes
 
 ### 4. Low Throughput
-**Symptom**: Fewer items completed than expected  
+**Symptom**: Fewer items completed than expected
 **Example**: Only 5 features completed per month
 
 **Investigation**:
@@ -418,7 +418,7 @@ curl http://vsm-service/api/v1/metrics?days=90
 Use VSM data to drive continuous improvement through regular cadence:
 
 ### 1. Daily Flow Review (5 minutes)
-**Participants**: Development team  
+**Participants**: Development team
 **Focus**: Current state
 
 **Questions**:
@@ -433,7 +433,7 @@ Use VSM data to drive continuous improvement through regular cadence:
 - Pair to finish in-progress work
 
 ### 2. Weekly Metrics Review (30 minutes)
-**Participants**: Team + stakeholders  
+**Participants**: Team + stakeholders
 **Focus**: Trends and patterns
 
 **Metrics to Review**:
@@ -454,7 +454,7 @@ Use VSM data to drive continuous improvement through regular cadence:
 - Assign action items
 
 ### 3. Monthly Retrospective (1-2 hours)
-**Participants**: Entire team  
+**Participants**: Entire team
 **Focus**: Deep analysis and improvement
 
 **Activities**:
@@ -472,7 +472,7 @@ Use VSM data to drive continuous improvement through regular cadence:
 - Add/remove stage transitions
 
 ### 4. Quarterly Planning
-**Participants**: Leadership + teams  
+**Participants**: Leadership + teams
 **Focus**: Strategic improvements
 
 **Questions**:

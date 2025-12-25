@@ -68,17 +68,17 @@ def dora_metrics_tracking(request):
 @pytest.fixture
 def kubectl_helper():
     """Mock kubectl helper for BDD tests."""
-    
+
     class KubectlHelper:
         """Mock implementation of kubectl operations."""
-        
+
         def __init__(self):
             self._namespaces = ['fawkes', 'default', 'kube-system']
-        
+
         def get_namespaces(self):
             """Get list of namespaces."""
             return self._namespaces
-        
+
         def get_deployment(self, name, namespace):
             """Get deployment by name."""
             if name == 'jenkins' and namespace == 'fawkes':
@@ -89,7 +89,7 @@ def kubectl_helper():
                     'ready_replicas': 1
                 }
             return None
-        
+
         def get_pods_by_label(self, label, namespace):
             """Get pods matching label selector."""
             if 'jenkins' in label.lower():
@@ -101,7 +101,7 @@ def kubectl_helper():
                     'labels': {'app.kubernetes.io/name': 'jenkins'}
                 }]
             return []
-        
+
         def get_service(self, name, namespace):
             """Get service by name."""
             if name == 'jenkins':
@@ -112,7 +112,7 @@ def kubectl_helper():
                     'ports': [{'port': 8080, 'targetPort': 8080}]
                 }
             return None
-        
+
         def get_ingress(self, name, namespace):
             """Get ingress by name."""
             if name == 'jenkins':
@@ -123,17 +123,17 @@ def kubectl_helper():
                     'hosts': ['jenkins.127.0.0.1.nip.io']
                 }
             return None
-    
+
     return KubectlHelper()
 
 
 @pytest.fixture
 def jenkins_api_helper():
     """Mock Jenkins API helper for BDD tests."""
-    
+
     class JenkinsAPIHelper:
         """Mock implementation of Jenkins API operations."""
-        
+
         def __init__(self):
             self._authenticated = False
             self._config = {
@@ -204,37 +204,37 @@ def jenkins_api_helper():
             }
             self._system_message = 'Fawkes CI/CD Platform - Golden Path Enabled'
             self._executor_count = 0
-        
+
         def get_configuration(self):
             """Get Jenkins configuration."""
             return self._config
-        
+
         def login(self, username, password):
             """Login to Jenkins.
-            
+
             Note: This is a mock for testing. Accepts any non-empty password for admin user.
             """
             if username == 'admin' and password and len(password) > 0:
                 self._authenticated = True
                 return True
             return False
-        
+
         def is_authenticated(self):
             """Check if authenticated."""
             return self._authenticated
-        
+
         def get_system_message(self):
             """Get Jenkins system message."""
             return self._system_message
-        
+
         def get_executor_count(self):
             """Get number of executors on controller."""
             return self._executor_count
-        
+
         def run_test_job(self, label):
             """Simulate running a test job with specific agent label."""
             templates = self._config['clouds'][0]['templates']
             matching_templates = [t for t in templates if label in t.get('label', '')]
             return len(matching_templates) > 0
-    
+
     return JenkinsAPIHelper()

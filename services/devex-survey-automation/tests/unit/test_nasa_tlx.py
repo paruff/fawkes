@@ -68,7 +68,7 @@ def test_overall_workload_calculation():
         effort=75.0,
         frustration=85.0
     )
-    
+
     # Manual calculation: (80 + 40 + 90 + 30 + 75 + 85) / 6 = 400 / 6 = 66.67
     expected_workload = (80.0 + 40.0 + 90.0 + (100 - 70.0) + 75.0 + 85.0) / 6.0
     assert expected_workload == pytest.approx(66.67, rel=0.01)
@@ -85,7 +85,7 @@ def test_task_types():
         "configuration",
         "onboarding"
     ]
-    
+
     for task_type in task_types:
         request = NASATLXRequest(
             task_type=task_type,
@@ -117,7 +117,7 @@ def test_nasa_tlx_response_schema():
         "comment": "Test comment",
         "submitted_at": datetime.now()
     }
-    
+
     response = NASATLXResponse(**response_data)
     assert response.id == 1
     assert response.task_type == "deployment"
@@ -128,7 +128,7 @@ def test_comment_length_validation():
     """Test that comment length is validated"""
     # Max length is 2000 characters
     long_comment = "x" * 2001
-    
+
     with pytest.raises(ValueError):
         NASATLXRequest(
             task_type="deployment",
@@ -162,7 +162,7 @@ def test_performance_interpretation():
     # Performance is special: higher is better (0=failure, 100=perfect)
     # In workload calculation, it's inverted: (100 - performance)
     # So a high performance (good) contributes less to workload
-    
+
     high_performance = NASATLXRequest(
         task_type="deployment",
         mental_demand=0.0,
@@ -175,7 +175,7 @@ def test_performance_interpretation():
     # Workload = (0 + 0 + 0 + (100-100) + 0 + 0) / 6 = 0
     expected_workload_high = (0.0 + 0.0 + 0.0 + 0.0 + 0.0 + 0.0) / 6.0
     assert expected_workload_high == 0.0
-    
+
     low_performance = NASATLXRequest(
         task_type="deployment",
         mental_demand=0.0,

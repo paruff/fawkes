@@ -288,7 +288,7 @@ groups:
         annotations:
           summary: "High CPU usage detected"
           description: "Pod {{ $labels.pod }} container {{ $labels.container }} CPU usage is above 70%"
-          
+
       - alert: HighMemoryUsage
         expr: |
           (sum(container_memory_working_set_bytes{namespace="fawkes"}) by (pod, container)

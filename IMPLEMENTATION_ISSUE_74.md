@@ -120,7 +120,7 @@ Each persona includes all required sections:
 - **Total Interviews**: 21 participants (7 platform engineers, 8 app developers, 6 PMs)
 - **Duration**: 6 weeks of research (November-December 2025)
 - **Methods**: Interviews, surveys, usage analytics, support ticket analysis, observational studies
-- **Review Process**: 
+- **Review Process**:
   - Platform Developer: Validated by 5 platform team members
   - Application Developer: Validated by 6 development team members
   - Platform Consumer: Validated by 4 product/business leaders

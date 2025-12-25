@@ -61,7 +61,7 @@ kubectl get configmap space-metrics-config -n fawkes-local \
 
 ## SPACE Metrics API
 
-**Base URL**: `http://space-metrics.fawkes-local.svc.cluster.local:8000`  
+**Base URL**: `http://space-metrics.fawkes-local.svc.cluster.local:8000`
 **External Access**: Port-forward with `kubectl port-forward -n fawkes-local svc/space-metrics 8000:8000`
 
 ### Health Check
@@ -273,7 +273,7 @@ Exposes Prometheus metrics:
 
 ## Feedback Service API
 
-**Base URL**: `http://feedback-service.fawkes.svc.cluster.local:8080`  
+**Base URL**: `http://feedback-service.fawkes.svc.cluster.local:8080`
 **External Access**: Port-forward with `kubectl port-forward -n fawkes svc/feedback-service 8080:8080`
 
 ### Health Check
@@ -574,7 +574,7 @@ You can also DM me directly with feedback!
 
 ## Unleash API
 
-**Base URL**: `http://unleash.fawkes.svc.cluster.local:4242`  
+**Base URL**: `http://unleash.fawkes.svc.cluster.local:4242`
 **UI**: `https://unleash.fawkes.local` (port-forward for local access)
 
 ### Authentication
@@ -589,7 +589,7 @@ Obtain from: Unleash UI → Settings → API Access → Create API Token
 
 ### Client API (OpenFeature SDK)
 
-**Base URL**: `http://unleash.fawkes.svc.cluster.local:4242/api/client`  
+**Base URL**: `http://unleash.fawkes.svc.cluster.local:4242/api/client`
 **Authentication**: Client API tokens (different from Admin API)
 
 #### Get Feature Flags
@@ -734,7 +734,7 @@ Authorization: <ADMIN_TOKEN>
 
 ## Product Analytics API
 
-**Base URL**: Depends on analytics platform (PostHog/Plausible)  
+**Base URL**: Depends on analytics platform (PostHog/Plausible)
 **UI**: `https://analytics.fawkes.local` (if deployed)
 
 ### Capture Event (PostHog)
@@ -812,7 +812,7 @@ Authorization: Bearer <API_TOKEN>
 
 ## Storybook (Design System)
 
-**URL**: `https://storybook.fawkes.local` (or port-forward)  
+**URL**: `https://storybook.fawkes.local` (or port-forward)
 **Port**: 6006
 
 Storybook is a static site and doesn't have a REST API, but provides:

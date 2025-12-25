@@ -27,13 +27,13 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     """Manage application lifespan"""
     # Startup: Create database tables
     Base.metadata.create_all(bind=engine)
-    
+
     # Initialize metrics collector
     metrics_collector = MetricsCollector()
     app.state.metrics_collector = metrics_collector
-    
+
     yield
-    
+
     # Shutdown: cleanup if needed
     pass
 
@@ -75,11 +75,11 @@ def verify_admin_token(authorization: str = Header(None)) -> bool:
     """Verify admin authorization token"""
     if not authorization:
         raise HTTPException(status_code=401, detail="Authorization header missing")
-    
+
     expected_token = f"Bearer {os.getenv('ADMIN_TOKEN', 'dev-admin-token')}"
     if authorization != expected_token:
         raise HTTPException(status_code=401, detail="Invalid authorization token")
-    
+
     return True
 
 

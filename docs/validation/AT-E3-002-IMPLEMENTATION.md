@@ -2,11 +2,11 @@
 
 ## Test Information
 
-**Test ID**: AT-E3-002  
-**Category**: DevEx  
-**Priority**: P0  
-**Related Issue**: #79  
-**Epic**: Epic 3 - Product Discovery & UX  
+**Test ID**: AT-E3-002
+**Category**: DevEx
+**Priority**: P0
+**Related Issue**: #79
+**Epic**: Epic 3 - Product Discovery & UX
 **Milestone**: M3.1
 
 ## Description
@@ -47,7 +47,7 @@ kubectl get pods -n fawkes-local -l app=space-metrics
 kubectl get service space-metrics -n fawkes-local
 ```
 
-**Expected Result**: 
+**Expected Result**:
 - Deployment exists with 2 ready replicas
 - Pods are in Running state
 - Service exists and is accessible
@@ -211,7 +211,7 @@ ls -la services/devex-survey-automation/scripts/validate-nasa-tlx.py
 curl http://localhost:8000/api/v1/metrics/space/health
 ```
 
-**Expected Result**: 
+**Expected Result**:
 - Health score returned (0-100)
 - Status indicator included (excellent/good/needs_improvement)
 

@@ -12,7 +12,7 @@
     - name: currentStage
       using:
         foreign_key_constraint_on: current_stage_id
-  
+
   array_relationships:
     # Work item has many transitions
     - name: transitions
@@ -30,12 +30,12 @@
     - name: workItem
       using:
         foreign_key_constraint_on: work_item_id
-    
+
     # Transition has from_stage
     - name: fromStage
       using:
         foreign_key_constraint_on: from_stage_id
-    
+
     # Transition has to_stage
     - name: toStage
       using:
@@ -76,7 +76,7 @@
     - name: category
       using:
         foreign_key_constraint_on: category_id
-  
+
   array_relationships:
     # Insight has many tags (via insight_tags)
     - name: tags
@@ -96,7 +96,7 @@
     - name: parent
       using:
         foreign_key_constraint_on: parent_id
-  
+
   array_relationships:
     # Category has many insights
     - name: insights
@@ -106,7 +106,7 @@
           table:
             schema: public
             name: insights
-    
+
     # Category has many subcategories
     - name: subcategories
       using:

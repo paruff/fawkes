@@ -193,12 +193,12 @@ interface FeedbackSubmission {
 
 ```
 @developer_alice [10:23 AM]
-The Jenkins build for my service is taking 45 minutes now. 
+The Jenkins build for my service is taking 45 minutes now.
 It used to be 15 minutes last month. Anyone else seeing this?
 🐌
 
 @platform_engineer [10:41 AM]
-Thanks for flagging @developer_alice! We'll investigate. 
+Thanks for flagging @developer_alice! We'll investigate.
 Can you share which service? (DM if sensitive)
 
 @developer_bob [11:02 AM]
@@ -211,7 +211,7 @@ I'll check if we inadvertently changed build parallelism settings.
 Created ticket: FAWKES-567. Will update here by EOD.
 
 @platform_engineer [4:30 PM]
-Update: Found the issue. Jenkins upgrade reset parallel build 
+Update: Found the issue. Jenkins upgrade reset parallel build
 settings. Fix deployed. Builds should be back to normal speed now.
 @developer_alice @developer_bob can you confirm?
 
@@ -443,18 +443,18 @@ CREATE TABLE feedback (
   category VARCHAR(50) NOT NULL, -- 'ci-cd', 'gitops', 'docs', 'dojo', 'other'
   description TEXT NOT NULL,
   source VARCHAR(50) NOT NULL, -- 'widget', 'mattermost', 'interview', 'github'
-  
+
   -- Context
   user_id VARCHAR(100), -- NULL if anonymous
   user_role VARCHAR(50),
   page_context VARCHAR(200), -- Which Backstage page?
   timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
-  
+
   -- Analysis
   sentiment VARCHAR(20), -- 'positive', 'neutral', 'negative' (AI-generated)
   themes TEXT[], -- e.g., ['performance', 'documentation', 'jenkins']
   impact_score INT, -- 1-5 based on affected users + frequency
-  
+
   -- Lifecycle
   status VARCHAR(50) DEFAULT 'new', -- 'new', 'triaged', 'in-progress', 'resolved', 'wont-fix'
   assigned_to VARCHAR(100),
@@ -491,10 +491,10 @@ def analyze_sentiment(feedback_text):
 def extract_themes(feedback_batch):
     prompt = f"""
     Analyze these {len(feedback_batch)} feedback items and identify 3-5 recurring themes.
-    
+
     Feedback:
     {format_feedback(feedback_batch)}
-    
+
     Return themes as a JSON array, e.g., ["performance", "documentation", "onboarding"]
     """
     # Returns: ['jenkins-slow', 'backstage-search', 'dojo-outdated', ...]
@@ -505,25 +505,25 @@ def extract_themes(feedback_batch):
 ```python
 def calculate_impact_score(feedback):
     score = 0
-    
+
     # How many users mention similar issues?
     score += count_similar_feedback(feedback) * 2  # 0-10 points
-    
+
     # Severity (based on type)
     severity_weights = {'bug': 3, 'friction': 2, 'feature-request': 1, 'praise': 0}
     score += severity_weights[feedback.type]
-    
+
     # Sentiment (negative = more urgent)
     if feedback.sentiment == 'negative':
         score += 2
-    
+
     # Recency (recent = more relevant)
     days_old = (now() - feedback.timestamp).days
     if days_old < 7:
         score += 3
     elif days_old < 30:
         score += 1
-    
+
     return min(score, 10)  # Cap at 10
 ```
 
@@ -584,10 +584,10 @@ Hey team! Here's what we heard from you last month and what we're doing about it
 ### 🔥 Top 3 Themes We Heard
 1. **Jenkins builds are slow** (18 mentions)
    👉 WE DID: Optimized build parallelism, reduced avg build time 45min → 18min
-   
+
 2. **Backstage search doesn't find docs** (12 mentions)
    👉 WE DID: Upgraded search index, now indexes TechDocs + ADRs + Mattermost
-   
+
 3. **Dojo modules are outdated** (9 mentions)
    👉 WORKING ON IT: Updating modules 6-10, target completion Dec 15
 

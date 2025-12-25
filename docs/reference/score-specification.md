@@ -52,7 +52,7 @@ Metadata about the workload.
 
 **Type**: `string`
 **Required**: Yes
-**Constraints**: 
+**Constraints**:
 - Must be a valid Kubernetes resource name
 - Lowercase alphanumeric characters, `-` only
 - Max 63 characters

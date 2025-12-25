@@ -12,17 +12,17 @@ This script:
 
 Usage:
     python index-docs.py [--weaviate-url URL] [--dry-run] [--force-reindex]
-    
+
 Examples:
     # Index with default settings
     python index-docs.py
-    
+
     # Use custom Weaviate URL
     python index-docs.py --weaviate-url http://weaviate.fawkes.svc:80
-    
+
     # Dry run to see what would be indexed
     python index-docs.py --dry-run
-    
+
     # Force re-indexing of all documents
     python index-docs.py --force-reindex
 """
@@ -103,18 +103,18 @@ def get_file_hash(filepath: Path) -> str:
 def chunk_content(content: str, max_chars: int = MAX_CHUNK_CHARS) -> List[str]:
     """
     Chunk content into smaller pieces.
-    
+
     Tries to split on paragraph boundaries, then sentences, then words.
     """
     # If content is short enough, return as-is
     if len(content) <= max_chars:
         return [content]
-    
+
     chunks = []
-    
+
     # Split on double newlines (paragraphs)
     paragraphs = content.split("\n\n")
-    
+
     current_chunk = ""
     for para in paragraphs:
         # If adding this paragraph would exceed limit
@@ -122,7 +122,7 @@ def chunk_content(content: str, max_chars: int = MAX_CHUNK_CHARS) -> List[str]:
             if current_chunk:
                 chunks.append(current_chunk.strip())
                 current_chunk = ""
-            
+
             # If single paragraph is too long, split it
             if len(para) > max_chars:
                 # Split on sentences
@@ -138,11 +138,11 @@ def chunk_content(content: str, max_chars: int = MAX_CHUNK_CHARS) -> List[str]:
                 current_chunk = para + "\n\n"
         else:
             current_chunk += para + "\n\n"
-    
+
     # Add remaining chunk
     if current_chunk:
         chunks.append(current_chunk.strip())
-    
+
     return chunks
 
 
@@ -154,7 +154,7 @@ def extract_title(content: str, filepath: Path) -> str:
         line = line.strip()
         if line.startswith("# "):
             return line[2:].strip()
-    
+
     # Use filename as fallback
     return filepath.stem.replace("-", " ").replace("_", " ").title()
 
@@ -162,7 +162,7 @@ def extract_title(content: str, filepath: Path) -> str:
 def categorize_file(filepath: Path) -> str:
     """Categorize file based on path and extension."""
     path_str = str(filepath)
-    
+
     if "docs/adr" in path_str or "ADR" in filepath.stem.upper():
         return "adr"
     elif "docs/" in path_str:
@@ -182,20 +182,20 @@ def categorize_file(filepath: Path) -> str:
 def scan_files(base_path: Path, scan_dirs: List[str]) -> List[Path]:
     """Scan directories for files to index."""
     files_to_index = []
-    
+
     for scan_dir in scan_dirs:
         dir_path = base_path / scan_dir
         if not dir_path.exists():
             print(f"⚠️  Directory not found: {dir_path}")
             continue
-        
+
         print(f"📁 Scanning: {dir_path}")
-        
+
         for ext in FILE_EXTENSIONS.keys():
             for filepath in dir_path.rglob(f"*{ext}"):
                 if not should_exclude(filepath):
                     files_to_index.append(filepath)
-    
+
     return sorted(files_to_index)
 
 
@@ -235,16 +235,16 @@ def create_client(url: str) -> weaviate.Client:
 def ensure_schema(client: weaviate.Client) -> None:
     """Ensure the document schema exists in Weaviate."""
     print(f"\n📋 Checking schema '{SCHEMA_NAME}'...")
-    
+
     try:
         # Check if schema exists
         schema = client.schema.get()
         class_names = [c["class"] for c in schema.get("classes", [])]
-        
+
         if SCHEMA_NAME in class_names:
             print(f"✅ Schema '{SCHEMA_NAME}' already exists")
             return
-        
+
         # Create schema
         print(f"📝 Creating schema '{SCHEMA_NAME}'...")
         schema_definition = {
@@ -303,10 +303,10 @@ def ensure_schema(client: weaviate.Client) -> None:
                 },
             ],
         }
-        
+
         client.schema.create_class(schema_definition)
         print(f"✅ Schema '{SCHEMA_NAME}' created successfully")
-        
+
     except Exception as e:
         print(f"❌ Failed to ensure schema: {e}")
         sys.exit(1)
@@ -318,7 +318,7 @@ def check_if_needs_reindex(
     """Check if file needs re-indexing based on hash."""
     if force:
         return True
-    
+
     try:
         # Query for existing document with same filepath
         result = (
@@ -332,16 +332,16 @@ def check_if_needs_reindex(
             .with_limit(1)
             .do()
         )
-        
+
         documents = result.get("data", {}).get("Get", {}).get(SCHEMA_NAME, [])
-        
+
         if not documents:
             return True  # New document
-        
+
         # Check if hash changed
         existing_hash = documents[0].get("fileHash", "")
         return existing_hash != file_hash
-        
+
     except Exception:
         # On error, assume needs reindex
         return True
@@ -363,18 +363,18 @@ def delete_existing_chunks(client: weaviate.Client, filepath: str) -> int:
             .with_limit(100)  # Assume max 100 chunks per file
             .do()
         )
-        
+
         documents = result.get("data", {}).get("Get", {}).get(SCHEMA_NAME, [])
-        
+
         deleted_count = 0
         for doc in documents:
             doc_id = doc.get("_additional", {}).get("id")
             if doc_id:
                 client.data_object.delete(doc_id, class_name=SCHEMA_NAME)
                 deleted_count += 1
-        
+
         return deleted_count
-        
+
     except Exception as e:
         print(f"  ⚠️  Failed to delete existing chunks: {e}")
         return 0
@@ -389,7 +389,7 @@ def index_file(
 ) -> Tuple[bool, int]:
     """
     Index a single file into Weaviate.
-    
+
     Returns:
         (success: bool, chunks_indexed: int)
     """
@@ -397,55 +397,55 @@ def index_file(
     content = read_file_content(filepath)
     if not content:
         return False, 0
-    
+
     # Skip empty files
     if not content.strip():
         return True, 0
-    
+
     # Calculate relative path
     try:
         rel_path = str(filepath.relative_to(base_path))
     except ValueError:
         rel_path = str(filepath)
-    
+
     # Calculate file hash
     file_hash = get_file_hash(filepath)
-    
+
     # Check if needs reindex
     if not dry_run and not check_if_needs_reindex(client, rel_path, file_hash, force):
         return True, 0  # Skip, no changes
-    
+
     # Extract metadata
     title = extract_title(content, filepath)
     category = categorize_file(filepath)
-    
+
     # Chunk content
     chunks = chunk_content(content)
-    
+
     if dry_run:
         print(f"  📄 Would index: {rel_path}")
         print(f"     Title: {title}")
         print(f"     Category: {category}")
         print(f"     Chunks: {len(chunks)}")
         return True, len(chunks)
-    
+
     # Delete existing chunks
     deleted_count = delete_existing_chunks(client, rel_path)
     if deleted_count > 0:
         print(f"  🗑️  Deleted {deleted_count} existing chunks")
-    
+
     # Index chunks
     indexed_count = 0
     timestamp = datetime.utcnow().isoformat() + "Z"
-    
+
     try:
         with client.batch as batch:
             batch.batch_size = 10
-            
+
             for chunk_idx, chunk in enumerate(chunks):
                 # Generate deterministic UUID
                 chunk_id = generate_uuid5(f"{rel_path}:chunk:{chunk_idx}")
-                
+
                 data_object = {
                     "title": title,
                     "content": chunk,
@@ -455,16 +455,16 @@ def index_file(
                     "chunkIndex": chunk_idx,
                     "indexed_at": timestamp,
                 }
-                
+
                 batch.add_data_object(
                     data_object=data_object,
                     class_name=SCHEMA_NAME,
                     uuid=chunk_id,
                 )
                 indexed_count += 1
-        
+
         return True, indexed_count
-        
+
     except Exception as e:
         print(f"  ❌ Failed to index {rel_path}: {e}")
         return False, 0
@@ -497,44 +497,44 @@ def main():
         help="Base path of repository (default: current directory)",
     )
     args = parser.parse_args()
-    
+
     print("=" * 70)
     print("Fawkes Documentation Indexing Script")
     print("=" * 70)
-    
+
     if args.dry_run:
         print("🔍 DRY RUN MODE - No changes will be made")
         print()
-    
+
     # Connect to Weaviate (skip in dry-run)
     if not args.dry_run:
         client = create_client(args.weaviate_url)
         ensure_schema(client)
     else:
         client = None
-    
+
     # Scan for files
     print(f"\n📂 Base path: {args.base_path}")
     files_to_index = scan_files(args.base_path, SCAN_DIRS)
     print(f"\n📊 Found {len(files_to_index)} files to process")
-    
+
     # Index files
     print("\n📝 Indexing files...")
     print()
-    
+
     success_count = 0
     error_count = 0
     total_chunks = 0
     skipped_count = 0
     start_time = time.time()
-    
+
     for i, filepath in enumerate(files_to_index, 1):
         print(f"[{i}/{len(files_to_index)}] Processing: {filepath.name}")
-        
+
         success, chunks = index_file(
             client, filepath, args.base_path, args.dry_run, args.force_reindex
         )
-        
+
         if success:
             if chunks > 0:
                 success_count += 1
@@ -545,9 +545,9 @@ def main():
                 print(f"  ⏭️  Skipped (no changes)")
         else:
             error_count += 1
-    
+
     elapsed_time = time.time() - start_time
-    
+
     # Summary
     print("\n" + "=" * 70)
     print("📊 Indexing Summary")
@@ -558,14 +558,14 @@ def main():
     print(f"Errors: {error_count}")
     print(f"Total chunks indexed: {total_chunks}")
     print(f"Time elapsed: {elapsed_time:.2f} seconds")
-    
+
     if args.dry_run:
         print("\n🔍 This was a dry run. Run without --dry-run to actually index.")
     else:
         print("\n✅ Indexing complete!")
-    
+
     print("=" * 70)
-    
+
     return 0 if error_count == 0 else 1
 
 

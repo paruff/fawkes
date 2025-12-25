@@ -61,7 +61,7 @@ import { useEventTracking, usePageViewTracking } from '@fawkes/design-system/ana
 
 function MyComponent() {
   const { trackPredefined } = useEventTracking();
-  
+
   // Track page views automatically
   usePageViewTracking();
 
@@ -113,31 +113,31 @@ interface EventProperties {
   component?: string;
   page?: string;
   section?: string;
-  
+
   // Identifiers
   entityId?: string;
   entityName?: string;
   entityKind?: string;
-  
+
   // User context
   team?: string;
   role?: string;
-  
+
   // Technical details
   language?: string;
   framework?: string;
   template?: string;
-  
+
   // CI/CD context
   buildId?: string;
   pipelineId?: string;
   deploymentTarget?: string;
-  
+
   // Performance metrics
   duration?: number;
   responseTime?: number;
   errorCode?: string;
-  
+
   // Feature flags
   featureFlag?: string;
   experimentId?: string;
@@ -259,7 +259,7 @@ Automatically track page views:
 function MyPage() {
   // Track on mount and whenever dependencies change
   usePageViewTracking([location.pathname]);
-  
+
   return <div>My Page</div>;
 }
 ```
@@ -275,7 +275,7 @@ function MyComponent() {
     page: 'catalog',
     section: 'service-list',
   });
-  
+
   return <div>Content</div>;
 }
 ```
@@ -289,7 +289,7 @@ function DeployButton() {
   const onClick = useButtonClick('Deploy', {
     target: 'production',
   });
-  
+
   return <button onClick={onClick}>Deploy</button>;
 }
 ```
@@ -301,11 +301,11 @@ Track form interactions:
 ```typescript
 function MyForm() {
   const { trackFormStart, trackFormSubmit, trackFormError } = useFormTracking('service-creation');
-  
+
   useEffect(() => {
     trackFormStart();
   }, []);
-  
+
   const handleSubmit = async () => {
     try {
       // Form submission logic
@@ -314,7 +314,7 @@ function MyForm() {
       trackFormError(error.message);
     }
   };
-  
+
   return <form onSubmit={handleSubmit}>...</form>;
 }
 ```
@@ -326,11 +326,11 @@ Track search queries:
 ```typescript
 function SearchBox() {
   const { trackSearch } = useSearchTracking('catalog');
-  
+
   const handleSearch = (query: string, results: any[]) => {
     trackSearch(query, results.length);
   };
-  
+
   return <input onChange={e => handleSearch(e.target.value, [])} />;
 }
 ```
@@ -342,13 +342,13 @@ Track errors:
 ```typescript
 function MyComponent() {
   const { trackError, trackAPIError } = useErrorTracking();
-  
+
   try {
     // Component logic
   } catch (error) {
     trackError(error, { component: 'MyComponent' });
   }
-  
+
   // Track API errors
   const fetchData = async () => {
     try {
@@ -370,10 +370,10 @@ Track performance metrics:
 ```typescript
 function PerformanceSensitiveComponent() {
   const { trackPerformance } = usePerformanceTracking('data-load');
-  
+
   useEffect(() => {
     const start = performance.now();
-    
+
     loadData().then(() => {
       const duration = performance.now() - start;
       trackPerformance(duration, { dataSize: '1MB' });
@@ -503,7 +503,7 @@ The privacy middleware automatically removes sensitive fields:
 ```typescript
 // These fields are automatically removed:
 const sensitiveFields = [
-  'email', 'password', 'token', 'apiKey', 
+  'email', 'password', 'token', 'apiKey',
   'secret', 'ssn'
 ];
 ```
@@ -570,9 +570,9 @@ import { trackEvent } from '@fawkes/design-system/analytics';
 
 test('tracks deployment event', () => {
   const component = render(<DeployButton />);
-  
+
   fireEvent.click(component.getByText('Deploy'));
-  
+
   expect(trackEvent).toHaveBeenCalledWith(
     expect.objectContaining({
       category: EventCategory.DEPLOYMENT,
@@ -691,7 +691,7 @@ For high-volume events, use sampling:
 
 ```typescript
 // Track only 10% of page views
-chain.use(filterMiddleware(event => 
+chain.use(filterMiddleware(event =>
   event.category !== EventCategory.NAVIGATION || Math.random() < 0.1
 ));
 ```

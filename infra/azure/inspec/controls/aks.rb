@@ -40,7 +40,7 @@ control 'aks-node-count' do
 
   # Get agent pools and check count
   agent_pools = azure_aks_cluster(resource_group: resource_group, name: cluster_name).properties.agentPoolProfiles
-  
+
   describe "Total node count across all pools" do
     it "should be at least 2" do
       total_count = agent_pools.inject(0) { |sum, pool| sum + pool['count'].to_i }
@@ -61,7 +61,7 @@ control 'aks-node-pool-separation' do
   end
 
   agent_pools = azure_aks_cluster(resource_group: resource_group, name: cluster_name).properties.agentPoolProfiles
-  
+
   describe "Node pool configuration" do
     it "should have a system node pool" do
       system_pools = agent_pools.select { |p| p['mode'] == 'System' }

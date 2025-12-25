@@ -74,7 +74,7 @@ graph LR
     B -->|No| D{Tier 2}
     D -->|Important| E[Audit → Enforce]
     D -->|Nice-to-Have| F[Audit Only]
-    
+
     style C fill:#ff6b6b
     style E fill:#FFA726
     style F fill:#4CAF50
@@ -407,7 +407,7 @@ graph LR
     E -->|Yes| F[Enforce Mode]
     E -->|No| G[Extend Timeline]
     G --> D
-    
+
     style F fill:#4CAF50
 ```
 
@@ -555,12 +555,12 @@ Overall Compliance: 87% (↑ 5% vs. last month)
 Tier 1 (Critical) - Enforced:
   Compliance: 98%  ✅
   Violations: 3 (all approved exemptions)
-  
+
 Tier 2 (Important) - Audit → Enforce:
   Compliance: 82%  ⚠️
   Violations: 27
   On Track to Enforce: March 2025
-  
+
 Tier 3 (Best Practice) - Audit Only:
   Compliance: 65%  ℹ️
   Violations: 105

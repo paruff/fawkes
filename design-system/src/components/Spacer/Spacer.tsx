@@ -10,7 +10,7 @@ export interface SpacerProps extends BaseComponentProps {
 
 /**
  * Add flexible space between elements
- * 
+ *
  * @component
  * @example
  * ```tsx

@@ -82,7 +82,7 @@ Lead Time = ArgoCD Sync Timestamp - First Commit Timestamp
 
 The lead time includes:
 1. **Development Time**: Time spent coding
-2. **Review Time**: Time in code review/PR process  
+2. **Review Time**: Time in code review/PR process
 3. **CI Time**: Jenkins build and test execution
 4. **GitOps Sync Time**: ArgoCD reconciliation
 

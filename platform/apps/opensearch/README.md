@@ -207,7 +207,7 @@ kubectl exec -n logging opensearch-cluster-master-0 -- \
 ## Related Documentation
 
 - [Deployment Guide](DEPLOYMENT_GUIDE.md) - Complete deployment documentation
-- [OpenTelemetry Collector](../opentelemetry/README.md) - Log collection configuration  
+- [OpenTelemetry Collector](../opentelemetry/README.md) - Log collection configuration
 - [ADR-011: Centralized Log Management](../../../docs/adr/ADR-011%20Centralized%20Log%20Management.md)
 - [Architecture: Observability Stack](../../../docs/architecture.md#4-observability-stack)
 - [OpenSearch Documentation](https://opensearch.org/docs/latest/)

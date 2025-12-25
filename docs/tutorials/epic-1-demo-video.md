@@ -5,8 +5,8 @@ description: Access the Epic 1 platform walkthrough video demonstration
 
 # Epic 1 Demo Video
 
-**Status**: 🎬 Ready for Recording  
-**Duration**: 30 minutes  
+**Status**: 🎬 Ready for Recording
+**Duration**: 30 minutes
 **Epic**: DORA 2023 Foundation
 
 ## Video Access
@@ -23,10 +23,10 @@ Once recorded, the video will be available here:
 
 To record this video, use these comprehensive guides:
 
-📝 **[Full Recording Script](epic-1-demo-video-script.md)**  
+📝 **[Full Recording Script](epic-1-demo-video-script.md)**
 Detailed 30-minute script covering all Epic 1 deliverables with timestamps and talking points.
 
-✅ **[Recording Checklist](epic-1-demo-video-checklist.md)**  
+✅ **[Recording Checklist](epic-1-demo-video-checklist.md)**
 Quick reference checklist for setup, recording, and post-production.
 
 ## What the Video Covers
@@ -135,7 +135,7 @@ Need help with recording?
 
 ---
 
-**Version**: 1.0  
-**Related Issue**: paruff/fawkes#37  
-**Dependencies**: paruff/fawkes#34, paruff/fawkes#36  
+**Version**: 1.0
+**Related Issue**: paruff/fawkes#37
+**Dependencies**: paruff/fawkes#34, paruff/fawkes#36
 **Last Updated**: December 2024

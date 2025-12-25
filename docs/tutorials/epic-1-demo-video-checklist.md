@@ -244,6 +244,6 @@ git --no-pager log --oneline -5
 
 ---
 
-**Version**: 1.0  
-**Related Issue**: paruff/fawkes#37  
+**Version**: 1.0
+**Related Issue**: paruff/fawkes#37
 **Last Updated**: December 2024

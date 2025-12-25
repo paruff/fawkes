@@ -94,9 +94,9 @@ record_test() {
     local test_name="$1"
     local status="$2"
     local message="$3"
-    
+
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
-    
+
     if [ "$status" = "PASS" ]; then
         PASSED_TESTS=$((PASSED_TESTS + 1))
         log_success "$test_name: $message"
@@ -104,7 +104,7 @@ record_test() {
         FAILED_TESTS=$((FAILED_TESTS + 1))
         log_error "$test_name: $message"
     fi
-    
+
     TEST_RESULTS+=("{\"test\":\"$test_name\",\"status\":\"$status\",\"message\":\"$message\"}")
 }
 
@@ -114,7 +114,7 @@ record_test() {
 
 validate_namespace() {
     log_info "Validating namespace '$NAMESPACE' exists..."
-    
+
     if kubectl get namespace "$NAMESPACE" &>/dev/null; then
         local phase=$(kubectl get namespace "$NAMESPACE" -o jsonpath='{.status.phase}')
         if [ "$phase" = "Active" ]; then
@@ -129,11 +129,11 @@ validate_namespace() {
 
 validate_argocd_application() {
     log_info "Validating ArgoCD Application for prometheus-stack..."
-    
+
     if kubectl get application prometheus-stack -n "$ARGOCD_NAMESPACE" &>/dev/null; then
         local health=$(kubectl get application prometheus-stack -n "$ARGOCD_NAMESPACE" -o jsonpath='{.status.health.status}')
         local sync=$(kubectl get application prometheus-stack -n "$ARGOCD_NAMESPACE" -o jsonpath='{.status.sync.status}')
-        
+
         if [ "$health" = "Healthy" ] && [ "$sync" = "Synced" ]; then
             record_test "argocd_application" "PASS" "ArgoCD Application is Healthy and Synced"
         else
@@ -146,11 +146,11 @@ validate_argocd_application() {
 
 validate_prometheus_operator() {
     log_info "Validating Prometheus Operator deployment..."
-    
+
     if kubectl get deployment prometheus-operator -n "$NAMESPACE" &>/dev/null; then
         local ready=$(kubectl get deployment prometheus-operator -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
         local desired=$(kubectl get deployment prometheus-operator -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
-        
+
         if [ "$ready" = "$desired" ] && [ "$ready" -gt 0 ]; then
             record_test "prometheus_operator" "PASS" "Prometheus Operator is running ($ready/$desired replicas ready)"
         else
@@ -163,11 +163,11 @@ validate_prometheus_operator() {
 
 validate_prometheus_server() {
     log_info "Validating Prometheus Server..."
-    
+
     if kubectl get statefulset prometheus-prometheus -n "$NAMESPACE" &>/dev/null; then
         local ready=$(kubectl get statefulset prometheus-prometheus -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
         local desired=$(kubectl get statefulset prometheus-prometheus -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
-        
+
         if [ "$ready" = "$desired" ] && [ "$ready" -gt 0 ]; then
             record_test "prometheus_server" "PASS" "Prometheus Server is running ($ready/$desired replicas ready)"
         else
@@ -180,11 +180,11 @@ validate_prometheus_server() {
 
 validate_grafana() {
     log_info "Validating Grafana deployment..."
-    
+
     if kubectl get deployment prometheus-grafana -n "$NAMESPACE" &>/dev/null; then
         local ready=$(kubectl get deployment prometheus-grafana -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
         local desired=$(kubectl get deployment prometheus-grafana -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
-        
+
         if [ "$ready" = "$desired" ] && [ "$ready" -gt 0 ]; then
             record_test "grafana" "PASS" "Grafana is running ($ready/$desired replicas ready)"
         else
@@ -197,11 +197,11 @@ validate_grafana() {
 
 validate_alertmanager() {
     log_info "Validating Alertmanager..."
-    
+
     if kubectl get statefulset alertmanager-prometheus-alertmanager -n "$NAMESPACE" &>/dev/null; then
         local ready=$(kubectl get statefulset alertmanager-prometheus-alertmanager -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
         local desired=$(kubectl get statefulset alertmanager-prometheus-alertmanager -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
-        
+
         if [ "$ready" = "$desired" ] && [ "$ready" -gt 0 ]; then
             record_test "alertmanager" "PASS" "Alertmanager is running ($ready/$desired replicas ready)"
         else
@@ -214,11 +214,11 @@ validate_alertmanager() {
 
 validate_node_exporter() {
     log_info "Validating Node Exporter DaemonSet..."
-    
+
     if kubectl get daemonset prometheus-prometheus-node-exporter -n "$NAMESPACE" &>/dev/null; then
         local desired=$(kubectl get daemonset prometheus-prometheus-node-exporter -n "$NAMESPACE" -o jsonpath='{.status.desiredNumberScheduled}')
         local ready=$(kubectl get daemonset prometheus-prometheus-node-exporter -n "$NAMESPACE" -o jsonpath='{.status.numberReady}')
-        
+
         if [ "$ready" = "$desired" ] && [ "$ready" -gt 0 ]; then
             record_test "node_exporter" "PASS" "Node Exporter is running on all nodes ($ready/$desired ready)"
         else
@@ -231,11 +231,11 @@ validate_node_exporter() {
 
 validate_kube_state_metrics() {
     log_info "Validating kube-state-metrics..."
-    
+
     if kubectl get deployment prometheus-kube-state-metrics -n "$NAMESPACE" &>/dev/null; then
         local ready=$(kubectl get deployment prometheus-kube-state-metrics -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
         local desired=$(kubectl get deployment prometheus-kube-state-metrics -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
-        
+
         if [ "$ready" = "$desired" ] && [ "$ready" -gt 0 ]; then
             record_test "kube_state_metrics" "PASS" "kube-state-metrics is running ($ready/$desired replicas ready)"
         else
@@ -248,11 +248,11 @@ validate_kube_state_metrics() {
 
 validate_servicemonitors() {
     log_info "Validating ServiceMonitors..."
-    
+
     local servicemonitors=("argocd-server-metrics" "jenkins-metrics" "postgresql-metrics" "otel-collector-metrics")
     local all_found=true
     local found_count=0
-    
+
     for sm in "${servicemonitors[@]}"; do
         if kubectl get servicemonitor "$sm" -n "$NAMESPACE" &>/dev/null; then
             found_count=$((found_count + 1))
@@ -262,7 +262,7 @@ validate_servicemonitors() {
             [ "$VERBOSE" = true ] && log_warning "  - ServiceMonitor $sm not found"
         fi
     done
-    
+
     if [ $found_count -ge 2 ]; then
         record_test "servicemonitors" "PASS" "Found $found_count ServiceMonitors for platform components"
     else
@@ -272,12 +272,12 @@ validate_servicemonitors() {
 
 validate_prometheus_storage() {
     log_info "Validating Prometheus persistent storage..."
-    
+
     local pvc_count=$(kubectl get pvc -n "$NAMESPACE" -l "app.kubernetes.io/name=prometheus" --no-headers 2>/dev/null | wc -l)
-    
+
     if [ "$pvc_count" -gt 0 ]; then
         local bound_count=$(kubectl get pvc -n "$NAMESPACE" -l "app.kubernetes.io/name=prometheus" -o jsonpath='{.items[?(@.status.phase=="Bound")].metadata.name}' 2>/dev/null | wc -w)
-        
+
         if [ "$bound_count" = "$pvc_count" ]; then
             record_test "prometheus_storage" "PASS" "Prometheus PVC(s) are Bound ($bound_count/$pvc_count)"
         else
@@ -290,11 +290,11 @@ validate_prometheus_storage() {
 
 validate_grafana_ingress() {
     log_info "Validating Grafana ingress..."
-    
+
     if kubectl get ingress -n "$NAMESPACE" --no-headers 2>/dev/null | grep -q "grafana"; then
         local ingress_name=$(kubectl get ingress -n "$NAMESPACE" --no-headers 2>/dev/null | grep "grafana" | awk '{print $1}' | head -1)
         local host=$(kubectl get ingress "$ingress_name" -n "$NAMESPACE" -o jsonpath='{.spec.rules[0].host}')
-        
+
         if [ -n "$host" ]; then
             record_test "grafana_ingress" "PASS" "Grafana ingress configured with host: $host"
         else
@@ -307,11 +307,11 @@ validate_grafana_ingress() {
 
 validate_prometheus_ingress() {
     log_info "Validating Prometheus ingress..."
-    
+
     if kubectl get ingress -n "$NAMESPACE" --no-headers 2>/dev/null | grep -q "prometheus"; then
         local ingress_name=$(kubectl get ingress -n "$NAMESPACE" --no-headers 2>/dev/null | grep "prometheus" | awk '{print $1}' | head -1)
         local host=$(kubectl get ingress "$ingress_name" -n "$NAMESPACE" -o jsonpath='{.spec.rules[0].host}')
-        
+
         if [ -n "$host" ]; then
             record_test "prometheus_ingress" "PASS" "Prometheus ingress configured with host: $host"
         else
@@ -324,11 +324,11 @@ validate_prometheus_ingress() {
 
 validate_resource_limits() {
     log_info "Validating resource limits for prometheus components..."
-    
+
     local deployments=$(kubectl get deployment -n "$NAMESPACE" -l "app.kubernetes.io/part-of=kube-prometheus-stack" -o name 2>/dev/null | wc -l)
     local statefulsets=$(kubectl get statefulset -n "$NAMESPACE" -l "app.kubernetes.io/part-of=kube-prometheus-stack" -o name 2>/dev/null | wc -l)
     local total_workloads=$((deployments + statefulsets))
-    
+
     if [ "$total_workloads" -gt 0 ]; then
         record_test "resource_limits" "PASS" "Found $total_workloads prometheus stack workloads with resource definitions"
     else
@@ -338,13 +338,13 @@ validate_resource_limits() {
 
 validate_pods_health() {
     log_info "Validating all prometheus pods are healthy..."
-    
+
     local total_pods=$(kubectl get pods -n "$NAMESPACE" --no-headers 2>/dev/null | wc -l)
     local ready_pods=$(kubectl get pods -n "$NAMESPACE" --no-headers 2>/dev/null | grep -c "Running" || true)
-    
+
     if [ "$total_pods" -gt 0 ]; then
         local health_percentage=$((ready_pods * 100 / total_pods))
-        
+
         if [ "$health_percentage" -ge 80 ]; then
             record_test "pods_health" "PASS" "Most pods are healthy ($ready_pods/$total_pods running)"
         else
@@ -361,11 +361,11 @@ validate_pods_health() {
 
 generate_report() {
     log_info "Generating validation report..."
-    
+
     mkdir -p "$REPORT_DIR"
-    
+
     local pass_percentage=$((PASSED_TESTS * 100 / TOTAL_TESTS))
-    
+
     cat > "$REPORT_FILE" << EOF
 {
   "test_suite": "AT-E1-006: Observability Stack Validation",
@@ -383,7 +383,7 @@ generate_report() {
   ]
 }
 EOF
-    
+
     log_success "Report saved to $REPORT_FILE"
 }
 
@@ -397,9 +397,9 @@ print_summary() {
     echo "  Passed:       ${GREEN}$PASSED_TESTS${NC}"
     echo "  Failed:       ${RED}$FAILED_TESTS${NC}"
     echo ""
-    
+
     local pass_percentage=$((PASSED_TESTS * 100 / TOTAL_TESTS))
-    
+
     if [ "$pass_percentage" -ge 90 ]; then
         echo -e "  ${GREEN}✓ VALIDATION PASSED${NC} ($pass_percentage% pass rate)"
         echo ""
@@ -415,7 +415,7 @@ print_summary() {
         echo "  Critical issues found with the observability stack."
         echo "  Review the failed tests above and the report: $REPORT_FILE"
     fi
-    
+
     echo "========================================================================"
     echo ""
 }
@@ -463,7 +463,7 @@ main() {
                 ;;
         esac
     done
-    
+
     echo ""
     echo "========================================================================"
     echo "  AT-E1-006: Observability Stack Validation"
@@ -474,22 +474,22 @@ main() {
     echo "  Prometheus URL:    $PROMETHEUS_URL"
     echo "  Grafana URL:       $GRAFANA_URL"
     echo ""
-    
+
     # Check prerequisites
     log_info "Checking prerequisites..."
     if ! command -v kubectl &>/dev/null; then
         log_error "kubectl is not installed"
         exit 1
     fi
-    
+
     if ! kubectl cluster-info &>/dev/null; then
         log_error "Cannot connect to Kubernetes cluster"
         exit 1
     fi
-    
+
     log_success "Prerequisites check passed"
     echo ""
-    
+
     # Run validations
     validate_namespace
     validate_argocd_application
@@ -505,11 +505,11 @@ main() {
     validate_prometheus_ingress
     validate_resource_limits
     validate_pods_health
-    
+
     # Generate report and summary
     generate_report
     print_summary
-    
+
     # Exit with appropriate code
     if [ "$FAILED_TESTS" -eq 0 ]; then
         exit 0

@@ -12,7 +12,7 @@ Base = declarative_base()
 class SpaceSatisfaction(Base):
     """Satisfaction metrics from surveys and feedback"""
     __tablename__ = "space_satisfaction"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(DateTime, nullable=False, index=True)
     nps_score = Column(Float)  # -100 to 100
@@ -26,7 +26,7 @@ class SpaceSatisfaction(Base):
 class SpacePerformance(Base):
     """System and process performance metrics"""
     __tablename__ = "space_performance"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(DateTime, nullable=False, index=True)
     deployment_frequency = Column(Float)  # per day
@@ -41,7 +41,7 @@ class SpacePerformance(Base):
 class SpaceActivity(Base):
     """Developer activity metrics"""
     __tablename__ = "space_activity"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(DateTime, nullable=False, index=True)
     commits_count = Column(Integer, default=0)
@@ -56,7 +56,7 @@ class SpaceActivity(Base):
 class SpaceCommunication(Base):
     """Collaboration quality metrics"""
     __tablename__ = "space_communication"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(DateTime, nullable=False, index=True)
     avg_review_time_hours = Column(Float)
@@ -70,7 +70,7 @@ class SpaceCommunication(Base):
 class SpaceEfficiency(Base):
     """Flow and efficiency metrics"""
     __tablename__ = "space_efficiency"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(DateTime, nullable=False, index=True)
     flow_state_days = Column(Float)  # days per week

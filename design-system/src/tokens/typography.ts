@@ -1,6 +1,6 @@
 /**
  * Design Tokens - Typography
- * 
+ *
  * Typography scale and font settings
  */
 
@@ -11,7 +11,7 @@ export const typography = {
     mono: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
     display: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   },
-  
+
   // Font sizes (rem units)
   fontSize: {
     xs: '0.75rem',    // 12px
@@ -26,7 +26,7 @@ export const typography = {
     '6xl': '3.75rem', // 60px
     '7xl': '4.5rem',  // 72px
   },
-  
+
   // Font weights
   fontWeight: {
     thin: 100,
@@ -39,7 +39,7 @@ export const typography = {
     extrabold: 800,
     black: 900,
   },
-  
+
   // Line heights
   lineHeight: {
     none: 1,
@@ -49,7 +49,7 @@ export const typography = {
     relaxed: 1.625,
     loose: 2,
   },
-  
+
   // Letter spacing
   letterSpacing: {
     tighter: '-0.05em',

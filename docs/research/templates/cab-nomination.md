@@ -22,7 +22,7 @@
 
 ## Fawkes Experience
 
-**How long have you/they been using Fawkes?**  
+**How long have you/they been using Fawkes?**
 [e.g., 6 months]
 
 **Deployment Stage**:
@@ -95,10 +95,10 @@
 
 ## Advisory Board Fit
 
-**Why are you interested in joining the Customer Advisory Board?**  
+**Why are you interested in joining the Customer Advisory Board?**
 [200-300 words describing motivation, what you hope to contribute, and what you hope to gain]
 
-**What unique perspective would you bring to the board?**  
+**What unique perspective would you bring to the board?**
 [e.g., Specific industry vertical, unique use case, organization size, geographic region, technical expertise]
 
 **Specific areas where you'd like to provide input** (check all that apply):
@@ -129,20 +129,20 @@
 - [ ] Asia-Pacific (flexible)
 - [ ] Flexible - can accommodate most times
 
-**Any scheduling constraints?**  
+**Any scheduling constraints?**
 [e.g., Cannot do Mondays, prefer afternoons, etc.]
 
 ---
 
 ## Additional Information
 
-**Have you used other Internal Developer Platforms?** (optional)  
+**Have you used other Internal Developer Platforms?** (optional)
 [e.g., Yes - Humanitec, Spotify Backstage standalone, custom in-house platform]
 
-**Public Speaking / Writing Experience?** (optional)  
+**Public Speaking / Writing Experience?** (optional)
 [e.g., Spoke at KubeCon, published blog posts on platform engineering]
 
-**Anything else you'd like us to know?**  
+**Anything else you'd like us to know?**
 [Open field for any additional context]
 
 ---
@@ -176,9 +176,9 @@ By submitting this nomination, I/the nominee:
 
 ## For Admin Use Only
 
-**Review Date**: 
+**Review Date**:
 
-**Reviewer**: 
+**Reviewer**:
 
 **Status**:
 - [ ] Under Review

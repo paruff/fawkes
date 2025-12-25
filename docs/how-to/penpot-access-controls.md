@@ -131,7 +131,7 @@ Fawkes Platform Team
    ```bash
    # Access Penpot backend pod
    kubectl exec -it -n fawkes penpot-backend-xxx -- bash
-   
+
    # Create admin user (if not using first-user auto-admin)
    # This is typically done through the UI on first login
    ```

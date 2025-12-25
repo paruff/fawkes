@@ -1,6 +1,6 @@
 /**
  * Design Tokens - Border Radius
- * 
+ *
  * Border radius values for component corners
  */
 

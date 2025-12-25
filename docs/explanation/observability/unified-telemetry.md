@@ -32,12 +32,12 @@ graph TB
     A --> C[New Relic Agent]
     A --> D[Prometheus Exporter]
     A --> E[Fluentd Sidecar]
-    
+
     B --> F[Datadog Backend]
     C --> G[New Relic Backend]
     D --> H[Prometheus]
     E --> I[Elasticsearch]
-    
+
     style A fill:#ff6b6b
 ```
 
@@ -74,7 +74,7 @@ graph TB
 
 **2022**: Datadog raises prices 40%. Company X evaluates alternatives.
 
-**Discovery**: 
+**Discovery**:
 - 200 microservices instrumented with `dd-trace` library
 - Custom dashboards use Datadog-specific query language
 - Alerts depend on Datadog metric names
@@ -93,8 +93,8 @@ graph TB
 - **Collector** - Vendor-agnostic telemetry pipeline
 - **Export to any backend** - Prometheus, Grafana, Datadog, Jaeger, etc.
 
-**Created by**: CNCF (merger of OpenTracing and OpenCensus)  
-**Status**: CNCF Graduated (highest maturity)  
+**Created by**: CNCF (merger of OpenTracing and OpenCensus)
+**Status**: CNCF Graduated (highest maturity)
 **Backed by**: Google, Microsoft, AWS, Splunk, Datadog, New Relic, etc.
 
 **The Key Insight**: Get vendors to agree on a **standard**, then compete on **backends**, not agents.
@@ -109,7 +109,7 @@ graph TB
     B --> E[Loki]
     B --> F[Optional: Datadog]
     B --> G[Optional: New Relic]
-    
+
     style B fill:#4CAF50
     style C fill:#2196F3
     style D fill:#2196F3
@@ -139,9 +139,9 @@ graph TB
 
 ### Fawkes Telemetry Stack
 
-**Metrics**: Prometheus (via OTel Collector)  
-**Logs**: Loki (via OTel Collector)  
-**Traces**: Grafana Tempo (via OTel Collector)  
+**Metrics**: Prometheus (via OTel Collector)
+**Logs**: Loki (via OTel Collector)
+**Traces**: Grafana Tempo (via OTel Collector)
 **Visualization**: Grafana (unified dashboard)
 
 **All data flows through OTel Collector:**
@@ -159,7 +159,7 @@ processors:
   batch:
     timeout: 10s
     send_batch_size: 1024
-  
+
   # Remove sensitive data
   attributes:
     actions:
@@ -171,12 +171,12 @@ processors:
 exporters:
   prometheus:
     endpoint: "prometheus:9090"
-  
+
   otlp/tempo:
     endpoint: "tempo:4317"
     tls:
       insecure: false
-  
+
   loki:
     endpoint: "http://loki:3100/loki/api/v1/push"
 
@@ -186,12 +186,12 @@ service:
       receivers: [otlp]
       processors: [batch, attributes]
       exporters: [prometheus]
-    
+
     traces:
       receivers: [otlp]
       processors: [batch, attributes]
       exporters: [otlp/tempo]
-    
+
     logs:
       receivers: [otlp]
       processors: [batch, attributes]
@@ -311,12 +311,12 @@ def process_order(order_id):
     with tracer.start_as_current_span("process_order") as span:
         span.set_attribute("order.id", order_id)
         span.set_attribute("order.amount", order.total)
-        
+
         # Business logic
         validate_order(order_id)
         charge_payment(order_id)
         ship_order(order_id)
-        
+
         span.set_attribute("order.status", "completed")
 ```
 
@@ -378,12 +378,12 @@ processors:
         type: status_code
         status_code:
           status_codes: [ERROR]
-      
+
       - name: slow-requests
         type: latency
         latency:
           threshold_ms: 1000
-      
+
       - name: probabilistic
         type: probabilistic
         probabilistic:
@@ -427,8 +427,8 @@ processors:
 
 ### Fawkes 1.0 (2022): Prometheus + Vendor Sprawl
 
-**Metrics**: Prometheus exporters (custom per service)  
-**Logs**: Fluentd + Elasticsearch  
+**Metrics**: Prometheus exporters (custom per service)
+**Logs**: Fluentd + Elasticsearch
 **Traces**: Jaeger (limited adoption)
 
 **Problems:**

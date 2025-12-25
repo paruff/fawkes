@@ -267,7 +267,7 @@ rate_limit:
   global:
     max_req_per_min: 1000
     unique_params: IP
-  
+
   per_role:
     admin:
       max_req_per_min: 10000

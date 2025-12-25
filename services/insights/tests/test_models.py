@@ -18,7 +18,7 @@ def test_create_category(db_session):
     )
     db_session.add(category)
     db_session.commit()
-    
+
     assert category.id is not None
     assert category.name == "Technical"
     assert category.slug == "technical"
@@ -35,7 +35,7 @@ def test_create_tag(db_session):
     )
     db_session.add(tag)
     db_session.commit()
-    
+
     assert tag.id is not None
     assert tag.name == "Best Practice"
     assert tag.usage_count == 0
@@ -57,7 +57,7 @@ def test_create_insight(db_session, sample_category):
     )
     db_session.add(insight)
     db_session.commit()
-    
+
     assert insight.id is not None
     assert insight.title == "Test Insight"
     assert insight.category_id == sample_category.id
@@ -79,7 +79,7 @@ def test_insight_with_tags(db_session, sample_category, sample_tag):
     insight.tags = [sample_tag]
     db_session.add(insight)
     db_session.commit()
-    
+
     assert len(insight.tags) == 1
     assert insight.tags[0].name == sample_tag.name
 
@@ -94,7 +94,7 @@ def test_category_hierarchy(db_session):
     )
     db_session.add(parent)
     db_session.commit()
-    
+
     child = Category(
         name="Child",
         slug="child",
@@ -104,7 +104,7 @@ def test_category_hierarchy(db_session):
     )
     db_session.add(child)
     db_session.commit()
-    
+
     assert child.parent_id == parent.id
     assert len(parent.subcategories) == 1
     assert parent.subcategories[0].name == "Child"
@@ -114,14 +114,14 @@ def test_cascade_delete_insight_tags(db_session, sample_insight):
     """Test that deleting an insight removes its tag associations."""
     insight_id = sample_insight.id
     tag_count = len(sample_insight.tags)
-    
+
     db_session.delete(sample_insight)
     db_session.commit()
-    
+
     # Check that insight is deleted
     deleted_insight = db_session.query(Insight).filter(Insight.id == insight_id).first()
     assert deleted_insight is None
-    
+
     # Tags should still exist
     tags = db_session.query(Tag).all()
     assert len(tags) >= tag_count

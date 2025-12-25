@@ -13,7 +13,7 @@ class SatisfactionMetrics(BaseModel):
     satisfaction_rating: Optional[float] = Field(None, ge=1, le=5, description="Platform satisfaction rating")
     burnout_percentage: Optional[float] = Field(None, ge=0, le=100, description="Percentage reporting burnout")
     response_count: int = Field(0, description="Number of survey responses")
-    
+
     class Config:
         from_attributes = True
 
@@ -26,7 +26,7 @@ class PerformanceMetrics(BaseModel):
     mttr_minutes: Optional[float] = Field(None, description="Mean time to recovery in minutes")
     build_success_rate: Optional[float] = Field(None, ge=0, le=100, description="Build success rate percentage")
     test_coverage: Optional[float] = Field(None, ge=0, le=100, description="Test coverage percentage")
-    
+
     class Config:
         from_attributes = True
 
@@ -39,7 +39,7 @@ class ActivityMetrics(BaseModel):
     active_developers_count: int = Field(0, description="Number of active developers")
     ai_tool_adoption_rate: Optional[float] = Field(None, ge=0, le=100, description="AI tool adoption percentage")
     platform_usage_count: int = Field(0, description="Platform usage count")
-    
+
     class Config:
         from_attributes = True
 
@@ -51,7 +51,7 @@ class CommunicationMetrics(BaseModel):
     cross_team_prs: int = Field(0, description="Cross-team pull requests")
     mattermost_messages: int = Field(0, description="Mattermost messages")
     constructive_feedback_rate: Optional[float] = Field(None, ge=0, le=100, description="Constructive feedback rate")
-    
+
     class Config:
         from_attributes = True
 
@@ -63,7 +63,7 @@ class EfficiencyMetrics(BaseModel):
     friction_incidents: int = Field(0, description="Number of friction incidents")
     context_switches: Optional[float] = Field(None, description="Context switches per day")
     cognitive_load_avg: Optional[float] = Field(None, ge=1, le=5, description="Average cognitive load")
-    
+
     class Config:
         from_attributes = True
 
@@ -86,7 +86,7 @@ class FrictionLogRequest(BaseModel):
     description: str = Field(..., description="Detailed description")
     severity: str = Field(..., description="Severity: low, medium, high, critical")
     category: Optional[str] = Field(None, description="Category: ci, deployment, documentation, etc.")
-    
+
     class Config:
         json_schema_extra = {
             "example": {
@@ -104,7 +104,7 @@ class PulseSurveyRequest(BaseModel):
     flow_state_days: float = Field(..., ge=0, le=7, description="Days per week achieving flow state")
     cognitive_load: float = Field(..., ge=1, le=5, description="Cognitive load rating 1-5")
     friction_experienced: Optional[bool] = Field(None, description="Experienced friction this week")
-    
+
     class Config:
         json_schema_extra = {
             "example": {

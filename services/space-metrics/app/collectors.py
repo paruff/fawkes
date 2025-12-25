@@ -36,7 +36,7 @@ async def collect_satisfaction_metrics(
 ) -> SatisfactionMetrics:
     """
     Collect satisfaction dimension metrics
-    
+
     Aggregates NPS scores, satisfaction ratings, and burnout percentages
     from survey responses within the time range.
     """
@@ -53,9 +53,9 @@ async def collect_satisfaction_metrics(
                 SpaceSatisfaction.timestamp <= end_time,
             )
         )
-        
+
         row = result.first()
-        
+
         return SatisfactionMetrics(
             nps_score=round(row.nps_score, 1) if row.nps_score else None,
             satisfaction_rating=round(row.satisfaction_rating, 2) if row.satisfaction_rating else None,
@@ -74,7 +74,7 @@ async def collect_performance_metrics(
 ) -> PerformanceMetrics:
     """
     Collect performance dimension metrics
-    
+
     Aggregates DORA metrics and build performance data.
     """
     try:
@@ -91,9 +91,9 @@ async def collect_performance_metrics(
                 SpacePerformance.timestamp <= end_time,
             )
         )
-        
+
         row = result.first()
-        
+
         return PerformanceMetrics(
             deployment_frequency=round(row.deployment_frequency, 2) if row.deployment_frequency else None,
             lead_time_hours=round(row.lead_time_hours, 1) if row.lead_time_hours else None,
@@ -114,7 +114,7 @@ async def collect_activity_metrics(
 ) -> ActivityMetrics:
     """
     Collect activity dimension metrics
-    
+
     Aggregates developer activity from GitHub, Backstage, etc.
     """
     try:
@@ -131,14 +131,14 @@ async def collect_activity_metrics(
                 SpaceActivity.timestamp <= end_time,
             )
         )
-        
+
         row = result.first()
-        
+
         # Check aggregation threshold
         active_devs = int(row.active_developers_count) if row.active_developers_count else 0
         if active_devs < AGGREGATION_THRESHOLD:
             logger.warning(f"Active developers ({active_devs}) below threshold ({AGGREGATION_THRESHOLD})")
-        
+
         return ActivityMetrics(
             commits_count=int(row.commits_count) if row.commits_count else 0,
             pull_requests_count=int(row.pull_requests_count) if row.pull_requests_count else 0,
@@ -159,7 +159,7 @@ async def collect_communication_metrics(
 ) -> CommunicationMetrics:
     """
     Collect communication dimension metrics
-    
+
     Aggregates collaboration quality metrics.
     """
     try:
@@ -175,9 +175,9 @@ async def collect_communication_metrics(
                 SpaceCommunication.timestamp <= end_time,
             )
         )
-        
+
         row = result.first()
-        
+
         return CommunicationMetrics(
             avg_review_time_hours=round(row.avg_review_time_hours, 1) if row.avg_review_time_hours else None,
             pr_comments_avg=round(row.pr_comments_avg, 1) if row.pr_comments_avg else None,
@@ -197,7 +197,7 @@ async def collect_efficiency_metrics(
 ) -> EfficiencyMetrics:
     """
     Collect efficiency dimension metrics
-    
+
     Aggregates flow state, friction, and cognitive load data.
     """
     try:
@@ -213,9 +213,9 @@ async def collect_efficiency_metrics(
                 SpaceEfficiency.timestamp <= end_time,
             )
         )
-        
+
         row = result.first()
-        
+
         return EfficiencyMetrics(
             flow_state_days=round(row.flow_state_days, 1) if row.flow_state_days else None,
             valuable_work_percentage=round(row.valuable_work_percentage, 1) if row.valuable_work_percentage else None,

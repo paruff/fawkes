@@ -64,9 +64,9 @@ def call(Map config = [:]) {
 def containerScan(Map config) {
     container('trivy') {
         echo "Scanning container image: ${config.image}"
-        
+
         def exitCode = config.failOnVulnerabilities ? config.trivyExitCode : '0'
-        
+
         sh """
             trivy image \
                 --severity ${config.trivySeverity} \
@@ -75,7 +75,7 @@ def containerScan(Map config) {
                 --output trivy-report.txt \
                 ${config.image}
         """
-        
+
         // Generate JSON report for archiving
         sh """
             trivy image \
@@ -84,7 +84,7 @@ def containerScan(Map config) {
                 --output trivy-report.json \
                 ${config.image}
         """
-        
+
         archiveArtifacts artifacts: 'trivy-report.*', allowEmptyArchive: true
     }
 }
@@ -98,7 +98,7 @@ def containerScan(Map config) {
  */
 def sonarAnalysis(Map config) {
     def sonarReportUrl = ''
-    
+
     withSonarQubeEnv('SonarQube') {
         switch (config.language) {
             case 'java':
@@ -140,19 +140,19 @@ def sonarAnalysis(Map config) {
                 """
                 break
         }
-        
+
         // Construct SonarQube report URL for developer access
         sonarReportUrl = "${config.sonarHostUrl}/dashboard?id=${config.sonarProject}&branch=${config.sonarBranch}"
     }
-    
+
     // Wait for quality gate with detailed logging
     echo "=============================================="
     echo "Waiting for SonarQube Quality Gate result..."
     echo "=============================================="
-    
+
     timeout(time: config.sonarQubeTimeout, unit: 'MINUTES') {
         def qg = waitForQualityGate()
-        
+
         // Log Quality Gate result with link to dashboard
         echo "=============================================="
         echo "SonarQube Quality Gate: ${qg.status}"
@@ -160,11 +160,11 @@ def sonarAnalysis(Map config) {
         echo "📊 View detailed analysis report:"
         echo "   ${sonarReportUrl}"
         echo "=============================================="
-        
+
         // Add summary to build description for easy access
-        currentBuild.description = (currentBuild.description ?: '') + 
+        currentBuild.description = (currentBuild.description ?: '') +
             "\n<a href='${sonarReportUrl}'>SonarQube Report</a>"
-        
+
         if (qg.status != 'OK') {
             def failureMessage = """
 ============================================
@@ -183,7 +183,7 @@ Common failure reasons:
 ============================================
 """
             echo failureMessage
-            
+
             if (config.failOnQualityGate) {
                 error "Quality Gate failed: ${qg.status}. See SonarQube report: ${sonarReportUrl}"
             } else {
@@ -193,7 +193,7 @@ Common failure reasons:
             echo "✅ Quality Gate passed successfully!"
         }
     }
-    
+
     return sonarReportUrl
 }
 
@@ -202,7 +202,7 @@ Common failure reasons:
  */
 def dependencyCheck(Map config) {
     echo "Running dependency vulnerability check..."
-    
+
     switch (config.language) {
         case 'java':
             sh 'mvn org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=7 || true'
@@ -263,17 +263,17 @@ def getSonarQubeUrl(String projectKey, String branch = 'main') {
 
 /**
  * Run secrets detection with Gitleaks
- * 
+ *
  * Scans the repository for hardcoded secrets, API keys, passwords, and other
  * sensitive information using Gitleaks. This is a critical security step that
  * helps prevent accidental exposure of credentials.
- * 
+ *
  * The scan uses the .gitleaks.toml configuration file if present for custom
  * rules and allowlists. Results are archived as JSON for audit purposes.
- * 
+ *
  * @param config Configuration map with the following options:
  *   - failOnSecrets: Whether to fail the pipeline if secrets are detected (default: true)
- * 
+ *
  * @example
  * secretsScan([failOnSecrets: true])
  */
@@ -281,9 +281,9 @@ def secretsScan(Map config) {
     echo "=============================================="
     echo "Scanning for secrets with Gitleaks"
     echo "=============================================="
-    
+
     def exitCode = config.failOnSecrets ? '1' : '0'
-    
+
     container('gitleaks') {
         try {
             sh """
@@ -295,10 +295,10 @@ def secretsScan(Map config) {
                     --exit-code ${exitCode}
             """
             echo "✅ No secrets detected!"
-            
+
             // Archive report even on success for audit trail
             archiveArtifacts artifacts: 'gitleaks-report.json', allowEmptyArchive: true
-            
+
         } catch (Exception e) {
             echo """
 ============================================
@@ -309,7 +309,7 @@ This is a critical security issue that must be resolved.
 
 Common secrets detected:
 - API keys and tokens
-- Passwords and credentials  
+- Passwords and credentials
 - Private keys and certificates
 - Database connection strings
 - OAuth tokens
@@ -325,7 +325,7 @@ For help, see: docs/how-to/security/secrets-management.md
 """
             // Archive the report for review
             archiveArtifacts artifacts: 'gitleaks-report.json', allowEmptyArchive: true
-            
+
             if (config.failOnSecrets) {
                 error "Secrets detected in code. Pipeline failed for security reasons."
             } else {

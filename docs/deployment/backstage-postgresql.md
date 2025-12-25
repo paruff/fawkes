@@ -129,13 +129,13 @@ Before deploying Backstage, you must configure GitHub OAuth authentication. With
    ```bash
    vim platform/apps/backstage/secrets.yaml
    ```
-   
+
    Replace these lines:
    ```yaml
    github-client-id: CHANGE_ME_github_oauth_client_id
    github-client-secret: CHANGE_ME_github_oauth_client_secret
    ```
-   
+
    With your actual values:
    ```yaml
    github-client-id: "your-actual-client-id"

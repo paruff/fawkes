@@ -213,19 +213,19 @@ Note: Performance is inverted because higher performance is better, while higher
 
 - **High Mental Demand**: Task requires complex thinking, many decisions, or unfamiliar concepts
   - *Improvements*: Better documentation, simplified workflows, guided wizards
-  
+
 - **High Physical Demand**: Task requires excessive typing, clicking, or repetitive actions
   - *Improvements*: Keyboard shortcuts, automation, CLI tools, batch operations
-  
+
 - **High Temporal Demand**: Task is time-pressured or has tight deadlines
   - *Improvements*: Faster build times, parallel execution, progress indicators
-  
+
 - **Low Performance**: Users struggle to complete the task successfully
   - *Improvements*: Better error messages, validation, rollback capabilities
-  
+
 - **High Effort**: Task requires more work than it should
   - *Improvements*: Automation, intelligent defaults, templates, code generation
-  
+
 - **High Frustration**: Task causes annoyance, stress, or discouragement
   - *Improvements*: Fix bugs, improve error handling, reduce complexity, provide alternatives
 
@@ -320,7 +320,7 @@ groups:
         annotations:
           summary: "High cognitive load detected for {{ $labels.task_type }}"
           description: "Average workload ({{ $value }}) exceeds 70 for task type {{ $labels.task_type }}"
-      
+
       - alert: HighFrustration
         expr: devex_nasa_tlx_frustration > 75
         for: 30m

@@ -5,7 +5,7 @@ description: Secure your application with HashiCorp Vault for compliant secret m
 
 # Consume Vault Secrets
 
-**Time to Complete**: 30 minutes  
+**Time to Complete**: 30 minutes
 **Goal**: Replace hardcoded configuration with secrets managed by HashiCorp Vault, following the Fawkes security best practices.
 
 ## What You'll Learn
@@ -43,14 +43,14 @@ First, let's verify you can access Vault.
    ```bash
    vault login
    ```
-   
+
    Enter your token when prompted.
 
 3. Verify authentication:
    ```bash
    vault token lookup
    ```
-   
+
    You should see details about your token, including policies and permissions.
 
 !!! tip "Vault Token Management"
@@ -67,7 +67,7 @@ Let's create a database connection secret for our application.
    ```bash
    vault secrets enable -path=secret kv-v2
    ```
-   
+
    If it's already enabled, you'll see an error - that's okay!
 
 2. Create a secret for your application:
@@ -83,7 +83,7 @@ Let's create a database connection secret for our application.
    ```bash
    vault kv get secret/hello-fawkes/database
    ```
-   
+
    You should see your secret values:
    ```
    ====== Data ======
@@ -121,14 +121,14 @@ For your application to access Vault, we need to set up Kubernetes authenticatio
    ```
 
 3. Create a policy that allows reading your secrets:
-   
+
    Create a file `hello-fawkes-policy.hcl`:
    ```hcl
    # Allow reading secrets for hello-fawkes
    path "secret/data/hello-fawkes/*" {
      capabilities = ["read", "list"]
    }
-   
+
    # Allow reading secret metadata
    path "secret/metadata/hello-fawkes/*" {
      capabilities = ["read", "list"]
@@ -248,10 +248,10 @@ Now let's modify our application to fetch secrets from Vault at runtime.
        });
 
        console.log('Successfully authenticated to Vault');
-       
+
        // Set the client token for future requests
        vaultClient.token = result.auth.client_token;
-       
+
        return vaultClient;
      } catch (error) {
        console.error('Vault authentication failed:', error);
@@ -298,15 +298,15 @@ Now let's modify our application to fetch secrets from Vault at runtime.
    const initializeSecrets = async () => {
      try {
        vaultClient = await initVaultClient();
-       
+
        // Load database secrets
        secrets.database = await getSecret(vaultClient, 'hello-fawkes/database');
        console.log('Database secrets loaded');
-       
+
        // Load API secrets
        secrets.api = await getSecret(vaultClient, 'hello-fawkes/api');
        console.log('API secrets loaded');
-       
+
        return true;
      } catch (error) {
        console.error('Failed to initialize secrets:', error);
@@ -326,7 +326,7 @@ Now let's modify our application to fetch secrets from Vault at runtime.
 
    app.get('/health', (req, res) => {
      const healthy = secrets.database !== null && secrets.api !== null;
-     res.status(healthy ? 200 : 503).json({ 
+     res.status(healthy ? 200 : 503).json({
        status: healthy ? 'healthy' : 'unhealthy',
        secretsLoaded: healthy
      });
@@ -358,7 +358,7 @@ Now let's modify our application to fetch secrets from Vault at runtime.
    app.post('/api/refresh-secrets', async (req, res) => {
      console.log('Refreshing secrets from Vault...');
      const success = await initializeSecrets();
-     res.json({ 
+     res.json({
        success,
        message: success ? 'Secrets refreshed' : 'Failed to refresh secrets'
      });
@@ -367,7 +367,7 @@ Now let's modify our application to fetch secrets from Vault at runtime.
    // Start server after loading secrets
    (async () => {
      const secretsLoaded = await initializeSecrets();
-     
+
      if (!secretsLoaded) {
        console.error('Failed to load secrets. Server will start but may not function correctly.');
      }
@@ -491,7 +491,7 @@ Let's deploy the updated application and verify it can read secrets from Vault.
    ```bash
    kubectl logs -n my-first-app -l app=hello-fawkes | grep -i vault
    ```
-   
+
    You should see:
    ```
    Successfully authenticated to Vault
@@ -503,7 +503,7 @@ Let's deploy the updated application and verify it can read secrets from Vault.
    ```bash
    curl https://hello-fawkes.127.0.0.1.nip.io/health
    ```
-   
+
    Should return:
    ```json
    {
@@ -516,7 +516,7 @@ Let's deploy the updated application and verify it can read secrets from Vault.
    ```bash
    curl https://hello-fawkes.127.0.0.1.nip.io/api/data
    ```
-   
+
    Should return database configuration from Vault:
    ```json
    {
@@ -552,7 +552,7 @@ Let's verify that secret rotation works by updating a secret in Vault and refres
    ```bash
    curl -X POST https://hello-fawkes.127.0.0.1.nip.io/api/refresh-secrets
    ```
-   
+
    Should return:
    ```json
    {
@@ -565,7 +565,7 @@ Let's verify that secret rotation works by updating a secret in Vault and refres
    ```bash
    kubectl logs -n my-first-app -l app=hello-fawkes --tail=20
    ```
-   
+
    You should see:
    ```
    Refreshing secrets from Vault...
@@ -578,7 +578,7 @@ Let's verify that secret rotation works by updating a secret in Vault and refres
     - Vault's automatic rotation features
     - A sidecar that refreshes secrets periodically
     - Or External Secrets Operator for full automation
-    
+
     See [How to Rotate Vault Secrets](../how-to/security/rotate-vault-secrets.md) for advanced patterns.
 
 !!! success "Checkpoint"

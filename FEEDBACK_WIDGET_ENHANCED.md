@@ -1,7 +1,7 @@
 # Enhanced Feedback Widget Implementation Summary
 
-**Issue**: #85 - Deploy Enhanced Feedback Widget in Backstage  
-**Implementation Date**: December 24, 2024  
+**Issue**: #85 - Deploy Enhanced Feedback Widget in Backstage
+**Implementation Date**: December 24, 2024
 **Status**: ✅ Complete (Code ready for deployment)
 
 ## Overview
@@ -19,7 +19,7 @@ Successfully implemented an enhanced feedback collection system for Backstage wi
 
 ### 2. GitHub Issues Integration ✅
 - **Automatic issue creation** from feedback submissions
-- **Configurable by feedback type**: 
+- **Configurable by feedback type**:
   - Bug reports → auto-create with `bug` label
   - Feature requests → auto-create with `enhancement` label
   - General feedback → manual creation option

@@ -21,7 +21,7 @@ Please be respectful and professional in all interactions. We are committed to p
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm 8+
 - Git
 

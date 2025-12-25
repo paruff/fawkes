@@ -65,10 +65,10 @@ mypy app
 def test_function_name():
     # Arrange
     setup_test_data()
-    
+
     # Act
     result = function_under_test()
-    
+
     # Assert
     assert result == expected_value
 ```
@@ -86,13 +86,13 @@ Example:
 ```python
 def calculate_total(items: list[Item]) -> float:
     """Calculate the total price of items.
-    
+
     Args:
         items: List of items to calculate total for
-        
+
     Returns:
         Total price as a float
-        
+
     Raises:
         ValueError: If items list is empty
     """

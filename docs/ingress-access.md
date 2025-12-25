@@ -58,13 +58,13 @@ metadata:
   annotations:
     # Required: Use nginx ingress class
     kubernetes.io/ingress.class: nginx
-    
+
     # Required: TLS certificate issuer (use letsencrypt-prod for production)
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    
+
     # Optional: ExternalDNS will auto-create DNS record based on host
     external-dns.alpha.kubernetes.io/hostname: my-service.fawkes.idp
-    
+
     # Optional: Force HTTPS redirect (enabled by default)
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:

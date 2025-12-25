@@ -1,7 +1,7 @@
 # Feedback Widget Implementation Summary
 
-**Issue**: #62 - Deploy feedback widget in Backstage  
-**Implementation Date**: December 22, 2024  
+**Issue**: #62 - Deploy feedback widget in Backstage
+**Implementation Date**: December 22, 2024
 **Status**: ✅ Complete
 
 ## Overview

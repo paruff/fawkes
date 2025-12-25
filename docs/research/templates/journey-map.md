@@ -2,10 +2,10 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: December 2025  
-**Status**: Active  
-**Owner**: Product Team  
+**Version**: 1.0
+**Last Updated**: December 2025
+**Status**: Active
+**Owner**: Product Team
 
 ---
 
@@ -128,15 +128,15 @@ graph TD
     Stage2 --> Stage3[Stage 3: Name]
     Stage3 --> Stage4[Stage 4: Name]
     Stage4 --> End([Goal Achieved])
-    
+
     Stage1 -.->|Pain Point| Pain1[Pain: Description]
     Stage2 -.->|Pain Point| Pain2[Pain: Description]
     Stage3 -.->|Pain Point| Pain3[Pain: Description]
-    
+
     Pain1 -.->|Opportunity| Opp1[Improve: Solution]
     Pain2 -.->|Opportunity| Opp2[Improve: Solution]
     Pain3 -.->|Opportunity| Opp3[Improve: Solution]
-    
+
     style Start fill:#e1f5e1
     style End fill:#e1f5e1
     style Pain1 fill:#ffe1e1
@@ -158,7 +158,7 @@ graph LR
         C --> D[Stage 4: High 😊]
         D --> E[Stage 5: Medium 😐]
     end
-    
+
     style A fill:#90EE90
     style B fill:#FFD700
     style C fill:#FF6B6B
@@ -175,52 +175,52 @@ graph TB
         D2[Search Documentation]
         D3{Find Answer?}
     end
-    
+
     subgraph "Learning"
         L1[Read Tutorial]
         L2[Watch Demo Video]
         L3[Ask Colleague]
     end
-    
+
     subgraph "Setup"
         S1[Configure Environment]
         S2[Install Dependencies]
         S3{Setup Success?}
     end
-    
+
     subgraph "Execution"
         E1[Perform Task]
         E2[Troubleshoot Issues]
         E3[Complete Task]
     end
-    
+
     subgraph "Validation"
         V1[Check Results]
         V2[Monitor for Issues]
         V3[Document Learnings]
     end
-    
+
     D1 --> D2
     D2 --> D3
     D3 -->|Yes| S1
     D3 -->|No| L1
-    
+
     L1 --> L2
     L2 --> L3
     L3 --> S1
-    
+
     S1 --> S2
     S2 --> S3
     S3 -->|Yes| E1
     S3 -->|No| L3
-    
+
     E1 --> E2
     E2 --> E3
     E3 --> V1
-    
+
     V1 --> V2
     V2 --> V3
-    
+
     style D3 fill:#FFD700
     style S3 fill:#FFD700
     style E2 fill:#FF6B6B
@@ -454,37 +454,37 @@ graph TB
 ```mermaid
 graph TB
     Start([Goal: Deploy New Microservice to Production]) --> Stage1[Stage 1: Pre-Deployment Preparation]
-    
+
     Stage1 --> Stage2[Stage 2: Service Configuration]
     Stage2 --> Stage3[Stage 3: Deploy to Staging]
     Stage3 --> Decision1{Staging Deployment Successful?}
-    
+
     Decision1 -->|No| Debug1[Debug CrashLoopBackOff]
     Debug1 --> Stage3
     Decision1 -->|Yes| Stage4[Stage 4: Production Deployment]
-    
+
     Stage4 --> Monitor[Monitor for Errors]
     Monitor --> Decision2{Healthy After 15min?}
-    
+
     Decision2 -->|No| Rollback[Manual Rollback]
     Rollback --> Debug2[Investigate and Fix]
     Debug2 --> Stage4
-    
+
     Decision2 -->|Yes| Stage5[Stage 5: Post-Deployment Monitoring]
     Stage5 --> End([Deployment Complete])
-    
+
     Stage1 -.->|Pain| Pain1["Outdated checklist<br/>No validation"]
     Stage2 -.->|Pain| Pain2["Complex YAML<br/>No templates"]
     Stage3 -.->|Pain| Pain3["Cryptic errors<br/>Hard to find logs"]
     Stage4 -.->|Pain| Pain4["Manual process<br/>All-or-nothing deployment"]
     Stage5 -.->|Pain| Pain5["Unclear success criteria<br/>Manual monitoring"]
-    
+
     Pain1 -.->|Fix| Opp1["Automated pre-flight checks<br/>Deployment wizard"]
     Pain2 -.->|Fix| Opp2["Golden path templates<br/>Service scaffolding"]
     Pain3 -.->|Fix| Opp3["Clear error messages<br/>Integrated log viewer"]
     Pain4 -.->|Fix| Opp4["GitOps automation<br/>Canary deployments"]
     Pain5 -.->|Fix| Opp5["Health report<br/>Smart alerts"]
-    
+
     style Start fill:#e1f5e1
     style End fill:#e1f5e1
     style Pain1 fill:#ffe1e1
@@ -515,7 +515,7 @@ graph LR
         S3 --> S4["Stage 4<br/>Prod Deploy<br/>😟→😊 4/5→2/5"]
         S4 --> S5["Stage 5<br/>Monitoring<br/>😐 2/5"]
     end
-    
+
     style S1 fill:#FFD700
     style S2 fill:#FFA500
     style S3 fill:#FF6B6B
@@ -566,25 +566,25 @@ graph TB
     Assess --> FindLogs[Search for Relevant Logs]
     FindLogs --> Correlate[Correlate Logs Across Services]
     Correlate --> Decision1{Root Cause Found?}
-    
+
     Decision1 -->|No| CheckMetrics[Review Metrics and Traces]
     CheckMetrics --> CheckChanges[Review Recent Deployments]
     CheckChanges --> Decision1
-    
+
     Decision1 -->|Yes| Fix[Implement Fix or Rollback]
     Fix --> Deploy[Deploy Fix to Production]
     Deploy --> Monitor[Monitor for Resolution]
     Monitor --> Decision2{Issue Resolved?}
-    
+
     Decision2 -->|No| Assess
     Decision2 -->|Yes| Document[Document Incident and RCA]
     Document --> End([Incident Closed])
-    
+
     FindLogs -.->|Pain| P1["Logs scattered across multiple systems"]
     Correlate -.->|Pain| P2["Manual correlation is time-consuming"]
     CheckMetrics -.->|Pain| P3["No single view of system health"]
     Deploy -.->|Pain| P4["Stressful emergency deployment"]
-    
+
     style Alert fill:#FF6B6B
     style End fill:#90EE90
     style P1 fill:#ffe1e1
@@ -601,26 +601,26 @@ graph TB
 graph LR
     Start([First Day: Need to Deploy Code]) --> Learn[Read Platform Documentation]
     Learn --> Confused{Documentation Clear?}
-    
+
     Confused -->|No| AskColleague[Ask Colleague for Help]
     AskColleague --> Shadow[Shadow Colleague's Workflow]
-    
+
     Confused -->|Yes| Attempt[Attempt First Deployment]
     Shadow --> Attempt
-    
+
     Attempt --> Stuck{Got Stuck?}
     Stuck -->|Yes| Search[Search Confluence & Mattermost]
     Search --> AskPlatform[Ask Platform Team]
     AskPlatform --> Attempt
-    
+
     Stuck -->|No| Success[First Successful Deployment]
     Success --> Practice[Practice More Deployments]
     Practice --> Confident([Confident Platform User])
-    
+
     Learn -.->|Pain| O1["Docs assume too much knowledge"]
     AskColleague -.->|Pain| O2["Interrupts colleague's work"]
     Search -.->|Pain| O3["Information scattered and outdated"]
-    
+
     style Start fill:#e1f5e1
     style Confident fill:#90EE90
     style O1 fill:#ffe1e1

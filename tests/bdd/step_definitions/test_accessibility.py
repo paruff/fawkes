@@ -74,13 +74,13 @@ def accessibility_tools_configured(design_system_path):
     package_json = design_system_path / 'package.json'
     with open(package_json) as f:
         package_data = json.load(f)
-    
+
     # Check for required dependencies
     dev_deps = package_data.get('devDependencies', {})
     assert 'axe-core' in dev_deps, "axe-core not found in devDependencies"
     assert 'jest-axe' in dev_deps, "jest-axe not found in devDependencies"
     assert '@lhci/cli' in dev_deps, "Lighthouse CI not found in devDependencies"
-    
+
     # Check for test scripts
     scripts = package_data.get('scripts', {})
     assert 'test:a11y' in scripts, "test:a11y script not found"
@@ -112,13 +112,13 @@ def axe_core_executes(design_system_path, axe_test_results):
     """Verify axe-core test file exists"""
     a11y_test = design_system_path / 'src' / 'a11y.test.tsx'
     assert a11y_test.exists(), "Axe-core accessibility test file not found"
-    
+
     # Verify test imports axe
     with open(a11y_test) as f:
         content = f.read()
         assert 'jest-axe' in content or 'axe-core' in content, "Axe imports not found"
         assert 'toHaveNoViolations' in content, "toHaveNoViolations matcher not found"
-    
+
     axe_test_results['executed'] = True
 
 
@@ -168,12 +168,12 @@ def lighthouse_runs(design_system_path, lighthouse_results):
     """Verify Lighthouse CI configuration exists"""
     lhci_config = design_system_path / 'lighthouserc.json'
     assert lhci_config.exists(), "Lighthouse CI config not found"
-    
+
     with open(lhci_config) as f:
         config = json.load(f)
         assert 'ci' in config, "CI configuration not found"
         assert 'assert' in config['ci'], "Assertions not configured"
-        
+
     lighthouse_results['executed'] = True
 
 
@@ -279,7 +279,7 @@ def grafana_configured():
     repo_root = Path(__file__).parent.parent.parent.parent
     dashboard_path = repo_root / 'platform' / 'apps' / 'grafana' / 'dashboards' / 'accessibility-dashboard.json'
     assert dashboard_path.exists(), "Accessibility dashboard not found"
-    
+
     with open(dashboard_path) as f:
         dashboard = json.load(f)
         assert 'dashboard' in dashboard, "Dashboard configuration invalid"
@@ -297,7 +297,7 @@ def see_overall_score():
     """Verify overall score panel exists"""
     repo_root = Path(__file__).parent.parent.parent.parent
     dashboard_path = repo_root / 'platform' / 'apps' / 'grafana' / 'dashboards' / 'accessibility-dashboard.json'
-    
+
     with open(dashboard_path) as f:
         dashboard = json.load(f)
         panels = dashboard['dashboard']['panels']
@@ -310,7 +310,7 @@ def see_pass_rate():
     """Verify pass rate panel exists"""
     repo_root = Path(__file__).parent.parent.parent.parent
     dashboard_path = repo_root / 'platform' / 'apps' / 'grafana' / 'dashboards' / 'accessibility-dashboard.json'
-    
+
     with open(dashboard_path) as f:
         dashboard = json.load(f)
         panels = dashboard['dashboard']['panels']
@@ -323,7 +323,7 @@ def see_violations_by_severity():
     """Verify severity grouping panel exists"""
     repo_root = Path(__file__).parent.parent.parent.parent
     dashboard_path = repo_root / 'platform' / 'apps' / 'grafana' / 'dashboards' / 'accessibility-dashboard.json'
-    
+
     with open(dashboard_path) as f:
         dashboard = json.load(f)
         panels = dashboard['dashboard']['panels']
@@ -336,7 +336,7 @@ def see_violations_by_component():
     """Verify component grouping panel exists"""
     repo_root = Path(__file__).parent.parent.parent.parent
     dashboard_path = repo_root / 'platform' / 'apps' / 'grafana' / 'dashboards' / 'accessibility-dashboard.json'
-    
+
     with open(dashboard_path) as f:
         dashboard = json.load(f)
         panels = dashboard['dashboard']['panels']
@@ -349,7 +349,7 @@ def see_wcag_compliance():
     """Verify WCAG compliance panel exists"""
     repo_root = Path(__file__).parent.parent.parent.parent
     dashboard_path = repo_root / 'platform' / 'apps' / 'grafana' / 'dashboards' / 'accessibility-dashboard.json'
-    
+
     with open(dashboard_path) as f:
         dashboard = json.load(f)
         panels = dashboard['dashboard']['panels']
@@ -467,7 +467,7 @@ def axe_executes_in_jenkins():
     """Verify axe-core execution in Jenkins"""
     repo_root = Path(__file__).parent.parent.parent.parent
     a11y_lib = repo_root / 'jenkins-shared-library' / 'vars' / 'accessibilityTest.groovy'
-    
+
     with open(a11y_lib) as f:
         content = f.read()
         assert 'axe' in content.lower() or 'test:a11y' in content, "Axe execution not found"
@@ -478,7 +478,7 @@ def lighthouse_executes_in_jenkins():
     """Verify Lighthouse execution in Jenkins"""
     repo_root = Path(__file__).parent.parent.parent.parent
     a11y_lib = repo_root / 'jenkins-shared-library' / 'vars' / 'accessibilityTest.groovy'
-    
+
     with open(a11y_lib) as f:
         content = f.read()
         assert 'lighthouse' in content.lower(), "Lighthouse execution not found"
@@ -489,7 +489,7 @@ def results_published_to_jenkins():
     """Verify result publishing in Jenkins"""
     repo_root = Path(__file__).parent.parent.parent.parent
     a11y_lib = repo_root / 'jenkins-shared-library' / 'vars' / 'accessibilityTest.groovy'
-    
+
     with open(a11y_lib) as f:
         content = f.read()
         assert 'publishHTML' in content or 'archiveArtifacts' in content, "Result publishing not found"

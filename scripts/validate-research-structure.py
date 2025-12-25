@@ -14,37 +14,37 @@ def check_path_exists(path, path_type="file"):
     """Check if a path exists and is of the expected type."""
     if not path.exists():
         return False, f"{path_type.capitalize()} not found: {path}"
-    
+
     if path_type == "file" and not path.is_file():
         return False, f"Expected file but found directory: {path}"
-    
+
     if path_type == "directory" and not path.is_dir():
         return False, f"Expected directory but found file: {path}"
-    
+
     return True, f"✓ {path_type.capitalize()} exists: {path}"
 
 def validate_structure():
     """Validate the user research repository structure."""
-    
+
     # Get the repository root (script is in scripts/)
     repo_root = Path(__file__).resolve().parent.parent
     research_dir = repo_root / "docs" / "research"
-    
+
     print("=" * 80)
     print("User Research Repository Structure Validation")
     print("=" * 80)
     print()
-    
+
     checks = []
     errors = []
-    
+
     # Check main research directory
     check, msg = check_path_exists(research_dir, "directory")
     checks.append((check, msg))
     if not check:
         print(msg)
         return False
-    
+
     # Check required directories
     required_dirs = [
         research_dir / "personas",
@@ -61,7 +61,7 @@ def validate_structure():
         research_dir / "assets" / "diagrams",
         research_dir / "templates",
     ]
-    
+
     print("Checking required directories...")
     for directory in required_dirs:
         check, msg = check_path_exists(directory, "directory")
@@ -70,7 +70,7 @@ def validate_structure():
             errors.append(msg)
         print(f"  {msg}")
     print()
-    
+
     # Check required documentation files
     required_docs = [
         research_dir / "README.md",
@@ -81,7 +81,7 @@ def validate_structure():
         research_dir / "data" / "README.md",
         research_dir / "assets" / "README.md",
     ]
-    
+
     print("Checking required documentation...")
     for doc in required_docs:
         check, msg = check_path_exists(doc, "file")
@@ -90,14 +90,14 @@ def validate_structure():
             errors.append(msg)
         print(f"  {msg}")
     print()
-    
+
     # Check template files
     required_templates = [
         research_dir / "templates" / "persona.md",
         research_dir / "templates" / "interview-guide.md",
         research_dir / "templates" / "journey-map.md",
     ]
-    
+
     print("Checking template files...")
     for template in required_templates:
         check, msg = check_path_exists(template, "file")
@@ -106,7 +106,7 @@ def validate_structure():
             errors.append(msg)
         print(f"  {msg}")
     print()
-    
+
     # Check Git LFS configuration
     print("Checking Git LFS configuration...")
     gitattributes = repo_root / ".gitattributes"
@@ -115,7 +115,7 @@ def validate_structure():
     if not check:
         errors.append(msg)
     print(f"  {msg}")
-    
+
     if check:
         # Verify LFS tracking for media files
         with open(gitattributes, 'r') as f:
@@ -129,7 +129,7 @@ def validate_structure():
                     errors.append(error_msg)
                     print(error_msg)
     print()
-    
+
     # Check .gitkeep files in empty directories
     print("Checking .gitkeep files...")
     gitkeep_dirs = [
@@ -144,7 +144,7 @@ def validate_structure():
         research_dir / "assets" / "audio",
         research_dir / "assets" / "diagrams",
     ]
-    
+
     for directory in gitkeep_dirs:
         gitkeep = directory / ".gitkeep"
         check, msg = check_path_exists(gitkeep, "file")
@@ -153,7 +153,7 @@ def validate_structure():
             errors.append(msg)
         print(f"  {msg}")
     print()
-    
+
     # Summary
     print("=" * 80)
     print("Validation Summary")
@@ -161,12 +161,12 @@ def validate_structure():
     total_checks = len(checks)
     passed_checks = sum(1 for check, _ in checks if check)
     failed_checks = total_checks - passed_checks
-    
+
     print(f"Total checks: {total_checks}")
     print(f"Passed: {passed_checks}")
     print(f"Failed: {failed_checks}")
     print()
-    
+
     if errors:
         print("Errors found:")
         for error in errors:

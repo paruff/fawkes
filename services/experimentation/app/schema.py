@@ -9,7 +9,7 @@ from .database import Base
 class Experiment(Base):
     """Experiment database model"""
     __tablename__ = "experiments"
-    
+
     id = Column(String, primary_key=True, index=True)
     name = Column(String, nullable=False, index=True)
     description = Column(Text, nullable=False)
@@ -23,7 +23,7 @@ class Experiment(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     started_at = Column(DateTime, nullable=True)
     stopped_at = Column(DateTime, nullable=True)
-    
+
     # Relationships
     assignments = relationship("Assignment", back_populates="experiment", cascade="all, delete-orphan")
     events = relationship("Event", back_populates="experiment", cascade="all, delete-orphan")
@@ -32,14 +32,14 @@ class Experiment(Base):
 class Assignment(Base):
     """Variant assignment database model"""
     __tablename__ = "assignments"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     experiment_id = Column(String, ForeignKey("experiments.id"), nullable=False, index=True)
     user_id = Column(String, nullable=False, index=True)
     variant = Column(String, nullable=False, index=True)
     context = Column(JSON, nullable=True)  # Additional context data
     assigned_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    
+
     # Relationships
     experiment = relationship("Experiment", back_populates="assignments")
     events = relationship("Event", back_populates="assignment")
@@ -48,7 +48,7 @@ class Assignment(Base):
 class Event(Base):
     """Event tracking database model"""
     __tablename__ = "events"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     experiment_id = Column(String, ForeignKey("experiments.id"), nullable=False, index=True)
     assignment_id = Column(Integer, ForeignKey("assignments.id"), nullable=False, index=True)
@@ -57,7 +57,7 @@ class Event(Base):
     event_name = Column(String, nullable=False, index=True)
     value = Column(Float, default=1.0)
     timestamp = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
-    
+
     # Relationships
     experiment = relationship("Experiment", back_populates="events")
     assignment = relationship("Assignment", back_populates="events")

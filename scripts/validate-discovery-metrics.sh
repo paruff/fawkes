@@ -31,7 +31,7 @@ print_result() {
     local test_name="$1"
     local result="$2"
     local details="$3"
-    
+
     if [ "$result" == "PASS" ]; then
         echo -e "${GREEN}✓${NC} $test_name"
         PASSED=$((PASSED + 1))
@@ -63,7 +63,7 @@ echo "Checking Discovery Metrics service..."
 if kubectl get deployment -n "$NAMESPACE" discovery-metrics &>/dev/null; then
     REPLICAS=$(kubectl get deployment -n "$NAMESPACE" discovery-metrics -o jsonpath='{.status.replicas}')
     READY=$(kubectl get deployment -n "$NAMESPACE" discovery-metrics -o jsonpath='{.status.readyReplicas}')
-    
+
     if [ "$REPLICAS" == "2" ] && [ "$READY" == "2" ]; then
         print_result "Discovery Metrics deployment has 2/2 replicas ready" "PASS"
     else
@@ -86,7 +86,7 @@ if [ -n "$PODS" ]; then
             print_result "Pod $POD is running" "FAIL" "Status: $STATUS"
         fi
     done
-    
+
     if [ "$ALL_RUNNING" == "true" ]; then
         print_result "All Discovery Metrics pods are running" "PASS"
     fi
@@ -144,31 +144,31 @@ echo "Checking database schema..."
 DB_POD=$(kubectl get pod -n "$NAMESPACE" -l cnpg.io/cluster=db-discovery-dev,role=primary -o jsonpath='{.items[0].metadata.name}')
 if [ -n "$DB_POD" ]; then
     TABLES=$(kubectl exec -n "$NAMESPACE" "$DB_POD" -- psql -U discovery_user -d discovery_metrics -c "\dt" 2>/dev/null || echo "")
-    
+
     if echo "$TABLES" | grep -q "interviews"; then
         print_result "Table 'interviews' exists" "PASS"
     else
         print_result "Table 'interviews' exists" "FAIL"
     fi
-    
+
     if echo "$TABLES" | grep -q "discovery_insights"; then
         print_result "Table 'discovery_insights' exists" "PASS"
     else
         print_result "Table 'discovery_insights' exists" "FAIL"
     fi
-    
+
     if echo "$TABLES" | grep -q "experiments"; then
         print_result "Table 'experiments' exists" "PASS"
     else
         print_result "Table 'experiments' exists" "FAIL"
     fi
-    
+
     if echo "$TABLES" | grep -q "feature_validations"; then
         print_result "Table 'feature_validations' exists" "PASS"
     else
         print_result "Table 'feature_validations' exists" "FAIL"
     fi
-    
+
     if echo "$TABLES" | grep -q "team_performance"; then
         print_result "Table 'team_performance' exists" "PASS"
     else
@@ -182,25 +182,25 @@ echo "Checking Prometheus metrics..."
 if [ -n "$PODS" ]; then
     POD=$(echo "$PODS" | awk '{print $1}')
     METRICS=$(kubectl exec -n "$NAMESPACE" "$POD" -- curl -s http://localhost:8000/metrics 2>/dev/null || echo "")
-    
+
     if echo "$METRICS" | grep -q "discovery_interviews_total"; then
         print_result "Metric 'discovery_interviews_total' is exposed" "PASS"
     else
         print_result "Metric 'discovery_interviews_total' is exposed" "FAIL"
     fi
-    
+
     if echo "$METRICS" | grep -q "discovery_insights_total"; then
         print_result "Metric 'discovery_insights_total' is exposed" "PASS"
     else
         print_result "Metric 'discovery_insights_total' is exposed" "FAIL"
     fi
-    
+
     if echo "$METRICS" | grep -q "discovery_experiments_total"; then
         print_result "Metric 'discovery_experiments_total' is exposed" "PASS"
     else
         print_result "Metric 'discovery_experiments_total' is exposed" "FAIL"
     fi
-    
+
     if echo "$METRICS" | grep -q "discovery_features_validated"; then
         print_result "Metric 'discovery_features_validated' is exposed" "PASS"
     else
@@ -213,7 +213,7 @@ echo ""
 echo "Checking ServiceMonitor..."
 if kubectl get servicemonitor -n "$NAMESPACE" discovery-metrics &>/dev/null; then
     print_result "ServiceMonitor exists" "PASS"
-    
+
     INTERVAL=$(kubectl get servicemonitor -n "$NAMESPACE" discovery-metrics -o jsonpath='{.spec.endpoints[0].interval}')
     if [ "$INTERVAL" == "30s" ]; then
         print_result "ServiceMonitor scrape interval is 30s" "PASS"
@@ -232,17 +232,17 @@ if [ -n "$PODS" ]; then
         # CPU usage
         CPU_USAGE=$(kubectl top pod -n "$NAMESPACE" "$POD" 2>/dev/null | tail -1 | awk '{print $2}' | sed 's/m//')
         CPU_LIMIT=1000  # 1 CPU = 1000m
-        
+
         if [ -n "$CPU_USAGE" ] && [ "$CPU_USAGE" -lt 700 ]; then
             print_result "Pod $POD CPU usage <70% of limit" "PASS"
         elif [ -n "$CPU_USAGE" ]; then
             print_result "Pod $POD CPU usage <70% of limit" "FAIL" "Usage: ${CPU_USAGE}m"
         fi
-        
+
         # Memory usage
         MEM_USAGE=$(kubectl top pod -n "$NAMESPACE" "$POD" 2>/dev/null | tail -1 | awk '{print $3}' | sed 's/Mi//')
         MEM_LIMIT=1024  # 1Gi = 1024Mi
-        
+
         if [ -n "$MEM_USAGE" ] && [ "$MEM_USAGE" -lt 717 ]; then
             print_result "Pod $POD memory usage <70% of limit" "PASS"
         elif [ -n "$MEM_USAGE" ]; then
