@@ -1,0 +1,46 @@
+# ============================================================================
+# FILE: platform/apps/discovery-metrics-application.yaml
+# PURPOSE: ArgoCD Application manifest for Discovery Metrics Service
+# DESCRIPTION: GitOps deployment configuration for discovery-metrics
+# ============================================================================
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: discovery-metrics
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: discovery-metrics
+    app.kubernetes.io/component: discovery
+    app.kubernetes.io/part-of: fawkes
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  
+  source:
+    repoURL: https://github.com/paruff/fawkes
+    targetRevision: HEAD
+    path: platform/apps/discovery-metrics
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  
+  revisionHistoryLimit: 10
