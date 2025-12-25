@@ -1,0 +1,726 @@
+{
+  "dashboard": {
+    "title": "Discovery Metrics Dashboard",
+    "tags": ["discovery", "metrics", "interviews", "insights", "experiments"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "30s",
+    "description": "Comprehensive dashboard tracking discovery activities: interviews conducted, insights captured, experiments run, features validated, trend analysis, team performance, and ROI calculations",
+    "time": {
+      "from": "now-30d",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["30s", "1m", "5m", "15m", "30m", "1h"],
+      "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "7d", "30d", "90d"]
+    },
+    "templating": {
+      "list": [
+        {
+          "name": "datasource",
+          "type": "datasource",
+          "query": "prometheus",
+          "current": {
+            "text": "Prometheus",
+            "value": "prometheus"
+          }
+        }
+      ]
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Discovery Overview",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 0, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 2,
+        "title": "Total Interviews",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 1, "w": 4, "h": 4},
+        "description": "Total number of interviews conducted",
+        "targets": [
+          {
+            "expr": "discovery_interviews_total",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 5},
+                {"color": "green", "value": 10}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 3,
+        "title": "Total Insights",
+        "type": "stat",
+        "gridPos": {"x": 4, "y": 1, "w": 4, "h": 4},
+        "description": "Total discovery insights captured",
+        "targets": [
+          {
+            "expr": "discovery_insights_total",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 3},
+                {"color": "green", "value": 5}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 4,
+        "title": "Total Experiments",
+        "type": "stat",
+        "gridPos": {"x": 8, "y": 1, "w": 4, "h": 4},
+        "description": "Total experiments run",
+        "targets": [
+          {
+            "expr": "discovery_experiments_total",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 2},
+                {"color": "green", "value": 5}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 5,
+        "title": "Features Validated",
+        "type": "stat",
+        "gridPos": {"x": 12, "y": 1, "w": 4, "h": 4},
+        "description": "Features successfully validated",
+        "targets": [
+          {
+            "expr": "discovery_features_validated",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 1},
+                {"color": "green", "value": 3}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 6,
+        "title": "Features Shipped",
+        "type": "stat",
+        "gridPos": {"x": 16, "y": 1, "w": 4, "h": 4},
+        "description": "Features shipped to production",
+        "targets": [
+          {
+            "expr": "discovery_features_shipped",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 1},
+                {"color": "green", "value": 2}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 7,
+        "title": "Validation Rate",
+        "type": "stat",
+        "gridPos": {"x": 20, "y": 1, "w": 4, "h": 4},
+        "description": "Percentage of insights that get validated",
+        "targets": [
+          {
+            "expr": "discovery_validation_rate",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 50},
+                {"color": "green", "value": 75}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 10,
+        "title": "Discovery Activity Trends",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 5, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 11,
+        "title": "Interviews Trend (Last 30 Days)",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 6, "w": 12, "h": 8},
+        "description": "Number of interviews conducted over time",
+        "targets": [
+          {
+            "expr": "discovery_interviews_total",
+            "refId": "A",
+            "legendFormat": "Total Interviews",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          },
+          {
+            "expr": "discovery_interviews_completed",
+            "refId": "B",
+            "legendFormat": "Completed",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "lineWidth": 2,
+              "fillOpacity": 10,
+              "showPoints": "auto"
+            }
+          }
+        },
+        "options": {
+          "legend": {"displayMode": "list", "placement": "bottom"}
+        }
+      },
+      {
+        "id": 12,
+        "title": "Insights Trend (Last 30 Days)",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 6, "w": 12, "h": 8},
+        "description": "Discovery insights captured over time",
+        "targets": [
+          {
+            "expr": "discovery_insights_total",
+            "refId": "A",
+            "legendFormat": "Total Insights",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          },
+          {
+            "expr": "discovery_insights_validated",
+            "refId": "B",
+            "legendFormat": "Validated",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "lineWidth": 2,
+              "fillOpacity": 10,
+              "showPoints": "auto"
+            }
+          }
+        },
+        "options": {
+          "legend": {"displayMode": "list", "placement": "bottom"}
+        }
+      },
+      {
+        "id": 20,
+        "title": "Status Breakdown",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 14, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 21,
+        "title": "Interviews by Status",
+        "type": "piechart",
+        "gridPos": {"x": 0, "y": 15, "w": 6, "h": 8},
+        "description": "Distribution of interview statuses",
+        "targets": [
+          {
+            "expr": "discovery_interviews_by_status",
+            "refId": "A",
+            "legendFormat": "{{status}}",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "options": {
+          "legend": {"displayMode": "list", "placement": "bottom"}
+        }
+      },
+      {
+        "id": 22,
+        "title": "Insights by Status",
+        "type": "piechart",
+        "gridPos": {"x": 6, "y": 15, "w": 6, "h": 8},
+        "description": "Distribution of insight statuses",
+        "targets": [
+          {
+            "expr": "discovery_insights_by_status",
+            "refId": "A",
+            "legendFormat": "{{status}}",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "options": {
+          "legend": {"displayMode": "list", "placement": "bottom"}
+        }
+      },
+      {
+        "id": 23,
+        "title": "Experiments by Status",
+        "type": "piechart",
+        "gridPos": {"x": 12, "y": 15, "w": 6, "h": 8},
+        "description": "Distribution of experiment statuses",
+        "targets": [
+          {
+            "expr": "discovery_experiments_by_status",
+            "refId": "A",
+            "legendFormat": "{{status}}",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "options": {
+          "legend": {"displayMode": "list", "placement": "bottom"}
+        }
+      },
+      {
+        "id": 24,
+        "title": "Features by Status",
+        "type": "piechart",
+        "gridPos": {"x": 18, "y": 15, "w": 6, "h": 8},
+        "description": "Distribution of feature validation statuses",
+        "targets": [
+          {
+            "expr": "discovery_features_by_status",
+            "refId": "A",
+            "legendFormat": "{{status}}",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "options": {
+          "legend": {"displayMode": "list", "placement": "bottom"}
+        }
+      },
+      {
+        "id": 30,
+        "title": "Insights Analysis",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 23, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 31,
+        "title": "Insights by Category",
+        "type": "bargauge",
+        "gridPos": {"x": 0, "y": 24, "w": 12, "h": 8},
+        "description": "Discovery insights grouped by category",
+        "targets": [
+          {
+            "expr": "discovery_insights_by_category",
+            "refId": "A",
+            "legendFormat": "{{category}}",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"}
+          }
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient"
+        }
+      },
+      {
+        "id": 32,
+        "title": "Insights by Source",
+        "type": "piechart",
+        "gridPos": {"x": 12, "y": 24, "w": 12, "h": 8},
+        "description": "Discovery insights grouped by source (interview, survey, analytics, support)",
+        "targets": [
+          {
+            "expr": "discovery_insights_by_source",
+            "refId": "A",
+            "legendFormat": "{{source}}",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "options": {
+          "legend": {"displayMode": "list", "placement": "bottom"}
+        }
+      },
+      {
+        "id": 40,
+        "title": "Performance Metrics",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 32, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 41,
+        "title": "Avg Time to Validation",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 33, "w": 6, "h": 6},
+        "description": "Average time from insight capture to validation (days)",
+        "targets": [
+          {
+            "expr": "discovery_avg_time_to_validation_days",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "days",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 7},
+                {"color": "red", "value": 14}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 42,
+        "title": "Avg Time to Ship",
+        "type": "stat",
+        "gridPos": {"x": 6, "y": 33, "w": 6, "h": 6},
+        "description": "Average time from feature proposal to ship (days)",
+        "targets": [
+          {
+            "expr": "discovery_avg_time_to_ship_days",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "days",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 30},
+                {"color": "red", "value": 60}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 43,
+        "title": "Feature Adoption Rate",
+        "type": "stat",
+        "gridPos": {"x": 12, "y": 33, "w": 6, "h": 6},
+        "description": "Average feature adoption rate percentage",
+        "targets": [
+          {
+            "expr": "discovery_feature_adoption_rate",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 50},
+                {"color": "green", "value": 75}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 44,
+        "title": "Avg Experiment ROI",
+        "type": "stat",
+        "gridPos": {"x": 18, "y": 33, "w": 6, "h": 6},
+        "description": "Average ROI percentage of completed experiments",
+        "targets": [
+          {
+            "expr": "discovery_experiments_avg_roi_percentage",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 50},
+                {"color": "green", "value": 100}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center"
+        }
+      },
+      {
+        "id": 50,
+        "title": "Recent Activity",
+        "type": "row",
+        "gridPos": {"x": 0, "y": 39, "w": 24, "h": 1},
+        "collapsed": false
+      },
+      {
+        "id": 51,
+        "title": "Interviews (Last 7 Days)",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 40, "w": 6, "h": 4},
+        "description": "Number of interviews in last 7 days",
+        "targets": [
+          {
+            "expr": "discovery_interviews_last_7d",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 2},
+                {"color": "green", "value": 5}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background"
+        }
+      },
+      {
+        "id": 52,
+        "title": "Interviews (Last 30 Days)",
+        "type": "stat",
+        "gridPos": {"x": 6, "y": 40, "w": 6, "h": 4},
+        "description": "Number of interviews in last 30 days",
+        "targets": [
+          {
+            "expr": "discovery_interviews_last_30d",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 5},
+                {"color": "green", "value": 10}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background"
+        }
+      },
+      {
+        "id": 53,
+        "title": "Insights (Last 7 Days)",
+        "type": "stat",
+        "gridPos": {"x": 12, "y": 40, "w": 6, "h": 4},
+        "description": "Number of insights captured in last 7 days",
+        "targets": [
+          {
+            "expr": "discovery_insights_last_7d",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 1},
+                {"color": "green", "value": 3}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background"
+        }
+      },
+      {
+        "id": 54,
+        "title": "Insights (Last 30 Days)",
+        "type": "stat",
+        "gridPos": {"x": 18, "y": 40, "w": 6, "h": 4},
+        "description": "Number of insights captured in last 30 days",
+        "targets": [
+          {
+            "expr": "discovery_insights_last_30d",
+            "refId": "A",
+            "datasource": {"type": "prometheus", "uid": "$datasource"}
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 3},
+                {"color": "green", "value": 5}
+              ]
+            }
+          }
+        },
+        "options": {
+          "textMode": "value_and_name",
+          "colorMode": "background"
+        }
+      }
+    ]
+  }
+}

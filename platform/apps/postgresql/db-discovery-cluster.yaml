@@ -1,0 +1,70 @@
+# ============================================================================
+# FILE: platform/apps/postgresql/db-discovery-cluster.yaml
+# PURPOSE: PostgreSQL cluster for Discovery Metrics Service using CloudNativePG
+# DESCRIPTION: HA PostgreSQL cluster with 3 replicas for discovery metrics data
+# ============================================================================
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: db-discovery-dev
+  namespace: fawkes
+  labels:
+    app: discovery-metrics
+    component: database
+spec:
+  instances: 3
+  primaryUpdateStrategy: unsupervised
+  
+  postgresql:
+    parameters:
+      max_connections: "200"
+      shared_buffers: "256MB"
+      effective_cache_size: "1GB"
+      maintenance_work_mem: "64MB"
+      checkpoint_completion_target: "0.9"
+      wal_buffers: "16MB"
+      default_statistics_target: "100"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "200"
+      work_mem: "2MB"
+      min_wal_size: "1GB"
+      max_wal_size: "4GB"
+  
+  bootstrap:
+    initdb:
+      database: discovery_metrics
+      owner: discovery_user
+      secret:
+        name: db-discovery-credentials
+  
+  storage:
+    size: 10Gi
+    storageClass: standard
+  
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  
+  monitoring:
+    enablePodMonitor: true
+  
+  backup:
+    retentionPolicy: "30d"
+    barmanObjectStore:
+      destinationPath: "s3://fawkes-backups/postgresql/discovery"
+      s3Credentials:
+        accessKeyId:
+          name: backup-credentials
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: backup-credentials
+          key: SECRET_ACCESS_KEY
+      wal:
+        compression: gzip
+      data:
+        compression: gzip
