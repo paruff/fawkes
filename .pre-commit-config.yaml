@@ -53,6 +53,18 @@ repos:
         args: ['--config', '.markdownlint.json', '--fix']
 
   # ============================================================================
+  # Prettier (JSON/YAML/Markdown Formatting)
+  # ============================================================================
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        name: Format with Prettier
+        types_or: [json, yaml, markdown]
+        exclude: '^(package-lock\.json|.*\.catalog-info\.yaml|catalog-info\.yaml|mkdocs\.yml|\.trunk/.*)'
+        args: ['--write', '--ignore-unknown']
+
+  # ============================================================================
   # Terraform Formatting & Validation
   # ============================================================================
   - repo: https://github.com/antonbabenko/pre-commit-terraform
@@ -142,7 +154,7 @@ repos:
         args: ['--max-line-length=120', '--extend-ignore=E203,W503']
 
   # ============================================================================
-  # Shell Script Validation
+  # Shell Script Validation & Formatting
   # ============================================================================
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.9.0.6
@@ -150,6 +162,13 @@ repos:
       - id: shellcheck
         name: Lint shell scripts
         args: ['--severity=warning']
+
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.8.0-1
+    hooks:
+      - id: shfmt
+        name: Format shell scripts with shfmt
+        args: ['-i', '2', '-ci', '-bn', '-sr', '-w']
 
   # ============================================================================
   # Go Code Quality
