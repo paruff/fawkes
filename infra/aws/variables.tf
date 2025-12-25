@@ -118,51 +118,36 @@ variable "worker_group_2_max_size" {
   default     = 3
 }
 
-variable "map_accounts" {
-  description = "DEPRECATED: Additional AWS account numbers to add to the aws-auth configmap. This variable is no longer used with EKS module v21+ which uses access entries instead. Account-level access must now be granted through specific IAM roles or users."
-  type        = list(string)
-
-  default = [
-    "618705811157",
-    "888888888888",
-  ]
-}
-
 variable "map_roles" {
-  description = "Additional IAM roles to add to the aws-auth configmap."
+  description = "Additional IAM roles to add to EKS cluster access entries."
   type = list(object({
-    rolearn  = string
-    username = string
-    groups   = list(string)
+    rolearn = string
+    groups  = list(string)
   }))
 
   default = [
     {
-      rolearn  = "arn:aws:iam::66666666666:role/role1"
-      username = "role1"
-      groups   = ["system:masters"]
+      rolearn = "arn:aws:iam::66666666666:role/role1"
+      groups  = ["system:masters"]
     },
   ]
 }
 
 variable "map_users" {
-  description = "Additional IAM users to add to the aws-auth configmap."
+  description = "Additional IAM users to add to EKS cluster access entries."
   type = list(object({
-    userarn  = string
-    username = string
-    groups   = list(string)
+    userarn = string
+    groups  = list(string)
   }))
 
   default = [
     {
-      userarn  = "arn:aws:iam::66666666666:user/user1"
-      username = "user1"
-      groups   = ["system:masters"]
+      userarn = "arn:aws:iam::66666666666:user/user1"
+      groups  = ["system:masters"]
     },
     {
-      userarn  = "arn:aws:iam::66666666666:user/user2"
-      username = "user2"
-      groups   = ["system:masters"]
+      userarn = "arn:aws:iam::66666666666:user/user2"
+      groups  = ["system:masters"]
     },
   ]
 }
