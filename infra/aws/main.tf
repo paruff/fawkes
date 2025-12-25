@@ -3,7 +3,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 6.27" # Allow upgrades within major 5
+      version = "~> 5.100" # Compatible with EKS/VPC modules; v6.x not yet supported by modules
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
