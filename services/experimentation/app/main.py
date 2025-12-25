@@ -47,11 +47,17 @@ app = FastAPI(
 )
 
 # Add CORS middleware
+# Get allowed origins from environment or use restrictive default
+ALLOWED_ORIGINS = os.getenv(
+    "CORS_ALLOWED_ORIGINS",
+    "https://backstage.fawkes.idp,https://experimentation.fawkes.idp"
+).split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
 
