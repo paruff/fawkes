@@ -119,7 +119,7 @@ variable "worker_group_2_max_size" {
 }
 
 variable "map_accounts" {
-  description = "Additional AWS account numbers to add to the aws-auth configmap."
+  description = "DEPRECATED: Additional AWS account numbers to add to the aws-auth configmap. This variable is no longer used with EKS module v21+ which uses access entries instead. Account-level access must now be granted through specific IAM roles or users."
   type        = list(string)
 
   default = [

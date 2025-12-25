@@ -200,6 +200,8 @@ module "eks" {
   }
 
   # Configure access entries (replaces aws-auth configmap in v21)
+  # Note: Account-level access (map_accounts) is not supported with access entries.
+  # Grant access using specific IAM principals (roles/users) instead.
   access_entries = merge(
     # Convert map_roles to access entries
     {
