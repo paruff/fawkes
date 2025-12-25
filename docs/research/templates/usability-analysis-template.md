@@ -281,6 +281,13 @@
 - [Did user's tech stack affect their experience?]
 - [Did team context matter?]
 
+**Cross-Session Synthesis Notes**:
+- Compare findings with other participants
+- Look for patterns across multiple users
+- Identify issues by frequency (1/8, 2/8, etc.)
+- Note differences between personas or experience levels
+- Flag issues for deeper investigation
+
 ---
 
 ## Recommendations
