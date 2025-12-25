@@ -39,6 +39,14 @@ Every playbook follows the same five-section structure, mapped to Diátaxis quad
 | Change Failure Rate Reduction | Improved quality | ⭐⭐⭐ | 🚧 Coming soon |
 | MTTR Improvement | Enhanced reliability | ⭐⭐⭐ | 🚧 Coming soon |
 
+### Platform as Product
+
+| Playbook | Business Value | Complexity | Status |
+|----------|---------------|------------|--------|
+| [Continuous Discovery Workflow](continuous-discovery-workflow.md) | Build features developers actually use | ⭐⭐⭐ | ✅ Available |
+| User Research Program | Understand developer needs | ⭐⭐ | 🚧 Coming soon |
+| Platform Adoption Strategy | Maximize ROI on platform investment | ⭐⭐⭐ | 🚧 Coming soon |
+
 ### Security & Compliance
 
 | Playbook | Business Value | Complexity | Status |
@@ -85,3 +93,4 @@ Creating a new playbook? Use the [Playbook Template](TEMPLATE.md) to ensure cons
 
 [View Template :material-file-document-edit:](TEMPLATE.md){ .md-button .md-button--primary }
 [Start DORA Playbook :material-chart-line:](dora-metrics-implementation.md){ .md-button }
+[Start Discovery Workflow :material-account-search:](continuous-discovery-workflow.md){ .md-button }
