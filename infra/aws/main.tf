@@ -3,7 +3,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 6.27" # Allow upgrades within major 5
+      version = "~> 6.27" # Allow upgrades within major 6
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
@@ -151,11 +151,15 @@ module "vpc" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 19.0" # Stable major; access entries not yet adopted here
+  version = "~> 21.0" # Updated for AWS provider v6 compatibility
 
-  cluster_version = var.eks_version
-  subnet_ids      = module.vpc.private_subnets
-  vpc_id          = module.vpc.vpc_id
+  # v21 requires explicit name argument
+  name = local.cluster_name
+
+  # v21 API changes: cluster_version -> kubernetes_version
+  kubernetes_version = var.eks_version
+  subnet_ids         = module.vpc.private_subnets
+  vpc_id             = module.vpc.vpc_id
 
   eks_managed_node_groups = {
     worker_group_1 = {
@@ -186,15 +190,14 @@ module "eks" {
     }
   }
 
-  cluster_enabled_log_types               = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
-  create_cloudwatch_log_group             = true
-  cloudwatch_log_group_retention_in_days  = 7
+  # v21 API changes: cluster_enabled_log_types -> enabled_log_types
+  enabled_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
-
-  cluster_encryption_config = var.kms_key_arn == null ? [] : [{
-    resources        = ["secrets"]
+  # v21 API changes: cluster_encryption_config -> encryption_config (new object structure)
+  encryption_config = var.kms_key_arn == null ? null : {
     provider_key_arn = var.kms_key_arn
-  }]
+    resources        = ["secrets"]
+  }
 
   tags = local.tags
 }
