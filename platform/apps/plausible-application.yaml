@@ -1,0 +1,63 @@
+# ============================================================================
+# FILE: platform/apps/plausible-application.yaml
+# PURPOSE: ArgoCD Application for Plausible Analytics platform deployment
+#          Provides privacy-focused, GDPR-compliant web analytics.
+# PREREQ: PostgreSQL cluster (db-plausible-dev) must be deployed first.
+#         ClickHouse database for analytics data.
+# ============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: plausible
+  namespace: fawkes
+  labels:
+    app: plausible
+    component: analytics
+    environment: dev
+    team: platform
+  annotations:
+    # Link to documentation
+    argocd.argoproj.io/docs: "https://plausible.io/docs"
+    # Sync wave to ensure database is deployed first
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/paruff/fawkes
+    targetRevision: HEAD
+    path: platform/apps/plausible
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fawkes
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Keep ArgoCD from flagging differences you expect
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/replicas
+
+  # Basic health and retention tuning
+  revisionHistoryLimit: 10

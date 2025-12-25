@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: insights-metrics
+  namespace: fawkes-local
+  labels:
+    app: insights
+    component: metrics
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: http
+  selector:
+    app: insights
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: insights-metrics
+  namespace: monitoring
+  labels:
+    app: insights
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: insights
+      component: metrics
+  namespaceSelector:
+    matchNames:
+      - fawkes-local
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s

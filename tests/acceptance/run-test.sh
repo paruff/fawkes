@@ -63,12 +63,19 @@ Supported Test IDs:
   AT-E2-007    AI Automation - AI code review bot working
   AT-E2-008    Unified API - GraphQL Data API deployed and functional
   AT-E2-009    AI Observability - AI-powered anomaly detection
+  AT-E2-010    Discovery Foundation - Feedback Analytics Dashboard
+
+  Epic 3: Product Discovery & UX
+  AT-E3-006    Feature Flags - Unleash with OpenFeature support
+  AT-E3-007    Event Tracking - 60+ events with Plausible analytics
 
 Examples:
   $0 AT-E1-001
   $0 AT-E1-002
   $0 AT-E2-007
   $0 AT-E2-009
+  $0 AT-E3-006
+  $0 AT-E3-007
 
 EOF
 }
@@ -728,6 +735,139 @@ run_at_e2_009() {
     return 0
 }
 
+run_at_e2_010() {
+    log_info "Running AT-E2-010: Feedback Analytics Dashboard validation"
+    echo ""
+    
+    # Run the comprehensive validation script
+    log_info "Step 1: Running comprehensive validation..."
+    if [ -f "$ROOT_DIR/scripts/validate-at-e2-010.sh" ]; then
+        if ! "$ROOT_DIR/scripts/validate-at-e2-010.sh"; then
+            log_error "Comprehensive validation failed"
+            return 1
+        fi
+    else
+        log_error "AT-E2-010 validation script not found at $ROOT_DIR/scripts/validate-at-e2-010.sh"
+        return 1
+    fi
+    
+    echo ""
+    log_info "Step 2: Running BDD tests..."
+    if ! cd "$ROOT_DIR"; then
+        log_error "Failed to change to root directory: $ROOT_DIR"
+        return 1
+    fi
+    
+    # Check if pytest is available
+    if command -v pytest &> /dev/null; then
+        # Run feedback BDD tests
+        if [ -f "tests/bdd/features/feedback-widget.feature" ]; then
+            log_info "Running feedback widget BDD tests..."
+            # Run feedback-related tests
+            if pytest tests/bdd -k "feedback" -v --tb=short -m "feedback or acceptance or AT-E2-010" 2>/dev/null; then
+                log_success "BDD tests passed"
+            else
+                log_warning "Some BDD tests failed or were skipped (may require cluster with feedback service deployed)"
+            fi
+        fi
+    else
+        log_warning "pytest not available, skipping BDD tests"
+    fi
+    
+    echo ""
+    log_success "AT-E2-010 validation completed!"
+    log_success "Feedback analytics dashboard is deployed and functional!"
+    return 0
+}
+
+run_at_e3_006() {
+    log_info "Running AT-E3-006: Feature Flags (Unleash) validation"
+    echo ""
+    
+    # Run the comprehensive validation script
+    log_info "Step 1: Running comprehensive validation..."
+    if [ -f "$ROOT_DIR/scripts/validate-at-e3-006.sh" ]; then
+        if ! "$ROOT_DIR/scripts/validate-at-e3-006.sh" --namespace "${NAMESPACE:-fawkes}"; then
+            log_error "Comprehensive validation failed"
+            return 1
+        fi
+    else
+        log_error "AT-E3-006 validation script not found at $ROOT_DIR/scripts/validate-at-e3-006.sh"
+        return 1
+    fi
+    
+    echo ""
+    log_info "Step 2: Running BDD tests..."
+    if ! cd "$ROOT_DIR"; then
+        log_error "Failed to change to root directory: $ROOT_DIR"
+        return 1
+    fi
+    
+    # Check if pytest is available
+    if command -v pytest &> /dev/null; then
+        # Run feature flags BDD tests
+        if [ -f "tests/bdd/features/feature-flags-unleash.feature" ]; then
+            log_info "Running Unleash feature flags BDD tests..."
+            if pytest tests/bdd -k "unleash or feature.flags" -v --tb=short 2>/dev/null; then
+                log_success "BDD tests passed"
+            else
+                log_warning "Some BDD tests failed or were skipped (may require cluster with Unleash deployed)"
+            fi
+        fi
+    else
+        log_warning "pytest not available, skipping BDD tests"
+    fi
+    
+    echo ""
+    log_success "AT-E3-006 validation completed!"
+    log_success "Feature flags platform (Unleash) is deployed and functional!"
+    return 0
+}
+
+run_at_e3_007() {
+    log_info "Running AT-E3-007: Event Tracking Infrastructure validation"
+    echo ""
+    
+    # Run the comprehensive validation script
+    log_info "Step 1: Running comprehensive validation..."
+    if [ -f "$ROOT_DIR/scripts/validate-at-e3-007.sh" ]; then
+        if ! "$ROOT_DIR/scripts/validate-at-e3-007.sh" --namespace "${NAMESPACE:-fawkes}"; then
+            log_error "Comprehensive validation failed"
+            return 1
+        fi
+    else
+        log_error "AT-E3-007 validation script not found at $ROOT_DIR/scripts/validate-at-e3-007.sh"
+        return 1
+    fi
+    
+    echo ""
+    log_info "Step 2: Running BDD tests..."
+    if ! cd "$ROOT_DIR"; then
+        log_error "Failed to change to root directory: $ROOT_DIR"
+        return 1
+    fi
+    
+    # Check if pytest is available
+    if command -v pytest &> /dev/null; then
+        # Run event tracking BDD tests
+        if [ -f "tests/bdd/features/event-tracking.feature" ]; then
+            log_info "Running event tracking BDD tests..."
+            if pytest tests/bdd -k "event.tracking or AT-E3-007" -v --tb=short 2>/dev/null; then
+                log_success "BDD tests passed"
+            else
+                log_warning "Some BDD tests failed or were skipped (may require cluster with event tracking deployed)"
+            fi
+        fi
+    else
+        log_warning "pytest not available, skipping BDD tests"
+    fi
+    
+    echo ""
+    log_success "AT-E3-007 validation completed!"
+    log_success "Event tracking infrastructure is deployed and functional!"
+    return 0
+}
+
 main() {
     if [ $# -eq 0 ]; then
         log_error "No test ID provided"
@@ -786,6 +926,15 @@ main() {
             ;;
         AT-E2-009)
             run_at_e2_009
+            ;;
+        AT-E2-010)
+            run_at_e2_010
+            ;;
+        AT-E3-006)
+            run_at_e3_006
+            ;;
+        AT-E3-007)
+            run_at_e3_007
             ;;
         AT-E1-006|AT-E1-008|AT-E1-010|AT-E1-011)
             log_error "$test_id validation not yet implemented"

@@ -1,0 +1,167 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design Tokens" />
+
+# Design Tokens
+
+Design tokens are the visual design atoms of the design system — specifically, they are named entities that store visual design attributes. We use them in place of hard-coded values to ensure a consistent visual language across the platform.
+
+## Colors
+
+The Fawkes Design System uses a carefully curated color palette that ensures accessibility and visual harmony.
+
+### Primary Colors
+- Used for primary actions, links, and key UI elements
+- Provides strong visual hierarchy
+- Meets WCAG 2.1 AA contrast requirements
+
+### Secondary Colors
+- Used for less prominent actions and UI elements
+- Complements the primary color palette
+
+### Semantic Colors
+- **Success**: Green tones for positive actions and confirmations
+- **Warning**: Yellow/amber tones for cautionary messages
+- **Error/Danger**: Red tones for errors and destructive actions
+- **Info**: Blue tones for informational messages
+
+### Neutral Colors
+- Gray scale from white to black
+- Used for text, backgrounds, borders, and shadows
+
+## Typography
+
+Typography tokens define font families, sizes, weights, and line heights used throughout the system.
+
+### Font Families
+- **Sans-serif**: Primary font family for UI elements and body text
+- **Monospace**: Used for code snippets and technical content
+
+### Font Sizes
+- **xs**: 12px - Small labels and captions
+- **sm**: 14px - Secondary text
+- **base**: 16px - Body text (default)
+- **lg**: 18px - Larger body text
+- **xl**: 20px - Small headings
+- **2xl**: 24px - Section headings
+- **3xl**: 30px - Page headings
+- **4xl**: 36px - Hero headings
+
+### Font Weights
+- **normal**: 400 - Regular text
+- **medium**: 500 - Slightly emphasized text
+- **semibold**: 600 - Sub-headings
+- **bold**: 700 - Headings and strong emphasis
+
+### Line Heights
+- **tight**: 1.25 - Headings
+- **normal**: 1.5 - Body text
+- **relaxed**: 1.75 - Comfortable reading
+
+## Spacing
+
+Consistent spacing creates visual rhythm and hierarchy. Our spacing scale uses a base unit of 4px.
+
+- **0**: 0px
+- **1**: 4px
+- **2**: 8px
+- **3**: 12px
+- **4**: 16px
+- **5**: 20px
+- **6**: 24px
+- **8**: 32px
+- **10**: 40px
+- **12**: 48px
+- **16**: 64px
+- **20**: 80px
+- **24**: 96px
+
+## Border Radius
+
+Rounded corners soften the UI and create a modern, friendly appearance.
+
+- **none**: 0px - Sharp corners
+- **sm**: 2px - Subtle rounding
+- **base**: 4px - Default rounding
+- **md**: 6px - Medium rounding
+- **lg**: 8px - Large rounding
+- **xl**: 12px - Extra large rounding
+- **2xl**: 16px - Very large rounding
+- **full**: 9999px - Fully rounded (pills, circles)
+
+## Shadows
+
+Shadows create depth and hierarchy in the interface.
+
+- **sm**: Subtle elevation for cards and containers
+- **base**: Default shadow for interactive elements
+- **md**: Medium elevation for dropdowns and popovers
+- **lg**: High elevation for modals and dialogs
+- **xl**: Maximum elevation for overlays
+- **inner**: Inset shadow for pressed/active states
+
+## Z-Index
+
+Z-index values ensure proper layering of UI elements.
+
+- **0**: Base layer
+- **10**: Dropdowns and popovers
+- **20**: Sticky headers
+- **30**: Fixed sidebars
+- **40**: Modals and overlays
+- **50**: Tooltips and toasts
+
+## Breakpoints
+
+Responsive design breakpoints for different screen sizes.
+
+- **sm**: 640px - Small devices (landscape phones)
+- **md**: 768px - Medium devices (tablets)
+- **lg**: 1024px - Large devices (desktops)
+- **xl**: 1280px - Extra large devices (large desktops)
+- **2xl**: 1536px - 2X large devices (larger desktops)
+
+## Usage Example
+
+```typescript
+import { tokens } from '@fawkes/design-system';
+
+const styles = {
+  // Colors
+  backgroundColor: tokens.colors.primary[500],
+  color: tokens.colors.neutral[50],
+  
+  // Typography
+  fontSize: tokens.typography.fontSize.lg,
+  fontWeight: tokens.typography.fontWeight.semibold,
+  lineHeight: tokens.typography.lineHeight.normal,
+  
+  // Spacing
+  padding: tokens.spacing[4],
+  margin: tokens.spacing[2],
+  
+  // Border
+  borderRadius: tokens.borderRadius.md,
+  
+  // Shadow
+  boxShadow: tokens.shadows.md,
+  
+  // Z-index
+  zIndex: tokens.zIndex[10],
+};
+```
+
+## Accessibility
+
+All color combinations in the design system meet WCAG 2.1 AA standards for color contrast:
+- Normal text: minimum 4.5:1 contrast ratio
+- Large text: minimum 3:1 contrast ratio
+- UI components: minimum 3:1 contrast ratio
+
+## Best Practices
+
+1. **Always use tokens instead of hard-coded values** - This ensures consistency and makes theme changes easier
+2. **Follow semantic meaning** - Use error colors for errors, not for decorative purposes
+3. **Maintain visual hierarchy** - Use size, weight, and spacing tokens to create clear hierarchy
+4. **Test accessibility** - Always verify color contrast meets WCAG standards
+5. **Be consistent** - Use the same tokens for similar UI patterns across the application

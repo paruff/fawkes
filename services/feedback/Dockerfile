@@ -24,8 +24,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
-RUN addgroup --gid 65534 appuser && \
-    adduser --uid 65534 --gid 65534 --disabled-password --gecos "" appuser
+RUN adduser --uid 10000 --disabled-password --gecos "" appuser
 
 # Copy installed packages from build stage
 COPY --from=build /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages

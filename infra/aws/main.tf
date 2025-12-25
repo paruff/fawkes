@@ -7,7 +7,7 @@ terraform {
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 2.26" # Matches current cluster compatibility
+      version = "~> 3.0" # Matches current cluster compatibility
     }
     random = {
       source  = "hashicorp/random"

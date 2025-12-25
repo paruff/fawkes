@@ -73,6 +73,20 @@ feedback_by_category_total = Gauge(
     ['category']
 )
 
+# Time-to-action metrics
+feedback_time_to_action_seconds = Histogram(
+    'feedback_time_to_action_seconds',
+    'Time from feedback submission to first action (status change from open)',
+    ['category'],
+    buckets=[60, 300, 900, 1800, 3600, 7200, 14400, 28800, 86400, 172800, 604800, float("inf")]
+)
+
+feedback_avg_time_to_action_hours = Gauge(
+    'feedback_avg_time_to_action_hours',
+    'Average time to action in hours',
+    ['status', 'category']
+)
+
 
 def calculate_nps_from_ratings(promoters: int, passives: int, detractors: int) -> float:
     """
@@ -280,6 +294,59 @@ async def update_sentiment_metrics(conn: asyncpg.Connection):
         logger.error(f"Error updating sentiment metrics: {e}")
 
 
+async def update_time_to_action_metrics(conn: asyncpg.Connection):
+    """
+    Update time-to-action metrics.
+    
+    Calculates the time from feedback submission (created_at) to first action
+    (status_changed_at), for feedback that has been acted upon.
+    
+    Args:
+        conn: Database connection
+    """
+    try:
+        # Check if status_changed_at column exists
+        has_status_changed_at = await conn.fetchval("""
+            SELECT EXISTS (
+                SELECT 1 
+                FROM information_schema.columns 
+                WHERE table_name='feedback' 
+                AND column_name='status_changed_at'
+            )
+        """)
+        
+        if not has_status_changed_at:
+            logger.debug("status_changed_at column not available, skipping time-to-action metrics")
+            return
+        
+        # Get average time to action by status and category
+        query = """
+            SELECT 
+                status,
+                category,
+                AVG(EXTRACT(EPOCH FROM (status_changed_at - created_at)) / 3600) as avg_hours,
+                COUNT(*) as count
+            FROM feedback
+            WHERE status_changed_at IS NOT NULL
+            AND status != 'open'
+            GROUP BY status, category
+        """
+        
+        rows = await conn.fetch(query)
+        
+        for row in rows:
+            if row['avg_hours'] is not None:
+                feedback_avg_time_to_action_hours.labels(
+                    status=row['status'],
+                    category=row['category']
+                ).set(round(row['avg_hours'], 2))
+        
+        logger.info(f"Updated time-to-action metrics for {len(rows)} status-category combinations")
+        
+    except Exception as e:
+        logger.error(f"Error updating time-to-action metrics: {e}")
+
+
 async def update_all_metrics(conn: asyncpg.Connection):
     """
     Update all feedback metrics from database.
@@ -301,5 +368,6 @@ async def update_all_metrics(conn: asyncpg.Connection):
     await update_response_rate_metrics(conn)
     await update_category_metrics(conn)
     await update_sentiment_metrics(conn)
+    await update_time_to_action_metrics(conn)
     
     logger.info("All feedback metrics updated successfully")

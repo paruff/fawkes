@@ -32,6 +32,11 @@ data:
             links:
               - url: https://github.com/paruff/fawkes/issues
                 title: GitHub Issues
+      # Privacy-focused analytics with Plausible
+      analytics:
+        plausible:
+          domain: backstage.fawkes.idp
+          src: https://plausible.fawkes.idp/js/script.js
 
     organization:
       name: Fawkes Platform
@@ -82,6 +87,16 @@ data:
           secure: false
         '/feedback/api':
           target: http://feedback-service.fawkes.svc:8000/
+          changeOrigin: true
+          secure: false
+        '/penpot/api':
+          target: http://penpot-backend.fawkes.svc:6060/api/
+          changeOrigin: true
+          secure: false
+          headers:
+            X-Forwarded-Proto: https
+        '/plausible/api':
+          target: http://plausible.fawkes.svc:8000/api/
           changeOrigin: true
           secure: false
 
