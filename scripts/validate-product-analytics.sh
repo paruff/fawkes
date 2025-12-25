@@ -70,19 +70,19 @@ echo ""
 echo "Test 2: Privacy-Compliant (GDPR, Cookie-less)"
 if kubectl get configmap plausible-config -n "$NAMESPACE" &>/dev/null; then
   CONFIG=$(kubectl get configmap plausible-config -n "$NAMESPACE" -o yaml)
-  
+
   if echo "$CONFIG" | grep -q "DISABLE_AUTH: \"false\""; then
     pass "Authentication enabled (not public)"
   else
     fail "Authentication not properly configured"
   fi
-  
+
   if echo "$CONFIG" | grep -q "DISABLE_REGISTRATION: \"true\""; then
     pass "Public registration disabled"
   else
     fail "Public registration not disabled"
   fi
-  
+
   if echo "$CONFIG" | grep -q "LOG_FAILED_LOGIN_ATTEMPTS: \"false\""; then
     pass "Failed login attempts not logged (privacy)"
   else
@@ -97,25 +97,25 @@ echo ""
 echo "Test 3: Backstage Instrumented with Analytics"
 if kubectl get configmap backstage-app-config -n "$NAMESPACE" &>/dev/null; then
   BACKSTAGE_CONFIG=$(kubectl get configmap backstage-app-config -n "$NAMESPACE" -o yaml)
-  
+
   if echo "$BACKSTAGE_CONFIG" | grep -q "plausible"; then
     pass "Plausible configured in Backstage"
   else
     fail "Plausible not configured in Backstage"
   fi
-  
+
   if echo "$BACKSTAGE_CONFIG" | grep -q "domain: backstage.fawkes.idp"; then
     pass "Tracking domain configured"
   else
     fail "Tracking domain not configured"
   fi
-  
+
   if echo "$BACKSTAGE_CONFIG" | grep -q "plausible.fawkes.idp/js/script.js"; then
     pass "Tracking script URL configured"
   else
     fail "Tracking script URL not configured"
   fi
-  
+
   if echo "$BACKSTAGE_CONFIG" | grep -q "/plausible/api"; then
     pass "Plausible API proxy configured"
   else
@@ -141,7 +141,7 @@ echo "Test 5: Dashboard Accessible"
 if kubectl get ingress plausible -n "$NAMESPACE" &>/dev/null; then
   HOSTS=$(kubectl get ingress plausible -n "$NAMESPACE" -o jsonpath='{.spec.rules[*].host}')
   pass "Dashboard ingress configured for: $HOSTS"
-  
+
   # Check if service is responding
   POD=$(kubectl get pods -n "$NAMESPACE" -l app=plausible,component=analytics --no-headers -o custom-columns=":metadata.name" | head -1)
   if [[ -n "$POD" ]]; then

@@ -79,11 +79,11 @@ log_warning() {
 run_test() {
   local test_name="$1"
   local test_command="$2"
-  
+
   if $VERBOSE; then
     log_info "Running: $test_name"
   fi
-  
+
   if eval "$test_command" >/dev/null 2>&1; then
     log_success "$test_name"
     return 0

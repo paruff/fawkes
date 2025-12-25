@@ -86,7 +86,7 @@ async def lifespan(app: FastAPI):
     global http_client
     logger.info("Starting Anomaly Detection Service")
     http_client = httpx.AsyncClient(timeout=30.0)
-    
+
     # Check Prometheus connection
     try:
         response = await http_client.get(f"{PROMETHEUS_URL}/api/v1/status/config")
@@ -96,7 +96,7 @@ async def lifespan(app: FastAPI):
             logger.warning(f"⚠️  Prometheus returned status {response.status_code}")
     except Exception as e:
         logger.error(f"❌ Failed to connect to Prometheus: {e}")
-    
+
     # Initialize ML models
     try:
         from .models import detector
@@ -104,14 +104,14 @@ async def lifespan(app: FastAPI):
         logger.info("✅ ML models initialized successfully")
     except Exception as e:
         logger.error(f"❌ Failed to initialize ML models: {e}")
-    
+
     # Start background anomaly detection
     import asyncio
     from . import detector as detection_module
     detection_task = asyncio.create_task(detection_module.run_continuous_detection())
-    
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down Anomaly Detection Service")
     detection_task.cancel()
@@ -180,20 +180,20 @@ async def health() -> HealthResponse:
     """Health check endpoint."""
     prometheus_connected = False
     models_loaded = False
-    
+
     try:
         if http_client:
             response = await http_client.get(f"{PROMETHEUS_URL}/api/v1/status/config", timeout=5.0)
             prometheus_connected = response.status_code == 200
     except Exception:
         pass
-    
+
     try:
         from .models import detector
         models_loaded = detector.models_initialized
     except Exception:
         pass
-    
+
     return HealthResponse(
         status="UP",
         service="anomaly-detection",
@@ -214,14 +214,14 @@ async def ready():
                 raise HTTPException(status_code=503, detail="Prometheus not reachable")
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"Prometheus not ready: {str(e)}")
-    
+
     try:
         from .models import detector
         if not detector.models_initialized:
             raise HTTPException(status_code=503, detail="ML models not loaded")
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"Models not ready: {str(e)}")
-    
+
     return {
         "status": "READY",
         "service": "anomaly-detection"
@@ -236,20 +236,20 @@ async def get_anomalies(
 ) -> List[AnomalyDetection]:
     """
     Get recent anomalies.
-    
+
     Args:
         limit: Maximum number of anomalies to return
         severity: Filter by severity (critical, high, medium, low)
         metric: Filter by metric name
     """
     filtered = recent_anomalies
-    
+
     if severity:
         filtered = [a for a in filtered if a.anomaly.severity == severity]
-    
+
     if metric:
         filtered = [a for a in filtered if a.anomaly.metric == metric]
-    
+
     return filtered[:limit]
 
 
@@ -259,7 +259,7 @@ async def get_anomaly(anomaly_id: str) -> AnomalyDetection:
     for anomaly in recent_anomalies:
         if anomaly.id == anomaly_id:
             return anomaly
-    
+
     raise HTTPException(status_code=404, detail="Anomaly not found")
 
 
@@ -271,13 +271,13 @@ async def trigger_rca(anomaly_id: str, background_tasks: BackgroundTasks):
         if a.id == anomaly_id:
             anomaly = a
             break
-    
+
     if not anomaly:
         raise HTTPException(status_code=404, detail="Anomaly not found")
-    
+
     if anomaly.root_cause:
         return {"message": "RCA already exists", "root_cause": anomaly.root_cause}
-    
+
     # Perform RCA in background
     from . import rca as rca_module
     background_tasks.add_task(
@@ -285,7 +285,7 @@ async def trigger_rca(anomaly_id: str, background_tasks: BackgroundTasks):
         anomaly,
         recent_anomalies
     )
-    
+
     return {"message": "RCA triggered", "anomaly_id": anomaly_id}
 
 
@@ -306,15 +306,15 @@ async def get_models():
 async def get_stats():
     """Get detection statistics."""
     total_anomalies = len(recent_anomalies)
-    
+
     severity_counts = {}
     for anomaly in recent_anomalies:
         sev = anomaly.anomaly.severity
         severity_counts[sev] = severity_counts.get(sev, 0) + 1
-    
+
     with_rca = sum(1 for a in recent_anomalies if a.root_cause is not None)
     alerted = sum(1 for a in recent_anomalies if a.alerted)
-    
+
     return {
         "total_anomalies": total_anomalies,
         "severity_counts": severity_counts,

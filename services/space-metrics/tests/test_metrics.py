@@ -52,11 +52,11 @@ def test_health_score_calculation_excellent():
         context_switches=3.0,
         cognitive_load_avg=2.5
     )
-    
+
     health_score = calculate_devex_health_score(
         satisfaction, performance, activity, communication, efficiency
     )
-    
+
     assert 70 <= health_score <= 100, "Excellent metrics should yield high health score"
 
 
@@ -98,11 +98,11 @@ def test_health_score_calculation_poor():
         context_switches=10.0,
         cognitive_load_avg=4.5
     )
-    
+
     health_score = calculate_devex_health_score(
         satisfaction, performance, activity, communication, efficiency
     )
-    
+
     assert 0 <= health_score <= 50, "Poor metrics should yield low health score"
 
 
@@ -113,11 +113,11 @@ def test_health_score_no_data():
     activity = ActivityMetrics()
     communication = CommunicationMetrics()
     efficiency = EfficiencyMetrics()
-    
+
     health_score = calculate_devex_health_score(
         satisfaction, performance, activity, communication, efficiency
     )
-    
+
     assert health_score == 0.0, "No data should yield zero health score"
 
 
@@ -132,7 +132,7 @@ def test_satisfaction_metrics_validation():
     )
     assert metrics.nps_score == 50.0
     assert metrics.satisfaction_rating == 4.0
-    
+
     # Invalid NPS score (out of range)
     with pytest.raises(ValueError):
         SatisfactionMetrics(nps_score=150.0)
@@ -149,7 +149,7 @@ def test_efficiency_metrics_validation():
     )
     assert metrics.flow_state_days == 3.5
     assert metrics.valuable_work_percentage == 65.0
-    
+
     # Invalid cognitive load (out of range)
     with pytest.raises(ValueError):
         EfficiencyMetrics(cognitive_load_avg=6.0)
@@ -162,7 +162,7 @@ def test_privacy_no_individual_data():
         active_developers_count=10,
         platform_usage_count=500
     )
-    
+
     # Ensure no individual identifiers in model
     model_dict = activity.model_dump()
     assert "user_id" not in model_dict

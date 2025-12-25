@@ -15,7 +15,7 @@ class WorkItemCreate(BaseModel):
 class WorkItemResponse(BaseModel):
     """Response model for work item."""
     model_config = ConfigDict(from_attributes=True)
-    
+
     id: int = Field(..., description="Work item ID")
     title: str = Field(..., description="Work item title")
     type: WorkItemType = Field(..., description="Work item type")
@@ -33,7 +33,7 @@ class StageTransitionCreate(BaseModel):
 class StageTransitionResponse(BaseModel):
     """Response model for stage transition."""
     model_config = ConfigDict(from_attributes=True)
-    
+
     id: int = Field(..., description="Transition ID")
     work_item_id: int = Field(..., description="Work item ID")
     from_stage: Optional[str] = Field(None, description="Source stage name")
@@ -66,7 +66,7 @@ class FlowMetricsResponse(BaseModel):
 class StageResponse(BaseModel):
     """Response model for stage."""
     model_config = ConfigDict(from_attributes=True)
-    
+
     id: int = Field(..., description="Stage ID")
     name: str = Field(..., description="Stage name")
     order: int = Field(..., description="Stage order in value stream")

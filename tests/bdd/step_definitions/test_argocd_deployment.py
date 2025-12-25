@@ -53,7 +53,7 @@ def kubectl_configured():
 @given("the ingress-nginx controller is deployed and running")
 def ingress_nginx_running():
     """Verify ingress-nginx is running."""
-    data = _kubectl_json(["-n", "ingress-nginx", "get", "deployment", 
+    data = _kubectl_json(["-n", "ingress-nginx", "get", "deployment",
                           "ingress-nginx-controller", "-o", "json"])
     status = data.get("status", {})
     ready_replicas = status.get("readyReplicas", 0)
@@ -120,7 +120,7 @@ def pods_running(namespace: str, table, context: Dict):
 @then(parsers.cfparse('all ArgoCD pods should be in Ready state within {timeout:d} seconds'))
 def pods_ready(timeout: int):
     """Wait for all ArgoCD pods to be ready."""
-    cmd = ["kubectl", "wait", "--for=condition=ready", "pod", 
+    cmd = ["kubectl", "wait", "--for=condition=ready", "pod",
            "-l", "app.kubernetes.io/part-of=argocd",
            "-n", "argocd", f"--timeout={timeout}s"]
     subprocess.check_call(cmd)
@@ -149,7 +149,7 @@ def ingress_exists(service: str, context: Dict):
     ingresses = context.get("argocd_ingresses", [])
     found = any(service in ing["metadata"]["name"] for ing in ingresses)
     assert found, f"Ingress for {service} not found"
-    
+
     # Store the ingress for further checks
     for ing in ingresses:
         if service in ing["metadata"]["name"]:
@@ -209,7 +209,7 @@ def ui_accessible(url: str):
 def retrieve_admin_password(context: Dict):
     """Retrieve admin password from secret."""
     try:
-        secret = _kubectl_json(["-n", "argocd", "get", "secret", 
+        secret = _kubectl_json(["-n", "argocd", "get", "secret",
                                "argocd-initial-admin-secret", "-o", "json"])
         context["admin_secret"] = secret
     except RuntimeError:
@@ -239,11 +239,11 @@ def argocd_cli_login(context: Dict):
         subprocess.check_output(["which", "argocd"], stderr=subprocess.DEVNULL)
     except subprocess.CalledProcessError:
         pytest.skip("argocd CLI not installed")
-    
+
     # This is a basic check - full login test would require more setup
     # Just verify the CLI can reach the server
     try:
-        subprocess.check_output(["argocd", "version", "--client"], 
+        subprocess.check_output(["argocd", "version", "--client"],
                                stderr=subprocess.DEVNULL)
     except subprocess.CalledProcessError:
         pytest.skip("argocd CLI not functional")
@@ -302,7 +302,7 @@ def password_base64_encoded(context: Dict):
 @given(parsers.cfparse('ArgoCD server is running in namespace "{namespace}"'))
 def argocd_server_running(namespace: str):
     """Verify ArgoCD server is running."""
-    data = _kubectl_json(["-n", namespace, "get", "deployment", 
+    data = _kubectl_json(["-n", namespace, "get", "deployment",
                          "argocd-server", "-o", "json"])
     status = data.get("status", {})
     ready = status.get("readyReplicas", 0)
@@ -327,10 +327,10 @@ def health_status(status: str, context: Dict):
     """Verify health status (via deployment status)."""
     deployment = context.get("server_deployment")
     assert deployment is not None, "ArgoCD server deployment not found"
-    
+
     # Check deployment conditions
     conditions = deployment.get("status", {}).get("conditions", [])
-    available = any(c.get("type") == "Available" and c.get("status") == "True" 
+    available = any(c.get("type") == "Available" and c.get("status") == "True"
                    for c in conditions)
     assert available, f"ArgoCD server not available. Expected health status: {status}"
 
@@ -424,7 +424,7 @@ def crds_exist(table, context: Dict):
     """Verify specified CRDs exist."""
     all_crds = context.get("all_crds", [])
     crd_names = [crd["metadata"]["name"] for crd in all_crds]
-    
+
     for row in table:
         crd_name = row["crd"]
         assert crd_name in crd_names, f"CRD {crd_name} not found"
@@ -459,7 +459,7 @@ def service_exists(service_name: str, context: Dict):
     services = context.get("argocd_services", [])
     service_names = [svc["metadata"]["name"] for svc in services]
     assert service_name in service_names, f"Service {service_name} not found"
-    
+
     # Store for further checks
     for svc in services:
         if svc["metadata"]["name"] == service_name:

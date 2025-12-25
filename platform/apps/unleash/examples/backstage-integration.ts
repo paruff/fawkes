@@ -31,7 +31,7 @@ export async function initializeFeatureFlags() {
  */
 export async function checkNewUIFeature(): Promise<boolean> {
   const client = OpenFeature.getClient();
-  
+
   const isEnabled = await client.getBooleanValue(
     'new-ui-enabled',
     false, // default value
@@ -41,7 +41,7 @@ export async function checkNewUIFeature(): Promise<boolean> {
       environment: 'production',
     }
   );
-  
+
   return isEnabled;
 }
 
@@ -50,7 +50,7 @@ export async function checkNewUIFeature(): Promise<boolean> {
  */
 export async function getSearchExperimentVariant(): Promise<string> {
   const client = OpenFeature.getClient();
-  
+
   const variant = await client.getStringValue(
     'search-algorithm',
     'default', // default variant
@@ -59,7 +59,7 @@ export async function getSearchExperimentVariant(): Promise<string> {
       team: 'search',
     }
   );
-  
+
   // variant could be: 'default', 'elastic', 'algolia', etc.
   return variant;
 }

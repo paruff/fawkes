@@ -10,7 +10,7 @@ export interface ToastProps extends BaseComponentProps {
 
 /**
  * Toast notification
- * 
+ *
  * @component
  * @example
  * ```tsx

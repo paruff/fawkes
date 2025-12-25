@@ -21,9 +21,9 @@ TESTS_FAILED=0
 test_check() {
     local test_name=$1
     local test_command=$2
-    
+
     echo -n "Testing: $test_name ... "
-    
+
     if eval "$test_command" > /dev/null 2>&1; then
         echo -e "${GREEN}PASS${NC}"
         ((TESTS_PASSED++))
@@ -102,7 +102,7 @@ def check_balanced(filepath, char_open, char_close, name):
         content = f.read()
     open_count = content.count(char_open)
     close_count = content.count(char_close)
-    
+
     if open_count == close_count:
         print(f"  ✓ {name} balanced in {filepath}")
         return True

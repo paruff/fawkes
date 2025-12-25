@@ -2,9 +2,9 @@
 
 ## Issue #100: Build Experimentation Framework
 
-**Epic**: 3.3 - Product Discovery & UX  
-**Milestone**: M3.3  
-**Priority**: P1  
+**Epic**: 3.3 - Product Discovery & UX
+**Milestone**: M3.3
+**Priority**: P1
 **Status**: ✅ Complete
 
 ## Overview
@@ -355,6 +355,6 @@ curl https://experimentation.fawkes.idp/api/v1/experiments/{id}/stats
 
 ---
 
-**Implementation Date**: December 25, 2025  
-**Implemented By**: GitHub Copilot  
+**Implementation Date**: December 25, 2025
+**Implemented By**: GitHub Copilot
 **Status**: ✅ Complete - All acceptance criteria met

@@ -65,28 +65,28 @@ wait_for_sync() {
     local app_name="$1"
     local namespace="$2"
     local timeout="$3"
-    
+
     log_info "Waiting for application '$app_name' to sync (timeout: ${timeout}s)..."
-    
+
     local elapsed=0
     local interval=5
-    
+
     while [ $elapsed -lt $timeout ]; do
         local sync_status=$(kubectl get application "$app_name" -n "$namespace" -o jsonpath='{.status.sync.status}' 2>/dev/null || echo "Unknown")
-        
+
         if [ "$sync_status" = "Synced" ]; then
             log_success "Application '$app_name' is Synced"
             return 0
         fi
-        
+
         if [ "$VERBOSE" = true ]; then
             log_info "Current sync status: $sync_status (elapsed: ${elapsed}s)"
         fi
-        
+
         sleep $interval
         elapsed=$((elapsed + interval))
     done
-    
+
     log_error "Timeout waiting for application '$app_name' to sync"
     return 1
 }
@@ -95,28 +95,28 @@ wait_for_health() {
     local app_name="$1"
     local namespace="$2"
     local timeout="$3"
-    
+
     log_info "Waiting for application '$app_name' to be healthy (timeout: ${timeout}s)..."
-    
+
     local elapsed=0
     local interval=5
-    
+
     while [ $elapsed -lt $timeout ]; do
         local health_status=$(kubectl get application "$app_name" -n "$namespace" -o jsonpath='{.status.health.status}' 2>/dev/null || echo "Unknown")
-        
+
         if [ "$health_status" = "Healthy" ]; then
             log_success "Application '$app_name' is Healthy"
             return 0
         fi
-        
+
         if [ "$VERBOSE" = true ]; then
             log_info "Current health status: $health_status (elapsed: ${elapsed}s)"
         fi
-        
+
         sleep $interval
         elapsed=$((elapsed + interval))
     done
-    
+
     log_error "Timeout waiting for application '$app_name' to be healthy"
     return 1
 }
@@ -124,15 +124,15 @@ wait_for_health() {
 test_application_sync() {
     local app_name="$1"
     local namespace="$2"
-    
+
     log_info "Testing sync for application: $app_name"
-    
+
     # Check if application exists
     if ! kubectl get application "$app_name" -n "$namespace" &> /dev/null; then
         log_error "Application '$app_name' does not exist"
         return 1
     fi
-    
+
     # Trigger hard refresh
     log_info "Triggering hard refresh for application '$app_name'..."
     if command -v argocd &> /dev/null; then
@@ -140,37 +140,37 @@ test_application_sync() {
     else
         log_warning "argocd CLI not found, skipping hard refresh"
     fi
-    
+
     # Wait for sync
     if ! wait_for_sync "$app_name" "$namespace" "$TIMEOUT"; then
         return 1
     fi
-    
+
     # Wait for health
     if ! wait_for_health "$app_name" "$namespace" "$TIMEOUT"; then
         return 1
     fi
-    
+
     log_success "Application '$app_name' sync test passed"
     return 0
 }
 
 test_all_applications() {
     local namespace="$1"
-    
+
     log_info "Testing sync for all applications in namespace '$namespace'..."
-    
+
     local apps=$(kubectl get applications -n "$namespace" -o jsonpath='{.items[*].metadata.name}' 2>/dev/null)
-    
+
     if [ -z "$apps" ]; then
         log_error "No applications found in namespace '$namespace'"
         return 1
     fi
-    
+
     local total=0
     local passed=0
     local failed=0
-    
+
     for app in $apps; do
         total=$((total + 1))
         if test_application_sync "$app" "$namespace"; then
@@ -180,7 +180,7 @@ test_all_applications() {
         fi
         echo ""
     done
-    
+
     echo "=========================================="
     echo "Test Summary"
     echo "=========================================="
@@ -188,7 +188,7 @@ test_all_applications() {
     echo "Passed: $passed"
     echo "Failed: $failed"
     echo ""
-    
+
     if [ $failed -eq 0 ]; then
         log_success "All application sync tests passed!"
         return 0
@@ -233,30 +233,30 @@ main() {
                 ;;
         esac
     done
-    
+
     log_info "Starting ArgoCD sync E2E tests..."
     log_info "Namespace: $ARGO_NAMESPACE"
     log_info "Timeout: ${TIMEOUT}s"
     echo ""
-    
+
     # Check prerequisites
     if ! command -v kubectl &> /dev/null; then
         log_error "kubectl not found"
         exit 1
     fi
-    
+
     # Check cluster access
     if ! kubectl cluster-info &> /dev/null; then
         log_error "Cannot access Kubernetes cluster"
         exit 1
     fi
-    
+
     # Check namespace exists
     if ! kubectl get namespace "$ARGO_NAMESPACE" &> /dev/null; then
         log_error "Namespace '$ARGO_NAMESPACE' does not exist"
         exit 1
     fi
-    
+
     # Run tests
     if [ -n "$APP_NAME" ]; then
         test_application_sync "$APP_NAME" "$ARGO_NAMESPACE"

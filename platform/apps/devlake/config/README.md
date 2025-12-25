@@ -94,7 +94,7 @@ All webhooks point to DevLake:
 | Deployments | `/api/plugins/webhook/1/deployments` | ArgoCD |
 | Incidents | `/api/plugins/webhook/1/incidents` | Observability |
 
-**Base URL (Production)**: `https://devlake.fawkes.idp`  
+**Base URL (Production)**: `https://devlake.fawkes.idp`
 **Base URL (Local Dev)**: `http://devlake.127.0.0.1.nip.io`
 
 ## Testing Webhooks

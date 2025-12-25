@@ -6,10 +6,10 @@ Trivy provides comprehensive vulnerability scanning for container images, filesy
 
 ## Integration Status
 
-✅ **Jenkins Pipelines**: Fully integrated via Golden Path shared library  
-✅ **Harbor Registry**: Automatic scanning on image push  
-✅ **Security Quality Gates**: HIGH/CRITICAL vulnerabilities block deployments  
-✅ **Scan Reports**: Archived in Jenkins and visible in Harbor UI  
+✅ **Jenkins Pipelines**: Fully integrated via Golden Path shared library
+✅ **Harbor Registry**: Automatic scanning on image push
+✅ **Security Quality Gates**: HIGH/CRITICAL vulnerabilities block deployments
+✅ **Scan Reports**: Archived in Jenkins and visible in Harbor UI
 📊 **Grafana Dashboard**: Available at Grafana → Security → Trivy Container Security Scanning
 
 ## Key Features
@@ -91,7 +91,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Security Scan') {
             steps {
                 script {
@@ -122,7 +122,7 @@ The Golden Path pipeline includes a dedicated **Container Security Scan** stage 
 
 Default security quality gates:
 - **CRITICAL** vulnerabilities: Immediate pipeline failure
-- **HIGH** vulnerabilities: Immediate pipeline failure  
+- **HIGH** vulnerabilities: Immediate pipeline failure
 - **MEDIUM/LOW** vulnerabilities: Warning only (pipeline continues)
 
 Quality gates can be customized:
@@ -687,6 +687,6 @@ For issues with Trivy integration:
 
 ---
 
-**Maintained by**: Fawkes Platform Team  
-**Last Updated**: December 2024  
+**Maintained by**: Fawkes Platform Team
+**Last Updated**: December 2024
 **Issue**: #20 - Integrate Trivy container scanning

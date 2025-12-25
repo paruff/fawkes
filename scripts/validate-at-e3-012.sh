@@ -85,7 +85,7 @@ print_header "1. Documentation Index and Overview"
 print_check "Epic 3 documentation index exists"
 if [ -f "docs/EPIC-3-DOCUMENTATION-INDEX.md" ]; then
     print_pass "Epic 3 documentation index found"
-    
+
     # Check if index is comprehensive
     word_count=$(wc -w < "docs/EPIC-3-DOCUMENTATION-INDEX.md")
     if [ "$word_count" -gt 1000 ]; then
@@ -106,14 +106,14 @@ if [ -f "docs/EPIC-3-DOCUMENTATION-INDEX.md" ]; then
         "Demo"
         "How-To Guides"
     )
-    
+
     missing_sections=()
     for section in "${required_sections[@]}"; do
         if ! grep -qi "$section" "docs/EPIC-3-DOCUMENTATION-INDEX.md"; then
             missing_sections+=("$section")
         fi
     done
-    
+
     if [ ${#missing_sections[@]} -eq 0 ]; then
         print_pass "All required sections in documentation index"
     else
@@ -148,14 +148,14 @@ if [ -f "docs/how-to/epic-3-user-guide.md" ]; then
         "UX Researcher"
         "Platform Engineer"
     )
-    
+
     missing_personas=()
     for persona in "${required_personas[@]}"; do
         if ! grep -qi "$persona" "docs/how-to/epic-3-user-guide.md"; then
             missing_personas+=("$persona")
         fi
     done
-    
+
     if [ ${#missing_personas[@]} -eq 0 ]; then
         print_pass "User guide covers all personas"
     else
@@ -225,14 +225,14 @@ if [ -f "docs/runbooks/epic-3-product-discovery-operations.md" ]; then
         "Unleash"
         "Analytics"
     )
-    
+
     missing_components=()
     for component in "${required_components[@]}"; do
         if ! grep -qi "$component" "docs/runbooks/epic-3-product-discovery-operations.md"; then
             missing_components+=("$component")
         fi
     done
-    
+
     if [ ${#missing_components[@]} -eq 0 ]; then
         print_pass "Operations runbook covers all key components"
     else
@@ -279,14 +279,14 @@ if [ -f "docs/runbooks/epic-3-architecture-diagrams.md" ]; then
         "Feature flags"
         "Discovery workflow"
     )
-    
+
     missing_diagrams=()
     for diagram in "${required_diagrams[@]}"; do
         if ! grep -qi "$diagram" "docs/runbooks/epic-3-architecture-diagrams.md"; then
             missing_diagrams+=("$diagram")
         fi
     done
-    
+
     if [ ${#missing_diagrams[@]} -eq 0 ]; then
         print_pass "Architecture diagrams cover all major systems"
     else
@@ -328,14 +328,14 @@ if [ -f "docs/reference/api/epic-3-product-discovery-apis.md" ]; then
         "Unleash API"
         "Analytics API"
     )
-    
+
     missing_apis=()
     for api in "${required_apis[@]}"; do
         if ! grep -qi "$api" "docs/reference/api/epic-3-product-discovery-apis.md"; then
             missing_apis+=("$api")
         fi
     done
-    
+
     if [ ${#missing_apis[@]} -eq 0 ]; then
         print_pass "API reference documents all major APIs"
     else

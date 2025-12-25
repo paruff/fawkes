@@ -103,7 +103,7 @@ with open(app_config_path) as f:
     app_config_data = config.get('data', {}).get('app-config.yaml', '')
     app_config_parsed = yaml.safe_load(app_config_data)
     techdocs = app_config_parsed.get('techdocs', {})
-    
+
 assert techdocs.get('builder') == 'local'
 assert techdocs.get('generator', {}).get('runIn') == 'local'
 assert techdocs.get('publisher', {}).get('type') == 'local'

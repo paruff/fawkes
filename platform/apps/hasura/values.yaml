@@ -40,19 +40,19 @@ hasura:
       connectionString:
         existingSecret: db-vsm-credentials
         key: connection-string
-    
+
     # VSM database for work items and flow metrics
     - name: vsm
       connectionString:
         existingSecret: db-vsm-credentials
         key: connection-string
-    
+
     # Backstage database for catalog
     - name: backstage
       connectionString:
         existingSecret: db-backstage-credentials
         key: connection-string
-    
+
     # DevLake database for DORA metrics
     # Note: Will need to configure this based on DevLake DB setup
     - name: devlake
@@ -65,35 +65,35 @@ hasura:
     # Enable console
     - name: HASURA_GRAPHQL_ENABLE_CONSOLE
       value: "true"
-    
+
     # Enable dev mode for local development (disable in production)
     - name: HASURA_GRAPHQL_DEV_MODE
       value: "true"
-    
+
     # Enable remote schema permissions
     - name: HASURA_GRAPHQL_ENABLE_REMOTE_SCHEMA_PERMISSIONS
       value: "true"
-    
+
     # Enable telemetry (can be disabled if needed)
     - name: HASURA_GRAPHQL_ENABLE_TELEMETRY
       value: "false"
-    
+
     # CORS settings
     - name: HASURA_GRAPHQL_CORS_DOMAIN
       value: "*"
-    
+
     # Unauthorized role for public access (limited permissions)
     - name: HASURA_GRAPHQL_UNAUTHORIZED_ROLE
       value: "anonymous"
-    
+
     # Query depth limit to prevent abuse
     - name: HASURA_GRAPHQL_QUERY_PLAN_CACHE_SIZE
       value: "100"
-    
+
     # Rate limiting
     - name: HASURA_GRAPHQL_RATE_LIMIT_PER_ROLE
       value: '{"admin":{"max_req_per_min":10000},"developer":{"max_req_per_min":1000},"viewer":{"max_req_per_min":100}}'
-    
+
     # Log level
     - name: HASURA_GRAPHQL_LOG_LEVEL
       value: "info"
@@ -176,12 +176,12 @@ hasura:
 # Redis cache configuration (for Task 53.4)
 redis:
   enabled: true
-  
+
   image:
     repository: redis
     tag: 7-alpine
     pullPolicy: IfNotPresent
-  
+
   resources:
     requests:
       cpu: 100m
@@ -189,10 +189,10 @@ redis:
     limits:
       cpu: 200m
       memory: 256Mi
-  
+
   persistence:
     enabled: false  # In-memory cache, no persistence needed
-  
+
   service:
     type: ClusterIP
     port: 6379

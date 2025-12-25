@@ -93,11 +93,11 @@ Organizations that implement capabilities across all three categories (Flow, Fee
 
 !!! success "Start Here: Tutorials"
     **New to Fawkes?** Begin with our guided tutorials to achieve your first success in under 30 minutes!
-    
+
     [**Deploy Your First Service →**](tutorials/1-deploy-first-service.md){ .md-button .md-button--primary }
-    
+
     Complete all 6 tutorials to master core Fawkes workflows:
-    
+
     1. [Deploy Your First Service](tutorials/1-deploy-first-service.md) - 30 min
     2. [Add Distributed Tracing](tutorials/2-add-tracing-tempo.md) - 25 min
     3. [Consume Vault Secrets](tutorials/3-consume-vault-secret.md) - 30 min

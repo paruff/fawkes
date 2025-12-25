@@ -80,12 +80,12 @@ CATEGORY_KEYWORDS = {
 def analyze_sentiment(text: str) -> Dict[str, Any]:
     """
     Analyze sentiment of text using VADER.
-    
+
     Returns dict with sentiment label and scores.
     """
     scores = sentiment_analyzer.polarity_scores(text)
     compound = scores['compound']
-    
+
     # Classify sentiment
     if compound >= 0.05:
         sentiment = "positive"
@@ -93,7 +93,7 @@ def analyze_sentiment(text: str) -> Dict[str, Any]:
         sentiment = "negative"
     else:
         sentiment = "neutral"
-    
+
     return {
         "sentiment": sentiment,
         "compound": compound,
@@ -106,29 +106,29 @@ def analyze_sentiment(text: str) -> Dict[str, Any]:
 def auto_categorize(text: str) -> str:
     """
     Automatically categorize feedback based on keywords.
-    
+
     Returns the most relevant category or "General" if no match.
     """
     text_lower = text.lower()
-    
+
     # Count matches for each category
     category_scores = {}
     for category, keywords in CATEGORY_KEYWORDS.items():
         score = sum(1 for keyword in keywords if keyword in text_lower)
         if score > 0:
             category_scores[category] = score
-    
+
     # Return category with highest score
     if category_scores:
         return max(category_scores, key=category_scores.get)
-    
+
     return "General"
 
 
 def extract_rating(text: str) -> Optional[int]:
     """
     Extract rating from natural language text.
-    
+
     Examples:
     - "5 stars" -> 5
     - "rate it 4" -> 4
@@ -140,18 +140,18 @@ def extract_rating(text: str) -> Optional[int]:
         r'(\d+)\s+(?:stars?|out of 5)',
         r'(?:rate|rating|score).*?(\d+)',
     ]
-    
+
     for pattern in patterns:
         match = re.search(pattern, text.lower())
         if match:
             rating = int(match.group(1))
             if 1 <= rating <= 5:
                 return rating
-    
+
     # Sentiment-based rating if no explicit rating
     sentiment_result = analyze_sentiment(text)
     compound = sentiment_result['compound']
-    
+
     if compound >= 0.6:
         return 5
     elif compound >= 0.2:
@@ -167,24 +167,24 @@ def extract_rating(text: str) -> Optional[int]:
 def parse_feedback(text: str, user_name: str, user_email: str) -> Dict[str, Any]:
     """
     Parse natural language feedback into structured format.
-    
+
     Args:
         text: Feedback text from user
         user_name: Mattermost username
         user_email: User email
-        
+
     Returns:
         Dict with parsed feedback data
     """
     # Analyze sentiment
     sentiment_result = analyze_sentiment(text)
-    
+
     # Auto-categorize
     category = auto_categorize(text)
-    
+
     # Extract or infer rating
     rating = extract_rating(text)
-    
+
     return {
         "rating": rating,
         "category": category,
@@ -204,7 +204,7 @@ def parse_feedback(text: str, user_name: str, user_email: str) -> Dict[str, Any]
 async def submit_feedback_to_api(feedback_data: Dict[str, Any]) -> Dict[str, Any]:
     """
     Submit parsed feedback to the feedback service API.
-    
+
     Returns the API response.
     """
     async with httpx.AsyncClient() as client:
@@ -243,17 +243,17 @@ async def mattermost_slash_feedback(
 ):
     """
     Handle /feedback slash command from Mattermost.
-    
+
     Usage:
         /feedback <your feedback here>
-        
+
     Examples:
         /feedback The new UI is amazing! Love the dark mode.
         /feedback Builds are too slow, taking 20+ minutes
         /feedback Rate it 5 stars, great documentation!
     """
     slash_commands_total.labels(command='feedback', platform='mattermost').inc()
-    
+
     # Validate token if configured
     if BOT_TOKEN and token != BOT_TOKEN:
         logger.warning(f"Invalid token from user {user_name}")
@@ -261,13 +261,13 @@ async def mattermost_slash_feedback(
             "response_type": "ephemeral",
             "text": "⚠️ Invalid token"
         }
-    
+
     # Show help if no text provided
     if not text or text.strip() == "":
         return {
             "response_type": "ephemeral",
             "text": """### 💬 Fawkes Feedback Bot
-            
+
 **Usage:**
 ```
 /feedback <your feedback here>
@@ -289,17 +289,17 @@ async def mattermost_slash_feedback(
 Just tell me what you think, and I'll handle the rest! 🎯
 """
         }
-    
+
     try:
         # Get user email from Mattermost
         user_email = f"{user_name}@{EMAIL_DOMAIN}"  # Configurable domain
-        
+
         # Parse feedback
         feedback_data = parse_feedback(text, user_name, user_email)
-        
+
         # Submit to feedback API
         result = await submit_feedback_to_api(feedback_data)
-        
+
         # Track metrics
         feedback_logs_total.labels(
             platform='mattermost',
@@ -307,7 +307,7 @@ Just tell me what you think, and I'll handle the rest! 🎯
             sentiment=feedback_data['sentiment'],
             category=feedback_data['category']
         ).inc()
-        
+
         # Format sentiment emoji
         sentiment_emoji = {
             "positive": "😊",
@@ -315,7 +315,7 @@ Just tell me what you think, and I'll handle the rest! 🎯
             "negative": "😞"
         }
         emoji = sentiment_emoji.get(feedback_data['sentiment'], "🤔")
-        
+
         # Return success response with analysis
         return {
             "response_type": "ephemeral",
@@ -335,7 +335,7 @@ Thank you for helping us improve Fawkes! 🎯
 _Your feedback will be reviewed by the team._
 """
         }
-        
+
     except Exception as e:
         logger.error(f"Error processing feedback: {e}")
         feedback_logs_total.labels(
@@ -344,7 +344,7 @@ _Your feedback will be reviewed by the team._
             sentiment='unknown',
             category='unknown'
         ).inc()
-        
+
         return {
             "response_type": "ephemeral",
             "text": f"❌ **Error submitting feedback**\n\n{str(e)}\n\nPlease try again later."
@@ -355,7 +355,7 @@ _Your feedback will be reviewed by the team._
 async def api_submit_feedback(request: Request):
     """
     API endpoint for submitting feedback programmatically.
-    
+
     Accepts JSON with feedback text and optional metadata.
     """
     try:
@@ -363,14 +363,14 @@ async def api_submit_feedback(request: Request):
         text = data.get("text", "")
         user_name = data.get("user_name", "unknown")
         user_email = data.get("user_email", f"{user_name}@{EMAIL_DOMAIN}")
-        
+
         if not text:
             raise HTTPException(status_code=400, detail="Text is required")
-        
+
         # Parse and submit feedback
         feedback_data = parse_feedback(text, user_name, user_email)
         result = await submit_feedback_to_api(feedback_data)
-        
+
         # Track metrics
         feedback_logs_total.labels(
             platform='api',
@@ -378,7 +378,7 @@ async def api_submit_feedback(request: Request):
             sentiment=feedback_data['sentiment'],
             category=feedback_data['category']
         ).inc()
-        
+
         return {
             "status": "success",
             "feedback_id": result.get('id'),
@@ -388,7 +388,7 @@ async def api_submit_feedback(request: Request):
                 "rating": feedback_data['rating']
             }
         }
-        
+
     except HTTPException:
         raise
     except Exception as e:

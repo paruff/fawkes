@@ -77,13 +77,13 @@ class MattermostSlashCommand(BaseModel):
 
 def send_to_insights_api(friction_data: Dict[str, Any]) -> Dict[str, Any]:
     """Send friction data to Insights API.
-    
+
     Args:
         friction_data: Friction data to send
-        
+
     Returns:
         Response from Insights API
-        
+
     Raises:
         requests.HTTPError: If API request fails
     """
@@ -102,7 +102,7 @@ def send_to_insights_api(friction_data: Dict[str, Any]) -> Dict[str, Any]:
 
 def send_mattermost_response(response_url: str, message: str, ephemeral: bool = False):
     """Send response back to Mattermost.
-    
+
     Args:
         response_url: URL to send response to
         message: Message text
@@ -120,24 +120,24 @@ def send_mattermost_response(response_url: str, message: str, ephemeral: bool = 
 
 def parse_friction_command(text: str) -> Dict[str, str]:
     """Parse friction command text.
-    
+
     Format: /friction title | description | [category] | [priority]
-    
+
     Args:
         text: Command text to parse
-        
+
     Returns:
         Parsed friction data
     """
     parts = [p.strip() for p in text.split("|")]
-    
+
     result = {
         "title": parts[0] if len(parts) > 0 else "",
         "description": parts[1] if len(parts) > 1 else "",
         "category": parts[2] if len(parts) > 2 else "Developer Experience",
         "priority": parts[3] if len(parts) > 3 else "medium",
     }
-    
+
     return result
 
 
@@ -172,21 +172,21 @@ async def slack_friction_command(
     response_url: str = Form(...)
 ):
     """Handle Slack /friction slash command.
-    
+
     Usage:
         /friction title | description | [category] | [priority]
-    
+
     Example:
         /friction Slow CI builds | Maven builds take 20+ min | CI/CD | high
     """
     slash_commands_total.labels(command="friction", platform="slack").inc()
-    
+
     logger.info(f"Received Slack /friction command from {user_name}: {text}")
-    
+
     # Validate token (if configured)
     if BOT_TOKEN and token != BOT_TOKEN:
         raise HTTPException(status_code=403, detail="Invalid token")
-    
+
     # Parse command
     if not text or not text.strip():
         return {
@@ -200,15 +200,15 @@ async def slack_friction_command(
                 "*Common categories:* `CI/CD`, `Documentation`, `Tooling`, `Infrastructure`"
             )
         }
-    
+
     parsed = parse_friction_command(text)
-    
+
     if not parsed["title"]:
         return {
             "response_type": "ephemeral",
             "text": "⚠️ Please provide at least a title for the friction point."
         }
-    
+
     # Create insight
     insight_data = {
         "title": parsed["title"],
@@ -226,11 +226,11 @@ async def slack_friction_command(
             "user_id": user_id,
         }
     }
-    
+
     try:
         result = send_to_insights_api(insight_data)
         friction_logs_total.labels(platform="slack", status="success").inc()
-        
+
         return {
             "response_type": "in_channel",
             "text": (
@@ -254,17 +254,17 @@ async def slack_friction_command(
 @app.post("/mattermost/slash/friction")
 async def mattermost_friction_command(request: Request):
     """Handle Mattermost /friction slash command.
-    
+
     Usage:
         /friction title | description | [category] | [priority]
-    
+
     Example:
         /friction Slow CI builds | Maven builds take 20+ min | CI/CD | high
     """
     form_data = await request.form()
-    
+
     slash_commands_total.labels(command="friction", platform="mattermost").inc()
-    
+
     # Extract form data
     token = form_data.get("token", "")
     user_name = form_data.get("user_name", "unknown")
@@ -272,13 +272,13 @@ async def mattermost_friction_command(request: Request):
     team_id = form_data.get("team_id", "")
     channel_id = form_data.get("channel_id", "")
     user_id = form_data.get("user_id", "")
-    
+
     logger.info(f"Received Mattermost /friction command from {user_name}: {text}")
-    
+
     # Validate token (if configured)
     if BOT_TOKEN and token != BOT_TOKEN:
         raise HTTPException(status_code=403, detail="Invalid token")
-    
+
     # Parse command
     if not text or not text.strip():
         return {
@@ -292,15 +292,15 @@ async def mattermost_friction_command(request: Request):
                 "**Common categories:** `CI/CD`, `Documentation`, `Tooling`, `Infrastructure`"
             )
         }
-    
+
     parsed = parse_friction_command(text)
-    
+
     if not parsed["title"]:
         return {
             "response_type": "ephemeral",
             "text": "⚠️ Please provide at least a title for the friction point."
         }
-    
+
     # Create insight
     insight_data = {
         "title": parsed["title"],
@@ -318,11 +318,11 @@ async def mattermost_friction_command(request: Request):
             "user_id": user_id,
         }
     }
-    
+
     try:
         result = send_to_insights_api(insight_data)
         friction_logs_total.labels(platform="mattermost", status="success").inc()
-        
+
         return {
             "response_type": "in_channel",
             "text": (
@@ -346,11 +346,11 @@ async def mattermost_friction_command(request: Request):
 @app.post("/api/v1/friction")
 async def api_log_friction(friction: FrictionData):
     """Direct API endpoint for logging friction (for testing/webhooks).
-    
+
     This endpoint allows friction logging via direct API calls.
     """
     logger.info(f"Received API friction log: {friction.title}")
-    
+
     insight_data = {
         "title": friction.title,
         "description": friction.description,
@@ -364,7 +364,7 @@ async def api_log_friction(friction: FrictionData):
             "platform": "api",
         }
     }
-    
+
     try:
         result = send_to_insights_api(insight_data)
         friction_logs_total.labels(platform="api", status="success").inc()

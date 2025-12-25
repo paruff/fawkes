@@ -256,7 +256,7 @@ repos:
     hooks:
       - id: gitleaks
         name: Detect secrets with Gitleaks
-        
+
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.4.0
     hooks:
@@ -401,11 +401,11 @@ import (
 func main() {
     // Load from .env file (gitignored)
     godotenv.Load()
-    
+
     // Get secrets from environment
     dbUrl := os.Getenv("DATABASE_URL")
     apiKey := os.Getenv("API_KEY")
-    
+
     if dbUrl == "" {
         panic("DATABASE_URL environment variable is required")
     }
@@ -418,7 +418,7 @@ func main() {
 public class Config {
     private static final String DB_URL = System.getenv("DATABASE_URL");
     private static final String API_KEY = System.getenv("API_KEY");
-    
+
     static {
         if (DB_URL == null || DB_URL.isEmpty()) {
             throw new IllegalStateException("DATABASE_URL environment variable is required");

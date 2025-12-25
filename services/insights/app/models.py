@@ -42,7 +42,7 @@ class InsightPriority(str, enum.Enum):
 class Insight(Base):
     """Insight model - stores captured insights and learnings."""
     __tablename__ = "insights"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(500), nullable=False, index=True)
     description = Column(Text, nullable=False)
@@ -52,16 +52,16 @@ class Insight(Base):
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=True, index=True)
     priority = Column(String(20), nullable=False, default="medium", index=True)
     status = Column(String(20), nullable=False, default="draft", index=True)
-    
+
     # Metadata
     created_at = Column(DateTime, default=utcnow, nullable=False, index=True)
     updated_at = Column(DateTime, default=utcnow, onupdate=utcnow, nullable=False)
     published_at = Column(DateTime, nullable=True)
-    
+
     # Relationships
     category = relationship("Category", back_populates="insights")
     tags = relationship("Tag", secondary=insight_tags, back_populates="insights")
-    
+
     # Add composite indexes for common queries
     __table_args__ = (
         Index('idx_insights_status_priority', 'status', 'priority'),
@@ -73,7 +73,7 @@ class Insight(Base):
 class Category(Base):
     """Category model - hierarchical categorization for insights."""
     __tablename__ = "categories"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), unique=True, nullable=False, index=True)
     slug = Column(String(100), unique=True, nullable=False, index=True)
@@ -81,11 +81,11 @@ class Category(Base):
     parent_id = Column(Integer, ForeignKey("categories.id"), nullable=True, index=True)
     color = Column(String(7), nullable=True)  # Hex color for UI display
     icon = Column(String(50), nullable=True)  # Icon name for UI display
-    
+
     # Metadata
     created_at = Column(DateTime, default=utcnow, nullable=False)
     updated_at = Column(DateTime, default=utcnow, onupdate=utcnow, nullable=False)
-    
+
     # Relationships
     parent = relationship("Category", remote_side=[id], backref="subcategories")
     insights = relationship("Insight", back_populates="category")
@@ -94,16 +94,16 @@ class Category(Base):
 class Tag(Base):
     """Tag model - flexible tagging system for insights."""
     __tablename__ = "tags"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50), unique=True, nullable=False, index=True)
     slug = Column(String(50), unique=True, nullable=False, index=True)
     description = Column(Text, nullable=True)
     color = Column(String(7), nullable=True)  # Hex color for UI display
-    
+
     # Metadata
     created_at = Column(DateTime, default=utcnow, nullable=False)
     usage_count = Column(Integer, default=0, nullable=False)  # Track tag popularity
-    
+
     # Relationships
     insights = relationship("Insight", secondary=insight_tags, back_populates="tags")

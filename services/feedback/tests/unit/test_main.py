@@ -43,7 +43,7 @@ def test_health_check_healthy(client):
         mock_conn = AsyncMock()
         mock_conn.fetchval.return_value = 1
         mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
-        
+
         response = client.get("/health")
         assert response.status_code == 200
         data = response.json()
@@ -87,7 +87,7 @@ def test_submit_feedback_success(client):
             'updated_at': datetime.now()
         }
         mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
-        
+
         feedback_data = {
             "rating": 5,
             "category": "UI",
@@ -95,7 +95,7 @@ def test_submit_feedback_success(client):
             "email": "user@example.com",
             "page_url": "https://backstage.example.com"
         }
-        
+
         response = client.post("/api/v1/feedback", json=feedback_data)
         assert response.status_code == 201
         data = response.json()
@@ -111,7 +111,7 @@ def test_submit_feedback_validation_error(client):
         "category": "UI",
         "comment": "Test"
     }
-    
+
     response = client.post("/api/v1/feedback", json=feedback_data)
     assert response.status_code == 422  # Validation error
 
@@ -122,7 +122,7 @@ def test_submit_feedback_missing_fields(client):
         "rating": 5
         # Missing category and comment
     }
-    
+
     response = client.post("/api/v1/feedback", json=feedback_data)
     assert response.status_code == 422  # Validation error
 
@@ -167,7 +167,7 @@ def test_list_feedback_success(client):
             'updated_at': datetime.now()
         }]
         mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
-        
+
         response = client.get(
             "/api/v1/feedback",
             headers={"Authorization": "Bearer test-token"}
@@ -202,7 +202,7 @@ def test_update_feedback_status_success(client):
             'updated_at': datetime.now()
         }
         mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
-        
+
         response = client.put(
             "/api/v1/feedback/1/status",
             json={"status": "resolved"},
@@ -237,7 +237,7 @@ def test_get_stats_success(client):
             [{'rating': 5, 'count': 5}, {'rating': 4, 'count': 5}]
         ]
         mock_pool.acquire.return_value.__aenter__.return_value = mock_conn
-        
+
         response = client.get(
             "/api/v1/feedback/stats",
             headers={"Authorization": "Bearer test-token"}

@@ -10,7 +10,7 @@ export interface StackProps extends BaseComponentProps {
 
 /**
  * Stack items vertically or horizontally with consistent spacing
- * 
+ *
  * @component
  * @example
  * ```tsx

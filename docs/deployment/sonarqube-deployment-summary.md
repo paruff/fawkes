@@ -6,7 +6,7 @@
 
 #### 1. SonarQube deployed via ArgoCD ✅
 - **Location:** `platform/apps/sonarqube-application.yaml`
-- **Configuration:** 
+- **Configuration:**
   - Helm chart: sonarqube/sonarqube v2025.1.0
   - Image: sonarqube:10.7.0-community
   - Automated sync with self-heal
@@ -50,7 +50,7 @@
 - **Ingress:** http://sonarqube.127.0.0.1.nip.io (local)
 - **TLS:** Configured via NGINX ingress annotations
 - **Health Checks:** /api/system/health endpoint
-- **Security:** 
+- **Security:**
   - Non-root containers (UID/GID 1000)
   - Seccomp profile: RuntimeDefault
   - Dropped capabilities (ALL)

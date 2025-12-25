@@ -1,7 +1,7 @@
 # Epic 1: Architecture Diagrams
 
-**Version**: 1.0  
-**Last Updated**: December 2024  
+**Version**: 1.0
+**Last Updated**: December 2024
 **Status**: Production Ready
 
 ---

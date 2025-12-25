@@ -10,7 +10,7 @@ export interface ProgressProps extends BaseComponentProps {
 
 /**
  * Progress bar
- * 
+ *
  * @component
  * @example
  * ```tsx

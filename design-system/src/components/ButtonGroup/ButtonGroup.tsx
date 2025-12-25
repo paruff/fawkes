@@ -10,7 +10,7 @@ export interface ButtonGroupProps extends BaseComponentProps {
 
 /**
  * Group multiple buttons together
- * 
+ *
  * @component
  * @example
  * ```tsx

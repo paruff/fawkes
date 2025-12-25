@@ -33,7 +33,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def get_db() -> Generator[Session, None, None]:
     """
     Get database session.
-    
+
     Yields:
         Database session
     """
@@ -47,10 +47,10 @@ def get_db() -> Generator[Session, None, None]:
 def init_db():
     """Initialize database with default stages if needed."""
     from app.models import Base, Stage, StageType
-    
+
     # Create all tables
     Base.metadata.create_all(bind=engine)
-    
+
     # Create default stages if they don't exist
     db = SessionLocal()
     try:

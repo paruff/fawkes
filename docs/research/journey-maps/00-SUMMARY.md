@@ -2,10 +2,10 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: December 2025  
-**Status**: Active  
-**Owner**: Product Team  
+**Version**: 1.0
+**Last Updated**: December 2025
+**Status**: Active
+**Owner**: Product Team
 **Related Issue**: [paruff/fawkes#95](https://github.com/paruff/fawkes/issues/95)
 
 ---

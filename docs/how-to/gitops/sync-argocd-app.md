@@ -117,18 +117,18 @@ metadata:
   namespace: argocd
 spec:
   # ... other fields ...
-  
+
   syncPolicy:
     automated:
       prune: true        # Automatically delete resources removed from Git
       selfHeal: true     # Automatically sync when cluster state drifts
       allowEmpty: false  # Prevent sync if Git directory is empty
-    
+
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true   # Prune after all resources are synced
-    
+
     retry:
       limit: 5           # Retry failed syncs up to 5 times
       backoff:

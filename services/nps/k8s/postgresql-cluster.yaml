@@ -12,15 +12,15 @@ metadata:
     component: database
 spec:
   instances: 3
-  
+
   # PostgreSQL version
   imageName: ghcr.io/cloudnative-pg/postgresql:15
-  
+
   # Storage
   storage:
     size: 5Gi
     storageClass: standard
-  
+
   # Bootstrap
   bootstrap:
     initdb:
@@ -28,7 +28,7 @@ spec:
       owner: nps
       secret:
         name: db-nps-credentials
-  
+
   # Resource limits (optimized for <70% utilization)
   resources:
     requests:
@@ -37,7 +37,7 @@ spec:
     limits:
       cpu: 1000m
       memory: 1Gi
-  
+
   # Backup configuration
   backup:
     barmanObjectStore:
@@ -52,15 +52,15 @@ spec:
       wal:
         compression: gzip
     retentionPolicy: "30d"
-  
+
   # Monitoring
   monitoring:
     enablePodMonitor: true
-  
+
   # High Availability
   minSyncReplicas: 1
   maxSyncReplicas: 2
-  
+
   # PostgreSQL configuration
   postgresql:
     parameters:

@@ -2,11 +2,11 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: December 2025  
-**Status**: Active  
-**Owner**: Product Team  
-**Based on**: User interviews and deployment observations (Nov-Dec 2025)  
+**Version**: 1.0
+**Last Updated**: December 2025
+**Status**: Active
+**Owner**: Product Team
+**Based on**: User interviews and deployment observations (Nov-Dec 2025)
 **Related Personas**: [Application Developer](../personas/application-developer.md)
 
 ---
@@ -327,55 +327,55 @@
 ```mermaid
 graph TB
     Start([Goal: Deploy New Service to Production]) --> Stage1[Stage 1: Pre-Deployment Planning]
-    
+
     Stage1 --> Stage2[Stage 2: Creating Service Manifests]
     Stage2 --> PlatformHelp{Need Platform Team?}
     PlatformHelp -->|Yes| Wait1[Wait for Response]
     Wait1 --> Stage2
-    
+
     PlatformHelp -->|No| Stage3[Stage 3: Deploy to Dev]
     Stage3 --> DevSuccess{Dev Deploy Success?}
-    
+
     DevSuccess -->|No| Debug1[Debug: Image, Config, or Startup Issues]
     Debug1 --> FixDev[Fix and Redeploy]
     FixDev --> Stage3
-    
+
     DevSuccess -->|Yes| Stage4[Stage 4: Deploy to Staging]
     Stage4 --> StageSuccess{Tests Pass?}
-    
+
     StageSuccess -->|No| Debug2[Debug Test Failures]
     Debug2 --> FixStage[Fix Config/Code]
     FixStage --> Stage4
-    
+
     StageSuccess -->|Yes| Approval[Get Approval]
     Approval --> Stage5[Stage 5: Production Deployment]
-    
+
     Stage5 --> Monitor[Monitor Metrics Closely]
     Monitor --> ProdHealthy{Healthy After 1hr?}
-    
+
     ProdHealthy -->|No| Rollback[Rollback to Previous Version]
     Rollback --> Debug3[Investigate Root Cause]
     Debug3 --> FixProd[Fix Issues]
     FixProd --> Stage5
-    
+
     ProdHealthy -->|Yes| Success[Deployment Successful! 🎉]
     Success --> Stage6[Stage 6: Post-Deployment Monitoring]
     Stage6 --> End([Service in Production])
-    
+
     Stage1 -.->|Pain| Pain1["Generic checklist<br/>No automation"]
     Stage2 -.->|Pain| Pain2["Manual YAML<br/>Resource guessing"]
     Stage3 -.->|Pain| Pain3["Cryptic errors<br/>Trial and error"]
     Stage4 -.->|Pain| Pain4["Manual testing<br/>Config drift"]
     Stage5 -.->|Pain| Pain5["Manual monitoring<br/>No auto-rollback"]
     Stage6 -.->|Pain| Pain6["Manual validation<br/>No health report"]
-    
+
     Pain1 -.->|Fix| Opp1["Auto readiness check<br/>Smart checklist"]
     Pain2 -.->|Fix| Opp2["Service wizard<br/>Resource recommendations"]
     Pain3 -.->|Fix| Opp3["Clear errors<br/>Pre-deploy validation"]
     Pain4 -.->|Fix| Opp4["Auto smoke tests<br/>Parity validation"]
     Pain5 -.->|Fix| Opp5["Canary deploy<br/>Auto rollback"]
     Pain6 -.->|Fix| Opp6["Health report<br/>Auto notification"]
-    
+
     style Start fill:#e1f5e1
     style End fill:#90EE90
     style Success fill:#FFD700
@@ -407,7 +407,7 @@ graph LR
         S4 --> S5["Production<br/>2-3 hrs<br/>😟→😊 4/5→1/5"]
         S5 --> S6["Next Day<br/>30 min<br/>😊 1/5"]
     end
-    
+
     style S1 fill:#FFD700
     style S2 fill:#FFA500
     style S3 fill:#98D8C8

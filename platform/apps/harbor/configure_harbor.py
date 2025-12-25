@@ -97,7 +97,7 @@ class HarborConfigurer:
             Project details if successful, None otherwise
         """
         logger.info(f"Creating project: {name}")
-        
+
         # Check if project exists
         response = self.session.get(f"{self.api_base}/projects?name={name}")
         if response.status_code == 200 and response.json():
@@ -332,7 +332,7 @@ def main():
     import sys
     robot_count = 0
     robot_names = []
-    
+
     for robot_config in robot_accounts:
         robot = configurer.create_robot_account(**robot_config)
         if robot:
@@ -349,7 +349,7 @@ def main():
             logger.info(f"OR use Harbor API to retrieve/regenerate the token")
             logger.info(f"Use this token in Jenkins credentials or GitLab CI/CD variables")
             logger.info(f"{'='*60}\n")
-            
+
             robot_count += 1
 
     if robot_count > 0:

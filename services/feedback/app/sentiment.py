@@ -32,10 +32,10 @@ except Exception as e:
 def analyze_sentiment(text: str) -> Dict[str, float]:
     """
     Analyze sentiment of text using VADER.
-    
+
     Args:
         text: Text to analyze
-    
+
     Returns:
         Dictionary with sentiment scores:
         {
@@ -53,7 +53,7 @@ def analyze_sentiment(text: str) -> Dict[str, float]:
             'neu': 1.0,
             'neg': 0.0
         }
-    
+
     if not text or not text.strip():
         return {
             'compound': 0.0,
@@ -61,7 +61,7 @@ def analyze_sentiment(text: str) -> Dict[str, float]:
             'neu': 1.0,
             'neg': 0.0
         }
-    
+
     try:
         scores = analyzer.polarity_scores(text)
         logger.debug(f"Sentiment analysis: compound={scores['compound']:.3f}")
@@ -79,10 +79,10 @@ def analyze_sentiment(text: str) -> Dict[str, float]:
 def classify_sentiment(compound_score: float) -> str:
     """
     Classify sentiment based on compound score.
-    
+
     Args:
         compound_score: VADER compound score (-1.0 to +1.0)
-    
+
     Returns:
         Sentiment classification: 'positive', 'neutral', or 'negative'
     """
@@ -97,10 +97,10 @@ def classify_sentiment(compound_score: float) -> str:
 def analyze_feedback_sentiment(comment: str) -> Tuple[str, float, float, float, float]:
     """
     Analyze feedback comment and return classification with scores.
-    
+
     Args:
         comment: Feedback comment text
-    
+
     Returns:
         Tuple of (sentiment, compound, pos, neu, neg):
         - sentiment: 'positive', 'neutral', or 'negative'
@@ -111,7 +111,7 @@ def analyze_feedback_sentiment(comment: str) -> Tuple[str, float, float, float, 
     """
     scores = analyze_sentiment(comment)
     sentiment = classify_sentiment(scores['compound'])
-    
+
     return (
         sentiment,
         round(scores['compound'], 3),
@@ -124,10 +124,10 @@ def analyze_feedback_sentiment(comment: str) -> Tuple[str, float, float, float, 
 def get_sentiment_emoji(sentiment: str) -> str:
     """
     Get emoji representation of sentiment.
-    
+
     Args:
         sentiment: 'positive', 'neutral', or 'negative'
-    
+
     Returns:
         Emoji string
     """
@@ -142,15 +142,15 @@ def get_sentiment_emoji(sentiment: str) -> str:
 def batch_analyze_sentiments(comments: list[str]) -> list[Dict[str, any]]:
     """
     Analyze sentiment for multiple comments.
-    
+
     Args:
         comments: List of comment strings
-    
+
     Returns:
         List of dictionaries with sentiment analysis results
     """
     results = []
-    
+
     for comment in comments:
         sentiment, compound, pos, neu, neg = analyze_feedback_sentiment(comment)
         results.append({
@@ -162,17 +162,17 @@ def batch_analyze_sentiments(comments: list[str]) -> list[Dict[str, any]]:
             'neg': neg,
             'emoji': get_sentiment_emoji(sentiment)
         })
-    
+
     return results
 
 
 def aggregate_sentiment_stats(sentiments: list[str]) -> Dict[str, any]:
     """
     Calculate aggregate sentiment statistics.
-    
+
     Args:
         sentiments: List of sentiment classifications ('positive', 'neutral', 'negative')
-    
+
     Returns:
         Dictionary with aggregate statistics:
         {
@@ -186,7 +186,7 @@ def aggregate_sentiment_stats(sentiments: list[str]) -> Dict[str, any]:
         }
     """
     total = len(sentiments)
-    
+
     if total == 0:
         return {
             'total': 0,
@@ -197,11 +197,11 @@ def aggregate_sentiment_stats(sentiments: list[str]) -> Dict[str, any]:
             'neutral_pct': 0.0,
             'negative_pct': 0.0
         }
-    
+
     positive = sum(1 for s in sentiments if s == 'positive')
     neutral = sum(1 for s in sentiments if s == 'neutral')
     negative = sum(1 for s in sentiments if s == 'negative')
-    
+
     return {
         'total': total,
         'positive': positive,

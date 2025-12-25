@@ -8,27 +8,27 @@ allowed_transitions:
     to: Design
     description: Pull work item from backlog into design phase
     required_fields: []
-    
+
   - from: Design
     to: Development
     description: Design approved, ready for implementation
     required_fields:
       - design_document
       - acceptance_criteria
-    
+
   - from: Development
     to: Code Review
     description: Implementation complete, ready for review
     required_fields:
       - pull_request_url
       - unit_tests_passing
-    
+
   - from: Code Review
     to: Development
     description: Review feedback requires changes
     required_fields:
       - review_comments
-    
+
   - from: Code Review
     to: Testing
     description: Code review approved, ready for testing
@@ -36,13 +36,13 @@ allowed_transitions:
       - approval_count
     validation:
       min_approvals: 2
-    
+
   - from: Testing
     to: Development
     description: Testing found defects, return to development
     required_fields:
       - defect_list
-    
+
   - from: Testing
     to: Deployment Approval
     description: Testing passed, ready for deployment approval
@@ -51,20 +51,20 @@ allowed_transitions:
       - test_coverage_percent
     validation:
       min_test_coverage: 80
-    
+
   - from: Deployment Approval
     to: Testing
     description: Deployment approval denied, return to testing
     required_fields:
       - rejection_reason
-    
+
   - from: Deployment Approval
     to: Deploy
     description: Deployment approved by stakeholders
     required_fields:
       - approver_name
       - deployment_plan
-    
+
   - from: Deploy
     to: Production
     description: Deployment successful, now in production
@@ -73,7 +73,7 @@ allowed_transitions:
       - deployment_status
     validation:
       deployment_status: success
-    
+
   - from: Deploy
     to: Deployment Approval
     description: Deployment failed, needs re-approval
@@ -90,7 +90,7 @@ automated_transitions:
       event_status: success
     from: Deploy
     to: Production
-    
+
   - name: auto_deploy_failure
     description: Automatically return to Deployment Approval on deployment failure
     trigger:
@@ -98,7 +98,7 @@ automated_transitions:
       event_status: failure
     from: Deploy
     to: Deployment Approval
-    
+
   - name: auto_code_review_approved
     description: Automatically move to Testing when PR is approved
     trigger:
@@ -107,7 +107,7 @@ automated_transitions:
       checks_passing: true
     from: Code Review
     to: Testing
-    
+
   - name: auto_ci_failure
     description: Automatically return to Development when CI checks fail
     trigger:
@@ -123,21 +123,21 @@ validation_rules:
     check: wip_limit
     action: reject
     message: "Cannot transition: WIP limit exceeded for target stage"
-    
+
   - name: required_fields_check
     description: Ensure all required fields are provided
     type: pre_transition
     check: required_fields
     action: reject
     message: "Cannot transition: Missing required fields"
-    
+
   - name: approval_count_check
     description: Verify minimum approval count is met
     type: pre_transition
     check: min_approvals
     action: reject
     message: "Cannot transition: Minimum approvals not met"
-    
+
   - name: test_coverage_check
     description: Ensure minimum test coverage is achieved
     type: pre_transition
@@ -155,7 +155,7 @@ notifications:
       - type: email
         recipients: code-review-team@example.com
         subject: "Code Review Required: {work_item_title}"
-        
+
   - transition_to: Deployment Approval
     notify:
       - type: slack
@@ -164,7 +164,7 @@ notifications:
       - type: email
         recipients: release-managers@example.com
         subject: "Deployment Approval Required: {work_item_title}"
-        
+
   - transition_to: Production
     notify:
       - type: slack
@@ -189,11 +189,11 @@ metrics:
     start_stage: Design
     end_stage: Production
     exclude_wait_stages: false  # Include wait time in cycle time
-    
+
   lead_time:
     start_stage: Backlog
     end_stage: Production
-    
+
   flow_efficiency:
     active_stages:
       - Design

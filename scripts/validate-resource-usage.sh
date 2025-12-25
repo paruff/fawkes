@@ -83,7 +83,7 @@ fi
 calculate_percentage() {
   local used=$1
   local limit=$2
-  
+
   # Convert to same units (millicores for CPU, Mi for memory)
   if [[ "$used" =~ m$ ]]; then
     used="${used%m}"
@@ -91,28 +91,28 @@ calculate_percentage() {
     # Assume cores, convert to millicores
     used=$((used * 1000))
   fi
-  
+
   if [[ "$limit" =~ m$ ]]; then
     limit="${limit%m}"
   elif [[ "$limit" =~ ^[0-9]+$ ]]; then
     # Assume cores, convert to millicores
     limit=$((limit * 1000))
   fi
-  
+
   # Calculate percentage
   if [ "$limit" -gt 0 ]; then
     percentage=$((used * 100 / limit))
   else
     percentage=0
   fi
-  
+
   echo "$percentage"
 }
 
 # Function to convert memory to Mi
 convert_to_mi() {
   local value=$1
-  
+
   if [[ "$value" =~ Gi$ ]]; then
     value="${value%Gi}"
     value=$((value * 1024))
@@ -122,7 +122,7 @@ convert_to_mi() {
     value="${value%Ki}"
     value=$((value / 1024))
   fi
-  
+
   echo "$value"
 }
 
@@ -157,25 +157,25 @@ fi
 
 for pod in $pods; do
   total_pods=$((total_pods + 1))
-  
+
   if [ "$VERBOSE" = true ]; then
     echo "Checking pod: $pod"
   fi
-  
+
   # Get pod resource requests and limits
   pod_json=$(kubectl get pod "$pod" -n "$NAMESPACE" -o json)
-  
+
   # Extract container resource limits
   containers=$(echo "$pod_json" | jq -r '.spec.containers[] | .name')
-  
+
   pod_has_violation=false
-  
+
   for container in $containers; do
     cpu_limit=$(echo "$pod_json" | jq -r ".spec.containers[] | select(.name==\"$container\") | .resources.limits.cpu // empty")
     memory_limit=$(echo "$pod_json" | jq -r ".spec.containers[] | select(.name==\"$container\") | .resources.limits.memory // empty")
     cpu_request=$(echo "$pod_json" | jq -r ".spec.containers[] | select(.name==\"$container\") | .resources.requests.cpu // empty")
     memory_request=$(echo "$pod_json" | jq -r ".spec.containers[] | select(.name==\"$container\") | .resources.requests.memory // empty")
-    
+
     # Check if limits are defined
     if [ -z "$cpu_limit" ] || [ -z "$memory_limit" ]; then
       if [ "$VERBOSE" = true ]; then
@@ -183,33 +183,33 @@ for pod in $pods; do
       fi
       continue
     fi
-    
+
     # Get current usage if metrics are available
     if [ "$METRICS_AVAILABLE" = true ]; then
       metrics=$(kubectl top pod "$pod" -n "$NAMESPACE" --containers 2>/dev/null | grep "$container" || echo "")
-      
+
       if [ -n "$metrics" ]; then
         cpu_usage=$(echo "$metrics" | awk '{print $2}')
         memory_usage=$(echo "$metrics" | awk '{print $3}')
-        
+
         # Calculate percentages
         cpu_percent=$(calculate_percentage "$cpu_usage" "$cpu_limit")
         memory_usage_mi=$(convert_to_mi "$memory_usage")
         memory_limit_mi=$(convert_to_mi "$memory_limit")
         memory_percent=$((memory_usage_mi * 100 / memory_limit_mi))
-        
+
         if [ "$VERBOSE" = true ]; then
           echo "  Container: $container"
           echo "    CPU: ${cpu_usage}/${cpu_limit} (${cpu_percent}%)"
           echo "    Memory: ${memory_usage}/${memory_limit} (${memory_percent}%)"
         fi
-        
+
         # Check if usage exceeds target
         if [ "$cpu_percent" -gt "$TARGET_CPU_PERCENT" ]; then
           cpu_violations+=("$pod/$container: ${cpu_percent}% CPU (${cpu_usage}/${cpu_limit})")
           pod_has_violation=true
         fi
-        
+
         if [ "$memory_percent" -gt "$TARGET_MEMORY_PERCENT" ]; then
           memory_violations+=("$pod/$container: ${memory_percent}% Memory (${memory_usage}/${memory_limit})")
           pod_has_violation=true
@@ -217,7 +217,7 @@ for pod in $pods; do
       fi
     fi
   done
-  
+
   if [ "$pod_has_violation" = true ]; then
     pods_exceed_target=$((pods_exceed_target + 1))
   else
@@ -257,24 +257,24 @@ echo ""
 
 if [ "$METRICS_AVAILABLE" = true ]; then
   node_metrics=$(kubectl top nodes --no-headers)
-  
+
   while IFS= read -r line; do
     node=$(echo "$line" | awk '{print $1}')
     cpu_usage=$(echo "$line" | awk '{print $2}')
     cpu_percent=$(echo "$line" | awk '{print $3}' | tr -d '%')
     memory_usage=$(echo "$line" | awk '{print $4}')
     memory_percent=$(echo "$line" | awk '{print $5}' | tr -d '%')
-    
+
     echo "Node: $node"
     echo "  CPU: ${cpu_usage} (${cpu_percent}%)"
     echo "  Memory: ${memory_usage} (${memory_percent}%)"
-    
+
     if [ "$cpu_percent" -gt "$TARGET_CPU_PERCENT" ]; then
       echo -e "  ${RED}✗ CPU usage exceeds target${NC}"
     else
       echo -e "  ${GREEN}✓ CPU usage within target${NC}"
     fi
-    
+
     if [ "$memory_percent" -gt "$TARGET_MEMORY_PERCENT" ]; then
       echo -e "  ${RED}✗ Memory usage exceeds target${NC}"
     else

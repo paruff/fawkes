@@ -57,7 +57,7 @@ Different components use different authentication methods:
 
 ## ArgoCD API
 
-**Base URL:** `https://argocd.fawkes.local/api/v1`  
+**Base URL:** `https://argocd.fawkes.local/api/v1`
 **Authentication:** Bearer token in `Authorization` header
 
 ### Get Applications
@@ -152,7 +152,7 @@ POST /applications/{name}/rollback
 
 ## Backstage APIs
 
-**Base URL:** `https://backstage.fawkes.local/api`  
+**Base URL:** `https://backstage.fawkes.local/api`
 **Authentication:** Session cookie or service token
 
 ### Catalog API
@@ -283,7 +283,7 @@ GET /techdocs/default/component/{name}/index.html
 
 ## Jenkins API
 
-**Base URL:** `https://jenkins.fawkes.local`  
+**Base URL:** `https://jenkins.fawkes.local`
 **Authentication:** Username + API token (Basic Auth)
 
 ### Get Jenkins Info
@@ -383,7 +383,7 @@ Jenkins sends webhooks to registered URLs on build events:
 
 ## Prometheus API
 
-**Base URL:** `http://prometheus-kube-prometheus-prometheus.prometheus.svc:9090/api/v1`  
+**Base URL:** `http://prometheus-kube-prometheus-prometheus.prometheus.svc:9090/api/v1`
 **Authentication:** None (internal only)
 
 ### Query API
@@ -466,7 +466,7 @@ GET /alerts
 
 ## Grafana API
 
-**Base URL:** `https://grafana.fawkes.local/api`  
+**Base URL:** `https://grafana.fawkes.local/api`
 **Authentication:** API Key in `Authorization: Bearer {key}` header
 
 ### Dashboards
@@ -538,7 +538,7 @@ POST /annotations
 
 ## Harbor API
 
-**Base URL:** `https://harbor.fawkes.local/api/v2.0`  
+**Base URL:** `https://harbor.fawkes.local/api/v2.0`
 **Authentication:** Basic Auth (username:password)
 
 ### Projects
@@ -631,7 +631,7 @@ GET /projects/{project}/repositories/{repository}/artifacts/{reference}/addition
 
 ## Vault API
 
-**Base URL:** `https://vault.fawkes.local/v1`  
+**Base URL:** `https://vault.fawkes.local/v1`
 **Authentication:** X-Vault-Token header
 
 ### KV Secrets Engine
@@ -726,7 +726,7 @@ GET /sys/seal-status
 
 ## DevLake API
 
-**Base URL:** `https://devlake.fawkes.local/api`  
+**Base URL:** `https://devlake.fawkes.local/api`
 **Authentication:** Bearer token
 
 For detailed DORA metrics API, see [DORA Metrics API Reference](../dora-metrics-api.md).
@@ -801,7 +801,7 @@ DevLake receives deployment events from ArgoCD:
 
 ## Kyverno API
 
-**Base URL:** Kubernetes API Server  
+**Base URL:** Kubernetes API Server
 **Authentication:** Kubernetes RBAC via kubectl
 
 ### Policies

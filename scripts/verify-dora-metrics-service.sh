@@ -47,7 +47,7 @@ print_warning() {
 check_condition() {
     local description="$1"
     local command="$2"
-    
+
     if eval "$command" &>/dev/null; then
         print_success "$description"
         return 0
@@ -111,25 +111,25 @@ print_header "2. Checking Database Schema"
 # Check MySQL pod is ready
 if kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/component=mysql -o jsonpath='{.items[0].status.phase}' | grep -q "Running"; then
     print_success "MySQL pod is running"
-    
+
     # Get MySQL root password
     MYSQL_ROOT_PASSWORD=$(kubectl get secret devlake-db -n "$DEVLAKE_NAMESPACE" -o jsonpath='{.data.mysql-root-password}' 2>/dev/null | base64 -d || echo "")
     MYSQL_POD=$(kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/component=mysql -o jsonpath='{.items[0].metadata.name}')
-    
+
     if [ -n "$MYSQL_ROOT_PASSWORD" ] && [ -n "$MYSQL_POD" ]; then
         # Check if database exists
         DB_CHECK=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$MYSQL_POD" -- \
             mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "SHOW DATABASES LIKE 'lake';" 2>/dev/null | grep -c "lake" || echo "0")
-        
+
         if [ "$DB_CHECK" -gt 0 ]; then
             print_success "Database 'lake' exists"
-            
+
             # Check key tables
             TABLES=("deployments" "commits" "incidents" "cicd_deployments" "project_metric_settings")
             for table in "${TABLES[@]}"; do
                 TABLE_CHECK=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$MYSQL_POD" -- \
                     mysql -u root -p"${MYSQL_ROOT_PASSWORD}" lake -e "SHOW TABLES LIKE '$table';" 2>/dev/null | grep -c "$table" || echo "0")
-            
+
                 if [ "$TABLE_CHECK" -gt 0 ]; then
                     print_success "Table '$table' exists"
                 else
@@ -157,7 +157,7 @@ DEVLAKE_POD=$(kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/comp
 
 if [ -n "$DEVLAKE_POD" ]; then
     print_success "DevLake API pod found: $DEVLAKE_POD"
-    
+
     # Check health endpoint
     HEALTH_CHECK=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$DEVLAKE_POD" -- curl -s http://localhost:8080/api/ping 2>/dev/null || echo "")
     if echo "$HEALTH_CHECK" | grep -q "pong"; then
@@ -166,7 +166,7 @@ if [ -n "$DEVLAKE_POD" ]; then
         print_failure "API health endpoint not responding"
         echo "  Debug: kubectl exec -n $DEVLAKE_NAMESPACE $DEVLAKE_POD -- curl http://localhost:8080/api/ping"
     fi
-    
+
     # Check metrics endpoint
     METRICS_CHECK=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$DEVLAKE_POD" -- curl -s http://localhost:8080/metrics 2>/dev/null || echo "")
     if echo "$METRICS_CHECK" | grep -q "dora"; then
@@ -174,7 +174,7 @@ if [ -n "$DEVLAKE_POD" ]; then
     else
         print_warning "Prometheus metrics endpoint accessible but may not expose DORA metrics yet"
     fi
-    
+
     # Check GraphQL endpoint
     GRAPHQL_CHECK=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$DEVLAKE_POD" -- curl -s -X POST http://localhost:8080/api/graphql -H "Content-Type: application/json" -d '{"query":"{ __schema { types { name } } }"}' 2>/dev/null || echo "")
     if echo "$GRAPHQL_CHECK" | grep -q "types"; then
@@ -200,7 +200,7 @@ if kubectl get pods -n "$MONITORING_NAMESPACE" -l app.kubernetes.io/name=prometh
     PROM_POD=$(kubectl get pods -n "$MONITORING_NAMESPACE" -l app.kubernetes.io/name=prometheus -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
     if [ -n "$PROM_POD" ]; then
         print_success "Prometheus pod found: $PROM_POD"
-        
+
         # Check if DevLake target exists in Prometheus
         echo ""
         print_warning "Manual check required: Verify DevLake target in Prometheus UI"
@@ -224,7 +224,7 @@ INGRESSES=("devlake" "devlake-grafana")
 for ingress in "${INGRESSES[@]}"; do
     if kubectl get ingress "$ingress" -n "$DEVLAKE_NAMESPACE" &>/dev/null; then
         print_success "Ingress $ingress exists"
-        
+
         # Get ingress host
         HOST=$(kubectl get ingress "$ingress" -n "$DEVLAKE_NAMESPACE" -o jsonpath='{.spec.rules[0].host}' 2>/dev/null)
         if [ -n "$HOST" ]; then
@@ -243,10 +243,10 @@ print_header "6. Checking Data Source Configuration"
 # Check ConfigMap for data sources
 if kubectl get configmap devlake-data-sources -n "$DEVLAKE_NAMESPACE" &>/dev/null; then
     print_success "DevLake data sources ConfigMap exists"
-    
+
     # Check if GitHub, ArgoCD, Jenkins are configured
     CONFIG=$(kubectl get configmap devlake-data-sources -n "$DEVLAKE_NAMESPACE" -o yaml 2>/dev/null || echo "")
-    
+
     for source in "github" "argocd" "jenkins" "webhook"; do
         if echo "$CONFIG" | grep -iq "$source"; then
             print_success "Data source '$source' is configured"
@@ -269,7 +269,7 @@ GRAFANA_POD=$(kubectl get pods -n "$DEVLAKE_NAMESPACE" -l app.kubernetes.io/comp
 
 if [ -n "$GRAFANA_POD" ]; then
     print_success "Grafana pod found: $GRAFANA_POD"
-    
+
     # Check Grafana health
     GRAFANA_HEALTH=$(kubectl exec -n "$DEVLAKE_NAMESPACE" "$GRAFANA_POD" -- curl -s http://localhost:3000/api/health 2>/dev/null || echo "")
     if echo "$GRAFANA_HEALTH" | grep -q "ok"; then
@@ -277,7 +277,7 @@ if [ -n "$GRAFANA_POD" ]; then
     else
         print_failure "Grafana health check failed"
     fi
-    
+
     echo ""
     print_warning "Manual check required: Verify DORA dashboards in Grafana UI"
     echo "  1. Get Grafana password: kubectl get secret -n $DEVLAKE_NAMESPACE devlake-grafana-secrets -o jsonpath='{.data.admin-password}' | base64 -d"

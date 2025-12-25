@@ -6,11 +6,11 @@
 
 ## Study Information
 
-**Research Title**: Fawkes Internal Platform User Research  
-**Conducting Organization**: Fawkes Product Team  
-**Principal Researcher**: [Researcher Name]  
-**Contact Email**: product-team@fawkes.local  
-**Study Period**: December 2025 - Ongoing  
+**Research Title**: Fawkes Internal Platform User Research
+**Conducting Organization**: Fawkes Product Team
+**Principal Researcher**: [Researcher Name]
+**Contact Email**: product-team@fawkes.local
+**Study Period**: December 2025 - Ongoing
 
 ---
 
@@ -31,7 +31,7 @@ We are conducting user research to understand how people use the Fawkes Internal
 
 **Duration**: Approximately 45-60 minutes
 
-**Format**: 
+**Format**:
 - [ ] Remote video call (Zoom, Google Meet, Microsoft Teams)
 - [ ] In-person meeting
 - [ ] Phone call
@@ -193,7 +193,7 @@ I consent to the use of my anonymized quotes in research reports, presentations,
 - [ ] **No**, please do not use my quotes
 
 **Example of anonymized quote**:
-> "The deployment process is stressful because I never know if it's going to work on the first try." 
+> "The deployment process is stressful because I never know if it's going to work on the first try."
 > — Senior Application Developer, 5 years experience
 
 ---
@@ -215,7 +215,7 @@ If yes, preferred contact method:
 
 ## Incentive Information
 
-**Incentive** (if applicable): 
+**Incentive** (if applicable):
 - [ ] $[amount] gift card to [retailer]
 - [ ] Company swag (t-shirt, mug, etc.)
 - [ ] No incentive offered
@@ -230,17 +230,17 @@ If yes, preferred contact method:
 
 If you have questions or concerns about this research, please contact:
 
-**Primary Researcher**:  
-[Researcher Name]  
-Email: [researcher-email]  
+**Primary Researcher**:
+[Researcher Name]
+Email: [researcher-email]
 Slack: @[researcher-username]
 
-**Product Team Lead**:  
-[Product Lead Name]  
+**Product Team Lead**:
+[Product Lead Name]
 Email: product-team@fawkes.local
 
-**Privacy Officer** (for privacy concerns):  
-[Privacy Officer Name]  
+**Privacy Officer** (for privacy concerns):
+[Privacy Officer Name]
 Email: privacy@company.com
 
 ---
@@ -289,7 +289,7 @@ If this interview is conducted remotely, verbal consent is acceptable:
 **Verbal Consent Statement** (read by researcher):
 > "Before we begin, I want to confirm that you've received and reviewed the consent form. Do you consent to participate in this research interview? Do you consent to [audio/video/screen] recording?"
 
-**Participant Response**: 
+**Participant Response**:
 - [ ] Yes, I consent to participate and to recording as indicated above
 - [ ] No, I do not consent
 
@@ -329,9 +329,9 @@ To help you understand how we'll protect your privacy, here are examples:
 
 ---
 
-**Version**: 1.0  
-**Last Updated**: December 2025  
-**Document Owner**: Product Team  
+**Version**: 1.0
+**Last Updated**: December 2025
+**Document Owner**: Product Team
 **Review Cycle**: Annual or as needed for compliance updates
 
 ---

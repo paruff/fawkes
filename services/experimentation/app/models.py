@@ -45,7 +45,7 @@ class ExperimentResponse(BaseModel):
     created_at: datetime
     started_at: Optional[datetime]
     stopped_at: Optional[datetime]
-    
+
     class Config:
         from_attributes = True
 
@@ -64,7 +64,7 @@ class VariantAssignment(BaseModel):
     user_id: str
     variant: str
     assigned_at: datetime
-    
+
     class Config:
         from_attributes = True
 

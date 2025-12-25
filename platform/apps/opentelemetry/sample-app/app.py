@@ -124,13 +124,13 @@ def hello(name):
     with tracer.start_as_current_span("greet_user") as span:
         span.set_attribute("user.name", name)
         logger.info(f"Greeting user: {name}")
-        
+
         # Simulate some processing
         result = simulate_work(0.1, "generate_greeting")
-        
+
         greeting = f"Hello, {name}! Welcome to the OpenTelemetry sample application."
         span.set_attribute("greeting.message", greeting)
-        
+
         return jsonify({
             "greeting": greeting,
             "trace_id": format(span.get_span_context().trace_id, '032x'),
@@ -143,25 +143,25 @@ def work():
     """Endpoint that simulates complex work with nested spans."""
     with tracer.start_as_current_span("complex_work") as span:
         logger.info("Starting complex work operation")
-        
+
         results = []
-        
+
         # Simulate multiple operations
         with tracer.start_as_current_span("database_query"):
             simulate_work(0.15, "query_database")
             results.append("Database query completed")
-        
+
         with tracer.start_as_current_span("external_api_call"):
             simulate_work(0.2, "call_external_api")
             results.append("External API call completed")
-        
+
         with tracer.start_as_current_span("data_processing"):
             simulate_work(0.1, "process_data")
             results.append("Data processing completed")
-        
+
         span.set_attribute("operations.count", len(results))
         logger.info("Complex work operation completed")
-        
+
         return jsonify({
             "status": "success",
             "results": results,
@@ -176,7 +176,7 @@ def trigger_error():
         logger.error("Intentional error triggered for testing")
         span.set_attribute("error", True)
         span.set_attribute("error.type", "IntentionalError")
-        
+
         # Record exception
         try:
             raise ValueError("This is an intentional error for testing traces")
@@ -184,7 +184,7 @@ def trigger_error():
             span.record_exception(e)
             span.set_status(trace.Status(trace.StatusCode.ERROR, str(e)))
             logger.exception("Error occurred during operation")
-            
+
             return jsonify({
                 "error": "IntentionalError",
                 "message": str(e),
@@ -196,6 +196,6 @@ if __name__ == '__main__':
     logger.info(f"Starting {SERVICE_NAME} v{SERVICE_VERSION}")
     logger.info(f"OTLP Endpoint: {OTEL_EXPORTER_OTLP_ENDPOINT}")
     logger.info(f"Environment: {DEPLOYMENT_ENVIRONMENT}")
-    
+
     # Run the Flask app
     app.run(host='0.0.0.0', port=8080, debug=False)

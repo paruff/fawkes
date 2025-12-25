@@ -17,12 +17,12 @@ Automated metadata ingestion is configured for:
   - Backstage developer portal database
   - Harbor container registry database
   - SonarQube code quality database
-  
+
 - `kubernetes.yaml` - Kubernetes resources ingestion recipe
   - Deployments, StatefulSets, Services
   - ConfigMaps, Secrets, Ingresses
   - Links to Backstage components via annotations
-  
+
 - `github-jenkins.yaml` - Git and CI/CD ingestion recipe
   - GitHub repositories, branches, commits, PRs
   - Jenkins jobs, builds, pipelines

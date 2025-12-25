@@ -79,7 +79,7 @@ Components are deployed in the following order using ArgoCD sync waves:
    ```bash
    # Get the Load Balancer IP
    kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
-   
+
    # Create DNS record: *.fawkes.idp -> <Load Balancer IP>
    ```
 

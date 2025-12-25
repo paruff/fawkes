@@ -16,7 +16,7 @@ client = TestClient(app)
 
 class TestHealthEndpoint:
     """Tests for health check endpoint."""
-    
+
     def test_health_check(self):
         """Test health endpoint returns healthy status."""
         response = client.get("/health")
@@ -28,19 +28,19 @@ class TestHealthEndpoint:
 
 class TestSentimentAnalysis:
     """Tests for sentiment analysis functionality."""
-    
+
     def test_positive_sentiment(self):
         """Test positive sentiment detection."""
         result = analyze_sentiment("This is amazing! I love it!")
         assert result["sentiment"] == "positive"
         assert result["compound"] > 0.05
-    
+
     def test_negative_sentiment(self):
         """Test negative sentiment detection."""
         result = analyze_sentiment("This is terrible and broken.")
         assert result["sentiment"] == "negative"
         assert result["compound"] < -0.05
-    
+
     def test_neutral_sentiment(self):
         """Test neutral sentiment detection."""
         result = analyze_sentiment("The system works as expected.")
@@ -50,17 +50,17 @@ class TestSentimentAnalysis:
 
 class TestAutoCategorization:
     """Tests for auto-categorization functionality."""
-    
+
     def test_ui_category(self):
         """Test UI category detection."""
         category = auto_categorize("The interface design is great")
         assert category == "UI"
-    
+
     def test_performance_category(self):
         """Test Performance category detection."""
         category = auto_categorize("The system is very slow and laggy")
         assert category == "Performance"
-    
+
     def test_general_category_fallback(self):
         """Test fallback to General category."""
         category = auto_categorize("Random feedback text")

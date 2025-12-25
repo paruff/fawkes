@@ -199,7 +199,7 @@ NPS = (% Promoters - % Detractors) × 100
 ### Score Interpretation
 - **-100 to 0**: Needs improvement
 - **0 to 30**: Good
-- **30 to 70**: Great  
+- **30 to 70**: Great
 - **70 to 100**: Excellent
 
 ---

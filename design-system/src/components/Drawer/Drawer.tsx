@@ -10,7 +10,7 @@ export interface DrawerProps extends BaseComponentProps {
 
 /**
  * Slide-out drawer
- * 
+ *
  * @component
  * @example
  * ```tsx

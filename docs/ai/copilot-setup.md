@@ -91,11 +91,11 @@ Permission: Full Access
     "markdown": true,
     "terraform": true
   },
-  
+
   // Copilot behavior
   "github.copilot.editor.enableAutoCompletions": true,
   "github.copilot.editor.enableCodeActions": true,
-  
+
   // Advanced settings
   "github.copilot.advanced": {
     "debug.overrideEngine": "",
@@ -233,7 +233,7 @@ import weaviate
 
 def search_documentation(query: str):
     """Search internal docs using Weaviate.
-    
+
     Based on patterns from docs/ai/vector-database.md
     """
     client = weaviate.Client("http://weaviate.fawkes.svc:80")
@@ -351,7 +351,7 @@ resource "azurerm_kubernetes_cluster" "main" {
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   dns_prefix          = "fawkes"
-  
+
   default_node_pool {
     name       = "default"
     node_count = 3
@@ -405,12 +405,12 @@ class Query(BaseModel):
 async def search_docs(query: Query):
     try:
         result = client.query.get(
-            "FawkesDocument", 
+            "FawkesDocument",
             ["title", "content", "filepath"]
         ).with_near_text({
             "concepts": [query.query]
         }).with_limit(query.limit).do()
-        
+
         return {"results": result["data"]["Get"]["FawkesDocument"]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -514,10 +514,10 @@ async def search_docs(query: Query):
   ```bash
   # Check authentication
   # VSCode: Cmd+Shift+P → "GitHub Copilot: Sign In"
-  
+
   # Check status
   # VSCode: Look for Copilot icon in status bar
-  
+
   # Restart extension
   # VSCode: Cmd+Shift+P → "Developer: Reload Window"
   ```
@@ -577,7 +577,7 @@ See [AI Telemetry Dashboard](../../platform/apps/ai-telemetry/README.md) for det
    ```bash
    # VSCode
    Cmd+Shift+P → "GitHub Copilot: Check Status"
-   
+
    # CLI
    gh copilot status
    ```
@@ -732,7 +732,7 @@ Treat Copilot as a pair programmer, not a replacement for review.
 
 ### Q: How do I report problematic suggestions?
 
-**A:** 
+**A:**
 1. In VSCode: Right-click suggestion → "Report Issue"
 2. Via GitHub: [GitHub Copilot Feedback](https://github.com/github/feedback/discussions/categories/copilot-feedback)
 3. Internal: Post in #ai-coding-help Slack channel

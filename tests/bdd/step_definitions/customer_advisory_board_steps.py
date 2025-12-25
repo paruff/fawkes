@@ -65,7 +65,7 @@ def step_check_cab_templates(context):
     context.nomination_template_exists = file_exists('docs/research/templates/cab-nomination.md')
     context.meeting_template_exists = file_exists('docs/research/templates/cab-meeting-agenda.md')
     context.feedback_template_exists = file_exists('docs/research/templates/cab-feedback-form.md')
-    
+
     if context.nomination_template_exists:
         context.nomination_content = read_file_content('docs/research/templates/cab-nomination.md')
     if context.meeting_template_exists:

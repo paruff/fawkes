@@ -180,10 +180,10 @@ def pods_running(datatable, context: Dict):
     """Verify specified pods are running."""
     pods = context.get("harbor_pods", [])
     expected_components = [row["component"] for row in datatable]
-    
+
     # Get actual pod names
     actual_pods = [pod["metadata"]["name"] for pod in pods]
-    
+
     # Check if each expected component has at least one pod
     for component in expected_components:
         matching_pods = [p for p in actual_pods if component in p]
@@ -198,11 +198,11 @@ def all_harbor_pods_ready(timeout: int, context: Dict):
         try:
             pods = _kubectl_json(["-n", "fawkes", "get", "pods", "-l", "app=harbor", "-o", "json"])
             items = pods.get("items", [])
-            
+
             if not items:
                 time.sleep(5)
                 continue
-            
+
             all_ready = True
             for pod in items:
                 conditions = pod.get("status", {}).get("conditions", [])
@@ -210,14 +210,14 @@ def all_harbor_pods_ready(timeout: int, context: Dict):
                 if not ready_condition or ready_condition["status"] != "True":
                     all_ready = False
                     break
-            
+
             if all_ready:
                 return
-            
+
             time.sleep(5)
         except RuntimeError:
             time.sleep(5)
-    
+
     pytest.fail(f"Harbor pods not ready within {timeout} seconds")
 
 
@@ -259,7 +259,7 @@ def ingress_has_host(host: str, context: Dict):
     """Verify ingress has expected host."""
     ingress = context.get("harbor_ingress")
     assert ingress is not None, "No ingress data found"
-    
+
     rules = ingress.get("spec", {}).get("rules", [])
     hosts = [rule.get("host") for rule in rules]
     assert host in hosts, f"Host {host} not found in ingress. Found: {hosts}"
@@ -270,7 +270,7 @@ def ingress_has_class(class_name: str, context: Dict):
     """Verify ingress uses expected class."""
     ingress = context.get("harbor_ingress")
     assert ingress is not None, "No ingress data found"
-    
+
     ingress_class = ingress.get("spec", {}).get("ingressClassName")
     assert ingress_class == class_name, f"Expected {class_name}, got {ingress_class}"
 
@@ -327,7 +327,7 @@ def see_dashboard(context: Dict):
 def check_trivy_pod(context: Dict):
     """Check Trivy scanner pod."""
     try:
-        pods = _kubectl_json(["-n", "fawkes", "get", "pods", 
+        pods = _kubectl_json(["-n", "fawkes", "get", "pods",
                              "-l", "component=trivy", "-o", "json"])
         context["trivy_pods"] = pods.get("items", [])
     except RuntimeError:
@@ -339,7 +339,7 @@ def pod_with_label_running(label: str, context: Dict):
     """Verify pod with label is running."""
     trivy_pods = context.get("trivy_pods", [])
     assert len(trivy_pods) > 0, f"No pods found with label {label}"
-    
+
     for pod in trivy_pods:
         phase = pod.get("status", {}).get("phase")
         assert phase == "Running", f"Pod is {phase}, not Running"
@@ -519,7 +519,7 @@ def redis_running(context: Dict):
     """Verify Redis is running."""
     redis_pods = context.get("redis_pods", [])
     assert len(redis_pods) > 0, "No Redis pods found"
-    
+
     for pod in redis_pods:
         phase = pod.get("status", {}).get("phase")
         assert phase == "Running", f"Redis pod is {phase}, not Running"
@@ -547,9 +547,9 @@ def pvcs_exist_for_components(datatable, context: Dict):
     """Verify PVCs exist for components."""
     pvcs = context.get("pvcs", [])
     expected_components = [row["component"] for row in datatable]
-    
+
     pvc_names = [pvc["metadata"]["name"] for pvc in pvcs]
-    
+
     for component in expected_components:
         matching = [p for p in pvc_names if component in p]
         assert len(matching) > 0, f"No PVC found for {component}"

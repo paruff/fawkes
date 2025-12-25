@@ -22,17 +22,17 @@ def upgrade() -> None:
     # Create StageCategory enum type
     stage_category_enum = sa.Enum('wait', 'active', 'done', name='stagecategory')
     stage_category_enum.create(op.get_bind(), checkfirst=True)
-    
+
     # Add new columns to stages table
     op.add_column('stages', sa.Column('category', stage_category_enum, nullable=True))
     op.add_column('stages', sa.Column('wip_limit', sa.Integer(), nullable=True))
     op.add_column('stages', sa.Column('description', sa.String(length=1000), nullable=True))
-    
+
     # Update existing stages with category and descriptions based on type
     # Note: This maps the old StageType to the new StageCategory
     op.execute("""
-        UPDATE stages SET 
-            category = CASE 
+        UPDATE stages SET
+            category = CASE
                 WHEN name = 'Backlog' THEN 'wait'
                 WHEN name = 'Analysis' THEN 'active'
                 WHEN name = 'Development' THEN 'active'
@@ -41,7 +41,7 @@ def upgrade() -> None:
                 WHEN name = 'Production' THEN 'done'
                 ELSE 'active'
             END,
-            wip_limit = CASE 
+            wip_limit = CASE
                 WHEN name = 'Backlog' THEN NULL
                 WHEN name = 'Analysis' THEN 5
                 WHEN name = 'Development' THEN 10
@@ -50,7 +50,7 @@ def upgrade() -> None:
                 WHEN name = 'Production' THEN NULL
                 ELSE NULL
             END,
-            description = CASE 
+            description = CASE
                 WHEN name = 'Backlog' THEN 'Work items waiting to be analyzed and prioritized'
                 WHEN name = 'Analysis' THEN 'Active design and analysis phase'
                 WHEN name = 'Development' THEN 'Active implementation phase'
@@ -68,7 +68,7 @@ def downgrade() -> None:
     op.drop_column('stages', 'description')
     op.drop_column('stages', 'wip_limit')
     op.drop_column('stages', 'category')
-    
+
     # Drop enum type
     stage_category_enum = sa.Enum('wait', 'active', 'done', name='stagecategory')
     stage_category_enum.drop(op.get_bind(), checkfirst=True)

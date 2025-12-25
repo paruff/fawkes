@@ -263,7 +263,7 @@ spec:
         summary: "Platform service {{ $labels.job }} is down"
         description: "{{ $labels.job }} has been unavailable for 5 minutes"
         runbook_url: "https://docs.fawkes.io/runbooks/service-down"
-    
+
     - alert: HighMemoryUsage
       expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes > 0.85
       for: 10m
@@ -273,7 +273,7 @@ spec:
       annotations:
         summary: "High memory usage on {{ $labels.instance }}"
         description: "Memory usage is above 85% for 10 minutes"
-    
+
     - alert: PodCrashLooping
       expr: rate(kube_pod_container_status_restarts_total[15m]) > 0
       for: 15m
@@ -298,35 +298,35 @@ spec:
     - record: fawkes:dora:deployment_frequency:per_day
       expr: |
         sum(rate(fawkes_deployment_total[24h])) by (team, environment)
-  
+
   - name: dora_lead_time
     interval: 1m
     rules:
     - record: fawkes:dora:lead_time_seconds:p50
       expr: |
-        histogram_quantile(0.50, 
+        histogram_quantile(0.50,
           sum(rate(fawkes_lead_time_seconds_bucket[1h])) by (team, le))
-    
+
     - record: fawkes:dora:lead_time_seconds:p95
       expr: |
-        histogram_quantile(0.95, 
+        histogram_quantile(0.95,
           sum(rate(fawkes_lead_time_seconds_bucket[1h])) by (team, le))
-  
+
   - name: dora_change_failure_rate
     interval: 5m
     rules:
     - record: fawkes:dora:change_failure_rate
       expr: |
-        sum(rate(fawkes_deployment_failed_total[7d])) by (team) 
-        / 
+        sum(rate(fawkes_deployment_failed_total[7d])) by (team)
+        /
         sum(rate(fawkes_deployment_total[7d])) by (team)
-  
+
   - name: dora_mttr
     interval: 5m
     rules:
     - record: fawkes:dora:mttr_seconds:median
       expr: |
-        histogram_quantile(0.50, 
+        histogram_quantile(0.50,
           sum(rate(fawkes_incident_resolution_seconds_bucket[7d])) by (team, le))
 ```
 
@@ -360,7 +360,7 @@ spec:
   replicas: 2
   retention: 30d
   retentionSize: 50GB
-  
+
   resources:
     requests:
       cpu: 500m
@@ -368,7 +368,7 @@ spec:
     limits:
       cpu: 2000m
       memory: 8Gi
-  
+
   storageSpec:
     volumeClaimTemplate:
       spec:
@@ -376,21 +376,21 @@ spec:
         resources:
           requests:
             storage: 100Gi
-  
+
   thanos:
     version: v0.32.5
     objectStorageConfig:
       key: objstore.yml
       name: thanos-objstore-config
-  
+
   serviceMonitorSelector:
     matchLabels:
       prometheus: core
-  
+
   podMonitorSelector:
     matchLabels:
       prometheus: core
-  
+
   ruleSelector:
     matchLabels:
       prometheus: core

@@ -38,7 +38,7 @@ const queries = {
   introspection: {
     query: '{ __typename }',
   },
-  
+
   // Schema query
   schema: {
     query: '{ __schema { queryType { name } } }',
@@ -56,14 +56,14 @@ export default function () {
   const queryNames = Object.keys(queries);
   const randomQuery = queryNames[Math.floor(Math.random() * queryNames.length)];
   const query = queries[randomQuery];
-  
+
   // Make GraphQL request
   const response = http.post(
     GRAPHQL_ENDPOINT,
     JSON.stringify(query),
     { headers }
   );
-  
+
   // Check response
   const success = check(response, {
     'status is 200': (r) => r.status === 200,
@@ -77,11 +77,11 @@ export default function () {
     },
     'response time < 1s': (r) => r.timings.duration < 1000,
   });
-  
+
   // Record metrics
   errorRate.add(!success);
   queryDuration.add(response.timings.duration);
-  
+
   // Think time
   sleep(1);
 }
@@ -91,7 +91,7 @@ export function setup() {
   console.log('Starting GraphQL load test...');
   console.log(`Endpoint: ${GRAPHQL_ENDPOINT}`);
   console.log(`Target: P95 < 1s`);
-  
+
   return {
     startTime: new Date().toISOString(),
   };

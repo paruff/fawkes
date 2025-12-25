@@ -14,7 +14,7 @@ def test_stage_category_enum_values():
 def test_stage_model_has_new_fields():
     """Test that Stage model includes new fields."""
     from datetime import datetime, timezone
-    
+
     # Create a stage instance with new fields
     stage = Stage(
         name='Test Stage',
@@ -24,7 +24,7 @@ def test_stage_model_has_new_fields():
         wip_limit=5,
         description='Test description'
     )
-    
+
     assert stage.name == 'Test Stage'
     assert stage.order == 1
     assert stage.type == StageType.DEVELOPMENT
@@ -36,7 +36,7 @@ def test_stage_model_has_new_fields():
 def test_stage_response_schema():
     """Test StageResponse schema includes new fields."""
     from app.schemas import StageResponse
-    
+
     # Create a response with new fields
     stage_data = {
         'id': 1,
@@ -47,9 +47,9 @@ def test_stage_response_schema():
         'wip_limit': 10,
         'description': 'Active implementation phase'
     }
-    
+
     response = StageResponse(**stage_data)
-    
+
     assert response.id == 1
     assert response.name == 'Development'
     assert response.order == 3
@@ -62,7 +62,7 @@ def test_stage_response_schema():
 def test_stage_response_schema_with_null_fields():
     """Test StageResponse schema allows null for optional fields."""
     from app.schemas import StageResponse
-    
+
     # Create a response with null optional fields
     stage_data = {
         'id': 1,
@@ -73,9 +73,9 @@ def test_stage_response_schema_with_null_fields():
         'wip_limit': None,
         'description': None
     }
-    
+
     response = StageResponse(**stage_data)
-    
+
     assert response.id == 1
     assert response.name == 'Backlog'
     assert response.category is None
@@ -86,15 +86,15 @@ def test_stage_response_schema_with_null_fields():
 def test_stage_response_with_all_categories():
     """Test StageResponse with all category types."""
     from app.schemas import StageResponse
-    
+
     # Wait stage
     wait_stage = StageResponse(
-        id=1, name='Backlog', order=1, 
+        id=1, name='Backlog', order=1,
         type=StageType.BACKLOG, category=StageCategory.WAIT,
         wip_limit=None, description='Waiting'
     )
     assert wait_stage.category == StageCategory.WAIT
-    
+
     # Active stage
     active_stage = StageResponse(
         id=2, name='Development', order=2,
@@ -103,7 +103,7 @@ def test_stage_response_with_all_categories():
     )
     assert active_stage.category == StageCategory.ACTIVE
     assert active_stage.wip_limit == 10
-    
+
     # Done stage
     done_stage = StageResponse(
         id=3, name='Production', order=3,

@@ -107,7 +107,7 @@ Manually verify in GitHub:
    ```bash
    # If using port-forward for local testing:
    kubectl port-forward -n fawkes svc/backstage 7007:7007
-   
+
    # Open browser to: http://localhost:7007
    # Or for production: https://backstage.fawkes.idp
    ```
@@ -188,7 +188,7 @@ behave tests/bdd/features/backstage-deployment.feature --tags=@authentication
 kubectl get secret backstage-oauth-credentials -n fawkes -o jsonpath='{.data.github-client-id}' | base64 -d
 ```
 
-**Solution**: 
+**Solution**:
 - Verify callback URL in GitHub OAuth app matches: `https://backstage.fawkes.idp/api/auth/github/handler/frame`
 - Check protocol (http vs https)
 - Check for trailing slashes

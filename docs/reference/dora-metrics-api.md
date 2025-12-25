@@ -9,8 +9,8 @@ description: API endpoints for querying DORA metrics from DevLake service
 
 The DORA Metrics Service (powered by Apache DevLake) exposes REST and GraphQL APIs for querying the five DORA metrics (four key metrics plus operational performance).
 
-**Base URL**: `http://devlake.127.0.0.1.nip.io/api` (local)  
-**Production URL**: `https://devlake.fawkes.idp/api`  
+**Base URL**: `http://devlake.127.0.0.1.nip.io/api` (local)
+**Production URL**: `https://devlake.fawkes.idp/api`
 **Authentication**: Bearer token (see [Authentication](#authentication))
 
 ---

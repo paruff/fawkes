@@ -53,9 +53,9 @@ async def lifespan(app: FastAPI):
     logger.info("Starting SPACE Metrics Service")
     await init_db()
     logger.info("Database initialized")
-    
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down SPACE Metrics Service")
 
@@ -95,7 +95,7 @@ async def get_space_metrics(
 ) -> SpaceMetricsResponse:
     """
     Get all SPACE dimension metrics (aggregated)
-    
+
     time_range: Time range for metrics (24h, 7d, 30d, 90d)
     """
     try:
@@ -111,7 +111,7 @@ async def get_space_metrics(
             start_time = now - timedelta(days=90)
         else:
             start_time = now - timedelta(days=30)
-        
+
         async with get_db_session() as session:
             # Collect metrics from each dimension
             satisfaction = await collect_satisfaction_metrics(session, start_time, now)
@@ -119,12 +119,12 @@ async def get_space_metrics(
             activity = await collect_activity_metrics(session, start_time, now)
             communication = await collect_communication_metrics(session, start_time, now)
             efficiency = await collect_efficiency_metrics(session, start_time, now)
-            
+
             # Calculate overall health score
             health_score = calculate_devex_health_score(
                 satisfaction, performance, activity, communication, efficiency
             )
-            
+
             return SpaceMetricsResponse(
                 satisfaction=satisfaction,
                 performance=performance,
@@ -146,7 +146,7 @@ async def get_satisfaction_metrics(time_range: Optional[str] = "30d"):
     try:
         now = datetime.utcnow()
         start_time = now - timedelta(days=30)
-        
+
         async with get_db_session() as session:
             metrics = await collect_satisfaction_metrics(session, start_time, now)
             return metrics
@@ -161,7 +161,7 @@ async def get_performance_metrics(time_range: Optional[str] = "30d"):
     try:
         now = datetime.utcnow()
         start_time = now - timedelta(days=30)
-        
+
         async with get_db_session() as session:
             metrics = await collect_performance_metrics(session, start_time, now)
             return metrics
@@ -176,7 +176,7 @@ async def get_activity_metrics(time_range: Optional[str] = "30d"):
     try:
         now = datetime.utcnow()
         start_time = now - timedelta(days=30)
-        
+
         async with get_db_session() as session:
             metrics = await collect_activity_metrics(session, start_time, now)
             return metrics
@@ -191,7 +191,7 @@ async def get_communication_metrics(time_range: Optional[str] = "30d"):
     try:
         now = datetime.utcnow()
         start_time = now - timedelta(days=30)
-        
+
         async with get_db_session() as session:
             metrics = await collect_communication_metrics(session, start_time, now)
             return metrics
@@ -206,7 +206,7 @@ async def get_efficiency_metrics(time_range: Optional[str] = "30d"):
     try:
         now = datetime.utcnow()
         start_time = now - timedelta(days=30)
-        
+
         async with get_db_session() as session:
             metrics = await collect_efficiency_metrics(session, start_time, now)
             return metrics
@@ -228,7 +228,7 @@ async def log_friction_incident(request: FrictionLogRequest):
             )
             session.add(efficiency)
             await session.commit()
-            
+
             return {
                 "status": "success",
                 "message": "Friction incident logged",
@@ -253,7 +253,7 @@ async def submit_pulse_survey(request: PulseSurveyRequest):
             )
             session.add(efficiency)
             await session.commit()
-            
+
             return {
                 "status": "success",
                 "message": "Pulse survey submitted",
@@ -269,18 +269,18 @@ async def get_devex_health():
     try:
         now = datetime.utcnow()
         start_time = now - timedelta(days=30)
-        
+
         async with get_db_session() as session:
             satisfaction = await collect_satisfaction_metrics(session, start_time, now)
             performance = await collect_performance_metrics(session, start_time, now)
             activity = await collect_activity_metrics(session, start_time, now)
             communication = await collect_communication_metrics(session, start_time, now)
             efficiency = await collect_efficiency_metrics(session, start_time, now)
-            
+
             health_score = calculate_devex_health_score(
                 satisfaction, performance, activity, communication, efficiency
             )
-            
+
             return {
                 "health_score": health_score,
                 "timestamp": now,

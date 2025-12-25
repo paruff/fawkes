@@ -80,7 +80,7 @@ package main
 import (
     "context"
     "log"
-    
+
     "go.opentelemetry.io/otel"
     "go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
     "go.opentelemetry.io/otel/sdk/resource"
@@ -314,10 +314,10 @@ tracer = trace.get_tracer(__name__)
 with tracer.start_as_current_span("database_query") as span:
     span.set_attribute("db.system", "postgresql")
     span.set_attribute("db.statement", "SELECT * FROM users WHERE id = ?")
-    
+
     # Your code here
     result = execute_query()
-    
+
     span.set_attribute("db.rows_returned", len(result))
 ```
 

@@ -10,7 +10,7 @@ export interface BoxProps extends BaseComponentProps {
 
 /**
  * A versatile box component for layout
- * 
+ *
  * @component
  * @example
  * ```tsx

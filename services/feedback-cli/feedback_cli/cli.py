@@ -90,7 +90,7 @@ def submit(ctx, rating, category, comment, email, page_url, feedback_type, inter
 
     # Check API connectivity first
     api_available = client.health_check()
-    
+
     if not api_available and not config.offline_mode:
         console.print("[red]✗[/red] Cannot connect to Feedback API at", config.api_url)
         console.print("  Offline mode is disabled. Enable it with: fawkes-feedback config set-offline true")
@@ -112,7 +112,7 @@ def submit(ctx, rating, category, comment, email, page_url, feedback_type, inter
                 default=3,
                 choices=["1", "2", "3", "4", "5"]
             )
-        
+
         if not category:
             console.print("\n[cyan]Common categories:[/cyan]")
             categories = ["UI/UX", "Performance", "Documentation", "Features", "Bug Report", "Other"]
@@ -123,20 +123,20 @@ def submit(ctx, rating, category, comment, email, page_url, feedback_type, inter
                 "[yellow]Category[/yellow]",
                 default=config.default_category
             )
-        
+
         if not comment:
             comment = Prompt.ask(
                 "[yellow]Your feedback[/yellow] (what went well or what could be improved)"
             )
-        
+
         if not email:
             if Confirm.ask("[yellow]Would you like to provide an email for follow-up?[/yellow]", default=False):
                 email = Prompt.ask("[yellow]Email address[/yellow]")
-        
+
         if not page_url:
             if Confirm.ask("[yellow]Is this about a specific page/URL?[/yellow]", default=False):
                 page_url = Prompt.ask("[yellow]Page URL[/yellow]")
-        
+
         if not feedback_type:
             feedback_type = Prompt.ask(
                 "[yellow]Feedback type[/yellow]",
@@ -163,7 +163,7 @@ def submit(ctx, rating, category, comment, email, page_url, feedback_type, inter
         if api_available:
             # Submit directly
             result = client.submit_feedback(feedback)
-            
+
             console.print()
             console.print(Panel.fit(
                 f"[bold green]✓ Feedback submitted successfully![/bold green]\n\n"
@@ -188,7 +188,7 @@ def submit(ctx, rating, category, comment, email, page_url, feedback_type, inter
                 box=box.DOUBLE,
                 border_style="yellow"
             ))
-        
+
     except Exception as e:
         console.print(f"[red]✗ Failed to submit feedback:[/red] {e}")
         sys.exit(1)
@@ -228,7 +228,7 @@ def list(ctx, category, status, limit):
         )
 
         items = response.get("items", [])
-        
+
         if not items:
             console.print("[yellow]No feedback found.[/yellow]")
             return
@@ -247,7 +247,7 @@ def list(ctx, category, status, limit):
         for item in items:
             rating_stars = "⭐" * item.get("rating", 0)
             created_at = item.get("created_at", "")[:10]  # Just the date part
-            
+
             table.add_row(
                 str(item.get("id")),
                 rating_stars,
@@ -329,13 +329,13 @@ def sync(ctx):
         sys.exit(1)
 
     queued_items = queue.get_all()
-    
+
     if not queued_items:
         console.print("[green]✓[/green] Queue is empty, nothing to sync")
         return
 
     console.print(f"[cyan]Syncing {len(queued_items)} queued feedback items...[/cyan]\n")
-    
+
     success_count = 0
     failed_indices = []
 
@@ -394,7 +394,7 @@ def queue_status(ctx):
     for i, item in enumerate(queued_items, 1):
         rating_stars = "⭐" * item.get("rating", 0)
         queued_at = item.get("queued_at", "")[:10]
-        
+
         table.add_row(
             str(i),
             rating_stars,
@@ -469,10 +469,10 @@ def config_init(ctx, api_url, api_key, author):
     )
 
     config_manager.save(config_obj)
-    
+
     console.print()
     console.print(f"[green]✓[/green] Configuration saved to {config_manager.config_path}")
-    
+
     # Test connection
     client = FeedbackClient(config_obj.api_url, config_obj.api_key)
     if client.health_check():
@@ -486,9 +486,9 @@ def config_init(ctx, api_url, api_key, author):
 @click.pass_context
 def config_set_offline(ctx, enabled):
     """Enable or disable offline mode.
-    
+
     Examples:
-    
+
       fawkes-feedback config set-offline true
       fawkes-feedback config set-offline false
     """
@@ -496,7 +496,7 @@ def config_set_offline(ctx, enabled):
     config_obj = config_manager.config
     config_obj.offline_mode = enabled
     config_manager.save(config_obj)
-    
+
     status = "enabled" if enabled else "disabled"
     console.print(f"[green]✓[/green] Offline mode {status}")
 

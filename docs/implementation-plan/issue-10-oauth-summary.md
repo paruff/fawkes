@@ -13,7 +13,7 @@ Created three levels of documentation to support different user needs:
 #### Quick Start Guide
 - **File**: `docs/how-to/security/github-oauth-quickstart.md`
 - **Purpose**: 5-minute setup for experienced users
-- **Contents**: 
+- **Contents**:
   - Quick setup steps
   - Common issues table
   - Links to detailed guides
@@ -236,6 +236,6 @@ Users can now:
 
 ---
 
-**Implementation Date**: December 14, 2024  
-**Issue**: paruff/fawkes#10  
+**Implementation Date**: December 14, 2024
+**Issue**: paruff/fawkes#10
 **Status**: ✅ Complete

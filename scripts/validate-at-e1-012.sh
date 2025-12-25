@@ -69,7 +69,7 @@ EOF
 
 check_prerequisites() {
     log_info "Checking prerequisites..."
-    
+
     # Check required tools
     local required_tools=("kubectl" "jq")
     for tool in "${required_tools[@]}"; do
@@ -78,13 +78,13 @@ check_prerequisites() {
             return 1
         fi
     done
-    
+
     # Check cluster access
     if ! kubectl cluster-info &> /dev/null; then
         log_error "Cannot access Kubernetes cluster"
         return 1
     fi
-    
+
     log_success "Prerequisites check passed"
     return 0
 }
@@ -95,7 +95,7 @@ main() {
     echo "  AT-E1-012: Full Platform Validation"
     echo "=========================================="
     echo ""
-    
+
     # Check for help flag first
     for arg in "$@"; do
         if [ "$arg" = "-h" ] || [ "$arg" = "--help" ]; then
@@ -103,17 +103,17 @@ main() {
             exit 0
         fi
     done
-    
+
     # Check prerequisites
     if ! check_prerequisites; then
         log_error "Prerequisites check failed"
         exit 1
     fi
-    
+
     # Run the full platform test
     log_info "Running full platform test..."
     echo ""
-    
+
     if "${ROOT_DIR}/tests/e2e/full-platform-test.sh" "$@"; then
         echo ""
         log_success "AT-E1-012 validation PASSED"

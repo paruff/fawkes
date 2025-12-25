@@ -64,14 +64,14 @@ def test_thank_you_page(client):
 def test_pulse_survey_response_validation(flow_state, valuable_work, cognitive_load, friction):
     """Test pulse survey response data validation"""
     from app.schemas import PulseSurveyResponse
-    
+
     response = PulseSurveyResponse(
         flow_state_days=flow_state,
         valuable_work_pct=valuable_work,
         cognitive_load=cognitive_load,
         friction_incidents=friction
     )
-    
+
     assert response.flow_state_days == flow_state
     assert response.valuable_work_pct == valuable_work
     assert response.cognitive_load == cognitive_load
@@ -82,7 +82,7 @@ def test_pulse_survey_response_invalid_values():
     """Test pulse survey response rejects invalid values"""
     from app.schemas import PulseSurveyResponse
     from pydantic import ValidationError
-    
+
     # Test invalid flow_state_days (> 7)
     with pytest.raises(ValidationError):
         PulseSurveyResponse(
@@ -91,7 +91,7 @@ def test_pulse_survey_response_invalid_values():
             cognitive_load=3.0,
             friction_incidents=False
         )
-    
+
     # Test invalid valuable_work_pct (> 100)
     with pytest.raises(ValidationError):
         PulseSurveyResponse(
@@ -100,7 +100,7 @@ def test_pulse_survey_response_invalid_values():
             cognitive_load=3.0,
             friction_incidents=False
         )
-    
+
     # Test invalid cognitive_load (> 5)
     with pytest.raises(ValidationError):
         PulseSurveyResponse(
@@ -114,7 +114,7 @@ def test_pulse_survey_response_invalid_values():
 def test_survey_distribution_request_validation():
     """Test survey distribution request validation"""
     from app.schemas import SurveyDistributionRequest
-    
+
     # Valid request
     request = SurveyDistributionRequest(
         type="pulse",
@@ -123,7 +123,7 @@ def test_survey_distribution_request_validation():
     )
     assert request.type == "pulse"
     assert request.test_mode is True
-    
+
     # Valid request with defaults
     request = SurveyDistributionRequest(type="deep_dive")
     assert request.test_mode is False
@@ -133,7 +133,7 @@ def test_survey_distribution_request_validation():
 def test_campaign_response_model():
     """Test campaign response model"""
     from app.schemas import CampaignResponse
-    
+
     campaign = CampaignResponse(
         id=1,
         type="pulse",
@@ -145,7 +145,7 @@ def test_campaign_response_model():
         total_responses=65,
         response_rate=65.0
     )
-    
+
     assert campaign.id == 1
     assert campaign.type == "pulse"
     assert campaign.response_rate == 65.0

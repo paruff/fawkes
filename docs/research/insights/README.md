@@ -28,37 +28,37 @@ Research insights are:
 3. **Document insights**:
    ```markdown
    # [Topic] Insights - [Date]
-   
+
    ## Summary
    [2-3 sentence overview of key findings]
-   
+
    ## Key Findings
    1. [Finding 1 with supporting evidence]
    2. [Finding 2 with supporting evidence]
    3. [Finding 3 with supporting evidence]
-   
+
    ## Evidence
    - [Reference to interviews: "5/7 platform engineers mentioned..."]
    - [Survey data: "68% of developers reported..."]
    - [Analytics: "Average time to first deployment: 4.5 hours"]
-   
+
    ## Impact
    - [How this affects users]
    - [Business impact]
    - [DORA metrics impact]
-   
+
    ## Recommendations
    1. [Prioritized action 1]
       - Expected impact: [High/Medium/Low]
       - Effort estimate: [High/Medium/Low]
    2. [Prioritized action 2]
    3. [Prioritized action 3]
-   
+
    ## Next Steps
    - [Follow-up research needed]
    - [Features to prioritize]
    - [Experiments to run]
-   
+
    ## Related Artifacts
    - [Link to interviews]
    - [Link to personas]

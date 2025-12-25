@@ -145,7 +145,7 @@ kubectl exec -it -n fawkes db-devex-dev-1 -- \
 SELECT * FROM survey_campaigns ORDER BY started_at DESC LIMIT 5;
 
 # Check response rate
-SELECT 
+SELECT
   type,
   period,
   year,

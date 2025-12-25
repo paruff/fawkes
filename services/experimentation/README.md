@@ -196,7 +196,7 @@ const isInExperiment = await client.getBooleanValue('experiment-new-feature', fa
 if (isInExperiment) {
   // Call experimentation service to assign variant
   const assignment = await assignVariant(experimentId, userId);
-  
+
   // Use variant configuration
   if (assignment.variant === 'new-feature') {
     enableNewFeature();

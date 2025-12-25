@@ -1,9 +1,9 @@
 # Week 1 Detailed Tasks - Epic 1: Infrastructure & GitOps
 
-**Epic**: Epic 1 - DORA 2023 Foundation  
-**Week**: 1 of 4  
-**Milestone**: 1.1 - Local Infrastructure & 1.2 - GitOps Foundation  
-**Duration**: 5 working days  
+**Epic**: Epic 1 - DORA 2023 Foundation
+**Week**: 1 of 4
+**Milestone**: 1.1 - Local Infrastructure & 1.2 - GitOps Foundation
+**Duration**: 5 working days
 **Goal**: Deploy local K8s cluster with ArgoCD managing platform
 
 ---
@@ -12,8 +12,8 @@
 
 ### Day 1: Local Kubernetes Cluster Setup
 
-**Issues**: #1, #2, #3  
-**Estimated Time**: 6-8 hours  
+**Issues**: #1, #2, #3
+**Estimated Time**: 6-8 hours
 **Goal**: Functional 4-node local K8s cluster with ingress and storage
 
 #### Morning (4 hours): Issue #1 - K8s Cluster
@@ -253,8 +253,8 @@ kubectl get pvc
 
 ### Day 2: ArgoCD Deployment & Git Structure
 
-**Issues**: #5, #6, #7  
-**Estimated Time**: 6-8 hours  
+**Issues**: #5, #6, #7
+**Estimated Time**: 6-8 hours
 **Goal**: ArgoCD managing all platform components via GitOps
 
 #### Morning (4 hours): Issue #5 - Deploy ArgoCD
@@ -472,8 +472,8 @@ kubectl get applications -n argocd
 
 ### Day 3: Documentation & Validation
 
-**Issue**: #8, plus documentation  
-**Estimated Time**: 6-8 hours  
+**Issue**: #8, plus documentation
+**Estimated Time**: 6-8 hours
 **Goal**: Complete documentation and validate Week 1 deliverables
 
 #### Morning (4 hours): Documentation

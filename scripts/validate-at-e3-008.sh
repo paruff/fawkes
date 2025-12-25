@@ -112,14 +112,14 @@ if [ -f "docs/playbooks/continuous-discovery-workflow.md" ]; then
         "Advisory Board"
         "Metrics"
     )
-    
+
     missing_sections=()
     for section in "${required_sections[@]}"; do
         if ! grep -qi "$section" "docs/playbooks/continuous-discovery-workflow.md"; then
             missing_sections+=("$section")
         fi
     done
-    
+
     if [ ${#missing_sections[@]} -eq 0 ]; then
         print_pass "All required sections present in playbook"
     else
@@ -192,14 +192,14 @@ if [ -f "docs/how-to/run-advisory-board-meetings.md" ]; then
         "Participants"
         "Frequency"
     )
-    
+
     missing_topics=()
     for topic in "${required_topics[@]}"; do
         if ! grep -qi "$topic" "docs/how-to/run-advisory-board-meetings.md"; then
             missing_topics+=("$topic")
         fi
     done
-    
+
     if [ ${#missing_topics[@]} -eq 0 ]; then
         print_pass "Advisory board guide has proper structure"
     else

@@ -10,7 +10,7 @@ export interface MenuProps extends BaseComponentProps {
 
 /**
  * Dropdown menu
- * 
+ *
  * @component
  * @example
  * ```tsx

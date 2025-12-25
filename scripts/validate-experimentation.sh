@@ -102,7 +102,7 @@ log_info "Test 2: Checking Experimentation service deployment..."
 if kubectl get deployment experimentation -n "$NAMESPACE" &>/dev/null; then
     REPLICAS_READY=$(kubectl get deployment experimentation -n "$NAMESPACE" -o jsonpath='{.status.readyReplicas}')
     REPLICAS_DESIRED=$(kubectl get deployment experimentation -n "$NAMESPACE" -o jsonpath='{.spec.replicas}')
-    
+
     if [[ "$REPLICAS_READY" == "$REPLICAS_DESIRED" ]] && [[ "$REPLICAS_READY" -ge 2 ]]; then
         check_passed "Experimentation deployment has $REPLICAS_READY/$REPLICAS_DESIRED replicas ready"
     else
@@ -158,10 +158,10 @@ POD_NAME=$(kubectl get pods -n "$NAMESPACE" -l app=experimentation -o jsonpath='
 
 if [[ -n "$POD_NAME" ]]; then
     HEALTH_RESPONSE=$(kubectl exec -n "$NAMESPACE" "$POD_NAME" -- curl -s http://localhost:8000/health || echo "failed")
-    
+
     if echo "$HEALTH_RESPONSE" | grep -q "healthy"; then
         check_passed "API health check returned healthy status"
-        
+
         if echo "$HEALTH_RESPONSE" | grep -q "experimentation"; then
             check_passed "API identifies as experimentation service"
         else
@@ -191,7 +191,7 @@ try:
 except Exception as e:
     print(f'FAILED: {e}')
 " 2>&1 || echo "FAILED")
-    
+
     if echo "$DB_TEST" | grep -q "SUCCESS"; then
         check_passed "Database connectivity test successful"
     else
@@ -219,7 +219,7 @@ if not missing:
 else:
     print(f'MISSING: {missing}')
 " 2>&1 || echo "FAILED")
-    
+
     if echo "$TABLES_CHECK" | grep -q "SUCCESS"; then
         check_passed "Database schema tables exist (experiments, assignments, events)"
     else
@@ -236,19 +236,19 @@ log_info "Test 7: Checking Prometheus metrics..."
 
 if [[ -n "$POD_NAME" ]]; then
     METRICS_RESPONSE=$(kubectl exec -n "$NAMESPACE" "$POD_NAME" -- curl -s http://localhost:8000/metrics || echo "failed")
-    
+
     if echo "$METRICS_RESPONSE" | grep -q "experimentation_experiments_total"; then
         check_passed "Prometheus metric 'experimentation_experiments_total' found"
     else
         check_failed "Prometheus metric 'experimentation_experiments_total' not found"
     fi
-    
+
     if echo "$METRICS_RESPONSE" | grep -q "experimentation_variant_assignments_total"; then
         check_passed "Prometheus metric 'experimentation_variant_assignments_total' found"
     else
         check_failed "Prometheus metric 'experimentation_variant_assignments_total' not found"
     fi
-    
+
     if echo "$METRICS_RESPONSE" | grep -q "experimentation_events_total"; then
         check_passed "Prometheus metric 'experimentation_events_total' found"
     else
@@ -283,11 +283,11 @@ for POD in $POD_NAMES; do
     METRICS=$(kubectl top pod "$POD" -n "$NAMESPACE" --no-headers 2>/dev/null || echo "0m 0Mi")
     CPU=$(echo "$METRICS" | awk '{print $2}' | sed 's/m//')
     MEMORY=$(echo "$METRICS" | awk '{print $3}' | sed 's/Mi//')
-    
+
     # Get requests
     CPU_REQUEST=$(kubectl get pod "$POD" -n "$NAMESPACE" -o json | jq -r '.spec.containers[0].resources.requests.cpu' | sed 's/m//')
     MEMORY_REQUEST=$(kubectl get pod "$POD" -n "$NAMESPACE" -o json | jq -r '.spec.containers[0].resources.requests.memory' | sed 's/Mi//')
-    
+
     if [[ "$CPU" -gt 0 ]] && [[ "$CPU_REQUEST" -gt 0 ]]; then
         CPU_PCT=$((CPU * 100 / CPU_REQUEST))
         if [[ "$CPU_PCT" -lt 70 ]]; then
@@ -296,7 +296,7 @@ for POD in $POD_NAMES; do
             check_failed "Pod $POD CPU usage: ${CPU_PCT}% (>=70%)"
         fi
     fi
-    
+
     if [[ "$MEMORY" -gt 0 ]] && [[ "$MEMORY_REQUEST" -gt 0 ]]; then
         MEMORY_PCT=$((MEMORY * 100 / MEMORY_REQUEST))
         if [[ "$MEMORY_PCT" -lt 70 ]]; then

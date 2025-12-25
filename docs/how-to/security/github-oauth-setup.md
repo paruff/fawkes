@@ -240,10 +240,10 @@ auth:
           resolvers:
             # Match GitHub username to catalog User entity
             - resolver: usernameMatchingUserEntityName
-            
+
             # Or use email matching
             # - resolver: emailMatchingUserEntityProfileEmail
-            
+
             # Or use multiple resolvers (first match wins)
             # - resolver: emailLocalPartMatchingUserEntityName
 ```
@@ -403,5 +403,5 @@ If you encounter issues not covered in this guide:
 
 ---
 
-**Last Updated**: December 2024  
+**Last Updated**: December 2024
 **Tested With**: Backstage 1.20+, Kubernetes 1.28+

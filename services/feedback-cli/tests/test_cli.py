@@ -59,7 +59,7 @@ def test_submit_with_flags(runner):
         "-c", "Test",
         "-m", "Great!",
     ])
-    
+
     assert result.exit_code == 0
     assert "successfully" in result.output.lower()
 
@@ -73,7 +73,7 @@ def test_submit_missing_required_fields(runner):
         "-r", "5",
         # Missing category and comment triggers interactive mode
     ])
-    
+
     # Should show interactive mode or abort
     assert result.exit_code != 0
     assert ("Interactive Mode" in result.output or "Aborted" in result.output)
@@ -110,7 +110,7 @@ def test_list_command(runner):
     )
 
     result = runner.invoke(main, ["list"])
-    
+
     assert result.exit_code == 0
     assert "Recent Feedback" in result.output
 
@@ -118,7 +118,7 @@ def test_list_command(runner):
 def test_config_show(runner):
     """Test config show command."""
     result = runner.invoke(main, ["config", "show"])
-    
+
     assert result.exit_code == 0
     assert "Configuration" in result.output
     assert "API URL" in result.output
@@ -128,7 +128,7 @@ def test_queue_empty(runner):
     """Test queue command with empty queue."""
     with runner.isolated_filesystem():
         result = runner.invoke(main, ["queue"])
-        
+
         assert result.exit_code == 0
         assert "empty" in result.output.lower()
 
@@ -137,6 +137,6 @@ def test_config_set_offline(runner):
     """Test setting offline mode."""
     with runner.isolated_filesystem():
         result = runner.invoke(main, ["config", "set-offline", "true"])
-        
+
         assert result.exit_code == 0
         assert "enabled" in result.output.lower()

@@ -592,7 +592,7 @@ tf_apply_dir() {
   fi
   echo "🚀 Running Terraform in $dir"
   pushd "$dir" >/dev/null
-  
+
   # Ensure Azure subscription and tenant env vars are set from az CLI context if available
   if command -v az >/dev/null 2>&1; then
     # Verify Azure CLI is logged in before proceeding
@@ -603,15 +603,15 @@ tf_apply_dir() {
         error_exit "Azure login failed. Please authenticate and try again."
       fi
     fi
-    
+
     export ARM_SUBSCRIPTION_ID="${ARM_SUBSCRIPTION_ID:-$(az account show --query id -o tsv 2>/dev/null || true)}"
     export ARM_TENANT_ID="${ARM_TENANT_ID:-$(az account show --query tenantId -o tsv 2>/dev/null || true)}"
-    
+
     echo "✅ Using Azure subscription: ${ARM_SUBSCRIPTION_ID}"
   fi
-  
+
   terraform init -upgrade -input=false 2>&1 | tee terraform.log
-  
+
   # Attempt to import existing AKS user node pool into state to avoid conflicts
   if command -v az >/dev/null 2>&1; then
     local rg="${TF_VAR_resource_group_name:-fawkes-rg}"
@@ -624,9 +624,9 @@ tf_apply_dir() {
         2>&1 | tee -a terraform.log || true
     fi
   fi
-  
+
   terraform plan -input=false -out=plan.tfplan 2>&1 | tee -a terraform.log
-  
+
   local rc=0
   if [[ $DRY_RUN -eq 1 ]]; then
     echo "[DRY-RUN] Skipping terraform apply in $dir"
@@ -635,7 +635,7 @@ tf_apply_dir() {
     rc=${PIPESTATUS[0]}
   fi
   popd >/dev/null
-  
+
   if [[ $rc -ne 0 ]]; then
     error_exit "Terraform apply failed for $dir; see $dir/terraform.log"
   fi
@@ -645,9 +645,9 @@ tf_apply_dir() {
   local tfjson kubeconfig_path rg_name cluster_name
   rg_name="${TF_VAR_resource_group_name:-fawkes-rg}"
   cluster_name="${TF_VAR_cluster_name:-fawkes-dev}"
-  
+
   tfjson=$(cd "$dir" && terraform output -json 2>/dev/null || true)
-  
+
   if [[ -n "$tfjson" ]]; then
     kubeconfig_path=$(echo "$tfjson" | jq -r '.kubeconfig_path.value // empty' 2>/dev/null || true)
     if [[ -n "$kubeconfig_path" ]]; then
@@ -664,7 +664,7 @@ tf_apply_dir() {
   # For Azure, always refresh credentials
   if [[ "$PROVIDER" == "azure" ]] && command -v az >/dev/null 2>&1; then
     echo "🔄 Refreshing AKS credentials..."
-    
+
     # Verify cluster exists and is running
     echo "🔍 Checking AKS cluster status..."
     local cluster_state cluster_info
@@ -672,31 +672,31 @@ tf_apply_dir() {
     cluster_state=$(echo "$cluster_info" | jq -r '.state // "Unknown"')
     local azure_rbac_enabled
     azure_rbac_enabled=$(echo "$cluster_info" | jq -r '.azureRbac // false')
-    
+
     if [[ "$cluster_state" != "Succeeded" ]]; then
       error_exit "AKS cluster is not in 'Succeeded' state (current: $cluster_state). Wait for cluster to be ready."
     fi
-    
+
     echo "✅ AKS cluster status: $cluster_state"
-    
+
     # Clean up old cluster contexts before adding new credentials
     echo "🧹 Removing old cluster contexts..."
     kubectl config delete-context "$cluster_name" 2>/dev/null || true
     kubectl config delete-cluster "$cluster_name" 2>/dev/null || true
     kubectl config unset "users.clusterUser_${rg_name}_${cluster_name}" 2>/dev/null || true
-    
+
     # Check if Azure RBAC is enabled
     if [[ "$azure_rbac_enabled" == "true" ]]; then
       echo "🔐 Azure RBAC for Kubernetes is enabled"
-      
+
       # Get user info
       local user_oid user_email
       user_oid=$(az ad signed-in-user show --query id -o tsv 2>/dev/null || echo "")
       user_email=$(az ad signed-in-user show --query userPrincipalName -o tsv 2>/dev/null || echo "unknown")
-      
+
       if [[ -n "$user_oid" ]]; then
         echo "👤 Current user: $user_email (OID: $user_oid)"
-        
+
         # Check if user has cluster admin role
         echo "🔍 Checking for Azure Kubernetes Service RBAC Cluster Admin role..."
         local has_admin_role
@@ -705,11 +705,11 @@ tf_apply_dir() {
           --scope "/subscriptions/${ARM_SUBSCRIPTION_ID}/resourceGroups/${rg_name}/providers/Microsoft.ContainerService/managedClusters/${cluster_name}" \
           --query "[?roleDefinitionName=='Azure Kubernetes Service RBAC Cluster Admin'].roleDefinitionName" \
           -o tsv 2>/dev/null || echo "")
-        
+
         if [[ -z "$has_admin_role" ]]; then
           echo "⚠️  User does not have cluster admin role yet"
           echo "🔧 Granting Azure Kubernetes Service RBAC Cluster Admin role..."
-          
+
           if az role assignment create \
             --role "Azure Kubernetes Service RBAC Cluster Admin" \
             --assignee "$user_oid" \
@@ -722,13 +722,13 @@ tf_apply_dir() {
         else
           echo "✅ User already has cluster admin role"
         fi
-        
+
         # Always wait for RBAC propagation after checking/creating role
         echo "⏳ Waiting 30 seconds for Azure RBAC propagation..."
         sleep 30
       fi
     fi
-    
+
     # Get credentials
     echo "📥 Downloading cluster credentials..."
     az aks get-credentials \
@@ -736,7 +736,7 @@ tf_apply_dir() {
       --name "$cluster_name" \
       --overwrite-existing \
       --file "${KUBECONFIG:-$HOME/.kube/config}"
-    
+
     # Install kubelogin if needed
     if ! command -v kubelogin >/dev/null 2>&1; then
       install_kubelogin || {
@@ -759,17 +759,17 @@ tf_apply_dir() {
     local max_attempts=12
     local attempt=1
     local connected=0
-    
+
     while [[ $attempt -le $max_attempts ]]; do
       echo "   Attempt $attempt/$max_attempts..."
-      
+
       if kubectl get nodes >/dev/null 2>&1; then
         echo "✅ kubectl connectivity verified"
         kubectl get nodes -o wide
         connected=1
         break
       fi
-      
+
       # Check for RBAC permission error
       local last_error
       last_error=$(kubectl get nodes 2>&1 || true)
@@ -781,15 +781,15 @@ tf_apply_dir() {
           echo "   Tip: Azure RBAC can take up to 5 minutes to propagate"
         fi
       fi
-      
+
       if [[ $attempt -lt $max_attempts ]]; then
         echo "   Waiting 5 seconds before retry..."
         sleep 5
       fi
-      
+
       attempt=$((attempt + 1))
     done
-    
+
     if [[ $connected -eq 0 ]]; then
       echo ""
       echo "════════════════════════════════════════════════════════════════════════════════"
@@ -822,7 +822,7 @@ install_kubelogin() {
   fi
 
   echo "📦 Installing kubelogin for AKS authentication..."
-  
+
   if [[ "$(uname -s)" == "Darwin" ]]; then
     # macOS: Use Homebrew
     if command -v brew >/dev/null 2>&1; then
@@ -851,7 +851,7 @@ install_kubelogin_binary() {
   local os arch url install_dir
   os="$(uname -s | tr '[:upper:]' '[:lower:]')"
   arch="$(uname -m)"
-  
+
   case "$arch" in
     x86_64) arch="amd64" ;;
     aarch64|arm64) arch="arm64" ;;
@@ -860,9 +860,9 @@ install_kubelogin_binary() {
   # Get latest version from GitHub
   local version
   version=$(curl -s https://api.github.com/repos/Azure/kubelogin/releases/latest | jq -r '.tag_name' || echo "v0.1.4")
-  
+
   url="https://github.com/Azure/kubelogin/releases/download/${version}/kubelogin-${os}-${arch}.zip"
-  
+
   # Try user-writable directory first
   if [[ -w "${HOME}/.local/bin" ]] || mkdir -p "${HOME}/.local/bin" 2>/dev/null; then
     install_dir="${HOME}/.local/bin"
@@ -876,18 +876,18 @@ install_kubelogin_binary() {
   echo "Downloading kubelogin ${version} from ${url}..."
   local tmpdir
   tmpdir=$(mktemp -d)
-  
+
   if curl -sL "$url" -o "${tmpdir}/kubelogin.zip"; then
     unzip -q "${tmpdir}/kubelogin.zip" -d "${tmpdir}"
-    
+
     # Find the kubelogin binary
     local binary
     binary=$(find "${tmpdir}" -name "kubelogin" -type f | head -n1)
-    
+
     if [[ -n "$binary" ]]; then
       chmod +x "$binary"
       mv "$binary" "${install_dir}/kubelogin"
-      
+
       # Add to PATH if not already there
       if [[ ":$PATH:" != *":${install_dir}:"* ]]; then
         export PATH="${install_dir}:${PATH}"
@@ -896,7 +896,7 @@ install_kubelogin_binary() {
       fi
     fi
   fi
-  
+
   rm -rf "${tmpdir}"
 }
 
@@ -1312,7 +1312,7 @@ get_service_password() {
   local secret_name="$1"
   local namespace="$2"
   local key="${3:-password}"
-  
+
   kubectl get secret "$secret_name" -n "$namespace" -o jsonpath="{.data.$key}" 2>/dev/null | base64 -d 2>/dev/null || echo "N/A"
 }
 
@@ -1323,7 +1323,7 @@ print_access_summary() {
   echo "                         🎉 FAWKES PLATFORM ACCESS GUIDE"
   echo "════════════════════════════════════════════════════════════════════════════════"
   echo ""
-  
+
   local ctx
   ctx=$(kubectl config current-context 2>/dev/null || echo "unknown")
   echo "📍 Kubernetes Context: $ctx"
@@ -1332,7 +1332,7 @@ print_access_summary() {
     echo "☁️  Provider: $PROVIDER"
   fi
   echo ""
-  
+
   # Detect if we have ingress/LoadBalancer external IPs
   local has_external=0
   local external_domain=""
@@ -1340,12 +1340,12 @@ print_access_summary() {
     has_external=1
     external_domain=$(kubectl get ingress -n "${ARGO_NS}" argocd-server -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
   fi
-  
+
   echo "────────────────────────────────────────────────────────────────────────────────"
   echo "  SERVICE ACCESS INFORMATION"
   echo "────────────────────────────────────────────────────────────────────────────────"
   echo ""
-  
+
   # ArgoCD
   echo "🔷 ArgoCD (GitOps CD)"
   if [[ $has_external -eq 1 && -n "$external_domain" ]]; then
@@ -1356,7 +1356,7 @@ print_access_summary() {
   echo "   Username:     admin"
   echo "   Password:     ${ARGOCD_PASSWORD}"
   echo ""
-  
+
   # Jenkins
   if kubectl get namespace jenkins >/dev/null 2>&1; then
     echo "🔷 Jenkins (CI/CD)"
@@ -1373,12 +1373,12 @@ print_access_summary() {
     echo "   Password:     $jenkins_pwd"
     echo ""
   fi
-  
+
   # Backstage
   if kubectl get namespace backstage >/dev/null 2>&1 || kubectl get deployment -n fawkes backstage >/dev/null 2>&1; then
     local backstage_ns="backstage"
     kubectl get namespace backstage >/dev/null 2>&1 || backstage_ns="fawkes"
-    
+
     echo "🔷 Backstage (Developer Portal)"
     local backstage_host
     backstage_host=$(kubectl get ingress -n "$backstage_ns" backstage -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
@@ -1390,7 +1390,7 @@ print_access_summary() {
     echo "   Auth:         GitHub OAuth or guest access"
     echo ""
   fi
-  
+
   # SonarQube
   if kubectl get namespace sonarqube >/dev/null 2>&1; then
     echo "🔷 SonarQube (Code Quality)"
@@ -1405,12 +1405,12 @@ print_access_summary() {
     echo "   Password:     admin (change on first login)"
     echo ""
   fi
-  
+
   # Grafana
   if kubectl get namespace grafana >/dev/null 2>&1 || kubectl get deployment -n fawkes grafana >/dev/null 2>&1; then
     local grafana_ns="grafana"
     kubectl get namespace grafana >/dev/null 2>&1 || grafana_ns="fawkes"
-    
+
     echo "🔷 Grafana (Observability)"
     local grafana_host
     grafana_host=$(kubectl get ingress -n "$grafana_ns" grafana -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
@@ -1426,18 +1426,18 @@ print_access_summary() {
     echo "   Password:     $grafana_pwd"
     echo ""
   fi
-  
+
   # Prometheus
   if kubectl get namespace prometheus >/dev/null 2>&1 || kubectl get deployment -n fawkes prometheus-server >/dev/null 2>&1; then
     local prom_ns="prometheus"
     kubectl get namespace prometheus >/dev/null 2>&1 || prom_ns="fawkes"
-    
+
     echo "🔷 Prometheus (Metrics)"
     echo "   Local URL:    http://localhost:9090"
     echo "   Port Forward: kubectl -n $prom_ns port-forward svc/prometheus-server 9090:80"
     echo ""
   fi
-  
+
   # Mattermost
   if kubectl get namespace mattermost >/dev/null 2>&1; then
     echo "🔷 Mattermost (Team Chat)"
@@ -1451,7 +1451,7 @@ print_access_summary() {
     echo "   Setup:        Create admin account on first access"
     echo ""
   fi
-  
+
   # Focalboard
   if kubectl get namespace focalboard >/dev/null 2>&1; then
     echo "🔷 Focalboard (Project Management)"
@@ -1464,7 +1464,7 @@ print_access_summary() {
     echo "   Port Forward: kubectl -n focalboard port-forward svc/focalboard 8000:8000"
     echo ""
   fi
-  
+
   echo "────────────────────────────────────────────────────────────────────────────────"
   echo "  QUICK COMMANDS"
   echo "────────────────────────────────────────────────────────────────────────────────"
@@ -1478,7 +1478,7 @@ print_access_summary() {
   echo "ArgoCD CLI login:"
   echo "  argocd login localhost:8080 --username admin --password ${ARGOCD_PASSWORD} --insecure"
   echo ""
-  
+
   if [[ "$PROVIDER" == "azure" ]]; then
     echo "────────────────────────────────────────────────────────────────────────────────"
     echo "  AZURE-SPECIFIC"
@@ -1489,7 +1489,7 @@ print_access_summary() {
     echo "Open Azure Portal:          https://portal.azure.com/#resource/subscriptions/${ARM_SUBSCRIPTION_ID}/resourceGroups/${TF_VAR_resource_group_name:-fawkes-rg}/providers/Microsoft.ContainerService/managedClusters/${TF_VAR_cluster_name:-fawkes-dev}"
     echo ""
   fi
-  
+
   echo "════════════════════════════════════════════════════════════════════════════════"
   echo "  📚 Documentation: ./docs/ or https://github.com/yourorg/fawkes/docs"
   echo "  🐛 Issues: https://github.com/yourorg/fawkes/issues"
@@ -1504,7 +1504,7 @@ post_deploy_summary() {
 
 main() {
   parse_flags "$@"
-  
+
   # Handle --access flag early
   if [[ $SHOW_ACCESS_ONLY -eq 1 ]]; then
     if [[ -x "$(dirname "${BASH_SOURCE[0]}")/access-summary.sh" ]]; then
@@ -1514,7 +1514,7 @@ main() {
     fi
     exit 0
   fi
-  
+
   # Validate environment after flag parsing
   if [[ -z "$ENV" ]]; then
     usage
@@ -1577,7 +1577,7 @@ main() {
   else
     echo "[DRY-RUN] Skipping cluster validation"
   fi
-  
+
   run_step "maybe_cleanup_argocd_cluster_resources" maybe_cleanup_argocd_cluster_resources
   # CRD patching not required; Helm manages CRDs now
   run_step "deploy_argocd" deploy_argocd

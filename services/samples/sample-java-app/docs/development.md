@@ -70,10 +70,10 @@ mvn spotbugs:check
 void shouldReturnExpectedValue() {
     // Arrange
     var input = setupTestData();
-    
+
     // Act
     var result = myService.process(input);
-    
+
     // Assert
     assertEquals(expectedValue, result);
 }
@@ -92,7 +92,7 @@ Example:
 ```java
 /**
  * Calculate the total price of items.
- * 
+ *
  * @param items List of items to calculate total for
  * @return Total price as BigDecimal
  * @throws IllegalArgumentException if items list is empty

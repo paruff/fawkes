@@ -91,21 +91,21 @@ echo ""
 # Scan each image
 for IMAGE in $IMAGES; do
     ((SCANNED_IMAGES++))
-    
+
     log_info "[$SCANNED_IMAGES/$TOTAL_IMAGES] Scanning: $IMAGE"
-    
+
     # Create safe filename
     SAFE_NAME=$(echo "$IMAGE" | sed 's/[^a-zA-Z0-9._-]/_/g')
     REPORT_FILE="$REPORT_DIR/trivy-scan-${SAFE_NAME}-${TIMESTAMP}.txt"
     JSON_REPORT_FILE="$REPORT_DIR/trivy-scan-${SAFE_NAME}-${TIMESTAMP}.json"
-    
+
     # Run Trivy scan
     if trivy image \
         --severity "$SEVERITY" \
         --timeout 5m \
         --output "$REPORT_FILE" \
         "$IMAGE" 2>&1 | tee /tmp/trivy-output.log; then
-        
+
         # Also generate JSON report
         trivy image \
             --severity "$SEVERITY" \
@@ -113,7 +113,7 @@ for IMAGE in $IMAGES; do
             --timeout 5m \
             --output "$JSON_REPORT_FILE" \
             "$IMAGE" &> /dev/null || true
-        
+
         # Check if vulnerabilities were found
         if grep -q "Total: 0" "$REPORT_FILE" 2>/dev/null || \
            ! grep -q "Total:" "$REPORT_FILE" 2>/dev/null; then
@@ -126,7 +126,7 @@ for IMAGE in $IMAGES; do
         log_error "Scan failed for $IMAGE"
         ((FAILED_SCANS++))
     fi
-    
+
     echo ""
 done
 

@@ -55,9 +55,9 @@ async def test_correlate_alerts_groups_by_service(correlator, redis_mock):
             "status": "firing"
         }
     ]
-    
+
     groups = await correlator.correlate_alerts(alerts)
-    
+
     assert len(groups) == 1
     assert groups[0]["count"] == 2
     assert groups[0]["grouping_key"] == "api-gateway:HighErrorRate:critical"
@@ -91,9 +91,9 @@ async def test_correlate_alerts_separate_groups_different_services(correlator, r
             "status": "firing"
         }
     ]
-    
+
     groups = await correlator.correlate_alerts(alerts)
-    
+
     assert len(groups) == 2
 
 
@@ -106,9 +106,9 @@ def test_calculate_priority_critical_severity(correlator):
             "service": "api-gateway"
         }
     }]
-    
+
     priority = correlator._calculate_priority(alerts)
-    
+
     assert priority > 5.0
 
 
@@ -121,16 +121,16 @@ def test_calculate_priority_increases_with_count(correlator):
             "service": "api-gateway"
         }
     }]
-    
+
     multiple_alerts = [
         {"labels": {"severity": "warning", "service": "api-gateway"}},
         {"labels": {"severity": "warning", "service": "api-gateway"}},
         {"labels": {"severity": "warning", "service": "api-gateway"}}
     ]
-    
+
     priority_single = correlator._calculate_priority(single_alert)
     priority_multiple = correlator._calculate_priority(multiple_alerts)
-    
+
     assert priority_multiple > priority_single
 
 
@@ -142,9 +142,9 @@ def test_deduplicate_alerts(correlator):
         {"fingerprint": "abc123", "labels": {"alertname": "Test"}},
         {"fingerprint": "def456", "labels": {"alertname": "Test2"}}
     ]
-    
+
     deduplicated = correlator._deduplicate_alerts(alerts)
-    
+
     assert len(deduplicated) == 2
 
 
@@ -158,9 +158,9 @@ def test_generate_grouping_key(correlator):
             "severity": "critical"
         }
     }
-    
+
     key = correlator._generate_grouping_key(alert)
-    
+
     assert key == "api-gateway:HighErrorRate:critical"
 
 
@@ -172,8 +172,8 @@ def test_generate_grouping_key_handles_missing_labels(correlator):
             "alertname": "TestAlert"
         }
     }
-    
+
     key = correlator._generate_grouping_key(alert)
-    
+
     assert "unknown" in key
     assert "TestAlert" in key

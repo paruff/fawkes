@@ -150,7 +150,7 @@ function PipelineCard({ pipelineId }: { pipelineId: string }) {
 
   const handleTriggerBuild = async () => {
     const startTime = Date.now();
-    
+
     trackPredefined(PredefinedEvents.TRIGGER_BUILD, {
       pipelineId,
       component: 'PipelineCard',
@@ -158,7 +158,7 @@ function PipelineCard({ pipelineId }: { pipelineId: string }) {
 
     try {
       await triggerJenkinsBuild(pipelineId);
-      
+
       trackPredefined(PredefinedEvents.BUILD_COMPLETE, {
         pipelineId,
         duration: Date.now() - startTime,
@@ -203,7 +203,7 @@ function DeployButton({ serviceName, environment }: DeployButtonProps) {
 
     try {
       await deployToArgoCD(serviceName, environment);
-      
+
       trackPredefined(PredefinedEvents.DEPLOYMENT_COMPLETE, {
         entityName: serviceName,
         deploymentTarget: environment,
@@ -266,7 +266,7 @@ function ServiceDetailPage({ serviceId }: { serviceId: string }) {
   const fetchServiceData = async () => {
     try {
       const response = await fetch(`/api/services/${serviceId}`);
-      
+
       if (!response.ok) {
         trackAPIError(
           `/api/services/${serviceId}`,
@@ -275,7 +275,7 @@ function ServiceDetailPage({ serviceId }: { serviceId: string }) {
         );
         throw new Error('Failed to fetch service data');
       }
-      
+
       return response.json();
     } catch (error) {
       trackError(error, {
@@ -300,7 +300,7 @@ function HeavyComponent() {
 
   useEffect(() => {
     const startTime = performance.now();
-    
+
     loadHeavyData().then(() => {
       const duration = performance.now() - startTime;
       trackPerformance(duration, {
@@ -558,7 +558,7 @@ jest.mock('@fawkes/design-system/analytics', () => ({
 test('tracks deployment event', () => {
   const { getByText } = render(<DeployButton />);
   fireEvent.click(getByText('Deploy'));
-  
+
   expect(trackEvent).toHaveBeenCalledWith(
     expect.objectContaining({
       category: EventCategory.DEPLOYMENT,

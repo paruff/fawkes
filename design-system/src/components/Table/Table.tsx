@@ -10,7 +10,7 @@ export interface TableProps extends BaseComponentProps {
 
 /**
  * Data table
- * 
+ *
  * @component
  * @example
  * ```tsx

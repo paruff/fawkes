@@ -10,7 +10,7 @@ export interface GridProps extends BaseComponentProps {
 
 /**
  * A flexible grid layout system
- * 
+ *
  * @component
  * @example
  * ```tsx

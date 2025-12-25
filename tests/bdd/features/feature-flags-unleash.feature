@@ -41,7 +41,7 @@ Feature: Feature Flags Platform (Unleash) Deployment
   @ui @local
   Scenario: Unleash UI is accessible via ingress
     Given Unleash ingress is configured
-    When I access "https://unleash.fawkes.idp" 
+    When I access "https://unleash.fawkes.idp"
     Then the Unleash UI should load successfully
     And TLS certificate should be valid
     And I should see the Unleash login page
@@ -58,7 +58,7 @@ Feature: Feature Flags Platform (Unleash) Deployment
   @rollout-strategies @local
   Scenario: Configure gradual rollout strategy
     Given a feature flag "gradual-rollout-test" exists
-    When I configure a "gradual rollout" strategy at "25%" 
+    When I configure a "gradual rollout" strategy at "25%"
     And I evaluate the flag for 100 random users
     Then approximately 25% of users should see the feature enabled
     And 75% of users should see the feature disabled

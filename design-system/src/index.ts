@@ -1,6 +1,6 @@
 /**
  * Fawkes Design System - Main Export
- * 
+ *
  * This is the entry point for the design system library.
  */
 

@@ -39,7 +39,7 @@ spec:
               set -e
               echo "Installing dependencies..."
               pip install -q prometheus-client==0.19.0 great-expectations==0.18.12 sqlalchemy==2.0.25 psycopg2-binary==2.9.9 requests==2.31.0
-              
+
               echo "Starting Prometheus exporter..."
               python3 /app/prometheus-exporter.py --port 9110 --results-dir /app/gx/uncommitted/validations
           workingDir: /app

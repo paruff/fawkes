@@ -8,9 +8,9 @@ status: deprecated
 
 !!! warning "Deprecated Tool"
     **Spinnaker is no longer used in Fawkes.** This documentation is retained for historical reference only.
-    
+
     **Migration Path**: Use [ArgoCD](https://argo-cd.readthedocs.io/) for GitOps-based continuous delivery.
-    
+
     See the migration guide below for transitioning from Spinnaker to ArgoCD.
 
 ---

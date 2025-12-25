@@ -19,7 +19,7 @@ class UsageTrends(BaseModel):
     unique_visitors: int = Field(description="Unique visitors")
     avg_session_duration: float = Field(description="Average session duration in seconds")
     bounce_rate: float = Field(description="Bounce rate percentage")
-    
+
     # Time series data
     users_over_time: List[TimeSeriesDataPoint] = Field(description="User activity over time")
     pageviews_over_time: List[TimeSeriesDataPoint] = Field(description="Page views over time")
@@ -65,7 +65,7 @@ class ExperimentResults(BaseModel):
     status: str = Field(description="draft, running, stopped")
     start_date: Optional[datetime] = None
     end_date: Optional[datetime] = None
-    
+
     # Statistical analysis
     variants: List[VariantMetrics]
     winner: Optional[str] = Field(description="Variant ID of the winner, if determined")

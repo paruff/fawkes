@@ -2,10 +2,10 @@
 
 ## Document Information
 
-**Version**: 1.0  
-**Last Updated**: December 2025  
-**Status**: Active  
-**Owner**: Platform Team  
+**Version**: 1.0
+**Last Updated**: December 2025
+**Status**: Active
+**Owner**: Platform Team
 **Review Cycle**: Quarterly
 
 ---
@@ -376,7 +376,7 @@ Document in PR description:
 
 1. **Organization Ownership**: All code created using company resources (including AI tools) belongs to the organization
 
-2. **AI-Generated Content**: 
+2. **AI-Generated Content**:
    - Treat AI-generated code as any other code
    - Organization owns the final work product
    - Attribution to AI tool optional but recommended
@@ -389,9 +389,9 @@ Document in PR description:
 ### License Compliance
 
 #### Acceptable Licenses
-✅ Permissive licenses (MIT, Apache 2.0, BSD)  
-✅ Weak copyleft (LGPL, MPL)  
-⚠️ Strong copyleft (GPL) - Legal review required  
+✅ Permissive licenses (MIT, Apache 2.0, BSD)
+✅ Weak copyleft (LGPL, MPL)
+⚠️ Strong copyleft (GPL) - Legal review required
 ❌ Proprietary/Commercial - Prohibited without legal approval
 
 #### License Review Process
@@ -655,6 +655,6 @@ This policy was developed with input from:
 - Legal & Compliance
 - Developer Community
 
-**Policy Owner**: Platform Team  
-**Review Cycle**: Quarterly  
+**Policy Owner**: Platform Team
+**Review Cycle**: Quarterly
 **Next Review**: March 2026

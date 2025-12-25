@@ -82,7 +82,7 @@ create_label() {
     local name=$1
     local color=$2
     local description=$3
-    
+
     gh label create "$name" \
         --repo "$REPO" \
         --color "$color" \
@@ -131,7 +131,7 @@ create_milestone() {
     local title=$1
     local description=$2
     local due_date=$3
-    
+
     gh api repos/"$REPO"/milestones \
         -X POST \
         -f title="$title" \
@@ -248,14 +248,14 @@ jobs:
         with:
           project-url: https://github.com/users/${{ github.repository_owner }}/projects/1
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Move to In Progress when assigned
         if: github.event.action == 'assigned'
         uses: actions/add-to-project@v0.5.0
         with:
           project-url: https://github.com/users/${{ github.repository_owner }}/projects/1
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Move to Done when closed
         if: github.event.action == 'closed'
         uses: actions/add-to-project@v0.5.0
@@ -268,7 +268,7 @@ jobs:
     if: github.event.label.name == 'acceptance-test'
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Run acceptance tests
         run: |
           # Determine which tests to run based on epic
@@ -279,7 +279,7 @@ jobs:
           elif [[ "${{ github.event.issue.labels }}" == *"epic-3"* ]]; then
             ./tests/run-epic3-acceptance-tests.sh
           fi
-      
+
       - name: Comment test results
         uses: actions/github-script@v7
         with:

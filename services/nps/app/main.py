@@ -114,7 +114,7 @@ async def init_database():
     try:
         db_pool = await asyncpg.create_pool(DATABASE_URL, min_size=2, max_size=10)
         logger.info("✅ Connected to database successfully")
-        
+
         # Create tables if not exists
         async with db_pool.acquire() as conn:
             await conn.execute("""
@@ -130,7 +130,7 @@ async def init_database():
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
-                
+
                 -- Survey responses table
                 CREATE TABLE IF NOT EXISTS survey_responses (
                     id SERIAL PRIMARY KEY,
@@ -142,7 +142,7 @@ async def init_database():
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (token) REFERENCES survey_links(token)
                 );
-                
+
                 -- Survey campaigns table
                 CREATE TABLE IF NOT EXISTS survey_campaigns (
                     id SERIAL PRIMARY KEY,
@@ -155,7 +155,7 @@ async def init_database():
                     nps_score FLOAT,
                     UNIQUE(quarter, year)
                 );
-                
+
                 -- Indexes
                 CREATE INDEX IF NOT EXISTS idx_survey_links_token ON survey_links(token);
                 CREATE INDEX IF NOT EXISTS idx_survey_links_user ON survey_links(user_id);
@@ -189,10 +189,10 @@ async def calculate_nps(
         start_date = datetime.now() - timedelta(days=90)  # Last quarter
     if not end_date:
         end_date = datetime.now()
-    
+
     # Get response counts by score type
     stats = await conn.fetchrow("""
-        SELECT 
+        SELECT
             COUNT(*) FILTER (WHERE score_type = 'promoter') as promoters,
             COUNT(*) FILTER (WHERE score_type = 'passive') as passives,
             COUNT(*) FILTER (WHERE score_type = 'detractor') as detractors,
@@ -200,19 +200,19 @@ async def calculate_nps(
         FROM survey_responses
         WHERE created_at >= $1 AND created_at <= $2
     """, start_date, end_date)
-    
+
     # Get total sent count
     total_sent = await conn.fetchval("""
         SELECT SUM(total_sent)
         FROM survey_campaigns
         WHERE started_at >= $1 AND started_at <= $2
     """, start_date, end_date) or 0
-    
+
     promoters = stats['promoters'] or 0
     passives = stats['passives'] or 0
     detractors = stats['detractors'] or 0
     total_responses = stats['total_responses'] or 0
-    
+
     # Calculate NPS: (% promoters - % detractors) * 100
     if total_responses > 0:
         promoter_pct = promoters / total_responses
@@ -220,10 +220,10 @@ async def calculate_nps(
         nps_score = (promoter_pct - detractor_pct) * 100
     else:
         nps_score = 0.0
-    
+
     # Calculate response rate
     response_rate = (total_responses / total_sent * 100) if total_sent > 0 else 0.0
-    
+
     return NPSMetrics(
         nps_score=round(nps_score, 2),
         total_responses=total_responses,
@@ -286,7 +286,7 @@ async def health_check():
         except Exception as e:
             logger.error(f"Database health check failed: {e}")
             db_connected = False
-    
+
     return HealthResponse(
         status="healthy" if db_connected else "degraded",
         service="nps-survey-service",
@@ -301,14 +301,14 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
     """Render survey page for a given token."""
     if not db_pool:
         raise HTTPException(status_code=503, detail="Service unavailable")
-    
+
     try:
         async with db_pool.acquire() as conn:
             link = await conn.fetchrow(
                 "SELECT * FROM survey_links WHERE token = $1",
                 token
             )
-            
+
             if not link:
                 return HTMLResponse(content="""
                     <!DOCTYPE html>
@@ -327,7 +327,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                     </body>
                     </html>
                 """)
-            
+
             if link['responded']:
                 return HTMLResponse(content="""
                     <!DOCTYPE html>
@@ -346,7 +346,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                     </body>
                     </html>
                 """)
-            
+
             if datetime.now() > link['expires_at']:
                 return HTMLResponse(content="""
                     <!DOCTYPE html>
@@ -365,7 +365,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                     </body>
                     </html>
                 """)
-            
+
             # Render survey form
             return HTMLResponse(content=f"""
                 <!DOCTYPE html>
@@ -488,43 +488,43 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                     <div class="survey-container">
                         <h1>Fawkes Platform Survey</h1>
                         <p class="subtitle">Help us improve the platform!</p>
-                        
+
                         <form id="surveyForm">
                             <div class="question">
                                 How likely are you to recommend Fawkes Platform to a colleague?
                             </div>
-                            
+
                             <div class="score-buttons" id="scoreButtons">
                                 {''.join([f'<button type="button" class="score-button" data-score="{i}">{i}</button>' for i in range(11)])}
                             </div>
-                            
+
                             <div class="score-labels">
                                 <span>Not at all likely</span>
                                 <span>Extremely likely</span>
                             </div>
-                            
+
                             <div>
                                 <label for="comment" style="font-weight: bold; display: block; margin-bottom: 10px;">
                                     What's the main reason for your score? (Optional)
                                 </label>
                                 <textarea id="comment" name="comment" placeholder="Your feedback helps us improve..."></textarea>
                             </div>
-                            
+
                             <button type="submit" class="submit-button" id="submitButton" disabled>
                                 Submit Feedback
                             </button>
-                            
+
                             <div class="error" id="errorMessage"></div>
                         </form>
                     </div>
-                    
+
                     <script>
                         let selectedScore = null;
                         const scoreButtons = document.querySelectorAll('.score-button');
                         const submitButton = document.getElementById('submitButton');
                         const errorMessage = document.getElementById('errorMessage');
                         const surveyForm = document.getElementById('surveyForm');
-                        
+
                         scoreButtons.forEach(button => {{
                             button.addEventListener('click', () => {{
                                 selectedScore = parseInt(button.dataset.score);
@@ -533,22 +533,22 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                                 submitButton.disabled = false;
                             }});
                         }});
-                        
+
                         surveyForm.addEventListener('submit', async (e) => {{
                             e.preventDefault();
-                            
+
                             if (selectedScore === null) {{
                                 errorMessage.textContent = 'Please select a score';
                                 errorMessage.style.display = 'block';
                                 return;
                             }}
-                            
+
                             submitButton.disabled = true;
                             submitButton.textContent = 'Submitting...';
                             errorMessage.style.display = 'none';
-                            
+
                             const comment = document.getElementById('comment').value;
-                            
+
                             try {{
                                 const response = await fetch('/api/v1/survey/{token}/submit', {{
                                     method: 'POST',
@@ -560,7 +560,7 @@ async def get_survey_page(token: str = Path(..., description="Survey token")):
                                         comment: comment || null
                                     }})
                                 }});
-                                
+
                                 if (response.ok) {{
                                     window.location.href = '/survey/{token}/thanks';
                                 }} else {{
@@ -647,7 +647,7 @@ async def submit_survey_response(
     """Submit a survey response."""
     if not db_pool:
         raise HTTPException(status_code=503, detail="Service unavailable")
-    
+
     with survey_request_duration.labels(endpoint="submit_response").time():
         try:
             async with db_pool.acquire() as conn:
@@ -656,19 +656,19 @@ async def submit_survey_response(
                     "SELECT * FROM survey_links WHERE token = $1",
                     token
                 )
-                
+
                 if not link:
                     raise HTTPException(status_code=404, detail="Invalid survey token")
-                
+
                 if link['responded']:
                     raise HTTPException(status_code=400, detail="Survey already completed")
-                
+
                 if datetime.now() > link['expires_at']:
                     raise HTTPException(status_code=400, detail="Survey link expired")
-                
+
                 # Calculate score type
                 score_type = calculate_score_type(response.score)
-                
+
                 # Insert response
                 async with conn.transaction():
                     result = await conn.fetchrow("""
@@ -676,18 +676,18 @@ async def submit_survey_response(
                         VALUES ($1, $2, $3, $4, $5)
                         RETURNING id, user_id, score, score_type, comment, created_at
                     """, link['user_id'], token, response.score, score_type, response.comment)
-                    
+
                     # Mark link as responded
                     await conn.execute(
                         "UPDATE survey_links SET responded = TRUE, updated_at = CURRENT_TIMESTAMP WHERE token = $1",
                         token
                     )
-                
+
                 # Update metrics
                 nps_responses.labels(score_type=score_type).inc()
-                
+
                 logger.info(f"Survey response submitted: user={link['user_id']}, score={response.score}, type={score_type}")
-                
+
                 return SurveyResponseOut(
                     id=result['id'],
                     user_id=result['user_id'],
@@ -712,15 +712,15 @@ async def get_nps_metrics(
     """Get NPS metrics for a given period."""
     if not db_pool:
         raise HTTPException(status_code=503, detail="Service unavailable")
-    
+
     with survey_request_duration.labels(endpoint="get_metrics").time():
         try:
             async with db_pool.acquire() as conn:
                 metrics = await calculate_nps(conn, start_date, end_date)
-                
+
                 # Update Prometheus gauge
                 nps_score_gauge.labels(period="current").set(metrics.nps_score)
-                
+
                 return metrics
         except Exception as e:
             logger.error(f"Error calculating NPS metrics: {e}")
@@ -733,20 +733,20 @@ async def generate_survey_link(user_id: str, email: str):
     """Generate a unique survey link for a user."""
     if not db_pool:
         raise HTTPException(status_code=503, detail="Service unavailable")
-    
+
     try:
         token = secrets.token_urlsafe(32)
         expires_at = datetime.now() + timedelta(days=SURVEY_EXPIRY_DAYS)
-        
+
         async with db_pool.acquire() as conn:
             await conn.execute("""
                 INSERT INTO survey_links (token, user_id, email, expires_at)
                 VALUES ($1, $2, $3, $4)
             """, token, user_id, email, expires_at)
-        
+
         survey_url = f"/survey/{token}"
         logger.info(f"Generated survey link for user {user_id}")
-        
+
         return {"token": token, "survey_url": survey_url, "expires_at": expires_at}
     except Exception as e:
         logger.error(f"Error generating survey link: {e}")

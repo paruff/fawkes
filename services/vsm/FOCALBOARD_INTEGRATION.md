@@ -12,7 +12,7 @@ In Focalboard/Mattermost settings, create a webhook:
 
 ```
 Webhook URL: http://vsm-service.fawkes.svc:8000/api/v1/focalboard/webhook
-Events: 
+Events:
   - card.created
   - card.moved
   - card.updated

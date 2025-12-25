@@ -10,7 +10,7 @@ export interface TextProps extends BaseComponentProps {
 
 /**
  * Text component with variants
- * 
+ *
  * @component
  * @example
  * ```tsx

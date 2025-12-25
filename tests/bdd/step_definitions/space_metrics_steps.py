@@ -24,7 +24,7 @@ def load_kube_clients():
     except Exception:
         logger.info("Falling back to in-cluster kube config")
         config.load_incluster_config()
-    
+
     core = client.CoreV1Api()
     apps = client.AppsV1Api()
     return core, apps
@@ -71,10 +71,10 @@ def exec_in_pod(core_api, namespace, pod_name, command):
 
 def parse_table_to_dict(table):
     """Parse a behave table into a dictionary.
-    
+
     Args:
         table: Behave table with two columns (key, value)
-        
+
     Returns:
         dict: Dictionary with parsed values, attempting float conversion
     """
@@ -110,17 +110,17 @@ def step_space_metrics_deployed(context):
     """Verify SPACE metrics service is deployed."""
     core_api, apps_api = load_kube_clients()
     namespace = getattr(context, 'namespace', 'fawkes-local')
-    
+
     context.namespace = namespace
     context.core_api = core_api
     context.apps_api = apps_api
-    
+
     # Check if deployment exists
     try:
         deployment = apps_api.read_namespaced_deployment("space-metrics", namespace)
         assert deployment is not None
         logger.info(f"SPACE metrics deployment found in {namespace}")
-        
+
         # Wait for deployment to be ready
         max_retries = 30
         for i in range(max_retries):
@@ -160,11 +160,11 @@ def step_check_health_endpoint(context):
     try:
         pod_name = get_pod_name(context.core_api, context.namespace, "app=space-metrics")
         context.pod_name = pod_name
-        
+
         # Execute curl command in the pod
         command = ["curl", "-s", "http://localhost:8000/health"]
         output = exec_in_pod(context.core_api, context.namespace, pod_name, command)
-        
+
         context.health_response = json.loads(output)
         context.health_status_code = 200
         logger.info(f"Health check response: {context.health_response}")
@@ -198,7 +198,7 @@ def step_request_space_metrics(context):
         pod_name = context.pod_name
         command = ["curl", "-s", "http://localhost:8000/api/v1/metrics/space"]
         output = exec_in_pod(context.core_api, context.namespace, pod_name, command)
-        
+
         context.space_metrics = json.loads(output)
         logger.info(f"SPACE metrics response: {context.space_metrics}")
     except Exception as e:
@@ -234,7 +234,7 @@ def step_request_dimension_metrics(context, dimension):
         pod_name = context.pod_name
         command = ["curl", "-s", f"http://localhost:8000/api/v1/metrics/space/{dimension}"]
         output = exec_in_pod(context.core_api, context.namespace, pod_name, command)
-        
+
         context.dimension_metrics = json.loads(output)
         context.dimension_name = dimension
         logger.info(f"{dimension.capitalize()} metrics response: {context.dimension_metrics}")
@@ -256,7 +256,7 @@ def step_verify_field_in_data(context, field):
     # Check if field exists at top level or in nested structure
     if field in context.dimension_metrics:
         return
-    
+
     # For nested structures, check if field exists in any nested dict/object
     def find_field_recursive(obj, target_field):
         if isinstance(obj, dict):
@@ -266,7 +266,7 @@ def step_verify_field_in_data(context, field):
         elif isinstance(obj, list):
             return any(find_field_recursive(item, target_field) for item in obj)
         return False
-    
+
     assert find_field_recursive(context.dimension_metrics, field), \
         f"Field '{field}' not found in response"
 
@@ -278,7 +278,7 @@ def step_submit_pulse_survey(context):
     """Submit a pulse survey response."""
     try:
         pod_name = context.pod_name
-        
+
         # Build survey data from table or use defaults
         if hasattr(context, 'table') and context.table:
             survey_data = parse_table_to_dict(context.table)
@@ -289,7 +289,7 @@ def step_submit_pulse_survey(context):
                 "flow_state_days": 3.0,
                 "cognitive_load": 3.0
             }
-        
+
         # Execute POST request
         json_data = json.dumps(survey_data)
         command = [
@@ -299,7 +299,7 @@ def step_submit_pulse_survey(context):
             "http://localhost:8000/api/v1/surveys/pulse/submit"
         ]
         output = exec_in_pod(context.core_api, context.namespace, pod_name, command)
-        
+
         context.survey_response = json.loads(output)
         logger.info(f"Pulse survey response: {context.survey_response}")
     except Exception as e:
@@ -320,14 +320,14 @@ def step_verify_success_confirmation(context):
     # Check for explicit success status
     if context.survey_response.get('status') == 'success':
         return
-    
+
     # Check for common success indicators
     success_indicators = ['status', 'result', 'message']
     for indicator in success_indicators:
         value = context.survey_response.get(indicator)
         if value and 'success' in str(value).lower():
             return
-    
+
     # If no success found, fail with helpful message
     assert False, f"No success confirmation in response: {context.survey_response}"
 
@@ -339,7 +339,7 @@ def step_log_friction_incident(context):
     """Log a friction incident."""
     try:
         pod_name = context.pod_name
-        
+
         # Build friction data from table or use defaults
         if hasattr(context, 'table') and context.table:
             friction_data = parse_table_to_dict(context.table)
@@ -350,7 +350,7 @@ def step_log_friction_incident(context):
                 "description": "Testing friction logging",
                 "severity": "low"
             }
-        
+
         # Execute POST request
         json_data = json.dumps(friction_data)
         command = [
@@ -360,7 +360,7 @@ def step_log_friction_incident(context):
             "http://localhost:8000/api/v1/friction/log"
         ]
         output = exec_in_pod(context.core_api, context.namespace, pod_name, command)
-        
+
         context.friction_response = json.loads(output)
         logger.info(f"Friction logging response: {context.friction_response}")
     except Exception as e:
@@ -384,7 +384,7 @@ def step_request_health_score(context):
         pod_name = context.pod_name
         command = ["curl", "-s", "http://localhost:8000/api/v1/metrics/space/health"]
         output = exec_in_pod(context.core_api, context.namespace, pod_name, command)
-        
+
         context.health_score_response = json.loads(output)
         logger.info(f"Health score response: {context.health_score_response}")
     except Exception as e:
@@ -416,7 +416,7 @@ def step_request_prometheus_metrics(context):
         pod_name = context.pod_name
         command = ["curl", "-s", "http://localhost:8000/metrics"]
         output = exec_in_pod(context.core_api, context.namespace, pod_name, command)
-        
+
         context.prometheus_metrics = output
         logger.info(f"Prometheus metrics received: {len(output)} bytes")
     except Exception as e:
@@ -440,7 +440,7 @@ def step_request_aggregated_metrics(context):
         pod_name = context.pod_name
         command = ["curl", "-s", "http://localhost:8000/api/v1/metrics/space"]
         output = exec_in_pod(context.core_api, context.namespace, pod_name, command)
-        
+
         context.aggregated_metrics = output
         logger.info(f"Aggregated metrics received")
     except Exception as e:
@@ -454,7 +454,7 @@ def step_verify_no_individual_data(context):
     # Check for common individual identifiers
     forbidden_fields = ['user_id', 'username', 'email', 'developer_name', 'developer_id']
     metrics_text = context.aggregated_metrics.lower()
-    
+
     for field in forbidden_fields:
         assert field not in metrics_text, \
             f"Individual identifier '{field}' found in metrics response"
@@ -470,14 +470,14 @@ def step_verify_aggregation_threshold(context, threshold):
             context.namespace
         )
         threshold_value = configmap.data.get('aggregation-threshold', '0')
-        
+
         try:
             config_threshold = int(threshold_value)
         except ValueError as e:
             raise AssertionError(
                 f"Aggregation threshold configuration is invalid: '{threshold_value}' is not a valid integer"
             ) from e
-        
+
         assert config_threshold >= threshold, \
             f"Aggregation threshold {config_threshold} is less than required {threshold}"
         logger.info(f"Aggregation threshold verified: {config_threshold}")
@@ -496,7 +496,7 @@ def step_verify_no_personal_identifiers(context):
         'developer_id', 'developerid', 'person_id', 'personid'
     ]
     metrics_text = context.aggregated_metrics.lower()
-    
+
     for identifier in personal_identifiers:
         assert identifier not in metrics_text, \
             f"Personal identifier '{identifier}' found in response"

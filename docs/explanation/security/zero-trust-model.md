@@ -46,7 +46,7 @@ graph TB
     A[Compromised App Pod] -->|No network policy| B[Database Pod]
     A -->|No network policy| C[Secret Store]
     A -->|No network policy| D[Other App Pods]
-    
+
     style A fill:#ff6b6b
 ```
 
@@ -72,7 +72,7 @@ kubectl get secrets -n prod  # Service account has excessive permissions
 
 **Day 4**: Attacker exfiltrates customer data, deploys cryptominer, pivots to other clusters
 
-**Time to Detect**: Days to weeks  
+**Time to Detect**: Days to weeks
 **Blast Radius**: Entire cluster potentially compromised
 
 ## The Solution: Layered Zero Trust Defense
@@ -86,7 +86,7 @@ graph TB
     C -->|3. Policy Check| D[Kyverno Admission]
     D -->|4. Secret Injection| E[Vault Agent]
     E -->|5. Application| F[Pod]
-    
+
     style B fill:#2196F3
     style D fill:#FF9800
     style E fill:#4CAF50

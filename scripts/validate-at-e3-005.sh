@@ -77,9 +77,9 @@ record_test_result() {
     local status=$2
     local message=$3
     local details=${4:-""}
-    
+
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
-    
+
     if [ "$status" = "PASS" ]; then
         PASSED_TESTS=$((PASSED_TESTS + 1))
         log_success "$test_name: $message"
@@ -87,7 +87,7 @@ record_test_result() {
         FAILED_TESTS=$((FAILED_TESTS + 1))
         log_error "$test_name: $message"
     fi
-    
+
     TEST_RESULTS+=("{\"test\":\"$test_name\",\"status\":\"$status\",\"message\":\"$message\",\"details\":\"$details\"}")
 }
 
@@ -97,7 +97,7 @@ record_test_result() {
 
 validate_directory_structure() {
     log_info "Validating journey maps directory structure..."
-    
+
     if [ -d "$JOURNEY_MAPS_DIR" ]; then
         record_test_result "directory_exists" "PASS" "Journey maps directory exists"
     else
@@ -108,7 +108,7 @@ validate_directory_structure() {
 
 validate_journey_maps_count() {
     log_info "Validating journey maps count (need 5)..."
-    
+
     local journey_files=(
         "01-developer-onboarding.md"
         "02-deploying-first-app.md"
@@ -116,7 +116,7 @@ validate_journey_maps_count() {
         "04-requesting-platform-feature.md"
         "05-contributing-to-platform.md"
     )
-    
+
     local found_count=0
     for file in "${journey_files[@]}"; do
         if [ -f "$JOURNEY_MAPS_DIR/$file" ]; then
@@ -126,7 +126,7 @@ validate_journey_maps_count() {
             log_warning "  Missing: $file"
         fi
     done
-    
+
     if [ $found_count -eq 5 ]; then
         record_test_result "journey_maps_count" "PASS" "All 5 journey maps exist ($found_count/5)"
     else
@@ -136,16 +136,16 @@ validate_journey_maps_count() {
 
 validate_summary_document() {
     log_info "Validating summary document..."
-    
+
     local summary_file="$JOURNEY_MAPS_DIR/00-SUMMARY.md"
-    
+
     if [ ! -f "$summary_file" ]; then
         record_test_result "summary_exists" "FAIL" "Summary document not found"
         return 1
     fi
-    
+
     record_test_result "summary_exists" "PASS" "Summary document exists"
-    
+
     # Check for required sections in summary
     local required_sections=(
         "Overview"
@@ -153,14 +153,14 @@ validate_summary_document() {
         "Success Metrics"
         "Validation Summary"
     )
-    
+
     local missing_sections=()
     for section in "${required_sections[@]}"; do
         if ! grep -q "$section" "$summary_file"; then
             missing_sections+=("$section")
         fi
     done
-    
+
     if [ ${#missing_sections[@]} -eq 0 ]; then
         record_test_result "summary_sections" "PASS" "All required sections present in summary"
     else
@@ -170,7 +170,7 @@ validate_summary_document() {
 
 validate_pain_points() {
     log_info "Validating pain points identified in journey maps..."
-    
+
     local pain_points_found=0
     local journey_files=(
         "01-developer-onboarding.md"
@@ -179,7 +179,7 @@ validate_pain_points() {
         "04-requesting-platform-feature.md"
         "05-contributing-to-platform.md"
     )
-    
+
     for file in "${journey_files[@]}"; do
         local filepath="$JOURNEY_MAPS_DIR/$file"
         if [ -f "$filepath" ]; then
@@ -189,7 +189,7 @@ validate_pain_points() {
             fi
         fi
     done
-    
+
     if [ $pain_points_found -ge 5 ]; then
         record_test_result "pain_points_identified" "PASS" "Pain points documented in $pain_points_found/5 journey maps"
     else
@@ -199,7 +199,7 @@ validate_pain_points() {
 
 validate_touchpoints() {
     log_info "Validating touchpoints mapped in journey maps..."
-    
+
     local touchpoints_found=0
     local journey_files=(
         "01-developer-onboarding.md"
@@ -208,7 +208,7 @@ validate_touchpoints() {
         "04-requesting-platform-feature.md"
         "05-contributing-to-platform.md"
     )
-    
+
     # Common touchpoints to look for
     local touchpoints=(
         "Backstage"
@@ -218,7 +218,7 @@ validate_touchpoints() {
         "Mattermost"
         "GitHub"
     )
-    
+
     for file in "${journey_files[@]}"; do
         local filepath="$JOURNEY_MAPS_DIR/$file"
         if [ -f "$filepath" ]; then
@@ -234,7 +234,7 @@ validate_touchpoints() {
             fi
         fi
     done
-    
+
     if [ $touchpoints_found -ge 5 ]; then
         record_test_result "touchpoints_mapped" "PASS" "Platform touchpoints documented in $touchpoints_found/5 journey maps"
     else
@@ -244,7 +244,7 @@ validate_touchpoints() {
 
 validate_opportunities() {
     log_info "Validating improvement opportunities documented..."
-    
+
     local opportunities_found=0
     local journey_files=(
         "01-developer-onboarding.md"
@@ -253,7 +253,7 @@ validate_opportunities() {
         "04-requesting-platform-feature.md"
         "05-contributing-to-platform.md"
     )
-    
+
     for file in "${journey_files[@]}"; do
         local filepath="$JOURNEY_MAPS_DIR/$file"
         if [ -f "$filepath" ]; then
@@ -263,7 +263,7 @@ validate_opportunities() {
             fi
         fi
     done
-    
+
     if [ $opportunities_found -ge 5 ]; then
         record_test_result "opportunities_documented" "PASS" "Improvement opportunities in $opportunities_found/5 journey maps"
     else
@@ -273,9 +273,9 @@ validate_opportunities() {
 
 validate_user_validation() {
     log_info "Validating user research and validation..."
-    
+
     local summary_file="$JOURNEY_MAPS_DIR/00-SUMMARY.md"
-    
+
     if [ -f "$summary_file" ]; then
         # Check for validation information
         if grep -iq "interview\|user\|participant\|validated" "$summary_file"; then
@@ -290,9 +290,9 @@ validate_user_validation() {
 
 validate_success_metrics() {
     log_info "Validating success metrics defined..."
-    
+
     local summary_file="$JOURNEY_MAPS_DIR/00-SUMMARY.md"
-    
+
     if [ -f "$summary_file" ]; then
         # Check for metrics section
         if grep -iq "metric\|measure\|target\|kpi" "$summary_file"; then
@@ -307,9 +307,9 @@ validate_success_metrics() {
 
 validate_journey_map_template() {
     log_info "Validating journey map template exists..."
-    
+
     local template_file="docs/research/templates/journey-map.md"
-    
+
     if [ -f "$template_file" ]; then
         record_test_result "template_exists" "PASS" "Journey map template available"
     else
@@ -319,9 +319,9 @@ validate_journey_map_template() {
 
 validate_readme() {
     log_info "Validating README documentation..."
-    
+
     local readme_file="$JOURNEY_MAPS_DIR/README.md"
-    
+
     if [ -f "$readme_file" ]; then
         record_test_result "readme_exists" "PASS" "Journey maps README exists"
     else
@@ -336,9 +336,9 @@ validate_readme() {
 
 generate_report() {
     log_info "Generating validation report..."
-    
+
     mkdir -p "$REPORT_DIR"
-    
+
     cat > "$REPORT_FILE" <<EOF
 {
   "test_id": "AT-E3-005",
@@ -355,7 +355,7 @@ generate_report() {
   ]
 }
 EOF
-    
+
     log_info "Report saved to: $REPORT_FILE"
 }
 
@@ -367,14 +367,14 @@ print_summary() {
     echo "Total Tests:  $TOTAL_TESTS"
     echo -e "Passed:       ${GREEN}$PASSED_TESTS${NC}"
     echo -e "Failed:       ${RED}$FAILED_TESTS${NC}"
-    
+
     if [ $TOTAL_TESTS -gt 0 ]; then
         local pass_rate=$(awk "BEGIN {printf \"%.1f\", ($PASSED_TESTS/$TOTAL_TESTS)*100}")
         echo "Pass Rate:    ${pass_rate}%"
     fi
-    
+
     echo "=========================================="
-    
+
     if [ $FAILED_TESTS -eq 0 ]; then
         echo -e "${GREEN}✓ AT-E3-005 PASSED${NC}"
         echo "Journey Mapping validation successful!"
@@ -408,13 +408,13 @@ main() {
                 ;;
         esac
     done
-    
+
     echo ""
     echo "=========================================="
     echo "AT-E3-005: Journey Mapping Validation"
     echo "=========================================="
     echo ""
-    
+
     # Run validation tests
     validate_directory_structure
     validate_journey_maps_count
@@ -426,13 +426,13 @@ main() {
     validate_success_metrics
     validate_journey_map_template
     validate_readme
-    
+
     # Generate report
     generate_report
-    
+
     # Print summary
     print_summary
-    
+
     # Exit with appropriate code
     if [ $FAILED_TESTS -eq 0 ]; then
         exit 0

@@ -10,7 +10,7 @@ export interface BreadcrumbsProps extends BaseComponentProps {
 
 /**
  * Breadcrumb navigation
- * 
+ *
  * @component
  * @example
  * ```tsx

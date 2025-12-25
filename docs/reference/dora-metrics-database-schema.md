@@ -9,9 +9,9 @@ description: MySQL database schema for DevLake DORA metrics storage
 
 The DORA Metrics Service uses MySQL 8.0 as its primary data store. DevLake creates and manages multiple tables to store raw data from various sources and calculated DORA metrics.
 
-**Database Name**: `lake`  
-**Character Set**: UTF-8 (utf8mb4)  
-**Engine**: InnoDB  
+**Database Name**: `lake`
+**Character Set**: UTF-8 (utf8mb4)
+**Engine**: InnoDB
 **Managed By**: DevLake automatic migrations
 
 ---
@@ -328,15 +328,15 @@ DevLake creates views for pre-calculated DORA metrics.
 
 ```sql
 CREATE VIEW v_dora_deployment_frequency AS
-SELECT 
+SELECT
     cicd_scope_id AS project_id,
     environment,
     DATE(finished_date) AS deployment_date,
     COUNT(*) AS deployment_count,
     COUNT(*) / 1.0 AS deployments_per_day
 FROM deployments
-WHERE 
-    result = 'SUCCESS' 
+WHERE
+    result = 'SUCCESS'
     AND environment = 'production'
     AND finished_date IS NOT NULL
 GROUP BY cicd_scope_id, environment, DATE(finished_date);
@@ -346,7 +346,7 @@ GROUP BY cicd_scope_id, environment, DATE(finished_date);
 
 ```sql
 CREATE VIEW v_dora_lead_time AS
-SELECT 
+SELECT
     d.cicd_scope_id AS project_id,
     d.id AS deployment_id,
     d.commit_sha,
@@ -363,7 +363,7 @@ WHERE d.result = 'SUCCESS' AND d.environment = 'production';
 
 ```sql
 CREATE VIEW v_dora_cfr AS
-SELECT 
+SELECT
     cicd_scope_id AS project_id,
     COUNT(*) AS total_deployments,
     SUM(CASE WHEN result = 'FAILURE' THEN 1 ELSE 0 END) AS failed_deployments,
@@ -377,7 +377,7 @@ GROUP BY cicd_scope_id;
 
 ```sql
 CREATE VIEW v_dora_mttr AS
-SELECT 
+SELECT
     i.id AS incident_id,
     i.severity,
     i.created_date AS incident_created,
@@ -396,19 +396,19 @@ Performance indexes for common DORA metric queries:
 
 ```sql
 -- Deployment frequency queries
-CREATE INDEX idx_deployments_frequency 
+CREATE INDEX idx_deployments_frequency
 ON deployments(cicd_scope_id, environment, result, finished_date);
 
 -- Lead time queries
-CREATE INDEX idx_deployments_leadtime 
+CREATE INDEX idx_deployments_leadtime
 ON deployments(commit_sha, finished_date);
 
 -- CFR queries
-CREATE INDEX idx_deployments_cfr 
+CREATE INDEX idx_deployments_cfr
 ON deployments(cicd_scope_id, environment, result);
 
 -- MTTR queries
-CREATE INDEX idx_incidents_mttr 
+CREATE INDEX idx_incidents_mttr
 ON incidents(severity, created_date, resolution_date);
 ```
 
@@ -495,7 +495,7 @@ kubectl exec -it -n fawkes devlake-0 -- /app/devlake migrate
 ### Check Table Sizes
 
 ```sql
-SELECT 
+SELECT
     table_name,
     ROUND(((data_length + index_length) / 1024 / 1024), 2) AS size_mb
 FROM information_schema.TABLES
@@ -506,7 +506,7 @@ ORDER BY size_mb DESC;
 ### Check Index Usage
 
 ```sql
-SELECT 
+SELECT
     table_schema,
     table_name,
     index_name,
@@ -524,8 +524,8 @@ SET GLOBAL slow_query_log = 'ON';
 SET GLOBAL long_query_time = 2;
 
 -- View slow queries
-SELECT * FROM mysql.slow_log 
-ORDER BY query_time DESC 
+SELECT * FROM mysql.slow_log
+ORDER BY query_time DESC
 LIMIT 10;
 ```
 

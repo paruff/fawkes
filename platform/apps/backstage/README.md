@@ -69,7 +69,7 @@ Before deploying Backstage, you need to set up GitHub OAuth for authentication:
    ```bash
    # Edit secrets file
    vim platform/apps/backstage/secrets.yaml
-   
+
    # Update github-client-id and github-client-secret
    # Then apply:
    kubectl apply -f platform/apps/backstage/secrets.yaml
@@ -79,7 +79,7 @@ Before deploying Backstage, you need to set up GitHub OAuth for authentication:
    ```bash
    # Apply via ArgoCD
    kubectl apply -f platform/apps/backstage-application.yaml
-   
+
    # Or deploy directly with Helm
    helm install backstage backstage/backstage \
      -f platform/apps/backstage/values.yaml \

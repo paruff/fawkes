@@ -30,24 +30,24 @@ spec:
         prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: rag-service
-      
+
       # Security context
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
         runAsGroup: 65534
         fsGroup: 65534
-      
+
       containers:
       - name: rag-service
         image: rag-service:latest
         imagePullPolicy: IfNotPresent
-        
+
         ports:
         - name: http
           containerPort: 8000
           protocol: TCP
-        
+
         env:
         - name: WEAVIATE_URL
           valueFrom:
@@ -69,7 +69,7 @@ spec:
             configMapKeyRef:
               name: rag-service-config
               key: default_threshold
-        
+
         # Resource limits
         resources:
           requests:
@@ -78,7 +78,7 @@ spec:
           limits:
             cpu: 1
             memory: 1Gi
-        
+
         # Liveness probe
         livenessProbe:
           httpGet:
@@ -88,7 +88,7 @@ spec:
           periodSeconds: 30
           timeoutSeconds: 5
           failureThreshold: 3
-        
+
         # Readiness probe
         readinessProbe:
           httpGet:
@@ -98,7 +98,7 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 3
           failureThreshold: 3
-        
+
         # Security context
         securityContext:
           allowPrivilegeEscalation: false
@@ -110,7 +110,7 @@ spec:
               - ALL
           seccompProfile:
             type: RuntimeDefault
-      
+
       # Pod affinity to spread across nodes
       affinity:
         podAntiAffinity:

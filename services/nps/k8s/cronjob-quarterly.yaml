@@ -16,14 +16,14 @@ spec:
   # Run on the first day of each quarter at 9 AM UTC
   # 0 9 1 */3 * = minute=0, hour=9, day=1, month=every 3 months
   schedule: "0 9 1 */3 *"
-  
+
   # Keep last 3 successful and 1 failed job
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
-  
+
   # Don't allow concurrent runs
   concurrencyPolicy: Forbid
-  
+
   jobTemplate:
     metadata:
       labels:
@@ -33,7 +33,7 @@ spec:
     spec:
       # Clean up completed job after 7 days
       ttlSecondsAfterFinished: 604800
-      
+
       template:
         metadata:
           labels:
@@ -43,23 +43,23 @@ spec:
         spec:
           restartPolicy: OnFailure
           serviceAccountName: nps-service
-          
+
           # Security context
           securityContext:
             runAsNonRoot: true
             runAsUser: 65534
             runAsGroup: 65534
             fsGroup: 65534
-          
+
           containers:
           - name: survey-sender
             image: nps-service:latest
             imagePullPolicy: IfNotPresent
-            
+
             # Override command to run survey distribution script
             command: ["python"]
             args: ["scripts/send-survey.py", "--all-users"]
-            
+
             env:
             - name: DATABASE_URL
               valueFrom:
@@ -86,7 +86,7 @@ spec:
                 configMapKeyRef:
                   name: nps-service-config
                   key: base_survey_url
-            
+
             # Resource limits for job
             resources:
               requests:
@@ -95,7 +95,7 @@ spec:
               limits:
                 cpu: 200m
                 memory: 256Mi
-            
+
             # Security context
             securityContext:
               allowPrivilegeEscalation: false
@@ -107,12 +107,12 @@ spec:
                   - ALL
               seccompProfile:
                 type: RuntimeDefault
-            
+
             # Volume mounts for writable directories
             volumeMounts:
             - name: tmp
               mountPath: /tmp
-          
+
           volumes:
           - name: tmp
             emptyDir: {}

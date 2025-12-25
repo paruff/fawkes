@@ -1,9 +1,9 @@
 # OpenTelemetry Collector Deployment - Implementation Summary
 
 ## Issue
-**#25 - Deploy OpenTelemetry Collector**  
-Priority: p0-critical  
-Milestone: 1.3 - Security & Observability  
+**#25 - Deploy OpenTelemetry Collector**
+Priority: p0-critical
+Milestone: 1.3 - Security & Observability
 Epic: DORA 2023 Foundation
 
 ## Solution Overview
@@ -282,7 +282,7 @@ The collector exposes self-monitoring metrics at port 8888:
 
 ---
 
-**Implementation Date**: December 2025  
-**Status**: ✅ Complete  
-**Implemented By**: GitHub Copilot  
+**Implementation Date**: December 2025
+**Status**: ✅ Complete
+**Implemented By**: GitHub Copilot
 **Reviewed By**: Pending

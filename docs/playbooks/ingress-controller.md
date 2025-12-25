@@ -5,8 +5,8 @@ description: "Deploy and configure NGINX Ingress Controller for HTTP/HTTPS routi
 
 # Playbook: Deploy NGINX Ingress Controller
 
-> **Estimated Duration**: 2 hours  
-> **Complexity**: ⭐⭐ Medium  
+> **Estimated Duration**: 2 hours
+> **Complexity**: ⭐⭐ Medium
 > **Target Audience**: Platform Engineers / DevOps Engineers
 
 ---

@@ -2,21 +2,21 @@
 
 ## Session Information
 
-**Participant ID**: P__  
-**Test Date**: [YYYY-MM-DD]  
-**Facilitator**: [Name]  
-**Feature/Workflow Tested**: [Name]  
-**Session Duration**: [XX] minutes  
-**Recording Location**: [Link or file path]  
+**Participant ID**: P__
+**Test Date**: [YYYY-MM-DD]
+**Facilitator**: [Name]
+**Feature/Workflow Tested**: [Name]
+**Session Duration**: [XX] minutes
+**Recording Location**: [Link or file path]
 
 ---
 
 ## Participant Profile
 
-**Role**: [e.g., Senior Platform Engineer]  
-**Experience**: [e.g., 7 years DevOps, 2 years with Fawkes]  
-**Platform Familiarity**: [New User / Occasional / Regular / Power User]  
-**Tech Stack**: [e.g., Java, Kubernetes, Jenkins]  
+**Role**: [e.g., Senior Platform Engineer]
+**Experience**: [e.g., 7 years DevOps, 2 years with Fawkes]
+**Platform Familiarity**: [New User / Occasional / Regular / Power User]
+**Tech Stack**: [e.g., Java, Kubernetes, Jenkins]
 **Team Context**: [e.g., Works on core services team, 8-person squad]
 
 ---
@@ -26,9 +26,9 @@
 **Overall Session Assessment:**
 [2-3 sentences summarizing the key findings from this session]
 
-**Critical Issues**: [Number]  
-**Major Issues**: [Number]  
-**Minor Issues**: [Number]  
+**Critical Issues**: [Number]
+**Major Issues**: [Number]
+**Minor Issues**: [Number]
 
 **Top Insight from This Session:**
 [The single most important thing learned]
@@ -61,18 +61,18 @@
 - **Deviation**: ☐ Followed expected  ☐ Minor deviation  ☐ Completely different
 
 **Observations**:
-- ✅ **What Worked Well**: 
+- ✅ **What Worked Well**:
   - [Observation 1]
   - [Observation 2]
-  
-- ❌ **What Didn't Work**: 
+
+- ❌ **What Didn't Work**:
   - [Observation 1]
   - [Observation 2]
-  
-- 🤔 **Confusion Points**: 
+
+- 🤔 **Confusion Points**:
   - [Where and why user was confused]
-  
-- 😤 **Frustration Moments**: 
+
+- 😤 **Frustration Moments**:
   - [What caused frustration]
 
 **Direct Quotes**:
@@ -138,10 +138,10 @@
 
 ### Post-Task Interview Summary
 
-**Most Difficult Task**: [Task name]  
+**Most Difficult Task**: [Task name]
 **Reason**: [User's explanation]
 
-**Easiest Task**: [Task name]  
+**Easiest Task**: [Task name]
 **Reason**: [User's explanation]
 
 **Biggest Surprise**: [Positive or negative surprise]
@@ -164,7 +164,7 @@
 - **Tasks Affected**: [Task numbers]
 - **Description**: [Full description]
 - **User Impact**: Completely blocks [workflow/task completion]
-- **Evidence**: 
+- **Evidence**:
   - Quote: "[User quote]"
   - Timestamp: [Video timestamp]
   - Behavior: [What was observed]
@@ -224,28 +224,28 @@
 ## Key Quotes
 
 ### Frustration/Confusion
-> "[Quote 1 - with context]"  
+> "[Quote 1 - with context]"
 > — During [Task X], when [context]
 
-> "[Quote 2]"  
+> "[Quote 2]"
 > — [Context]
 
 ### Delight/Satisfaction
-> "[Quote 1]"  
+> "[Quote 1]"
 > — [Context]
 
-> "[Quote 2]"  
+> "[Quote 2]"
 > — [Context]
 
 ### Mental Models/Expectations
-> "[Quote revealing what user expected]"  
+> "[Quote revealing what user expected]"
 > — [Context]
 
-> "[Quote showing user's understanding]"  
+> "[Quote showing user's understanding]"
 > — [Context]
 
 ### Suggestions
-> "[Quote with user suggestion]"  
+> "[Quote with user suggestion]"
 > — [Context]
 
 ---
@@ -255,7 +255,7 @@
 **What Worked Well**:
 1. [Specific feature or interaction that was successful]
    - Why it worked: [User feedback or observation]
-   
+
 2. [Another positive finding]
    - Why it worked: [Explanation]
 
@@ -345,8 +345,8 @@
 - Raw recording: [Secure location - not in Git]
 - Observation checklist: [File location]
 
-**Analysis Date**: [YYYY-MM-DD]  
-**Analyst**: [Name]  
+**Analysis Date**: [YYYY-MM-DD]
+**Analyst**: [Name]
 **Review Status**: ☐ Draft  ☐ Reviewed  ☐ Final
 
 ---
@@ -376,7 +376,7 @@
 
 ---
 
-**Analysis Version**: 1.0  
-**Template Version**: 1.0  
-**Last Updated**: December 2025  
+**Analysis Version**: 1.0
+**Template Version**: 1.0
+**Last Updated**: December 2025
 **Owner**: Product Team

@@ -83,42 +83,42 @@ EOF
 
 check_prerequisites() {
   log_info "Checking prerequisites..."
-  
+
   # Check kubectl
   if ! command -v kubectl >/dev/null 2>&1; then
     error_exit "kubectl is not installed. Please install kubectl."
   fi
-  
+
   # Check cluster connectivity
   if ! kubectl cluster-info >/dev/null 2>&1; then
     error_exit "Cannot connect to Kubernetes cluster. Check your kubeconfig."
   fi
-  
+
   # Check if ArgoCD namespace exists
   if ! kubectl get namespace "${ARGO_NS}" >/dev/null 2>&1; then
     error_exit "ArgoCD namespace '${ARGO_NS}' does not exist. Please install ArgoCD first."
   fi
-  
+
   # Check if ArgoCD is running
   if ! kubectl get deployment argocd-server -n "${ARGO_NS}" >/dev/null 2>&1; then
     error_exit "ArgoCD is not installed in namespace '${ARGO_NS}'. Please install ArgoCD first."
   fi
-  
+
   # Check argocd CLI (optional)
   if command -v argocd >/dev/null 2>&1; then
     log_success "argocd CLI found (optional features enabled)"
   else
     log_warning "argocd CLI not found (optional features disabled)"
   fi
-  
+
   log_success "Prerequisites check passed"
 }
 
 validate_manifests() {
   log_info "Validating bootstrap manifests..."
-  
+
   local bootstrap_dir="${ROOT_DIR}/platform/bootstrap"
-  
+
   # Check if required files exist
   local required_files=(
     "app-of-apps.yaml"
@@ -126,18 +126,18 @@ validate_manifests() {
     "kustomization.yaml"
     "project-default.yaml"
   )
-  
+
   for file in "${required_files[@]}"; do
     if [[ ! -f "${bootstrap_dir}/${file}" ]]; then
       error_exit "Required file not found: ${bootstrap_dir}/${file}"
     fi
   done
-  
+
   # Validate kustomization
   if ! kubectl kustomize "${bootstrap_dir}" >/dev/null 2>&1; then
     error_exit "Invalid kustomization in ${bootstrap_dir}"
   fi
-  
+
   log_success "Manifest validation passed"
 }
 
@@ -147,15 +147,15 @@ validate_manifests() {
 
 apply_bootstrap() {
   log_info "Applying bootstrap configuration..."
-  
+
   local bootstrap_dir="${ROOT_DIR}/platform/bootstrap"
-  
+
   if [[ $DRY_RUN -eq 1 ]]; then
     log_info "[DRY-RUN] Would apply:"
     kubectl kustomize "${bootstrap_dir}"
     return 0
   fi
-  
+
   # Apply the bootstrap kustomization
   if kubectl apply -k "${bootstrap_dir}"; then
     log_success "Bootstrap configuration applied"
@@ -167,16 +167,16 @@ apply_bootstrap() {
 wait_for_sync() {
   local timeout="${1:-300}"
   log_info "Waiting for applications to sync (timeout: ${timeout}s)..."
-  
+
   local end=$((SECONDS + timeout))
-  
+
   # Wait for app-of-apps to sync
   log_info "Waiting for platform-bootstrap to sync..."
   while [[ ${SECONDS} -lt ${end} ]]; do
     local status
     status=$(kubectl get application platform-bootstrap -n "${ARGO_NS}" \
       -o jsonpath='{.status.sync.status}' 2>/dev/null || echo "Unknown")
-    
+
     if [[ "$status" == "Synced" ]]; then
       log_success "platform-bootstrap synced successfully"
       break
@@ -185,45 +185,45 @@ wait_for_sync() {
     else
       log_info "Sync status: $status (waiting...)"
     fi
-    
+
     sleep 5
   done
-  
+
   if [[ ${SECONDS} -ge ${end} ]]; then
     log_error "Timeout waiting for sync"
     return 1
   fi
-  
+
   # List all applications
   log_info "Discovered applications:"
   kubectl get applications -n "${ARGO_NS}"
-  
+
   log_success "All applications discovered"
 }
 
 show_status() {
   log_info "Platform status:"
   echo ""
-  
+
   # ArgoCD Applications
   echo "=== ArgoCD Applications ==="
   kubectl get applications -n "${ARGO_NS}" -o wide 2>/dev/null || \
     log_warning "No applications found yet"
   echo ""
-  
+
   # ApplicationSets
   echo "=== ApplicationSets ==="
   kubectl get applicationsets -n "${ARGO_NS}" 2>/dev/null || \
     log_warning "No applicationsets found yet"
   echo ""
-  
+
   # ArgoCD access
   echo "=== ArgoCD Access ==="
   echo "To access ArgoCD UI:"
   echo "  kubectl -n ${ARGO_NS} port-forward svc/argocd-server 8080:80"
   echo "  Open: http://localhost:8080"
   echo ""
-  
+
   if command -v argocd >/dev/null 2>&1; then
     echo "To use ArgoCD CLI:"
     echo "  argocd login localhost:8080 --username admin"
@@ -238,7 +238,7 @@ show_status() {
 main() {
   local wait_for_apps=0
   local timeout=300
-  
+
   # Parse arguments
   while [[ $# -gt 0 ]]; do
     case $1 in
@@ -272,25 +272,25 @@ main() {
         ;;
     esac
   done
-  
+
   echo ""
   echo "╔═══════════════════════════════════════════════════════════╗"
   echo "║         Fawkes Platform Bootstrap (App-of-Apps)          ║"
   echo "╚═══════════════════════════════════════════════════════════╝"
   echo ""
-  
+
   # Run bootstrap steps
   check_prerequisites
   validate_manifests
   apply_bootstrap
-  
+
   if [[ $DRY_RUN -eq 0 ]]; then
     if [[ $wait_for_apps -eq 1 ]]; then
       wait_for_sync "$timeout"
     fi
-    
+
     show_status
-    
+
     echo ""
     log_success "Bootstrap complete!"
     echo ""

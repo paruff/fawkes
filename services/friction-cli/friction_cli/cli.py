@@ -93,12 +93,12 @@ def log(ctx, title, description, category, priority, tags, interactive):
 
         if not title:
             title = Prompt.ask("[yellow]What's the friction about?[/yellow] (brief title)")
-        
+
         if not description:
             description = Prompt.ask(
                 "[yellow]Describe the friction[/yellow] (what happened, when, impact)"
             )
-        
+
         if not category:
             # Show available categories
             try:
@@ -116,14 +116,14 @@ def log(ctx, title, description, category, priority, tags, interactive):
                     "[yellow]Category[/yellow]",
                     default=config.default_category
                 )
-        
+
         if not priority:
             priority = Prompt.ask(
                 "[yellow]Priority[/yellow]",
                 choices=["low", "medium", "high", "critical"],
                 default=config.default_priority
             )
-        
+
         if not tags:
             tags_input = Prompt.ask(
                 "[yellow]Tags[/yellow] (comma-separated, optional)",
@@ -149,7 +149,7 @@ def log(ctx, title, description, category, priority, tags, interactive):
         )
 
         result = client.create_insight(insight)
-        
+
         console.print()
         console.print(Panel.fit(
             f"[bold green]✓ Friction point logged successfully![/bold green]\n\n"
@@ -160,7 +160,7 @@ def log(ctx, title, description, category, priority, tags, interactive):
             box=box.DOUBLE,
             border_style="green"
         ))
-        
+
     except Exception as e:
         console.print(f"[red]✗ Failed to log friction:[/red] {e}")
         sys.exit(1)
@@ -365,10 +365,10 @@ def config_init(ctx, api_url, api_key, author):
     )
 
     config_manager.save(config)
-    
+
     console.print()
     console.print(f"[green]✓[/green] Configuration saved to {config_manager.config_path}")
-    
+
     # Test connection
     client = InsightsClient(config.api_url, config.api_key)
     if client.health_check():

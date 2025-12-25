@@ -166,8 +166,8 @@ The existing `tests/acceptance/generate-report.sh` script automatically supports
 ```markdown
 # Fawkes Acceptance Test Report
 
-**Epic:** 2  
-**Week:** 2  
+**Epic:** 2
+**Week:** 2
 **Generated:** 2025-12-21 20:08:41
 
 ## Summary

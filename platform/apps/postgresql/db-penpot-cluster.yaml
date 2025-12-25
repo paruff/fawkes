@@ -9,7 +9,7 @@ metadata:
 spec:
   instances: 1
   imageName: ghcr.io/cloudnative-pg/postgresql:15.4
-  
+
   postgresql:
     parameters:
       max_connections: "100"
@@ -24,18 +24,18 @@ spec:
       work_mem: "6553kB"
       min_wal_size: "1GB"
       max_wal_size: "4GB"
-  
+
   bootstrap:
     initdb:
       database: penpot
       owner: penpot
       secret:
         name: penpot-db-credentials
-  
+
   storage:
     size: 10Gi
     storageClass: standard
-  
+
   resources:
     requests:
       memory: "512Mi"
@@ -43,7 +43,7 @@ spec:
     limits:
       memory: "2Gi"
       cpu: "1000m"
-  
+
   monitoring:
     enablePodMonitor: true
 

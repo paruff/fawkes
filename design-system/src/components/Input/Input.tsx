@@ -10,7 +10,7 @@ export interface InputProps extends BaseComponentProps {
 
 /**
  * Text input field
- * 
+ *
  * @component
  * @example
  * ```tsx

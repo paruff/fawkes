@@ -10,7 +10,7 @@ export interface AvatarProps extends BaseComponentProps {
 
 /**
  * User avatar
- * 
+ *
  * @component
  * @example
  * ```tsx

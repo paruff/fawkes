@@ -87,9 +87,9 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"❌ Failed to connect to Weaviate: {e}")
         weaviate_client = None
-    
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down RAG service")
 
@@ -132,13 +132,13 @@ async def add_metrics(request, call_next):
     start_time = time.time()
     response = await call_next(request)
     duration = time.time() - start_time
-    
+
     REQUEST_COUNT.labels(
         method=request.method,
         endpoint=request.url.path,
         status=response.status_code
     ).inc()
-    
+
     return response
 
 
@@ -164,21 +164,21 @@ async def root():
 async def dashboard():
     """
     Serve the indexing dashboard.
-    
+
     Provides a web UI for viewing indexing statistics and managing re-indexing.
     """
     # Path to dashboard HTML file
     # In production, this would be in a proper static files directory
     # For now, we'll return a simple inline version
     dashboard_path = Path(__file__).parent.parent.parent / "platform" / "apps" / "rag-service" / "dashboard.html"
-    
+
     try:
         if dashboard_path.exists():
             with open(dashboard_path, 'r') as f:
                 return HTMLResponse(content=f.read())
     except Exception as e:
         logger.warning(f"Could not load dashboard from {dashboard_path}: {e}")
-    
+
     # Fallback: return simple inline dashboard
     return HTMLResponse(content="""
     <!DOCTYPE html>
@@ -240,7 +240,7 @@ async def dashboard():
 async def health():
     """
     Health check endpoint.
-    
+
     Returns service status and Weaviate connection status.
     """
     weaviate_connected = False
@@ -249,7 +249,7 @@ async def health():
             weaviate_connected = weaviate_client.is_ready()
         except Exception as e:
             logger.warning(f"Weaviate health check failed: {e}")
-    
+
     return HealthResponse(
         status="UP" if weaviate_connected else "DEGRADED",
         service="rag-service",
@@ -263,16 +263,16 @@ async def health():
 async def query_context(request: QueryRequest):
     """
     Query endpoint for context retrieval.
-    
+
     Retrieves relevant context from Weaviate vector database based on
     semantic similarity to the provided query.
-    
+
     Args:
         request: Query request with query text, top_k, and threshold
-        
+
     Returns:
         QueryResponse with ranked results and metadata
-        
+
     Raises:
         HTTPException: If Weaviate is not connected or query fails
     """
@@ -282,7 +282,7 @@ async def query_context(request: QueryRequest):
             status_code=503,
             detail="Weaviate client not initialized"
         )
-    
+
     try:
         if not weaviate_client.is_ready():
             raise HTTPException(
@@ -295,14 +295,14 @@ async def query_context(request: QueryRequest):
             status_code=503,
             detail=f"Weaviate connection error: {str(e)}"
         )
-    
+
     # Start timing
     start_time = time.time()
-    
+
     try:
         # Execute semantic search query
         logger.info(f"Executing query: '{request.query}' (top_k={request.top_k}, threshold={request.threshold})")
-        
+
         result = (
             weaviate_client.query
             .get(SCHEMA_NAME, ["title", "content", "filepath", "category"])
@@ -311,11 +311,11 @@ async def query_context(request: QueryRequest):
             .with_additional(["certainty", "distance"])
             .do()
         )
-        
+
         # Calculate retrieval time
         retrieval_time_ms = (time.time() - start_time) * 1000
         QUERY_LATENCY.observe(retrieval_time_ms / 1000)
-        
+
         # Parse results
         if "data" not in result or "Get" not in result["data"]:
             logger.warning("No data returned from Weaviate")
@@ -325,19 +325,19 @@ async def query_context(request: QueryRequest):
                 count=0,
                 retrieval_time_ms=retrieval_time_ms
             )
-        
+
         documents = result["data"]["Get"].get(SCHEMA_NAME, [])
-        
+
         # Filter and format results
         context_results = []
         for doc in documents:
             # Get certainty score (Weaviate's relevance metric, 0-1)
             certainty = doc.get("_additional", {}).get("certainty", 0.0)
-            
+
             # Apply threshold filter
             if certainty >= request.threshold:
                 RELEVANCE_SCORE.observe(certainty)
-                
+
                 context_results.append(
                     ContextResult(
                         content=doc.get("content", ""),
@@ -347,16 +347,16 @@ async def query_context(request: QueryRequest):
                         category=doc.get("category")
                     )
                 )
-        
+
         logger.info(f"Query completed in {retrieval_time_ms:.2f}ms, returned {len(context_results)} results")
-        
+
         return QueryResponse(
             query=request.query,
             results=context_results,
             count=len(context_results),
             retrieval_time_ms=round(retrieval_time_ms, 2)
         )
-        
+
     except Exception as e:
         logger.error(f"Query execution failed: {e}")
         raise HTTPException(
@@ -369,7 +369,7 @@ async def query_context(request: QueryRequest):
 async def ready():
     """
     Readiness check endpoint for Kubernetes.
-    
+
     Returns 200 if service is ready to accept traffic, 503 otherwise.
     """
     if weaviate_client:
@@ -378,7 +378,7 @@ async def ready():
                 return {"status": "READY"}
         except Exception:
             pass
-    
+
     raise HTTPException(status_code=503, detail="Service not ready")
 
 
@@ -397,7 +397,7 @@ class StatsResponse(BaseModel):
 async def get_stats():
     """
     Get indexing statistics and metrics.
-    
+
     Returns information about indexed documents, storage usage,
     and search performance.
     """
@@ -407,7 +407,7 @@ async def get_stats():
             status_code=503,
             detail="Weaviate client not initialized"
         )
-    
+
     try:
         if not weaviate_client.is_ready():
             raise HTTPException(
@@ -420,7 +420,7 @@ async def get_stats():
             status_code=503,
             detail=f"Weaviate connection error: {str(e)}"
         )
-    
+
     try:
         # Get all documents to calculate stats
         # Note: Limited to 10000 to prevent memory issues
@@ -432,34 +432,34 @@ async def get_stats():
             .with_limit(MAX_STATS_DOCUMENTS)
             .do()
         )
-        
+
         documents = result.get("data", {}).get("Get", {}).get(SCHEMA_NAME, [])
-        
+
         # Calculate statistics
         total_chunks = len(documents)
-        
+
         # Count unique documents (files)
         # Documents are considered unique by their filepath (without chunk suffix)
         unique_docs = set()
         categories_count = {}
         last_indexed_timestamp = None
         storage_size_chars = 0
-        
+
         for doc in documents:
             # Count by category
             category = doc.get("category", "unknown")
             categories_count[category] = categories_count.get(category, 0) + 1
-            
+
             # Track last indexed
             indexed_at = doc.get("indexed_at")
             if indexed_at:
                 if not last_indexed_timestamp or indexed_at > last_indexed_timestamp:
                     last_indexed_timestamp = indexed_at
-            
+
             # Estimate storage (sum of content lengths)
             content = doc.get("content", "")
             storage_size_chars += len(content)
-        
+
         # Calculate index freshness
         index_freshness_hours = None
         if last_indexed_timestamp:
@@ -472,25 +472,25 @@ async def get_stats():
                 else:
                     now = datetime.now()
                     last_indexed_dt = last_indexed_dt.replace(tzinfo=None)
-                
+
                 delta = now - last_indexed_dt
                 index_freshness_hours = round(delta.total_seconds() / 3600, 2)
             except Exception as e:
                 logger.warning(f"Failed to parse timestamp: {e}")
-        
+
         # Estimate storage in MB (rough approximation)
         # Average 1 char ≈ 1 byte, plus overhead for metadata
         storage_usage_mb = round((storage_size_chars * 1.5) / (1024 * 1024), 2)
-        
+
         # Get average query time from Prometheus metrics
         # For now, we'll return None as we'd need to query Prometheus
         avg_query_time_ms = None
-        
+
         # Count unique documents (estimate based on chunks)
         # Average chunks per document - this is an approximation
         AVG_CHUNKS_PER_DOCUMENT = 3
         estimated_unique_docs = max(1, total_chunks // AVG_CHUNKS_PER_DOCUMENT)
-        
+
         return StatsResponse(
             total_documents=estimated_unique_docs,
             total_chunks=total_chunks,
@@ -500,7 +500,7 @@ async def get_stats():
             storage_usage_mb=storage_usage_mb,
             avg_query_time_ms=avg_query_time_ms
         )
-        
+
     except Exception as e:
         logger.error(f"Failed to get stats: {e}")
         raise HTTPException(

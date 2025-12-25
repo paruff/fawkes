@@ -28,16 +28,16 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     # Initialize metrics collector
     metrics_collector = MetricsCollector()
     app.state.metrics_collector = metrics_collector
-    
+
     # Initialize data aggregator
     data_aggregator = DataAggregator(metrics_collector)
     app.state.data_aggregator = data_aggregator
-    
+
     # Start background task to refresh metrics
     await data_aggregator.start_background_refresh()
-    
+
     yield
-    
+
     # Shutdown: cleanup
     await data_aggregator.stop_background_refresh()
 
@@ -87,7 +87,7 @@ async def get_dashboard_data(
 ):
     """
     Get complete dashboard data including all analytics
-    
+
     Time ranges: 1h, 6h, 24h, 7d, 30d, 90d
     """
     try:
@@ -157,7 +157,7 @@ async def get_funnel_data(
 ):
     """
     Get funnel visualization data
-    
+
     Available funnels: onboarding, deployment, service_creation
     """
     try:
@@ -187,12 +187,12 @@ async def export_data(
 ):
     """
     Export dashboard data in various formats
-    
+
     Formats: json, csv
     """
     if format not in ["json", "csv"]:
         raise HTTPException(status_code=400, detail="Format must be 'json' or 'csv'")
-    
+
     try:
         data = await aggregator.export_data(format, time_range)
         return data

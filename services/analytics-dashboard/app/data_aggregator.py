@@ -23,25 +23,25 @@ from .metrics import MetricsCollector
 
 class DataAggregator:
     """Aggregate data from multiple sources for analytics dashboard"""
-    
+
     def __init__(self, metrics_collector: MetricsCollector):
         self.metrics_collector = metrics_collector
         self.refresh_interval = int(os.getenv('REFRESH_INTERVAL', '300'))  # 5 minutes default
         self.refresh_task = None
-        
+
         # Service endpoints
         self.plausible_url = os.getenv('PLAUSIBLE_URL', 'http://plausible.fawkes.svc:8000')
         self.experimentation_url = os.getenv('EXPERIMENTATION_URL', 'http://experimentation.fawkes.svc:8000')
         self.feedback_url = os.getenv('FEEDBACK_URL', 'http://feedback-service.fawkes.svc:8000')
-        
+
         # Cache for data
         self._cache = {}
         self._cache_timestamp = {}
-    
+
     async def start_background_refresh(self):
         """Start background task to refresh metrics"""
         self.refresh_task = asyncio.create_task(self._background_refresh())
-    
+
     async def stop_background_refresh(self):
         """Stop background refresh task"""
         if self.refresh_task:
@@ -50,7 +50,7 @@ class DataAggregator:
                 await self.refresh_task
             except asyncio.CancelledError:
                 pass
-    
+
     async def _background_refresh(self):
         """Background task to refresh metrics periodically"""
         while True:
@@ -62,7 +62,7 @@ class DataAggregator:
             except Exception as e:
                 print(f"Error in background refresh: {e}")
                 await asyncio.sleep(60)  # Wait 1 minute before retry
-    
+
     async def refresh_all_metrics(self):
         """Refresh all metrics from sources"""
         with self.metrics_collector.data_refresh_duration.time():
@@ -72,7 +72,7 @@ class DataAggregator:
                     await self.get_dashboard_data(time_range)
                 except Exception as e:
                     print(f"Error refreshing {time_range} data: {e}")
-    
+
     def _parse_time_range(self, time_range: str) -> timedelta:
         """Parse time range string to timedelta"""
         mapping = {
@@ -84,7 +84,7 @@ class DataAggregator:
             '90d': timedelta(days=90)
         }
         return mapping.get(time_range, timedelta(days=7))
-    
+
     async def _fetch_plausible_data(self, time_range: str) -> Dict:
         """Fetch data from Plausible analytics"""
         # Simulate Plausible API calls
@@ -100,7 +100,7 @@ class DataAggregator:
                     return response.json()
         except Exception as e:
             print(f"Error fetching Plausible data: {e}")
-        
+
         # Return mock data for development
         return {
             'visitors': 1250,
@@ -120,7 +120,7 @@ class DataAggregator:
                 'Internal': 250
             }
         }
-    
+
     async def _fetch_experiment_data(self, status: Optional[str] = None) -> List[Dict]:
         """Fetch experiment results from experimentation service"""
         try:
@@ -133,7 +133,7 @@ class DataAggregator:
                     return response.json()
         except Exception as e:
             print(f"Error fetching experiment data: {e}")
-        
+
         # Return mock data for development
         return [
             {
@@ -167,16 +167,16 @@ class DataAggregator:
                 'recommendation': 'Deploy Variant A - shows 40% improvement in conversions'
             }
         ]
-    
+
     async def get_usage_trends(self, time_range: str) -> UsageTrends:
         """Get usage trends from Plausible"""
         cache_key = f"usage_trends_{time_range}"
         if cache_key in self._cache and \
            datetime.utcnow() - self._cache_timestamp.get(cache_key, datetime.min) < timedelta(minutes=5):
             return self._cache[cache_key]
-        
+
         plausible_data = await self._fetch_plausible_data(time_range)
-        
+
         # Generate time series data (mock for now)
         delta = self._parse_time_range(time_range)
         now = datetime.utcnow()
@@ -187,7 +187,7 @@ class DataAggregator:
                 timestamp=ts,
                 value=plausible_data['visitors'] * (0.8 + 0.4 * (i / 20))
             ))
-        
+
         usage_trends = UsageTrends(
             total_users=plausible_data.get('visitors', 0),
             active_users=int(plausible_data.get('visitors', 0) * 0.65),
@@ -200,7 +200,7 @@ class DataAggregator:
             top_pages=plausible_data.get('top_pages', {}),
             traffic_sources=plausible_data.get('sources', {})
         )
-        
+
         # Update metrics
         self.metrics_collector.update_usage_metrics({
             'total_users': usage_trends.total_users,
@@ -210,11 +210,11 @@ class DataAggregator:
             'avg_session_duration': usage_trends.avg_session_duration,
             'bounce_rate': usage_trends.bounce_rate
         })
-        
+
         self._cache[cache_key] = usage_trends
         self._cache_timestamp[cache_key] = datetime.utcnow()
         return usage_trends
-    
+
     async def get_feature_adoption(self, time_range: str) -> FeatureAdoption:
         """Get feature adoption metrics"""
         # Mock feature data - in production, aggregate from events
@@ -255,7 +255,7 @@ class DataAggregator:
                 trend='down'
             )
         ]
-        
+
         # Update metrics
         self.metrics_collector.update_feature_metrics([
             {
@@ -264,7 +264,7 @@ class DataAggregator:
                 'unique_users': f.unique_users
             } for f in features
         ])
-        
+
         # Generate adoption trend
         delta = self._parse_time_range(time_range)
         now = datetime.utcnow()
@@ -275,7 +275,7 @@ class DataAggregator:
                 timestamp=ts,
                 value=45 + 20 * (i / 15)  # Growing adoption
             ))
-        
+
         return FeatureAdoption(
             total_features=len(features),
             features=features,
@@ -283,17 +283,17 @@ class DataAggregator:
             least_adopted='Configure Monitoring',
             adoption_trend=adoption_trend
         )
-    
+
     async def get_experiment_results(self, status: Optional[str] = None) -> List[ExperimentResults]:
         """Get experiment results with statistical analysis"""
         exp_data = await self._fetch_experiment_data(status)
-        
+
         results = []
         for exp in exp_data:
             variants = [
                 VariantMetrics(**v) for v in exp.get('variants', [])
             ]
-            
+
             result = ExperimentResults(
                 experiment_id=exp['experiment_id'],
                 experiment_name=exp['name'],
@@ -307,7 +307,7 @@ class DataAggregator:
                 recommendation=exp.get('recommendation', 'Continue monitoring')
             )
             results.append(result)
-        
+
         # Update metrics
         self.metrics_collector.update_experiment_metrics([
             {
@@ -322,9 +322,9 @@ class DataAggregator:
                 ]
             } for r in results
         ])
-        
+
         return results
-    
+
     async def get_user_segments(self, time_range: str) -> UserSegments:
         """Get user segment analysis"""
         # Mock segment data
@@ -358,7 +358,7 @@ class DataAggregator:
                 characteristics={'last_seen': '>14 days', 'declining_usage': True}
             )
         ]
-        
+
         # Update metrics
         self.metrics_collector.update_segment_metrics([
             {
@@ -367,14 +367,14 @@ class DataAggregator:
                 'avg_engagement': s.avg_engagement
             } for s in segments
         ])
-        
+
         return UserSegments(
             total_users=sum(s.user_count for s in segments),
             segments=segments,
             segmentation_method='behavioral',
             last_updated=datetime.utcnow()
         )
-    
+
     async def get_funnel_data(self, funnel_name: str, time_range: str) -> FunnelData:
         """Get funnel visualization data"""
         # Define standard funnels
@@ -503,16 +503,16 @@ class DataAggregator:
                 ]
             }
         }
-        
+
         if funnel_name not in funnels:
             raise ValueError(f"Unknown funnel: {funnel_name}")
-        
+
         funnel_config = funnels[funnel_name]
         steps = funnel_config['steps']
-        
+
         overall_conversion = (steps[-1].users_completed / steps[0].users_entered) * 100 if steps else 0
         avg_time = sum(s.avg_time_to_next_step or 0 for s in steps) if steps else None
-        
+
         funnel = FunnelData(
             funnel_name=funnel_name,
             description=funnel_config['description'],
@@ -522,7 +522,7 @@ class DataAggregator:
             completed_users=steps[-1].users_completed if steps else 0,
             avg_completion_time=avg_time
         )
-        
+
         # Update metrics
         self.metrics_collector.update_funnel_metrics({
             funnel_name: {
@@ -536,16 +536,16 @@ class DataAggregator:
                 ]
             }
         })
-        
+
         return funnel
-    
+
     async def get_dashboard_data(self, time_range: str) -> DashboardData:
         """Get complete dashboard data"""
         cache_key = f"dashboard_{time_range}"
         if cache_key in self._cache and \
            datetime.utcnow() - self._cache_timestamp.get(cache_key, datetime.min) < timedelta(minutes=5):
             return self._cache[cache_key]
-        
+
         # Fetch all data concurrently
         usage_trends, feature_adoption, experiments, user_segments = await asyncio.gather(
             self.get_usage_trends(time_range),
@@ -553,12 +553,12 @@ class DataAggregator:
             self.get_experiment_results(),
             self.get_user_segments(time_range)
         )
-        
+
         # Get key funnels
         funnels = {}
         for funnel_name in ['onboarding', 'deployment', 'service_creation']:
             funnels[funnel_name] = await self.get_funnel_data(funnel_name, time_range)
-        
+
         dashboard = DashboardData(
             time_range=time_range,
             usage_trends=usage_trends,
@@ -567,15 +567,15 @@ class DataAggregator:
             user_segments=user_segments,
             funnels=funnels
         )
-        
+
         self._cache[cache_key] = dashboard
         self._cache_timestamp[cache_key] = datetime.utcnow()
         return dashboard
-    
+
     async def export_data(self, format: str, time_range: str) -> Dict:
         """Export dashboard data in specified format"""
         data = await self.get_dashboard_data(time_range)
-        
+
         if format == 'json':
             return data.model_dump()
         elif format == 'csv':
@@ -584,5 +584,5 @@ class DataAggregator:
                 'message': 'CSV export not yet implemented',
                 'data': data.model_dump()
             }
-        
+
         return {}

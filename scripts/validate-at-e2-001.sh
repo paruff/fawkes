@@ -79,9 +79,9 @@ record_test_result() {
     local status=$2
     local message=$3
     local details=${4:-""}
-    
+
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
-    
+
     if [ "$status" = "PASS" ]; then
         PASSED_TESTS=$((PASSED_TESTS + 1))
         log_success "$test_name: $message"
@@ -89,7 +89,7 @@ record_test_result() {
         FAILED_TESTS=$((FAILED_TESTS + 1))
         log_error "$test_name: $message"
     fi
-    
+
     TEST_RESULTS+=("{\"test\":\"$test_name\",\"status\":\"$status\",\"message\":\"$message\",\"details\":\"$details\"}")
 }
 
@@ -100,16 +100,16 @@ record_test_result() {
 # AC1: GitHub Copilot configured for org (documented)
 validate_copilot_documentation() {
     log_info "Validating GitHub Copilot documentation..."
-    
+
     local doc_file="docs/ai/copilot-setup.md"
-    
+
     if [ ! -f "$doc_file" ]; then
         record_test_result "AC1_COPILOT_DOC_EXISTS" "FAIL" "Copilot setup documentation not found"
         return 1
     fi
-    
+
     record_test_result "AC1_COPILOT_DOC_EXISTS" "PASS" "Copilot setup documentation exists"
-    
+
     # Check for required sections
     local required_sections=(
         "Organization Setup"
@@ -120,7 +120,7 @@ validate_copilot_documentation() {
         "Best Practices"
         "Troubleshooting"
     )
-    
+
     local missing_sections=0
     for section in "${required_sections[@]}"; do
         if ! grep -q "$section" "$doc_file"; then
@@ -128,14 +128,14 @@ validate_copilot_documentation() {
             missing_sections=$((missing_sections + 1))
         fi
     done
-    
+
     if [ $missing_sections -eq 0 ]; then
         record_test_result "AC1_COPILOT_DOC_COMPLETE" "PASS" "All required sections present"
     else
         record_test_result "AC1_COPILOT_DOC_COMPLETE" "FAIL" "Missing $missing_sections sections"
         return 1
     fi
-    
+
     # Check documentation size (should be comprehensive)
     local doc_lines=$(wc -l < "$doc_file")
     if [ $doc_lines -gt 200 ]; then
@@ -144,21 +144,21 @@ validate_copilot_documentation() {
         record_test_result "AC1_COPILOT_DOC_COMPREHENSIVE" "FAIL" "Documentation seems incomplete ($doc_lines lines)"
         return 1
     fi
-    
+
     return 0
 }
 
 # AC2: IDE extensions documented
 validate_ide_extensions_documented() {
     log_info "Validating IDE extensions documentation..."
-    
+
     local doc_file="docs/ai/copilot-setup.md"
-    
+
     if [ ! -f "$doc_file" ]; then
         record_test_result "AC2_IDE_DOC" "FAIL" "Documentation file not found"
         return 1
     fi
-    
+
     # Check for VSCode extension documentation
     if grep -q "VSCode" "$doc_file" && grep -q "Extensions" "$doc_file"; then
         record_test_result "AC2_VSCODE_EXTENSIONS" "PASS" "VSCode extensions documented"
@@ -166,7 +166,7 @@ validate_ide_extensions_documented() {
         record_test_result "AC2_VSCODE_EXTENSIONS" "FAIL" "VSCode extensions not documented"
         return 1
     fi
-    
+
     # Check for IntelliJ extension documentation
     if grep -q "IntelliJ" "$doc_file" && grep -q "Plugin" "$doc_file"; then
         record_test_result "AC2_INTELLIJ_EXTENSIONS" "PASS" "IntelliJ extensions documented"
@@ -174,7 +174,7 @@ validate_ide_extensions_documented() {
         record_test_result "AC2_INTELLIJ_EXTENSIONS" "FAIL" "IntelliJ extensions not documented"
         return 1
     fi
-    
+
     # Check for Vim/Neovim extension documentation
     if grep -q "Vim\|Neovim" "$doc_file"; then
         record_test_result "AC2_VIM_EXTENSIONS" "PASS" "Vim/Neovim extensions documented"
@@ -182,7 +182,7 @@ validate_ide_extensions_documented() {
         record_test_result "AC2_VIM_EXTENSIONS" "FAIL" "Vim/Neovim extensions not documented"
         return 1
     fi
-    
+
     # Check for keyboard shortcuts documentation
     if grep -q "Keyboard Shortcuts\|keyboard shortcuts" "$doc_file"; then
         record_test_result "AC2_KEYBOARD_SHORTCUTS" "PASS" "Keyboard shortcuts documented"
@@ -190,21 +190,21 @@ validate_ide_extensions_documented() {
         record_test_result "AC2_KEYBOARD_SHORTCUTS" "FAIL" "Keyboard shortcuts not documented"
         return 1
     fi
-    
+
     return 0
 }
 
 # AC3: Integration with RAG system documented
 validate_rag_integration_documented() {
     log_info "Validating RAG system integration documentation..."
-    
+
     local doc_file="docs/ai/copilot-setup.md"
-    
+
     if [ ! -f "$doc_file" ]; then
         record_test_result "AC3_RAG_INTEGRATION" "FAIL" "Documentation file not found"
         return 1
     fi
-    
+
     # Check for RAG integration documentation
     if grep -q "RAG\|Retrieval Augmented Generation" "$doc_file"; then
         record_test_result "AC3_RAG_MENTIONED" "PASS" "RAG integration mentioned in documentation"
@@ -212,7 +212,7 @@ validate_rag_integration_documented() {
         record_test_result "AC3_RAG_MENTIONED" "FAIL" "RAG integration not mentioned"
         return 1
     fi
-    
+
     # Check for Weaviate reference
     if grep -q "Weaviate\|vector database" "$doc_file"; then
         record_test_result "AC3_WEAVIATE_REFERENCE" "PASS" "Weaviate/vector database referenced"
@@ -220,7 +220,7 @@ validate_rag_integration_documented() {
         record_test_result "AC3_WEAVIATE_REFERENCE" "FAIL" "Weaviate not referenced"
         return 1
     fi
-    
+
     # Check for context-based approaches
     if grep -q "context\|Context" "$doc_file"; then
         record_test_result "AC3_CONTEXT_APPROACHES" "PASS" "Context-based approaches documented"
@@ -228,7 +228,7 @@ validate_rag_integration_documented() {
         record_test_result "AC3_CONTEXT_APPROACHES" "FAIL" "Context approaches not documented"
         return 1
     fi
-    
+
     # Check for integration limitations
     if grep -q "Limitations\|limitations" "$doc_file"; then
         record_test_result "AC3_LIMITATIONS" "PASS" "Integration limitations documented"
@@ -236,23 +236,23 @@ validate_rag_integration_documented() {
         record_test_result "AC3_LIMITATIONS" "FAIL" "Limitations not documented"
         return 1
     fi
-    
+
     return 0
 }
 
 # AC4: Test code generation working
 validate_code_generation_tests() {
     log_info "Validating code generation tests..."
-    
+
     local test_script="tests/ai/code-generation-test.sh"
-    
+
     if [ ! -f "$test_script" ]; then
         record_test_result "AC4_TEST_SCRIPT_EXISTS" "FAIL" "Code generation test script not found"
         return 1
     fi
-    
+
     record_test_result "AC4_TEST_SCRIPT_EXISTS" "PASS" "Code generation test script exists"
-    
+
     # Check if script is executable
     if [ -x "$test_script" ]; then
         record_test_result "AC4_TEST_SCRIPT_EXECUTABLE" "PASS" "Test script is executable"
@@ -260,7 +260,7 @@ validate_code_generation_tests() {
         record_test_result "AC4_TEST_SCRIPT_EXECUTABLE" "FAIL" "Test script is not executable"
         return 1
     fi
-    
+
     # Check for test functions
     if grep -q "test_generate_rest_api\|test_generate_terraform\|test_generate_test_cases" "$test_script"; then
         record_test_result "AC4_TEST_FUNCTIONS" "PASS" "Required test functions present"
@@ -268,7 +268,7 @@ validate_code_generation_tests() {
         record_test_result "AC4_TEST_FUNCTIONS" "FAIL" "Missing required test functions"
         return 1
     fi
-    
+
     # Run the code generation tests
     log_info "Running code generation tests..."
     if bash "$test_script" > /tmp/code-gen-test-output.log 2>&1; then
@@ -277,31 +277,31 @@ validate_code_generation_tests() {
         local exit_code=$?
         log_warning "Code generation tests failed with exit code $exit_code"
         record_test_result "AC4_CODE_GENERATION_TESTS" "FAIL" "Code generation tests failed (see logs)"
-        
+
         # Show last few lines of output for debugging
         if [ "$VERBOSE" = true ]; then
             tail -20 /tmp/code-gen-test-output.log
         fi
-        
+
         return 1
     fi
-    
+
     return 0
 }
 
 # AC5: Usage telemetry configured (opt-in)
 validate_telemetry_configuration() {
     log_info "Validating usage telemetry configuration..."
-    
+
     # Check for telemetry documentation
     local telemetry_doc="platform/apps/ai-telemetry/README.md"
     if [ ! -f "$telemetry_doc" ]; then
         record_test_result "AC5_TELEMETRY_DOC_EXISTS" "FAIL" "Telemetry documentation not found"
         return 1
     fi
-    
+
     record_test_result "AC5_TELEMETRY_DOC_EXISTS" "PASS" "Telemetry documentation exists"
-    
+
     # Check for opt-in mechanism documented
     if grep -q "opt-in\|Opt-in\|OPT-IN" "$telemetry_doc"; then
         record_test_result "AC5_OPT_IN_DOCUMENTED" "PASS" "Opt-in mechanism documented"
@@ -309,7 +309,7 @@ validate_telemetry_configuration() {
         record_test_result "AC5_OPT_IN_DOCUMENTED" "FAIL" "Opt-in not documented"
         return 1
     fi
-    
+
     # Check for privacy considerations
     if grep -q "Privacy\|privacy\|GDPR\|anonymized" "$telemetry_doc"; then
         record_test_result "AC5_PRIVACY_DOCUMENTED" "PASS" "Privacy considerations documented"
@@ -317,16 +317,16 @@ validate_telemetry_configuration() {
         record_test_result "AC5_PRIVACY_DOCUMENTED" "FAIL" "Privacy not documented"
         return 1
     fi
-    
+
     # Check for Grafana dashboard
     local dashboard_file="platform/apps/ai-telemetry/dashboards/ai-telemetry-dashboard.json"
     if [ ! -f "$dashboard_file" ]; then
         record_test_result "AC5_DASHBOARD_EXISTS" "FAIL" "Grafana dashboard not found"
         return 1
     fi
-    
+
     record_test_result "AC5_DASHBOARD_EXISTS" "PASS" "Grafana dashboard exists"
-    
+
     # Validate dashboard JSON
     if python3 -c "import json; json.load(open('$dashboard_file'))" 2>/dev/null; then
         record_test_result "AC5_DASHBOARD_VALID_JSON" "PASS" "Dashboard JSON is valid"
@@ -334,7 +334,7 @@ validate_telemetry_configuration() {
         record_test_result "AC5_DASHBOARD_VALID_JSON" "FAIL" "Dashboard JSON is invalid"
         return 1
     fi
-    
+
     # Check for metrics documentation
     if grep -q "acceptance rate\|lines generated\|time saved" "$telemetry_doc"; then
         record_test_result "AC5_METRICS_DOCUMENTED" "PASS" "Key metrics documented"
@@ -342,14 +342,14 @@ validate_telemetry_configuration() {
         record_test_result "AC5_METRICS_DOCUMENTED" "FAIL" "Metrics not documented"
         return 1
     fi
-    
+
     return 0
 }
 
 # AC6: Documentation complete and accessible
 validate_documentation_completeness() {
     log_info "Validating documentation completeness..."
-    
+
     # Check all required documentation files exist
     local required_docs=(
         "docs/ai/copilot-setup.md"
@@ -357,7 +357,7 @@ validate_documentation_completeness() {
         "platform/apps/ai-telemetry/dashboards/ai-telemetry-dashboard.json"
         "tests/ai/code-generation-test.sh"
     )
-    
+
     local missing_docs=0
     for doc in "${required_docs[@]}"; do
         if [ ! -f "$doc" ]; then
@@ -365,14 +365,14 @@ validate_documentation_completeness() {
             missing_docs=$((missing_docs + 1))
         fi
     done
-    
+
     if [ $missing_docs -eq 0 ]; then
         record_test_result "AC6_ALL_DOCS_PRESENT" "PASS" "All required documentation present"
     else
         record_test_result "AC6_ALL_DOCS_PRESENT" "FAIL" "Missing $missing_docs documentation files"
         return 1
     fi
-    
+
     # Check for cross-references
     if grep -q "vector-database.md\|RAG.*README\|telemetry.*README" "docs/ai/copilot-setup.md"; then
         record_test_result "AC6_CROSS_REFERENCES" "PASS" "Documentation includes cross-references"
@@ -380,7 +380,7 @@ validate_documentation_completeness() {
         record_test_result "AC6_CROSS_REFERENCES" "FAIL" "Missing cross-references"
         return 1
     fi
-    
+
     # Check for examples and usage instructions
     if grep -q "Example\|example\|EXAMPLE" "docs/ai/copilot-setup.md"; then
         record_test_result "AC6_EXAMPLES_PRESENT" "PASS" "Documentation includes examples"
@@ -388,7 +388,7 @@ validate_documentation_completeness() {
         record_test_result "AC6_EXAMPLES_PRESENT" "FAIL" "Missing examples"
         return 1
     fi
-    
+
     return 0
 }
 
@@ -398,15 +398,15 @@ validate_documentation_completeness() {
 
 generate_report() {
     log_info "Generating validation report..."
-    
+
     mkdir -p "$REPORT_DIR"
-    
+
     local report_json="["
     for result in "${TEST_RESULTS[@]}"; do
         report_json="$report_json$result,"
     done
     report_json="${report_json%,}]"  # Remove trailing comma
-    
+
     # Create full report
     cat > "$REPORT_FILE" << EOF
 {
@@ -431,9 +431,9 @@ generate_report() {
   "results": $report_json
 }
 EOF
-    
+
     log_success "Report saved to $REPORT_FILE"
-    
+
     # Print summary
     echo ""
     echo "========================================="
@@ -449,7 +449,7 @@ EOF
     fi
     echo "========================================="
     echo ""
-    
+
     if [ $FAILED_TESTS -eq 0 ]; then
         echo -e "${GREEN}✓ AT-E2-001 PASSED${NC}"
         echo "All acceptance criteria met!"
@@ -487,11 +487,11 @@ main() {
                 ;;
         esac
     done
-    
+
     log_info "Starting AT-E2-001 validation: AI Coding Assistant..."
     log_info "Namespace: $NAMESPACE"
     echo ""
-    
+
     # Run validation tests
     validate_copilot_documentation || true
     validate_ide_extensions_documented || true
@@ -499,10 +499,10 @@ main() {
     validate_code_generation_tests || true
     validate_telemetry_configuration || true
     validate_documentation_completeness || true
-    
+
     # Generate report
     generate_report
-    
+
     # Exit with appropriate code
     if [ $FAILED_TESTS -eq 0 ]; then
         log_success "AT-E2-001 validation passed! ✨"

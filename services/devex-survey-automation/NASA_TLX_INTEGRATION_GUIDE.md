@@ -129,7 +129,7 @@ Add to Jenkins shared library pipeline:
 def call(Map config) {
     pipeline {
         // ... existing stages ...
-        
+
         post {
             success {
                 script {
@@ -138,9 +138,9 @@ def call(Map config) {
                             "task_type=deployment&" +
                             "task_id=${env.BUILD_ID}&" +
                             "user_id=${env.BUILD_USER}"
-                        
+
                         echo "✨ Optional: Submit cognitive load assessment: ${nasaTlxUrl}"
-                        
+
                         // Send to Mattermost
                         mattermostSend(
                             channel: "#${config.team}",
@@ -170,7 +170,7 @@ async def nasa_tlx_command(ctx, task_type: str = "general"):
         f"task_type={task_type}&"
         f"user_id={user_id}"
     )
-    
+
     await ctx.respond(
         f"📊 **NASA-TLX Cognitive Load Assessment**\n\n"
         f"Help us understand your experience with {task_type} tasks!\n\n"
@@ -205,7 +205,7 @@ groups:
           summary: "High cognitive load detected"
           description: "Average cognitive workload ({{ $value | printf \"%.1f\" }}) exceeds 70/100. Developers are experiencing high cognitive load on platform tasks."
           dashboard: "https://grafana.fawkes.idp/d/nasa-tlx-cognitive-load"
-      
+
       - alert: HighFrustrationLevels
         expr: avg(devex_nasa_tlx_frustration{task_type=~".+"}) > 75
         for: 30m
@@ -216,7 +216,7 @@ groups:
           summary: "High frustration levels for {{ $labels.task_type }}"
           description: "Developers report high frustration ({{ $value | printf \"%.1f\" }}/100) with {{ $labels.task_type }} tasks. Urgent UX improvements needed."
           dashboard: "https://grafana.fawkes.idp/d/nasa-tlx-cognitive-load"
-      
+
       - alert: LowPerformanceScore
         expr: avg(devex_nasa_tlx_performance{task_type=~".+"}) < 50
         for: 1h
@@ -238,17 +238,17 @@ Update the DevEx Survey Automation deployment with these environment variables:
 env:
   - name: SURVEY_BASE_URL
     value: "https://surveys.fawkes.idp"
-  
+
   # Existing variables...
   - name: DATABASE_URL
     valueFrom:
       secretKeyRef:
         name: devex-survey-secrets
         key: database-url
-  
+
   - name: MATTERMOST_URL
     value: "http://mattermost.fawkes.svc:8065"
-  
+
   - name: MATTERMOST_TOKEN
     valueFrom:
       secretKeyRef:
