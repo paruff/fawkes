@@ -1,0 +1,258 @@
+# ============================================================================
+# FILE: platform/apps/unleash/deployment.yaml
+# PURPOSE: Unleash Feature Flags platform deployment with PostgreSQL backend
+# DESCRIPTION: Open-source feature flag management for gradual rollouts,
+#              A/B testing, and kill switches. OpenFeature compatible.
+# ============================================================================
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: unleash-config
+  namespace: fawkes
+  labels:
+    app: unleash
+    component: feature-flags
+data:
+  # Database connection (PostgreSQL)
+  DATABASE_HOST: "db-unleash-dev-rw.fawkes.svc.cluster.local"
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: "unleash"
+  DATABASE_SSL: "false"
+  # Application settings
+  LOG_LEVEL: "info"
+  NODE_ENV: "production"
+  # Server configuration
+  BASE_URI_PATH: ""
+  UNLEASH_URL: "https://unleash.fawkes.idp"
+  # Email settings (optional - for notifications)
+  EMAIL_HOST: ""
+  EMAIL_PORT: "587"
+  EMAIL_SECURE: "false"
+  # Feature flag defaults
+  ENABLE_OPENAPI: "true"
+  ENABLE_PROMETHEUS_METRICS: "true"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: unleash-secret
+  namespace: fawkes
+  labels:
+    app: unleash
+    component: feature-flags
+  annotations:
+    # WARNING: This secret contains default development values
+    # For production, use External Secrets Operator to sync from Vault
+    # or replace with secure values generated as follows:
+    # kubectl create secret generic unleash-secret \
+    #   --from-literal=ADMIN_PASSWORD="$(openssl rand -base64 32)" \
+    #   --from-literal=INIT_ADMIN_API_TOKENS="*:*.$(openssl rand -hex 32)" \
+    #   --from-literal=INIT_CLIENT_API_TOKENS="*:development.$(openssl rand -hex 32)" \
+    #   --dry-run=client -o yaml | kubectl apply -f -
+type: Opaque
+stringData:
+  # ⚠️ SECURITY WARNING: Replace these default values before production deployment!
+  # Admin user password (username: admin@fawkes.local)
+  ADMIN_PASSWORD: "changeme-unleash-admin-password"
+  # API tokens for admin and client access
+  # Format: <project>:<environment>.<token>
+  INIT_ADMIN_API_TOKENS: "*:*.changeme-admin-api-token-replace-in-production"
+  INIT_CLIENT_API_TOKENS: "*:development.changeme-client-api-token-replace-in-production"
+
+---
+# Unleash main application deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unleash
+  namespace: fawkes
+  labels:
+    app: unleash
+    component: feature-flags
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: unleash
+      component: feature-flags
+  template:
+    metadata:
+      labels:
+        app: unleash
+        component: feature-flags
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "4242"
+        prometheus.io/path: "/internal-backstage/prometheus"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        fsGroup: 999
+      initContainers:
+        # Wait for database to be ready
+        - name: wait-for-db
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              until nc -z db-unleash-dev-rw.fawkes.svc.cluster.local 5432; do
+                echo "Waiting for PostgreSQL..."
+                sleep 2
+              done
+              echo "PostgreSQL is ready!"
+      containers:
+        - name: unleash
+          image: unleashorg/unleash-server:5.11
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4242
+              name: http
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: unleash-config
+            - secretRef:
+                name: unleash-secret
+          env:
+            # Database URL construction
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-unleash-credentials
+                  key: username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-unleash-credentials
+                  key: password
+            - name: DATABASE_URL
+              value: "postgres://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST):$(DATABASE_PORT)/$(DATABASE_NAME)"
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 4242
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 4242
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: 999
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - unleash
+                    - key: component
+                      operator: In
+                      values:
+                        - feature-flags
+                topologyKey: kubernetes.io/hostname
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: unleash
+  namespace: fawkes
+  labels:
+    app: unleash
+    component: feature-flags
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4242
+      targetPort: 4242
+      protocol: TCP
+      name: http
+  selector:
+    app: unleash
+    component: feature-flags
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: unleash
+  namespace: fawkes
+  labels:
+    app: unleash
+    component: feature-flags
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+    - secretName: unleash-tls
+      hosts:
+        - unleash.fawkes.idp
+  rules:
+    - host: unleash.fawkes.idp
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: unleash
+                port:
+                  number: 4242
+
+---
+# ServiceMonitor for Prometheus metrics
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: unleash
+  namespace: fawkes
+  labels:
+    app: unleash
+    component: feature-flags
+    monitoring: "true"
+spec:
+  selector:
+    matchLabels:
+      app: unleash
+      component: feature-flags
+  endpoints:
+    - port: http
+      path: /internal-backstage/prometheus
+      interval: 30s
+      scrapeTimeout: 10s
