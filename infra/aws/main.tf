@@ -194,6 +194,7 @@ module "eks" {
   create_cloudwatch_log_group            = true
   cloudwatch_log_group_retention_in_days = 7
 
+  # Encryption config: Changed from list to object in EKS module v21
   encryption_config = var.kms_key_arn == null ? null : {
     provider_key_arn = var.kms_key_arn
     resources        = ["secrets"]
@@ -202,11 +203,12 @@ module "eks" {
   # Configure access entries (replaces aws-auth configmap in v21)
   # Note: Account-level access (map_accounts) is not supported with access entries.
   # Grant access using specific IAM principals (roles/users) instead.
+  # Keys use ARN suffix to avoid state issues from list reordering
   access_entries = merge(
     # Convert map_roles to access entries
     {
       for idx, role in var.map_roles :
-      "role_${idx}" => {
+      "role_${replace(split("/", role.rolearn)[1], "/[^a-zA-Z0-9-]/", "_")}" => {
         principal_arn     = role.rolearn
         kubernetes_groups = role.groups
         type              = "STANDARD"
@@ -215,7 +217,7 @@ module "eks" {
     # Convert map_users to access entries
     {
       for idx, user in var.map_users :
-      "user_${idx}" => {
+      "user_${replace(split("/", user.userarn)[1], "/[^a-zA-Z0-9-]/", "_")}" => {
         principal_arn     = user.userarn
         kubernetes_groups = user.groups
         type              = "STANDARD"
