@@ -34,11 +34,22 @@ metadata:
   labels:
     app: plausible
     component: analytics
+  annotations:
+    # WARNING: This secret contains default development values
+    # For production, use External Secrets Operator to sync from Vault
+    # or replace with secure values generated as follows:
+    # kubectl create secret generic plausible-secret \
+    #   --from-literal=SECRET_KEY_BASE="$(openssl rand -base64 64 | tr -d '\n')" \
+    #   --from-literal=ADMIN_USER_EMAIL="admin@your-domain.com" \
+    #   --from-literal=ADMIN_USER_NAME="Platform Admin" \
+    #   --from-literal=ADMIN_USER_PWD="$(openssl rand -base64 32)" \
+    #   --dry-run=client -o yaml | kubectl apply -f -
 type: Opaque
 stringData:
-  # Generate with: openssl rand -base64 64 | tr -d '\n'
+  # ⚠️ SECURITY WARNING: Replace these default values before production deployment!
+  # Generate secure key: openssl rand -base64 64 | tr -d '\n'
   SECRET_KEY_BASE: "changeme-plausible-secret-key-base-64-chars-min-use-openssl-rand"
-  # Admin credentials
+  # ⚠️ CHANGE IMMEDIATELY: Default admin credentials
   ADMIN_USER_EMAIL: "admin@fawkes.local"
   ADMIN_USER_NAME: "Platform Admin"
   ADMIN_USER_PWD: "changeme-admin-password"
