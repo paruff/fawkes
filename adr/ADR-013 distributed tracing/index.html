@@ -1337,6 +1337,8 @@
       
         
       
+        
+      
     
     
     
@@ -1412,6 +1414,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/security/quality-gates-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Gates Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1428,6 +1458,8 @@
   
     
     
+      
+        
       
         
       
@@ -1495,6 +1527,34 @@
     
   
     Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/development/code-quality-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Quality Standards
   
 
     
@@ -5535,7 +5595,7 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 <div class="highlight"><pre><span></span><code>{resource.service.name=&quot;backstage&quot; &amp;&amp; span.http.route=&quot;/api/catalog/*&quot; &amp;&amp; trace.user.id=&quot;alice@example.com&quot;}
 </code></pre></div></p>
 <p><strong>Deployment trace (commit to production)</strong>:
-<div class="highlight"><pre><span></span><code>{resource.service.name=&quot;jenkins&quot; || resource.service.name=&quot;argocd&quot;} 
+<div class="highlight"><pre><span></span><code>{resource.service.name=&quot;jenkins&quot; || resource.service.name=&quot;argocd&quot;}
   | {span.git.commit.sha=&quot;abc123def&quot;}
 </code></pre></div></p>
 <h3 id="sampling-strategies">Sampling Strategies</h3>
@@ -5561,7 +5621,7 @@ opentelemetry-instrument<span class="w"> </span><span class="se">\</span>
 5. ArgoCD sync → child span with deployment details
 6. Application start → final span with health check</p>
 <p><strong>Query to calculate lead time</strong>:
-<div class="highlight"><pre><span></span><code>{span.git.commit.sha=&quot;abc123&quot;} 
+<div class="highlight"><pre><span></span><code>{span.git.commit.sha=&quot;abc123&quot;}
   | {span.name=&quot;deploy-to-production&quot;}
 </code></pre></div></p>
 <p><strong>Change Failure Rate</strong>:

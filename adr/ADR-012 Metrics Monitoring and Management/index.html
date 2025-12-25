@@ -1337,6 +1337,8 @@
       
         
       
+        
+      
     
     
     
@@ -1412,6 +1414,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/security/quality-gates-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Gates Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1428,6 +1458,8 @@
   
     
     
+      
+        
       
         
       
@@ -1495,6 +1527,34 @@
     
   
     Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/development/code-quality-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Quality Standards
   
 
     
@@ -4881,12 +4941,12 @@ Custom microservice for DORA metrics calculation:
 <span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes:dora:lead_time_seconds:p50</span>
 <span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">        </span><span class="no">histogram_quantile(0.50, </span>
+<span class="w">        </span><span class="no">histogram_quantile(0.50,</span>
 <span class="w">          </span><span class="no">sum(rate(fawkes_lead_time_seconds_bucket[1h])) by (team, le))</span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes:dora:lead_time_seconds:p95</span>
 <span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">        </span><span class="no">histogram_quantile(0.95, </span>
+<span class="w">        </span><span class="no">histogram_quantile(0.95,</span>
 <span class="w">          </span><span class="no">sum(rate(fawkes_lead_time_seconds_bucket[1h])) by (team, le))</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora_change_failure_rate</span>
@@ -4894,8 +4954,8 @@ Custom microservice for DORA metrics calculation:
 <span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes:dora:change_failure_rate</span>
 <span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">        </span><span class="no">sum(rate(fawkes_deployment_failed_total[7d])) by (team) </span>
-<span class="w">        </span><span class="no">/ </span>
+<span class="w">        </span><span class="no">sum(rate(fawkes_deployment_failed_total[7d])) by (team)</span>
+<span class="w">        </span><span class="no">/</span>
 <span class="w">        </span><span class="no">sum(rate(fawkes_deployment_total[7d])) by (team)</span>
 
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dora_mttr</span>
@@ -4903,7 +4963,7 @@ Custom microservice for DORA metrics calculation:
 <span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fawkes:dora:mttr_seconds:median</span>
 <span class="w">      </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">        </span><span class="no">histogram_quantile(0.50, </span>
+<span class="w">        </span><span class="no">histogram_quantile(0.50,</span>
 <span class="w">          </span><span class="no">sum(rate(fawkes_incident_resolution_seconds_bucket[7d])) by (team, le))</span>
 </code></pre></div></p>
 <p><strong>Thanos Configuration</strong>:

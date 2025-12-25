@@ -1337,6 +1337,8 @@
       
         
       
+        
+      
     
     
     
@@ -1412,6 +1414,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/security/quality-gates-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Gates Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1428,6 +1458,8 @@
   
     
     
+      
+        
       
         
       
@@ -1495,6 +1527,34 @@
     
   
     Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/development/code-quality-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Quality Standards
   
 
     
@@ -5603,9 +5663,9 @@
 <h1 id="insights-database-and-tracking-system">Insights Database and Tracking System</h1>
 <h2 id="overview">Overview</h2>
 <p>The Insights Database and Tracking System is a structured platform for capturing, organizing, and tracking organizational learnings, best practices, and knowledge. It provides a comprehensive solution for knowledge management with features like tagging, hierarchical categorization, and advanced search capabilities.</p>
-<p><strong>Service Name</strong>: <code>insights</code><br />
-<strong>Database</strong>: PostgreSQL 15+<br />
-<strong>API Framework</strong>: FastAPI<br />
+<p><strong>Service Name</strong>: <code>insights</code>
+<strong>Database</strong>: PostgreSQL 15+
+<strong>API Framework</strong>: FastAPI
 <strong>API Documentation</strong>: <code>/docs</code> (Swagger), <code>/redoc</code> (ReDoc)</p>
 <hr />
 <h2 id="key-features">Key Features</h2>
@@ -6170,9 +6230,9 @@
 <span class="n">SELECT</span> <span class="n">priority</span><span class="p">,</span> <span class="n">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="n">FROM</span> <span class="n">insights</span> <span class="n">GROUP</span> <span class="n">BY</span> <span class="n">priority</span><span class="p">;</span>
 
 <span class="c1"># Insights by category</span>
-<span class="n">SELECT</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">COUNT</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> 
-<span class="n">FROM</span> <span class="n">categories</span> <span class="n">c</span> 
-<span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">insights</span> <span class="n">i</span> <span class="n">ON</span> <span class="n">c</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">category_id</span> 
+<span class="n">SELECT</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">COUNT</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="n">FROM</span> <span class="n">categories</span> <span class="n">c</span>
+<span class="n">LEFT</span> <span class="n">JOIN</span> <span class="n">insights</span> <span class="n">i</span> <span class="n">ON</span> <span class="n">c</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">category_id</span>
 <span class="n">GROUP</span> <span class="n">BY</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="2-tag-usage-tracking">2. Tag Usage Tracking</h3>
@@ -6191,15 +6251,15 @@
 <h3 id="4-time-based-aggregation">4. Time-Based Aggregation</h3>
 <p>Filter insights by date ranges for trend analysis:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Insights created in last 30 days</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="nb">DATE</span><span class="p">(</span><span class="n">created_at</span><span class="p">),</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">insights</span><span class="w"> </span>
+<span class="k">SELECT</span><span class="w"> </span><span class="nb">DATE</span><span class="p">(</span><span class="n">created_at</span><span class="p">),</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">insights</span>
 <span class="k">WHERE</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;30 days&#39;</span>
 <span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nb">DATE</span><span class="p">(</span><span class="n">created_at</span><span class="p">);</span>
 
 <span class="c1">-- Insights by status over time</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="nb">DATE</span><span class="p">(</span><span class="n">created_at</span><span class="p">),</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">insights</span><span class="w"> </span>
-<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nb">DATE</span><span class="p">(</span><span class="n">created_at</span><span class="p">),</span><span class="w"> </span><span class="n">status</span><span class="w"> </span>
+<span class="k">SELECT</span><span class="w"> </span><span class="nb">DATE</span><span class="p">(</span><span class="n">created_at</span><span class="p">),</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">insights</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nb">DATE</span><span class="p">(</span><span class="n">created_at</span><span class="p">),</span><span class="w"> </span><span class="n">status</span>
 <span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nb">DATE</span><span class="p">(</span><span class="n">created_at</span><span class="p">);</span>
 </code></pre></div>
 <h3 id="5-author-contribution-metrics">5. Author Contribution Metrics</h3>

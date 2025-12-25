@@ -1343,6 +1343,8 @@
       
         
       
+        
+      
     
     
     
@@ -1418,6 +1420,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/security/quality-gates-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Gates Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1434,6 +1464,8 @@
   
     
     
+      
+        
       
         
       
@@ -1501,6 +1533,34 @@
     
   
     Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/development/code-quality-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Quality Standards
   
 
     
@@ -6060,7 +6120,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
 
     <span class="c1"># 2. Filter by relevance threshold</span>
     <span class="n">relevant_docs</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">doc</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span> 
+        <span class="n">doc</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span>
         <span class="k">if</span> <span class="n">doc</span><span class="p">[</span><span class="s2">&quot;_additional&quot;</span><span class="p">][</span><span class="s2">&quot;certainty&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.7</span>
     <span class="p">]</span>
 
@@ -6071,7 +6131,7 @@ kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> <
     <span class="p">])</span>
 
     <span class="c1"># 4. Create prompt with context</span>
-    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Based on the following context from Fawkes documentation, </span>
+    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Based on the following context from Fawkes documentation,</span>
 <span class="s2">answer the question.</span>
 
 <span class="s2">Context:</span>
@@ -6153,7 +6213,7 @@ weaviate_memory_usage_bytes
 </code></pre></div></p>
 <p><strong>Query Performance Dashboard</strong>:
 <div class="highlight"><pre><span></span><code><span class="c1"># 95th percentile query latency</span>
-<span class="kr">histogram_quantile</span><span class="o">(</span><span class="mf">0.95</span><span class="p">,</span><span class="w"> </span>
+<span class="kr">histogram_quantile</span><span class="o">(</span><span class="mf">0.95</span><span class="p">,</span>
 <span class="w">  </span><span class="kr">rate</span><span class="o">(</span><span class="nv">weaviate_query_duration_seconds_bucket</span><span class="p">[</span><span class="s">5m</span><span class="p">]</span><span class="o">)</span>
 <span class="o">)</span>
 

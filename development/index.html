@@ -1337,6 +1337,8 @@
       
         
       
+        
+      
     
     
     
@@ -1412,6 +1414,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/security/quality-gates-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quality Gates Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1428,6 +1458,8 @@
   
     
     
+      
+        
       
         
       
@@ -1495,6 +1527,34 @@
     
   
     Debug Buildpack Failures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/development/code-quality-standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Quality Standards
   
 
     
@@ -4526,6 +4586,56 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Coding Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#language-specific-linters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Language-Specific Linters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ide-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IDE Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detailed-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detailed Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -4665,15 +4775,41 @@
 </ol>
 <hr />
 <h2 id="coding-standards">Coding Standards</h2>
+<p>Fawkes enforces comprehensive code quality standards for all languages. All code must pass automated linting before merge.</p>
+<h3 id="quick-start">Quick Start</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install pre-commit hooks (one-time setup)</span>
+make<span class="w"> </span>pre-commit-setup
+
+<span class="c1"># Run all linters on your changes</span>
+make<span class="w"> </span>lint
+
+<span class="c1"># Run specific linter</span>
+pre-commit<span class="w"> </span>run<span class="w"> </span>shellcheck<span class="w"> </span>--all-files
+</code></pre></div>
+<h3 id="language-specific-linters">Language-Specific Linters</h3>
 <ul>
-<li><strong>Language</strong>: Follow the conventions of the language used in the respective module (e.g., Java, Python, Bash).</li>
-<li><strong>Linting</strong>: Use linters to ensure code quality:</li>
-<li>YAML: <code>yamllint</code></li>
-<li>Shell: <code>shellcheck</code></li>
-<li>Python: <code>flake8</code></li>
-<li>Java: Checkstyle or SonarQube</li>
-<li><strong>Documentation</strong>: Add comments and update relevant documentation for any changes.</li>
+<li><strong>Bash</strong>: ShellCheck - Shell script linting</li>
+<li><strong>Python</strong>: Black (formatter) + Flake8 (linter)</li>
+<li><strong>Go</strong>: golangci-lint - Comprehensive Go linting</li>
+<li><strong>YAML</strong>: yamllint - YAML syntax and style</li>
+<li><strong>JSON</strong>: check-json - JSON validation</li>
+<li><strong>Markdown</strong>: markdownlint - Documentation linting</li>
+<li><strong>Terraform</strong>: terraform fmt, TFLint, tfsec - IaC linting and security</li>
 </ul>
+<h3 id="ide-integration">IDE Integration</h3>
+<p>Configure your IDE for automatic linting:</p>
+<p><strong>VS Code</strong>: Install recommended extensions
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>setup-vscode
+</code></pre></div></p>
+<p><strong>Other IDEs</strong>: See <a href="../how-to/development/code-quality-standards/#ide-integration">Code Quality Standards</a></p>
+<h3 id="detailed-documentation">Detailed Documentation</h3>
+<p>For comprehensive coding standards, linting rules, and troubleshooting:</p>
+<p>📖 <strong><a href="../how-to/development/code-quality-standards/">Code Quality Standards</a></strong></p>
+<p>This includes:
+- Language-specific style guides
+- Security scanning requirements
+- IDE integration guides
+- Common issues and solutions</p>
 <hr />
 <h2 id="branching-and-workflow">Branching and Workflow</h2>
 <ol>
