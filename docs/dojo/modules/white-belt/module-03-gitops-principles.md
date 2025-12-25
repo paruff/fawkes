@@ -1191,7 +1191,7 @@ Next module:
 
 ---
 
-## 🏆 Achievement Unlocked!
+## 🏆 Achievement Unlocked
 
 **🎓 GitOps Practitioner**
 

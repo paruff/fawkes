@@ -1023,9 +1023,9 @@ We can now trace every production artifact back to exact source code commit."
 
 ---
 
-## 🎉 Yellow Belt Complete!
+## 🎉 Yellow Belt Complete
 
-### 🏆 Congratulations!
+### 🏆 Congratulations
 
 You've completed all four Yellow Belt modules:
 

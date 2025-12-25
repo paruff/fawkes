@@ -1,4 +1,4 @@
-# Welcome to the Fawkes Customer Advisory Board!
+# Welcome to the Fawkes Customer Advisory Board
 
 Dear [Member Name],
 
@@ -441,7 +441,7 @@ A: For quarterly meetings, members only (plus product team). However, we can inv
 
 ---
 
-## Thank You!
+## Thank You
 
 We're genuinely excited to have you on the Customer Advisory Board. Your experience, insights, and feedback will help make Fawkes better for everyone.
 

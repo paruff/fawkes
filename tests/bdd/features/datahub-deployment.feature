@@ -168,4 +168,3 @@ Feature: DataHub Data Catalog Deployment
       | Kubernetes Resources | Deployment and Service in K8s |
     And the lineage graph must show upstream and downstream dependencies
     And I must be able to navigate between related entities
-

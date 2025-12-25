@@ -178,13 +178,13 @@ Additional criteria met:
 
 ## Files Changed
 
-### Created (6 files):
+### Created (6 files)
 
 1. `docs/how-to/security/github-oauth-setup.md` (11,471 bytes)
 2. `docs/how-to/security/github-oauth-quickstart.md` (3,005 bytes)
 3. `docs/validation/backstage-oauth-validation.md` (8,125 bytes)
 
-### Modified (7 files):
+### Modified (7 files)
 
 1. `platform/apps/backstage/secrets.yaml` - Enhanced with detailed comments
 2. `platform/apps/backstage/README.md` - Added OAuth quick start
@@ -196,7 +196,7 @@ Additional criteria met:
 
 ## Security Considerations
 
-### Best Practices Documented:
+### Best Practices Documented
 
 1. Separate OAuth apps per environment
 2. Use Vault for production secrets (not Git)
@@ -204,7 +204,7 @@ Additional criteria met:
 4. Organization OAuth apps preferred over personal
 5. Regular review of authorized users
 
-### Security Validations:
+### Security Validations
 
 - Secrets properly documented as needing change from placeholders
 - Production guidance emphasizes External Secrets Operator with Vault

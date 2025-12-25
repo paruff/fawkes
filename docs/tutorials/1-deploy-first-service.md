@@ -367,7 +367,7 @@ Fawkes uses ArgoCD for GitOps-based deployments. This is the preferred method.
 If ArgoCD isn't available, you can deploy directly:
 `bash
     kubectl apply -f k8s/
-    `
+`
 
 !!! success "Checkpoint"
 ArgoCD is now managing your application deployment. Any changes you push to Git will automatically sync!

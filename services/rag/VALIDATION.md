@@ -293,7 +293,7 @@ requests==2.31.0  # For GitHub and Backstage API calls
 
 ## Documentation
 
-### Created:
+### Created
 
 1. `services/rag/indexers/README.md` - Comprehensive indexer documentation
    - Usage examples
@@ -302,7 +302,7 @@ requests==2.31.0  # For GitHub and Backstage API calls
    - Troubleshooting guide
    - Best practices
 
-### Updated:
+### Updated
 
 1. `services/rag/app/main.py` - Added stats endpoint and dashboard
 2. `services/rag/requirements.txt` - Added requests dependency

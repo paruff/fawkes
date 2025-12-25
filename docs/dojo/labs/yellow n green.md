@@ -358,7 +358,9 @@ name: cosign-config
 namespace: lab-module-8
 data:
 sign-image.sh: |
-#!/bin/bash
+
+# !/bin/bash
+
 set -e
 
     IMAGE=$1
@@ -860,7 +862,9 @@ name: rollback-scripts
 namespace: lab-module-12
 data:
 rollback-deployment.sh: |
-#!/bin/bash
+
+# !/bin/bash
+
 set -e
 
     DEPLOYMENT_NAME=$1
@@ -884,7 +888,9 @@ set -e
     kubectl get pods -n $NAMESPACE -l app=$DEPLOYMENT_NAME
 
 rollback-argocd.sh: |
-#!/bin/bash
+
+# !/bin/bash
+
 set -e
 
     APP_NAME=$1
@@ -1203,7 +1209,9 @@ name: lab-setup-scripts
 namespace: fawkes-system
 data:
 setup-module.sh: |
-#!/bin/bash # Automated lab setup script
+
+# !/bin/bash # Automated lab setup script
+
 set -e
 
     MODULE=$1
@@ -1244,7 +1252,9 @@ set -e
     echo "Access with: kubectl config set-context --current --namespace=$NAMESPACE"
 
 cleanup-lab.sh: |
-#!/bin/bash # Cleanup lab environment
+
+# !/bin/bash # Cleanup lab environment
+
 set -e
 
     MODULE=$1

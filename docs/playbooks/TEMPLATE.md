@@ -105,7 +105,7 @@ kubectl apply -f [manifest]
 **Verification**: [How to confirm this step completed successfully]
 
 ??? example "Expected Output"
-`     [Example of what successful output looks like]
+`[Example of what successful output looks like]]
     `
 
 ### Step 2: [Second Major Step]

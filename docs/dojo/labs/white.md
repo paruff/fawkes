@@ -4,9 +4,9 @@
 
 # =============================================================================
 
-# This file contains all Kubernetes manifests needed for White Belt labs.
+# This file contains all Kubernetes manifests needed for White Belt labs
 
-# Each lab is separated by comments and can be extracted as needed.
+# Each lab is separated by comments and can be extracted as needed
 
 # =============================================================================
 

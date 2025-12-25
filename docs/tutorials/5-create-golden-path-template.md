@@ -469,32 +469,32 @@ Skeleton application files are created with conditional features.
    ```
    ````
 
-   ## Building with Buildpacks
+## Building with Buildpacks
 
-   ```bash
-   pack build ${{ values.component_id }}:latest --builder paketobuildpacks/builder:base
-   ```
+```bash
+pack build ${{ values.component_id }}:latest --builder paketobuildpacks/builder:base
+```
 
-   ## Deployment
+## Deployment
 
-   This service is deployed using ArgoCD. Push to `main` branch to trigger deployment.
+This service is deployed using ArgoCD. Push to `main` branch to trigger deployment.
 
-   ## Features
+## Features
 
-   - ✅ Express.js REST API
-     {% if values.enable_tracing %}- ✅ OpenTelemetry distributed tracing
-     {% endif %}{% if values.enable_vault %}- ✅ HashiCorp Vault secret management
-     {% endif %}- ✅ Cloud Native Buildpacks
-   - ✅ Kubernetes-ready with health checks
-   - ✅ Security best practices (non-root, read-only filesystem)
+- ✅ Express.js REST API
+  {% if values.enable_tracing %}- ✅ OpenTelemetry distributed tracing
+  {% endif %}{% if values.enable_vault %}- ✅ HashiCorp Vault secret management
+  {% endif %}- ✅ Cloud Native Buildpacks
+- ✅ Kubernetes-ready with health checks
+- ✅ Security best practices (non-root, read-only filesystem)
 
-   ## Owner
+## Owner
 
-   Team: ${{ values.owner }}
+Team: ${{ values.owner }}
 
-   ```
+```
 
-   ```
+```
 
 !!! success "Checkpoint"
 Complete skeleton with Kubernetes manifests and README.

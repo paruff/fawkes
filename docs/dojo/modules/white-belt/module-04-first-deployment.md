@@ -952,7 +952,7 @@ Next up is the **White Belt Assessment** (2 hours):
 
 ## Module Completion
 
-### ✅ You've Completed Module 4!
+### ✅ You've Completed Module 4
 
 **Next Steps**:
 
