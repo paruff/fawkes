@@ -24,20 +24,29 @@ make lint
 pre-commit run --files path/to/file
 ```
 
+**💡 TIP**: Set up format-on-save in your IDE for automatic formatting. See the [Format-on-Save Setup Guide](./format-on-save-setup.md) for detailed instructions.
+
 ## Language-Specific Standards
 
 ### Bash
 
+**Formatter**: shfmt
 **Linter**: ShellCheck
 
 **Standards**:
 - Use `#!/usr/bin/env bash` shebang
+- **Indentation**: 2 spaces
+- **Case indentation**: Indent case statements
+- **Binary next line**: Place `&&` and `||` at beginning of line
+- **Simplify redirects**: Use simplified redirect syntax
 - Use double quotes for variables: `"${var}"`
 - Check exit codes with `|| exit 1`
 - Use `[[ ]]` instead of `[ ]` for conditionals
 - Add `set -euo pipefail` at script start for safety
 
-**Configuration**: `.shellcheckrc` (uses defaults)
+**Configuration**: 
+- shfmt args in `.pre-commit-config.yaml`: `-i 2 -ci -bn -sr`
+- ShellCheck: `.shellcheckrc` (uses defaults)
 
 **Example**:
 ```bash
@@ -61,6 +70,11 @@ fi
   hooks:
     - id: shellcheck
       args: ['--severity=warning']
+
+- repo: https://github.com/scop/pre-commit-shfmt
+  hooks:
+    - id: shfmt
+      args: ['-i', '2', '-ci', '-bn', '-sr', '-w']
 ```
 
 ### Python
@@ -206,6 +220,7 @@ func CreateUser(ctx context.Context, username, email string) (*User, error) {
 
 ### YAML
 
+**Formatter**: Prettier
 **Linter**: yamllint
 
 **Standards**:
@@ -215,7 +230,9 @@ func CreateUser(ctx context.Context, username, email string) (*User, error) {
 - **Trailing spaces**: Not allowed
 - **Empty lines**: Maximum 2 consecutive
 
-**Configuration**: `.yamllint`
+**Configuration**: 
+- Formatting: `.prettierrc`
+- Linting: `.yamllint`
 ```yaml
 extends: default
 
@@ -251,19 +268,27 @@ spec:
 
 ### JSON
 
+**Formatter**: Prettier
 **Linter**: check-json (built-in to pre-commit-hooks)
 
 **Standards**:
 - **Indentation**: 2 spaces
-- **Trailing commas**: Not allowed
+- **Trailing commas**: Not allowed (JSON spec)
 - **Comments**: Not supported (use YAML if comments needed)
 - **Keys**: Use camelCase or snake_case consistently
+
+**Configuration**: `.prettierrc`
 
 **Pre-commit hook**:
 ```yaml
 - repo: https://github.com/pre-commit/pre-commit-hooks
   hooks:
     - id: check-json
+
+- repo: https://github.com/pre-commit/mirrors-prettier
+  hooks:
+    - id: prettier
+      types_or: [json]
 ```
 
 **Example**:
@@ -284,6 +309,7 @@ spec:
 
 ### Markdown
 
+**Formatter**: Prettier
 **Linter**: markdownlint-cli
 
 **Standards**:
@@ -293,7 +319,9 @@ spec:
 - **Lists**: Consistent markers (- or *)
 - **Code blocks**: Language specifier required
 
-**Configuration**: `.markdownlint.json`
+**Configuration**: 
+- Formatting: `.prettierrc`
+- Linting: `.markdownlint.json`
 ```json
 {
   "MD013": false,   // Disable line length
@@ -745,6 +773,7 @@ CVE-2023-12345 exp:2024-12-31
 
 ### Resources
 
+- **Format-on-Save Setup**: [docs/how-to/development/format-on-save-setup.md](./format-on-save-setup.md)
 - **Pre-commit Documentation**: [docs/PRE-COMMIT.md](../../PRE-COMMIT.md)
 - **Security Quality Gates**: [docs/how-to/security/quality-gates-configuration.md](../security/quality-gates-configuration.md)
 - **Contributing Guide**: [docs/contributing.md](../../contributing.md)
