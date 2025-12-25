@@ -16,5 +16,8 @@ export * from './utils';
 // Export types
 export * from './types';
 
+// Export analytics
+export * from './analytics';
+
 // Version
 export const VERSION = '1.0.0';
