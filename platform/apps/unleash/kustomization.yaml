@@ -6,7 +6,8 @@ namespace: fawkes
 resources:
   - deployment.yaml
 
-commonLabels:
-  app.kubernetes.io/name: unleash
-  app.kubernetes.io/part-of: fawkes-platform
-  app.kubernetes.io/managed-by: argocd
+labels:
+  - pairs:
+      app.kubernetes.io/name: unleash
+      app.kubernetes.io/part-of: fawkes-platform
+      app.kubernetes.io/managed-by: argocd
