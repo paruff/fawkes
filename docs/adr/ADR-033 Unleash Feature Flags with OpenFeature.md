@@ -366,7 +366,10 @@ If we need to migrate to a different provider:
 
 - [Unleash Documentation](https://docs.getunleash.io/)
 - [OpenFeature Documentation](https://openfeature.dev/)
-- [OpenFeature Unleash Provider](https://github.com/open-feature/js-sdk-contrib/tree/main/libs/providers/unleash)
+- [OpenFeature Providers](https://openfeature.dev/ecosystem)
+  - [Unleash Provider (JavaScript/TypeScript)](https://github.com/open-feature/js-sdk-contrib/tree/main/libs/providers/unleash)
+  - [Unleash Provider (Python)](https://github.com/open-feature/python-sdk-contrib/tree/main/providers/unleash)
+  - [Unleash Provider (Go)](https://github.com/open-feature/go-sdk-contrib/tree/main/providers/unleash)
 - [CNCF OpenFeature Project](https://www.cncf.io/projects/openfeature/)
 - [Feature Flags Best Practices](https://www.unleash-hosted.com/articles/feature-flag-best-practices)
 - [Issue #99: Deploy Feature Flags Platform](https://github.com/paruff/fawkes/issues/99)
