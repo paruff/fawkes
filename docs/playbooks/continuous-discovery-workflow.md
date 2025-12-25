@@ -977,10 +977,10 @@ automated rollback, then migration failure rate will drop from 18% to <5%.
 
 ## Links
 
-- [Interview Notes](link)
-- [Analytics Dashboard](link)
-- [Support Tickets](link)
-- [Prototype](link)
+- [Interview Notes](#) _(Link to interview documentation)_
+- [Analytics Dashboard](#) _(Link to analytics platform)_
+- [Support Tickets](#) _(Link to support system)_
+- [Prototype](#) _(Link to prototype)_
 ```
 
 ---
@@ -1417,10 +1417,10 @@ RICE Score = ([Reach] × [Impact] × [Confidence]) / [Effort]
 ### Internal Fawkes Resources
 
 - [Product Discovery Flow (IP3dP)](../explanation/idp/product-discovery-delivery-flow.md)
-- [Interview Guide Template](../../docs/research/templates/interview-guide.md)
-- [Journey Map Template](../../docs/research/templates/journey-map.md)
-- [Persona Template](../../docs/research/templates/persona.md)
-- [SPACE Framework (DX Metrics)](../reference/metrics/space-framework.md)
+- [Interview Guide Template](../research/templates/interview-guide.md)
+- [Journey Map Template](../research/templates/journey-map.md)
+- [Persona Template](../research/templates/persona.md)
+- [SPACE Framework (DX Metrics)](https://queue.acm.org/detail.cfm?id=3454124)
 - [Platform as Product (Dojo Module)](../dojo/modules/black-belt/module-17-platform-product.md)
 
 ---
@@ -1574,11 +1574,11 @@ gh issue list --label "roadmap" --json body | \
 
 | Metric | How to Measure | Target Value | Dashboard Link |
 |--------|----------------|--------------|----------------|
-| **Interviews per Month** | Count interview issues in GitHub | 10-12 | [Discovery Dashboard](link) |
-| **NPS Score** | Quarterly survey | >40 | [NPS Tracker](link) |
-| **Feature Adoption** | Analytics (% users adopting within 3 months) | >75% | [Analytics Dashboard](link) |
-| **Support Tickets per Feature** | Average tickets in first 30 days | <10 | [Support Dashboard](link) |
-| **Time Insight to Delivery** | Days from insight doc to feature ship | <60 days | [Roadmap Tracker](link) |
+| **Interviews per Month** | Count interview issues in GitHub | 10-12 | _Platform Analytics_ |
+| **NPS Score** | Quarterly survey | >40 | _NPS Tracking System_ |
+| **Feature Adoption** | Analytics (% users adopting within 3 months) | >75% | _Analytics Dashboard_ |
+| **Support Tickets per Feature** | Average tickets in first 30 days | <10 | _Support Dashboard_ |
+| **Time Insight to Delivery** | Days from insight doc to feature ship | <60 days | _Roadmap Tracker_ |
 
 ### Verification Checklist
 
@@ -1615,9 +1615,9 @@ When implementing continuous discovery, refer to:
 
 - **Explanation**: [Product Discovery & Delivery Flow (IP3dP)](../explanation/idp/product-discovery-delivery-flow.md)
 - **Tutorial**: [Module 17: Platform as Product](../dojo/modules/black-belt/module-17-platform-product.md)
-- **Reference**: [Interview Guide Template](../../docs/research/templates/interview-guide.md)
-- **Reference**: [Journey Map Template](../../docs/research/templates/journey-map.md)
-- **Reference**: [Persona Template](../../docs/research/templates/persona.md)
+- **Reference**: [Interview Guide Template](../research/templates/interview-guide.md)
+- **Reference**: [Journey Map Template](../research/templates/journey-map.md)
+- **Reference**: [Persona Template](../research/templates/persona.md)
 - **How-To**: [View DORA Metrics](../how-to/observability/view-dora-metrics-devlake.md)
 - **ADR**: [ADR-020: Platform-as-Product Operating Model](../adr/ADR-020%20Platform-as-Product%20Operating%20Model.md)
 
