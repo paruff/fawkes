@@ -1,9 +1,9 @@
 terraform {
-  required_version = ">= 1.6.0" # Repo guideline: Terraform 1.6+ syntax
+  required_version = ">= 1.5.7" # Required for EKS module v21
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0" # Allow upgrades within major 5
+      version = "~> 6.0" # Updated to support VPC module v6.5
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
@@ -151,11 +151,15 @@ module "vpc" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 19.0" # Stable major; access entries not yet adopted here
+  version = "~> 21.0" # Updated to support AWS provider 6.x
 
-  cluster_version = var.eks_version
-  subnet_ids      = module.vpc.private_subnets
-  vpc_id          = module.vpc.vpc_id
+  name               = local.cluster_name
+  kubernetes_version = var.eks_version
+  subnet_ids         = module.vpc.private_subnets
+  vpc_id             = module.vpc.vpc_id
+
+  # Enable API and ConfigMap authentication for backward compatibility
+  authentication_mode = "API_AND_CONFIG_MAP"
 
   eks_managed_node_groups = {
     worker_group_1 = {
@@ -186,15 +190,40 @@ module "eks" {
     }
   }
 
-  cluster_enabled_log_types               = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
-  create_cloudwatch_log_group             = true
-  cloudwatch_log_group_retention_in_days  = 7
+  enabled_log_types                      = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+  create_cloudwatch_log_group            = true
+  cloudwatch_log_group_retention_in_days = 7
 
-
-  cluster_encryption_config = var.kms_key_arn == null ? [] : [{
-    resources        = ["secrets"]
+  # Encryption config: Changed from list to object in EKS module v21
+  encryption_config = var.kms_key_arn == null ? null : {
     provider_key_arn = var.kms_key_arn
-  }]
+    resources        = ["secrets"]
+  }
+
+  # Configure access entries (replaces aws-auth configmap in v21)
+  # Note: Account-level access (map_accounts) is not supported with access entries.
+  # Grant access using specific IAM principals (roles/users) instead.
+  # Keys use ARN suffix to avoid state issues from list reordering
+  access_entries = merge(
+    # Convert map_roles to access entries
+    {
+      for idx, role in var.map_roles :
+      "role_${replace(split("/", role.rolearn)[1], "/[^a-zA-Z0-9-]/", "_")}" => {
+        principal_arn     = role.rolearn
+        kubernetes_groups = role.groups
+        type              = "STANDARD"
+      }
+    },
+    # Convert map_users to access entries
+    {
+      for idx, user in var.map_users :
+      "user_${replace(split("/", user.userarn)[1], "/[^a-zA-Z0-9-]/", "_")}" => {
+        principal_arn     = user.userarn
+        kubernetes_groups = user.groups
+        type              = "STANDARD"
+      }
+    }
+  )
 
   tags = local.tags
 }
@@ -218,18 +247,4 @@ output "cluster_endpoint" {
 
 output "vpc_id" {
   value = module.vpc.vpc_id
-}
-
-# aws-auth configmap management (maps legacy vars to authentication config)
-resource "kubernetes_config_map" "aws_auth" {
-  metadata {
-    name      = "aws-auth"
-    namespace = "kube-system"
-  }
-  data = {
-    mapRoles    = yamlencode([for r in var.map_roles : { rolearn = r.rolearn, username = r.username, groups = r.groups }])
-    mapUsers    = yamlencode([for u in var.map_users : { userarn = u.userarn, username = u.username, groups = u.groups }])
-    mapAccounts = yamlencode(var.map_accounts)
-  }
-  depends_on = [module.eks]
 }
