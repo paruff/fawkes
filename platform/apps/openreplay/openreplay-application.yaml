@@ -1,0 +1,187 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openreplay
+  namespace: fawkes
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://openreplay.com/charts
+    chart: openreplay
+    targetRevision: 1.14.0
+    helm:
+      releaseName: openreplay
+      values: |
+        # OpenReplay configuration for Fawkes usability testing
+        
+        # Domain configuration
+        domainName: openreplay.fawkes.local
+        
+        # Ingress configuration
+        ingress:
+          enabled: true
+          className: nginx
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt-prod
+            nginx.ingress.kubernetes.io/ssl-redirect: "true"
+            nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+          hosts:
+            - host: openreplay.fawkes.local
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - secretName: openreplay-tls
+              hosts:
+                - openreplay.fawkes.local
+        
+        # PostgreSQL for metadata
+        postgresql:
+          enabled: true
+          auth:
+            username: openreplay
+            password: changeme  # IMPORTANT: Change in production
+            database: openreplay
+          primary:
+            persistence:
+              enabled: true
+              size: 20Gi
+              storageClass: standard
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 250m
+            limits:
+              memory: 1Gi
+              cpu: 500m
+        
+        # MinIO for session recordings storage
+        minio:
+          enabled: true
+          mode: standalone
+          rootUser: admin
+          rootPassword: changeme  # IMPORTANT: Change in production
+          persistence:
+            enabled: true
+            size: 50Gi
+            storageClass: standard
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 250m
+            limits:
+              memory: 1Gi
+              cpu: 500m
+        
+        # Redis for caching
+        redis:
+          enabled: true
+          master:
+            persistence:
+              enabled: true
+              size: 8Gi
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+            limits:
+              memory: 512Mi
+              cpu: 200m
+        
+        # OpenReplay components
+        
+        # Frontend application
+        frontend:
+          replicaCount: 1
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+            limits:
+              memory: 512Mi
+              cpu: 200m
+        
+        # API server
+        api:
+          replicaCount: 1
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 250m
+            limits:
+              memory: 1Gi
+              cpu: 500m
+        
+        # Session ingestion service
+        http:
+          replicaCount: 1
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+            limits:
+              memory: 512Mi
+              cpu: 200m
+        
+        # WebSocket service for real-time replay
+        websocket:
+          replicaCount: 1
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+            limits:
+              memory: 512Mi
+              cpu: 200m
+        
+        # Data retention configuration
+        storage:
+          # Auto-delete sessions older than this many days
+          retentionDays: 90
+        
+        # Privacy and security
+        security:
+          # Enable HTTPS
+          ssl: true
+          # Session recording consent required
+          consentRequired: true
+        
+        # Feature flags
+        features:
+          # Enable console log capture
+          captureConsole: true
+          # Enable network request capture
+          captureNetwork: true
+          # Enable performance monitoring
+          capturePerformance: true
+          # Enable click heatmaps
+          captureHeatmaps: true
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openreplay
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  
+  # Health checks
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
