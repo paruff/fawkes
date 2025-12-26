@@ -4,10 +4,12 @@
 # Purpose: Common utilities - error handling, logging, state management
 # =============================================================================
 
+set -euo pipefail
+
 # Error handling
 error_exit() {
   echo "[ERROR] $1" >&2
-  exit 1
+  exit "${2:-1}"
 }
 
 # State tracking for --resume functionality
