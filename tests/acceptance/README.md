@@ -4,6 +4,12 @@ This directory contains acceptance test runners for Fawkes platform validation.
 
 ## Test IDs and Coverage
 
+### Epic 0: Code Quality Standards
+
+| Test ID   | Category         | Description                            | Status         |
+| --------- | ---------------- | -------------------------------------- | -------------- |
+| AT-E0-001 | Code Quality     | Code quality standards validated       | ✅ Implemented |
+
 ### Epic 1: DORA 2023 Foundation
 
 | Test ID   | Category         | Description                            | Status         |
@@ -53,12 +59,16 @@ This directory contains acceptance test runners for Fawkes platform validation.
 ### Run Specific Acceptance Test
 
 ```bash
+./tests/acceptance/run-test.sh AT-E0-001
 ./tests/acceptance/run-test.sh AT-E1-002
 ```
 
 ### Run via Makefile
 
 ```bash
+# Run AT-E0-001 validation (Code Quality Standards)
+make validate-at-e0-001
+
 # Run AT-E1-001 validation
 make validate-at-e1-001
 
@@ -80,6 +90,113 @@ make validate-at-e1-009
 # Run AT-E1-012 validation
 make validate-at-e1-012
 ```
+
+## AT-E0-001: Code Quality Standards
+
+### Acceptance Criteria
+
+- [x] All linters passing
+- [x] Pre-commit hooks working
+- [x] CI/CD gates enforced
+- [x] Code formatted
+- [x] Docs complete
+- [x] Setup tested
+
+### Test Components
+
+1. **Comprehensive Validation** (`scripts/validate-at-e0-001.sh`)
+
+   - Checks linter configuration in pre-commit
+   - Validates pre-commit setup and Makefile targets
+   - Verifies CI/CD workflows (code-quality.yml, pre-commit.yml)
+   - Confirms formatter configuration
+   - Validates CODING_STANDARDS.md documentation
+   - Checks security scanning integration
+
+2. **Key Validations**:
+   - Pre-commit configuration with 10+ linters
+   - Language-specific config files (yamllint, prettier, golangci, etc.)
+   - GitHub Actions workflows for code quality
+   - Python dev requirements with testing tools
+   - IDE configuration files (editorconfig, VSCode settings)
+   - Comprehensive documentation (5000+ words)
+
+### Test Reports
+
+Test reports are generated in JSON format at:
+
+```
+reports/at-e0-001-validation-YYYYMMDD-HHMMSS.json
+```
+
+### Validation Commands
+
+Run the test:
+
+```bash
+# Run via test runner
+./tests/acceptance/run-test.sh AT-E0-001
+
+# Run via Makefile
+make validate-at-e0-001
+
+# Run directly
+./scripts/validate-at-e0-001.sh
+
+# Run with report generation
+./scripts/validate-at-e0-001.sh --report reports/at-e0-001.json
+
+# Run with verbose output
+./scripts/validate-at-e0-001.sh --verbose
+```
+
+### Prerequisites
+
+- Repository cloned locally
+- No Kubernetes cluster required (documentation and config validation only)
+- Optional: pre-commit installed for full validation
+
+### Success Criteria
+
+The test passes when:
+
+- ✓ Pre-commit configuration exists with all required linters
+- ✓ Language-specific config files are present
+- ✓ Makefile targets for quality checks exist
+- ✓ GitHub Actions workflows are configured
+- ✓ CODING_STANDARDS.md is comprehensive (>2000 words)
+- ✓ Security scanning is configured
+- ✓ Pass rate ≥85%
+
+### Troubleshooting
+
+**Pre-commit not installed:**
+
+```bash
+# Install pre-commit
+make pre-commit-setup
+
+# Verify installation
+pre-commit --version
+```
+
+**Linters not configured:**
+
+- Check `.pre-commit-config.yaml` exists
+- Verify language-specific config files (`.yamllint`, `.golangci.yml`, etc.)
+- Run `pre-commit run --all-files` to test
+
+**CI/CD workflows missing:**
+
+- Check `.github/workflows/` directory
+- Verify `code-quality.yml` and `pre-commit.yml` exist
+- Review workflow trigger configuration
+
+**Documentation incomplete:**
+
+- Review `CODING_STANDARDS.md` for required sections
+- Ensure all language-specific guides are present
+- Add examples and FAQ sections
 
 ## AT-E1-003: Backstage Developer Portal
 
