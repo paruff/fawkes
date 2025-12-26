@@ -1,14 +1,13 @@
 #!/bin/bash
 
-set -euo pipefail
-# Don't use set -e to prevent early exit on failures
-# We want to collect all validation results
-
 # validate-at-e3-012.sh
 # Validation script for AT-E3-012: Complete Epic 3 Documentation
 #
 # This script validates that all Epic 3 documentation is complete including
 # runbooks, API references, tutorials, how-to guides, and architecture docs.
+#
+# Note: Uses set -uo pipefail only (without -e) to collect all validation results
+set -uo pipefail
 
 # Color codes for output
 RED='\033[0;31m'
