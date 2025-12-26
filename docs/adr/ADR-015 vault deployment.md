@@ -89,11 +89,11 @@ We chose **Raft integrated storage** over PostgreSQL for:
 
 #### Secret Injection Methods
 
-| Method | Use Case | Pros | Cons |
-|--------|----------|------|------|
-| Vault Agent Sidecar | Most applications | Auto-rotation, no app changes | Extra container per pod |
-| CSI Driver | Stateful apps, legacy | Native volume mount | No auto-rotation in files |
-| Direct API | CI/CD pipelines | Full control | Requires Vault SDK/client |
+| Method              | Use Case              | Pros                          | Cons                      |
+| ------------------- | --------------------- | ----------------------------- | ------------------------- |
+| Vault Agent Sidecar | Most applications     | Auto-rotation, no app changes | Extra container per pod   |
+| CSI Driver          | Stateful apps, legacy | Native volume mount           | No auto-rotation in files |
+| Direct API          | CI/CD pipelines       | Full control                  | Requires Vault SDK/client |
 
 ### Kubernetes Auth Configuration
 
@@ -108,12 +108,12 @@ Service Account → Kubernetes Auth → Vault Policy → Secrets Access
 
 ### Access Control Policies
 
-| Role | Service Accounts | Allowed Paths |
-|------|-----------------|---------------|
-| jenkins | jenkins, jenkins-agent | secret/data/fawkes/cicd/*, apps/*, shared/* |
-| backstage | backstage | secret/data/fawkes/core/backstage/*, shared/* |
-| platform-service | * in fawkes namespace | secret/data/fawkes/{namespace}/*, shared/* |
-| observability | grafana, prometheus | secret/data/fawkes/observability/*, shared/* |
+| Role             | Service Accounts       | Allowed Paths                                 |
+| ---------------- | ---------------------- | --------------------------------------------- |
+| jenkins          | jenkins, jenkins-agent | secret/data/fawkes/cicd/_, apps/_, shared/\*  |
+| backstage        | backstage              | secret/data/fawkes/core/backstage/_, shared/_ |
+| platform-service | \* in fawkes namespace | secret/data/fawkes/{namespace}/_, shared/_    |
+| observability    | grafana, prometheus    | secret/data/fawkes/observability/_, shared/_  |
 
 ### Integration with Existing ESO
 
@@ -162,12 +162,12 @@ spec:
 
 ### Risks and Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Vault cluster unavailable | HA with 3 replicas, monitoring alerts |
-| Unseal keys lost | Store in secure location, use cloud auto-unseal |
-| Policy misconfiguration | Infrastructure as code, policy testing |
-| Agent injection failures | Webhook fallback policy, health monitoring |
+| Risk                      | Mitigation                                      |
+| ------------------------- | ----------------------------------------------- |
+| Vault cluster unavailable | HA with 3 replicas, monitoring alerts           |
+| Unseal keys lost          | Store in secure location, use cloud auto-unseal |
+| Policy misconfiguration   | Infrastructure as code, policy testing          |
+| Agent injection failures  | Webhook fallback policy, health monitoring      |
 
 ## Alternatives Considered
 

@@ -29,7 +29,7 @@ Before you begin, ensure you have:
 - [ ] Understanding of YAML and basic templating
 
 !!! info "What is a Golden Path?"
-    A "Golden Path" is a supported, opinionated, well-documented way to build and deploy software. It reduces cognitive load by providing sensible defaults while still allowing customization when needed.
+A "Golden Path" is a supported, opinionated, well-documented way to build and deploy software. It reduces cognitive load by providing sensible defaults while still allowing customization when needed.
 
 ## Step 1: Understand Backstage Templates
 
@@ -38,6 +38,7 @@ Backstage templates use a declarative format to scaffold new projects.
 1. Navigate to Backstage and click **Create**.
 
 2. Browse the existing templates:
+
    - What information do they collect?
    - What files do they generate?
    - How do they integrate with the platform?
@@ -48,22 +49,24 @@ Backstage templates use a declarative format to scaffold new projects.
    - **Output**: Links to the created resources
 
 !!! info "Template Philosophy"
-    Templates should make it easy to do the right thing and hard to do the wrong thing. Embed security, observability, and compliance by default.
+Templates should make it easy to do the right thing and hard to do the wrong thing. Embed security, observability, and compliance by default.
 
 !!! success "Checkpoint"
-    You understand what Backstage templates do and how they work.
+You understand what Backstage templates do and how they work.
 
 ## Step 2: Create Template Repository Structure
 
 Let's create a template for Node.js services that includes all Fawkes best practices.
 
 1. Create a new directory for your template:
+
    ```bash
    mkdir fawkes-nodejs-template
    cd fawkes-nodejs-template
    ```
 
 2. Create the directory structure:
+
    ```bash
    mkdir -p skeleton
    mkdir -p skeleton/k8s
@@ -71,11 +74,13 @@ Let's create a template for Node.js services that includes all Fawkes best pract
    ```
 
 3. Initialize a git repository:
+
    ```bash
    git init
    ```
 
 4. Create a `template.yaml` at the root:
+
    ```yaml
    apiVersion: scaffolder.backstage.io/v1beta3
    kind: Template
@@ -101,7 +106,7 @@ Let's create a template for Node.js services that includes all Fawkes best pract
              title: Name
              type: string
              description: Unique name for this service (lowercase, hyphens only)
-             pattern: '^[a-z0-9-]+$'
+             pattern: "^[a-z0-9-]+$"
              ui:autofocus: true
            description:
              title: Description
@@ -177,7 +182,7 @@ Let's create a template for Node.js services that includes all Fawkes best pract
          action: catalog:register
          input:
            repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-           catalogInfoPath: '/catalog-info.yaml'
+           catalogInfoPath: "/catalog-info.yaml"
 
        - id: create-argocd-app
          name: Create ArgoCD Application
@@ -199,13 +204,14 @@ Let's create a template for Node.js services that includes all Fawkes best pract
    ```
 
 !!! success "Checkpoint"
-    Template metadata and parameters are defined.
+Template metadata and parameters are defined.
 
 ## Step 3: Create Skeleton Files
 
 Now let's create the actual files that will be generated.
 
 1. Create `skeleton/catalog-info.yaml`:
+
    ```yaml
    apiVersion: backstage.io/v1alpha1
    kind: Component
@@ -226,6 +232,7 @@ Now let's create the actual files that will be generated.
    ```
 
 2. Create `skeleton/package.json`:
+
    ```json
    {
      "name": "${{ values.component_id }}",
@@ -248,6 +255,7 @@ Now let's create the actual files that will be generated.
    ```
 
 3. Create `skeleton/server.js`:
+
    ```javascript
    {% if values.enable_tracing %}// Load tracing before anything else
    require('./tracing');
@@ -303,6 +311,7 @@ Now let's create the actual files that will be generated.
    ```
 
 4. If tracing is enabled, create `skeleton/tracing.js`:
+
    ```javascript
    {% if values.enable_tracing %}const { NodeSDK } = require('@opentelemetry/sdk-node');
    const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
@@ -331,6 +340,7 @@ Now let's create the actual files that will be generated.
    ```
 
 5. If Vault is enabled, create `skeleton/vault-client.js`:
+
    ```javascript
    {% if values.enable_vault %}const vault = require('node-vault');
    const fs = require('fs');
@@ -374,11 +384,12 @@ Now let's create the actual files that will be generated.
    ```
 
 !!! success "Checkpoint"
-    Skeleton application files are created with conditional features.
+Skeleton application files are created with conditional features.
 
 ## Step 4: Create Kubernetes Manifests
 
 1. Create `skeleton/k8s/deployment.yaml`:
+
    ```yaml
    apiVersion: apps/v1
    kind: Deployment
@@ -444,7 +455,8 @@ Now let's create the actual files that will be generated.
 2. Create other Kubernetes manifests (service, ingress, serviceaccount if needed).
 
 3. Create `skeleton/README.md`:
-   ```markdown
+
+   ````markdown
    # ${{ values.component_id }}
 
    ${{ values.description }}
@@ -455,43 +467,49 @@ Now let's create the actual files that will be generated.
    npm install
    npm start
    ```
+   ````
 
-   ## Building with Buildpacks
+## Building with Buildpacks
 
-   ```bash
-   pack build ${{ values.component_id }}:latest --builder paketobuildpacks/builder:base
-   ```
+```bash
+pack build ${{ values.component_id }}:latest --builder paketobuildpacks/builder:base
+```
 
-   ## Deployment
+## Deployment
 
-   This service is deployed using ArgoCD. Push to `main` branch to trigger deployment.
+This service is deployed using ArgoCD. Push to `main` branch to trigger deployment.
 
-   ## Features
+## Features
 
-   - ✅ Express.js REST API
-   {% if values.enable_tracing %}- ✅ OpenTelemetry distributed tracing
-   {% endif %}{% if values.enable_vault %}- ✅ HashiCorp Vault secret management
-   {% endif %}- ✅ Cloud Native Buildpacks
-   - ✅ Kubernetes-ready with health checks
-   - ✅ Security best practices (non-root, read-only filesystem)
+- ✅ Express.js REST API
+  {% if values.enable_tracing %}- ✅ OpenTelemetry distributed tracing
+  {% endif %}{% if values.enable_vault %}- ✅ HashiCorp Vault secret management
+  {% endif %}- ✅ Cloud Native Buildpacks
+- ✅ Kubernetes-ready with health checks
+- ✅ Security best practices (non-root, read-only filesystem)
 
-   ## Owner
+## Owner
 
-   Team: ${{ values.owner }}
-   ```
+Team: ${{ values.owner }}
+
+```
+
+```
 
 !!! success "Checkpoint"
-    Complete skeleton with Kubernetes manifests and README.
+Complete skeleton with Kubernetes manifests and README.
 
 ## Step 5: Publish the Template
 
 1. Commit all files:
+
    ```bash
    git add .
    git commit -m "Initial Fawkes Node.js template"
    ```
 
 2. Create a GitHub repository:
+
    - Go to github.com
    - Create a new repository: `fawkes-nodejs-template`
    - Push your code:
@@ -508,7 +526,7 @@ Now let's create the actual files that will be generated.
    - Click **Analyze** → **Import**
 
 !!! success "Checkpoint"
-    Your template is published and available in Backstage!
+Your template is published and available in Backstage!
 
 ## Step 6: Use Your Template
 
@@ -519,6 +537,7 @@ Let's create a new service using your template.
 2. Find and select **Fawkes Node.js Service**.
 
 3. Fill in the form:
+
    - Name: `my-awesome-service`
    - Description: `A service created from the Golden Path template`
    - Owner: Select your team
@@ -529,6 +548,7 @@ Let's create a new service using your template.
 4. Click **Create**.
 
 5. Watch Backstage:
+
    - Fetch the skeleton
    - Substitute variables
    - Create GitHub repository
@@ -538,7 +558,7 @@ Let's create a new service using your template.
 6. Navigate to the newly created repository and service in the catalog!
 
 !!! success "Checkpoint"
-    You've used your Golden Path template to create a production-ready service in minutes!
+You've used your Golden Path template to create a production-ready service in minutes!
 
 ## What You've Accomplished
 

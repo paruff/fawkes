@@ -7,6 +7,7 @@ This document summarizes the webhook configurations implemented for DORA metrics
 ## Acceptance Criteria Status
 
 ### ✅ GitHub Webhooks Configured (Commits)
+
 - **Configuration**: `platform/apps/devlake/config/webhooks.yaml`
 - **Documentation**: `platform/apps/devlake/config/github-webhook-setup.md`
 - **Endpoint**: `/api/plugins/webhook/1/commits`
@@ -15,12 +16,14 @@ This document summarizes the webhook configurations implemented for DORA metrics
 - **Purpose**: Captures commit timestamps for lead time calculation
 
 **Setup Required**:
+
 1. Get webhook secret from Kubernetes
 2. Configure webhook in GitHub repository settings
 3. Point to: `https://devlake.fawkes.idp/api/plugins/webhook/1/commits`
 4. Test with a commit push
 
 ### ✅ Jenkins Webhooks Configured (Builds)
+
 - **Implementation**: `jenkins-shared-library/vars/doraMetrics.groovy`
 - **Documentation**: `platform/apps/devlake/config/jenkins-webhook-setup.md`
 - **Endpoint**: `/api/plugins/webhook/1/cicd`
@@ -29,6 +32,7 @@ This document summarizes the webhook configurations implemented for DORA metrics
 - **Purpose**: Tracks build success rate, rework rate, quality metrics
 
 **Integration Method**:
+
 ```groovy
 @Library('fawkes-pipeline-library') _
 
@@ -40,6 +44,7 @@ doraMetrics.recordQualityGate(service: 'my-service', passed: true, coveragePerce
 **Usage**: Automatically available in all Jenkins pipelines via shared library. Golden Path pipelines automatically emit DORA events.
 
 ### ✅ ArgoCD Webhooks Configured (Deployments)
+
 - **Configuration**: `platform/apps/devlake/config/argocd-notifications.yaml`
 - **Endpoint**: `/api/plugins/webhook/1/deployments`
 - **Events**: Sync succeeded, sync failed, health degraded
@@ -47,16 +52,19 @@ doraMetrics.recordQualityGate(service: 'my-service', passed: true, coveragePerce
 - **Purpose**: Tracks deployment frequency, lead time, change failure rate
 
 **Templates Configured**:
+
 1. `deployment-succeeded` - Successful ArgoCD syncs
 2. `deployment-failed` - Failed ArgoCD syncs
 3. `health-degraded` - Application health issues
 
 **Triggers**:
+
 - `on-sync-succeeded` - Fires on successful application sync
 - `on-sync-failed` - Fires on failed application sync
 - `on-health-degraded` - Fires when app health degrades
 
 **Setup Required**:
+
 ```bash
 kubectl apply -f platform/apps/devlake/config/argocd-notifications.yaml
 ```
@@ -66,6 +74,7 @@ kubectl apply -f platform/apps/devlake/config/argocd-notifications.yaml
 **Automated Test Script**: `scripts/test-dora-webhooks.sh`
 
 Tests performed:
+
 - ✅ DevLake service running
 - ✅ Webhook endpoints accessible
 - ✅ GitHub webhook endpoint responds
@@ -78,6 +87,7 @@ Tests performed:
 **BDD Test Coverage**: `tests/bdd/features/dora-webhooks.feature`
 
 Scenarios tested:
+
 - GitHub commit webhooks
 - Jenkins build webhooks
 - Jenkins quality gate webhooks
@@ -89,6 +99,7 @@ Scenarios tested:
 - End-to-end integration flow
 
 **Manual Testing**:
+
 ```bash
 # Test GitHub webhook
 ./scripts/test-dora-webhooks.sh
@@ -120,11 +131,13 @@ cd tests/bdd && pytest features/dora-webhooks.feature -v
 ## DORA Metrics Enabled
 
 ### Deployment Frequency
+
 - **Data Source**: ArgoCD webhook (deployments)
 - **Calculation**: Count of successful syncs per time period
 - **Webhook**: `/api/plugins/webhook/1/deployments`
 
 ### Lead Time for Changes
+
 - **Data Sources**:
   - GitHub webhook (commit timestamp)
   - ArgoCD webhook (deployment timestamp)
@@ -134,6 +147,7 @@ cd tests/bdd && pytest features/dora-webhooks.feature -v
   - `/api/plugins/webhook/1/deployments` (end time)
 
 ### Change Failure Rate
+
 - **Data Sources**:
   - ArgoCD webhook (failed syncs)
   - Incident webhook (production incidents)
@@ -143,11 +157,13 @@ cd tests/bdd && pytest features/dora-webhooks.feature -v
   - `/api/plugins/webhook/1/incidents` (incidents)
 
 ### Mean Time to Restore
+
 - **Data Source**: Incident webhook
 - **Calculation**: Average time from incident creation to resolution
 - **Webhook**: `/api/plugins/webhook/1/incidents`
 
 ### Additional CI Metrics (Jenkins)
+
 - **Build Success Rate**: Jenkins webhook
 - **Rework Rate**: Jenkins webhook (retry builds)
 - **Quality Gate Pass Rate**: Jenkins webhook
@@ -156,12 +172,15 @@ cd tests/bdd && pytest features/dora-webhooks.feature -v
 ## Security
 
 ### Authentication
+
 - **GitHub**: HMAC-SHA256 signature validation (`X-Hub-Signature-256`)
 - **Jenkins**: Internal cluster network (no external access)
 - **ArgoCD**: Internal cluster network (no external access)
 
 ### Secrets Management
+
 All webhook secrets managed via External Secrets Operator:
+
 ```yaml
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
@@ -182,6 +201,7 @@ spec:
 ```
 
 ### Network Policies
+
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -215,7 +235,9 @@ spec:
 ## Files Created/Modified
 
 ### Configuration Files
+
 1. `platform/apps/devlake/config/webhooks.yaml` (183 lines)
+
    - Webhook endpoint configurations
    - External secrets for webhook authentication
    - Service definitions
@@ -227,12 +249,15 @@ spec:
    - Service configuration
 
 ### Documentation
+
 3. `platform/apps/devlake/config/README.md` (327 lines)
+
    - Quick start guide
    - Testing instructions
    - Troubleshooting guide
 
 4. `platform/apps/devlake/config/github-webhook-setup.md` (343 lines)
+
    - Step-by-step GitHub webhook setup
    - Security considerations
    - Troubleshooting
@@ -244,12 +269,15 @@ spec:
    - Troubleshooting
 
 ### Testing
+
 6. `scripts/test-dora-webhooks.sh` (400+ lines)
+
    - Automated webhook validation
    - Tests all endpoints
    - Network policy validation
 
 7. `tests/bdd/features/dora-webhooks.feature` (200+ lines)
+
    - 15+ BDD scenarios
    - Integration testing
    - End-to-end validation
@@ -260,6 +288,7 @@ spec:
    - Response validation
 
 ### Existing Files (Leveraged)
+
 - `jenkins-shared-library/vars/doraMetrics.groovy` (already exists)
   - Jenkins webhook integration
   - Functions: recordBuild, recordQualityGate, recordTestResults, recordIncident
@@ -269,15 +298,18 @@ spec:
 ### For Platform Engineers
 
 1. **Deploy webhook configurations**:
+
    ```bash
    kubectl apply -f platform/apps/devlake/config/webhooks.yaml
    kubectl apply -f platform/apps/devlake/config/argocd-notifications.yaml
    ```
 
 2. **Configure GitHub webhooks**:
+
    - Follow `platform/apps/devlake/config/github-webhook-setup.md`
 
 3. **Validate deployment**:
+
    ```bash
    ./scripts/test-dora-webhooks.sh
    ```
@@ -289,6 +321,7 @@ spec:
 ### For Developers
 
 **Jenkins pipelines automatically emit DORA events** if using:
+
 - Golden Path pipelines (automatic)
 - Shared library with `@Library('fawkes-pipeline-library')` (manual calls)
 
@@ -304,6 +337,7 @@ spec:
 ## Monitoring
 
 ### Prometheus Metrics
+
 ```promql
 # Webhook requests
 devlake_webhook_requests_total{source="github"}
@@ -318,6 +352,7 @@ histogram_quantile(0.95, devlake_webhook_duration_seconds_bucket)
 ```
 
 ### Grafana Dashboards
+
 - **DevLake Webhooks** - Webhook health and metrics
 - **DORA Metrics Overview** - Complete DORA metrics visualization
 

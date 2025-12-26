@@ -5,6 +5,7 @@ This integration adds friction logging capability to Backstage portal, allowing 
 ## Overview
 
 The friction logger integration provides:
+
 - **Web Form**: Simple form to log friction points
 - **Proxy Endpoint**: Routes friction logs to Insights API
 - **Dashboard Widget**: View recent friction points (optional)
@@ -18,13 +19,13 @@ Add to `app-config.yaml`:
 ```yaml
 proxy:
   endpoints:
-    '/friction/api':
+    "/friction/api":
       target: http://insights-service.fawkes.svc.cluster.local:8000
       changeOrigin: true
       pathRewrite:
-        '^/friction/api': ''
+        "^/friction/api": ""
       headers:
-        X-Source: 'Backstage'
+        X-Source: "Backstage"
 ```
 
 ### 2. Add Navigation Menu Item
@@ -275,7 +276,7 @@ import { FrictionLoggerPage } from './components/FrictionLogger';
 Create `packages/app/src/components/FrictionLogger/index.ts`:
 
 ```typescript
-export { FrictionLoggerPage } from './FrictionLogger';
+export { FrictionLoggerPage } from "./FrictionLogger";
 ```
 
 ## Usage
@@ -293,11 +294,13 @@ export { FrictionLoggerPage } from './FrictionLogger';
 ## API Integration
 
 The form submits to:
+
 ```
 POST /api/proxy/friction/api/insights
 ```
 
 Which proxies to:
+
 ```
 POST http://insights-service.fawkes.svc.cluster.local:8000/insights
 ```
@@ -374,6 +377,7 @@ Add to homepage in `packages/app/src/components/home/HomePage.tsx`.
 ### Proxy Not Working
 
 Check `app-config.yaml`:
+
 ```bash
 # Verify proxy endpoint is configured
 cat app-config.yaml | grep -A 5 "friction/api"

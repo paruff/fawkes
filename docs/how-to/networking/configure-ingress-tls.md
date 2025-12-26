@@ -81,9 +81,9 @@ spec:
 
     # HTTP-01 challenge solver using NGINX Ingress
     solvers:
-    - http01:
-        ingress:
-          class: nginx
+      - http01:
+          ingress:
+            class: nginx
 ```
 
 **For staging/testing, use Let's Encrypt staging:**
@@ -101,9 +101,9 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-staging-account-key
     solvers:
-    - http01:
-        ingress:
-          class: nginx
+      - http01:
+          ingress:
+            class: nginx
 ```
 
 #### Apply ClusterIssuer
@@ -180,7 +180,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 
     # NGINX-specific annotations
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"  # Force HTTPS
+    nginx.ingress.kubernetes.io/ssl-redirect: "true" # Force HTTPS
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
     # Optional: Client body size limit (for file uploads)
@@ -196,22 +196,22 @@ metadata:
 spec:
   # TLS configuration
   tls:
-  - hosts:
-    - my-app.example.com
-    secretName: my-app-tls-cert  # cert-manager creates this secret
+    - hosts:
+        - my-app.example.com
+      secretName: my-app-tls-cert # cert-manager creates this secret
 
   # Routing rules
   rules:
-  - host: my-app.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: my-app-service
-            port:
-              number: 80
+    - host: my-app.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: my-app-service
+                port:
+                  number: 80
 ```
 
 #### Apply Ingress
@@ -370,33 +370,33 @@ kubectl delete secret my-app-tls-cert -n my-namespace
 ```yaml
 spec:
   tls:
-  - hosts:
-    - app.example.com
-    - www.app.example.com
-    secretName: app-tls-cert
+    - hosts:
+        - app.example.com
+        - www.app.example.com
+      secretName: app-tls-cert
 
   rules:
-  - host: app.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: my-app
-            port:
-              number: 80
+    - host: app.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: my-app
+                port:
+                  number: 80
 
-  - host: www.app.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: my-app
-            port:
-              number: 80
+    - host: www.app.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: my-app
+                port:
+                  number: 80
 ```
 
 ### Path-Based Routing
@@ -404,24 +404,24 @@ spec:
 ```yaml
 spec:
   rules:
-  - host: my-app.example.com
-    http:
-      paths:
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: api-service
-            port:
-              number: 8080
+    - host: my-app.example.com
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: api-service
+                port:
+                  number: 8080
 
-      - path: /web
-        pathType: Prefix
-        backend:
-          service:
-            name: web-service
-            port:
-              number: 80
+          - path: /web
+            pathType: Prefix
+            backend:
+              service:
+                name: web-service
+                port:
+                  number: 80
 ```
 
 ### Custom TLS Certificate (Not Let's Encrypt)
@@ -439,9 +439,9 @@ kubectl create secret tls my-custom-cert \
 ```yaml
 spec:
   tls:
-  - hosts:
-    - my-app.example.com
-    secretName: my-custom-cert  # Use custom cert
+    - hosts:
+        - my-app.example.com
+      secretName: my-custom-cert # Use custom cert
 ```
 
 ### Rate Limiting
@@ -449,8 +449,8 @@ spec:
 ```yaml
 metadata:
   annotations:
-    nginx.ingress.kubernetes.io/limit-rps: "10"  # 10 requests per second
-    nginx.ingress.kubernetes.io/limit-connections: "5"  # 5 concurrent connections
+    nginx.ingress.kubernetes.io/limit-rps: "10" # 10 requests per second
+    nginx.ingress.kubernetes.io/limit-connections: "5" # 5 concurrent connections
 ```
 
 ### Basic Authentication

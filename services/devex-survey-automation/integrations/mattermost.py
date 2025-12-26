@@ -17,19 +17,14 @@ class MattermostClient:
         self.base_url = settings.mattermost_url
         self.token = settings.mattermost_token
         self.bot_user_id = settings.mattermost_bot_user_id
-        self.headers = {
-            "Authorization": f"Bearer {self.token}",
-            "Content-Type": "application/json"
-        }
+        self.headers = {"Authorization": f"Bearer {self.token}", "Content-Type": "application/json"}
 
     async def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
         """Get Mattermost user by email"""
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.get(
-                    f"{self.base_url}/api/v4/users/email/{email}",
-                    headers=self.headers,
-                    timeout=10.0
+                    f"{self.base_url}/api/v4/users/email/{email}", headers=self.headers, timeout=10.0
                 )
                 if response.status_code == 200:
                     return response.json()
@@ -48,7 +43,7 @@ class MattermostClient:
                     f"{self.base_url}/api/v4/channels/direct",
                     headers=self.headers,
                     json=[self.bot_user_id, user_id],
-                    timeout=10.0
+                    timeout=10.0,
                 )
                 if response.status_code in [200, 201]:
                     channel = response.json()
@@ -85,11 +80,8 @@ class MattermostClient:
                 response = await client.post(
                     f"{self.base_url}/api/v4/posts",
                     headers=self.headers,
-                    json={
-                        "channel_id": channel_id,
-                        "message": message
-                    },
-                    timeout=10.0
+                    json={"channel_id": channel_id, "message": message},
+                    timeout=10.0,
                 )
 
                 if response.status_code == 201:
@@ -126,11 +118,8 @@ class MattermostClient:
                 response = await client.post(
                     f"{self.base_url}/api/v4/posts",
                     headers=self.headers,
-                    json={
-                        "channel_id": channel_id,
-                        "message": message
-                    },
-                    timeout=10.0
+                    json={"channel_id": channel_id, "message": message},
+                    timeout=10.0,
                 )
 
                 if response.status_code == 201:

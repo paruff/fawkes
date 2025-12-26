@@ -50,6 +50,7 @@ research/
 ### Prerequisites
 
 1. **Git LFS**: Large files (videos, audio) are tracked with Git LFS
+
    ```bash
    # Install Git LFS (if not already installed)
    git lfs install
@@ -65,12 +66,14 @@ research/
 ### Quick Start
 
 1. **Clone the repository** (if not already done):
+
    ```bash
    git clone https://github.com/paruff/fawkes.git
    cd fawkes/docs/research
    ```
 
 2. **Create a new research artifact**:
+
    ```bash
    # Copy a template
    cp templates/persona.md personas/my-new-persona.md
@@ -95,14 +98,17 @@ research/
 **Purpose**: Represent key user segments with their goals, pain points, and behaviors.
 
 **When to Create**:
+
 - After conducting 5+ user interviews
 - When you identify a distinct user segment
 - When updating existing personas with new insights
 
 **Naming Convention**: `{role}-{descriptor}.md`
+
 - Examples: `platform-engineer-senior.md`, `app-developer-junior.md`
 
 **Process**:
+
 1. Copy `templates/persona.md`
 2. Fill in sections based on research data
 3. Include direct quotes from users
@@ -114,14 +120,17 @@ research/
 **Purpose**: Document findings from user interviews.
 
 **When to Create**:
+
 - After each user interview
 - During user testing sessions
 - Following feedback sessions
 
 **Naming Convention**: `YYYY-MM-DD-{participant-role}-{topic}.md`
+
 - Examples: `2025-12-23-platform-engineer-deployment-pain-points.md`
 
 **Process**:
+
 1. Use `templates/interview-guide.md` for script
 2. Take notes during interview (with permission)
 3. Transcribe within 24 hours
@@ -130,6 +139,7 @@ research/
 6. Store in `interviews/` directory
 
 **Privacy Guidelines**:
+
 - Remove personally identifiable information (PII)
 - Use pseudonyms or role descriptions
 - Obtain consent for recording
@@ -140,14 +150,17 @@ research/
 **Purpose**: Visualize user experience across stages to identify pain points and opportunities.
 
 **When to Create**:
+
 - When analyzing a specific user workflow
 - After identifying consistent patterns in interviews
 - When prioritizing improvements
 
 **Naming Convention**: `{persona}-{scenario}.md`
+
 - Examples: `platform-engineer-incident-response.md`, `app-developer-first-deployment.md`
 
 **Process**:
+
 1. Copy `templates/journey-map.md`
 2. Choose specific persona and scenario
 3. Map stages based on research
@@ -160,38 +173,47 @@ research/
 **Purpose**: Synthesize learnings across multiple research activities.
 
 **When to Create**:
+
 - After completing a research sprint
 - Quarterly research summaries
 - When preparing for planning sessions
 - Ad-hoc synthesis of patterns
 
 **Naming Convention**: `YYYY-MM-{topic}-insights.md`
+
 - Examples: `2025-12-deployment-experience-insights.md`
 
 **Template Structure**:
+
 ```markdown
 # [Topic] Insights - [Date]
 
 ## Summary
+
 [2-3 sentence overview]
 
 ## Key Findings
+
 1. [Finding 1]
 2. [Finding 2]
 3. [Finding 3]
 
 ## Evidence
+
 - [Reference to interviews, surveys, etc.]
 
 ## Recommendations
+
 1. [Action 1]
 2. [Action 2]
 
 ## Next Steps
+
 - [Follow-up research needed]
 ```
 
 **Process**:
+
 1. Review multiple research artifacts
 2. Identify patterns and themes
 3. Document with supporting evidence
@@ -205,12 +227,14 @@ research/
 **Location**: `data/raw/`
 
 **Contents**:
+
 - Survey responses (CSV, JSON)
 - Analytics exports
 - Unprocessed interview recordings
 - Raw observation notes
 
 **Guidelines**:
+
 - Keep original, unmodified data
 - Include metadata file describing collection method
 - Use descriptive filenames with dates
@@ -221,12 +245,14 @@ research/
 **Location**: `data/processed/`
 
 **Contents**:
+
 - Cleaned survey data
 - Anonymized transcripts
 - Aggregated analytics
 - Coded qualitative data
 
 **Guidelines**:
+
 - Document transformation process
 - Include data dictionary
 - Version processed datasets
@@ -235,12 +261,14 @@ research/
 #### Media Assets
 
 **Images** (`assets/images/`):
+
 - Screenshots
 - Photos from sessions
 - Diagrams and wireframes
 - Supported formats: PNG, JPG, SVG
 
 **Videos** (`assets/videos/`):
+
 - User testing recordings
 - Demo videos
 - Prototype walkthroughs
@@ -248,12 +276,14 @@ research/
 - Supported formats: MP4, MOV
 
 **Audio** (`assets/audio/`):
+
 - Interview recordings
 - Podcast-style summaries
 - Tracked with Git LFS
 - Supported formats: MP3, WAV, M4A
 
 **Diagrams** (`assets/diagrams/`):
+
 - Flowcharts
 - System diagrams
 - Process maps
@@ -285,6 +315,7 @@ git lfs push origin main
 ```
 
 **Storage Limits**:
+
 - Keep individual files under 100MB when possible
 - Use external storage (e.g., shared drive) for very large files
 - Link to external files in markdown with `[Download](link)`
@@ -302,23 +333,27 @@ git lfs push origin main
 ### Contribution Process
 
 1. **Create a Branch**:
+
    ```bash
    git checkout -b research/add-new-persona-platform-engineer
    ```
 
 2. **Make Changes**:
+
    - Follow templates
    - Use descriptive filenames
    - Include supporting evidence
    - Link related artifacts
 
 3. **Commit with Clear Messages**:
+
    ```bash
    git add personas/platform-engineer-senior.md
    git commit -m "Add senior platform engineer persona based on Q4 2025 interviews"
    ```
 
 4. **Open Pull Request**:
+
    - Describe research context
    - Link to source interviews/data
    - Tag reviewers (product team)
@@ -348,12 +383,14 @@ Before submitting research artifacts, ensure:
 **Who**: All Fawkes team members
 
 **Includes**:
+
 - View all personas, journey maps, templates
 - Read processed insights and summaries
 - Access anonymized interview notes
 - View diagrams and screenshots
 
 **Does Not Include**:
+
 - Raw interview recordings (privacy)
 - Unprocessed survey data with PII
 - Internal research strategy documents
@@ -363,12 +400,14 @@ Before submitting research artifacts, ensure:
 **Who**: Product team, designated researchers
 
 **Includes**:
+
 - Create new research artifacts
 - Update existing personas and journey maps
 - Add interview notes and insights
 - Upload supporting media
 
 **Process**:
+
 - Request access via GitHub team membership
 - Contact product owner: @paruff
 - Join `#product-research` channel in Mattermost
@@ -380,6 +419,7 @@ Before submitting research artifacts, ensure:
 **Location**: Not stored in this repository
 
 **Includes**:
+
 - Raw recordings with identifiable information
 - Unredacted survey responses
 - Research strategy and roadmap
@@ -476,6 +516,7 @@ Before submitting research artifacts, ensure:
 ## Changelog
 
 ### 2025-12-23
+
 - Initial repository structure created
 - Added templates (persona, interview guide, journey map)
 - Configured Git LFS for media files

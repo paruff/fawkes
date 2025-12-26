@@ -47,6 +47,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 **External Secrets Method (Recommended)**:
 
 - [ ] Create secret in Vault/AWS Secrets Manager:
+
   ```bash
   # Example for Vault
   vault kv put secret/fawkes/devlake \
@@ -59,6 +60,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
   ```
 
 - [ ] Verify ExternalSecret exists:
+
   ```bash
   kubectl get externalsecret -n fawkes devlake-secrets
   kubectl get externalsecret -n fawkes devlake-db
@@ -75,6 +77,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 **Manual Secrets Method (Development Only)**:
 
 - [ ] Create DevLake secrets manually:
+
   ```bash
   kubectl create secret generic devlake-secrets -n fawkes \
     --from-literal=encryption-secret=$(openssl rand -base64 32) \
@@ -91,16 +94,19 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 2. Deploy DevLake via ArgoCD
 
 - [ ] Apply ArgoCD Application:
+
   ```bash
   kubectl apply -f platform/apps/devlake/devlake-application.yaml
   ```
 
 - [ ] Verify Application is created:
+
   ```bash
   kubectl get application devlake -n fawkes
   ```
 
 - [ ] Check Application status:
+
   ```bash
   argocd app get devlake
   # Expected: Health Status: Healthy, Sync Status: Synced
@@ -114,17 +120,20 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 3. Verify Pod Deployment
 
 - [ ] Check all pods are running:
+
   ```bash
   kubectl get pods -n fawkes -l app.kubernetes.io/name=devlake
   ```
 
   Expected pods:
+
   - devlake-lake-0 (Running)
   - devlake-ui-0 (Running)
   - devlake-grafana-0 (Running)
   - devlake-mysql-0 (Running)
 
 - [ ] Check pod logs for errors:
+
   ```bash
   kubectl logs -n fawkes -l app.kubernetes.io/component=lake --tail=50
   kubectl logs -n fawkes -l app.kubernetes.io/component=mysql --tail=50
@@ -139,11 +148,13 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 4. Verify Services
 
 - [ ] Check services are created:
+
   ```bash
   kubectl get svc -n fawkes -l app.kubernetes.io/name=devlake
   ```
 
   Expected services:
+
   - devlake-lake (ClusterIP)
   - devlake-ui (ClusterIP)
   - devlake-grafana (ClusterIP)
@@ -159,12 +170,14 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 5. Verify Ingress
 
 - [ ] Check ingress resources:
+
   ```bash
   kubectl get ingress -n fawkes devlake
   kubectl get ingress -n fawkes devlake-grafana
   ```
 
 - [ ] Test external access (if DNS configured):
+
   ```bash
   curl http://devlake.127.0.0.1.nip.io/api/ping
   curl http://devlake-grafana.127.0.0.1.nip.io/api/health
@@ -183,6 +196,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 6. Verify Database Creation
 
 - [ ] Connect to MySQL:
+
   ```bash
   # Get root password first
   MYSQL_ROOT_PASSWORD=$(kubectl get secret devlake-db -n fawkes -o jsonpath='{.data.mysql-root-password}' | base64 -d)
@@ -193,18 +207,21 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
   ```
 
 - [ ] Verify database exists:
+
   ```sql
   SHOW DATABASES;
   -- Expected: 'lake' database listed
   ```
 
 - [ ] Verify key tables exist:
+
   ```sql
   USE lake;
   SHOW TABLES;
   ```
 
   Expected tables:
+
   - deployments
   - commits
   - incidents
@@ -213,6 +230,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
   - dora_benchmarks
 
 - [ ] Check table schemas:
+
   ```sql
   DESCRIBE deployments;
   DESCRIBE commits;
@@ -232,12 +250,14 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 7. Test REST API
 
 - [ ] Health check:
+
   ```bash
   curl http://devlake.127.0.0.1.nip.io/api/ping
   # Expected: {"message":"pong"}
   ```
 
 - [ ] Get API version:
+
   ```bash
   curl http://devlake.127.0.0.1.nip.io/api/version
   ```
@@ -252,6 +272,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 8. Test GraphQL API
 
 - [ ] GraphQL introspection query:
+
   ```bash
   curl -X POST http://devlake.127.0.0.1.nip.io/api/graphql \
     -H "Content-Type: application/json" \
@@ -268,16 +289,19 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 9. Test Prometheus Metrics Endpoint
 
 - [ ] Verify metrics endpoint:
+
   ```bash
   curl http://devlake.127.0.0.1.nip.io/metrics
   ```
 
 - [ ] Check for DORA metrics (may be empty initially):
+
   ```bash
   curl http://devlake.127.0.0.1.nip.io/metrics | grep dora
   ```
 
   Expected metrics (after data collection):
+
   - dora_deployment_frequency_total
   - dora_lead_time_seconds
   - dora_change_failure_rate
@@ -290,16 +314,19 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 10. Deploy ServiceMonitor
 
 - [ ] Apply ServiceMonitor:
+
   ```bash
   kubectl apply -f platform/apps/devlake/servicemonitor-devlake.yaml
   ```
 
 - [ ] Verify ServiceMonitor exists:
+
   ```bash
   kubectl get servicemonitor devlake-metrics -n monitoring
   ```
 
 - [ ] Check Prometheus targets:
+
   ```bash
   kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
   # Open http://localhost:9090/targets
@@ -322,11 +349,13 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 11. Configure GitHub Data Source
 
 - [ ] Access DevLake UI:
+
   ```bash
   # Open http://devlake.127.0.0.1.nip.io
   ```
 
 - [ ] Add GitHub connection:
+
   - Click "Data Connections"
   - Click "Add Connection"
   - Select "GitHub"
@@ -344,6 +373,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 12. Configure ArgoCD Data Source
 
 - [ ] Add ArgoCD connection:
+
   - Click "Add Connection"
   - Select "ArgoCD"
   - Enter:
@@ -375,6 +405,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 - [ ] Enable webhook plugin in DevLake UI
 
 - [ ] Get webhook URL:
+
   ```bash
   echo "http://devlake.127.0.0.1.nip.io/api/plugins/webhook/1/incidents"
   ```
@@ -388,6 +419,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 15. Access Grafana
 
 - [ ] Get Grafana admin password:
+
   ```bash
   kubectl get secret devlake-grafana-secrets -n fawkes \
     -o jsonpath='{.data.admin-password}' | base64 -d
@@ -402,10 +434,12 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 16. Verify DORA Dashboards
 
 - [ ] Check pre-installed dashboards:
+
   - Navigate to Dashboards → Browse
   - Look for "DORA Metrics" dashboards
 
 - [ ] Verify dashboard folders:
+
   - DORA Metrics Overview
   - Deployment Frequency
   - Lead Time for Changes
@@ -424,11 +458,13 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 17. Run Verification Script
 
 - [ ] Execute automated verification:
+
   ```bash
   ./scripts/verify-dora-metrics-service.sh
   ```
 
 - [ ] Review verification results:
+
   - All checks should pass
   - Address any failures before proceeding
 
@@ -448,6 +484,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 - [ ] Configure deployment frequency window (default: 7 days)
 
 - [ ] Configure lead time stages:
+
   - Development
   - Review
   - Production
@@ -463,11 +500,13 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 - [ ] Wait 5-10 minutes for data collection
 
 - [ ] Query deployment via API:
+
   ```bash
   curl http://devlake.127.0.0.1.nip.io/api/deployments
   ```
 
 - [ ] Check data in database:
+
   ```sql
   SELECT * FROM deployments ORDER BY created_at DESC LIMIT 5;
   ```
@@ -488,6 +527,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### 21. Run BDD Tests
 
 - [ ] Execute BDD tests for DORA metrics:
+
   ```bash
   cd tests/bdd
   pytest features/devlake-dora-metrics.feature
@@ -532,10 +572,10 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 - [ ] BDD tests passed
 - [ ] Documentation updated
 
-**Deployed by**: _________________
-**Date**: _________________
-**Verified by**: _________________
-**Date**: _________________
+**Deployed by**: **\*\*\*\***\_**\*\*\*\***
+**Date**: **\*\*\*\***\_**\*\*\*\***
+**Verified by**: **\*\*\*\***\_**\*\*\*\***
+**Date**: **\*\*\*\***\_**\*\*\*\***
 
 ---
 
@@ -544,6 +584,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 ### Common Issues
 
 **Issue**: Pods stuck in Pending state
+
 - **Solution**: Check PVC status, ensure storage class exists
   ```bash
   kubectl get pvc -n fawkes
@@ -551,6 +592,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
   ```
 
 **Issue**: Database connection errors
+
 - **Solution**: Verify MySQL pod is running, check credentials
   ```bash
   kubectl logs -n fawkes devlake-lake-0 | grep mysql
@@ -558,6 +600,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
   ```
 
 **Issue**: API endpoints return 404
+
 - **Solution**: Check ingress configuration, verify routes
   ```bash
   kubectl describe ingress devlake -n fawkes
@@ -565,6 +608,7 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
   ```
 
 **Issue**: Prometheus not scraping
+
 - **Solution**: Verify ServiceMonitor, check Prometheus logs
   ```bash
   kubectl logs -n monitoring prometheus-kube-prometheus-prometheus-0 | grep devlake
@@ -577,16 +621,19 @@ This checklist ensures the DORA Metrics Service (DevLake) is properly deployed a
 If deployment fails and needs rollback:
 
 1. Delete ArgoCD Application:
+
    ```bash
    kubectl delete application devlake -n fawkes
    ```
 
 2. Clean up resources:
+
    ```bash
    kubectl delete namespace fawkes-devlake
    ```
 
 3. Remove secrets (if manually created):
+
    ```bash
    kubectl delete secret devlake-secrets -n fawkes
    kubectl delete secret devlake-db -n fawkes

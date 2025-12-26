@@ -15,6 +15,7 @@ December 22, 2025
 **Location**: `services/ai-code-review/app/`
 
 Implemented FastAPI-based service with:
+
 - **Webhook Handler**: Receives GitHub PR events with signature verification
 - **Review Engine**: Orchestrates the review process
 - **GitHub Integration**: Fetches PR diffs, files, and posts review comments
@@ -24,6 +25,7 @@ Implemented FastAPI-based service with:
 - **Metrics**: Comprehensive Prometheus metrics
 
 **Key Files**:
+
 - `app/main.py` - FastAPI application and webhook handler
 - `app/reviewer.py` - Review engine with LLM and integration logic
 
@@ -34,24 +36,28 @@ Implemented FastAPI-based service with:
 Created comprehensive prompts for 5 categories:
 
 1. **Security** (`security.txt`)
+
    - Injection vulnerabilities
    - Authentication/authorization issues
    - Secrets detection
    - Common vulnerabilities (XSS, CSRF, etc.)
 
 2. **Performance** (`performance.txt`)
+
    - N+1 query problems
    - Algorithm efficiency
    - Memory management
    - Async/concurrency issues
 
 3. **Best Practices** (`best_practices.txt`)
+
    - SOLID principles
    - DRY violations
    - Code organization
    - Error handling
 
 4. **Test Coverage** (`test_coverage.txt`)
+
    - Missing unit tests
    - Edge case coverage
    - Error condition testing
@@ -64,6 +70,7 @@ Created comprehensive prompts for 5 categories:
    - README updates
 
 **Features**:
+
 - Few-shot examples for each category
 - Specific actionable recommendations
 - Severity assignment guidelines
@@ -74,6 +81,7 @@ Created comprehensive prompts for 5 categories:
 **Location**: `services/ai-code-review/integrations/sonarqube.py`
 
 Implemented comprehensive SonarQube integration:
+
 - **Fetch PR findings** from SonarQube API
 - **Standardize findings** to common format
 - **Deduplicate** between AI and SonarQube findings
@@ -81,6 +89,7 @@ Implemented comprehensive SonarQube integration:
 - **Project metrics** retrieval
 
 **Deduplication Logic**:
+
 - Matches findings by file, line number, and category
 - Removes SonarQube duplicates of AI findings
 - Preserves unique findings from both sources
@@ -88,16 +97,20 @@ Implemented comprehensive SonarQube integration:
 ### 4. Infrastructure ✅
 
 #### Docker
+
 **File**: `Dockerfile`
+
 - Multi-stage build for optimized image size
 - Security hardening (non-root user, read-only filesystem)
 - Python 3.12 base image
 - Health checks built-in
 
 #### Kubernetes
+
 **Location**: `services/ai-code-review/k8s/`
 
 Manifests:
+
 - `deployment.yaml` - Service deployment with 2 replicas
 - `service.yaml` - ClusterIP service
 - `configmap.yaml` - Configuration values
@@ -105,6 +118,7 @@ Manifests:
 - `kustomization.yaml` - Kustomize configuration
 
 **Features**:
+
 - Security contexts (non-root, drop capabilities)
 - Resource limits (256Mi-512Mi memory, 200m-500m CPU)
 - Liveness and readiness probes
@@ -112,9 +126,11 @@ Manifests:
 - Environment-based configuration
 
 #### GitOps
+
 **File**: `platform/apps/ai-code-review-application.yaml`
 
 ArgoCD application manifest for automated deployment:
+
 - Sync wave: 4 (after core services)
 - Auto-sync enabled
 - Self-healing enabled
@@ -125,6 +141,7 @@ ArgoCD application manifest for automated deployment:
 **Location**: `services/ai-code-review/tests/`
 
 Comprehensive test suite:
+
 - **18 unit tests** (100% passing)
 - **Test coverage**:
   - Main service endpoints
@@ -135,6 +152,7 @@ Comprehensive test suite:
   - Deduplication logic
 
 **Test Files**:
+
 - `tests/unit/test_main.py` - Service tests
 - `tests/unit/test_sonarqube.py` - Integration tests
 
@@ -161,21 +179,22 @@ Created comprehensive documentation:
 
 ### Environment Variables
 
-| Variable | Purpose | Required |
-|----------|---------|----------|
-| `GITHUB_WEBHOOK_SECRET` | Webhook signature verification | Yes |
-| `GITHUB_TOKEN` | GitHub API access | Yes |
-| `LLM_API_KEY` | OpenAI/Anthropic API key | Yes |
-| `LLM_API_URL` | LLM API endpoint | No |
-| `LLM_MODEL` | Model to use (gpt-4, claude-3) | No |
-| `RAG_SERVICE_URL` | RAG service endpoint | No |
-| `SONARQUBE_URL` | SonarQube server | No |
-| `SONARQUBE_TOKEN` | SonarQube token | No |
-| `FALSE_POSITIVE_THRESHOLD` | Confidence threshold | No |
+| Variable                   | Purpose                        | Required |
+| -------------------------- | ------------------------------ | -------- |
+| `GITHUB_WEBHOOK_SECRET`    | Webhook signature verification | Yes      |
+| `GITHUB_TOKEN`             | GitHub API access              | Yes      |
+| `LLM_API_KEY`              | OpenAI/Anthropic API key       | Yes      |
+| `LLM_API_URL`              | LLM API endpoint               | No       |
+| `LLM_MODEL`                | Model to use (gpt-4, claude-3) | No       |
+| `RAG_SERVICE_URL`          | RAG service endpoint           | No       |
+| `SONARQUBE_URL`            | SonarQube server               | No       |
+| `SONARQUBE_TOKEN`          | SonarQube token                | No       |
+| `FALSE_POSITIVE_THRESHOLD` | Confidence threshold           | No       |
 
 ### Configurable Limits
 
 Constants defined in `app/reviewer.py`:
+
 - `MAX_FILES_TO_QUERY_RAG` = 10
 - `MAX_FILES_TO_REVIEW` = 20
 - `MAX_PATCH_SIZE` = 2000 chars
@@ -193,25 +212,27 @@ Prometheus metrics exposed at `/metrics`:
 
 ## Acceptance Criteria
 
-| Criterion | Status | Notes |
-|-----------|--------|-------|
-| AI review bot deployed | ✅ | Ready for deployment |
-| GitHub/GitLab integration | ✅ | GitHub webhook handler |
-| Reviews posted automatically | ✅ | Via GitHub API |
-| Categories: quality, security, etc. | ✅ | 5 categories implemented |
-| False positive rate <20% | ✅ | Configurable threshold (0.8) |
-| Passes AT-E2-007 (partial) | ⚠️ | Needs E2E validation |
+| Criterion                           | Status | Notes                        |
+| ----------------------------------- | ------ | ---------------------------- |
+| AI review bot deployed              | ✅     | Ready for deployment         |
+| GitHub/GitLab integration           | ✅     | GitHub webhook handler       |
+| Reviews posted automatically        | ✅     | Via GitHub API               |
+| Categories: quality, security, etc. | ✅     | 5 categories implemented     |
+| False positive rate <20%            | ✅     | Configurable threshold (0.8) |
+| Passes AT-E2-007 (partial)          | ⚠️     | Needs E2E validation         |
 
 ## Deployment Instructions
 
 ### Quick Start
 
 1. **Deploy with ArgoCD**:
+
    ```bash
    kubectl apply -f platform/apps/ai-code-review-application.yaml
    ```
 
 2. **Configure secrets**:
+
    ```bash
    kubectl create secret generic ai-code-review-secrets \
      --from-literal=GITHUB_TOKEN=ghp_xxx \
@@ -221,6 +242,7 @@ Prometheus metrics exposed at `/metrics`:
    ```
 
 3. **Verify deployment**:
+
    ```bash
    ./services/ai-code-review/validate-deployment.sh
    ```
@@ -233,12 +255,14 @@ Prometheus metrics exposed at `/metrics`:
 ### Validation
 
 Run validation script:
+
 ```bash
 cd services/ai-code-review
 ./validate-deployment.sh
 ```
 
 Expected output:
+
 - ✅ Deployment exists with desired replicas
 - ✅ Service and configmap exist
 - ✅ Health check returns 200
@@ -300,18 +324,21 @@ Review Engine
 ## Dependencies
 
 ### Runtime Dependencies
+
 - Python 3.12
 - FastAPI 0.115.5
 - httpx 0.27.0
 - Prometheus client
 
 ### External Services
+
 - GitHub API
 - OpenAI or Anthropic API
 - RAG Service (optional)
 - SonarQube (optional)
 
 ### Depends On (Issues)
+
 - #40 - RAG service
 - #42 - AI assistant config
 
@@ -320,6 +347,7 @@ Review Engine
 See `DEPLOYMENT.md` for detailed troubleshooting guide.
 
 Common issues:
+
 1. **Webhook not triggering**: Check signature and URL
 2. **No comments posted**: Verify GitHub token permissions
 3. **High false positives**: Adjust threshold or improve prompts
@@ -327,6 +355,7 @@ Common issues:
 ## Backstage Integration
 
 Service registered in Backstage catalog:
+
 - Component: `ai-code-review-service`
 - System: `ai-platform`
 - Owner: `platform-team`
@@ -335,6 +364,7 @@ Service registered in Backstage catalog:
 ## Testing Summary
 
 All tests passing:
+
 ```
 18 passed in 0.5s
 - 10 tests for main service
@@ -342,6 +372,7 @@ All tests passing:
 ```
 
 Security scan clean:
+
 ```
 CodeQL: 0 vulnerabilities
 ```

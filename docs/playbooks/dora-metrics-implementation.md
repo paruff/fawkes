@@ -14,7 +14,7 @@ description: "Implement automated collection and visualization of DORA metrics t
 ## I. Business Objective
 
 !!! info "Diátaxis: Explanation / Conceptual"
-    This section defines the "why"—the risk mitigated, compliance goal achieved, and value delivered.
+This section defines the "why"—the risk mitigated, compliance goal achieved, and value delivered.
 
 ### What We're Solving
 
@@ -24,12 +24,12 @@ DORA (DevOps Research and Assessment) research has identified four key metrics t
 
 ### Risk Mitigation
 
-| Risk | Impact Without Action | How This Playbook Helps |
-|------|----------------------|------------------------|
-| Invisible bottlenecks | Teams waste effort on wrong improvements | Data reveals actual constraints |
-| Unable to demonstrate improvement | Stakeholders lose confidence in engineering | Dashboards show measurable progress |
-| Slow incident response | Prolonged outages damage customer trust | MTTR tracking drives faster recovery |
-| High change failure rate | Quality issues erode user satisfaction | Early detection enables proactive fixes |
+| Risk                              | Impact Without Action                       | How This Playbook Helps                 |
+| --------------------------------- | ------------------------------------------- | --------------------------------------- |
+| Invisible bottlenecks             | Teams waste effort on wrong improvements    | Data reveals actual constraints         |
+| Unable to demonstrate improvement | Stakeholders lose confidence in engineering | Dashboards show measurable progress     |
+| Slow incident response            | Prolonged outages damage customer trust     | MTTR tracking drives faster recovery    |
+| High change failure rate          | Quality issues erode user satisfaction      | Early detection enables proactive fixes |
 
 ### Expected Outcomes
 
@@ -41,30 +41,30 @@ DORA (DevOps Research and Assessment) research has identified four key metrics t
 
 ### Business Value
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Visibility into delivery performance | None/Manual | Automated, Real-time | ∞ improvement |
-| Time to identify bottlenecks | Days/Weeks | Minutes | 90%+ reduction |
-| Engineering productivity discussions | Opinion-based | Data-driven | Qualitative shift |
-| Stakeholder confidence | Low | High | Measurable progress |
+| Metric                               | Before        | After                | Improvement         |
+| ------------------------------------ | ------------- | -------------------- | ------------------- |
+| Visibility into delivery performance | None/Manual   | Automated, Real-time | ∞ improvement       |
+| Time to identify bottlenecks         | Days/Weeks    | Minutes              | 90%+ reduction      |
+| Engineering productivity discussions | Opinion-based | Data-driven          | Qualitative shift   |
+| Stakeholder confidence               | Low           | High                 | Measurable progress |
 
 ---
 
 ## II. Technical Prerequisites
 
 !!! abstract "Diátaxis: Reference"
-    This section lists required Fawkes components, versions, and environment specifications.
+This section lists required Fawkes components, versions, and environment specifications.
 
 ### Required Fawkes Components
 
-| Component | Minimum Version | Required | Documentation |
-|-----------|-----------------|----------|---------------|
-| Kubernetes | 1.28+ | ✅ | See [Getting Started](../getting-started.md) |
-| Prometheus | 2.47+ | ✅ | See [Prometheus Tool](../tools/prometheus.md) |
-| Grafana | 10.2+ | ✅ | See [Observability](../observability/dora-metrics-guide.md) |
-| Jenkins | 2.426+ | ✅ | See [Jenkins Tool](../tools/jenkins.md) |
-| ArgoCD | 2.9+ | ✅ | See [GitOps Module](../dojo/modules/green-belt/module-09-gitops-argocd.md) |
-| DevLake | 0.19+ | ⬜ Optional | See [DevLake ADR](../adr/ADR-016%20devlake-dora-strategy.md) |
+| Component  | Minimum Version | Required    | Documentation                                                              |
+| ---------- | --------------- | ----------- | -------------------------------------------------------------------------- |
+| Kubernetes | 1.28+           | ✅          | See [Getting Started](../getting-started.md)                               |
+| Prometheus | 2.47+           | ✅          | See [Prometheus Tool](../tools/prometheus.md)                              |
+| Grafana    | 10.2+           | ✅          | See [Observability](../observability/dora-metrics-guide.md)                |
+| Jenkins    | 2.426+          | ✅          | See [Jenkins Tool](../tools/jenkins.md)                                    |
+| ArgoCD     | 2.9+            | ✅          | See [GitOps Module](../dojo/modules/green-belt/module-09-gitops-argocd.md) |
+| DevLake    | 0.19+           | ⬜ Optional | See [DevLake ADR](../adr/ADR-016%20devlake-dora-strategy.md)               |
 
 ### Environment Requirements
 
@@ -100,7 +100,7 @@ external_access: required for dashboards
 ## III. Implementation Steps
 
 !!! tip "Diátaxis: How-to Guide (Core)"
-    This is the core of the playbook—step-by-step procedures using Fawkes components.
+This is the core of the playbook—step-by-step procedures using Fawkes components.
 
 ### Step 1: Configure Deployment Event Collection
 
@@ -153,17 +153,17 @@ spec:
         app: dora-collector
     spec:
       containers:
-      - name: collector
-        image: fawkes/dora-collector:v1.0.0
-        ports:
-        - containerPort: 8080
-        volumeMounts:
-        - name: config
-          mountPath: /etc/dora
+        - name: collector
+          image: fawkes/dora-collector:v1.0.0
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config
+              mountPath: /etc/dora
       volumes:
-      - name: config
-        configMap:
-          name: dora-collector-config
+        - name: config
+          configMap:
+            name: dora-collector-config
 ---
 apiVersion: v1
 kind: Service
@@ -174,8 +174,8 @@ spec:
   selector:
     app: dora-collector
   ports:
-  - port: 8080
-    targetPort: 8080
+    - port: 8080
+      targetPort: 8080
 ```
 
 3. Apply the configuration:
@@ -191,10 +191,9 @@ kubectl get pods -n dora-metrics -l app=dora-collector
 ```
 
 ??? example "Expected Output"
-    ```
-    NAME                              READY   STATUS    RESTARTS   AGE
+`NAME                              READY   STATUS    RESTARTS   AGEE
     dora-collector-7d9f8b6c4f-x2k9j   1/1     Running   0          30s
-    ```
+    `
 
 ### Step 2: Configure ArgoCD Webhooks
 
@@ -332,7 +331,7 @@ pipeline {
 **Verification**: Run a pipeline and verify metrics are being collected.
 
 !!! warning "Common Pitfall"
-    Ensure the Jenkins service account has network access to the dora-collector service. If using network policies, create appropriate rules.
+Ensure the Jenkins service account has network access to the dora-collector service. If using network policies, create appropriate rules.
 
 ### Step 4: Configure Incident Tracking for MTTR
 
@@ -351,25 +350,25 @@ metadata:
   namespace: monitoring
 spec:
   groups:
-  - name: dora-incidents
-    rules:
-    - alert: ServiceDown
-      expr: up{job=~".*production.*"} == 0
-      for: 1m
-      labels:
-        severity: critical
-        dora_incident: "true"
-      annotations:
-        summary: "Service {{ $labels.job }} is down"
+    - name: dora-incidents
+      rules:
+        - alert: ServiceDown
+          expr: up{job=~".*production.*"} == 0
+          for: 1m
+          labels:
+            severity: critical
+            dora_incident: "true"
+          annotations:
+            summary: "Service {{ $labels.job }} is down"
 
-    - alert: HighErrorRate
-      expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
-      for: 2m
-      labels:
-        severity: warning
-        dora_incident: "true"
-      annotations:
-        summary: "High error rate for {{ $labels.service }}"
+        - alert: HighErrorRate
+          expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
+          for: 2m
+          labels:
+            severity: warning
+            dora_incident: "true"
+          annotations:
+            summary: "High error rate for {{ $labels.service }}"
 ```
 
 2. Configure Alertmanager to notify DORA collector:
@@ -379,7 +378,7 @@ spec:
 receivers:
   - name: dora-collector
     webhook_configs:
-      - url: 'http://dora-collector.dora-metrics:8080/webhooks/alertmanager'
+      - url: "http://dora-collector.dora-metrics:8080/webhooks/alertmanager"
         send_resolved: true
 
 route:
@@ -459,7 +458,7 @@ kubectl apply -f dora-dashboard-configmap.yaml
 ## IV. Validation & Success Metrics
 
 !!! check "Diátaxis: How-to Guide / Reference"
-    Instructions for verifying the implementation and measuring success.
+Instructions for verifying the implementation and measuring success.
 
 ### Functional Validation
 
@@ -502,11 +501,11 @@ kubectl exec -n monitoring deploy/prometheus -- \
 
 ### Success Metrics
 
-| Metric | How to Measure | Target Value | Dashboard Link |
-|--------|----------------|--------------|----------------|
-| Data Collection | Check `dora_*` metrics exist | All 4 metrics present | /grafana/dora |
-| Dashboard Load | Grafana dashboard loads | < 3 seconds | /grafana/dora |
-| Historical Data | Query 7-day data | Data available | /grafana/dora |
+| Metric          | How to Measure               | Target Value          | Dashboard Link |
+| --------------- | ---------------------------- | --------------------- | -------------- |
+| Data Collection | Check `dora_*` metrics exist | All 4 metrics present | /grafana/dora  |
+| Dashboard Load  | Grafana dashboard loads      | < 3 seconds           | /grafana/dora  |
+| Historical Data | Query 7-day data             | Data available        | /grafana/dora  |
 
 ### Verification Checklist
 
@@ -520,19 +519,19 @@ kubectl exec -n monitoring deploy/prometheus -- \
 
 This playbook establishes the foundation for measuring DORA metrics. After 2-4 weeks of data collection, you'll be able to:
 
-| DORA Metric | Initial Baseline | Typical Elite Target |
-|-------------|-----------------|---------------------|
-| Deployment Frequency | Measured | Multiple per day |
-| Lead Time for Changes | Measured | < 1 hour |
-| Change Failure Rate | Measured | 0-15% |
-| Time to Restore | Measured | < 1 hour |
+| DORA Metric           | Initial Baseline | Typical Elite Target |
+| --------------------- | ---------------- | -------------------- |
+| Deployment Frequency  | Measured         | Multiple per day     |
+| Lead Time for Changes | Measured         | < 1 hour             |
+| Change Failure Rate   | Measured         | 0-15%                |
+| Time to Restore       | Measured         | < 1 hour             |
 
 ---
 
 ## V. Client Presentation Talking Points
 
 !!! quote "Diátaxis: Explanation / Conceptual"
-    Ready-to-use business language for communicating success to client executives.
+Ready-to-use business language for communicating success to client executives.
 
 ### Executive Summary
 
@@ -569,25 +568,25 @@ This playbook establishes the foundation for measuring DORA metrics. After 2-4 w
 ### Common Executive Questions & Answers
 
 ??? question "How does this compare to industry benchmarks?"
-    According to the 2023 State of DevOps Report from DORA, elite performers deploy on demand (often multiple times per day), have lead times under one hour, a change failure rate of 0-15%, and recover from failures in under one hour. Your current metrics place you in the [Elite/High/Medium/Low] performance category, which aligns with approximately [X%] of organizations studied.
+According to the 2023 State of DevOps Report from DORA, elite performers deploy on demand (often multiple times per day), have lead times under one hour, a change failure rate of 0-15%, and recover from failures in under one hour. Your current metrics place you in the [Elite/High/Medium/Low] performance category, which aligns with approximately [X%] of organizations studied.
 
 ??? question "What's the ROI on this implementation?"
-    The primary ROI is in enabling data-driven improvement. Organizations that improve from Medium to Elite performance see 2x improvement in organizational performance goals according to DORA research. Additionally, by identifying bottlenecks, we typically see 20-30% improvement in developer productivity within the first quarter.
+The primary ROI is in enabling data-driven improvement. Organizations that improve from Medium to Elite performance see 2x improvement in organizational performance goals according to DORA research. Additionally, by identifying bottlenecks, we typically see 20-30% improvement in developer productivity within the first quarter.
 
 ??? question "What's the risk if we don't maintain this?"
-    Without continued attention, metrics data quality may degrade as systems change. We recommend quarterly reviews of data collection configuration as part of normal platform maintenance. The cost of maintenance is minimal compared to the value of continued visibility.
+Without continued attention, metrics data quality may degrade as systems change. We recommend quarterly reviews of data collection configuration as part of normal platform maintenance. The cost of maintenance is minimal compared to the value of continued visibility.
 
 ??? question "What's the next step after implementing metrics?"
-    With baseline metrics established, the next step is to identify your primary bottleneck. Typically, this is either deployment frequency (solved by automation) or lead time (solved by pipeline optimization). We can run a focused improvement sprint targeting your biggest constraint.
+With baseline metrics established, the next step is to identify your primary bottleneck. Typically, this is either deployment frequency (solved by automation) or lead time (solved by pipeline optimization). We can run a focused improvement sprint targeting your biggest constraint.
 
 ### Follow-Up Actions
 
-| Action | Owner | Timeline |
-|--------|-------|----------|
-| Review baseline metrics after 2 weeks | Engineering Lead | +2 weeks |
-| Identify primary improvement opportunity | Platform Team | +3 weeks |
-| Begin targeted improvement playbook | Consultant/Team | +4 weeks |
-| Schedule stakeholder review | Consultant | +6 weeks |
+| Action                                   | Owner            | Timeline |
+| ---------------------------------------- | ---------------- | -------- |
+| Review baseline metrics after 2 weeks    | Engineering Lead | +2 weeks |
+| Identify primary improvement opportunity | Platform Team    | +3 weeks |
+| Begin targeted improvement playbook      | Consultant/Team  | +4 weeks |
+| Schedule stakeholder review              | Consultant       | +6 weeks |
 
 ---
 
@@ -601,15 +600,15 @@ This playbook establishes the foundation for measuring DORA metrics. After 2-4 w
 
 ### Troubleshooting
 
-| Issue | Possible Cause | Resolution |
-|-------|---------------|------------|
-| Metrics not appearing | Webhook not configured | Verify ArgoCD/Jenkins webhook settings |
-| Dashboard empty | Prometheus not scraping | Check Prometheus targets and scrape config |
-| Incorrect lead time | Clock skew | Ensure NTP sync across nodes |
-| Missing deployments | Network policy blocking | Add network policy for dora-metrics namespace |
+| Issue                 | Possible Cause          | Resolution                                    |
+| --------------------- | ----------------------- | --------------------------------------------- |
+| Metrics not appearing | Webhook not configured  | Verify ArgoCD/Jenkins webhook settings        |
+| Dashboard empty       | Prometheus not scraping | Check Prometheus targets and scrape config    |
+| Incorrect lead time   | Clock skew              | Ensure NTP sync across nodes                  |
+| Missing deployments   | Network policy blocking | Add network policy for dora-metrics namespace |
 
 ### Change Log
 
-| Date | Version | Changes |
-|------|---------|---------|
-| 2024-01-15 | 1.0 | Initial release |
+| Date       | Version | Changes         |
+| ---------- | ------- | --------------- |
+| 2024-01-15 | 1.0     | Initial release |

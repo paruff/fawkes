@@ -7,6 +7,7 @@ This directory contains the networking infrastructure for the Fawkes platform, p
 ### 1. NGINX Ingress Controller (`ingress-controller/`)
 
 High-availability Layer 7 Ingress Controller with:
+
 - 2 replicas with pod anti-affinity for HA
 - TLS termination and automatic HTTPS redirect
 - Security headers (HSTS, hide server tokens)
@@ -16,6 +17,7 @@ High-availability Layer 7 Ingress Controller with:
 ### 2. cert-manager (`cert-manager/`)
 
 Automatic TLS certificate provisioning with:
+
 - Let's Encrypt integration (staging and production)
 - Self-signed issuer for internal services
 - Automatic certificate renewal
@@ -24,6 +26,7 @@ Automatic TLS certificate provisioning with:
 ### 3. ExternalDNS (`external-dns/`)
 
 Automated DNS record management with:
+
 - AWS Route53 support (configurable for other providers)
 - Automatic record creation from Ingress resources
 - TXT record ownership tracking
@@ -32,6 +35,7 @@ Automated DNS record management with:
 ### 4. ClusterIssuer (`tls-cluster-issuer.yaml`)
 
 Certificate issuers for cert-manager:
+
 - `letsencrypt-staging`: Testing without rate limits
 - `letsencrypt-prod`: Production certificates
 - `selfsigned-issuer`: Internal/development use
@@ -39,6 +43,7 @@ Certificate issuers for cert-manager:
 ### 5. Load Balancer Provisioning (`loadbalancer-provisioning/`)
 
 Terraform configuration for:
+
 - Static Elastic IP allocation
 - AWS NLB configuration
 - DNS record value output
@@ -63,11 +68,13 @@ Components are deployed in the following order using ArgoCD sync waves:
 ## Quick Start
 
 1. Deploy the networking stack via ArgoCD:
+
    ```bash
    kubectl apply -f platform/networking/networking-application.yaml
    ```
 
 2. Provision the static IP (optional, for predictable DNS):
+
    ```bash
    cd platform/networking/loadbalancer-provisioning
    cp terraform.tfvars.example terraform.tfvars
@@ -76,6 +83,7 @@ Components are deployed in the following order using ArgoCD sync waves:
    ```
 
 3. Configure wildcard DNS:
+
    ```bash
    # Get the Load Balancer IP
    kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
@@ -119,12 +127,12 @@ spec:
 
 ### Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `INGRESS_DOMAIN` | `fawkes.idp` | Base domain for ingress |
-| `TLS_CLUSTER_ISSUER` | `letsencrypt-prod` | Default certificate issuer |
-| `LETSENCRYPT_EMAIL` | `platform-admin@fawkes.idp` | Let's Encrypt notification email |
-| `DNS_PROVIDER` | `aws` | DNS provider for ExternalDNS |
+| Variable             | Default                     | Description                      |
+| -------------------- | --------------------------- | -------------------------------- |
+| `INGRESS_DOMAIN`     | `fawkes.idp`                | Base domain for ingress          |
+| `TLS_CLUSTER_ISSUER` | `letsencrypt-prod`          | Default certificate issuer       |
+| `LETSENCRYPT_EMAIL`  | `platform-admin@fawkes.idp` | Let's Encrypt notification email |
+| `DNS_PROVIDER`       | `aws`                       | DNS provider for ExternalDNS     |
 
 ### Cloud Provider Setup
 
@@ -151,6 +159,7 @@ spec:
 ### Grafana Dashboards
 
 Import the following dashboards:
+
 - NGINX Ingress: [Dashboard 9614](https://grafana.com/grafana/dashboards/9614)
 - cert-manager: [Dashboard 11001](https://grafana.com/grafana/dashboards/11001)
 

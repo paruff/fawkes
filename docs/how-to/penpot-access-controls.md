@@ -13,6 +13,7 @@ Penpot supports multiple authentication methods and provides role-based access c
 Users can register and log in with email and password.
 
 **Configuration** (in `deployment.yaml`):
+
 ```yaml
 env:
   - name: PENPOT_FLAGS
@@ -20,6 +21,7 @@ env:
 ```
 
 **User Registration**:
+
 - Navigate to https://penpot.fawkes.local
 - Click "Sign Up"
 - Enter email and password
@@ -30,11 +32,13 @@ env:
 Planned integration with Backstage OAuth for single sign-on.
 
 **Benefits**:
+
 - Single sign-on across Fawkes platform
 - Consistent user identity
 - Centralized access management
 
 **Implementation Plan**:
+
 ```yaml
 # Future configuration
 penpot:
@@ -53,6 +57,7 @@ penpot:
 Penpot supports LDAP and SAML for enterprise authentication.
 
 **Configuration Example**:
+
 ```yaml
 env:
   - name: PENPOT_LDAP_HOST
@@ -72,18 +77,21 @@ env:
 Penpot supports the following roles at the team level:
 
 1. **Owner**
+
    - Full control over team and all projects
    - Can add/remove members
    - Can manage team settings
    - Can delete team
 
 2. **Admin**
+
    - Can manage projects and members
    - Can create/delete projects
    - Can invite new members
    - Cannot delete team
 
 3. **Editor**
+
    - Can create and edit designs
    - Can comment on designs
    - Can share designs
@@ -128,6 +136,7 @@ Fawkes Platform Team
 ### Initial Setup
 
 1. **Create Admin User**:
+
    ```bash
    # Access Penpot backend pod
    kubectl exec -it -n fawkes penpot-backend-xxx -- bash
@@ -137,6 +146,7 @@ Fawkes Platform Team
    ```
 
 2. **Create Platform Team**:
+
    - Log in as admin
    - Click "Teams" → "Create Team"
    - Name: "Fawkes Platform"
@@ -192,6 +202,7 @@ Fawkes Platform Team
 5. Share link via Mattermost or email
 
 **Security Best Practices**:
+
 - Use expiring links for external reviews
 - Revoke links after review completion
 - Don't share internal/sensitive designs publicly
@@ -203,6 +214,7 @@ Fawkes Platform Team
 Developers accessing designs through Backstage should have **Viewer** role:
 
 1. **Automatic Access** (Future):
+
    - Backstage catalog references Penpot designs
    - Developers automatically get viewer access via OAuth
 
@@ -216,17 +228,20 @@ Developers accessing designs through Backstage should have **Viewer** role:
 For automation and component sync:
 
 1. **Create Service Account**:
+
    ```bash
    # API tokens are per-user in Penpot
    # Create a dedicated "service" user for automation
    ```
 
 2. **Generate API Token**:
+
    - Log in as service user
    - Navigate to Profile → API Tokens
    - Create new token with read-only access
 
 3. **Store Token Securely**:
+
    ```bash
    # Create Kubernetes secret
    kubectl create secret generic penpot-api-token \
@@ -272,6 +287,7 @@ env:
 ### Rate Limiting
 
 Penpot includes built-in rate limiting:
+
 - API requests: 100 requests/minute per user
 - Login attempts: 5 failed attempts trigger 15-minute lockout
 - Export requests: 10 exports/minute per user
@@ -292,6 +308,7 @@ env:
 ```
 
 Access audit logs:
+
 ```bash
 kubectl logs -n fawkes penpot-backend-xxx | grep "audit"
 ```
@@ -348,12 +365,14 @@ spec:
 ### Data Privacy
 
 Penpot stores the following user data:
+
 - Email addresses
 - Hashed passwords (bcrypt)
 - Design files and assets
 - Activity logs
 
 **GDPR Compliance**:
+
 - Users can request data export
 - Users can request account deletion
 - All data is stored within cluster (no external cloud)
@@ -366,7 +385,7 @@ Configure retention policies:
 # In deployment.yaml
 env:
   - name: PENPOT_DATA_RETENTION_DAYS
-    value: "365"  # Keep inactive projects for 1 year
+    value: "365" # Keep inactive projects for 1 year
 ```
 
 ## Troubleshooting
@@ -374,12 +393,14 @@ env:
 ### User Cannot Log In
 
 1. **Check user exists**:
+
    ```bash
    kubectl exec -n fawkes penpot-backend-xxx -- \
      psql -U penpot -d penpot -c "SELECT email FROM profile;"
    ```
 
 2. **Reset password**:
+
    - User clicks "Forgot Password" on login page
    - Or admin resets via database (not recommended)
 
@@ -393,9 +414,11 @@ env:
 ### User Cannot Access Project
 
 1. **Verify team membership**:
+
    - Check if user is member of team that owns project
 
 2. **Check project permissions**:
+
    - Verify project is not set to "Private" if user is external
 
 3. **Check user role**:
@@ -404,12 +427,14 @@ env:
 ### API Token Not Working
 
 1. **Verify token is valid**:
+
    ```bash
    curl -H "Authorization: Token YOUR_TOKEN" \
      https://penpot.fawkes.local/api/rpc/command/get-profile
    ```
 
 2. **Check token expiration**:
+
    - Tokens don't expire by default in Penpot
    - But can be revoked by user
 

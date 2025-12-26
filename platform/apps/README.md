@@ -42,65 +42,65 @@ platform/apps/
 
 ### Core Platform
 
-| Component | Purpose | Namespace |
-|-----------|---------|-----------|
-| [ArgoCD](argocd/) | GitOps continuous delivery | `argocd` |
-| [Ingress NGINX](ingress-nginx/) | Ingress controller | `ingress-nginx` |
-| [Cert Manager](cert-manager/) | TLS certificate management | `cert-manager` |
-| [Storage](storage/) | Storage classes and provisioners | `kube-system` |
+| Component                       | Purpose                          | Namespace       |
+| ------------------------------- | -------------------------------- | --------------- |
+| [ArgoCD](argocd/)               | GitOps continuous delivery       | `argocd`        |
+| [Ingress NGINX](ingress-nginx/) | Ingress controller               | `ingress-nginx` |
+| [Cert Manager](cert-manager/)   | TLS certificate management       | `cert-manager`  |
+| [Storage](storage/)             | Storage classes and provisioners | `kube-system`   |
 
 ### Developer Experience
 
-| Component | Purpose | Namespace |
-|-----------|---------|-----------|
-| [Backstage](backstage/) | Developer portal and service catalog | `fawkes` |
-| [Eclipse Che](eclipse-che/) | Cloud development environments | `eclipse-che` |
-| [Dashboard](dashboard/) | Kubernetes web UI | `kubernetes-dashboard` |
+| Component                   | Purpose                              | Namespace              |
+| --------------------------- | ------------------------------------ | ---------------------- |
+| [Backstage](backstage/)     | Developer portal and service catalog | `fawkes`               |
+| [Eclipse Che](eclipse-che/) | Cloud development environments       | `eclipse-che`          |
+| [Dashboard](dashboard/)     | Kubernetes web UI                    | `kubernetes-dashboard` |
 
 ### CI/CD
 
-| Component | Purpose | Namespace |
-|-----------|---------|-----------|
-| [Jenkins](jenkins/) | Build and deployment automation | `fawkes` |
-| [Harbor](harbor/) | Container registry with scanning | `harbor` |
-| [SonarQube](sonarqube/) | Code quality and security analysis | `fawkes` |
-| [Trivy](trivy/) | Container security scanning | `fawkes` |
+| Component               | Purpose                            | Namespace |
+| ----------------------- | ---------------------------------- | --------- |
+| [Jenkins](jenkins/)     | Build and deployment automation    | `fawkes`  |
+| [Harbor](harbor/)       | Container registry with scanning   | `harbor`  |
+| [SonarQube](sonarqube/) | Code quality and security analysis | `fawkes`  |
+| [Trivy](trivy/)         | Container security scanning        | `fawkes`  |
 
 ### Observability
 
-| Component | Purpose | Namespace |
-|-----------|---------|-----------|
-| [Prometheus](prometheus/) | Metrics collection and alerting | `monitoring` |
-| [Grafana](grafana/) | Metrics visualization | `monitoring` |
-| [OpenTelemetry](opentelemetry/) | Telemetry data pipeline | `monitoring` |
-| [OpenSearch](opensearch/) | Log aggregation and search | `logging` |
-| [Fluent Bit](fluent-bit/) | Log collection | `logging` |
-| [Tempo](tempo/) | Distributed tracing | `monitoring` |
+| Component                       | Purpose                         | Namespace    |
+| ------------------------------- | ------------------------------- | ------------ |
+| [Prometheus](prometheus/)       | Metrics collection and alerting | `monitoring` |
+| [Grafana](grafana/)             | Metrics visualization           | `monitoring` |
+| [OpenTelemetry](opentelemetry/) | Telemetry data pipeline         | `monitoring` |
+| [OpenSearch](opensearch/)       | Log aggregation and search      | `logging`    |
+| [Fluent Bit](fluent-bit/)       | Log collection                  | `logging`    |
+| [Tempo](tempo/)                 | Distributed tracing             | `monitoring` |
 
 ### Security
 
-| Component | Purpose | Namespace |
-|-----------|---------|-----------|
-| [Vault](vault/) | Secrets management | `vault` |
-| [Vault CSI Driver](vault-csi-driver/) | Vault CSI integration | `kube-system` |
-| [External Secrets](external-secrets/) | Cloud secrets sync | `external-secrets` |
-| [Kyverno](kyverno/) | Policy enforcement | `kyverno` |
+| Component                             | Purpose               | Namespace          |
+| ------------------------------------- | --------------------- | ------------------ |
+| [Vault](vault/)                       | Secrets management    | `vault`            |
+| [Vault CSI Driver](vault-csi-driver/) | Vault CSI integration | `kube-system`      |
+| [External Secrets](external-secrets/) | Cloud secrets sync    | `external-secrets` |
+| [Kyverno](kyverno/)                   | Policy enforcement    | `kyverno`          |
 
 ### Data & AI
 
-| Component | Purpose | Namespace |
-|-----------|---------|-----------|
-| [DevLake](devlake/) | DORA metrics collection | `devlake` |
-| [DataHub](datahub/) | Data catalog and lineage | `fawkes` |
-| [Weaviate](weaviate/) | Vector database for AI/ML | `fawkes` |
-| [PostgreSQL](postgresql/) | Relational database | `fawkes` |
+| Component                 | Purpose                   | Namespace |
+| ------------------------- | ------------------------- | --------- |
+| [DevLake](devlake/)       | DORA metrics collection   | `devlake` |
+| [DataHub](datahub/)       | Data catalog and lineage  | `fawkes`  |
+| [Weaviate](weaviate/)     | Vector database for AI/ML | `fawkes`  |
+| [PostgreSQL](postgresql/) | Relational database       | `fawkes`  |
 
 ### Collaboration
 
-| Component | Purpose | Namespace |
-|-----------|---------|-----------|
+| Component                 | Purpose                    | Namespace    |
+| ------------------------- | -------------------------- | ------------ |
 | [Mattermost](mattermost/) | Team messaging and ChatOps | `mattermost` |
-| [Focalboard](focalboard/) | Project management | `focalboard` |
+| [Focalboard](focalboard/) | Project management         | `focalboard` |
 
 ## Deployment
 

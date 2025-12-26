@@ -30,6 +30,7 @@ flake8 app/ tests/
 ### API Documentation
 
 Once running, visit:
+
 - Swagger UI: http://localhost:${{ values.port }}/docs
 - ReDoc: http://localhost:${{ values.port }}/redoc
 

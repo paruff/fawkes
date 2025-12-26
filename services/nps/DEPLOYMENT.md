@@ -54,7 +54,7 @@ Edit `k8s/postgresql-credentials.yaml`:
 ```yaml
 stringData:
   username: nps
-  password: YOUR_STRONG_DB_PASSWORD  # Generate a strong password
+  password: YOUR_STRONG_DB_PASSWORD # Generate a strong password
 ```
 
 ## Step 3: Deploy PostgreSQL Database
@@ -164,20 +164,20 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-  - hosts:
-    - nps.fawkes.idp
-    secretName: nps-service-tls
+    - hosts:
+        - nps.fawkes.idp
+      secretName: nps-service-tls
   rules:
-  - host: nps.fawkes.idp
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nps-service
-            port:
-              number: 8000
+    - host: nps.fawkes.idp
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nps-service
+                port:
+                  number: 8000
 ```
 
 Apply the ingress:
@@ -201,6 +201,7 @@ curl http://localhost:8000/metrics
 ```
 
 Key metrics:
+
 - `nps_responses_total{score_type}` - Total responses by type
 - `nps_score{period}` - Current NPS score
 - `nps_survey_request_duration_seconds{endpoint}` - Request duration
@@ -301,16 +302,19 @@ kubectl get pods -n fawkes -l app=nps-service
 ## Security Best Practices
 
 1. **Use External Secrets Operator** in production:
+
    ```bash
    # Replace k8s/secret.yaml with ExternalSecret
    kubectl apply -f external-secret.yaml
    ```
 
 2. **Rotate credentials regularly**:
+
    - Database password every 90 days
    - Mattermost bot token every 180 days
 
 3. **Enable network policies**:
+
    ```yaml
    apiVersion: networking.k8s.io/v1
    kind: NetworkPolicy
@@ -322,26 +326,26 @@ kubectl get pods -n fawkes -l app=nps-service
        matchLabels:
          app: nps-service
      policyTypes:
-     - Ingress
-     - Egress
+       - Ingress
+       - Egress
      ingress:
-     - from:
-       - namespaceSelector:
-           matchLabels:
-             name: fawkes
-       ports:
-       - protocol: TCP
-         port: 8000
+       - from:
+           - namespaceSelector:
+               matchLabels:
+                 name: fawkes
+         ports:
+           - protocol: TCP
+             port: 8000
      egress:
-     - to:
-       - namespaceSelector:
-           matchLabels:
-             name: fawkes
-       ports:
-       - protocol: TCP
-         port: 5432  # PostgreSQL
-       - protocol: TCP
-         port: 8065  # Mattermost
+       - to:
+           - namespaceSelector:
+               matchLabels:
+                 name: fawkes
+         ports:
+           - protocol: TCP
+             port: 5432 # PostgreSQL
+           - protocol: TCP
+             port: 8065 # Mattermost
    ```
 
 4. **Enable audit logging** for survey responses
@@ -349,6 +353,7 @@ kubectl get pods -n fawkes -l app=nps-service
 ## Support
 
 For issues or questions:
+
 - Check logs: `kubectl logs -n fawkes -l app=nps-service`
 - Open issue in Fawkes repository
 - Contact platform team

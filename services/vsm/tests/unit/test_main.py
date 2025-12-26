@@ -32,27 +32,18 @@ def test_health_endpoint_structure():
 def test_create_work_item_validation():
     """Test work item creation validation."""
     # Test with invalid type
-    response = client.post(
-        "/api/v1/work-items",
-        json={"title": "Test item", "type": "invalid_type"}
-    )
+    response = client.post("/api/v1/work-items", json={"title": "Test item", "type": "invalid_type"})
     assert response.status_code == 422  # Validation error
 
     # Test with missing title
-    response = client.post(
-        "/api/v1/work-items",
-        json={"type": "feature"}
-    )
+    response = client.post("/api/v1/work-items", json={"type": "feature"})
     assert response.status_code == 422
 
 
 def test_transition_validation():
     """Test stage transition validation."""
     # Test with non-existent work item - expects failure without DB
-    response = client.put(
-        "/api/v1/work-items/99999/transition",
-        json={"to_stage": "Development"}
-    )
+    response = client.put("/api/v1/work-items/99999/transition", json={"to_stage": "Development"})
     # Will fail with 404 or 500 or 503 depending on DB state
     assert response.status_code in [404, 500, 503]
 

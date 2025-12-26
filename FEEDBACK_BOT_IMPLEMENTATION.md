@@ -7,6 +7,7 @@ Successfully implemented issue #87: Deploy Mattermost Feedback Bot
 ## What Was Built
 
 ### Feedback Bot Service (`services/feedback-bot/`)
+
 - **FastAPI application** with natural language processing
 - **VADER sentiment analysis** - analyzes positive/negative/neutral sentiment
 - **Auto-categorization** - 10 categories (UI, Performance, Documentation, CI/CD, Security, API, Feature Request, Bug, Observability, Developer Experience)
@@ -18,16 +19,19 @@ Successfully implemented issue #87: Deploy Mattermost Feedback Bot
 ### Key Features
 
 1. **Natural Language Interface**
+
    - Users type feedback naturally: "The new UI is amazing!"
    - Bot analyzes and categorizes automatically
    - No forms or structured input required
 
 2. **Sentiment Analysis**
+
    - Positive: 😊 (compound score ≥ 0.05)
    - Neutral: 😐 (compound score -0.05 to 0.05)
    - Negative: 😞 (compound score ≤ -0.05)
 
 3. **Auto-Categorization**
+
    - Keyword-based matching for 10 categories
    - Falls back to "General" if no match
    - Handles multiple categories intelligently
@@ -40,6 +44,7 @@ Successfully implemented issue #87: Deploy Mattermost Feedback Bot
 ## Deployment
 
 ### Kubernetes Manifests (`platform/apps/feedback-bot/`)
+
 - `deployment.yaml` - 2 replicas with health checks
 - `service.yaml` - ClusterIP service on port 8000
 - `secret.yaml` - Optional credentials for API and bot token
@@ -102,6 +107,7 @@ Environment variables in `deployment.yaml`:
 ## Testing
 
 ### Unit Tests
+
 ```bash
 cd services/feedback-bot
 pip install -r requirements.txt -r requirements-dev.txt
@@ -111,7 +117,9 @@ pytest tests/test_main.py -v
 **Result:** ✅ 7/7 tests passing
 
 ### BDD Tests
+
 Located in `tests/bdd/features/feedback-bot.feature`
+
 - 15 scenarios covering all features
 - Tests for NLP, sentiment analysis, auto-categorization
 - Integration and error handling tests
@@ -172,6 +180,7 @@ Metrics exposed on `/metrics`:
 ## Next Steps
 
 1. **Deploy to cluster:**
+
    ```bash
    kubectl apply -k platform/apps/feedback-bot/
    ```
@@ -179,11 +188,13 @@ Metrics exposed on `/metrics`:
 2. **Configure Mattermost slash command** as documented above
 
 3. **Test bot:**
+
    ```
    /feedback Test message
    ```
 
 4. **Monitor metrics:**
+
    - Check Prometheus for `feedback_bot_*` metrics
    - View logs: `kubectl logs -n fawkes -l app=feedback-bot`
 
@@ -206,6 +217,7 @@ Metrics exposed on `/metrics`:
 ## Support
 
 For issues or questions:
+
 - View logs: `kubectl logs -n fawkes -l app=feedback-bot -f`
 - Check health: `curl http://feedback-bot:8000/health`
 - View metrics: `curl http://feedback-bot:8000/metrics`

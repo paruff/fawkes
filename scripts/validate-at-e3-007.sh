@@ -36,7 +36,7 @@ while [[ $# -gt 0 ]]; do
       NAMESPACE="$2"
       shift 2
       ;;
-    -v|--verbose)
+    -v | --verbose)
       VERBOSE=true
       shift
       ;;
@@ -84,7 +84,7 @@ run_test() {
     log_info "Running: $test_name"
   fi
 
-  if eval "$test_command" >/dev/null 2>&1; then
+  if eval "$test_command" > /dev/null 2>&1; then
     log_success "$test_name"
     return 0
   else
@@ -99,7 +99,7 @@ run_test() {
 count_events() {
   local file="$1"
   local pattern="$2"
-  grep -c "$pattern" "$file" 2>/dev/null || echo "0"
+  grep -c "$pattern" "$file" 2> /dev/null || echo "0"
 }
 
 ################################################################################
@@ -361,7 +361,7 @@ log_info "Validating Plausible integration..."
 echo ""
 
 # Test 53: Check if Plausible pod is running
-if kubectl get pods -n "$NAMESPACE" -l app=plausible --no-headers 2>/dev/null | grep -q Running; then
+if kubectl get pods -n "$NAMESPACE" -l app=plausible --no-headers 2> /dev/null | grep -q Running; then
   log_success "Plausible pod is running"
   ((TESTS_PASSED++))
   ((TESTS_TOTAL++))
@@ -372,7 +372,7 @@ else
 fi
 
 # Test 54: Check if Plausible service exists
-if kubectl get svc -n "$NAMESPACE" plausible --no-headers 2>/dev/null >/dev/null; then
+if kubectl get svc -n "$NAMESPACE" plausible --no-headers 2> /dev/null > /dev/null; then
   log_success "Plausible service exists"
   ((TESTS_PASSED++))
   ((TESTS_TOTAL++))

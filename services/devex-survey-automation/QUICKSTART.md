@@ -3,6 +3,7 @@
 ## Overview
 
 This system automates DevEx surveys with:
+
 - **Weekly Pulse Surveys**: Monday 9 AM (5 questions, 2 minutes)
 - **Quarterly Deep-Dive**: Q1-Q4 start (comprehensive NPS + SPACE survey)
 - **Automated Reminders**: Wednesday 9 AM for non-respondents
@@ -83,11 +84,11 @@ curl http://localhost:8000/api/v1/survey/campaigns
 
 ## CronJob Schedules
 
-| CronJob | Schedule | Description |
-|---------|----------|-------------|
-| `devex-pulse-survey-weekly` | Monday 9:00 AM | Distribute weekly pulse survey |
-| `devex-pulse-survey-reminders` | Wednesday 9:00 AM | Send reminders to non-respondents |
-| `devex-deepdive-survey-quarterly` | Q1-Q4 start, 9:00 AM | Distribute quarterly deep-dive |
+| CronJob                           | Schedule             | Description                       |
+| --------------------------------- | -------------------- | --------------------------------- |
+| `devex-pulse-survey-weekly`       | Monday 9:00 AM       | Distribute weekly pulse survey    |
+| `devex-pulse-survey-reminders`    | Wednesday 9:00 AM    | Send reminders to non-respondents |
+| `devex-deepdive-survey-quarterly` | Q1-Q4 start, 9:00 AM | Distribute quarterly deep-dive    |
 
 ### Manually Trigger CronJob
 
@@ -118,6 +119,7 @@ kubectl logs -n fawkes job/<job-name>
 ### Prometheus Metrics
 
 Available at `/metrics`:
+
 - `devex_survey_distributed_total{type}` - Surveys distributed
 - `devex_survey_responses_total{type}` - Responses received
 - `devex_survey_response_rate{type}` - Response rate %
@@ -126,6 +128,7 @@ Available at `/metrics`:
 ### Grafana Dashboard
 
 Import metrics to create dashboard with:
+
 - Response rate trends
 - Weekly pulse metrics (flow state, cognitive load, etc.)
 - Survey distribution success rate
@@ -161,17 +164,20 @@ ORDER BY started_at DESC;
 ### Surveys Not Being Sent
 
 1. Check Mattermost integration:
+
 ```bash
 kubectl get secret devex-survey-mattermost -n fawkes -o yaml
 ```
 
 2. Check CronJob schedules:
+
 ```bash
 kubectl get cronjobs -n fawkes
 kubectl describe cronjob devex-pulse-survey-weekly -n fawkes
 ```
 
 3. View recent jobs:
+
 ```bash
 kubectl get jobs -n fawkes -l app=devex-survey-automation
 ```
@@ -209,10 +215,11 @@ kubectl logs -n fawkes -l app=devex-survey-automation --tail=100
 ### With Backstage
 
 Add to `app-config.yaml`:
+
 ```yaml
 proxy:
   endpoints:
-    '/devex-surveys':
+    "/devex-surveys":
       target: http://devex-survey-automation.fawkes.svc:8000
       changeOrigin: true
 ```
@@ -220,6 +227,7 @@ proxy:
 ### With Space-Metrics Service
 
 Pulse survey responses are automatically forwarded to:
+
 - URL: `http://space-metrics.fawkes.svc:8000/api/v1/surveys/pulse/submit`
 - No configuration needed if services are in same namespace
 
@@ -235,10 +243,12 @@ Pulse survey responses are automatically forwarded to:
 ## Response Rate Targets
 
 **Goals**:
+
 - Weekly Pulse: >60% response rate
 - Quarterly Deep-Dive: >40% response rate
 
 **Strategies to Improve**:
+
 - Keep surveys short (2-5 minutes)
 - Send at optimal times (Monday morning)
 - Show impact of previous feedback
@@ -249,6 +259,7 @@ Pulse survey responses are automatically forwarded to:
 ## Privacy & Ethics
 
 **Remember**:
+
 - ❌ Never use for individual performance reviews
 - ❌ Never rank or compare developers
 - ❌ Never use for hiring/firing decisions
@@ -260,6 +271,7 @@ Pulse survey responses are automatically forwarded to:
 ## Support
 
 For issues:
+
 1. Check logs: `kubectl logs -n fawkes -l app=devex-survey-automation`
 2. Check health: `curl http://<service>/health`
 3. Review documentation in `services/devex-survey-automation/README.md`
@@ -269,6 +281,7 @@ For issues:
 ## Next Steps
 
 After deployment:
+
 1. Configure Mattermost bot token
 2. Test with small group (`test_mode: true`)
 3. Verify surveys are delivered

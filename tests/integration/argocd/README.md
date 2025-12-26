@@ -56,6 +56,7 @@ pytest tests/bdd -v -m gitops
 ## Test Reports
 
 Test reports are generated in the `reports/` directory with timestamps:
+
 - `reports/at-e1-002-validation-YYYYMMDD-HHMMSS.json`
 
 ## Validation Commands

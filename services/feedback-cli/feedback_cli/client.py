@@ -14,10 +14,7 @@ class FeedbackSubmission(BaseModel):
     comment: str = Field(..., description="Feedback comment", min_length=1)
     email: Optional[str] = Field(None, description="Optional email for follow-up")
     page_url: Optional[str] = Field(None, description="Page URL where feedback was submitted")
-    feedback_type: str = Field(
-        "feedback",
-        description="Type of feedback (feedback, bug_report, feature_request)"
-    )
+    feedback_type: str = Field("feedback", description="Type of feedback (feedback, bug_report, feature_request)")
 
 
 class FeedbackClient:

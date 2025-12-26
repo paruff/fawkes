@@ -11,47 +11,47 @@ JSON_FILE="./data/issues/epic3.json"
 
 # Check if file exists
 if [ ! -f "$JSON_FILE" ]; then
-    echo "ERROR: File $JSON_FILE not found"
-    exit 1
+  echo "ERROR: File $JSON_FILE not found"
+  exit 1
 fi
 
 echo "1. Checking JSON validity..."
-if jq empty "$JSON_FILE" 2>/dev/null; then
-    echo "✅ JSON is valid"
+if jq empty "$JSON_FILE" 2> /dev/null; then
+  echo "✅ JSON is valid"
 else
-    echo "❌ JSON is invalid - syntax errors detected"
-    jq empty "$JSON_FILE"
-    exit 1
+  echo "❌ JSON is invalid - syntax errors detected"
+  jq empty "$JSON_FILE"
+  exit 1
 fi
 
 echo ""
 echo "2. Checking for null tasks arrays..."
-NULL_TASKS=$(jq -r '.issues[] | select(.tasks == null) | .number' "$JSON_FILE" 2>/dev/null)
+NULL_TASKS=$(jq -r '.issues[] | select(.tasks == null) | .number' "$JSON_FILE" 2> /dev/null)
 if [ -n "$NULL_TASKS" ]; then
-    echo "❌ Found issues with null tasks:"
-    echo "$NULL_TASKS"
+  echo "❌ Found issues with null tasks:"
+  echo "$NULL_TASKS"
 else
-    echo "✅ No null tasks arrays found"
+  echo "✅ No null tasks arrays found"
 fi
 
 echo ""
 echo "3. Checking for issues without tasks array..."
-NO_TASKS=$(jq -r '.issues[] | select(has("tasks") | not) | .number' "$JSON_FILE" 2>/dev/null)
+NO_TASKS=$(jq -r '.issues[] | select(has("tasks") | not) | .number' "$JSON_FILE" 2> /dev/null)
 if [ -n "$NO_TASKS" ]; then
-    echo "⚠️  Found issues without tasks array:"
-    echo "$NO_TASKS"
+  echo "⚠️  Found issues without tasks array:"
+  echo "$NO_TASKS"
 else
-    echo "✅ All issues have tasks array"
+  echo "✅ All issues have tasks array"
 fi
 
 echo ""
 echo "4. Checking for empty or malformed tasks..."
-EMPTY_TASKS=$(jq -r '.issues[] | select(.tasks == []) | .number' "$JSON_FILE" 2>/dev/null)
+EMPTY_TASKS=$(jq -r '.issues[] | select(.tasks == []) | .number' "$JSON_FILE" 2> /dev/null)
 if [ -n "$EMPTY_TASKS" ]; then
-    echo "⚠️  Found issues with empty tasks array:"
-    echo "$EMPTY_TASKS"
+  echo "⚠️  Found issues with empty tasks array:"
+  echo "$EMPTY_TASKS"
 else
-    echo "✅ All issues have non-empty tasks"
+  echo "✅ All issues have non-empty tasks"
 fi
 
 echo ""

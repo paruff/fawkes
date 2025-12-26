@@ -64,8 +64,8 @@ npm run type-check
 ### Test Structure
 
 ```javascript
-describe('MyFunction', () => {
-  it('should return expected value', () => {
+describe("MyFunction", () => {
+  it("should return expected value", () => {
     // Arrange
     const input = setupTestData();
 
@@ -130,11 +130,11 @@ mkdocs build
 Use a structured logging library like Winston or Pino:
 
 ```javascript
-const logger = require('winston');
+const logger = require("winston");
 
-logger.info('Processing request', {
+logger.info("Processing request", {
   userId: userId,
-  requestId: requestId
+  requestId: requestId,
 });
 ```
 
@@ -151,11 +151,11 @@ Expose Prometheus metrics for:
 Use OpenTelemetry for distributed tracing:
 
 ```javascript
-const { trace } = require('@opentelemetry/api');
+const { trace } = require("@opentelemetry/api");
 
-const tracer = trace.getTracer('my-service');
+const tracer = trace.getTracer("my-service");
 
-const span = tracer.startSpan('operation_name');
+const span = tracer.startSpan("operation_name");
 try {
   // Your code here
 } finally {

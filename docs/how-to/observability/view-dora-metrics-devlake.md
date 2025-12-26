@@ -86,12 +86,12 @@ Time Range: Last 90 days
 
 **Interpretation**:
 
-| Performance Level | Deployment Frequency |
-|-------------------|---------------------|
-| Elite | Multiple deploys per day |
-| High | Between once per day and once per week |
-| Medium | Between once per week and once per month |
-| Low | Fewer than once per month |
+| Performance Level | Deployment Frequency                     |
+| ----------------- | ---------------------------------------- |
+| Elite             | Multiple deploys per day                 |
+| High              | Between once per day and once per week   |
+| Medium            | Between once per week and once per month |
+| Low               | Fewer than once per month                |
 
 **Example view**:
 
@@ -124,12 +124,12 @@ Time Range: Last 90 days
 
 **Interpretation**:
 
-| Performance Level | Lead Time for Changes |
-|-------------------|----------------------|
-| Elite | Less than one hour |
-| High | Between one day and one week |
-| Medium | Between one week and one month |
-| Low | More than one month |
+| Performance Level | Lead Time for Changes          |
+| ----------------- | ------------------------------ |
+| Elite             | Less than one hour             |
+| High              | Between one day and one week   |
+| Medium            | Between one week and one month |
+| Low               | More than one month            |
 
 **Example view**:
 
@@ -165,11 +165,11 @@ Time Range: Last 90 days
 **Interpretation**:
 
 | Performance Level | Change Failure Rate |
-|-------------------|-------------------|
-| Elite | 0-15% |
-| High | 16-30% |
-| Medium | 31-45% |
-| Low | More than 45% |
+| ----------------- | ------------------- |
+| Elite             | 0-15%               |
+| High              | 16-30%              |
+| Medium            | 31-45%              |
+| Low               | More than 45%       |
 
 **Example view**:
 
@@ -204,12 +204,12 @@ Time Range: Last 90 days
 
 **Interpretation**:
 
-| Performance Level | Mean Time to Recovery |
-|-------------------|---------------------|
-| Elite | Less than one hour |
-| High | Less than one day |
-| Medium | Between one day and one week |
-| Low | More than one week |
+| Performance Level | Mean Time to Recovery        |
+| ----------------- | ---------------------------- |
+| Elite             | Less than one hour           |
+| High              | Less than one day            |
+| Medium            | Between one day and one week |
+| Low               | More than one week           |
 
 **Example view**:
 
@@ -372,12 +372,12 @@ kubectl logs -n devlake -l app=devlake-collector --tail=50
 
 Based on the State of DevOps Report, teams are categorized as:
 
-| Tier | Deployment Frequency | Lead Time | Change Failure Rate | MTTR |
-|------|---------------------|-----------|-------------------|------|
-| **Elite** | Multiple/day | < 1 hour | 0-15% | < 1 hour |
-| **High** | 1/day - 1/week | 1 day - 1 week | 16-30% | < 1 day |
-| **Medium** | 1/week - 1/month | 1 week - 1 month | 31-45% | 1 day - 1 week |
-| **Low** | < 1/month | > 1 month | > 45% | > 1 week |
+| Tier       | Deployment Frequency | Lead Time        | Change Failure Rate | MTTR           |
+| ---------- | -------------------- | ---------------- | ------------------- | -------------- |
+| **Elite**  | Multiple/day         | < 1 hour         | 0-15%               | < 1 hour       |
+| **High**   | 1/day - 1/week       | 1 day - 1 week   | 16-30%              | < 1 day        |
+| **Medium** | 1/week - 1/month     | 1 week - 1 month | 31-45%              | 1 day - 1 week |
+| **Low**    | < 1/month            | > 1 month        | > 45%               | > 1 week       |
 
 ### Improvement Recommendations
 

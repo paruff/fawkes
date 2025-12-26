@@ -1,4 +1,3 @@
-
 # Fawkes - Internal Product Delivery Platform
 
 > **🎓 Learn platform engineering while building a world-class delivery platform**
@@ -50,6 +49,7 @@ One platform, one login, one interface. No more context switching between a doze
 Fawkes is applying for the AWS Activate program to accelerate development and provide free learning resources to the platform engineering community. We're building an AWS-native Internal Delivery Platform that helps organizations achieve Elite DORA performance.
 
 **Why AWS?**
+
 - Native integration with EKS, RDS, S3, and CloudWatch
 - Scalable, secure infrastructure for enterprise workloads
 - Cost-effective for startups and growing companies
@@ -61,8 +61,8 @@ Fawkes is applying for the AWS Activate program to accelerate development and pr
 
 ## AWS Activate Application
 
-   📊 [AWS Cost Estimation](docs/AWS_COST_ESTIMATION.md)
-   📈 [Business Case & Value Proposition](docs/BUSINESS_CASE.md)
+📊 [AWS Cost Estimation](docs/AWS_COST_ESTIMATION.md)
+📈 [Business Case & Value Proposition](docs/BUSINESS_CASE.md)
 
 ---
 
@@ -156,12 +156,12 @@ Unlike infrastructure-only solutions, Fawkes provides everything product teams n
 
 Fawkes automates collection and visualization of the **Four Key Metrics** that separate high performers from the rest:
 
-| Metric | What It Measures | Fawkes Automation |
-|--------|------------------|-------------------|
-| **Deployment Frequency** | How often you deploy to production | ✅ Automated via webhooks |
-| **Lead Time for Changes** | Time from commit to production | ✅ Git → CI → CD tracking |
-| **Change Failure Rate** | % of deployments causing failures | ✅ Deployment correlation |
-| **Time to Restore Service** | Time to recover from incidents | ✅ Incident detection to resolution |
+| Metric                      | What It Measures                   | Fawkes Automation                   |
+| --------------------------- | ---------------------------------- | ----------------------------------- |
+| **Deployment Frequency**    | How often you deploy to production | ✅ Automated via webhooks           |
+| **Lead Time for Changes**   | Time from commit to production     | ✅ Git → CI → CD tracking           |
+| **Change Failure Rate**     | % of deployments causing failures  | ✅ Deployment correlation           |
+| **Time to Restore Service** | Time to recover from incidents     | ✅ Incident detection to resolution |
 
 **Real-time dashboards** show your team's performance and track improvement over time.
 
@@ -262,6 +262,7 @@ Fawkes is built on a modern, cloud-native architecture:
 ```
 
 **Key Components**:
+
 - **Backstage** - Developer portal and dojo learning hub
 - **Mattermost** - Team collaboration and ChatOps
 - **Focalboard** - Project management (bundled with Mattermost)
@@ -289,6 +290,7 @@ Fawkes is built on a modern, cloud-native architecture:
 5. Total time: 40 hours to platform architect
 
 **Skills You'll Gain**:
+
 - Deploy applications with CI/CD
 - Implement GitOps workflows
 - Configure observability stacks
@@ -306,6 +308,7 @@ Fawkes is built on a modern, cloud-native architecture:
 5. Onboard first team (1 hour)
 
 **What You'll Have**:
+
 - Production-ready IDP
 - Automated DORA metrics
 - Golden path templates
@@ -323,6 +326,7 @@ Fawkes is built on a modern, cloud-native architecture:
 5. Celebrate with the community! 🎉
 
 **Ways to Contribute**:
+
 - Code (platform features, dojo modules)
 - Documentation (guides, tutorials)
 - Dojo content (create new modules)
@@ -466,6 +470,7 @@ Join our vibrant platform engineering community:
 ### Current Release: v0.1.0-alpha (MVP in Development)
 
 **Sprint 01-04** (Oct-Dec 2025): Foundation
+
 - ✅ Core architecture and governance
 - ✅ Dojo learning system design
 - 🔄 Backstage deployment
@@ -539,6 +544,7 @@ Fawkes is open source and community-driven. We welcome contributions of all kind
 3. **Browse** [good first issues](https://github.com/paruff/fawkes/labels/good%20first%20issue)
 4. **Fork** the repository and create a branch
 5. **Set up code quality tools** - Essential for all contributors:
+
    ```bash
    # Install pre-commit hooks (one-time setup)
    make pre-commit-setup
@@ -546,6 +552,7 @@ Fawkes is open source and community-driven. We welcome contributions of all kind
    # Run linters before committing
    make lint
    ```
+
 6. **Make** your changes with tests and documentation
 7. **Submit** a pull request
 8. **Celebrate** your contribution! 🎉
@@ -553,6 +560,7 @@ Fawkes is open source and community-driven. We welcome contributions of all kind
 ### Code Quality Standards
 
 All contributions must pass:
+
 - ✅ **Automated linting** - Bash, Python, Go, YAML, JSON, Markdown, Terraform
 - ✅ **Security scanning** - Secrets detection, SAST, container scanning
 - ✅ **Pre-commit hooks** - Run automatically on `git commit`
@@ -563,6 +571,7 @@ All contributions must pass:
 ### Recognition
 
 All contributors are recognized in:
+
 - [CONTRIBUTORS.md](CONTRIBUTORS.md) (automated via all-contributors bot)
 - Monthly "Contributor of the Month" spotlight
 - Annual "Top Contributors" feature
@@ -575,6 +584,7 @@ All contributors are recognized in:
 Fawkes is open source software licensed under the [MIT License](LICENSE).
 
 This means you can:
+
 - ✅ Use commercially
 - ✅ Modify
 - ✅ Distribute
@@ -582,6 +592,7 @@ This means you can:
 - ✅ Use privately
 
 With the requirements to:
+
 - Include the license and copyright notice
 - State changes made to the code
 

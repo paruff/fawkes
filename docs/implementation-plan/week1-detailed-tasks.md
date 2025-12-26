@@ -19,6 +19,7 @@
 #### Morning (4 hours): Issue #1 - K8s Cluster
 
 **Task 1.1: Create Terraform module** (90 min)
+
 ```bash
 # Location: infra/local/cluster/
 
@@ -29,6 +30,7 @@ mkdir -p infra/local/cluster/{terraform,inspec/controls,scripts}
 ```
 
 **Copilot Prompt for main.tf**:
+
 ```
 Create a Terraform configuration for deploying a local Kubernetes cluster using kind:
 
@@ -50,11 +52,13 @@ Add comments explaining each configuration block.
 ```
 
 **Task 1.2: Create InSpec validation** (45 min)
+
 ```bash
 # Location: infra/local/cluster/inspec/controls/cluster.rb
 ```
 
 **Copilot Prompt**:
+
 ```
 Create an InSpec test suite for validating Kubernetes cluster deployment:
 
@@ -71,11 +75,13 @@ Include descriptive test descriptions and impact levels.
 ```
 
 **Task 1.3: Create deployment script** (90 min)
+
 ```bash
 # Location: scripts/deploy-local-cluster.sh
 ```
 
 **Copilot Prompt**:
+
 ```
 Create a bash deployment script that:
 
@@ -109,11 +115,13 @@ Include functions for each major step.
 ```
 
 **Task 1.4: Create documentation** (45 min)
+
 ```bash
 # Location: docs/runbooks/local-cluster-setup.md
 ```
 
 **Copilot Prompt**:
+
 ```
 Create comprehensive documentation for local K8s cluster setup:
 
@@ -138,6 +146,7 @@ Add troubleshooting for:
 ```
 
 **Validation Commands**:
+
 ```bash
 # Test Terraform
 cd infra/local/cluster/terraform
@@ -169,12 +178,14 @@ kubectl top nodes
 #### Afternoon (2-3 hours): Issues #2 & #3 - Ingress & Storage
 
 **Task 2.1: Deploy nginx-ingress** (90 min)
+
 ```bash
 # Location: platform/apps/ingress-nginx/
 mkdir -p platform/apps/ingress-nginx
 ```
 
 **Copilot Prompt**:
+
 ```
 Create ArgoCD Application and Helm values for nginx-ingress-controller:
 
@@ -202,11 +213,13 @@ Files needed:
 ```
 
 **Task 3.1: Configure persistent storage** (60 min)
+
 ```bash
 # Location: platform/apps/local-path-storage/
 ```
 
 **Copilot Prompt**:
+
 ```
 Create configuration for local-path-provisioner:
 
@@ -231,6 +244,7 @@ Include cleanup script to delete test resources.
 ```
 
 **End of Day 1 Validation**:
+
 ```bash
 # Cluster healthy
 kubectl get nodes
@@ -260,11 +274,13 @@ kubectl get pvc
 #### Morning (4 hours): Issue #5 - Deploy ArgoCD
 
 **Task 5.1: Deploy ArgoCD** (90 min)
+
 ```bash
 # Location: platform/apps/argocd/
 ```
 
 **Copilot Prompt**:
+
 ```
 Create ArgoCD deployment configuration:
 
@@ -303,11 +319,13 @@ Include README with:
 ```
 
 **Task 5.2: Configure ArgoCD CLI** (30 min)
+
 ```bash
 # Location: scripts/configure-argocd.sh
 ```
 
 **Copilot Prompt**:
+
 ```
 Create script to configure ArgoCD CLI:
 
@@ -323,6 +341,7 @@ Include error handling and validation steps.
 ```
 
 **Validation**:
+
 ```bash
 # Deploy ArgoCD
 kubectl apply -f platform/apps/argocd/install.yaml
@@ -343,11 +362,13 @@ argocd app list
 #### Afternoon (3-4 hours): Issues #6 & #7 - Git Structure & App-of-Apps
 
 **Task 6.1: Create Git repository structure** (90 min)
+
 ```bash
 # Location: platform/apps/
 ```
 
 **Copilot Prompt**:
+
 ```
 Create comprehensive Git repository structure for platform components:
 
@@ -380,11 +401,13 @@ Add .gitkeep files to maintain empty directories.
 ```
 
 **Task 6.2: Create app templates** (60 min)
+
 ```bash
 # Location: platform/templates/
 ```
 
 **Copilot Prompt**:
+
 ```
 Create reusable templates for ArgoCD Applications:
 
@@ -406,11 +429,13 @@ Include documentation on template usage.
 ```
 
 **Task 7.1: Implement app-of-apps pattern** (90 min)
+
 ```bash
 # Location: platform/bootstrap/
 ```
 
 **Copilot Prompt**:
+
 ```
 Create app-of-apps pattern for managing all platform applications:
 
@@ -448,6 +473,7 @@ Include sync waves:
 ```
 
 **End of Day 2 Validation**:
+
 ```bash
 # Apply app-of-apps
 kubectl apply -f platform/bootstrap/app-of-apps.yaml
@@ -481,17 +507,20 @@ kubectl get applications -n argocd
 **Task: Create comprehensive Week 1 documentation**
 
 1. **Architecture Diagrams** (90 min)
+
 ```bash
 # Location: docs/architecture/diagrams/
 ```
 
 Create:
+
 - infrastructure-overview.mermaid (C4 Context)
 - kubernetes-cluster.mermaid (Nodes, pods, services)
 - gitops-workflow.mermaid (Git → ArgoCD → K8s)
 - network-topology.mermaid (Ingress, services, pods)
 
 **Copilot Prompt**:
+
 ```
 Create Mermaid diagrams for Fawkes architecture:
 
@@ -521,6 +550,7 @@ Create Mermaid diagrams for Fawkes architecture:
 2. **Runbook Updates** (90 min)
 
 Update these runbooks:
+
 - docs/runbooks/local-cluster-setup.md
 - docs/runbooks/argocd-management.md (new)
 - docs/runbooks/gitops-workflow.md (new)
@@ -529,6 +559,7 @@ Update these runbooks:
 3. **README Updates** (60 min)
 
 Update:
+
 - platform/apps/README.md
 - infra/README.md
 - Root README.md (add Week 1 status)
@@ -567,6 +598,7 @@ kubectl top pods -A
 **Task 8.3: Create demo video** (90 min)
 
 Record screen capture demonstrating:
+
 1. Cluster deployment (2 min)
 2. ArgoCD UI tour (3 min)
 3. Deploying an app via GitOps (5 min)
@@ -576,6 +608,7 @@ Record screen capture demonstrating:
 Upload to: docs/videos/week1-demo.mp4
 
 **End of Day 3 Validation**:
+
 ```bash
 # All tests passing
 ./tests/acceptance/run-all-week1.sh
@@ -595,6 +628,7 @@ test -f docs/videos/week1-demo.mp4
 ### Days 4-5: Buffer & Week 2 Prep
 
 **Use for**:
+
 - Catching up on any delayed tasks
 - Fixing bugs discovered during testing
 - Additional documentation
@@ -628,16 +662,19 @@ Update daily in PROJECT_STATUS.md:
 ### Week 1 Progress
 
 **Day 1**: ✅ Cluster deployment complete
+
 - Issue #1: ✅ Complete
 - Issue #2: ✅ Complete
 - Issue #3: ✅ Complete
 
 **Day 2**: ✅ ArgoCD and GitOps complete
+
 - Issue #5: ✅ Complete
 - Issue #6: ✅ Complete
 - Issue #7: ✅ Complete
 
 **Day 3**: ✅ Documentation and validation
+
 - Issue #8: ✅ Complete
 - All Week 1 docs: ✅ Complete
 
@@ -653,16 +690,19 @@ Update daily in PROJECT_STATUS.md:
 Once Week 1 is complete, you're ready for:
 
 **Week 2 Focus**: Developer Portal & CI/CD
+
 - Issue #9: Deploy Backstage
 - Issue #14: Deploy Jenkins
 - Issue #17: Deploy Harbor
 
 **Prerequisites Met**:
+
 - ✅ K8s cluster operational
 - ✅ GitOps workflow established
 - ✅ Can deploy new apps via ArgoCD
 
 **Start Week 2 with**:
+
 ```bash
 # Begin Backstage deployment
 argocd app create backstage \
@@ -686,6 +726,7 @@ If stuck on any task:
 5. **GitHub search**: Look for similar issues/PRs
 
 **Chat template**:
+
 ```
 Working on Fawkes Epic 1, Week 1, Day X.
 

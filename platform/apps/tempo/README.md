@@ -23,6 +23,7 @@ Applications → OpenTelemetry Collector → Tempo → Grafana
 ### Accessing Tempo
 
 Tempo is accessed through Grafana:
+
 1. Open Grafana: http://grafana.127.0.0.1.nip.io
 2. Navigate to Explore
 3. Select "Tempo" data source
@@ -31,16 +32,19 @@ Tempo is accessed through Grafana:
 ## TraceQL Queries
 
 ### Find slow requests
+
 ```traceql
 {duration > 1s}
 ```
 
 ### Find errors
+
 ```traceql
 {status = error}
 ```
 
 ### Service-specific traces
+
 ```traceql
 {service.name = "my-service" && http.status_code >= 500}
 ```
@@ -48,6 +52,7 @@ Tempo is accessed through Grafana:
 ## Trace Retention
 
 Traces are retained based on age:
+
 - **Recent**: Last 7 days (hot storage)
 - **Archive**: 8-30 days (cold storage)
 - **Deleted**: > 30 days
@@ -55,10 +60,13 @@ Traces are retained based on age:
 ## Integration
 
 ### With Grafana
+
 Tempo is configured as a data source in Grafana for trace visualization and correlation with logs/metrics.
 
 ### With OpenSearch
+
 Link traces to logs:
+
 ```json
 {
   "trace_id": "abc123...",

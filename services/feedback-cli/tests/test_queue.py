@@ -53,11 +53,13 @@ def test_add_to_queue(queue):
 def test_add_multiple_items(queue):
     """Test adding multiple items to queue."""
     for i in range(3):
-        queue.add({
-            "rating": i + 1,
-            "category": f"Category{i}",
-            "comment": f"Comment{i}",
-        })
+        queue.add(
+            {
+                "rating": i + 1,
+                "category": f"Category{i}",
+                "comment": f"Comment{i}",
+            }
+        )
 
     assert queue.size() == 3
 
@@ -72,11 +74,13 @@ def test_remove_from_queue(queue):
     """Test removing items from queue."""
     # Add 3 items
     for i in range(3):
-        queue.add({
-            "rating": i + 1,
-            "category": f"Category{i}",
-            "comment": f"Comment{i}",
-        })
+        queue.add(
+            {
+                "rating": i + 1,
+                "category": f"Category{i}",
+                "comment": f"Comment{i}",
+            }
+        )
 
     # Remove middle item
     queue.remove(1)
@@ -101,11 +105,13 @@ def test_remove_invalid_index(queue):
 
 def test_increment_attempts(queue):
     """Test incrementing attempt counter."""
-    queue.add({
-        "rating": 5,
-        "category": "Test",
-        "comment": "Test",
-    })
+    queue.add(
+        {
+            "rating": 5,
+            "category": "Test",
+            "comment": "Test",
+        }
+    )
 
     items = queue.get_all()
     assert items[0]["attempts"] == 0
@@ -122,11 +128,13 @@ def test_increment_attempts(queue):
 def test_clear_queue(queue):
     """Test clearing all items from queue."""
     for i in range(5):
-        queue.add({
-            "rating": i + 1,
-            "category": f"Category{i}",
-            "comment": f"Comment{i}",
-        })
+        queue.add(
+            {
+                "rating": i + 1,
+                "category": f"Category{i}",
+                "comment": f"Comment{i}",
+            }
+        )
 
     assert queue.size() == 5
 
@@ -142,11 +150,13 @@ def test_queue_persistence(temp_queue_dir):
 
     # Create first queue and add items
     queue1 = OfflineQueue(str(queue_path))
-    queue1.add({
-        "rating": 5,
-        "category": "Persistent",
-        "comment": "This should persist",
-    })
+    queue1.add(
+        {
+            "rating": 5,
+            "category": "Persistent",
+            "comment": "This should persist",
+        }
+    )
 
     # Create new queue instance
     queue2 = OfflineQueue(str(queue_path))
@@ -210,11 +220,13 @@ def test_queue_json_format(temp_queue_dir):
     queue_path = temp_queue_dir / "queue.json"
     queue = OfflineQueue(str(queue_path))
 
-    queue.add({
-        "rating": 5,
-        "category": "Test",
-        "comment": "Test",
-    })
+    queue.add(
+        {
+            "rating": 5,
+            "category": "Test",
+            "comment": "Test",
+        }
+    )
 
     # Read and verify JSON format
     with open(queue_path, "r") as f:

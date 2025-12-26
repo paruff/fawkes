@@ -11,10 +11,10 @@ specific types of projects.
 
 ## Available Templates
 
-| Template | Description | Resources | Use Case |
-|----------|-------------|-----------|----------|
-| `goldenpath-python.yaml` | Python development environment | 2 CPU, 4Gi Memory | Django, FastAPI, Flask, Data Science |
-| `goldenpath-ai.yaml` | AI/ML development with GPU | 8 CPU, 16Gi Memory, GPU | TensorFlow, PyTorch, Jupyter |
+| Template                 | Description                    | Resources               | Use Case                             |
+| ------------------------ | ------------------------------ | ----------------------- | ------------------------------------ |
+| `goldenpath-python.yaml` | Python development environment | 2 CPU, 4Gi Memory       | Django, FastAPI, Flask, Data Science |
+| `goldenpath-ai.yaml`     | AI/ML development with GPU     | 8 CPU, 16Gi Memory, GPU | TensorFlow, PyTorch, Jupyter         |
 
 ## Using Devfiles
 
@@ -168,11 +168,11 @@ events:
 
 ## Resource Guidelines
 
-| Workload Type | CPU Request | CPU Limit | Memory Request | Memory Limit |
-|---------------|-------------|-----------|----------------|--------------|
-| Light (editing) | 500m | 2 | 1Gi | 4Gi |
-| Medium (builds) | 1 | 4 | 2Gi | 8Gi |
-| Heavy (AI/ML) | 2 | 8 | 8Gi | 16Gi |
+| Workload Type   | CPU Request | CPU Limit | Memory Request | Memory Limit |
+| --------------- | ----------- | --------- | -------------- | ------------ |
+| Light (editing) | 500m        | 2         | 1Gi            | 4Gi          |
+| Medium (builds) | 1           | 4         | 2Gi            | 8Gi          |
+| Heavy (AI/ML)   | 2           | 8         | 8Gi            | 16Gi         |
 
 ## Vault Integration
 

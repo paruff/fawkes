@@ -10,6 +10,7 @@ description: Comprehensive API reference for all Epic 1 platform components
 This document provides API references for all Epic 1 platform components, including REST APIs, webhooks, and integrations.
 
 **Component Coverage:**
+
 - ArgoCD REST API
 - Backstage Plugin APIs
 - Jenkins REST API & Webhooks
@@ -41,17 +42,17 @@ This document provides API references for all Epic 1 platform components, includ
 
 Different components use different authentication methods:
 
-| Component | Auth Method | How to Obtain |
-|-----------|-------------|---------------|
-| ArgoCD | Bearer Token | `argocd account get-user-token` |
-| Backstage | Session Cookie | OAuth flow via UI |
-| Jenkins | API Token | User settings → API Token |
-| Prometheus | None (internal) | Port-forward only |
-| Grafana | API Key | Settings → API Keys |
-| Harbor | Basic Auth | Username/password |
-| Vault | Token | `vault login` or service account |
-| DevLake | Bearer Token | Kubernetes secret |
-| Kyverno | Kubernetes RBAC | kubectl with proper permissions |
+| Component  | Auth Method     | How to Obtain                    |
+| ---------- | --------------- | -------------------------------- |
+| ArgoCD     | Bearer Token    | `argocd account get-user-token`  |
+| Backstage  | Session Cookie  | OAuth flow via UI                |
+| Jenkins    | API Token       | User settings → API Token        |
+| Prometheus | None (internal) | Port-forward only                |
+| Grafana    | API Key         | Settings → API Keys              |
+| Harbor     | Basic Auth      | Username/password                |
+| Vault      | Token           | `vault login` or service account |
+| DevLake    | Bearer Token    | Kubernetes secret                |
+| Kyverno    | Kubernetes RBAC | kubectl with proper permissions  |
 
 ---
 
@@ -67,6 +68,7 @@ GET /applications
 ```
 
 **Response:**
+
 ```json
 {
   "items": [
@@ -106,6 +108,7 @@ POST /applications/{name}/sync
 ```
 
 **Request Body:**
+
 ```json
 {
   "revision": "main",
@@ -118,6 +121,7 @@ POST /applications/{name}/sync
 ```
 
 **Response:**
+
 ```json
 {
   "metadata": {
@@ -142,6 +146,7 @@ POST /applications/{name}/rollback
 ```
 
 **Request Body:**
+
 ```json
 {
   "id": "12345"
@@ -164,11 +169,13 @@ GET /catalog/entities
 ```
 
 **Query Parameters:**
+
 - `filter` - Filter expression (e.g., `kind=component,metadata.name=payment-service`)
 - `limit` - Number of results (default: 20)
 - `offset` - Pagination offset
 
 **Response:**
+
 ```json
 {
   "items": [
@@ -203,6 +210,7 @@ GET /catalog/entities/by-name/{kind}/{namespace}/{name}
 ```
 
 **Example:**
+
 ```bash
 curl https://backstage.fawkes.local/api/catalog/entities/by-name/component/default/payment-service
 ```
@@ -214,6 +222,7 @@ POST /catalog/entities
 ```
 
 **Request Body:**
+
 ```json
 {
   "apiVersion": "backstage.io/v1alpha1",
@@ -245,6 +254,7 @@ POST /scaffolder/v2/tasks
 ```
 
 **Request Body:**
+
 ```json
 {
   "templateRef": "template:default/python-service",
@@ -257,6 +267,7 @@ POST /scaffolder/v2/tasks
 ```
 
 **Response:**
+
 ```json
 {
   "id": "task-uuid-123",
@@ -299,6 +310,7 @@ GET /api/json?tree=jobs[name,url,color]
 ```
 
 **Response:**
+
 ```json
 {
   "jobs": [
@@ -324,6 +336,7 @@ POST /job/{job-name}/build
 ```
 
 **With Parameters:**
+
 ```http
 POST /job/{job-name}/buildWithParameters?BRANCH=main&TAG=v1.0.0
 ```
@@ -335,6 +348,7 @@ GET /job/{job-name}/{build-number}/api/json
 ```
 
 **Response:**
+
 ```json
 {
   "number": 42,
@@ -356,6 +370,7 @@ GET /job/{job-name}/{build-number}/consoleText
 Jenkins sends webhooks to registered URLs on build events:
 
 **Webhook Payload:**
+
 ```json
 {
   "name": "payment-service-pipeline",
@@ -395,11 +410,13 @@ GET /query?query={promql-query}
 ```
 
 **Example:**
+
 ```bash
 curl 'http://prometheus.prometheus.svc:9090/api/v1/query?query=up'
 ```
 
 **Response:**
+
 ```json
 {
   "status": "success",
@@ -425,6 +442,7 @@ GET /query_range?query={promql-query}&start={timestamp}&end={timestamp}&step={du
 ```
 
 **Example:**
+
 ```bash
 curl 'http://prometheus.prometheus.svc:9090/api/v1/query_range?query=rate(http_requests_total[5m])&start=2024-12-16T09:00:00Z&end=2024-12-16T10:00:00Z&step=60s'
 ```
@@ -438,6 +456,7 @@ GET /targets
 ```
 
 **Response:**
+
 ```json
 {
   "status": "success",
@@ -490,6 +509,7 @@ POST /dashboards/db
 ```
 
 **Request Body:**
+
 ```json
 {
   "dashboard": {
@@ -524,6 +544,7 @@ POST /annotations
 ```
 
 **Request Body:**
+
 ```json
 {
   "dashboardUID": "dashboard-uid",
@@ -556,6 +577,7 @@ POST /projects
 ```
 
 **Request Body:**
+
 ```json
 {
   "project_name": "fawkes-platform",
@@ -590,6 +612,7 @@ GET /projects/{project}/repositories/{repository}/artifacts
 ```
 
 **Response:**
+
 ```json
 {
   "artifacts": [
@@ -643,6 +666,7 @@ GET /secret/data/{path}
 ```
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -665,6 +689,7 @@ POST /secret/data/{path}
 ```
 
 **Request Body:**
+
 ```json
 {
   "data": {
@@ -689,6 +714,7 @@ POST /auth/kubernetes/login
 ```
 
 **Request Body:**
+
 ```json
 {
   "jwt": "{service-account-jwt}",
@@ -697,6 +723,7 @@ POST /auth/kubernetes/login
 ```
 
 **Response:**
+
 ```json
 {
   "auth": {
@@ -772,6 +799,7 @@ DevLake receives deployment events from ArgoCD:
 **Endpoint:** `POST /webhooks/argocd`
 
 **Payload:**
+
 ```json
 {
   "type": "sync",
@@ -787,6 +815,7 @@ DevLake receives deployment events from ArgoCD:
 **Endpoint:** `POST /webhooks/jenkins`
 
 **Payload:**
+
 ```json
 {
   "job": "payment-service-pipeline",
@@ -827,6 +856,7 @@ kubectl get policyreports -A
 ```
 
 **Or via API:**
+
 ```http
 GET /apis/wgpolicyk8s.io/v1alpha2/policyreports
 ```
@@ -838,6 +868,7 @@ kubectl get policyreport {name} -n {namespace} -o json
 ```
 
 **Response:**
+
 ```json
 {
   "apiVersion": "wgpolicyk8s.io/v1alpha2",
@@ -933,16 +964,16 @@ kubectl get policyreport -n my-service
 
 ## API Rate Limits
 
-| Component | Rate Limit | Notes |
-|-----------|------------|-------|
-| ArgoCD | 30 req/min | Per user/token |
-| Backstage | 100 req/min | Per session |
-| Jenkins | 60 req/min | Per API token |
-| Prometheus | Unlimited | Internal only |
-| Grafana | 100 req/min | Per API key |
-| Harbor | 100 req/min | Per user |
-| Vault | 100 req/min | Per token |
-| DevLake | 60 req/min | Per token |
+| Component  | Rate Limit  | Notes          |
+| ---------- | ----------- | -------------- |
+| ArgoCD     | 30 req/min  | Per user/token |
+| Backstage  | 100 req/min | Per session    |
+| Jenkins    | 60 req/min  | Per API token  |
+| Prometheus | Unlimited   | Internal only  |
+| Grafana    | 100 req/min | Per API key    |
+| Harbor     | 100 req/min | Per user       |
+| Vault      | 100 req/min | Per token      |
+| DevLake    | 60 req/min  | Per token      |
 
 ---
 
@@ -964,6 +995,7 @@ All APIs follow a consistent error format:
 ```
 
 **Common HTTP Status Codes:**
+
 - `200 OK` - Request succeeded
 - `201 Created` - Resource created
 - `400 Bad Request` - Invalid request
@@ -979,11 +1011,11 @@ All APIs follow a consistent error format:
 
 ## SDK & Client Libraries
 
-| Language | ArgoCD | Jenkins | Prometheus | Grafana |
-|----------|--------|---------|------------|---------|
-| Python | `argocd-python` | `python-jenkins` | `prometheus-api-client` | `grafana-client` |
-| Go | `argocd-client-go` | - | `prometheus/client_golang` | `grafana-api-golang-client` |
-| JavaScript | - | `jenkins` | `prom-client` | `grafana-api-client` |
+| Language   | ArgoCD             | Jenkins          | Prometheus                 | Grafana                     |
+| ---------- | ------------------ | ---------------- | -------------------------- | --------------------------- |
+| Python     | `argocd-python`    | `python-jenkins` | `prometheus-api-client`    | `grafana-client`            |
+| Go         | `argocd-client-go` | -                | `prometheus/client_golang` | `grafana-api-golang-client` |
+| JavaScript | -                  | `jenkins`        | `prom-client`              | `grafana-api-client`        |
 
 ---
 
@@ -1000,6 +1032,7 @@ All APIs follow a consistent error format:
 ## Support
 
 For API issues or questions:
+
 - Check component-specific documentation
 - Review logs via `kubectl logs`
 - Open issue on GitHub with API request/response examples
@@ -1009,6 +1042,6 @@ For API issues or questions:
 
 ## Change Log
 
-| Date | Version | Changes | Author |
-|------|---------|---------|--------|
-| 2024-12 | 1.0 | Initial Epic 1 API documentation | Platform Team |
+| Date    | Version | Changes                          | Author        |
+| ------- | ------- | -------------------------------- | ------------- |
+| 2024-12 | 1.0     | Initial Epic 1 API documentation | Platform Team |

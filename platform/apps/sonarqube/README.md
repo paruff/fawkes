@@ -18,12 +18,14 @@ SonarQube provides continuous inspection of code quality and security. It perfor
 ### Accessing SonarQube
 
 Local development:
+
 ```bash
 # Access UI
 http://sonarqube.127.0.0.1.nip.io
 ```
 
 Default credentials:
+
 - Username: `admin`
 - Password: `admin` (change on first login!)
 
@@ -52,6 +54,7 @@ stage('Quality Gate') {
 ## Quality Gate
 
 The default quality gate requires:
+
 - **New Bugs**: 0
 - **New Vulnerabilities**: 0
 - **Security Hotspots Reviewed**: 100%
@@ -124,13 +127,13 @@ curl -u admin:${SONAR_PASSWORD} \
 
 ### Key Metrics
 
-| Metric | Description | Target |
-|--------|-------------|--------|
-| Bugs | Potential bugs | 0 |
-| Vulnerabilities | Security issues | 0 |
-| Code Smells | Maintainability issues | ≤ 100/kLOC |
-| Coverage | Unit test coverage | ≥ 80% |
-| Duplications | Duplicate code | ≤ 3% |
+| Metric          | Description            | Target     |
+| --------------- | ---------------------- | ---------- |
+| Bugs            | Potential bugs         | 0          |
+| Vulnerabilities | Security issues        | 0          |
+| Code Smells     | Maintainability issues | ≤ 100/kLOC |
+| Coverage        | Unit test coverage     | ≥ 80%      |
+| Duplications    | Duplicate code         | ≤ 3%       |
 
 ### Export Reports
 

@@ -26,14 +26,14 @@ These policies enforce Pod Security Standards and will **DENY** non-compliant re
 
 **Source File:** `platform/policies/mandatory-security.yaml`
 
-| Policy Name | Severity | Resource Type | Description | Enforcement Mode |
-|-------------|----------|---------------|-------------|------------------|
-| `require-run-as-non-root` | High | Pod | Containers must run as non-root user. Validates `securityContext.runAsNonRoot=true`. | **Enforce** |
-| `disallow-privileged-containers` | Critical | Pod | Prohibits privileged containers with full host access. | **Enforce** |
-| `restrict-host-namespaces` | High | Pod | Disallows `hostNetwork`, `hostPID`, `hostIPC` usage. | **Enforce** |
-| `disallow-host-ports` | Medium | Pod | Prevents binding to host ports (`hostPort`). | **Enforce** |
-| `disallow-capabilities` | High | Pod | Restricts Linux capabilities beyond defaults (e.g., `CAP_SYS_ADMIN`). | **Enforce** |
-| `require-seccomp-profile` | Medium | Pod | Requires seccomp profile (RuntimeDefault or Localhost). | **Audit** |
+| Policy Name                      | Severity | Resource Type | Description                                                                          | Enforcement Mode |
+| -------------------------------- | -------- | ------------- | ------------------------------------------------------------------------------------ | ---------------- |
+| `require-run-as-non-root`        | High     | Pod           | Containers must run as non-root user. Validates `securityContext.runAsNonRoot=true`. | **Enforce**      |
+| `disallow-privileged-containers` | Critical | Pod           | Prohibits privileged containers with full host access.                               | **Enforce**      |
+| `restrict-host-namespaces`       | High     | Pod           | Disallows `hostNetwork`, `hostPID`, `hostIPC` usage.                                 | **Enforce**      |
+| `disallow-host-ports`            | Medium   | Pod           | Prevents binding to host ports (`hostPort`).                                         | **Enforce**      |
+| `disallow-capabilities`          | High     | Pod           | Restricts Linux capabilities beyond defaults (e.g., `CAP_SYS_ADMIN`).                | **Enforce**      |
+| `require-seccomp-profile`        | Medium   | Pod           | Requires seccomp profile (RuntimeDefault or Localhost).                              | **Audit**        |
 
 ### Excluded Namespaces
 
@@ -53,21 +53,21 @@ Enforce resource management best practices.
 
 **Source File:** `platform/policies/resource-constraints.yaml`
 
-| Policy Name | Severity | Resource Type | Description | Enforcement Mode |
-|-------------|----------|---------------|-------------|------------------|
-| `require-resource-limits` | High | Pod | All containers must have CPU and memory limits. | **Enforce** |
-| `require-resource-requests` | High | Pod | All containers must have CPU and memory requests. | **Enforce** |
-| `limit-resource-maximums` | Medium | Pod | Enforces maximum CPU (8 cores) and memory (16Gi) limits. | **Audit** |
-| `require-probes` | Medium | Deployment, StatefulSet | Requires `livenessProbe` and `readinessProbe` for workloads. | **Audit** |
+| Policy Name                 | Severity | Resource Type           | Description                                                  | Enforcement Mode |
+| --------------------------- | -------- | ----------------------- | ------------------------------------------------------------ | ---------------- |
+| `require-resource-limits`   | High     | Pod                     | All containers must have CPU and memory limits.              | **Enforce**      |
+| `require-resource-requests` | High     | Pod                     | All containers must have CPU and memory requests.            | **Enforce**      |
+| `limit-resource-maximums`   | Medium   | Pod                     | Enforces maximum CPU (8 cores) and memory (16Gi) limits.     | **Audit**        |
+| `require-probes`            | Medium   | Deployment, StatefulSet | Requires `livenessProbe` and `readinessProbe` for workloads. | **Audit**        |
 
 ### Default Resource Limits
 
 When `add-default-resources` mutation is applied:
 
-| Resource | Request | Limit |
-|----------|---------|-------|
-| CPU | `100m` | `500m` |
-| Memory | `128Mi` | `512Mi` |
+| Resource | Request | Limit   |
+| -------- | ------- | ------- |
+| CPU      | `100m`  | `500m`  |
+| Memory   | `128Mi` | `512Mi` |
 
 ---
 
@@ -77,13 +77,13 @@ These policies automatically modify resources to comply with platform standards.
 
 **Source File:** `platform/policies/mutation-policies.yaml`
 
-| Policy Name | Resource Type | Mutation Applied | Description |
-|-------------|---------------|------------------|-------------|
-| `add-platform-labels` | Pod, Deployment, StatefulSet, DaemonSet | Adds labels:<br>• `app.fawkes.idp/managed-by=fawkes-platform`<br>• `app.fawkes.idp/environment={{namespace}}` | Ensures consistent labeling for monitoring and cost allocation. |
-| `add-vault-annotations` | Pod | Adds annotations:<br>• `vault.hashicorp.com/agent-inject=true`<br>• `vault.hashicorp.com/role={{namespace}}` | Enables Vault Agent sidecar for secret injection. |
-| `set-ingress-class` | Ingress | Sets `ingressClassName=nginx` | Standardizes Ingress controller usage. |
-| `set-default-security-context` | Pod | Sets:<br>• `runAsNonRoot=true`<br>• `allowPrivilegeEscalation=false`<br>• `seccompProfile.type=RuntimeDefault` | Applies secure defaults if not explicitly configured. |
-| `add-default-resources` | Pod | Adds CPU/memory requests and limits if missing (see table above). | Prevents unbounded resource consumption. |
+| Policy Name                    | Resource Type                           | Mutation Applied                                                                                               | Description                                                     |
+| ------------------------------ | --------------------------------------- | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `add-platform-labels`          | Pod, Deployment, StatefulSet, DaemonSet | Adds labels:<br>• `app.fawkes.idp/managed-by=fawkes-platform`<br>• `app.fawkes.idp/environment={{namespace}}`  | Ensures consistent labeling for monitoring and cost allocation. |
+| `add-vault-annotations`        | Pod                                     | Adds annotations:<br>• `vault.hashicorp.com/agent-inject=true`<br>• `vault.hashicorp.com/role={{namespace}}`   | Enables Vault Agent sidecar for secret injection.               |
+| `set-ingress-class`            | Ingress                                 | Sets `ingressClassName=nginx`                                                                                  | Standardizes Ingress controller usage.                          |
+| `set-default-security-context` | Pod                                     | Sets:<br>• `runAsNonRoot=true`<br>• `allowPrivilegeEscalation=false`<br>• `seccompProfile.type=RuntimeDefault` | Applies secure defaults if not explicitly configured.           |
+| `add-default-resources`        | Pod                                     | Adds CPU/memory requests and limits if missing (see table above).                                              | Prevents unbounded resource consumption.                        |
 
 ---
 
@@ -93,22 +93,22 @@ These policies automatically create resources when triggers occur (e.g., new nam
 
 **Source File:** `platform/policies/generation-policies.yaml`
 
-| Policy Name | Trigger | Generated Resource | Description |
-|-------------|---------|-------------------|-------------|
-| `generate-namespace-network-policy` | New Namespace | NetworkPolicy | Creates default deny-all ingress NetworkPolicy for network isolation. |
-| `generate-namespace-resource-quota` | New Namespace | ResourceQuota | Creates quota limiting namespaces to 10 Pods, 20 CPU cores, 40Gi memory. |
-| `generate-namespace-limit-range` | New Namespace | LimitRange | Sets default and maximum resource limits for containers. |
-| `generate-namespace-service-account` | New Namespace | ServiceAccount | Creates `fawkes-workload` ServiceAccount with standard RBAC. |
+| Policy Name                          | Trigger       | Generated Resource | Description                                                              |
+| ------------------------------------ | ------------- | ------------------ | ------------------------------------------------------------------------ |
+| `generate-namespace-network-policy`  | New Namespace | NetworkPolicy      | Creates default deny-all ingress NetworkPolicy for network isolation.    |
+| `generate-namespace-resource-quota`  | New Namespace | ResourceQuota      | Creates quota limiting namespaces to 10 Pods, 20 CPU cores, 40Gi memory. |
+| `generate-namespace-limit-range`     | New Namespace | LimitRange         | Sets default and maximum resource limits for containers.                 |
+| `generate-namespace-service-account` | New Namespace | ServiceAccount     | Creates `fawkes-workload` ServiceAccount with standard RBAC.             |
 
 ### Generated ResourceQuota Limits
 
-| Resource | Limit |
-|----------|-------|
-| Pods | 10 |
-| CPU (total) | 20 cores |
-| Memory (total) | 40Gi |
-| Persistent Volume Claims | 5 |
-| Services (LoadBalancer) | 2 |
+| Resource                 | Limit    |
+| ------------------------ | -------- |
+| Pods                     | 10       |
+| CPU (total)              | 20 cores |
+| Memory (total)           | 40Gi     |
+| Persistent Volume Claims | 5        |
+| Services (LoadBalancer)  | 2        |
 
 ---
 
@@ -205,11 +205,11 @@ spec:
 
 Kyverno exposes Prometheus metrics:
 
-| Metric | Description |
-|--------|-------------|
-| `kyverno_policy_results_total` | Total policy evaluations (by policy, result, and action). |
-| `kyverno_admission_review_duration_seconds` | Latency of admission webhook processing. |
-| `kyverno_policy_execution_duration_seconds` | Time taken to execute individual policies. |
+| Metric                                      | Description                                               |
+| ------------------------------------------- | --------------------------------------------------------- |
+| `kyverno_policy_results_total`              | Total policy evaluations (by policy, result, and action). |
+| `kyverno_admission_review_duration_seconds` | Latency of admission webhook processing.                  |
+| `kyverno_policy_execution_duration_seconds` | Time taken to execute individual policies.                |
 
 **Grafana Dashboard:** `grafana.fawkes.idp/d/kyverno`
 

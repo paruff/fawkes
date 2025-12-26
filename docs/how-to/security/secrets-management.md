@@ -193,7 +193,7 @@ kind: Secret
 metadata:
   name: my-secret
 stringData:
-  password: "hardcoded-secret"  # DETECTED BY GITLEAKS
+  password: "hardcoded-secret" # DETECTED BY GITLEAKS
 ```
 
 ### ❌ DON'T: Commit Example Secrets
@@ -262,7 +262,7 @@ repos:
     hooks:
       - id: detect-secrets
         name: Detect secrets
-        args: ['--baseline', '.secrets.baseline']
+        args: ["--baseline", ".secrets.baseline"]
 ```
 
 ---
@@ -377,14 +377,14 @@ if not DATABASE_URL:
 
 ```javascript
 // Load from .env file (gitignored)
-require('dotenv').config();
+require("dotenv").config();
 
 // Get secrets from environment
 const dbUrl = process.env.DATABASE_URL;
 const apiKey = process.env.API_KEY;
 
 if (!dbUrl) {
-  throw new Error('DATABASE_URL environment variable is required');
+  throw new Error("DATABASE_URL environment variable is required");
 }
 ```
 
@@ -459,6 +459,7 @@ Review changes carefully before committing.
 ### Q: What's the performance impact?
 
 **A:** Minimal:
+
 - Pre-commit: ~2-5 seconds for typical changes
 - Pipeline: ~10-20 seconds for full repository scan
 
@@ -473,7 +474,7 @@ Review changes carefully before committing.
   hooks:
     - id: trufflehog
       name: TruffleHog secret scan
-      args: ['filesystem', '.', '--json']
+      args: ["filesystem", ".", "--json"]
 ```
 
 ---

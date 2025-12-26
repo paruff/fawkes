@@ -16,7 +16,7 @@ class StatisticalAnalyzer:
         status: str,
         variants: List[Dict],
         variant_data: Dict[str, Dict],
-        significance_level: float = 0.05
+        significance_level: float = 0.05,
     ) -> ExperimentStats:
         """
         Perform statistical analysis on experiment data
@@ -33,24 +33,21 @@ class StatisticalAnalyzer:
             ExperimentStats with analysis results
         """
         # Find control variant (first variant by convention)
-        control_variant = variants[0]['name']
+        control_variant = variants[0]["name"]
 
         # Calculate stats for each variant
         variant_stats = []
         for variant_config in variants:
-            variant_name = variant_config['name']
-            data = variant_data.get(variant_name, {'sample_size': 0, 'conversions': 0, 'values': []})
+            variant_name = variant_config["name"]
+            data = variant_data.get(variant_name, {"sample_size": 0, "conversions": 0, "values": []})
 
             stats_obj = self._calculate_variant_stats(
-                variant_name,
-                data['sample_size'],
-                data['conversions'],
-                data['values']
+                variant_name, data["sample_size"], data["conversions"], data["values"]
             )
             variant_stats.append(stats_obj)
 
         # Perform statistical test (control vs each variant)
-        control_data = variant_data.get(control_variant, {'sample_size': 0, 'conversions': 0, 'values': []})
+        control_data = variant_data.get(control_variant, {"sample_size": 0, "conversions": 0, "values": []})
 
         # Find the best performing variant
         winner = None
@@ -59,15 +56,15 @@ class StatisticalAnalyzer:
         effect_size = 0.0
 
         for variant_config in variants[1:]:  # Skip control
-            variant_name = variant_config['name']
-            variant_data_obj = variant_data.get(variant_name, {'sample_size': 0, 'conversions': 0, 'values': []})
+            variant_name = variant_config["name"]
+            variant_data_obj = variant_data.get(variant_name, {"sample_size": 0, "conversions": 0, "values": []})
 
             # Perform two-proportion z-test
             p_value, effect = self._two_proportion_test(
-                control_data['sample_size'],
-                control_data['conversions'],
-                variant_data_obj['sample_size'],
-                variant_data_obj['conversions']
+                control_data["sample_size"],
+                control_data["conversions"],
+                variant_data_obj["sample_size"],
+                variant_data_obj["conversions"],
             )
 
             if p_value < min_p_value:
@@ -76,8 +73,8 @@ class StatisticalAnalyzer:
                 # Check if significant and better than control
                 if p_value < significance_level:
                     significant = True
-                    control_rate = control_data['conversions'] / max(control_data['sample_size'], 1)
-                    variant_rate = variant_data_obj['conversions'] / max(variant_data_obj['sample_size'], 1)
+                    control_rate = control_data["conversions"] / max(control_data["sample_size"], 1)
+                    variant_rate = variant_data_obj["conversions"] / max(variant_data_obj["sample_size"], 1)
 
                     if variant_rate > control_rate:
                         winner = variant_name
@@ -85,13 +82,7 @@ class StatisticalAnalyzer:
 
         # Generate recommendation
         recommendation = self._generate_recommendation(
-            status,
-            significant,
-            winner,
-            control_variant,
-            min_p_value,
-            significance_level,
-            variant_stats
+            status, significant, winner, control_variant, min_p_value, significance_level, variant_stats
         )
 
         # Calculate totals
@@ -112,15 +103,11 @@ class StatisticalAnalyzer:
             effect_size=effect_size,
             recommendation=recommendation,
             sample_size_per_variant=avg_sample_per_variant,
-            total_conversions=total_conversions
+            total_conversions=total_conversions,
         )
 
     def _calculate_variant_stats(
-        self,
-        variant: str,
-        sample_size: int,
-        conversions: int,
-        values: List[float]
+        self, variant: str, sample_size: int, conversions: int, values: List[float]
     ) -> VariantStats:
         """Calculate statistics for a single variant"""
         conversion_rate = conversions / sample_size if sample_size > 0 else 0.0
@@ -132,7 +119,7 @@ class StatisticalAnalyzer:
             # Calculate 95% confidence interval
             if len(values) > 1:
                 sem = stats.sem(values)
-                ci = stats.t.interval(0.95, len(values)-1, loc=mean_value, scale=sem)
+                ci = stats.t.interval(0.95, len(values) - 1, loc=mean_value, scale=sem)
             else:
                 ci = (mean_value, mean_value)
         else:
@@ -147,16 +134,10 @@ class StatisticalAnalyzer:
             conversion_rate=conversion_rate,
             mean_value=mean_value,
             std_dev=std_dev,
-            confidence_interval=ci
+            confidence_interval=ci,
         )
 
-    def _two_proportion_test(
-        self,
-        n1: int,
-        x1: int,
-        n2: int,
-        x2: int
-    ) -> tuple[float, float]:
+    def _two_proportion_test(self, n1: int, x1: int, n2: int, x2: int) -> tuple[float, float]:
         """
         Perform two-proportion z-test
 
@@ -179,7 +160,7 @@ class StatisticalAnalyzer:
         p_pool = (x1 + x2) / (n1 + n2)
 
         # Standard error
-        se = np.sqrt(p_pool * (1 - p_pool) * (1/n1 + 1/n2))
+        se = np.sqrt(p_pool * (1 - p_pool) * (1 / n1 + 1 / n2))
 
         if se == 0:
             return 1.0, 0.0
@@ -203,7 +184,7 @@ class StatisticalAnalyzer:
         control: str,
         p_value: float,
         alpha: float,
-        variant_stats: List[VariantStats]
+        variant_stats: List[VariantStats],
     ) -> str:
         """Generate actionable recommendation based on analysis"""
         # Check if we have enough data

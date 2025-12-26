@@ -28,18 +28,20 @@ Before you begin, ensure you have:
 - [ ] Basic understanding of Kubernetes secrets (helpful but not required)
 
 !!! info "Why Vault?"
-    Storing secrets in code, environment variables, or ConfigMaps is insecure. Vault provides centralized secret management with audit logs, access control, and rotation capabilities. [Learn more about Zero Trust Security](../explanation/security/zero-trust-model.md).
+Storing secrets in code, environment variables, or ConfigMaps is insecure. Vault provides centralized secret management with audit logs, access control, and rotation capabilities. [Learn more about Zero Trust Security](../explanation/security/zero-trust-model.md).
 
 ## Step 1: Authenticate to Vault
 
 First, let's verify you can access Vault.
 
 1. Set the Vault address:
+
    ```bash
    export VAULT_ADDR="https://vault.127.0.0.1.nip.io"
    ```
 
 2. Log in to Vault (use the token provided by your platform team):
+
    ```bash
    vault login
    ```
@@ -47,6 +49,7 @@ First, let's verify you can access Vault.
    Enter your token when prompted.
 
 3. Verify authentication:
+
    ```bash
    vault token lookup
    ```
@@ -54,16 +57,17 @@ First, let's verify you can access Vault.
    You should see details about your token, including policies and permissions.
 
 !!! tip "Vault Token Management"
-    In production, individual users don't use root tokens. Instead, applications authenticate using Kubernetes Service Accounts. We'll set that up later in this tutorial.
+In production, individual users don't use root tokens. Instead, applications authenticate using Kubernetes Service Accounts. We'll set that up later in this tutorial.
 
 !!! success "Checkpoint"
-    You can authenticate to Vault and are ready to create secrets.
+You can authenticate to Vault and are ready to create secrets.
 
 ## Step 2: Create a Secret in Vault
 
 Let's create a database connection secret for our application.
 
 1. Enable the KV v2 secrets engine if not already enabled:
+
    ```bash
    vault secrets enable -path=secret kv-v2
    ```
@@ -71,6 +75,7 @@ Let's create a database connection secret for our application.
    If it's already enabled, you'll see an error - that's okay!
 
 2. Create a secret for your application:
+
    ```bash
    vault kv put secret/hello-fawkes/database \
      host="postgres.database.svc.cluster.local" \
@@ -80,11 +85,13 @@ Let's create a database connection secret for our application.
    ```
 
 3. Verify the secret was created:
+
    ```bash
    vault kv get secret/hello-fawkes/database
    ```
 
    You should see your secret values:
+
    ```
    ====== Data ======
    Key         Value
@@ -103,18 +110,20 @@ Let's create a database connection secret for our application.
    ```
 
 !!! success "Checkpoint"
-    Your secrets are stored in Vault and can be accessed programmatically.
+Your secrets are stored in Vault and can be accessed programmatically.
 
 ## Step 3: Configure Vault Kubernetes Authentication
 
 For your application to access Vault, we need to set up Kubernetes authentication.
 
 1. Enable Kubernetes auth method (if not already enabled):
+
    ```bash
    vault auth enable kubernetes
    ```
 
 2. Configure the Kubernetes auth method:
+
    ```bash
    vault write auth/kubernetes/config \
      kubernetes_host="https://kubernetes.default.svc:443"
@@ -123,6 +132,7 @@ For your application to access Vault, we need to set up Kubernetes authenticatio
 3. Create a policy that allows reading your secrets:
 
    Create a file `hello-fawkes-policy.hcl`:
+
    ```hcl
    # Allow reading secrets for hello-fawkes
    path "secret/data/hello-fawkes/*" {
@@ -136,6 +146,7 @@ For your application to access Vault, we need to set up Kubernetes authenticatio
    ```
 
 4. Upload the policy to Vault:
+
    ```bash
    vault policy write hello-fawkes hello-fawkes-policy.hcl
    ```
@@ -150,16 +161,17 @@ For your application to access Vault, we need to set up Kubernetes authenticatio
    ```
 
 !!! info "What Did We Just Do?"
-    We created a Vault role that trusts the `hello-fawkes` ServiceAccount in the `my-first-app` namespace. This allows pods using that ServiceAccount to authenticate to Vault and read secrets according to the `hello-fawkes` policy.
+We created a Vault role that trusts the `hello-fawkes` ServiceAccount in the `my-first-app` namespace. This allows pods using that ServiceAccount to authenticate to Vault and read secrets according to the `hello-fawkes` policy.
 
 !!! success "Checkpoint"
-    Kubernetes authentication is configured, allowing your application to securely access Vault.
+Kubernetes authentication is configured, allowing your application to securely access Vault.
 
 ## Step 4: Create a Kubernetes Service Account
 
 Your application needs a ServiceAccount to authenticate with Vault.
 
 1. Create `k8s/serviceaccount.yaml`:
+
    ```yaml
    apiVersion: v1
    kind: ServiceAccount
@@ -169,6 +181,7 @@ Your application needs a ServiceAccount to authenticate with Vault.
    ```
 
 2. Update `k8s/deployment.yaml` to use the ServiceAccount:
+
    ```yaml
    apiVersion: apps/v1
    kind: Deployment
@@ -189,11 +202,11 @@ Your application needs a ServiceAccount to authenticate with Vault.
            app: hello-fawkes
            version: v3
        spec:
-         serviceAccountName: hello-fawkes  # Add this line
+         serviceAccountName: hello-fawkes # Add this line
          containers:
-         - name: hello-fawkes
-           image: YOUR-USERNAME/hello-fawkes:v3.0.0
-           # ... rest of container spec
+           - name: hello-fawkes
+             image: YOUR-USERNAME/hello-fawkes:v3.0.0
+             # ... rest of container spec
    ```
 
 3. Apply the ServiceAccount:
@@ -202,28 +215,30 @@ Your application needs a ServiceAccount to authenticate with Vault.
    ```
 
 !!! success "Checkpoint"
-    Your application now has a ServiceAccount that can authenticate with Vault.
+Your application now has a ServiceAccount that can authenticate with Vault.
 
 ## Step 5: Update Application to Use Vault
 
 Now let's modify our application to fetch secrets from Vault at runtime.
 
 1. Install the Vault client library:
+
    ```bash
    npm install --save node-vault
    ```
 
 2. Create a new file `vault-client.js`:
+
    ```javascript
-   const vault = require('node-vault');
-   const fs = require('fs');
+   const vault = require("node-vault");
+   const fs = require("fs");
 
    // Read the service account token
    const getK8sToken = () => {
      try {
-       return fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
+       return fs.readFileSync("/var/run/secrets/kubernetes.io/serviceaccount/token", "utf8");
      } catch (error) {
-       console.error('Failed to read Kubernetes token:', error);
+       console.error("Failed to read Kubernetes token:", error);
        return null;
      }
    };
@@ -231,30 +246,30 @@ Now let's modify our application to fetch secrets from Vault at runtime.
    // Initialize Vault client
    const initVaultClient = async () => {
      const vaultClient = vault({
-       apiVersion: 'v1',
-       endpoint: process.env.VAULT_ADDR || 'http://vault.fawkes-platform.svc.cluster.local:8200',
+       apiVersion: "v1",
+       endpoint: process.env.VAULT_ADDR || "http://vault.fawkes-platform.svc.cluster.local:8200",
      });
 
      // Authenticate using Kubernetes service account
      const k8sToken = getK8sToken();
      if (!k8sToken) {
-       throw new Error('No Kubernetes token available');
+       throw new Error("No Kubernetes token available");
      }
 
      try {
        const result = await vaultClient.kubernetesLogin({
-         role: 'hello-fawkes',
+         role: "hello-fawkes",
          jwt: k8sToken,
        });
 
-       console.log('Successfully authenticated to Vault');
+       console.log("Successfully authenticated to Vault");
 
        // Set the client token for future requests
        vaultClient.token = result.auth.client_token;
 
        return vaultClient;
      } catch (error) {
-       console.error('Vault authentication failed:', error);
+       console.error("Vault authentication failed:", error);
        throw error;
      }
    };
@@ -277,12 +292,13 @@ Now let's modify our application to fetch secrets from Vault at runtime.
    ```
 
 3. Update `server.js` to use Vault secrets:
+
    ```javascript
    // Load tracing first
-   require('./tracing');
+   require("./tracing");
 
-   const express = require('express');
-   const { initVaultClient, getSecret } = require('./vault-client');
+   const express = require("express");
+   const { initVaultClient, getSecret } = require("./vault-client");
 
    const app = express();
    const PORT = process.env.PORT || 8080;
@@ -300,42 +316,42 @@ Now let's modify our application to fetch secrets from Vault at runtime.
        vaultClient = await initVaultClient();
 
        // Load database secrets
-       secrets.database = await getSecret(vaultClient, 'hello-fawkes/database');
-       console.log('Database secrets loaded');
+       secrets.database = await getSecret(vaultClient, "hello-fawkes/database");
+       console.log("Database secrets loaded");
 
        // Load API secrets
-       secrets.api = await getSecret(vaultClient, 'hello-fawkes/api');
-       console.log('API secrets loaded');
+       secrets.api = await getSecret(vaultClient, "hello-fawkes/api");
+       console.log("API secrets loaded");
 
        return true;
      } catch (error) {
-       console.error('Failed to initialize secrets:', error);
+       console.error("Failed to initialize secrets:", error);
        return false;
      }
    };
 
-   app.get('/', (req, res) => {
+   app.get("/", (req, res) => {
      res.json({
-       message: 'Hello from Fawkes!',
+       message: "Hello from Fawkes!",
        timestamp: new Date().toISOString(),
-       version: '3.0.0',
-       tracing: 'enabled',
-       secrets: 'managed by Vault'
+       version: "3.0.0",
+       tracing: "enabled",
+       secrets: "managed by Vault",
      });
    });
 
-   app.get('/health', (req, res) => {
+   app.get("/health", (req, res) => {
      const healthy = secrets.database !== null && secrets.api !== null;
      res.status(healthy ? 200 : 503).json({
-       status: healthy ? 'healthy' : 'unhealthy',
-       secretsLoaded: healthy
+       status: healthy ? "healthy" : "unhealthy",
+       secretsLoaded: healthy,
      });
    });
 
    // Endpoint that uses database secrets
-   app.get('/api/data', async (req, res) => {
+   app.get("/api/data", async (req, res) => {
      if (!secrets.database) {
-       return res.status(503).json({ error: 'Database secrets not loaded' });
+       return res.status(503).json({ error: "Database secrets not loaded" });
      }
 
      // In a real app, you'd use these to connect to the database
@@ -347,7 +363,7 @@ Now let's modify our application to fetch secrets from Vault at runtime.
      };
 
      res.json({
-       message: 'Database connection configured',
+       message: "Database connection configured",
        host: dbConfig.host,
        port: dbConfig.port,
        user: dbConfig.username,
@@ -355,12 +371,12 @@ Now let's modify our application to fetch secrets from Vault at runtime.
    });
 
    // Endpoint to trigger secret refresh
-   app.post('/api/refresh-secrets', async (req, res) => {
-     console.log('Refreshing secrets from Vault...');
+   app.post("/api/refresh-secrets", async (req, res) => {
+     console.log("Refreshing secrets from Vault...");
      const success = await initializeSecrets();
      res.json({
        success,
-       message: success ? 'Secrets refreshed' : 'Failed to refresh secrets'
+       message: success ? "Secrets refreshed" : "Failed to refresh secrets",
      });
    });
 
@@ -369,10 +385,10 @@ Now let's modify our application to fetch secrets from Vault at runtime.
      const secretsLoaded = await initializeSecrets();
 
      if (!secretsLoaded) {
-       console.error('Failed to load secrets. Server will start but may not function correctly.');
+       console.error("Failed to load secrets. Server will start but may not function correctly.");
      }
 
-     app.listen(PORT, '0.0.0.0', () => {
+     app.listen(PORT, "0.0.0.0", () => {
        console.log(`Server running on port ${PORT}`);
      });
    })();
@@ -385,13 +401,14 @@ Now let's modify our application to fetch secrets from Vault at runtime.
    ```
 
 !!! success "Checkpoint"
-    Your application now fetches secrets from Vault instead of using hardcoded values!
+Your application now fetches secrets from Vault instead of using hardcoded values!
 
 ## Step 6: Update Deployment Configuration
 
 Add environment variables for Vault connectivity.
 
 1. Update `k8s/deployment.yaml`:
+
    ```yaml
    apiVersion: apps/v1
    kind: Deployment
@@ -414,48 +431,48 @@ Add environment variables for Vault connectivity.
        spec:
          serviceAccountName: hello-fawkes
          containers:
-         - name: hello-fawkes
-           image: YOUR-USERNAME/hello-fawkes:v3.0.0
-           ports:
-           - containerPort: 8080
-             name: http
-           env:
-           - name: PORT
-             value: "8080"
-           - name: VAULT_ADDR
-             value: "http://vault.fawkes-platform.svc.cluster.local:8200"
-           - name: OTEL_SERVICE_NAME
-             value: "hello-fawkes"
-           - name: SERVICE_VERSION
-             value: "3.0.0"
-           - name: ENVIRONMENT
-             value: "development"
-           - name: OTEL_EXPORTER_OTLP_ENDPOINT
-             value: "http://tempo.fawkes-platform.svc.cluster.local:4318/v1/traces"
-           livenessProbe:
-             httpGet:
-               path: /health
-               port: 8080
-             initialDelaySeconds: 15
-             periodSeconds: 10
-           readinessProbe:
-             httpGet:
-               path: /health
-               port: 8080
-             initialDelaySeconds: 10
-             periodSeconds: 5
-           resources:
-             requests:
-               memory: "128Mi"
-               cpu: "100m"
-             limits:
-               memory: "256Mi"
-               cpu: "200m"
-           securityContext:
-             runAsNonRoot: true
-             runAsUser: 1000
-             allowPrivilegeEscalation: false
-             readOnlyRootFilesystem: true
+           - name: hello-fawkes
+             image: YOUR-USERNAME/hello-fawkes:v3.0.0
+             ports:
+               - containerPort: 8080
+                 name: http
+             env:
+               - name: PORT
+                 value: "8080"
+               - name: VAULT_ADDR
+                 value: "http://vault.fawkes-platform.svc.cluster.local:8200"
+               - name: OTEL_SERVICE_NAME
+                 value: "hello-fawkes"
+               - name: SERVICE_VERSION
+                 value: "3.0.0"
+               - name: ENVIRONMENT
+                 value: "development"
+               - name: OTEL_EXPORTER_OTLP_ENDPOINT
+                 value: "http://tempo.fawkes-platform.svc.cluster.local:4318/v1/traces"
+             livenessProbe:
+               httpGet:
+                 path: /health
+                 port: 8080
+               initialDelaySeconds: 15
+               periodSeconds: 10
+             readinessProbe:
+               httpGet:
+                 path: /health
+                 port: 8080
+               initialDelaySeconds: 10
+               periodSeconds: 5
+             resources:
+               requests:
+                 memory: "128Mi"
+                 cpu: "100m"
+               limits:
+                 memory: "256Mi"
+                 cpu: "200m"
+             securityContext:
+               runAsNonRoot: true
+               runAsUser: 1000
+               allowPrivilegeEscalation: false
+               readOnlyRootFilesystem: true
    ```
 
 2. Commit the changes:
@@ -465,34 +482,39 @@ Add environment variables for Vault connectivity.
    ```
 
 !!! success "Checkpoint"
-    Deployment is configured to connect to Vault using the ServiceAccount.
+Deployment is configured to connect to Vault using the ServiceAccount.
 
 ## Step 7: Deploy and Verify
 
 Let's deploy the updated application and verify it can read secrets from Vault.
 
 1. Build and push the new version:
+
    ```bash
    docker build -t YOUR-USERNAME/hello-fawkes:v3.0.0 .
    docker push YOUR-USERNAME/hello-fawkes:v3.0.0
    ```
 
 2. Push to Git (ArgoCD will auto-sync):
+
    ```bash
    git push
    ```
 
 3. Watch the deployment:
+
    ```bash
    kubectl rollout status deployment/hello-fawkes -n my-first-app
    ```
 
 4. Check that secrets loaded successfully:
+
    ```bash
    kubectl logs -n my-first-app -l app=hello-fawkes | grep -i vault
    ```
 
    You should see:
+
    ```
    Successfully authenticated to Vault
    Database secrets loaded
@@ -500,11 +522,13 @@ Let's deploy the updated application and verify it can read secrets from Vault.
    ```
 
 5. Test the health endpoint:
+
    ```bash
    curl https://hello-fawkes.127.0.0.1.nip.io/health
    ```
 
    Should return:
+
    ```json
    {
      "status": "healthy",
@@ -513,11 +537,13 @@ Let's deploy the updated application and verify it can read secrets from Vault.
    ```
 
 6. Test the data endpoint that uses secrets:
+
    ```bash
    curl https://hello-fawkes.127.0.0.1.nip.io/api/data
    ```
 
    Should return database configuration from Vault:
+
    ```json
    {
      "message": "Database connection configured",
@@ -528,13 +554,14 @@ Let's deploy the updated application and verify it can read secrets from Vault.
    ```
 
 !!! success "Checkpoint"
-    Your application is running and successfully retrieving secrets from Vault! 🎉
+Your application is running and successfully retrieving secrets from Vault! 🎉
 
 ## Step 8: Rotate a Secret
 
 Let's verify that secret rotation works by updating a secret in Vault and refreshing it in the application.
 
 1. Update the database password in Vault:
+
    ```bash
    vault kv put secret/hello-fawkes/database \
      host="postgres.database.svc.cluster.local" \
@@ -544,16 +571,19 @@ Let's verify that secret rotation works by updating a secret in Vault and refres
    ```
 
 2. Verify the secret was updated:
+
    ```bash
    vault kv get secret/hello-fawkes/database
    ```
 
 3. Trigger secret refresh in your application:
+
    ```bash
    curl -X POST https://hello-fawkes.127.0.0.1.nip.io/api/refresh-secrets
    ```
 
    Should return:
+
    ```json
    {
      "success": true,
@@ -562,11 +592,13 @@ Let's verify that secret rotation works by updating a secret in Vault and refres
    ```
 
 4. Check the logs to verify the new secret was loaded:
+
    ```bash
    kubectl logs -n my-first-app -l app=hello-fawkes --tail=20
    ```
 
    You should see:
+
    ```
    Refreshing secrets from Vault...
    Database secrets loaded
@@ -574,15 +606,12 @@ Let's verify that secret rotation works by updating a secret in Vault and refres
    ```
 
 !!! info "Production Secret Rotation"
-    In production, you'd automate secret rotation using:
-    - Vault's automatic rotation features
-    - A sidecar that refreshes secrets periodically
-    - Or External Secrets Operator for full automation
+In production, you'd automate secret rotation using: - Vault's automatic rotation features - A sidecar that refreshes secrets periodically - Or External Secrets Operator for full automation
 
     See [How to Rotate Vault Secrets](../how-to/security/rotate-vault-secrets.md) for advanced patterns.
 
 !!! success "Checkpoint"
-    You've successfully rotated a secret and verified your application picked up the new value!
+You've successfully rotated a secret and verified your application picked up the new value!
 
 ## What You've Accomplished
 

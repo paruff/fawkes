@@ -1,6 +1,7 @@
 # ADR-026: AI-Powered Anomaly Detection Strategy
 
 ## Status
+
 Accepted
 
 ## Context
@@ -14,6 +15,7 @@ Implement **AI-powered anomaly detection** in Grafana using ML algorithms.
 **Use Cases**:
 
 **1. Build Time Anomalies**
+
 ```
 Normal: 15 min average build time
 Detected: 45 min average (3σ above normal)
@@ -25,6 +27,7 @@ Suggested actions:
 ```
 
 **2. Deployment Failure Spike**
+
 ```
 Normal: 5% deployment failure rate
 Detected: 25% failure rate
@@ -36,6 +39,7 @@ Potential causes (AI-generated):
 ```
 
 **3. Developer Satisfaction Drop**
+
 ```
 Normal: NPS 60-65
 Detected: NPS dropped to 45 in 2 weeks
@@ -47,12 +51,14 @@ Top friction themes (from feedback):
 ```
 
 **Implementation**:
+
 - Grafana Machine Learning plugin
 - Train models on historical data (6+ months)
 - Slack/Mattermost notifications
 - Link to related dashboards and runbooks
 
 **Thresholds**:
+
 - Info: 1σ deviation (notify platform team)
 - Warning: 2σ deviation (investigate within 24h)
 - Critical: 3σ deviation (investigate immediately)

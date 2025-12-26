@@ -32,6 +32,7 @@ Fawkes is an opinionated Internal Delivery Platform (IDP) designed to accelerate
 ### Architectural Context
 
 Fawkes sits at the intersection of:
+
 - **Platform Engineering**: Providing self-service infrastructure and tooling
 - **DevSecOps**: Integrating security throughout the delivery pipeline
 - **DORA Research**: Optimizing for the four key metrics
@@ -42,18 +43,21 @@ Fawkes sits at the intersection of:
 ## Architectural Principles
 
 ### 1. Developer Experience First
+
 - Self-service capabilities over ticket-driven workflows
 - Golden paths for common scenarios
 - Single pane of glass (Backstage) for discovery and management
 - Fast feedback loops (build, test, deploy in minutes, not hours)
 
 ### 2. Observable by Default
+
 - Every component exposes metrics, logs, and traces
 - DORA metrics collected automatically
 - Distributed tracing for end-to-end visibility
 - Real-time dashboards for platform health
 
 ### 3. Secure by Design
+
 - Security scanning at every stage (code, dependencies, containers, runtime)
 - Policy-as-code for compliance automation
 - Least privilege access controls
@@ -61,24 +65,28 @@ Fawkes sits at the intersection of:
 - Zero-trust networking (roadmap)
 
 ### 4. Declarative & GitOps-Driven
+
 - All configuration stored in Git
 - Automated reconciliation of desired state
 - Audit trail through Git history
 - Easy rollback capabilities
 
 ### 5. Cloud-Agnostic with Pragmatic Defaults
+
 - Multi-cloud support through abstraction layers
 - Provider-specific optimizations where needed
 - Start with AWS, expand to Azure/GCP
 - On-premises capable (though cloud-first)
 
 ### 6. Extensible & Pluggable
+
 - Plugin architecture for custom extensions
 - Well-defined APIs for integration
 - Modular components that can be adopted incrementally
 - Community contributions encouraged
 
 ### 7. Metrics-Driven Improvement
+
 - Measure everything
 - DORA metrics as first-class citizens
 - A/B testing for platform changes
@@ -183,14 +191,14 @@ The Developer Experience (DX) Layer is the primary interface between developers 
 
 ### Key Components
 
-| Component | Purpose | Technology |
-|-----------|---------|------------|
-| **Backstage Portal** | Single pane of glass for developers | TypeScript/React |
-| **Service Catalog** | Inventory of services, APIs, resources | Backstage Core |
-| **Software Templates** | Golden paths for new services | Backstage Scaffolder |
-| **TechDocs** | Documentation as code | MkDocs + Backstage |
-| **Authentication** | SSO via OAuth 2.0/OIDC | GitHub OAuth |
-| **PostgreSQL** | Catalog and session storage | CloudNativePG (HA) |
+| Component              | Purpose                                | Technology           |
+| ---------------------- | -------------------------------------- | -------------------- |
+| **Backstage Portal**   | Single pane of glass for developers    | TypeScript/React     |
+| **Service Catalog**    | Inventory of services, APIs, resources | Backstage Core       |
+| **Software Templates** | Golden paths for new services          | Backstage Scaffolder |
+| **TechDocs**           | Documentation as code                  | MkDocs + Backstage   |
+| **Authentication**     | SSO via OAuth 2.0/OIDC                 | GitHub OAuth         |
+| **PostgreSQL**         | Catalog and session storage            | CloudNativePG (HA)   |
 
 ### Authentication Flow
 
@@ -234,15 +242,18 @@ Developer Access Request
 ### Deployment Configuration
 
 **High Availability**:
+
 - 2 replicas with pod anti-affinity
 - Pod disruption budget (minAvailable: 1)
 - PostgreSQL HA cluster (3 instances)
 
 **Resource Allocation**:
+
 - Backstage: 300m-1 CPU, 384Mi-1Gi memory (optimized for <70% utilization)
 - PostgreSQL: 300m-1 CPU, 384Mi-1Gi memory per pod (3 pods for HA)
 
 **Security**:
+
 - TLS termination at ingress (cert-manager)
 - Non-root container execution
 - Read-only filesystem where possible
@@ -250,15 +261,15 @@ Developer Access Request
 
 ### Integration Points
 
-| Integration | Purpose | Configuration |
-|-------------|---------|---------------|
-| **GitHub OAuth** | User authentication | `auth.providers.github` |
-| **GitHub API** | Repository discovery | `integrations.github` |
-| **Jenkins** | CI/CD pipeline status | `proxy.endpoints./jenkins` |
-| **ArgoCD** | Deployment status | `proxy.endpoints./argocd` |
-| **Kubernetes** | Resource status | `kubernetes.clusterLocatorMethods` |
-| **Prometheus** | Metrics exposure | ServiceMonitor |
-| **Eclipse Che** | Cloud Development Environments | `proxy.endpoints./che-api` |
+| Integration      | Purpose                        | Configuration                      |
+| ---------------- | ------------------------------ | ---------------------------------- |
+| **GitHub OAuth** | User authentication            | `auth.providers.github`            |
+| **GitHub API**   | Repository discovery           | `integrations.github`              |
+| **Jenkins**      | CI/CD pipeline status          | `proxy.endpoints./jenkins`         |
+| **ArgoCD**       | Deployment status              | `proxy.endpoints./argocd`          |
+| **Kubernetes**   | Resource status                | `kubernetes.clusterLocatorMethods` |
+| **Prometheus**   | Metrics exposure               | ServiceMonitor                     |
+| **Eclipse Che**  | Cloud Development Environments | `proxy.endpoints./che-api`         |
 
 ### Cloud Development Environments (Eclipse Che)
 
@@ -311,10 +322,10 @@ pre-configured development workspaces.
 
 #### Golden Path Devfiles
 
-| Template | Description | Resources |
-|----------|-------------|-----------|
-| `goldenpath-python` | Python development (Django, FastAPI, Flask) | 2 CPU, 4Gi Memory |
-| `goldenpath-ai` | AI/ML development with GPU support | 8 CPU, 16Gi Memory, GPU |
+| Template            | Description                                 | Resources               |
+| ------------------- | ------------------------------------------- | ----------------------- |
+| `goldenpath-python` | Python development (Django, FastAPI, Flask) | 2 CPU, 4Gi Memory       |
+| `goldenpath-ai`     | AI/ML development with GPU support          | 8 CPU, 16Gi Memory, GPU |
 
 #### Key Features
 
@@ -326,10 +337,10 @@ pre-configured development workspaces.
 
 #### Access URLs
 
-| Endpoint | URL | Purpose |
-|----------|-----|---------|
-| Che Dashboard | `https://che.fawkes.idp` | Workspace management |
-| Devfile Registry | `https://che.fawkes.idp/devfile-registry` | Template catalog |
+| Endpoint         | URL                                       | Purpose              |
+| ---------------- | ----------------------------------------- | -------------------- |
+| Che Dashboard    | `https://che.fawkes.idp`                  | Workspace management |
+| Devfile Registry | `https://che.fawkes.idp/devfile-registry` | Template catalog     |
 
 See [ADR-021: Eclipse Che CDE Strategy](adr/ADR-021%20eclipse-che-cde-strategy.md)
 for detailed architecture decisions.
@@ -343,6 +354,7 @@ for detailed architecture decisions.
 **Purpose**: Single pane of glass for developer self-service
 
 **Key Features**:
+
 - Software catalog (services, APIs, resources)
 - Software templates (golden paths)
 - TechDocs (documentation as code)
@@ -351,6 +363,7 @@ for detailed architecture decisions.
 **Technology**: Backstage (TypeScript/React), PostgreSQL
 
 **Integrations**:
+
 - GitHub (repository discovery, authentication)
 - Jenkins (pipeline status)
 - ArgoCD (deployment status)
@@ -361,6 +374,7 @@ for detailed architecture decisions.
 **Purpose**: Continuous integration and build automation
 
 **Key Features**:
+
 - Pipeline as code (Jenkinsfile)
 - Dynamic Kubernetes agents
 - Shared pipeline libraries
@@ -369,6 +383,7 @@ for detailed architecture decisions.
 **Technology**: Jenkins, Kubernetes plugin, Docker
 
 **Pipelines**:
+
 - Build pipeline (compile, unit test)
 - Security scan pipeline (SAST, dependency check, container scan)
 - Integration test pipeline
@@ -379,6 +394,7 @@ for detailed architecture decisions.
 **Purpose**: Declarative continuous delivery
 
 **Key Features**:
+
 - Git as source of truth
 - Automated sync and reconciliation
 - Progressive delivery (blue-green, canary)
@@ -388,6 +404,7 @@ for detailed architecture decisions.
 **Technology**: ArgoCD, Kustomize/Helm
 
 **Repository Structure**:
+
 ```
 gitops-repo/
 ├── apps/
@@ -409,24 +426,28 @@ gitops-repo/
 **Components**:
 
 **Metrics** (Prometheus + Grafana):
+
 - Platform metrics (Jenkins, ArgoCD, Backstage)
 - Application metrics (custom + OpenTelemetry)
 - DORA metrics (automated collection)
 - Infrastructure metrics (Kubernetes, nodes)
 
 **Logging** (OpenSearch + Fluent Bit):
+
 - Centralized log aggregation
 - Structured logging
 - Log correlation with traces
 - Retention policies
 
 **Tracing** (Grafana Tempo + OpenTelemetry):
+
 - Distributed tracing
 - Service dependency mapping
 - Performance analysis
 - Request flow visualization
 
 **Alerting** (Grafana Alerting):
+
 - Threshold-based alerts
 - Anomaly detection
 - Multi-channel notifications (Slack, PagerDuty, email)
@@ -438,18 +459,21 @@ gitops-repo/
 **Components**:
 
 **Code Security** (SonarQube):
+
 - Static analysis (SAST)
 - Code quality gates
 - Technical debt tracking
 - Security hotspots
 
 **Container Security** (Trivy):
+
 - Image vulnerability scanning
 - SBOM generation
 - Policy enforcement
 - Registry integration
 
 **Secrets Management** (HashiCorp Vault + External Secrets Operator):
+
 - HashiCorp Vault for centralized secrets management (HA deployment)
 - Vault Agent Sidecar for automatic secret injection into pods
 - CSI Secret Store Driver for volume-based secret mounting
@@ -459,6 +483,7 @@ gitops-repo/
 - Comprehensive audit logging for compliance
 
 **Policy Enforcement** (Kyverno):
+
 - Kubernetes-native policy engine for policy-as-code
 - **Validation Policies**: Enforce Pod Security Standards (runAsNonRoot,
   disallow privileged, require resource limits)
@@ -484,6 +509,7 @@ calculation, and visualization. In the Fawkes GitOps architecture:
 - **Observability** provides incident data for CFR/MTTR
 
 **Architecture**:
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        Data Sources                              │
@@ -536,6 +562,7 @@ calculation, and visualization. In the Fawkes GitOps architecture:
 ```
 
 **DORA Metrics Calculated**:
+
 1. **Deployment Frequency**: ArgoCD syncs per day/week (production apps)
 2. **Lead Time for Changes**: Commit timestamp to ArgoCD sync completion
 3. **Change Failure Rate**: (Failed syncs + Incidents) / Total syncs
@@ -543,6 +570,7 @@ calculation, and visualization. In the Fawkes GitOps architecture:
 5. **Operational Performance**: SLO/SLI adherence from Prometheus
 
 **CI/Rework Metrics** (from Jenkins):
+
 - Build Success Rate
 - Quality Gate Pass Rate
 - Test Flakiness
@@ -557,18 +585,21 @@ See [ADR-016: DevLake DORA Strategy](adr/ADR-016%20devlake-dora-strategy.md) for
 **Components**:
 
 **Terraform**:
+
 - Kubernetes cluster provisioning
 - VPC, networking, security groups
 - IAM roles and policies
 - Cloud resources (databases, caches, queues)
 
 **Crossplane** (Roadmap):
+
 - Kubernetes-native infrastructure management
 - Cloud-agnostic abstractions
 - GitOps-driven infrastructure
 - Self-service resource provisioning
 
 **Helm**:
+
 - Package management for Kubernetes
 - Platform component deployment
 - Application chart templating
@@ -684,6 +715,7 @@ Applications emit telemetry
 Used for real-time event notification between components.
 
 **Example**: Jenkins → DORA Metrics Service
+
 ```
 Jenkins Pipeline Completes
     │
@@ -706,6 +738,7 @@ DORA Service processes event
 Used for service catalog and status updates.
 
 **Example**: Backstage → Kubernetes
+
 ```
 Backstage Kubernetes Plugin
     │
@@ -725,6 +758,7 @@ Display in Backstage UI (real-time status)
 Used for declarative state management.
 
 **Example**: ArgoCD → Kubernetes
+
 ```
 ArgoCD watches Git repository
     │
@@ -747,6 +781,7 @@ Cluster converges to desired state
 Used for programmatic interactions.
 
 **Example**: Backstage Templates → GitHub API
+
 ```
 User triggers template scaffolding
     │
@@ -868,6 +903,7 @@ Deploy to Kubernetes
 ```
 
 **Quality Gate Enforcement Strategy**:
+
 - **Fail Fast**: Pipeline stops at first critical issue
 - **Defense in Depth**: Multiple gates catch different issue types
 - **Automated**: No manual approvals required for clean builds
@@ -907,6 +943,7 @@ The SonarQube Quality Gate is a mandatory stage in the Golden Path CI/CD pipelin
 ```
 
 **Quality Gate Conditions**:
+
 - 0 new bugs
 - 0 new vulnerabilities
 - 100% security hotspots reviewed
@@ -924,10 +961,12 @@ The platform enforces quality gates at multiple stages with defined severity thr
 - **Dependency Checks**: CVSS ≥7 vulnerabilities require remediation
 
 For detailed configuration, customization, and override processes, see:
+
 - [Quality Gates Configuration Guide](../how-to/security/quality-gates-configuration.md)
 - [ADR-014: SonarQube Quality Gates](../adr/ADR-014%20sonarqube%20quality%20gates.md)
 
 **Override Process**: All quality gate exceptions require documented justification and approval from:
+
 - Security Team (required)
 - Technical Lead (required)
 - Product Owner (for production deployments)
@@ -971,13 +1010,14 @@ for cloud provider integration.
 
 **Secret Injection Methods**:
 
-| Method | Description | Use Case |
-|--------|-------------|----------|
+| Method              | Description                              | Use Case                         |
+| ------------------- | ---------------------------------------- | -------------------------------- |
 | Vault Agent Sidecar | Automatic injection via mutating webhook | Most applications, auto-rotation |
-| CSI Secret Store | Mount secrets as volumes | Legacy apps, file-based config |
-| External Secrets | Sync from cloud providers | Cloud-native deployments |
+| CSI Secret Store    | Mount secrets as volumes                 | Legacy apps, file-based config   |
+| External Secrets    | Sync from cloud providers                | Cloud-native deployments         |
 
 **Secret Rotation Flow**:
+
 ```
 Secret Updated in Vault
      │
@@ -992,6 +1032,7 @@ Application Reads New Secret (no pod restart)
 ```
 
 **Best Practices**:
+
 - No secrets in Git repositories
 - Secrets encrypted at rest and in transit
 - Automatic rotation via Vault Agent
@@ -1006,12 +1047,14 @@ Application Reads New Secret (no pod restart)
 ### Current State (MVP): AWS Focus
 
 **Rationale**:
+
 - Fastest time to MVP
 - Most mature Terraform provider
 - Largest market share
 - Extensive documentation and community
 
 **AWS Components**:
+
 - EKS (Kubernetes)
 - VPC, subnets, security groups
 - IAM roles and policies
@@ -1050,6 +1093,7 @@ Application consumes database
 ```
 
 **Benefits**:
+
 - Consistent API across clouds
 - GitOps-driven infrastructure
 - Self-service for developers
@@ -1073,6 +1117,7 @@ Application consumes database
 ```
 
 **Cluster Federation**:
+
 - ArgoCD manages multiple clusters
 - Centralized observability (Prometheus, Grafana)
 - Unified developer portal (Backstage)
@@ -1085,30 +1130,33 @@ Application consumes database
 ### Horizontal Scaling
 
 **Kubernetes Cluster**:
+
 - Node autoscaling (3-100 nodes)
 - Pod autoscaling (HPA based on CPU/memory/custom metrics)
 - Cluster API for cluster lifecycle management
 
 **Platform Components**:
+
 - Jenkins: Dynamic agents (spin up/down as needed)
 - Prometheus: Sharding and federation for large environments
 - Grafana: Read replicas for dashboard queries
 
 ### Performance Targets
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| CI Build Time (small) | < 5 minutes | P95 |
-| CI Build Time (large) | < 15 minutes | P95 |
-| Deployment Time | < 2 minutes | P95 |
-| Backstage Page Load | < 2 seconds | P95 |
-| Grafana Dashboard Load | < 3 seconds | P95 |
-| ArgoCD Sync Time | < 30 seconds | P95 |
-| GitOps Drift Detection | < 3 minutes | Maximum |
+| Metric                 | Target       | Measurement |
+| ---------------------- | ------------ | ----------- |
+| CI Build Time (small)  | < 5 minutes  | P95         |
+| CI Build Time (large)  | < 15 minutes | P95         |
+| Deployment Time        | < 2 minutes  | P95         |
+| Backstage Page Load    | < 2 seconds  | P95         |
+| Grafana Dashboard Load | < 3 seconds  | P95         |
+| ArgoCD Sync Time       | < 30 seconds | P95         |
+| GitOps Drift Detection | < 3 minutes  | Maximum     |
 
 ### Resource Allocation (per cluster)
 
 **MVP Scale** (5 teams, 25 services):
+
 - Kubernetes nodes: 3-5 (16GB RAM, 4 vCPU each)
 - Total cluster capacity: ~48-80GB RAM, 12-20 vCPU
 - Platform overhead: ~11GB RAM, 5.5 vCPU
@@ -1116,6 +1164,7 @@ Application consumes database
 - Resource utilization target: <70% CPU/Memory average
 
 **Platform Component Resources (Optimized for <70% utilization):**
+
 - Backstage (2 replicas): 600m CPU request, 2 CPU limit, 768Mi-2Gi memory
 - Jenkins Controller: 500m-1.5 CPU, 1-2Gi memory
 - Prometheus: 300m-800m CPU, 768Mi-1.5Gi memory
@@ -1127,6 +1176,7 @@ Application consumes database
 - Kyverno (7 pods total): 560m-2.8 CPU, 700Mi-1.4Gi memory
 
 **Production Scale** (20 teams, 200 services):
+
 - Kubernetes nodes: 10-20 (32GB RAM, 8 vCPU each)
 - Total cluster capacity: ~320-640GB RAM, 80-160 vCPU
 - Platform overhead: ~50GB RAM, 25 vCPU
@@ -1145,56 +1195,56 @@ Application consumes database
 
 ### Core Platform
 
-| Component | Technology | Version | Rationale |
-|-----------|-----------|---------|-----------|
-| Container Orchestration | Kubernetes | 1.28+ | Industry standard, CNCF graduated |
-| Infrastructure as Code | Terraform | 1.6+ | Mature, multi-cloud, large community |
-| Developer Portal | Backstage | Latest | CNCF incubating, Spotify-proven |
-| Cloud Development Env | Eclipse Che | 7.89+ | CNCF incubating, Devfile standard |
-| CI/CD | Jenkins | 2.4+ | Enterprise adoption, extensive plugins |
-| GitOps | ArgoCD | 2.9+ | Kubernetes-native, progressive delivery |
-| Container Registry | Harbor | 2.9+ | Security scanning, RBAC, replication |
+| Component               | Technology  | Version | Rationale                               |
+| ----------------------- | ----------- | ------- | --------------------------------------- |
+| Container Orchestration | Kubernetes  | 1.28+   | Industry standard, CNCF graduated       |
+| Infrastructure as Code  | Terraform   | 1.6+    | Mature, multi-cloud, large community    |
+| Developer Portal        | Backstage   | Latest  | CNCF incubating, Spotify-proven         |
+| Cloud Development Env   | Eclipse Che | 7.89+   | CNCF incubating, Devfile standard       |
+| CI/CD                   | Jenkins     | 2.4+    | Enterprise adoption, extensive plugins  |
+| GitOps                  | ArgoCD      | 2.9+    | Kubernetes-native, progressive delivery |
+| Container Registry      | Harbor      | 2.9+    | Security scanning, RBAC, replication    |
 
 ### Observability
 
-| Component | Technology | Version | Rationale |
-|-----------|-----------|---------|-----------|
-| Metrics | Prometheus | 2.48+ | CNCF graduated, Kubernetes-native |
-| Visualization | Grafana | 10+ | Rich dashboards, multi-source support |
-| Logging | OpenSearch | 2.11+ | Open source, Elasticsearch-compatible |
-| Log Collection | Fluent Bit | 2.2+ | Lightweight, high-performance |
-| Tracing | Grafana Tempo | 2.3+ | Scalable, cost-effective, Grafana-native |
-| Instrumentation | OpenTelemetry | 1.21+ | CNCF project, vendor-neutral |
+| Component       | Technology    | Version | Rationale                                |
+| --------------- | ------------- | ------- | ---------------------------------------- |
+| Metrics         | Prometheus    | 2.48+   | CNCF graduated, Kubernetes-native        |
+| Visualization   | Grafana       | 10+     | Rich dashboards, multi-source support    |
+| Logging         | OpenSearch    | 2.11+   | Open source, Elasticsearch-compatible    |
+| Log Collection  | Fluent Bit    | 2.2+    | Lightweight, high-performance            |
+| Tracing         | Grafana Tempo | 2.3+    | Scalable, cost-effective, Grafana-native |
+| Instrumentation | OpenTelemetry | 1.21+   | CNCF project, vendor-neutral             |
 
 ### Security
 
-| Component | Technology | Version | Rationale |
-|-----------|-----------|---------|-----------|
-| SAST | SonarQube | 10+ | Code quality and security analysis |
-| Container Scanning | Trivy | 0.48+ | Comprehensive vulnerability detection |
-| Policy Engine | Kyverno | 3.3+ | Kubernetes-native, validation/mutation/generation |
-| Secrets (Primary) | HashiCorp Vault | 1.17+ | Centralized secrets, dynamic credentials, HA |
-| Secrets (Cloud Sync) | External Secrets Operator | 0.9+ | Multi-provider cloud secrets sync |
-| Secrets (CSI) | Secrets Store CSI Driver | 1.4+ | Volume-based secret mounting |
+| Component            | Technology                | Version | Rationale                                         |
+| -------------------- | ------------------------- | ------- | ------------------------------------------------- |
+| SAST                 | SonarQube                 | 10+     | Code quality and security analysis                |
+| Container Scanning   | Trivy                     | 0.48+   | Comprehensive vulnerability detection             |
+| Policy Engine        | Kyverno                   | 3.3+    | Kubernetes-native, validation/mutation/generation |
+| Secrets (Primary)    | HashiCorp Vault           | 1.17+   | Centralized secrets, dynamic credentials, HA      |
+| Secrets (Cloud Sync) | External Secrets Operator | 0.9+    | Multi-provider cloud secrets sync                 |
+| Secrets (CSI)        | Secrets Store CSI Driver  | 1.4+    | Volume-based secret mounting                      |
 
 ### Data Stores
 
-| Component | Technology | Version | Purpose |
-|-----------|-----------|---------|---------|
-| Backstage Backend | PostgreSQL | 15+ | Service catalog, user data |
-| DORA Metrics | PostgreSQL | 15+ | Historical metrics storage |
-| SonarQube | PostgreSQL | 15+ | Code analysis data |
-| Jenkins | File system + PostgreSQL | - | Build data, job configs |
+| Component         | Technology               | Version | Purpose                    |
+| ----------------- | ------------------------ | ------- | -------------------------- |
+| Backstage Backend | PostgreSQL               | 15+     | Service catalog, user data |
+| DORA Metrics      | PostgreSQL               | 15+     | Historical metrics storage |
+| SonarQube         | PostgreSQL               | 15+     | Code analysis data         |
+| Jenkins           | File system + PostgreSQL | -       | Build data, job configs    |
 
 ### Programming Languages
 
-| Purpose | Language | Rationale |
-|---------|----------|-----------|
-| Platform Services | Go | Performance, Kubernetes ecosystem |
-| DORA Metrics Service | Go or Python | Developer preference, quick development |
-| Backstage Plugins | TypeScript | Backstage requirement |
-| Scripts/Automation | Bash, Python | Platform automation, tooling |
-| IaC Modules | HCL (Terraform) | Infrastructure provisioning |
+| Purpose              | Language        | Rationale                               |
+| -------------------- | --------------- | --------------------------------------- |
+| Platform Services    | Go              | Performance, Kubernetes ecosystem       |
+| DORA Metrics Service | Go or Python    | Developer preference, quick development |
+| Backstage Plugins    | TypeScript      | Backstage requirement                   |
+| Scripts/Automation   | Bash, Python    | Platform automation, tooling            |
+| IaC Modules          | HCL (Terraform) | Infrastructure provisioning             |
 
 ---
 
@@ -1203,22 +1253,26 @@ Application consumes database
 ### 6-Month Roadmap
 
 **Multi-Cloud Expansion**:
+
 - Azure support via Terraform
 - GCP support via Terraform
 - Crossplane implementation for cloud abstraction
 
 **Advanced Security**:
+
 - Service mesh (Linkerd) for mTLS
 - Runtime security (Falco)
 - Policy-as-code enforcement (expanded Kyverno policies)
 - SLSA compliance
 
 **Enhanced Observability**:
+
 - Distributed tracing adoption (100% of services)
 - Cost visibility (OpenCost integration)
 - SLO tracking and error budgets
 
 **Dojo Expansion**:
+
 - 10+ learning modules
 - Hands-on labs with live platform
 - Certification integration complete
@@ -1226,22 +1280,26 @@ Application consumes database
 ### 12-Month Vision
 
 **Platform Maturity**:
+
 - CNCF Sandbox/Incubating project
 - 50+ production deployments
 - Enterprise-grade stability (99.9% uptime)
 
 **Advanced Features**:
+
 - Multi-region deployments
 - Disaster recovery automation
 - Blue-green cluster upgrades
 - Chaos engineering integration
 
 **Ecosystem**:
+
 - 20+ community plugins
 - Commercial support partnerships
 - Training and certification program
 
 **Research & Development**:
+
 - AI-powered platform insights
 - Predictive failure detection
 - Automated performance optimization
@@ -1366,6 +1424,7 @@ The architecture will evolve based on community feedback, adoption patterns, and
 ---
 
 **Next Steps**:
+
 1. Review and approve this architecture
 2. Create detailed ADRs for key decisions
 3. Begin MVP implementation following this blueprint

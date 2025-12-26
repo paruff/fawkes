@@ -41,7 +41,7 @@ class AlertCorrelator:
         # Convert alerts to dict if needed
         alert_dicts = []
         for alert in alerts:
-            if hasattr(alert, 'dict'):
+            if hasattr(alert, "dict"):
                 alert_dicts.append(alert.dict())
             else:
                 alert_dicts.append(alert)
@@ -81,7 +81,7 @@ class AlertCorrelator:
                     "count": len(grouped_alerts),
                     "suppressed": False,
                     "suppression_reason": None,
-                    "routed_to": None
+                    "routed_to": None,
                 }
 
                 await self._save_group(group)
@@ -126,14 +126,7 @@ class AlertCorrelator:
             return 0.0
 
         # Severity scoring
-        severity_map = {
-            "critical": 10.0,
-            "high": 7.5,
-            "warning": 5.0,
-            "medium": 5.0,
-            "low": 2.5,
-            "info": 1.0
-        }
+        severity_map = {"critical": 10.0, "high": 7.5, "warning": 5.0, "medium": 5.0, "low": 2.5, "info": 1.0}
 
         max_severity = 0.0
         for alert in alerts:
@@ -172,7 +165,9 @@ class AlertCorrelator:
             fingerprint = alert.get("fingerprint")
             if not fingerprint:
                 labels = alert.get("labels", {})
-                fingerprint = hashlib.md5(json.dumps(labels, sort_keys=True).encode(), usedforsecurity=False).hexdigest()
+                fingerprint = hashlib.md5(
+                    json.dumps(labels, sort_keys=True).encode(), usedforsecurity=False
+                ).hexdigest()
 
             if fingerprint not in seen_fingerprints:
                 seen_fingerprints.add(fingerprint)
@@ -202,11 +197,7 @@ class AlertCorrelator:
         # Set with expiration (2x time window to keep history)
         expiration = int(self.time_window.total_seconds() * 2)
 
-        await self.redis.setex(
-            f"alert_group:{group_id}",
-            expiration,
-            json.dumps(group)
-        )
+        await self.redis.setex(f"alert_group:{group_id}", expiration, json.dumps(group))
 
         # Add to recent groups list
         await self.redis.lpush("alert_groups:recent", group_id)

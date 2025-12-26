@@ -340,6 +340,7 @@ If Prometheus is installed, nginx metrics are available:
 ### Grafana Dashboards
 
 Import nginx dashboard for visualization of:
+
 - Request rate
 - Response times
 - Error rates
@@ -368,15 +369,15 @@ spec:
     matchLabels:
       app: design-system-storybook
   policyTypes:
-  - Ingress
+    - Ingress
   ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: ingress-nginx
-    ports:
-    - protocol: TCP
-      port: 6006
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 6006
 ```
 
 ### RBAC

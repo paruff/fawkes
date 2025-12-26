@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 # Interview schemas
 class InterviewBase(BaseModel):
     """Base interview schema."""
+
     participant_role: str = Field(..., max_length=100)
     participant_team: str = Field(..., max_length=100)
     interviewer: str = Field(..., max_length=100)
@@ -16,11 +17,13 @@ class InterviewBase(BaseModel):
 
 class InterviewCreate(InterviewBase):
     """Create interview schema."""
+
     pass
 
 
 class InterviewUpdate(BaseModel):
     """Update interview schema."""
+
     completed_date: Optional[datetime] = None
     duration_minutes: Optional[int] = None
     status: Optional[str] = None
@@ -30,6 +33,7 @@ class InterviewUpdate(BaseModel):
 
 class InterviewResponse(InterviewBase):
     """Interview response schema."""
+
     id: int
     completed_date: Optional[datetime] = None
     duration_minutes: Optional[int] = None
@@ -45,6 +49,7 @@ class InterviewResponse(InterviewBase):
 # Discovery Insight schemas
 class DiscoveryInsightBase(BaseModel):
     """Base discovery insight schema."""
+
     title: str = Field(..., max_length=255)
     description: str
     category: str = Field(..., max_length=100)
@@ -55,11 +60,13 @@ class DiscoveryInsightBase(BaseModel):
 
 class DiscoveryInsightCreate(DiscoveryInsightBase):
     """Create discovery insight schema."""
+
     pass
 
 
 class DiscoveryInsightUpdate(BaseModel):
     """Update discovery insight schema."""
+
     status: Optional[str] = None
     validated_date: Optional[datetime] = None
     time_to_validation_days: Optional[float] = None
@@ -67,6 +74,7 @@ class DiscoveryInsightUpdate(BaseModel):
 
 class DiscoveryInsightResponse(DiscoveryInsightBase):
     """Discovery insight response schema."""
+
     id: int
     status: str
     captured_date: datetime
@@ -82,6 +90,7 @@ class DiscoveryInsightResponse(DiscoveryInsightBase):
 # Experiment schemas
 class ExperimentBase(BaseModel):
     """Base experiment schema."""
+
     name: str = Field(..., max_length=255)
     description: str
     hypothesis: str
@@ -91,11 +100,13 @@ class ExperimentBase(BaseModel):
 
 class ExperimentCreate(ExperimentBase):
     """Create experiment schema."""
+
     pass
 
 
 class ExperimentUpdate(BaseModel):
     """Update experiment schema."""
+
     status: Optional[str] = None
     start_date: Optional[datetime] = None
     end_date: Optional[datetime] = None
@@ -107,6 +118,7 @@ class ExperimentUpdate(BaseModel):
 
 class ExperimentResponse(ExperimentBase):
     """Experiment response schema."""
+
     id: int
     status: str
     start_date: Optional[datetime] = None
@@ -125,6 +137,7 @@ class ExperimentResponse(ExperimentBase):
 # Feature Validation schemas
 class FeatureValidationBase(BaseModel):
     """Base feature validation schema."""
+
     feature_name: str = Field(..., max_length=255)
     description: str
     experiment_id: Optional[int] = None
@@ -132,11 +145,13 @@ class FeatureValidationBase(BaseModel):
 
 class FeatureValidationCreate(FeatureValidationBase):
     """Create feature validation schema."""
+
     pass
 
 
 class FeatureValidationUpdate(BaseModel):
     """Update feature validation schema."""
+
     status: Optional[str] = None
     validated_date: Optional[datetime] = None
     shipped_date: Optional[datetime] = None
@@ -148,6 +163,7 @@ class FeatureValidationUpdate(BaseModel):
 
 class FeatureValidationResponse(FeatureValidationBase):
     """Feature validation response schema."""
+
     id: int
     status: str
     proposed_date: datetime
@@ -167,6 +183,7 @@ class FeatureValidationResponse(FeatureValidationBase):
 # Team Performance schemas
 class TeamPerformanceBase(BaseModel):
     """Base team performance schema."""
+
     team_name: str = Field(..., max_length=100)
     period_start: datetime
     period_end: datetime
@@ -174,6 +191,7 @@ class TeamPerformanceBase(BaseModel):
 
 class TeamPerformanceCreate(TeamPerformanceBase):
     """Create team performance schema."""
+
     interviews_conducted: int = 0
     insights_generated: int = 0
     experiments_run: int = 0
@@ -186,6 +204,7 @@ class TeamPerformanceCreate(TeamPerformanceBase):
 
 class TeamPerformanceResponse(TeamPerformanceBase):
     """Team performance response schema."""
+
     id: int
     interviews_conducted: int
     insights_generated: int
@@ -205,6 +224,7 @@ class TeamPerformanceResponse(TeamPerformanceBase):
 # Statistics schema
 class DiscoveryStatistics(BaseModel):
     """Discovery statistics schema."""
+
     total_interviews: int
     completed_interviews: int
     total_insights: int
@@ -224,6 +244,7 @@ class DiscoveryStatistics(BaseModel):
 # Health check schema
 class HealthResponse(BaseModel):
     """Health check response schema."""
+
     status: str
     service: str
     version: str

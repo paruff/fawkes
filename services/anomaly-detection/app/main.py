@@ -18,10 +18,7 @@ from prometheus_client import make_asgi_app, Counter, Histogram, Gauge
 import httpx
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Configuration from environment
@@ -40,6 +37,7 @@ http_client: Optional[httpx.AsyncClient] = None
 # Pydantic models
 class AnomalyScore(BaseModel):
     """Anomaly score model."""
+
     metric: str = Field(..., description="Metric name")
     timestamp: datetime = Field(..., description="Timestamp of anomaly")
     score: float = Field(..., description="Anomaly score (0-1, higher = more anomalous)")
@@ -51,6 +49,7 @@ class AnomalyScore(BaseModel):
 
 class RootCause(BaseModel):
     """Root cause analysis result."""
+
     anomaly_id: str
     likely_causes: List[str] = Field(..., description="List of likely root causes")
     correlated_metrics: List[str] = Field(..., description="Correlated metrics showing anomalies")
@@ -61,6 +60,7 @@ class RootCause(BaseModel):
 
 class AnomalyDetection(BaseModel):
     """Complete anomaly detection result."""
+
     id: str
     anomaly: AnomalyScore
     root_cause: Optional[RootCause] = None
@@ -70,6 +70,7 @@ class AnomalyDetection(BaseModel):
 
 class HealthResponse(BaseModel):
     """Health check response."""
+
     status: str
     service: str
     version: str
@@ -100,6 +101,7 @@ async def lifespan(app: FastAPI):
     # Initialize ML models
     try:
         from .models import detector
+
         detector.initialize_models()
         logger.info("✅ ML models initialized successfully")
     except Exception as e:
@@ -108,6 +110,7 @@ async def lifespan(app: FastAPI):
     # Start background anomaly detection
     import asyncio
     from . import detector as detection_module
+
     detection_task = asyncio.create_task(detection_module.run_continuous_detection())
 
     yield
@@ -124,37 +127,23 @@ app = FastAPI(
     title="Anomaly Detection Service",
     description="AI-powered anomaly detection for metrics, logs, and system behavior",
     version="0.1.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Prometheus metrics
-ANOMALIES_DETECTED = Counter(
-    'anomaly_detection_total',
-    'Total anomalies detected',
-    ['metric', 'severity']
-)
+ANOMALIES_DETECTED = Counter("anomaly_detection_total", "Total anomalies detected", ["metric", "severity"])
 
 DETECTION_DURATION = Histogram(
-    'anomaly_detection_duration_seconds',
-    'Anomaly detection processing duration',
-    buckets=[0.1, 0.5, 1.0, 2.0, 5.0, 10.0]
+    "anomaly_detection_duration_seconds",
+    "Anomaly detection processing duration",
+    buckets=[0.1, 0.5, 1.0, 2.0, 5.0, 10.0],
 )
 
-FALSE_POSITIVE_RATE_GAUGE = Gauge(
-    'anomaly_detection_false_positive_rate',
-    'Estimated false positive rate'
-)
+FALSE_POSITIVE_RATE_GAUGE = Gauge("anomaly_detection_false_positive_rate", "Estimated false positive rate")
 
-MODELS_LOADED = Gauge(
-    'anomaly_detection_models_loaded',
-    'Number of ML models loaded'
-)
+MODELS_LOADED = Gauge("anomaly_detection_models_loaded", "Number of ML models loaded")
 
-ROOT_CAUSE_ANALYSES = Counter(
-    'anomaly_detection_rca_total',
-    'Total root cause analyses performed',
-    ['status']
-)
+ROOT_CAUSE_ANALYSES = Counter("anomaly_detection_rca_total", "Total root cause analyses performed", ["status"])
 
 # Add prometheus metrics endpoint
 metrics_app = make_asgi_app()
@@ -168,11 +157,7 @@ MAX_RECENT_ANOMALIES = 100
 @app.get("/", include_in_schema=False)
 async def root():
     """Root endpoint."""
-    return {
-        "service": "anomaly-detection",
-        "status": "running",
-        "version": "0.1.0"
-    }
+    return {"service": "anomaly-detection", "status": "running", "version": "0.1.0"}
 
 
 @app.get("/health")
@@ -190,6 +175,7 @@ async def health() -> HealthResponse:
 
     try:
         from .models import detector
+
         models_loaded = detector.models_initialized
     except Exception:
         pass
@@ -200,7 +186,7 @@ async def health() -> HealthResponse:
         version="0.1.0",
         prometheus_connected=prometheus_connected,
         models_loaded=models_loaded,
-        llm_configured=bool(LLM_API_KEY)
+        llm_configured=bool(LLM_API_KEY),
     )
 
 
@@ -217,22 +203,18 @@ async def ready():
 
     try:
         from .models import detector
+
         if not detector.models_initialized:
             raise HTTPException(status_code=503, detail="ML models not loaded")
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"Models not ready: {str(e)}")
 
-    return {
-        "status": "READY",
-        "service": "anomaly-detection"
-    }
+    return {"status": "READY", "service": "anomaly-detection"}
 
 
 @app.get("/api/v1/anomalies")
 async def get_anomalies(
-    limit: int = 50,
-    severity: Optional[str] = None,
-    metric: Optional[str] = None
+    limit: int = 50, severity: Optional[str] = None, metric: Optional[str] = None
 ) -> List[AnomalyDetection]:
     """
     Get recent anomalies.
@@ -280,11 +262,8 @@ async def trigger_rca(anomaly_id: str, background_tasks: BackgroundTasks):
 
     # Perform RCA in background
     from . import rca as rca_module
-    background_tasks.add_task(
-        rca_module.perform_root_cause_analysis,
-        anomaly,
-        recent_anomalies
-    )
+
+    background_tasks.add_task(rca_module.perform_root_cause_analysis, anomaly, recent_anomalies)
 
     return {"message": "RCA triggered", "anomaly_id": anomaly_id}
 
@@ -294,10 +273,8 @@ async def get_models():
     """Get information about loaded ML models."""
     try:
         from .models import detector
-        return {
-            "models_loaded": detector.models_initialized,
-            "models": detector.get_model_info()
-        }
+
+        return {"models_loaded": detector.models_initialized, "models": detector.get_model_info()}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get model info: {str(e)}")
 
@@ -320,10 +297,11 @@ async def get_stats():
         "severity_counts": severity_counts,
         "with_root_cause_analysis": with_rca,
         "alerts_sent": alerted,
-        "false_positive_threshold": FALSE_POSITIVE_THRESHOLD
+        "false_positive_threshold": FALSE_POSITIVE_THRESHOLD,
     }
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

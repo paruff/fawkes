@@ -10,12 +10,14 @@
 ## 📋 Assessment Overview
 
 This assessment validates your understanding of:
+
 - Internal developer platform fundamentals
 - DORA metrics and their significance
 - GitOps principles and workflows
 - Basic deployment operations
 
 **Requirements**:
+
 - Completed Modules 1-4
 - Access to Fawkes lab environment
 - Basic command line proficiency
@@ -457,6 +459,7 @@ D) Push is for production, pull is for staging
 **Objective**: Deploy a web application to Kubernetes using GitOps workflow.
 
 **Tasks**:
+
 1. Fork the sample application repository
 2. Modify the deployment manifest (change replica count to 3)
 3. Commit and push changes to Git
@@ -464,12 +467,14 @@ D) Push is for production, pull is for staging
 5. Access the application via its service URL
 
 **Acceptance Criteria**:
+
 - ✅ Application running with 3 replicas
 - ✅ All pods in "Running" state
 - ✅ Application accessible via browser
 - ✅ ArgoCD shows "Synced" and "Healthy" status
 
 **Validation Command**:
+
 ```bash
 fawkes assessment validate --lab white-belt-lab1
 ```
@@ -481,6 +486,7 @@ fawkes assessment validate --lab white-belt-lab1
 **Objective**: Use Kustomize overlays to deploy the same app to dev and prod environments.
 
 **Tasks**:
+
 1. Create base configuration (common to all environments)
 2. Create dev overlay (1 replica, dev config)
 3. Create prod overlay (3 replicas, prod config, resource limits)
@@ -488,12 +494,14 @@ fawkes assessment validate --lab white-belt-lab1
 5. Verify different configurations in each environment
 
 **Acceptance Criteria**:
+
 - ✅ Dev environment: 1 replica, no resource limits
 - ✅ Prod environment: 3 replicas, resource limits configured
 - ✅ Both environments use same base image
 - ✅ ArgoCD managing both environments
 
 **Validation Command**:
+
 ```bash
 fawkes assessment validate --lab white-belt-lab2
 ```
@@ -505,6 +513,7 @@ fawkes assessment validate --lab white-belt-lab2
 **Objective**: Set up DORA metrics collection and dashboard for your application.
 
 **Tasks**:
+
 1. Configure deployment tracking (Prometheus annotations)
 2. Deploy the DORA metrics exporter
 3. Create Grafana dashboard showing:
@@ -514,12 +523,14 @@ fawkes assessment validate --lab white-belt-lab2
 4. Perform 3 test deployments and observe metrics
 
 **Acceptance Criteria**:
+
 - ✅ Deployment frequency metric showing 3+ deployments
 - ✅ Lead time calculated for each deployment
 - ✅ Dashboard displays real-time metrics
 - ✅ Deployment success/failure status tracked
 
 **Validation Command**:
+
 ```bash
 fawkes assessment validate --lab white-belt-lab3
 ```
@@ -531,12 +542,14 @@ fawkes assessment validate --lab white-belt-lab3
 ### Automated Grading
 
 The Fawkes assessment system automatically grades:
+
 - **Written exam**: Instant results upon submission
 - **Labs**: Validation scripts check cluster state
 
 ### Manual Review
 
 Platform engineers will review:
+
 - Code quality in Git commits
 - Documentation in pull requests
 - Dashboard configuration
@@ -561,6 +574,7 @@ Passing Score: 80 points
 ### Passing (≥80 points)
 
 You will receive:
+
 - ✅ **Fawkes Platform Operator** digital certificate
 - 🎖️ Digital badge (add to LinkedIn/resume)
 - 📧 Certificate email with verification link
@@ -578,12 +592,14 @@ You will receive:
 ## Study Resources
 
 ### Review Materials
+
 - Module 1: Internal Delivery Platforms
 - Module 2: DORA Metrics
 - Module 3: GitOps Principles
 - Module 4: Your First Deployment
 
 ### Practice Labs
+
 ```bash
 # Launch practice environment
 fawkes lab start --module 1
@@ -593,6 +609,7 @@ fawkes lab start --module 4
 ```
 
 ### Additional Resources
+
 - [DORA Research Papers](https://dora.dev)
 - [GitOps Principles](https://opengitops.dev)
 - [Kubernetes Basics](https://kubernetes.io/docs/tutorials/)
@@ -620,11 +637,13 @@ fawkes assessment schedule --belt white --date "2025-10-20" --time "14:00"
 ### During the Assessment
 
 1. **Written Exam** (60 minutes)
+
    - 30 questions, multiple choice
    - Can review and change answers
    - Submit when complete
 
 2. **Hands-On Labs** (70 minutes)
+
    - Access lab environment via browser
    - Complete all 3 labs
    - Run validation commands
@@ -640,6 +659,7 @@ fawkes assessment schedule --belt white --date "2025-10-20" --time "14:00"
 ## Good Luck! 🍀
 
 Remember:
+
 - ✅ Read questions carefully
 - ✅ Use the lab environment to test your understanding
 - ✅ Don't rush - you have 2 hours
@@ -651,4 +671,4 @@ Remember:
 ---
 
 **White Belt Assessment** | Fawkes Dojo | Version 1.0
-*Earn your Fawkes Platform Operator certification* 🥋
+_Earn your Fawkes Platform Operator certification_ 🥋

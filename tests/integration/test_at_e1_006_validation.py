@@ -36,18 +36,12 @@ class TestATE1006Validation:
     @pytest.fixture(scope="class")
     def namespace(self, request):
         """Get monitoring namespace from CLI or environment."""
-        return (
-            request.config.getoption("--namespace", None) or
-            os.getenv("NAMESPACE", "monitoring")
-        )
+        return request.config.getoption("--namespace", None) or os.getenv("NAMESPACE", "monitoring")
 
     @pytest.fixture(scope="class")
     def argocd_namespace(self, request):
         """Get ArgoCD namespace from CLI or environment."""
-        return (
-            request.config.getoption("--argocd-namespace", None) or
-            os.getenv("ARGOCD_NAMESPACE", "fawkes")
-        )
+        return request.config.getoption("--argocd-namespace", None) or os.getenv("ARGOCD_NAMESPACE", "fawkes")
 
     @pytest.fixture(scope="class")
     def validation_timeout(self, request):
@@ -75,12 +69,14 @@ class TestATE1006Validation:
             result = subprocess.run(
                 [
                     str(validation_script),
-                    "--namespace", namespace,
-                    "--argocd-namespace", argocd_namespace,
+                    "--namespace",
+                    namespace,
+                    "--argocd-namespace",
+                    argocd_namespace,
                 ],
                 capture_output=True,
                 text=True,
-                timeout=validation_timeout
+                timeout=validation_timeout,
             )
 
             # Find and parse the JSON report
@@ -88,24 +84,17 @@ class TestATE1006Validation:
             if reports_dir.exists():
                 # Get the most recent AT-E1-006 report
                 report_files = sorted(
-                    reports_dir.glob("at-e1-006-validation-*.json"),
-                    key=lambda p: p.stat().st_mtime,
-                    reverse=True
+                    reports_dir.glob("at-e1-006-validation-*.json"), key=lambda p: p.stat().st_mtime, reverse=True
                 )
                 if report_files:
-                    with open(report_files[0], 'r') as f:
+                    with open(report_files[0], "r") as f:
                         report = json.load(f)
                 else:
                     report = None
             else:
                 report = None
 
-            return {
-                "exit_code": result.returncode,
-                "stdout": result.stdout,
-                "stderr": result.stderr,
-                "report": report
-            }
+            return {"exit_code": result.returncode, "stdout": result.stdout, "stderr": result.stderr, "report": report}
         finally:
             os.chdir(original_dir)
 
@@ -114,15 +103,13 @@ class TestATE1006Validation:
     @pytest.mark.smoke
     def test_validation_script_runs(self, validation_result):
         """Test that validation script runs successfully."""
-        assert validation_result["exit_code"] in [0, 1], \
-            f"Validation script crashed: {validation_result['stderr']}"
+        assert validation_result["exit_code"] in [0, 1], f"Validation script crashed: {validation_result['stderr']}"
 
     @pytest.mark.integration
     @pytest.mark.observability
     def test_validation_report_generated(self, validation_result):
         """Test that validation report is generated."""
-        assert validation_result["report"] is not None, \
-            "Validation report was not generated"
+        assert validation_result["report"] is not None, "Validation report was not generated"
 
         # Check report structure
         assert "test_suite" in validation_result["report"]
@@ -139,8 +126,7 @@ class TestATE1006Validation:
         # This test focuses on the report summary
         if validation_result["report"]:
             summary = validation_result["report"]["summary"]
-            assert summary["failed"] == 0, \
-                f"{summary['failed']} tests failed. Pass rate: {summary['pass_percentage']}%"
+            assert summary["failed"] == 0, f"{summary['failed']} tests failed. Pass rate: {summary['pass_percentage']}%"
 
     @pytest.mark.integration
     @pytest.mark.observability
@@ -148,12 +134,10 @@ class TestATE1006Validation:
         """Test that monitoring namespace exists."""
         if validation_result["report"]:
             namespace_test = next(
-                (t for t in validation_result["report"]["results"] if "namespace_exists" in t["test"]),
-                None
+                (t for t in validation_result["report"]["results"] if "namespace_exists" in t["test"]), None
             )
             assert namespace_test is not None, "Namespace existence test not found"
-            assert namespace_test["status"] == "PASS", \
-                f"Namespace check failed: {namespace_test['message']}"
+            assert namespace_test["status"] == "PASS", f"Namespace check failed: {namespace_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.observability
@@ -161,12 +145,10 @@ class TestATE1006Validation:
         """Test that ArgoCD Application for prometheus-stack is Healthy and Synced."""
         if validation_result["report"]:
             argocd_test = next(
-                (t for t in validation_result["report"]["results"] if "argocd_application" in t["test"]),
-                None
+                (t for t in validation_result["report"]["results"] if "argocd_application" in t["test"]), None
             )
             assert argocd_test is not None, "ArgoCD Application test not found"
-            assert argocd_test["status"] == "PASS", \
-                f"ArgoCD Application check failed: {argocd_test['message']}"
+            assert argocd_test["status"] == "PASS", f"ArgoCD Application check failed: {argocd_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.observability
@@ -174,12 +156,10 @@ class TestATE1006Validation:
         """Test that Prometheus Operator is deployed and running."""
         if validation_result["report"]:
             operator_test = next(
-                (t for t in validation_result["report"]["results"] if "prometheus_operator" in t["test"]),
-                None
+                (t for t in validation_result["report"]["results"] if "prometheus_operator" in t["test"]), None
             )
             assert operator_test is not None, "Prometheus Operator test not found"
-            assert operator_test["status"] == "PASS", \
-                f"Prometheus Operator check failed: {operator_test['message']}"
+            assert operator_test["status"] == "PASS", f"Prometheus Operator check failed: {operator_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.observability
@@ -187,25 +167,19 @@ class TestATE1006Validation:
         """Test that Prometheus Server is deployed and running."""
         if validation_result["report"]:
             server_test = next(
-                (t for t in validation_result["report"]["results"] if "prometheus_server" in t["test"]),
-                None
+                (t for t in validation_result["report"]["results"] if "prometheus_server" in t["test"]), None
             )
             assert server_test is not None, "Prometheus Server test not found"
-            assert server_test["status"] == "PASS", \
-                f"Prometheus Server check failed: {server_test['message']}"
+            assert server_test["status"] == "PASS", f"Prometheus Server check failed: {server_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.observability
     def test_grafana_deployed(self, validation_result):
         """Test that Grafana is deployed and running."""
         if validation_result["report"]:
-            grafana_test = next(
-                (t for t in validation_result["report"]["results"] if "grafana" in t["test"]),
-                None
-            )
+            grafana_test = next((t for t in validation_result["report"]["results"] if "grafana" in t["test"]), None)
             assert grafana_test is not None, "Grafana test not found"
-            assert grafana_test["status"] == "PASS", \
-                f"Grafana check failed: {grafana_test['message']}"
+            assert grafana_test["status"] == "PASS", f"Grafana check failed: {grafana_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.observability
@@ -213,12 +187,10 @@ class TestATE1006Validation:
         """Test that Alertmanager is deployed and running."""
         if validation_result["report"]:
             alertmanager_test = next(
-                (t for t in validation_result["report"]["results"] if "alertmanager" in t["test"]),
-                None
+                (t for t in validation_result["report"]["results"] if "alertmanager" in t["test"]), None
             )
             assert alertmanager_test is not None, "Alertmanager test not found"
-            assert alertmanager_test["status"] == "PASS", \
-                f"Alertmanager check failed: {alertmanager_test['message']}"
+            assert alertmanager_test["status"] == "PASS", f"Alertmanager check failed: {alertmanager_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.observability
@@ -226,12 +198,12 @@ class TestATE1006Validation:
         """Test that Node Exporter is running on all nodes."""
         if validation_result["report"]:
             node_exporter_test = next(
-                (t for t in validation_result["report"]["results"] if "node_exporter" in t["test"]),
-                None
+                (t for t in validation_result["report"]["results"] if "node_exporter" in t["test"]), None
             )
             assert node_exporter_test is not None, "Node Exporter test not found"
-            assert node_exporter_test["status"] == "PASS", \
-                f"Node Exporter check failed: {node_exporter_test['message']}"
+            assert (
+                node_exporter_test["status"] == "PASS"
+            ), f"Node Exporter check failed: {node_exporter_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.observability
@@ -239,25 +211,19 @@ class TestATE1006Validation:
         """Test that kube-state-metrics is running."""
         if validation_result["report"]:
             ksm_test = next(
-                (t for t in validation_result["report"]["results"] if "kube_state_metrics" in t["test"]),
-                None
+                (t for t in validation_result["report"]["results"] if "kube_state_metrics" in t["test"]), None
             )
             assert ksm_test is not None, "kube-state-metrics test not found"
-            assert ksm_test["status"] == "PASS", \
-                f"kube-state-metrics check failed: {ksm_test['message']}"
+            assert ksm_test["status"] == "PASS", f"kube-state-metrics check failed: {ksm_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.observability
     def test_servicemonitors_configured(self, validation_result):
         """Test that ServiceMonitors are configured for platform components."""
         if validation_result["report"]:
-            sm_test = next(
-                (t for t in validation_result["report"]["results"] if "servicemonitors" in t["test"]),
-                None
-            )
+            sm_test = next((t for t in validation_result["report"]["results"] if "servicemonitors" in t["test"]), None)
             assert sm_test is not None, "ServiceMonitors test not found"
-            assert sm_test["status"] == "PASS", \
-                f"ServiceMonitors check failed: {sm_test['message']}"
+            assert sm_test["status"] == "PASS", f"ServiceMonitors check failed: {sm_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.observability
@@ -265,12 +231,10 @@ class TestATE1006Validation:
         """Test that persistent storage is configured for Prometheus."""
         if validation_result["report"]:
             storage_test = next(
-                (t for t in validation_result["report"]["results"] if "prometheus_storage" in t["test"]),
-                None
+                (t for t in validation_result["report"]["results"] if "prometheus_storage" in t["test"]), None
             )
             assert storage_test is not None, "Prometheus storage test not found"
-            assert storage_test["status"] == "PASS", \
-                f"Prometheus storage check failed: {storage_test['message']}"
+            assert storage_test["status"] == "PASS", f"Prometheus storage check failed: {storage_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.observability
@@ -278,12 +242,10 @@ class TestATE1006Validation:
         """Test that Grafana ingress is configured."""
         if validation_result["report"]:
             ingress_test = next(
-                (t for t in validation_result["report"]["results"] if "grafana_ingress" in t["test"]),
-                None
+                (t for t in validation_result["report"]["results"] if "grafana_ingress" in t["test"]), None
             )
             assert ingress_test is not None, "Grafana ingress test not found"
-            assert ingress_test["status"] == "PASS", \
-                f"Grafana ingress check failed: {ingress_test['message']}"
+            assert ingress_test["status"] == "PASS", f"Grafana ingress check failed: {ingress_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.observability
@@ -291,12 +253,10 @@ class TestATE1006Validation:
         """Test that Prometheus ingress is configured."""
         if validation_result["report"]:
             ingress_test = next(
-                (t for t in validation_result["report"]["results"] if "prometheus_ingress" in t["test"]),
-                None
+                (t for t in validation_result["report"]["results"] if "prometheus_ingress" in t["test"]), None
             )
             assert ingress_test is not None, "Prometheus ingress test not found"
-            assert ingress_test["status"] == "PASS", \
-                f"Prometheus ingress check failed: {ingress_test['message']}"
+            assert ingress_test["status"] == "PASS", f"Prometheus ingress check failed: {ingress_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.observability
@@ -304,45 +264,29 @@ class TestATE1006Validation:
         """Test that resource limits are configured for all components."""
         if validation_result["report"]:
             limits_test = next(
-                (t for t in validation_result["report"]["results"] if "resource_limits" in t["test"]),
-                None
+                (t for t in validation_result["report"]["results"] if "resource_limits" in t["test"]), None
             )
             assert limits_test is not None, "Resource limits test not found"
-            assert limits_test["status"] == "PASS", \
-                f"Resource limits check failed: {limits_test['message']}"
+            assert limits_test["status"] == "PASS", f"Resource limits check failed: {limits_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.observability
     def test_pods_health(self, validation_result):
         """Test that all pods in monitoring namespace are healthy."""
         if validation_result["report"]:
-            health_test = next(
-                (t for t in validation_result["report"]["results"] if "pods_health" in t["test"]),
-                None
-            )
+            health_test = next((t for t in validation_result["report"]["results"] if "pods_health" in t["test"]), None)
             assert health_test is not None, "Pods health test not found"
-            assert health_test["status"] == "PASS", \
-                f"Pods health check failed: {health_test['message']}"
+            assert health_test["status"] == "PASS", f"Pods health check failed: {health_test['message']}"
 
 
 def pytest_addoption(parser):
     """Add custom command line options."""
-    parser.addoption(
-        "--namespace",
-        action="store",
-        default=None,
-        help="Monitoring namespace (default: monitoring)"
-    )
-    parser.addoption(
-        "--argocd-namespace",
-        action="store",
-        default=None,
-        help="ArgoCD namespace (default: fawkes)"
-    )
+    parser.addoption("--namespace", action="store", default=None, help="Monitoring namespace (default: monitoring)")
+    parser.addoption("--argocd-namespace", action="store", default=None, help="ArgoCD namespace (default: fawkes)")
     parser.addoption(
         "--validation-timeout",
         action="store",
         type=int,
         default=None,
-        help="Timeout in seconds for validation script (default: 600)"
+        help="Timeout in seconds for validation script (default: 600)",
     )

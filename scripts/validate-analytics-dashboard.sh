@@ -25,19 +25,19 @@ TESTS_FAILED=0
 
 # Function to run a test
 run_test() {
-    local test_name="$1"
-    local test_command="$2"
+  local test_name="$1"
+  local test_command="$2"
 
-    echo -n "Testing: $test_name... "
-    if eval "$test_command" > /dev/null 2>&1; then
-        echo -e "${GREEN}✓ PASSED${NC}"
-        ((TESTS_PASSED++))
-        return 0
-    else
-        echo -e "${RED}✗ FAILED${NC}"
-        ((TESTS_FAILED++))
-        return 1
-    fi
+  echo -n "Testing: $test_name... "
+  if eval "$test_command" > /dev/null 2>&1; then
+    echo -e "${GREEN}✓ PASSED${NC}"
+    ((TESTS_PASSED++))
+    return 0
+  else
+    echo -e "${RED}✗ FAILED${NC}"
+    ((TESTS_FAILED++))
+    return 1
+  fi
 }
 
 # 1. Check if namespace exists
@@ -79,29 +79,29 @@ run_test "PodDisruptionBudget exists" "kubectl get pdb $SERVICE_NAME -n $NAMESPA
 echo -e "${YELLOW}9. Testing health endpoint...${NC}"
 POD_NAME=$(kubectl get pods -n $NAMESPACE -l app=$SERVICE_NAME -o jsonpath='{.items[0].metadata.name}')
 if [ -n "$POD_NAME" ]; then
-    run_test "Health endpoint responds" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- http://localhost:8000/health | grep -q healthy"
+  run_test "Health endpoint responds" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- http://localhost:8000/health | grep -q healthy"
 fi
 
 # 10. Test API endpoints
 echo -e "${YELLOW}10. Testing API endpoints...${NC}"
 if [ -n "$POD_NAME" ]; then
-    run_test "Dashboard endpoint responds" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- 'http://localhost:8000/api/v1/dashboard?time_range=7d' | grep -q usage_trends"
-    run_test "Usage trends endpoint responds" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- 'http://localhost:8000/api/v1/usage-trends?time_range=7d' | grep -q total_users"
-    run_test "Feature adoption endpoint responds" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- 'http://localhost:8000/api/v1/feature-adoption?time_range=30d' | grep -q features"
-    run_test "Experiment results endpoint responds" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- 'http://localhost:8000/api/v1/experiment-results' | grep -q experiment_id"
-    run_test "User segments endpoint responds" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- 'http://localhost:8000/api/v1/user-segments?time_range=30d' | grep -q segments"
-    run_test "Funnel endpoint responds" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- 'http://localhost:8000/api/v1/funnel/onboarding?time_range=30d' | grep -q steps"
+  run_test "Dashboard endpoint responds" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- 'http://localhost:8000/api/v1/dashboard?time_range=7d' | grep -q usage_trends"
+  run_test "Usage trends endpoint responds" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- 'http://localhost:8000/api/v1/usage-trends?time_range=7d' | grep -q total_users"
+  run_test "Feature adoption endpoint responds" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- 'http://localhost:8000/api/v1/feature-adoption?time_range=30d' | grep -q features"
+  run_test "Experiment results endpoint responds" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- 'http://localhost:8000/api/v1/experiment-results' | grep -q experiment_id"
+  run_test "User segments endpoint responds" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- 'http://localhost:8000/api/v1/user-segments?time_range=30d' | grep -q segments"
+  run_test "Funnel endpoint responds" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- 'http://localhost:8000/api/v1/funnel/onboarding?time_range=30d' | grep -q steps"
 fi
 
 # 11. Test metrics endpoint
 echo -e "${YELLOW}11. Testing Prometheus metrics...${NC}"
 if [ -n "$POD_NAME" ]; then
-    run_test "Metrics endpoint accessible" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- http://localhost:8000/metrics | grep -q analytics_"
-    run_test "Usage metrics present" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- http://localhost:8000/metrics | grep -q analytics_total_users"
-    run_test "Feature metrics present" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- http://localhost:8000/metrics | grep -q analytics_feature_adoption_rate"
-    run_test "Experiment metrics present" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- http://localhost:8000/metrics | grep -q analytics_active_experiments"
-    run_test "Segment metrics present" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- http://localhost:8000/metrics | grep -q analytics_segment_size"
-    run_test "Funnel metrics present" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- http://localhost:8000/metrics | grep -q analytics_funnel_conversion_rate"
+  run_test "Metrics endpoint accessible" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- http://localhost:8000/metrics | grep -q analytics_"
+  run_test "Usage metrics present" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- http://localhost:8000/metrics | grep -q analytics_total_users"
+  run_test "Feature metrics present" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- http://localhost:8000/metrics | grep -q analytics_feature_adoption_rate"
+  run_test "Experiment metrics present" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- http://localhost:8000/metrics | grep -q analytics_active_experiments"
+  run_test "Segment metrics present" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- http://localhost:8000/metrics | grep -q analytics_segment_size"
+  run_test "Funnel metrics present" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- http://localhost:8000/metrics | grep -q analytics_funnel_conversion_rate"
 fi
 
 # 12. Check resource limits
@@ -130,7 +130,7 @@ run_test "Dashboard has correct label" "kubectl get configmap analytics-dashboar
 # 16. Test export functionality
 echo -e "${YELLOW}16. Testing export functionality...${NC}"
 if [ -n "$POD_NAME" ]; then
-    run_test "JSON export works" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- 'http://localhost:8000/api/v1/export/json?time_range=7d' | grep -q timestamp"
+  run_test "JSON export works" "kubectl exec -n $NAMESPACE $POD_NAME -- wget -q -O- 'http://localhost:8000/api/v1/export/json?time_range=7d' | grep -q timestamp"
 fi
 
 # 17. Check pod anti-affinity
@@ -150,9 +150,9 @@ echo -e "Tests Failed: ${RED}$TESTS_FAILED${NC}"
 echo ""
 
 if [ $TESTS_FAILED -eq 0 ]; then
-    echo -e "${GREEN}✓ All validation tests passed!${NC}"
-    exit 0
+  echo -e "${GREEN}✓ All validation tests passed!${NC}"
+  exit 0
 else
-    echo -e "${RED}✗ Some validation tests failed.${NC}"
-    exit 1
+  echo -e "${RED}✗ Some validation tests failed.${NC}"
+  exit 1
 fi

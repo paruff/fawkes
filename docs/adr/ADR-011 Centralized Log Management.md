@@ -1,6 +1,7 @@
 # ADR-011: Centralized Log Management
 
 ## Status
+
 Accepted
 
 ## Context
@@ -8,6 +9,7 @@ Accepted
 The Fawkes platform requires comprehensive log management for both platform services and applications deployed by teams:
 
 **Platform Service Logs**:
+
 - Kubernetes control plane (API server, scheduler, controller manager, etcd)
 - NGINX Ingress Controller (access logs, error logs)
 - ArgoCD (deployment events, sync operations, application health)
@@ -21,6 +23,7 @@ The Fawkes platform requires comprehensive log management for both platform serv
 - External Secrets Operator (secret synchronization, errors)
 
 **Application Logs** (from teams using Fawkes):
+
 - Microservice application logs (structured and unstructured)
 - Container stdout/stderr
 - Application performance metrics
@@ -29,6 +32,7 @@ The Fawkes platform requires comprehensive log management for both platform serv
 - Business event logs
 
 **Logging Requirements**:
+
 - **Centralized Storage**: All logs in one searchable location
 - **Long-Term Retention**: 30 days hot storage, 90+ days cold storage
 - **Fast Search**: Sub-second queries across billions of log entries
@@ -41,6 +45,7 @@ The Fawkes platform requires comprehensive log management for both platform serv
 - **Cost Efficiency**: Minimize storage and compute costs
 
 **Security & Compliance Requirements**:
+
 - Encryption at rest and in transit
 - Role-based access control (RBAC)
 - Audit trail of log access
@@ -50,6 +55,7 @@ The Fawkes platform requires comprehensive log management for both platform serv
 - Log integrity verification
 
 **Operational Requirements**:
+
 - Cloud-agnostic (works on AWS, Azure, GCP, on-premises)
 - Low operational overhead (minimal maintenance)
 - Automatic log collection (no application code changes)
@@ -59,6 +65,7 @@ The Fawkes platform requires comprehensive log management for both platform serv
 - GitOps-compatible deployment
 
 **Integration Requirements**:
+
 - Kubernetes native (DaemonSet for log collection)
 - Prometheus metrics integration
 - Grafana dashboard integration
@@ -67,6 +74,7 @@ The Fawkes platform requires comprehensive log management for both platform serv
 - OpenTelemetry compatibility
 
 **Dojo Learning Requirements**:
+
 - Simple enough for learners to understand
 - Clear troubleshooting workflows
 - Hands-on labs for log analysis
@@ -162,6 +170,7 @@ We will use **OpenSearch** as the centralized log storage and search engine, wit
 ### OpenSearch Configuration
 
 **Cluster Sizing (Production)**:
+
 ```yaml
 Master Nodes: 3 replicas
   - CPU: 2 cores
@@ -183,6 +192,7 @@ Data Nodes (Warm): 2 replicas (optional for MVP)
 ```
 
 **Index Template**:
+
 ```json
 {
   "index_patterns": ["fawkes-logs-*"],
@@ -216,6 +226,7 @@ Data Nodes (Warm): 2 replicas (optional for MVP)
 ```
 
 **Index Lifecycle Policy (ILM)**:
+
 ```json
 {
   "policy": {
@@ -258,6 +269,7 @@ Data Nodes (Warm): 2 replicas (optional for MVP)
 ### Fluent Bit Configuration
 
 **DaemonSet Deployment**:
+
 ```yaml
 apiVersion: apps/v1
 kind: DaemonSet
@@ -275,37 +287,38 @@ spec:
     spec:
       serviceAccountName: fluent-bit
       containers:
-      - name: fluent-bit
-        image: fluent/fluent-bit:2.2
-        resources:
-          limits:
-            cpu: 200m
-            memory: 256Mi
-          requests:
-            cpu: 100m
-            memory: 128Mi
-        volumeMounts:
-        - name: varlog
-          mountPath: /var/log
-          readOnly: true
-        - name: varlibdockercontainers
-          mountPath: /var/lib/docker/containers
-          readOnly: true
-        - name: fluent-bit-config
-          mountPath: /fluent-bit/etc/
+        - name: fluent-bit
+          image: fluent/fluent-bit:2.2
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          volumeMounts:
+            - name: varlog
+              mountPath: /var/log
+              readOnly: true
+            - name: varlibdockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+            - name: fluent-bit-config
+              mountPath: /fluent-bit/etc/
       volumes:
-      - name: varlog
-        hostPath:
-          path: /var/log
-      - name: varlibdockercontainers
-        hostPath:
-          path: /var/lib/docker/containers
-      - name: fluent-bit-config
-        configMap:
-          name: fluent-bit-config
+        - name: varlog
+          hostPath:
+            path: /var/log
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers
+        - name: fluent-bit-config
+          configMap:
+            name: fluent-bit-config
 ```
 
 **Fluent Bit Pipeline Configuration**:
+
 ```ini
 [SERVICE]
     Flush         5
@@ -373,6 +386,7 @@ spec:
 ```
 
 **Parsing Configuration** (parsers.conf):
+
 ```ini
 [PARSER]
     Name         docker
@@ -398,6 +412,7 @@ spec:
 ### Multi-Tenancy & Access Control
 
 **Namespace-Based Log Isolation**:
+
 ```yaml
 apiVersion: v1
 kind: Role
@@ -405,9 +420,9 @@ metadata:
   name: log-reader
   namespace: team-alpha
 rules:
-- apiGroups: [""]
-  resources: ["pods", "pods/log"]
-  verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -415,9 +430,9 @@ metadata:
   name: team-alpha-log-readers
   namespace: team-alpha
 subjects:
-- kind: Group
-  name: team-alpha
-  apiGroup: rbac.authorization.k8s.io
+  - kind: Group
+    name: team-alpha
+    apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: Role
   name: log-reader
@@ -425,6 +440,7 @@ roleRef:
 ```
 
 **OpenSearch Role-Based Access**:
+
 ```json
 {
   "team-alpha-logs": {
@@ -445,6 +461,7 @@ roleRef:
 ### Grafana Integration
 
 **Loki Datasource Configuration** (simulated via OpenSearch):
+
 ```yaml
 apiVersion: 1
 datasources:
@@ -467,6 +484,7 @@ datasources:
 ### Structured Logging Best Practices
 
 **Recommended Log Format (JSON)**:
+
 ```json
 {
   "@timestamp": "2024-12-07T10:30:00.123Z",
@@ -487,6 +505,7 @@ datasources:
 ```
 
 **Fields to Always Include**:
+
 - `@timestamp`: ISO 8601 timestamp
 - `level`: Log level (ERROR, WARN, INFO, DEBUG)
 - `message`: Human-readable message
@@ -497,26 +516,31 @@ datasources:
 ### Common Query Patterns
 
 **Search for Errors in Namespace**:
+
 ```
 k8s_namespace:"team-alpha" AND level:"ERROR"
 ```
 
 **Find Logs with Trace ID**:
+
 ```
 trace_id:"a1b2c3d4e5f6"
 ```
 
 **Logs from Specific Pod**:
+
 ```
 k8s_pod_name:"jenkins-agent-*"
 ```
 
 **Slow Requests (Duration > 1000ms)**:
+
 ```
 duration_ms:>1000
 ```
 
 **Deployment Events**:
+
 ```
 message:"deployment" AND k8s_namespace:"production"
 ```
@@ -524,6 +548,7 @@ message:"deployment" AND k8s_namespace:"production"
 ### Alerting Rules
 
 **High Error Rate**:
+
 ```json
 {
   "trigger": {
@@ -541,10 +566,7 @@ message:"deployment" AND k8s_namespace:"production"
         "body": {
           "query": {
             "bool": {
-              "must": [
-                { "term": { "level": "ERROR" }},
-                { "range": { "@timestamp": { "gte": "now-5m" }}}
-              ]
+              "must": [{ "term": { "level": "ERROR" } }, { "range": { "@timestamp": { "gte": "now-5m" } } }]
             }
           }
         }
@@ -563,6 +585,7 @@ message:"deployment" AND k8s_namespace:"production"
 ```
 
 **Service Unavailable**:
+
 ```json
 {
   "trigger": {
@@ -581,9 +604,9 @@ message:"deployment" AND k8s_namespace:"production"
           "query": {
             "bool": {
               "must": [
-                { "match": { "message": "connection refused" }},
-                { "term": { "k8s_namespace": "production" }},
-                { "range": { "@timestamp": { "gte": "now-1m" }}}
+                { "match": { "message": "connection refused" } },
+                { "term": { "k8s_namespace": "production" } },
+                { "range": { "@timestamp": { "gte": "now-1m" } } }
               ]
             }
           }
@@ -631,6 +654,7 @@ message:"deployment" AND k8s_namespace:"production"
 ### Alternative 1: Grafana Loki
 
 **Pros**:
+
 - Designed for Kubernetes logging (cloud-native)
 - Very cost-efficient (indexes only metadata, not log content)
 - Tight Grafana integration (unified metrics + logs)
@@ -639,6 +663,7 @@ message:"deployment" AND k8s_namespace:"production"
 - Good for high-volume, short-retention use cases
 
 **Cons**:
+
 - Limited full-text search capabilities (no inverted index)
 - Less powerful query language than OpenSearch DSL
 - Smaller community and ecosystem than OpenSearch/Elasticsearch
@@ -651,6 +676,7 @@ message:"deployment" AND k8s_namespace:"production"
 ### Alternative 2: Elastic Cloud (ELK Stack)
 
 **Pros**:
+
 - Industry standard (Elasticsearch, Logstash, Kibana)
 - Massive ecosystem and community
 - Extremely powerful search and analytics
@@ -659,6 +685,7 @@ message:"deployment" AND k8s_namespace:"production"
 - Extensive documentation and training
 
 **Cons**:
+
 - **Licensing concerns** (Elastic License 2.0, not fully open source)
 - High cost for managed service ($50-500+/month)
 - Vendor lock-in potential

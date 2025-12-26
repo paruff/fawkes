@@ -5,6 +5,7 @@ This directory contains Kubernetes manifests for deploying the SPACE Metrics Ser
 ## Overview
 
 The SPACE Metrics Service collects and exposes Developer Experience metrics across five dimensions:
+
 - **S**atisfaction
 - **P**erformance
 - **A**ctivity
@@ -79,6 +80,7 @@ kubectl create secret generic space-metrics-db-credentials \
 ### Environment Variables
 
 Configure via ConfigMap:
+
 - `aggregation-threshold`: Minimum team size for metrics (default: 5)
 - `collection-interval`: Metrics collection interval in seconds (default: 3600)
 - `retention-days`: Data retention period (default: 90)
@@ -157,7 +159,7 @@ Add proxy endpoint in Backstage `app-config.yaml`:
 ```yaml
 proxy:
   endpoints:
-    '/space-metrics/api':
+    "/space-metrics/api":
       target: http://space-metrics.fawkes-local.svc:8000/
       changeOrigin: true
 ```
@@ -204,6 +206,7 @@ kubectl get secret -n fawkes-local space-metrics-db-credentials -o yaml
 ## Resource Usage
 
 The deployment targets <70% resource utilization:
+
 - **CPU**: 100m request, 500m limit per replica
 - **Memory**: 128Mi request, 512Mi limit per replica
 - **Total (2 replicas)**: ~200m CPU, ~256Mi memory requests

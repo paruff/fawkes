@@ -7,6 +7,7 @@ This directory contains three sample applications deployed on the Fawkes platfor
 ### 1. Sample Java Spring Boot App (`sample-java-app`)
 
 A Java Spring Boot microservice demonstrating:
+
 - REST API with health and info endpoints
 - Prometheus metrics via Spring Actuator
 - Docker containerization with security best practices
@@ -20,6 +21,7 @@ A Java Spring Boot microservice demonstrating:
 ### 2. Sample Python FastAPI App (`sample-python-app`)
 
 A Python FastAPI application demonstrating:
+
 - High-performance async REST API
 - Prometheus metrics integration
 - Structured logging
@@ -33,6 +35,7 @@ A Python FastAPI application demonstrating:
 ### 3. Sample Node.js Express App (`sample-nodejs-app`)
 
 A Node.js Express service demonstrating:
+
 - Lightweight REST API
 - Prometheus metrics with prom-client
 - Express middleware patterns
@@ -81,6 +84,7 @@ annotations:
 ```
 
 Metrics are collected by DevLake and can be viewed in:
+
 - **DevLake Dashboard**: https://devlake.fawkes.idp
 - **Grafana DORA Dashboard**: https://grafana.fawkes.idp/d/dora-metrics
 
@@ -117,6 +121,7 @@ curl https://sample-nodejs-app.fawkes.idp/health
 ## Backstage Integration
 
 All sample apps are registered in the Backstage service catalog with:
+
 - Component metadata
 - API definitions
 - Kubernetes integration
@@ -130,6 +135,7 @@ View in Backstage: https://backstage.fawkes.idp/catalog
 Each sample application follows Fawkes best practices:
 
 ### Security
+
 - Non-root container execution (UID 65534)
 - Read-only root filesystem
 - Dropped capabilities
@@ -137,12 +143,14 @@ Each sample application follows Fawkes best practices:
 - TLS termination at ingress
 
 ### Observability
+
 - Prometheus metrics exposition
 - Structured logging to stdout
 - Health and readiness probes
 - OpenTelemetry tracing support
 
 ### Scalability
+
 - Horizontal pod autoscaling ready
 - Resource requests and limits defined
 - Pod disruption budgets
@@ -201,6 +209,7 @@ Each app includes a `Jenkinsfile` that defines the CI/CD pipeline:
 6. **Deploy**: Update GitOps repository for ArgoCD
 
 The pipeline enforces quality gates:
+
 - Zero new bugs/vulnerabilities (SonarQube)
 - No HIGH/CRITICAL container vulnerabilities (Trivy)
 - Test coverage ≥ 80%

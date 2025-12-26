@@ -15,24 +15,28 @@ This implementation provides three complete, production-ready microservice templ
 Each template includes:
 
 ✅ **Production-Ready Application Code**
+
 - REST API with standard endpoints (/, /health, /ready, /info)
 - Prometheus metrics integration
 - Structured logging
 - Health and readiness checks
 
 ✅ **Docker Support**
+
 - Multi-stage Dockerfile for optimal image size
 - Non-root user execution (UID 65534)
 - Security best practices (read-only filesystem, dropped capabilities)
 - Health check configuration
 
 ✅ **CI/CD Integration**
+
 - Jenkinsfile configured for Golden Path pipeline
 - SonarQube integration for SAST
 - Trivy container scanning
 - Automated GitOps deployment
 
 ✅ **Kubernetes Manifests**
+
 - Deployment with security contexts
 - Service (ClusterIP)
 - Ingress with TLS
@@ -40,12 +44,14 @@ Each template includes:
 - Liveness and readiness probes
 
 ✅ **Testing**
+
 - Unit tests with framework-specific tools
 - BDD/Gherkin feature files
 - Test configuration files
 - Code coverage reports
 
 ✅ **Developer Experience**
+
 - Comprehensive README with examples
 - Backstage catalog integration
 - API documentation
@@ -58,12 +64,14 @@ Each template includes:
 **Framework:** Spring Boot 3.4.1 with Java 21 LTS
 
 **Key Dependencies:**
+
 - spring-boot-starter-web
 - spring-boot-starter-actuator
 - micrometer-registry-prometheus
 - cucumber 7.20.1 (BDD testing)
 
 **Testing:**
+
 - JUnit 5 for unit tests
 - Cucumber for BDD tests
 - Maven Surefire/Failsafe plugins
@@ -71,6 +79,7 @@ Each template includes:
 **Build Tool:** Maven 3.9+
 
 **Files:** 19 files including:
+
 - pom.xml with full dependency management
 - Application.java (main entry point)
 - HealthController.java (REST endpoints)
@@ -82,6 +91,7 @@ Each template includes:
 **Framework:** FastAPI 0.115.5 with Python 3.12
 
 **Key Dependencies:**
+
 - fastapi (latest secure version)
 - uvicorn 0.32.1 (ASGI server)
 - prometheus-client
@@ -89,11 +99,13 @@ Each template includes:
 - behave (BDD)
 
 **Testing:**
+
 - pytest for unit tests
 - behave for BDD tests
 - pytest-cov for coverage
 
 **Files:** 17 files including:
+
 - app/main.py (FastAPI application)
 - requirements.txt and requirements-dev.txt
 - Unit and BDD test files
@@ -105,6 +117,7 @@ Each template includes:
 **Framework:** Express 4.21.1 with Node.js 20 LTS
 
 **Key Dependencies:**
+
 - express (latest secure version)
 - prom-client 15.1.3 (Prometheus metrics)
 - jest 29.7.0 (testing)
@@ -112,11 +125,13 @@ Each template includes:
 - winston 3.17.0 (logging)
 
 **Testing:**
+
 - Jest for unit tests
 - Cucumber for BDD tests
 - supertest for API testing
 
 **Files:** 15 files including:
+
 - src/index.js (Express application)
 - package.json
 - Unit and BDD test files
@@ -129,6 +144,7 @@ Each template includes:
 ### Security Features Implemented
 
 1. **Container Security**
+
    - Non-root user (UID 65534)
    - Read-only root filesystem
    - Dropped all capabilities
@@ -136,6 +152,7 @@ Each template includes:
    - No privilege escalation
 
 2. **Kubernetes Security**
+
    - Security contexts at pod and container level
    - Resource limits to prevent resource exhaustion
    - Network policies ready
@@ -150,6 +167,7 @@ Each template includes:
 ### CodeQL Findings
 
 **Alert:** java/spring-boot-exposed-actuators-config
+
 - **Status:** Accepted/Expected
 - **Rationale:** Actuator endpoints (health, info, metrics, prometheus) are intentionally exposed for platform observability. These endpoints are required for:
   - Prometheus metrics scraping
@@ -202,18 +220,21 @@ All templates support:
 ### Local Testing
 
 **Java:**
+
 ```bash
 ./mvnw test
 ./mvnw verify  # BDD tests
 ```
 
 **Python:**
+
 ```bash
 pytest tests/unit
 behave tests/bdd/features
 ```
 
 **Node.js:**
+
 ```bash
 npm test
 npm run test:bdd
@@ -241,6 +262,7 @@ Each service automatically exposes:
 - **Info Endpoint:** `/info` or `/actuator/info`
 
 These are integrated with:
+
 - Prometheus (metrics collection)
 - Grafana (visualization)
 - OpenSearch (logging)

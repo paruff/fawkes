@@ -103,22 +103,22 @@ terraform apply
 
 ## Variables
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|----------|
-| release_name | Helm release name for ArgoCD | string | "argocd" | no |
-| chart_repo | Helm chart repository URL | string | "https://argoproj.github.io/argo-helm" | no |
-| chart_name | Helm chart name | string | "argo-cd" | no |
-| chart_version | Chart version (empty for latest) | string | "" | no |
-| namespace | Kubernetes namespace | string | "argocd" | no |
-| kubeconfig_path | Path to kubeconfig file | string | - | yes |
+| Name            | Description                      | Type   | Default                                | Required |
+| --------------- | -------------------------------- | ------ | -------------------------------------- | -------- |
+| release_name    | Helm release name for ArgoCD     | string | "argocd"                               | no       |
+| chart_repo      | Helm chart repository URL        | string | "https://argoproj.github.io/argo-helm" | no       |
+| chart_name      | Helm chart name                  | string | "argo-cd"                              | no       |
+| chart_version   | Chart version (empty for latest) | string | ""                                     | no       |
+| namespace       | Kubernetes namespace             | string | "argocd"                               | no       |
+| kubeconfig_path | Path to kubeconfig file          | string | -                                      | yes      |
 
 ## Outputs
 
-| Name | Description | Sensitive |
-|------|-------------|-----------|
-| argocd_release_name | Helm release name | no |
-| argocd_admin_password_b64 | Base64-encoded admin password | yes |
-| argocd_admin_password | Decoded admin password | yes |
+| Name                      | Description                   | Sensitive |
+| ------------------------- | ----------------------------- | --------- |
+| argocd_release_name       | Helm release name             | no        |
+| argocd_admin_password_b64 | Base64-encoded admin password | yes       |
+| argocd_admin_password     | Decoded admin password        | yes       |
 
 ## Configuration
 
@@ -135,6 +135,7 @@ ArgoCD is deployed to the `argocd` namespace (ArgoCD convention). This can be ch
 - **Protocol**: HTTP
 
 For production, update `values.yaml` to:
+
 - Enable HTTPS/TLS
 - Use real domain name
 - Configure certificate management
@@ -142,29 +143,32 @@ For production, update `values.yaml` to:
 ### Admin Credentials
 
 Initial admin password is auto-generated and stored in:
+
 ```bash
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 
 Or retrieve via Terraform:
+
 ```bash
 terraform output -raw argocd_admin_password
 ```
 
 ### Resource Limits
 
-| Component | CPU Request | Memory Request | CPU Limit | Memory Limit |
-|-----------|-------------|----------------|-----------|--------------|
-| Server | 50m | 128Mi | 500m | 512Mi |
-| Controller | 100m | 256Mi | 1000m | 1Gi |
-| Repo Server | 50m | 128Mi | 500m | 512Mi |
-| Redis | 50m | 64Mi | 200m | 128Mi |
+| Component   | CPU Request | Memory Request | CPU Limit | Memory Limit |
+| ----------- | ----------- | -------------- | --------- | ------------ |
+| Server      | 50m         | 128Mi          | 500m      | 512Mi        |
+| Controller  | 100m        | 256Mi          | 1000m     | 1Gi          |
+| Repo Server | 50m         | 128Mi          | 500m      | 512Mi        |
+| Redis       | 50m         | 64Mi           | 200m      | 128Mi        |
 
 ## Accessing ArgoCD
 
 ### Web UI
 
 Access the ArgoCD UI at:
+
 - **URL**: http://argocd.127.0.0.1.nip.io
 - **Username**: admin
 - **Password**: Retrieved via output or kubectl
@@ -172,6 +176,7 @@ Access the ArgoCD UI at:
 ### Port Forwarding
 
 If ingress is not working:
+
 ```bash
 kubectl port-forward -n argocd svc/argocd-server 8080:80
 # Access at http://localhost:8080
@@ -180,6 +185,7 @@ kubectl port-forward -n argocd svc/argocd-server 8080:80
 ### CLI Access
 
 Install ArgoCD CLI:
+
 ```bash
 # macOS
 brew install argocd
@@ -191,6 +197,7 @@ sudo mv argocd /usr/local/bin/
 ```
 
 Login:
+
 ```bash
 # Get password
 PASSWORD=$(terraform output -raw argocd_admin_password)
@@ -250,6 +257,7 @@ kubectl -n argocd get deployment argocd-server
 ### Pods Not Starting
 
 Check pod status and logs:
+
 ```bash
 kubectl get pods -n argocd
 kubectl logs -n argocd -l app.kubernetes.io/name=argocd-server
@@ -259,16 +267,19 @@ kubectl describe pod -n argocd <pod-name>
 ### UI Not Accessible
 
 1. Check ingress:
+
 ```bash
 kubectl describe ingress -n argocd argocd-server
 ```
 
 2. Check ingress-nginx controller:
+
 ```bash
 kubectl get svc -n ingress-nginx
 ```
 
 3. Test with port-forward:
+
 ```bash
 kubectl port-forward -n argocd svc/argocd-server 8080:80
 curl http://localhost:8080
@@ -277,6 +288,7 @@ curl http://localhost:8080
 ### Cannot Login
 
 Reset admin password:
+
 ```bash
 # Delete existing secret
 kubectl -n argocd delete secret argocd-initial-admin-secret
@@ -294,6 +306,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 ### Terraform State Issues
 
 If Terraform state is out of sync:
+
 ```bash
 # Refresh state
 terraform refresh
@@ -340,6 +353,7 @@ After ArgoCD is deployed, it manages the rest of the Fawkes platform:
 ### Local Development
 
 The current configuration uses:
+
 - HTTP (no TLS) for simplicity
 - Auto-generated admin password
 - No SSO/RBAC
@@ -361,6 +375,7 @@ This is suitable for local development but **NOT for production**.
 ## Support
 
 For issues or questions:
+
 - Check [Troubleshooting](#troubleshooting) section
 - Review [ArgoCD documentation](https://argo-cd.readthedocs.io/)
 - Open a GitHub issue in the Fawkes repository

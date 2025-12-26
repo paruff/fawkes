@@ -28,6 +28,7 @@ vim secret-local.yaml
 ```
 
 Replace the following values:
+
 - `GITHUB_WEBHOOK_SECRET`: Generate with `openssl rand -hex 20`
 - `GITHUB_TOKEN`: Your GitHub Personal Access Token
 - `LLM_API_KEY`: Your OpenAI or Anthropic API key
@@ -89,17 +90,17 @@ gh pr view --json reviews
 
 ### Environment Variables
 
-| Variable | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `GITHUB_WEBHOOK_SECRET` | Secret for webhook signature verification | Yes | - |
-| `GITHUB_TOKEN` | GitHub PAT for API access | Yes | - |
-| `LLM_API_KEY` | OpenAI or Anthropic API key | Yes | - |
-| `LLM_API_URL` | LLM API endpoint | No | `https://api.openai.com/v1/chat/completions` |
-| `LLM_MODEL` | Model to use | No | `gpt-4` |
-| `RAG_SERVICE_URL` | RAG service endpoint | No | `http://rag-service.fawkes.svc:8000` |
-| `SONARQUBE_URL` | SonarQube server URL | No | `http://sonarqube.fawkes.svc:9000` |
-| `SONARQUBE_TOKEN` | SonarQube API token | No | - |
-| `FALSE_POSITIVE_THRESHOLD` | Confidence threshold for filtering | No | `0.8` |
+| Variable                   | Description                               | Required | Default                                      |
+| -------------------------- | ----------------------------------------- | -------- | -------------------------------------------- |
+| `GITHUB_WEBHOOK_SECRET`    | Secret for webhook signature verification | Yes      | -                                            |
+| `GITHUB_TOKEN`             | GitHub PAT for API access                 | Yes      | -                                            |
+| `LLM_API_KEY`              | OpenAI or Anthropic API key               | Yes      | -                                            |
+| `LLM_API_URL`              | LLM API endpoint                          | No       | `https://api.openai.com/v1/chat/completions` |
+| `LLM_MODEL`                | Model to use                              | No       | `gpt-4`                                      |
+| `RAG_SERVICE_URL`          | RAG service endpoint                      | No       | `http://rag-service.fawkes.svc:8000`         |
+| `SONARQUBE_URL`            | SonarQube server URL                      | No       | `http://sonarqube.fawkes.svc:9000`           |
+| `SONARQUBE_TOKEN`          | SonarQube API token                       | No       | -                                            |
+| `FALSE_POSITIVE_THRESHOLD` | Confidence threshold for filtering        | No       | `0.8`                                        |
 
 ### Adjusting Resource Limits
 
@@ -108,7 +109,7 @@ Edit `k8s/deployment.yaml` to adjust resource requests/limits:
 ```yaml
 resources:
   requests:
-    memory: "256Mi"  # Increase for larger PRs
+    memory: "256Mi" # Increase for larger PRs
     cpu: "200m"
   limits:
     memory: "512Mi"
@@ -121,7 +122,7 @@ Adjust replica count in `k8s/deployment.yaml`:
 
 ```yaml
 spec:
-  replicas: 2  # Increase for higher throughput
+  replicas: 2 # Increase for higher throughput
 ```
 
 ## Monitoring
@@ -139,6 +140,7 @@ curl http://localhost:8000/metrics
 ```
 
 Key metrics:
+
 - `ai_review_webhooks_total` - Webhook events received
 - `ai_review_reviews_total` - Reviews performed
 - `ai_review_duration_seconds` - Review duration
@@ -171,6 +173,7 @@ kubectl describe pod -n fawkes -l app=ai-code-review
 ```
 
 Common issues:
+
 - **ImagePullBackOff**: Build and push Docker image
 - **CrashLoopBackOff**: Check logs for errors
 - **Pending**: Check resource availability

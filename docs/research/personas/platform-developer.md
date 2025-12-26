@@ -26,6 +26,7 @@
 **Reporting Structure**: Reports to Engineering Manager, Platform Team
 
 **Key Responsibilities**:
+
 - Design and maintain internal developer platform (Kubernetes, ArgoCD, Jenkins)
 - Ensure platform reliability, scalability, and security
 - Support application teams with platform onboarding and troubleshooting
@@ -33,6 +34,7 @@
 - Define platform standards and best practices
 
 **Time Allocation**:
+
 - 40% on platform reliability and incident response
 - 30% on new platform capabilities and improvements
 - 20% on developer support and consultation
@@ -43,23 +45,27 @@
 ### Goals and Motivations
 
 **Primary Goals**:
+
 1. Reduce platform incidents and mean time to recovery (MTTR < 30 minutes)
 2. Enable developer self-service to reduce support requests by 50%
 3. Achieve 99.9% platform uptime
 4. Improve developer satisfaction with platform (NPS > 40)
 
 **Success Metrics**:
+
 - Platform uptime and reliability metrics
 - Developer satisfaction scores
 - Number of support tickets (downward trend)
 - Time to onboard new services (< 1 day)
 
 **Motivations**:
+
 - **Professional**: Wants to build a world-class platform that enables elite DORA performance
 - **Personal**: Enjoys solving complex infrastructure problems and automation
 - **Team**: Takes pride in unblocking developers and seeing their success
 
 **What drives them at work**:
+
 > "I want to make infrastructure invisible. Developers should focus on business logic, not on Kubernetes YAML or CI/CD pipelines. A great platform is one that developers don't have to think about."
 
 ---
@@ -69,12 +75,14 @@
 **Major Pain Points**:
 
 1. **Alert Fatigue and On-Call Burden**
+
    - **Description**: Too many false-positive alerts, unclear alert messages, and difficulty correlating alerts to root causes
    - **Impact**: Interrupts deep work, causes burnout, delays incident resolution
    - **Frequency**: 5-10 pages per week, 80% are false positives or low severity
    - **Current Workaround**: Manually correlate metrics across multiple dashboards, document runbooks for common issues
 
 2. **Developer Self-Service Limitations**
+
    - **Description**: Developers frequently need platform team help for routine tasks (deployments, scaling, config changes)
    - **Impact**: Platform team becomes bottleneck, can't focus on strategic work
    - **Frequency**: 15-20 support requests per week
@@ -87,6 +95,7 @@
    - **Current Workaround**: Manually correlate data from Prometheus, ELK, and Jaeger; train developers on troubleshooting
 
 **Frustrations**:
+
 - Spending more time on support than building
 - Lack of standardization across application teams
 - Difficulty measuring platform value and ROI
@@ -97,6 +106,7 @@
 ### Tools and Workflows
 
 **Primary Tools**:
+
 - **Development**: VS Code, Vim (for quick edits), iTerm2
 - **Version Control**: Git, GitHub
 - **CI/CD**: Jenkins (legacy), migrating to ArgoCD
@@ -105,6 +115,7 @@
 - **Communication**: Mattermost, Zoom, Confluence
 
 **Typical Daily Workflow**:
+
 1. **8:00 AM** - Check Grafana dashboards, review alerts from overnight
 2. **9:00 AM** - Triage support tickets, prioritize for the day
 3. **10:00 AM** - Deep work on platform improvements or incidents
@@ -115,6 +126,7 @@
 8. **5:00 PM** - Check on deployments, hand off to next on-call
 
 **Platform Interaction Points**:
+
 - Monitors platform health constantly (Grafana dashboards always open)
 - Deploys platform changes 2-3 times per week
 - Reviews all platform-related PRs
@@ -127,6 +139,7 @@
 **Overall Technical Proficiency**: Expert
 
 **Specific Skills**:
+
 - **Programming Languages**: Python (Advanced), Go (Intermediate), Bash (Expert)
 - **Cloud Platforms**: AWS (Advanced), Azure (Intermediate)
 - **Containers & Orchestration**: Docker (Expert), Kubernetes (Expert)
@@ -155,6 +168,7 @@
 ### Behaviors and Preferences
 
 **Communication Preferences**:
+
 - Prefers async Mattermost for non-urgent questions
 - Uses Zoom for complex troubleshooting and pairing
 - Documentation style: Loves runbooks with clear decision trees
@@ -171,6 +185,7 @@
 ### Needs from the Platform
 
 **Must Have**:
+
 1. Unified observability with correlation across metrics, logs, and traces
 2. Self-service developer portal for common tasks (deployments, rollbacks, logs)
 3. Intelligent alerting that reduces noise and provides context
@@ -178,6 +193,7 @@
 5. Infrastructure as Code for all platform components
 
 **Should Have**:
+
 1. DORA metrics dashboard to demonstrate platform value
 2. Automated policy enforcement (security, compliance)
 3. Cost visibility and optimization recommendations
@@ -185,6 +201,7 @@
 5. Platform API for automation
 
 **Nice to Have**:
+
 1. AI-powered incident analysis and recommendations
 2. Automated capacity planning
 3. Developer feedback collection built into platform

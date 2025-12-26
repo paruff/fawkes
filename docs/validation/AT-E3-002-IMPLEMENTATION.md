@@ -48,6 +48,7 @@ kubectl get service space-metrics -n fawkes-local
 ```
 
 **Expected Result**:
+
 - Deployment exists with 2 ready replicas
 - Pods are in Running state
 - Service exists and is accessible
@@ -66,6 +67,7 @@ curl http://localhost:8000/api/v1/metrics/space
 ```
 
 **Expected Result**:
+
 - Health endpoint returns `{"status": "healthy"}`
 - SPACE metrics endpoint returns data for all 5 dimensions
 
@@ -133,6 +135,7 @@ kubectl get servicemonitor -n monitoring space-metrics
 ```
 
 **Expected Result**:
+
 - Metrics endpoint exposes SPACE metrics in Prometheus format
 - ServiceMonitor exists and is configured correctly
 - Key metrics present: `space_devex_health_score`, `space_nps_score`, etc.
@@ -148,6 +151,7 @@ curl http://localhost:8000/api/v1/metrics/space | grep -i "user_id\|username\|em
 ```
 
 **Expected Result**:
+
 - Aggregation threshold is set to 5 or higher
 - API responses do not contain individual developer identifiers
 - Metrics are aggregated at team level
@@ -163,6 +167,7 @@ kubectl logs -n fawkes-local -l app=space-metrics --tail=50 | grep -i "database\
 ```
 
 **Expected Result**:
+
 - Database credentials secret exists
 - No database connection errors in logs
 
@@ -181,6 +186,7 @@ curl http://localhost:8080/health
 ```
 
 **Expected Result**:
+
 - Deployment exists with at least 1 ready replica
 - Pods are in Running state
 - Service health endpoint responds successfully
@@ -200,6 +206,7 @@ ls -la services/devex-survey-automation/scripts/validate-nasa-tlx.py
 ```
 
 **Expected Result**:
+
 - NASA-TLX assessment endpoint is accessible
 - Validation script exists
 - Tool is integrated with DevEx Survey Automation service
@@ -212,6 +219,7 @@ curl http://localhost:8000/api/v1/metrics/space/health
 ```
 
 **Expected Result**:
+
 - Health score returned (0-100)
 - Status indicator included (excellent/good/needs_improvement)
 
@@ -228,6 +236,7 @@ make validate-at-e3-002
 ```
 
 The script validates:
+
 1. Service deployment and readiness
 2. API endpoints accessibility
 3. All 5 SPACE dimensions
@@ -280,9 +289,9 @@ If any check fails:
 
 ## Test History
 
-| Date | Version | Result | Notes |
-|------|---------|--------|-------|
-| 2025-12-23 | 1.0 | PASS | Initial implementation validated |
+| Date       | Version | Result | Notes                            |
+| ---------- | ------- | ------ | -------------------------------- |
+| 2025-12-23 | 1.0     | PASS   | Initial implementation validated |
 
 ## Notes
 
@@ -294,6 +303,7 @@ If any check fails:
 ## Maintenance
 
 This test should be run:
+
 - After initial deployment
 - After any changes to the SPACE metrics service
 - Before releases to production

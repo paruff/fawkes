@@ -36,18 +36,12 @@ class TestATE1001Validation:
     @pytest.fixture(scope="class")
     def resource_group(self, request):
         """Get resource group from CLI or environment."""
-        return (
-            request.config.getoption("--resource-group", None) or
-            os.getenv("AZURE_RESOURCE_GROUP", "fawkes-rg")
-        )
+        return request.config.getoption("--resource-group", None) or os.getenv("AZURE_RESOURCE_GROUP", "fawkes-rg")
 
     @pytest.fixture(scope="class")
     def cluster_name(self, request):
         """Get cluster name from CLI or environment."""
-        return (
-            request.config.getoption("--cluster-name", None) or
-            os.getenv("AZURE_CLUSTER_NAME", "fawkes-aks")
-        )
+        return request.config.getoption("--cluster-name", None) or os.getenv("AZURE_CLUSTER_NAME", "fawkes-aks")
 
     @pytest.fixture(scope="class")
     def validation_timeout(self, request):
@@ -75,12 +69,14 @@ class TestATE1001Validation:
             result = subprocess.run(
                 [
                     str(validation_script),
-                    "--resource-group", resource_group,
-                    "--cluster-name", cluster_name,
+                    "--resource-group",
+                    resource_group,
+                    "--cluster-name",
+                    cluster_name,
                 ],
                 capture_output=True,
                 text=True,
-                timeout=validation_timeout
+                timeout=validation_timeout,
             )
 
             # Find and parse the JSON report
@@ -88,24 +84,17 @@ class TestATE1001Validation:
             if reports_dir.exists():
                 # Get the most recent AT-E1-001 report
                 report_files = sorted(
-                    reports_dir.glob("at-e1-001-validation-*.json"),
-                    key=lambda p: p.stat().st_mtime,
-                    reverse=True
+                    reports_dir.glob("at-e1-001-validation-*.json"), key=lambda p: p.stat().st_mtime, reverse=True
                 )
                 if report_files:
-                    with open(report_files[0], 'r') as f:
+                    with open(report_files[0], "r") as f:
                         report = json.load(f)
                 else:
                     report = None
             else:
                 report = None
 
-            return {
-                "exit_code": result.returncode,
-                "stdout": result.stdout,
-                "stderr": result.stderr,
-                "report": report
-            }
+            return {"exit_code": result.returncode, "stdout": result.stdout, "stderr": result.stderr, "report": report}
         finally:
             os.chdir(original_dir)
 
@@ -114,15 +103,13 @@ class TestATE1001Validation:
     @pytest.mark.smoke
     def test_validation_script_runs(self, validation_result):
         """Test that validation script runs successfully."""
-        assert validation_result["exit_code"] in [0, 1], \
-            f"Validation script crashed: {validation_result['stderr']}"
+        assert validation_result["exit_code"] in [0, 1], f"Validation script crashed: {validation_result['stderr']}"
 
     @pytest.mark.integration
     @pytest.mark.azure
     def test_validation_report_generated(self, validation_result):
         """Test that validation report is generated."""
-        assert validation_result["report"] is not None, \
-            "Validation report was not generated"
+        assert validation_result["report"] is not None, "Validation report was not generated"
 
         # Check report structure
         assert "test_suite" in validation_result["report"]
@@ -135,13 +122,13 @@ class TestATE1001Validation:
     @pytest.mark.smoke
     def test_all_acceptance_criteria_pass(self, validation_result):
         """Test that all AT-E1-001 acceptance criteria pass."""
-        assert validation_result["exit_code"] == 0, \
-            f"Validation failed. Check output:\n{validation_result['stdout']}\n{validation_result['stderr']}"
+        assert (
+            validation_result["exit_code"] == 0
+        ), f"Validation failed. Check output:\n{validation_result['stdout']}\n{validation_result['stderr']}"
 
         if validation_result["report"]:
             summary = validation_result["report"]["summary"]
-            assert summary["failed"] == 0, \
-                f"{summary['failed']} tests failed. Success rate: {summary['success_rate']}%"
+            assert summary["failed"] == 0, f"{summary['failed']} tests failed. Success rate: {summary['success_rate']}%"
 
     @pytest.mark.integration
     @pytest.mark.azure
@@ -149,38 +136,28 @@ class TestATE1001Validation:
         """Test that AKS cluster exists and is running."""
         if validation_result["report"]:
             cluster_test = next(
-                (t for t in validation_result["report"]["tests"] if "Cluster Exists" in t["test"]),
-                None
+                (t for t in validation_result["report"]["tests"] if "Cluster Exists" in t["test"]), None
             )
             assert cluster_test is not None, "Cluster existence test not found"
-            assert cluster_test["status"] == "PASS", \
-                f"Cluster check failed: {cluster_test['message']}"
+            assert cluster_test["status"] == "PASS", f"Cluster check failed: {cluster_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.azure
     def test_minimum_nodes_present(self, validation_result):
         """Test that cluster has minimum required nodes (4)."""
         if validation_result["report"]:
-            node_test = next(
-                (t for t in validation_result["report"]["tests"] if "Node Count" in t["test"]),
-                None
-            )
+            node_test = next((t for t in validation_result["report"]["tests"] if "Node Count" in t["test"]), None)
             assert node_test is not None, "Node count test not found"
-            assert node_test["status"] == "PASS", \
-                f"Node count check failed: {node_test['message']}"
+            assert node_test["status"] == "PASS", f"Node count check failed: {node_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.azure
     def test_all_nodes_ready(self, validation_result):
         """Test that all nodes are in Ready state."""
         if validation_result["report"]:
-            ready_test = next(
-                (t for t in validation_result["report"]["tests"] if "Nodes Ready" in t["test"]),
-                None
-            )
+            ready_test = next((t for t in validation_result["report"]["tests"] if "Nodes Ready" in t["test"]), None)
             assert ready_test is not None, "Nodes ready test not found"
-            assert ready_test["status"] == "PASS", \
-                f"Nodes ready check failed: {ready_test['message']}"
+            assert ready_test["status"] == "PASS", f"Nodes ready check failed: {ready_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.azure
@@ -188,25 +165,19 @@ class TestATE1001Validation:
         """Test that all nodes are schedulable."""
         if validation_result["report"]:
             sched_test = next(
-                (t for t in validation_result["report"]["tests"] if "Nodes Schedulable" in t["test"]),
-                None
+                (t for t in validation_result["report"]["tests"] if "Nodes Schedulable" in t["test"]), None
             )
             assert sched_test is not None, "Nodes schedulable test not found"
-            assert sched_test["status"] == "PASS", \
-                f"Nodes schedulable check failed: {sched_test['message']}"
+            assert sched_test["status"] == "PASS", f"Nodes schedulable check failed: {sched_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.azure
     def test_system_pods_running(self, validation_result):
         """Test that all system pods are running."""
         if validation_result["report"]:
-            pods_test = next(
-                (t for t in validation_result["report"]["tests"] if "System Pods" in t["test"]),
-                None
-            )
+            pods_test = next((t for t in validation_result["report"]["tests"] if "System Pods" in t["test"]), None)
             assert pods_test is not None, "System pods test not found"
-            assert pods_test["status"] == "PASS", \
-                f"System pods check failed: {pods_test['message']}"
+            assert pods_test["status"] == "PASS", f"System pods check failed: {pods_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.azure
@@ -214,25 +185,19 @@ class TestATE1001Validation:
         """Test that cluster metrics are available (kubelet, cAdvisor)."""
         if validation_result["report"]:
             metrics_test = next(
-                (t for t in validation_result["report"]["tests"] if "Cluster Metrics" in t["test"]),
-                None
+                (t for t in validation_result["report"]["tests"] if "Cluster Metrics" in t["test"]), None
             )
             assert metrics_test is not None, "Cluster metrics test not found"
-            assert metrics_test["status"] == "PASS", \
-                f"Cluster metrics check failed: {metrics_test['message']}"
+            assert metrics_test["status"] == "PASS", f"Cluster metrics check failed: {metrics_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.azure
     def test_storage_class_configured(self, validation_result):
         """Test that StorageClass is configured for persistent volumes."""
         if validation_result["report"]:
-            storage_test = next(
-                (t for t in validation_result["report"]["tests"] if "StorageClass" in t["test"]),
-                None
-            )
+            storage_test = next((t for t in validation_result["report"]["tests"] if "StorageClass" in t["test"]), None)
             assert storage_test is not None, "StorageClass test not found"
-            assert storage_test["status"] == "PASS", \
-                f"StorageClass check failed: {storage_test['message']}"
+            assert storage_test["status"] == "PASS", f"StorageClass check failed: {storage_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.azure
@@ -240,12 +205,10 @@ class TestATE1001Validation:
         """Test that ingress controller is deployed (nginx/traefik)."""
         if validation_result["report"]:
             ingress_test = next(
-                (t for t in validation_result["report"]["tests"] if "Ingress Controller" in t["test"]),
-                None
+                (t for t in validation_result["report"]["tests"] if "Ingress Controller" in t["test"]), None
             )
             assert ingress_test is not None, "Ingress controller test not found"
-            assert ingress_test["status"] == "PASS", \
-                f"Ingress controller check failed: {ingress_test['message']}"
+            assert ingress_test["status"] == "PASS", f"Ingress controller check failed: {ingress_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.azure
@@ -253,12 +216,10 @@ class TestATE1001Validation:
         """Test that cluster resource limits are within acceptable range."""
         if validation_result["report"]:
             limits_test = next(
-                (t for t in validation_result["report"]["tests"] if "Resource Limits" in t["test"]),
-                None
+                (t for t in validation_result["report"]["tests"] if "Resource Limits" in t["test"]), None
             )
             assert limits_test is not None, "Resource limits test not found"
-            assert limits_test["status"] == "PASS", \
-                f"Resource limits check failed: {limits_test['message']}"
+            assert limits_test["status"] == "PASS", f"Resource limits check failed: {limits_test['message']}"
 
     @pytest.mark.integration
     @pytest.mark.azure
@@ -266,32 +227,20 @@ class TestATE1001Validation:
         """Test that kubectl is configured and working."""
         if validation_result["report"]:
             kubectl_test = next(
-                (t for t in validation_result["report"]["tests"] if "kubectl Configuration" in t["test"]),
-                None
+                (t for t in validation_result["report"]["tests"] if "kubectl Configuration" in t["test"]), None
             )
             assert kubectl_test is not None, "kubectl configuration test not found"
-            assert kubectl_test["status"] == "PASS", \
-                f"kubectl configuration check failed: {kubectl_test['message']}"
+            assert kubectl_test["status"] == "PASS", f"kubectl configuration check failed: {kubectl_test['message']}"
 
 
 def pytest_addoption(parser):
     """Add custom command line options."""
-    parser.addoption(
-        "--resource-group",
-        action="store",
-        default=None,
-        help="Azure resource group name"
-    )
-    parser.addoption(
-        "--cluster-name",
-        action="store",
-        default=None,
-        help="AKS cluster name"
-    )
+    parser.addoption("--resource-group", action="store", default=None, help="Azure resource group name")
+    parser.addoption("--cluster-name", action="store", default=None, help="AKS cluster name")
     parser.addoption(
         "--validation-timeout",
         action="store",
         type=int,
         default=None,
-        help="Timeout in seconds for validation script (default: 600)"
+        help="Timeout in seconds for validation script (default: 600)",
     )

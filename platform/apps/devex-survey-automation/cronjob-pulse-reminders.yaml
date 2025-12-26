@@ -1,3 +1,23 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
 # ============================================================================
 # FILE: platform/apps/devex-survey-automation/cronjob-pulse-reminders.yaml
 # PURPOSE: CronJob for sending pulse survey reminders
@@ -13,8 +33,8 @@ metadata:
     component: cronjob
     survey-type: reminder
 spec:
-  schedule: "0 9 * * 3"  # Every Wednesday at 9:00 AM
-  timeZone: "America/New_York"  # Adjust to your timezone
+  schedule: "0 9 * * 3" # Every Wednesday at 9:00 AM
+  timeZone: "America/New_York" # Adjust to your timezone
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
@@ -30,30 +50,30 @@ spec:
           serviceAccountName: devex-survey-automation
           restartPolicy: OnFailure
           containers:
-          - name: send-reminders
-            image: python:3.11-slim
-            command:
-            - /bin/sh
-            - -c
-            - |
-              pip install httpx asyncpg sqlalchemy asyncio-compat --quiet
-              python3 <<'EOF'
-              import asyncio
-              import httpx
-              from datetime import datetime, timedelta
+            - name: send-reminders
+              image: python:3.11-slim
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  pip install httpx asyncpg sqlalchemy asyncio-compat --quiet
+                  python3 <<'EOF'
+                  import asyncio
+                  import httpx
+                  from datetime import datetime, timedelta
 
-              async def send_reminders():
-                  # This would connect to database and send reminders
-                  # For now, placeholder implementation
-                  print("Reminder job would run here")
-                  print("In production, this would:")
-                  print("1. Query database for unresponded recipients")
-                  print("2. Filter those sent > 2 days ago")
-                  print("3. Send reminders via Mattermost")
-                  return True
+                  async def send_reminders():
+                      # This would connect to database and send reminders
+                      # For now, placeholder implementation
+                      print("Reminder job would run here")
+                      print("In production, this would:")
+                      print("1. Query database for unresponded recipients")
+                      print("2. Filter those sent > 2 days ago")
+                      print("3. Send reminders via Mattermost")
+                      return True
 
-              asyncio.run(send_reminders())
-              EOF
+                  asyncio.run(send_reminders())
+                  EOF
           securityContext:
             runAsNonRoot: true
             runAsUser: 65534

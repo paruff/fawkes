@@ -134,13 +134,13 @@ parameters:
 
 ## Comparison with Vault Agent
 
-| Feature | CSI Driver | Vault Agent |
-|---------|-----------|-------------|
-| Resource Usage | Lower (no sidecar) | Higher (sidecar per pod) |
-| Secret Location | File mount | File mount + template |
-| Rotation | Automatic | Automatic |
-| Ease of Use | Simple | More flexible |
-| Use Case | File-based config | Complex templating |
+| Feature         | CSI Driver         | Vault Agent              |
+| --------------- | ------------------ | ------------------------ |
+| Resource Usage  | Lower (no sidecar) | Higher (sidecar per pod) |
+| Secret Location | File mount         | File mount + template    |
+| Rotation        | Automatic          | Automatic                |
+| Ease of Use     | Simple             | More flexible            |
+| Use Case        | File-based config  | Complex templating       |
 
 ## Troubleshooting
 

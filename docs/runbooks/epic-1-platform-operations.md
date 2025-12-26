@@ -318,6 +318,7 @@ kubectl get events -n <namespace> --field-selector type=Warning
 **Symptoms**: Pod stuck in `Pending`, `ContainerCreating`, or `CrashLoopBackOff` state
 
 **Diagnosis**:
+
 ```bash
 # Check pod status and events
 kubectl describe pod <pod-name> -n <namespace>
@@ -330,22 +331,28 @@ kubectl logs <pod-name> -n <namespace> --previous
 ```
 
 **Common Causes**:
+
 1. **Insufficient Resources**: Node doesn't have enough CPU/memory
+
    ```bash
    # Check node resources
    kubectl top nodes
    kubectl describe nodes | grep -A 5 "Allocated resources"
    ```
+
    **Solution**: Scale down other workloads or add nodes
 
 2. **Image Pull Errors**: Cannot pull container image
+
    ```bash
    # Check image pull secrets
    kubectl get secrets -n <namespace>
    ```
+
    **Solution**: Verify Harbor credentials or image name
 
 3. **Configuration Errors**: Invalid ConfigMap or Secret references
+
    ```bash
    # Verify ConfigMap exists
    kubectl get configmap -n <namespace>
@@ -353,6 +360,7 @@ kubectl logs <pod-name> -n <namespace> --previous
    # Verify Secret exists
    kubectl get secret -n <namespace>
    ```
+
    **Solution**: Create missing resources or fix references
 
 4. **Policy Violations**: Kyverno blocking pod creation
@@ -367,6 +375,7 @@ kubectl logs <pod-name> -n <namespace> --previous
 **Symptoms**: Cannot access service via port-forward or ingress
 
 **Diagnosis**:
+
 ```bash
 # Check service exists
 kubectl get svc -n <namespace>
@@ -382,16 +391,21 @@ kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller
 ```
 
 **Common Causes**:
+
 1. **No Healthy Pods**: Service has no ready endpoints
+
    ```bash
    kubectl get pods -n <namespace> -o wide
    ```
+
    **Solution**: Fix pod issues first
 
 2. **Incorrect Service Selector**: Service not matching pods
+
    ```bash
    kubectl describe svc <service-name> -n <namespace>
    ```
+
    **Solution**: Update service selector to match pod labels
 
 3. **Ingress Misconfiguration**: TLS or path issues
@@ -405,6 +419,7 @@ kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller
 **Symptoms**: Application shows `OutOfSync` status in ArgoCD
 
 **Diagnosis**:
+
 ```bash
 # Check application status
 argocd app get <app-name>
@@ -417,6 +432,7 @@ argocd app history <app-name>
 ```
 
 **Solutions**:
+
 ```bash
 # Manual sync
 argocd app sync <app-name>
@@ -436,6 +452,7 @@ argocd app get <app-name> --hard-refresh
 **Symptoms**: Builds failing consistently
 
 **Diagnosis**:
+
 ```bash
 # Check Jenkins agent pods
 kubectl get pods -n jenkins -l jenkins/label
@@ -447,13 +464,16 @@ kubectl logs -n jenkins -l app.kubernetes.io/component=jenkins-controller --tail
 ```
 
 **Common Causes**:
+
 1. **Agent Connection Issues**: Agents can't connect to controller
    **Solution**: Check network policies and service endpoints
 
 2. **Insufficient Agent Resources**: Agents running out of memory/CPU
+
    ```bash
    kubectl top pods -n jenkins -l jenkins/label
    ```
+
    **Solution**: Increase agent resource requests/limits
 
 3. **Quality Gate Failures**: SonarQube or security scan blocking build
@@ -464,6 +484,7 @@ kubectl logs -n jenkins -l app.kubernetes.io/component=jenkins-controller --tail
 **Symptoms**: Dashboards show "No data" or metrics not being collected
 
 **Diagnosis**:
+
 ```bash
 # Check Prometheus targets
 kubectl port-forward svc/prometheus-kube-prometheus-prometheus -n prometheus 9090:9090
@@ -477,6 +498,7 @@ kubectl logs -n prometheus prometheus-kube-prometheus-prometheus-0
 ```
 
 **Solutions**:
+
 ```bash
 # Verify ServiceMonitor exists for component
 kubectl get servicemonitor -n <namespace>
@@ -493,12 +515,14 @@ kubectl delete pod -n prometheus prometheus-kube-prometheus-prometheus-0
 **Symptoms**: Vault pods show "Sealed" status
 
 **Diagnosis**:
+
 ```bash
 # Check Vault status
 kubectl exec -n vault vault-0 -- vault status
 ```
 
 **Solution**:
+
 ```bash
 # Unseal Vault (requires unseal keys)
 kubectl exec -n vault vault-0 -- vault operator unseal <key-1>
@@ -515,6 +539,7 @@ kubectl exec -n vault vault-0 -- vault operator unseal <key-3>
 **Symptoms**: TLS errors when accessing services
 
 **Diagnosis**:
+
 ```bash
 # Check certificates
 kubectl get certificates -A
@@ -527,6 +552,7 @@ kubectl logs -n cert-manager -l app=cert-manager
 ```
 
 **Solutions**:
+
 ```bash
 # Check certificate status
 kubectl describe certificate <cert-name> -n <namespace>
@@ -545,18 +571,18 @@ kubectl rollout restart deployment cert-manager -n cert-manager
 
 ### Regular Maintenance Schedule
 
-| Task | Frequency | Procedure |
-|------|-----------|-----------|
-| Check cluster resource usage | Daily | Run health checks, ensure <70% utilization |
-| Review failed pods/jobs | Daily | Check for CrashLoopBackOff, fix issues |
-| Check ArgoCD sync status | Daily | Ensure all apps synced |
-| Review Prometheus alerts | Daily | Check Grafana for active alerts |
-| Update component configurations | Weekly | Apply configuration changes via GitOps |
-| Review security scan results | Weekly | Check SonarQube and Trivy reports |
-| Rotate Vault secrets | Monthly | Follow secret rotation procedures |
-| Update platform components | Monthly | Apply security patches and updates |
-| Review DORA metrics | Weekly | Check DevLake dashboards |
-| Backup critical data | Daily | Backup databases and persistent volumes |
+| Task                            | Frequency | Procedure                                  |
+| ------------------------------- | --------- | ------------------------------------------ |
+| Check cluster resource usage    | Daily     | Run health checks, ensure <70% utilization |
+| Review failed pods/jobs         | Daily     | Check for CrashLoopBackOff, fix issues     |
+| Check ArgoCD sync status        | Daily     | Ensure all apps synced                     |
+| Review Prometheus alerts        | Daily     | Check Grafana for active alerts            |
+| Update component configurations | Weekly    | Apply configuration changes via GitOps     |
+| Review security scan results    | Weekly    | Check SonarQube and Trivy reports          |
+| Rotate Vault secrets            | Monthly   | Follow secret rotation procedures          |
+| Update platform components      | Monthly   | Apply security patches and updates         |
+| Review DORA metrics             | Weekly    | Check DevLake dashboards                   |
+| Backup critical data            | Daily     | Backup databases and persistent volumes    |
 
 ### Backup Procedures
 
@@ -640,12 +666,12 @@ kubectl rollout status deployment/<deployment-name> -n <namespace>
 
 ### Severity Levels
 
-| Severity | Definition | Response Time | Escalation |
-|----------|-----------|---------------|------------|
-| **P0 - Critical** | Platform completely down, no users can access | Immediate | Page on-call engineer |
-| **P1 - High** | Major feature broken, significant user impact | < 30 minutes | Notify team lead |
-| **P2 - Medium** | Minor feature issue, workaround available | < 4 hours | Create ticket |
-| **P3 - Low** | Cosmetic issue, no functional impact | Next business day | Backlog |
+| Severity          | Definition                                    | Response Time     | Escalation            |
+| ----------------- | --------------------------------------------- | ----------------- | --------------------- |
+| **P0 - Critical** | Platform completely down, no users can access | Immediate         | Page on-call engineer |
+| **P1 - High**     | Major feature broken, significant user impact | < 30 minutes      | Notify team lead      |
+| **P2 - Medium**   | Minor feature issue, workaround available     | < 4 hours         | Create ticket         |
+| **P3 - Low**      | Cosmetic issue, no functional impact          | Next business day | Backlog               |
 
 ### Emergency Contacts
 
@@ -705,6 +731,7 @@ kubectl exec -n <namespace> <pod-name> -- df -h
 
 ```markdown
 # Incident notification template
+
 Subject: [P0/P1/P2] <Brief Description> - Fawkes Platform
 
 Status: Investigating/Mitigating/Resolved
@@ -714,10 +741,12 @@ Current Status: <Current state>
 Next Update: <Expected time>
 
 Actions Taken:
+
 - <Action 1>
 - <Action 2>
 
 Next Steps:
+
 - <Next step 1>
 - <Next step 2>
 ```
@@ -738,6 +767,7 @@ kubectl logs -n <namespace> <pod-name>
 
 ```markdown
 # Post-incident review template
+
 1. Timeline of events
 2. Root cause analysis
 3. Impact assessment
@@ -811,11 +841,13 @@ echo "=== Health Check Complete ==="
 ```
 
 Make it executable:
+
 ```bash
 chmod +x scripts/health-check.sh
 ```
 
 Run daily or on-demand:
+
 ```bash
 ./scripts/health-check.sh
 ```
@@ -835,6 +867,6 @@ Run daily or on-demand:
 
 ## Change Log
 
-| Date | Version | Changes | Author |
-|------|---------|---------|--------|
-| 2024-12 | 1.0 | Initial Epic 1 runbook | Platform Team |
+| Date    | Version | Changes                | Author        |
+| ------- | ------- | ---------------------- | ------------- |
+| 2024-12 | 1.0     | Initial Epic 1 runbook | Platform Team |

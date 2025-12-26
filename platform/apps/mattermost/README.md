@@ -19,12 +19,14 @@ Mattermost provides secure team messaging and collaboration for the Fawkes platf
 ### Accessing Mattermost
 
 Local development:
+
 ```bash
 # Access UI
 http://mattermost.127.0.0.1.nip.io
 ```
 
 Default admin:
+
 - Email: `admin@fawkes.local`
 - Password: Set during first login
 
@@ -55,7 +57,7 @@ Configure Prometheus alerts to Mattermost:
 receivers:
   - name: mattermost
     webhook_configs:
-      - url: 'http://mattermost.127.0.0.1.nip.io/hooks/alerts'
+      - url: "http://mattermost.127.0.0.1.nip.io/hooks/alerts"
         send_resolved: true
 ```
 
@@ -80,22 +82,22 @@ data:
 
 Create custom slash commands for platform operations:
 
-| Command | Action | Example |
-|---------|--------|---------|
-| `/deploy` | Trigger deployment | `/deploy myapp production` |
-| `/rollback` | Rollback deployment | `/rollback myapp` |
-| `/status` | Check service status | `/status jenkins` |
-| `/logs` | View recent logs | `/logs myapp --tail 50` |
+| Command     | Action               | Example                    |
+| ----------- | -------------------- | -------------------------- |
+| `/deploy`   | Trigger deployment   | `/deploy myapp production` |
+| `/rollback` | Rollback deployment  | `/rollback myapp`          |
+| `/status`   | Check service status | `/status jenkins`          |
+| `/logs`     | View recent logs     | `/logs myapp --tail 50`    |
 
 ## Channels Structure
 
-| Channel | Purpose | Members |
-|---------|---------|---------|
-| `#general` | Platform announcements | All users |
-| `#ci-cd` | Build and deployment notifications | Dev team |
-| `#alerts` | Monitoring alerts | On-call team |
-| `#incidents` | Incident response | SRE team |
-| `#platform-help` | Platform support | All users |
+| Channel          | Purpose                            | Members      |
+| ---------------- | ---------------------------------- | ------------ |
+| `#general`       | Platform announcements             | All users    |
+| `#ci-cd`         | Build and deployment notifications | Dev team     |
+| `#alerts`        | Monitoring alerts                  | On-call team |
+| `#incidents`     | Incident response                  | SRE team     |
+| `#platform-help` | Platform support                   | All users    |
 
 ## Bot Configuration
 

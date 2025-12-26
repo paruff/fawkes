@@ -98,20 +98,20 @@
         "id": 1,
         "type": "row",
         "title": "Overview",
-        "gridPos": {"x": 0, "y": 0, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 2,
         "title": "Overall Data Quality Score",
         "type": "gauge",
-        "gridPos": {"x": 0, "y": 1, "w": 8, "h": 6},
+        "gridPos": { "x": 0, "y": 1, "w": 8, "h": 6 },
         "description": "Percentage of all expectations passing across all datasources",
         "targets": [
           {
             "expr": "avg(data_quality_success_rate_percent{datasource=~\"$datasource\",suite=~\"$suite\"})",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -119,14 +119,14 @@
             "unit": "percent",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "orange", "value": 70},
-                {"color": "yellow", "value": 85},
-                {"color": "green", "value": 95}
+                { "color": "red", "value": null },
+                { "color": "orange", "value": 70 },
+                { "color": "yellow", "value": 85 },
+                { "color": "green", "value": 95 }
               ]
             }
           }
@@ -144,46 +144,42 @@
         "id": 3,
         "title": "Validation Pass/Fail Summary",
         "type": "stat",
-        "gridPos": {"x": 8, "y": 1, "w": 8, "h": 6},
+        "gridPos": { "x": 8, "y": 1, "w": 8, "h": 6 },
         "description": "Current validation status across all datasources",
         "targets": [
           {
             "expr": "sum(data_quality_validation_success{datasource=~\"$datasource\",suite=~\"$suite\"} == 1)",
             "refId": "A",
             "legendFormat": "Passing",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           },
           {
             "expr": "sum(data_quality_validation_success{datasource=~\"$datasource\",suite=~\"$suite\"} == 0)",
             "refId": "B",
             "legendFormat": "Failing",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "red", "value": 1}
+                { "color": "green", "value": null },
+                { "color": "red", "value": 1 }
               ]
             }
           },
           "overrides": [
             {
-              "matcher": {"id": "byName", "options": "Passing"},
-              "properties": [
-                {"id": "color", "value": {"mode": "fixed", "fixedColor": "green"}}
-              ]
+              "matcher": { "id": "byName", "options": "Passing" },
+              "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } }]
             },
             {
-              "matcher": {"id": "byName", "options": "Failing"},
-              "properties": [
-                {"id": "color", "value": {"mode": "fixed", "fixedColor": "red"}}
-              ]
+              "matcher": { "id": "byName", "options": "Failing" },
+              "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }]
             }
           ]
         },
@@ -198,25 +194,25 @@
         "id": 4,
         "title": "Total Validation Runs (24h)",
         "type": "stat",
-        "gridPos": {"x": 16, "y": 1, "w": 8, "h": 6},
+        "gridPos": { "x": 16, "y": 1, "w": 8, "h": 6 },
         "description": "Total number of validation runs in the last 24 hours",
         "targets": [
           {
             "expr": "sum(increase(data_quality_validation_runs_total{datasource=~\"$datasource\",suite=~\"$suite\"}[24h]))",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 1},
-                {"color": "green", "value": 4}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 1 },
+                { "color": "green", "value": 4 }
               ]
             }
           }
@@ -232,14 +228,14 @@
         "id": 5,
         "type": "row",
         "title": "Validation Results by Datasource",
-        "gridPos": {"x": 0, "y": 7, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 7, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 6,
         "title": "Validation Status by Datasource",
         "type": "table",
-        "gridPos": {"x": 0, "y": 8, "w": 12, "h": 8},
+        "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
         "description": "Current validation status for each datasource",
         "targets": [
           {
@@ -247,21 +243,21 @@
             "refId": "A",
             "format": "table",
             "instant": true,
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           },
           {
             "expr": "data_quality_success_rate_percent{datasource=~\"$datasource\",suite=~\"$suite\"}",
             "refId": "B",
             "format": "table",
             "instant": true,
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           },
           {
             "expr": "data_quality_expectations_total{datasource=~\"$datasource\",suite=~\"$suite\"}",
             "refId": "C",
             "format": "table",
             "instant": true,
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "transformations": [
@@ -305,7 +301,7 @@
           },
           "overrides": [
             {
-              "matcher": {"id": "byName", "options": "Status"},
+              "matcher": { "id": "byName", "options": "Status" },
               "properties": [
                 {
                   "id": "mappings",
@@ -313,8 +309,8 @@
                     {
                       "type": "value",
                       "options": {
-                        "0": {"text": "❌ Failed", "color": "red"},
-                        "1": {"text": "✅ Passing", "color": "green"}
+                        "0": { "text": "❌ Failed", "color": "red" },
+                        "1": { "text": "✅ Passing", "color": "green" }
                       }
                     }
                   ]
@@ -326,7 +322,7 @@
               ]
             },
             {
-              "matcher": {"id": "byName", "options": "Success Rate %"},
+              "matcher": { "id": "byName", "options": "Success Rate %" },
               "properties": [
                 {
                   "id": "unit",
@@ -347,10 +343,10 @@
                   "value": {
                     "mode": "absolute",
                     "steps": [
-                      {"color": "red", "value": null},
-                      {"color": "orange", "value": 70},
-                      {"color": "yellow", "value": 85},
-                      {"color": "green", "value": 95}
+                      { "color": "red", "value": null },
+                      { "color": "orange", "value": 70 },
+                      { "color": "yellow", "value": 85 },
+                      { "color": "green", "value": 95 }
                     ]
                   }
                 }
@@ -363,14 +359,14 @@
         "id": 7,
         "title": "Success Rate by Datasource",
         "type": "bargauge",
-        "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8},
+        "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
         "description": "Success rate percentage for each datasource",
         "targets": [
           {
             "expr": "data_quality_success_rate_percent{datasource=~\"$datasource\",suite=~\"$suite\"}",
             "refId": "A",
             "legendFormat": "{{datasource}} - {{suite}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -378,14 +374,14 @@
             "unit": "percent",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "orange", "value": 70},
-                {"color": "yellow", "value": 85},
-                {"color": "green", "value": 95}
+                { "color": "red", "value": null },
+                { "color": "orange", "value": 70 },
+                { "color": "yellow", "value": 85 },
+                { "color": "green", "value": 95 }
               ]
             }
           }
@@ -400,21 +396,21 @@
         "id": 8,
         "type": "row",
         "title": "Failed Expectations",
-        "gridPos": {"x": 0, "y": 16, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 16, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 9,
         "title": "Failed Expectations Breakdown",
         "type": "piechart",
-        "gridPos": {"x": 0, "y": 17, "w": 12, "h": 8},
+        "gridPos": { "x": 0, "y": 17, "w": 12, "h": 8 },
         "description": "Distribution of failed expectations by datasource",
         "targets": [
           {
             "expr": "sum by (datasource) (increase(data_quality_expectation_failures_total{datasource=~\"$datasource\",suite=~\"$suite\"}[24h]))",
             "refId": "A",
             "legendFormat": "{{datasource}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -441,14 +437,14 @@
         "id": 10,
         "title": "Failed Expectations Over Time",
         "type": "timeseries",
-        "gridPos": {"x": 12, "y": 17, "w": 12, "h": 8},
+        "gridPos": { "x": 12, "y": 17, "w": 12, "h": 8 },
         "description": "Trend of failed expectations over time by datasource",
         "targets": [
           {
             "expr": "sum by (datasource) (increase(data_quality_expectation_failures_total{datasource=~\"$datasource\",suite=~\"$suite\"}[1h]))",
             "refId": "A",
             "legendFormat": "{{datasource}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -487,34 +483,34 @@
         "id": 11,
         "type": "row",
         "title": "Data Freshness",
-        "gridPos": {"x": 0, "y": 25, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 25, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 12,
         "title": "Data Freshness by Datasource",
         "type": "stat",
-        "gridPos": {"x": 0, "y": 26, "w": 24, "h": 8},
+        "gridPos": { "x": 0, "y": 26, "w": 24, "h": 8 },
         "description": "Time since last validation for each datasource",
         "targets": [
           {
             "expr": "data_quality_data_freshness_seconds{datasource=~\"$datasource\",suite=~\"$suite\"}",
             "refId": "A",
             "legendFormat": "{{datasource}} - {{suite}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "s",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 21600},
-                {"color": "orange", "value": 43200},
-                {"color": "red", "value": 86400}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 21600 },
+                { "color": "orange", "value": 43200 },
+                { "color": "red", "value": 86400 }
               ]
             }
           }
@@ -531,21 +527,21 @@
         "id": 13,
         "type": "row",
         "title": "Historical Trends",
-        "gridPos": {"x": 0, "y": 34, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 34, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 14,
         "title": "Validation Success Rate - 7 Day Trend",
         "type": "timeseries",
-        "gridPos": {"x": 0, "y": 35, "w": 12, "h": 8},
+        "gridPos": { "x": 0, "y": 35, "w": 12, "h": 8 },
         "description": "Success rate trend over the last 7 days",
         "targets": [
           {
             "expr": "avg_over_time(data_quality_success_rate_percent{datasource=~\"$datasource\",suite=~\"$suite\"}[1h])",
             "refId": "A",
             "legendFormat": "{{datasource}} - {{suite}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -582,14 +578,14 @@
         "id": 15,
         "title": "Validation Success Rate - 30 Day Trend",
         "type": "timeseries",
-        "gridPos": {"x": 12, "y": 35, "w": 12, "h": 8},
+        "gridPos": { "x": 12, "y": 35, "w": 12, "h": 8 },
         "description": "Success rate trend over the last 30 days",
         "targets": [
           {
             "expr": "avg_over_time(data_quality_success_rate_percent{datasource=~\"$datasource\",suite=~\"$suite\"}[4h])",
             "refId": "A",
             "legendFormat": "{{datasource}} - {{suite}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -626,14 +622,14 @@
         "id": 16,
         "title": "Validation Runs by Status (7d)",
         "type": "barchart",
-        "gridPos": {"x": 0, "y": 43, "w": 12, "h": 8},
+        "gridPos": { "x": 0, "y": 43, "w": 12, "h": 8 },
         "description": "Count of successful vs failed validation runs in the last 7 days",
         "targets": [
           {
             "expr": "sum by (status, datasource) (increase(data_quality_validation_runs_total{datasource=~\"$datasource\",suite=~\"$suite\"}[7d]))",
             "refId": "A",
             "legendFormat": "{{datasource}} - {{status}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -645,16 +641,12 @@
           },
           "overrides": [
             {
-              "matcher": {"id": "byRegexp", "options": ".*success.*"},
-              "properties": [
-                {"id": "color", "value": {"mode": "fixed", "fixedColor": "green"}}
-              ]
+              "matcher": { "id": "byRegexp", "options": ".*success.*" },
+              "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } }]
             },
             {
-              "matcher": {"id": "byRegexp", "options": ".*failure.*"},
-              "properties": [
-                {"id": "color", "value": {"mode": "fixed", "fixedColor": "red"}}
-              ]
+              "matcher": { "id": "byRegexp", "options": ".*failure.*" },
+              "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }]
             }
           ]
         },
@@ -675,14 +667,14 @@
         "id": 17,
         "title": "Total Expectations Evaluated Over Time",
         "type": "timeseries",
-        "gridPos": {"x": 12, "y": 43, "w": 12, "h": 8},
+        "gridPos": { "x": 12, "y": 43, "w": 12, "h": 8 },
         "description": "Number of expectations evaluated over time",
         "targets": [
           {
             "expr": "data_quality_expectations_total{datasource=~\"$datasource\",suite=~\"$suite\"}",
             "refId": "A",
             "legendFormat": "{{datasource}} - {{suite}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {

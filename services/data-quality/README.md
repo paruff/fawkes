@@ -5,6 +5,7 @@ This service provides automated data quality validation and monitoring for Fawke
 ## Overview
 
 The data quality service validates data in the following databases:
+
 - **Backstage**: Developer portal catalog data
 - **Harbor**: Container registry metadata
 - **DataHub**: Data catalog metadata
@@ -52,14 +53,18 @@ services/data-quality/
 ## Expectation Suites
 
 ### Backstage Database (`backstage_db_suite.json`)
+
 Validates:
+
 - Row counts within expected range
 - Required columns exist
 - Primary key (entity_id) is not null and unique
 - Entity references are not null
 
 ### Harbor Database (`harbor_db_suite.json`)
+
 Validates:
+
 - Artifact row counts
 - Required columns (id, digest, size, timestamps)
 - Primary key uniqueness
@@ -67,14 +72,18 @@ Validates:
 - Referential integrity
 
 ### DataHub Database (`datahub_db_suite.json`)
+
 Validates:
+
 - Metadata row counts
 - Required columns (urn, aspect, version)
 - URN format follows DataHub standards
 - Aspect and version are not null
 
 ### DORA Metrics (`dora_metrics_suite.json`)
+
 Validates:
+
 - Metrics data exists
 - Timestamp column exists and is valid
 - Data freshness (latest data is recent)
@@ -83,7 +92,9 @@ Validates:
 - Value type and range validation
 
 ### SonarQube Database (`sonarqube_db_suite.json`)
+
 Validates:
+
 - Project row counts
 - Required columns (uuid, kee, name, timestamps)
 - Primary key uniqueness
@@ -112,11 +123,13 @@ platform/apps/data-quality/
 ### Environment Variables
 
 From ConfigMap:
+
 - `ALERT_ON_FAILURE`: Enable failure alerts (default: true)
 - `ALERT_ON_WARNING`: Enable warning alerts (default: false)
 - `SEND_DAILY_SUMMARY`: Enable daily summary (default: true)
 
 From Secrets:
+
 - `POSTGRES_USER`: PostgreSQL username
 - `POSTGRES_PASSWORD`: PostgreSQL password
 - `BACKSTAGE_DB_CONNECTION_STRING`: Backstage DB connection
@@ -181,6 +194,7 @@ The service sends alerts to Mattermost on validation failures:
 - **Daily Summary**: Summary of all validations (optional)
 
 Alert format:
+
 ```
 ## 🚨 Data Quality Validation Failed
 
@@ -259,6 +273,7 @@ A comprehensive Grafana dashboard is available for visualizing data quality metr
 **Dashboard Location**: `platform/apps/grafana/dashboards/data-quality.json`
 
 **Dashboard Features**:
+
 - Overall data quality score (% passing)
 - Validation pass/fail summary
 - Validation status by datasource
@@ -270,6 +285,7 @@ A comprehensive Grafana dashboard is available for visualizing data quality metr
 **Accessing the Dashboard**:
 
 1. Import the dashboard in Grafana:
+
    ```bash
    # Via Grafana UI
    # Dashboard > Import > Upload JSON file
@@ -282,12 +298,14 @@ A comprehensive Grafana dashboard is available for visualizing data quality metr
    ```
 
 **Dashboard Variables**:
+
 - `datasource`: Filter by specific datasource(s)
 - `suite`: Filter by specific expectation suite(s)
 
 ### CronJob Schedule
 
 The CronJob runs every 6 hours by default:
+
 ```
 0 */6 * * *
 ```
@@ -312,6 +330,7 @@ kubectl describe job -n fawkes data-quality-validation-<timestamp>
 ## Validation Script (AT-E2-004)
 
 The acceptance test validation is implemented in:
+
 ```
 scripts/validate-at-e2-004.sh
 ```
@@ -333,11 +352,13 @@ Or directly:
 ### Database Connection Issues
 
 1. **Check secrets are set correctly**:
+
    ```bash
    kubectl get secret data-quality-secrets -n fawkes -o yaml
    ```
 
 2. **Verify database connectivity**:
+
    ```bash
    kubectl run -it --rm debug --image=postgres:15 --restart=Never -n fawkes -- \
      psql "postgresql://app:changeme@db-backstage-rw.fawkes.svc.cluster.local:5432/backstage" -c "SELECT 1"
@@ -351,6 +372,7 @@ Or directly:
 ### Checkpoint Failures
 
 1. **Review the specific failure**:
+
    ```bash
    python3 scripts/run_checkpoint.py backstage_db_checkpoint --json | jq
    ```
@@ -362,6 +384,7 @@ Or directly:
 ### Alert Issues
 
 1. **Test Mattermost webhook**:
+
    ```bash
    curl -X POST $MATTERMOST_WEBHOOK_URL \
      -H 'Content-Type: application/json' \
@@ -405,6 +428,7 @@ Add new checkpoint to the validation job or create a separate job.
 ## Support
 
 For issues or questions:
+
 - Check troubleshooting section above
 - Review Great Expectations docs
 - Open an issue in the Fawkes repository

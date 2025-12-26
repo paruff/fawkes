@@ -17,7 +17,7 @@ class PromptLoader:
         if category not in self._prompts_cache:
             prompt_file = self.prompts_dir / f"{category}.txt"
             if prompt_file.exists():
-                with open(prompt_file, 'r') as f:
+                with open(prompt_file, "r") as f:
                     self._prompts_cache[category] = f.read()
             else:
                 # Return default prompt if file doesn't exist
@@ -45,7 +45,6 @@ Focus on:
 - Command injection risks
 
 Provide specific, actionable feedback. Only report genuine security concerns.""",
-
             "performance": """You are a performance-focused code reviewer. Review the code changes for performance issues.
 Focus on:
 - N+1 query problems
@@ -57,7 +56,6 @@ Focus on:
 - Inefficient data structures
 
 Provide specific, actionable feedback. Only report significant performance concerns.""",
-
             "best_practices": """You are a code quality reviewer. Review the code changes for adherence to best practices.
 Focus on:
 - Code organization and structure
@@ -69,7 +67,6 @@ Focus on:
 - Code readability and maintainability
 
 Provide specific, actionable feedback. Focus on important issues.""",
-
             "test_coverage": """You are a testing-focused code reviewer. Review the code changes for testing gaps.
 Focus on:
 - Missing unit tests for new functions
@@ -80,7 +77,6 @@ Focus on:
 - Mock usage appropriateness
 
 Provide specific, actionable feedback about testing needs.""",
-
             "documentation": """You are a documentation-focused code reviewer. Review the code changes for documentation quality.
 Focus on:
 - Missing or inadequate docstrings
@@ -90,7 +86,7 @@ Focus on:
 - Missing README updates
 - Unclear variable or function names
 
-Provide specific, actionable feedback about documentation needs."""
+Provide specific, actionable feedback about documentation needs.""",
         }
 
         return defaults.get(category, "Review the code changes and provide feedback.")

@@ -1,3 +1,23 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
 # ============================================================================
 # FILE: platform/apps/devex-survey-automation/deployment.yaml
 # PURPOSE: Kubernetes Deployment for DevEx Survey Automation Service
@@ -33,74 +53,74 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
       containers:
-      - name: devex-survey-automation
-        image: devex-survey-automation:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 8000
-          name: http
-          protocol: TCP
-        env:
-        - name: DATABASE_URL
-          value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@db-devex-dev-rw.fawkes.svc.cluster.local:5432/devex_surveys"
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: db-devex-credentials
-              key: username
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-devex-credentials
-              key: password
-        - name: SPACE_METRICS_URL
-          value: "http://space-metrics.fawkes.svc:8000"
-        - name: NPS_SERVICE_URL
-          value: "http://nps-service.fawkes.svc:8000"
-        - name: MATTERMOST_URL
-          value: "http://mattermost.fawkes.svc:8065"
-        - name: MATTERMOST_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: devex-survey-mattermost
-              key: bot-token
-              optional: true
-        - name: MATTERMOST_BOT_USER_ID
-          valueFrom:
-            secretKeyRef:
-              name: devex-survey-mattermost
-              key: bot-user-id
-              optional: true
-        - name: SURVEY_BASE_URL
-          value: "https://surveys.fawkes.idp"
-        - name: PULSE_SURVEY_DAY
-          value: "monday"
-        - name: PULSE_SURVEY_HOUR
-          value: "9"
-        - name: REMINDER_DAYS
-          value: "2"
-        - name: ALLOWED_ORIGINS
-          value: "https://backstage.fawkes.idp,http://localhost:3000"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 30
-          periodSeconds: 30
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
-        resources:
-          requests:
-            cpu: 100m
-            memory: 256Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
+        - name: devex-survey-automation
+          image: devex-survey-automation:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+              name: http
+              protocol: TCP
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@db-devex-dev-rw.fawkes.svc.cluster.local:5432/devex_surveys"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-devex-credentials
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-devex-credentials
+                  key: password
+            - name: SPACE_METRICS_URL
+              value: "http://space-metrics.fawkes.svc:8000"
+            - name: NPS_SERVICE_URL
+              value: "http://nps-service.fawkes.svc:8000"
+            - name: MATTERMOST_URL
+              value: "http://mattermost.fawkes.svc:8065"
+            - name: MATTERMOST_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: devex-survey-mattermost
+                  key: bot-token
+                  optional: true
+            - name: MATTERMOST_BOT_USER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: devex-survey-mattermost
+                  key: bot-user-id
+                  optional: true
+            - name: SURVEY_BASE_URL
+              value: "https://surveys.fawkes.idp"
+            - name: PULSE_SURVEY_DAY
+              value: "monday"
+            - name: PULSE_SURVEY_HOUR
+              value: "9"
+            - name: REMINDER_DAYS
+              value: "2"
+            - name: ALLOWED_ORIGINS
+              value: "https://backstage.fawkes.idp,http://localhost:3000"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

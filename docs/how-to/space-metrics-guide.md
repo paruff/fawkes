@@ -7,6 +7,7 @@ This document provides a comprehensive guide to the SPACE Framework metrics coll
 ## Architecture
 
 The SPACE metrics service is built with:
+
 - **FastAPI**: RESTful API framework
 - **PostgreSQL**: Data persistence
 - **SQLAlchemy**: ORM for database operations
@@ -20,16 +21,19 @@ The SPACE metrics service is built with:
 **What it measures**: Developer happiness and fulfillment
 
 **Key Metrics**:
+
 - NPS Score (-100 to 100)
 - Platform satisfaction rating (1-5)
 - Burnout percentage
 
 **Data Sources**:
+
 - NPS Service (quarterly surveys)
 - Pulse surveys (weekly)
 - Feedback widget
 
 **Target Values**:
+
 - NPS > 50 (good), > 70 (excellent)
 - Satisfaction rating > 4.0/5.0
 - Burnout < 20%
@@ -37,6 +41,7 @@ The SPACE metrics service is built with:
 **API Endpoint**: `GET /api/v1/metrics/space/satisfaction`
 
 **Example Response**:
+
 ```json
 {
   "nps_score": 65.0,
@@ -51,6 +56,7 @@ The SPACE metrics service is built with:
 **What it measures**: System and process outcomes
 
 **Key Metrics**:
+
 - Deployment frequency (per day)
 - Lead time for changes (hours)
 - Change failure rate (%)
@@ -59,11 +65,13 @@ The SPACE metrics service is built with:
 - Test coverage (%)
 
 **Data Sources**:
+
 - Jenkins API (builds, deployments)
 - ArgoCD (deployments)
 - GitHub API (PRs, commits)
 
 **Target Values**:
+
 - Deployment frequency > 1/day
 - Lead time < 24 hours
 - Change failure rate < 15%
@@ -73,6 +81,7 @@ The SPACE metrics service is built with:
 **API Endpoint**: `GET /api/v1/metrics/space/performance`
 
 **Example Response**:
+
 ```json
 {
   "deployment_frequency": 2.3,
@@ -89,6 +98,7 @@ The SPACE metrics service is built with:
 **What it measures**: Developer actions and outputs
 
 **Key Metrics**:
+
 - Commits count
 - Pull requests count
 - Code reviews count
@@ -97,11 +107,13 @@ The SPACE metrics service is built with:
 - Platform usage count
 
 **Data Sources**:
+
 - GitHub API
 - Backstage analytics
 - AI tool telemetry
 
 **Target Values**:
+
 - 80%+ developers active weekly
 - 90%+ PRs reviewed within 24h
 - 70%+ AI tool adoption
@@ -109,6 +121,7 @@ The SPACE metrics service is built with:
 **API Endpoint**: `GET /api/v1/metrics/space/activity`
 
 **Example Response**:
+
 ```json
 {
   "commits_count": 523,
@@ -125,6 +138,7 @@ The SPACE metrics service is built with:
 **What it measures**: Team interaction and collaboration quality
 
 **Key Metrics**:
+
 - Average review time (hours)
 - PR comments average
 - Cross-team PRs
@@ -132,10 +146,12 @@ The SPACE metrics service is built with:
 - Constructive feedback rate (%)
 
 **Data Sources**:
+
 - GitHub API (PR reviews)
 - Mattermost API
 
 **Target Values**:
+
 - Review time < 12 hours
 - PR comments > 2 per review
 - Constructive feedback > 80%
@@ -143,6 +159,7 @@ The SPACE metrics service is built with:
 **API Endpoint**: `GET /api/v1/metrics/space/communication`
 
 **Example Response**:
+
 ```json
 {
   "avg_review_time_hours": 8.5,
@@ -158,6 +175,7 @@ The SPACE metrics service is built with:
 **What it measures**: Ability to complete work with minimal interruption
 
 **Key Metrics**:
+
 - Flow state days (per week)
 - Valuable work percentage
 - Friction incidents
@@ -165,11 +183,13 @@ The SPACE metrics service is built with:
 - Cognitive load average (1-5)
 
 **Data Sources**:
+
 - Pulse surveys
 - Friction logging widget
 - Self-reported metrics
 
 **Target Values**:
+
 - Flow state > 3 days/week
 - Valuable work > 60%
 - Friction < 30 incidents/100 devs/month
@@ -178,6 +198,7 @@ The SPACE metrics service is built with:
 **API Endpoint**: `GET /api/v1/metrics/space/efficiency`
 
 **Example Response**:
+
 ```json
 {
   "flow_state_days": 3.5,
@@ -193,11 +214,13 @@ The SPACE metrics service is built with:
 The overall DevEx health score combines all five dimensions into a single metric (0-100).
 
 **Calculation**:
+
 1. Normalize each dimension to 0-100 scale
 2. Calculate weighted average
 3. Return score with status
 
 **Status Indicators**:
+
 - 80-100: Excellent
 - 60-79: Good
 - 0-59: Needs Improvement
@@ -205,6 +228,7 @@ The overall DevEx health score combines all five dimensions into a single metric
 **API Endpoint**: `GET /api/v1/metrics/space/health`
 
 **Example Response**:
+
 ```json
 {
   "health_score": 78.3,
@@ -266,12 +290,14 @@ POST /api/v1/friction/log
 ### Ethical Use Guidelines
 
 **Never use SPACE metrics for:**
+
 - ❌ Individual performance reviews
 - ❌ Ranking developers
 - ❌ Firing decisions
 - ❌ Bonus calculations
 
 **Always use SPACE metrics for:**
+
 - ✅ Identifying platform improvement opportunities
 - ✅ Understanding team-level trends
 - ✅ Measuring impact of platform changes
@@ -286,7 +312,7 @@ Add to `app-config.yaml`:
 ```yaml
 proxy:
   endpoints:
-    '/space-metrics/api':
+    "/space-metrics/api":
       target: http://space-metrics.fawkes-local.svc:8000/
       changeOrigin: true
 ```
@@ -351,6 +377,7 @@ kubectl port-forward -n monitoring svc/prometheus-prometheus 9090:9090
 ## Support
 
 For questions or issues:
+
 1. Check troubleshooting section above
 2. Review service logs
 3. Consult platform documentation

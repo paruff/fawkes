@@ -13,19 +13,33 @@ import logging
 from app import __version__
 from app.database import get_db, check_db_connection
 from app.models import (
-    Interview, InterviewStatus,
-    DiscoveryInsight, InsightStatus,
-    Experiment, ExperimentStatus,
-    FeatureValidation, FeatureStatus,
-    TeamPerformance
+    Interview,
+    InterviewStatus,
+    DiscoveryInsight,
+    InsightStatus,
+    Experiment,
+    ExperimentStatus,
+    FeatureValidation,
+    FeatureStatus,
+    TeamPerformance,
 )
 from app.schemas import (
-    InterviewCreate, InterviewUpdate, InterviewResponse,
-    DiscoveryInsightCreate, DiscoveryInsightUpdate, DiscoveryInsightResponse,
-    ExperimentCreate, ExperimentUpdate, ExperimentResponse,
-    FeatureValidationCreate, FeatureValidationUpdate, FeatureValidationResponse,
-    TeamPerformanceCreate, TeamPerformanceResponse,
-    DiscoveryStatistics, HealthResponse
+    InterviewCreate,
+    InterviewUpdate,
+    InterviewResponse,
+    DiscoveryInsightCreate,
+    DiscoveryInsightUpdate,
+    DiscoveryInsightResponse,
+    ExperimentCreate,
+    ExperimentUpdate,
+    ExperimentResponse,
+    FeatureValidationCreate,
+    FeatureValidationUpdate,
+    FeatureValidationResponse,
+    TeamPerformanceCreate,
+    TeamPerformanceResponse,
+    DiscoveryStatistics,
+    HealthResponse,
 )
 from app.prometheus_exporter import update_prometheus_metrics
 
@@ -34,12 +48,12 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Prometheus metrics
-interviews_created = Counter('discovery_interviews_created_total', 'Total interviews created')
-insights_created = Counter('discovery_insights_created_total', 'Total insights created')
-experiments_created = Counter('discovery_experiments_created_total', 'Total experiments created')
-features_created = Counter('discovery_features_created_total', 'Total features created')
-api_requests = Counter('discovery_api_requests_total', 'Total API requests', ['method', 'endpoint'])
-request_duration = Histogram('discovery_request_duration_seconds', 'Request duration', ['method', 'endpoint'])
+interviews_created = Counter("discovery_interviews_created_total", "Total interviews created")
+insights_created = Counter("discovery_insights_created_total", "Total insights created")
+experiments_created = Counter("discovery_experiments_created_total", "Total experiments created")
+features_created = Counter("discovery_features_created_total", "Total features created")
+api_requests = Counter("discovery_api_requests_total", "Total API requests", ["method", "endpoint"])
+request_duration = Histogram("discovery_request_duration_seconds", "Request duration", ["method", "endpoint"])
 
 # Create FastAPI app
 app = FastAPI(
@@ -65,10 +79,7 @@ app.add_middleware(
 async def health_check(db: Session = Depends(get_db)):
     """Health check endpoint."""
     return HealthResponse(
-        status="healthy",
-        service="discovery-metrics",
-        version=__version__,
-        database_connected=check_db_connection()
+        status="healthy", service="discovery-metrics", version=__version__, database_connected=check_db_connection()
     )
 
 
@@ -81,7 +92,9 @@ async def metrics(db: Session = Depends(get_db)):
 
 
 # Interview endpoints
-@app.post("/api/v1/interviews", response_model=InterviewResponse, status_code=status.HTTP_201_CREATED, tags=["Interviews"])
+@app.post(
+    "/api/v1/interviews", response_model=InterviewResponse, status_code=status.HTTP_201_CREATED, tags=["Interviews"]
+)
 async def create_interview(interview_data: InterviewCreate, db: Session = Depends(get_db)):
     """Create a new interview."""
     interview = Interview(**interview_data.model_dump())
@@ -97,7 +110,7 @@ async def list_interviews(
     status_filter: Optional[str] = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """List interviews."""
     query = db.query(Interview)
@@ -132,7 +145,9 @@ async def update_interview(interview_id: int, interview_data: InterviewUpdate, d
 
 
 # Discovery Insight endpoints
-@app.post("/api/v1/insights", response_model=DiscoveryInsightResponse, status_code=status.HTTP_201_CREATED, tags=["Insights"])
+@app.post(
+    "/api/v1/insights", response_model=DiscoveryInsightResponse, status_code=status.HTTP_201_CREATED, tags=["Insights"]
+)
 async def create_insight(insight_data: DiscoveryInsightCreate, db: Session = Depends(get_db)):
     """Create a new discovery insight."""
     insight = DiscoveryInsight(**insight_data.model_dump())
@@ -150,7 +165,7 @@ async def list_insights(
     source: Optional[str] = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """List discovery insights."""
     query = db.query(DiscoveryInsight)
@@ -194,7 +209,9 @@ async def update_insight(insight_id: int, insight_data: DiscoveryInsightUpdate, 
 
 
 # Experiment endpoints
-@app.post("/api/v1/experiments", response_model=ExperimentResponse, status_code=status.HTTP_201_CREATED, tags=["Experiments"])
+@app.post(
+    "/api/v1/experiments", response_model=ExperimentResponse, status_code=status.HTTP_201_CREATED, tags=["Experiments"]
+)
 async def create_experiment(experiment_data: ExperimentCreate, db: Session = Depends(get_db)):
     """Create a new experiment."""
     experiment = Experiment(**experiment_data.model_dump())
@@ -211,7 +228,7 @@ async def list_experiments(
     validated: Optional[bool] = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """List experiments."""
     query = db.query(Experiment)
@@ -253,7 +270,9 @@ async def update_experiment(experiment_id: int, experiment_data: ExperimentUpdat
 
 
 # Feature Validation endpoints
-@app.post("/api/v1/features", response_model=FeatureValidationResponse, status_code=status.HTTP_201_CREATED, tags=["Features"])
+@app.post(
+    "/api/v1/features", response_model=FeatureValidationResponse, status_code=status.HTTP_201_CREATED, tags=["Features"]
+)
 async def create_feature(feature_data: FeatureValidationCreate, db: Session = Depends(get_db)):
     """Create a new feature validation."""
     feature = FeatureValidation(**feature_data.model_dump())
@@ -269,7 +288,7 @@ async def list_features(
     status_filter: Optional[str] = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """List feature validations."""
     query = db.query(FeatureValidation)
@@ -314,7 +333,12 @@ async def update_feature(feature_id: int, feature_data: FeatureValidationUpdate,
 
 
 # Team Performance endpoints
-@app.post("/api/v1/team-performance", response_model=TeamPerformanceResponse, status_code=status.HTTP_201_CREATED, tags=["Team Performance"])
+@app.post(
+    "/api/v1/team-performance",
+    response_model=TeamPerformanceResponse,
+    status_code=status.HTTP_201_CREATED,
+    tags=["Team Performance"],
+)
 async def create_team_performance(team_data: TeamPerformanceCreate, db: Session = Depends(get_db)):
     """Create team performance record."""
     team = TeamPerformance(**team_data.model_dump())
@@ -329,7 +353,7 @@ async def list_team_performance(
     team_name: Optional[str] = None,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """List team performance records."""
     query = db.query(TeamPerformance)
@@ -344,39 +368,37 @@ async def list_team_performance(
 async def get_statistics(db: Session = Depends(get_db)):
     """Get discovery statistics."""
     total_interviews = db.query(Interview).count()
-    completed_interviews = db.query(Interview).filter(
-        Interview.status == InterviewStatus.COMPLETED
-    ).count()
+    completed_interviews = db.query(Interview).filter(Interview.status == InterviewStatus.COMPLETED).count()
 
     total_insights = db.query(DiscoveryInsight).count()
-    validated_insights = db.query(DiscoveryInsight).filter(
-        DiscoveryInsight.status.in_([InsightStatus.VALIDATED, InsightStatus.IMPLEMENTED])
-    ).count()
+    validated_insights = (
+        db.query(DiscoveryInsight)
+        .filter(DiscoveryInsight.status.in_([InsightStatus.VALIDATED, InsightStatus.IMPLEMENTED]))
+        .count()
+    )
 
     total_experiments = db.query(Experiment).count()
-    completed_experiments = db.query(Experiment).filter(
-        Experiment.status == ExperimentStatus.COMPLETED
-    ).count()
+    completed_experiments = db.query(Experiment).filter(Experiment.status == ExperimentStatus.COMPLETED).count()
 
     total_features = db.query(FeatureValidation).count()
-    validated_features = db.query(FeatureValidation).filter(
-        FeatureValidation.status.in_([
-            FeatureStatus.VALIDATED,
-            FeatureStatus.BUILDING,
-            FeatureStatus.SHIPPED
-        ])
-    ).count()
-    shipped_features = db.query(FeatureValidation).filter(
-        FeatureValidation.status == FeatureStatus.SHIPPED
-    ).count()
+    validated_features = (
+        db.query(FeatureValidation)
+        .filter(FeatureValidation.status.in_([FeatureStatus.VALIDATED, FeatureStatus.BUILDING, FeatureStatus.SHIPPED]))
+        .count()
+    )
+    shipped_features = db.query(FeatureValidation).filter(FeatureValidation.status == FeatureStatus.SHIPPED).count()
 
-    avg_validation_time = db.query(
-        func.avg(DiscoveryInsight.time_to_validation_days)
-    ).filter(DiscoveryInsight.time_to_validation_days.isnot(None)).scalar()
+    avg_validation_time = (
+        db.query(func.avg(DiscoveryInsight.time_to_validation_days))
+        .filter(DiscoveryInsight.time_to_validation_days.isnot(None))
+        .scalar()
+    )
 
-    avg_ship_time = db.query(
-        func.avg(FeatureValidation.time_to_ship_days)
-    ).filter(FeatureValidation.time_to_ship_days.isnot(None)).scalar()
+    avg_ship_time = (
+        db.query(func.avg(FeatureValidation.time_to_ship_days))
+        .filter(FeatureValidation.time_to_ship_days.isnot(None))
+        .scalar()
+    )
 
     validation_rate = (validated_insights / total_insights * 100) if total_insights > 0 else 0
     experiment_success_rate = (completed_experiments / total_experiments * 100) if total_experiments > 0 else 0
@@ -396,5 +418,5 @@ async def get_statistics(db: Session = Depends(get_db)):
         avg_time_to_ship_days=float(avg_ship_time) if avg_ship_time else None,
         validation_rate=validation_rate,
         experiment_success_rate=experiment_success_rate,
-        feature_validation_rate=feature_validation_rate
+        feature_validation_rate=feature_validation_rate,
     )

@@ -67,6 +67,7 @@ Switch to conceptual overview:
 > "Product discovery is about building the right things, not just building things right. Traditional platforms focus on delivery metrics - and we do that too with DORA in Epic 1. But Epic 3 answers a different question: How do we know we're building what developers actually need?
 >
 > We've implemented a multi-layered approach:
+>
 > - **Research Infrastructure** for qualitative insights
 > - **SPACE Framework** for quantitative DevEx measurement
 > - **Multi-Channel Feedback** to capture continuous input
@@ -99,6 +100,7 @@ Navigate to `docs/research/` directory:
 > "First, let's look at our research repository. This is where we centralize all our user research activities.
 >
 > We have five main areas:
+>
 > - **Personas** - 5 validated user personas representing our key user types
 > - **Journey Maps** - 5 detailed journey maps covering critical workflows
 > - **Interview Guides** - Templates for conducting user research
@@ -110,6 +112,7 @@ Navigate to `docs/research/` directory:
 Open a persona file (e.g., `personas/persona-new-developer.md`):
 
 > "Here's one of our personas - 'Alex the New Developer'. This persona was created from interviews with 10 recent hires. You can see:
+>
 > - Demographics and background
 > - Goals and motivations
 > - Pain points and frustrations
@@ -125,6 +128,7 @@ Open `journey-maps/01-developer-onboarding.md`:
 > "Now let's look at a journey map - specifically the Developer Onboarding journey.
 >
 > This map shows the end-to-end experience of a new developer joining the team. For each stage:
+>
 > - **Touchpoints** - Where they interact with the platform
 > - **Pain Points** - What frustrates them (marked in red)
 > - **Opportunities** - How we can improve (marked in green)
@@ -143,6 +147,7 @@ Open `journey-maps/01-developer-onboarding.md`:
 **[7:00-7:30] SPACE Framework Introduction**
 
 > "Now let's talk about developer experience measurement. We use the SPACE framework - created by GitHub, Microsoft, and academia - to quantify DevEx across five dimensions:
+>
 > - **Satisfaction** - How developers feel
 > - **Performance** - System and delivery metrics
 > - **Activity** - Development activity levels
@@ -158,30 +163,35 @@ Navigate to Grafana SPACE metrics dashboard:
 > Let's walk through each dimension:
 >
 > **Satisfaction** (top left):
+>
 > - eNPS score of 45 - that's in the 'Good' range
 > - Based on quarterly NPS surveys
 > - Average feedback rating of 4.2 out of 5
 > - We aggregate responses to protect individual privacy - we never show data for fewer than 5 developers
 >
 > **Performance** (top right):
+>
 > - Deployment frequency: 12.5 per week
 > - Lead time: 4.2 hours
 > - Build success rate: 95%
 > - These tie directly to our Epic 1 DORA metrics
 >
 > **Activity** (middle left):
+>
 > - 85 commits per week (team average)
 > - 23 PRs merged
 > - 4.8 active development days
 > - This helps us understand team engagement patterns
 >
 > **Communication** (middle right):
+>
 > - 450 Mattermost messages
 > - 156 PR comments
 > - 12 documentation updates
 > - Healthy collaboration indicators
 >
 > **Efficiency** (bottom):
+>
 > - Time to first commit for new hires: 3.5 hours
 > - Time to production: 8.2 hours
 > - Cognitive load index: 3.8 out of 10 (lower is better)
@@ -197,6 +207,7 @@ curl http://localhost:8000/api/v1/metrics/space | jq .
 ```
 
 > "Behind the scenes, we have a SPACE metrics service with a REST API. This collects data from:
+>
 > - Prometheus for performance metrics
 > - GitHub API for activity metrics
 > - Mattermost API for communication metrics
@@ -227,6 +238,7 @@ Show NASA-TLX assessment form:
 > "We also measure cognitive load using the NASA-TLX assessment. This is a scientifically validated method for measuring mental workload.
 >
 > Developers can take a quick 2-minute assessment after completing a task like 'Deploying to production' or 'Debugging an incident'. They rate six dimensions on a scale of 0-100:
+>
 > - Mental demand
 > - Physical demand
 > - Temporal demand (time pressure)
@@ -251,6 +263,7 @@ Navigate to Backstage and show feedback widget:
 > "First, the Backstage widget. In the bottom right corner of our developer portal, there's a floating feedback button. Let me click it...
 >
 > You can:
+>
 > - Rate your experience (1-5 stars)
 > - Select a category (UI/UX, Performance, Documentation, etc.)
 > - Write free-form feedback
@@ -306,6 +319,7 @@ Show example NPS survey:
 Navigate to Grafana feedback dashboard:
 
 > "All four channels feed into our feedback analytics dashboard. Here you can see:
+>
 > - Feedback volume over time
 > - Breakdown by rating and category
 > - Sentiment analysis results
@@ -327,6 +341,7 @@ Navigate to Grafana feedback dashboard:
 Navigate to Storybook (`https://storybook.fawkes.local`):
 
 > "Welcome to our design system Storybook. On the left, you see our component library organized by category:
+>
 > - Foundations (colors, typography, spacing)
 > - Components (buttons, forms, cards, modals)
 > - Patterns (navigation, data display, feedback)
@@ -334,17 +349,20 @@ Navigate to Storybook (`https://storybook.fawkes.local`):
 > We have 42 components currently. Let me click on 'Button' to show you what each component page includes:
 >
 > **Overview Tab**:
+>
 > - Interactive component preview
 > - Props/controls to play with variants
 > - Code example showing how to use it
 >
 > **Docs Tab**:
+>
 > - Detailed usage guidelines
 > - Do's and Don'ts
 > - Accessibility considerations
 > - Design tokens used
 >
 > **Accessibility Tab** (from a11y addon):
+>
 > - Automated WCAG 2.1 AA checks
 > - Violations (if any) are highlighted
 > - Our goal is >90% compliance
@@ -356,6 +374,7 @@ Navigate to Storybook (`https://storybook.fawkes.local`):
 Show design tokens and accessibility features:
 
 > "We use design tokens for consistency. These are the atomic values like colors, spacing, and typography that all components use. For example:
+>
 > - `color-primary-500` - our primary blue
 > - `spacing-md` - 16px
 > - `font-size-lg` - 18px
@@ -363,6 +382,7 @@ Show design tokens and accessibility features:
 > These are defined once and used everywhere, making it easy to maintain consistency and rebrand if needed.
 >
 > For accessibility, every component is:
+>
 > - Tested with axe-core (automated accessibility testing)
 > - Keyboard navigable
 > - Screen reader compatible
@@ -384,8 +404,8 @@ npm install @fawkes/design-system
 Then import components:
 
 ```javascript
-import { Button, Card, Modal } from '@fawkes/design-system';
-import '@fawkes/design-system/dist/styles.css';
+import { Button, Card, Modal } from "@fawkes/design-system";
+import "@fawkes/design-system/dist/styles.css";
 
 function MyApp() {
   return (
@@ -410,6 +430,7 @@ Navigate to product analytics dashboard (if deployed):
 > "Next, let's look at product analytics. We track how developers actually use the platform, which features are popular, and where they get stuck.
 >
 > Our analytics dashboard shows:
+>
 > - **Usage Trends**: Active users, session duration, feature adoption
 > - **User Journeys**: How do developers navigate through tasks
 > - **Funnels**: Where do developers drop off (e.g., service creation funnel)
@@ -417,6 +438,7 @@ Navigate to product analytics dashboard (if deployed):
 > - **Discovery Metrics**: Time to discovery, usage depth
 >
 > For example, this funnel shows the 'Create Service' journey:
+>
 > 1. Visit Backstage: 100 users
 > 2. Click 'Create': 85 users (85%)
 > 3. Choose template: 75 users (75%)
@@ -432,10 +454,10 @@ Show code example of event tracking:
 > "Behind the scenes, we use event tracking. When a developer performs an action in Backstage or other UIs, we capture it:
 
 ```javascript
-analytics.track('service_created', {
-  template: 'java-service',
-  environment: 'dev',
-  component: 'backstage'
+analytics.track("service_created", {
+  template: "java-service",
+  environment: "dev",
+  component: "backstage",
 });
 ```
 
@@ -448,6 +470,7 @@ analytics.track('service_created', {
 Navigate to Unleash UI:
 
 > "Now let's look at feature flags with Unleash. Feature flags let us:
+>
 > - Roll out new features gradually
 > - A/B test different approaches
 > - Kill switch problematic features instantly
@@ -456,11 +479,13 @@ Navigate to Unleash UI:
 > Here in the Unleash UI, you see our current feature flags. Let me show you one: 'new-dashboard-ui'
 >
 > **Strategy**: Gradual Rollout
+>
 > - Currently at 50% rollout
 > - Started at 10%, monitored metrics, increased to 25%, 50%
 > - Planning to go to 100% next week if metrics look good
 >
 > **Metrics**: In the last hour:
+>
 > - 1,500 users saw the new dashboard
 > - 500 users saw the old dashboard
 > - We're tracking satisfaction scores for both groups
@@ -474,10 +499,10 @@ Show code example:
 > "In code, we use the OpenFeature SDK, which is vendor-neutral:
 
 ```javascript
-import { OpenFeature } from '@openfeature/sdk';
+import { OpenFeature } from "@openfeature/sdk";
 
 const client = OpenFeature.getClient();
-const useNewDashboard = await client.getBooleanValue('new-dashboard-ui', false);
+const useNewDashboard = await client.getBooleanValue("new-dashboard-ui", false);
 
 if (useNewDashboard) {
   return <NewDashboard />;
@@ -501,21 +526,25 @@ Show discovery workflow diagram or calendar:
 > **Our Weekly Cadence**:
 >
 > **Monday**: Planning & Synthesis
+>
 > - Review last week's feedback, metrics, and research findings
 > - Identify patterns and update journey maps
 > - Prioritize opportunities for the week
 >
 > **Tuesday-Wednesday**: Exploration
+>
 > - Conduct 1-2 user interviews
 > - Run usability tests on prototypes
 > - Gather feedback on new features
 >
 > **Thursday**: Validation
+>
 > - Review A/B test results from feature flags
 > - Analyze product analytics data
 > - Quick pulse surveys if needed
 >
 > **Friday**: Documentation & Planning
+>
 > - Update research repository
 > - Share insights in Mattermost #product-discovery
 > - Plan next week's research activities"
@@ -525,12 +554,14 @@ Show discovery workflow diagram or calendar:
 Show advisory board documentation:
 
 > "We also have a Customer Advisory Board that meets quarterly. This is a group of 10-12 power users who:
+>
 > - Provide strategic feedback on our roadmap
 > - Participate in early access programs
 > - Act as evangelists for the platform
 > - Give us direct access to developer needs
 >
 > We documented our advisory board setup in `docs/how-to/run-advisory-board-meetings.md` including:
+>
 > - How to recruit members
 > - Meeting agenda templates
 > - How to synthesize feedback
@@ -581,6 +612,7 @@ Show example of insight → feature:
 **[29:30-30:00] Call to Action & Resources**
 
 > "All of this is documented in our Epic 3 docs:
+>
 > - Operations runbook for maintaining these systems
 > - API reference for integrating with them
 > - Architecture diagrams showing how it all fits together

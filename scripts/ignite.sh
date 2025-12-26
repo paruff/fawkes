@@ -67,7 +67,7 @@ SKIP_CLUSTER=0
 DRY_RUN=0
 RESUME=0
 VERBOSE=0
-SHOW_ACCESS_ONLY=0  # Add this line
+SHOW_ACCESS_ONLY=0 # Add this line
 ENV=""
 
 # State tracking (for --resume)
@@ -80,10 +80,10 @@ context_id() {
   local env_part="${ENV:-unknown}"
   local prov_part="${PROVIDER:-none}"
   local name_part="${CLUSTER_NAME:-}" \
-        reg_part="${REGION:-}" \
-        loc_part="${LOCATION:-}"
+    reg_part="${REGION:-}" \
+    loc_part="${LOCATION:-}"
   if [[ -z "$name_part" ]]; then
-    name_part="$(kubectl config current-context 2>/dev/null || echo unknown)"
+    name_part="$(kubectl config current-context 2> /dev/null || echo unknown)"
   fi
   local key="${env_part}:${prov_part}:${name_part}:${reg_part}:${loc_part}"
   echo "${key// /_}"
@@ -110,7 +110,7 @@ state_clear_context() {
 
 state_is_done() {
   local step="$1" ctx="$CONTEXT_ID"
-  jq -e --arg ctx "$ctx" --arg step "$step" '.runs[$ctx].steps[$step].status == "done"' "$STATE_FILE" >/dev/null 2>&1
+  jq -e --arg ctx "$ctx" --arg step "$step" '.runs[$ctx].steps[$step].status == "done"' "$STATE_FILE" > /dev/null 2>&1
 }
 
 state_mark_done() {
@@ -124,8 +124,10 @@ state_mark_done() {
 }
 
 run_step() {
-  local step_name="$1"; shift
-  local fn="$1"; shift || true
+  local step_name="$1"
+  shift
+  local fn="$1"
+  shift || true
   if [[ $RESUME -eq 1 ]] && state_is_done "$step_name"; then
     echo "⏭️  Skipping step '$step_name' (resume)"
     return 0
@@ -142,7 +144,10 @@ run_step() {
   fi
 }
 
-function error_exit { echo "[ERROR] $1"; exit 1; }
+function error_exit {
+  echo "[ERROR] $1"
+  exit 1
+}
 
 # ----------------------------- Phase: Cleanup ------------------------------
 cleanup_resources() {
@@ -152,19 +157,20 @@ cleanup_resources() {
   kubectl delete namespace jenkins --wait --ignore-not-found || true
 
   echo "🧹 Cleaning up Argo CD cluster-scoped resources (may be absent)..."
-  CRDS=$(kubectl get crd -o name 2>/dev/null | grep -E 'argoproj.io' || true)
+  CRDS=$(kubectl get crd -o name 2> /dev/null | grep -E 'argoproj.io' || true)
   if [[ -n "$CRDS" ]]; then
     echo "$CRDS" | xargs kubectl delete --wait --ignore-not-found || true
   fi
-  CROLES=$(kubectl get clusterrole -o name 2>/dev/null | grep -E '^clusterrole/argocd' || true)
+  CROLES=$(kubectl get clusterrole -o name 2> /dev/null | grep -E '^clusterrole/argocd' || true)
   if [[ -n "$CROLES" ]]; then
     echo "$CROLES" | xargs kubectl delete --wait --ignore-not-found || true
   fi
-  CRBINDINGS=$(kubectl get clusterrolebinding -o name 2>/dev/null | grep -E '^clusterrolebinding/argocd' || true)
+  CRBINDINGS=$(kubectl get clusterrolebinding -o name 2> /dev/null | grep -E '^clusterrolebinding/argocd' || true)
   if [[ -n "$CRBINDINGS" ]]; then
     echo "$CRBINDINGS" | xargs kubectl delete --wait --ignore-not-found || true
   fi
-  echo "✅ Cleanup complete."; }
+  echo "✅ Cleanup complete."
+}
 
 # Determine sensible minikube resource settings
 function compute_minikube_resources() {
@@ -176,9 +182,9 @@ function compute_minikube_resources() {
 
   if [[ -z "$mem_mb" ]]; then
     # Try to detect Docker Desktop memory and choose a safe value
-    if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+    if command -v docker > /dev/null 2>&1 && docker info > /dev/null 2>&1; then
       local total_line total_val unit
-      total_line=$(docker info 2>/dev/null | awk -F': ' '/Total Memory/ {print $2; exit}')
+      total_line=$(docker info 2> /dev/null | awk -F': ' '/Total Memory/ {print $2; exit}')
       if [[ -n "$total_line" ]]; then
         # Examples: "7.75GiB" or "15360MiB"
         if [[ "$total_line" =~ ^([0-9]+\.[0-9]+|[0-9]+)GiB$ ]]; then
@@ -190,8 +196,8 @@ function compute_minikube_resources() {
         fi
         if [[ -n "${mem_mb}" ]]; then
           # Leave 256MB headroom and cap by default_mem
-          local safe_mb=$(( mem_mb > 256 ? mem_mb - 256 : mem_mb ))
-          if (( safe_mb >= default_mem )); then
+          local safe_mb=$((mem_mb > 256 ? mem_mb - 256 : mem_mb))
+          if ((safe_mb >= default_mem)); then
             mem_mb=$default_mem
           else
             mem_mb=$safe_mb
@@ -220,8 +226,8 @@ function detect_minikube_arch() {
   local m
   m=$(uname -m)
   case "$m" in
-    arm64|aarch64) echo "arm64" ;;
-    x86_64|amd64) echo "amd64" ;;
+    arm64 | aarch64) echo "arm64" ;;
+    x86_64 | amd64) echo "amd64" ;;
     *) echo "amd64" ;;
   esac
 }
@@ -236,35 +242,42 @@ function choose_minikube_driver() {
   local os="$(uname -s)"
   if [[ "$os" == "Darwin" ]]; then
     # Prefer Docker if daemon is healthy
-    if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
-      echo "docker"; return 0
+    if command -v docker > /dev/null 2>&1 && docker info > /dev/null 2>&1; then
+      echo "docker"
+      return 0
     fi
     # Prefer vfkit (Apple Virtualization Framework) if minikube supports it
-    if minikube start --help 2>/dev/null | grep -q "vfkit"; then
-      echo "vfkit"; return 0
+    if minikube start --help 2> /dev/null | grep -q "vfkit"; then
+      echo "vfkit"
+      return 0
     fi
     # Fallback to qemu if available
-    if command -v qemu-system-x86_64 >/dev/null 2>&1 || command -v qemu-system-aarch64 >/dev/null 2>&1; then
-      echo "qemu"; return 0
+    if command -v qemu-system-x86_64 > /dev/null 2>&1 || command -v qemu-system-aarch64 > /dev/null 2>&1; then
+      echo "qemu"
+      return 0
     fi
     # As a last resort use docker even if not yet ready (script will attempt to start Desktop)
-    echo "docker"; return 0
+    echo "docker"
+    return 0
   else
     # Non-macOS: prefer docker, else kvm2/qemu, else auto
-    if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
-      echo "docker"; return 0
+    if command -v docker > /dev/null 2>&1 && docker info > /dev/null 2>&1; then
+      echo "docker"
+      return 0
     fi
-    if command -v qemu-system-x86_64 >/dev/null 2>&1; then
-      echo "qemu"; return 0
+    if command -v qemu-system-x86_64 > /dev/null 2>&1; then
+      echo "qemu"
+      return 0
     fi
-    echo "auto"; return 0
+    echo "auto"
+    return 0
   fi
 }
 
 # Try to find and use an existing local Kubernetes context (docker-desktop, minikube, kind-*, rancher-desktop, colima)
 function use_first_reachable_local_context() {
   local contexts
-  contexts=$(kubectl config get-contexts -o name 2>/dev/null || true)
+  contexts=$(kubectl config get-contexts -o name 2> /dev/null || true)
   if [[ -z "$contexts" ]]; then return 1; fi
   local -a candidates=()
   if [[ $PREFER_MINIKUBE -eq 1 ]]; then
@@ -283,12 +296,12 @@ function use_first_reachable_local_context() {
 
   local ctx
   for ctx in "${candidates[@]}"; do
-    if kubectl --context "$ctx" cluster-info >/dev/null 2>&1; then
+    if kubectl --context "$ctx" cluster-info > /dev/null 2>&1; then
       if [[ $DRY_RUN -eq 1 ]]; then
         echo "[DRY-RUN] Would use local Kubernetes context '$ctx'"
         return 0
       fi
-      kubectl config use-context "$ctx" >/dev/null 2>&1 || true
+      kubectl config use-context "$ctx" > /dev/null 2>&1 || true
       echo "Using local Kubernetes context '$ctx'."
       return 0
     fi
@@ -301,19 +314,19 @@ function driver_extra_args() {
   local driver="$1"
   local -a args=()
   # Only add --arch if supported by current minikube
-  if minikube start --help 2>/dev/null | grep -q -- "--arch"; then
+  if minikube start --help 2> /dev/null | grep -q -- "--arch"; then
     local arch
     arch=$(detect_minikube_arch)
     args+=("--arch=${arch}")
   fi
   if [[ "$driver" == "qemu" ]]; then
-    if command -v socket_vmnet >/dev/null 2>&1; then
+    if command -v socket_vmnet > /dev/null 2>&1; then
       args+=("--network=socket_vmnet")
     else
       echo "[WARN] QEMU running without socket_vmnet; minikube service/tunnel may not work." >&2
     fi
   fi
-  if (( ${#args[@]} > 0 )); then
+  if ((${#args[@]} > 0)); then
     printf "%s " "${args[@]}"
   fi
 }
@@ -356,68 +369,96 @@ parse_flags() {
   while [[ $i -lt ${#argv[@]} ]]; do
     local arg="${argv[$i]}"
     case "$arg" in
-      --provider|-p)
-        local next_index=$((i+1))
+      --provider | -p)
+        local next_index=$((i + 1))
         if [[ $next_index -ge ${#argv[@]} ]]; then
           error_exit "--provider requires a value: local|aws|azure|gcp"
         fi
         PROVIDER="${argv[$next_index]}"
-        i=$((i+2))
+        i=$((i + 2))
         continue
         ;;
-      --cluster-name|-n)
-        local next_index=$((i+1))
+      --cluster-name | -n)
+        local next_index=$((i + 1))
         if [[ $next_index -ge ${#argv[@]} ]]; then
           error_exit "--cluster-name requires a value"
         fi
         CLUSTER_NAME="${argv[$next_index]}"
-        i=$((i+2))
+        i=$((i + 2))
         continue
         ;;
-      --region|-r)
-        local next_index=$((i+1))
+      --region | -r)
+        local next_index=$((i + 1))
         if [[ $next_index -ge ${#argv[@]} ]]; then
           error_exit "--region requires a value"
         fi
         REGION="${argv[$next_index]}"
-        i=$((i+2))
+        i=$((i + 2))
         continue
         ;;
       --location)
-        local next_index=$((i+1))
+        local next_index=$((i + 1))
         if [[ $next_index -ge ${#argv[@]} ]]; then
           error_exit "--location requires a value"
         fi
         LOCATION="${argv[$next_index]}"
-        i=$((i+2))
+        i=$((i + 2))
         continue
         ;;
       --only-cluster)
-        ONLY_CLUSTER=1; i=$((i+1)); continue ;;
+        ONLY_CLUSTER=1
+        i=$((i + 1))
+        continue
+        ;;
       --only-apps)
-        ONLY_APPS=1; i=$((i+1)); continue ;;
+        ONLY_APPS=1
+        i=$((i + 1))
+        continue
+        ;;
       --skip-cluster)
-        SKIP_CLUSTER=1; i=$((i+1)); continue ;;
+        SKIP_CLUSTER=1
+        i=$((i + 1))
+        continue
+        ;;
       --dry-run)
-        DRY_RUN=1; i=$((i+1)); continue ;;
+        DRY_RUN=1
+        i=$((i + 1))
+        continue
+        ;;
       --resume)
-        RESUME=1; i=$((i+1)); continue ;;
-      --verbose|-v)
-        VERBOSE=1; i=$((i+1)); continue ;;
+        RESUME=1
+        i=$((i + 1))
+        continue
+        ;;
+      --verbose | -v)
+        VERBOSE=1
+        i=$((i + 1))
+        continue
+        ;;
       --prefer-minikube)
-        PREFER_MINIKUBE=1; i=$((i+1)); continue ;;
+        PREFER_MINIKUBE=1
+        i=$((i + 1))
+        continue
+        ;;
       --prefer-docker-desktop)
-        PREFER_DOCKER=1; i=$((i+1)); continue ;;
+        PREFER_DOCKER=1
+        i=$((i + 1))
+        continue
+        ;;
       --access)
-        SHOW_ACCESS_ONLY=1; i=$((i+1)); continue ;;  # Add this case
-      --help|-h)
-        usage ;;
+        SHOW_ACCESS_ONLY=1
+        i=$((i + 1))
+        continue
+        ;; # Add this case
+      --help | -h)
+        usage
+        ;;
       *)
         # First non-flag positional becomes ENV (environment)
         if [[ ! "$arg" =~ ^- && -z "$ENV" && "$arg" != "clean" && "$arg" != "cleanup" ]]; then
           ENV="$arg"
         fi
-        i=$((i+1))
+        i=$((i + 1))
         ;;
     esac
   done
@@ -434,7 +475,7 @@ parse_flags() {
   fi
 
   # Validate mutually exclusive flags
-  if [[ $ONLY_CLUSTER -eq 1 && ( $ONLY_APPS -eq 1 || $SKIP_CLUSTER -eq 1 ) ]]; then
+  if [[ $ONLY_CLUSTER -eq 1 && ($ONLY_APPS -eq 1 || $SKIP_CLUSTER -eq 1) ]]; then
     error_exit "--only-cluster cannot be combined with --only-apps/--skip-cluster"
   fi
   if [[ ${PREFER_MINIKUBE:-0} -eq 1 && ${PREFER_DOCKER:-0} -eq 1 ]]; then
@@ -450,7 +491,7 @@ check_prereqs() {
       echo "Some required tools are missing in your environment."
       echo "You can enter the Nix dev shell to get a reproducible environment:"
       echo "  ./scripts/tools.sh shell"
-      if command -v bash >/dev/null 2>&1 && [[ -f "$(dirname "${BASH_SOURCE[0]}")/tools-install.sh" || -f "$(dirname "${BASH_SOURCE[0]}")/brew-install.sh" ]]; then
+      if command -v bash > /dev/null 2>&1 && [[ -f "$(dirname "${BASH_SOURCE[0]}")/tools-install.sh" || -f "$(dirname "${BASH_SOURCE[0]}")/brew-install.sh" ]]; then
         AUTO_INSTALL=0
         if [[ "${AUTO_INSTALL:-}" == "1" || "${AUTO_INSTALL:-}" == "true" || "${2:-}" == "--auto-install" ]]; then
           AUTO_INSTALL=1
@@ -490,7 +531,7 @@ check_prereqs() {
     echo "✅ All required tools are available."
   else
     for tool in kubectl jq base64 terraform; do
-      if ! command -v $tool &>/dev/null; then
+      if ! command -v $tool &> /dev/null; then
         error_exit "$tool is required but not installed. Please install $tool and try again."
       fi
     done
@@ -523,10 +564,10 @@ provision_cluster() {
   fi
   echo "🔍 Checking available Kubernetes contexts..."
   kubectl config get-contexts || true
-  ACTIVE_CONTEXT=$(kubectl config current-context 2>/dev/null || echo "")
+  ACTIVE_CONTEXT=$(kubectl config current-context 2> /dev/null || echo "")
   if [[ -n "$ACTIVE_CONTEXT" ]]; then
     echo "Current active context: $ACTIVE_CONTEXT"
-    if kubectl cluster-info &>/dev/null; then
+    if kubectl cluster-info &> /dev/null; then
       read -p "Do you want to use the current context '$ACTIVE_CONTEXT'? [y/N]: " USE_CURRENT
       if [[ ! "$USE_CURRENT" =~ ^[Yy]$ ]]; then
         error_exit "Aborted by user."
@@ -556,7 +597,7 @@ provision_local_cluster() {
     return 0
   fi
 
-  if ! command -v minikube >/dev/null 2>&1; then
+  if ! command -v minikube > /dev/null 2>&1; then
     error_exit "minikube not installed and Docker Desktop K8s not reachable; install minikube or enable Docker Desktop Kubernetes."
   fi
   echo "Provisioning local cluster via minikube..."
@@ -565,15 +606,15 @@ provision_local_cluster() {
     return 0
   fi
   DRIVER="$(choose_minikube_driver)"
-  if command -v docker >/dev/null 2>&1 && ! docker info >/dev/null 2>&1 && [[ "$(uname -s)" == "Darwin" ]]; then
+  if command -v docker > /dev/null 2>&1 && ! docker info > /dev/null 2>&1 && [[ "$(uname -s)" == "Darwin" ]]; then
     echo "Docker CLI found but daemon is not running. Attempting to start Docker Desktop..."
     open -a Docker || true
     echo "Waiting for Docker engine to become ready (up to 90s)..."
     end=$((SECONDS + 90))
-    until docker info >/dev/null 2>&1 || [[ ${SECONDS} -ge ${end} ]]; do sleep 3; done
-    if docker info >/dev/null 2>&1; then echo "Docker engine is ready."; else echo "Docker engine not ready; will try other drivers."; fi
+    until docker info > /dev/null 2>&1 || [[ ${SECONDS} -ge ${end} ]]; do sleep 3; done
+    if docker info > /dev/null 2>&1; then echo "Docker engine is ready."; else echo "Docker engine not ready; will try other drivers."; fi
   fi
-  if [[ "$DRIVER" == "docker" ]] && { ! command -v docker >/dev/null 2>&1 || ! docker info >/dev/null 2>&1; }; then
+  if [[ "$DRIVER" == "docker" ]] && { ! command -v docker > /dev/null 2>&1 || ! docker info > /dev/null 2>&1; }; then
     echo "Docker driver selected but daemon not running; attempting anyway."
   fi
   read MEM CPUS < <(compute_minikube_resources)
@@ -591,12 +632,12 @@ tf_apply_dir() {
     error_exit "Terraform directory not found: $dir"
   fi
   echo "🚀 Running Terraform in $dir"
-  pushd "$dir" >/dev/null
+  pushd "$dir" > /dev/null
 
   # Ensure Azure subscription and tenant env vars are set from az CLI context if available
-  if command -v az >/dev/null 2>&1; then
+  if command -v az > /dev/null 2>&1; then
     # Verify Azure CLI is logged in before proceeding
-    if ! az account show >/dev/null 2>&1; then
+    if ! az account show > /dev/null 2>&1; then
       echo "[ERROR] Azure CLI is not logged in"
       echo "[ACTION] Running: az login"
       if ! az login; then
@@ -604,8 +645,8 @@ tf_apply_dir() {
       fi
     fi
 
-    export ARM_SUBSCRIPTION_ID="${ARM_SUBSCRIPTION_ID:-$(az account show --query id -o tsv 2>/dev/null || true)}"
-    export ARM_TENANT_ID="${ARM_TENANT_ID:-$(az account show --query tenantId -o tsv 2>/dev/null || true)}"
+    export ARM_SUBSCRIPTION_ID="${ARM_SUBSCRIPTION_ID:-$(az account show --query id -o tsv 2> /dev/null || true)}"
+    export ARM_TENANT_ID="${ARM_TENANT_ID:-$(az account show --query tenantId -o tsv 2> /dev/null || true)}"
 
     echo "✅ Using Azure subscription: ${ARM_SUBSCRIPTION_ID}"
   fi
@@ -613,14 +654,14 @@ tf_apply_dir() {
   terraform init -upgrade -input=false 2>&1 | tee terraform.log
 
   # Attempt to import existing AKS user node pool into state to avoid conflicts
-  if command -v az >/dev/null 2>&1; then
+  if command -v az > /dev/null 2>&1; then
     local rg="${TF_VAR_resource_group_name:-fawkes-rg}"
     local cluster="${TF_VAR_cluster_name:-fawkes-dev}"
     local pool_name="user"
-    if az aks nodepool show -g "$rg" --cluster-name "$cluster" -n "$pool_name" >/dev/null 2>&1; then
+    if az aks nodepool show -g "$rg" --cluster-name "$cluster" -n "$pool_name" > /dev/null 2>&1; then
       echo "🔗 Importing existing AKS node pool '$pool_name' into Terraform state"
       terraform import -input=false azurerm_kubernetes_cluster_node_pool.user \
-"/subscriptions/${ARM_SUBSCRIPTION_ID}/resourceGroups/${rg}/providers/Microsoft.ContainerService/managedClusters/${cluster}/agentPools/${pool_name}" \
+        "/subscriptions/${ARM_SUBSCRIPTION_ID}/resourceGroups/${rg}/providers/Microsoft.ContainerService/managedClusters/${cluster}/agentPools/${pool_name}" \
         2>&1 | tee -a terraform.log || true
     fi
   fi
@@ -634,7 +675,7 @@ tf_apply_dir() {
     terraform apply -input=false plan.tfplan 2>&1 | tee -a terraform.log
     rc=${PIPESTATUS[0]}
   fi
-  popd >/dev/null
+  popd > /dev/null
 
   if [[ $rc -ne 0 ]]; then
     error_exit "Terraform apply failed for $dir; see $dir/terraform.log"
@@ -646,10 +687,10 @@ tf_apply_dir() {
   rg_name="${TF_VAR_resource_group_name:-fawkes-rg}"
   cluster_name="${TF_VAR_cluster_name:-fawkes-dev}"
 
-  tfjson=$(cd "$dir" && terraform output -json 2>/dev/null || true)
+  tfjson=$(cd "$dir" && terraform output -json 2> /dev/null || true)
 
   if [[ -n "$tfjson" ]]; then
-    kubeconfig_path=$(echo "$tfjson" | jq -r '.kubeconfig_path.value // empty' 2>/dev/null || true)
+    kubeconfig_path=$(echo "$tfjson" | jq -r '.kubeconfig_path.value // empty' 2> /dev/null || true)
     if [[ -n "$kubeconfig_path" ]]; then
       # Make path absolute if relative
       if [[ "$kubeconfig_path" != /* ]]; then
@@ -662,13 +703,13 @@ tf_apply_dir() {
   fi
 
   # For Azure, always refresh credentials
-  if [[ "$PROVIDER" == "azure" ]] && command -v az >/dev/null 2>&1; then
+  if [[ "$PROVIDER" == "azure" ]] && command -v az > /dev/null 2>&1; then
     echo "🔄 Refreshing AKS credentials..."
 
     # Verify cluster exists and is running
     echo "🔍 Checking AKS cluster status..."
     local cluster_state cluster_info
-    cluster_info=$(az aks show -g "$rg_name" -n "$cluster_name" --query '{state:provisioningState,azureRbac:aadProfile.enableAzureRbac}' -o json 2>/dev/null || echo '{}')
+    cluster_info=$(az aks show -g "$rg_name" -n "$cluster_name" --query '{state:provisioningState,azureRbac:aadProfile.enableAzureRbac}' -o json 2> /dev/null || echo '{}')
     cluster_state=$(echo "$cluster_info" | jq -r '.state // "Unknown"')
     local azure_rbac_enabled
     azure_rbac_enabled=$(echo "$cluster_info" | jq -r '.azureRbac // false')
@@ -681,9 +722,9 @@ tf_apply_dir() {
 
     # Clean up old cluster contexts before adding new credentials
     echo "🧹 Removing old cluster contexts..."
-    kubectl config delete-context "$cluster_name" 2>/dev/null || true
-    kubectl config delete-cluster "$cluster_name" 2>/dev/null || true
-    kubectl config unset "users.clusterUser_${rg_name}_${cluster_name}" 2>/dev/null || true
+    kubectl config delete-context "$cluster_name" 2> /dev/null || true
+    kubectl config delete-cluster "$cluster_name" 2> /dev/null || true
+    kubectl config unset "users.clusterUser_${rg_name}_${cluster_name}" 2> /dev/null || true
 
     # Check if Azure RBAC is enabled
     if [[ "$azure_rbac_enabled" == "true" ]]; then
@@ -691,8 +732,8 @@ tf_apply_dir() {
 
       # Get user info
       local user_oid user_email
-      user_oid=$(az ad signed-in-user show --query id -o tsv 2>/dev/null || echo "")
-      user_email=$(az ad signed-in-user show --query userPrincipalName -o tsv 2>/dev/null || echo "unknown")
+      user_oid=$(az ad signed-in-user show --query id -o tsv 2> /dev/null || echo "")
+      user_email=$(az ad signed-in-user show --query userPrincipalName -o tsv 2> /dev/null || echo "unknown")
 
       if [[ -n "$user_oid" ]]; then
         echo "👤 Current user: $user_email (OID: $user_oid)"
@@ -704,7 +745,7 @@ tf_apply_dir() {
           --assignee "$user_oid" \
           --scope "/subscriptions/${ARM_SUBSCRIPTION_ID}/resourceGroups/${rg_name}/providers/Microsoft.ContainerService/managedClusters/${cluster_name}" \
           --query "[?roleDefinitionName=='Azure Kubernetes Service RBAC Cluster Admin'].roleDefinitionName" \
-          -o tsv 2>/dev/null || echo "")
+          -o tsv 2> /dev/null || echo "")
 
         if [[ -z "$has_admin_role" ]]; then
           echo "⚠️  User does not have cluster admin role yet"
@@ -714,7 +755,7 @@ tf_apply_dir() {
             --role "Azure Kubernetes Service RBAC Cluster Admin" \
             --assignee "$user_oid" \
             --scope "/subscriptions/${ARM_SUBSCRIPTION_ID}/resourceGroups/${rg_name}/providers/Microsoft.ContainerService/managedClusters/${cluster_name}" \
-            >/dev/null 2>&1; then
+            > /dev/null 2>&1; then
             echo "✅ Cluster admin role granted"
           else
             echo "⚠️  Role may already exist or creation failed (continuing anyway)"
@@ -738,7 +779,7 @@ tf_apply_dir() {
       --file "${KUBECONFIG:-$HOME/.kube/config}"
 
     # Install kubelogin if needed
-    if ! command -v kubelogin >/dev/null 2>&1; then
+    if ! command -v kubelogin > /dev/null 2>&1; then
       install_kubelogin || {
         echo "[ERROR] kubelogin installation failed"
         return 1
@@ -763,7 +804,7 @@ tf_apply_dir() {
     while [[ $attempt -le $max_attempts ]]; do
       echo "   Attempt $attempt/$max_attempts..."
 
-      if kubectl get nodes >/dev/null 2>&1; then
+      if kubectl get nodes > /dev/null 2>&1; then
         echo "✅ kubectl connectivity verified"
         kubectl get nodes -o wide
         connected=1
@@ -816,7 +857,7 @@ tf_apply_dir() {
 
 # Install kubelogin for AKS authentication (Azure-specific)
 install_kubelogin() {
-  if command -v kubelogin >/dev/null 2>&1; then
+  if command -v kubelogin > /dev/null 2>&1; then
     echo "✅ kubelogin already installed"
     return 0
   fi
@@ -825,7 +866,7 @@ install_kubelogin() {
 
   if [[ "$(uname -s)" == "Darwin" ]]; then
     # macOS: Use Homebrew
-    if command -v brew >/dev/null 2>&1; then
+    if command -v brew > /dev/null 2>&1; then
       echo "Installing kubelogin via Homebrew..."
       brew install Azure/kubelogin/kubelogin || {
         echo "[WARN] Homebrew install failed, trying direct download..."
@@ -838,7 +879,7 @@ install_kubelogin() {
     install_kubelogin_binary
   fi
 
-  if command -v kubelogin >/dev/null 2>&1; then
+  if command -v kubelogin > /dev/null 2>&1; then
     echo "✅ kubelogin installed successfully"
     return 0
   else
@@ -854,7 +895,7 @@ install_kubelogin_binary() {
 
   case "$arch" in
     x86_64) arch="amd64" ;;
-    aarch64|arm64) arch="arm64" ;;
+    aarch64 | arm64) arch="arm64" ;;
   esac
 
   # Get latest version from GitHub
@@ -864,7 +905,7 @@ install_kubelogin_binary() {
   url="https://github.com/Azure/kubelogin/releases/download/${version}/kubelogin-${os}-${arch}.zip"
 
   # Try user-writable directory first
-  if [[ -w "${HOME}/.local/bin" ]] || mkdir -p "${HOME}/.local/bin" 2>/dev/null; then
+  if [[ -w "${HOME}/.local/bin" ]] || mkdir -p "${HOME}/.local/bin" 2> /dev/null; then
     install_dir="${HOME}/.local/bin"
   elif [[ -w "/usr/local/bin" ]]; then
     install_dir="/usr/local/bin"
@@ -906,11 +947,11 @@ tf_destroy_dir() {
     error_exit "Terraform directory not found: $dir"
   fi
   echo "🗑️  Destroying Terraform in $dir"
-  pushd "$dir" >/dev/null
+  pushd "$dir" > /dev/null
   # Ensure Azure subscription and tenant env vars are set from az CLI context if available
-  if command -v az >/dev/null 2>&1; then
-    export ARM_SUBSCRIPTION_ID="${ARM_SUBSCRIPTION_ID:-$(az account show --query id -o tsv 2>/dev/null || true)}"
-    export ARM_TENANT_ID="${ARM_TENANT_ID:-$(az account show --query tenantId -o tsv 2>/dev/null || true)}"
+  if command -v az > /dev/null 2>&1; then
+    export ARM_SUBSCRIPTION_ID="${ARM_SUBSCRIPTION_ID:-$(az account show --query id -o tsv 2> /dev/null || true)}"
+    export ARM_TENANT_ID="${ARM_TENANT_ID:-$(az account show --query tenantId -o tsv 2> /dev/null || true)}"
   fi
   terraform init -upgrade -input=false 2>&1 | tee terraform.log
   local rc=0
@@ -920,7 +961,7 @@ tf_destroy_dir() {
     terraform destroy -auto-approve -input=false 2>&1 | tee -a terraform.log
     rc=${PIPESTATUS[0]}
   fi
-  popd >/dev/null
+  popd > /dev/null
   if [[ $rc -ne 0 ]]; then
     error_exit "Terraform destroy failed for $dir; see $dir/terraform.log"
   fi
@@ -929,13 +970,13 @@ tf_destroy_dir() {
 try_set_kubeconfig_from_tf_outputs() {
   local dir="$1"
   local out_json
-  pushd "$dir" >/dev/null
-  if ! out_json=$(terraform output -json 2>/dev/null); then
-    popd >/dev/null
+  pushd "$dir" > /dev/null
+  if ! out_json=$(terraform output -json 2> /dev/null); then
+    popd > /dev/null
     echo "[WARN] No Terraform outputs available in $dir; leaving KUBECONFIG unchanged." >&2
     return 0
   fi
-  popd >/dev/null
+  popd > /dev/null
   # Try kubeconfig_path first
   local path
   path=$(echo "$out_json" | jq -r 'try .kubeconfig_path.value // empty')
@@ -966,7 +1007,7 @@ provision_aws_cluster() {
   dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../infra/aws" && pwd)"
   tf_apply_dir "$dir"
   try_set_kubeconfig_from_tf_outputs "$dir"
-  if [[ $DRY_RUN -eq 0 ]] && ! kubectl cluster-info &>/dev/null; then
+  if [[ $DRY_RUN -eq 0 ]] && ! kubectl cluster-info &> /dev/null; then
     error_exit "Cluster not reachable after AWS Terraform apply. Ensure your AWS creds and outputs provide kubeconfig."
   fi
 }
@@ -980,7 +1021,7 @@ provision_azure_cluster() {
   if [[ -n "$CLUSTER_NAME" ]]; then export TF_VAR_cluster_name="$CLUSTER_NAME"; fi
   tf_apply_dir "$dir"
   try_set_kubeconfig_from_tf_outputs "$dir"
-  if [[ $DRY_RUN -eq 0 ]] && ! kubectl cluster-info &>/dev/null; then
+  if [[ $DRY_RUN -eq 0 ]] && ! kubectl cluster-info &> /dev/null; then
     error_exit "Cluster not reachable after Azure Terraform apply. Ensure your Azure creds and outputs provide kubeconfig."
   fi
 }
@@ -1010,7 +1051,7 @@ destroy_azure_cluster() {
 destroy_gcp_cluster() {
   echo "🔧 Provider=gcp selected. Destroying Terraform under infra/gcp..."
   local dir
-  dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../infra/gcp" 2>/dev/null || true)"
+  dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../infra/gcp" 2> /dev/null || true)"
   if [[ -z "$dir" || ! -d "$dir" ]]; then
     error_exit "infra/gcp not found yet. GCP provisioning not implemented."
   fi
@@ -1020,13 +1061,13 @@ destroy_gcp_cluster() {
 provision_gcp_cluster() {
   echo "🔧 Provider=gcp selected. Applying Terraform under infra/gcp..."
   local dir
-  dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../infra/gcp" 2>/dev/null || true)"
+  dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../infra/gcp" 2> /dev/null || true)"
   if [[ -z "$dir" || ! -d "$dir" ]]; then
     error_exit "infra/gcp not found yet. GCP provisioning not implemented."
   fi
   tf_apply_dir "$dir"
   try_set_kubeconfig_from_tf_outputs "$dir"
-  if [[ $DRY_RUN -eq 0 ]] && ! kubectl cluster-info &>/dev/null; then
+  if [[ $DRY_RUN -eq 0 ]] && ! kubectl cluster-info &> /dev/null; then
     error_exit "Cluster not reachable after GCP Terraform apply. Ensure your GCP creds and outputs provide kubeconfig."
   fi
 }
@@ -1035,15 +1076,15 @@ provision_gcp_cluster() {
 validate_cluster() {
   echo "🔎 Validating Kubernetes cluster health..."
   # API reachability
-  if ! kubectl cluster-info >/dev/null 2>&1; then
-    error_exit "Kubernetes API is not reachable with current context '$(kubectl config current-context 2>/dev/null || echo unknown)'."
+  if ! kubectl cluster-info > /dev/null 2>&1; then
+    error_exit "Kubernetes API is not reachable with current context '$(kubectl config current-context 2> /dev/null || echo unknown)'."
   fi
 
   # Node readiness (wait up to 120s for at least one Ready node)
   local ready=0
   local end=$((SECONDS + 120))
   while [[ ${SECONDS} -lt ${end} ]]; do
-    ready=$(kubectl get nodes -o json 2>/dev/null | jq -r '[.items[].status.conditions[] | select(.type=="Ready") | .status=="True"] | map(select(.==true)) | length' 2>/dev/null || echo 0)
+    ready=$(kubectl get nodes -o json 2> /dev/null | jq -r '[.items[].status.conditions[] | select(.type=="Ready") | .status=="True"] | map(select(.==true)) | length' 2> /dev/null || echo 0)
     if [[ -n "$ready" && $ready -ge 1 ]]; then
       break
     fi
@@ -1056,11 +1097,14 @@ validate_cluster() {
   echo "✅ Nodes Ready: ${ready}"
 
   # StorageClass existence and default
-  if ! kubectl get storageclass >/dev/null 2>&1; then
+  if ! kubectl get storageclass > /dev/null 2>&1; then
     error_exit "No StorageClass resources found. Configure a default StorageClass for dynamic provisioning."
   fi
   local has_default
-  has_default=$(kubectl get storageclass -o json | jq -e '[.items[] | .metadata.annotations["storageclass.kubernetes.io/is-default-class"]=="true" or .metadata.annotations["storageclass.beta.kubernetes.io/is-default-class"]=="true"] | any' >/dev/null 2>&1; echo $?)
+  has_default=$(
+    kubectl get storageclass -o json | jq -e '[.items[] | .metadata.annotations["storageclass.kubernetes.io/is-default-class"]=="true" or .metadata.annotations["storageclass.beta.kubernetes.io/is-default-class"]=="true"] | any' > /dev/null 2>&1
+    echo $?
+  )
   if [[ "$has_default" != "0" ]]; then
     echo "[WARN] No default StorageClass detected. Some workloads may fail to provision PersistentVolumes."
     echo "       Tip (minikube): minikube addons enable storage-provisioner default-storageclass"
@@ -1077,8 +1121,8 @@ validate_cluster() {
 maybe_cleanup_argocd_cluster_resources() {
   set +e
   if [[ "$ENV" != "local" ]]; then return 0; fi
-  if kubectl get clusterrole argocd-application-controller >/dev/null 2>&1 || \
-     kubectl get crd applications.argoproj.io >/dev/null 2>&1; then
+  if kubectl get clusterrole argocd-application-controller > /dev/null 2>&1 \
+    || kubectl get crd applications.argoproj.io > /dev/null 2>&1; then
     echo "⚠️  Detected pre-existing Argo CD cluster-scoped resources. These can block Helm from installing."
     local do_clean="N"
     if [[ "${AUTO_CLEAN_ARGO:-}" == "1" || "${AUTO_CLEAN_ARGO:-}" == "true" || "${2:-}" == "--auto-clean" ]]; then
@@ -1089,12 +1133,12 @@ maybe_cleanup_argocd_cluster_resources() {
     if [[ "$do_clean" =~ ^[Yy]$ ]]; then
       echo "🧹 Removing Argo CD cluster-scoped resources (CRDs, ClusterRoles, ClusterRoleBindings)..."
       # Delete CRDs under argoproj.io (macOS-safe, only run delete when list is non-empty)
-      CRDS=$(kubectl get crd -o name 2>/dev/null | grep -E 'argoproj.io' || true)
+      CRDS=$(kubectl get crd -o name 2> /dev/null | grep -E 'argoproj.io' || true)
       if [[ -n "$CRDS" ]]; then echo "$CRDS" | xargs kubectl delete --wait --ignore-not-found; fi
       # Delete cluster roles/bindings by name prefix
-      CROLES=$(kubectl get clusterrole -o name 2>/dev/null | grep -E '^clusterrole/argocd' || true)
+      CROLES=$(kubectl get clusterrole -o name 2> /dev/null | grep -E '^clusterrole/argocd' || true)
       if [[ -n "$CROLES" ]]; then echo "$CROLES" | xargs kubectl delete --wait --ignore-not-found; fi
-      CRBINDINGS=$(kubectl get clusterrolebinding -o name 2>/dev/null | grep -E '^clusterrolebinding/argocd' || true)
+      CRBINDINGS=$(kubectl get clusterrolebinding -o name 2> /dev/null | grep -E '^clusterrolebinding/argocd' || true)
       if [[ -n "$CRBINDINGS" ]]; then echo "$CRBINDINGS" | xargs kubectl delete --wait --ignore-not-found; fi
       echo "✅ Cleanup complete."
     else
@@ -1121,7 +1165,7 @@ deploy_argocd() {
   export KUBECONFIG="${TEMP_KUBECONFIG}"
   export TF_VAR_kubeconfig_path="${TEMP_KUBECONFIG}"
   echo "Using temporary KUBECONFIG at ${KUBECONFIG} for Terraform operations"
-  pushd "${TF_MODULE_DIR}" >/dev/null
+  pushd "${TF_MODULE_DIR}" > /dev/null
   echo "Running: terraform init (with -upgrade to reconcile provider constraints)"
   terraform init -upgrade -input=false 2>&1 | tee terraform.log
   echo "Running: terraform plan"
@@ -1134,7 +1178,7 @@ deploy_argocd() {
     terraform apply -input=false plan.tfplan 2>&1 | tee -a terraform.log
     rc=${PIPESTATUS[0]}
   fi
-  popd >/dev/null
+  popd > /dev/null
   # Restore kubeconfig environment immediately after Terraform operations
   if [[ -n "${PREV_KUBECONFIG-}" ]]; then
     export KUBECONFIG="${PREV_KUBECONFIG}"
@@ -1159,32 +1203,43 @@ deploy_argocd() {
   ARGOCD_PASSWORD=$(kubectl -n "${ARGO_NS}" get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
   if [[ "$ENV" == "local" ]]; then
     FAWKES_LOCAL_PASSWORD="${FAWKES_LOCAL_PASSWORD:-fawkesidp}"
-    if command -v argocd >/dev/null 2>&1; then
+    if command -v argocd > /dev/null 2>&1; then
       echo "🔐 Setting ArgoCD admin password to a local default for developers..."
       # Detect service ports to choose correct forwarding & scheme
       local svc_ports svc_scheme svc_target_port
-      svc_ports=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[*].port}' 2>/dev/null || echo "")
+      svc_ports=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[*].port}' 2> /dev/null || echo "")
       # Prefer HTTP (80) for local since chart is configured insecure=true
       if echo "${svc_ports}" | grep -qw 80; then
-        svc_target_port=80; svc_scheme="http"; local argocd_login_flag="--plaintext"
+        svc_target_port=80
+        svc_scheme="http"
+        local argocd_login_flag="--plaintext"
       elif echo "${svc_ports}" | grep -qw 443; then
-        svc_target_port=443; svc_scheme="https"; local argocd_login_flag="--insecure"
+        svc_target_port=443
+        svc_scheme="https"
+        local argocd_login_flag="--insecure"
       else
         # Fallback to first port reported; assume http
-        svc_target_port=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[0].port}' 2>/dev/null || echo 80)
-        svc_scheme="http"; local argocd_login_flag="--plaintext"
+        svc_target_port=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[0].port}' 2> /dev/null || echo 80)
+        svc_scheme="http"
+        local argocd_login_flag="--plaintext"
       fi
-      (kubectl -n "${ARGO_NS}" port-forward svc/argocd-server 8080:${svc_target_port} >/dev/null 2>&1 & echo $! > /tmp/fawkes-argocd-pf.pid)
+      (
+        kubectl -n "${ARGO_NS}" port-forward svc/argocd-server 8080:${svc_target_port} > /dev/null 2>&1 &
+        echo $! > /tmp/fawkes-argocd-pf.pid
+      )
       sleep 2
       set +e
       # Use appropriate login flag based on scheme
-      argocd login localhost:8080 --username admin --password "${ARGOCD_PASSWORD}" ${argocd_login_flag} >/dev/null 2>&1
+      argocd login localhost:8080 --username admin --password "${ARGOCD_PASSWORD}" ${argocd_login_flag} > /dev/null 2>&1
       if [[ $? -eq 0 ]]; then
-        argocd account update-password --current-password "${ARGOCD_PASSWORD}" --new-password "${FAWKES_LOCAL_PASSWORD}" >/dev/null 2>&1 && ARGOCD_PASSWORD="${FAWKES_LOCAL_PASSWORD}"
+        argocd account update-password --current-password "${ARGOCD_PASSWORD}" --new-password "${FAWKES_LOCAL_PASSWORD}" > /dev/null 2>&1 && ARGOCD_PASSWORD="${FAWKES_LOCAL_PASSWORD}"
       else
         echo "[WARN] ArgoCD CLI login failed; attempting password change via kubectl proxy..." >&2
         # Fallback: use API server service proxy to change password
-        (kubectl proxy --address 127.0.0.1 --port=8001 >/dev/null 2>&1 & echo $! > /tmp/fawkes-kubectl-proxy.pid)
+        (
+          kubectl proxy --address 127.0.0.1 --port=8001 > /dev/null 2>&1 &
+          echo $! > /tmp/fawkes-kubectl-proxy.pid
+        )
         sleep 2
         local proxy_base="http://127.0.0.1:8001/api/v1/namespaces/${ARGO_NS}/services/${svc_scheme}:argocd-server:${svc_target_port}/proxy"
         local token
@@ -1194,19 +1249,19 @@ deploy_argocd() {
         if [[ -n "${token}" ]]; then
           curl -sk -X PUT -H "Authorization: Bearer ${token}" -H "Content-Type: application/json" \
             -d '{"currentPassword":"'"${ARGOCD_PASSWORD}"'","newPassword":"'"${FAWKES_LOCAL_PASSWORD}"'"}' \
-            "${proxy_base}/api/v1/account/password" >/dev/null 2>&1 && ARGOCD_PASSWORD="${FAWKES_LOCAL_PASSWORD}" || \
-            echo "[WARN] Password change via API proxy did not succeed." >&2
+            "${proxy_base}/api/v1/account/password" > /dev/null 2>&1 && ARGOCD_PASSWORD="${FAWKES_LOCAL_PASSWORD}" \
+            || echo "[WARN] Password change via API proxy did not succeed." >&2
         else
           echo "[WARN] Could not obtain ArgoCD auth token via API proxy; keeping initial password." >&2
         fi
         if [[ -f /tmp/fawkes-kubectl-proxy.pid ]]; then
-          kill $(cat /tmp/fawkes-kubectl-proxy.pid) >/dev/null 2>&1 || true
+          kill $(cat /tmp/fawkes-kubectl-proxy.pid) > /dev/null 2>&1 || true
           rm -f /tmp/fawkes-kubectl-proxy.pid || true
         fi
       fi
       set -e
       if [[ -f /tmp/fawkes-argocd-pf.pid ]]; then
-        kill $(cat /tmp/fawkes-argocd-pf.pid) >/dev/null 2>&1 || true
+        kill $(cat /tmp/fawkes-argocd-pf.pid) > /dev/null 2>&1 || true
         rm -f /tmp/fawkes-argocd-pf.pid || true
       fi
     else
@@ -1215,17 +1270,25 @@ deploy_argocd() {
   fi
   # Derive scheme/port suggestion for local access summary
   local svc_ports_summary svc_scheme_summary svc_target_port_summary
-  svc_ports_summary=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[*].port}' 2>/dev/null || echo "")
+  svc_ports_summary=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[*].port}' 2> /dev/null || echo "")
   # Prefer HTTP (80) for local summary when available
   if echo "${svc_ports_summary}" | grep -qw 80; then
-    svc_target_port_summary=80; svc_scheme_summary="http"
+    svc_target_port_summary=80
+    svc_scheme_summary="http"
   elif echo "${svc_ports_summary}" | grep -qw 443; then
-    svc_target_port_summary=443; svc_scheme_summary="https"
+    svc_target_port_summary=443
+    svc_scheme_summary="https"
   else
-    svc_target_port_summary=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[0].port}' 2>/dev/null || echo 80)
+    svc_target_port_summary=$(kubectl -n "${ARGO_NS}" get svc argocd-server -o jsonpath='{.spec.ports[0].port}' 2> /dev/null || echo 80)
     svc_scheme_summary="http"
   fi
-  echo ""; echo "==================== ArgoCD Credentials ===================="; echo "URL:      ${svc_scheme_summary}://localhost:8080 (use port-forward below)"; echo "Username: admin"; echo "Password: ${ARGOCD_PASSWORD}"; echo "============================================================"; echo ""
+  echo ""
+  echo "==================== ArgoCD Credentials ===================="
+  echo "URL:      ${svc_scheme_summary}://localhost:8080 (use port-forward below)"
+  echo "Username: admin"
+  echo "Password: ${ARGOCD_PASSWORD}"
+  echo "============================================================"
+  echo ""
 }
 
 ## (log moved into ensure_argocd_workloads when invoked)
@@ -1233,7 +1296,7 @@ deploy_argocd() {
 wait_for_workload() {
   local name="$1" ns="${2:-default}" timeout="${3:-300}"
   echo "⏳ Waiting for workload ${name} in namespace ${ns} (timeout ${timeout}s)..."
-  if kubectl get deployment "${name}" -n "${ns}" >/dev/null 2>&1; then
+  if kubectl get deployment "${name}" -n "${ns}" > /dev/null 2>&1; then
     if ! kubectl wait --for=condition=available deployment/${name} -n "${ns}" --timeout="${timeout}s"; then
       kubectl -n "${ns}" get pods -o wide
       kubectl -n "${ns}" describe deployment/${name} || true
@@ -1241,7 +1304,7 @@ wait_for_workload() {
     fi
     return 0
   fi
-  if kubectl get statefulset "${name}" -n "${ns}" >/dev/null 2>&1; then
+  if kubectl get statefulset "${name}" -n "${ns}" > /dev/null 2>&1; then
     if ! kubectl rollout status statefulset/${name} -n "${ns}" --timeout="${timeout}s"; then
       kubectl -n "${ns}" get pods -o wide
       kubectl -n "${ns}" describe statefulset/${name} || true
@@ -1254,7 +1317,7 @@ wait_for_workload() {
   while [[ ${SECONDS} -lt ${end} ]]; do
     pod=$(kubectl -n "${ns}" get pods --no-headers -o custom-columns=":metadata.name" | grep "^${name}" | head -n1 || true)
     if [[ -n "$pod" ]]; then
-      ready=$(kubectl -n "${ns}" get pod "$pod" -o jsonpath='{.status.containerStatuses[0].ready}' 2>/dev/null || echo "false")
+      ready=$(kubectl -n "${ns}" get pod "$pod" -o jsonpath='{.status.containerStatuses[0].ready}' 2> /dev/null || echo "false")
       if [[ "$ready" == "true" ]]; then
         echo "Pod $pod is ready"
         return 0
@@ -1283,7 +1346,8 @@ wait_for_argocd_endpoints() {
   end=$((SECONDS + ENDPOINTS_TIMEOUT))
   while [[ ${SECONDS} -lt ${end} ]]; do
     if kubectl get endpoints argocd-server -n "${ARGO_NS}" -o jsonpath='{.subsets}' | grep -q .; then
-      echo "✅ argocd-server has endpoints"; return 0
+      echo "✅ argocd-server has endpoints"
+      return 0
     fi
     sleep 2
   done
@@ -1313,7 +1377,7 @@ get_service_password() {
   local namespace="$2"
   local key="${3:-password}"
 
-  kubectl get secret "$secret_name" -n "$namespace" -o jsonpath="{.data.$key}" 2>/dev/null | base64 -d 2>/dev/null || echo "N/A"
+  kubectl get secret "$secret_name" -n "$namespace" -o jsonpath="{.data.$key}" 2> /dev/null | base64 -d 2> /dev/null || echo "N/A"
 }
 
 # Print comprehensive access summary for all services
@@ -1325,7 +1389,7 @@ print_access_summary() {
   echo ""
 
   local ctx
-  ctx=$(kubectl config current-context 2>/dev/null || echo "unknown")
+  ctx=$(kubectl config current-context 2> /dev/null || echo "unknown")
   echo "📍 Kubernetes Context: $ctx"
   echo "🌍 Environment: $ENV"
   if [[ -n "${PROVIDER}" ]]; then
@@ -1336,9 +1400,9 @@ print_access_summary() {
   # Detect if we have ingress/LoadBalancer external IPs
   local has_external=0
   local external_domain=""
-  if kubectl get ingress -A 2>/dev/null | grep -q .; then
+  if kubectl get ingress -A 2> /dev/null | grep -q .; then
     has_external=1
-    external_domain=$(kubectl get ingress -n "${ARGO_NS}" argocd-server -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
+    external_domain=$(kubectl get ingress -n "${ARGO_NS}" argocd-server -o jsonpath='{.spec.rules[0].host}' 2> /dev/null || echo "")
   fi
 
   echo "────────────────────────────────────────────────────────────────────────────────"
@@ -1358,10 +1422,10 @@ print_access_summary() {
   echo ""
 
   # Jenkins
-  if kubectl get namespace jenkins >/dev/null 2>&1; then
+  if kubectl get namespace jenkins > /dev/null 2>&1; then
     echo "🔷 Jenkins (CI/CD)"
     local jenkins_host
-    jenkins_host=$(kubectl get ingress -n jenkins jenkins -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
+    jenkins_host=$(kubectl get ingress -n jenkins jenkins -o jsonpath='{.spec.rules[0].host}' 2> /dev/null || echo "")
     if [[ -n "$jenkins_host" ]]; then
       echo "   External URL: https://$jenkins_host"
     fi
@@ -1375,13 +1439,13 @@ print_access_summary() {
   fi
 
   # Backstage
-  if kubectl get namespace backstage >/dev/null 2>&1 || kubectl get deployment -n fawkes backstage >/dev/null 2>&1; then
+  if kubectl get namespace backstage > /dev/null 2>&1 || kubectl get deployment -n fawkes backstage > /dev/null 2>&1; then
     local backstage_ns="backstage"
-    kubectl get namespace backstage >/dev/null 2>&1 || backstage_ns="fawkes"
+    kubectl get namespace backstage > /dev/null 2>&1 || backstage_ns="fawkes"
 
     echo "🔷 Backstage (Developer Portal)"
     local backstage_host
-    backstage_host=$(kubectl get ingress -n "$backstage_ns" backstage -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
+    backstage_host=$(kubectl get ingress -n "$backstage_ns" backstage -o jsonpath='{.spec.rules[0].host}' 2> /dev/null || echo "")
     if [[ -n "$backstage_host" ]]; then
       echo "   External URL: https://$backstage_host"
     fi
@@ -1392,10 +1456,10 @@ print_access_summary() {
   fi
 
   # SonarQube
-  if kubectl get namespace sonarqube >/dev/null 2>&1; then
+  if kubectl get namespace sonarqube > /dev/null 2>&1; then
     echo "🔷 SonarQube (Code Quality)"
     local sonar_host
-    sonar_host=$(kubectl get ingress -n sonarqube sonarqube -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
+    sonar_host=$(kubectl get ingress -n sonarqube sonarqube -o jsonpath='{.spec.rules[0].host}' 2> /dev/null || echo "")
     if [[ -n "$sonar_host" ]]; then
       echo "   External URL: https://$sonar_host"
     fi
@@ -1407,13 +1471,13 @@ print_access_summary() {
   fi
 
   # Grafana
-  if kubectl get namespace grafana >/dev/null 2>&1 || kubectl get deployment -n fawkes grafana >/dev/null 2>&1; then
+  if kubectl get namespace grafana > /dev/null 2>&1 || kubectl get deployment -n fawkes grafana > /dev/null 2>&1; then
     local grafana_ns="grafana"
-    kubectl get namespace grafana >/dev/null 2>&1 || grafana_ns="fawkes"
+    kubectl get namespace grafana > /dev/null 2>&1 || grafana_ns="fawkes"
 
     echo "🔷 Grafana (Observability)"
     local grafana_host
-    grafana_host=$(kubectl get ingress -n "$grafana_ns" grafana -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
+    grafana_host=$(kubectl get ingress -n "$grafana_ns" grafana -o jsonpath='{.spec.rules[0].host}' 2> /dev/null || echo "")
     if [[ -n "$grafana_host" ]]; then
       echo "   External URL: https://$grafana_host"
     fi
@@ -1428,9 +1492,9 @@ print_access_summary() {
   fi
 
   # Prometheus
-  if kubectl get namespace prometheus >/dev/null 2>&1 || kubectl get deployment -n fawkes prometheus-server >/dev/null 2>&1; then
+  if kubectl get namespace prometheus > /dev/null 2>&1 || kubectl get deployment -n fawkes prometheus-server > /dev/null 2>&1; then
     local prom_ns="prometheus"
-    kubectl get namespace prometheus >/dev/null 2>&1 || prom_ns="fawkes"
+    kubectl get namespace prometheus > /dev/null 2>&1 || prom_ns="fawkes"
 
     echo "🔷 Prometheus (Metrics)"
     echo "   Local URL:    http://localhost:9090"
@@ -1439,10 +1503,10 @@ print_access_summary() {
   fi
 
   # Mattermost
-  if kubectl get namespace mattermost >/dev/null 2>&1; then
+  if kubectl get namespace mattermost > /dev/null 2>&1; then
     echo "🔷 Mattermost (Team Chat)"
     local mm_host
-    mm_host=$(kubectl get ingress -n mattermost mattermost -o jsonpath='{.spec.rules[0].host}' 2>/dev/null || echo "")
+    mm_host=$(kubectl get ingress -n mattermost mattermost -o jsonpath='{.spec.rules[0].host}' 2> /dev/null || echo "")
     if [[ -n "$mm_host" ]]; then
       echo "   External URL: https://$mm_host"
     fi
@@ -1453,10 +1517,10 @@ print_access_summary() {
   fi
 
   # Focalboard
-  if kubectl get namespace focalboard >/dev/null 2>&1; then
+  if kubectl get namespace focalboard > /dev/null 2>&1; then
     echo "🔷 Focalboard (Project Management)"
     local fb_host
-    fb_host=$(kubectl get ingress -n focalboard focalboard -o jsonpath='{.spec.rules[0].host}' 2>/devnull || echo "")
+    fb_host=$(kubectl get ingress -n focalboard focalboard -o jsonpath='{.spec.rules[0].host}' 2> /devnull || echo "")
     if [[ -n "$fb_host" ]]; then
       echo "   External URL: https://$fb_host"
     fi
@@ -1520,7 +1584,7 @@ main() {
     usage
   fi
   case "$ENV" in
-    local|dev|stage|production|destroy|cleanup) ;;
+    local | dev | stage | production | destroy | cleanup) ;;
     *) error_exit "Invalid command/environment: $ENV. Must be one of: local, dev, stage, production, destroy, cleanup." ;;
   esac
   # Verbose

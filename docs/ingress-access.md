@@ -5,6 +5,7 @@ This document describes how to configure external access for services on the Faw
 ## Overview
 
 The Fawkes platform provides:
+
 - **NGINX Ingress Controller**: High availability Layer 7 routing
 - **ExternalDNS**: Automated DNS record management
 - **cert-manager**: Automatic TLS certificate provisioning via Let's Encrypt
@@ -88,19 +89,19 @@ spec:
 
 ### Mandatory Annotations
 
-| Annotation | Value | Description |
-|------------|-------|-------------|
-| `kubernetes.io/ingress.class` | `nginx` | Specifies the Ingress controller |
-| `cert-manager.io/cluster-issuer` | `letsencrypt-prod` or `letsencrypt-staging` | TLS certificate issuer |
+| Annotation                       | Value                                       | Description                      |
+| -------------------------------- | ------------------------------------------- | -------------------------------- |
+| `kubernetes.io/ingress.class`    | `nginx`                                     | Specifies the Ingress controller |
+| `cert-manager.io/cluster-issuer` | `letsencrypt-prod` or `letsencrypt-staging` | TLS certificate issuer           |
 
 ### Recommended Annotations
 
-| Annotation | Default | Description |
-|------------|---------|-------------|
-| `nginx.ingress.kubernetes.io/ssl-redirect` | `true` | Force HTTPS redirect |
-| `external-dns.alpha.kubernetes.io/hostname` | Auto from host | DNS record hostname |
-| `nginx.ingress.kubernetes.io/proxy-body-size` | `50m` | Max request body size |
-| `nginx.ingress.kubernetes.io/proxy-read-timeout` | `60` | Backend read timeout |
+| Annotation                                       | Default        | Description           |
+| ------------------------------------------------ | -------------- | --------------------- |
+| `nginx.ingress.kubernetes.io/ssl-redirect`       | `true`         | Force HTTPS redirect  |
+| `external-dns.alpha.kubernetes.io/hostname`      | Auto from host | DNS record hostname   |
+| `nginx.ingress.kubernetes.io/proxy-body-size`    | `50m`          | Max request body size |
+| `nginx.ingress.kubernetes.io/proxy-read-timeout` | `60`           | Backend read timeout  |
 
 ## Example Ingress Resources
 
@@ -230,11 +231,11 @@ spec:
 
 ### Issuers Available
 
-| Issuer | Usage | Rate Limits |
-|--------|-------|-------------|
+| Issuer                | Usage               | Rate Limits                            |
+| --------------------- | ------------------- | -------------------------------------- |
 | `letsencrypt-staging` | Development/Testing | No rate limits, untrusted certificates |
-| `letsencrypt-prod` | Production | Rate limited, trusted certificates |
-| `selfsigned-issuer` | Internal services | No rate limits, self-signed |
+| `letsencrypt-prod`    | Production          | Rate limited, trusted certificates     |
+| `selfsigned-issuer`   | Internal services   | No rate limits, self-signed            |
 
 ### Certificate Lifecycle
 
@@ -245,12 +246,14 @@ spec:
 ### Troubleshooting Certificates
 
 Check certificate status:
+
 ```bash
 kubectl get certificate -A
 kubectl describe certificate <name> -n <namespace>
 ```
 
 Check certificate requests:
+
 ```bash
 kubectl get certificaterequest -A
 kubectl describe certificaterequest <name> -n <namespace>
@@ -263,11 +266,13 @@ kubectl describe certificaterequest <name> -n <namespace>
 A wildcard DNS record `*.fawkes.idp` must point to the Ingress Controller's Load Balancer IP.
 
 Get the Load Balancer IP:
+
 ```bash
 kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
 ```
 
 Or use the Terraform output:
+
 ```bash
 cd platform/networking/loadbalancer-provisioning
 terraform output ingress_lb_public_ip
@@ -276,6 +281,7 @@ terraform output ingress_lb_public_ip
 ### ExternalDNS Behavior
 
 ExternalDNS automatically manages DNS records based on Ingress resources:
+
 - Creates A records when Ingress is created
 - Updates records when Ingress is modified
 - Does not delete records by default (upsert-only policy)
@@ -295,6 +301,7 @@ All HTTP requests are automatically redirected to HTTPS. This is enforced at the
 ### Security Headers
 
 The Ingress Controller adds the following security headers by default:
+
 - `Strict-Transport-Security: max-age=31536000; includeSubDomains`
 - Server tokens are hidden
 
@@ -305,6 +312,7 @@ The Ingress Controller adds the following security headers by default:
 Prometheus metrics are available at `/metrics` on the Ingress Controller pods.
 
 Key metrics:
+
 - `nginx_ingress_controller_requests`: Total requests handled
 - `nginx_ingress_controller_request_duration_seconds`: Request latency
 - `nginx_ingress_controller_ssl_expire_time_seconds`: Certificate expiration
@@ -312,6 +320,7 @@ Key metrics:
 ### Access Logs
 
 Access logs are available via:
+
 ```bash
 kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller
 ```

@@ -103,9 +103,9 @@ EOF
     # Wait for ArgoCD to be ready
     echo "⏳ Waiting for ArgoCD to be ready..."
     kubectl wait --for=condition=available --timeout=300s \
-      deployment/argocd-server -n argocd 2>/dev/null || \
-      kubectl wait --for=condition=available --timeout=300s \
-      deployment/argocd-server -n "$NAMESPACE"
+      deployment/argocd-server -n argocd 2> /dev/null \
+      || kubectl wait --for=condition=available --timeout=300s \
+        deployment/argocd-server -n "$NAMESPACE"
 
     echo "✅ ArgoCD deployed!"
     echo "🔑 Get admin password: kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath=\"{.data.password}\" | base64 -d"

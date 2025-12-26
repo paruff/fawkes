@@ -65,19 +65,19 @@ The OpenTelemetry Collector receives traces via OTLP protocol from instrumented 
 
 Traces are automatically propagated across service boundaries using W3C Trace Context:
 
-| Header | Purpose |
-|--------|---------|
+| Header        | Purpose                                     |
+| ------------- | ------------------------------------------- |
 | `traceparent` | Contains trace ID, span ID, and trace flags |
-| `tracestate` | Vendor-specific trace context |
+| `tracestate`  | Vendor-specific trace context               |
 
 ### 3. Trace-Log Correlation
 
 Every trace is correlated with application logs:
 
-| Attribute | Description |
-|-----------|-------------|
+| Attribute  | Description                               |
+| ---------- | ----------------------------------------- |
 | `trace_id` | 32-character hexadecimal trace identifier |
-| `span_id` | 16-character hexadecimal span identifier |
+| `span_id`  | 16-character hexadecimal span identifier  |
 
 Click on a trace ID in logs to jump directly to the trace in Grafana.
 
@@ -136,6 +136,7 @@ platform/apps/tempo/tempo-application.yaml
 ```
 
 Key features:
+
 - OTLP ingestion on ports 4317 (gRPC) and 4318 (HTTP)
 - 7-day trace retention
 - Metrics generation for RED metrics
@@ -150,6 +151,7 @@ platform/apps/grafana/helm-release.yml
 ```
 
 Data sources configured:
+
 - **Tempo**: Trace storage and visualization
 - **Prometheus**: Trace-to-metrics correlation
 - **OpenSearch**: Trace-to-logs correlation
@@ -187,14 +189,14 @@ opentelemetry-instrument \
 
 ```javascript
 // tracing.js - Add at the very top of your application
-const { NodeSDK } = require('@opentelemetry/sdk-node');
-const { OTLPTraceExporter } = require('@opentelemetry/exporter-trace-otlp-grpc');
-const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
+const { NodeSDK } = require("@opentelemetry/sdk-node");
+const { OTLPTraceExporter } = require("@opentelemetry/exporter-trace-otlp-grpc");
+const { getNodeAutoInstrumentations } = require("@opentelemetry/auto-instrumentations-node");
 
 const sdk = new NodeSDK({
-  serviceName: 'my-nodejs-app',
+  serviceName: "my-nodejs-app",
   traceExporter: new OTLPTraceExporter({
-    url: 'grpc://otel-collector.monitoring.svc.cluster.local:4317',
+    url: "grpc://otel-collector.monitoring.svc.cluster.local:4317",
   }),
   instrumentations: [getNodeAutoInstrumentations()],
 });
@@ -285,14 +287,14 @@ Access Grafana at `http://grafana.127.0.0.1.nip.io` and navigate to Explore → 
 
 ## Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `TEMPO_URL` | Tempo API endpoint | `http://tempo.monitoring.svc.cluster.local:3200` |
-| `TEMPO_OTLP_GRPC_ENDPOINT` | OTLP gRPC ingestion endpoint | `tempo.monitoring.svc.cluster.local:4317` |
-| `TEMPO_OTLP_HTTP_ENDPOINT` | OTLP HTTP ingestion endpoint | `http://tempo.monitoring.svc.cluster.local:4318` |
-| `TRACE_SAMPLING_PERCENTAGE` | Sampling rate (1-100) | `100` (development) |
-| `TRACE_CLUSTER_NAME` | Cluster identifier | `fawkes-dev` |
-| `TRACE_ENVIRONMENT` | Environment label | `development` |
+| Variable                    | Description                  | Default                                          |
+| --------------------------- | ---------------------------- | ------------------------------------------------ |
+| `TEMPO_URL`                 | Tempo API endpoint           | `http://tempo.monitoring.svc.cluster.local:3200` |
+| `TEMPO_OTLP_GRPC_ENDPOINT`  | OTLP gRPC ingestion endpoint | `tempo.monitoring.svc.cluster.local:4317`        |
+| `TEMPO_OTLP_HTTP_ENDPOINT`  | OTLP HTTP ingestion endpoint | `http://tempo.monitoring.svc.cluster.local:4318` |
+| `TRACE_SAMPLING_PERCENTAGE` | Sampling rate (1-100)        | `100` (development)                              |
+| `TRACE_CLUSTER_NAME`        | Cluster identifier           | `fawkes-dev`                                     |
+| `TRACE_ENVIRONMENT`         | Environment label            | `development`                                    |
 
 ## Monitoring
 

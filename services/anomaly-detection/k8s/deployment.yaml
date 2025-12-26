@@ -1,3 +1,23 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -16,7 +36,7 @@ metadata:
     app: anomaly-detection
 type: Opaque
 stringData:
-  LLM_API_KEY: ""  # Set this via External Secrets or manually
+  LLM_API_KEY: "" # Set this via External Secrets or manually
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -70,60 +90,60 @@ spec:
         runAsUser: 65534
         fsGroup: 65534
       containers:
-      - name: anomaly-detection
-        image: anomaly-detection:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - name: http
-          containerPort: 8000
-          protocol: TCP
-        env:
-        - name: LLM_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: anomaly-detection-secrets
-              key: LLM_API_KEY
-              optional: true
-        envFrom:
-        - configMapRef:
-            name: anomaly-detection-config
-        resources:
-          requests:
-            cpu: 200m
-            memory: 512Mi
-          limits:
-            cpu: 1000m
-            memory: 2Gi
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 30
-          periodSeconds: 30
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: http
-          initialDelaySeconds: 20
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 65534
-          capabilities:
-            drop:
-            - ALL
-        volumeMounts:
-        - name: tmp
-          mountPath: /tmp
+        - name: anomaly-detection
+          image: anomaly-detection:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          env:
+            - name: LLM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: anomaly-detection-secrets
+                  key: LLM_API_KEY
+                  optional: true
+          envFrom:
+            - configMapRef:
+                name: anomaly-detection-config
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
       volumes:
-      - name: tmp
-        emptyDir: {}
+        - name: tmp
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -140,10 +160,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: http
-    port: 8000
-    targetPort: http
-    protocol: TCP
+    - name: http
+      port: 8000
+      targetPort: http
+      protocol: TCP
   selector:
     app: anomaly-detection
 ---
@@ -159,13 +179,13 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: anomaly-detection.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: anomaly-detection
-            port:
-              number: 8000
+    - host: anomaly-detection.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: anomaly-detection
+                port:
+                  number: 8000

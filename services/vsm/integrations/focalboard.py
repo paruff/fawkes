@@ -34,6 +34,7 @@ router = APIRouter(prefix="/api/v1/focalboard", tags=["Focalboard Integration"])
 
 class FocalboardCardAction(str, Enum):
     """Focalboard card webhook actions."""
+
     CREATED = "card.created"
     UPDATED = "card.updated"
     MOVED = "card.moved"
@@ -94,6 +95,7 @@ class FocalboardColumnStageMapping:
 # Webhook payload schemas
 class FocalboardCard(BaseModel):
     """Focalboard card model."""
+
     id: str = Field(..., description="Card ID")
     title: str = Field(..., description="Card title")
     board_id: str = Field(..., alias="boardId", description="Board ID")
@@ -108,6 +110,7 @@ class FocalboardCard(BaseModel):
 
 class FocalboardWebhookPayload(BaseModel):
     """Focalboard webhook payload."""
+
     action: str = Field(..., description="Webhook action")
     card: FocalboardCard = Field(..., description="Card data")
     board_id: str = Field(..., alias="boardId", description="Board ID")
@@ -119,12 +122,14 @@ class FocalboardWebhookPayload(BaseModel):
 
 class FocalboardSyncRequest(BaseModel):
     """Request to sync a specific Focalboard board."""
+
     board_id: str = Field(..., description="Focalboard board ID to sync")
     workspace_id: Optional[str] = Field(None, description="Workspace ID")
 
 
 class FocalboardSyncResponse(BaseModel):
     """Response from board sync operation."""
+
     status: str = Field(..., description="Sync status")
     synced_count: int = Field(..., description="Number of cards synced")
     failed_count: int = Field(0, description="Number of cards that failed to sync")
@@ -133,9 +138,7 @@ class FocalboardSyncResponse(BaseModel):
 
 @router.post("/webhook", status_code=200)
 async def handle_focalboard_webhook(
-    payload: FocalboardWebhookPayload,
-    background_tasks: BackgroundTasks,
-    db: Session = Depends(get_db)
+    payload: FocalboardWebhookPayload, background_tasks: BackgroundTasks, db: Session = Depends(get_db)
 ):
     """
     Handle incoming Focalboard webhooks.
@@ -166,20 +169,12 @@ async def handle_focalboard_webhook(
         else:
             logger.warning(f"Unknown webhook action: {payload.action}")
 
-        return {
-            "status": "success",
-            "message": f"Webhook processed: {payload.action}",
-            "card_id": payload.card.id
-        }
+        return {"status": "success", "message": f"Webhook processed: {payload.action}", "card_id": payload.card.id}
 
     except Exception as e:
         logger.error(f"Failed to process Focalboard webhook: {e}", exc_info=True)
         # Return 200 to avoid webhook retries for unrecoverable errors
-        return {
-            "status": "error",
-            "message": str(e),
-            "card_id": payload.card.id
-        }
+        return {"status": "error", "message": str(e), "card_id": payload.card.id}
 
 
 async def _handle_card_created(card: FocalboardCard, db: Session):
@@ -200,10 +195,7 @@ async def _handle_card_created(card: FocalboardCard, db: Session):
             work_item_type = WorkItemType.EPIC
 
     # Create work item
-    work_item = WorkItem(
-        title=card.title,
-        type=work_item_type
-    )
+    work_item = WorkItem(title=card.title, type=work_item_type)
     db.add(work_item)
     db.commit()
     db.refresh(work_item)
@@ -215,11 +207,7 @@ async def _handle_card_created(card: FocalboardCard, db: Session):
 
     stage = db.query(Stage).filter(Stage.name == stage_name).first()
     if stage:
-        transition = StageTransition(
-            work_item_id=work_item.id,
-            from_stage_id=None,
-            to_stage_id=stage.id
-        )
+        transition = StageTransition(work_item_id=work_item.id, from_stage_id=None, to_stage_id=stage.id)
         db.add(transition)
         db.commit()
 
@@ -267,11 +255,7 @@ async def _handle_card_moved(card: FocalboardCard, db: Session):
 
     # Create transition
     from_stage_id = current_transition.to_stage_id if current_transition else None
-    transition = StageTransition(
-        work_item_id=work_item.id,
-        from_stage_id=from_stage_id,
-        to_stage_id=new_stage.id
-    )
+    transition = StageTransition(work_item_id=work_item.id, from_stage_id=from_stage_id, to_stage_id=new_stage.id)
     db.add(transition)
 
     # Update work item timestamp
@@ -313,10 +297,7 @@ async def _handle_card_deleted(card: FocalboardCard, db: Session):
 
 
 @router.post("/sync", response_model=FocalboardSyncResponse)
-async def sync_focalboard_board(
-    request: FocalboardSyncRequest,
-    db: Session = Depends(get_db)
-):
+async def sync_focalboard_board(request: FocalboardSyncRequest, db: Session = Depends(get_db)):
     """
     Manually sync a Focalboard board to VSM.
 
@@ -360,10 +341,7 @@ async def sync_focalboard_board(
                 logger.error(f"Failed to sync card: {e}", exc_info=True)
 
         return FocalboardSyncResponse(
-            status="completed",
-            synced_count=synced_count,
-            failed_count=failed_count,
-            details=details
+            status="completed", synced_count=synced_count, failed_count=failed_count, details=details
         )
 
     except Exception as e:
@@ -403,10 +381,7 @@ async def _fetch_focalboard_cards(board_id: str) -> List[Dict[str, Any]]:
 
 
 @router.get("/work-items/{work_item_id}/sync-to-focalboard")
-async def sync_work_item_to_focalboard(
-    work_item_id: int,
-    db: Session = Depends(get_db)
-):
+async def sync_work_item_to_focalboard(work_item_id: int, db: Session = Depends(get_db)):
     """
     Sync a VSM work item to Focalboard.
 
@@ -463,7 +438,7 @@ async def sync_work_item_to_focalboard(
             "status": "success",
             "work_item_id": work_item_id,
             "focalboard_column": column_name,
-            "message": "Sync to Focalboard (placeholder - API integration not fully implemented)"
+            "message": "Sync to Focalboard (placeholder - API integration not fully implemented)",
         }
     except HTTPException:
         raise
@@ -482,5 +457,5 @@ async def get_stage_column_mapping():
     """
     return {
         "column_to_stage": FocalboardColumnStageMapping.COLUMN_TO_STAGE,
-        "description": "Map of Focalboard column names (lowercase) to VSM stage names"
+        "description": "Map of Focalboard column names (lowercase) to VSM stage names",
     }

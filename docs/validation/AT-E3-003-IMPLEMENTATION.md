@@ -36,6 +36,7 @@ Validates that the multi-channel feedback system is fully operational with all f
 **Location**: `services/feedback/`, `platform/apps/feedback-service/`
 
 **Features**:
+
 - REST API for feedback submission
 - PostgreSQL database (CloudNativePG)
 - Admin endpoints for feedback management
@@ -45,6 +46,7 @@ Validates that the multi-channel feedback system is fully operational with all f
 - GitHub issue creation capability
 
 **Key Endpoints**:
+
 - `POST /api/v1/feedback` - Submit feedback
 - `GET /api/v1/feedback` - List feedback (admin)
 - `PUT /api/v1/feedback/{id}/status` - Update status (admin)
@@ -54,6 +56,7 @@ Validates that the multi-channel feedback system is fully operational with all f
 - `GET /metrics` - Prometheus metrics
 
 **Deployment**:
+
 ```bash
 kubectl apply -k platform/apps/feedback-service/
 ```
@@ -63,6 +66,7 @@ kubectl apply -k platform/apps/feedback-service/
 **Location**: `services/feedback-cli/`
 
 **Features**:
+
 - Quick feedback submission from terminal
 - Interactive mode with prompts
 - Offline queue capability
@@ -71,6 +75,7 @@ kubectl apply -k platform/apps/feedback-service/
 - Rich terminal UI
 
 **Commands**:
+
 ```bash
 # Initialize configuration
 fawkes-feedback config init
@@ -89,6 +94,7 @@ fawkes-feedback stats
 ```
 
 **Installation**:
+
 ```bash
 cd services/feedback-cli
 pip install -e .
@@ -99,6 +105,7 @@ pip install -e .
 **Location**: `services/feedback-bot/`, `platform/apps/feedback-bot/`
 
 **Features**:
+
 - Natural language interface
 - Sentiment analysis (VADER)
 - Auto-categorization
@@ -107,16 +114,19 @@ pip install -e .
 - `/feedback` slash command
 
 **Usage in Mattermost**:
+
 ```
 /feedback The new UI is amazing! Love the dark mode.
 ```
 
 **Analysis Example**:
+
 - Rating: ⭐⭐⭐⭐⭐ (5/5)
 - Sentiment: Positive 😊
 - Category: UI
 
 **Deployment**:
+
 ```bash
 kubectl apply -k platform/apps/feedback-bot/
 ```
@@ -126,6 +136,7 @@ kubectl apply -k platform/apps/feedback-bot/
 **Location**: `platform/apps/feedback-service/cronjob-automation.yaml`
 
 **Features**:
+
 - Runs every 15 minutes
 - AI-powered triage
 - Priority calculation
@@ -137,12 +148,14 @@ kubectl apply -k platform/apps/feedback-bot/
 **Schedule**: `*/15 * * * *` (every 15 minutes)
 
 **Triage Logic**:
+
 - **P0**: Critical bugs, security issues, rating 1-2
 - **P1**: Important features, rating 2-3
 - **P2**: Enhancements, rating 3-4
 - **P3**: Nice-to-have, rating 4-5
 
 **Deployment**:
+
 ```bash
 kubectl apply -f platform/apps/feedback-service/cronjob-automation.yaml
 ```
@@ -152,6 +165,7 @@ kubectl apply -f platform/apps/feedback-service/cronjob-automation.yaml
 **Location**: `platform/apps/grafana/dashboards/feedback-analytics.json`
 
 **Features**:
+
 - NPS Score tracking
 - Sentiment analysis visualization
 - Feedback volume metrics
@@ -161,6 +175,7 @@ kubectl apply -f platform/apps/feedback-service/cronjob-automation.yaml
 - Historical trends (30/90 days)
 
 **Key Metrics**:
+
 - **NPS Score**: -100 to +100 scale
 - **Total Feedback**: Volume over time
 - **Response Rate**: % of feedback addressed
@@ -170,6 +185,7 @@ kubectl apply -f platform/apps/feedback-service/cronjob-automation.yaml
 - **Low-Rated Feedback**: Issues requiring attention
 
 **Dashboard Panels** (25 total):
+
 1. Key Metrics Overview (4 panels)
 2. NPS Breakdown (2 panels)
 3. Feedback Volume & Categories (2 panels)
@@ -334,6 +350,7 @@ behave tests/bdd/features --tags=@at-e3-003
 All of the following must pass:
 
 ### Code and Configuration
+
 1. ✅ Feedback service code exists with all required endpoints
 2. ✅ CLI tool code exists with submit and list commands
 3. ✅ Bot code exists with NLP and sentiment analysis
@@ -342,6 +359,7 @@ All of the following must pass:
 6. ✅ BDD tests exist for all channels
 
 ### Deployed Components (when cluster is available)
+
 7. ✅ Feedback service deployed with 2 replicas
 8. ✅ Feedback database cluster operational
 9. ✅ Feedback bot deployed with 1+ replicas
@@ -349,6 +367,7 @@ All of the following must pass:
 11. ✅ Grafana dashboard loaded and accessible
 
 ### Functionality
+
 12. ✅ Feedback can be submitted via Backstage widget
 13. ✅ CLI tool can submit and list feedback
 14. ✅ Bot responds to /feedback commands in Mattermost
@@ -356,6 +375,7 @@ All of the following must pass:
 16. ✅ Dashboard displays feedback metrics
 
 ### Integration
+
 17. ✅ All channels submit to central feedback service
 18. ✅ Metrics exported to Prometheus
 19. ✅ Dashboard queries Prometheus for data
@@ -365,20 +385,21 @@ All of the following must pass:
 
 ### Code Validation (No Cluster Required)
 
-| Component | Status | Details |
-|-----------|--------|---------|
+| Component             | Status  | Details                                     |
+| --------------------- | ------- | ------------------------------------------- |
 | Feedback Service Code | ✅ PASS | Complete FastAPI service with all endpoints |
-| CLI Tool Code | ✅ PASS | Submit and list commands implemented |
-| Bot Code | ✅ PASS | NLP and sentiment analysis present |
-| Automation Config | ✅ PASS | CronJob manifest with correct schedule |
-| Analytics Dashboard | ✅ PASS | Valid JSON with 25+ panels |
-| Database Schema | ✅ PASS | PostgreSQL schema with all required tables |
-| Kubernetes Manifests | ✅ PASS | Complete deployment configurations |
-| BDD Tests | ✅ PASS | Comprehensive test coverage |
+| CLI Tool Code         | ✅ PASS | Submit and list commands implemented        |
+| Bot Code              | ✅ PASS | NLP and sentiment analysis present          |
+| Automation Config     | ✅ PASS | CronJob manifest with correct schedule      |
+| Analytics Dashboard   | ✅ PASS | Valid JSON with 25+ panels                  |
+| Database Schema       | ✅ PASS | PostgreSQL schema with all required tables  |
+| Kubernetes Manifests  | ✅ PASS | Complete deployment configurations          |
+| BDD Tests             | ✅ PASS | Comprehensive test coverage                 |
 
 ### Deployment Validation (Requires Cluster)
 
 Run on actual cluster to validate:
+
 - Service deployments are running
 - Pods are healthy and ready
 - APIs are accessible
@@ -476,9 +497,9 @@ curl http://localhost:8000/metrics | grep feedback_
 
 ## Test History
 
-| Date | Version | Result | Notes |
-|------|---------|--------|-------|
-| 2025-12-24 | 1.0 | PASS (Code) | All code and configuration validated |
+| Date       | Version | Result      | Notes                                |
+| ---------- | ------- | ----------- | ------------------------------------ |
+| 2025-12-24 | 1.0     | PASS (Code) | All code and configuration validated |
 
 ## Notes
 
@@ -491,6 +512,7 @@ curl http://localhost:8000/metrics | grep feedback_
 ## Maintenance
 
 This test should be run:
+
 - After initial deployment
 - After any changes to feedback system components
 - Before releases to production

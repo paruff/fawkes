@@ -16,6 +16,7 @@ Built a complete A/B testing framework with statistical analysis, variant assign
 ### Service Architecture
 
 **FastAPI-based Microservice**:
+
 - **Language**: Python 3.11
 - **Framework**: FastAPI with async/await support
 - **Database**: PostgreSQL (CloudNativePG) for persistence
@@ -26,6 +27,7 @@ Built a complete A/B testing framework with statistical analysis, variant assign
 ### Core Features
 
 #### 1. Experiment Management
+
 - Create experiments with variants, metrics, and hypotheses
 - Lifecycle management: draft → running → stopped
 - Traffic allocation control (0-100%)
@@ -33,18 +35,21 @@ Built a complete A/B testing framework with statistical analysis, variant assign
 - Significance level setting (default: 0.05)
 
 #### 2. Variant Assignment
+
 - **Consistent Hashing**: Same user always gets same variant
 - **Traffic Allocation**: Control experiment participation percentage
 - **Allocation Weights**: Distribute traffic across variants (e.g., 50/50, 70/30)
 - **Context Storage**: Track assignment metadata
 
 #### 3. Event Tracking
+
 - Track conversion events per user/variant
 - Support for custom metrics
 - Value tracking for quantitative analysis
 - Timestamp recording for time-series analysis
 
 #### 4. Statistical Analysis
+
 - **Two-Proportion Z-Test**: Compare variant conversion rates
 - **Confidence Intervals**: 95% CI for each variant
 - **P-Value Calculation**: Test statistical significance
@@ -52,6 +57,7 @@ Built a complete A/B testing framework with statistical analysis, variant assign
 - **Automated Recommendations**: Data-driven decision support
 
 #### 5. Monitoring & Observability
+
 - **Prometheus Metrics**: 9 metric types exposed
   - Experiments created/active
   - Variant assignments
@@ -97,6 +103,7 @@ Built a complete A/B testing framework with statistical analysis, variant assign
 ### Files Created
 
 **Service Code (8 files)**:
+
 - `services/experimentation/app/main.py` - FastAPI application and endpoints
 - `services/experimentation/app/models.py` - Pydantic request/response models
 - `services/experimentation/app/schema.py` - SQLAlchemy database schema
@@ -107,6 +114,7 @@ Built a complete A/B testing framework with statistical analysis, variant assign
 - `services/experimentation/app/__init__.py` - Package initialization
 
 **Kubernetes Manifests (8 resources)**:
+
 - `platform/apps/experimentation/deployment.yaml`:
   - ConfigMap for environment variables
   - Secret for admin token
@@ -119,21 +127,26 @@ Built a complete A/B testing framework with statistical analysis, variant assign
 - `platform/apps/experimentation-application.yaml` - ArgoCD application
 
 **Database (2 resources)**:
+
 - `platform/apps/postgresql/db-experiment-cluster.yaml` - PostgreSQL cluster (3 replicas)
 - `platform/apps/postgresql/db-experiment-credentials.yaml` - Database credentials
 
 **Dashboard**:
+
 - `platform/apps/grafana/dashboards/experimentation.json` - Grafana dashboard
 
 **Testing & Validation**:
+
 - `tests/bdd/features/experimentation.feature` - BDD tests (21 scenarios)
 - `scripts/validate-experimentation.sh` - Validation script (10 checks)
 
 **Documentation**:
+
 - `services/experimentation/README.md` - Service documentation with API examples
 - `platform/apps/experimentation/README.md` - Deployment guide
 
 **Configuration**:
+
 - `services/experimentation/requirements.txt` - Python dependencies
 - `services/experimentation/requirements-dev.txt` - Dev dependencies
 - `services/experimentation/Dockerfile` - Container image
@@ -144,6 +157,7 @@ Built a complete A/B testing framework with statistical analysis, variant assign
 ## API Endpoints
 
 ### Experiment Management
+
 - `POST /api/v1/experiments` - Create experiment
 - `GET /api/v1/experiments` - List experiments
 - `GET /api/v1/experiments/{id}` - Get experiment
@@ -153,11 +167,13 @@ Built a complete A/B testing framework with statistical analysis, variant assign
 - `POST /api/v1/experiments/{id}/stop` - Stop experiment
 
 ### Assignment & Tracking
+
 - `POST /api/v1/experiments/{id}/assign` - Assign variant to user
 - `POST /api/v1/experiments/{id}/track` - Track event
 - `GET /api/v1/experiments/{id}/stats` - Get statistical analysis
 
 ### System
+
 - `GET /health` - Health check
 - `GET /metrics` - Prometheus metrics
 
@@ -166,18 +182,21 @@ Built a complete A/B testing framework with statistical analysis, variant assign
 ✅ **All criteria met**:
 
 1. ✅ **Framework deployed**
+
    - FastAPI service deployed with 2 replicas
    - PostgreSQL database with 3 replicas (HA)
    - Kubernetes resources configured
    - ArgoCD application for GitOps
 
 2. ✅ **Variant assignment working**
+
    - Consistent hash-based assignment implemented
    - Traffic allocation control (0-100%)
    - Variant allocation weights configurable
    - Assignment persistence in database
 
 3. ✅ **Statistical analysis automated**
+
    - Two-proportion z-test implementation
    - Confidence interval calculation
    - P-value and significance testing
@@ -185,6 +204,7 @@ Built a complete A/B testing framework with statistical analysis, variant assign
    - Automated recommendations
 
 4. ✅ **Results dashboard**
+
    - Grafana dashboard with 8 panels
    - Real-time metrics visualization
    - Assignment distribution charts
@@ -200,6 +220,7 @@ Built a complete A/B testing framework with statistical analysis, variant assign
 ## Testing
 
 ### BDD Acceptance Tests (21 scenarios)
+
 - Deployment health checks
 - Database connectivity
 - API functionality
@@ -212,6 +233,7 @@ Built a complete A/B testing framework with statistical analysis, variant assign
 - Resilience testing
 
 ### Validation Script (10 checks)
+
 1. PostgreSQL cluster health
 2. Service deployment status
 3. Service and ingress configuration
@@ -229,11 +251,11 @@ Built a complete A/B testing framework with statistical analysis, variant assign
 
 **Target**: <70% CPU/Memory utilization
 
-| Component | Requests | Limits | Replicas | Total |
-|-----------|----------|--------|----------|-------|
-| Experimentation Service | 200m CPU, 256Mi | 1 CPU, 1Gi | 2 | 400m-2 CPU, 512Mi-2Gi |
-| PostgreSQL Database | 200m CPU, 256Mi | 500m CPU, 512Mi | 3 | 600m-1.5 CPU, 768Mi-1.5Gi |
-| **Total Platform Impact** | - | - | - | **1-3.5 CPU, 1.25-3.5Gi** |
+| Component                 | Requests        | Limits          | Replicas | Total                     |
+| ------------------------- | --------------- | --------------- | -------- | ------------------------- |
+| Experimentation Service   | 200m CPU, 256Mi | 1 CPU, 1Gi      | 2        | 400m-2 CPU, 512Mi-2Gi     |
+| PostgreSQL Database       | 200m CPU, 256Mi | 500m CPU, 512Mi | 3        | 600m-1.5 CPU, 768Mi-1.5Gi |
+| **Total Platform Impact** | -               | -               | -        | **1-3.5 CPU, 1.25-3.5Gi** |
 
 ## Security Features
 
@@ -248,6 +270,7 @@ Built a complete A/B testing framework with statistical analysis, variant assign
 ## Deployment
 
 ### Prerequisites
+
 1. CloudNativePG operator installed
 2. Ingress controller configured
 3. cert-manager for TLS
@@ -274,6 +297,7 @@ make validate-at-e3-012
 ```
 
 ### Access URLs
+
 - **API**: https://experimentation.fawkes.idp
 - **Metrics**: https://experimentation.fawkes.idp/metrics
 - **Health**: https://experimentation.fawkes.idp/health
@@ -317,16 +341,19 @@ curl https://experimentation.fawkes.idp/api/v1/experiments/{id}/stats
 ## Integration Points
 
 ### With Unleash (Feature Flags)
+
 - Use Unleash to control experiment traffic
 - Gate experiments behind feature flags
 - Gradual rollout integration
 
 ### With Plausible (Analytics)
+
 - Cross-reference experiment events
 - Combine with web analytics data
 - Funnel analysis integration
 
 ### With Backstage
+
 - Experiment management UI (future)
 - Entity annotations for experiments
 - Developer self-service

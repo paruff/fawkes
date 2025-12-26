@@ -24,7 +24,7 @@ from .metrics import (
     feedback_submissions_total,
     feedback_request_duration,
     feedback_time_to_action_seconds,
-    update_all_metrics
+    update_all_metrics,
 )
 
 # Import sentiment analysis
@@ -42,20 +42,16 @@ from .notifications import (
     notify_duplicate_detected,
     notify_high_priority_feedback,
     notify_automation_summary,
-    is_notification_enabled
+    is_notification_enabled,
 )
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Configuration from environment
 DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://feedback:feedback@db-feedback-dev-rw.fawkes.svc.cluster.local:5432/feedback_db"
+    "DATABASE_URL", "postgresql://feedback:feedback@db-feedback-dev-rw.fawkes.svc.cluster.local:5432/feedback_db"
 )
 # SECURITY: In production, ADMIN_TOKEN must be set via environment variable
 # This default is ONLY for development/testing purposes
@@ -68,35 +64,22 @@ db_pool = None
 # Pydantic models
 class FeedbackSubmission(BaseModel):
     """Request model for feedback submission."""
+
     rating: int = Field(..., description="Rating from 1-5", ge=1, le=5)
     category: str = Field(..., description="Feedback category", min_length=1, max_length=100)
     comment: str = Field(..., description="Feedback comment", min_length=1, max_length=2000)
     email: Optional[EmailStr] = Field(None, description="Optional email for follow-up")
     page_url: Optional[str] = Field(None, description="Page URL where feedback was submitted")
-    feedback_type: str = Field(
-        "feedback",
-        description="Type of feedback (feedback, bug_report, feature_request)"
-    )
-    screenshot: Optional[str] = Field(
-        None,
-        description="Base64 encoded screenshot data (optional)"
-    )
-    browser_info: Optional[str] = Field(
-        None,
-        description="Browser information (name, version)"
-    )
-    user_agent: Optional[str] = Field(
-        None,
-        description="User agent string"
-    )
-    create_github_issue: bool = Field(
-        False,
-        description="Whether to automatically create a GitHub issue"
-    )
+    feedback_type: str = Field("feedback", description="Type of feedback (feedback, bug_report, feature_request)")
+    screenshot: Optional[str] = Field(None, description="Base64 encoded screenshot data (optional)")
+    browser_info: Optional[str] = Field(None, description="Browser information (name, version)")
+    user_agent: Optional[str] = Field(None, description="User agent string")
+    create_github_issue: bool = Field(False, description="Whether to automatically create a GitHub issue")
 
 
 class FeedbackResponse(BaseModel):
     """Response model for feedback item."""
+
     id: int = Field(..., description="Feedback ID")
     rating: int = Field(..., description="Rating from 1-5")
     category: str = Field(..., description="Feedback category")
@@ -117,6 +100,7 @@ class FeedbackResponse(BaseModel):
 
 class FeedbackListResponse(BaseModel):
     """Response model for feedback list."""
+
     items: List[FeedbackResponse] = Field(..., description="List of feedback items")
     total: int = Field(..., description="Total number of feedback items")
     page: int = Field(..., description="Current page number")
@@ -125,11 +109,13 @@ class FeedbackListResponse(BaseModel):
 
 class StatusUpdate(BaseModel):
     """Request model for status update."""
+
     status: str = Field(..., description="New status (open, in_progress, resolved, dismissed)")
 
 
 class FeedbackStats(BaseModel):
     """Aggregated feedback statistics."""
+
     total_feedback: int = Field(..., description="Total feedback count")
     average_rating: float = Field(..., description="Average rating")
     by_category: dict = Field(..., description="Feedback count by category")
@@ -139,6 +125,7 @@ class FeedbackStats(BaseModel):
 
 class HealthResponse(BaseModel):
     """Health check response."""
+
     status: str = Field(..., description="Service status")
     service: str = Field(..., description="Service name")
     version: str = Field(..., description="Service version")
@@ -155,7 +142,8 @@ async def init_database():
 
         # Create table if not exists
         async with db_pool.acquire() as conn:
-            await conn.execute("""
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS feedback (
                     id SERIAL PRIMARY KEY,
                     rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
@@ -196,7 +184,8 @@ async def init_database():
                         ALTER TABLE feedback ADD COLUMN status_changed_at TIMESTAMP;
                     END IF;
                 END $$;
-            """)
+            """
+            )
             logger.info("✅ Database schema initialized")
     except Exception as e:
         logger.error(f"❌ Failed to connect to database: {e}")
@@ -232,7 +221,7 @@ app = FastAPI(
     title="Feedback Service",
     description="Feedback collection and management service for Backstage",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Add CORS middleware
@@ -280,7 +269,7 @@ async def health_check():
         status="healthy" if db_connected else "degraded",
         service="feedback-service",
         version="1.0.0",
-        database_connected=db_connected
+        database_connected=db_connected,
     )
 
 
@@ -294,10 +283,7 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
     # Validate feedback type
     valid_types = ["feedback", "bug_report", "feature_request"]
     if feedback.feedback_type not in valid_types:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Invalid feedback_type. Must be one of: {', '.join(valid_types)}"
-        )
+        raise HTTPException(status_code=400, detail=f"Invalid feedback_type. Must be one of: {', '.join(valid_types)}")
 
     with feedback_request_duration.labels(endpoint="submit_feedback").time():
         try:
@@ -311,24 +297,20 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
                     # Validate and decode base64 screenshot
                     # Remove data URL prefix if present (e.g., "data:image/png;base64,")
                     screenshot_data = feedback.screenshot
-                    if ',' in screenshot_data:
-                        screenshot_data = screenshot_data.split(',', 1)[1]
+                    if "," in screenshot_data:
+                        screenshot_data = screenshot_data.split(",", 1)[1]
 
                     screenshot_bytes = base64.b64decode(screenshot_data)
 
                     # Basic validation - check if it's a reasonable size (< 5MB)
                     if len(screenshot_bytes) > 5 * 1024 * 1024:
-                        raise HTTPException(
-                            status_code=400,
-                            detail="Screenshot too large (max 5MB)"
-                        )
+                        raise HTTPException(status_code=400, detail="Screenshot too large (max 5MB)")
 
                     logger.info(f"Screenshot received: {len(screenshot_bytes)} bytes")
                 except Exception as e:
                     logger.error(f"Error processing screenshot: {e}")
                     raise HTTPException(
-                        status_code=400,
-                        detail="Invalid screenshot data. Must be base64 encoded image."
+                        status_code=400, detail="Invalid screenshot data. Must be base64 encoded image."
                     )
 
             async with db_pool.acquire() as conn:
@@ -358,16 +340,13 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
                     feedback.feedback_type,
                     screenshot_bytes,
                     feedback.browser_info,
-                    feedback.user_agent
+                    feedback.user_agent,
                 )
 
                 # Update metrics
-                feedback_submissions_total.labels(
-                    category=feedback.category,
-                    rating=str(feedback.rating)
-                ).inc()
+                feedback_submissions_total.labels(category=feedback.category, rating=str(feedback.rating)).inc()
 
-                feedback_id = row['id']
+                feedback_id = row["id"]
 
                 logger.info(
                     f"Feedback submitted: ID={feedback_id}, type={feedback.feedback_type}, "
@@ -392,7 +371,7 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
                             email=feedback.email,
                             screenshot_data=feedback.screenshot if feedback.screenshot else None,
                             browser_info=feedback.browser_info,
-                            user_agent=feedback.user_agent
+                            user_agent=feedback.user_agent,
                         )
 
                         if success and issue_url:
@@ -405,7 +384,7 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
                                     WHERE id = $2
                                     """,
                                     issue_url,
-                                    feedback_id
+                                    feedback_id,
                                 )
                             logger.info(f"✅ Linked GitHub issue to feedback ID {feedback_id}: {issue_url}")
                         elif error:
@@ -418,22 +397,22 @@ async def submit_feedback(feedback: FeedbackSubmission, background_tasks: Backgr
                     logger.warning("GitHub issue creation requested but GitHub integration not enabled")
 
                 return FeedbackResponse(
-                    id=row['id'],
-                    rating=row['rating'],
-                    category=row['category'],
-                    comment=row['comment'],
-                    email=row['email'],
-                    page_url=row['page_url'],
-                    status=row['status'],
-                    sentiment=row['sentiment'],
-                    sentiment_compound=row['sentiment_compound'],
-                    feedback_type=row['feedback_type'],
-                    browser_info=row['browser_info'],
-                    user_agent=row['user_agent'],
-                    has_screenshot=row['has_screenshot'],
-                    github_issue_url=row['github_issue_url'],
-                    created_at=row['created_at'],
-                    updated_at=row['updated_at']
+                    id=row["id"],
+                    rating=row["rating"],
+                    category=row["category"],
+                    comment=row["comment"],
+                    email=row["email"],
+                    page_url=row["page_url"],
+                    status=row["status"],
+                    sentiment=row["sentiment"],
+                    sentiment_compound=row["sentiment_compound"],
+                    feedback_type=row["feedback_type"],
+                    browser_info=row["browser_info"],
+                    user_agent=row["user_agent"],
+                    has_screenshot=row["has_screenshot"],
+                    github_issue_url=row["github_issue_url"],
+                    created_at=row["created_at"],
+                    updated_at=row["updated_at"],
                 )
         except HTTPException:
             raise
@@ -449,7 +428,7 @@ async def list_feedback(
     page_size: int = Query(20, ge=1, le=100, description="Page size"),
     status: Optional[str] = Query(None, description="Filter by status"),
     category: Optional[str] = Query(None, description="Filter by category"),
-    _token: str = Depends(verify_admin_token)
+    _token: str = Depends(verify_admin_token),
 ):
     """List all feedback (admin only)."""
     if not db_pool:
@@ -498,32 +477,27 @@ async def list_feedback(
 
                 items = [
                     FeedbackResponse(
-                        id=row['id'],
-                        rating=row['rating'],
-                        category=row['category'],
-                        comment=row['comment'],
-                        email=row['email'],
-                        page_url=row['page_url'],
-                        status=row['status'],
-                        sentiment=row['sentiment'],
-                        sentiment_compound=row['sentiment_compound'],
-                        feedback_type=row['feedback_type'],
-                        browser_info=row['browser_info'],
-                        user_agent=row['user_agent'],
-                        has_screenshot=row['has_screenshot'],
-                        github_issue_url=row['github_issue_url'],
-                        created_at=row['created_at'],
-                        updated_at=row['updated_at']
+                        id=row["id"],
+                        rating=row["rating"],
+                        category=row["category"],
+                        comment=row["comment"],
+                        email=row["email"],
+                        page_url=row["page_url"],
+                        status=row["status"],
+                        sentiment=row["sentiment"],
+                        sentiment_compound=row["sentiment_compound"],
+                        feedback_type=row["feedback_type"],
+                        browser_info=row["browser_info"],
+                        user_agent=row["user_agent"],
+                        has_screenshot=row["has_screenshot"],
+                        github_issue_url=row["github_issue_url"],
+                        created_at=row["created_at"],
+                        updated_at=row["updated_at"],
                     )
                     for row in rows
                 ]
 
-                return FeedbackListResponse(
-                    items=items,
-                    total=total,
-                    page=page,
-                    page_size=page_size
-                )
+                return FeedbackListResponse(items=items, total=total, page=page, page_size=page_size)
         except Exception as e:
             logger.error(f"Error listing feedback: {e}")
             raise HTTPException(status_code=500, detail="Failed to list feedback")
@@ -535,7 +509,7 @@ async def update_feedback_status(
     feedback_id: int,
     status_update: StatusUpdate,
     background_tasks: BackgroundTasks,
-    _token: str = Depends(verify_admin_token)
+    _token: str = Depends(verify_admin_token),
 ):
     """Update feedback status (admin only) and sync with GitHub if applicable."""
     if not db_pool:
@@ -544,27 +518,21 @@ async def update_feedback_status(
     # Validate status
     valid_statuses = ["open", "in_progress", "resolved", "dismissed"]
     if status_update.status not in valid_statuses:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Invalid status. Must be one of: {', '.join(valid_statuses)}"
-        )
+        raise HTTPException(status_code=400, detail=f"Invalid status. Must be one of: {', '.join(valid_statuses)}")
 
     with feedback_request_duration.labels(endpoint="update_status").time():
         try:
             async with db_pool.acquire() as conn:
                 # First, get the current status to check if it's changing
-                current_row = await conn.fetchrow(
-                    "SELECT status FROM feedback WHERE id = $1",
-                    feedback_id
-                )
+                current_row = await conn.fetchrow("SELECT status FROM feedback WHERE id = $1", feedback_id)
 
                 if not current_row:
                     raise HTTPException(status_code=404, detail="Feedback not found")
 
                 # Update status and set status_changed_at if status is actually changing
                 # (and if it's changing from 'open' to any other status for first action tracking)
-                status_is_changing = current_row['status'] != status_update.status
-                first_action = current_row['status'] == 'open' and status_update.status != 'open'
+                status_is_changing = current_row["status"] != status_update.status
+                first_action = current_row["status"] == "open" and status_update.status != "open"
 
                 if status_is_changing and first_action:
                     row = await conn.fetchrow(
@@ -580,13 +548,13 @@ async def update_feedback_status(
                                   (screenshot IS NOT NULL) as has_screenshot
                         """,
                         status_update.status,
-                        feedback_id
+                        feedback_id,
                     )
 
                     # Record time-to-action metric (time from created_at to now)
-                    if row['created_at'] and row['status_changed_at']:
-                        time_to_action = (row['status_changed_at'] - row['created_at']).total_seconds()
-                        feedback_time_to_action_seconds.labels(category=row['category']).observe(time_to_action)
+                    if row["created_at"] and row["status_changed_at"]:
+                        time_to_action = (row["status_changed_at"] - row["created_at"]).total_seconds()
+                        feedback_time_to_action_seconds.labels(category=row["category"]).observe(time_to_action)
                         logger.info(f"Time-to-action recorded: {time_to_action:.0f}s for feedback ID {feedback_id}")
                 else:
                     row = await conn.fetchrow(
@@ -600,7 +568,7 @@ async def update_feedback_status(
                                   (screenshot IS NOT NULL) as has_screenshot
                         """,
                         status_update.status,
-                        feedback_id
+                        feedback_id,
                     )
 
                 if not row:
@@ -609,16 +577,14 @@ async def update_feedback_status(
                 logger.info(f"Feedback status updated: ID={feedback_id}, status={status_update.status}")
 
                 # If there's a GitHub issue linked, update it as well
-                github_issue_url = row['github_issue_url']
+                github_issue_url = row["github_issue_url"]
                 if github_issue_url and is_github_enabled():
                     logger.info(f"Syncing status update to GitHub issue: {github_issue_url}")
 
                     # Update in background to not block response
                     async def update_github_task():
                         success, error = await update_issue_status(
-                            issue_url=github_issue_url,
-                            new_status=status_update.status,
-                            feedback_id=feedback_id
+                            issue_url=github_issue_url, new_status=status_update.status, feedback_id=feedback_id
                         )
                         if success:
                             logger.info(f"✅ Synced status to GitHub issue for feedback ID {feedback_id}")
@@ -628,22 +594,22 @@ async def update_feedback_status(
                     background_tasks.add_task(update_github_task)
 
                 return FeedbackResponse(
-                    id=row['id'],
-                    rating=row['rating'],
-                    category=row['category'],
-                    comment=row['comment'],
-                    email=row['email'],
-                    page_url=row['page_url'],
-                    status=row['status'],
-                    sentiment=row['sentiment'],
-                    sentiment_compound=row['sentiment_compound'],
-                    feedback_type=row['feedback_type'],
-                    browser_info=row['browser_info'],
-                    user_agent=row['user_agent'],
-                    has_screenshot=row['has_screenshot'],
-                    github_issue_url=row['github_issue_url'],
-                    created_at=row['created_at'],
-                    updated_at=row['updated_at']
+                    id=row["id"],
+                    rating=row["rating"],
+                    category=row["category"],
+                    comment=row["comment"],
+                    email=row["email"],
+                    page_url=row["page_url"],
+                    status=row["status"],
+                    sentiment=row["sentiment"],
+                    sentiment_compound=row["sentiment_compound"],
+                    feedback_type=row["feedback_type"],
+                    browser_info=row["browser_info"],
+                    user_agent=row["user_agent"],
+                    has_screenshot=row["has_screenshot"],
+                    github_issue_url=row["github_issue_url"],
+                    created_at=row["created_at"],
+                    updated_at=row["updated_at"],
                 )
         except HTTPException:
             raise
@@ -663,34 +629,28 @@ async def get_feedback_stats(_token: str = Depends(verify_admin_token)):
         try:
             async with db_pool.acquire() as conn:
                 # Total and average
-                total_and_avg = await conn.fetchrow(
-                    "SELECT COUNT(*) as total, AVG(rating) as avg_rating FROM feedback"
-                )
+                total_and_avg = await conn.fetchrow("SELECT COUNT(*) as total, AVG(rating) as avg_rating FROM feedback")
 
                 # By category
-                category_rows = await conn.fetch(
-                    "SELECT category, COUNT(*) as count FROM feedback GROUP BY category"
-                )
-                by_category = {row['category']: row['count'] for row in category_rows}
+                category_rows = await conn.fetch("SELECT category, COUNT(*) as count FROM feedback GROUP BY category")
+                by_category = {row["category"]: row["count"] for row in category_rows}
 
                 # By status
-                status_rows = await conn.fetch(
-                    "SELECT status, COUNT(*) as count FROM feedback GROUP BY status"
-                )
-                by_status = {row['status']: row['count'] for row in status_rows}
+                status_rows = await conn.fetch("SELECT status, COUNT(*) as count FROM feedback GROUP BY status")
+                by_status = {row["status"]: row["count"] for row in status_rows}
 
                 # By rating
                 rating_rows = await conn.fetch(
                     "SELECT rating, COUNT(*) as count FROM feedback GROUP BY rating ORDER BY rating"
                 )
-                by_rating = {str(row['rating']): row['count'] for row in rating_rows}
+                by_rating = {str(row["rating"]): row["count"] for row in rating_rows}
 
                 return FeedbackStats(
-                    total_feedback=total_and_avg['total'],
-                    average_rating=float(total_and_avg['avg_rating']) if total_and_avg['avg_rating'] else 0.0,
+                    total_feedback=total_and_avg["total"],
+                    average_rating=float(total_and_avg["avg_rating"]) if total_and_avg["avg_rating"] else 0.0,
                     by_category=by_category,
                     by_status=by_status,
-                    by_rating=by_rating
+                    by_rating=by_rating,
                 )
         except Exception as e:
             logger.error(f"Error getting feedback stats: {e}")
@@ -708,10 +668,7 @@ async def refresh_metrics(_token: str = Depends(verify_admin_token)):
         async with db_pool.acquire() as conn:
             await update_all_metrics(conn)
 
-        return {
-            "status": "success",
-            "message": "All metrics refreshed successfully"
-        }
+        return {"status": "success", "message": "All metrics refreshed successfully"}
     except Exception as e:
         logger.error(f"Error refreshing metrics: {e}")
         raise HTTPException(status_code=500, detail="Failed to refresh metrics")
@@ -736,7 +693,7 @@ async def root():
             "duplicate_detection": github_enabled,
             "notifications": notification_enabled,
             "automation_pipeline": github_enabled,
-            "feedback_types": ["feedback", "bug_report", "feature_request"]
+            "feedback_types": ["feedback", "bug_report", "feature_request"],
         },
         "endpoints": {
             "health": "/health",
@@ -748,17 +705,14 @@ async def root():
             "metrics": "/metrics",
             "refresh_metrics": "POST /api/v1/metrics/refresh (admin)",
             "triage_feedback": "POST /api/v1/feedback/{id}/triage (admin)",
-            "automate_validated": "POST /api/v1/automation/process-validated (admin)"
-        }
+            "automate_validated": "POST /api/v1/automation/process-validated (admin)",
+        },
     }
 
 
 # Get feedback screenshot (admin only)
 @app.get("/api/v1/feedback/{feedback_id}/screenshot", tags=["Feedback"])
-async def get_feedback_screenshot(
-    feedback_id: int,
-    _token: str = Depends(verify_admin_token)
-):
+async def get_feedback_screenshot(feedback_id: int, _token: str = Depends(verify_admin_token)):
     """Get screenshot data for a specific feedback (admin only)."""
     if not db_pool:
         raise HTTPException(status_code=503, detail="Database not available")
@@ -769,24 +723,24 @@ async def get_feedback_screenshot(
                 """
                 SELECT screenshot FROM feedback WHERE id = $1
                 """,
-                feedback_id
+                feedback_id,
             )
 
             if not row:
                 raise HTTPException(status_code=404, detail="Feedback not found")
 
-            screenshot_bytes = row['screenshot']
+            screenshot_bytes = row["screenshot"]
 
             if not screenshot_bytes:
                 raise HTTPException(status_code=404, detail="No screenshot available for this feedback")
 
             # Return screenshot as base64 encoded string
-            screenshot_base64 = base64.b64encode(screenshot_bytes).decode('utf-8')
+            screenshot_base64 = base64.b64encode(screenshot_bytes).decode("utf-8")
 
             return {
                 "feedback_id": feedback_id,
                 "screenshot": f"data:image/png;base64,{screenshot_base64}",
-                "size_bytes": len(screenshot_bytes)
+                "size_bytes": len(screenshot_bytes),
             }
     except HTTPException:
         raise
@@ -797,10 +751,7 @@ async def get_feedback_screenshot(
 
 # Triage feedback with AI (admin only)
 @app.post("/api/v1/feedback/{feedback_id}/triage", tags=["Automation"])
-async def triage_feedback_endpoint(
-    feedback_id: int,
-    _token: str = Depends(verify_admin_token)
-):
+async def triage_feedback_endpoint(feedback_id: int, _token: str = Depends(verify_admin_token)):
     """
     Run AI triage on specific feedback submission.
 
@@ -824,7 +775,7 @@ async def triage_feedback_endpoint(
                 FROM feedback
                 WHERE id = $1
                 """,
-                feedback_id
+                feedback_id,
             )
 
             if not row:
@@ -832,20 +783,17 @@ async def triage_feedback_endpoint(
 
             # Run AI triage
             triage_result = await triage_feedback(
-                feedback_id=row['id'],
-                feedback_type=row['feedback_type'] or 'feedback',
-                category=row['category'],
-                comment=row['comment'],
-                rating=row['rating'],
-                sentiment_compound=row['sentiment_compound']
+                feedback_id=row["id"],
+                feedback_type=row["feedback_type"] or "feedback",
+                category=row["category"],
+                comment=row["comment"],
+                rating=row["rating"],
+                sentiment_compound=row["sentiment_compound"],
             )
 
             logger.info(f"Triage completed for feedback ID {feedback_id}: {triage_result}")
 
-            return {
-                "status": "success",
-                "triage": triage_result
-            }
+            return {"status": "success", "triage": triage_result}
 
     except HTTPException:
         raise
@@ -861,7 +809,7 @@ async def automate_validated_feedback(
     min_rating: int = Query(None, ge=1, le=5, description="Minimum rating filter"),
     feedback_type: Optional[str] = Query(None, description="Filter by feedback type"),
     limit: int = Query(10, ge=1, le=100, description="Maximum number to process"),
-    _token: str = Depends(verify_admin_token)
+    _token: str = Depends(verify_admin_token),
 ):
     """
     Automatically process validated feedback and create GitHub issues.
@@ -879,8 +827,7 @@ async def automate_validated_feedback(
 
     if not is_github_enabled():
         raise HTTPException(
-            status_code=503,
-            detail="GitHub integration not enabled. Set GITHUB_TOKEN environment variable."
+            status_code=503, detail="GitHub integration not enabled. Set GITHUB_TOKEN environment variable."
         )
 
     try:
@@ -912,7 +859,7 @@ async def automate_validated_feedback(
                     "status": "success",
                     "message": "No validated feedback to process",
                     "processed": 0,
-                    "issues_created": 0
+                    "issues_created": 0,
                 }
 
             processed = 0
@@ -925,32 +872,29 @@ async def automate_validated_feedback(
                 try:
                     # Run AI triage
                     triage_result = await triage_feedback(
-                        feedback_id=feedback['id'],
-                        feedback_type=feedback['feedback_type'] or 'feedback',
-                        category=feedback['category'],
-                        comment=feedback['comment'],
-                        rating=feedback['rating'],
-                        sentiment_compound=feedback['sentiment_compound']
+                        feedback_id=feedback["id"],
+                        feedback_type=feedback["feedback_type"] or "feedback",
+                        category=feedback["category"],
+                        comment=feedback["comment"],
+                        rating=feedback["rating"],
+                        sentiment_compound=feedback["sentiment_compound"],
                     )
 
                     processed += 1
 
                     # Skip if duplicates found
-                    if not triage_result['should_create_issue']:
+                    if not triage_result["should_create_issue"]:
                         skipped_duplicates += 1
-                        logger.info(
-                            f"Skipping feedback ID {feedback['id']}: "
-                            f"{triage_result['triage_reason']}"
-                        )
+                        logger.info(f"Skipping feedback ID {feedback['id']}: " f"{triage_result['triage_reason']}")
 
                         # Notify about duplicates
-                        if triage_result['potential_duplicates']:
+                        if triage_result["potential_duplicates"]:
                             background_tasks.add_task(
                                 notify_duplicate_detected,
-                                feedback['id'],
-                                triage_result['potential_duplicates'],
-                                feedback['category'],
-                                feedback['comment']
+                                feedback["id"],
+                                triage_result["potential_duplicates"],
+                                feedback["category"],
+                                feedback["comment"],
                             )
 
                         continue
@@ -958,16 +902,16 @@ async def automate_validated_feedback(
                     # Create GitHub issue in background
                     async def create_issue_background():
                         success, issue_url, error = await create_github_issue(
-                            feedback_id=feedback['id'],
-                            feedback_type=feedback['feedback_type'] or 'feedback',
-                            category=feedback['category'],
-                            comment=feedback['comment'],
-                            page_url=feedback['page_url'],
-                            rating=feedback['rating'],
-                            email=feedback['email'],
+                            feedback_id=feedback["id"],
+                            feedback_type=feedback["feedback_type"] or "feedback",
+                            category=feedback["category"],
+                            comment=feedback["comment"],
+                            page_url=feedback["page_url"],
+                            rating=feedback["rating"],
+                            email=feedback["email"],
                             screenshot_data=None,  # Screenshots not auto-attached in batch
-                            browser_info=feedback['browser_info'],
-                            user_agent=feedback['user_agent']
+                            browser_info=feedback["browser_info"],
+                            user_agent=feedback["user_agent"],
                         )
 
                         if success and issue_url:
@@ -982,7 +926,7 @@ async def automate_validated_feedback(
                                     WHERE id = $2
                                     """,
                                     issue_url,
-                                    feedback['id']
+                                    feedback["id"],
                                 )
                             logger.info(
                                 f"✅ Automated issue created for feedback ID {feedback['id']}: "
@@ -991,17 +935,15 @@ async def automate_validated_feedback(
 
                             # Send notification about issue creation
                             await notify_issue_created(
-                                feedback_id=feedback['id'],
+                                feedback_id=feedback["id"],
                                 issue_url=issue_url,
-                                priority=triage_result['priority'],
-                                category=feedback['category'],
-                                feedback_type=feedback['feedback_type'] or 'feedback',
-                                comment_preview=feedback['comment']
+                                priority=triage_result["priority"],
+                                category=feedback["category"],
+                                feedback_type=feedback["feedback_type"] or "feedback",
+                                comment_preview=feedback["comment"],
                             )
                         elif error:
-                            logger.error(
-                                f"❌ Failed to create issue for feedback ID {feedback['id']}: {error}"
-                            )
+                            logger.error(f"❌ Failed to create issue for feedback ID {feedback['id']}: {error}")
 
                     background_tasks.add_task(create_issue_background)
                     issues_created += 1
@@ -1017,7 +959,7 @@ async def automate_validated_feedback(
                 "processed": processed,
                 "issues_created": issues_created,
                 "skipped_duplicates": skipped_duplicates,
-                "errors": errors if errors else None
+                "errors": errors if errors else None,
             }
 
             logger.info(
@@ -1026,13 +968,7 @@ async def automate_validated_feedback(
             )
 
             # Send automation summary notification
-            background_tasks.add_task(
-                notify_automation_summary,
-                processed,
-                issues_created,
-                skipped_duplicates,
-                errors
-            )
+            background_tasks.add_task(notify_automation_summary, processed, issues_created, skipped_duplicates, errors)
 
             return result
 

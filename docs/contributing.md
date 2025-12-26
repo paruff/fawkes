@@ -32,12 +32,12 @@ git push origin feature/your-feature-name
 
 ### 2. Development Guidelines
 
-| Guideline | Description |
-|-----------|-------------|
-| ![](assets/images/icons/git.png){ width="24" } **Branch Lifetime** | Merge within 24 hours |
-| ![](assets/images/icons/test.png){ width="24" } **Testing** | Include tests with all changes |
-| ![](assets/images/icons/docs.png){ width="24" } **Documentation** | Update relevant docs |
-| ![](assets/images/icons/ci.png){ width="24" } **CI/CD** | Ensure all checks pass |
+| Guideline                                                          | Description                    |
+| ------------------------------------------------------------------ | ------------------------------ |
+| ![](assets/images/icons/git.png){ width="24" } **Branch Lifetime** | Merge within 24 hours          |
+| ![](assets/images/icons/test.png){ width="24" } **Testing**        | Include tests with all changes |
+| ![](assets/images/icons/docs.png){ width="24" } **Documentation**  | Update relevant docs           |
+| ![](assets/images/icons/ci.png){ width="24" } **CI/CD**            | Ensure all checks pass         |
 
 ### 3. Code Quality Standards
 
@@ -54,6 +54,7 @@ make lint
 ```
 
 **All code must**:
+
 - Pass automated linting (Bash, Python, Go, YAML, JSON, Markdown, Terraform)
 - Pass security scanning (secrets detection, SAST, container scanning)
 - Follow language-specific style guides
@@ -74,6 +75,7 @@ description: Brief description of the page content
 # Your Page Title
 
 Content goes here following the standard format:
+
 - Use H2 (##) for main sections
 - Use tables for structured information
 - Include related links
@@ -113,10 +115,12 @@ mkdocs build
 ## Submitting Changes
 
 1. **Create Issue**
+
    - Describe the problem or enhancement
    - Reference related DORA capabilities
 
 2. **Submit Pull Request**
+
    - Reference the issue
    - Include clear description
    - Update documentation

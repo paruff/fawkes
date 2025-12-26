@@ -51,17 +51,20 @@ This guide provides step-by-step instructions for setting up the Fawkes infrastr
    aws configure
    ```
 2. Enter the following details when prompted:
+
    - **AWS Access Key ID**: (from the `.csv` file)
    - **AWS Secret Access Key**: (from the `.csv` file)
    - **Default region name**: (e.g., `us-east-1`)
    - **Default output format**: (e.g., `json`)
 
 3. Validate the configuration by listing S3 buckets:
+
    ```sh
    aws s3 ls
    ```
 
 4. (Optional) Create a profile for Terraform:
+
    - Add the following to `~/.aws/credentials`:
      ```plaintext
      [terraform]
@@ -129,6 +132,7 @@ This guide provides step-by-step instructions for setting up the Fawkes infrastr
 ### Terraform Version Compatibility
 
 To prevent issues with Terraform provider versions, add version constraints to your `provider` blocks:
+
 ```hcl
 provider "aws" {
   version = "~> 3.0"
@@ -138,6 +142,7 @@ provider "aws" {
 ### AWS CLI Errors
 
 If you encounter errors with the AWS CLI, ensure your credentials and region are correctly configured:
+
 ```sh
 aws configure
 ```

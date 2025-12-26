@@ -45,16 +45,16 @@ curl -X POST http://vsm-service.fawkes.svc:8000/api/v1/focalboard/webhook \
 
 Default mappings:
 
-| Focalboard Column | VSM Stage |
-|-------------------|-----------|
-| Backlog, To Do | Backlog |
-| Design | Design |
-| Development, In Progress | Development |
-| Code Review, In Review | Code Review |
-| Testing | Testing |
-| Deployment Approval | Deployment Approval |
-| Deploy | Deploy |
-| Production, Done | Production |
+| Focalboard Column        | VSM Stage           |
+| ------------------------ | ------------------- |
+| Backlog, To Do           | Backlog             |
+| Design                   | Design              |
+| Development, In Progress | Development         |
+| Code Review, In Review   | Code Review         |
+| Testing                  | Testing             |
+| Deployment Approval      | Deployment Approval |
+| Deploy                   | Deploy              |
+| Production, Done         | Production          |
 
 ### View Mappings
 
@@ -96,6 +96,7 @@ sudo systemctl restart focalboard
 ### 3. Configure Widget
 
 In Focalboard:
+
 1. Add new widget to board
 2. Select "VSM Flow Metrics"
 3. Configure:
@@ -134,11 +135,13 @@ curl http://vsm-service.fawkes.svc:8000/api/v1/metrics?days=7 | jq
 ### Webhooks Not Working
 
 1. Check VSM service logs:
+
    ```bash
    kubectl logs -n fawkes deployment/vsm-service -f
    ```
 
 2. Verify webhook endpoint is accessible:
+
    ```bash
    curl http://vsm-service.fawkes.svc:8000/api/v1/health
    ```
@@ -168,6 +171,7 @@ curl http://vsm-service.fawkes.svc:8000/api/v1/metrics?days=7 | jq
 Receives Focalboard webhook events.
 
 **Request Body**:
+
 ```json
 {
   "action": "card.created|card.moved|card.updated|card.deleted",
@@ -193,6 +197,7 @@ Receives Focalboard webhook events.
 Manually sync a Focalboard board.
 
 **Request Body**:
+
 ```json
 {
   "board_id": "string"
@@ -200,6 +205,7 @@ Manually sync a Focalboard board.
 ```
 
 **Response**:
+
 ```json
 {
   "status": "completed",
@@ -216,6 +222,7 @@ Manually sync a Focalboard board.
 Push a VSM work item to Focalboard.
 
 **Response**:
+
 ```json
 {
   "status": "success",
@@ -232,6 +239,7 @@ Push a VSM work item to Focalboard.
 Get column-to-stage mapping.
 
 **Response**:
+
 ```json
 {
   "column_to_stage": {

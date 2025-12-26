@@ -11,57 +11,57 @@ Playbooks are **consultant-ready guides** that combine the Diátaxis documentati
 
 Every playbook follows the same five-section structure, mapped to Diátaxis quadrants:
 
-| Section | Diátaxis Quadrant | Purpose |
-|---------|------------------|---------|
-| **I. Business Objective** | Explanation / Conceptual | Defines the "why"—the risk mitigated, compliance goal achieved, and value to the client |
-| **II. Technical Prerequisites** | Reference | Lists necessary Fawkes components and versions, linking to detailed Reference documentation |
-| **III. Implementation Steps** | How-to Guide (Core) | Step-by-step procedure to execute the objective using Fawkes components |
-| **IV. Validation & Success Metrics** | How-to Guide / Reference | Instructions to verify outcomes (e.g., checking Kyverno reports, viewing DORA metrics) |
-| **V. Client Presentation Talking Points** | Explanation / Conceptual | Ready-to-use business language for communicating success to client executives |
+| Section                                   | Diátaxis Quadrant        | Purpose                                                                                     |
+| ----------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------- |
+| **I. Business Objective**                 | Explanation / Conceptual | Defines the "why"—the risk mitigated, compliance goal achieved, and value to the client     |
+| **II. Technical Prerequisites**           | Reference                | Lists necessary Fawkes components and versions, linking to detailed Reference documentation |
+| **III. Implementation Steps**             | How-to Guide (Core)      | Step-by-step procedure to execute the objective using Fawkes components                     |
+| **IV. Validation & Success Metrics**      | How-to Guide / Reference | Instructions to verify outcomes (e.g., checking Kyverno reports, viewing DORA metrics)      |
+| **V. Client Presentation Talking Points** | Explanation / Conceptual | Ready-to-use business language for communicating success to client executives               |
 
 ## Available Playbooks
 
 ### Platform Setup
 
-| Playbook | Business Value | Complexity | Status |
-|----------|---------------|------------|--------|
-| Platform Bootstrap | Establish foundation for elite delivery | ⭐⭐ | 🚧 Coming soon |
-| Multi-Cloud Strategy | Reduce vendor lock-in risk | ⭐⭐⭐ | 🚧 Coming soon |
-| GitOps Foundation | Enable declarative infrastructure | ⭐⭐ | 🚧 Coming soon |
+| Playbook             | Business Value                          | Complexity | Status         |
+| -------------------- | --------------------------------------- | ---------- | -------------- |
+| Platform Bootstrap   | Establish foundation for elite delivery | ⭐⭐       | 🚧 Coming soon |
+| Multi-Cloud Strategy | Reduce vendor lock-in risk              | ⭐⭐⭐     | 🚧 Coming soon |
+| GitOps Foundation    | Enable declarative infrastructure       | ⭐⭐       | 🚧 Coming soon |
 
 ### DORA Excellence
 
-| Playbook | Business Value | Complexity | Status |
-|----------|---------------|------------|--------|
-| [DORA Metrics Implementation](dora-metrics-implementation.md) | Data-driven delivery improvement | ⭐⭐ | ✅ Available |
-| Deployment Frequency Optimization | Faster time to market | ⭐⭐ | 🚧 Coming soon |
-| Lead Time Reduction | Rapid value delivery | ⭐⭐⭐ | 🚧 Coming soon |
-| Change Failure Rate Reduction | Improved quality | ⭐⭐⭐ | 🚧 Coming soon |
-| MTTR Improvement | Enhanced reliability | ⭐⭐⭐ | 🚧 Coming soon |
+| Playbook                                                      | Business Value                   | Complexity | Status         |
+| ------------------------------------------------------------- | -------------------------------- | ---------- | -------------- |
+| [DORA Metrics Implementation](dora-metrics-implementation.md) | Data-driven delivery improvement | ⭐⭐       | ✅ Available   |
+| Deployment Frequency Optimization                             | Faster time to market            | ⭐⭐       | 🚧 Coming soon |
+| Lead Time Reduction                                           | Rapid value delivery             | ⭐⭐⭐     | 🚧 Coming soon |
+| Change Failure Rate Reduction                                 | Improved quality                 | ⭐⭐⭐     | 🚧 Coming soon |
+| MTTR Improvement                                              | Enhanced reliability             | ⭐⭐⭐     | 🚧 Coming soon |
 
 ### Platform as Product
 
-| Playbook | Business Value | Complexity | Status |
-|----------|---------------|------------|--------|
-| [Continuous Discovery Workflow](continuous-discovery-workflow.md) | Build features developers actually use | ⭐⭐⭐ | ✅ Available |
-| User Research Program | Understand developer needs | ⭐⭐ | 🚧 Coming soon |
-| Platform Adoption Strategy | Maximize ROI on platform investment | ⭐⭐⭐ | 🚧 Coming soon |
+| Playbook                                                          | Business Value                         | Complexity | Status         |
+| ----------------------------------------------------------------- | -------------------------------------- | ---------- | -------------- |
+| [Continuous Discovery Workflow](continuous-discovery-workflow.md) | Build features developers actually use | ⭐⭐⭐     | ✅ Available   |
+| User Research Program                                             | Understand developer needs             | ⭐⭐       | 🚧 Coming soon |
+| Platform Adoption Strategy                                        | Maximize ROI on platform investment    | ⭐⭐⭐     | 🚧 Coming soon |
 
 ### Security & Compliance
 
-| Playbook | Business Value | Complexity | Status |
-|----------|---------------|------------|--------|
-| Security Scanning Pipeline | Shift-left security posture | ⭐⭐ | 🚧 Coming soon |
-| Policy Enforcement with Kyverno | Automated compliance | ⭐⭐ | 🚧 Coming soon |
-| Secrets Management | Reduced security risk | ⭐⭐ | 🚧 Coming soon |
+| Playbook                        | Business Value              | Complexity | Status         |
+| ------------------------------- | --------------------------- | ---------- | -------------- |
+| Security Scanning Pipeline      | Shift-left security posture | ⭐⭐       | 🚧 Coming soon |
+| Policy Enforcement with Kyverno | Automated compliance        | ⭐⭐       | 🚧 Coming soon |
+| Secrets Management              | Reduced security risk       | ⭐⭐       | 🚧 Coming soon |
 
 ### Observability
 
-| Playbook | Business Value | Complexity | Status |
-|----------|---------------|------------|--------|
-| Full-Stack Observability | Proactive incident detection | ⭐⭐⭐ | 🚧 Coming soon |
-| SLO-Based Alerting | Customer-focused reliability | ⭐⭐⭐ | 🚧 Coming soon |
-| Cost Visibility | FinOps enablement | ⭐⭐ | 🚧 Coming soon |
+| Playbook                 | Business Value               | Complexity | Status         |
+| ------------------------ | ---------------------------- | ---------- | -------------- |
+| Full-Stack Observability | Proactive incident detection | ⭐⭐⭐     | 🚧 Coming soon |
+| SLO-Based Alerting       | Customer-focused reliability | ⭐⭐⭐     | 🚧 Coming soon |
+| Cost Visibility          | FinOps enablement            | ⭐⭐       | 🚧 Coming soon |
 
 ## Using Playbooks
 

@@ -1,12 +1,15 @@
 # VSM Service Implementation Summary
 
 ## Overview
+
 Successfully implemented VSM (Value Stream Mapping) tracking service for issue #51.
 
 ## Components Implemented
 
 ### 1. Service API (`services/vsm/`)
+
 - **FastAPI Application** (`app/main.py`):
+
   - POST `/api/v1/work-items` - Create work items
   - PUT `/api/v1/work-items/{id}/transition` - Move between stages
   - GET `/api/v1/work-items/{id}/history` - Get stage history
@@ -16,12 +19,14 @@ Successfully implemented VSM (Value Stream Mapping) tracking service for issue #
   - GET `/metrics` - Prometheus metrics
 
 - **Database Models** (`app/models.py`):
+
   - `WorkItem` - Work items (features, bugs, tasks, epics)
   - `Stage` - Value stream stages (Backlog → Production)
   - `StageTransition` - Transition history
   - `FlowMetrics` - Aggregated metrics
 
 - **Pydantic Schemas** (`app/schemas.py`):
+
   - Request/response models with validation
   - OpenAPI documentation auto-generated
 
@@ -33,7 +38,9 @@ Successfully implemented VSM (Value Stream Mapping) tracking service for issue #
   - `vsm_work_in_progress` - WIP gauge by stage
 
 ### 2. Database Schema (`services/vsm/migrations/`)
+
 - **Alembic Migrations**:
+
   - Initial migration (001) creates all tables
   - Default stages pre-populated
 
@@ -44,12 +51,15 @@ Successfully implemented VSM (Value Stream Mapping) tracking service for issue #
   - `flow_metrics` - Aggregated flow metrics
 
 ### 3. Kubernetes Deployment (`platform/apps/vsm-service/`)
+
 - **PostgreSQL Cluster** (`postgresql/db-vsm-cluster.yaml`):
+
   - CloudNativePG cluster with HA (3 replicas)
   - Resource optimized (200m CPU, 256Mi memory)
   - Monitoring enabled
 
 - **Service Manifests**:
+
   - `deployment.yaml` - 2 replicas, health probes
   - `service.yaml` - ClusterIP service
   - `ingress.yaml` - External access
@@ -72,7 +82,9 @@ Successfully implemented VSM (Value Stream Mapping) tracking service for issue #
 ## Testing
 
 ### Unit Tests
+
 Location: `services/vsm/tests/unit/`
+
 - API endpoint validation
 - Request/response model validation
 - Health check verification
@@ -80,8 +92,10 @@ Location: `services/vsm/tests/unit/`
 Run: `cd services/vsm && pytest tests/unit -v`
 
 ### Validation Script
+
 Location: `services/vsm/validate.sh`
 Tests all API endpoints end-to-end:
+
 1. Health check
 2. Create work item
 3. Stage transition
@@ -94,6 +108,7 @@ Run: `./services/vsm/validate.sh`
 ## Deployment Instructions
 
 ### Prerequisites
+
 - Kubernetes cluster with ArgoCD
 - CloudNativePG operator installed
 - Ingress controller configured
@@ -101,17 +116,20 @@ Run: `./services/vsm/validate.sh`
 ### Deploy Steps
 
 1. **Deploy PostgreSQL cluster**:
+
 ```bash
 kubectl apply -f platform/apps/postgresql/db-vsm-credentials.yaml
 kubectl apply -f platform/apps/postgresql/db-vsm-cluster.yaml
 ```
 
 2. **Wait for database to be ready**:
+
 ```bash
 kubectl wait --for=condition=Ready cluster/db-vsm-dev -n fawkes --timeout=300s
 ```
 
 3. **Build and push Docker image**:
+
 ```bash
 cd services/vsm
 ./build.sh
@@ -120,17 +138,20 @@ docker push <registry>/vsm-service:latest
 ```
 
 4. **Deploy via ArgoCD**:
+
 ```bash
 kubectl apply -f platform/apps/vsm-service-application.yaml
 ```
 
 5. **Verify deployment**:
+
 ```bash
 kubectl get pods -n fawkes -l app=vsm-service
 kubectl logs -n fawkes -l app=vsm-service
 ```
 
 6. **Run validation**:
+
 ```bash
 export VSM_URL=http://vsm-service.127.0.0.1.nip.io
 ./services/vsm/validate.sh
@@ -139,6 +160,7 @@ export VSM_URL=http://vsm-service.127.0.0.1.nip.io
 ## API Usage Examples
 
 ### Create Work Item
+
 ```bash
 curl -X POST http://vsm-service.127.0.0.1.nip.io/api/v1/work-items \
   -H "Content-Type: application/json" \
@@ -146,6 +168,7 @@ curl -X POST http://vsm-service.127.0.0.1.nip.io/api/v1/work-items \
 ```
 
 ### Transition Stage
+
 ```bash
 curl -X PUT http://vsm-service.127.0.0.1.nip.io/api/v1/work-items/1/transition \
   -H "Content-Type: application/json" \
@@ -153,11 +176,13 @@ curl -X PUT http://vsm-service.127.0.0.1.nip.io/api/v1/work-items/1/transition \
 ```
 
 ### Get Flow Metrics
+
 ```bash
 curl http://vsm-service.127.0.0.1.nip.io/api/v1/metrics?days=7
 ```
 
 ### View API Documentation
+
 Open: http://vsm-service.127.0.0.1.nip.io/docs
 
 ## Architecture

@@ -13,10 +13,19 @@ from app import __version__
 from app.database import get_db, check_db_connection
 from app.models import Insight, Tag, Category, insight_tags
 from app.schemas import (
-    InsightCreate, InsightUpdate, InsightResponse, InsightListResponse, InsightSearchRequest,
-    TagCreate, TagUpdate, TagResponse,
-    CategoryCreate, CategoryUpdate, CategoryResponse,
-    InsightStatistics, HealthResponse
+    InsightCreate,
+    InsightUpdate,
+    InsightResponse,
+    InsightListResponse,
+    InsightSearchRequest,
+    TagCreate,
+    TagUpdate,
+    TagResponse,
+    CategoryCreate,
+    CategoryUpdate,
+    CategoryResponse,
+    InsightStatistics,
+    HealthResponse,
 )
 from app.prometheus_exporter import update_prometheus_metrics
 
@@ -25,11 +34,11 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Prometheus metrics
-insights_created = Counter('insights_created_total', 'Total number of insights created')
-insights_updated = Counter('insights_updated_total', 'Total number of insights updated')
-insights_deleted = Counter('insights_deleted_total', 'Total number of insights deleted')
-api_requests = Counter('api_requests_total', 'Total API requests', ['method', 'endpoint'])
-request_duration = Histogram('request_duration_seconds', 'Request duration', ['method', 'endpoint'])
+insights_created = Counter("insights_created_total", "Total number of insights created")
+insights_updated = Counter("insights_updated_total", "Total number of insights updated")
+insights_deleted = Counter("insights_deleted_total", "Total number of insights deleted")
+api_requests = Counter("api_requests_total", "Total API requests", ["method", "endpoint"])
+request_duration = Histogram("request_duration_seconds", "Request duration", ["method", "endpoint"])
 
 # Create FastAPI app
 app = FastAPI(
@@ -55,10 +64,7 @@ app.add_middleware(
 async def health_check(db: Session = Depends(get_db)):
     """Health check endpoint."""
     return HealthResponse(
-        status="healthy",
-        service="insights",
-        version=__version__,
-        database_connected=check_db_connection()
+        status="healthy", service="insights", version=__version__, database_connected=check_db_connection()
     )
 
 
@@ -76,9 +82,7 @@ async def metrics(db: Session = Depends(get_db)):
 async def create_tag(tag_data: TagCreate, db: Session = Depends(get_db)):
     """Create a new tag."""
     # Check if tag already exists
-    existing_tag = db.query(Tag).filter(
-        or_(Tag.name == tag_data.name, Tag.slug == tag_data.slug)
-    ).first()
+    existing_tag = db.query(Tag).filter(or_(Tag.name == tag_data.name, Tag.slug == tag_data.slug)).first()
     if existing_tag:
         raise HTTPException(status_code=400, detail="Tag with this name or slug already exists")
 
@@ -90,11 +94,7 @@ async def create_tag(tag_data: TagCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/tags", response_model=List[TagResponse], tags=["Tags"])
-async def list_tags(
-    skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=1000),
-    db: Session = Depends(get_db)
-):
+async def list_tags(skip: int = Query(0, ge=0), limit: int = Query(100, ge=1, le=1000), db: Session = Depends(get_db)):
     """List all tags."""
     tags = db.query(Tag).order_by(Tag.name).offset(skip).limit(limit).all()
     return tags
@@ -141,9 +141,9 @@ async def delete_tag(tag_id: int, db: Session = Depends(get_db)):
 async def create_category(category_data: CategoryCreate, db: Session = Depends(get_db)):
     """Create a new category."""
     # Check if category already exists
-    existing_category = db.query(Category).filter(
-        or_(Category.name == category_data.name, Category.slug == category_data.slug)
-    ).first()
+    existing_category = (
+        db.query(Category).filter(or_(Category.name == category_data.name, Category.slug == category_data.slug)).first()
+    )
     if existing_category:
         raise HTTPException(status_code=400, detail="Category with this name or slug already exists")
 
@@ -156,9 +156,7 @@ async def create_category(category_data: CategoryCreate, db: Session = Depends(g
 
 @app.get("/categories", response_model=List[CategoryResponse], tags=["Categories"])
 async def list_categories(
-    skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=1000),
-    db: Session = Depends(get_db)
+    skip: int = Query(0, ge=0), limit: int = Query(100, ge=1, le=1000), db: Session = Depends(get_db)
 ):
     """List all categories."""
     categories = db.query(Category).order_by(Category.name).offset(skip).limit(limit).all()
@@ -168,7 +166,7 @@ async def list_categories(
     for category in categories:
         category_dict = CategoryResponse.model_validate(category).model_dump()
         insight_count = db.query(Insight).filter(Insight.category_id == category.id).count()
-        category_dict['insight_count'] = insight_count
+        category_dict["insight_count"] = insight_count
         result.append(CategoryResponse(**category_dict))
 
     return result
@@ -183,7 +181,7 @@ async def get_category(category_id: int, db: Session = Depends(get_db)):
 
     category_dict = CategoryResponse.model_validate(category).model_dump()
     insight_count = db.query(Insight).filter(Insight.category_id == category.id).count()
-    category_dict['insight_count'] = insight_count
+    category_dict["insight_count"] = insight_count
     return CategoryResponse(**category_dict)
 
 
@@ -214,8 +212,7 @@ async def delete_category(category_id: int, db: Session = Depends(get_db)):
     insight_count = db.query(Insight).filter(Insight.category_id == category.id).count()
     if insight_count > 0:
         raise HTTPException(
-            status_code=400,
-            detail=f"Cannot delete category with {insight_count} insights. Remove insights first."
+            status_code=400, detail=f"Cannot delete category with {insight_count} insights. Remove insights first."
         )
 
     db.delete(category)
@@ -227,8 +224,8 @@ async def delete_category(category_id: int, db: Session = Depends(get_db)):
 async def create_insight(insight_data: InsightCreate, db: Session = Depends(get_db)):
     """Create a new insight."""
     # Extract tag IDs
-    tag_ids = insight_data.tag_ids if hasattr(insight_data, 'tag_ids') else []
-    insight_dict = insight_data.model_dump(exclude={'tag_ids'})
+    tag_ids = insight_data.tag_ids if hasattr(insight_data, "tag_ids") else []
+    insight_dict = insight_data.model_dump(exclude={"tag_ids"})
 
     # Create insight
     insight = Insight(**insight_dict)
@@ -258,7 +255,7 @@ async def list_insights(
     priority: Optional[str] = None,
     category_id: Optional[int] = None,
     author: Optional[str] = None,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """List insights with pagination and filters."""
     query = db.query(Insight)
@@ -280,12 +277,7 @@ async def list_insights(
     offset = (page - 1) * page_size
     insights = query.order_by(Insight.created_at.desc()).offset(offset).limit(page_size).all()
 
-    return InsightListResponse(
-        total=total,
-        page=page,
-        page_size=page_size,
-        insights=insights
-    )
+    return InsightListResponse(total=total, page=page, page_size=page_size, insights=insights)
 
 
 @app.post("/insights/search", response_model=InsightListResponse, tags=["Insights"])
@@ -300,7 +292,7 @@ async def search_insights(search_request: InsightSearchRequest, db: Session = De
             or_(
                 Insight.title.ilike(search_term),
                 Insight.description.ilike(search_term),
-                Insight.content.ilike(search_term)
+                Insight.content.ilike(search_term),
             )
         )
 
@@ -327,10 +319,7 @@ async def search_insights(search_request: InsightSearchRequest, db: Session = De
     insights = query.order_by(Insight.created_at.desc()).offset(offset).limit(search_request.page_size).all()
 
     return InsightListResponse(
-        total=total,
-        page=search_request.page,
-        page_size=search_request.page_size,
-        insights=insights
+        total=total, page=search_request.page, page_size=search_request.page_size, insights=insights
     )
 
 
@@ -351,9 +340,9 @@ async def update_insight(insight_id: int, insight_data: InsightUpdate, db: Sessi
         raise HTTPException(status_code=404, detail="Insight not found")
 
     # Handle tag updates
-    update_data = insight_data.model_dump(exclude_unset=True, exclude={'tag_ids'})
+    update_data = insight_data.model_dump(exclude_unset=True, exclude={"tag_ids"})
 
-    if hasattr(insight_data, 'tag_ids') and insight_data.tag_ids is not None:
+    if hasattr(insight_data, "tag_ids") and insight_data.tag_ids is not None:
         # Update tag usage counts
         old_tags = set(tag.id for tag in insight.tags)
         new_tags = set(insight_data.tag_ids)
@@ -411,22 +400,20 @@ async def get_statistics(db: Session = Depends(get_db)):
     total_insights = db.query(Insight).count()
 
     # Insights by status
-    status_counts = db.query(
-        Insight.status, func.count(Insight.id)
-    ).group_by(Insight.status).all()
+    status_counts = db.query(Insight.status, func.count(Insight.id)).group_by(Insight.status).all()
     insights_by_status = {status: count for status, count in status_counts}
 
     # Insights by priority
-    priority_counts = db.query(
-        Insight.priority, func.count(Insight.id)
-    ).group_by(Insight.priority).all()
+    priority_counts = db.query(Insight.priority, func.count(Insight.id)).group_by(Insight.priority).all()
     insights_by_priority = {priority: count for priority, count in priority_counts}
 
     # Insights by category
-    category_counts = db.query(
-        Category.name, func.count(Insight.id)
-    ).join(Insight, Category.id == Insight.category_id, isouter=True
-    ).group_by(Category.name).all()
+    category_counts = (
+        db.query(Category.name, func.count(Insight.id))
+        .join(Insight, Category.id == Insight.category_id, isouter=True)
+        .group_by(Category.name)
+        .all()
+    )
     insights_by_category = {name if name else "Uncategorized": count for name, count in category_counts}
 
     # Total tags and categories
@@ -443,10 +430,11 @@ async def get_statistics(db: Session = Depends(get_db)):
         insights_by_category=insights_by_category,
         total_tags=total_tags,
         total_categories=total_categories,
-        recent_insights=recent_insights
+        recent_insights=recent_insights,
     )
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

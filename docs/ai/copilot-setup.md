@@ -19,11 +19,13 @@ GitHub Copilot is an AI-powered coding assistant that helps developers write cod
 1. Navigate to your organization settings: `https://github.com/organizations/[YOUR-ORG]/settings/copilot`
 2. Click **"Enable GitHub Copilot"**
 3. Configure access policies:
+
    - **Allowed for**: Select teams or all organization members
    - **Public code matching**: Enable/disable suggestions matching public code
    - **Block suggestions**: Configure to block suggestions matching public code (recommended for security)
 
 4. Review and configure policies:
+
    ```
    Settings → Copilot → Policies
    - Enable/Disable for all members
@@ -76,6 +78,7 @@ Permission: Full Access
 **Configuration:**
 
 1. Sign in to GitHub:
+
    - Click **Accounts** icon (bottom left)
    - Select **Sign in with GitHub**
    - Authorize VSCode
@@ -100,7 +103,7 @@ Permission: Full Access
   "github.copilot.advanced": {
     "debug.overrideEngine": "",
     "debug.overrideProxyUrl": "",
-    "length": 500  // Max suggestion length
+    "length": 500 // Max suggestion length
   }
 }
 ```
@@ -126,6 +129,7 @@ Permission: Full Access
 **Configuration:**
 
 1. Authenticate:
+
    - **Settings** → **Tools** → **GitHub Copilot**
    - Click **Sign in to GitHub**
    - Complete OAuth flow
@@ -160,6 +164,7 @@ Plug 'github/copilot.vim'
 ```
 
 Then run:
+
 ```vim
 :PlugInstall
 ```
@@ -215,6 +220,7 @@ Fawkes uses a RAG (Retrieval Augmented Generation) system powered by Weaviate ve
 GitHub Copilot uses open files and workspace context for suggestions. To leverage internal documentation:
 
 1. **Open relevant docs** alongside code:
+
    ```bash
    # Open in split panes
    code docs/architecture.md src/service.py
@@ -281,6 +287,7 @@ echo "Context loaded. Start coding with Copilot."
 ```
 
 **Usage:**
+
 ```bash
 # Load context before coding
 ./rag-query.sh "How to deploy ArgoCD applications"
@@ -302,17 +309,20 @@ GitHub is developing workspace-level instructions for Copilot. When available:
 # Fawkes Coding Guidelines for Copilot
 
 ## Architecture Principles
+
 - GitOps-first: All config in Git
 - Declarative over imperative
 - Kubernetes-native patterns
 
 ## Conventions
+
 - Use ErrKind for error handling
 - Terraform 1.6+ syntax
 - Kustomize for K8s overlays
 - BDD tests with Gherkin
 
 ## Security
+
 - Never commit secrets
 - Use External Secrets Operator
 - Scan with Trivy
@@ -421,12 +431,14 @@ async def search_docs(query: Query):
 ### 1. Security Best Practices
 
 **✅ DO:**
+
 - Review all Copilot suggestions before accepting
 - Scan for hardcoded credentials or secrets
 - Use Copilot for boilerplate, verify for security-critical code
 - Enable "Block public code suggestions" for sensitive projects
 
 **❌ DON'T:**
+
 - Blindly accept suggestions without review
 - Use Copilot-generated code in production without testing
 - Share proprietary code patterns publicly
@@ -435,6 +447,7 @@ async def search_docs(query: Query):
 ### 2. Code Quality Best Practices
 
 **✅ DO:**
+
 - Use descriptive variable and function names (helps Copilot context)
 - Write clear comments explaining intent
 - Provide examples in comments for complex logic
@@ -442,6 +455,7 @@ async def search_docs(query: Query):
 - Refactor suggestions to match team style
 
 **❌ DON'T:**
+
 - Accept verbose or overly complex suggestions
 - Skip code review for Copilot-generated code
 - Ignore linting warnings on generated code
@@ -450,6 +464,7 @@ async def search_docs(query: Query):
 ### 3. Productivity Best Practices
 
 **✅ DO:**
+
 - Learn keyboard shortcuts for faster workflow
 - Use Copilot Chat for explaining complex code
 - Leverage Copilot for documentation and tests
@@ -457,6 +472,7 @@ async def search_docs(query: Query):
 - Iterate on suggestions (reject and try again)
 
 **❌ DON'T:**
+
 - Rely solely on Copilot without understanding code
 - Spend more time fixing suggestions than writing code
 - Accept first suggestion without exploring alternatives
@@ -465,12 +481,14 @@ async def search_docs(query: Query):
 ### 4. Privacy and Compliance
 
 **✅ DO:**
+
 - Review organization's Copilot policies
 - Opt-in to telemetry collection (helps improve Copilot)
 - Report inappropriate or problematic suggestions
 - Use content exclusions for sensitive files
 
 **❌ DON'T:**
+
 - Share Copilot suggestions containing sensitive data
 - Use Copilot on code with export restrictions
 - Ignore licensing concerns for suggested code
@@ -481,15 +499,19 @@ async def search_docs(query: Query):
 ### Current Limitations
 
 1. **Context Window**: Limited to open files and immediate workspace
+
    - **Mitigation**: Keep relevant docs open in workspace
 
 2. **No Custom RAG Integration**: Cannot directly query internal knowledge base
+
    - **Mitigation**: Use comment-based context or wrapper scripts
 
 3. **Public Code Bias**: May suggest patterns from public repos over internal conventions
+
    - **Mitigation**: Provide context through comments and examples
 
 4. **Language Support**: Best for popular languages (Python, JavaScript, Go, Java)
+
    - **Mitigation**: Less common languages may have lower-quality suggestions
 
 5. **Security Awareness**: May suggest insecure patterns
@@ -511,6 +533,7 @@ async def search_docs(query: Query):
 
 - **Symptom**: No suggestions appearing
 - **Fixes**:
+
   ```bash
   # Check authentication
   # VSCode: Cmd+Shift+P → "GitHub Copilot: Sign In"
@@ -574,6 +597,7 @@ See [AI Telemetry Dashboard](../../platform/apps/ai-telemetry/README.md) for det
 ### Copilot Not Suggesting
 
 1. **Check authentication**:
+
    ```bash
    # VSCode
    Cmd+Shift+P → "GitHub Copilot: Check Status"
@@ -583,11 +607,13 @@ See [AI Telemetry Dashboard](../../platform/apps/ai-telemetry/README.md) for det
    ```
 
 2. **Verify subscription**:
+
    - Check organization settings
    - Confirm user has access
    - Review billing status
 
 3. **Check file type**:
+
    - Ensure file extension is supported
    - Check language mode in IDE
    - Try `.py`, `.js`, `.tf` files
@@ -600,6 +626,7 @@ See [AI Telemetry Dashboard](../../platform/apps/ai-telemetry/README.md) for det
 ### Suggestions Not Relevant
 
 1. **Add more context**:
+
    ```python
    # Add detailed comment
    # Function to query Weaviate for Fawkes docs
@@ -610,6 +637,7 @@ See [AI Telemetry Dashboard](../../platform/apps/ai-telemetry/README.md) for det
    ```
 
 2. **Open reference files**:
+
    - Open similar existing code
    - Open relevant documentation
    - Keep examples in workspace
@@ -618,7 +646,7 @@ See [AI Telemetry Dashboard](../../platform/apps/ai-telemetry/README.md) for det
    ```json
    {
      "github.copilot.advanced": {
-       "length": 1000  // Increase for more complete suggestions
+       "length": 1000 // Increase for more complete suggestions
      }
    }
    ```
@@ -626,11 +654,13 @@ See [AI Telemetry Dashboard](../../platform/apps/ai-telemetry/README.md) for det
 ### Performance Issues
 
 1. **Reduce file size**:
+
    - Close large files
    - Split complex files
    - Work in smaller modules
 
 2. **Disable for specific files**:
+
    ```json
    {
      "github.copilot.enable": {
@@ -675,6 +705,7 @@ See [AI Telemetry Dashboard](../../platform/apps/ai-telemetry/README.md) for det
 ### Q: Is my code sent to GitHub/OpenAI?
 
 **A:** Yes, code snippets are sent to GitHub's Copilot service for processing. GitHub states that:
+
 - Copilot for Business: Code snippets are NOT used for model training
 - Copilot for Individuals: Code may be used for training (can opt out)
 - All transmission is encrypted (HTTPS)
@@ -682,6 +713,7 @@ See [AI Telemetry Dashboard](../../platform/apps/ai-telemetry/README.md) for det
 ### Q: Can I use Copilot for proprietary/confidential code?
 
 **A:** With Copilot for Business, yes. GitHub provides:
+
 - No training on your code
 - No code retention after processing
 - SOC 2 Type II compliance
@@ -692,6 +724,7 @@ Verify your organization's policy before using on sensitive code.
 ### Q: What if Copilot suggests copyrighted code?
 
 **A:** GitHub provides:
+
 - Copyright filter to block verbatim code from public repos
 - Legal protection for Business users (in some plans)
 - Attribution for code similar to public sources
@@ -701,11 +734,13 @@ Best practice: Review suggestions, add attribution, and run license compliance t
 ### Q: How accurate is Copilot?
 
 **A:** Accuracy varies by:
+
 - Language (better for popular languages like Python, JavaScript)
 - Context (better with clear comments and examples)
 - Complexity (better for common patterns than novel algorithms)
 
 **Typical acceptance rates:**
+
 - Simple boilerplate: 70-90%
 - Business logic: 40-60%
 - Complex algorithms: 20-40%
@@ -715,6 +750,7 @@ Always review and test suggested code.
 ### Q: Can I customize Copilot for Fawkes conventions?
 
 **A:** Currently limited, but you can:
+
 - Use detailed comments with conventions
 - Keep style guides in workspace
 - Open example files for context
@@ -723,6 +759,7 @@ Always review and test suggested code.
 ### Q: Does Copilot replace code review?
 
 **A:** No. Code review is still essential:
+
 - Verify logic correctness
 - Check security implications
 - Ensure style consistency
@@ -733,6 +770,7 @@ Treat Copilot as a pair programmer, not a replacement for review.
 ### Q: How do I report problematic suggestions?
 
 **A:**
+
 1. In VSCode: Right-click suggestion → "Report Issue"
 2. Via GitHub: [GitHub Copilot Feedback](https://github.com/github/feedback/discussions/categories/copilot-feedback)
 3. Internal: Post in #ai-coding-help Slack channel
@@ -740,6 +778,7 @@ Treat Copilot as a pair programmer, not a replacement for review.
 ### Q: Can I use Copilot offline?
 
 **A:** No, Copilot requires internet connection to:
+
 - Send code context to GitHub's servers
 - Receive AI-generated suggestions
 - Authenticate your account

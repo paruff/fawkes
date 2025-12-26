@@ -23,11 +23,11 @@ This document provides a complete field-level specification for the Jenkins Helm
 
 Container image configuration for the Jenkins controller.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `controller.image.repository` | String | No | `jenkins/jenkins` | Docker image repository. |
-| `controller.image.tag` | String | No | `2.528.1-lts-jdk17` | Image tag. Use Jenkins LTS version with JDK 17 for plugin compatibility. |
-| `controller.image.pullPolicy` | String | No | `IfNotPresent` | Image pull policy: `Always`, `IfNotPresent`, `Never`. |
+| Field                         | Type   | Required | Default             | Description                                                              |
+| ----------------------------- | ------ | -------- | ------------------- | ------------------------------------------------------------------------ |
+| `controller.image.repository` | String | No       | `jenkins/jenkins`   | Docker image repository.                                                 |
+| `controller.image.tag`        | String | No       | `2.528.1-lts-jdk17` | Image tag. Use Jenkins LTS version with JDK 17 for plugin compatibility. |
+| `controller.image.pullPolicy` | String | No       | `IfNotPresent`      | Image pull policy: `Always`, `IfNotPresent`, `Never`.                    |
 
 **Example:**
 
@@ -44,10 +44,10 @@ controller:
 
 Administrative user credentials.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `controller.admin.username` | String | No | `admin` | Username for the Jenkins admin account. |
-| `controller.admin.password` | String | No | - | Password for the Jenkins admin account. **Security Note:** Use Kubernetes Secret instead of plaintext. |
+| Field                       | Type   | Required | Default | Description                                                                                            |
+| --------------------------- | ------ | -------- | ------- | ------------------------------------------------------------------------------------------------------ |
+| `controller.admin.username` | String | No       | `admin` | Username for the Jenkins admin account.                                                                |
+| `controller.admin.password` | String | No       | -       | Password for the Jenkins admin account. **Security Note:** Use Kubernetes Secret instead of plaintext. |
 
 **Security Recommendation:**
 
@@ -71,9 +71,9 @@ controller:
 
 Java options and Jenkins runtime arguments.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `controller.JENKINS_OPTS` | String | No | - | Command-line arguments passed to Jenkins on startup. |
+| Field                     | Type   | Required | Default | Description                                          |
+| ------------------------- | ------ | -------- | ------- | ---------------------------------------------------- |
+| `controller.JENKINS_OPTS` | String | No       | -       | Command-line arguments passed to Jenkins on startup. |
 
 **Common Options:**
 
@@ -93,9 +93,9 @@ controller:
 
 Kubernetes Service type for the Jenkins controller.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `controller.serviceType` | String | No | `ClusterIP` | Service type: `ClusterIP`, `NodePort`, `LoadBalancer`. |
+| Field                    | Type   | Required | Default     | Description                                            |
+| ------------------------ | ------ | -------- | ----------- | ------------------------------------------------------ |
+| `controller.serviceType` | String | No       | `ClusterIP` | Service type: `ClusterIP`, `NodePort`, `LoadBalancer`. |
 
 **Fawkes Default:** `ClusterIP` (access via Ingress).
 
@@ -105,9 +105,9 @@ Kubernetes Service type for the Jenkins controller.
 
 Number of build executors on the controller node.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `controller.executors` | Integer | No | `0` | Number of executors. **Best Practice:** Set to `0` to force builds on agents. |
+| Field                  | Type    | Required | Default | Description                                                                   |
+| ---------------------- | ------- | -------- | ------- | ----------------------------------------------------------------------------- |
+| `controller.executors` | Integer | No       | `0`     | Number of executors. **Best Practice:** Set to `0` to force builds on agents. |
 
 **Fawkes Default:** `0` (builds run exclusively on Kubernetes agents).
 
@@ -117,11 +117,11 @@ Number of build executors on the controller node.
 
 Jenkins Configuration as Code (JCasC) plugin configuration.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `controller.JCasC.enabled` | Boolean | No | `true` | Enable JCasC plugin. |
-| `controller.JCasC.defaultConfig` | Boolean | No | `false` | Use default JCasC configuration. Set to `false` for custom config. |
-| `controller.JCasC.configScripts` | Object | No | `{}` | Inline JCasC YAML configurations (key-value pairs). |
+| Field                            | Type    | Required | Default | Description                                                        |
+| -------------------------------- | ------- | -------- | ------- | ------------------------------------------------------------------ |
+| `controller.JCasC.enabled`       | Boolean | No       | `true`  | Enable JCasC plugin.                                               |
+| `controller.JCasC.defaultConfig` | Boolean | No       | `false` | Use default JCasC configuration. Set to `false` for custom config. |
+| `controller.JCasC.configScripts` | Object  | No       | `{}`    | Inline JCasC YAML configurations (key-value pairs).                |
 
 **Example:**
 
@@ -142,9 +142,9 @@ controller:
 
 Additional environment variables injected into the Jenkins controller container.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `controller.extraEnv` | Array[Object] | No | `[]` | Environment variables (standard Kubernetes `env` format). |
+| Field                 | Type          | Required | Default | Description                                               |
+| --------------------- | ------------- | -------- | ------- | --------------------------------------------------------- |
+| `controller.extraEnv` | Array[Object] | No       | `[]`    | Environment variables (standard Kubernetes `env` format). |
 
 **Example:**
 
@@ -168,9 +168,9 @@ controller:
 
 List of Jenkins plugins to install on startup.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `installPlugins` | Array[String] | No | `[]` | Plugin IDs with optional version (format: `plugin-name:version`). |
+| Field            | Type          | Required | Default | Description                                                       |
+| ---------------- | ------------- | -------- | ------- | ----------------------------------------------------------------- |
+| `installPlugins` | Array[String] | No       | `[]`    | Plugin IDs with optional version (format: `plugin-name:version`). |
 
 **Example:**
 
@@ -192,12 +192,12 @@ installPlugins:
 
 Persistent storage configuration for Jenkins data (jobs, builds, plugins).
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `persistence.enabled` | Boolean | No | `false` | Enable persistent storage. |
-| `persistence.size` | String | No | `8Gi` | Requested storage size. |
-| `persistence.storageClass` | String | No | `standard` | Kubernetes StorageClass name. |
-| `persistence.accessMode` | String | No | `ReadWriteOnce` | Volume access mode. |
+| Field                      | Type    | Required | Default         | Description                   |
+| -------------------------- | ------- | -------- | --------------- | ----------------------------- |
+| `persistence.enabled`      | Boolean | No       | `false`         | Enable persistent storage.    |
+| `persistence.size`         | String  | No       | `8Gi`           | Requested storage size.       |
+| `persistence.storageClass` | String  | No       | `standard`      | Kubernetes StorageClass name. |
+| `persistence.accessMode`   | String  | No       | `ReadWriteOnce` | Volume access mode.           |
 
 **Environment-Specific Defaults:**
 
@@ -221,11 +221,11 @@ persistence:
 
 Kubernetes ServiceAccount configuration.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `serviceAccount.create` | Boolean | No | `true` | Create a ServiceAccount for Jenkins. |
-| `serviceAccount.name` | String | No | `jenkins` | ServiceAccount name (auto-generated if not specified). |
-| `serviceAccount.annotations` | Object | No | `{}` | Annotations for the ServiceAccount (e.g., IAM roles). |
+| Field                        | Type    | Required | Default   | Description                                            |
+| ---------------------------- | ------- | -------- | --------- | ------------------------------------------------------ |
+| `serviceAccount.create`      | Boolean | No       | `true`    | Create a ServiceAccount for Jenkins.                   |
+| `serviceAccount.name`        | String  | No       | `jenkins` | ServiceAccount name (auto-generated if not specified). |
+| `serviceAccount.annotations` | Object  | No       | `{}`      | Annotations for the ServiceAccount (e.g., IAM roles).  |
 
 **Example (AWS IRSA):**
 
@@ -242,10 +242,10 @@ serviceAccount:
 
 Role-Based Access Control configuration.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `rbac.create` | Boolean | No | `true` | Create RBAC resources (Role, RoleBinding, ClusterRole). |
-| `rbac.readSecrets` | Boolean | No | `false` | Grant permission to read Secrets (required for credentials binding). |
+| Field              | Type    | Required | Default | Description                                                          |
+| ------------------ | ------- | -------- | ------- | -------------------------------------------------------------------- |
+| `rbac.create`      | Boolean | No       | `true`  | Create RBAC resources (Role, RoleBinding, ClusterRole).              |
+| `rbac.readSecrets` | Boolean | No       | `false` | Grant permission to read Secrets (required for credentials binding). |
 
 **Fawkes Default:** `rbac.create: true` (required for Kubernetes agent provisioning).
 
@@ -257,12 +257,12 @@ Role-Based Access Control configuration.
 
 Ingress configuration for external access to Jenkins.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `ingress.enabled` | Boolean | No | `false` | Enable Ingress resource creation. |
-| `ingress.annotations` | Object | No | `{}` | Ingress annotations (e.g., `cert-manager.io/cluster-issuer`). |
-| `ingress.hosts` | Array[Object] | No | `[]` | Hostnames and paths for Ingress rules. |
-| `ingress.tls` | Array[Object] | No | `[]` | TLS configuration for HTTPS. |
+| Field                 | Type          | Required | Default | Description                                                   |
+| --------------------- | ------------- | -------- | ------- | ------------------------------------------------------------- |
+| `ingress.enabled`     | Boolean       | No       | `false` | Enable Ingress resource creation.                             |
+| `ingress.annotations` | Object        | No       | `{}`    | Ingress annotations (e.g., `cert-manager.io/cluster-issuer`). |
+| `ingress.hosts`       | Array[Object] | No       | `[]`    | Hostnames and paths for Ingress rules.                        |
+| `ingress.tls`         | Array[Object] | No       | `[]`    | TLS configuration for HTTPS.                                  |
 
 **Example:**
 
@@ -290,15 +290,15 @@ ingress:
 
 Kubernetes Pod Template configuration for dynamic Jenkins agents.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `agent.enabled` | Boolean | No | `true` | Enable Kubernetes-based agent provisioning. |
-| `agent.image` | String | No | `jenkins/inbound-agent` | Default agent image. |
-| `agent.tag` | String | No | `latest-jdk17` | Agent image tag. |
-| `agent.resources.requests.cpu` | String | No | `512m` | CPU request for agents. |
-| `agent.resources.requests.memory` | String | No | `512Mi` | Memory request for agents. |
-| `agent.resources.limits.cpu` | String | No | `1` | CPU limit for agents. |
-| `agent.resources.limits.memory` | String | No | `1Gi` | Memory limit for agents. |
+| Field                             | Type    | Required | Default                 | Description                                 |
+| --------------------------------- | ------- | -------- | ----------------------- | ------------------------------------------- |
+| `agent.enabled`                   | Boolean | No       | `true`                  | Enable Kubernetes-based agent provisioning. |
+| `agent.image`                     | String  | No       | `jenkins/inbound-agent` | Default agent image.                        |
+| `agent.tag`                       | String  | No       | `latest-jdk17`          | Agent image tag.                            |
+| `agent.resources.requests.cpu`    | String  | No       | `512m`                  | CPU request for agents.                     |
+| `agent.resources.requests.memory` | String  | No       | `512Mi`                 | Memory request for agents.                  |
+| `agent.resources.limits.cpu`      | String  | No       | `1`                     | CPU limit for agents.                       |
+| `agent.resources.limits.memory`   | String  | No       | `1Gi`                   | Memory limit for agents.                    |
 
 **Example:**
 
@@ -322,11 +322,11 @@ agent:
 
 Security context for the Jenkins controller Pod.
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| `controller.podSecurityContext.runAsUser` | Integer | No | `1000` | User ID to run the container as. |
-| `controller.podSecurityContext.runAsNonRoot` | Boolean | No | `true` | Require running as non-root user. |
-| `controller.podSecurityContext.fsGroup` | Integer | No | `1000` | Filesystem group ID for volume permissions. |
+| Field                                        | Type    | Required | Default | Description                                 |
+| -------------------------------------------- | ------- | -------- | ------- | ------------------------------------------- |
+| `controller.podSecurityContext.runAsUser`    | Integer | No       | `1000`  | User ID to run the container as.            |
+| `controller.podSecurityContext.runAsNonRoot` | Boolean | No       | `true`  | Require running as non-root user.           |
+| `controller.podSecurityContext.fsGroup`      | Integer | No       | `1000`  | Filesystem group ID for volume permissions. |
 
 **Fawkes Default (Kyverno-compliant):**
 

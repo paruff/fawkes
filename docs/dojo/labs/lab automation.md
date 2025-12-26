@@ -1,19 +1,20 @@
-#!/usr/bin/env python3
+# !/usr/bin/env python3
+
 """
 Fawkes Dojo Lab Automation & Validation Scripts
 
 This module provides automated lab environment setup, validation,
 and grading for all Fawkes Dojo assessments.
 
-Usage:
-    # Start lab environment
-    fawkes lab start --module 1
+Usage: # Start lab environment
+fawkes lab start --module 1
 
     # Validate lab completion
     fawkes lab validate --lab white-belt-lab1
 
     # Run assessment validation
     fawkes assessment validate --belt white
+
 """
 
 import subprocess
@@ -25,37 +26,33 @@ from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
 from enum import Enum
 
-
 class BeltLevel(Enum):
-    WHITE = "white"
-    YELLOW = "yellow"
-    GREEN = "green"
-    BROWN = "brown"
-    BLACK = "black"
-
+WHITE = "white"
+YELLOW = "yellow"
+GREEN = "green"
+BROWN = "brown"
+BLACK = "black"
 
 @dataclass
 class ValidationResult:
-    """Result of a lab validation check"""
-    passed: bool
-    message: str
-    points: int
-    max_points: int
-    details: Optional[Dict] = None
-
+"""Result of a lab validation check"""
+passed: bool
+message: str
+points: int
+max_points: int
+details: Optional[Dict] = None
 
 @dataclass
 class LabEnvironment:
-    """Lab environment configuration"""
-    module_id: int
-    belt_level: BeltLevel
-    cluster_name: str
-    namespace: str
-    resources: List[str]
-
+"""Lab environment configuration"""
+module_id: int
+belt_level: BeltLevel
+cluster_name: str
+namespace: str
+resources: List[str]
 
 class LabAutomation:
-    """Main class for lab automation"""
+"""Main class for lab automation"""
 
     def __init__(self):
         self.kubectl = "kubectl"
@@ -92,13 +89,14 @@ class LabAutomation:
         exit_code, _, _ = self.run_command(cmd)
         return exit_code == 0
 
-
 # =============================================================================
+
 # WHITE BELT LAB VALIDATORS
+
 # =============================================================================
 
 class WhiteBeltLab1Validator:
-    """Validator for White Belt Lab 1: First Deployment"""
+"""Validator for White Belt Lab 1: First Deployment"""
 
     def __init__(self, lab_automation: LabAutomation):
         self.lab = lab_automation
@@ -184,9 +182,8 @@ class WhiteBeltLab1Validator:
 
         return exit_code == 0 and "my-first-app" in stdout
 
-
 class WhiteBeltLab2Validator:
-    """Validator for White Belt Lab 2: Multi-Environment Deployment"""
+"""Validator for White Belt Lab 2: Multi-Environment Deployment"""
 
     def __init__(self, lab_automation: LabAutomation):
         self.lab = lab_automation
@@ -282,9 +279,8 @@ class WhiteBeltLab2Validator:
 
         return dev_app and prod_app
 
-
 class WhiteBeltLab3Validator:
-    """Validator for White Belt Lab 3: DORA Metrics"""
+"""Validator for White Belt Lab 3: DORA Metrics"""
 
     def __init__(self, lab_automation: LabAutomation):
         self.lab = lab_automation
@@ -345,13 +341,14 @@ class WhiteBeltLab3Validator:
         # For now, check if ServiceMonitor exists
         return self.lab.check_resource_exists("servicemonitor", "my-first-app", "default")
 
-
 # =============================================================================
+
 # YELLOW BELT LAB VALIDATORS
+
 # =============================================================================
 
 class YellowBeltLab1Validator:
-    """Validator for Yellow Belt Lab 1: Production CI Pipeline"""
+"""Validator for Yellow Belt Lab 1: Production CI Pipeline"""
 
     def __init__(self, lab_automation: LabAutomation):
         self.lab = lab_automation
@@ -428,13 +425,14 @@ class YellowBeltLab1Validator:
         # Check for quality gate configuration
         return os.path.exists(".fawkes/quality-gates.yml")
 
-
 # =============================================================================
+
 # COMMAND LINE INTERFACE
+
 # =============================================================================
 
 class FawkesLabCLI:
-    """Command line interface for Fawkes lab automation"""
+"""Command line interface for Fawkes lab automation"""
 
     def __init__(self):
         self.lab_automation = LabAutomation()
@@ -573,13 +571,14 @@ class FawkesLabCLI:
             print("💡 Review the failed checks and try again.")
             print("   Need help? Visit #dojo-support on Mattermost")
 
-
 # =============================================================================
+
 # ASSESSMENT AUTOMATION
+
 # =============================================================================
 
 class AssessmentValidator:
-    """Automated assessment validation and grading"""
+"""Automated assessment validation and grading"""
 
     def __init__(self):
         self.lab_automation = LabAutomation()
@@ -673,14 +672,15 @@ class AssessmentValidator:
         hash_obj = hashlib.sha256(data.encode())
         return f"FPA-2025-{hash_obj.hexdigest()[:8].upper()}"
 
-
 # =============================================================================
+
 # UTILITY FUNCTIONS
+
 # =============================================================================
 
 def setup_lab_environment():
-    """One-time setup for lab infrastructure"""
-    print("🔧 Setting up Fawkes Dojo lab infrastructure...")
+"""One-time setup for lab infrastructure"""
+print("🔧 Setting up Fawkes Dojo lab infrastructure...")
 
     lab = LabAutomation()
 
@@ -705,10 +705,9 @@ def setup_lab_environment():
 
     print("✅ Lab infrastructure ready!")
 
-
 def cleanup_lab_environment(module_id: int):
-    """Clean up lab environment"""
-    print(f"🧹 Cleaning up lab environment for Module {module_id}...")
+"""Clean up lab environment"""
+print(f"🧹 Cleaning up lab environment for Module {module_id}...")
 
     lab = LabAutomation()
     namespace = f"lab-module-{module_id}"
@@ -717,14 +716,15 @@ def cleanup_lab_environment(module_id: int):
 
     print(f"✅ Lab environment cleaned up!")
 
-
 # =============================================================================
+
 # MAIN CLI ENTRYPOINT
+
 # =============================================================================
 
 def main():
-    """Main CLI entrypoint"""
-    import argparse
+"""Main CLI entrypoint"""
+import argparse
 
     parser = argparse.ArgumentParser(description="Fawkes Dojo Lab Automation")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
@@ -806,30 +806,35 @@ def main():
     else:
         parser.print_help()
 
-
-if __name__ == "__main__":
-    main()
-
+if **name** == "**main**":
+main()
 
 # =============================================================================
+
 # EXAMPLE USAGE
+
 # =============================================================================
 
 """
 Example usage:
 
 # Start a lab environment
+
 $ fawkes lab start --module 1
 
 # Validate lab completion
+
 $ fawkes lab validate --lab white-belt-lab1
 
 # Clean up lab
+
 $ fawkes lab stop --module 1
 
 # Validate entire belt assessment
+
 $ fawkes assessment validate --belt white
 
 # Setup lab infrastructure (one-time)
+
 $ fawkes setup
 """

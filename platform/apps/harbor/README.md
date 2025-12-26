@@ -48,16 +48,19 @@ kubectl wait --for=condition=ready pod -l app=harbor -n fawkes --timeout=600s
 ### Accessing Harbor
 
 Local development:
+
 ```bash
 # Access UI
 http://harbor.127.0.0.1.nip.io
 ```
 
 Default credentials:
+
 - Username: `admin`
 - Password: `Harbor12345` (⚠️ CHANGE IN PRODUCTION!)
 
 **⚠️ Security Note**: The default password is only suitable for local development. For production deployments:
+
 1. Change the admin password immediately after first login via Harbor UI
 2. Generate a secure secret key: `openssl rand -base64 32`
 3. Use External Secrets Operator to manage credentials from Vault/cloud provider
@@ -82,11 +85,11 @@ docker push harbor.127.0.0.1.nip.io/fawkes/myapp:latest
 
 ## Project Structure
 
-| Project | Purpose | Access |
-|---------|---------|--------|
-| `fawkes` | Platform components | Platform team |
-| `library` | Public base images | All users (read) |
-| `apps` | Application images | Development teams |
+| Project   | Purpose             | Access            |
+| --------- | ------------------- | ----------------- |
+| `fawkes`  | Platform components | Platform team     |
+| `library` | Public base images  | All users (read)  |
+| `apps`    | Application images  | Development teams |
 
 ## Security Scanning
 
@@ -171,6 +174,7 @@ python3 configure_harbor.py \
 ```
 
 This script will:
+
 - Create projects: `fawkes`, `apps`, `library`
 - Configure automatic vulnerability scanning
 - Create robot accounts for CI/CD pipelines

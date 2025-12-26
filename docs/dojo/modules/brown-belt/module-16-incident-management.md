@@ -7,6 +7,7 @@
 **Duration**: 60 minutes
 **Difficulty**: Advanced
 **Prerequisites**:
+
 - Module 12: Rollback & Incident Response complete
 - Module 13: Observability complete
 - Module 14: DORA Metrics Deep Dive complete
@@ -27,6 +28,7 @@ By the end of this module, you will:
 7. ✅ Measure and improve incident management effectiveness
 
 **DORA Capabilities Addressed**:
+
 - ✓ Mean Time to Restore (MTTR) - Elite level
 - ✓ Incident Management Process
 - ✓ Postmortem Culture
@@ -86,19 +88,20 @@ By the end of this module, you will:
 
 ### Incident Severity Matrix
 
-| Severity | Impact | MTTR Target | Response | Example |
-|----------|--------|-------------|----------|---------|
-| **SEV0** | Critical outage, data loss | < 15 min | All hands, exec notification | Database corruption |
-| **SEV1** | Full service down | < 30 min | Full team, page oncall | API completely down |
-| **SEV2** | Major feature broken | < 2 hours | Team leads, business hours | Payment processing failing |
-| **SEV3** | Minor degradation | < 8 hours | Oncall engineer | Slow response times |
-| **SEV4** | Cosmetic/low impact | < 1 day | Regular sprint work | UI bug in admin panel |
+| Severity | Impact                     | MTTR Target | Response                     | Example                    |
+| -------- | -------------------------- | ----------- | ---------------------------- | -------------------------- |
+| **SEV0** | Critical outage, data loss | < 15 min    | All hands, exec notification | Database corruption        |
+| **SEV1** | Full service down          | < 30 min    | Full team, page oncall       | API completely down        |
+| **SEV2** | Major feature broken       | < 2 hours   | Team leads, business hours   | Payment processing failing |
+| **SEV3** | Minor degradation          | < 8 hours   | Oncall engineer              | Slow response times        |
+| **SEV4** | Cosmetic/low impact        | < 1 day     | Regular sprint work          | UI bug in admin panel      |
 
 ### Incident Roles
 
 #### Incident Commander (IC)
 
 **Responsibilities**:
+
 - Overall incident coordination
 - Communication hub
 - Decision authority
@@ -106,12 +109,14 @@ By the end of this module, you will:
 - Declare incident resolved
 
 **Skills needed**:
+
 - Calm under pressure
 - Clear communication
 - Technical understanding
 - Decision-making
 
 **IC Checklist**:
+
 ```markdown
 [ ] Acknowledge incident
 [ ] Assess severity
@@ -127,6 +132,7 @@ By the end of this module, you will:
 #### Technical Lead (TL)
 
 **Responsibilities**:
+
 - Technical investigation
 - Hypothesis testing
 - Implementation of fixes
@@ -135,6 +141,7 @@ By the end of this module, you will:
 #### Communications Lead (Comms)
 
 **Responsibilities**:
+
 - Status page updates
 - Stakeholder notifications
 - Customer communication
@@ -143,6 +150,7 @@ By the end of this module, you will:
 #### Scribe
 
 **Responsibilities**:
+
 - Document timeline
 - Capture decisions
 - Record hypotheses
@@ -225,6 +233,7 @@ Current Status: INVESTIGATING
 **Status**: MITIGATING
 **Impact**: Still affecting 100% of payment attempts
 **Progress**:
+
 - Root cause identified: Database connection pool exhausted
 - Mitigation in progress: Scaling connection pool
 - ETA for resolution: 15 minutes
@@ -244,6 +253,7 @@ Next update: 15:00 UTC or when status changes
 **Root Cause**: Traffic spike exceeded connection pool capacity
 
 **Next Steps**:
+
 - Postmortem scheduled: 2025-10-13 10:00 UTC
 - Monitoring enhanced connection pool metrics
 - Reviewing auto-scaling policies
@@ -368,14 +378,17 @@ Reconstruct exact sequence:
 **Blameless Principles**:
 
 1. **Focus on Systems, Not People**
+
    - ❌ "Bob deployed bad code"
    - ✅ "Deployment lacked sufficient testing"
 
 2. **Assume Good Intentions**
+
    - Everyone did their best with available information
    - No one comes to work to break things
 
 3. **Psychological Safety**
+
    - People feel safe admitting mistakes
    - Honesty leads to better learning
 
@@ -394,6 +407,7 @@ Reconstruct exact sequence:
 **Duration**: 47 minutes
 **Severity**: SEV1
 **Impact**:
+
 - ~500 failed payment attempts
 - $12,000 estimated revenue impact
 - No data loss
@@ -413,11 +427,13 @@ See [detailed timeline](#timeline-analysis) above
 ## Impact Analysis
 
 ### User Impact
+
 - **Affected Users**: 100% of users attempting checkout
 - **Failed Transactions**: ~500
 - **Duration**: 47 minutes
 
 ### Business Impact
+
 - **Revenue Loss**: ~$12,000 (estimated)
 - **Reputation**: Minimal (quick resolution, good communication)
 - **SLO Impact**:
@@ -425,6 +441,7 @@ See [detailed timeline](#timeline-analysis) above
   - Error Budget: 15% consumed in single incident
 
 ### Technical Impact
+
 - **Systems Affected**: Payment API, database, checkout flow
 - **Data Loss**: None
 - **Security Impact**: None
@@ -434,19 +451,23 @@ See [detailed timeline](#timeline-analysis) above
 ## Root Cause Analysis
 
 ### Primary Cause
+
 Database connection pool configuration (100 connections) insufficient for traffic spike (150 requests/sec).
 
 ### Contributing Factors
 
 1. **Lack of Load Testing**
+
    - New traffic patterns not tested
    - Connection pool limits not validated
 
 2. **No Auto-Scaling**
+
    - Manual configuration required
    - Cannot adapt to traffic changes
 
 3. **Insufficient Monitoring**
+
    - No alerting on connection pool utilization
    - Detected via error rate, not proactive metric
 
@@ -480,27 +501,27 @@ Database connection pool configuration (100 connections) insufficient for traffi
 
 ### Immediate (< 1 week)
 
-| Action | Owner | Deadline | Status |
-|--------|-------|----------|--------|
-| Implement connection pool monitoring | @bob | Oct 15 | ✅ Done |
-| Alert on 80% pool utilization | @carol | Oct 15 | ✅ Done |
-| Document all database limits | @dave | Oct 16 | 🔄 In Progress |
+| Action                               | Owner  | Deadline | Status         |
+| ------------------------------------ | ------ | -------- | -------------- |
+| Implement connection pool monitoring | @bob   | Oct 15   | ✅ Done        |
+| Alert on 80% pool utilization        | @carol | Oct 15   | ✅ Done        |
+| Document all database limits         | @dave  | Oct 16   | 🔄 In Progress |
 
 ### Short-term (< 1 month)
 
-| Action | Owner | Deadline | Status |
-|--------|-------|----------|--------|
-| Implement auto-scaling for connection pool | @eve | Nov 1 | 📋 Planned |
-| Load test with 2x expected traffic | @frank | Nov 5 | 📋 Planned |
-| Create runbook for connection pool issues | @grace | Oct 25 | 🔄 In Progress |
+| Action                                     | Owner  | Deadline | Status         |
+| ------------------------------------------ | ------ | -------- | -------------- |
+| Implement auto-scaling for connection pool | @eve   | Nov 1    | 📋 Planned     |
+| Load test with 2x expected traffic         | @frank | Nov 5    | 📋 Planned     |
+| Create runbook for connection pool issues  | @grace | Oct 25   | 🔄 In Progress |
 
 ### Long-term (< 3 months)
 
-| Action | Owner | Deadline | Status |
-|--------|-------|----------|--------|
-| Implement chaos engineering for database | @henry | Dec 15 | 📋 Planned |
-| Review all system capacity limits | @iris | Nov 30 | 📋 Planned |
-| Enhance pre-launch checklist | @jack | Nov 15 | 📋 Planned |
+| Action                                   | Owner  | Deadline | Status     |
+| ---------------------------------------- | ------ | -------- | ---------- |
+| Implement chaos engineering for database | @henry | Dec 15   | 📋 Planned |
+| Review all system capacity limits        | @iris  | Nov 30   | 📋 Planned |
+| Enhance pre-launch checklist             | @jack  | Nov 15   | 📋 Planned |
 
 ---
 
@@ -517,14 +538,17 @@ Database connection pool configuration (100 connections) insufficient for traffi
 ## Supporting Data
 
 ### Metrics
+
 - [Grafana Dashboard](https://grafana.company.com/incident-2025-10-12)
 - [Connection Pool Graph](https://grafana.company.com/connection-pool)
 - [Error Rate Spike](https://grafana.company.com/error-rate)
 
 ### Logs
+
 - [Relevant Log Entries](https://opensearch.company.com/incident-logs)
 
 ### Communication
+
 - [Slack War Room Archive](https://mattermost.company.com/incident-war-room)
 - [Status Page Timeline](https://status.company.com/incidents/12345)
 
@@ -547,9 +571,9 @@ Database connection pool configuration (100 connections) insufficient for traffi
 
 ## Approval
 
-- [ ] Engineering Manager: _________________
-- [ ] SRE Lead: _________________
-- [ ] CTO: _________________
+- [ ] Engineering Manager: **\*\*\*\***\_**\*\*\*\***
+- [ ] SRE Lead: **\*\*\*\***\_**\*\*\*\***
+- [ ] CTO: **\*\*\*\***\_**\*\*\*\***
 
 **Approved**: October 14, 2025
 ```
@@ -866,17 +890,19 @@ spec:
       app: payment-api
   duration: "30s"
   scheduler:
-    cron: "@every 2h"  # Run every 2 hours
+    cron: "@every 2h" # Run every 2 hours
 ```
 
 **Hypothesis**: "Payment API can tolerate single pod failure without user impact"
 
 **Expected Outcome**:
+
 - Service remains available (other pods handle traffic)
 - No increase in error rate
 - Automatic pod recovery within 1 minute
 
 **Success Criteria**:
+
 - ✅ Availability > 99.9%
 - ✅ Error rate < 0.5%
 - ✅ P95 latency < 500ms
@@ -908,6 +934,7 @@ spec:
 **Hypothesis**: "Application can handle 100ms database latency without errors"
 
 **Expected Outcome**:
+
 - Increased response times but no errors
 - Circuit breaker prevents cascading failures
 - Timeouts configured appropriately
@@ -937,6 +964,7 @@ spec:
 **Hypothesis**: "Auto-scaling triggers before service degrades under CPU stress"
 
 **Expected Outcome**:
+
 - HPA scales up within 1 minute
 - No user-visible impact
 - Automatic recovery after experiment
@@ -949,46 +977,55 @@ Conduct regular "GameDay" exercises:
 # GameDay Planning Template
 
 ## Objective
+
 Test incident response for complete database failure
 
 ## Date & Time
+
 2025-10-20, 10:00-12:00 UTC (off-peak)
 
 ## Scope
+
 - Service: Payment API (production)
 - Failure: Database primary failure
 - Duration: 15 minutes
 
 ## Participants
+
 - Incident Commander: @alice
 - On-call Engineer: @bob
 - Database Team: @carol
 - Observers: @dave, @eve
 
 ## Scenario
+
 1. At T+0: Simulate primary database failure
 2. Team responds as if real incident
 3. Test failover to replica
 4. Measure MTTR and effectiveness
 
 ## Success Criteria
+
 - [ ] Automatic failover within 2 minutes
 - [ ] Service restored within 5 minutes
 - [ ] No data loss
 - [ ] All runbooks followed correctly
 
 ## Safety Measures
+
 - [ ] Backup verified before test
 - [ ] Rollback plan documented
 - [ ] Exec team notified
 - [ ] Customer communication ready
 
 ## Debrief
+
 - What went well
 - What needs improvement
 - Action items
 
 ## Results
+
 [To be filled after GameDay]
 ```
 
@@ -1006,6 +1043,7 @@ avg(incident_duration_seconds) by (severity) / 60
 ```
 
 **Targets**:
+
 - SEV0: < 15 min
 - SEV1: < 30 min
 - SEV2: < 2 hours
@@ -1066,28 +1104,34 @@ sum(action_items_completed_on_time) / sum(action_items_total) * 100
       {
         "title": "MTTR by Severity",
         "type": "graph",
-        "targets": [{
-          "expr": "avg(incident_duration_seconds) by (severity) / 60",
-          "legendFormat": "{{severity}}"
-        }],
-        "yAxes": [{
-          "label": "Minutes",
-          "format": "short"
-        }]
+        "targets": [
+          {
+            "expr": "avg(incident_duration_seconds) by (severity) / 60",
+            "legendFormat": "{{severity}}"
+          }
+        ],
+        "yAxes": [
+          {
+            "label": "Minutes",
+            "format": "short"
+          }
+        ]
       },
       {
         "title": "Incidents This Month",
         "type": "stat",
-        "targets": [{
-          "expr": "sum(increase(incidents_total[30d]))"
-        }],
+        "targets": [
+          {
+            "expr": "sum(increase(incidents_total[30d]))"
+          }
+        ],
         "fieldConfig": {
           "defaults": {
             "thresholds": {
               "steps": [
-                {"value": 0, "color": "green"},
-                {"value": 5, "color": "yellow"},
-                {"value": 10, "color": "red"}
+                { "value": 0, "color": "green" },
+                { "value": 5, "color": "yellow" },
+                { "value": 10, "color": "red" }
               ]
             }
           }
@@ -1096,24 +1140,28 @@ sum(action_items_completed_on_time) / sum(action_items_total) * 100
       {
         "title": "Detection Time Trend",
         "type": "graph",
-        "targets": [{
-          "expr": "avg_over_time((incident_detected_seconds - incident_started_seconds)[30d:1d])",
-          "legendFormat": "Detection Time"
-        }]
+        "targets": [
+          {
+            "expr": "avg_over_time((incident_detected_seconds - incident_started_seconds)[30d:1d])",
+            "legendFormat": "Detection Time"
+          }
+        ]
       },
       {
         "title": "Action Item Completion Rate",
         "type": "gauge",
-        "targets": [{
-          "expr": "sum(action_items_completed_on_time) / sum(action_items_total) * 100"
-        }],
+        "targets": [
+          {
+            "expr": "sum(action_items_completed_on_time) / sum(action_items_total) * 100"
+          }
+        ],
         "fieldConfig": {
           "defaults": {
             "thresholds": {
               "steps": [
-                {"value": 0, "color": "red"},
-                {"value": 60, "color": "yellow"},
-                {"value": 80, "color": "green"}
+                { "value": 0, "color": "red" },
+                { "value": 60, "color": "yellow" },
+                { "value": 80, "color": "green" }
               ]
             },
             "max": 100,
@@ -1124,21 +1172,26 @@ sum(action_items_completed_on_time) / sum(action_items_total) * 100
       {
         "title": "Repeat Incidents",
         "type": "piechart",
-        "targets": [{
-          "expr": "sum(incidents_repeat)",
-          "legendFormat": "Repeat"
-        }, {
-          "expr": "sum(incidents_total) - sum(incidents_repeat)",
-          "legendFormat": "New"
-        }]
+        "targets": [
+          {
+            "expr": "sum(incidents_repeat)",
+            "legendFormat": "Repeat"
+          },
+          {
+            "expr": "sum(incidents_total) - sum(incidents_repeat)",
+            "legendFormat": "New"
+          }
+        ]
       },
       {
         "title": "Incidents by Service",
         "type": "table",
-        "targets": [{
-          "expr": "sum(incidents_total) by (service)",
-          "format": "table"
-        }]
+        "targets": [
+          {
+            "expr": "sum(incidents_total) by (service)",
+            "format": "table"
+          }
+        ]
       }
     ]
   }
@@ -1158,6 +1211,7 @@ Conduct a complete incident response simulation from detection through postmorte
 **Duration**: 60 minutes
 
 **Roles**:
+
 - Incident Commander
 - Technical Lead
 - Communications Lead
@@ -1176,6 +1230,7 @@ Time: 14:23 UTC
 ```
 
 **Tasks**:
+
 - [ ] Acknowledge alert
 - [ ] Initial assessment
 - [ ] Declare incident
@@ -1184,6 +1239,7 @@ Time: 14:23 UTC
 ### Step 2: Initial Response (10 minutes)
 
 **IC Actions**:
+
 ```markdown
 1. Create war room: #incident-2025-10-12-checkout
 2. Assemble team:
@@ -1195,6 +1251,7 @@ Time: 14:23 UTC
 ```
 
 **Initial Notification**:
+
 ```markdown
 🚨 INCIDENT DECLARED - SEV1
 
@@ -1233,6 +1290,7 @@ curl https://payment-api.internal/health
 **Hypothesis**: Payment service is down/degraded
 
 **Verification**:
+
 ```bash
 # Check payment service metrics
 # - All pods healthy
@@ -1264,6 +1322,7 @@ watch kubectl get pods -l app=payment-api
 ```
 
 **Status Update**:
+
 ```markdown
 📊 UPDATE - 14:45 UTC
 
@@ -1279,6 +1338,7 @@ Next update: 14:50 UTC
 ### Step 5: Resolution (10 minutes)
 
 **Verify Fix**:
+
 ```bash
 # Check error rate
 # - Decreased from 25% to 5%
@@ -1293,6 +1353,7 @@ Next update: 14:50 UTC
 ```
 
 **Resolution Notice**:
+
 ```markdown
 ✅ INCIDENT RESOLVED - 15:10 UTC
 
@@ -1311,24 +1372,29 @@ War room remains open for 1 hour
 
 ```markdown
 ## Timeline
+
 [See above]
 
 ## Root Cause
+
 Payment service database connection pool (100 connections)
 insufficient for traffic spike (200 req/s)
 
 ## What Went Well
+
 - Fast detection (< 1 minute)
 - Clear communication
 - Effective collaboration
 - Quick mitigation (22 minutes)
 
 ## What Went Wrong
+
 - No proactive monitoring of pool usage
 - Inadequate load testing
 - Manual scaling required
 
 ## Action Items
+
 1. [ ] Add pool usage monitoring (@bob, Oct 15)
 2. [ ] Implement auto-scaling (@carol, Nov 1)
 3. [ ] Load test 3x expected traffic (@dave, Oct 20)
@@ -1338,6 +1404,7 @@ insufficient for traffic spike (200 req/s)
 ### Lab Validation
 
 **Success Criteria**:
+
 - [ ] Incident detected within 1 minute
 - [ ] War room created within 2 minutes
 - [ ] Root cause identified within 15 minutes
@@ -1358,6 +1425,7 @@ insufficient for traffic spike (200 req/s)
 **Requirements**:
 
 #### 1. Automated Detection
+
 ```yaml
 # Task: Create alerts for common failure scenarios
 - [ ] Service completely down
@@ -1368,6 +1436,7 @@ insufficient for traffic spike (200 req/s)
 ```
 
 #### 2. Incident Automation
+
 ```python
 # Task: Build incident automation
 - [ ] Auto-create war room channel
@@ -1378,8 +1447,10 @@ insufficient for traffic spike (200 req/s)
 ```
 
 #### 3. Runbooks
+
 ```markdown
 # Task: Create runbooks for top 5 incidents
+
 - [ ] Service down
 - [ ] High error rate
 - [ ] Database connection issues
@@ -1388,8 +1459,10 @@ insufficient for traffic spike (200 req/s)
 ```
 
 #### 4. Postmortem Template
+
 ```markdown
 # Task: Customize postmortem template
+
 - [ ] Executive summary
 - [ ] Timeline
 - [ ] Root cause analysis
@@ -1398,6 +1471,7 @@ insufficient for traffic spike (200 req/s)
 ```
 
 #### 5. Chaos Experiments
+
 ```yaml
 # Task: Design 3 chaos experiments
 - [ ] Pod failure
@@ -1406,6 +1480,7 @@ insufficient for traffic spike (200 req/s)
 ```
 
 #### 6. Metrics Dashboard
+
 ```json
 # Task: Build incident metrics dashboard
 - [ ] MTTR by severity
@@ -1415,6 +1490,7 @@ insufficient for traffic spike (200 req/s)
 ```
 
 **Validation Criteria**:
+
 - [ ] All alerts configured and tested
 - [ ] Automation creates incidents successfully
 - [ ] Runbooks comprehensive and tested
@@ -1429,42 +1505,49 @@ insufficient for traffic spike (200 req/s)
 ### Quiz Questions
 
 1. **What is the primary goal of incident response?**
+
    - [ ] Find who caused the problem
    - [x] Restore service as quickly as possible
    - [ ] Write detailed reports
    - [ ] Prevent all future incidents
 
 2. **What makes a postmortem "blameless"?**
+
    - [ ] Not mentioning anyone's name
    - [ ] Focusing only on technology
    - [x] Assuming good intentions and learning from systems
    - [ ] Avoiding technical details
 
 3. **What is the target MTTR for SEV1 incidents?**
+
    - [ ] < 5 minutes
    - [ ] < 15 minutes
    - [x] < 30 minutes
    - [ ] < 2 hours
 
 4. **What is the role of an Incident Commander?**
+
    - [ ] Fix the technical problem
    - [x] Coordinate response and make decisions
    - [ ] Write the postmortem
    - [ ] Page the oncall engineer
 
 5. **What is Chaos Engineering?**
+
    - [ ] Creating random problems in production
    - [ ] Testing in chaotic environments
    - [x] Experimenting to build confidence in system resilience
    - [ ] Stress testing before launch
 
 6. **How often should postmortem action items be reviewed?**
+
    - [ ] Never, they're just documentation
    - [ ] Only when incidents recur
    - [x] Regularly (weekly/bi-weekly) until complete
    - [ ] Once at the postmortem meeting
 
 7. **What is MTTD?**
+
    - [ ] Mean Time To Deploy
    - [x] Mean Time To Detect
    - [ ] Mean Time To Document
@@ -1511,6 +1594,7 @@ insufficient for traffic spike (200 req/s)
 ### Real-World Impact
 
 "After implementing advanced incident management practices:
+
 - **MTTR**: 45 minutes → 12 minutes (73% improvement)
 - **Repeat incidents**: 30% → 5%
 - **Detection time**: 15 minutes → 2 minutes
@@ -1519,15 +1603,17 @@ insufficient for traffic spike (200 req/s)
 - **Customer satisfaction**: NPS +15 points
 
 We transformed from reactive firefighting to proactive reliability engineering."
-- *SRE Team, SaaS Platform*
+
+- _SRE Team, SaaS Platform_
 
 ---
 
-## 🎉 Brown Belt Complete!
+## 🎉 Brown Belt Complete
 
-### 🏆 Congratulations!
+### 🏆 Congratulations
 
 You've completed all four Brown Belt modules:
+
 - ✅ Module 13: Observability Fundamentals
 - ✅ Module 14: DORA Metrics Deep Dive
 - ✅ Module 15: SLIs, SLOs, and Error Budgets
@@ -1550,6 +1636,7 @@ Module 16: Incident Management    ████████████ 100% ✓
 **You're now ready for the Brown Belt Certification Exam!**
 
 **Exam Format**:
+
 - 50 multiple choice questions
 - 4 hands-on challenges:
   1. Build complete observability stack
@@ -1560,6 +1647,7 @@ Module 16: Incident Management    ████████████ 100% ✓
 - 3-hour time limit
 
 **Schedule Your Exam**:
+
 - Visit Fawkes Dojo Portal
 - Navigate to Certifications → Brown Belt
 - Click "Schedule Exam"
@@ -1567,6 +1655,7 @@ Module 16: Incident Management    ████████████ 100% ✓
 ### 🎓 What You've Achieved
 
 **Skills Mastered**:
+
 - ✅ Comprehensive observability (metrics, logs, traces)
 - ✅ DORA metrics automation and analysis
 - ✅ SLI/SLO definition and error budget management
@@ -1576,6 +1665,7 @@ Module 16: Incident Management    ████████████ 100% ✓
 - ✅ SRE best practices
 
 **DORA Impact**:
+
 - **Deployment Frequency**: Confidence to deploy with observability
 - **Lead Time**: Fast feedback from comprehensive monitoring
 - **Change Failure Rate**: Detect issues immediately
@@ -1584,17 +1674,20 @@ Module 16: Incident Management    ████████████ 100% ✓
 ### 🚀 What's Next?
 
 **Option 1: Take Brown Belt Certification Exam**
+
 - Validate your observability and SRE mastery
 - Earn "Fawkes SRE Practitioner" badge
 - Get LinkedIn-verified credential
 
 **Option 2: Continue to Black Belt**
+
 - Module 17: Platform Architecture & Design
 - Module 18: Multi-Tenancy & RBAC
 - Module 19: Cost Optimization
 - Module 20: Platform Team Leadership
 
 **Option 3: Apply to Production**
+
 - Implement full observability stack
 - Define SLIs/SLOs for your services
 - Create incident response automation
@@ -1606,24 +1699,28 @@ Module 16: Incident Management    ████████████ 100% ✓
 ## 📚 Additional Resources
 
 ### Books
-- *Site Reliability Engineering* - Google (free online)
-- *The Site Reliability Workbook* - Google
-- *Observability Engineering* - Charity Majors et al.
-- *Chaos Engineering* - Casey Rosenthal
+
+- _Site Reliability Engineering_ - Google (free online)
+- _The Site Reliability Workbook_ - Google
+- _Observability Engineering_ - Charity Majors et al.
+- _Chaos Engineering_ - Casey Rosenthal
 
 ### Tools & Platforms
+
 - [Chaos Mesh](https://chaos-mesh.org/) - Kubernetes chaos engineering
 - [Gremlin](https://www.gremlin.com/) - Chaos engineering platform
 - [PagerDuty](https://www.pagerduty.com/) - Incident management
 - [Blameless](https://www.blameless.com/) - SRE platform
 
 ### Learning Resources
+
 - [Google SRE Books](https://sre.google/books/)
 - [Chaos Engineering Principles](https://principlesofchaos.org/)
 - [Postmortem Culture](https://sre.google/sre-book/postmortem-culture/)
 - [VOID Report](https://void.report/) - Postmortem database
 
 ### Community
+
 - [SRE Weekly Newsletter](https://sreweekly.com/)
 - [Chaos Engineering Slack](https://chaos-community.slack.com/)
 - [Fawkes Mattermost](https://mattermost.fawkes.internal) - #brown-belt
@@ -1638,12 +1735,14 @@ Module 16: Incident Management    ████████████ 100% ✓
 To complete this module, you must:
 
 - [ ] **Conceptual Understanding**
+
   - [ ] Explain incident response framework
   - [ ] Understand root cause analysis techniques
   - [ ] Know blameless postmortem principles
   - [ ] Understand chaos engineering
 
 - [ ] **Practical Skills**
+
   - [ ] Execute incident response simulation
   - [ ] Write comprehensive postmortem
   - [ ] Create incident automation
@@ -1651,6 +1750,7 @@ To complete this module, you must:
   - [ ] Build incident metrics dashboard
 
 - [ ] **Hands-On Lab**
+
   - [ ] Complete incident simulation
   - [ ] MTTR < 50 minutes achieved
   - [ ] Postmortem documented
@@ -1662,6 +1762,7 @@ To complete this module, you must:
 ### Certification Credit
 
 Upon completion, you earn:
+
 - **10 points** toward Brown Belt certification (100% complete!)
 - **Badge**: "Incident Response Expert"
 - **Skill Unlocked**: Advanced SRE Practices
@@ -1692,6 +1793,7 @@ You've mastered observability, SRE practices, and incident management. You're no
 ### Quick Reference
 
 **Severity Assessment** (< 1 min):
+
 ```
 SEV0: Complete outage + data loss
 SEV1: Complete outage OR revenue impact
@@ -1701,6 +1803,7 @@ SEV4: Cosmetic issue
 ```
 
 **Initial Response** (< 5 min):
+
 ```
 1. Acknowledge alert
 2. Assess severity
@@ -1711,6 +1814,7 @@ SEV4: Cosmetic issue
 ```
 
 **Communication Cadence**:
+
 ```
 SEV0/1: Every 15 minutes
 SEV2:   Every 30 minutes
@@ -1718,6 +1822,7 @@ SEV3:   Every hour
 ```
 
 **Key Commands**:
+
 ```bash
 # Check recent deployments
 kubectl rollout history deployment/SERVICE
@@ -1748,24 +1853,29 @@ curl prometheus:9090/api/v1/query?query=...
 **Impact**: [User/Business impact]
 
 ## Timeline
+
 [Key events with timestamps]
 
 ## Root Cause
+
 [Primary cause + contributing factors]
 
 ## What Went Well ✅
+
 [Positive aspects]
 
 ## What Went Wrong ❌
+
 [Areas for improvement]
 
 ## Action Items
 
 | Action | Owner | Deadline | Status |
-|--------|-------|----------|--------|
+| ------ | ----- | -------- | ------ |
 | ...    | ...   | ...      | ...    |
 
 ## Lessons Learned
+
 [Key takeaways]
 ```
 
@@ -1809,6 +1919,7 @@ Before conducting chaos experiments:
 **🎉 Congratulations on completing Brown Belt!**
 
 You've achieved mastery in observability, SRE practices, and incident management. You can now:
+
 - Build comprehensive monitoring systems
 - Track and improve DORA metrics
 - Manage services with SLIs/SLOs
@@ -1820,8 +1931,8 @@ You've achieved mastery in observability, SRE practices, and incident management
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*
-*Version 1.0 | Last Updated: October 2025*
-*License: MIT | https://github.com/paruff/fawkes*
+_Fawkes Dojo - Where Platform Engineers Are Forged_
+_Version 1.0 | Last Updated: October 2025_
+_License: MIT | https://github.com/paruff/fawkes_
 
 **🎉 Brown Belt Complete - Congratulations, SRE Practitioner! 🎉**

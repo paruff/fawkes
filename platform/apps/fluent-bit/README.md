@@ -5,10 +5,12 @@
 **This platform uses OpenTelemetry Collector for log collection, not Fluent Bit.**
 
 For log collection configuration, see:
+
 - `platform/apps/opentelemetry/otel-collector-application.yaml` - OpenTelemetry Collector configuration
 - `platform/apps/opentelemetry/README.md` - OpenTelemetry documentation
 
 The OpenTelemetry Collector provides unified telemetry collection (logs, metrics, traces) with:
+
 - Native Kubernetes metadata enrichment via k8sattributes processor
 - Trace correlation support (traceId, spanId)
 - Direct export to OpenSearch
@@ -17,6 +19,7 @@ The OpenTelemetry Collector provides unified telemetry collection (logs, metrics
 ## Historical Context
 
 Fluent Bit was originally considered for log collection but was replaced by OpenTelemetry Collector to provide a unified observability pipeline. This decision aligns with:
+
 - ADR-011: Centralized Log Management
 - ADR-013: Distributed Tracing
 
@@ -180,6 +183,7 @@ Fluent Bit exposes Prometheus metrics:
 ```
 
 Key metrics:
+
 - `fluentbit_input_records_total` - Records received
 - `fluentbit_output_records_total` - Records sent
 - `fluentbit_output_errors_total` - Output errors

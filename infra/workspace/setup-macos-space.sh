@@ -6,7 +6,7 @@ echo "Setting up your macOS development environment using Homebrew and Brewfile.
 
 # Function to check and install Homebrew
 install_brew() {
-  if ! command -v brew &>/dev/null; then
+  if ! command -v brew &> /dev/null; then
     echo "Homebrew not found. Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   else
@@ -28,7 +28,7 @@ install_brew_bundle() {
 # Function to test if a CLI tool is accessible
 test_cli_tool() {
   local cmd="$1"
-  if command -v "$cmd" &>/dev/null; then
+  if command -v "$cmd" &> /dev/null; then
     echo "✅ $cmd is accessible."
   else
     echo "❌ $cmd is NOT accessible."

@@ -35,6 +35,7 @@ fawkes-feedback config init
 ```
 
 This will prompt you for:
+
 - Feedback API URL (default: `http://feedback-service.fawkes.svc.cluster.local:8000`)
 - Your name (pulled from git config if available)
 - API key (optional)
@@ -42,16 +43,19 @@ This will prompt you for:
 ### 2. Submit Feedback
 
 **Quick submit:**
+
 ```bash
 fawkes-feedback submit -r 5 -c "UI/UX" -m "Love the new dashboard!"
 ```
 
 **Interactive mode:**
+
 ```bash
 fawkes-feedback submit -i
 ```
 
 **Bug report:**
+
 ```bash
 fawkes-feedback submit -t bug_report -r 2 -c "Jenkins" -m "Build failing on main branch"
 ```
@@ -63,6 +67,7 @@ fawkes-feedback submit -t bug_report -r 2 -c "Jenkins" -m "Build failing on main
 Submit new feedback about the platform.
 
 **Options:**
+
 - `-r, --rating INTEGER` - Rating from 1-5 (required)
 - `-c, --category TEXT` - Feedback category (required)
 - `-m, --comment TEXT` - Feedback comment (required)
@@ -72,6 +77,7 @@ Submit new feedback about the platform.
 - `-i, --interactive` - Use interactive mode
 
 **Examples:**
+
 ```bash
 # Quick feedback
 fawkes-feedback submit -r 5 -c "Performance" -m "Builds are super fast now!"
@@ -88,11 +94,13 @@ fawkes-feedback submit -i
 List recent feedback submissions.
 
 **Options:**
+
 - `-c, --category TEXT` - Filter by category
 - `-s, --status TEXT` - Filter by status
 - `-l, --limit INTEGER` - Number of results (default: 10)
 
 **Examples:**
+
 ```bash
 # List last 10 feedback items
 fawkes-feedback list
@@ -109,6 +117,7 @@ fawkes-feedback list -l 20
 Show details of a specific feedback item.
 
 **Examples:**
+
 ```bash
 fawkes-feedback show 123
 ```
@@ -118,6 +127,7 @@ fawkes-feedback show 123
 Sync queued feedback to the service when online.
 
 **Examples:**
+
 ```bash
 fawkes-feedback sync
 ```
@@ -127,6 +137,7 @@ fawkes-feedback sync
 Display all feedback items waiting to be submitted.
 
 **Examples:**
+
 ```bash
 fawkes-feedback queue
 ```
@@ -134,16 +145,19 @@ fawkes-feedback queue
 ### Configuration Commands
 
 #### `config show` - Show Configuration
+
 ```bash
 fawkes-feedback config show
 ```
 
 #### `config init` - Initialize Configuration
+
 ```bash
 fawkes-feedback config init
 ```
 
 #### `config set-offline` - Enable/Disable Offline Mode
+
 ```bash
 fawkes-feedback config set-offline true
 fawkes-feedback config set-offline false
@@ -152,6 +166,7 @@ fawkes-feedback config set-offline false
 ## Configuration
 
 Configuration can be set via:
+
 1. Config file: `~/.fawkes-feedback/config.yaml`
 2. Environment variables
 3. Command-line options (for `config init`)
@@ -160,7 +175,7 @@ Configuration can be set via:
 
 ```yaml
 api_url: http://feedback-service.fawkes.svc.cluster.local:8000
-api_key: null  # Optional
+api_key: null # Optional
 default_category: General
 author: Your Name
 offline_mode: true
@@ -181,11 +196,13 @@ When the feedback service is unavailable, feedback is automatically queued local
 **Queue location:** `~/.fawkes-feedback/queue.json`
 
 **Check queue status:**
+
 ```bash
 fawkes-feedback queue
 ```
 
 **Sync when online:**
+
 ```bash
 fawkes-feedback sync
 ```
@@ -229,6 +246,7 @@ fawkes-feedback sync
 ## Feedback Categories
 
 Common categories you can use:
+
 - `UI/UX` - User interface and experience
 - `Performance` - Speed and responsiveness
 - `Documentation` - Docs quality and completeness
@@ -251,6 +269,7 @@ Common categories you can use:
 This CLI integrates with the Fawkes Feedback Service API:
 
 **Endpoints used:**
+
 - `POST /api/v1/feedback` - Submit feedback
 - `GET /api/v1/feedback` - List feedback (requires auth)
 - `GET /api/v1/feedback/{id}` - Get feedback details

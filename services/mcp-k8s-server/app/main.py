@@ -21,8 +21,11 @@ def healthz():
 def list_pods(namespace: str = "fawkes"):
     v1 = client.CoreV1Api()
     pods = v1.list_namespaced_pod(namespace).items
-    return [{
-        "name": p.metadata.name,
-        "namespace": p.metadata.namespace,
-        "phase": p.status.phase,
-    } for p in pods]
+    return [
+        {
+            "name": p.metadata.name,
+            "namespace": p.metadata.namespace,
+            "phase": p.status.phase,
+        }
+        for p in pods
+    ]

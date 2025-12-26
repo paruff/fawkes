@@ -31,10 +31,10 @@ def test_focalboard_webhook_endpoint_exists():
             "boardId": "test-board",
             "status": "Backlog",
             "createAt": int(datetime.now().timestamp() * 1000),
-            "updateAt": int(datetime.now().timestamp() * 1000)
+            "updateAt": int(datetime.now().timestamp() * 1000),
         },
         "boardId": "test-board",
-        "workspaceId": "test-workspace"
+        "workspaceId": "test-workspace",
     }
 
     response = client.post("/api/v1/focalboard/webhook", json=payload)
@@ -95,10 +95,10 @@ def test_webhook_card_created_validation():
             "boardId": "board-1",
             "status": "Backlog",
             "createAt": 1640000000000,
-            "updateAt": 1640000000000
+            "updateAt": 1640000000000,
         },
         "boardId": "board-1",
-        "workspaceId": "workspace-1"
+        "workspaceId": "workspace-1",
     }
 
     response = client.post("/api/v1/focalboard/webhook", json=valid_payload)
@@ -110,7 +110,7 @@ def test_webhook_card_created_validation():
         "card": {
             "id": "card-1",
             # Missing required fields like title, boardId, status, etc.
-        }
+        },
     }
 
     response = client.post("/api/v1/focalboard/webhook", json=invalid_payload)
@@ -128,10 +128,10 @@ def test_webhook_card_moved_validation():
             "boardId": "board-1",
             "status": "Development",
             "createAt": 1640000000000,
-            "updateAt": 1640000100000
+            "updateAt": 1640000100000,
         },
         "boardId": "board-1",
-        "workspaceId": "workspace-1"
+        "workspaceId": "workspace-1",
     }
 
     response = client.post("/api/v1/focalboard/webhook", json=payload)
@@ -140,9 +140,7 @@ def test_webhook_card_moved_validation():
 
 def test_sync_board_endpoint():
     """Test manual board sync endpoint."""
-    sync_request = {
-        "board_id": "test-board-123"
-    }
+    sync_request = {"board_id": "test-board-123"}
 
     response = client.post("/api/v1/focalboard/sync", json=sync_request)
     # Should return 200 with sync results or error

@@ -68,6 +68,7 @@ sudo yum install jq -y      # RHEL/CentOS
 ### AWS Account Requirements
 
 **IAM Permissions Needed**:
+
 - EC2 (VPC, Security Groups, EBS)
 - EKS (Cluster creation and management)
 - RDS (PostgreSQL instances)
@@ -82,6 +83,7 @@ sudo yum install jq -y      # RHEL/CentOS
 **Recommended**: Use an IAM user with `AdministratorAccess` for initial setup, then lock down to least-privilege after deployment.
 
 **Service Limits Check**:
+
 ```bash
 # Check EKS cluster limit (default: 100 per region)
 aws service-quotas get-service-quota \
@@ -99,17 +101,20 @@ aws service-quotas get-service-quota \
 ### Domain and SSL (Optional but Recommended)
 
 **For production deployments**:
+
 - Domain name (e.g., `fawkes.yourdomain.com`)
 - Access to DNS management (Route53 or external DNS provider)
 - SSL certificate via AWS Certificate Manager (we'll create this)
 
 **Without domain**:
+
 - Can use AWS-provided Load Balancer DNS names
 - Self-signed certificates (development only)
 
 ### Budget and Cost Awareness
 
 **Expected Monthly Costs**:
+
 - **Development**: ~$379/month
 - **Staging**: ~$762/month
 - **Production**: ~$2,084/month
@@ -117,6 +122,7 @@ aws service-quotas get-service-quota \
 See [AWS Cost Estimation](./AWS_COST_ESTIMATION.md) for detailed breakdown.
 
 **Set up billing alerts**:
+
 ```bash
 aws budgets create-budget \
   --account-id YOUR_ACCOUNT_ID \
@@ -186,7 +192,9 @@ aws budgets create-budget \
 **VPC CIDR**: `10.0.0.0/16` (65,536 IPs)
 
 **Subnets**:
+
 - **Public Subnets** (3 AZs): `10.0.1.0/24`, `10.0.2.0/24`, `10.0.3.0/24`
+
   - Internet Gateway attached
   - NAT Gateways deployed here
   - Application Load Balancers
@@ -198,20 +206,21 @@ aws budgets create-budget \
   - Egress via NAT Gateways
 
 **Why 3 Availability Zones?**
+
 - High availability and fault tolerance
 - EKS best practice (distribute nodes across AZs)
 - RDS Multi-AZ automatic failover
 
 ### Component Placement
 
-| Component | Subnet Type | Availability Zones | Accessibility |
-|-----------|-------------|-------------------|---------------|
-| **Internet Gateway** | N/A | Region-level | Public |
-| **NAT Gateways** | Public | 3 (one per AZ) | Public IPs |
-| **Application Load Balancers** | Public | 3 | Internet-facing |
-| **EKS Worker Nodes** | Private | 3 | Internal only |
-| **RDS PostgreSQL** | Private | 2 (Multi-AZ) | Internal only |
-| **S3 Buckets** | N/A | Region-level | VPC Endpoint |
+| Component                      | Subnet Type | Availability Zones | Accessibility   |
+| ------------------------------ | ----------- | ------------------ | --------------- |
+| **Internet Gateway**           | N/A         | Region-level       | Public          |
+| **NAT Gateways**               | Public      | 3 (one per AZ)     | Public IPs      |
+| **Application Load Balancers** | Public      | 3                  | Internet-facing |
+| **EKS Worker Nodes**           | Private     | 3                  | Internal only   |
+| **RDS PostgreSQL**             | Private     | 2 (Multi-AZ)       | Internal only   |
+| **S3 Buckets**                 | N/A         | Region-level       | VPC Endpoint    |
 
 ---
 
@@ -330,6 +339,7 @@ terraform plan -var-file=production.tfvars -out=tfplan
 ```
 
 **Review the plan carefully**. You should see:
+
 - 1 VPC
 - 6 subnets (3 public, 3 private)
 - 1 Internet Gateway
@@ -348,6 +358,7 @@ terraform apply tfplan
 ```
 
 **Expected output**:
+
 ```
 Apply complete! Resources: 42 added, 0 changed, 0 destroyed.
 
@@ -462,6 +473,7 @@ aws acm request-certificate \
 ```
 
 **Validation**:
+
 ```bash
 # Check VPC exists
 aws ec2 describe-vpcs --filters "Name=tag:Name,Values=fawkes-production-vpc"
@@ -587,6 +599,7 @@ eksctl create cluster -f cluster-config.yaml
 ```
 
 **What's happening during creation**:
+
 1. EKS control plane provisioning (managed by AWS)
 2. Worker nodes launching across 3 AZs
 3. IAM roles and policies creation
@@ -705,6 +718,7 @@ kubectl get pods -n kube-system | grep cluster-autoscaler
 ```
 
 **Validation**:
+
 ```bash
 # Check cluster status
 eksctl get cluster --name fawkes-production
@@ -909,6 +923,7 @@ kubectl run postgres-client --rm -i --tty \
 ```
 
 **Validation**:
+
 ```bash
 # Verify RDS instance is running
 aws rds describe-db-instances \
@@ -1512,6 +1527,7 @@ kubectl wait --for=condition=available --timeout=300s \
 ```
 
 **Validation**:
+
 ```bash
 # Check all platform services are running
 kubectl get pods -n argocd
@@ -1796,6 +1812,7 @@ kubectl cp dora-dashboard.json monitoring/$GRAFANA_POD:/tmp/
 ```
 
 **Validation**:
+
 ```bash
 # Check Prometheus is scraping targets
 kubectl port-forward -n monitoring svc/prometheus-operated 9090:9090 &
@@ -2068,6 +2085,7 @@ EOF
 ```
 
 **Validation**:
+
 ```bash
 # Check Trivy is scanning
 kubectl get vulnerabilityreports -A
@@ -2609,11 +2627,13 @@ cat DEPLOYMENT_RECORD.md
 #### Issue: Pods stuck in Pending state
 
 **Symptoms**:
+
 ```bash
 kubectl get pods -A | grep Pending
 ```
 
 **Diagnosis**:
+
 ```bash
 # Check pod events
 kubectl describe pod <pod-name> -n <namespace>
@@ -2630,6 +2650,7 @@ kubectl get pod <pod-name> -n <namespace> -o yaml | grep -A 10 nodeSelector
 ```
 
 **Solutions**:
+
 ```bash
 # Scale up nodes if resource constrained
 eksctl scale nodegroup --cluster=fawkes-production --nodes=9 --name=fawkes-ng-general
@@ -2644,12 +2665,14 @@ kubectl describe pvc <pvc-name> -n <namespace>
 #### Issue: Cannot access services via ingress
 
 **Symptoms**:
+
 ```bash
 curl https://argocd.fawkes.yourdomain.com
 # Returns timeout or connection refused
 ```
 
 **Diagnosis**:
+
 ```bash
 # Check ingress status
 kubectl get ingress -A
@@ -2666,6 +2689,7 @@ aws ec2 describe-security-groups --group-ids <sg-id>
 ```
 
 **Solutions**:
+
 ```bash
 # Restart ALB controller
 kubectl rollout restart deployment/aws-load-balancer-controller -n kube-system
@@ -2680,12 +2704,14 @@ nslookup argocd.fawkes.yourdomain.com
 #### Issue: Database connection failures
 
 **Symptoms**:
+
 ```bash
 # Pods crashlooping with database errors
 kubectl logs <pod-name> -n <namespace> | grep -i "database\|postgres"
 ```
 
 **Diagnosis**:
+
 ```bash
 # Check RDS status
 aws rds describe-db-instances --db-instance-identifier fawkes-production-db
@@ -2702,6 +2728,7 @@ aws ec2 describe-security-groups --group-ids <rds-sg-id>
 ```
 
 **Solutions**:
+
 ```bash
 # Verify security group allows traffic from EKS nodes
 EKS_NODE_SG=$(aws eks describe-cluster --name fawkes-production --query "cluster.resourcesVpcConfig.clusterSecurityGroupId" --output text)
@@ -2719,6 +2746,7 @@ kubectl get secret postgres-credentials -n fawkes-system -o yaml
 #### Issue: High AWS costs
 
 **Diagnosis**:
+
 ```bash
 # Check current month's costs
 aws ce get-cost-and-usage \
@@ -2733,6 +2761,7 @@ kubectl top pods -A
 ```
 
 **Solutions**:
+
 ```bash
 # Right-size nodes
 eksctl scale nodegroup --cluster=fawkes-production --nodes=3 --name=fawkes-ng-general
@@ -2755,12 +2784,14 @@ aws budgets create-budget \
 #### Issue: Certificate validation pending
 
 **Symptoms**:
+
 ```bash
 aws acm describe-certificate --certificate-arn <cert-arn> | grep Status
 # Returns: PENDING_VALIDATION
 ```
 
 **Solutions**:
+
 ```bash
 # Get validation records
 aws acm describe-certificate --certificate-arn <cert-arn> --query 'Certificate.DomainValidationOptions[0].ResourceRecord'
@@ -3164,6 +3195,7 @@ kubectl create secret generic <secret-name> \
 ### RDS Failure
 
 **Detection**:
+
 ```bash
 aws rds describe-db-instances \
   --db-instance-identifier fawkes-production-db \
@@ -3171,6 +3203,7 @@ aws rds describe-db-instances \
 ```
 
 **Recovery** (Multi-AZ automatic failover):
+
 ```bash
 # Force failover to standby
 aws rds reboot-db-instance \
@@ -3188,6 +3221,7 @@ aws rds describe-db-instances \
 ```
 
 **Recovery** (Complete failure - restore from snapshot):
+
 ```bash
 # List recent snapshots
 aws rds describe-db-snapshots \
@@ -3229,12 +3263,14 @@ kubectl rollout restart deployment -n focalboard
 ### EKS Cluster Failure
 
 **Detection**:
+
 ```bash
 kubectl get nodes
 # No response or all nodes NotReady
 ```
 
 **Recovery**:
+
 ```bash
 # Check cluster status
 aws eks describe-cluster --name fawkes-production --query 'cluster.status'
@@ -3251,11 +3287,13 @@ velero restore create --from-backup daily-backup-20251007
 ### Complete Region Failure
 
 **Prerequisites**:
+
 - Multi-region setup (not covered in this guide)
 - Cross-region RDS replication
 - S3 cross-region replication
 
 **Recovery**:
+
 ```bash
 # Promote RDS read replica in secondary region
 aws rds promote-read-replica \
@@ -3410,6 +3448,7 @@ aws config describe-compliance-by-config-rule
 Congratulations! You've successfully deployed the Fawkes platform on AWS in production.
 
 **What you've accomplished**:
+
 - ✅ Deployed a complete Internal Delivery Platform on AWS
 - ✅ Set up high-availability infrastructure across 3 availability zones
 - ✅ Implemented security best practices (encryption, network policies, RBAC)
@@ -3418,6 +3457,7 @@ Congratulations! You've successfully deployed the Fawkes platform on AWS in prod
 - ✅ Created maintainable, documented infrastructure
 
 **Next steps**:
+
 1. **Onboard your first team**: Create their first project using Backstage
 2. **Deploy first application**: Use the golden path templates
 3. **Configure CI/CD**: Set up Jenkins pipelines for automated builds
@@ -3425,6 +3465,7 @@ Congratulations! You've successfully deployed the Fawkes platform on AWS in prod
 5. **Iterate and improve**: Collect feedback and enhance the platform
 
 **Remember**:
+
 - Monitor costs daily for the first week
 - Review security scans weekly
 - Perform monthly maintenance tasks
@@ -3432,6 +3473,7 @@ Congratulations! You've successfully deployed the Fawkes platform on AWS in prod
 - Keep documentation up to date
 
 **Need help?**
+
 - Check troubleshooting section first
 - Search GitHub Issues: https://github.com/paruff/fawkes/issues
 - Join the community on Mattermost

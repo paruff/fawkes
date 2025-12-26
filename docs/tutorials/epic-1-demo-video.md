@@ -34,36 +34,43 @@ Quick reference checklist for setup, recording, and post-production.
 This 30-minute demo walkthrough demonstrates:
 
 ### 🎯 Platform Overview (3 min)
+
 - Complete Fawkes architecture
 - Epic 1 key deliverables
 - Multi-layer platform design
 
 ### 🛠️ Developer Portal - Backstage (5 min)
+
 - Service catalog navigation
 - Creating services from golden path templates
 - TechDocs and documentation hub
 
 ### 🔄 GitOps with ArgoCD (4 min)
+
 - Application synchronization
 - Deployment management
 - Rollback capabilities
 
 ### ⚙️ CI/CD Golden Path (5 min)
+
 - Jenkins pipeline stages
 - Security scanning integration
 - Trunk-based development workflow
 
 ### 🔒 Security Scanning (3 min)
+
 - SonarQube SAST analysis
 - Harbor container scanning
 - Vault secrets management
 
 ### 📊 Observability Stack (3 min)
+
 - Prometheus metrics
 - Grafana dashboards
 - Full platform visibility
 
 ### 📈 DORA Metrics Dashboard (5 min)
+
 - Deployment Frequency
 - Lead Time for Changes
 - Change Failure Rate
@@ -71,16 +78,19 @@ This 30-minute demo walkthrough demonstrates:
 - Trend analysis and insights
 
 ### 🚀 Complete Workflow (1.5 min)
+
 - End-to-end developer journey
 - Platform resource utilization
 
 ### 🎬 Closing (1 min)
+
 - Summary and next steps
 - Documentation resources
 
 ## Video Specifications
 
 ### Technical Requirements
+
 - **Resolution**: 1920x1080 (1080p)
 - **Format**: MP4 (H.264)
 - **Frame Rate**: 30 fps
@@ -88,6 +98,7 @@ This 30-minute demo walkthrough demonstrates:
 - **Captions**: Enabled (YouTube auto-generate or manual)
 
 ### Quality Standards
+
 - Clear audio with minimal background noise
 - Readable screen text (16-18pt terminal font)
 - Smooth navigation between services

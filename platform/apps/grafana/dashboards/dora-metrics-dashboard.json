@@ -12,32 +12,32 @@
         "id": 1,
         "title": "DORA Four Key Metrics Overview",
         "type": "row",
-        "gridPos": {"x": 0, "y": 0, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 2,
         "title": "Deployment Frequency",
         "type": "stat",
-        "gridPos": {"x": 0, "y": 1, "w": 6, "h": 6},
+        "gridPos": { "x": 0, "y": 1, "w": 6, "h": 6 },
         "description": "Number of deployments to production per day/week. Elite: On-demand (multiple deploys per day)",
         "targets": [
           {
             "expr": "sum(increase(dora_deployments_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[7d]))",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 7},
-                {"color": "green", "value": 28}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 7 },
+                { "color": "green", "value": 28 }
               ]
             }
           },
@@ -54,13 +54,13 @@
         "id": 3,
         "title": "Lead Time for Changes",
         "type": "gauge",
-        "gridPos": {"x": 6, "y": 1, "w": 6, "h": 6},
+        "gridPos": { "x": 6, "y": 1, "w": 6, "h": 6 },
         "description": "Time from commit to production deployment. Elite: Less than one hour",
         "targets": [
           {
             "expr": "avg(dora_lead_time_seconds{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / 3600",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -68,14 +68,14 @@
             "unit": "h",
             "min": 0,
             "max": 168,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 1},
-                {"color": "orange", "value": 24},
-                {"color": "red", "value": 168}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 1 },
+                { "color": "orange", "value": 24 },
+                { "color": "red", "value": 168 }
               ]
             }
           }
@@ -89,13 +89,13 @@
         "id": 4,
         "title": "Change Failure Rate",
         "type": "gauge",
-        "gridPos": {"x": 12, "y": 1, "w": 6, "h": 6},
+        "gridPos": { "x": 12, "y": 1, "w": 6, "h": 6 },
         "description": "Percentage of deployments causing failures in production. Elite: 0-15%",
         "targets": [
           {
             "expr": "sum(dora_deployment_failures_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / sum(dora_deployments_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) * 100",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -103,14 +103,14 @@
             "unit": "percent",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 15},
-                {"color": "orange", "value": 30},
-                {"color": "red", "value": 45}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 15 },
+                { "color": "orange", "value": 30 },
+                { "color": "red", "value": 45 }
               ]
             }
           }
@@ -124,13 +124,13 @@
         "id": 5,
         "title": "Mean Time to Restore (MTTR)",
         "type": "gauge",
-        "gridPos": {"x": 18, "y": 1, "w": 6, "h": 6},
+        "gridPos": { "x": 18, "y": 1, "w": 6, "h": 6 },
         "description": "Time to restore service after an incident. Elite: Less than one hour",
         "targets": [
           {
             "expr": "avg(dora_mttr_seconds{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / 3600",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -138,14 +138,14 @@
             "unit": "h",
             "min": 0,
             "max": 168,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 1},
-                {"color": "orange", "value": 24},
-                {"color": "red", "value": 168}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 1 },
+                { "color": "orange", "value": 24 },
+                { "color": "red", "value": 168 }
               ]
             }
           }
@@ -159,27 +159,27 @@
         "id": 6,
         "title": "Deployment Trends",
         "type": "row",
-        "gridPos": {"x": 0, "y": 7, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 7, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 7,
         "title": "Deployment Frequency Over Time",
         "type": "timeseries",
-        "gridPos": {"x": 0, "y": 8, "w": 12, "h": 8},
+        "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
         "description": "Daily deployment count trend",
         "targets": [
           {
             "expr": "sum(increase(dora_deployments_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[1d]))",
             "refId": "A",
             "legendFormat": "Deployments per day",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "drawStyle": "line",
               "lineInterpolation": "smooth",
@@ -194,25 +194,25 @@
         "id": 8,
         "title": "Deployment Frequency by Service",
         "type": "timeseries",
-        "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8},
+        "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
         "description": "Deployment frequency breakdown by service",
         "targets": [
           {
             "expr": "sum by (service) (increase(dora_deployments_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[1d]))",
             "refId": "A",
             "legendFormat": "{{service}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "drawStyle": "line",
               "lineInterpolation": "smooth",
               "fillOpacity": 10,
-              "stacking": {"mode": "normal"}
+              "stacking": { "mode": "normal" }
             }
           }
         }
@@ -221,27 +221,27 @@
         "id": 9,
         "title": "Lead Time Analysis",
         "type": "row",
-        "gridPos": {"x": 0, "y": 16, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 16, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 10,
         "title": "Lead Time Trend",
         "type": "timeseries",
-        "gridPos": {"x": 0, "y": 17, "w": 12, "h": 8},
+        "gridPos": { "x": 0, "y": 17, "w": 12, "h": 8 },
         "description": "Average lead time from commit to production",
         "targets": [
           {
             "expr": "avg(dora_lead_time_seconds{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / 3600",
             "refId": "A",
             "legendFormat": "Avg Lead Time",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "h",
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "drawStyle": "line",
               "lineInterpolation": "smooth",
@@ -250,9 +250,9 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 1},
-                {"color": "red", "value": 24}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 1 },
+                { "color": "red", "value": 24 }
               ]
             }
           }
@@ -262,32 +262,32 @@
         "id": 11,
         "title": "Lead Time Distribution (P50, P95, P99)",
         "type": "timeseries",
-        "gridPos": {"x": 12, "y": 17, "w": 12, "h": 8},
+        "gridPos": { "x": 12, "y": 17, "w": 12, "h": 8 },
         "description": "Lead time percentiles over time",
         "targets": [
           {
             "expr": "histogram_quantile(0.50, sum(rate(dora_lead_time_seconds_bucket{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[5m])) by (le)) / 3600",
             "refId": "A",
             "legendFormat": "P50",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           },
           {
             "expr": "histogram_quantile(0.95, sum(rate(dora_lead_time_seconds_bucket{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[5m])) by (le)) / 3600",
             "refId": "B",
             "legendFormat": "P95",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           },
           {
             "expr": "histogram_quantile(0.99, sum(rate(dora_lead_time_seconds_bucket{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[5m])) by (le)) / 3600",
             "refId": "C",
             "legendFormat": "P99",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "h",
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "drawStyle": "line",
               "lineInterpolation": "smooth",
@@ -300,27 +300,27 @@
         "id": 12,
         "title": "Failure Analysis",
         "type": "row",
-        "gridPos": {"x": 0, "y": 25, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 25, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 13,
         "title": "Change Failure Rate Over Time",
         "type": "timeseries",
-        "gridPos": {"x": 0, "y": 26, "w": 12, "h": 8},
+        "gridPos": { "x": 0, "y": 26, "w": 12, "h": 8 },
         "description": "Change failure rate trend",
         "targets": [
           {
             "expr": "sum(increase(dora_deployment_failures_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[1d])) / sum(increase(dora_deployments_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[1d])) * 100",
             "refId": "A",
             "legendFormat": "Failure Rate",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "percent",
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "drawStyle": "line",
               "lineInterpolation": "smooth",
@@ -329,9 +329,9 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 15},
-                {"color": "red", "value": 30}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 15 },
+                { "color": "red", "value": 30 }
               ]
             }
           }
@@ -341,14 +341,14 @@
         "id": 14,
         "title": "Failures by Service",
         "type": "piechart",
-        "gridPos": {"x": 12, "y": 26, "w": 12, "h": 8},
+        "gridPos": { "x": 12, "y": 26, "w": 12, "h": 8 },
         "description": "Distribution of deployment failures by service",
         "targets": [
           {
             "expr": "sum by (service) (increase(dora_deployment_failures_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[7d]))",
             "refId": "A",
             "legendFormat": "{{service}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ]
       },
@@ -356,27 +356,27 @@
         "id": 15,
         "title": "Recovery Metrics",
         "type": "row",
-        "gridPos": {"x": 0, "y": 34, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 34, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 16,
         "title": "MTTR Trend",
         "type": "timeseries",
-        "gridPos": {"x": 0, "y": 35, "w": 12, "h": 8},
+        "gridPos": { "x": 0, "y": 35, "w": 12, "h": 8 },
         "description": "Mean time to restore service after incident",
         "targets": [
           {
             "expr": "avg(dora_mttr_seconds{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / 60",
             "refId": "A",
             "legendFormat": "Avg MTTR",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "m",
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "drawStyle": "line",
               "lineInterpolation": "smooth",
@@ -385,9 +385,9 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 60},
-                {"color": "red", "value": 1440}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 60 },
+                { "color": "red", "value": 1440 }
               ]
             }
           }
@@ -397,20 +397,20 @@
         "id": 17,
         "title": "Incident Count",
         "type": "timeseries",
-        "gridPos": {"x": 12, "y": 35, "w": 12, "h": 8},
+        "gridPos": { "x": 12, "y": 35, "w": 12, "h": 8 },
         "description": "Number of incidents over time",
         "targets": [
           {
             "expr": "sum(increase(dora_incidents_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[1d]))",
             "refId": "A",
             "legendFormat": "Incidents per day",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "drawStyle": "bars",
               "barAlignment": 0,
@@ -423,42 +423,42 @@
         "id": 18,
         "title": "DORA Benchmark Comparison",
         "type": "row",
-        "gridPos": {"x": 0, "y": 43, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 43, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 20,
         "title": "Performance vs Benchmarks",
         "type": "table",
-        "gridPos": {"x": 0, "y": 44, "w": 24, "h": 8},
+        "gridPos": { "x": 0, "y": 44, "w": 24, "h": 8 },
         "description": "Comparison of current metrics against DORA performance benchmarks",
         "targets": [
           {
             "expr": "sum(increase(dora_deployments_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}[7d])) / 7",
             "refId": "A",
             "legendFormat": "Deployment Frequency",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "instant": true
           },
           {
             "expr": "avg(dora_lead_time_seconds{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / 3600",
             "refId": "B",
             "legendFormat": "Lead Time",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "instant": true
           },
           {
             "expr": "sum(dora_deployment_failures_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / sum(dora_deployments_total{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) * 100",
             "refId": "C",
             "legendFormat": "Change Failure Rate",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "instant": true
           },
           {
             "expr": "avg(dora_mttr_seconds{environment=\"$environment\",team=~\"$team\",service=~\"$service\"}) / 3600",
             "refId": "D",
             "legendFormat": "MTTR",
-            "datasource": {"type": "prometheus", "uid": "prometheus"},
+            "datasource": { "type": "prometheus", "uid": "prometheus" },
             "instant": true
           }
         ],
@@ -485,7 +485,7 @@
           },
           "overrides": [
             {
-              "matcher": {"id": "byName", "options": "Metric"},
+              "matcher": { "id": "byName", "options": "Metric" },
               "properties": [
                 {
                   "id": "custom.width",
@@ -500,7 +500,7 @@
         "id": 21,
         "title": "Benchmark Reference",
         "type": "text",
-        "gridPos": {"x": 0, "y": 52, "w": 24, "h": 6},
+        "gridPos": { "x": 0, "y": 52, "w": 24, "h": 6 },
         "options": {
           "mode": "markdown",
           "content": "## DORA Performance Benchmarks\n\nBased on the 2023 State of DevOps Report, performance levels are classified as:\n\n| Metric | Elite | High | Medium | Low |\n|--------|-------|------|--------|-----|\n| **Deployment Frequency** | Multiple per day (>1/day) | Once per day to once per week | Once per week to once per month | < Once per month |\n| **Lead Time for Changes** | < 1 hour | 1 hour to 1 day | 1 day to 1 week | > 1 week |\n| **Change Failure Rate** | 0-15% | 16-30% | 31-45% | > 45% |\n| **Mean Time to Restore** | < 1 hour | 1 hour to 1 day | 1 day to 1 week | > 1 week |\n\n### Color Coding:\n- 🟢 **Green**: Elite/High performer\n- 🟡 **Yellow**: Medium performer\n- 🔴 **Red**: Low performer\n\n### How to Improve:\n1. **Deployment Frequency**: Automate deployment pipelines, reduce batch sizes, implement feature flags\n2. **Lead Time**: Optimize CI/CD pipeline, improve code review speed, automate testing\n3. **Change Failure Rate**: Enhance testing coverage, implement progressive delivery, improve monitoring\n4. **MTTR**: Improve observability, automate rollbacks, practice incident response\n\n### Resources:\n- [DORA Metrics Implementation Playbook](../../../docs/playbooks/dora-metrics-implementation.md)\n- [DORA Metrics Guide](../../../docs/observability/dora-metrics-guide.md)"
@@ -510,14 +510,14 @@
         "id": 22,
         "title": "Performance Category",
         "type": "row",
-        "gridPos": {"x": 0, "y": 58, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 58, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 23,
         "title": "DORA Performance Level",
         "type": "text",
-        "gridPos": {"x": 0, "y": 59, "w": 24, "h": 6},
+        "gridPos": { "x": 0, "y": 59, "w": 24, "h": 6 },
         "options": {
           "mode": "markdown",
           "content": "## DORA Performance Classification\n\n**Note**: This dashboard shows placeholder metrics. Configure the DORA metrics collector to populate actual data.\n\n### Elite Performance Targets:\n- **Deployment Frequency**: On-demand (multiple deploys per day)\n- **Lead Time for Changes**: Less than one hour\n- **Change Failure Rate**: 0-15%\n- **Mean Time to Restore**: Less than one hour\n\n### Implementation Status:\n🔄 **Metrics collection pending** - Refer to [DORA Metrics Implementation Playbook](../../../docs/playbooks/dora-metrics-implementation.md) for setup instructions.\n\n### Next Steps:\n1. Configure deployment event collection from ArgoCD\n2. Configure Jenkins pipeline metrics integration\n3. Set up incident tracking for MTTR\n4. Enable metrics export to Prometheus\n5. Wait 2-4 weeks for baseline data collection\n6. Analyze trends and identify improvement opportunities"
@@ -543,7 +543,7 @@
             "value": "production",
             "text": "production"
           },
-          "datasource": {"type": "prometheus", "uid": "prometheus"}
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         },
         {
           "name": "team",
@@ -555,7 +555,7 @@
             "value": "All",
             "text": "All"
           },
-          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "label": "Team",
           "description": "Filter metrics by team"
         },
@@ -565,7 +565,7 @@
           "query": "label_values(dora_deployments_total{environment=\"$environment\",team=~\"$team\"}, service)",
           "multi": true,
           "includeAll": true,
-          "datasource": {"type": "prometheus", "uid": "prometheus"}
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
         }
       ]
     },
@@ -580,7 +580,7 @@
       "list": [
         {
           "name": "Deployments",
-          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "expr": "changes(dora_deployments_total[1m]) > 0",
           "titleFormat": "Deployment",
           "textFormat": "{{service}}",
@@ -588,7 +588,7 @@
         },
         {
           "name": "Incidents",
-          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "expr": "changes(dora_incidents_total[1m]) > 0",
           "titleFormat": "Incident",
           "textFormat": "{{service}}",

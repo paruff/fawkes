@@ -17,33 +17,33 @@
         "id": 1,
         "title": "DevEx Overview",
         "type": "row",
-        "gridPos": {"x": 0, "y": 0, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 2,
         "title": "Overall DevEx Health Score",
         "type": "stat",
-        "gridPos": {"x": 0, "y": 1, "w": 6, "h": 4},
+        "gridPos": { "x": 0, "y": 1, "w": 6, "h": 4 },
         "description": "Overall developer experience health score based on all SPACE dimensions (0-100 scale)",
         "targets": [
           {
             "expr": "space_devex_health_score{team=~\"$team\"}",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "orange", "value": 50},
-                {"color": "yellow", "value": 60},
-                {"color": "green", "value": 80}
+                { "color": "red", "value": null },
+                { "color": "orange", "value": 50 },
+                { "color": "yellow", "value": 60 },
+                { "color": "green", "value": 80 }
               ]
             },
             "mappings": []
@@ -66,38 +66,38 @@
         "id": 3,
         "title": "SPACE Dimensions Status",
         "type": "bargauge",
-        "gridPos": {"x": 6, "y": 1, "w": 18, "h": 4},
+        "gridPos": { "x": 6, "y": 1, "w": 18, "h": 4 },
         "description": "Health status of all 5 SPACE dimensions (0-5 scale)",
         "targets": [
           {
             "expr": "space_satisfaction_score{team=~\"$team\"}",
             "refId": "A",
             "legendFormat": "Satisfaction",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           },
           {
             "expr": "space_performance_score{team=~\"$team\"}",
             "refId": "B",
             "legendFormat": "Performance",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           },
           {
             "expr": "space_activity_score{team=~\"$team\"}",
             "refId": "C",
             "legendFormat": "Activity",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           },
           {
             "expr": "space_communication_score{team=~\"$team\"}",
             "refId": "D",
             "legendFormat": "Communication",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           },
           {
             "expr": "space_efficiency_score{team=~\"$team\"}",
             "refId": "E",
             "legendFormat": "Efficiency & Flow",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -105,14 +105,14 @@
             "min": 0,
             "max": 5,
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "orange", "value": 2.5},
-                {"color": "yellow", "value": 3.5},
-                {"color": "green", "value": 4.0}
+                { "color": "red", "value": null },
+                { "color": "orange", "value": 2.5 },
+                { "color": "yellow", "value": 3.5 },
+                { "color": "green", "value": 4.0 }
               ]
             }
           }
@@ -127,20 +127,20 @@
         "id": 10,
         "title": "📊 SATISFACTION",
         "type": "row",
-        "gridPos": {"x": 0, "y": 5, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 5, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 11,
         "title": "Net Promoter Score (NPS)",
         "type": "gauge",
-        "gridPos": {"x": 0, "y": 6, "w": 6, "h": 6},
+        "gridPos": { "x": 0, "y": 6, "w": 6, "h": 6 },
         "description": "How likely developers are to recommend Fawkes platform (-100 to 100 scale). Elite: >70, Good: >50",
         "targets": [
           {
             "expr": "space_nps_score{team=~\"$team\"}",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -148,14 +148,14 @@
             "unit": "short",
             "min": -100,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "orange", "value": 0},
-                {"color": "yellow", "value": 50},
-                {"color": "green", "value": 70}
+                { "color": "red", "value": null },
+                { "color": "orange", "value": 0 },
+                { "color": "yellow", "value": 50 },
+                { "color": "green", "value": 70 }
               ]
             }
           }
@@ -169,13 +169,13 @@
         "id": 12,
         "title": "Platform Satisfaction Rating",
         "type": "stat",
-        "gridPos": {"x": 6, "y": 6, "w": 6, "h": 3},
+        "gridPos": { "x": 6, "y": 6, "w": 6, "h": 3 },
         "description": "Average platform satisfaction rating (1-5 scale). Target: >4.0",
         "targets": [
           {
             "expr": "space_satisfaction_rating_avg{team=~\"$team\"}",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -184,14 +184,14 @@
             "decimals": 1,
             "min": 1,
             "max": 5,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "orange", "value": 2.5},
-                {"color": "yellow", "value": 3.5},
-                {"color": "green", "value": 4.0}
+                { "color": "red", "value": null },
+                { "color": "orange", "value": 2.5 },
+                { "color": "yellow", "value": 3.5 },
+                { "color": "green", "value": 4.0 }
               ]
             }
           }
@@ -206,27 +206,27 @@
         "id": 13,
         "title": "Survey Response Rate",
         "type": "stat",
-        "gridPos": {"x": 12, "y": 6, "w": 6, "h": 3},
+        "gridPos": { "x": 12, "y": 6, "w": 6, "h": 3 },
         "description": "Percentage of developers responding to surveys. Target: >70%",
         "targets": [
           {
             "expr": "space_survey_response_rate{team=~\"$team\"} * 100",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "percent",
             "decimals": 0,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "orange", "value": 50},
-                {"color": "yellow", "value": 70},
-                {"color": "green", "value": 85}
+                { "color": "red", "value": null },
+                { "color": "orange", "value": 50 },
+                { "color": "yellow", "value": 70 },
+                { "color": "green", "value": 85 }
               ]
             }
           }
@@ -240,27 +240,27 @@
         "id": 14,
         "title": "Burnout Percentage",
         "type": "stat",
-        "gridPos": {"x": 18, "y": 6, "w": 6, "h": 3},
+        "gridPos": { "x": 18, "y": 6, "w": 6, "h": 3 },
         "description": "Percentage of developers reporting burnout symptoms. Target: <20%",
         "targets": [
           {
             "expr": "space_burnout_percentage{team=~\"$team\"} * 100",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "percent",
             "decimals": 0,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 15},
-                {"color": "orange", "value": 20},
-                {"color": "red", "value": 30}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 15 },
+                { "color": "orange", "value": 20 },
+                { "color": "red", "value": 30 }
               ]
             }
           }
@@ -274,19 +274,19 @@
         "id": 15,
         "title": "NPS Trend (30 days)",
         "type": "timeseries",
-        "gridPos": {"x": 6, "y": 9, "w": 18, "h": 3},
+        "gridPos": { "x": 6, "y": 9, "w": 18, "h": 3 },
         "description": "Net Promoter Score trend over last 30 days",
         "targets": [
           {
             "expr": "space_nps_score{team=~\"$team\"}",
             "refId": "A",
             "legendFormat": "{{team}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "axisPlacement": "auto",
               "fillOpacity": 10,
@@ -297,41 +297,41 @@
           }
         },
         "options": {
-          "tooltip": {"mode": "multi"},
-          "legend": {"displayMode": "list", "placement": "bottom"}
+          "tooltip": { "mode": "multi" },
+          "legend": { "displayMode": "list", "placement": "bottom" }
         }
       },
       {
         "id": 20,
         "title": "⚡ PERFORMANCE",
         "type": "row",
-        "gridPos": {"x": 0, "y": 12, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 12, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 21,
         "title": "Deployment Frequency",
         "type": "stat",
-        "gridPos": {"x": 0, "y": 13, "w": 6, "h": 4},
+        "gridPos": { "x": 0, "y": 13, "w": 6, "h": 4 },
         "description": "Deployments per day. Elite: >1/day",
         "targets": [
           {
             "expr": "sum(rate(space_deployments_total{team=~\"$team\"}[7d])) * 86400",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
             "decimals": 1,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 0.14},
-                {"color": "green", "value": 1}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 0.14 },
+                { "color": "green", "value": 1 }
               ]
             }
           }
@@ -346,13 +346,13 @@
         "id": 22,
         "title": "Lead Time for Changes",
         "type": "gauge",
-        "gridPos": {"x": 6, "y": 13, "w": 6, "h": 4},
+        "gridPos": { "x": 6, "y": 13, "w": 6, "h": 4 },
         "description": "Time from commit to production. Elite: <1 hour",
         "targets": [
           {
             "expr": "space_lead_time_hours_avg{team=~\"$team\"}",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -360,14 +360,14 @@
             "unit": "h",
             "min": 0,
             "max": 168,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 1},
-                {"color": "orange", "value": 24},
-                {"color": "red", "value": 168}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 1 },
+                { "color": "orange", "value": 24 },
+                { "color": "red", "value": 168 }
               ]
             }
           }
@@ -381,13 +381,13 @@
         "id": 23,
         "title": "Change Failure Rate",
         "type": "gauge",
-        "gridPos": {"x": 12, "y": 13, "w": 6, "h": 4},
+        "gridPos": { "x": 12, "y": 13, "w": 6, "h": 4 },
         "description": "Percentage of deployments causing failures. Elite: 0-15%",
         "targets": [
           {
             "expr": "space_change_failure_rate{team=~\"$team\"} * 100",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -395,14 +395,14 @@
             "unit": "percent",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 15},
-                {"color": "orange", "value": 30},
-                {"color": "red", "value": 45}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 15 },
+                { "color": "orange", "value": 30 },
+                { "color": "red", "value": 45 }
               ]
             }
           }
@@ -416,27 +416,27 @@
         "id": 24,
         "title": "Build Success Rate",
         "type": "stat",
-        "gridPos": {"x": 18, "y": 13, "w": 6, "h": 4},
+        "gridPos": { "x": 18, "y": 13, "w": 6, "h": 4 },
         "description": "Percentage of successful builds. Target: >95%",
         "targets": [
           {
             "expr": "space_build_success_rate{team=~\"$team\"} * 100",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "percent",
             "decimals": 1,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "orange", "value": 85},
-                {"color": "yellow", "value": 90},
-                {"color": "green", "value": 95}
+                { "color": "red", "value": null },
+                { "color": "orange", "value": 85 },
+                { "color": "yellow", "value": 90 },
+                { "color": "green", "value": 95 }
               ]
             }
           }
@@ -450,32 +450,32 @@
         "id": 30,
         "title": "🔨 ACTIVITY",
         "type": "row",
-        "gridPos": {"x": 0, "y": 17, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 17, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 31,
         "title": "Active Developers",
         "type": "stat",
-        "gridPos": {"x": 0, "y": 18, "w": 4, "h": 4},
+        "gridPos": { "x": 0, "y": 18, "w": 4, "h": 4 },
         "description": "Number of developers active on platform in last 7 days",
         "targets": [
           {
             "expr": "space_active_developers_count{team=~\"$team\"}",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 50},
-                {"color": "green", "value": 80}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 50 },
+                { "color": "green", "value": 80 }
               ]
             }
           }
@@ -489,19 +489,19 @@
         "id": 32,
         "title": "Commits (7d)",
         "type": "stat",
-        "gridPos": {"x": 4, "y": 18, "w": 4, "h": 4},
+        "gridPos": { "x": 4, "y": 18, "w": 4, "h": 4 },
         "description": "Total commits in last 7 days",
         "targets": [
           {
             "expr": "sum(increase(space_commits_total{team=~\"$team\"}[7d]))",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "palette-classic"}
+            "color": { "mode": "palette-classic" }
           }
         },
         "options": {
@@ -513,19 +513,19 @@
         "id": 33,
         "title": "Pull Requests (7d)",
         "type": "stat",
-        "gridPos": {"x": 8, "y": 18, "w": 4, "h": 4},
+        "gridPos": { "x": 8, "y": 18, "w": 4, "h": 4 },
         "description": "Total pull requests created in last 7 days",
         "targets": [
           {
             "expr": "sum(increase(space_pull_requests_total{team=~\"$team\"}[7d]))",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "palette-classic"}
+            "color": { "mode": "palette-classic" }
           }
         },
         "options": {
@@ -537,19 +537,19 @@
         "id": 34,
         "title": "Code Reviews (7d)",
         "type": "stat",
-        "gridPos": {"x": 12, "y": 18, "w": 4, "h": 4},
+        "gridPos": { "x": 12, "y": 18, "w": 4, "h": 4 },
         "description": "Total code reviews completed in last 7 days",
         "targets": [
           {
             "expr": "sum(increase(space_code_reviews_total{team=~\"$team\"}[7d]))",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "palette-classic"}
+            "color": { "mode": "palette-classic" }
           }
         },
         "options": {
@@ -561,25 +561,25 @@
         "id": 35,
         "title": "AI Tool Adoption",
         "type": "stat",
-        "gridPos": {"x": 16, "y": 18, "w": 4, "h": 4},
+        "gridPos": { "x": 16, "y": 18, "w": 4, "h": 4 },
         "description": "Percentage of developers using AI tools. Target: >70%",
         "targets": [
           {
             "expr": "space_ai_adoption_percentage{team=~\"$team\"} * 100",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "percent",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 50},
-                {"color": "green", "value": 70}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 50 },
+                { "color": "green", "value": 70 }
               ]
             }
           }
@@ -593,25 +593,25 @@
         "id": 36,
         "title": "Platform Engagement",
         "type": "stat",
-        "gridPos": {"x": 20, "y": 18, "w": 4, "h": 4},
+        "gridPos": { "x": 20, "y": 18, "w": 4, "h": 4 },
         "description": "Percentage of developers actively using platform weekly. Target: >80%",
         "targets": [
           {
             "expr": "space_platform_engagement_percentage{team=~\"$team\"} * 100",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "percent",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 70},
-                {"color": "green", "value": 80}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 70 },
+                { "color": "green", "value": 80 }
               ]
             }
           }
@@ -625,20 +625,20 @@
         "id": 40,
         "title": "💬 COMMUNICATION & COLLABORATION",
         "type": "row",
-        "gridPos": {"x": 0, "y": 22, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 22, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 41,
         "title": "Avg Review Time",
         "type": "gauge",
-        "gridPos": {"x": 0, "y": 23, "w": 6, "h": 4},
+        "gridPos": { "x": 0, "y": 23, "w": 6, "h": 4 },
         "description": "Average time to first code review. Target: <12 hours",
         "targets": [
           {
             "expr": "space_avg_review_time_hours{team=~\"$team\"}",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -646,14 +646,14 @@
             "unit": "h",
             "min": 0,
             "max": 48,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 12},
-                {"color": "orange", "value": 24},
-                {"color": "red", "value": 48}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 12 },
+                { "color": "orange", "value": 24 },
+                { "color": "red", "value": 48 }
               ]
             }
           }
@@ -667,26 +667,26 @@
         "id": 42,
         "title": "Comments per PR",
         "type": "stat",
-        "gridPos": {"x": 6, "y": 23, "w": 6, "h": 4},
+        "gridPos": { "x": 6, "y": 23, "w": 6, "h": 4 },
         "description": "Average comments per pull request. Target: >2",
         "targets": [
           {
             "expr": "space_comments_per_pr_avg{team=~\"$team\"}",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
             "decimals": 1,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 1},
-                {"color": "green", "value": 2}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 1 },
+                { "color": "green", "value": 2 }
               ]
             }
           }
@@ -700,26 +700,26 @@
         "id": 43,
         "title": "Cross-Team PRs",
         "type": "stat",
-        "gridPos": {"x": 12, "y": 23, "w": 6, "h": 4},
+        "gridPos": { "x": 12, "y": 23, "w": 6, "h": 4 },
         "description": "Percentage of PRs involving cross-team collaboration. Target: >15%",
         "targets": [
           {
             "expr": "space_cross_team_pr_percentage{team=~\"$team\"} * 100",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "percent",
             "decimals": 0,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 10},
-                {"color": "green", "value": 15}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 10 },
+                { "color": "green", "value": 15 }
               ]
             }
           }
@@ -733,19 +733,19 @@
         "id": 44,
         "title": "Knowledge Sharing",
         "type": "stat",
-        "gridPos": {"x": 18, "y": 23, "w": 6, "h": 4},
+        "gridPos": { "x": 18, "y": 23, "w": 6, "h": 4 },
         "description": "Documentation contributions (wiki edits, TechDocs updates) in last 7 days",
         "targets": [
           {
             "expr": "sum(increase(space_documentation_contributions_total{team=~\"$team\"}[7d]))",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "palette-classic"}
+            "color": { "mode": "palette-classic" }
           }
         },
         "options": {
@@ -757,33 +757,33 @@
         "id": 50,
         "title": "⚡ EFFICIENCY & FLOW",
         "type": "row",
-        "gridPos": {"x": 0, "y": 27, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 27, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 51,
         "title": "Flow State Achievement",
         "type": "stat",
-        "gridPos": {"x": 0, "y": 28, "w": 6, "h": 4},
+        "gridPos": { "x": 0, "y": 28, "w": 6, "h": 4 },
         "description": "Percentage of developers achieving flow 3+ days per week. Target: >60%",
         "targets": [
           {
             "expr": "space_flow_state_achievement_percentage{team=~\"$team\"} * 100",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "percent",
             "decimals": 0,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 50},
-                {"color": "green", "value": 60}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 50 },
+                { "color": "green", "value": 60 }
               ]
             }
           }
@@ -797,13 +797,13 @@
         "id": 52,
         "title": "Valuable Work Time",
         "type": "gauge",
-        "gridPos": {"x": 6, "y": 28, "w": 6, "h": 4},
+        "gridPos": { "x": 6, "y": 28, "w": 6, "h": 4 },
         "description": "Average % of time spent on valuable work. Target: >60%",
         "targets": [
           {
             "expr": "space_valuable_work_percentage_avg{team=~\"$team\"}",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -811,13 +811,13 @@
             "unit": "percent",
             "min": 0,
             "max": 100,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 50},
-                {"color": "green", "value": 60}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 50 },
+                { "color": "green", "value": 60 }
               ]
             }
           }
@@ -831,26 +831,26 @@
         "id": 53,
         "title": "Friction Incidents (30d)",
         "type": "stat",
-        "gridPos": {"x": 12, "y": 28, "w": 6, "h": 4},
+        "gridPos": { "x": 12, "y": 28, "w": 6, "h": 4 },
         "description": "Total friction incidents reported in last 30 days. Target: <30 per 100 developers",
         "targets": [
           {
             "expr": "sum(increase(space_friction_incidents_total{team=~\"$team\"}[30d]))",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
             "unit": "short",
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 20},
-                {"color": "orange", "value": 30},
-                {"color": "red", "value": 50}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 20 },
+                { "color": "orange", "value": 30 },
+                { "color": "red", "value": 50 }
               ]
             }
           }
@@ -864,13 +864,13 @@
         "id": 54,
         "title": "Cognitive Load",
         "type": "gauge",
-        "gridPos": {"x": 18, "y": 28, "w": 6, "h": 4},
+        "gridPos": { "x": 18, "y": 28, "w": 6, "h": 4 },
         "description": "Average cognitive load (1-5 scale, 5=overwhelmed). Target: <3.5",
         "targets": [
           {
             "expr": "space_cognitive_load_avg{team=~\"$team\"}",
             "refId": "A",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
@@ -879,14 +879,14 @@
             "min": 1,
             "max": 5,
             "decimals": 1,
-            "color": {"mode": "thresholds"},
+            "color": { "mode": "thresholds" },
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 3},
-                {"color": "orange", "value": 3.5},
-                {"color": "red", "value": 4}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 3 },
+                { "color": "orange", "value": 3.5 },
+                { "color": "red", "value": 4 }
               ]
             }
           }
@@ -900,26 +900,26 @@
         "id": 60,
         "title": "📈 HISTORICAL TRENDS",
         "type": "row",
-        "gridPos": {"x": 0, "y": 32, "w": 24, "h": 1},
+        "gridPos": { "x": 0, "y": 32, "w": 24, "h": 1 },
         "collapsed": false
       },
       {
         "id": 61,
         "title": "DevEx Health Score Trend (30 days)",
         "type": "timeseries",
-        "gridPos": {"x": 0, "y": 33, "w": 12, "h": 6},
+        "gridPos": { "x": 0, "y": 33, "w": 12, "h": 6 },
         "description": "Overall DevEx health score trend over last 30 days",
         "targets": [
           {
             "expr": "space_devex_health_score{team=~\"$team\"}",
             "refId": "A",
             "legendFormat": "{{team}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "axisPlacement": "auto",
               "fillOpacity": 10,
@@ -932,51 +932,51 @@
           }
         },
         "options": {
-          "tooltip": {"mode": "multi"},
-          "legend": {"displayMode": "list", "placement": "bottom"}
+          "tooltip": { "mode": "multi" },
+          "legend": { "displayMode": "list", "placement": "bottom" }
         }
       },
       {
         "id": 62,
         "title": "SPACE Dimensions Trend (30 days)",
         "type": "timeseries",
-        "gridPos": {"x": 12, "y": 33, "w": 12, "h": 6},
+        "gridPos": { "x": 12, "y": 33, "w": 12, "h": 6 },
         "description": "Individual SPACE dimension scores over last 30 days",
         "targets": [
           {
             "expr": "space_satisfaction_score{team=~\"$team\"}",
             "refId": "A",
             "legendFormat": "Satisfaction",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           },
           {
             "expr": "space_performance_score{team=~\"$team\"}",
             "refId": "B",
             "legendFormat": "Performance",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           },
           {
             "expr": "space_activity_score{team=~\"$team\"}",
             "refId": "C",
             "legendFormat": "Activity",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           },
           {
             "expr": "space_communication_score{team=~\"$team\"}",
             "refId": "D",
             "legendFormat": "Communication",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           },
           {
             "expr": "space_efficiency_score{team=~\"$team\"}",
             "refId": "E",
             "legendFormat": "Efficiency",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "axisPlacement": "auto",
               "fillOpacity": 10,
@@ -989,27 +989,27 @@
           }
         },
         "options": {
-          "tooltip": {"mode": "multi"},
-          "legend": {"displayMode": "list", "placement": "bottom"}
+          "tooltip": { "mode": "multi" },
+          "legend": { "displayMode": "list", "placement": "bottom" }
         }
       },
       {
         "id": 63,
         "title": "Deployment Frequency Trend (30 days)",
         "type": "timeseries",
-        "gridPos": {"x": 0, "y": 39, "w": 8, "h": 5},
+        "gridPos": { "x": 0, "y": 39, "w": 8, "h": 5 },
         "description": "Daily deployment frequency trend",
         "targets": [
           {
             "expr": "sum(rate(space_deployments_total{team=~\"$team\"}[1d])) by (team) * 86400",
             "refId": "A",
             "legendFormat": "{{team}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "axisPlacement": "auto",
               "fillOpacity": 20,
@@ -1019,27 +1019,27 @@
           }
         },
         "options": {
-          "tooltip": {"mode": "multi"},
-          "legend": {"displayMode": "list", "placement": "bottom"}
+          "tooltip": { "mode": "multi" },
+          "legend": { "displayMode": "list", "placement": "bottom" }
         }
       },
       {
         "id": 64,
         "title": "Lead Time Trend (30 days)",
         "type": "timeseries",
-        "gridPos": {"x": 8, "y": 39, "w": 8, "h": 5},
+        "gridPos": { "x": 8, "y": 39, "w": 8, "h": 5 },
         "description": "Lead time for changes trend in hours",
         "targets": [
           {
             "expr": "space_lead_time_hours_avg{team=~\"$team\"}",
             "refId": "A",
             "legendFormat": "{{team}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "axisPlacement": "auto",
               "fillOpacity": 20,
@@ -1049,27 +1049,27 @@
           }
         },
         "options": {
-          "tooltip": {"mode": "multi"},
-          "legend": {"displayMode": "list", "placement": "bottom"}
+          "tooltip": { "mode": "multi" },
+          "legend": { "displayMode": "list", "placement": "bottom" }
         }
       },
       {
         "id": 65,
         "title": "Friction Incidents Trend (30 days)",
         "type": "timeseries",
-        "gridPos": {"x": 16, "y": 39, "w": 8, "h": 5},
+        "gridPos": { "x": 16, "y": 39, "w": 8, "h": 5 },
         "description": "Daily friction incidents reported",
         "targets": [
           {
             "expr": "sum(rate(space_friction_incidents_total{team=~\"$team\"}[1d])) by (team) * 86400",
             "refId": "A",
             "legendFormat": "{{team}}",
-            "datasource": {"type": "prometheus", "uid": "prometheus"}
+            "datasource": { "type": "prometheus", "uid": "prometheus" }
           }
         ],
         "fieldConfig": {
           "defaults": {
-            "color": {"mode": "palette-classic"},
+            "color": { "mode": "palette-classic" },
             "custom": {
               "axisPlacement": "auto",
               "fillOpacity": 20,
@@ -1079,8 +1079,8 @@
           }
         },
         "options": {
-          "tooltip": {"mode": "multi"},
-          "legend": {"displayMode": "list", "placement": "bottom"}
+          "tooltip": { "mode": "multi" },
+          "legend": { "displayMode": "list", "placement": "bottom" }
         }
       }
     ],
@@ -1090,7 +1090,7 @@
           "name": "team",
           "type": "query",
           "label": "Team",
-          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "query": "label_values(space_devex_health_score, team)",
           "refresh": 1,
           "regex": "",
@@ -1109,7 +1109,7 @@
       "list": [
         {
           "name": "Deployments",
-          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "enable": true,
           "expr": "changes(space_deployments_total[5m]) > 0",
           "iconColor": "green",
@@ -1117,7 +1117,7 @@
         },
         {
           "name": "Incidents",
-          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
           "enable": true,
           "expr": "changes(space_incidents_total[5m]) > 0",
           "iconColor": "red",

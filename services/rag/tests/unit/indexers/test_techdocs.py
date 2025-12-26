@@ -15,7 +15,7 @@ from indexers.techdocs import BackstageIndexer
 class TestBackstageIndexer:
     """Test Backstage TechDocs indexer functionality."""
 
-    @patch('indexers.techdocs.weaviate.Client')
+    @patch("indexers.techdocs.weaviate.Client")
     def test_indexer_initialization(self, mock_weaviate):
         """Test indexer initializes correctly."""
         mock_client = Mock()
@@ -23,9 +23,7 @@ class TestBackstageIndexer:
         mock_weaviate.return_value = mock_client
 
         indexer = BackstageIndexer(
-            backstage_url="http://backstage.example.com",
-            weaviate_url="http://test:8080",
-            dry_run=False
+            backstage_url="http://backstage.example.com", weaviate_url="http://test:8080", dry_run=False
         )
 
         assert indexer.backstage_url == "http://backstage.example.com"
@@ -35,31 +33,21 @@ class TestBackstageIndexer:
 
     def test_indexer_dry_run_mode(self):
         """Test indexer in dry-run mode doesn't connect to Weaviate."""
-        indexer = BackstageIndexer(
-            backstage_url="http://backstage.example.com",
-            dry_run=True
-        )
+        indexer = BackstageIndexer(backstage_url="http://backstage.example.com", dry_run=True)
 
         assert indexer.dry_run is True
         assert indexer.weaviate_client is None
 
     def test_indexer_with_auth_token(self):
         """Test indexer with authentication token."""
-        indexer = BackstageIndexer(
-            backstage_url="http://backstage.example.com",
-            auth_token="test_token",
-            dry_run=True
-        )
+        indexer = BackstageIndexer(backstage_url="http://backstage.example.com", auth_token="test_token", dry_run=True)
 
         assert indexer.auth_token == "test_token"
         assert "Authorization" in indexer.session.headers
 
     def test_extract_text_from_html(self):
         """Test HTML text extraction using BeautifulSoup."""
-        indexer = BackstageIndexer(
-            backstage_url="http://test",
-            dry_run=True
-        )
+        indexer = BackstageIndexer(backstage_url="http://test", dry_run=True)
 
         html = """
         <html>
@@ -85,10 +73,7 @@ class TestBackstageIndexer:
 
     def test_extract_sections_with_headings(self):
         """Test section extraction from content with headings."""
-        indexer = BackstageIndexer(
-            backstage_url="http://test",
-            dry_run=True
-        )
+        indexer = BackstageIndexer(backstage_url="http://test", dry_run=True)
 
         content = """# Introduction
 This is the introduction.
@@ -108,10 +93,7 @@ This section has more details.
 
     def test_extract_sections_no_headings(self):
         """Test section extraction from content without headings."""
-        indexer = BackstageIndexer(
-            backstage_url="http://test",
-            dry_run=True
-        )
+        indexer = BackstageIndexer(backstage_url="http://test", dry_run=True)
 
         content = "Just plain content without any headings."
         sections = indexer.extract_sections(content)
@@ -121,10 +103,7 @@ This section has more details.
 
     def test_chunk_content_short(self):
         """Test chunking short content returns single chunk."""
-        indexer = BackstageIndexer(
-            backstage_url="http://test",
-            dry_run=True
-        )
+        indexer = BackstageIndexer(backstage_url="http://test", dry_run=True)
 
         content = "Short content"
         chunks = indexer.chunk_content(content)
@@ -134,10 +113,7 @@ This section has more details.
 
     def test_chunk_content_long(self):
         """Test chunking long content returns multiple chunks."""
-        indexer = BackstageIndexer(
-            backstage_url="http://test",
-            dry_run=True
-        )
+        indexer = BackstageIndexer(backstage_url="http://test", dry_run=True)
 
         # Create content longer than MAX_CHUNK_CHARS
         content = "Paragraph.\n\n" * 500
@@ -151,10 +127,7 @@ This section has more details.
 
     def test_get_content_hash(self):
         """Test content hash calculation."""
-        indexer = BackstageIndexer(
-            backstage_url="http://test",
-            dry_run=True
-        )
+        indexer = BackstageIndexer(backstage_url="http://test", dry_run=True)
 
         content = "Test content"
         hash1 = indexer.get_content_hash(content)
@@ -163,13 +136,10 @@ This section has more details.
         assert hash1 == hash2  # Same content should produce same hash
         assert len(hash1) == 32  # MD5 hash is 32 hex characters
 
-    @patch('indexers.techdocs.requests.Session')
+    @patch("indexers.techdocs.requests.Session")
     def test_backstage_request_success(self, mock_session):
         """Test successful Backstage API request."""
-        indexer = BackstageIndexer(
-            backstage_url="http://test",
-            dry_run=True
-        )
+        indexer = BackstageIndexer(backstage_url="http://test", dry_run=True)
 
         # Mock response
         mock_response = Mock()
@@ -181,13 +151,10 @@ This section has more details.
 
         assert result == {"data": "test"}
 
-    @patch('indexers.techdocs.requests.Session')
+    @patch("indexers.techdocs.requests.Session")
     def test_backstage_request_404(self, mock_session):
         """Test Backstage API request with 404 error."""
-        indexer = BackstageIndexer(
-            backstage_url="http://test",
-            dry_run=True
-        )
+        indexer = BackstageIndexer(backstage_url="http://test", dry_run=True)
 
         # Mock response
         mock_response = Mock()
@@ -200,14 +167,11 @@ This section has more details.
 
     def test_fetch_catalog_entities_list_response(self):
         """Test fetching catalog entities with list response."""
-        indexer = BackstageIndexer(
-            backstage_url="http://test",
-            dry_run=True
-        )
+        indexer = BackstageIndexer(backstage_url="http://test", dry_run=True)
 
         mock_entities = [
             {"kind": "Component", "metadata": {"name": "test1"}},
-            {"kind": "API", "metadata": {"name": "test2"}}
+            {"kind": "API", "metadata": {"name": "test2"}},
         ]
 
         indexer._backstage_request = Mock(return_value=mock_entities)
@@ -219,15 +183,12 @@ This section has more details.
 
     def test_fetch_catalog_entities_dict_response(self):
         """Test fetching catalog entities with dict response."""
-        indexer = BackstageIndexer(
-            backstage_url="http://test",
-            dry_run=True
-        )
+        indexer = BackstageIndexer(backstage_url="http://test", dry_run=True)
 
         mock_response = {
             "items": [
                 {"kind": "Component", "metadata": {"name": "test1"}},
-                {"kind": "API", "metadata": {"name": "test2"}}
+                {"kind": "API", "metadata": {"name": "test2"}},
             ]
         }
 
@@ -240,23 +201,11 @@ This section has more details.
 
     def test_fetch_techdocs_metadata(self):
         """Test fetching TechDocs metadata for an entity."""
-        indexer = BackstageIndexer(
-            backstage_url="http://test",
-            dry_run=True
-        )
+        indexer = BackstageIndexer(backstage_url="http://test", dry_run=True)
 
-        entity = {
-            "kind": "Component",
-            "metadata": {
-                "namespace": "default",
-                "name": "my-service"
-            }
-        }
+        entity = {"kind": "Component", "metadata": {"namespace": "default", "name": "my-service"}}
 
-        mock_metadata = {
-            "site_name": "My Service",
-            "site_description": "Service documentation"
-        }
+        mock_metadata = {"site_name": "My Service", "site_description": "Service documentation"}
 
         indexer._backstage_request = Mock(return_value=mock_metadata)
 

@@ -26,6 +26,7 @@ Kubernetes Services (backstage, jenkins, etc.)
 ### 1. nginx-ingress Controller
 
 The nginx-ingress controller provides:
+
 - Layer 7 HTTP/HTTPS routing
 - TLS termination
 - Load balancing across service pods
@@ -36,6 +37,7 @@ The nginx-ingress controller provides:
 ### 2. Azure Load Balancer
 
 Azure automatically creates a Standard SKU Load Balancer when you deploy a LoadBalancer service:
+
 - Public IP assignment
 - Health probes
 - Port forwarding (80, 443)
@@ -45,6 +47,7 @@ Azure automatically creates a Standard SKU Load Balancer when you deploy a LoadB
 ### 3. cert-manager
 
 Automates TLS certificate management:
+
 - Let's Encrypt integration
 - Automatic certificate issuance and renewal
 - HTTP-01 and DNS-01 challenge support
@@ -225,7 +228,7 @@ metadata:
   name: test-app-tls
   namespace: ingress-test
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-staging  # Use staging first!
+    cert-manager.io/cluster-issuer: letsencrypt-staging # Use staging first!
 spec:
   ingressClassName: nginx
   tls:
@@ -338,6 +341,7 @@ spec:
 For private ingress (only accessible within VNet):
 
 Add annotation to service:
+
 ```yaml
 service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 ```
@@ -347,6 +351,7 @@ service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 If your Azure Load Balancer uses PROXY protocol:
 
 Update values-azure.yaml:
+
 ```yaml
 config:
   use-proxy-protocol: "true"
@@ -368,11 +373,13 @@ curl http://localhost:9402/metrics | grep nginx_ingress
 ### Grafana Dashboards
 
 Import the official nginx-ingress dashboard:
+
 - Dashboard ID: 9614 (from grafana.com)
 
 ### Alerts
 
 PrometheusRules are configured for:
+
 - Controller down alert
 - High error rate alert
 - Certificate expiration alert (via cert-manager)

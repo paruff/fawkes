@@ -51,7 +51,7 @@ class SuppressionEngine:
 
         for rule_file in rules_path.glob("*.yaml"):
             try:
-                with open(rule_file, 'r') as f:
+                with open(rule_file, "r") as f:
                     rule_data = yaml.safe_load(f)
 
                     # Add file path for tracking
@@ -72,7 +72,7 @@ class SuppressionEngine:
                 "schedule": "0 2 * * 0",
                 "duration": 7200,
                 "services": ["example-service"],
-                "suppress_severity": ["medium", "low"]
+                "suppress_severity": ["medium", "low"],
             },
             {
                 "name": "Example Known Issue",
@@ -81,13 +81,13 @@ class SuppressionEngine:
                 "alert_pattern": "ExampleAlert",
                 "services": ["example-service"],
                 "ticket_url": "https://jira.example.com/ISSUE-123",
-                "expires_at": "2025-12-31T23:59:59Z"
-            }
+                "expires_at": "2025-12-31T23:59:59Z",
+            },
         ]
 
         for i, rule in enumerate(example_rules):
             rule_file = rules_path / f"example-{i+1}.yaml"
-            with open(rule_file, 'w') as f:
+            with open(rule_file, "w") as f:
                 yaml.dump(rule, f, default_flow_style=False)
             logger.info(f"Created example rule: {rule_file}")
 
@@ -174,9 +174,10 @@ class SuppressionEngine:
         # Check if rule has expired
         if expires_at:
             try:
-                expiry = datetime.fromisoformat(expires_at.replace('Z', '+00:00'))
+                expiry = datetime.fromisoformat(expires_at.replace("Z", "+00:00"))
                 # Compare with timezone-aware now
                 from datetime import timezone
+
                 if datetime.now(timezone.utc) > expiry:
                     return False
             except Exception as e:

@@ -8,6 +8,7 @@ from app.database import Base
 
 class InterviewStatus(str, enum.Enum):
     """Interview status enum."""
+
     SCHEDULED = "scheduled"
     COMPLETED = "completed"
     CANCELLED = "cancelled"
@@ -16,6 +17,7 @@ class InterviewStatus(str, enum.Enum):
 
 class InsightStatus(str, enum.Enum):
     """Insight status enum."""
+
     DRAFT = "draft"
     VALIDATED = "validated"
     IMPLEMENTED = "implemented"
@@ -24,6 +26,7 @@ class InsightStatus(str, enum.Enum):
 
 class ExperimentStatus(str, enum.Enum):
     """Experiment status enum."""
+
     PLANNED = "planned"
     RUNNING = "running"
     COMPLETED = "completed"
@@ -32,6 +35,7 @@ class ExperimentStatus(str, enum.Enum):
 
 class FeatureStatus(str, enum.Enum):
     """Feature validation status enum."""
+
     PROPOSED = "proposed"
     VALIDATED = "validated"
     BUILDING = "building"
@@ -41,6 +45,7 @@ class FeatureStatus(str, enum.Enum):
 
 class Interview(Base):
     """Interview tracking model."""
+
     __tablename__ = "interviews"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -62,6 +67,7 @@ class Interview(Base):
 
 class DiscoveryInsight(Base):
     """Discovery insight model."""
+
     __tablename__ = "discovery_insights"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -85,6 +91,7 @@ class DiscoveryInsight(Base):
 
 class Experiment(Base):
     """Experiment tracking model."""
+
     __tablename__ = "experiments"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -110,6 +117,7 @@ class Experiment(Base):
 
 class FeatureValidation(Base):
     """Feature validation tracking model."""
+
     __tablename__ = "feature_validations"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -133,6 +141,7 @@ class FeatureValidation(Base):
 
 class TeamPerformance(Base):
     """Team performance metrics model."""
+
     __tablename__ = "team_performance"
 
     id = Column(Integer, primary_key=True, index=True)

@@ -30,16 +30,14 @@ from datetime import datetime
 from pathlib import Path
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
 # ============================================================================
 # PYTEST CONFIGURATION
 # ============================================================================
+
 
 def pytest_configure(config):
     """
@@ -52,114 +50,39 @@ def pytest_configure(config):
     - Mark tests as smoke, security, performance, etc.
     """
     # Test type markers
-    config.addinivalue_line(
-        "markers",
-        "unit: Unit tests (fast, isolated, no external dependencies)"
-    )
-    config.addinivalue_line(
-        "markers",
-        "integration: Integration tests (external dependencies required)"
-    )
-    config.addinivalue_line(
-        "markers",
-        "e2e: End-to-end tests (full system, slowest)"
-    )
+    config.addinivalue_line("markers", "unit: Unit tests (fast, isolated, no external dependencies)")
+    config.addinivalue_line("markers", "integration: Integration tests (external dependencies required)")
+    config.addinivalue_line("markers", "e2e: End-to-end tests (full system, slowest)")
 
     # Special test categories
-    config.addinivalue_line(
-        "markers",
-        "smoke: Critical path smoke tests (run on every commit)"
-    )
-    config.addinivalue_line(
-        "markers",
-        "security: Security-focused tests"
-    )
-    config.addinivalue_line(
-        "markers",
-        "performance: Performance and load tests"
-    )
-    config.addinivalue_line(
-        "markers",
-        "slow: Slow-running tests (run less frequently)"
-    )
-    config.addinivalue_line(
-        "markers",
-        "accessibility: Accessibility testing related tests"
-    )
-    config.addinivalue_line(
-        "markers",
-        "wcag: WCAG compliance tests"
-    )
-    config.addinivalue_line(
-        "markers",
-        "lighthouse: Lighthouse CI tests"
-    )
-    config.addinivalue_line(
-        "markers",
-        "a11y: Accessibility (a11y) shorthand marker"
-    )
-    config.addinivalue_line(
-        "markers",
-        "critical: Critical tests that must pass"
-    )
-    config.addinivalue_line(
-        "markers",
-        "important: Important tests (high priority)"
-    )
-    config.addinivalue_line(
-        "markers",
-        "normal: Normal priority tests"
-    )
+    config.addinivalue_line("markers", "smoke: Critical path smoke tests (run on every commit)")
+    config.addinivalue_line("markers", "security: Security-focused tests")
+    config.addinivalue_line("markers", "performance: Performance and load tests")
+    config.addinivalue_line("markers", "slow: Slow-running tests (run less frequently)")
+    config.addinivalue_line("markers", "accessibility: Accessibility testing related tests")
+    config.addinivalue_line("markers", "wcag: WCAG compliance tests")
+    config.addinivalue_line("markers", "lighthouse: Lighthouse CI tests")
+    config.addinivalue_line("markers", "a11y: Accessibility (a11y) shorthand marker")
+    config.addinivalue_line("markers", "critical: Critical tests that must pass")
+    config.addinivalue_line("markers", "important: Important tests (high priority)")
+    config.addinivalue_line("markers", "normal: Normal priority tests")
 
     # DORA capability markers
-    config.addinivalue_line(
-        "markers",
-        "dora_deployment_frequency: Tests that measure/improve deployment frequency"
-    )
-    config.addinivalue_line(
-        "markers",
-        "dora_lead_time: Tests that measure/improve lead time for changes"
-    )
-    config.addinivalue_line(
-        "markers",
-        "dora_change_failure_rate: Tests that measure/improve change failure rate"
-    )
-    config.addinivalue_line(
-        "markers",
-        "dora_mttr: Tests that measure/improve mean time to restore"
-    )
+    config.addinivalue_line("markers", "dora_deployment_frequency: Tests that measure/improve deployment frequency")
+    config.addinivalue_line("markers", "dora_lead_time: Tests that measure/improve lead time for changes")
+    config.addinivalue_line("markers", "dora_change_failure_rate: Tests that measure/improve change failure rate")
+    config.addinivalue_line("markers", "dora_mttr: Tests that measure/improve mean time to restore")
 
     # Dojo belt level markers
-    config.addinivalue_line(
-        "markers",
-        "white_belt: White belt curriculum tests (fundamentals)"
-    )
-    config.addinivalue_line(
-        "markers",
-        "yellow_belt: Yellow belt curriculum tests (CI/CD)"
-    )
-    config.addinivalue_line(
-        "markers",
-        "green_belt: Green belt curriculum tests (GitOps)"
-    )
-    config.addinivalue_line(
-        "markers",
-        "brown_belt: Brown belt curriculum tests (Observability)"
-    )
-    config.addinivalue_line(
-        "markers",
-        "black_belt: Black belt curriculum tests (Architecture)"
-    )
+    config.addinivalue_line("markers", "white_belt: White belt curriculum tests (fundamentals)")
+    config.addinivalue_line("markers", "yellow_belt: Yellow belt curriculum tests (CI/CD)")
+    config.addinivalue_line("markers", "green_belt: Green belt curriculum tests (GitOps)")
+    config.addinivalue_line("markers", "brown_belt: Brown belt curriculum tests (Observability)")
+    config.addinivalue_line("markers", "black_belt: Black belt curriculum tests (Architecture)")
 
     # Sprint markers
-    config.addinivalue_line(
-        "markers",
-        "sprint_01: Tests for Sprint 01 scope"
-    )
-    config.addinivalue_line(
-        "markers",
-        "sprint_02: Tests for Sprint 02 scope"
-    )
+    config.addinivalue_line("markers", "sprint_01: Tests for Sprint 01 scope")
+    config.addinivalue_line("markers", "sprint_02: Tests for Sprint 02 scope")
 
 
 def pytest_collection_modifyitems(config, items):
@@ -185,16 +108,16 @@ def pytest_collection_modifyitems(config, items):
         # Auto-tag DORA capabilities based on test name
         test_name = item.name.lower()
 
-        if any(word in test_name for word in ['deploy', 'deployment', 'release']):
+        if any(word in test_name for word in ["deploy", "deployment", "release"]):
             item.add_marker(pytest.mark.dora_deployment_frequency)
 
-        if any(word in test_name for word in ['commit', 'lead_time', 'velocity']):
+        if any(word in test_name for word in ["commit", "lead_time", "velocity"]):
             item.add_marker(pytest.mark.dora_lead_time)
 
-        if any(word in test_name for word in ['fail', 'failure', 'rollback', 'revert']):
+        if any(word in test_name for word in ["fail", "failure", "rollback", "revert"]):
             item.add_marker(pytest.mark.dora_change_failure_rate)
 
-        if any(word in test_name for word in ['incident', 'restore', 'mttr', 'recovery']):
+        if any(word in test_name for word in ["incident", "restore", "mttr", "recovery"]):
             item.add_marker(pytest.mark.dora_mttr)
 
 
@@ -211,71 +134,50 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     # Test category summary
     terminalreporter.write_sep("=", "Test Summary by Category")
 
-    categories = {
-        'unit': [],
-        'integration': [],
-        'e2e': [],
-        'smoke': [],
-        'security': []
-    }
+    categories = {"unit": [], "integration": [], "e2e": [], "smoke": [], "security": []}
 
-    for report in terminalreporter.stats.get('passed', []):
+    for report in terminalreporter.stats.get("passed", []):
         for category in categories.keys():
             if category in report.keywords:
                 categories[category].append(report)
 
     for category, tests in categories.items():
-        icon = '✅' if tests else '⏸️'
-        terminalreporter.write_line(
-            f"  {icon} {category.upper()}: {len(tests)} tests passed"
-        )
+        icon = "✅" if tests else "⏸️"
+        terminalreporter.write_line(f"  {icon} {category.upper()}: {len(tests)} tests passed")
 
     # DORA metrics coverage
     terminalreporter.write_sep("=", "DORA Metrics Coverage")
 
-    dora_metrics = {
-        'dora_deployment_frequency': 0,
-        'dora_lead_time': 0,
-        'dora_change_failure_rate': 0,
-        'dora_mttr': 0
-    }
+    dora_metrics = {"dora_deployment_frequency": 0, "dora_lead_time": 0, "dora_change_failure_rate": 0, "dora_mttr": 0}
 
-    for report in terminalreporter.stats.get('passed', []):
+    for report in terminalreporter.stats.get("passed", []):
         for metric in dora_metrics.keys():
             if metric in report.keywords:
                 dora_metrics[metric] += 1
 
     for metric, count in dora_metrics.items():
-        metric_name = metric.replace('dora_', '').replace('_', ' ').title()
-        icon = '📊' if count > 0 else '⏸️'
+        metric_name = metric.replace("dora_", "").replace("_", " ").title()
+        icon = "📊" if count > 0 else "⏸️"
         terminalreporter.write_line(f"  {icon} {metric_name}: {count} tests")
 
     # Dojo progression summary
     terminalreporter.write_sep("=", "Dojo Progression Summary")
 
-    belt_levels = ['white_belt', 'yellow_belt', 'green_belt', 'brown_belt', 'black_belt']
-    belt_emoji = {
-        'white_belt': '🥋',
-        'yellow_belt': '🟡',
-        'green_belt': '🟢',
-        'brown_belt': '🟤',
-        'black_belt': '⚫'
-    }
+    belt_levels = ["white_belt", "yellow_belt", "green_belt", "brown_belt", "black_belt"]
+    belt_emoji = {"white_belt": "🥋", "yellow_belt": "🟡", "green_belt": "🟢", "brown_belt": "🟤", "black_belt": "⚫"}
 
     for belt in belt_levels:
-        count = sum(1 for report in terminalreporter.stats.get('passed', [])
-                   if belt in report.keywords)
-        emoji = belt_emoji.get(belt, '🎯')
-        status = '✅' if count > 0 else '⏸️'
-        belt_name = belt.replace('_', ' ').title()
-        terminalreporter.write_line(
-            f"  {status} {emoji} {belt_name}: {count} scenarios"
-        )
+        count = sum(1 for report in terminalreporter.stats.get("passed", []) if belt in report.keywords)
+        emoji = belt_emoji.get(belt, "🎯")
+        status = "✅" if count > 0 else "⏸️"
+        belt_name = belt.replace("_", " ").title()
+        terminalreporter.write_line(f"  {status} {emoji} {belt_name}: {count} scenarios")
 
 
 # ============================================================================
 # SESSION-SCOPED FIXTURES (Set up once per test session)
 # ============================================================================
+
 
 @pytest.fixture(scope="session")
 def test_namespace() -> str:
@@ -309,12 +211,13 @@ def aws_region() -> str:
     Returns:
         str: AWS region (from env or default to us-east-1)
     """
-    return os.getenv('AWS_REGION', 'us-east-1')
+    return os.getenv("AWS_REGION", "us-east-1")
 
 
 # ============================================================================
 # KUBERNETES FIXTURES
 # ============================================================================
+
 
 @pytest.fixture(scope="session")
 def kubernetes_client():
@@ -367,11 +270,7 @@ def clean_namespace(kubernetes_client, test_namespace) -> Generator[str, None, N
     namespace = f"{test_namespace}-{uuid.uuid4().hex[:6]}"
 
     try:
-        kubernetes_client.create_namespace(
-            body=client.V1Namespace(
-                metadata=client.V1ObjectMeta(name=namespace)
-            )
-        )
+        kubernetes_client.create_namespace(body=client.V1Namespace(metadata=client.V1ObjectMeta(name=namespace)))
         logger.info(f"Created test namespace: {namespace}")
 
         yield namespace
@@ -379,10 +278,7 @@ def clean_namespace(kubernetes_client, test_namespace) -> Generator[str, None, N
     finally:
         # Cleanup namespace
         try:
-            kubernetes_client.delete_namespace(
-                name=namespace,
-                body=client.V1DeleteOptions()
-            )
+            kubernetes_client.delete_namespace(name=namespace, body=client.V1DeleteOptions())
             logger.info(f"Deleted test namespace: {namespace}")
         except Exception as e:
             logger.warning(f"Failed to delete namespace {namespace}: {e}")
@@ -392,6 +288,7 @@ def clean_namespace(kubernetes_client, test_namespace) -> Generator[str, None, N
 # JENKINS FIXTURES
 # ============================================================================
 
+
 @pytest.fixture(scope="session")
 def jenkins_url() -> str:
     """
@@ -400,10 +297,7 @@ def jenkins_url() -> str:
     Returns:
         str: Jenkins URL from env or default
     """
-    return os.getenv(
-        'JENKINS_URL',
-        'http://jenkins.fawkes-platform.svc:8080'
-    )
+    return os.getenv("JENKINS_URL", "http://jenkins.fawkes-platform.svc:8080")
 
 
 @pytest.fixture(scope="session")
@@ -420,8 +314,8 @@ def jenkins_client(jenkins_url):
     try:
         from jenkinsapi.jenkins import Jenkins
 
-        username = os.getenv('JENKINS_USER', 'robot-account')
-        token = os.getenv('JENKINS_TOKEN')
+        username = os.getenv("JENKINS_USER", "robot-account")
+        token = os.getenv("JENKINS_TOKEN")
 
         if not token:
             pytest.skip("JENKINS_TOKEN not set")
@@ -440,6 +334,7 @@ def jenkins_client(jenkins_url):
 # GITHUB FIXTURES
 # ============================================================================
 
+
 @pytest.fixture(scope="session")
 def github_token() -> str:
     """
@@ -451,7 +346,7 @@ def github_token() -> str:
     Raises:
         pytest.skip: If token not available
     """
-    token = os.getenv('GITHUB_TOKEN')
+    token = os.getenv("GITHUB_TOKEN")
     if not token:
         pytest.skip("GITHUB_TOKEN not set")
     return token
@@ -485,6 +380,7 @@ def github_client(github_token):
 # ARGOCD FIXTURES
 # ============================================================================
 
+
 @pytest.fixture(scope="session")
 def argocd_url() -> str:
     """
@@ -493,10 +389,7 @@ def argocd_url() -> str:
     Returns:
         str: ArgoCD URL from env or default
     """
-    return os.getenv(
-        'ARGOCD_URL',
-        'http://argocd-server.argocd.svc'
-    )
+    return os.getenv("ARGOCD_URL", "http://argocd-server.argocd.svc")
 
 
 @pytest.fixture(scope="session")
@@ -510,7 +403,7 @@ def argocd_token() -> str:
     Raises:
         pytest.skip: If token not available
     """
-    token = os.getenv('ARGOCD_TOKEN')
+    token = os.getenv("ARGOCD_TOKEN")
     if not token:
         pytest.skip("ARGOCD_TOKEN not set")
     return token
@@ -520,6 +413,7 @@ def argocd_token() -> str:
 # DORA METRICS FIXTURES
 # ============================================================================
 
+
 @pytest.fixture(scope="session")
 def dora_metrics_url() -> str:
     """
@@ -528,10 +422,7 @@ def dora_metrics_url() -> str:
     Returns:
         str: DORA metrics API URL
     """
-    return os.getenv(
-        'DORA_METRICS_URL',
-        'http://dora-metrics.fawkes-platform.svc:8080'
-    )
+    return os.getenv("DORA_METRICS_URL", "http://dora-metrics.fawkes-platform.svc:8080")
 
 
 @pytest.fixture(scope="function")
@@ -542,6 +433,7 @@ def dora_metrics_client(dora_metrics_url):
     Returns:
         DORAMetricsClient: Client for recording metrics
     """
+
     class DORAMetricsClient:
         """Simple client for DORA metrics API."""
 
@@ -559,8 +451,7 @@ def dora_metrics_client(dora_metrics_url):
             if sha:
                 return self._commit_times.get(f"{repo}/{sha}")
             # Return most recent for repo
-            repo_commits = {k: v for k, v in self._commit_times.items()
-                           if k.startswith(f"{repo}/")}
+            repo_commits = {k: v for k, v in self._commit_times.items() if k.startswith(f"{repo}/")}
             if repo_commits:
                 return max(repo_commits.values())
             return datetime.utcnow()
@@ -568,6 +459,7 @@ def dora_metrics_client(dora_metrics_url):
         def record_deployment(self, service: str, version: str, status: str):
             """Record a deployment event."""
             import requests
+
             try:
                 response = requests.post(
                     f"{self.base_url}/api/v1/deployments",
@@ -578,9 +470,9 @@ def dora_metrics_client(dora_metrics_url):
                         "commit_sha": version,
                         "commit_timestamp": datetime.utcnow().isoformat(),
                         "deployment_timestamp": datetime.utcnow().isoformat(),
-                        "status": status
+                        "status": status,
                     },
-                    timeout=5
+                    timeout=5,
                 )
                 logger.info(f"Recorded deployment: {service} {version} - {status}")
                 return response.status_code == 201
@@ -588,7 +480,7 @@ def dora_metrics_client(dora_metrics_url):
                 logger.warning(f"Failed to record deployment: {e}")
                 return False
 
-        def record_failure(self, service: str, failure_type: str = 'test_failure'):
+        def record_failure(self, service: str, failure_type: str = "test_failure"):
             """Record a failure event."""
             logger.info(f"Recorded failure: {service} - {failure_type}")
 
@@ -598,6 +490,7 @@ def dora_metrics_client(dora_metrics_url):
 # ============================================================================
 # GIT FIXTURES
 # ============================================================================
+
 
 @pytest.fixture(scope="function")
 def git_repo(tmp_path):
@@ -641,6 +534,7 @@ def git_repo(tmp_path):
 # MATTERMOST FIXTURES
 # ============================================================================
 
+
 @pytest.fixture(scope="session")
 def mattermost_webhook_url() -> str:
     """
@@ -649,10 +543,7 @@ def mattermost_webhook_url() -> str:
     Returns:
         str: Webhook URL from env or default
     """
-    return os.getenv(
-        'MATTERMOST_WEBHOOK_URL',
-        'http://mattermost.fawkes-platform.svc:8065/hooks/test'
-    )
+    return os.getenv("MATTERMOST_WEBHOOK_URL", "http://mattermost.fawkes-platform.svc:8065/hooks/test")
 
 
 @pytest.fixture(scope="function")
@@ -663,26 +554,20 @@ def mattermost_client(mattermost_webhook_url):
     Returns:
         MattermostClient: Client for sending test messages
     """
+
     class MattermostClient:
         """Simple client for Mattermost webhooks."""
 
         def __init__(self, webhook_url: str):
             self.webhook_url = webhook_url
 
-        def send_message(self, text: str, color: str = 'good') -> bool:
+        def send_message(self, text: str, color: str = "good") -> bool:
             """Send a message to Mattermost."""
             import requests
+
             try:
                 response = requests.post(
-                    self.webhook_url,
-                    json={
-                        "text": text,
-                        "attachments": [{
-                            "color": color,
-                            "text": text
-                        }]
-                    },
-                    timeout=5
+                    self.webhook_url, json={"text": text, "attachments": [{"color": color, "text": text}]}, timeout=5
                 )
                 return response.status_code == 200
             except Exception as e:
@@ -696,6 +581,7 @@ def mattermost_client(mattermost_webhook_url):
 # DATABASE FIXTURES
 # ============================================================================
 
+
 @pytest.fixture(scope="session")
 def postgres_connection_string() -> str:
     """
@@ -704,10 +590,7 @@ def postgres_connection_string() -> str:
     Returns:
         str: Connection string
     """
-    return os.getenv(
-        'POSTGRES_CONNECTION',
-        'postgresql://postgres:test@localhost:5432/fawkes_test'
-    )
+    return os.getenv("POSTGRES_CONNECTION", "postgresql://postgres:test@localhost:5432/fawkes_test")
 
 
 @pytest.fixture(scope="function")
@@ -743,6 +626,7 @@ def clean_database(postgres_connection_string):
 # ============================================================================
 # UTILITY FIXTURES
 # ============================================================================
+
 
 @pytest.fixture
 def wait_for_condition():

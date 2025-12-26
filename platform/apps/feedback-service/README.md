@@ -83,6 +83,7 @@ kubectl get ingress -n fawkes feedback-service
 Update the following secrets before production deployment:
 
 1. **feedback-admin-token**: Admin API token
+
    ```bash
    kubectl create secret generic feedback-admin-token \
      --from-literal=token=<your-secure-token> \
@@ -189,6 +190,7 @@ kubectl logs -n fawkes -l cnpg.io/cluster=db-feedback-dev -f
 ### Dashboards
 
 A Grafana dashboard can be created to visualize:
+
 - Feedback submission rate
 - Average ratings over time
 - Category distribution
@@ -255,7 +257,7 @@ The feedback service is integrated with Backstage via a proxy endpoint:
 # In backstage app-config.yaml
 proxy:
   endpoints:
-    '/feedback/api':
+    "/feedback/api":
       target: http://feedback-service.fawkes.svc:8000/
       changeOrigin: true
       secure: false

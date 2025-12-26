@@ -30,6 +30,7 @@
 ### Stage 1: Identifying the Need (1 week, informal)
 
 **Actions**:
+
 1. Team experiences pain point (deployment incidents)
 2. Discusses problem in retrospective
 3. Researches solutions online - discovers canary deployments
@@ -40,6 +41,7 @@
 8. Team agrees this would be valuable
 
 **Thoughts**:
+
 - "Are we the only ones who need this?"
 - "Maybe this already exists and we don't know about it?"
 - "Is this something we should build ourselves?"
@@ -48,6 +50,7 @@
 **Emotions**: Hopeful 😐 (Intensity: 2/5)
 
 **Pain Points**:
+
 - Unclear what platform currently supports
 - No visibility into platform roadmap
 - Don't know if others have same need
@@ -55,6 +58,7 @@
 - No guidance on when to request vs. build yourself
 
 **Opportunities**:
+
 - Platform capability discovery catalog
 - Public platform roadmap
 - Feature voting/upvoting system
@@ -63,6 +67,7 @@
 - Platform office hours for exploratory discussions
 
 **Touchpoints**:
+
 - Team retrospective (problem identification)
 - Backstage docs (capability search)
 - Mattermost (informal inquiry)
@@ -73,6 +78,7 @@
 ### Stage 2: Submitting the Request (30 minutes)
 
 **Actions**:
+
 1. Platform team asks Maria to "file a ticket"
 2. Searches for where to submit feature requests
 3. Finds Jira project for platform requests
@@ -87,6 +93,7 @@
 12. No indication of next steps or timeline
 
 **Thoughts**:
+
 - "Is this enough information?"
 - "Will they understand why this is important?"
 - "What happens next?"
@@ -96,6 +103,7 @@
 **Emotions**: Uncertain 😐 (Intensity: 3/5)
 
 **Pain Points**:
+
 - No feature request template with guided questions
 - Unclear what information to provide
 - No prioritization guidance
@@ -104,6 +112,7 @@
 - Can't attach supporting materials easily
 
 **Opportunities**:
+
 - Feature request template with guided prompts
 - Request intake form that asks right questions
 - Automatic similar request detection
@@ -112,6 +121,7 @@
 - Clear next steps communication
 
 **Touchpoints**:
+
 - Jira (feature request submission)
 - Mattermost (confirmation from platform team)
 - Email (auto-response)
@@ -121,6 +131,7 @@
 ### Stage 3: Waiting for Response (2 weeks)
 
 **Actions**:
+
 1. Checks ticket daily - no updates
 2. After 1 week, comments on ticket asking for status
 3. No response to comment
@@ -132,6 +143,7 @@
 9. Response: "We're evaluating feasibility and priority"
 
 **Thoughts**:
+
 - "Did they even see my request?"
 - "Is this important to them?"
 - "How do I know if this will ever get built?"
@@ -141,6 +153,7 @@
 **Emotions**: Frustrated 😟 (Intensity: 4/5)
 
 **Pain Points**:
+
 - Black box - no visibility into evaluation process
 - No communication unless requester asks
 - Unclear timeline or expectations
@@ -149,6 +162,7 @@
 - Considering building workaround due to lack of progress
 
 **Opportunities**:
+
 - Automatic status updates at key milestones
 - Transparent evaluation criteria
 - Expected timeline ranges by request type
@@ -158,6 +172,7 @@
 - Notification when similar requests are grouped
 
 **Touchpoints**:
+
 - Jira (checking status)
 - Mattermost (status inquiries)
 - Email (hoping for updates)
@@ -167,6 +182,7 @@
 ### Stage 4: Prioritization Discussion (1 hour meeting)
 
 **Actions**:
+
 1. Platform team invites Maria to planning meeting
 2. Team presents feature request to platform team
 3. Platform team asks clarifying questions:
@@ -182,6 +198,7 @@
 9. Platform team will reach out when starting development
 
 **Thoughts**:
+
 - "Finally getting to discuss this properly!"
 - "I wish I'd known to include this information from the start"
 - "2-3 sprints feels long but at least we have a timeline"
@@ -190,6 +207,7 @@
 **Emotions**: Hopeful → Satisfied 😐 → 😊 (Intensity: 3/5 → 2/5)
 
 **Pain Points**:
+
 - Meeting required for information that could be async
 - Took weeks to get to this conversation
 - Initial request template didn't ask for this information
@@ -197,6 +215,7 @@
 - Timeline is rough estimate, not commitment
 
 **Opportunities**:
+
 - Upfront request template with business case questions
 - Async prioritization process with clear criteria
 - Feature request scoring rubric (visible to all)
@@ -205,6 +224,7 @@
 - Committed timeline once prioritized
 
 **Touchpoints**:
+
 - Zoom/meeting room (prioritization discussion)
 - Jira (updated with meeting notes)
 - Shared doc (business case documentation)
@@ -214,6 +234,7 @@
 ### Stage 5: Development & Updates (2 months)
 
 **Actions**:
+
 1. Request added to platform team backlog
 2. Maria doesn't hear anything for 3 weeks
 3. Checks Jira - status: "In Progress"
@@ -227,6 +248,7 @@
 11. Gets access to beta feature in dev environment
 
 **Thoughts**:
+
 - "It's actually happening!"
 - "Wish I knew what was going on without having to ask"
 - "Excited to try this out"
@@ -235,6 +257,7 @@
 **Emotions**: Impatient → Excited 😐 → 😊 (Intensity: 3/5 → 1/5)
 
 **Pain Points**:
+
 - Sparse communication during development
 - No visibility into technical decisions or trade-offs
 - Must proactively seek updates
@@ -243,6 +266,7 @@
 - Early adopter invitation was informal (might have missed it)
 
 **Opportunities**:
+
 - Regular development progress updates
 - Design review sessions with stakeholders
 - Public feature development dashboard
@@ -251,6 +275,7 @@
 - Design docs shared with requesters
 
 **Touchpoints**:
+
 - Jira (status checking)
 - GitHub (following related issues)
 - Mattermost (informal updates)
@@ -261,6 +286,7 @@
 ### Stage 6: Testing & Feedback (2 weeks)
 
 **Actions**:
+
 1. Reads beta documentation for canary deployments
 2. Sets up first canary deployment in dev
 3. Encounters configuration issue - not well documented
@@ -273,6 +299,7 @@
 10. Participates in feedback session with platform team
 
 **Thoughts**:
+
 - "This is pretty good but needs some polish"
 - "Documentation could be clearer"
 - "Glad to be involved in shaping this"
@@ -281,6 +308,7 @@
 **Emotions**: Engaged 😊 (Intensity: 2/5)
 
 **Pain Points**:
+
 - Beta documentation incomplete
 - Some rough edges in user experience
 - Feedback process is ad-hoc
@@ -288,6 +316,7 @@
 - No structured way to report issues
 
 **Opportunities**:
+
 - Beta program with clear expectations
 - Structured feedback collection (surveys, interviews)
 - Issue tracking for beta feedback
@@ -296,6 +325,7 @@
 - Feedback impact transparency (what was changed based on feedback)
 
 **Touchpoints**:
+
 - Beta documentation
 - Mattermost beta channel
 - Dev environment
@@ -307,6 +337,7 @@
 ### Stage 7: General Availability & Adoption (Ongoing)
 
 **Actions**:
+
 1. Platform team announces GA release of canary deployments
 2. Announcement in all-hands and Mattermost
 3. Maria's team migrates from beta to GA version
@@ -318,6 +349,7 @@
 9. Maria is recognized as platform champion
 
 **Thoughts**:
+
 - "This was worth the wait!"
 - "Glad we pushed for this feature"
 - "Our deployments are so much safer now"
@@ -326,12 +358,14 @@
 **Emotions**: Proud 😊 (Intensity: 1/5)
 
 **Pain Points**:
+
 - Migration from beta to GA required manual changes
 - Some teams don't know feature exists
 - No central place to share team learnings
 - Recognition was informal
 
 **Opportunities**:
+
 - Automatic migration from beta to GA
 - Feature launch campaign (docs, videos, demos)
 - Platform newsletter with new features
@@ -341,6 +375,7 @@
 - Usage analytics (track adoption)
 
 **Touchpoints**:
+
 - All-hands meeting (announcement)
 - Backstage (documentation)
 - Mattermost (adoption support)
@@ -508,6 +543,7 @@ graph LR
 ### Validation with Personas
 
 This journey map aligns with:
+
 - **Application Developer persona** (Maria Rodriguez): Matches pain point about unclear platform capabilities
 - **Platform Consumer persona** (Sarah Kim): Matches pain point about limited visibility into progress
 - **Platform Developer persona** (Alex Chen): Supports goal of improving developer self-service and satisfaction
@@ -517,6 +553,7 @@ This journey map aligns with:
 ## 7. Improvement Roadmap
 
 ### Phase 1 (Month 1) - Quick Wins
+
 - [ ] Create feature request template with guided prompts
 - [ ] Publish current platform roadmap
 - [ ] Set up automatic request status notifications
@@ -525,6 +562,7 @@ This journey map aligns with:
 - [ ] Set up platform newsletter
 
 ### Phase 2 (Month 2-3) - Enhanced Experience
+
 - [ ] Build request intake process with impact assessment
 - [ ] Create transparent prioritization criteria
 - [ ] Implement scheduled platform office hours
@@ -533,6 +571,7 @@ This journey map aligns with:
 - [ ] Implement feedback collection system
 
 ### Phase 3 (Month 4-6) - Strategic Improvements
+
 - [ ] Implement formal platform champion program
 - [ ] Build usage analytics dashboard
 - [ ] Create feature launch playbook

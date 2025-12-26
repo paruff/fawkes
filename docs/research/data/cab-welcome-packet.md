@@ -1,4 +1,4 @@
-# Welcome to the Fawkes Customer Advisory Board!
+# Welcome to the Fawkes Customer Advisory Board
 
 Dear [Member Name],
 
@@ -29,11 +29,13 @@ This welcome packet contains everything you need to get started as a CAB member.
 **Total: 4-6 hours per quarter**
 
 - **Quarterly Strategic Meeting**: 2 hours (virtual)
+
   - Scheduled Q1, Q2, Q3, Q4
   - Calendar invite sent 4-6 weeks in advance
   - Recordings available if you can't attend live
 
 - **Async Participation**: 1-2 hours
+
   - Monitor and contribute to Mattermost `#cab-advisory-board` channel
   - Respond to polls and surveys (1-2 per quarter)
   - Review RFCs when tagged
@@ -82,16 +84,19 @@ As a CAB member, you will:
 ### Access Setup
 
 **Mattermost Channel**: `#cab-advisory-board`
+
 - Private channel for CAB members and product team
 - Your invite is already sent - check your Mattermost notifications
 - If you don't see it, post in `#general` or DM the product lead
 
 **GitHub Team**: `@fawkes/advisory-board`
+
 - You'll be mentioned on relevant issues, discussions, and RFCs
 - Check your GitHub notifications settings to ensure you receive mentions
 - Team membership: https://github.com/orgs/paruff/teams/advisory-board
 
 **CAB Member Directory** (optional):
+
 - We'd love to publicly recognize you in `docs/CUSTOMER_ADVISORY_BOARD_MEMBERS.md`
 - You can provide: Name, Company, Role, Bio, LinkedIn/GitHub links, Photo
 - Send info to product team or submit a PR
@@ -100,6 +105,7 @@ As a CAB member, you will:
 ### Your Onboarding Call
 
 **What We'll Cover** (30 minutes):
+
 1. Welcome and thank you
 2. Review CAB charter and expectations
 3. Answer your questions
@@ -108,6 +114,7 @@ As a CAB member, you will:
 6. Walk through communication channels
 
 **Schedule Your Call**:
+
 - [Calendly link or email to schedule]
 - Or propose times in the `#cab-advisory-board` channel
 
@@ -127,6 +134,7 @@ As a CAB member, you will:
 **Format**: Virtual (Zoom/Google Meet/Teams link in calendar invite)
 
 **What to Expect**:
+
 - Platform updates and progress
 - Roadmap review and prioritization
 - Feature deep dives
@@ -134,10 +142,12 @@ As a CAB member, you will:
 - Q&A with product and engineering team
 
 **Preparation**:
+
 - Pre-read materials sent 1 week before (30 min review)
 - No homework required, but context helps
 
 **Can't Attend?**
+
 - Let us know in the channel
 - Recording and notes shared within 48 hours
 - We appreciate >50% attendance over the year
@@ -145,12 +155,14 @@ As a CAB member, you will:
 ### Ad-Hoc Sessions
 
 **Feature Feedback Sessions** (as needed):
+
 - 30-60 minutes
 - Optional attendance
 - Deep dive on specific features
 - Scheduled 2+ weeks in advance
 
 **Early Access Reviews** (2-3 times per year):
+
 - Async - test on your schedule
 - 1-2 week testing window
 - Structured feedback form provided
@@ -164,6 +176,7 @@ As a CAB member, you will:
 **Channel**: `#cab-advisory-board` (Private)
 
 **Purpose**:
+
 - Strategic discussions and feedback
 - Announcements and updates
 - Meeting logistics
@@ -171,11 +184,13 @@ As a CAB member, you will:
 - Quick polls and surveys
 
 **Response Time**:
+
 - Product team monitors daily
 - No expectation of immediate response from members
 - Contribute when you have time and insights
 
 **Guidelines**:
+
 - Keep pre-release info confidential
 - Be respectful and constructive
 - No urgent support requests (use normal channels)
@@ -186,11 +201,13 @@ As a CAB member, you will:
 **Team**: `@fawkes/advisory-board`
 
 **When You'll Be Mentioned**:
+
 - Major RFCs requiring CAB input
 - Strategic discussions and decisions
 - Early access opportunities
 
 **How to Respond**:
+
 - Comment directly on the issue/discussion
 - Or discuss in Mattermost if you prefer
 
@@ -199,6 +216,7 @@ As a CAB member, you will:
 **CAB Email List**: cab@fawkes.local (if needed)
 
 **What You'll Receive**:
+
 - Meeting invitations
 - Formal announcements
 - Quarterly CAB summaries
@@ -232,12 +250,14 @@ As a CAB member, you will:
 ### 4. Early Access Testing
 
 **Process**:
+
 1. Product team shares early preview (branch, demo environment, or local setup instructions)
 2. Test in your context (1-2 weeks)
 3. Complete feedback form or add comments in GitHub Discussion
 4. Optional: Join sync call to discuss findings
 
 **What to Test**:
+
 - Does it solve the problem?
 - Does it work in your environment?
 - Any bugs or unexpected behavior?
@@ -247,12 +267,14 @@ As a CAB member, you will:
 ### 5. RFC Reviews
 
 **When You're Tagged**:
+
 - You'll get GitHub notification
 - Review the RFC (usually 2-10 pages)
 - Comment with your perspective
 - 1 week typical response window
 
 **What to Focus On**:
+
 - Does the approach make sense?
 - Any concerns or risks?
 - Alternative approaches to consider?
@@ -295,32 +317,38 @@ As a CAB member, you will:
 ### What You Get
 
 🎯 **Strategic Influence**
+
 - Direct impact on platform direction
 - Your feedback shapes the roadmap
 - Early input on major decisions
 
 🔬 **Early Access**
+
 - Preview features before general release
 - Opportunity to shape implementation
 - Listed as early access tester in release notes
 
 🌟 **Public Recognition**
+
 - Listed in CAB member directory
 - Credited when your input shapes features
 - "CAB Spotlight" blog posts
 - Speaking opportunities (optional)
 
 🤝 **Networking**
+
 - Connect with other platform engineering leaders
 - Share experiences and best practices
 - Build your professional network
 
 🎁 **Swag and Badges** (optional)
+
 - "Fawkes CAB Member" digital badge for LinkedIn/GitHub
 - Custom swag package (if offered)
 - Exclusive member items
 
 📚 **Learning**
+
 - Behind-the-scenes look at platform engineering
 - Access to product strategy discussions
 - Insights into roadmap planning
@@ -364,16 +392,19 @@ A: For quarterly meetings, members only (plus product team). However, we can inv
 ### Product Team
 
 **Product Lead**: [Name]
+
 - Mattermost: @[username]
 - Email: [email]
 - GitHub: @[username]
 
 **Engineering Lead**: [Name]
+
 - Mattermost: @[username]
 - Email: [email]
 - GitHub: @[username]
 
 **Community Manager**: [Name]
+
 - Mattermost: @[username]
 - Email: [email]
 - GitHub: @[username]
@@ -390,24 +421,27 @@ A: For quarterly meetings, members only (plus product team). However, we can inv
 ## What's Next?
 
 **This Week**:
+
 1. Complete the first steps checklist above
 2. Join your onboarding call
 3. Review the current roadmap document
 4. Introduce yourself in the `#cab-advisory-board` channel
 
 **This Month**:
+
 - Get familiar with the Mattermost channel and discussions
 - Review recent meeting notes (if any)
 - Share initial thoughts or feedback
 
 **This Quarter**:
+
 - Attend (or watch recording of) your first quarterly meeting
 - Participate in at least one async discussion
 - Consider early access testing opportunities
 
 ---
 
-## Thank You!
+## Thank You
 
 We're genuinely excited to have you on the Customer Advisory Board. Your experience, insights, and feedback will help make Fawkes better for everyone.
 

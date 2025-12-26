@@ -11,6 +11,7 @@ Successfully implemented an enhanced feedback collection system for Backstage wi
 ## Key Enhancements Delivered
 
 ### 1. Screenshot Capture ✅
+
 - **Base64 encoding** support for PNG screenshots
 - **Maximum size**: 5MB per screenshot
 - **Storage**: PostgreSQL BYTEA column for secure storage
@@ -18,6 +19,7 @@ Successfully implemented an enhanced feedback collection system for Backstage wi
 - **Validation**: Size and format validation on submission
 
 ### 2. GitHub Issues Integration ✅
+
 - **Automatic issue creation** from feedback submissions
 - **Configurable by feedback type**:
   - Bug reports → auto-create with `bug` label
@@ -29,6 +31,7 @@ Successfully implemented an enhanced feedback collection system for Backstage wi
 - **Error handling**: Graceful degradation if GitHub unavailable
 
 ### 3. Contextual Feedback ✅
+
 - **Page URL**: Automatically captured
 - **Browser information**: Browser name and version
 - **User agent**: Full user agent string
@@ -41,12 +44,14 @@ Successfully implemented an enhanced feedback collection system for Backstage wi
 ### New Module: `github_integration.py` (367 lines)
 
 Complete GitHub API integration with:
+
 - `create_github_issue()` - Creates issues with rich metadata
 - `update_issue_status()` - Syncs status changes to GitHub
 - `_attach_screenshot_to_issue()` - Adds screenshot notes to issues
 - `is_github_enabled()` - Configuration check
 
 **Features**:
+
 - Full async/await support with httpx
 - Comprehensive error handling and logging
 - Automatic labeling based on feedback type and category
@@ -55,7 +60,9 @@ Complete GitHub API integration with:
 ### Enhanced API Endpoints
 
 #### POST /api/v1/feedback
+
 **New Fields**:
+
 ```json
 {
   "rating": 5,
@@ -72,6 +79,7 @@ Complete GitHub API integration with:
 ```
 
 **Response includes**:
+
 - `feedback_type`
 - `browser_info`
 - `user_agent`
@@ -79,7 +87,9 @@ Complete GitHub API integration with:
 - `github_issue_url` (if created)
 
 #### GET /api/v1/feedback/{id}/screenshot (Admin)
+
 Retrieves screenshot as base64-encoded data URL:
+
 ```json
 {
   "feedback_id": 123,
@@ -91,6 +101,7 @@ Retrieves screenshot as base64-encoded data URL:
 ### Database Schema Updates
 
 New columns added to `feedback` table:
+
 ```sql
 ALTER TABLE feedback ADD COLUMN feedback_type VARCHAR(50) DEFAULT 'feedback';
 ALTER TABLE feedback ADD COLUMN screenshot BYTEA;
@@ -105,6 +116,7 @@ CREATE INDEX idx_feedback_github_issue ON feedback(github_issue_url);
 ### Configuration
 
 #### Environment Variables
+
 ```yaml
 # Existing
 DATABASE_URL: postgresql://...
@@ -112,12 +124,14 @@ ADMIN_TOKEN: your-admin-token
 
 # New for GitHub Integration
 GITHUB_TOKEN: ghp_your_github_personal_access_token
-GITHUB_OWNER: paruff  # default
-GITHUB_REPO: fawkes   # default
+GITHUB_OWNER: paruff # default
+GITHUB_REPO: fawkes # default
 ```
 
 #### Backstage Plugin Configuration
+
 Updated `feedback-widget.yaml` with:
+
 - Feedback types configuration (feedback, bug_report, feature_request)
 - Feature flags for screenshot capture and GitHub integration
 - Screenshot settings (maxSizeMB, format, quality)
@@ -128,7 +142,9 @@ Updated `feedback-widget.yaml` with:
 ### Unit Tests: 39 tests, all passing ✅
 
 **New test files**:
+
 1. `test_github_integration.py` (13 tests)
+
    - GitHub enabled/disabled checks
    - Issue creation for different feedback types
    - Status synchronization
@@ -136,6 +152,7 @@ Updated `feedback-widget.yaml` with:
    - Error handling
 
 2. `test_enhanced_features.py` (14 tests)
+
    - Feedback submission with new fields
    - Screenshot validation (size, format)
    - Contextual data capture
@@ -150,6 +167,7 @@ Updated `feedback-widget.yaml` with:
 ### BDD Tests: 5 new scenarios ✅
 
 Added to `feedback-widget.feature`:
+
 - Submit feedback with screenshot
 - Submit feedback with GitHub issue creation
 - Submit feedback with contextual information
@@ -157,6 +175,7 @@ Added to `feedback-widget.feature`:
 - Admin can retrieve screenshot
 
 ### Test Coverage
+
 - **Happy paths**: All covered
 - **Error handling**: Comprehensive
 - **Edge cases**: Size limits, invalid data, missing auth
@@ -165,17 +184,21 @@ Added to `feedback-widget.feature`:
 ## API Changes Summary
 
 ### Backward Compatible ✅
+
 All existing endpoints continue to work. New fields are optional.
 
 ### New Required Dependencies
+
 - `httpx==0.28.1` - Async HTTP client for GitHub API
 
 ### Breaking Changes
+
 None. The service version is bumped to 2.0.0 for semantic clarity, but all existing clients continue to work.
 
 ## Security Considerations
 
 ### Implemented ✅
+
 - **Screenshot storage**: Admin-only access
 - **Size limits**: 5MB maximum prevents DoS
 - **Input validation**: Pydantic models validate all fields
@@ -184,6 +207,7 @@ None. The service version is bumped to 2.0.0 for semantic clarity, but all exist
 - **SQL injection**: Parameterized queries via asyncpg
 
 ### Production Recommendations
+
 1. Use External Secrets Operator for GitHub token
 2. Implement rate limiting on screenshot uploads
 3. Set up CORS whitelist for production
@@ -195,13 +219,16 @@ None. The service version is bumped to 2.0.0 for semantic clarity, but all exist
 ## Documentation
 
 ### Updated Files
+
 1. **README-feedback.md** - Comprehensive guide (320 lines)
+
    - API documentation
    - Usage examples
    - Frontend integration guide
    - Security considerations
 
 2. **feedback-widget.yaml** - Enhanced configuration
+
    - Feedback types with auto-create settings
    - Feature flags
    - Screenshot settings
@@ -215,6 +242,7 @@ None. The service version is bumped to 2.0.0 for semantic clarity, but all exist
 ## Deployment Instructions
 
 ### Prerequisites
+
 - Kubernetes cluster with existing feedback service (issue #62)
 - GitHub personal access token with `repo` scope
 - Optional: kubectl and argocd CLI
@@ -222,6 +250,7 @@ None. The service version is bumped to 2.0.0 for semantic clarity, but all exist
 ### Deployment Steps
 
 #### 1. Update Secrets
+
 ```bash
 # Create or update GitHub token secret
 kubectl create secret generic feedback-github-token \
@@ -234,6 +263,7 @@ kubectl edit deployment feedback-service -n fawkes
 ```
 
 Add environment variables:
+
 ```yaml
 env:
   - name: GITHUB_TOKEN
@@ -248,6 +278,7 @@ env:
 ```
 
 #### 2. Update Database Schema
+
 ```bash
 # Connect to database
 kubectl exec -it -n fawkes db-feedback-dev-1 -- psql -U feedback -d feedback_db
@@ -266,6 +297,7 @@ CREATE INDEX IF NOT EXISTS idx_feedback_github_issue ON feedback(github_issue_ur
 ```
 
 #### 3. Build and Deploy New Image
+
 ```bash
 # Build Docker image
 cd services/feedback
@@ -287,6 +319,7 @@ argocd app sync feedback-service
 ```
 
 #### 4. Verify Deployment
+
 ```bash
 # Check pod status
 kubectl get pods -n fawkes -l app=feedback-service
@@ -304,6 +337,7 @@ curl http://localhost:8000/
 ```
 
 #### 5. Update Backstage Plugin Config
+
 ```bash
 # Apply updated plugin configuration
 kubectl apply -f platform/apps/backstage/plugins/feedback-widget.yaml
@@ -317,6 +351,7 @@ kubectl rollout restart deployment backstage -n fawkes
 ### Manual API Testing
 
 #### Submit feedback with screenshot
+
 ```bash
 curl -X POST http://feedback.127.0.0.1.nip.io/api/v1/feedback \
   -H "Content-Type: application/json" \
@@ -335,18 +370,21 @@ curl -X POST http://feedback.127.0.0.1.nip.io/api/v1/feedback \
 ```
 
 #### Retrieve screenshot (admin)
+
 ```bash
 curl http://feedback.127.0.0.1.nip.io/api/v1/feedback/1/screenshot \
   -H "Authorization: Bearer your-admin-token"
 ```
 
 #### Check GitHub issue created
+
 ```bash
 # Visit https://github.com/paruff/fawkes/issues
 # Look for automatically created issue with feedback ID
 ```
 
 ### BDD Tests
+
 ```bash
 # Run enhanced feedback scenarios
 behave tests/bdd/features/feedback-widget.feature --tags=@enhanced
@@ -386,6 +424,7 @@ From issue #85:
 ## Monitoring
 
 ### New Metrics to Monitor
+
 - `feedback_submissions_total{feedback_type="bug_report"}`
 - `feedback_submissions_total{feedback_type="feature_request"}`
 - `feedback_github_issues_created_total` (if implemented)
@@ -393,6 +432,7 @@ From issue #85:
 - Screenshot storage size in database
 
 ### Suggested Alerts
+
 - GitHub API rate limit approaching (if token rate limit tracking added)
 - GitHub issue creation failures (>5% of requests)
 - Screenshot storage exceeding 80% of allocated space
@@ -403,30 +443,36 @@ From issue #85:
 **Total**: 11 files created/modified
 
 ### Services (4 files)
+
 - `services/feedback/app/github_integration.py` - NEW (367 lines)
 - `services/feedback/app/main.py` - MODIFIED (added 200+ lines)
 - `services/feedback/requirements.txt` - MODIFIED (added httpx)
 - `services/feedback/Dockerfile` - MODIFIED (fixed user creation)
 
 ### Tests (3 files)
+
 - `services/feedback/tests/unit/test_github_integration.py` - NEW (370 lines)
 - `services/feedback/tests/unit/test_enhanced_features.py` - NEW (460 lines)
 - `services/feedback/tests/unit/test_main.py` - MODIFIED (updated 3 tests)
 
 ### Configuration (2 files)
+
 - `platform/apps/backstage/plugins/feedback-widget.yaml` - MODIFIED (enhanced config)
 - `platform/apps/backstage/plugins/README-feedback.md` - MODIFIED (comprehensive docs)
 
 ### Tests (2 files)
+
 - `tests/bdd/features/feedback-widget.feature` - MODIFIED (5 new scenarios)
 - `tests/bdd/step_definitions/feedback_steps.py` - TBD (steps for new scenarios)
 
 ## Dependencies
 
 ### New
+
 - `httpx==0.28.1` - Async HTTP client for GitHub API
 
 ### Existing (unchanged)
+
 - `fastapi==0.115.5`
 - `uvicorn[standard]==0.32.1`
 - `pydantic[email]==2.10.3`
@@ -435,6 +481,7 @@ From issue #85:
 - `vaderSentiment==3.3.2`
 
 ### Development (unchanged)
+
 - `pytest==8.3.4`
 - `pytest-asyncio==0.24.0`
 
@@ -455,6 +502,7 @@ From issue #85:
 ## Summary
 
 ✅ **Complete implementation** of enhanced feedback widget with:
+
 - Screenshot capture and secure storage
 - GitHub Issues integration with auto-creation and status sync
 - Contextual information capture (browser, user agent, page URL)
@@ -464,6 +512,7 @@ From issue #85:
 - Detailed documentation and deployment guides
 
 The implementation is **code-complete** and ready for deployment pending:
+
 1. Docker image build in proper environment
 2. Database schema migration
 3. Secret configuration for GitHub token

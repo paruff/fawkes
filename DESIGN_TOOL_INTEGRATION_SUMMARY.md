@@ -16,20 +16,24 @@ Successfully integrated Penpot, an open-source design and prototyping platform, 
 Created complete Kubernetes deployment for Penpot with the following components:
 
 - **Penpot Backend** (penpotapp/backend:2.0.3)
+
   - Main application server and API
   - Resource limits: 1 CPU core, 2Gi RAM
   - Health checks configured
 
 - **Penpot Frontend** (penpotapp/frontend:2.0.3)
+
   - Web-based UI for designers
   - 2 replicas for high availability
   - Resource limits: 500m CPU, 512Mi RAM
 
 - **Penpot Exporter** (penpotapp/exporter:2.0.3)
+
   - Asset export service (SVG, PNG, PDF)
   - Resource limits: 500m CPU, 1Gi RAM
 
 - **Redis** (redis:7.2-alpine)
+
   - Session and cache management
   - Resource limits: 200m CPU, 256Mi RAM
 
@@ -39,6 +43,7 @@ Created complete Kubernetes deployment for Penpot with the following components:
   - 10Gi storage allocation
 
 **Files Created**:
+
 - `/platform/apps/penpot/deployment.yaml` - All Kubernetes resources
 - `/platform/apps/penpot/README.md` - Deployment documentation
 - `/platform/apps/penpot-application.yaml` - ArgoCD application manifest
@@ -49,11 +54,13 @@ Created complete Kubernetes deployment for Penpot with the following components:
 Configured Backstage plugin for seamless design viewing:
 
 **Plugin Configuration**:
+
 - Custom Penpot viewer plugin
 - Component mapping for Design System sync
 - Proxy endpoint: `/penpot/api` → `http://penpot-backend.fawkes.svc:6060/api/`
 
 **Component Annotations**:
+
 ```yaml
 annotations:
   penpot.io/design-id: "project-id/file-id"
@@ -62,11 +69,13 @@ annotations:
 ```
 
 **Component Mapping**:
+
 - 10+ mapped components (Button, Input, Card, Alert, etc.)
 - Auto-validation of design token consistency
 - Warning system for unmapped components
 
 **Files Created**:
+
 - `/platform/apps/backstage/plugins/penpot-viewer.yaml` - Plugin configuration and component mappings
 - Updated `/platform/apps/backstage/app-config.yaml` - Added Penpot proxy endpoint
 
@@ -75,24 +84,28 @@ annotations:
 Created comprehensive documentation for the entire workflow:
 
 **Design-to-Code Workflow** (13KB):
+
 - 7-phase workflow from design to deployment
 - Step-by-step guides for designers, developers, and QA
 - Tools reference and troubleshooting guides
 - Best practices and metrics tracking
 
 **Access Controls** (10KB):
+
 - Authentication methods (local, OAuth, LDAP/SAML)
 - Role-based access control (Owner, Admin, Editor, Viewer)
 - Security best practices and compliance guidance
 - Monitoring and alerting configuration
 
 **Component Library Sync** (12KB):
+
 - Automated sync process via Jenkins
 - Design token validation
 - Component mapping logic
 - Troubleshooting and best practices
 
 **Files Created**:
+
 - `/docs/how-to/design-to-code-workflow.md`
 - `/docs/how-to/penpot-access-controls.md`
 - `/docs/how-to/component-library-sync.md`
@@ -102,6 +115,7 @@ Created comprehensive documentation for the entire workflow:
 Created comprehensive BDD test coverage:
 
 **Test Scenarios** (15 scenarios):
+
 1. Penpot deployment and accessibility
 2. Database configuration
 3. Persistent storage
@@ -119,32 +133,38 @@ Created comprehensive BDD test coverage:
 15. Acceptance criteria validation
 
 **Files Created**:
+
 - `/tests/bdd/features/penpot-integration.feature`
 - Updated `/scripts/validate-at-e3-004.sh` with 7 additional Penpot checks
 
 ## Acceptance Criteria Status
 
 ✅ **Design tool configured**
+
 - Penpot deployed with all services running
 - Database and storage configured
 - Ingress and networking set up
 
 ✅ **Backstage plugin deployed**
+
 - Plugin configuration created
 - Proxy endpoint configured
 - Component annotations supported
 
 ✅ **Design-to-code workflow documented**
+
 - Comprehensive 13KB workflow guide
 - Covers all roles: designers, developers, QA
 - Includes troubleshooting and best practices
 
 ✅ **Component library synced**
+
 - Component mapping configuration created
 - 10+ components mapped to design system
 - Auto-sync process documented
 
 ✅ **Access controls configured**
+
 - Local authentication enabled
 - Role-based access control documented
 - OAuth integration planned
@@ -174,14 +194,14 @@ Created comprehensive BDD test coverage:
 
 Estimated resource requirements:
 
-| Component | CPU (Request/Limit) | Memory (Request/Limit) |
-|-----------|---------------------|------------------------|
-| Backend   | 200m / 1000m       | 512Mi / 2Gi            |
-| Frontend  | 100m / 500m        | 256Mi / 512Mi          |
-| Exporter  | 100m / 500m        | 256Mi / 1Gi            |
-| Redis     | 50m / 200m         | 128Mi / 256Mi          |
-| PostgreSQL| 200m / 1000m       | 512Mi / 2Gi            |
-| **Total** | **650m / 3200m**   | **1664Mi / 6Gi**       |
+| Component  | CPU (Request/Limit) | Memory (Request/Limit) |
+| ---------- | ------------------- | ---------------------- |
+| Backend    | 200m / 1000m        | 512Mi / 2Gi            |
+| Frontend   | 100m / 500m         | 256Mi / 512Mi          |
+| Exporter   | 100m / 500m         | 256Mi / 1Gi            |
+| Redis      | 50m / 200m          | 128Mi / 256Mi          |
+| PostgreSQL | 200m / 1000m        | 512Mi / 2Gi            |
+| **Total**  | **650m / 3200m**    | **1664Mi / 6Gi**       |
 
 ## Validation
 
@@ -203,28 +223,33 @@ Design System Component Library is complete and ready!
 ## Next Steps (Post-Deployment)
 
 1. **Deploy to Cluster**
+
    ```bash
    kubectl apply -f platform/apps/penpot-application.yaml
    ```
 
 2. **Verify Deployment**
+
    ```bash
    kubectl get pods -n fawkes -l app=penpot
    kubectl logs -n fawkes -l component=backend
    ```
 
 3. **Initial Setup**
+
    - Access Penpot at https://penpot.fawkes.local
    - Create admin user on first login
    - Create "Fawkes Platform" team
    - Invite team members
 
 4. **Configure Component Library**
+
    - Create Penpot project for Design System
    - Tag with `design-system` label
    - Build components using design tokens
 
 5. **Test Backstage Integration**
+
    - Add `penpot.io/design-id` annotation to a component
    - Verify design appears in Backstage "Design" tab
    - Test component mapping validation

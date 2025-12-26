@@ -24,7 +24,7 @@ By the end of this module, you will be able to:
 
 **The Research**: The DORA (DevOps Research and Assessment) team spent 9 years studying 32,000+ organizations to answer one question:
 
-> *"What separates high-performing software teams from everyone else?"*
+> _"What separates high-performing software teams from everyone else?"_
 
 **The Discovery**: Just **four metrics** predict organizational performance better than any other measures. Organizations that excel at these metrics are:
 
@@ -51,8 +51,7 @@ You've mastered this module when you can:
 
 ### 📺 Video: The Four Key Metrics Explained (7 minutes)
 
-> **[VIDEO PLACEHOLDER]**
-> **See detailed script in supporting document**
+> **[VIDEO PLACEHOLDER]** > **See detailed script in supporting document**
 
 ### The Four Key Metrics
 
@@ -63,18 +62,21 @@ DORA identified four metrics that matter most for software delivery performance:
 **Definition**: How often does your organization deploy code to production?
 
 **Why It Matters**: Deployment frequency is a proxy for **batch size**. Small, frequent deployments mean:
+
 - Lower risk (less can go wrong)
 - Faster feedback (find problems sooner)
 - Faster time to market (features reach customers quickly)
 - Better team morale (see your work in production)
 
 **Performance Levels**:
+
 - **Elite**: Multiple deployments per day (on-demand)
 - **High**: Between once per day and once per week
 - **Medium**: Between once per week and once per month
 - **Low**: Between once per month and once every six months
 
 **Example**:
+
 - **Low Performer**: "We deploy every 2 months during maintenance windows"
 - **Elite Performer**: "We deploy 50+ times per day automatically"
 
@@ -87,18 +89,21 @@ DORA identified four metrics that matter most for software delivery performance:
 **Definition**: How long does it take for a commit to go from version control to running in production?
 
 **Why It Matters**: Lead time measures **efficiency**. Short lead times mean:
+
 - Faster feature delivery to customers
 - Quicker response to market changes
 - Reduced work-in-progress inventory
 - Higher developer satisfaction
 
 **Performance Levels**:
+
 - **Elite**: Less than one hour
 - **High**: Between one day and one week
 - **Medium**: Between one month and six months
 - **Low**: More than six months
 
 **Example**:
+
 - **Low Performer**: "I wrote this code 3 months ago. Still waiting for QA approval."
 - **Elite Performer**: "I committed code 20 minutes ago. It's already in production."
 
@@ -113,18 +118,21 @@ DORA identified four metrics that matter most for software delivery performance:
 **Definition**: How long does it take to restore service when an incident occurs?
 
 **Why It Matters**: MTTR measures **resilience**. Fast recovery means:
+
 - Less customer impact from incidents
 - Lower stress for on-call engineers
 - Better SLAs and reliability
 - Confidence to move fast (you can recover quickly)
 
 **Performance Levels**:
+
 - **Elite**: Less than one hour
 - **High**: Less than one day
 - **Medium**: Between one day and one week
 - **Low**: More than one week
 
 **Example**:
+
 - **Low Performer**: "Production is down. We need a 5-hour emergency change board meeting."
 - **Elite Performer**: "Production issue detected. Automatic rollback completed in 4 minutes."
 
@@ -137,12 +145,14 @@ DORA identified four metrics that matter most for software delivery performance:
 **Definition**: What percentage of deployments cause failures in production?
 
 **Why It Matters**: CFR measures **quality**. Low failure rates mean:
+
 - Sustainable velocity (not breaking things constantly)
 - Lower operational burden
 - Better customer experience
 - More time for feature development (less firefighting)
 
 **Performance Levels**:
+
 - **Elite**: 0-15%
 - **High**: 16-30%
 - **Medium**: 16-30%
@@ -151,6 +161,7 @@ DORA identified four metrics that matter most for software delivery performance:
 **Note**: 2023 research collapsed High/Medium/Low into same range. Elite performers stand out with <15%.
 
 **Example**:
+
 - **Low Performer**: "Every Friday deployment requires weekend hotfixes."
 - **Elite Performer**: "We deploy 100 times per week with 5% failure rate."
 
@@ -164,12 +175,12 @@ DORA identified four metrics that matter most for software delivery performance:
 
 Here's how teams compare across the four metrics:
 
-| Performance | Deployment Freq | Lead Time | MTTR | Change Fail Rate |
-|-------------|----------------|-----------|------|------------------|
-| **Elite** | On-demand (multiple/day) | < 1 hour | < 1 hour | 0-15% |
-| **High** | 1/day - 1/week | 1 day - 1 week | < 1 day | 16-30% |
-| **Medium** | 1/week - 1/month | 1 week - 1 month | 1 day - 1 week | 16-30% |
-| **Low** | 1/month - 6/months | 1 month - 6 months | > 1 week | 16-30% |
+| Performance | Deployment Freq          | Lead Time          | MTTR           | Change Fail Rate |
+| ----------- | ------------------------ | ------------------ | -------------- | ---------------- |
+| **Elite**   | On-demand (multiple/day) | < 1 hour           | < 1 hour       | 0-15%            |
+| **High**    | 1/day - 1/week           | 1 day - 1 week     | < 1 day        | 16-30%           |
+| **Medium**  | 1/week - 1/month         | 1 week - 1 month   | 1 day - 1 week | 16-30%           |
+| **Low**     | 1/month - 6/months       | 1 month - 6 months | > 1 week       | 16-30%           |
 
 **Key Insight**: Elite performers are **417x faster** at deploying and **6,570x faster** at going from commit to production than low performers!
 
@@ -180,10 +191,12 @@ Here's how teams compare across the four metrics:
 #### They Balance Speed and Stability
 
 **Speed Metrics**:
+
 - Deployment Frequency
 - Lead Time for Changes
 
 **Stability Metrics**:
+
 - Time to Restore Service
 - Change Failure Rate
 
@@ -210,23 +223,27 @@ Good metrics (DORA): How fast you deliver value and how reliably
 #### Scenario: Legacy Bank vs. Digital Startup
 
 **Legacy Bank** (Low Performer):
+
 - Deploys every 3 months
 - Lead time: 4 months from idea to production
 - MTTR: 3 days (requires emergency change approval)
 - CFR: 25% (1 in 4 releases has issues)
 
 **Impact**:
+
 - New credit card feature takes 1 year to launch (competitors launch in 6 weeks)
 - When mobile app crashes, customers can't access accounts for 3 days
 - Developer turnover: 35% annually (frustration with slow process)
 
 **Digital Startup** (Elite Performer):
+
 - Deploys 20x per day
 - Lead time: 2 hours from commit to production
 - MTTR: 15 minutes (automated rollback)
 - CFR: 8% (rigorous testing catches issues)
 
 **Impact**:
+
 - New feature ideas tested with customers within days
 - Production incidents resolved in minutes, not days
 - Developer retention: 95% (engineers love working there)
@@ -240,21 +257,25 @@ Good metrics (DORA): How fast you deliver value and how reliably
 A well-designed platform (like Fawkes) directly improves all four metrics:
 
 #### Deployment Frequency ↑
+
 - **Automation**: CI/CD pipelines remove manual deployment steps
 - **Self-Service**: Teams deploy when ready, no waiting for tickets
 - **Reduced Fear**: Good testing and rollback make deployments safe
 
 #### Lead Time ↓
+
 - **Automated Testing**: No waiting for manual QA
 - **Fast Pipelines**: Optimized builds complete in minutes
 - **Simplified Process**: Golden paths remove decision paralysis
 
 #### MTTR ↓
+
 - **Observability**: Know immediately when things break
 - **Quick Rollback**: Automated rollback via GitOps
 - **Runbooks**: Standardized incident response
 
 #### Change Failure Rate ↓
+
 - **Quality Gates**: Automated security scanning, testing
 - **Consistent Patterns**: Golden paths reduce errors
 - **Progressive Delivery**: Canary deployments catch issues early
@@ -266,21 +287,27 @@ A well-designed platform (like Fawkes) directly improves all four metrics:
 ### Common Misconceptions
 
 #### ❌ "We can't measure that in our organization"
+
 **Reality**: If you deploy software, you can measure these metrics. Start simple with manual tracking if needed.
 
 #### ❌ "Our industry is different; this doesn't apply"
+
 **Reality**: DORA research spans every industry from finance to gaming to healthcare. The metrics apply universally.
 
 #### ❌ "We need to slow down to improve quality"
+
 **Reality**: Elite performers deploy MORE frequently AND have LOWER change failure rates. Speed and stability go together.
 
 #### ❌ "Our legacy systems prevent us from improving"
+
 **Reality**: Legacy systems are a constraint, not an excuse. Many elite performers maintain legacy systems.
 
 #### ❌ "Leadership only cares about features, not metrics"
+
 **Reality**: These metrics predict revenue, market share, and profitability. Leadership should care.
 
 #### ❌ "100% success rate is the goal"
+
 **Reality**: Some failure is healthy. Elite performers have 8-15% CFR because they're taking appropriate risks.
 
 ---
@@ -311,6 +338,7 @@ Alertmanager detects any incidents
 ```
 
 **Data Sources**:
+
 - **Git**: Commit timestamps (lead time start)
 - **Jenkins**: Build results (quality signals)
 - **ArgoCD**: Deployment events (DF, lead time end, CFR)
@@ -324,8 +352,7 @@ Alertmanager detects any incidents
 
 ### 📺 Video: Navigating Fawkes DORA Dashboards (10 minutes)
 
-> **[VIDEO PLACEHOLDER]**
-> **See detailed script in supporting document**
+> **[VIDEO PLACEHOLDER]** > **See detailed script in supporting document**
 
 ### Key Takeaways from Demo
 
@@ -351,6 +378,7 @@ You'll analyze DORA metrics for a sample application, identify performance bottl
 ### Lab Environment
 
 When you click "Start Lab", we'll provision:
+
 - ✅ Access to Grafana DORA dashboards
 - ✅ Sample data for 3 months (90 days)
 - ✅ 3 different teams with varying performance levels
@@ -365,6 +393,7 @@ When you click "Start Lab", we'll provision:
 You'll analyze "Team Alpha's" performance over the last 30 days.
 
 **Given Data** (available in dashboard):
+
 - Total deployments to production: 45
 - Total commits: 180
 - Failed deployments (rollbacks): 7
@@ -403,6 +432,7 @@ You'll analyze "Team Alpha's" performance over the last 30 days.
    Based on the metrics you calculated, classify Team Alpha according to DORA performance levels:
 
    📝 **Submit**:
+
    - Deployment Frequency Level: [Elite/High/Medium/Low]
    - Lead Time Level: [Elite/High/Medium/Low]
    - Change Failure Rate Level: [Elite/High/Medium/Low]
@@ -417,18 +447,21 @@ You'll analyze "Team Alpha's" performance over the last 30 days.
    Open the "Team Comparison" dashboard and compare Team Bravo and Team Charlie.
 
    **Team Bravo**:
+
    - DF: 0.3 per day (9 per month)
    - LT: 3 days
    - MTTR: 4 hours
    - CFR: 10%
 
    **Team Charlie**:
+
    - DF: 2.5 per day (75 per month)
    - LT: 45 minutes
    - MTTR: 30 minutes
    - CFR: 18%
 
    📝 **Submit**:
+
    - Which team is the higher performer overall? [Bravo/Charlie]
    - What is Team Charlie's biggest weakness? [DF/LT/MTTR/CFR]
    - If Team Bravo could improve one metric, which would have the biggest impact? [DF/LT/MTTR/CFR]
@@ -441,15 +474,18 @@ You'll analyze "Team Alpha's" performance over the last 30 days.
 6. **Recommend Improvements for Team Alpha** (Bonus: +10 points)
 
    Based on Team Alpha's metrics:
+
    - DF: 1.5 per day (High)
    - LT: 6 hours (Elite)
    - MTTR: 2 hours (Elite)
    - CFR: 15.6% (Elite)
 
    📝 **Submit**:
+
    - Team Alpha is performing at Elite level across all metrics. However, what could they do to push even further? (3-5 specific recommendations)
 
    Examples of good recommendations:
+
    - "Reduce deployment frequency variability (some days have 5 deploys, others have 0)"
    - "Investigate the 7 failed deployments to find common root causes"
    - "Implement chaos engineering to practice MTTR scenarios"
@@ -465,6 +501,7 @@ Once you've completed all tasks:
 3. Click "Submit Lab" button
 
 **Grading**:
+
 - Parts 1-2: Auto-graded immediately (45 points)
 - Parts 3-4: Reviewed within 24 hours by instructors (15 + 10 points)
 - Passing score: 48/60 (80%)
@@ -472,16 +509,19 @@ Once you've completed all tasks:
 ### Troubleshooting Hints
 
 **Can't access Grafana?**
+
 - Click "Open Grafana" from lab instructions
 - Use provided credentials (auto-populated)
 - Try incognito mode if having authentication issues
 
 **Calculations not matching?**
+
 - Double-check your formulas
 - Ensure you're using correct time periods (30 days)
 - Round to 2 decimal places
 
 **Don't understand a metric?**
+
 - Review the Theory & Concepts section
 - Check the DORA handbook link in resources
 - Ask in #dojo-white-belt on Mattermost
@@ -495,6 +535,7 @@ Once you've completed all tasks:
 **Instructions**: Answer all 10 questions. You need 8/10 (80%) to pass. Unlimited attempts allowed.
 
 #### Question 1
+
 **Which metric measures "how often" you deploy to production?**
 
 - [x] A) Deployment Frequency
@@ -507,6 +548,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 2
+
 **An elite performer's Lead Time for Changes is:**
 
 - [x] A) Less than one hour
@@ -519,6 +561,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 3
+
 **What does MTTR stand for?**
 
 - [ ] A) Mean Time To Release
@@ -531,6 +574,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 4
+
 **Elite performers have a Change Failure Rate of:**
 
 - [x] A) 0-15%
@@ -543,6 +587,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 5
+
 **Which statement is TRUE about DORA metrics?**
 
 - [ ] A) You must choose between speed (DF/LT) and stability (MTTR/CFR)
@@ -555,6 +600,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 6
+
 **Your team deploys once per month. What performance level is this?**
 
 - [ ] A) Elite
@@ -567,6 +613,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 7
+
 **Lead Time for Changes measures:**
 
 - [ ] A) Time spent writing code
@@ -579,6 +626,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 8
+
 **Why do DORA metrics matter to business leaders?**
 
 - [ ] A) They're required for compliance
@@ -591,6 +639,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 9
+
 **A team has 20 deployments and 5 failures in a month. What's their CFR?**
 
 - [ ] A) 5%
@@ -603,6 +652,7 @@ Once you've completed all tasks:
 ---
 
 #### Question 10
+
 **How does a platform like Fawkes improve DORA metrics?**
 
 - [ ] A) By forcing teams to deploy more frequently
@@ -630,6 +680,7 @@ Once you've completed all tasks:
 Congratulations! 🎉 You've completed Module 2. Let's recap:
 
 ✅ **You now understand**:
+
 - The Four Key Metrics and what they measure
 - Why these metrics predict business success
 - How to calculate and interpret DORA metrics
@@ -637,6 +688,7 @@ Congratulations! 🎉 You've completed Module 2. Let's recap:
 - How Fawkes automates metrics collection
 
 ✅ **You can now**:
+
 - Analyze DORA dashboards and spot issues
 - Make data-driven recommendations for improvement
 - Explain metrics to business stakeholders
@@ -645,16 +697,19 @@ Congratulations! 🎉 You've completed Module 2. Let's recap:
 ### How This Connects to Your Work
 
 **For Developers**:
+
 - You understand what "good" looks like (Elite benchmarks)
 - You can advocate for improvements using data
 - You know how to track your team's progress
 
 **For Platform Engineers**:
+
 - You can measure platform impact objectively
 - You know which improvements matter most
 - You can demonstrate ROI to leadership
 
 **For Leaders**:
+
 - You have a data-driven framework for investment decisions
 - You can benchmark against industry standards
 - You can track improvement over time
@@ -664,11 +719,13 @@ Congratulations! 🎉 You've completed Module 2. Let's recap:
 **This Week, Try This**:
 
 1. **Measure Your Current State**
+
    - Track deployments for one week
    - Calculate your team's current DORA metrics
    - Be honest—no judgment, just data
 
 2. **Identify One Improvement**
+
    - Pick the metric with the most room for improvement
    - Brainstorm 3 concrete actions to improve it
    - Estimate impact and effort
@@ -683,12 +740,15 @@ Congratulations! 🎉 You've completed Module 2. Let's recap:
 Take 2 minutes to think about:
 
 1. **Which metric surprised you most?**
+
    - Did your team's performance match your intuition?
 
 2. **What's your team's biggest opportunity?**
+
    - Which metric, if improved, would have the most impact?
 
 3. **What's blocking improvement?**
+
    - Technical debt? Process issues? Cultural resistance?
 
 4. **Who needs to know this?**
@@ -697,22 +757,26 @@ Take 2 minutes to think about:
 ### Additional Resources
 
 **📚 Further Reading**:
+
 - [DORA State of DevOps Report](https://dora.dev/research) - Annual research findings
 - [Accelerate Book](https://itrevolution.com/accelerate-book/) - The foundational research
 - [DORA Quick Check](https://dora.dev/quickcheck/) - Assess your team in 5 minutes
 - [Google Cloud DORA Resources](https://cloud.google.com/blog/products/devops-sre/the-2023-accelerate-state-of-devops-report-is-here) - Implementation guides
 
 **🎥 Videos to Watch**:
+
 - "DORA Metrics Explained" by Dr. Nicole Forsgren (15 min)
 - "Why DORA Metrics Matter" by Gene Kim (20 min)
 - "Implementing DORA Metrics" by Charity Majors (30 min)
 
 **🛠️ Tools**:
+
 - [Four Keys Project](https://github.com/dora-team/fourkeys) - Open source DORA metrics tool
 - [Sleuth](https://www.sleuth.io/) - Commercial DORA tracking (Fawkes alternative)
 - [LinearB](https://linearb.io/) - Engineering intelligence platform
 
 **💬 Community**:
+
 - Share your team's metrics (anonymously!) in `#dojo-metrics`
 - Join the DORA community discussions
 - Help others interpret their data
@@ -722,6 +786,7 @@ Take 2 minutes to think about:
 **Next Up: GitOps Principles**
 
 In Module 3, you'll learn:
+
 - What GitOps is and why it's transforming deployments
 - Declarative infrastructure and desired state
 - How ArgoCD implements GitOps
@@ -737,9 +802,10 @@ In Module 3, you'll learn:
 
 ## Module Completion
 
-### ✅ You've Completed Module 2!
+### ✅ You've Completed Module 2
 
 **Next Steps**:
+
 1. ✅ Mark this module complete in your Backstage profile
 2. 📊 View your progress on the Dojo dashboard
 3. 💬 Share your DORA metrics insights in `#dojo-achievements`
@@ -752,11 +818,13 @@ In Module 3, you'll learn:
 ---
 
 **Questions or Issues?**
+
 - 💬 Ask in `#dojo-white-belt` on Mattermost
 - 📧 Email: dojo@fawkes.io
 - 🐛 Report bugs: [GitHub Issues](https://github.com/paruff/fawkes/issues)
 
 **Feedback?**
+
 - Rate this module (takes 30 seconds)
 - What worked well? What could be better?
 - Help us improve the learning experience!

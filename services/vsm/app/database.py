@@ -23,7 +23,7 @@ engine = create_engine(
     pool_pre_ping=True,  # Enable connection health checks
     pool_size=5,
     max_overflow=10,
-    echo=os.getenv("SQL_ECHO", "false").lower() == "true"
+    echo=os.getenv("SQL_ECHO", "false").lower() == "true",
 )
 
 # Create session factory

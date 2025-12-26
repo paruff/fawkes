@@ -14,17 +14,20 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 ### Deployment
 
 - [ ] Applied ingress-nginx ArgoCD Application:
+
   ```bash
   kubectl apply -f platform/apps/ingress-nginx/ingress-nginx-azure-application.yaml
   ```
 
 - [ ] Namespace created:
+
   ```bash
   kubectl get namespace ingress-nginx
   # Expected: ingress-nginx namespace exists
   ```
 
 - [ ] Deployment is ready:
+
   ```bash
   kubectl get deployment ingress-nginx-controller -n ingress-nginx
   # Expected: 2/2 READY
@@ -39,18 +42,21 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 ### Load Balancer Configuration
 
 - [ ] Service type is LoadBalancer:
+
   ```bash
   kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.spec.type}'
   # Expected: LoadBalancer
   ```
 
 - [ ] External IP is assigned:
+
   ```bash
   kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
   # Expected: IP address (not <pending>)
   ```
 
 - [ ] Azure Load Balancer health probe is configured:
+
   ```bash
   kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.metadata.annotations.service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path}'
   # Expected: /healthz
@@ -65,6 +71,7 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 ### High Availability
 
 - [ ] HorizontalPodAutoscaler is configured:
+
   ```bash
   kubectl get hpa ingress-nginx-controller -n ingress-nginx
   # Expected: HPA exists with min=2, max=10
@@ -79,12 +86,14 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 ### Metrics and Monitoring
 
 - [ ] Metrics service exists:
+
   ```bash
   kubectl get svc ingress-nginx-controller-metrics -n ingress-nginx
   # Expected: Service exists
   ```
 
 - [ ] ServiceMonitor is created (requires Prometheus Operator):
+
   ```bash
   kubectl get servicemonitor ingress-nginx-controller -n ingress-nginx
   # Expected: ServiceMonitor exists (or skip if Prometheus Operator not installed)
@@ -117,12 +126,14 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 ### Terraform Configuration
 
 - [ ] DNS variables configured in `infra/azure/terraform.tfvars`:
+
   ```
   dns_zone_name = "fawkes.yourdomain.com"
   create_dns_records = true
   ```
 
 - [ ] Terraform initialized:
+
   ```bash
   cd infra/azure && terraform init
   # Expected: Success
@@ -137,12 +148,14 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 ### DNS Deployment
 
 - [ ] Terraform applied:
+
   ```bash
   terraform apply
   # Expected: DNS zone and A records created
   ```
 
 - [ ] DNS zone exists:
+
   ```bash
   az network dns zone show -g fawkes-rg -n fawkes.yourdomain.com
   # Expected: DNS zone details
@@ -157,6 +170,7 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 ### DNS Delegation
 
 - [ ] Nameservers obtained:
+
   ```bash
   terraform output dns_zone_name_servers
   # Expected: 4 Azure DNS nameservers
@@ -175,17 +189,20 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 ### Deployment
 
 - [ ] Applied cert-manager ArgoCD Application:
+
   ```bash
   kubectl apply -f platform/apps/cert-manager/cert-manager-application.yaml
   ```
 
 - [ ] Namespace created:
+
   ```bash
   kubectl get namespace cert-manager
   # Expected: cert-manager namespace exists
   ```
 
 - [ ] Deployments are ready:
+
   ```bash
   kubectl get deployment -n cert-manager
   # Expected: cert-manager, cert-manager-webhook, cert-manager-cainjector all ready
@@ -208,12 +225,14 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 ### ClusterIssuers Configuration
 
 - [ ] Email address updated in ClusterIssuer files:
+
   ```bash
   grep "email:" platform/apps/cert-manager/cluster-issuer-*.yaml
   # Expected: Your actual email, not platform-team@example.com
   ```
 
 - [ ] ClusterIssuers applied:
+
   ```bash
   kubectl apply -f platform/apps/cert-manager/cluster-issuer-letsencrypt-staging.yaml
   kubectl apply -f platform/apps/cert-manager/cluster-issuer-letsencrypt-prod.yaml
@@ -238,11 +257,13 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 ### Test Ingress Deployment
 
 - [ ] Deploy test echo server:
+
   ```bash
   kubectl apply -f platform/apps/ingress-nginx/test-ingress.yaml
   ```
 
 - [ ] Test namespace created:
+
   ```bash
   kubectl get namespace ingress-test
   # Expected: Namespace exists
@@ -257,6 +278,7 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 ### HTTP Testing
 
 - [ ] Test HTTP access with nip.io:
+
   ```bash
   EXTERNAL_IP=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
   curl http://test.${EXTERNAL_IP}.nip.io
@@ -272,30 +294,35 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 ### TLS Certificate Testing
 
 - [ ] Create test ingress with TLS:
+
   ```yaml
   # Create ingress with cert-manager annotation
   # Use letsencrypt-staging first!
   ```
 
 - [ ] Certificate resource created:
+
   ```bash
   kubectl get certificate -n ingress-test
   # Expected: Certificate resource exists
   ```
 
 - [ ] CertificateRequest created:
+
   ```bash
   kubectl get certificaterequest -n ingress-test
   # Expected: CertificateRequest exists
   ```
 
 - [ ] Certificate issued (may take 1-2 minutes):
+
   ```bash
   kubectl get certificate -n ingress-test -o jsonpath='{.items[0].status.conditions[?(@.type=="Ready")].status}'
   # Expected: True
   ```
 
 - [ ] TLS secret created:
+
   ```bash
   kubectl get secret -n ingress-test | grep tls
   # Expected: TLS secret exists
@@ -312,6 +339,7 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 ### Load Balancer
 
 - [ ] Load Balancer rules exist:
+
   ```bash
   az network lb rule list --resource-group MC_fawkes-rg_fawkes-aks_eastus --lb-name kubernetes -o table
   # Expected: Rules for ports 80 and 443
@@ -336,6 +364,7 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 ### Prometheus Metrics
 
 - [ ] Metrics endpoints accessible:
+
   ```bash
   kubectl port-forward -n ingress-nginx svc/ingress-nginx-controller-metrics 9402:10254 &
   curl http://localhost:9402/metrics | grep nginx_ingress_controller_requests
@@ -371,21 +400,25 @@ Use this checklist to verify your Azure Load Balancer and Ingress deployment.
 If you encounter any issues, check the following:
 
 ### External IP Pending
+
 - Wait 2-3 minutes for Azure to provision the Load Balancer
 - Check service events: `kubectl describe svc ingress-nginx-controller -n ingress-nginx`
 
 ### Certificate Not Issuing
+
 - Verify DNS points to ingress IP: `dig +short yourapp.fawkes.yourdomain.com`
 - Check challenge status: `kubectl get challenge -A`
 - Check cert-manager logs: `kubectl logs -n cert-manager deployment/cert-manager`
 - Verify ClusterIssuer is ready: `kubectl describe clusterissuer letsencrypt-prod`
 
 ### 404 Not Found
+
 - Verify ingress resource: `kubectl describe ingress <name> -n <namespace>`
 - Check backend service exists: `kubectl get svc <name> -n <namespace>`
 - Check controller logs: `kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller`
 
 ### DNS Not Resolving
+
 - Wait up to 48 hours for DNS propagation
 - Verify nameserver delegation: `dig NS fawkes.yourdomain.com`
 - Check Azure DNS records: `az network dns record-set a list -g fawkes-rg -z fawkes.yourdomain.com`
@@ -395,6 +428,7 @@ If you encounter any issues, check the following:
 All items checked? You're ready to use Azure Load Balancer and Ingress!
 
 Summary:
+
 - ✅ nginx-ingress deployed with Azure Load Balancer
 - ✅ Azure Load Balancer created with health probes
 - ✅ Public IP assigned
@@ -405,6 +439,7 @@ Summary:
 - ✅ TLS certificates issuing
 
 Next steps:
+
 1. Deploy your application services
 2. Create Ingress resources with cert-manager annotations
 3. Monitor certificate status

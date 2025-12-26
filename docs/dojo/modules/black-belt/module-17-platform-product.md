@@ -24,12 +24,14 @@ By the end of this module, you will be able to:
 ### The Platform as a Product Mindset
 
 **Traditional IT thinking**:
+
 - "We build infrastructure, developers must use it"
 - Success = Infrastructure availability (99.9% uptime)
 - Mandate adoption through policy
 - One-size-fits-all solutions
 
 **Platform as a Product thinking**:
+
 - "We serve developers, they are our customers"
 - Success = Developer satisfaction + business outcomes
 - Earn adoption through superior experience
@@ -40,6 +42,7 @@ By the end of this module, you will be able to:
 **The "Build It and They Will Come" Fallacy**:
 
 Many platform teams build technically excellent platforms that nobody uses:
+
 - ❌ Kubernetes cluster set up perfectly, but developers still deploy to VMs
 - ❌ CI/CD pipelines available, but teams continue using manual processes
 - ❌ Observability stack deployed, but no one looks at the dashboards
@@ -163,6 +166,7 @@ Closing:
 ```
 
 **Pro tips**:
+
 - Ask "How?" and "Why?" not "Would you use...?"
 - Observe actual behavior, not stated preferences
 - Look for workarounds (reveals unmet needs)
@@ -171,12 +175,14 @@ Closing:
 #### 2. Shadowing / Observation
 
 Sit with developers and watch them work:
+
 - Where do they wait?
 - What do they Google?
 - What tools do they switch between?
 - Where do they ask for help?
 
 **Example insights**:
+
 - "They spent 20 minutes figuring out environment variable syntax"
 - "They copy-pasted from another team's repo instead of using docs"
 - "They waited 15 minutes for CI pipeline, then force-pushed to debug"
@@ -213,6 +219,7 @@ PLATFORM SATISFACTION SURVEY (NPS-style):
 #### 4. Analytics / Telemetry
 
 Instrument your platform to observe usage:
+
 - Which features are used most/least?
 - Where do users drop off?
 - How long do tasks take?
@@ -539,6 +546,7 @@ Target: 80% of issues resolved in <1 hour
 ### Lab Overview
 
 You will practice product management for a platform by:
+
 1. Analyzing user feedback and identifying themes
 2. Prioritizing features using impact vs. effort
 3. Creating a quarterly roadmap
@@ -581,19 +589,11 @@ cat interviews.json | jq '.[] | {name, role, pain_points}'
   "interviews": [
     {
       "name": "Alex (Frontend Dev)",
-      "pain_points": [
-        "Deployments take 25 minutes",
-        "No way to see if my deploy worked",
-        "Kubernetes is confusing"
-      ]
+      "pain_points": ["Deployments take 25 minutes", "No way to see if my deploy worked", "Kubernetes is confusing"]
     },
     {
       "name": "Jordan (Backend Dev)",
-      "pain_points": [
-        "Can't debug production issues",
-        "No staging environment",
-        "Database migrations are manual"
-      ]
+      "pain_points": ["Can't debug production issues", "No staging environment", "Database migrations are manual"]
     }
     // ... 13 more interviews
   ]
@@ -615,6 +615,7 @@ python analyze_feedback.py interviews.json
 ```
 
 **Question**: Which theme should you prioritize? Consider:
+
 - Frequency (how many users mentioned it)
 - Severity (how much pain does it cause)
 - Feasibility (can you solve it in <1 quarter)
@@ -631,6 +632,7 @@ cat features.yaml
 ```
 
 **features.yaml**:
+
 ```yaml
 features:
   - name: "Real-time deployment dashboard"
@@ -668,6 +670,7 @@ fawkes product prioritize --input features.yaml --output priority-matrix.png
 ```
 
 **Expected result**:
+
 ```
 DO FIRST (High Impact, Low-Med Effort):
 1. Real-time deployment dashboard
@@ -699,12 +702,15 @@ vim Q1-2025-roadmap.md
 # Q1 2025 Platform Roadmap
 
 ## North Star Goal
+
 Reduce deployment time from 25 minutes to <8 minutes (68% improvement)
 
 ## Sprint 1-2 (Weeks 1-4): Visibility
+
 **Theme**: Developers can't see what's happening
 
 - [ ] Deployment status dashboard in Backstage
+
   - Real-time progress (queued → building → deploying → healthy)
   - Estimated time remaining
   - Success metric: 70% of developers check dashboard weekly
@@ -715,9 +721,11 @@ Reduce deployment time from 25 minutes to <8 minutes (68% improvement)
   - Success metric: <2 min to notice failed deploy
 
 ## Sprint 3-4 (Weeks 5-8): Speed
+
 **Theme**: Deployments are too slow
 
 - [ ] Parallel CI pipelines
+
   - Run tests in parallel (8min → 3min)
   - Cache dependencies
   - Success metric: P95 build time <5 minutes
@@ -728,9 +736,11 @@ Reduce deployment time from 25 minutes to <8 minutes (68% improvement)
   - Success metric: Image build <2 minutes
 
 ## Sprint 5-6 (Weeks 9-12): Polish
+
 **Theme**: Improve overall experience
 
 - [ ] Documentation overhaul
+
   - Step-by-step tutorials for common tasks
   - Video walkthroughs
   - Success metric: NPS +10 points
@@ -740,6 +750,7 @@ Reduce deployment time from 25 minutes to <8 minutes (68% improvement)
   - Success metric: 15+ attendees average
 
 ## Success Criteria (End of Q1)
+
 - [ ] Deploy time P95: <8 minutes (from 25min)
 - [ ] Platform adoption: 85% of teams (from 70%)
 - [ ] NPS: 50+ (from 38)
@@ -814,6 +825,7 @@ open http://localhost:3000/user-feedback/platform-nps
 ```
 
 **Expected dashboard**:
+
 ```
 Platform NPS: 42
 ├─ Promoters (9-10): 12 responses (55%)
@@ -852,6 +864,7 @@ curl -X POST http://localhost:3000/api/dashboards/db \
 **Dashboard panels** (pre-configured):
 
 1. **Adoption Panel**:
+
 ```promql
 # Teams using platform
 count(count by (team) (deployment_total{platform="fawkes"}))
@@ -861,6 +874,7 @@ rate(deployment_total{platform="fawkes"}[1d])
 ```
 
 2. **Satisfaction Panel**:
+
 ```sql
 -- NPS score
 SELECT
@@ -872,6 +886,7 @@ WHERE survey_id = 'platform-nps'
 ```
 
 3. **DORA Metrics Panel**:
+
 ```promql
 # Deploy frequency (per day per team)
 avg(rate(deployment_total[1d])) by (team)
@@ -1092,17 +1107,20 @@ Productively saying no means: (1) Acknowledge the request, (2) Explain current p
 **Challenge**: 280+ engineers, hundreds of microservices, fragmented tooling creating chaos.
 
 **Product Approach**:
+
 - **Started with research**: Interviewed 50 engineers about pain points
 - **Built for themselves first**: Backstage solved Spotify's own problems
 - **Measured everything**: Tracked time-to-deploy, incident response time, onboarding speed
 - **Iterated based on feedback**: Weekly demos, monthly retrospectives
 
 **Key Product Decisions**:
+
 - **Golden paths, not enforcement**: Made easy path obvious, didn't block alternatives
 - **Self-service**: Developers create services without ops tickets
 - **Plugin ecosystem**: Teams can extend for their needs
 
 **Results**:
+
 - Onboarding time: 10 days → 1 day (90% improvement)
 - Time to first deploy: 4 hours → 5 minutes (98% improvement)
 - Adoption: 100% of teams (voluntary, not mandated)
@@ -1139,11 +1157,13 @@ PAVED ROAD (Netflix platform):
 **Key Insight**: Don't mandate the platform, make it irresistibly better.
 
 **Product Metrics**:
+
 - **Adoption**: 95%+ voluntary (not mandated)
 - **Developer satisfaction**: NPS 72 (world-class)
 - **Time saved**: 40+ engineering hours per new service
 
 **How they measured product-market fit**:
+
 - Tracked adoption rate by team
 - Monthly surveys (NPS + open feedback)
 - Usage analytics (which features, how often)
@@ -1160,12 +1180,14 @@ PAVED ROAD (Netflix platform):
 **Product Transformation**:
 
 **Before** (Infrastructure mindset):
+
 - Success = Uptime percentage
 - Shipped features, hoped developers used them
 - No user research
 - Reactive support (waiting for tickets)
 
 **After** (Product mindset):
+
 - **Hired product manager for platform team**
 - **Quarterly OKRs tied to developer productivity**
 - **Regular user research**: 10 developer interviews/month
@@ -1175,6 +1197,7 @@ PAVED ROAD (Netflix platform):
 **Product Management Practices**:
 
 1. **Quarterly Planning**:
+
 ```
 Q1 OKRs:
 Objective: Make deployments delightful
@@ -1184,11 +1207,13 @@ Objective: Make deployments delightful
 ```
 
 2. **Bi-weekly User Testing**:
+
 - Watch developers deploy a feature
 - Identify friction points
 - Ship improvements within 1 sprint
 
 3. **Feature Flags for Platform Features**:
+
 ```yaml
 # Gradually roll out new features
 features:
@@ -1199,6 +1224,7 @@ features:
 ```
 
 **Results**:
+
 - **NPS**: 18 → 58 in 6 months
 - **Adoption**: 45% → 85%
 - **Platform budget**: Increased 40% (demonstrated clear value)
@@ -1215,6 +1241,7 @@ features:
 **Example: CI/CD Product Manager**
 
 **Responsibilities**:
+
 - **User research**: Interview 5 developers weekly
 - **Roadmap**: Prioritize features based on impact
 - **Metrics**: Own deployment frequency and lead time
@@ -1223,6 +1250,7 @@ features:
 **Sample Project: "Project Lightning" (Faster CI/CD)**
 
 **Discovery Phase** (2 weeks):
+
 ```
 Research findings:
 - 78% of developers frustrated with CI speed
@@ -1239,6 +1267,7 @@ User quotes:
 ```
 
 **Roadmap** (3 months):
+
 ```
 Month 1: Quick wins
 ├─ Parallel test execution: 18min → 12min
@@ -1257,11 +1286,13 @@ Month 3: Intelligence
 ```
 
 **Communication**:
+
 - Weekly Slack updates in #engineering
 - Demo videos showing improvements
 - "Build time tracker" dashboard (public)
 
 **Results**:
+
 - Build time: 18min → 5min (72% faster)
 - False failure rate: 40% → 8%
 - Developer NPS: +28 points
@@ -1275,13 +1306,13 @@ Month 3: Intelligence
 
 This module directly supports these **DORA capabilities**:
 
-| Capability | How This Module Helps | Impact on Metrics |
-|------------|----------------------|-------------------|
-| **Generative Culture** | Product thinking fosters collaboration between platform and dev teams | Improves all DORA metrics through better alignment |
-| **Visual Management** | Platform health dashboards make work visible | Faster identification of bottlenecks |
-| **Team Experimentation** | User research and feedback loops enable rapid iteration | Higher deployment frequency through faster learning |
-| **Work in Small Batches** | Quarterly roadmaps and iterative improvement | Reduced lead time and change failure rate |
-| **Learning Culture** | Continuous user feedback creates learning organization | Sustained improvement across all metrics |
+| Capability                | How This Module Helps                                                 | Impact on Metrics                                   |
+| ------------------------- | --------------------------------------------------------------------- | --------------------------------------------------- |
+| **Generative Culture**    | Product thinking fosters collaboration between platform and dev teams | Improves all DORA metrics through better alignment  |
+| **Visual Management**     | Platform health dashboards make work visible                          | Faster identification of bottlenecks                |
+| **Team Experimentation**  | User research and feedback loops enable rapid iteration               | Higher deployment frequency through faster learning |
+| **Work in Small Batches** | Quarterly roadmaps and iterative improvement                          | Reduced lead time and change failure rate           |
+| **Learning Culture**      | Continuous user feedback creates learning organization                | Sustained improvement across all metrics            |
 
 ---
 
@@ -1292,6 +1323,7 @@ This module directly supports these **DORA capabilities**:
 **Symptom**: You've built a technically excellent platform but only 30% adoption after 6 months.
 
 **Root Causes**:
+
 - Built for perceived needs, not actual needs
 - No marketing/evangelism of the platform
 - Lack of documentation or examples
@@ -1352,6 +1384,7 @@ ONGOING: Prevent future issues
 ```
 
 **Example Turnaround**:
+
 ```
 GitHub Internal Platform (fictional example):
 - Month 0: NPS -15 (crisis mode)
@@ -1414,21 +1447,21 @@ Step 3: Review quarterly
 ## How We Prioritize
 
 **P0 Criteria** (Do This Quarter):
+
 - Affects >50% of teams
 - Improves DORA metrics significantly
 - Blocks other high-priority work
 
 **Current P0 Features** (Q1 2025):
+
 1. Deployment speed improvements (18min → 8min target)
 2. Real-time deployment status dashboard
 3. Parallel CI pipelines
 
-**P1 Features** (Q2 2025):
-4. Self-service preview environments
-5. Integrated log viewer
-6. Cost optimization dashboard
+**P1 Features** (Q2 2025): 4. Self-service preview environments 5. Integrated log viewer 6. Cost optimization dashboard
 
 ## Your Request: "Support for Terraform 1.7"
+
 - Priority: P2 (Do Later)
 - Reasoning: Affects 5 teams (12%), existing 1.6 sufficient for most use cases
 - Timeline: Q3 2025 (will revisit if Terraform 1.7 becomes critical)
@@ -1479,7 +1512,9 @@ ROI: 54x
 # Platform Team Business Case
 
 ## Executive Summary
+
 Our platform team drives $271M in annual value through:
+
 - $262.5M in developer productivity gains
 - $3.3M in faster time-to-market
 - $5.25M in reduced downtime costs
@@ -1487,12 +1522,14 @@ Our platform team drives $271M in annual value through:
 At $5M/year cost, we deliver 54x ROI.
 
 ## Metrics
+
 - Deploy frequency: 5/day (up from 0.5/day)
 - Lead time: 2 days (down from 14 days)
 - MTTR: 15 minutes (down from 2 hours)
 - Developer NPS: 52 (up from 18)
 
 ## Request
+
 Maintain current headcount (10 FTE) and approve Q1 roadmap.
 Without platform investment, we risk losing competitive advantage
 in deployment velocity.
@@ -1503,6 +1540,7 @@ in deployment velocity.
 ## 📚 Additional Resources
 
 ### Books
+
 - **"The Lean Startup"** by Eric Ries - Core product principles applicable to platforms
 - **"Inspired: How to Create Tech Products Customers Love"** by Marty Cagan - Product management fundamentals
 - **"Escaping the Build Trap"** by Melissa Perri - Outcome-driven product development
@@ -1510,17 +1548,20 @@ in deployment velocity.
 - **"The Mom Test"** by Rob Fitzpatrick - How to conduct effective user interviews
 
 ### Articles & Papers
+
 - **"Team Topologies"** by Matthew Skelton & Manuel Pais - Platform team structures
 - **"Platform Strategy"** by Evan Bottcher (ThoughtWorks) - Defining platform vision
 - **"Developers Are Users Too"** by Jean Yang - Applying UX to developer tools
 - **DORA State of DevOps Reports** - Measuring platform impact
 
 ### Courses & Communities
+
 - **Platform Engineering Community** - [platformengineering.org](https://platformengineering.org)
 - **Product School** - Internal product management courses
 - **Mind the Product** - Product management community and resources
 
 ### Tools
+
 - **Backstage** - Platform with built-in user feedback and analytics
 - **Pendo** - Product analytics for internal tools
 - **Dovetail** - User research repository
@@ -1543,6 +1584,7 @@ By completing this module, you've learned:
 **Critical insight**: The best platform is useless if developers don't adopt it. Product thinking ensures you build what users actually need, not what you think they need.
 
 **Remember**:
+
 - 🎯 **Outcomes over outputs**: Measure impact, not features shipped
 - 👂 **Listen more than talk**: Users know their problems better than you
 - 🔁 **Iterate relentlessly**: Small improvements compound over time
@@ -1555,6 +1597,7 @@ By completing this module, you've learned:
 ### In Module 18: Multi-Tenancy & Resource Management
 
 You'll learn how to:
+
 - Design multi-tenant platforms serving multiple teams securely
 - Implement resource quotas and isolation
 - Handle namespace management and RBAC at scale
@@ -1562,6 +1605,7 @@ You'll learn how to:
 - Monitor and optimize resource utilization across tenants
 
 **Prepare by**:
+
 - Identifying how many teams your platform will serve
 - Understanding your organization's compliance requirements
 - Listing resources that need quota enforcement (CPU, memory, storage)
@@ -1587,4 +1631,4 @@ Next: Module 18 to continue your Black Belt journey!
 ---
 
 **Module 17: Platform as a Product** | Fawkes Dojo | Black Belt
-*"Build what users need, not what you think they need"* | Version 1.0
+_"Build what users need, not what you think they need"_ | Version 1.0

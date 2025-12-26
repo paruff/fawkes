@@ -20,17 +20,20 @@ from opentelemetry.instrumentation.requests import RequestsInstrumentor
 # Note: For production, consider using python-json-logger or structlog
 import json
 
+
 class JSONFormatter(logging.Formatter):
     """Format logs as JSON for structured logging."""
+
     def format(self, record):
         log_data = {
             "timestamp": self.formatTime(record),
             "level": record.levelname,
             "message": record.getMessage(),
-            "traceId": getattr(record, 'otelTraceID', ''),
-            "spanId": getattr(record, 'otelSpanID', ''),
+            "traceId": getattr(record, "otelTraceID", ""),
+            "spanId": getattr(record, "otelSpanID", ""),
         }
         return json.dumps(log_data)
+
 
 handler = logging.StreamHandler()
 handler.setFormatter(JSONFormatter())
@@ -40,30 +43,28 @@ logger.setLevel(logging.INFO)
 
 # OpenTelemetry Collector endpoint
 OTEL_EXPORTER_OTLP_ENDPOINT = os.getenv(
-    'OTEL_EXPORTER_OTLP_ENDPOINT',
-    'otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317'
+    "OTEL_EXPORTER_OTLP_ENDPOINT", "otel-collector-opentelemetry-collector.monitoring.svc.cluster.local:4317"
 )
 
 # Service configuration
-SERVICE_NAME = os.getenv('SERVICE_NAME', 'otel-sample-app')
-SERVICE_VERSION = os.getenv('SERVICE_VERSION', '1.0.0')
-DEPLOYMENT_ENVIRONMENT = os.getenv('DEPLOYMENT_ENVIRONMENT', 'development')
+SERVICE_NAME = os.getenv("SERVICE_NAME", "otel-sample-app")
+SERVICE_VERSION = os.getenv("SERVICE_VERSION", "1.0.0")
+DEPLOYMENT_ENVIRONMENT = os.getenv("DEPLOYMENT_ENVIRONMENT", "development")
 
 # Configure OpenTelemetry
-resource = Resource.create({
-    "service.name": SERVICE_NAME,
-    "service.version": SERVICE_VERSION,
-    "deployment.environment": DEPLOYMENT_ENVIRONMENT,
-})
+resource = Resource.create(
+    {
+        "service.name": SERVICE_NAME,
+        "service.version": SERVICE_VERSION,
+        "deployment.environment": DEPLOYMENT_ENVIRONMENT,
+    }
+)
 
 # Create tracer provider
 tracer_provider = TracerProvider(resource=resource)
 
 # Configure OTLP exporter
-otlp_exporter = OTLPSpanExporter(
-    endpoint=OTEL_EXPORTER_OTLP_ENDPOINT,
-    insecure=True
-)
+otlp_exporter = OTLPSpanExporter(endpoint=OTEL_EXPORTER_OTLP_ENDPOINT, insecure=True)
 
 # Add span processor
 span_processor = BatchSpanProcessor(otlp_exporter)
@@ -94,31 +95,33 @@ def simulate_work(duration: float, operation: str):
         return f"Operation '{operation}' completed in {duration}s"
 
 
-@app.route('/')
+@app.route("/")
 def index():
     """Root endpoint with basic information."""
-    return jsonify({
-        "service": SERVICE_NAME,
-        "version": SERVICE_VERSION,
-        "environment": DEPLOYMENT_ENVIRONMENT,
-        "message": "OpenTelemetry Sample Application",
-        "endpoints": {
-            "/": "This help message",
-            "/health": "Health check endpoint",
-            "/hello/<name>": "Greeting endpoint with tracing",
-            "/work": "Simulate work with nested spans",
-            "/error": "Trigger an error to see error traces"
+    return jsonify(
+        {
+            "service": SERVICE_NAME,
+            "version": SERVICE_VERSION,
+            "environment": DEPLOYMENT_ENVIRONMENT,
+            "message": "OpenTelemetry Sample Application",
+            "endpoints": {
+                "/": "This help message",
+                "/health": "Health check endpoint",
+                "/hello/<name>": "Greeting endpoint with tracing",
+                "/work": "Simulate work with nested spans",
+                "/error": "Trigger an error to see error traces",
+            },
         }
-    })
+    )
 
 
-@app.route('/health')
+@app.route("/health")
 def health():
     """Health check endpoint."""
     return jsonify({"status": "healthy", "service": SERVICE_NAME}), 200
 
 
-@app.route('/hello/<name>')
+@app.route("/hello/<name>")
 def hello(name):
     """Greeting endpoint that demonstrates tracing."""
     with tracer.start_as_current_span("greet_user") as span:
@@ -131,14 +134,16 @@ def hello(name):
         greeting = f"Hello, {name}! Welcome to the OpenTelemetry sample application."
         span.set_attribute("greeting.message", greeting)
 
-        return jsonify({
-            "greeting": greeting,
-            "trace_id": format(span.get_span_context().trace_id, '032x'),
-            "span_id": format(span.get_span_context().span_id, '016x')
-        })
+        return jsonify(
+            {
+                "greeting": greeting,
+                "trace_id": format(span.get_span_context().trace_id, "032x"),
+                "span_id": format(span.get_span_context().span_id, "016x"),
+            }
+        )
 
 
-@app.route('/work')
+@app.route("/work")
 def work():
     """Endpoint that simulates complex work with nested spans."""
     with tracer.start_as_current_span("complex_work") as span:
@@ -162,14 +167,12 @@ def work():
         span.set_attribute("operations.count", len(results))
         logger.info("Complex work operation completed")
 
-        return jsonify({
-            "status": "success",
-            "results": results,
-            "trace_id": format(span.get_span_context().trace_id, '032x')
-        })
+        return jsonify(
+            {"status": "success", "results": results, "trace_id": format(span.get_span_context().trace_id, "032x")}
+        )
 
 
-@app.route('/error')
+@app.route("/error")
 def trigger_error():
     """Endpoint that triggers an error to demonstrate error tracing."""
     with tracer.start_as_current_span("error_operation") as span:
@@ -185,17 +188,22 @@ def trigger_error():
             span.set_status(trace.Status(trace.StatusCode.ERROR, str(e)))
             logger.exception("Error occurred during operation")
 
-            return jsonify({
-                "error": "IntentionalError",
-                "message": str(e),
-                "trace_id": format(span.get_span_context().trace_id, '032x')
-            }), 500
+            return (
+                jsonify(
+                    {
+                        "error": "IntentionalError",
+                        "message": str(e),
+                        "trace_id": format(span.get_span_context().trace_id, "032x"),
+                    }
+                ),
+                500,
+            )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logger.info(f"Starting {SERVICE_NAME} v{SERVICE_VERSION}")
     logger.info(f"OTLP Endpoint: {OTEL_EXPORTER_OTLP_ENDPOINT}")
     logger.info(f"Environment: {DEPLOYMENT_ENVIRONMENT}")
 
     # Run the Flask app
-    app.run(host='0.0.0.0', port=8080, debug=False)
+    app.run(host="0.0.0.0", port=8080, debug=False)

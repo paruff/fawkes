@@ -33,7 +33,7 @@ def _kubectl_json(args: list[str]) -> Dict:
     try:
         raw = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as e:  # pragma: no cover
-        raise RuntimeError(f"kubectl failed: {' '.join(cmd)}\n{e.output.decode()}" )
+        raise RuntimeError(f"kubectl failed: {' '.join(cmd)}\n{e.output.decode()}")
     try:
         return json.loads(raw.decode())
     except json.JSONDecodeError as e:  # pragma: no cover
@@ -65,10 +65,8 @@ def _assert_app_synced_healthy(app: Dict, name: str):
     status = app.get("status", {})
     sync_status = status.get("sync", {}).get("status")
     health_status = status.get("health", {}).get("status")
-    assert sync_status == "Synced", f"Application {name} sync status={sync_status}" \
-        + f" (expected Synced)"
-    assert health_status == "Healthy", f"Application {name} health status={health_status}" \
-        + f" (expected Healthy)"
+    assert sync_status == "Synced", f"Application {name} sync status={sync_status}" + f" (expected Synced)"
+    assert health_status == "Healthy", f"Application {name} health status={health_status}" + f" (expected Healthy)"
 
 
 @then(parsers.cfparse('Application "{app_name}" is Synced and Healthy'))

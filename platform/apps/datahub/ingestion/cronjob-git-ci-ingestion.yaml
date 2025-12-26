@@ -1,3 +1,23 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
 # ==============================================================================
 # FILE: platform/apps/datahub/ingestion/cronjob-git-ci-ingestion.yaml
 # PURPOSE: Kubernetes CronJob for automated GitHub and Jenkins metadata ingestion
@@ -196,78 +216,78 @@ spec:
           serviceAccountName: datahub-ingestion
 
           containers:
-          - name: datahub-ingestion
-            image: acryldata/datahub-ingestion:latest
-            imagePullPolicy: IfNotPresent
+            - name: datahub-ingestion
+              image: acryldata/datahub-ingestion:latest
+              imagePullPolicy: IfNotPresent
 
-            command:
-            - /bin/bash
-            - -c
-            - |
-                set -e
-                echo "Starting GitHub and Jenkins metadata ingestion..."
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  set -e
+                  echo "Starting GitHub and Jenkins metadata ingestion..."
 
-                # Verify DataHub is accessible
-                if ! curl -f -s http://datahub-datahub-gms.fawkes.svc:8080/health > /dev/null; then
-                  echo "ERROR: DataHub GMS is not accessible"
-                  exit 1
-                fi
+                  # Verify DataHub is accessible
+                  if ! curl -f -s http://datahub-datahub-gms.fawkes.svc:8080/health > /dev/null; then
+                    echo "ERROR: DataHub GMS is not accessible"
+                    exit 1
+                  fi
 
-                echo "DataHub GMS is healthy"
+                  echo "DataHub GMS is healthy"
 
-                # Ingest GitHub repositories
-                echo "Ingesting GitHub repositories..."
-                if [ -n "$GITHUB_TOKEN" ] && [ "$GITHUB_TOKEN" != "REPLACE_WITH_GITHUB_TOKEN" ]; then
-                  datahub ingest -c /config/github.yaml
-                  echo "GitHub ingestion completed"
-                else
-                  echo "WARNING: GitHub token not configured, skipping GitHub ingestion"
-                fi
+                  # Ingest GitHub repositories
+                  echo "Ingesting GitHub repositories..."
+                  if [ -n "$GITHUB_TOKEN" ] && [ "$GITHUB_TOKEN" != "REPLACE_WITH_GITHUB_TOKEN" ]; then
+                    datahub ingest -c /config/github.yaml
+                    echo "GitHub ingestion completed"
+                  else
+                    echo "WARNING: GitHub token not configured, skipping GitHub ingestion"
+                  fi
 
-                # Ingest Jenkins jobs
-                echo "Ingesting Jenkins jobs..."
-                if [ -n "$JENKINS_TOKEN" ] && [ "$JENKINS_TOKEN" != "REPLACE_WITH_JENKINS_TOKEN" ]; then
-                  datahub ingest -c /config/jenkins.yaml
-                  echo "Jenkins ingestion completed"
-                else
-                  echo "WARNING: Jenkins token not configured, skipping Jenkins ingestion"
-                fi
+                  # Ingest Jenkins jobs
+                  echo "Ingesting Jenkins jobs..."
+                  if [ -n "$JENKINS_TOKEN" ] && [ "$JENKINS_TOKEN" != "REPLACE_WITH_JENKINS_TOKEN" ]; then
+                    datahub ingest -c /config/jenkins.yaml
+                    echo "Jenkins ingestion completed"
+                  else
+                    echo "WARNING: Jenkins token not configured, skipping Jenkins ingestion"
+                  fi
 
-                echo "Git/CI metadata ingestion completed successfully"
+                  echo "Git/CI metadata ingestion completed successfully"
 
-            env:
-            - name: GITHUB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: datahub-git-ci-ingestion-credentials
-                  key: GITHUB_TOKEN
+              env:
+                - name: GITHUB_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: datahub-git-ci-ingestion-credentials
+                      key: GITHUB_TOKEN
 
-            - name: JENKINS_USER
-              valueFrom:
-                secretKeyRef:
-                  name: datahub-git-ci-ingestion-credentials
-                  key: JENKINS_USER
+                - name: JENKINS_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: datahub-git-ci-ingestion-credentials
+                      key: JENKINS_USER
 
-            - name: JENKINS_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: datahub-git-ci-ingestion-credentials
-                  key: JENKINS_TOKEN
+                - name: JENKINS_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: datahub-git-ci-ingestion-credentials
+                      key: JENKINS_TOKEN
 
-            volumeMounts:
-            - name: config
-              mountPath: /config
-              readOnly: true
+              volumeMounts:
+                - name: config
+                  mountPath: /config
+                  readOnly: true
 
-            resources:
-              requests:
-                cpu: 200m
-                memory: 512Mi
-              limits:
-                cpu: 500m
-                memory: 1Gi
+              resources:
+                requests:
+                  cpu: 200m
+                  memory: 512Mi
+                limits:
+                  cpu: 500m
+                  memory: 1Gi
 
           volumes:
-          - name: config
-            configMap:
-              name: datahub-git-ci-ingestion-config
+            - name: config
+              configMap:
+                name: datahub-git-ci-ingestion-config

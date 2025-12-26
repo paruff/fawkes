@@ -17,6 +17,7 @@ Conversational Mattermost bot for collecting feedback with natural language proc
 ### Using the Bot in Mattermost
 
 Simply type:
+
 ```
 /feedback <your feedback here>
 ```
@@ -24,27 +25,35 @@ Simply type:
 ### Examples
 
 **Positive feedback:**
+
 ```
 /feedback The new UI is amazing! Love the dark mode feature.
 ```
+
 Analysis: ⭐⭐⭐⭐⭐ (5/5), Sentiment: Positive 😊, Category: UI
 
 **Performance feedback:**
+
 ```
 /feedback Builds are taking 20+ minutes, way too slow
 ```
+
 Analysis: ⭐⭐ (2/5), Sentiment: Negative 😞, Category: Performance
 
 **Feature request:**
+
 ```
 /feedback Would be great if we could export metrics to CSV
 ```
+
 Analysis: ⭐⭐⭐⭐ (4/5), Sentiment: Neutral 😐, Category: Feature Request
 
 **With explicit rating:**
+
 ```
 /feedback Rate it 5 stars! Documentation is excellent and comprehensive.
 ```
+
 Analysis: ⭐⭐⭐⭐⭐ (5/5), Sentiment: Positive 😊, Category: Documentation
 
 ## Installation
@@ -138,18 +147,18 @@ The bot uses **VADER (Valence Aware Dictionary and sEntiment Reasoner)** to anal
 
 The bot automatically categorizes feedback based on keywords:
 
-| Category | Keywords |
-|----------|----------|
-| **UI** | interface, design, layout, visual, button, menu, navigation |
-| **Performance** | slow, fast, speed, lag, loading, responsive, timeout |
-| **Documentation** | docs, guide, tutorial, help, readme, instructions |
-| **CI/CD** | build, deploy, pipeline, jenkins, argocd |
-| **Security** | security, vulnerability, auth, permission, access |
-| **API** | api, endpoint, rest, graphql, request, response |
-| **Feature Request** | want, wish, need, could, should, feature, add |
-| **Bug** | bug, error, issue, problem, broken, crash, fail |
-| **Observability** | metrics, logs, traces, monitoring, grafana, prometheus |
-| **Developer Experience** | dx, experience, workflow, productivity, friction |
+| Category                 | Keywords                                                    |
+| ------------------------ | ----------------------------------------------------------- |
+| **UI**                   | interface, design, layout, visual, button, menu, navigation |
+| **Performance**          | slow, fast, speed, lag, loading, responsive, timeout        |
+| **Documentation**        | docs, guide, tutorial, help, readme, instructions           |
+| **CI/CD**                | build, deploy, pipeline, jenkins, argocd                    |
+| **Security**             | security, vulnerability, auth, permission, access           |
+| **API**                  | api, endpoint, rest, graphql, request, response             |
+| **Feature Request**      | want, wish, need, could, should, feature, add               |
+| **Bug**                  | bug, error, issue, problem, broken, crash, fail             |
+| **Observability**        | metrics, logs, traces, monitoring, grafana, prometheus      |
+| **Developer Experience** | dx, experience, workflow, productivity, friction            |
 
 ### Smart Rating
 
@@ -178,6 +187,7 @@ curl -X POST http://feedback-bot.fawkes.svc.cluster.local:8000/api/v1/feedback \
 ```
 
 Response:
+
 ```json
 {
   "status": "success",
@@ -283,6 +293,7 @@ The feedback bot integrates with:
 4. **Kubernetes**: Deployed as a service with health checks
 
 All feedback submitted via the bot:
+
 - Is analyzed for sentiment automatically
 - Is auto-categorized based on content
 - Has ratings extracted or inferred
@@ -295,11 +306,13 @@ All feedback submitted via the bot:
 ### Example 1: Simple Positive Feedback
 
 Input:
+
 ```
 /feedback Love the new design!
 ```
 
 Response:
+
 ```
 ✅ Feedback submitted successfully!
 
@@ -318,11 +331,13 @@ Thank you for helping us improve Fawkes! 🎯
 ### Example 2: Detailed Performance Issue
 
 Input:
+
 ```
 /feedback The Jenkins builds are extremely slow, taking over 25 minutes to complete. This is blocking our deployments.
 ```
 
 Response:
+
 ```
 ✅ Feedback submitted successfully!
 
@@ -341,11 +356,13 @@ Thank you for helping us improve Fawkes! 🎯
 ### Example 3: Feature Request
 
 Input:
+
 ```
 /feedback Would be awesome if we could integrate with Slack as well as Mattermost
 ```
 
 Response:
+
 ```
 ✅ Feedback submitted successfully!
 
@@ -366,6 +383,7 @@ Thank you for helping us improve Fawkes! 🎯
 ### Slash Command Not Working
 
 1. **Check bot deployment:**
+
    ```bash
    kubectl get pods -n fawkes -l app=feedback-bot
    kubectl logs -n fawkes -l app=feedback-bot
@@ -387,6 +405,7 @@ Thank you for helping us improve Fawkes! 🎯
 ### Connection to Feedback API Fails
 
 1. Check feedback service is running:
+
    ```bash
    kubectl get svc -n fawkes feedback-service
    ```

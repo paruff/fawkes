@@ -1,10 +1,30 @@
+# Copyright (c) 2025  Philip Ruff
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+# OR OTHER DEALINGS IN THE SOFTWARE.
+
 # Basic values.yaml you can use with `helm upgrade --install -f values.yaml jenkins charts.jenkins.io/jenkins`
 controller:
   # Use explicit repository + tag if your chart supports them; otherwise use single image
   image:
     repository: "jenkins/jenkins"
     # Choose a Jenkins LTS new enough for your plugins. Example:
-    tag: "2.528.1-lts-jdk17"   # <- use JDK17 LTS for plugin compatibility
+    tag: "2.528.1-lts-jdk17" # <- use JDK17 LTS for plugin compatibility
     # If chart expects controller.image.* (not nested), set both:
   # If the chart still reads controller.image and controller.tag, keep compatibility:
   # image: "jenkins/jenkins"
@@ -52,7 +72,7 @@ persistence:
   # In production, enable persistence and set the correct storageClass.
   enabled: false
   size: 8Gi
-  storageClass: standard   # change to your cluster's StorageClass
+  storageClass: standard # change to your cluster's StorageClass
 
 serviceAccount:
   create: true

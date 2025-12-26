@@ -26,6 +26,7 @@ argocd app get jenkins
 ```
 
 **Expected output:**
+
 - Status: `Synced` and `Healthy`
 - Sync Status: `Synced`
 - Health Status: `Healthy`
@@ -39,6 +40,7 @@ kubectl get deployment jenkins -n fawkes
 ```
 
 **Expected output:**
+
 ```
 NAME      READY   UP-TO-DATE   AVAILABLE   AGE
 jenkins   1/1     1            1           5m
@@ -53,12 +55,14 @@ kubectl get pods -n fawkes -l app.kubernetes.io/name=jenkins
 ```
 
 **Expected output:**
+
 ```
 NAME        READY   STATUS    RESTARTS   AGE
 jenkins-0   2/2     Running   0          5m
 ```
 
 Check pod logs:
+
 ```bash
 kubectl logs -n fawkes jenkins-0 -c jenkins --tail=50
 ```
@@ -74,6 +78,7 @@ kubectl get service jenkins -n fawkes
 ```
 
 **Expected output:**
+
 ```
 NAME      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
 jenkins   ClusterIP   10.96.xxx.xxx   <none>        8080/TCP   5m
@@ -88,6 +93,7 @@ kubectl get ingress jenkins -n fawkes
 ```
 
 **Expected output:**
+
 ```
 NAME      CLASS   HOSTS                          ADDRESS         PORTS   AGE
 jenkins   nginx   jenkins.127.0.0.1.nip.io       192.168.x.x     80      5m
@@ -98,15 +104,18 @@ jenkins   nginx   jenkins.127.0.0.1.nip.io       192.168.x.x     80      5m
 Open a browser and navigate to: `http://jenkins.127.0.0.1.nip.io`
 
 **Expected result:**
+
 - Jenkins login page displayed
 - No certificate errors (if TLS is configured)
 - Page loads without errors
 
 Login with credentials (after setting them up):
+
 - **Username:** `admin`
 - **Password:** Value from `platform/apps/jenkins/secrets.yaml`
 
 **⚠️ Important:** Before accessing Jenkins:
+
 1. Update password in `platform/apps/jenkins/secrets.yaml`
 2. Apply the secret: `kubectl apply -f platform/apps/jenkins/secrets.yaml`
 3. Sync ArgoCD: `argocd app sync jenkins`
@@ -118,17 +127,20 @@ Login with credentials (after setting them up):
 Once logged in, navigate to **Manage Jenkins** → **Configuration as Code**
 
 **Expected result:**
+
 - Configuration loaded successfully
 - System message: "Fawkes CI/CD Platform - Golden Path Enabled"
 - No configuration errors
 
 Check system message:
+
 ```bash
 kubectl exec -n fawkes jenkins-0 -c jenkins -- \
   curl -s http://localhost:8080/api/json | grep -o '"systemMessage":"[^"]*"'
 ```
 
 **Expected output:**
+
 ```json
 "systemMessage":"Fawkes CI/CD Platform - Golden Path Enabled"
 ```
@@ -138,6 +150,7 @@ kubectl exec -n fawkes jenkins-0 -c jenkins -- \
 Navigate to **Manage Jenkins** → **Nodes and Clouds** → **Configure Clouds**
 
 **Expected configuration:**
+
 - Cloud name: `kubernetes`
 - Kubernetes URL: Default (in-cluster)
 - Kubernetes Namespace: `fawkes`
@@ -146,6 +159,7 @@ Navigate to **Manage Jenkins** → **Nodes and Clouds** → **Configure Clouds**
 - Container Cap: `20`
 
 Or check via CLI:
+
 ```bash
 kubectl get configmap jenkins-casc -n fawkes -o yaml | grep -A 10 "clouds:"
 ```
@@ -156,15 +170,16 @@ Navigate to **Manage Jenkins** → **Nodes and Clouds** → **Configure Clouds**
 
 **Expected agent templates:**
 
-| Template Name  | Label          | Container Image                 | CPU Request | Memory Request | Idle Termination |
-|---------------|----------------|----------------------------------|-------------|----------------|------------------|
-| jnlp-agent    | k8s-agent      | jenkins/inbound-agent:latest    | -           | -              | 10 min           |
-| maven-agent   | maven, java    | maven:3.9-eclipse-temurin-17    | 1           | 2Gi            | 10 min           |
-| python-agent  | python         | python:3.11-slim                | 500m        | 1Gi            | 10 min           |
-| node-agent    | node, nodejs   | node:20-slim                    | 500m        | 1Gi            | 10 min           |
-| go-agent      | go, golang     | golang:1.21                     | 500m        | 1Gi            | 10 min           |
+| Template Name | Label        | Container Image              | CPU Request | Memory Request | Idle Termination |
+| ------------- | ------------ | ---------------------------- | ----------- | -------------- | ---------------- |
+| jnlp-agent    | k8s-agent    | jenkins/inbound-agent:latest | -           | -              | 10 min           |
+| maven-agent   | maven, java  | maven:3.9-eclipse-temurin-17 | 1           | 2Gi            | 10 min           |
+| python-agent  | python       | python:3.11-slim             | 500m        | 1Gi            | 10 min           |
+| node-agent    | node, nodejs | node:20-slim                 | 500m        | 1Gi            | 10 min           |
+| go-agent      | go, golang   | golang:1.21                  | 500m        | 1Gi            | 10 min           |
 
 Or check via CLI:
+
 ```bash
 kubectl get configmap jenkins-casc -n fawkes -o yaml | grep -A 5 "templates:"
 ```
@@ -198,18 +213,21 @@ pipeline {
 5. Click **Save** and then **Build Now**
 
 **Expected result:**
+
 - Build starts successfully
 - A new pod is created in the `fawkes` namespace
 - Build executes on the dynamic agent
 - Pod is terminated after build completion (within 10 minutes)
 
 Monitor agent pods:
+
 ```bash
 # Watch for agent pods being created
 kubectl get pods -n fawkes --watch | grep -E "jenkins-agent|jnlp"
 ```
 
 **Expected output:**
+
 ```
 jenkins-agent-xxxxx   0/2     Pending   0          0s
 jenkins-agent-xxxxx   0/2     ContainerCreating   0          1s
@@ -221,21 +239,25 @@ jenkins-agent-xxxxx   0/2     Terminating   0          40s
 ### 11. Verify Security Configuration
 
 Check authentication is required:
+
 ```bash
 # Should return 403 or redirect to login
 curl -I http://jenkins.127.0.0.1.nip.io/
 ```
 
 **Expected response:**
+
 - HTTP 403 Forbidden OR
 - HTTP 302 redirect to login page
 
 Anonymous access should be denied:
+
 ```bash
 curl -I http://jenkins.127.0.0.1.nip.io/api/json
 ```
 
 **Expected response:**
+
 - HTTP 403 Forbidden
 
 ### 12. Verify Executor Configuration
@@ -247,12 +269,14 @@ Navigate to **Manage Jenkins** → **System Information**
 Look for: `Number of executors: 0`
 
 Or via CLI:
+
 ```bash
 kubectl exec -n fawkes jenkins-0 -c jenkins -- \
   curl -s http://localhost:8080/computer/api/json | grep -o '"numExecutors":[0-9]*'
 ```
 
 **Expected output:**
+
 ```json
 "numExecutors":0
 ```
@@ -267,11 +291,13 @@ python3 -m pytest tests/bdd/step_definitions/test_jenkins_kubernetes_deployment.
 ```
 
 **Expected result:**
+
 ```
 10 passed in 0.10s
 ```
 
 All tests should pass:
+
 - ✅ Jenkins is deployed via ArgoCD
 - ✅ Kubernetes plugin is configured
 - ✅ Agent templates are configured
@@ -288,11 +314,13 @@ All tests should pass:
 ### Jenkins Pod Not Starting
 
 Check pod events:
+
 ```bash
 kubectl describe pod jenkins-0 -n fawkes
 ```
 
 Common issues:
+
 - **PVC not bound**: Check storage class availability
 - **Image pull errors**: Verify network connectivity
 - **Resource limits**: Check cluster has sufficient resources
@@ -300,11 +328,13 @@ Common issues:
 ### Agent Pods Not Starting
 
 Check Jenkins logs:
+
 ```bash
 kubectl logs -n fawkes jenkins-0 -c jenkins | grep -i kubernetes
 ```
 
 Common issues:
+
 - **RBAC permissions**: Verify ServiceAccount has correct permissions
 - **Network policies**: Check network access from Jenkins to agents
 - **Resource quotas**: Verify namespace has sufficient quotas
@@ -312,11 +342,13 @@ Common issues:
 ### UI Not Accessible
 
 Check Ingress status:
+
 ```bash
 kubectl describe ingress jenkins -n fawkes
 ```
 
 Common issues:
+
 - **Ingress controller not installed**: Install nginx-ingress
 - **DNS resolution**: Verify DNS resolves to cluster
 - **TLS certificate**: Check cert-manager is working
@@ -324,11 +356,13 @@ Common issues:
 ### Configuration Not Loading
 
 Check ConfigMap exists:
+
 ```bash
 kubectl get configmap jenkins-casc -n fawkes
 ```
 
 Check Jenkins logs for JCasC errors:
+
 ```bash
 kubectl logs -n fawkes jenkins-0 -c jenkins | grep -i casc
 ```

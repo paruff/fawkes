@@ -17,9 +17,7 @@ def sonarqube_integration(mock_http_client):
     from integrations.sonarqube import SonarQubeIntegration
 
     return SonarQubeIntegration(
-        sonarqube_url="http://sonarqube.test:9000",
-        sonarqube_token="test-token",
-        http_client=mock_http_client
+        sonarqube_url="http://sonarqube.test:9000", sonarqube_token="test-token", http_client=mock_http_client
     )
 
 
@@ -38,7 +36,7 @@ async def test_get_pr_findings_success(sonarqube_integration, mock_http_client):
                 "message": "Potential SQL injection",
                 "severity": "CRITICAL",
                 "type": "VULNERABILITY",
-                "rule": "python:S3649"
+                "rule": "python:S3649",
             },
             {
                 "key": "issue2",
@@ -47,8 +45,8 @@ async def test_get_pr_findings_success(sonarqube_integration, mock_http_client):
                 "message": "Remove this unused variable",
                 "severity": "MINOR",
                 "type": "CODE_SMELL",
-                "rule": "python:S1481"
-            }
+                "rule": "python:S1481",
+            },
         ]
     }
 
@@ -82,9 +80,7 @@ async def test_get_pr_findings_no_token(mock_http_client):
     from integrations.sonarqube import SonarQubeIntegration
 
     integration = SonarQubeIntegration(
-        sonarqube_url="http://sonarqube.test:9000",
-        sonarqube_token="",
-        http_client=mock_http_client
+        sonarqube_url="http://sonarqube.test:9000", sonarqube_token="", http_client=mock_http_client
     )
 
     findings = await integration.get_pr_findings("test/repo", 123)
@@ -103,7 +99,7 @@ def test_standardize_findings(sonarqube_integration):
             "severity": "BLOCKER",
             "type": "VULNERABILITY",
             "rule": "squid:S3649",
-            "effort": "30min"
+            "effort": "30min",
         },
         {
             "key": "issue2",
@@ -112,8 +108,8 @@ def test_standardize_findings(sonarqube_integration):
             "message": "Code smell",
             "severity": "MAJOR",
             "type": "CODE_SMELL",
-            "rule": "squid:S1234"
-        }
+            "rule": "squid:S1234",
+        },
     ]
 
     standardized = sonarqube_integration._standardize_findings(raw_issues)
@@ -161,38 +157,16 @@ def test_prioritize_findings(sonarqube_integration):
 def test_deduplicate_with_ai_findings(sonarqube_integration):
     """Test deduplication between AI and SonarQube findings."""
     ai_findings = [
-        {
-            "path": "src/main.py",
-            "line": 42,
-            "category": "security",
-            "message": "SQL injection detected"
-        },
-        {
-            "path": "src/util.py",
-            "line": 100,
-            "category": "performance",
-            "message": "Inefficient loop"
-        }
+        {"path": "src/main.py", "line": 42, "category": "security", "message": "SQL injection detected"},
+        {"path": "src/util.py", "line": 100, "category": "performance", "message": "Inefficient loop"},
     ]
 
     sq_findings = [
-        {
-            "file": "src/main.py",
-            "line": 42,
-            "category": "security",
-            "message": "SQL injection vulnerability"
-        },
-        {
-            "file": "src/helper.py",
-            "line": 20,
-            "category": "quality",
-            "message": "Unused variable"
-        }
+        {"file": "src/main.py", "line": 42, "category": "security", "message": "SQL injection vulnerability"},
+        {"file": "src/helper.py", "line": 20, "category": "quality", "message": "Unused variable"},
     ]
 
-    deduplicated = sonarqube_integration.deduplicate_with_ai_findings(
-        ai_findings, sq_findings
-    )
+    deduplicated = sonarqube_integration.deduplicate_with_ai_findings(ai_findings, sq_findings)
 
     # Should have 2 AI findings + 1 unique SQ finding = 3 total
     assert len(deduplicated) == 3
@@ -214,7 +188,7 @@ async def test_get_project_metrics_success(sonarqube_integration, mock_http_clie
                 {"metric": "bugs", "value": "5"},
                 {"metric": "vulnerabilities", "value": "2"},
                 {"metric": "code_smells", "value": "10"},
-                {"metric": "coverage", "value": "75.5"}
+                {"metric": "coverage", "value": "75.5"},
             ]
         }
     }
@@ -235,9 +209,7 @@ async def test_get_project_metrics_no_token(mock_http_client):
     from integrations.sonarqube import SonarQubeIntegration
 
     integration = SonarQubeIntegration(
-        sonarqube_url="http://sonarqube.test:9000",
-        sonarqube_token="",
-        http_client=mock_http_client
+        sonarqube_url="http://sonarqube.test:9000", sonarqube_token="", http_client=mock_http_client
     )
 
     metrics = await integration.get_project_metrics("test:project")

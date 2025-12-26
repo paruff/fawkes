@@ -7,6 +7,7 @@
 **Duration**: 60 minutes
 **Difficulty**: Intermediate
 **Prerequisites**:
+
 - Module 9: GitOps with ArgoCD complete
 - Understanding of Kubernetes Deployments
 - Familiarity with service routing
@@ -27,6 +28,7 @@ By the end of this module, you will:
 7. ✅ Choose the right strategy for different scenarios
 
 **DORA Capabilities Addressed**:
+
 - ✓ CD2: Automate deployment process (advanced)
 - ✓ Work in Small Batches
 - ✓ Team Experimentation
@@ -38,6 +40,7 @@ By the end of this module, you will:
 ### The Problem: High-Risk Deployments
 
 **Traditional "Big Bang" deployment**:
+
 ```
 Old Version (100% traffic) → SWITCH → New Version (100% traffic)
                                 ↓
@@ -53,13 +56,13 @@ Old Version (100% traffic) → SWITCH → New Version (100% traffic)
 
 Different strategies for different needs:
 
-| Strategy | Risk | Downtime | Complexity | Best For |
-|----------|------|----------|------------|----------|
-| **Recreate** | High | Yes | Low | Development, stateful apps |
-| **Rolling Update** | Medium | No | Low | Most applications |
-| **Blue-Green** | Low | No | Medium | Production, quick rollback |
-| **Canary** | Very Low | No | High | Critical apps, gradual rollout |
-| **A/B Testing** | Very Low | No | High | Feature testing, experiments |
+| Strategy           | Risk     | Downtime | Complexity | Best For                       |
+| ------------------ | -------- | -------- | ---------- | ------------------------------ |
+| **Recreate**       | High     | Yes      | Low        | Development, stateful apps     |
+| **Rolling Update** | Medium   | No       | Low        | Most applications              |
+| **Blue-Green**     | Low      | No       | Medium     | Production, quick rollback     |
+| **Canary**         | Very Low | No       | High       | Critical apps, gradual rollout |
+| **A/B Testing**    | Very Low | No       | High       | Feature testing, experiments   |
 
 ---
 
@@ -68,6 +71,7 @@ Different strategies for different needs:
 ### What is Blue-Green?
 
 Run two identical production environments:
+
 - **Blue**: Current production version
 - **Green**: New version being deployed
 
@@ -106,12 +110,14 @@ Switch traffic from Blue → Green when ready.
 ```
 
 ### Benefits
+
 - ✅ Instant rollback (switch back to Blue)
 - ✅ Zero downtime
 - ✅ Test in production before switching
 - ✅ Simple conceptually
 
 ### Drawbacks
+
 - ❌ 2x infrastructure cost during deployment
 - ❌ Database migrations tricky
 - ❌ All-or-nothing switch
@@ -145,20 +151,20 @@ spec:
         version: blue
     spec:
       containers:
-      - name: myapp
-        image: myapp:v1.0
-        ports:
-        - containerPort: 8080
-        env:
-        - name: VERSION
-          value: "v1.0-blue"
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
+        - name: myapp
+          image: myapp:v1.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: VERSION
+              value: "v1.0-blue"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
 ---
 apiVersion: v1
 kind: Service
@@ -167,14 +173,15 @@ metadata:
 spec:
   selector:
     app: myapp
-    version: blue  # Points to blue initially
+    version: blue # Points to blue initially
   ports:
-  - port: 80
-    targetPort: 8080
+    - port: 80
+      targetPort: 8080
   type: LoadBalancer
 ```
 
 Deploy:
+
 ```bash
 kubectl apply -f blue-deployment.yaml
 
@@ -208,23 +215,24 @@ spec:
         version: green
     spec:
       containers:
-      - name: myapp
-        image: myapp:v2.0  # New version
-        ports:
-        - containerPort: 8080
-        env:
-        - name: VERSION
-          value: "v2.0-green"
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
+        - name: myapp
+          image: myapp:v2.0 # New version
+          ports:
+            - containerPort: 8080
+          env:
+            - name: VERSION
+              value: "v2.0-green"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
 ```
 
 Deploy Green (without switching traffic):
+
 ```bash
 kubectl apply -f green-deployment.yaml
 
@@ -246,12 +254,13 @@ spec:
     app: myapp
     version: green
   ports:
-  - port: 80
-    targetPort: 8080
+    - port: 80
+      targetPort: 8080
   type: LoadBalancer
 ```
 
 Test Green:
+
 ```bash
 kubectl apply -f green-test-service.yaml
 
@@ -344,12 +353,14 @@ Step 5:
 ```
 
 ### Benefits
+
 - ✅ Zero downtime
 - ✅ Gradual rollout (detect issues early)
 - ✅ No extra infrastructure needed
 - ✅ Built into Kubernetes
 
 ### Drawbacks
+
 - ❌ Both versions run simultaneously
 - ❌ Rollback slower than blue-green
 - ❌ May cause issues if versions incompatible
@@ -366,8 +377,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1        # Max 1 extra pod during update
-      maxUnavailable: 1  # Max 1 pod can be unavailable
+      maxSurge: 1 # Max 1 extra pod during update
+      maxUnavailable: 1 # Max 1 pod can be unavailable
   selector:
     matchLabels:
       app: myapp
@@ -377,22 +388,22 @@ spec:
         app: myapp
     spec:
       containers:
-      - name: myapp
-        image: myapp:v2.0
-        ports:
-        - containerPort: 8080
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 10
-          periodSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 3
+        - name: myapp
+          image: myapp:v2.0
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 3
 ```
 
 ### Controlling Rolling Update Speed
@@ -401,8 +412,8 @@ spec:
 strategy:
   type: RollingUpdate
   rollingUpdate:
-    maxSurge: 2        # Update 2 pods at a time
-    maxUnavailable: 0  # Keep all pods available
+    maxSurge: 2 # Update 2 pods at a time
+    maxUnavailable: 0 # Keep all pods available
 
 # This means:
 # - Always maintain at least 5 pods available
@@ -411,13 +422,13 @@ strategy:
 ```
 
 **Conservative rollout**:
+
 ```yaml
 strategy:
   type: RollingUpdate
   rollingUpdate:
     maxSurge: 1
     maxUnavailable: 0
-
 # This means:
 # - Update only 1 pod at a time
 # - Never reduce capacity
@@ -496,12 +507,14 @@ Phase 4: 100% canary
 ```
 
 ### Benefits
+
 - ✅ Lowest risk (expose to small % first)
 - ✅ Real user feedback before full rollout
 - ✅ Can monitor metrics for issues
 - ✅ Gradual, controlled rollout
 
 ### Drawbacks
+
 - ❌ Complex to implement correctly
 - ❌ Need sophisticated traffic routing
 - ❌ Requires monitoring and analysis
@@ -578,25 +591,25 @@ metadata:
   name: myapp
 spec:
   hosts:
-  - myapp
+    - myapp
   http:
-  - match:
-    - headers:
-        x-canary:
-          exact: "true"
-    route:
-    - destination:
-        host: myapp
-        subset: canary
-  - route:
-    - destination:
-        host: myapp
-        subset: baseline
-      weight: 95
-    - destination:
-        host: myapp
-        subset: canary
-      weight: 5
+    - match:
+        - headers:
+            x-canary:
+              exact: "true"
+      route:
+        - destination:
+            host: myapp
+            subset: canary
+    - route:
+        - destination:
+            host: myapp
+            subset: baseline
+          weight: 95
+        - destination:
+            host: myapp
+            subset: canary
+          weight: 5
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
@@ -605,12 +618,12 @@ metadata:
 spec:
   host: myapp
   subsets:
-  - name: baseline
-    labels:
-      version: v1.0
-  - name: canary
-    labels:
-      version: v2.0
+    - name: baseline
+      labels:
+        version: v1.0
+    - name: canary
+      labels:
+        version: v2.0
 ```
 
 ---
@@ -633,12 +646,14 @@ Phase 3: Start new
 ```
 
 ### When to Use
+
 - ✅ Development/test environments
 - ✅ Stateful apps that can't run mixed versions
 - ✅ Database migrations that break compatibility
 - ✅ When downtime is acceptable
 
 ### Drawbacks
+
 - ❌ Downtime (seconds to minutes)
 - ❌ All-or-nothing deployment
 
@@ -652,7 +667,7 @@ metadata:
 spec:
   replicas: 3
   strategy:
-    type: Recreate  # Simple!
+    type: Recreate # Simple!
   selector:
     matchLabels:
       app: myapp
@@ -662,8 +677,8 @@ spec:
         app: myapp
     spec:
       containers:
-      - name: myapp
-        image: myapp:v2.0
+        - name: myapp
+          image: myapp:v2.0
 ```
 
 ```bash
@@ -700,16 +715,16 @@ myapp-v2-pqr  1/1  Running      0  10s
 
 ### Decision Matrix
 
-| Scenario | Recommended Strategy | Reason |
-|----------|---------------------|---------|
-| **Development environment** | Recreate or Rolling | Fast, simple |
-| **Stateless web app** | Rolling Update or Blue-Green | Zero downtime, safe |
-| **Critical production app** | Canary | Gradual, low risk |
-| **Microservice** | Rolling Update | Standard, works well |
-| **Database migration** | Blue-Green or Recreate | Handle schema changes |
-| **Breaking API changes** | Blue-Green with versioning | Quick rollback |
-| **Feature testing** | Canary or A/B | Real user feedback |
-| **Overnight batch job** | Recreate | Downtime acceptable |
+| Scenario                    | Recommended Strategy         | Reason                |
+| --------------------------- | ---------------------------- | --------------------- |
+| **Development environment** | Recreate or Rolling          | Fast, simple          |
+| **Stateless web app**       | Rolling Update or Blue-Green | Zero downtime, safe   |
+| **Critical production app** | Canary                       | Gradual, low risk     |
+| **Microservice**            | Rolling Update               | Standard, works well  |
+| **Database migration**      | Blue-Green or Recreate       | Handle schema changes |
+| **Breaking API changes**    | Blue-Green with versioning   | Quick rollback        |
+| **Feature testing**         | Canary or A/B                | Real user feedback    |
+| **Overnight batch job**     | Recreate                     | Downtime acceptable   |
 
 ### Example Decision Tree
 
@@ -747,11 +762,13 @@ Can you accept downtime?
 **Objective**: Deploy same application using 3 different strategies
 
 **Scenario**: You have a web application with:
+
 - Frontend (stateless)
 - API (stateless)
 - Database (stateful)
 
 **Requirements**:
+
 1. Deploy frontend with **Blue-Green**
 2. Deploy API with **Canary** (10% → 50% → 100%)
 3. Deploy database with **Recreate** (maintenance window)
@@ -789,6 +806,7 @@ spec:
 ```
 
 **Validation Criteria**:
+
 - [ ] Frontend: Blue and Green deployed, traffic switchable
 - [ ] API: Canary at 10%, metrics monitored, promotable
 - [ ] Database: Recreate strategy, downtime measured
@@ -802,42 +820,49 @@ spec:
 ### Quiz Questions
 
 1. **What is the main benefit of Blue-Green deployment?**
+
    - [ ] Lowest cost
    - [x] Instant rollback
    - [ ] No infrastructure changes
    - [ ] Automatic testing
 
 2. **In a Rolling Update, what does maxSurge: 2 mean?**
+
    - [ ] Maximum 2 pods total
    - [ ] Update 2 pods per minute
    - [x] Can have 2 extra pods temporarily during update
    - [ ] Must have 2 pods available
 
 3. **When should you use Recreate strategy?**
+
    - [ ] Production critical apps
    - [ ] Never, it's deprecated
    - [x] When downtime is acceptable or for incompatible versions
    - [ ] Only for initial deployment
 
 4. **What's the primary advantage of Canary deployment?**
+
    - [ ] Fastest deployment
    - [ ] Simplest to implement
    - [x] Lowest risk with gradual rollout
    - [ ] Requires least infrastructure
 
 5. **In Blue-Green, when do you delete the Blue environment?**
+
    - [ ] Immediately after switching
    - [ ] Never
    - [x] After Green is validated in production
    - [ ] Before deploying Green
 
 6. **What's required for precise canary traffic control?**
+
    - [ ] Multiple data centers
    - [x] Advanced routing (like Istio or ingress controller)
    - [ ] Minimum 100 pods
    - [ ] Manual intervention
 
 7. **Which strategy has the highest infrastructure cost during deployment?**
+
    - [x] Blue-Green
    - [ ] Rolling Update
    - [ ] Canary
@@ -881,24 +906,28 @@ spec:
 ### Real-World Impact
 
 "After implementing deployment strategies:
+
 - **Deployment confidence**: 60% → 95%
 - **Production incidents from deploys**: 15 per month → 2 per month
 - **Rollback time**: 30 minutes → 30 seconds (Blue-Green)
 - **User impact from bad deploys**: 100% → 5% (Canary)
 
 We now deploy during business hours with confidence."
-- *Platform Team, Financial Services*
+
+- _Platform Team, Financial Services_
 
 ---
 
 ## 📚 Additional Resources
 
 ### Documentation
+
 - [Kubernetes Deployment Strategies](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
 - [Istio Traffic Management](https://istio.io/latest/docs/concepts/traffic-management/)
 - [Argo Rollouts](https://argoproj.github.io/argo-rollouts/)
 
 ### Tools
+
 - [Flagger](https://flagger.app/) - Progressive delivery operator
 - [Spinnaker](https://spinnaker.io/) - Multi-cloud CD platform
 - [Argo Rollouts](https://github.com/argoproj/argo-rollouts) - Advanced K8s deployments
@@ -910,17 +939,20 @@ We now deploy during business hours with confidence."
 ### Assessment Checklist
 
 - [ ] **Conceptual Understanding**
+
   - [ ] Explain each deployment strategy
   - [ ] Choose appropriate strategy for scenarios
   - [ ] Understand trade-offs
 
 - [ ] **Practical Skills**
+
   - [ ] Implement Blue-Green deployment
   - [ ] Configure Rolling Update parameters
   - [ ] Set up basic Canary deployment
   - [ ] Execute rollback procedures
 
 - [ ] **Hands-On Lab**
+
   - [ ] Deploy using multiple strategies
   - [ ] Switch traffic between versions
   - [ ] Perform successful rollback
@@ -931,6 +963,7 @@ We now deploy during business hours with confidence."
 ### Certification Credit
 
 Upon completion, you earn:
+
 - **5 points** toward Green Belt certification (50% complete)
 - **Badge**: "Deployment Strategist"
 - **Skill Unlocked**: Advanced Deployment Patterns
@@ -961,6 +994,6 @@ Module 12: Rollback & Incident    ░░░░░░░░░░░░  0%
 
 ---
 
-*Fawkes Dojo - Where Platform Engineers Are Forged*
-*Version 1.0 | Last Updated: October 2025*
-*License: MIT | https://github.com/paruff/fawkes*
+_Fawkes Dojo - Where Platform Engineers Are Forged_
+_Version 1.0 | Last Updated: October 2025_
+_License: MIT | https://github.com/paruff/fawkes_

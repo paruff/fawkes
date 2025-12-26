@@ -84,12 +84,14 @@ ai_copilot_suggestions_total{accepted="true"} / ai_copilot_suggestions_total
 ```
 
 **What it tracks:**
+
 - Total suggestions shown
 - Suggestions accepted
 - Suggestions rejected
 - Acceptance rate by language
 
 **Privacy:**
+
 - No code content
 - No file names
 - Aggregated by time window
@@ -103,11 +105,13 @@ sum(ai_copilot_lines_generated) by (language)
 ```
 
 **What it tracks:**
+
 - Number of lines accepted from AI
 - Breakdown by language
 - Daily/weekly trends
 
 **Privacy:**
+
 - Count only, no content
 - Aggregated statistics
 
@@ -120,17 +124,20 @@ sum(ai_copilot_time_saved_seconds) / 3600  # Convert to hours
 ```
 
 **What it tracks:**
+
 - Estimated time saved based on typing speed
 - Time saved by activity type
 - Cumulative time savings
 
 **Calculation:**
+
 ```
 Time Saved = (Lines Generated × Average Seconds per Line) - (AI Wait Time)
 Average Seconds per Line ≈ 10-15 seconds (industry standard)
 ```
 
 **Privacy:**
+
 - Statistical estimate only
 - No tracking of actual work time
 - Aggregated across team
@@ -144,6 +151,7 @@ sum(rate(ai_copilot_feature_usage[1h])) by (feature)
 ```
 
 **What it tracks:**
+
 - Code completion usage
 - AI chat usage
 - Code explanation requests
@@ -233,11 +241,13 @@ The AI Telemetry dashboard includes:
 #### 2. Acceptance Rate Chart
 
 Time-series graph showing:
+
 - Overall acceptance rate
 - Acceptance rate by language
 - 7-day moving average
 
 **Query:**
+
 ```promql
 sum(rate(ai_copilot_suggestions_total{accepted="true"}[1h]))
 /
@@ -247,11 +257,13 @@ sum(rate(ai_copilot_suggestions_total[1h]))
 #### 3. Lines of Code Generated
 
 Stacked area chart:
+
 - Daily lines generated
 - Breakdown by language
 - Cumulative total
 
 **Query:**
+
 ```promql
 sum(increase(ai_copilot_lines_generated[1d])) by (language)
 ```
@@ -263,6 +275,7 @@ sum(increase(ai_copilot_lines_generated[1d])) by (language)
 - ROI estimate
 
 **Query:**
+
 ```promql
 sum(ai_copilot_time_saved_seconds) / 3600
 ```
@@ -274,6 +287,7 @@ sum(ai_copilot_time_saved_seconds) / 3600
 - Feature adoption trends
 
 **Query:**
+
 ```promql
 sum(rate(ai_copilot_feature_usage[1h])) by (feature)
 ```
@@ -302,14 +316,14 @@ Add to Prometheus scrape config:
 
 ```yaml
 scrape_configs:
-  - job_name: 'ai-telemetry'
+  - job_name: "ai-telemetry"
     honor_labels: true
     honor_timestamps: true
     scrape_interval: 30s
     scrape_timeout: 10s
     static_configs:
       - targets:
-          - 'pushgateway.fawkes.svc:9091'
+          - "pushgateway.fawkes.svc:9091"
 ```
 
 ### Pushgateway Configuration
@@ -333,17 +347,17 @@ spec:
         app: pushgateway
     spec:
       containers:
-      - name: pushgateway
-        image: prom/pushgateway:v1.6.0
-        ports:
-        - containerPort: 9091
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "50m"
-          limits:
-            memory: "128Mi"
-            cpu: "100m"
+        - name: pushgateway
+          image: prom/pushgateway:v1.6.0
+          ports:
+            - containerPort: 9091
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
 ```
 
 ## Usage Examples
@@ -433,7 +447,7 @@ groups:
 ```yaml
 # Prometheus retention configuration
 retention:
-  time: 90d  # Keep metrics for 90 days
+  time: 90d # Keep metrics for 90 days
   size: 10GB # Maximum storage size
 ```
 
@@ -551,7 +565,7 @@ curl http://pushgateway.fawkes.svc:9091/metrics | grep ai_copilot
 - [GitHub Copilot Setup Guide](../../docs/ai/copilot-setup.md)
 - [Prometheus Configuration](../prometheus/README.md)
 - [Grafana Dashboards](../grafana/README.md)
-- [Privacy Policy](#) *(TODO: Link to org privacy policy)*
+- [Privacy Policy](#) _(TODO: Link to org privacy policy)_
 
 ## Support
 

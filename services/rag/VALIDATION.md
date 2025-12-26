@@ -13,6 +13,7 @@
 **Implementation**: `services/rag/indexers/github.py`
 
 **Features:**
+
 - GitHub API integration for fetching repositories
 - Support for organization-wide indexing
 - Support for specific repository indexing
@@ -23,6 +24,7 @@
 - Incremental updates via MD5 hash comparison
 
 **Validation:**
+
 ```bash
 # Test help
 python -m indexers.github --help
@@ -41,6 +43,7 @@ python -m indexers.github --github-token $GITHUB_TOKEN --repo paruff/fawkes
 **Implementation**: `services/rag/indexers/techdocs.py`
 
 **Features:**
+
 - Backstage API integration
 - Catalog entity discovery
 - TechDocs metadata fetching
@@ -51,6 +54,7 @@ python -m indexers.github --github-token $GITHUB_TOKEN --repo paruff/fawkes
 - Incremental updates via content hash
 
 **Validation:**
+
 ```bash
 # Test help
 python -m indexers.techdocs --help
@@ -77,6 +81,7 @@ def categorize_file(filepath: Path) -> str:
 ```
 
 **Validation:**
+
 ```bash
 # Test indexing with dry-run
 cd services/rag
@@ -100,6 +105,7 @@ FILE_EXTENSIONS = {
 ```
 
 **Validation:**
+
 ```bash
 # Test indexing
 python scripts/index-docs.py --dry-run
@@ -130,17 +136,20 @@ FILE_EXTENSIONS = {
 ### ✅ AC6: Search working across all sources
 
 **Implementation**:
+
 - Stats API: `GET /api/v1/stats`
 - Query API: `POST /api/v1/query`
 - Dashboard: `GET /dashboard`
 
 **Features:**
+
 - Unified search across all indexed sources
 - Category filtering (doc, adr, platform, infrastructure, code, github, techdocs)
 - Relevance scoring with threshold (default: 0.7)
 - Fast response times (<500ms)
 
 **Validation:**
+
 ```bash
 # Check stats
 curl http://rag-service.local/api/v1/stats
@@ -163,6 +172,7 @@ open http://rag-service.local/dashboard
 **File**: `services/rag/indexers/github.py`
 
 **Implementation**:
+
 - GitHub API client with retry logic
 - Rate limiter with automatic waiting
 - Repository and file fetching
@@ -182,6 +192,7 @@ open http://rag-service.local/dashboard
 **File**: `services/rag/indexers/techdocs.py`
 
 **Implementation**:
+
 - Backstage API client
 - Catalog entity discovery
 - TechDocs metadata fetching
@@ -200,6 +211,7 @@ open http://rag-service.local/dashboard
 **File**: `platform/apps/rag-service/dashboard.html`
 
 **Implementation**:
+
 - Responsive HTML/CSS design
 - Real-time stats display:
   - Total documents
@@ -212,6 +224,7 @@ open http://rag-service.local/dashboard
 - Fetches data from `/api/v1/stats` endpoint
 
 **Features**:
+
 - Modern gradient design
 - Hover animations
 - Loading states
@@ -227,6 +240,7 @@ open http://rag-service.local/dashboard
 ### GET /api/v1/stats
 
 **Response:**
+
 ```json
 {
   "total_documents": 125,
@@ -263,6 +277,7 @@ Total: 44 tests, all passing ✅
 ```
 
 **Run tests:**
+
 ```bash
 cd services/rag
 pytest tests/unit/ -v
@@ -271,13 +286,15 @@ pytest tests/unit/ -v
 ## Dependencies Added
 
 Updated `services/rag/requirements.txt`:
+
 ```
 requests==2.31.0  # For GitHub and Backstage API calls
 ```
 
 ## Documentation
 
-### Created:
+### Created
+
 1. `services/rag/indexers/README.md` - Comprehensive indexer documentation
    - Usage examples
    - Configuration options
@@ -285,7 +302,8 @@ requests==2.31.0  # For GitHub and Backstage API calls
    - Troubleshooting guide
    - Best practices
 
-### Updated:
+### Updated
+
 1. `services/rag/app/main.py` - Added stats endpoint and dashboard
 2. `services/rag/requirements.txt` - Added requests dependency
 

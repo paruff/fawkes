@@ -11,14 +11,7 @@ import httpx
 
 from .metrics import MetricsCollector
 from .data_aggregator import DataAggregator
-from .models import (
-    UsageTrends,
-    FeatureAdoption,
-    ExperimentResults,
-    UserSegments,
-    FunnelData,
-    DashboardData
-)
+from .models import UsageTrends, FeatureAdoption, ExperimentResults, UserSegments, FunnelData, DashboardData
 
 
 # Lifespan context manager for startup/shutdown
@@ -47,14 +40,13 @@ app = FastAPI(
     title="Fawkes Analytics Dashboard Service",
     description="Comprehensive analytics dashboards with usage trends, feature adoption, experiment results, and user segments",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Add CORS middleware
-ALLOWED_ORIGINS = os.getenv(
-    "CORS_ALLOWED_ORIGINS",
-    "https://backstage.fawkes.idp,https://grafana.fawkes.idp"
-).split(",")
+ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "https://backstage.fawkes.idp,https://grafana.fawkes.idp").split(
+    ","
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -81,10 +73,7 @@ async def health_check():
 
 
 @app.get("/api/v1/dashboard", response_model=DashboardData)
-async def get_dashboard_data(
-    time_range: str = "7d",
-    aggregator: DataAggregator = Depends(get_data_aggregator)
-):
+async def get_dashboard_data(time_range: str = "7d", aggregator: DataAggregator = Depends(get_data_aggregator)):
     """
     Get complete dashboard data including all analytics
 
@@ -98,10 +87,7 @@ async def get_dashboard_data(
 
 
 @app.get("/api/v1/usage-trends", response_model=UsageTrends)
-async def get_usage_trends(
-    time_range: str = "7d",
-    aggregator: DataAggregator = Depends(get_data_aggregator)
-):
+async def get_usage_trends(time_range: str = "7d", aggregator: DataAggregator = Depends(get_data_aggregator)):
     """Get usage trends over time"""
     try:
         data = await aggregator.get_usage_trends(time_range)
@@ -111,10 +97,7 @@ async def get_usage_trends(
 
 
 @app.get("/api/v1/feature-adoption", response_model=FeatureAdoption)
-async def get_feature_adoption(
-    time_range: str = "30d",
-    aggregator: DataAggregator = Depends(get_data_aggregator)
-):
+async def get_feature_adoption(time_range: str = "30d", aggregator: DataAggregator = Depends(get_data_aggregator)):
     """Get feature adoption metrics"""
     try:
         data = await aggregator.get_feature_adoption(time_range)
@@ -125,8 +108,7 @@ async def get_feature_adoption(
 
 @app.get("/api/v1/experiment-results", response_model=List[ExperimentResults])
 async def get_experiment_results(
-    status: Optional[str] = None,
-    aggregator: DataAggregator = Depends(get_data_aggregator)
+    status: Optional[str] = None, aggregator: DataAggregator = Depends(get_data_aggregator)
 ):
     """Get experiment results with statistical analysis"""
     try:
@@ -137,10 +119,7 @@ async def get_experiment_results(
 
 
 @app.get("/api/v1/user-segments", response_model=UserSegments)
-async def get_user_segments(
-    time_range: str = "30d",
-    aggregator: DataAggregator = Depends(get_data_aggregator)
-):
+async def get_user_segments(time_range: str = "30d", aggregator: DataAggregator = Depends(get_data_aggregator)):
     """Get user segment analysis"""
     try:
         data = await aggregator.get_user_segments(time_range)
@@ -151,9 +130,7 @@ async def get_user_segments(
 
 @app.get("/api/v1/funnel/{funnel_name}", response_model=FunnelData)
 async def get_funnel_data(
-    funnel_name: str,
-    time_range: str = "30d",
-    aggregator: DataAggregator = Depends(get_data_aggregator)
+    funnel_name: str, time_range: str = "30d", aggregator: DataAggregator = Depends(get_data_aggregator)
 ):
     """
     Get funnel visualization data
@@ -168,9 +145,7 @@ async def get_funnel_data(
 
 
 @app.post("/api/v1/metrics/refresh")
-async def refresh_metrics(
-    aggregator: DataAggregator = Depends(get_data_aggregator)
-):
+async def refresh_metrics(aggregator: DataAggregator = Depends(get_data_aggregator)):
     """Manually trigger metrics refresh"""
     try:
         await aggregator.refresh_all_metrics()
@@ -180,11 +155,7 @@ async def refresh_metrics(
 
 
 @app.get("/api/v1/export/{format}")
-async def export_data(
-    format: str,
-    time_range: str = "30d",
-    aggregator: DataAggregator = Depends(get_data_aggregator)
-):
+async def export_data(format: str, time_range: str = "30d", aggregator: DataAggregator = Depends(get_data_aggregator)):
     """
     Export dashboard data in various formats
 

@@ -9,6 +9,7 @@ from typing import Optional, Dict, Any
 
 class SatisfactionMetrics(BaseModel):
     """Satisfaction dimension metrics"""
+
     nps_score: Optional[float] = Field(None, ge=-100, le=100, description="Net Promoter Score")
     satisfaction_rating: Optional[float] = Field(None, ge=1, le=5, description="Platform satisfaction rating")
     burnout_percentage: Optional[float] = Field(None, ge=0, le=100, description="Percentage reporting burnout")
@@ -20,6 +21,7 @@ class SatisfactionMetrics(BaseModel):
 
 class PerformanceMetrics(BaseModel):
     """Performance dimension metrics"""
+
     deployment_frequency: Optional[float] = Field(None, description="Deployments per day")
     lead_time_hours: Optional[float] = Field(None, description="Average lead time in hours")
     change_failure_rate: Optional[float] = Field(None, ge=0, le=100, description="Change failure rate percentage")
@@ -33,6 +35,7 @@ class PerformanceMetrics(BaseModel):
 
 class ActivityMetrics(BaseModel):
     """Activity dimension metrics"""
+
     commits_count: int = Field(0, description="Number of commits")
     pull_requests_count: int = Field(0, description="Number of pull requests")
     code_reviews_count: int = Field(0, description="Number of code reviews")
@@ -46,6 +49,7 @@ class ActivityMetrics(BaseModel):
 
 class CommunicationMetrics(BaseModel):
     """Communication dimension metrics"""
+
     avg_review_time_hours: Optional[float] = Field(None, description="Average review time in hours")
     pr_comments_avg: Optional[float] = Field(None, description="Average PR comments")
     cross_team_prs: int = Field(0, description="Cross-team pull requests")
@@ -58,8 +62,11 @@ class CommunicationMetrics(BaseModel):
 
 class EfficiencyMetrics(BaseModel):
     """Efficiency dimension metrics"""
+
     flow_state_days: Optional[float] = Field(None, description="Days per week in flow state")
-    valuable_work_percentage: Optional[float] = Field(None, ge=0, le=100, description="Percentage time on valuable work")
+    valuable_work_percentage: Optional[float] = Field(
+        None, ge=0, le=100, description="Percentage time on valuable work"
+    )
     friction_incidents: int = Field(0, description="Number of friction incidents")
     context_switches: Optional[float] = Field(None, description="Context switches per day")
     cognitive_load_avg: Optional[float] = Field(None, ge=1, le=5, description="Average cognitive load")
@@ -70,6 +77,7 @@ class EfficiencyMetrics(BaseModel):
 
 class SpaceMetricsResponse(BaseModel):
     """Complete SPACE metrics response"""
+
     satisfaction: SatisfactionMetrics
     performance: PerformanceMetrics
     activity: ActivityMetrics
@@ -82,6 +90,7 @@ class SpaceMetricsResponse(BaseModel):
 
 class FrictionLogRequest(BaseModel):
     """Request to log friction incident"""
+
     title: str = Field(..., max_length=200, description="Brief title of friction incident")
     description: str = Field(..., description="Detailed description")
     severity: str = Field(..., description="Severity: low, medium, high, critical")
@@ -93,13 +102,14 @@ class FrictionLogRequest(BaseModel):
                 "title": "Slow CI builds",
                 "description": "Jenkins builds taking over 30 minutes",
                 "severity": "high",
-                "category": "ci"
+                "category": "ci",
             }
         }
 
 
 class PulseSurveyRequest(BaseModel):
     """Weekly pulse survey submission"""
+
     valuable_work_percentage: float = Field(..., ge=0, le=100, description="Percentage of time on valuable work")
     flow_state_days: float = Field(..., ge=0, le=7, description="Days per week achieving flow state")
     cognitive_load: float = Field(..., ge=1, le=5, description="Cognitive load rating 1-5")
@@ -111,6 +121,6 @@ class PulseSurveyRequest(BaseModel):
                 "valuable_work_percentage": 65.0,
                 "flow_state_days": 3.0,
                 "cognitive_load": 3.0,
-                "friction_experienced": False
+                "friction_experienced": False,
             }
         }

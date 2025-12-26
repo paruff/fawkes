@@ -1,6 +1,6 @@
 name: Pre-commit Validation
 
-'on':
+"on":
   pull_request:
     branches: [main, develop]
   push:
@@ -30,9 +30,9 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
-          cache: 'pip'
-          cache-dependency-path: 'requirements*.txt'
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: "requirements*.txt"
 
       - name: Install Python dependencies
         run: |
@@ -69,12 +69,12 @@ jobs:
       - name: Setup kubectl
         uses: azure/setup-kubectl@v4
         with:
-          version: 'v1.28.0'
+          version: "v1.28.0"
 
       - name: Setup Helm
         uses: azure/setup-helm@v4
         with:
-          version: 'v3.13.0'
+          version: "v3.13.0"
 
       - name: Install kubeval
         run: |
@@ -267,9 +267,9 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
-          cache: 'pip'
-          cache-dependency-path: 'requirements*.txt'
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: "requirements*.txt"
 
       - name: Install yq
         run: |

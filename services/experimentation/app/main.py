@@ -15,7 +15,7 @@ from .models import (
     ExperimentUpdate,
     VariantAssignment,
     ExperimentStats,
-    ExperimentList
+    ExperimentList,
 )
 from .experiment_manager import ExperimentManager
 from .metrics import MetricsCollector
@@ -43,14 +43,13 @@ app = FastAPI(
     title="Fawkes Experimentation Service",
     description="A/B Testing Framework with statistical analysis and variant assignment",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Add CORS middleware
 # Get allowed origins from environment or use restrictive default
 ALLOWED_ORIGINS = os.getenv(
-    "CORS_ALLOWED_ORIGINS",
-    "https://backstage.fawkes.idp,https://experimentation.fawkes.idp"
+    "CORS_ALLOWED_ORIGINS", "https://backstage.fawkes.idp,https://experimentation.fawkes.idp"
 ).split(",")
 
 app.add_middleware(
@@ -93,7 +92,7 @@ async def health_check():
 async def create_experiment(
     experiment: ExperimentCreate,
     manager: ExperimentManager = Depends(get_experiment_manager),
-    _: bool = Depends(verify_admin_token)
+    _: bool = Depends(verify_admin_token),
 ):
     """Create a new A/B test experiment"""
     return manager.create_experiment(experiment)
@@ -101,20 +100,14 @@ async def create_experiment(
 
 @app.get("/api/v1/experiments", response_model=ExperimentList)
 async def list_experiments(
-    skip: int = 0,
-    limit: int = 100,
-    status: str = None,
-    manager: ExperimentManager = Depends(get_experiment_manager)
+    skip: int = 0, limit: int = 100, status: str = None, manager: ExperimentManager = Depends(get_experiment_manager)
 ):
     """List all experiments with optional filtering"""
     return manager.list_experiments(skip=skip, limit=limit, status=status)
 
 
 @app.get("/api/v1/experiments/{experiment_id}", response_model=ExperimentResponse)
-async def get_experiment(
-    experiment_id: str,
-    manager: ExperimentManager = Depends(get_experiment_manager)
-):
+async def get_experiment(experiment_id: str, manager: ExperimentManager = Depends(get_experiment_manager)):
     """Get experiment details by ID"""
     experiment = manager.get_experiment(experiment_id)
     if not experiment:
@@ -127,7 +120,7 @@ async def update_experiment(
     experiment_id: str,
     update: ExperimentUpdate,
     manager: ExperimentManager = Depends(get_experiment_manager),
-    _: bool = Depends(verify_admin_token)
+    _: bool = Depends(verify_admin_token),
 ):
     """Update experiment configuration"""
     experiment = manager.update_experiment(experiment_id, update)
@@ -140,7 +133,7 @@ async def update_experiment(
 async def delete_experiment(
     experiment_id: str,
     manager: ExperimentManager = Depends(get_experiment_manager),
-    _: bool = Depends(verify_admin_token)
+    _: bool = Depends(verify_admin_token),
 ):
     """Delete an experiment"""
     if not manager.delete_experiment(experiment_id):
@@ -150,10 +143,7 @@ async def delete_experiment(
 
 @app.post("/api/v1/experiments/{experiment_id}/assign", response_model=VariantAssignment)
 async def assign_variant(
-    experiment_id: str,
-    user_id: str,
-    context: dict = None,
-    manager: ExperimentManager = Depends(get_experiment_manager)
+    experiment_id: str, user_id: str, context: dict = None, manager: ExperimentManager = Depends(get_experiment_manager)
 ):
     """Assign a variant to a user for an experiment"""
     assignment = manager.assign_variant(experiment_id, user_id, context or {})
@@ -168,7 +158,7 @@ async def track_event(
     user_id: str,
     event_name: str,
     value: float = 1.0,
-    manager: ExperimentManager = Depends(get_experiment_manager)
+    manager: ExperimentManager = Depends(get_experiment_manager),
 ):
     """Track an event for experiment analytics"""
     success = manager.track_event(experiment_id, user_id, event_name, value)
@@ -178,10 +168,7 @@ async def track_event(
 
 
 @app.get("/api/v1/experiments/{experiment_id}/stats", response_model=ExperimentStats)
-async def get_experiment_stats(
-    experiment_id: str,
-    manager: ExperimentManager = Depends(get_experiment_manager)
-):
+async def get_experiment_stats(experiment_id: str, manager: ExperimentManager = Depends(get_experiment_manager)):
     """Get statistical analysis for an experiment"""
     stats = manager.get_experiment_stats(experiment_id)
     if not stats:
@@ -193,7 +180,7 @@ async def get_experiment_stats(
 async def start_experiment(
     experiment_id: str,
     manager: ExperimentManager = Depends(get_experiment_manager),
-    _: bool = Depends(verify_admin_token)
+    _: bool = Depends(verify_admin_token),
 ):
     """Start an experiment"""
     experiment = manager.start_experiment(experiment_id)
@@ -206,7 +193,7 @@ async def start_experiment(
 async def stop_experiment(
     experiment_id: str,
     manager: ExperimentManager = Depends(get_experiment_manager),
-    _: bool = Depends(verify_admin_token)
+    _: bool = Depends(verify_admin_token),
 ):
     """Stop an experiment"""
     experiment = manager.stop_experiment(experiment_id)
@@ -217,4 +204,5 @@ async def stop_experiment(
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -5,6 +5,7 @@ ${{ values.description }}
 ## Overview
 
 This is a Node.js Express microservice following the Fawkes Golden Path. It includes:
+
 - ✅ REST API with health, ready, and info endpoints
 - ✅ Prometheus metrics
 - ✅ Docker containerization

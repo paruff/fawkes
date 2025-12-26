@@ -248,18 +248,18 @@ Training Version: 1.0
 
 **For Training Administrators Only**
 
-| Question | Correct Answer(s) | Topic |
-|----------|-------------------|-------|
-| Q1 | A, C | Approved Tools |
-| Q2 | B, C, D | Data Classification |
-| Q3 | B, C, D | Code Review |
-| Q4 | C, D | Security Incident |
-| Q5 | B, C, D | Intellectual Property |
-| Q6 | A, C | Acceptable Use |
-| Q7 | B, D | Data Privacy |
-| Q8 | B | Documentation |
-| Q9 | B, C, D | License Compliance |
-| Q10 | C | Training Requirements |
+| Question | Correct Answer(s) | Topic                 |
+| -------- | ----------------- | --------------------- |
+| Q1       | A, C              | Approved Tools        |
+| Q2       | B, C, D           | Data Classification   |
+| Q3       | B, C, D           | Code Review           |
+| Q4       | C, D              | Security Incident     |
+| Q5       | B, C, D           | Intellectual Property |
+| Q6       | A, C              | Acceptable Use        |
+| Q7       | B, D              | Data Privacy          |
+| Q8       | B                 | Documentation         |
+| Q9       | B, C, D           | License Compliance    |
+| Q10      | C                 | Training Requirements |
 
 ---
 
@@ -274,6 +274,7 @@ Training Version: 1.0
 ### Quiz Feedback
 
 Help us improve this quiz:
+
 - Submit feedback: [Quiz Feedback Form](https://backstage.fawkes.idp/ai-quiz-feedback)
 - Report errors: platform-team@fawkes.idp
 - Suggest questions: #ai-policy-discussion (Slack)
@@ -285,16 +286,19 @@ Help us improve this quiz:
 Once certified, you should:
 
 1. **Set up your AI tools**
+
    - [GitHub Copilot Setup Guide](./copilot-setup.md)
    - [Access Internal RAG System](./vector-database.md)
    - [Browse AI Tools Catalog](https://backstage.fawkes.idp/catalog?filters[kind]=tool&filters[spec.type]=ai)
 
 2. **Join the AI Community**
+
    - Slack: #ai-tools
    - Monthly AI Tips newsletter
    - Quarterly AI Tool workshops
 
 3. **Stay Current**
+
    - Watch for policy updates
    - Participate in quarterly refreshers
    - Share your AI tips and learnings

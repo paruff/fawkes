@@ -18,17 +18,11 @@ from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_
 from starlette.responses import Response
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Configuration
-FEEDBACK_API_URL = os.getenv(
-    "FEEDBACK_API_URL",
-    "http://feedback-service.fawkes.svc.cluster.local:8000"
-)
+FEEDBACK_API_URL = os.getenv("FEEDBACK_API_URL", "http://feedback-service.fawkes.svc.cluster.local:8000")
 FEEDBACK_API_TOKEN = os.getenv("FEEDBACK_API_TOKEN", "")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 MATTERMOST_URL = os.getenv("MATTERMOST_URL", "http://mattermost.fawkes.svc.cluster.local:8065")
@@ -38,7 +32,7 @@ EMAIL_DOMAIN = os.getenv("EMAIL_DOMAIN", "fawkes.local")
 app = FastAPI(
     title="Fawkes Mattermost Feedback Bot",
     description="Conversational feedback bot with NLP and sentiment analysis",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # Initialize sentiment analyzer
@@ -46,20 +40,12 @@ sentiment_analyzer = SentimentIntensityAnalyzer()
 
 # Prometheus metrics
 feedback_logs_total = Counter(
-    'feedback_bot_logs_total',
-    'Total feedback submissions via bot',
-    ['platform', 'status', 'sentiment', 'category']
+    "feedback_bot_logs_total", "Total feedback submissions via bot", ["platform", "status", "sentiment", "category"]
 )
 slash_commands_total = Counter(
-    'feedback_bot_slash_commands_total',
-    'Total slash commands received',
-    ['command', 'platform']
+    "feedback_bot_slash_commands_total", "Total slash commands received", ["command", "platform"]
 )
-request_duration = Histogram(
-    'feedback_bot_request_duration_seconds',
-    'Request processing duration',
-    ['endpoint']
-)
+request_duration = Histogram("feedback_bot_request_duration_seconds", "Request processing duration", ["endpoint"])
 
 
 # Category keywords for auto-categorization
@@ -73,7 +59,7 @@ CATEGORY_KEYWORDS = {
     "Feature Request": ["want", "wish", "need", "could", "should", "feature", "add", "new"],
     "Bug": ["bug", "error", "issue", "problem", "broken", "crash", "fail", "wrong"],
     "Observability": ["metrics", "logs", "traces", "monitoring", "grafana", "prometheus", "alert"],
-    "Developer Experience": ["dx", "experience", "workflow", "productivity", "friction", "ease"]
+    "Developer Experience": ["dx", "experience", "workflow", "productivity", "friction", "ease"],
 }
 
 
@@ -84,7 +70,7 @@ def analyze_sentiment(text: str) -> Dict[str, Any]:
     Returns dict with sentiment label and scores.
     """
     scores = sentiment_analyzer.polarity_scores(text)
-    compound = scores['compound']
+    compound = scores["compound"]
 
     # Classify sentiment
     if compound >= 0.05:
@@ -97,9 +83,9 @@ def analyze_sentiment(text: str) -> Dict[str, Any]:
     return {
         "sentiment": sentiment,
         "compound": compound,
-        "pos": scores['pos'],
-        "neu": scores['neu'],
-        "neg": scores['neg']
+        "pos": scores["pos"],
+        "neu": scores["neu"],
+        "neg": scores["neg"],
     }
 
 
@@ -136,9 +122,9 @@ def extract_rating(text: str) -> Optional[int]:
     """
     # Pattern: "X stars", "X/5", "rate it X", "X out of 5"
     patterns = [
-        r'(\d+)[/]5',
-        r'(\d+)\s+(?:stars?|out of 5)',
-        r'(?:rate|rating|score).*?(\d+)',
+        r"(\d+)[/]5",
+        r"(\d+)\s+(?:stars?|out of 5)",
+        r"(?:rate|rating|score).*?(\d+)",
     ]
 
     for pattern in patterns:
@@ -150,7 +136,7 @@ def extract_rating(text: str) -> Optional[int]:
 
     # Sentiment-based rating if no explicit rating
     sentiment_result = analyze_sentiment(text)
-    compound = sentiment_result['compound']
+    compound = sentiment_result["compound"]
 
     if compound >= 0.6:
         return 5
@@ -193,11 +179,7 @@ def parse_feedback(text: str, user_name: str, user_email: str) -> Dict[str, Any]
         "page_url": None,  # Not available from Mattermost
         "sentiment": sentiment_result["sentiment"],
         "sentiment_compound": sentiment_result["compound"],
-        "metadata": {
-            "source": "mattermost",
-            "user_name": user_name,
-            "processed_at": datetime.utcnow().isoformat()
-        }
+        "metadata": {"source": "mattermost", "user_name": user_name, "processed_at": datetime.utcnow().isoformat()},
     }
 
 
@@ -209,11 +191,7 @@ async def submit_feedback_to_api(feedback_data: Dict[str, Any]) -> Dict[str, Any
     """
     async with httpx.AsyncClient() as client:
         try:
-            response = await client.post(
-                f"{FEEDBACK_API_URL}/api/v1/feedback",
-                json=feedback_data,
-                timeout=10.0
-            )
+            response = await client.post(f"{FEEDBACK_API_URL}/api/v1/feedback", json=feedback_data, timeout=10.0)
             response.raise_for_status()
             return response.json()
         except httpx.HTTPError as e:
@@ -239,7 +217,7 @@ async def mattermost_slash_feedback(
     user_name: str = Form(...),
     user_id: str = Form(...),
     channel_id: str = Form(...),
-    text: str = Form(...)
+    text: str = Form(...),
 ):
     """
     Handle /feedback slash command from Mattermost.
@@ -252,15 +230,12 @@ async def mattermost_slash_feedback(
         /feedback Builds are too slow, taking 20+ minutes
         /feedback Rate it 5 stars, great documentation!
     """
-    slash_commands_total.labels(command='feedback', platform='mattermost').inc()
+    slash_commands_total.labels(command="feedback", platform="mattermost").inc()
 
     # Validate token if configured
     if BOT_TOKEN and token != BOT_TOKEN:
         logger.warning(f"Invalid token from user {user_name}")
-        return {
-            "response_type": "ephemeral",
-            "text": "⚠️ Invalid token"
-        }
+        return {"response_type": "ephemeral", "text": "⚠️ Invalid token"}
 
     # Show help if no text provided
     if not text or text.strip() == "":
@@ -287,7 +262,7 @@ async def mattermost_slash_feedback(
 ✓ Extract ratings from your comments
 
 Just tell me what you think, and I'll handle the rest! 🎯
-"""
+""",
         }
 
     try:
@@ -302,19 +277,15 @@ Just tell me what you think, and I'll handle the rest! 🎯
 
         # Track metrics
         feedback_logs_total.labels(
-            platform='mattermost',
-            status='success',
-            sentiment=feedback_data['sentiment'],
-            category=feedback_data['category']
+            platform="mattermost",
+            status="success",
+            sentiment=feedback_data["sentiment"],
+            category=feedback_data["category"],
         ).inc()
 
         # Format sentiment emoji
-        sentiment_emoji = {
-            "positive": "😊",
-            "neutral": "😐",
-            "negative": "😞"
-        }
-        emoji = sentiment_emoji.get(feedback_data['sentiment'], "🤔")
+        sentiment_emoji = {"positive": "😊", "neutral": "😐", "negative": "😞"}
+        emoji = sentiment_emoji.get(feedback_data["sentiment"], "🤔")
 
         # Return success response with analysis
         return {
@@ -333,21 +304,16 @@ Just tell me what you think, and I'll handle the rest! 🎯
 Thank you for helping us improve Fawkes! 🎯
 
 _Your feedback will be reviewed by the team._
-"""
+""",
         }
 
     except Exception as e:
         logger.error(f"Error processing feedback: {e}")
-        feedback_logs_total.labels(
-            platform='mattermost',
-            status='error',
-            sentiment='unknown',
-            category='unknown'
-        ).inc()
+        feedback_logs_total.labels(platform="mattermost", status="error", sentiment="unknown", category="unknown").inc()
 
         return {
             "response_type": "ephemeral",
-            "text": f"❌ **Error submitting feedback**\n\n{str(e)}\n\nPlease try again later."
+            "text": f"❌ **Error submitting feedback**\n\n{str(e)}\n\nPlease try again later.",
         }
 
 
@@ -373,35 +339,28 @@ async def api_submit_feedback(request: Request):
 
         # Track metrics
         feedback_logs_total.labels(
-            platform='api',
-            status='success',
-            sentiment=feedback_data['sentiment'],
-            category=feedback_data['category']
+            platform="api", status="success", sentiment=feedback_data["sentiment"], category=feedback_data["category"]
         ).inc()
 
         return {
             "status": "success",
-            "feedback_id": result.get('id'),
+            "feedback_id": result.get("id"),
             "analysis": {
-                "sentiment": feedback_data['sentiment'],
-                "category": feedback_data['category'],
-                "rating": feedback_data['rating']
-            }
+                "sentiment": feedback_data["sentiment"],
+                "category": feedback_data["category"],
+                "rating": feedback_data["rating"],
+            },
         }
 
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Error in API endpoint: {e}")
-        feedback_logs_total.labels(
-            platform='api',
-            status='error',
-            sentiment='unknown',
-            category='unknown'
-        ).inc()
+        feedback_logs_total.labels(platform="api", status="error", sentiment="unknown", category="unknown").inc()
         raise HTTPException(status_code=500, detail=str(e))
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

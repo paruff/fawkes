@@ -34,7 +34,7 @@ By the end of this module, you will be able to:
 
 ### Why Multi-Cloud?
 
-#### ✅ Valid Reasons:
+#### ✅ Valid Reasons
 
 1. **Avoid vendor lock-in**: Reduce dependency on single provider
 2. **Disaster recovery**: Survive cloud provider outage
@@ -43,7 +43,7 @@ By the end of this module, you will be able to:
 5. **Acquisitions**: Inherited cloud environments from acquired companies
 6. **Best-of-breed services**: Leverage unique capabilities (e.g., BigQuery on GCP, SageMaker on AWS)
 
-#### ❌ Poor Reasons:
+#### ❌ Poor Reasons
 
 1. **"Just in case" vendor lock-in fear**: Adds massive complexity without clear benefit
 2. **Negotiation leverage**: Threat of moving is often sufficient
@@ -101,6 +101,7 @@ Complexity & Cost ────────────────────�
 ### The Cost of Multi-Cloud
 
 **Operational overhead**:
+
 - Multiple IAM systems to manage
 - Different networking models (VPC, VNet, VPC)
 - Divergent monitoring and logging tools
@@ -108,11 +109,13 @@ Complexity & Cost ────────────────────�
 - More complex incident response
 
 **Financial costs**:
+
 - Data egress fees (expensive to move data between clouds)
 - Lost volume discounts (spend split across providers)
 - Duplication of resources (CI/CD, monitoring, networks)
 
 **Engineering complexity**:
+
 - Lowest common denominator (can't use best-of-breed services)
 - Abstraction layers introduce bugs and performance overhead
 - Testing must cover all cloud environments
@@ -147,11 +150,13 @@ Complexity & Cost ────────────────────�
 ```
 
 **Pros**:
+
 - Each team optimizes for their cloud
 - Limited complexity (no cross-cloud communication)
 - Easy to start (pilot one app on new cloud)
 
 **Cons**:
+
 - Teams must learn different clouds
 - Harder to share infrastructure
 - Duplicated platform tooling
@@ -192,10 +197,12 @@ Global Load Balancer (Cloudflare, AWS Route53)
 ```
 
 **Implementation**:
+
 - **Active-Passive**: Primary handles all traffic, secondary is warm standby
 - **Active-Active**: Both clouds handle traffic (more complex, requires data sync)
 
 **Key decisions**:
+
 - **RTO (Recovery Time Objective)**: How long can you be down?
   - RTO < 5 min → Active-Active (expensive)
   - RTO 5-30 min → Warm standby (moderate cost)
@@ -242,13 +249,14 @@ Global Load Balancer (Cloudflare, AWS Route53)
 **Abstraction strategies**:
 
 1. **Storage**: Use Kubernetes CSI drivers
+
 ```yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: my-pvc
 spec:
-  storageClassName: fast-ssd  # Maps to EBS (AWS), PD-SSD (GCP), Premium (Azure)
+  storageClassName: fast-ssd # Maps to EBS (AWS), PD-SSD (GCP), Premium (Azure)
   accessModes:
     - ReadWriteOnce
   resources:
@@ -257,6 +265,7 @@ spec:
 ```
 
 2. **Secrets**: Use External Secrets Operator
+
 ```yaml
 apiVersion: external-secrets.io/v1beta1
 kind: ClusterSecretStore
@@ -269,6 +278,7 @@ spec:
 ```
 
 3. **Databases**: Use Crossplane for cloud resource provisioning
+
 ```yaml
 apiVersion: database.crossplane.io/v1alpha1
 kind: PostgreSQLInstance
@@ -281,7 +291,7 @@ spec:
     instanceClass: db.t3.medium
     storageGB: 100
   providerConfigRef:
-    name: default  # Points to current cloud
+    name: default # Points to current cloud
 ```
 
 ---
@@ -313,6 +323,7 @@ spec:
 ```
 
 **Implementation**:
+
 - **Geo-routing**: Route users to nearest compliant region (DNS, Anycast)
 - **Data partitioning**: Customer data sharded by geography
 - **Cross-region replication**: Limited to regions with adequate legal frameworks
@@ -398,20 +409,20 @@ spec:
     kind: XDatabase
     plural: xdatabases
   versions:
-  - name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        type: object
-        properties:
-          spec:
-            type: object
-            properties:
-              size:
-                type: string
-                enum: [small, medium, large]
-              engine:
-                type: string
-                enum: [postgres, mysql]
+    - name: v1alpha1
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                size:
+                  type: string
+                  enum: [small, medium, large]
+                engine:
+                  type: string
+                  enum: [postgres, mysql]
 ---
 # Composition for AWS
 apiVersion: apiextensions.crossplane.io/v1
@@ -423,14 +434,14 @@ spec:
     apiVersion: example.com/v1alpha1
     kind: XDatabase
   resources:
-  - name: rds-instance
-    base:
-      apiVersion: database.aws.crossplane.io/v1beta1
-      kind: RDSInstance
-      spec:
-        forProvider:
-          engine: # Set from spec.engine
-          instanceClass: # Map spec.size to AWS instance class
+    - name: rds-instance
+      base:
+        apiVersion: database.aws.crossplane.io/v1beta1
+        kind: RDSInstance
+        spec:
+          forProvider:
+            engine: # Set from spec.engine
+            instanceClass: # Map spec.size to AWS instance class
 ---
 # Composition for GCP
 apiVersion: apiextensions.crossplane.io/v1
@@ -442,17 +453,18 @@ spec:
     apiVersion: example.com/v1alpha1
     kind: XDatabase
   resources:
-  - name: cloudsql-instance
-    base:
-      apiVersion: database.gcp.crossplane.io/v1beta1
-      kind: CloudSQLInstance
-      spec:
-        forProvider:
-          databaseVersion: # Set from spec.engine
-          tier: # Map spec.size to GCP tier
+    - name: cloudsql-instance
+      base:
+        apiVersion: database.gcp.crossplane.io/v1beta1
+        kind: CloudSQLInstance
+        spec:
+          forProvider:
+            databaseVersion: # Set from spec.engine
+            tier: # Map spec.size to GCP tier
 ```
 
 **Usage** (same manifest works on any cloud):
+
 ```yaml
 apiVersion: example.com/v1alpha1
 kind: XDatabase
@@ -481,11 +493,12 @@ spec:
     global:
       meshID: shared-mesh
       multiCluster:
-        clusterName: aws-east-cluster  # or gcp-us-cluster
-      network: aws-network  # or gcp-network
+        clusterName: aws-east-cluster # or gcp-us-cluster
+      network: aws-network # or gcp-network
 ```
 
 **Service in AWS can call service in GCP transparently**:
+
 ```yaml
 # Payment service running in AWS EKS
 apiVersion: v1
@@ -500,7 +513,6 @@ kind: Service
 metadata:
   name: fraud-detection
   namespace: fraud
-
 # Payment service can call: http://fraud-detection.fraud.svc.cluster.local
 # Istio routes across clouds with mTLS
 ```
@@ -546,6 +558,7 @@ data:
 ```
 
 **Grafana dashboards** showing unified view:
+
 ```
 ┌─────────────────────────────────────────────────┐
 │  Application Performance (All Clouds)           │
@@ -616,6 +629,7 @@ Result: Multi-cloud loses ~15% in discounts
 ### Lab Overview
 
 You will deploy the same application to AWS (EKS) and GCP (GKE) using:
+
 1. Terraform to provision infrastructure
 2. Kubernetes manifests for the application
 3. Crossplane to provision cloud-specific resources (RDS, Cloud SQL)
@@ -661,6 +675,7 @@ cat main.tf
 ```
 
 **main.tf**:
+
 ```hcl
 # Multi-cloud infrastructure
 variable "cloud_provider" {
@@ -738,6 +753,7 @@ kubectl get pods -n payments --context gcp-cluster
 ```
 
 **deployment.yaml** (same for both clouds):
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -755,20 +771,20 @@ spec:
         app: payment-api
     spec:
       containers:
-      - name: api
-        image: ghcr.io/fawkes-demo/payment-api:v2.0.0
-        ports:
-        - containerPort: 8080
-        env:
-        - name: CLOUD_PROVIDER
-          value: "auto-detect"  # App detects AWS vs GCP
-        resources:
-          limits:
-            memory: "256Mi"
-            cpu: "500m"
-          requests:
-            memory: "128Mi"
-            cpu: "250m"
+        - name: api
+          image: ghcr.io/fawkes-demo/payment-api:v2.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: CLOUD_PROVIDER
+              value: "auto-detect" # App detects AWS vs GCP
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
 ```
 
 ---
@@ -1099,17 +1115,20 @@ Cloud-native services (Lambda, DynamoDB, BigQuery) offer better performance, fea
 **Approach**: Multi-cloud by region, not by workload.
 
 **Architecture**:
+
 - **Primary**: GCP (main infrastructure)
 - **Disaster Recovery**: AWS (warm standby)
 - **Data residency**: Regional clouds for EU/APAC
 
 **Key decisions**:
+
 - Standardized on Kubernetes (GKE primary, EKS secondary)
 - Used Terraform for infrastructure provisioning
 - Avoided active-active (complexity not worth it)
 - Invested heavily in observability (Datadog across clouds)
 
 **Results**:
+
 - Survived GCP outage in 2020 with minimal downtime
 - Achieved 99.99% availability SLA
 - Cost: ~20% overhead vs single-cloud
@@ -1123,16 +1142,19 @@ Cloud-native services (Lambda, DynamoDB, BigQuery) offer better performance, fea
 **Journey**: Datacenter → GCP (2016-2018)
 
 **Why NOT multi-cloud?**:
+
 - Decided vendor lock-in risk < operational complexity cost
 - Bet on GCP for best-of-breed data/ML services (BigQuery, Dataflow)
 - Negotiated favorable pricing with Google
 
 **How they mitigated lock-in**:
+
 - Used Kubernetes for all workloads (portable if needed)
 - Abstracted storage with GCS-compatible libraries
 - Open-sourced internal tools (Backstage) for community portability
 
 **Results**:
+
 - Successful migration in 2 years
 - Reduced infrastructure costs by 30%
 - Faster feature development (cloud-native services)
@@ -1146,16 +1168,19 @@ Cloud-native services (Lambda, DynamoDB, BigQuery) offer better performance, fea
 **Approach**: AWS-primary with strategic GCP usage.
 
 **Architecture**:
+
 - **95% of workloads**: AWS (core banking systems)
 - **ML/AI workloads**: GCP (BigQuery, Vertex AI)
 - **Data analytics**: GCP (better data warehouse pricing)
 
 **Implementation**:
+
 - Cross-cloud VPN for secure connectivity
 - Replicate data to GCP for analytics (batch, nightly)
 - Unified IAM via Okta SSO
 
 **Results**:
+
 - Best-of-breed services without full multi-cloud complexity
 - Contained GCP usage to specific use cases
 - Avoided active-active complexity
@@ -1169,11 +1194,13 @@ Cloud-native services (Lambda, DynamoDB, BigQuery) offer better performance, fea
 **Journey**: AWS → Own Datacenters (2016)
 
 **Why leave the cloud?**:
+
 - At scale (exabytes of data), cloud economics inverted
 - 90% of workload predictable (not bursty)
 - Egress fees killed economics ($75M+/year in bandwidth)
 
 **Result**:
+
 - Saved ~$75M over 2 years
 - Better performance (purpose-built infrastructure)
 - Retained AWS for edge locations and burst capacity
@@ -1186,12 +1213,12 @@ Cloud-native services (Lambda, DynamoDB, BigQuery) offer better performance, fea
 
 This module supports these **DORA capabilities**:
 
-| Capability | How This Module Helps | Impact on Metrics |
-|------------|----------------------|-------------------|
-| **Deployment Automation** | Terraform + Crossplane enable automated provisioning across clouds | Improves deployment frequency |
-| **Loosely Coupled Architecture** | Service mesh enables independent deployment across clouds | Enables faster changes, reduces dependencies |
-| **Monitoring & Observability** | Unified observability (Prometheus, Grafana) across clouds | Reduces MTTR with consistent tooling |
-| **Database Change Management** | Crossplane provides declarative database provisioning | Safer, faster database changes |
+| Capability                       | How This Module Helps                                              | Impact on Metrics                            |
+| -------------------------------- | ------------------------------------------------------------------ | -------------------------------------------- |
+| **Deployment Automation**        | Terraform + Crossplane enable automated provisioning across clouds | Improves deployment frequency                |
+| **Loosely Coupled Architecture** | Service mesh enables independent deployment across clouds          | Enables faster changes, reduces dependencies |
+| **Monitoring & Observability**   | Unified observability (Prometheus, Grafana) across clouds          | Reduces MTTR with consistent tooling         |
+| **Database Change Management**   | Crossplane provides declarative database provisioning              | Safer, faster database changes               |
 
 ---
 
@@ -1320,23 +1347,27 @@ aws ce get-cost-and-usage \
 ## 📚 Additional Resources
 
 ### Official Documentation
+
 - [AWS Well-Architected Framework - Multi-Region](https://aws.amazon.com/architecture/well-architected/)
 - [GCP Multi-Cloud Architecture](https://cloud.google.com/architecture/multicloud)
 - [Azure Arc for Multi-Cloud](https://azure.microsoft.com/en-us/products/azure-arc/)
 - [CNCF Multi-Cloud White Paper](https://www.cncf.io/)
 
 ### Tools & Frameworks
+
 - [Terraform Multi-Cloud Modules](https://registry.terraform.io/)
 - [Crossplane Documentation](https://crossplane.io/docs/)
 - [Istio Multi-Cluster](https://istio.io/latest/docs/setup/install/multicluster/)
 - [Kubecost for Multi-Cloud](https://www.kubecost.com/)
 
 ### Books & Papers
+
 - **"Cloud Native Transformation"** by Pini Reznik, Jamie Dobson & Michelle Gienow (O'Reilly) - Chapter on multi-cloud strategies
 - **"Architecting the Cloud"** by Michael J. Kavis - Multi-cloud decision framework
 - **ThoughtWorks Technology Radar** - Regular assessment of multi-cloud tools
 
 ### Case Studies
+
 - [Shopify Engineering Blog - Multi-Cloud](https://shopify.engineering/)
 - [Spotify Labs - Why We Chose GCP](https://engineering.atspotify.com/)
 - [Dropbox Tech Blog - Infrastructure](https://dropbox.tech/)
@@ -1357,6 +1388,7 @@ By completing this module, you've learned:
 **Critical insight**: Multi-cloud is a tool, not a goal. Most organizations benefit more from single-cloud excellence with portability planning than premature multi-cloud complexity.
 
 **Decision framework**:
+
 - **Start-up**: Single cloud, cloud-native services (speed > portability)
 - **Growth stage**: Single cloud with abstraction layers (prepare for optionality)
 - **Enterprise**: Selective multi-cloud (DR, compliance, best-of-breed)
@@ -1374,6 +1406,7 @@ You've mastered all 20 modules of the Fawkes Dojo. Here's what comes next:
 To earn your **Fawkes Platform Architect** certification, complete:
 
 **Written Exam** (50 questions, 90% pass required):
+
 - Multi-cloud architecture design
 - Zero trust security implementation
 - Platform-as-a-product principles
@@ -1381,18 +1414,22 @@ To earn your **Fawkes Platform Architect** certification, complete:
 - DORA metrics and continuous improvement
 
 **Practical Assessment**:
+
 1. **Architecture Design** (90 minutes)
+
    - Design a complete platform architecture for a given scenario
    - Present to peer review panel
    - Defend design decisions under questioning
 
 2. **Implementation Challenge** (90 minutes)
+
    - Implement multi-tenant namespace with resource quotas
    - Configure zero trust policies (mTLS, image signing)
    - Deploy application across two cloud providers
    - Set up unified observability
 
 3. **Code Contribution** (60 minutes)
+
    - Contribute a feature or bug fix to Fawkes codebase
    - Submit PR with documentation and tests
    - Code review by platform team
@@ -1405,6 +1442,7 @@ To earn your **Fawkes Platform Architect** certification, complete:
 ### 2. Continue Your Platform Engineering Journey
 
 **Advanced Topics** (self-study):
+
 - **FinOps**: Cloud cost optimization at scale
 - **Platform Security**: Advanced threat modeling, security-as-code
 - **Developer Experience**: Measuring and improving DORA metrics
@@ -1412,6 +1450,7 @@ To earn your **Fawkes Platform Architect** certification, complete:
 - **Platform Product Management**: Roadmapping, user research, adoption metrics
 
 **Recommended Certifications**:
+
 - **Kubernetes**: CKA (Certified Kubernetes Administrator)
 - **Cloud**: AWS Solutions Architect, GCP Professional Cloud Architect
 - **Security**: CISSP, Certified Ethical Hacker
@@ -1420,6 +1459,7 @@ To earn your **Fawkes Platform Architect** certification, complete:
 ### 3. Contribute to the Platform Engineering Community
 
 **Ways to give back**:
+
 - Write blog posts about your platform journey
 - Speak at meetups or conferences (KubeCon, PlatformCon)
 - Contribute to open-source platform tools (Backstage, Crossplane, ArgoCD)
@@ -1440,6 +1480,7 @@ To earn your **Fawkes Platform Architect** certification, complete:
 8. **Platform Product Manager**: Own platform roadmap and adoption
 
 **Salary Ranges** (US, 2025):
+
 - Platform Engineer: $120k - $180k
 - Senior Platform Engineer: $150k - $220k
 - Staff Platform Engineer: $180k - $280k
@@ -1532,6 +1573,7 @@ OVERALL PROGRESS: 20/20 MODULES COMPLETE (100%)
 Over the course of 20 modules, you've learned:
 
 ### Technical Skills
+
 - ✅ Design and implement internal developer platforms
 - ✅ Build CI/CD pipelines with security scanning and quality gates
 - ✅ Implement GitOps workflows with ArgoCD
@@ -1546,6 +1588,7 @@ Over the course of 20 modules, you've learned:
 - ✅ Design multi-cloud strategies and disaster recovery
 
 ### Leadership & Soft Skills
+
 - ✅ Communicate platform value to stakeholders
 - ✅ Gather and incorporate user feedback
 - ✅ Balance technical debt with feature development
@@ -1554,6 +1597,7 @@ Over the course of 20 modules, you've learned:
 - ✅ Navigate organizational change
 
 ### Industry Knowledge
+
 - ✅ DORA research and high-performing organizations
 - ✅ Platform engineering best practices
 - ✅ DevOps and SRE principles
@@ -1569,12 +1613,14 @@ Over the course of 20 modules, you've learned:
 We'd love to hear about your Fawkes Dojo journey!
 
 **Join the community**:
+
 - 💬 **Mattermost**: `#dojo-graduates` channel
 - 🐦 **Twitter**: Tweet with `#FawkesDojo` and `@FawkesPlatform`
 - 💼 **LinkedIn**: Add "Fawkes Platform Architect" to certifications
 - 📝 **Blog**: Write about your learning experience
 
 **Help improve the Dojo**:
+
 - Submit feedback via Backstage feedback plugin
 - Suggest new modules or improvements
 - Contribute lab exercises or quizzes
@@ -1616,6 +1662,7 @@ Upon passing the Black Belt Assessment, you'll receive:
 ```
 
 **Digital badge includes**:
+
 - Credly integration (add to LinkedIn, resume)
 - QR code for verification
 - Skill tags for recruiter searches
@@ -1630,11 +1677,13 @@ Platform engineering evolves rapidly. To maintain your certification:
 **Recertification Options** (every 2 years):
 
 1. **Continuous Learning Path**:
+
    - Complete 4 new Fawkes Dojo modules (as they're released)
    - Attend 2 platform engineering conferences/workshops
    - Contribute to 2 open-source platform projects
 
 2. **Advanced Assessment**:
+
    - Take updated Black Belt exam (reflects new tools/practices)
    - Present case study from your production platform
 
@@ -1645,7 +1694,7 @@ Platform engineering evolves rapidly. To maintain your certification:
 
 ---
 
-## 🎉 Congratulations!
+## 🎉 Congratulations
 
 You've completed the most comprehensive platform engineering curriculum available. You're now equipped to:
 
@@ -1673,7 +1722,7 @@ You've completed the most comprehensive platform engineering curriculum availabl
 ---
 
 **Module 20: Multi-Cloud Strategies** | Fawkes Dojo | Black Belt
-*"Build once, deploy anywhere"* | Version 1.0
+_"Build once, deploy anywhere"_ | Version 1.0
 
 ---
 
